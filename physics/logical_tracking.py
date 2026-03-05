@@ -49,8 +49,8 @@ class LogicalErrorTracker:
         self.error_history: List[LogicalErrorEvent] = []
 
     def update(self,
-               syndrome_q: float,
-               syndrome_p: float,
+               error_q: float,
+               error_p: float,
                correction_q: float,
                correction_p: float) -> Tuple[bool, bool]:
         """
@@ -65,8 +65,8 @@ class LogicalErrorTracker:
         different lattice point), we accumulate ±λ/2 extra displacement.
 
         Args:
-            syndrome_q: Measured q syndrome
-            syndrome_p: Measured p syndrome
+            error_q: True q error (before correction)
+            error_p: True p error (before correction)
             correction_q: Applied q correction
             correction_p: Applied p correction
 
@@ -75,10 +75,10 @@ class LogicalErrorTracker:
         """
         self.total_rounds += 1
 
-        # The difference between syndrome and correction is the residual
-        # This accumulates if there are systematic biases or wrong decisions
-        residual_q = syndrome_q - correction_q
-        residual_p = syndrome_p - correction_p
+        # The residual is the true error minus the correction
+        # This accumulates if corrections are imperfect
+        residual_q = error_q - correction_q
+        residual_p = error_p - correction_p
 
         self.accumulated_q += residual_q
         self.accumulated_p += residual_p
@@ -126,9 +126,9 @@ class LogicalErrorTracker:
         Returns:
             (x_error, z_error)
         """
-        syndrome = qec_result['syndrome']
+        error = qec_result['error']
         correction = qec_result['correction']
-        return self.update(syndrome[0], syndrome[1], correction[0], correction[1])
+        return self.update(error[0], error[1], correction[0], correction[1])
 
     def get_total_logical_errors(self) -> int:
         """Get total number of logical errors"""
@@ -256,12 +256,12 @@ class ExperimentErrorTracker:
             'params': params,
         }
 
-    def update(self, syndrome: np.ndarray, correction: np.ndarray) -> Tuple[bool, bool]:
+    def update(self, error: np.ndarray, correction: np.ndarray) -> Tuple[bool, bool]:
         """Update current configuration's tracker"""
         if self.current_tracker is None:
             raise RuntimeError("No configuration started")
         return self.current_tracker.update(
-            syndrome[0], syndrome[1], correction[0], correction[1]
+            error[0], error[1], correction[0], correction[1]
         )
 
     def end_configuration(self):
@@ -333,6 +333,6 @@ def simulate_error_accumulation(n_rounds: int,
 
         # Note: This simplified model doesn't perfectly match full QEC
         # but captures the error accumulation dynamics
-        tracker.update(syndrome_q, syndrome_p, correction_q, correction_p)
+        tracker.update(error_q, error_p, correction_q, correction_p)
 
     return tracker.get_statistics()

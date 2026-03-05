@@ -20,7 +20,8 @@ try:
     HAS_STRAWBERRYFIELDS = True
 except ImportError:
     HAS_STRAWBERRYFIELDS = False
-    print("Warning: Strawberry Fields not available. Using analytical approximation.")
+    import warnings
+    warnings.warn("Strawberry Fields not available. Using analytical approximation.", ImportWarning)
 
 
 @dataclass
