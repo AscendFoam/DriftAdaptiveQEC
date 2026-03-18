@@ -5,6 +5,10 @@ Implements GKP error correction protocols:
 - Linear decoder (parameterized)
 - Full QEC cycle simulation
 - Multiple correction strategies
+
+中文说明：
+- 该模块实现 GKP 纠错的核心流程：综合征测量、线性解码、残差统计与多轮仿真。
+- 上层实验通常通过 GKPErrorCorrector / QECSimulator 访问这里的能力。
 """
 
 import numpy as np
@@ -71,6 +75,7 @@ class LinearDecoder:
         Returns:
             correction: [dq, dp] correction to apply
         """
+        # 中文注释：线性解码核心公式 Δ = K @ s + b。
         return self.K @ syndrome + self.b
 
     def update(self, K: np.ndarray, b: np.ndarray):
@@ -108,6 +113,7 @@ def compute_optimal_decoder_params(sigma: float,
     Returns:
         Optimal decoder parameters
     """
+    # 中文注释：使用近似 Wiener 思路估计最优线性增益与旋转矩阵。
     # Total effective noise variance
     # Includes: GKP finite energy, displacement noise, measurement noise
     var_signal = (LATTICE_CONST / 2) ** 2 / 3  # Uniform signal variance
@@ -187,17 +193,16 @@ class GKPErrorCorrector:
             - residual: Remaining error after correction
             - success: Whether error was successfully corrected
         """
-        # 1. Measure syndrome
+        # 1. 测量综合征（可选加噪）
         syndrome = self.measurement.measure(error, add_noise=add_measurement_noise)
 
-        # 2. Decode to get correction
+        # 2. 解码得到校正位移
         correction = self.decoder.decode(syndrome)
 
-        # 3. Apply correction (in simulation, we track the residual)
+        # 3. 应用校正并跟踪残差
         residual = error - correction
 
-        # 4. Check if correction was successful
-        # Error is corrected if residual is within ±λ/2
+        # 4. 判定纠错是否成功：残差是否在基本晶胞范围内
         success = (np.abs(residual[0]) < self.lattice / 2 and
                    np.abs(residual[1]) < self.lattice / 2)
 
@@ -372,3 +377,43 @@ class QECSimulator:
             'error_rates': np.array(error_rates),
             'mean_error_rate': np.mean(error_rates),
         }
+        
+"""
+### 代码核心功能解析
+这段代码是**GKP量子纠错（QEC）** 的核心实现模块，专门用于纠正GKP（Gottesman-Kitaev-Preskill）量子比特在演化过程中产生的位移误差，以下分模块解析核心逻辑：
+
+#### 1. 核心数据结构与基础组件
+- **DecoderParameters**：数据类，封装线性解码器的核心参数——2x2增益矩阵`K`（控制纠错强度）和2维偏置向量`b`（补偿系统偏移），并提供参数扁平化/还原的方法（适配后续参数优化）。
+- **LinearDecoder**：线性解码器核心类，核心逻辑是 `Δ = K @ s + b`（`s`为测量到的综合征，`Δ`为待施加的校正位移）。支持参数更新、最优参数计算，是纠错的“决策核心”。
+
+#### 2. 最优解码器参数计算
+`compute_optimal_decoder_params` 函数基于**维纳滤波（Wiener Filter）** 思路，结合噪声来源（位移噪声、GKP有限能量噪声、测量噪声）计算最优增益矩阵：
+- 核心逻辑：通过信号方差与总噪声方差的比值确定最优增益`gain`，再结合相位漂移的旋转矩阵`R`得到最终`K`；偏置`b`默认归零（无系统漂移时）。
+- 输入：噪声标准差、GKP有限能量参数、相位旋转角、测量效率；输出：最优解码器参数。
+
+#### 3. 单轮纠错核心类 GKPErrorCorrector
+这是单轮量子纠错的完整实现，流程为：
+1. **综合征测量**：通过`RealisticSyndromeMeasurement`测量误差对应的综合征（可选加入测量噪声，模拟真实实验）；
+2. **解码计算校正量**：用`LinearDecoder`将综合征转换为校正位移；
+3. **残差计算与成功判定**：残差=原始误差-校正量，若残差落在GKP晶格基本单元内（<晶格常数/2），则判定纠错成功；
+4. **性能评估**：通过大量随机误差样本，统计成功概率、逻辑错误率、残差统计特征。
+
+#### 4. 多轮纠错仿真 QECSimulator
+模拟真实量子系统的多轮纠错过程，核心能力：
+- **多轮仿真**：累计每轮误差→执行单轮纠错→更新累计残差，统计多轮纠错的整体成功率；
+- **带漂移的仿真**：模拟噪声参数随时间漂移的场景，支持周期性重新校准解码器参数（适配实时噪声），输出不同时间步的逻辑错误率。
+
+#### 5. 关键概念补充
+- **GKP晶格常数（LATTICE_CONST）**：GKP量子比特的相位空间晶格单元大小，是判定纠错是否成功的核心阈值；
+- **综合征（syndrome）**：误差的“特征指纹”，通过测量提取，是纠错的依据；
+- **残差（residual）**：纠错后未被消除的剩余误差，直接反映纠错效果。
+
+---
+
+### 总结
+1. **核心逻辑**：以“测量综合征→线性解码算校正量→应用校正→判定成功”为核心流程，实现GKP量子比特的误差纠正；
+2. **优化思路**：基于维纳滤波计算最优解码器参数，平衡信号与噪声，最大化纠错成功率；
+3. **仿真能力**：支持单轮/多轮纠错、带噪声/漂移的真实场景仿真，输出错误率、残差等关键性能指标。
+
+简言之，这段代码是GKP量子纠错从“理论解码”到“工程仿真”的完整实现，核心是通过线性解码将测量到的误差特征转换为精准的校正动作，最终降低量子比特的逻辑错误率。
+"""

@@ -8,6 +8,10 @@ Implements physically accurate noise channels for bosonic systems:
 - Dephasing / phase diffusion
 
 These are proper quantum channels, not classical approximations.
+
+中文说明：
+- 本文件提供多种噪声通道及其组合模型，用于近似真实硬件中的退相干和控制误差。
+- 重点是把不同噪声源统一折算到可仿真的 Wigner 函数演化上。
 """
 
 import numpy as np
@@ -59,6 +63,7 @@ class QuantumNoiseChannel:
 
         For efficiency, this uses analytical approximations when possible.
         """
+        # 中文注释：按“损失 -> 热噪声 -> 位移 -> 相位”顺序依次叠加噪声影响。
         W = wigner.copy()
 
         # 1. Photon loss: contraction + diffusion
@@ -356,6 +361,7 @@ class CombinedNoiseModel:
 
         Combines all noise sources into equivalent displacement noise.
         """
+        # 中文注释：该等效 sigma 常用于上层快速估计与参数调度，不替代完整仿真。
         # Photon loss contribution
         sigma_loss = np.sqrt(self.params.gamma / 2) if self.params.gamma > 0 else 0
 

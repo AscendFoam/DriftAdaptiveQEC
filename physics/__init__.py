@@ -7,6 +7,10 @@ This module provides physically accurate simulations of:
 - Syndrome measurement with finite squeezing effects
 - Error correction protocols
 - Logical error tracking
+
+中文说明：
+- 该模块是物理仿真层统一入口，集中导出最常用类和函数。
+- 目标是让上层实验脚本通过稳定API访问噪声、测量、纠错与逻辑错误统计能力。
 """
 
 from .gkp_state import ApproximateGKPState, GKPStateFactory

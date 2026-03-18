@@ -4,6 +4,10 @@ GKP State Preparation Module
 Provides tools for creating and manipulating approximate (finite-energy) GKP states.
 Uses Strawberry Fields for quantum state simulation when available,
 with analytical fallback for faster computation.
+
+中文说明：
+- 本文件负责 GKP 态的创建与表示（优先 SF 精确仿真，失败时退化为解析近似）。
+- 其中 LATTICE_CONST 是后续噪声、测量、解码模块共享的基础常量。
 """
 
 import numpy as np
@@ -79,6 +83,7 @@ class ApproximateGKPState:
 
     def _prepare_state_sf(self):
         """Prepare GKP state using Strawberry Fields"""
+        # 中文注释：仅在 SF 可用时走该路径，得到更真实但更慢的状态表示。
         prog = sf.Program(1)
 
         # GKP state encoding
@@ -147,6 +152,7 @@ class ApproximateGKPState:
 
         where r_{nm} = (n√(2π), m√(2π))
         """
+        # 中文注释：该函数是“无 SF 依赖”时的核心近似实现，计算速度更高。
         Q, P = np.meshgrid(q_vec, p_vec)
         W = np.zeros_like(Q)
 
@@ -246,3 +252,44 @@ def delta_to_squeezing_db(delta: float) -> float:
 def squeezing_db_to_delta(squeezing_db: float) -> float:
     """Convert squeezing in dB to GKP delta parameter"""
     return np.sqrt(10**(-squeezing_db / 10) / 2)
+
+"""
+### 代码核心功能解析
+这段代码是一个**近似GKP量子态的生成与操作模块**，专为有限能量的GKP（Gottesman-Kitaev-Preskill）态设计，核心目标是在量子仿真中高效创建、表示和计算GKP态，以下是分层解析：
+
+#### 1. 基础定义与依赖管理
+- **核心常量**：`LATTICE_CONST = √(2π)` 是GKP态的晶格常数，是后续噪声、测量、解码的共享基础，决定了GKP态在相空间中的晶格点间距。
+- **依赖兼容**：优先导入量子仿真库Strawberry Fields（SF），若导入失败则触发警告，自动降级为解析近似计算（速度更快，精度稍低）。
+
+#### 2. 数据结构与核心类
+##### (1) `GKPParameters` 数据类
+用`dataclass`封装GKP态的核心参数，便于参数管理：
+- `delta`：有限能量参数（包络宽度），越小越接近理想GKP态，但能量越高（典型值0.2-0.5）；
+- `logical_state`：逻辑量子比特态（'0'/'1'/'+/-'）；
+- `cutoff`：Fock空间截断维度（仿真精度控制）。
+
+##### (2) `ApproximateGKPState` 核心类
+实现近似GKP态的创建、Wigner函数计算、位移操作等核心功能：
+- **初始化逻辑**：
+  - 计算等效压缩度（dB）：`squeezing_db = -10×log10(2×delta²)`；
+  - 优先调用SF创建高精度GKP态，失败则自动切换到解析近似模式。
+- **_prepare_state_sf 方法**：
+  通过SF的GKP门+旋转门（Rgate）生成不同逻辑态的GKP态（如|+⟩/|-⟩需额外90°相空间旋转），并指定Fock截断维度。
+- **get_wigner 方法**：
+  计算GKP态的Wigner函数（相空间分布）：优先用SF的高精度计算，失败则调用解析近似；
+  解析近似的核心逻辑是对晶格点求和：`W(q,p) ∝ Σ(-1)^(n+m)×exp(-Δ²(n²+m²))×exp(-|r-r_nm|²/(2Δ²))`，其中`r_nm`是晶格点坐标。
+- **辅助方法**：
+  `apply_displacement`：对GKP态施加位移操作；
+  `mean_photon_number`：估算平均光子数（SF模式用真实值，近似模式用`1/(2×delta²)`）。
+
+##### (3) `GKPStateFactory` 工厂类
+封装GKP态的创建逻辑，提供便捷的接口生成不同逻辑态的GKP态（如`create_logical_zero`直接生成|0⟩_L），降低使用成本。
+
+#### 3. 工具函数
+- `delta_to_squeezing_db`/`squeezing_db_to_delta`：实现delta参数与压缩度（dB）的双向转换，便于和实验参数（如压缩光dB值）对齐。
+
+### 总结
+1. 核心目标：生成有限能量的近似GKP态，优先用Strawberry Fields高精度仿真，降级为解析近似保证可用性；
+2. 核心逻辑：通过晶格常数定义GKP态的相空间晶格，用delta参数控制能量/理想度，支持不同逻辑态的生成和Wigner函数计算；
+3. 设计特点：兼容SF高精度仿真和解析近似两种模式，兼顾精度与速度，通过工厂类简化使用，参数与实验（压缩度dB）对齐。
+"""

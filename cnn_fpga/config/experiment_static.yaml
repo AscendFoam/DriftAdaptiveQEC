@@ -1,0 +1,54 @@
+# 实验基础信息：用于静态场景的数据生成、训练、评估
+experiment:
+  name: static_v1
+  stage: p1_static
+  seed: 1234
+
+# 路径配置：所有产物默认输出到项目相对目录
+paths:
+  output_root: runs
+  dataset_dir: artifacts/datasets/static_v1
+  model_dir: artifacts/models/static_v1
+  report_dir: artifacts/reports/static_v1
+
+# 硬件默认参数：与工程文档中确认的默认值保持一致
+hardware_defaults:
+  fixed_point: Q4.20
+  t_fast_us: 5.0
+  window_size: 2048
+  t_slow_update_ms: 20.0
+
+# 参数映射策略：CNN输出参数映射到线性解码器(K,b)时使用
+param_mapping:
+  alpha_bias: 1.0
+  beta_smoothing: 0.2
+  gain_clip: [0.2, 1.2]
+  theta_clip_deg: [-20.0, 20.0]
+
+# 数据集构建参数：用于生成32x32 syndrome直方图数据
+dataset:
+  n_configurations: 200
+  samples_per_configuration: 64
+  points_per_sample: 1024
+  histogram_bins: 32
+  # 数据集拆分比例：train/val/test
+  split:
+    train: 0.8
+    val: 0.1
+    test: 0.1
+  # 参数采样范围：用于合成标签(sigma, mu_q, mu_p, theta_deg)
+  parameter_ranges:
+    sigma: [0.15, 0.60]
+    mu_q: [-0.3, 0.3]
+    mu_p: [-0.3, 0.3]
+    theta_deg: [-15.0, 15.0]
+
+# 训练配置：当前脚手架为线性回归基线
+training:
+  model_type: linear_regression_baseline
+  max_train_samples: 50000
+  l2_reg: 1.0e-3
+
+# 评估配置：默认在测试集上评估
+evaluation:
+  target_split: test

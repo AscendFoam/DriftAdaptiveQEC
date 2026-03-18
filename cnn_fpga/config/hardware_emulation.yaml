@@ -1,0 +1,72 @@
+# 硬件行为仿真实验：用于P2阶段，不依赖真实板卡
+experiment:
+  name: hardware_emulation_v1
+  stage: p2_emulation
+  seed: 20260311
+
+# 输出路径：行为仿真结果落盘目录
+paths:
+  output_root: runs
+
+# 工程默认参数：与快慢回路基线一致
+hardware_defaults:
+  fixed_point: Q4.20
+  t_fast_us: 5.0
+  window_size: 2048
+  t_slow_update_ms: 20.0
+
+# 参数映射策略：与主实验文档保持一致，方便对齐
+param_mapping:
+  alpha_bias: 1.0
+  beta_smoothing: 0.2
+  gain_clip: [0.2, 1.2]
+  theta_clip_deg: [-20.0, 20.0]
+
+# 仿真规模：轮数与重复次数
+simulation:
+  n_rounds: 4000
+  repeats: 12
+
+# 线性解码和噪声基础参数
+model:
+  gain: 0.9
+  theta_deg: 0.0
+  sigma_measurement: 0.05
+  sigma_ratio_p: 1.0
+  mu_q: 0.0
+  mu_p: 0.0
+
+# 测量模型参数（有限能量、效率、辅助比特误差）
+measurement:
+  delta: 0.3
+  measurement_efficiency: 0.95
+  ancilla_error_rate: 0.01
+  add_shot_noise: true
+
+# 漂移场景集合：用于行为仿真稳定性验证
+drift:
+  scenarios:
+    - name: linear_med
+      type: linear
+      params:
+        sigma0: 0.20
+        alpha: 0.00008
+        sigma_min: 0.05
+        sigma_max: 0.70
+    - name: step_large
+      type: step
+      params:
+        sigma0: 0.18
+        delta_sigma: 0.18
+        jump_round: 1800
+        sigma_min: 0.05
+        sigma_max: 0.70
+    - name: sinusoidal_mid
+      type: sin
+      params:
+        sigma0: 0.23
+        amplitude: 0.08
+        frequency: 0.0015
+        phase: 0.0
+        sigma_min: 0.05
+        sigma_max: 0.70

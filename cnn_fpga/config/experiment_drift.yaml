@@ -1,0 +1,79 @@
+# 漂移实验基础信息：用于P2阶段对比full_qec/simplified
+experiment:
+  name: drift_v1
+  stage: p2_drift
+  seed: 20260311
+
+# 输出路径：结果会写入 runs/drift_suite/*
+paths:
+  output_root: runs
+
+# 硬件默认参数：与项目统一默认值一致
+hardware_defaults:
+  fixed_point: Q4.20
+  t_fast_us: 5.0
+  window_size: 2048
+  t_slow_update_ms: 20.0
+
+# 参数映射配置：后续CNN预测参数写回K,b时复用
+param_mapping:
+  alpha_bias: 1.0
+  beta_smoothing: 0.2
+  gain_clip: [0.2, 1.2]
+  theta_clip_deg: [-20.0, 20.0]
+
+# 仿真轮数与重复次数：用于统计均值/方差
+simulation:
+  n_rounds: 2000
+  repeats: 10
+
+# 解码与噪声模型基础参数
+model:
+  gain: 0.9
+  theta_deg: 0.0
+  sigma_measurement: 0.05
+  sigma_ratio_p: 1.0
+  mu_q: 0.0
+  mu_p: 0.0
+
+# 测量模型参数（对应RealisticSyndromeMeasurement）
+measurement:
+  delta: 0.3
+  measurement_efficiency: 0.95
+  ancilla_error_rate: 0.01
+  add_shot_noise: true
+
+# 漂移场景定义：可按场景名批量运行并输出LER曲线
+drift:
+  scenarios:
+    - name: linear_low
+      type: linear
+      params:
+        sigma0: 0.20
+        alpha: 0.00005
+        sigma_min: 0.05
+        sigma_max: 0.60
+    - name: step_mid
+      type: step
+      params:
+        sigma0: 0.20
+        delta_sigma: 0.12
+        jump_round: 1000
+        sigma_min: 0.05
+        sigma_max: 0.60
+    - name: sinusoidal
+      type: sin
+      params:
+        sigma0: 0.25
+        amplitude: 0.06
+        frequency: 0.002
+        phase: 0.0
+        sigma_min: 0.05
+        sigma_max: 0.60
+    - name: random_walk
+      type: random_walk
+      params:
+        sigma0: 0.22
+        step_std: 0.003
+        sigma_min: 0.05
+        sigma_max: 0.60

@@ -1,0 +1,58 @@
+# HIL实验配置：当前先使用mock后端，后续可替换真实板卡驱动
+experiment:
+  name: hardware_hil_v1
+  stage: p3_hil
+  seed: 20260311
+
+# 输出路径：HIL运行日志与摘要文件输出目录
+paths:
+  output_root: runs
+
+# 工程默认参数：固定点、快慢回路节拍
+hardware_defaults:
+  fixed_point: Q4.20
+  t_fast_us: 5.0
+  window_size: 2048
+  t_slow_update_ms: 20.0
+
+# 参数映射策略：与训练/仿真阶段保持一致，避免语义漂移
+param_mapping:
+  alpha_bias: 1.0
+  beta_smoothing: 0.2
+  gain_clip: [0.2, 1.2]
+  theta_clip_deg: [-20.0, 20.0]
+
+# HIL后端信息：mock表示行为模拟，board/bitstream用于追溯
+hil:
+  backend: mock
+  board: ZCU111
+  bitstream_version: fpga_linear_v1
+
+# 时序预算与规模：用于统计违约率
+timing:
+  n_slow_updates: 1500
+  n_fast_cycles: 300000
+  slow_update_budget_us: 5000.0
+  fast_cycle_budget_us: 1.5
+
+# 延迟模型：模拟DMA/预处理/推理/写回的随机时延
+latency_model:
+  dma_mean_us: 10.0
+  dma_std_us: 2.0
+  preprocess_mean_us: 60.0
+  preprocess_std_us: 12.0
+  inference_mean_us: 900.0
+  inference_std_us: 150.0
+  writeback_mean_us: 20.0
+  writeback_std_us: 5.0
+
+# 快路径模型：模拟单周期解码延迟分布
+fast_path_model:
+  latency_mean_us: 1.0
+  latency_std_us: 0.12
+
+# 异常概率模型：模拟通信与推理失败事件
+error_model:
+  dma_timeout_prob: 1.0e-4
+  axi_write_fail_prob: 5.0e-5
+  cnn_infer_fail_prob: 2.0e-5
