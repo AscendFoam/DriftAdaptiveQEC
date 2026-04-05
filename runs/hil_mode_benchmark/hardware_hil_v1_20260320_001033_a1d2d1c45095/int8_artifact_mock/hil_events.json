@@ -1,0 +1,826 @@
+{
+  "backend_events": [
+    {
+      "kind": "window_ready",
+      "epoch_id": 2048,
+      "time_us": 10240.0,
+      "details": {
+        "window_id": 1,
+        "buffer_id": 0,
+        "epoch_start": 1,
+        "epoch_end": 2048
+      }
+    },
+    {
+      "kind": "commit_applied",
+      "epoch_id": 2309,
+      "time_us": 11545.0,
+      "details": {
+        "activated_bank": "B",
+        "version": 1
+      }
+    },
+    {
+      "kind": "commit_ack_asserted",
+      "epoch_id": 2311,
+      "time_us": 11555.0,
+      "details": {
+        "active_bank": "B"
+      }
+    },
+    {
+      "kind": "window_ready",
+      "epoch_id": 6048,
+      "time_us": 30240.0,
+      "details": {
+        "window_id": 2,
+        "buffer_id": 1,
+        "epoch_start": 4001,
+        "epoch_end": 6048
+      }
+    },
+    {
+      "kind": "commit_applied",
+      "epoch_id": 6277,
+      "time_us": 31385.0,
+      "details": {
+        "activated_bank": "A",
+        "version": 2
+      }
+    },
+    {
+      "kind": "commit_ack_asserted",
+      "epoch_id": 6278,
+      "time_us": 31390.0,
+      "details": {
+        "active_bank": "A"
+      }
+    }
+  ],
+  "host_events": [
+    {
+      "kind": "slow_update_started",
+      "job_id": 1,
+      "readout": {
+        "buffer_id": 0,
+        "byte_count": 4096,
+        "window": {
+          "window_id": 1,
+          "start_epoch": 1,
+          "end_epoch": 2048,
+          "ready_time_us": 10240.0,
+          "payload": {
+            "histogram": {
+              "type": "ndarray",
+              "shape": [
+                32,
+                32
+              ],
+              "min": 0.0,
+              "max": 0.01025390625,
+              "mean": 0.0009765625,
+              "std": 0.001030166051350534
+            },
+            "target_params": {
+              "sigma": 0.21351367446602076,
+              "mu_q": 0.016601496387454805,
+              "mu_p": -0.002843343628660356,
+              "theta_deg": 0.1023309962636268
+            },
+            "diagnostics": {
+              "valid_window": true,
+              "overflow_ratio": 0.2783203125,
+              "overflow_alert": true,
+              "window_ler": 0.35498046875,
+              "mean_abs_residual_q": 0.696724161348903,
+              "mean_abs_residual_p": 0.7073410653518835,
+              "mean_correction_norm": 1.078995387925083,
+              "active_version_counts": {
+                "0": 2048
+              }
+            },
+            "window_stats": {
+              "n_cycles": 2048,
+              "epoch_start": 1,
+              "epoch_end": 2048,
+              "mean_syndrome_q": 0.006916358135640621,
+              "mean_syndrome_p": 0.01583103509619832,
+              "std_syndrome_q": 0.802109317221936,
+              "std_syndrome_p": 0.818063710292341
+            }
+          }
+        },
+        "metadata": {
+          "backend": "mock_fpga"
+        }
+      },
+      "active_params": {
+        "K": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "b": [
+          0.0,
+          0.0
+        ],
+        "metadata": {}
+      },
+      "started_epoch": 2048,
+      "started_time_us": 10240.0,
+      "ready_time_us": 11537.375933087036,
+      "latency": {
+        "dma_us": 7.4674782225878165,
+        "preprocess_us": 57.80889258282054,
+        "inference_us": 1210.9164126542369,
+        "writeback_us": 21.183149627392044,
+        "commit_ack_us": 6.889250658636514,
+        "fast_cycle_us": null,
+        "total_us": 1304.2651837456738,
+        "metadata": {}
+      }
+    },
+    {
+      "kind": "slow_update_finished",
+      "job_id": 1,
+      "readout": {
+        "buffer_id": 0,
+        "byte_count": 4096,
+        "window": {
+          "window_id": 1,
+          "start_epoch": 1,
+          "end_epoch": 2048,
+          "ready_time_us": 10240.0,
+          "payload": {
+            "histogram": {
+              "type": "ndarray",
+              "shape": [
+                32,
+                32
+              ],
+              "min": 0.0,
+              "max": 0.01025390625,
+              "mean": 0.0009765625,
+              "std": 0.001030166051350534
+            },
+            "target_params": {
+              "sigma": 0.21351367446602076,
+              "mu_q": 0.016601496387454805,
+              "mu_p": -0.002843343628660356,
+              "theta_deg": 0.1023309962636268
+            },
+            "diagnostics": {
+              "valid_window": true,
+              "overflow_ratio": 0.2783203125,
+              "overflow_alert": true,
+              "window_ler": 0.35498046875,
+              "mean_abs_residual_q": 0.696724161348903,
+              "mean_abs_residual_p": 0.7073410653518835,
+              "mean_correction_norm": 1.078995387925083,
+              "active_version_counts": {
+                "0": 2048
+              }
+            },
+            "window_stats": {
+              "n_cycles": 2048,
+              "epoch_start": 1,
+              "epoch_end": 2048,
+              "mean_syndrome_q": 0.006916358135640621,
+              "mean_syndrome_p": 0.01583103509619832,
+              "std_syndrome_q": 0.802109317221936,
+              "std_syndrome_p": 0.818063710292341
+            }
+          }
+        },
+        "metadata": {
+          "backend": "mock_fpga"
+        }
+      },
+      "active_params": {
+        "K": [
+          [
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0
+          ]
+        ],
+        "b": [
+          0.0,
+          0.0
+        ],
+        "metadata": {}
+      },
+      "started_epoch": 2048,
+      "started_time_us": 10240.0,
+      "ready_time_us": 11537.375933087036,
+      "latency": {
+        "dma_us": 7.4674782225878165,
+        "preprocess_us": 57.80889258282054,
+        "inference_us": 1210.9164126542369,
+        "writeback_us": 21.183149627392044,
+        "commit_ack_us": 6.889250658636514,
+        "fast_cycle_us": null,
+        "total_us": 1304.2651837456738,
+        "metadata": {}
+      },
+      "completed_epoch": 2308,
+      "completed_time_us": 11540.0,
+      "proposed_params": {
+        "K": [
+          [
+            0.9616250995982203,
+            -0.00039710814840760534
+          ],
+          [
+            -0.0003971081484076055,
+            0.9120594735870118
+          ]
+        ],
+        "b": [
+          -0.001986967321338824,
+          0.0009083663915382795
+        ],
+        "metadata": {
+          "prediction": {
+            "sigma": 0.6999586505078914,
+            "mu_q": -0.05188709818220589,
+            "mu_p": 0.0105636299771621,
+            "theta_deg": -0.4590010411045098,
+            "source": "model_artifact",
+            "metadata": {
+              "artifact_path": "/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/artifacts/models/static_theta_v2/tiny_cnn_20260319_151717_b87c6c227b57_int8_20260319_151756.npz",
+              "model_type": "tiny_cnn_int8",
+              "label_names": [
+                "sigma",
+                "mu_q",
+                "mu_p",
+                "theta_deg"
+              ],
+              "raw_prediction": {
+                "sigma": 0.6999586505078914,
+                "mu_q": -0.05188709818220589,
+                "mu_p": 0.0105636299771621,
+                "theta_deg": -0.4590010411045098
+              },
+              "window_id": 1,
+              "window_diagnostics": {
+                "valid_window": true,
+                "overflow_ratio": 0.2783203125,
+                "overflow_alert": true,
+                "window_ler": 0.35498046875,
+                "mean_abs_residual_q": 0.696724161348903,
+                "mean_abs_residual_p": 0.7073410653518835,
+                "mean_correction_norm": 1.078995387925083,
+                "active_version_counts": {
+                  "0": 2048
+                }
+              },
+              "inference_service_mode": "subprocess",
+              "inference_service_backend": "artifact_npz"
+            }
+          },
+          "error_cov": [
+            [
+              0.4899201812525108,
+              -0.002737546085437242
+            ],
+            [
+              -0.0027375460854372428,
+              0.14822942017561824
+            ]
+          ],
+          "measurement_cov": [
+            [
+              0.11631578947368423,
+              0.0
+            ],
+            [
+              0.0,
+              0.11631578947368423
+            ]
+          ],
+          "gain_eigvals_raw": [
+            0.5602814612701635,
+            0.8081414046559959
+          ],
+          "gain_eigvals_clipped": [
+            0.5602814612701635,
+            0.8081414046559959
+          ],
+          "theta_deg_clipped": -0.4590010411045098,
+          "sigma_ratio_p": 0.55,
+          "runtime_mode": "model_artifact",
+          "window_id": 1,
+          "window_diagnostics": {
+            "valid_window": true,
+            "overflow_ratio": 0.2783203125,
+            "overflow_alert": true,
+            "window_ler": 0.35498046875,
+            "mean_abs_residual_q": 0.696724161348903,
+            "mean_abs_residual_p": 0.7073410653518835,
+            "mean_correction_norm": 1.078995387925083,
+            "active_version_counts": {
+              "0": 2048
+            }
+          }
+        }
+      },
+      "commit": {
+        "target_bank": "B",
+        "commit_epoch": 2309,
+        "version": 1,
+        "ack_delay_us": 6.889250658636514
+      }
+    },
+    {
+      "kind": "slow_update_started",
+      "job_id": 2,
+      "readout": {
+        "buffer_id": 1,
+        "byte_count": 4096,
+        "window": {
+          "window_id": 2,
+          "start_epoch": 4001,
+          "end_epoch": 6048,
+          "ready_time_us": 30240.0,
+          "payload": {
+            "histogram": {
+              "type": "ndarray",
+              "shape": [
+                32,
+                32
+              ],
+              "min": 0.0,
+              "max": 0.0126953125,
+              "mean": 0.0009765625,
+              "std": 0.0010977847268804908
+            },
+            "target_params": {
+              "sigma": 0.40255877730027895,
+              "mu_q": 0.060229059323221354,
+              "mu_p": 0.23810557196533702,
+              "theta_deg": 0.08383051522989964
+            },
+            "diagnostics": {
+              "valid_window": true,
+              "overflow_ratio": 0.265625,
+              "overflow_alert": true,
+              "window_ler": 0.48046875,
+              "mean_abs_residual_q": 0.6851693277614235,
+              "mean_abs_residual_p": 0.7163254736405981,
+              "mean_correction_norm": 1.0155931607134046,
+              "active_version_counts": {
+                "1": 2048
+              }
+            },
+            "window_stats": {
+              "n_cycles": 2048,
+              "epoch_start": 4001,
+              "epoch_end": 6048,
+              "mean_syndrome_q": 0.03372481791302562,
+              "mean_syndrome_p": 0.05003369692713022,
+              "std_syndrome_q": 0.7845703928253084,
+              "std_syndrome_p": 0.8403224494863025
+            }
+          }
+        },
+        "metadata": {
+          "backend": "mock_fpga"
+        }
+      },
+      "active_params": {
+        "K": [
+          [
+            0.9616250995982203,
+            -0.00039710814840760534
+          ],
+          [
+            -0.0003971081484076055,
+            0.9120594735870118
+          ]
+        ],
+        "b": [
+          -0.001986967321338824,
+          0.0009083663915382795
+        ],
+        "metadata": {
+          "prediction": {
+            "sigma": 0.6999586505078914,
+            "mu_q": -0.05188709818220589,
+            "mu_p": 0.0105636299771621,
+            "theta_deg": -0.4590010411045098,
+            "source": "model_artifact",
+            "metadata": {
+              "artifact_path": "/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/artifacts/models/static_theta_v2/tiny_cnn_20260319_151717_b87c6c227b57_int8_20260319_151756.npz",
+              "model_type": "tiny_cnn_int8",
+              "label_names": [
+                "sigma",
+                "mu_q",
+                "mu_p",
+                "theta_deg"
+              ],
+              "raw_prediction": {
+                "sigma": 0.6999586505078914,
+                "mu_q": -0.05188709818220589,
+                "mu_p": 0.0105636299771621,
+                "theta_deg": -0.4590010411045098
+              },
+              "window_id": 1,
+              "window_diagnostics": {
+                "valid_window": true,
+                "overflow_ratio": 0.2783203125,
+                "overflow_alert": true,
+                "window_ler": 0.35498046875,
+                "mean_abs_residual_q": 0.696724161348903,
+                "mean_abs_residual_p": 0.7073410653518835,
+                "mean_correction_norm": 1.078995387925083,
+                "active_version_counts": {
+                  "0": 2048
+                }
+              },
+              "inference_service_mode": "subprocess",
+              "inference_service_backend": "artifact_npz"
+            }
+          },
+          "error_cov": [
+            [
+              0.4899201812525108,
+              -0.002737546085437242
+            ],
+            [
+              -0.0027375460854372428,
+              0.14822942017561824
+            ]
+          ],
+          "measurement_cov": [
+            [
+              0.11631578947368423,
+              0.0
+            ],
+            [
+              0.0,
+              0.11631578947368423
+            ]
+          ],
+          "gain_eigvals_raw": [
+            0.5602814612701635,
+            0.8081414046559959
+          ],
+          "gain_eigvals_clipped": [
+            0.5602814612701635,
+            0.8081414046559959
+          ],
+          "theta_deg_clipped": -0.4590010411045098,
+          "sigma_ratio_p": 0.55,
+          "runtime_mode": "model_artifact",
+          "window_id": 1,
+          "window_diagnostics": {
+            "valid_window": true,
+            "overflow_ratio": 0.2783203125,
+            "overflow_alert": true,
+            "window_ler": 0.35498046875,
+            "mean_abs_residual_q": 0.696724161348903,
+            "mean_abs_residual_p": 0.7073410653518835,
+            "mean_correction_norm": 1.078995387925083,
+            "active_version_counts": {
+              "0": 2048
+            }
+          }
+        }
+      },
+      "started_epoch": 6048,
+      "started_time_us": 30240.0,
+      "ready_time_us": 31375.322759428527,
+      "latency": {
+        "dma_us": 10.061885682707562,
+        "preprocess_us": 52.25772947320451,
+        "inference_us": 1055.8292911261628,
+        "writeback_us": 17.173853146455244,
+        "commit_ack_us": 4.919221946627485,
+        "fast_cycle_us": null,
+        "total_us": 1140.2419813751576,
+        "metadata": {}
+      }
+    },
+    {
+      "kind": "slow_update_finished",
+      "job_id": 2,
+      "readout": {
+        "buffer_id": 1,
+        "byte_count": 4096,
+        "window": {
+          "window_id": 2,
+          "start_epoch": 4001,
+          "end_epoch": 6048,
+          "ready_time_us": 30240.0,
+          "payload": {
+            "histogram": {
+              "type": "ndarray",
+              "shape": [
+                32,
+                32
+              ],
+              "min": 0.0,
+              "max": 0.0126953125,
+              "mean": 0.0009765625,
+              "std": 0.0010977847268804908
+            },
+            "target_params": {
+              "sigma": 0.40255877730027895,
+              "mu_q": 0.060229059323221354,
+              "mu_p": 0.23810557196533702,
+              "theta_deg": 0.08383051522989964
+            },
+            "diagnostics": {
+              "valid_window": true,
+              "overflow_ratio": 0.265625,
+              "overflow_alert": true,
+              "window_ler": 0.48046875,
+              "mean_abs_residual_q": 0.6851693277614235,
+              "mean_abs_residual_p": 0.7163254736405981,
+              "mean_correction_norm": 1.0155931607134046,
+              "active_version_counts": {
+                "1": 2048
+              }
+            },
+            "window_stats": {
+              "n_cycles": 2048,
+              "epoch_start": 4001,
+              "epoch_end": 6048,
+              "mean_syndrome_q": 0.03372481791302562,
+              "mean_syndrome_p": 0.05003369692713022,
+              "std_syndrome_q": 0.7845703928253084,
+              "std_syndrome_p": 0.8403224494863025
+            }
+          }
+        },
+        "metadata": {
+          "backend": "mock_fpga"
+        }
+      },
+      "active_params": {
+        "K": [
+          [
+            0.9616250995982203,
+            -0.00039710814840760534
+          ],
+          [
+            -0.0003971081484076055,
+            0.9120594735870118
+          ]
+        ],
+        "b": [
+          -0.001986967321338824,
+          0.0009083663915382795
+        ],
+        "metadata": {
+          "prediction": {
+            "sigma": 0.6999586505078914,
+            "mu_q": -0.05188709818220589,
+            "mu_p": 0.0105636299771621,
+            "theta_deg": -0.4590010411045098,
+            "source": "model_artifact",
+            "metadata": {
+              "artifact_path": "/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/artifacts/models/static_theta_v2/tiny_cnn_20260319_151717_b87c6c227b57_int8_20260319_151756.npz",
+              "model_type": "tiny_cnn_int8",
+              "label_names": [
+                "sigma",
+                "mu_q",
+                "mu_p",
+                "theta_deg"
+              ],
+              "raw_prediction": {
+                "sigma": 0.6999586505078914,
+                "mu_q": -0.05188709818220589,
+                "mu_p": 0.0105636299771621,
+                "theta_deg": -0.4590010411045098
+              },
+              "window_id": 1,
+              "window_diagnostics": {
+                "valid_window": true,
+                "overflow_ratio": 0.2783203125,
+                "overflow_alert": true,
+                "window_ler": 0.35498046875,
+                "mean_abs_residual_q": 0.696724161348903,
+                "mean_abs_residual_p": 0.7073410653518835,
+                "mean_correction_norm": 1.078995387925083,
+                "active_version_counts": {
+                  "0": 2048
+                }
+              },
+              "inference_service_mode": "subprocess",
+              "inference_service_backend": "artifact_npz"
+            }
+          },
+          "error_cov": [
+            [
+              0.4899201812525108,
+              -0.002737546085437242
+            ],
+            [
+              -0.0027375460854372428,
+              0.14822942017561824
+            ]
+          ],
+          "measurement_cov": [
+            [
+              0.11631578947368423,
+              0.0
+            ],
+            [
+              0.0,
+              0.11631578947368423
+            ]
+          ],
+          "gain_eigvals_raw": [
+            0.5602814612701635,
+            0.8081414046559959
+          ],
+          "gain_eigvals_clipped": [
+            0.5602814612701635,
+            0.8081414046559959
+          ],
+          "theta_deg_clipped": -0.4590010411045098,
+          "sigma_ratio_p": 0.55,
+          "runtime_mode": "model_artifact",
+          "window_id": 1,
+          "window_diagnostics": {
+            "valid_window": true,
+            "overflow_ratio": 0.2783203125,
+            "overflow_alert": true,
+            "window_ler": 0.35498046875,
+            "mean_abs_residual_q": 0.696724161348903,
+            "mean_abs_residual_p": 0.7073410653518835,
+            "mean_correction_norm": 1.078995387925083,
+            "active_version_counts": {
+              "0": 2048
+            }
+          }
+        }
+      },
+      "started_epoch": 6048,
+      "started_time_us": 30240.0,
+      "ready_time_us": 31375.322759428527,
+      "latency": {
+        "dma_us": 10.061885682707562,
+        "preprocess_us": 52.25772947320451,
+        "inference_us": 1055.8292911261628,
+        "writeback_us": 17.173853146455244,
+        "commit_ack_us": 4.919221946627485,
+        "fast_cycle_us": null,
+        "total_us": 1140.2419813751576,
+        "metadata": {}
+      },
+      "completed_epoch": 6276,
+      "completed_time_us": 31380.0,
+      "proposed_params": {
+        "K": [
+          [
+            0.9304673891637001,
+            -0.0004692638997001508
+          ],
+          [
+            -0.0004692638997001509,
+            0.8409752838618171
+          ]
+        ],
+        "b": [
+          -0.0029661712432323415,
+          0.0032804885852778126
+        ],
+        "metadata": {
+          "prediction": {
+            "sigma": 0.6948039398511494,
+            "mu_q": -0.03556210161855486,
+            "mu_p": 0.028861166636631692,
+            "theta_deg": -0.17425172578727507,
+            "source": "model_artifact",
+            "metadata": {
+              "artifact_path": "/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/artifacts/models/static_theta_v2/tiny_cnn_20260319_151717_b87c6c227b57_int8_20260319_151756.npz",
+              "model_type": "tiny_cnn_int8",
+              "label_names": [
+                "sigma",
+                "mu_q",
+                "mu_p",
+                "theta_deg"
+              ],
+              "raw_prediction": {
+                "sigma": 0.6948039398511494,
+                "mu_q": -0.03556210161855486,
+                "mu_p": 0.028861166636631692,
+                "theta_deg": -0.17425172578727507
+              },
+              "window_id": 2,
+              "window_diagnostics": {
+                "valid_window": true,
+                "overflow_ratio": 0.265625,
+                "overflow_alert": true,
+                "window_ler": 0.48046875,
+                "mean_abs_residual_q": 0.6851693277614235,
+                "mean_abs_residual_p": 0.7163254736405981,
+                "mean_correction_norm": 1.0155931607134046,
+                "active_version_counts": {
+                  "1": 2048
+                }
+              },
+              "inference_service_mode": "subprocess",
+              "inference_service_backend": "artifact_npz"
+            }
+          },
+          "error_cov": [
+            [
+              0.4827494004187792,
+              -0.0010240485205514477
+            ],
+            [
+              -0.0010240485205514477,
+              0.14603575015078607
+            ]
+          ],
+          "measurement_cov": [
+            [
+              0.11631578947368423,
+              0.0
+            ],
+            [
+              0.0,
+              0.11631578947368423
+            ]
+          ],
+          "gain_eigvals_raw": [
+            0.5566362200179963,
+            0.8058388523686605
+          ],
+          "gain_eigvals_clipped": [
+            0.5566362200179963,
+            0.8058388523686605
+          ],
+          "theta_deg_clipped": -0.17425172578727507,
+          "sigma_ratio_p": 0.55,
+          "runtime_mode": "model_artifact",
+          "window_id": 2,
+          "window_diagnostics": {
+            "valid_window": true,
+            "overflow_ratio": 0.265625,
+            "overflow_alert": true,
+            "window_ler": 0.48046875,
+            "mean_abs_residual_q": 0.6851693277614235,
+            "mean_abs_residual_p": 0.7163254736405981,
+            "mean_correction_norm": 1.0155931607134046,
+            "active_version_counts": {
+              "1": 2048
+            }
+          }
+        }
+      },
+      "commit": {
+        "target_bank": "A",
+        "commit_epoch": 6277,
+        "version": 2,
+        "ack_delay_us": 4.919221946627485
+      }
+    }
+  ],
+  "commit_requests": [
+    {
+      "job_id": 1,
+      "window_id": 1,
+      "epoch_id": 2308,
+      "time_us": 11540.0,
+      "target_bank": "B",
+      "commit_epoch": 2309,
+      "version": 1,
+      "ack_delay_us": 6.889250658636514
+    },
+    {
+      "job_id": 2,
+      "window_id": 2,
+      "epoch_id": 6276,
+      "time_us": 31380.0,
+      "target_bank": "A",
+      "commit_epoch": 6277,
+      "version": 2,
+      "ack_delay_us": 4.919221946627485
+    }
+  ],
+  "commit_acks": [
+    {
+      "epoch_id": 2311,
+      "time_us": 11555.0,
+      "active_bank": "B"
+    },
+    {
+      "epoch_id": 6278,
+      "time_us": 31390.0,
+      "active_bank": "A"
+    }
+  ]
+}

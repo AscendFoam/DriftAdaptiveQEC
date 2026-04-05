@@ -1,0 +1,594 @@
+{
+  "backend": "mock",
+  "requested_n_slow_updates": 900,
+  "n_fast_cycles": 3600000,
+  "n_windows_ready": 900,
+  "n_slow_updates_started": 900,
+  "n_slow_updates_finished": 900,
+  "n_slow_updates_failed": 0,
+  "n_commits_requested": 900,
+  "n_commit_acks_observed": 900,
+  "n_commits_applied": 900,
+  "slow_update_budget_us": 5000.0,
+  "fast_cycle_budget_us": 1.5,
+  "slow_update_mean_us": 1000.6798920783252,
+  "slow_update_p95_us": 1266.1337939440984,
+  "slow_update_p99_us": 1343.570642272065,
+  "slow_update_violation_rate": 0.0,
+  "fast_cycle_mean_us": 1.0,
+  "fast_cycle_p95_us": 1.1974,
+  "fast_cycle_p99_us": 1.27912,
+  "fast_cycle_violation_rate": 1.888888888888889e-05,
+  "window_drop_count": 0,
+  "pending_windows_at_end": 0,
+  "dma_timeouts": 0,
+  "axi_write_failures": 0,
+  "cnn_infer_failures": 0,
+  "failure_reason_counts": {},
+  "artifact_path": null,
+  "inference_service_mode": "inproc",
+  "final_ler": 0.8098447222222223,
+  "overflow_rate": 0.0024669444444444443,
+  "overflow_any_rate": 0.0024669444444444443,
+  "histogram_input_saturation_rate": 0.0024669444444444443,
+  "correction_saturation_rate": 0.0,
+  "correction_clip_saturation_rate": 0.0,
+  "correction_fixed_point_saturation_rate": 0.0,
+  "aggressive_param_rate": 0.0,
+  "aggressive_param_gain_rate": 0.0,
+  "aggressive_param_bias_rate": 0.0,
+  "aggressive_param_correction_rate": 0.0,
+  "dominant_overflow_source": "histogram_input",
+  "final_snapshot": {
+    "backend": "mock",
+    "epoch_id": 3600000,
+    "time_us": 18000000.0,
+    "started": true,
+    "fast_cycle_budget_violations": 68,
+    "dropped_dma_buffers": 0,
+    "pending_commit_ack_time_us": null,
+    "status": {
+      "ready": true,
+      "hist_ready": false,
+      "commit_ack": true,
+      "overflow_alert": false,
+      "epoch_id": 3600000,
+      "time_us": 18000000.0,
+      "active_bank": "A",
+      "active_version": 900,
+      "pending_commit": false,
+      "pending_dma_buffers": 0
+    },
+    "dma": {
+      "pending_buffers": 0,
+      "buffer_ids": []
+    },
+    "param_bank": {
+      "epoch_id": 3600000,
+      "active_bank": "A",
+      "staging_bank": "B",
+      "active_version": 900,
+      "pending_commit": null,
+      "banks": {
+        "A": {
+          "version": 900,
+          "params": {
+            "K": [
+              [
+                0.8363551444005026,
+                0.06721558502433185
+              ],
+              [
+                0.06721558502433185,
+                0.6761463145383644
+              ]
+            ],
+            "b": [
+              0.0004370362841949073,
+              0.001405773523174903
+            ],
+            "metadata": {
+              "prediction": {
+                "sigma": 0.8481805445797038,
+                "mu_q": 0.009566004462837585,
+                "mu_p": 0.008092676792856256,
+                "theta_deg": 20.0,
+                "source": "ukf_baseline",
+                "metadata": {
+                  "window_id": 900,
+                  "measurement_prediction": {
+                    "sigma": 0.85,
+                    "mu_q": 0.008674673838684088,
+                    "mu_p": 0.02361438989419555,
+                    "theta_deg": 20.0,
+                    "source": "window_variance",
+                    "metadata": {
+                      "window_id": 900,
+                      "observation": {
+                        "valid": true,
+                        "total_mass": 1.0,
+                        "mean_q": 0.008674673838684088,
+                        "mean_p": 0.02361438989419555,
+                        "covariance": [
+                          [
+                            0.6909239741187861,
+                            0.01573927269388052
+                          ],
+                          [
+                            0.01573927269388052,
+                            0.8832659354731922
+                          ]
+                        ],
+                        "eigenvalues": [
+                          0.8845453638733619,
+                          0.6896445457186164
+                        ],
+                        "principal_axis": [
+                          0.0810216647317141,
+                          0.9967123405697864
+                        ],
+                        "anisotropy_ratio": 0.22034010477573304
+                      },
+                      "measurement_var_floor": 0.11631578947368423,
+                      "sigma_ratio_p": 0.55,
+                      "sigma_estimate_raw": 1.0148828513825676,
+                      "mu_q_estimate_raw": 0.008674673838684088,
+                      "mu_p_estimate_raw": 0.02361438989419555,
+                      "theta_estimate_raw_deg": 20.0
+                    }
+                  },
+                  "innovation": {
+                    "sigma": 0.0018226191407758607,
+                    "mu_q": -0.0012060380972665694,
+                    "mu_p": 0.02100205785347858,
+                    "theta_deg": 0.0
+                  },
+                  "state_after_update": {
+                    "sigma": 0.8481805445797038,
+                    "mu_q": 0.009566004462837585,
+                    "mu_p": 0.008092676792856256,
+                    "theta_deg": 20.0,
+                    "v_sigma": 0.04244591200368924,
+                    "v_mu_q": 0.0007251102821611067,
+                    "v_mu_p": 0.0002202529091963471,
+                    "v_theta_deg": 4.7504141337307
+                  },
+                  "kalman_gain_diag": [
+                    0.0017358099719758401,
+                    0.26094322710564666,
+                    0.2609432271053179,
+                    0.0
+                  ],
+                  "covariance_diag": [
+                    4.710918382055963e-05,
+                    0.000688358067764105,
+                    0.0006883580677625306,
+                    0.2025,
+                    0.002724128089312287,
+                    2.75619751747361e-05,
+                    2.7561975174826336e-05,
+                    9.395127759748258
+                  ],
+                  "ukf_params": {
+                    "alpha": 0.3,
+                    "beta": 2.0,
+                    "kappa": 0.0,
+                    "velocity_decay": 1.0
+                  },
+                  "window_diagnostics": {
+                    "valid_window": true,
+                    "overflow_ratio": 0.0029296875,
+                    "overflow_any_ratio": 0.0029296875,
+                    "overflow_alert": false,
+                    "histogram_input_saturation_ratio": 0.0029296875,
+                    "histogram_input_saturation_q_ratio": 0.001953125,
+                    "histogram_input_saturation_p_ratio": 0.0009765625,
+                    "decoder_input_saturation_ratio": 0.08349609375,
+                    "decoder_input_saturation_q_ratio": 0.03515625,
+                    "decoder_input_saturation_p_ratio": 0.048828125,
+                    "correction_saturation_ratio": 0.0,
+                    "correction_saturation_q_ratio": 0.0,
+                    "correction_saturation_p_ratio": 0.0,
+                    "correction_clip_saturation_ratio": 0.0,
+                    "correction_fixed_point_saturation_ratio": 0.0,
+                    "aggressive_param_ratio": 0.0,
+                    "aggressive_param_gain_ratio": 0.0,
+                    "aggressive_param_bias_ratio": 0.0,
+                    "aggressive_param_correction_ratio": 0.0,
+                    "aggressive_with_histogram_saturation_ratio": 0.0,
+                    "aggressive_with_correction_saturation_ratio": 0.0,
+                    "dominant_overflow_source": "histogram_input",
+                    "window_ler": 0.62890625,
+                    "mean_abs_residual_q": 0.7087935857219565,
+                    "mean_abs_residual_p": 0.8606021043912763,
+                    "mean_correction_norm": 0.8813242918428965,
+                    "mean_correction_utilization": 0.3050168072416577,
+                    "mean_active_param_max_gain": 0.8608197999596965,
+                    "mean_active_param_bias_norm": 0.001349912435853615,
+                    "active_version_counts": {
+                      "899": 2048
+                    }
+                  }
+                }
+              },
+              "error_cov": [
+                [
+                  0.6607121158786532,
+                  0.1612717601570103
+                ],
+                [
+                  0.1612717601570103,
+                  0.2763197167764355
+                ]
+              ],
+              "measurement_cov": [
+                [
+                  0.11631578947368423,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.11631578947368423
+                ]
+              ],
+              "gain_eigvals_raw": [
+                0.6516838354250011,
+                0.8608206686163317
+              ],
+              "gain_eigvals_clipped": [
+                0.6516838354250011,
+                0.8608206686163317
+              ],
+              "gain_eigvals_scaled": [
+                0.6516838354250011,
+                0.8608206686163317
+              ],
+              "gain_scale": 1.0,
+              "theta_deg_clipped": 20.0,
+              "sigma_ratio_p": 0.55,
+              "param_aggressiveness": {
+                "max_gain": 0.8608196166281485,
+                "bias_norm": 0.0014721412677329822,
+                "gain_threshold": 1.08,
+                "bias_threshold": 0.6266570686577501,
+                "gain_flag": false,
+                "bias_flag": false,
+                "aggressive": false
+              },
+              "runtime_mode": "ukf",
+              "window_id": 900,
+              "window_diagnostics": {
+                "valid_window": true,
+                "overflow_ratio": 0.0029296875,
+                "overflow_any_ratio": 0.0029296875,
+                "overflow_alert": false,
+                "histogram_input_saturation_ratio": 0.0029296875,
+                "histogram_input_saturation_q_ratio": 0.001953125,
+                "histogram_input_saturation_p_ratio": 0.0009765625,
+                "decoder_input_saturation_ratio": 0.08349609375,
+                "decoder_input_saturation_q_ratio": 0.03515625,
+                "decoder_input_saturation_p_ratio": 0.048828125,
+                "correction_saturation_ratio": 0.0,
+                "correction_saturation_q_ratio": 0.0,
+                "correction_saturation_p_ratio": 0.0,
+                "correction_clip_saturation_ratio": 0.0,
+                "correction_fixed_point_saturation_ratio": 0.0,
+                "aggressive_param_ratio": 0.0,
+                "aggressive_param_gain_ratio": 0.0,
+                "aggressive_param_bias_ratio": 0.0,
+                "aggressive_param_correction_ratio": 0.0,
+                "aggressive_with_histogram_saturation_ratio": 0.0,
+                "aggressive_with_correction_saturation_ratio": 0.0,
+                "dominant_overflow_source": "histogram_input",
+                "window_ler": 0.62890625,
+                "mean_abs_residual_q": 0.7087935857219565,
+                "mean_abs_residual_p": 0.8606021043912763,
+                "mean_correction_norm": 0.8813242918428965,
+                "mean_correction_utilization": 0.3050168072416577,
+                "mean_active_param_max_gain": 0.8608197999596965,
+                "mean_active_param_bias_norm": 0.001349912435853615,
+                "active_version_counts": {
+                  "899": 2048
+                }
+              }
+            }
+          }
+        },
+        "B": {
+          "version": 899,
+          "params": {
+            "K": [
+              [
+                0.8363548538807466,
+                0.06721566064235632
+              ],
+              [
+                0.06721566064235633,
+                0.6761458437825038
+              ]
+            ],
+            "b": [
+              0.00031646578755195793,
+              0.0013122014925322264
+            ],
+            "metadata": {
+              "prediction": {
+                "sigma": 0.8481796192779524,
+                "mu_q": 0.009116045475962047,
+                "mu_p": 0.0030809140340643413,
+                "theta_deg": 20.0,
+                "source": "ukf_baseline",
+                "metadata": {
+                  "window_id": 899,
+                  "measurement_prediction": {
+                    "sigma": 0.85,
+                    "mu_q": 0.024991322249542258,
+                    "mu_p": 0.01569702885095215,
+                    "theta_deg": 20.0,
+                    "source": "window_variance",
+                    "metadata": {
+                      "window_id": 899,
+                      "observation": {
+                        "valid": true,
+                        "total_mass": 1.0,
+                        "mean_q": 0.024991322249542258,
+                        "mean_p": 0.01569702885095215,
+                        "covariance": [
+                          [
+                            0.7039259463443734,
+                            0.019570622163815277
+                          ],
+                          [
+                            0.019570622163815277,
+                            0.86707489281023
+                          ]
+                        ],
+                        "eigenvalues": [
+                          0.8693896556872374,
+                          0.7016111834673661
+                        ],
+                        "principal_axis": [
+                          0.1174586856068174,
+                          0.99307776995335
+                        ],
+                        "anisotropy_ratio": 0.19298420578428133
+                      },
+                      "measurement_var_floor": 0.11631578947368423,
+                      "sigma_ratio_p": 0.55,
+                      "sigma_estimate_raw": 1.0136758749372201,
+                      "mu_q_estimate_raw": 0.024991322249542258,
+                      "mu_p_estimate_raw": 0.01569702885095215,
+                      "theta_estimate_raw_deg": 20.0
+                    }
+                  },
+                  "innovation": {
+                    "sigma": 0.0018235492830350752,
+                    "mu_q": 0.021480456381461906,
+                    "mu_p": 0.017070562478553028,
+                    "theta_deg": 0.0
+                  },
+                  "state_after_update": {
+                    "sigma": 0.8481796192779524,
+                    "mu_q": 0.009116045475962047,
+                    "mu_p": 0.0030809140340643413,
+                    "theta_deg": 20.0,
+                    "v_sigma": 0.0424235134722821,
+                    "v_mu_q": 0.0007646664599885984,
+                    "v_mu_p": -0.00046858199334736815,
+                    "v_theta_deg": 4.750413228913047
+                  },
+                  "kalman_gain_diag": [
+                    0.001737579026220107,
+                    0.26094322710566475,
+                    0.2609432271057831,
+                    0.0
+                  ],
+                  "covariance_diag": [
+                    4.712050576780211e-05,
+                    0.0006883580677641744,
+                    0.0006883580677640259,
+                    0.2025000000000004,
+                    0.002721457437514318,
+                    2.756197517471054e-05,
+                    2.756197517479483e-05,
+                    9.380726372439419
+                  ],
+                  "ukf_params": {
+                    "alpha": 0.3,
+                    "beta": 2.0,
+                    "kappa": 0.0,
+                    "velocity_decay": 1.0
+                  },
+                  "window_diagnostics": {
+                    "valid_window": true,
+                    "overflow_ratio": 0.00146484375,
+                    "overflow_any_ratio": 0.00146484375,
+                    "overflow_alert": false,
+                    "histogram_input_saturation_ratio": 0.00146484375,
+                    "histogram_input_saturation_q_ratio": 0.0009765625,
+                    "histogram_input_saturation_p_ratio": 0.00048828125,
+                    "decoder_input_saturation_ratio": 0.0869140625,
+                    "decoder_input_saturation_q_ratio": 0.0361328125,
+                    "decoder_input_saturation_p_ratio": 0.05322265625,
+                    "correction_saturation_ratio": 0.0,
+                    "correction_saturation_q_ratio": 0.0,
+                    "correction_saturation_p_ratio": 0.0,
+                    "correction_clip_saturation_ratio": 0.0,
+                    "correction_fixed_point_saturation_ratio": 0.0,
+                    "aggressive_param_ratio": 0.0,
+                    "aggressive_param_gain_ratio": 0.0,
+                    "aggressive_param_bias_ratio": 0.0,
+                    "aggressive_param_correction_ratio": 0.0,
+                    "aggressive_with_histogram_saturation_ratio": 0.0,
+                    "aggressive_with_correction_saturation_ratio": 0.0,
+                    "dominant_overflow_source": "histogram_input",
+                    "window_ler": 0.62939453125,
+                    "mean_abs_residual_q": 0.7153517047236271,
+                    "mean_abs_residual_p": 0.8591882094420302,
+                    "mean_correction_norm": 0.8813022016760195,
+                    "mean_correction_utilization": 0.3055729931182882,
+                    "mean_active_param_max_gain": 0.8608189578445056,
+                    "mean_active_param_bias_norm": 0.0015572029833796413,
+                    "active_version_counts": {
+                      "898": 2048
+                    }
+                  }
+                }
+              },
+              "error_cov": [
+                [
+                  0.6607106743041005,
+                  0.16127140828626368
+                ],
+                [
+                  0.16127140828626368,
+                  0.27631911388833574
+                ]
+              ],
+              "measurement_cov": [
+                [
+                  0.11631578947368423,
+                  0.0
+                ],
+                [
+                  0.0,
+                  0.11631578947368423
+                ]
+              ],
+              "gain_eigvals_raw": [
+                0.6516833401618322,
+                0.8608204072118169
+              ],
+              "gain_eigvals_clipped": [
+                0.6516833401618322,
+                0.8608204072118169
+              ],
+              "gain_eigvals_scaled": [
+                0.6516833401618322,
+                0.8608204072118169
+              ],
+              "gain_scale": 1.0,
+              "theta_deg_clipped": 20.0,
+              "sigma_ratio_p": 0.55,
+              "param_aggressiveness": {
+                "max_gain": 0.8608193536311026,
+                "bias_norm": 0.001349823452046483,
+                "gain_threshold": 1.08,
+                "bias_threshold": 0.6266570686577501,
+                "gain_flag": false,
+                "bias_flag": false,
+                "aggressive": false
+              },
+              "runtime_mode": "ukf",
+              "window_id": 899,
+              "window_diagnostics": {
+                "valid_window": true,
+                "overflow_ratio": 0.00146484375,
+                "overflow_any_ratio": 0.00146484375,
+                "overflow_alert": false,
+                "histogram_input_saturation_ratio": 0.00146484375,
+                "histogram_input_saturation_q_ratio": 0.0009765625,
+                "histogram_input_saturation_p_ratio": 0.00048828125,
+                "decoder_input_saturation_ratio": 0.0869140625,
+                "decoder_input_saturation_q_ratio": 0.0361328125,
+                "decoder_input_saturation_p_ratio": 0.05322265625,
+                "correction_saturation_ratio": 0.0,
+                "correction_saturation_q_ratio": 0.0,
+                "correction_saturation_p_ratio": 0.0,
+                "correction_clip_saturation_ratio": 0.0,
+                "correction_fixed_point_saturation_ratio": 0.0,
+                "aggressive_param_ratio": 0.0,
+                "aggressive_param_gain_ratio": 0.0,
+                "aggressive_param_bias_ratio": 0.0,
+                "aggressive_param_correction_ratio": 0.0,
+                "aggressive_with_histogram_saturation_ratio": 0.0,
+                "aggressive_with_correction_saturation_ratio": 0.0,
+                "dominant_overflow_source": "histogram_input",
+                "window_ler": 0.62939453125,
+                "mean_abs_residual_q": 0.7153517047236271,
+                "mean_abs_residual_p": 0.8591882094420302,
+                "mean_correction_norm": 0.8813022016760195,
+                "mean_correction_utilization": 0.3055729931182882,
+                "mean_active_param_max_gain": 0.8608189578445056,
+                "mean_active_param_bias_norm": 0.0015572029833796413,
+                "active_version_counts": {
+                  "898": 2048
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "hist_meta": {
+      "buffer_id": 1,
+      "hist_sequence": 900,
+      "overflow_alert": false,
+      "overflow_count": 6
+    },
+    "fast_loop": {
+      "n_fast_cycles": 3600000,
+      "overflow_count": 8881,
+      "overflow_rate": 0.0024669444444444443,
+      "overflow_any_count": 8881,
+      "overflow_any_rate": 0.0024669444444444443,
+      "histogram_input_saturation_count": 8881,
+      "histogram_input_saturation_rate": 0.0024669444444444443,
+      "histogram_input_saturation_q_rate": 0.0010569444444444443,
+      "histogram_input_saturation_p_rate": 0.001411388888888889,
+      "correction_saturation_count": 0,
+      "correction_saturation_rate": 0.0,
+      "correction_saturation_q_rate": 0.0,
+      "correction_saturation_p_rate": 0.0,
+      "correction_clip_saturation_rate": 0.0,
+      "correction_fixed_point_saturation_rate": 0.0,
+      "aggressive_param_count": 0,
+      "aggressive_param_rate": 0.0,
+      "aggressive_param_gain_rate": 0.0,
+      "aggressive_param_bias_rate": 0.0,
+      "aggressive_param_correction_rate": 0.0,
+      "aggressive_with_histogram_saturation_rate": 0.0,
+      "aggressive_with_correction_saturation_rate": 0.0,
+      "dominant_overflow_source": "histogram_input",
+      "final_logical_error_rate": 0.8098447222222223,
+      "tracker": {
+        "total_rounds": 3600000,
+        "logical_x_errors": 1134929,
+        "logical_z_errors": 1780512,
+        "total_logical_errors": 2915441,
+        "x_error_rate": 0.3152580555555556,
+        "z_error_rate": 0.4945866666666667,
+        "total_error_rate": 0.8098447222222223,
+        "accumulated_q": 0.26053939271787524,
+        "accumulated_p": 0.20398176402370405
+      },
+      "latest_record": {
+        "epoch_id": 3600000,
+        "active_version": 900,
+        "noise_state": {
+          "sigma": 0.45,
+          "mu_q": 0.01,
+          "mu_p": -0.01,
+          "theta_deg": 2.1537616598267277
+        },
+        "wrapped_residual": [
+          0.26053939271787524,
+          0.20398176402370405
+        ],
+        "syndrome_saturated": [
+          0,
+          0
+        ],
+        "histogram_input_saturated": [
+          0,
+          0
+        ],
+        "correction_saturated": [
+          0,
+          0
+        ],
+        "param_aggressive": false
+      }
+    }
+  }
+}

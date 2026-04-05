@@ -1,0 +1,99 @@
+{
+  "config_path": "/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/cnn_fpga/config/p4_multiscenario.yaml",
+  "reference_mode": "static_linear",
+  "compare_modes": [
+    "window_variance",
+    "ekf",
+    "cnn_fpga"
+  ],
+  "n_windows_per_scenario": 16,
+  "scenarios": {
+    "static_bias_theta": {
+      "reference_mode": "static_linear",
+      "n_windows": 16,
+      "capture_target_means": {
+        "sigma": 0.2199999988079071,
+        "mu_q": 0.03500000014901161,
+        "mu_p": -0.02500000037252903,
+        "theta_deg": 4.0
+      },
+      "modes": {
+        "window_variance": {
+          "n_windows": 16,
+          "per_label": {
+            "sigma": {
+              "mae": 0.6299999999999999,
+              "rmse": 0.6299999999999999
+            },
+            "mu_q": {
+              "mae": 0.037369815518256556,
+              "rmse": 0.04219866793285091
+            },
+            "mu_p": {
+              "mae": 0.025726106787138506,
+              "rmse": 0.027743061344656348
+            },
+            "theta_deg": {
+              "mae": 6.25,
+              "rmse": 7.810249675906654
+            }
+          },
+          "k_rmse_to_oracle_mean": 0.29678049574625226,
+          "b_rmse_to_oracle_mean": 0.016401820963687454,
+          "max_gain_mean": 0.8929108024965309,
+          "bias_norm_mean": 0.0009177888411528788
+        },
+        "ekf": {
+          "n_windows": 16,
+          "per_label": {
+            "sigma": {
+              "mae": 0.5536985302785095,
+              "rmse": 0.5587493763900047
+            },
+            "mu_q": {
+              "mae": 0.04063431501511383,
+              "rmse": 0.041186940448191614
+            },
+            "mu_p": {
+              "mae": 0.024308022125370865,
+              "rmse": 0.02460002477883898
+            },
+            "theta_deg": {
+              "mae": 2.467789624904798,
+              "rmse": 2.9560220665216015
+            }
+          },
+          "k_rmse_to_oracle_mean": 0.2730537647480148,
+          "b_rmse_to_oracle_mean": 0.016786157435568036,
+          "max_gain_mean": 0.8694827886477143,
+          "bias_norm_mean": 0.0009992107104680168
+        },
+        "cnn_fpga": {
+          "n_windows": 16,
+          "per_label": {
+            "sigma": {
+              "mae": 0.4775635524589141,
+              "rmse": 0.47768361824810607
+            },
+            "mu_q": {
+              "mae": 0.08117270594030743,
+              "rmse": 0.08335217101348627
+            },
+            "mu_p": {
+              "mae": 0.03742747301872412,
+              "rmse": 0.03896703477860352
+            },
+            "theta_deg": {
+              "mae": 2.4213725332284266,
+              "rmse": 2.7256112717361223
+            }
+          },
+          "k_rmse_to_oracle_mean": 0.257855934008989,
+          "b_rmse_to_oracle_mean": 0.02169360972962772,
+          "max_gain_mean": 0.8541123570156173,
+          "bias_norm_mean": 0.007763868835288451
+        }
+      }
+    }
+  }
+}
