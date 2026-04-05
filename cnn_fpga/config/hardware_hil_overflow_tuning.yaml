@@ -1,0 +1,113 @@
+# P3 参数调优实验：以 overflow_rate 为主目标，同时约束 LER 不显著劣化
+experiment:
+  name: hardware_hil_overflow_tuning_v1
+  stage: p3_hil_tuning
+
+# 基础配置直接复用正式 P3 HIL 配置，再覆盖参数映射和 timing
+base_config: hardware_hil.yaml
+
+paths:
+  output_root: runs
+
+tuning:
+  # 基准候选：当前正式 P3 配置
+  baseline_candidate: baseline_current
+
+  # 短扫：先降低总时长，快速看 overflow/LER 的相对趋势
+  short_timing:
+    n_slow_updates: 240
+    n_fast_cycles: 960000
+
+  # 长确认：只对少数候选做正式长度确认
+  confirm_timing:
+    n_slow_updates: 900
+    n_fast_cycles: 3600000
+
+  selection:
+    # 候选 LER 若较当前配置恶化超过该阈值，则不进入长确认
+    ler_tolerance_abs: 0.020
+    confirm_top_k: 3
+
+  # 设计原则：
+  # 1. `gain_clip` 上界必须压到 0.8 以下才可能真实限制当前 adaptive K；
+  # 2. 同时降低 `beta` 和 `alpha`，减小参数更新抖动与偏置注入强度。
+  candidates:
+    - name: baseline_current
+      gain_clip: [0.20, 1.20]
+      beta_smoothing: 0.20
+      alpha_bias: 1.00
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz
+
+    - name: mild_clip
+      gain_clip: [0.15, 0.80]
+      beta_smoothing: 0.15
+      alpha_bias: 0.90
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz
+
+    - name: mild_clip_lowfloor
+      gain_clip: [0.10, 0.80]
+      beta_smoothing: 0.15
+      alpha_bias: 0.90
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz
+
+    - name: mid_clip
+      gain_clip: [0.15, 0.75]
+      beta_smoothing: 0.10
+      alpha_bias: 0.90
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz
+
+    - name: mid_clip_lowfloor
+      gain_clip: [0.10, 0.75]
+      beta_smoothing: 0.10
+      alpha_bias: 0.90
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz
+
+    - name: strong_clip
+      gain_clip: [0.10, 0.70]
+      beta_smoothing: 0.10
+      alpha_bias: 0.80
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz
+
+    - name: strong_clip_slow
+      gain_clip: [0.05, 0.70]
+      beta_smoothing: 0.08
+      alpha_bias: 0.80
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz
+
+    - name: very_conservative
+      gain_clip: [0.05, 0.65]
+      beta_smoothing: 0.05
+      alpha_bias: 0.70
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz

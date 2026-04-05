@@ -62,8 +62,10 @@ DriftAdaptiveQEC/
 │   │   ├── tiny_cnn.py                    # CNN 模型定义
 │   │   ├── train.py                       # 训练入口
 │   │   ├── evaluate.py                    # 回归评估
+│   │   ├── evaluate_tflite.py             # 独立 TFLite 精度评估
 │   │   ├── quantize.py                    # QAT/PTQ + int8 导出
-│   │   └── export.py                      # ONNX/TFLite 导出
+│   │   ├── export.py                      # ONNX/TFLite 导出
+│   │   └── validate_export.py             # artifact 与 TFLite 一致性验收
 │   ├── decoder/
 │   │   ├── param_mapper.py                # (σ,μ,θ) -> (K,b)
 │   │   ├── linear_runtime.py              # 快回路等价软件实现
@@ -74,16 +76,23 @@ DriftAdaptiveQEC/
 │   │   ├── slow_loop_runtime.py           # CNN 推理与参数更新
 │   │   ├── scheduler.py                   # 双回路调度
 │   │   ├── param_bank.py                  # 双缓冲参数切换
-│   │   └── latency_injector.py            # DMA/AXI/推理延迟注入
+│   │   ├── latency_injector.py            # DMA/AXI/推理延迟注入
+│   │   ├── inference_service.py           # 进程内/子进程推理服务
+│   │   └── inference_worker.py            # 独立推理 worker
 │   ├── hwio/
 │   │   ├── axi_map.py                     # 寄存器映射定义
 │   │   ├── dma_client.py                  # DMA 读写接口
 │   │   ├── fpga_driver.py                 # HIL 驱动封装
-│   │   └── mock_fpga.py                   # 无板卡时模拟后端
+│   │   ├── mock_fpga.py                   # 无板卡时模拟后端
+│   │   └── board_backend.py               # 真板卡后端骨架
 │   ├── benchmark/
 │   │   ├── run_static_suite.py
 │   │   ├── run_drift_suite.py
+│   │   ├── run_hardware_emulation.py
 │   │   ├── run_hil_suite.py
+│   │   ├── run_hil_mode_benchmark.py
+│   │   ├── run_p2_mode_benchmark.py
+│   │   ├── run_p3_param_sweep.py
 │   │   └── summarize.py
 │   └── report/
 │       ├── metrics.py
@@ -159,17 +168,32 @@ DriftAdaptiveQEC/
 
 ### 3.6 参数映射与稳定化规则（必须固定，避免训练-部署语义漂移）
 
-给定 CNN 预测输出 `(sigma_hat, mu_q_hat, mu_p_hat, theta_hat)`，建议采用以下确定性映射：
+给定 CNN 预测输出 `(sigma_hat, mu_q_hat, mu_p_hat, theta_hat)`，当前工程主线已经固定为“协方差一致”的确定性映射，不能再使用早期的 `g * R(theta)` 简化式。建议采用以下规则：
 
-1. 增益估计（Wiener 型）  
-   `g_raw = var_signal / (var_signal + sigma_hat^2 + sigma_meas^2 + delta_eff^2)`  
-   `g = clip(g_raw, g_min, g_max)`，推荐 `g_min=0.2`, `g_max=1.2`
-2. 旋转矩阵  
-   `R(theta_hat) = [[cos(theta), -sin(theta)], [sin(theta), cos(theta)]]`，并限制 `theta_hat` 在 `[-20°, +20°]`
-3. 解码参数  
-   `K_target = g * R(theta_hat)`  
-   `b_target = -alpha * [mu_q_hat, mu_p_hat]`，推荐 `alpha in [0.5, 1.0]`
-4. 参数平滑（防止抖动）  
+1. 预测误差协方差  
+   先将 `theta_hat` clip 到 `[-20°, +20°]`，构造旋转矩阵  
+   `R(theta_hat) = [[cos(theta), -sin(theta)], [sin(theta), cos(theta)]]`  
+   设 `sigma_q = sigma_hat`，`sigma_p = sigma_ratio_p * sigma_hat`，则主轴系误差协方差为  
+   `C_principal = diag(sigma_q^2, sigma_p^2)`  
+   实验室坐标系协方差为  
+   `C = R(theta_hat) * C_principal * R(theta_hat)^T`
+2. 测量噪声协方差  
+   用测量效率和有限能量参数折算出等效测量噪声  
+   `R_meas = (sigma_meas^2 + delta_eff^2) * I`
+3. 线性增益矩阵  
+   使用 Wiener / Kalman 风格矩阵形式  
+   `K_raw = C * (C + R_meas)^(-1)`  
+   然后对 `K_raw` 的特征值做裁剪，而不是对单一标量增益裁剪。当前工程实现已经进一步加入“保守缩放”旋钮：  
+   `K_raw = U * diag(lambda_raw) * U^T`  
+   `lambda_clip = clip(lambda_raw, [g_min, g_max])`  
+   `lambda_scaled = clip(lambda_clip * gain_scale, [0, g_max])`  
+   `K_target = U * diag(lambda_scaled) * U^T`  
+   其中 `gain_scale` 只作为工程稳定性调参项，不改变物理映射主线语义；若没有同口径长时 benchmark 支撑，不应随意修改默认值
+4. 偏置项  
+   先验均值 `mu = [mu_q_hat, mu_p_hat]^T` 对应的偏置应写成  
+   `b_target = alpha * (I - K_target) * mu`  
+   不能再写成 `-alpha * mu`，否则在非零均值漂移下会把校正方向推错
+5. 参数平滑（防止抖动）  
    `K_next = (1-beta) * K_prev + beta * K_target`  
    `b_next = (1-beta) * b_prev + beta * b_target`，推荐 `beta=0.1~0.3`
 
@@ -268,11 +292,17 @@ DriftAdaptiveQEC/
 - 慢回路掉帧时快回路稳定运行
 - 极端噪声下无数值溢出
 
-### 5.4 阶段 P3：FPGA 在环实验（HIL）
+### 5.4 阶段 P3：软件 HIL 主线与真板扩展
 
-目标：真实板卡上验证端到端链路。
+目标：先在软件 HIL 中完成端到端链路、部署产物和运行时诊断验证；若未来具备板卡条件，再把相同链路迁移到真板。
 
-步骤：
+软件 HIL 主线步骤：
+1. 以 `mock FPGA backend` 驱动快回路事件推进、直方图窗口、参数 bank 和 commit 时序
+2. 用真实 `.tflite` 或 artifact 子进程模拟 ARM 侧推理服务
+3. 输出周期级/窗口级/运行级诊断，重点跟踪 `LER / commit / overflow breakdown`
+4. 在软件 HIL 口径下完成参数调优、baseline 冻结和统计复现准备
+
+真板扩展步骤（条件具备时再执行）：
 1. 部署 FPGA 快回路 IP（线性解码 + 直方图 + 参数bank）
 2. ARM 运行 TFLite 推理服务
 3. Linux 用户态驱动完成 DMA + AXI 写回
@@ -283,13 +313,136 @@ DriftAdaptiveQEC/
 - 快回路周期违约率 `< 10^-6`
 - HIL 相对行为仿真 LER 偏差 `< 15%`
 
-### 5.5 阶段 P4：对比实验与报告
+当前代码进度对照（截至 2026-04-01）：
+
+- 软件侧 HIL 双回路已经打通，正式结果位于：
+  - [hardware_hil_v1_20260328_012839_7b58cdf75d7a](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/runs/hil_mode_benchmark/hardware_hil_v1_20260328_012839_7b58cdf75d7a)
+- 新统计口径已经补上 `overflow breakdown`，并完成了正式长跑复核：
+  - [hardware_hil_v1_20260330_233853_c9ed542a0cfa](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/runs/hil_mode_benchmark/hardware_hil_v1_20260330_233853_c9ed542a0cfa)
+  - 该轮结果表明，长配置下主导 overflow 来源不是 `correction_saturation`，也不是 `aggressive_param`，而是 `histogram_input`
+- 因此又补做了输入范围侧定向调参，并完成长确认：
+  - [hardware_hil_histogram_tuning_20260331_001959_bfea868ecd4f](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/runs/p3_histogram_tuning/hardware_hil_histogram_tuning_20260331_001959_bfea868ecd4f)
+  - 最优长确认组合：
+    - `syndrome_limit = 1.441311257912825`
+    - `histogram_range_limit = 1.8799712059732503`
+    - `sigma_measurement = 0.03`
+  - 相对旧默认值 baseline，`LER` 从 `1.069503` 降到 `1.046678`，`histogram_input_saturation_rate` 从 `0.387092` 降到 `0.022181`
+- 基于上述结果，正式 HIL 默认配置已切换到新输入范围组合，并完成正式 mode benchmark 复跑：
+  - [hardware_hil_v1_20260331_010329_c128fa34262e](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/runs/hil_mode_benchmark/hardware_hil_v1_20260331_010329_c128fa34262e)
+- 修正 `.tflite` 导出语义后，`float_artifact_mock` 与 `int8_artifact_mock` 已重新对齐：
+  - 旧默认值下：
+    - `fixed_baseline_mock`: `LER = 1.1987018`，`overflow_rate = 0.2972882`
+    - `float_artifact_mock`: `LER = 1.1405753`，`overflow_rate = 0.3935607`
+    - `int8_artifact_mock`: `LER = 1.1407845`，`overflow_rate = 0.3933973`
+  - 新默认值下：
+    - `fixed_baseline_mock`: `LER = 1.1993300`，`overflow_rate = 0.0161568`
+    - `float_artifact_mock`: `LER = 1.1238110`，`overflow_rate = 0.0227638`
+    - `int8_artifact_mock`: `LER = 1.1246990`，`overflow_rate = 0.0226377`
+  - 三种可运行模式在新默认值下仍全部由 `histogram_input` 主导，且 `correction_saturation_rate = 0`、`aggressive_param_rate = 0`
+- 真实 `.tflite` 导出物已在 `/.venvs/tf311` 中独立验证：
+  - float `.tflite`: `MSE = 0.292359`，`R2_mean = 0.994359`
+  - int8 `.tflite`: `MSE = 0.297316`，`R2_mean = 0.994192`
+- `real_board` 当前仍因缺少 `/dev/uio0,/dev/uio1` 被 `skipped_unavailable`
+- 因此，当前更准确的工程判断应是：
+  - `P3-软件HIL`：已通过
+  - `P3-真板HIL`：待板卡与地址表条件具备后继续
+- 如果未来较长时间都无法获得板卡，则项目主线不应停在这里，而应继续推进：
+  - `overflow` 来源拆分与参数收敛
+  - baseline 冻结与多场景复现
+  - 多场景统计复现与报告
+
+截至 `2026-04-01`，在上述软件 HIL 主线之上又完成了一轮正式 P4 多场景对比，且主方案已从“直接回归绝对参数”演进到“teacher + residual-b”：
+
+- runtime-consistent 数据集、训练和运行时链路已经打通：
+  - [manifest.json](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/artifacts/datasets/runtime_b_residual_v1/manifest.json)
+  - [tiny_cnn_20260401_083648_2fc740424c0d.npz](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/artifacts/models/runtime_b_residual_v1/tiny_cnn_20260401_083648_2fc740424c0d.npz)
+  - [eval_test_20260401_083649.json](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/artifacts/reports/runtime_b_residual_v1/eval_test_20260401_083649.json)
+- 对应正式 benchmark 已完成：
+  - [p4_multiscenario_hybrid_b_v1_20260401_083649_41775bdd90b1_11082](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/runs/p4_benchmark/p4_multiscenario_hybrid_b_v1_20260401_083649_41775bdd90b1_11082)
+- 当前 4 个正式场景上的平均 `LER` 为：
+  - `Hybrid Residual-B = 0.850799`
+  - `Constant Residual-Mu = 0.855549`
+  - `EKF = 0.855779`
+  - `Window Variance = 0.857016`
+  - `CNN-FPGA = 0.954315`
+- `Hybrid Residual-B` 在 `linear_ramp / periodic_drift / static_bias_theta / step_sigma_theta` 四个场景下均取得最优 `LER`
+- 本轮正式对比同时表明：
+  - `commit` 与调度链路稳定，`n_commits_applied` 基本均为 `600`
+  - `slow_update_violation_rate = 0`
+  - `correction_saturation_rate = 0`
+  - `aggressive_param_rate = 0`
+  - 当前主导瓶颈依然是 `histogram_input overflow`
+- 但 `static_bias_theta` 场景下 `Hybrid Residual-B` 的跨 seed 波动偏大，需后续做额外 repeat 复查
+
+截至 `2026-04-02`，在冻结模型的前提下，又完成了一轮输入统计范围定向调参与更长配置正式复验：
+
+- 定向调参结果：
+  - [hybrid_b_histogram_tuning_20260401_144804_19d9812a12db](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/runs/p3_histogram_tuning/hybrid_b_histogram_tuning_20260401_144804_19d9812a12db)
+- 当前主线默认输入范围已更新为：
+  - `syndrome_limit = 1.566643`
+  - `histogram_range_limit = 2.255965971`
+- 更长配置正式复验结果：
+  - [p4_multiscenario_hybrid_b_long_v1_20260402_145451_94eb56a87b59_38723](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/runs/p4_benchmark/p4_multiscenario_hybrid_b_long_v1_20260402_145451_94eb56a87b59_38723)
+- 本轮长配置只比较：
+  - `EKF`
+  - `Constant Residual-Mu`
+  - `Hybrid Residual-B`
+- 4 个正式场景上的平均 `LER` 为：
+  - `Hybrid Residual-B = 0.798807`
+  - `Constant Residual-Mu = 0.826193`
+  - `EKF = 0.828108`
+- `Hybrid Residual-B` 在四个场景下继续全部最优，且领先次优模式的幅度扩大到 `0.023~0.032`
+- 三条主线的跨场景平均 `histogram_input_saturation_rate` 已降到约 `0.00254~0.00258`
+- `static_bias_theta` 场景下 `Hybrid Residual-B` 的 `LER std` 也从此前 seed 复查中的 `0.005021` 收敛到 `0.000629`
+
+### 5.5 阶段 P4：多基线统计对比与报告
 
 输出：
 - 静态噪声对比
 - 漂移噪声追踪
 - 非高斯鲁棒性
 - 资源、延迟、功耗综合报告
+
+进入条件调整为：
+
+- `P3-软件HIL` 已通过
+- `.tflite` 部署产物已独立验收
+- `overflow` 来源统计链路已接通
+- baseline 集合与统计口径已冻结
+
+说明：
+
+- `P4` 不再以“必须先拿到真板”为前置条件
+- 若真板长期不可得，则 `P4` 的主结论先以“软件 HIL + 真实 `.tflite` + 严格物理仿真回看”的组合口径完成
+- 真板联调转为后续增强验证，而不是阻塞条件
+- 截至 `2026-04-02`，软件 HIL 主线不仅满足进入 `P4` 的条件，而且已经完成“首轮正式结果 + 新默认值长配置复验”的两轮验证
+
+### 5.5.1 当前 P4 正式口径与工程含义
+
+当前正式 P4 结果对应的核心工程选择如下：
+
+1. 正式对比不再只看旧 `CNN-FPGA`
+
+- 旧 `CNN-FPGA` 仍保留
+- 但它现在主要承担“绝对参数回归基线”的角色
+- 当前主方案已经切到 `Hybrid Residual-B`
+
+2. 当前 CNN 的职责被重新定义为“残差补偿器”
+
+- `Window Variance` 或其它 teacher 先给出稳定的一阶估计
+- CNN 不再独立承担全部参数辨识
+- CNN 只学习对运行时 `b` 的小幅修正
+
+3. 当前最重要的工程瓶颈不是模型量化，而是输入统计范围
+
+- 本轮正式对比里，`float/int8` 不再是主要矛盾
+- 主要 overflow 来源一致落在 `histogram_input`
+- 因而后续优先级应放在窗口统计范围和饱和控制，而不是继续盲目压 gain 或频繁改主模型
+
+4. 当前主线结论已经升级为“优势在更长配置下成立”
+
+- 经过 `2026-04-02` 的更长配置复验后，`Hybrid Residual-B` 对 `EKF / Constant Residual-Mu` 的优势不但保留，而且明显扩大
+- 因此后续主线可以从“继续确认该方向是否有效”，转为“补更强 baseline 与论文级对比”
 
 ### 5.6 分阶段硬门槛（Go/No-Go）
 
@@ -298,8 +451,14 @@ DriftAdaptiveQEC/
 | P0 | `final_gap_mean > 0` 且重复实验标准差可控 | 先修正物理建模与统计代码，不进入 P1 |
 | P1 | 参数回归指标达阈值，int8 退化 < 10% | 扩展数据集并重训，不进入 P2 |
 | P2 | 周期仿真无越界/无切换毛刺，延迟预算达标 | 修复运行时与参数bank，不进入 P3 |
-| P3 | HIL 稳定运行 24h，无严重通信错误 | 驱动和RTL整改后复测 |
-| P4 | 主结论在 2 组以上噪声场景复现 | 增加重复实验与敏感性分析 |
+| P3-软件HIL | 双回路事件推进、artifact/int8/真实 `.tflite` 模式对比可复现，预算/commit 正常 | 修复运行时、导出链路或参数映射，不进入真板联调 |
+| P3-真板HIL | HIL 稳定运行 24h，无严重通信错误 | 驱动和RTL整改后复测 |
+| P4 | 主结论在 2 组以上噪声场景复现，baseline 与统计口径冻结 | 增加重复实验与敏感性分析 |
+
+补充说明：
+
+- `P3-真板HIL` 是强增强项，但在板卡长期不可得时，不再阻塞 `P4`
+- 主线 go/no-go 判断以 `P3-软件HIL -> P4` 为主，真板验证作为条件具备后的追加里程碑
 
 ---
 
@@ -345,7 +504,7 @@ DriftAdaptiveQEC/
 - 对时序曲线使用 block bootstrap 估计置信区间
 - 同时报告效应量（Cohen's d）
 
-### 7.3 基线集合（统一对比口径）
+### 7.3 基线集合（统一对比口径，2026-03-31 冻结）
 
 每个实验场景建议至少比较以下 4 条曲线：
 
@@ -355,6 +514,35 @@ DriftAdaptiveQEC/
 4. CNN-FPGA 协同（本文方案）
 
 MWPM 可作为扩展基线，但不应阻塞主实验流水线。
+
+冻结说明：
+
+- 自 `2026-03-31` 起，`P4` 主线统计对比默认冻结以上 4 条基线
+- `MWPM` 保持为可选增强项，不作为 `P4` 启动前置条件
+- `fixed_baseline / oracle_delayed / fixed_baseline_mock` 继续保留为 `P2/P3` 内部工程校验基线，但不替代 `P4` 的正式对比集合
+
+### 7.3.1 2026-04-02 当前正式运行集合
+
+在正式进入 runtime-consistent `residual-b` 主线后，当前实际运行的正式对比集合扩展为：
+
+1. `Window Variance`
+2. `EKF`
+3. `Constant Residual-Mu`
+4. `CNN-FPGA`
+5. `Hybrid Residual-B`
+
+补充说明：
+
+- `Constant Residual-Mu` 的作用是提供一个公平、低复杂度、可解释的常数残差基线
+- `Hybrid Residual-B` 是当前主线方案，用于回答“在 teacher 已经稳定的前提下，CNN 做残差修正是否还能继续带来收益”
+- `Static Linear` 仍保留为工程锚点基线，但本轮 `hybrid_b` 正式对比的核心竞争关系已经转为上述 5 模式集合
+- 后续若不发生严重反例，不应频繁再改这套正式比较口径
+
+下一步强 baseline 扩展建议：
+
+- 在上述正式集合之外，新增 `RLS Residual-B / UKF / Particle Filter` 作为更强的经典自适应对照
+- 其中 `RLS Residual-B` 最容易与当前 `teacher + residual-b` 的运行时语义保持一致，可优先落地
+- `UKF / Particle Filter` 则适合作为后续论文中“比 EKF 更强的经典滤波”补充对比
 
 ---
 
@@ -410,6 +598,54 @@ MWPM 可作为扩展基线，但不应阻塞主实验流水线。
 
 校准后再运行 P3/P4 正式实验，降低“仿真乐观偏差”风险。
 
+### 8.7 `.tflite` 部署产物准入规则
+
+任何准备进入 `P3/P4` 的 `.tflite` 模型，至少要经过两步独立验收：
+
+1. 独立精度评测
+
+- 使用 [evaluate_tflite.py](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/cnn_fpga/model/evaluate_tflite.py)
+- 在 `/.venvs/tf311` 或其它真实 TensorFlow/TFLite 环境中直接执行
+- 记录 `MSE / MAE / R2_mean / per_label`
+
+2. 导出一致性检查
+
+- 使用 [validate_export.py](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/cnn_fpga/model/validate_export.py)
+- 对比源 artifact 与导出 `.tflite` 的逐样本输出差异
+- 若该检查未通过，不允许进入 HIL benchmark
+
+说明：
+
+- 这样做的目的，是把“模型训练正确”和“部署产物语义正确”分开验证
+- 尤其要防止归一化、通道顺序、量化 scale 等导出阶段问题污染后续 P3/P4 结果
+
+### 8.8 长期无板卡时的主线调整
+
+如果未来较长时间内无法获得真实板卡、地址表或寄存器说明，则建议把主线实验顺序调整为：
+
+1. 优先完成 `P3-软件HIL` 内部收敛
+
+- 继续拆解 `overflow` 来源
+- 固定默认参数与主模型
+- 清理所有会破坏横向可比性的隐式配置漂移
+
+2. 提前进入 `P4` 的统计对比准备
+
+- 冻结 baseline 集合
+- 冻结场景集、seed、运行轮数和报告模板
+- 在软件 HIL 口径下先形成一版完整主结论
+
+3. 真板联调转为条件性扩展
+
+- 只有在真实板卡和地址表具备时才重启
+- 目的从“阻塞主线”改为“增强验证和工程落地补完”
+
+这样调整后的核心原则是：
+
+- 不因为外部硬件条件长期缺失而让项目主线停滞
+- 先把软件 HIL、物理仿真和部署产物三条线收敛到可复现实验结论
+- 真板验证放到条件成熟时补齐
+
 ---
 
 ## 9. 与现有 physics 库的集成策略
@@ -431,10 +667,11 @@ MWPM 可作为扩展基线，但不应阻塞主实验流水线。
 ## 10. 里程碑与时间建议
 
 - 第 1 周：P0 收敛 + P1 数据流水线
-- 第 2 周：P1 模型训练 + int8 导出
+- 第 2 周：P1 模型训练 + int8 / `.tflite` 导出
 - 第 3 周：P2 行为仿真与调度器联调
-- 第 4 周：P3 HIL 接入与端到端打通
-- 第 5 周：P4 大规模实验与报告产出
+- 第 4 周：P3 软件 HIL 打通 + `overflow` 来源拆分
+- 第 5 周：baseline 冻结 + P4 多场景统计对比
+- 第 6 周：若板卡条件具备，再补 P3 真板联调；若条件不具备，则继续扩展 P4 报告
 
 ---
 
@@ -496,3 +733,42 @@ python -m cnn_fpga.benchmark.run_hil_suite --config cnn_fpga/config/hardware_hil
 - 两者共同用于后续论文与系统实现：
   - 原文档：为什么做
   - 本文档：怎么做、做到什么程度算通过
+
+---
+
+## 15. 2026-04-03 强 baseline 正式更新补充
+
+在 `2026-04-02` 的长配置复验之后，又完成了 `RLS Residual-B + UKF` 的正式强 baseline 扩展：
+
+- 结果目录：
+  - [p4_multiscenario_strong_baselines_v1_20260403_145747_b82874392710_86447](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/runs/p4_benchmark/p4_multiscenario_strong_baselines_v1_20260403_145747_b82874392710_86447)
+- 4 个正式场景平均 `LER`：
+  - `Hybrid Residual-B = 0.798332`
+  - `UKF = 0.817974`
+  - `Constant Residual-Mu = 0.825719`
+  - `RLS Residual-B = 0.827908`
+  - `EKF = 0.828369`
+
+本轮结果说明：
+
+1. 修正后的 `UKF` 已经成为当前最强经典 baseline
+
+- 它在 `static_bias_theta / linear_ramp / step_sigma_theta / periodic_drift` 四个正式场景中均优于 `EKF`
+- 说明前一阶段对 `UKF` 的数值稳定化修正是有效的
+
+2. `Hybrid Residual-B` 的优势依旧成立
+
+- 虽然 `UKF` 已经显著抬高了经典对照上限
+- 但 `Hybrid Residual-B` 仍保持约 `0.0196` 的平均 `LER` 优势
+
+3. 下一档更值得补的 baseline 是 `Particle Filter`
+
+- 不是继续围绕 `EKF` 做小修小补
+- 也不是继续长时间微调 `UKF`
+- 而是新增一个对非线性、非高斯假设更宽松的经典滤波对照
+
+因此，当前工程主线可以更新为：
+
+1. 保持 `Hybrid Residual-B` 为主方案
+2. 保持 `UKF` 为当前最强经典对照
+3. 继续补 `Particle Filter`，以增强论文级对比说服力

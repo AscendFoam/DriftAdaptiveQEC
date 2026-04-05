@@ -29,6 +29,19 @@ def _wrap_to_fundamental(value: np.ndarray, lattice: float) -> np.ndarray:
     return np.mod(value + lattice / 2.0, lattice) - lattice / 2.0
 
 
+def _resolve_noise_shape(dataset_cfg: Dict) -> Dict[str, float | str]:
+    """Read dataset noise-shape settings used to make theta observable."""
+    shape_cfg = dataset_cfg.get("noise_shape", {})
+    distribution = str(shape_cfg.get("distribution", "isotropic_gaussian")).lower()
+    sigma_ratio_p = float(shape_cfg.get("sigma_ratio_p", 1.0))
+    if sigma_ratio_p <= 0:
+        raise ValueError("dataset.noise_shape.sigma_ratio_p must be positive")
+    return {
+        "distribution": distribution,
+        "sigma_ratio_p": sigma_ratio_p,
+    }
+
+
 def _histogram_from_params(
     rng: np.random.Generator,
     sigma: float,
@@ -37,12 +50,27 @@ def _histogram_from_params(
     theta_deg: float,
     points_per_sample: int,
     bins: int,
+    noise_shape: Dict[str, float | str],
     lattice: float = LATTICE_CONST,
 ) -> np.ndarray:
-    # 中文注释：给定一组参数，采样点云后统计为固定大小直方图输入。
+    # 中文注释：
+    # - 早期版本使用各向同性高斯，旋转后分布不变，导致 theta 在统计上几乎不可辨识。
+    # - 这里支持“椭圆高斯”生成，使 theta_deg 会真实反映在直方图方向性上。
     theta = np.deg2rad(theta_deg)
     rotation = np.array([[np.cos(theta), -np.sin(theta)], [np.sin(theta), np.cos(theta)]], dtype=float)
-    base = rng.normal(0.0, sigma, size=(points_per_sample, 2))
+    distribution = str(noise_shape["distribution"])
+    sigma_ratio_p = float(noise_shape["sigma_ratio_p"])
+    if distribution == "anisotropic_gaussian":
+        base = np.column_stack(
+            [
+                rng.normal(0.0, sigma, size=points_per_sample),
+                rng.normal(0.0, sigma * sigma_ratio_p, size=points_per_sample),
+            ]
+        )
+    elif distribution == "isotropic_gaussian":
+        base = rng.normal(0.0, sigma, size=(points_per_sample, 2))
+    else:
+        raise ValueError(f"Unsupported dataset.noise_shape.distribution: {distribution}")
     rotated = (rotation @ base.T).T
     displaced = rotated + np.array([mu_q, mu_p], dtype=float)
     wrapped = _wrap_to_fundamental(displaced, lattice)
@@ -67,6 +95,7 @@ def _build_dataset(config: Dict, rng: np.random.Generator) -> Tuple[np.ndarray, 
     samples_per_cfg = int(dataset_cfg["samples_per_configuration"])
     points_per_sample = int(dataset_cfg["points_per_sample"])
     bins = int(dataset_cfg["histogram_bins"])
+    noise_shape = _resolve_noise_shape(dataset_cfg)
 
     total = n_cfg * samples_per_cfg
     histograms = np.zeros((total, bins, bins), dtype=np.float32)
@@ -89,6 +118,7 @@ def _build_dataset(config: Dict, rng: np.random.Generator) -> Tuple[np.ndarray, 
                 theta_deg=theta_deg,
                 points_per_sample=points_per_sample,
                 bins=bins,
+                noise_shape=noise_shape,
             )
             histograms[idx] = hist
             labels[idx] = np.array([sigma, mu_q, mu_p, theta_deg], dtype=np.float32)
@@ -153,6 +183,7 @@ def main() -> int:
         "samples_per_configuration": int(dataset_cfg["samples_per_configuration"]),
         "histogram_bins": int(dataset_cfg["histogram_bins"]),
         "points_per_sample": int(dataset_cfg["points_per_sample"]),
+        "noise_shape": _resolve_noise_shape(dataset_cfg),
         "split": split_cfg,
     }
     print("Dataset build plan:", plan)
@@ -183,6 +214,7 @@ def main() -> int:
         "n_val": int(val_idx.size),
         "n_test": int(test_idx.size),
         "label_names": list(LABEL_NAMES),
+        "noise_shape": _resolve_noise_shape(dataset_cfg),
         "files": {
             "train": str(train_path),
             "val": str(val_path),

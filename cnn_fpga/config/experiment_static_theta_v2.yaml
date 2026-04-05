@@ -1,0 +1,67 @@
+# Theta 定向增强版静态实验：
+# - 不覆盖 static_v1，单独生成一套可追溯数据/模型/报告目录
+# - 关键变化是让 theta_deg 在数据分布上真正可辨识
+experiment:
+  name: static_theta_v2
+  stage: p1_static_theta_boost
+  seed: 20260319
+
+paths:
+  output_root: runs
+  dataset_dir: artifacts/datasets/static_theta_v2
+  model_dir: artifacts/models/static_theta_v2
+  report_dir: artifacts/reports/static_theta_v2
+
+hardware_defaults:
+  fixed_point: Q4.20
+  t_fast_us: 5.0
+  window_size: 2048
+  t_slow_update_ms: 20.0
+
+param_mapping:
+  alpha_bias: 1.0
+  beta_smoothing: 0.2
+  gain_clip: [0.2, 1.2]
+  theta_clip_deg: [-20.0, 20.0]
+
+dataset:
+  n_configurations: 256
+  samples_per_configuration: 64
+  points_per_sample: 4096
+  histogram_bins: 32
+  split:
+    train: 0.8
+    val: 0.1
+    test: 0.1
+  parameter_ranges:
+    sigma: [0.15, 0.60]
+    mu_q: [-0.3, 0.3]
+    mu_p: [-0.3, 0.3]
+    theta_deg: [-15.0, 15.0]
+  noise_shape:
+    # 使用椭圆高斯而不是圆对称高斯，让旋转角 theta_deg 可以反映到二阶统计中。
+    distribution: anisotropic_gaussian
+    sigma_ratio_p: 0.55
+
+training:
+  model_type: tiny_cnn
+  max_train_samples: 50000
+  max_val_samples: 5000
+  l2_reg: 1.0e-3
+  tiny_cnn:
+    conv_channels: 12
+    kernel_size: 3
+    hidden_dim: 64
+    batch_size: 64
+    epochs: 28
+    learning_rate: 3.0e-3
+    weight_decay: 1.0e-4
+    patience: 6
+    label_weights:
+      sigma: 1.0
+      mu_q: 1.0
+      mu_p: 1.0
+      theta_deg: 3.0
+
+evaluation:
+  target_split: test

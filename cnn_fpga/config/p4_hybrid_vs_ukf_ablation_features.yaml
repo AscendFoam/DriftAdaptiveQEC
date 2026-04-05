@@ -1,0 +1,149 @@
+# Hybrid vs UKF ablation：
+# - 固定上下文长度和 teacher，测试不同输入通道的重要性
+
+experiment:
+  name: p4_hybrid_vs_ukf_ablation_features_v1
+  stage: p4_ablation_features
+  seed: 20260404
+
+base_config: p4_multiscenario_hybrid_b_long.yaml
+
+p4_benchmark:
+  protocol:
+    protocol_id: p4_hybrid_vs_ukf_ablation_features_v1
+    frozen_baseline_set: [ukf, hybrid_full, hybrid_no_hist_deltas, hybrid_no_teacher_prediction, hybrid_no_teacher_params, hybrid_no_teacher_deltas]
+
+  modes:
+    - name: ukf
+      label: UKF
+      slow_loop_mode: ukf
+      overrides:
+        slow_loop:
+          ukf:
+            initial_velocity_std_sigma: 0.008
+            initial_velocity_std_mu_q: 0.008
+            initial_velocity_std_mu_p: 0.008
+            initial_velocity_std_theta_deg: 0.6
+            process_std_sigma: 0.006
+            process_std_mu_q: 0.006
+            process_std_mu_p: 0.006
+            process_std_theta_deg: 0.45
+            process_std_v_sigma: 0.0015
+            process_std_v_mu_q: 0.0015
+            process_std_v_mu_p: 0.0015
+            process_std_v_theta_deg: 0.12
+
+    - name: hybrid_full
+      label: Hybrid Full
+      slow_loop_mode: hybrid_residual_b
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/runtime_b_residual_v1
+        slow_loop:
+          inference_service:
+            label_names: [b_q, b_p]
+          hybrid_residual_b:
+            teacher_mode: window_variance
+            context_windows: 5
+            context_padding: edge_repeat
+            include_histogram_deltas: true
+            include_teacher_prediction: true
+            include_teacher_params: true
+            include_teacher_deltas: true
+            residual_scale_b: 1.0
+            residual_clip_b: 0.12
+            ema_alpha: 0.35
+            ema_apply_to: b
+
+    - name: hybrid_no_hist_deltas
+      label: Hybrid No HistDelta
+      slow_loop_mode: hybrid_residual_b
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/runtime_b_residual_no_hist_deltas_v1
+        slow_loop:
+          inference_service:
+            label_names: [b_q, b_p]
+          hybrid_residual_b:
+            teacher_mode: window_variance
+            context_windows: 5
+            context_padding: edge_repeat
+            include_histogram_deltas: false
+            include_teacher_prediction: true
+            include_teacher_params: true
+            include_teacher_deltas: true
+            residual_scale_b: 1.0
+            residual_clip_b: 0.12
+            ema_alpha: 0.35
+            ema_apply_to: b
+
+    - name: hybrid_no_teacher_prediction
+      label: Hybrid No TeacherPred
+      slow_loop_mode: hybrid_residual_b
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/runtime_b_residual_no_teacher_prediction_v1
+        slow_loop:
+          inference_service:
+            label_names: [b_q, b_p]
+          hybrid_residual_b:
+            teacher_mode: window_variance
+            context_windows: 5
+            context_padding: edge_repeat
+            include_histogram_deltas: true
+            include_teacher_prediction: false
+            include_teacher_params: true
+            include_teacher_deltas: true
+            residual_scale_b: 1.0
+            residual_clip_b: 0.12
+            ema_alpha: 0.35
+            ema_apply_to: b
+
+    - name: hybrid_no_teacher_params
+      label: Hybrid No TeacherParams
+      slow_loop_mode: hybrid_residual_b
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/runtime_b_residual_no_teacher_params_v1
+        slow_loop:
+          inference_service:
+            label_names: [b_q, b_p]
+          hybrid_residual_b:
+            teacher_mode: window_variance
+            context_windows: 5
+            context_padding: edge_repeat
+            include_histogram_deltas: true
+            include_teacher_prediction: true
+            include_teacher_params: false
+            include_teacher_deltas: true
+            residual_scale_b: 1.0
+            residual_clip_b: 0.12
+            ema_alpha: 0.35
+            ema_apply_to: b
+
+    - name: hybrid_no_teacher_deltas
+      label: Hybrid No TeacherDelta
+      slow_loop_mode: hybrid_residual_b
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/runtime_b_residual_no_teacher_deltas_v1
+        slow_loop:
+          inference_service:
+            label_names: [b_q, b_p]
+          hybrid_residual_b:
+            teacher_mode: window_variance
+            context_windows: 5
+            context_padding: edge_repeat
+            include_histogram_deltas: true
+            include_teacher_prediction: true
+            include_teacher_params: true
+            include_teacher_deltas: false
+            residual_scale_b: 1.0
+            residual_clip_b: 0.12
+            ema_alpha: 0.35
+            ema_apply_to: b

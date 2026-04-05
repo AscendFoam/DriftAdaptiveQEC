@@ -7,6 +7,8 @@ experiment:
 # 输出路径：HIL运行日志与摘要文件输出目录
 paths:
   output_root: runs
+  # P3 HIL 先直接复用 P1/P2 已验收通过的 Tiny-CNN 主模型目录。
+  model_dir: artifacts/models/static_theta_v2
 
 # 工程默认参数：固定点、快慢回路节拍
 hardware_defaults:
@@ -15,18 +17,129 @@ hardware_defaults:
   window_size: 2048
   t_slow_update_ms: 20.0
 
+# 运行时调度参数：描述双回路调度器的窗口、队列和提交节拍
+runtime:
+  t_fast_us: 5.0
+  window_size: 2048
+  t_slow_update_ms: 20.0
+  # 20ms / 5us = 4000 cycles，使窗口产出节拍与慢回路更新节拍对齐，避免 mock HIL 中确定性积压。
+  window_stride: 4000
+  max_pending_windows: 2
+  commit_delay_cycles: 1
+  guard_cycles_after_commit: 0
+
+# 快回路行为配置：P3 mock backend 需要真正生成周期级 syndrome / histogram。
+fast_loop:
+  fixed_point: Q4.20
+  enable_fixed_point: true
+  histogram_bins: 32
+  # 2026-04-01 针对 `hybrid_residual_b` 的定向长确认表明，
+  # 进一步放宽输入统计范围能继续显著压低 histogram_input saturation，
+  # 且不会恶化 LER，因此将其提升为当前主线默认值。
+  syndrome_limit: 1.566643
+  # 允许把“解码输入限幅”和“直方图统计范围”分开调；
+  # 当前主线默认把 histogram_range 放宽到 2.255965971，优先缓解窗口统计阶段的输入饱和。
+  histogram_range_limit: 2.255965971
+  correction_limit: 2.5066282746310002
+  use_full_qec_model: true
+  overflow_alert_ratio: 0.05
+
 # 参数映射策略：与训练/仿真阶段保持一致，避免语义漂移
 param_mapping:
-  alpha_bias: 1.0
+  # P3 第二轮调参后，当前推荐默认值：
+  # - 将最小增益 floor 从 0.20 降到 0.10，减小低噪声阶段的过度校正；
+  # - 轻微降低 bias 强度，减少非零均值漂移下注入幅度。
+  alpha_bias: 0.9
   beta_smoothing: 0.2
-  gain_clip: [0.2, 1.2]
+  gain_clip: [0.1, 1.2]
+  # 第三轮验证表明 0.97 / 0.95 虽能轻微改变 overflow，但在同口径长确认中不优于默认值，
+  # 因此当前主线仍保持 gain_scale=1.0，只把它作为后续定向调优旋钮。
+  gain_scale: 1.0
+  # P3 后续主线将把 overflow 进一步细分为：
+  # - 直方图输入饱和
+  # - 校正量硬饱和
+  # - 预测参数过激进（启发式：高增益/高偏置/接近校正上限）
+  aggressive_gain_ratio: 0.9
+  aggressive_bias_ratio: 0.25
+  aggressive_correction_ratio: 0.7
   theta_clip_deg: [-20.0, 20.0]
+  # P1 theta_v2 数据集对应的各向异性比例，必须带到运行时映射。
+  sigma_ratio_p: 0.55
+
+# 快回路物理模型参数：保持与 P2 正式 benchmark 一致。
+model:
+  gain: 0.9
+  theta_deg: 0.0
+  # 与 2026-03-31 的 histogram-input 长确认最优组合保持一致。
+  sigma_measurement: 0.03
+  sigma_ratio_p: 0.55
+  mu_q: 0.0
+  mu_p: 0.0
+
+# 测量模型：供参数映射器估计有效测量噪声
+measurement:
+  delta: 0.3
+  measurement_efficiency: 0.95
+  ancilla_error_rate: 0.01
+  add_shot_noise: true
+
+# 慢回路配置：P3 默认直接接入已训练浮点主模型。
+slow_loop:
+  mode: model_artifact
+  fallback_sigma: 0.25
+  fallback_mu_q: 0.0
+  fallback_mu_p: 0.0
+  fallback_theta_deg: 0.0
+  # 若切到公平 oracle 基线，至少延迟一个窗口，避免读取当前窗口真值。
+  oracle_delay_windows: 1
+  prediction_noise:
+    sigma_std: 0.01
+    mu_std: 0.005
+    theta_deg_std: 0.75
+  fixed_baseline:
+    sigma: 0.25
+    mu_q: 0.0
+    mu_p: 0.0
+    theta_deg: 0.0
+  model_artifact:
+    path:
+    use_latest_model_dir_artifact: true
+    artifact_selector: latest_float
+  # 推理服务接口：默认切到 subprocess，模拟 ARM/TFLite 服务与运行时解耦。
+  inference_service:
+    mode: subprocess
+    backend: artifact_npz
+    # 指向项目内的 Python 3.11 + TensorFlow 环境，使 backend=tflite 可在不切主环境时直接运行。
+    python_executable: .venvs/tf311/bin/python
+    worker_module: cnn_fpga.runtime.inference_worker
+    request_timeout_s: 10.0
+    label_names: [sigma, mu_q, mu_p, theta_deg]
+    tflite:
+      path:
+
+# AXI / DMA 入口参数：为后续真实板卡 backend 预留一致字段。
+axi:
+  poll_interval_cycles: 1
+  commit_timeout_cycles: 8192
+
+dma:
+  histogram_buffer_bytes: 4096
+  buffer_count: 2
 
 # HIL后端信息：mock表示行为模拟，board/bitstream用于追溯
 hil:
   backend: mock
   board: ZCU111
   bitstream_version: fpga_linear_v1
+  board_io:
+    # 真实板卡阶段优先支持 /dev/uio + mmap 的 AXI-Lite / DMA buffer 访问。
+    axi_uio_path: /dev/uio0
+    axi_map_size_bytes: 4096
+    axi_base_offset: 0
+    dma_buffer_path: /dev/uio1
+    dma_dtype: float32
+    # 开发环境没有板卡时允许 benchmark 记为 skipped，而不是直接中断。
+    allow_missing_device: true
 
 # 时序预算与规模：用于统计违约率
 timing:
@@ -45,6 +158,8 @@ latency_model:
   inference_std_us: 150.0
   writeback_mean_us: 20.0
   writeback_std_us: 5.0
+  commit_ack_mean_us: 5.0
+  commit_ack_std_us: 1.0
 
 # 快路径模型：模拟单周期解码延迟分布
 fast_path_model:
@@ -56,3 +171,42 @@ error_model:
   dma_timeout_prob: 1.0e-4
   axi_write_fail_prob: 5.0e-5
   cnn_infer_fail_prob: 2.0e-5
+
+# 周期级目标噪声轨迹：mock HIL 会用它驱动快回路物理过程，再由 DMA 导出 histogram 窗口。
+mock_signal:
+  type: random_walk
+  sigma0: 0.24
+  sigma_min: 0.05
+  sigma_max: 0.65
+  sigma_step_std: 0.004
+  mu_q0: 0.0
+  mu_p0: 0.0
+  mu_step_std: 0.002
+  theta_deg0: 0.0
+  theta_amplitude_deg: 6.0
+  theta_frequency: 0.01
+  theta_step_std_deg: 0.25
+
+# P3 模式对比：mock/fp32/int8/board 四类模式用同一入口脚本比较。
+benchmark_modes:
+  - name: fixed_baseline_mock
+    backend: mock
+    slow_loop_mode: fixed_baseline
+    inference_service_mode: subprocess
+  - name: float_artifact_mock
+    backend: mock
+    slow_loop_mode: model_artifact
+    artifact_selector: latest_float
+    inference_service_mode: subprocess
+  - name: int8_artifact_mock
+    backend: mock
+    slow_loop_mode: model_artifact
+    artifact_selector: latest_int8
+    inference_service_mode: subprocess
+    inference_backend: tflite
+  - name: real_board
+    backend: board
+    slow_loop_mode: model_artifact
+    artifact_selector: latest_int8
+    inference_service_mode: subprocess
+    inference_backend: tflite

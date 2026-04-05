@@ -1,0 +1,24 @@
+# P4 smoke 配置：
+# - 只缩短 timing / repeats，用于快速验证四类正式 baseline 的入口和报告模板。
+# - 场景集、模式集和报告模板与正式版保持一致，避免 smoke 与 formal 口径漂移。
+
+experiment:
+  name: p4_multiscenario_smoke_v1
+  stage: p4_benchmark_smoke
+  seed: 20260331
+
+base_config: p4_multiscenario.yaml
+
+timing:
+  n_slow_updates: 60
+  n_fast_cycles: 240000
+
+p4_benchmark:
+  protocol:
+    protocol_id: p4_hil_smoke_v1
+    report_template_version: p4_hil_report_v1
+    repeats: 1
+    scenario_seed_stride: 1000
+    mode_seed_stride: 100000
+    real_board_policy: conditional_extension
+    frozen_baseline_set: [static_linear, window_variance, ekf, cnn_fpga]

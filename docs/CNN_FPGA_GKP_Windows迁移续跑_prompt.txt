@@ -1,0 +1,151 @@
+你现在接手的项目根目录是 DriftAdaptiveQEC。
+
+请先阅读并参考以下文档：
+1. docs/CNN_FPGA_GKP_阶段结论.md
+2. docs/CNN_FPGA_GKP_工程化实验方案.md
+3. docs/P4_UKF正式结果与Hybrid机制分析.md
+4. docs/CNN_FPGA_GKP_项目完成目标与投稿路线报告.md
+5. docs/CNN_FPGA_GKP_论文提纲_摘要_贡献点草稿.md
+
+当前上下文压缩总结如下。
+
+一、项目主线当前定位
+1. 项目已经从“只有 CNN 训练脚手架”推进到“物理仿真 -> runtime-consistent dataset -> 双回路调度 -> software HIL -> 正式 benchmark -> 论文草稿”的完整工程链路。
+2. 当前最优正式主线不是“绝对参数回归 CNN”，而是：
+   - teacher + residual-b
+   - 即 `Hybrid Residual-B`
+3. 当前论文叙事不应写成“CNN 全面打败所有经典解码器”，而应写成：
+   - 在实时硬件约束下，teacher-guided residual learner 能在运行时一致的双回路解码框架中稳定提升经典自适应 baseline。
+
+二、当前最重要的正式结果
+1. 强 baseline 正式结果已经完成：
+   - 结果目录：
+     runs/p4_benchmark/p4_multiscenario_strong_baselines_v1_20260403_145747_b82874392710_86447
+   - 平均 LER：
+     - Hybrid Residual-B = 0.798332
+     - UKF = 0.817974
+     - Constant Residual-Mu = 0.825719
+     - RLS Residual-B = 0.827908
+     - EKF = 0.828369
+2. 当前结论：
+   - 修正后的 UKF 已是最强经典 baseline
+   - 但 Hybrid Residual-B 仍稳定优于 UKF，平均优势约 0.019642
+3. 当前优势不是靠更激进的参数换来的：
+   - correction_saturation_rate = 0
+   - aggressive_param_rate = 0
+   - overflow 仍主要来自 histogram_input
+
+三、已完成的 ablation
+1. teacher 组正式完成：
+   - 结果目录：
+     runs/p4_benchmark/p4_hybrid_vs_ukf_ablation_teacher_v1_20260404_163354_0cb233334835_12987
+   - 跨 4 场景平均 LER：
+     - UKF = 0.819012
+     - Hybrid Teacher=WV = 0.799105
+     - Hybrid Teacher=UKF = 0.803542
+   - 当前结论：
+     - teacher=window_variance 版主模型略强于 teacher=ukf
+     - 但即使 teacher 升级为 UKF，residual learner 仍然有额外价值
+
+2. context 组目前只有单场景 smoke：
+   - 结果目录：
+     runs/p4_benchmark/p4_hybrid_vs_ukf_ablation_context_v1_20260404_180047_189a42d123b0_16692
+   - 在 static_bias_theta 上：
+     - UKF = 0.826406
+     - Hybrid Ctx1 = 0.824150
+     - Hybrid Ctx3 = 0.838388
+     - Hybrid Ctx5 = 0.813885
+   - 当前结论：
+     - Ctx5 最好
+     - Ctx3 退化，说明“上下文长度增加一定更好”并不成立
+   - 注意：
+     - context 组还没有正式全场景复验，只有 smoke
+
+3. features 组正式已完成：
+   - 原始结果目录：
+     runs/p4_benchmark/p4_hybrid_vs_ukf_ablation_features_v1_20260404_211945_a7d2984ad50e_23637
+   - 自动汇总目录：
+     runs/p4_features_summary/features_summary_20260405_145948
+   - 跨 4 场景平均 LER：
+     - UKF = 0.818081
+     - Hybrid Full = 0.798355
+     - Hybrid No HistDelta = 0.826422
+     - Hybrid No TeacherPred = 0.807556
+     - Hybrid No TeacherParams = 0.749436
+     - Hybrid No TeacherDelta = 0.800473
+   - 当前可先接受的结论：
+     - histogram delta 很重要，去掉后性能明显变差
+     - teacher prediction 有价值，去掉后性能也会变差
+   - 当前最值得警惕的异常：
+     - No TeacherParams 反而远好于 Hybrid Full
+     - 这不是标准 ablation 应有的趋势
+     - 暂时不能直接解释成“teacher params 有害”
+     - 需要后续重点复查
+
+四、最近新增的工具与文档
+1. 论文草稿文档：
+   - docs/CNN_FPGA_GKP_论文提纲_摘要_贡献点草稿.md
+2. 项目完成目标与投稿路线报告：
+   - docs/CNN_FPGA_GKP_项目完成目标与投稿路线报告.md
+3. features 结果自动汇总脚本：
+   - cnn_fpga/benchmark/summarize_p4_features_ablation.py
+4. 说明：
+   - 该脚本已修正为按“跨场景平均”汇总，不再只保留单场景
+
+五、当前代码与运行特征
+1. 当前 Tiny-CNN 训练主路径是纯 NumPy：
+   - cnn_fpga/model/tiny_cnn.py
+2. 因此当前迁移到带 RTX4070 的 Windows 笔记本后：
+   - 不会自动吃到 GPU 加速
+   - 可能更快的主要原因是 CPU、更高功耗墙和更强散热
+3. dataset build、HIL mock、正式 benchmark 也基本是 CPU / Python / NumPy 主导
+4. 因此当前 Windows+RTX4070 的收益更可能是“中等提速”，不是 GPU 数量级提速
+
+六、当前最应该继续做的事情
+优先级 1：
+1. 复查 `Hybrid No TeacherParams` 的异常优势是否稳定
+2. 建议先做多 seed 正式复验，确认这不是偶然结果
+3. 检查 `teacher params` 通道的数值尺度、归一化、冗余性和与其他通道的耦合
+
+优先级 2：
+1. 把 features 正式结果回写到：
+   - docs/CNN_FPGA_GKP_阶段结论.md
+   - docs/CNN_FPGA_GKP_工程化实验方案.md
+   - docs/CNN_FPGA_GKP_论文提纲_摘要_贡献点草稿.md
+2. 在论文叙事中补上：
+   - histogram delta 的重要性
+   - teacher prediction 的作用
+   - No TeacherParams 异常现象及其待解释性
+
+优先级 3：
+1. 如果时间允许，再把 context 组做正式全场景 benchmark，而不只是单场景 smoke
+2. 之后再决定是否进入：
+   - No TeacherParams 结构修正
+   - teacher params 通道重编码
+   - 进一步论文图表整理
+
+七、常用命令
+1. 查看 features 结果汇总：
+   python -m cnn_fpga.benchmark.summarize_p4_features_ablation
+
+2. 重新查看 teacher 结果：
+   sed -n '1,220p' runs/p4_benchmark/p4_hybrid_vs_ukf_ablation_teacher_v1_20260404_163354_0cb233334835_12987/comparison.csv
+
+3. 重新查看 context smoke：
+   sed -n '1,220p' runs/p4_benchmark/p4_hybrid_vs_ukf_ablation_context_v1_20260404_180047_189a42d123b0_16692/comparison.csv
+
+4. 重新查看 features 正式结果：
+   sed -n '1,260p' runs/p4_benchmark/p4_hybrid_vs_ukf_ablation_features_v1_20260404_211945_a7d2984ad50e_23637/comparison.csv
+
+5. 查看 features 自动汇总：
+   sed -n '1,220p' runs/p4_features_summary/features_summary_20260405_145948/report.md
+
+八、当前最关键的判断
+1. 主线论文价值已经成立
+2. 当前最强 classical baseline 是 UKF
+3. 当前最优主线仍是 Hybrid Residual-B
+4. 但 features ablation 暴露出一个重要异常：
+   - No TeacherParams 远优于 Full
+5. 后续最值得做的工作不是继续盲目扩 baseline，而是先解释清楚这个异常，并确认它是否稳定
+
+请从上述状态继续，不要回退到旧的“只有 CNN 训练脚手架”的阶段理解。

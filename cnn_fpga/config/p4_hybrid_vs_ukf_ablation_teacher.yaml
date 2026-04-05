@@ -1,0 +1,80 @@
+# Hybrid vs UKF ablation：
+# - 只比较 teacher 差异
+
+experiment:
+  name: p4_hybrid_vs_ukf_ablation_teacher_v1
+  stage: p4_ablation_teacher
+  seed: 20260404
+
+base_config: p4_multiscenario_hybrid_b_long.yaml
+
+p4_benchmark:
+  protocol:
+    protocol_id: p4_hybrid_vs_ukf_ablation_teacher_v1
+    frozen_baseline_set: [ukf, hybrid_teacher_window_variance, hybrid_teacher_ukf]
+
+  modes:
+    - name: ukf
+      label: UKF
+      slow_loop_mode: ukf
+      overrides:
+        slow_loop:
+          ukf:
+            initial_velocity_std_sigma: 0.008
+            initial_velocity_std_mu_q: 0.008
+            initial_velocity_std_mu_p: 0.008
+            initial_velocity_std_theta_deg: 0.6
+            process_std_sigma: 0.006
+            process_std_mu_q: 0.006
+            process_std_mu_p: 0.006
+            process_std_theta_deg: 0.45
+            process_std_v_sigma: 0.0015
+            process_std_v_mu_q: 0.0015
+            process_std_v_mu_p: 0.0015
+            process_std_v_theta_deg: 0.12
+
+    - name: hybrid_teacher_window_variance
+      label: Hybrid Teacher=WV
+      slow_loop_mode: hybrid_residual_b
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/runtime_b_residual_v1
+        slow_loop:
+          inference_service:
+            label_names: [b_q, b_p]
+          hybrid_residual_b:
+            teacher_mode: window_variance
+            context_windows: 5
+            context_padding: edge_repeat
+            include_histogram_deltas: true
+            include_teacher_prediction: true
+            include_teacher_params: true
+            include_teacher_deltas: true
+            residual_scale_b: 1.0
+            residual_clip_b: 0.12
+            ema_alpha: 0.35
+            ema_apply_to: b
+
+    - name: hybrid_teacher_ukf
+      label: Hybrid Teacher=UKF
+      slow_loop_mode: hybrid_residual_b
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/runtime_b_residual_teacher_ukf_v1
+        slow_loop:
+          inference_service:
+            label_names: [b_q, b_p]
+          hybrid_residual_b:
+            teacher_mode: ukf
+            context_windows: 5
+            context_padding: edge_repeat
+            include_histogram_deltas: true
+            include_teacher_prediction: true
+            include_teacher_params: true
+            include_teacher_deltas: true
+            residual_scale_b: 1.0
+            residual_clip_b: 0.12
+            ema_alpha: 0.35
+            ema_apply_to: b

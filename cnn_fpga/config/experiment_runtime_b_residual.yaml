@@ -1,0 +1,83 @@
+# Runtime-consistent residual-b 实验模板：
+# - 标签从 `delta_mu` 升级到更直接作用控制量的 `delta_b`
+# - 输入加入更强时间信息：5 帧窗口 + histogram 差分
+# - 输入加入 teacher 条件特征：当前 teacher 预测、当前 teacher b、teacher 时间差分
+
+experiment:
+  name: runtime_b_residual_v1
+  stage: p4_b_repair
+  seed: 20260402
+
+base_config: p4_multiscenario.yaml
+
+paths:
+  output_root: runs
+  dataset_dir: artifacts/datasets/runtime_b_residual_v1
+  model_dir: artifacts/models/runtime_b_residual_v1
+  report_dir: artifacts/reports/runtime_b_residual_v1
+
+runtime_dataset:
+  scenarios_from_p4: true
+  reference_mode: static_linear
+  teacher_mode: window_variance
+  label_semantics: residual_b
+  context_windows: 5
+  context_padding: edge_repeat
+  include_histogram_deltas: true
+  include_teacher_prediction: true
+  include_teacher_params: true
+  include_teacher_deltas: true
+  windows_per_scenario: 512
+  scenario_seed_stride: 1000
+  split:
+    train: 0.8
+    val: 0.1
+    test: 0.1
+
+training:
+  model_type: tiny_cnn
+  max_train_samples: 50000
+  max_val_samples: 10000
+  tiny_cnn:
+    conv_channels: 16
+    kernel_size: 3
+    hidden_dim: 96
+    batch_size: 64
+    epochs: 36
+    learning_rate: 2.0e-3
+    weight_decay: 1.0e-4
+    patience: 8
+    label_weights:
+      b_q: 2.0
+      b_p: 2.0
+
+evaluation:
+  target_split: test
+
+slow_loop:
+  mode: hybrid_residual_b
+  model_artifact:
+    path:
+    use_latest_model_dir_artifact: true
+    artifact_selector: latest_float
+  inference_service:
+    mode: inproc
+    backend: artifact_npz
+    label_names: [b_q, b_p]
+    python_executable: .venvs/tf311/bin/python
+  hybrid_residual_b:
+    teacher_mode: window_variance
+    context_windows: 5
+    context_padding: edge_repeat
+    include_histogram_deltas: true
+    include_teacher_prediction: true
+    include_teacher_params: true
+    include_teacher_deltas: true
+    residual_scale_b: 1.0
+    residual_clip_b: 0.12
+    ema_alpha: 0.35
+    ema_apply_to: b
+
+postprocess:
+  ema_alpha: 0.35
+  ema_apply_to: b

@@ -8,6 +8,28 @@ from typing import Any, Dict, Optional
 import numpy as np
 
 
+def _serialize_value(value: Any) -> Any:
+    """Convert metadata values to JSON-friendly summaries."""
+    if isinstance(value, np.ndarray):
+        if value.size <= 16:
+            return value.tolist()
+        return {
+            "type": "ndarray",
+            "shape": list(value.shape),
+            "min": float(np.min(value)),
+            "max": float(np.max(value)),
+            "mean": float(np.mean(value)),
+            "std": float(np.std(value)),
+        }
+    if isinstance(value, dict):
+        return {str(key): _serialize_value(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_serialize_value(item) for item in value]
+    if isinstance(value, np.generic):
+        return value.item()
+    return value
+
+
 def _coerce_array(value: np.ndarray | list[float], shape: tuple[int, ...], name: str) -> np.ndarray:
     array = np.asarray(value, dtype=float)
     if array.shape != shape:
@@ -41,7 +63,7 @@ class DecoderRuntimeParams:
         return {
             "K": self.K.tolist(),
             "b": self.b.tolist(),
-            "metadata": dict(self.metadata),
+            "metadata": _serialize_value(self.metadata),
         }
 
 

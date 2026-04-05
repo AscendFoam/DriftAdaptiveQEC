@@ -1,0 +1,23 @@
+# Hybrid Residual-B ablation：
+# - 把时间上下文压到单窗，测试“无历史窗口”时 residual-b 还能剩多少收益
+
+experiment:
+  name: runtime_b_residual_ctx1_v1
+  stage: p4_ablation_ctx1
+  seed: 20260404
+
+base_config: experiment_runtime_b_residual.yaml
+
+paths:
+  dataset_dir: artifacts/datasets/runtime_b_residual_ctx1_v1
+  model_dir: artifacts/models/runtime_b_residual_ctx1_v1
+  report_dir: artifacts/reports/runtime_b_residual_ctx1_v1
+
+runtime_dataset:
+  context_windows: 1
+  include_histogram_deltas: false
+
+slow_loop:
+  hybrid_residual_b:
+    context_windows: 1
+    include_histogram_deltas: false

@@ -1,0 +1,58 @@
+# P4 正式对比配置：
+# - 在冻结场景集上新增 `hybrid_residual_mu`
+# - 保留旧 `cnn_fpga` 主模型，作为“绝对参数回归”对照组
+# - `hybrid_residual_mu` 使用 runtime-consistent residual-mu 数据训练出的新模型
+
+experiment:
+  name: p4_multiscenario_hybrid_mu_v1
+  stage: p4_mu_repair_benchmark
+  seed: 20260401
+
+base_config: experiment_runtime_mu_residual.yaml
+
+p4_benchmark:
+  protocol:
+    protocol_id: p4_hil_hybrid_mu_v1
+    frozen_baseline_set: [static_linear, window_variance, ekf, cnn_fpga, hybrid_residual_mu]
+
+  modes:
+    - name: static_linear
+      label: Static Linear
+      slow_loop_mode: static_linear
+
+    - name: window_variance
+      label: Window Variance
+      slow_loop_mode: window_variance
+
+    - name: ekf
+      label: EKF
+      slow_loop_mode: ekf
+
+    - name: cnn_fpga
+      label: CNN-FPGA
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/static_theta_v2
+        slow_loop:
+          inference_service:
+            label_names: [sigma, mu_q, mu_p, theta_deg]
+
+    - name: hybrid_residual_mu
+      label: Hybrid Residual-Mu
+      slow_loop_mode: hybrid_residual_mu
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/runtime_mu_residual_v1
+        slow_loop:
+          inference_service:
+            label_names: [mu_q, mu_p]
+          hybrid_residual_mu:
+            teacher_mode: window_variance
+            context_windows: 3
+            residual_scale_mu: 1.0
+            residual_clip_mu: 0.12
+            ema_alpha: 0.35
+            ema_apply_to: mu

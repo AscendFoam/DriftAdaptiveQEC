@@ -1,0 +1,104 @@
+# UKF 定向调参 smoke：
+# - 目标不是正式结论，而是验证“速度衰减”是否能修复 UKF 对 step/periodic 的过强惯性
+# - 只保留和 UKF 决策相关的基线，缩短运行时间
+
+experiment:
+  name: p4_ukf_tuning_smoke_v1
+  stage: p4_ukf_tuning_smoke
+  seed: 20260403
+
+base_config: p4_multiscenario_hybrid_b_long.yaml
+
+timing:
+  n_slow_updates: 120
+  n_fast_cycles: 480000
+
+p4_benchmark:
+  protocol:
+    protocol_id: p4_ukf_tuning_smoke_v1
+    repeats: 1
+    frozen_baseline_set: [ekf, ukf_cv, ukf_decay_085, ukf_decay_070, hybrid_residual_b]
+
+  modes:
+    - name: ekf
+      label: EKF
+      slow_loop_mode: ekf
+
+    - name: ukf_cv
+      label: UKF-CV
+      slow_loop_mode: ukf
+      overrides:
+        slow_loop:
+          ukf:
+            velocity_decay: 1.0
+            process_std_sigma: 0.006
+            process_std_mu_q: 0.006
+            process_std_mu_p: 0.006
+            process_std_theta_deg: 0.45
+            process_std_v_sigma: 0.0015
+            process_std_v_mu_q: 0.0015
+            process_std_v_mu_p: 0.0015
+            process_std_v_theta_deg: 0.12
+
+    - name: ukf_decay_085
+      label: UKF-Decay0.85
+      slow_loop_mode: ukf
+      overrides:
+        slow_loop:
+          ukf:
+            velocity_decay: 0.85
+            process_std_sigma: 0.007
+            process_std_mu_q: 0.007
+            process_std_mu_p: 0.007
+            process_std_theta_deg: 0.55
+            process_std_v_sigma: 0.0022
+            process_std_v_mu_q: 0.0022
+            process_std_v_mu_p: 0.0022
+            process_std_v_theta_deg: 0.18
+            measurement_std_sigma: 0.075
+            measurement_std_mu_q: 0.045
+            measurement_std_mu_p: 0.045
+            measurement_std_theta_deg: 3.5
+
+    - name: ukf_decay_070
+      label: UKF-Decay0.70
+      slow_loop_mode: ukf
+      overrides:
+        slow_loop:
+          ukf:
+            velocity_decay: 0.70
+            process_std_sigma: 0.008
+            process_std_mu_q: 0.008
+            process_std_mu_p: 0.008
+            process_std_theta_deg: 0.65
+            process_std_v_sigma: 0.003
+            process_std_v_mu_q: 0.003
+            process_std_v_mu_p: 0.003
+            process_std_v_theta_deg: 0.24
+            measurement_std_sigma: 0.07
+            measurement_std_mu_q: 0.04
+            measurement_std_mu_p: 0.04
+            measurement_std_theta_deg: 3.0
+
+    - name: hybrid_residual_b
+      label: Hybrid Residual-B
+      slow_loop_mode: hybrid_residual_b
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/runtime_b_residual_v1
+        slow_loop:
+          inference_service:
+            label_names: [b_q, b_p]
+          hybrid_residual_b:
+            teacher_mode: window_variance
+            context_windows: 5
+            context_padding: edge_repeat
+            include_histogram_deltas: true
+            include_teacher_prediction: true
+            include_teacher_params: true
+            include_teacher_deltas: true
+            residual_scale_b: 1.0
+            residual_clip_b: 0.12
+            ema_alpha: 0.35
+            ema_apply_to: b

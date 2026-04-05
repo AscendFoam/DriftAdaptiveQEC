@@ -1,0 +1,21 @@
+# Hybrid Residual-B ablation：
+# - 去掉 teacher delta 通道
+
+experiment:
+  name: runtime_b_residual_no_teacher_deltas_v1
+  stage: p4_ablation_no_teacher_deltas
+  seed: 20260404
+
+base_config: experiment_runtime_b_residual.yaml
+
+paths:
+  dataset_dir: artifacts/datasets/runtime_b_residual_no_teacher_deltas_v1
+  model_dir: artifacts/models/runtime_b_residual_no_teacher_deltas_v1
+  report_dir: artifacts/reports/runtime_b_residual_no_teacher_deltas_v1
+
+runtime_dataset:
+  include_teacher_deltas: false
+
+slow_loop:
+  hybrid_residual_b:
+    include_teacher_deltas: false

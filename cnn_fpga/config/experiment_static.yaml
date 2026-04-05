@@ -43,11 +43,21 @@ dataset:
     mu_p: [-0.3, 0.3]
     theta_deg: [-15.0, 15.0]
 
-# 训练配置：当前脚手架为线性回归基线
+# 训练配置：默认切到 Tiny-CNN 主模型，线性基线仍可手动改回
 training:
-  model_type: linear_regression_baseline
+  model_type: tiny_cnn
   max_train_samples: 50000
+  max_val_samples: 5000
   l2_reg: 1.0e-3
+  tiny_cnn:
+    conv_channels: 8
+    kernel_size: 3
+    hidden_dim: 32
+    batch_size: 64
+    epochs: 20
+    learning_rate: 5.0e-3
+    weight_decay: 1.0e-4
+    patience: 5
 
 # 评估配置：默认在测试集上评估
 evaluation:

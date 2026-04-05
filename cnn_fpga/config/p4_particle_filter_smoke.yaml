@@ -1,0 +1,95 @@
+# Particle Filter 强 baseline smoke：
+# - 在正式 P4 场景集上快速检查 `Particle Filter` 能否稳定接入当前运行时
+# - 该配置只用于单次 repeat 的冒烟验证，不直接作为最终结论
+
+experiment:
+  name: p4_particle_filter_smoke_v1
+  stage: p4_particle_filter_smoke
+  seed: 20260404
+
+base_config: p4_multiscenario_hybrid_b_long.yaml
+
+timing:
+  n_slow_updates: 120
+  n_fast_cycles: 480000
+
+p4_benchmark:
+  protocol:
+    protocol_id: p4_particle_filter_smoke_v1
+    repeats: 1
+    frozen_baseline_set: [ekf, ukf, particle_filter, hybrid_residual_b]
+
+  modes:
+    - name: ekf
+      label: EKF
+      slow_loop_mode: ekf
+
+    - name: ukf
+      label: UKF
+      slow_loop_mode: ukf
+      overrides:
+        slow_loop:
+          ukf:
+            initial_velocity_std_sigma: 0.008
+            initial_velocity_std_mu_q: 0.008
+            initial_velocity_std_mu_p: 0.008
+            initial_velocity_std_theta_deg: 0.6
+            process_std_sigma: 0.006
+            process_std_mu_q: 0.006
+            process_std_mu_p: 0.006
+            process_std_theta_deg: 0.45
+            process_std_v_sigma: 0.0015
+            process_std_v_mu_q: 0.0015
+            process_std_v_mu_p: 0.0015
+            process_std_v_theta_deg: 0.12
+
+    - name: particle_filter
+      label: Particle Filter
+      slow_loop_mode: particle_filter
+      overrides:
+        postprocess:
+          ema_alpha: 0.20
+          ema_apply_to: all
+        slow_loop:
+          particle_filter:
+            n_particles: 512
+            initial_std_sigma: 0.03
+            initial_std_mu_q: 0.02
+            initial_std_mu_p: 0.02
+            initial_std_theta_deg: 3.0
+            process_std_sigma: 0.006
+            process_std_mu_q: 0.004
+            process_std_mu_p: 0.004
+            process_std_theta_deg: 0.45
+            measurement_std_sigma: 0.12
+            measurement_std_mu_q: 0.08
+            measurement_std_mu_p: 0.08
+            measurement_std_theta_deg: 5.5
+            resample_ess_ratio: 0.30
+            rejuvenation_std_sigma: 0.0015
+            rejuvenation_std_mu_q: 0.0010
+            rejuvenation_std_mu_p: 0.0010
+            rejuvenation_std_theta_deg: 0.12
+
+    - name: hybrid_residual_b
+      label: Hybrid Residual-B
+      slow_loop_mode: hybrid_residual_b
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/runtime_b_residual_v1
+        slow_loop:
+          inference_service:
+            label_names: [b_q, b_p]
+          hybrid_residual_b:
+            teacher_mode: window_variance
+            context_windows: 5
+            context_padding: edge_repeat
+            include_histogram_deltas: true
+            include_teacher_prediction: true
+            include_teacher_params: true
+            include_teacher_deltas: true
+            residual_scale_b: 1.0
+            residual_clip_b: 0.12
+            ema_alpha: 0.35
+            ema_apply_to: b

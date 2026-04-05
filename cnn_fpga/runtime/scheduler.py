@@ -6,11 +6,36 @@ from collections import deque
 from dataclasses import dataclass, field
 from typing import Any, Callable, Deque, Dict, List, Optional
 
+import numpy as np
+
 from .latency_injector import LatencyInjector, LatencySample
 from .param_bank import DecoderRuntimeParams, ParamBank
 
 
 SlowPathFn = Callable[["WindowFrame", DecoderRuntimeParams], DecoderRuntimeParams]
+FastPathFn = Callable[[int, float, bool], Optional[Dict[str, Any]]]
+
+
+def _summarize_value(value: Any) -> Any:
+    """Convert runtime payloads to JSON-friendly summaries for event logs."""
+    if isinstance(value, np.ndarray):
+        if value.size <= 16:
+            return value.tolist()
+        return {
+            "type": "ndarray",
+            "shape": list(value.shape),
+            "min": float(np.min(value)),
+            "max": float(np.max(value)),
+            "mean": float(np.mean(value)),
+            "std": float(np.std(value)),
+        }
+    if isinstance(value, dict):
+        return {str(key): _summarize_value(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_summarize_value(item) for item in value]
+    if isinstance(value, np.generic):
+        return value.item()
+    return value
 
 
 @dataclass(frozen=True)
@@ -98,7 +123,7 @@ class WindowFrame:
             "start_epoch": self.start_epoch,
             "end_epoch": self.end_epoch,
             "ready_time_us": self.ready_time_us,
-            "payload": dict(self.payload),
+            "payload": _summarize_value(self.payload),
         }
 
 
@@ -112,7 +137,8 @@ class SlowUpdateJob:
     started_time_us: float
     ready_time_us: float
     latency: LatencySample
-    proposed_params: DecoderRuntimeParams
+    active_params: DecoderRuntimeParams
+    proposed_params: Optional[DecoderRuntimeParams] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -122,7 +148,8 @@ class SlowUpdateJob:
             "started_time_us": self.started_time_us,
             "ready_time_us": self.ready_time_us,
             "latency": self.latency.to_dict(),
-            "proposed_params": self.proposed_params.to_dict(),
+            "active_params": self.active_params.to_dict(),
+            "proposed_params": None if self.proposed_params is None else self.proposed_params.to_dict(),
         }
 
 
@@ -254,6 +281,26 @@ class DualLoopScheduler:
 
         finished_job = self._slow_job
         self._slow_job = None
+        try:
+            proposed_params = self.slow_path_fn(finished_job.window, finished_job.active_params)
+        except Exception as exc:  # pragma: no cover - defensive path
+            error_reason = getattr(exc, "reason", str(exc))
+            self._record(
+                SchedulerEvent(
+                    kind="slow_update_failed",
+                    epoch_id=self.epoch_id,
+                    time_us=self.time_us,
+                    details={
+                        "job_id": finished_job.job_id,
+                        "window_id": finished_job.window.window_id,
+                        "reason": error_reason,
+                    },
+                ),
+                events,
+            )
+            return
+
+        finished_job.proposed_params = proposed_params
         self._record(
             SchedulerEvent(
                 kind="slow_update_finished",
@@ -302,20 +349,6 @@ class DualLoopScheduler:
 
         window = self._window_queue.popleft()
         active_params = self.param_bank.read_active()
-        try:
-            proposed_params = self.slow_path_fn(window, active_params)
-        except Exception as exc:  # pragma: no cover - defensive path
-            self._next_slow_start_time_us = self.time_us + self.config.slow_update_period_us
-            self._record(
-                SchedulerEvent(
-                    kind="slow_update_failed",
-                    epoch_id=self.epoch_id,
-                    time_us=self.time_us,
-                    details={"window_id": window.window_id, "error": str(exc)},
-                ),
-                events,
-            )
-            return
 
         latency = self.latency_injector.sample_slow_update()
         self._job_counter += 1
@@ -326,7 +359,7 @@ class DualLoopScheduler:
             started_time_us=self.time_us,
             ready_time_us=self.time_us + latency.total_us,
             latency=latency,
-            proposed_params=proposed_params,
+            active_params=active_params,
         )
         self._next_slow_start_time_us = self.time_us + self.config.slow_update_period_us
         if latency.total_us > self.config.slow_path_budget_us:
@@ -357,7 +390,15 @@ class DualLoopScheduler:
 
     def tick(self, *, window_payload: Optional[Dict[str, Any]] = None) -> List[SchedulerEvent]:
         """Advance one fast-path cycle and emit scheduler events."""
+        return self.tick_with_fast_path(window_payload=window_payload, fast_path_fn=None)
 
+    def tick_with_fast_path(
+        self,
+        *,
+        window_payload: Optional[Dict[str, Any]] = None,
+        fast_path_fn: Optional[FastPathFn] = None,
+    ) -> List[SchedulerEvent]:
+        """Advance one fast-path cycle and optionally execute the fast-loop callback."""
         events: List[SchedulerEvent] = []
         self.epoch_id += 1
         self.time_us = self.epoch_id * self.config.t_fast_us
@@ -397,7 +438,15 @@ class DualLoopScheduler:
 
         self._maybe_finish_slow_job(events)
 
-        if self.epoch_id >= self._next_window_emit_epoch:
+        will_emit_window = self.epoch_id >= self._next_window_emit_epoch
+        if fast_path_fn is not None:
+            fast_payload = fast_path_fn(self.epoch_id, self.time_us, will_emit_window)
+            if will_emit_window and fast_payload is not None:
+                if window_payload is not None:
+                    raise ValueError("window_payload and fast_path_fn both produced window payload")
+                window_payload = fast_payload
+
+        if will_emit_window:
             self._emit_window(window_payload, events)
 
         self._maybe_start_slow_job(events)
@@ -408,6 +457,7 @@ class DualLoopScheduler:
         n_cycles: int,
         *,
         window_payload_factory: Optional[Callable[[int, int], Dict[str, Any]]] = None,
+        fast_path_fn: Optional[FastPathFn] = None,
     ) -> List[SchedulerEvent]:
         if n_cycles <= 0:
             raise ValueError("n_cycles must be positive")
@@ -418,7 +468,7 @@ class DualLoopScheduler:
             will_emit_window = self.epoch_id + 1 >= self._next_window_emit_epoch
             if will_emit_window and window_payload_factory is not None:
                 payload = window_payload_factory(self._window_counter + 1, self.epoch_id + 1)
-            collected.extend(self.tick(window_payload=payload))
+            collected.extend(self.tick_with_fast_path(window_payload=payload, fast_path_fn=fast_path_fn))
         return collected
 
     def snapshot(self) -> Dict[str, Any]:

@@ -1,0 +1,78 @@
+# Runtime-consistent residual-mu 实验模板：
+# - 数据集来自真实快/慢回路窗口，而不是静态高斯直方图
+# - teacher 先用 Window Variance，CNN 只学 mu_q / mu_p 的残差
+# - 运行时默认走 `hybrid_residual_mu + EMA`，并打开最小时间上下文
+
+experiment:
+  name: runtime_mu_residual_v1
+  stage: p4_mu_repair
+  seed: 20260401
+
+base_config: p4_multiscenario.yaml
+
+paths:
+  output_root: runs
+  dataset_dir: artifacts/datasets/runtime_mu_residual_v1
+  model_dir: artifacts/models/runtime_mu_residual_v1
+  report_dir: artifacts/reports/runtime_mu_residual_v1
+
+runtime_dataset:
+  scenarios_from_p4: true
+  reference_mode: static_linear
+  teacher_mode: window_variance
+  label_semantics: residual_mu
+  # 3 帧上下文是首版“最小时间上下文”：
+  # [t-2, t-1, t] 三个窗口堆叠后送入 Tiny-CNN。
+  context_windows: 3
+  context_padding: edge_repeat
+  windows_per_scenario: 192
+  scenario_seed_stride: 1000
+  split:
+    train: 0.8
+    val: 0.1
+    test: 0.1
+
+training:
+  model_type: tiny_cnn
+  max_train_samples: 50000
+  max_val_samples: 5000
+  tiny_cnn:
+    conv_channels: 12
+    kernel_size: 3
+    hidden_dim: 64
+    batch_size: 64
+    epochs: 24
+    learning_rate: 3.0e-3
+    weight_decay: 1.0e-4
+    patience: 6
+    # 当前首版不再强调 theta，而是把损失重心压到 mu_q / mu_p。
+    label_weights:
+      mu_q: 2.0
+      mu_p: 2.0
+
+evaluation:
+  target_split: test
+
+slow_loop:
+  # 训练完成后，运行时直接走 teacher + residual CNN 融合模式。
+  mode: hybrid_residual_mu
+  model_artifact:
+    path:
+    use_latest_model_dir_artifact: true
+    artifact_selector: latest_float
+  inference_service:
+    mode: inproc
+    backend: artifact_npz
+    label_names: [mu_q, mu_p]
+    python_executable: .venvs/tf311/bin/python
+  hybrid_residual_mu:
+    teacher_mode: window_variance
+    context_windows: 3
+    residual_scale_mu: 1.0
+    residual_clip_mu: 0.12
+    ema_alpha: 0.35
+    ema_apply_to: mu
+
+postprocess:
+  ema_alpha: 0.35
+  ema_apply_to: mu

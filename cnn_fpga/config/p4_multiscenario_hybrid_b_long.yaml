@@ -1,0 +1,20 @@
+# P4 更长配置复验：
+# - 使用已经回写的新输入范围默认值
+# - 主要用于在更长窗口统计下确认 `hybrid_residual_b` 对 `constant_residual_mu / ekf` 的优势
+# - 默认仍保留完整场景集，但实际运行时可通过 `--mode` 过滤到三条主线
+
+experiment:
+  name: p4_multiscenario_hybrid_b_long_v1
+  stage: p4_b_repair_benchmark_long_confirm
+  seed: 20260402
+
+base_config: p4_multiscenario_hybrid_b.yaml
+
+timing:
+  n_slow_updates: 900
+  n_fast_cycles: 3600000
+
+p4_benchmark:
+  protocol:
+    protocol_id: p4_hil_hybrid_b_long_v1
+    repeats: 4

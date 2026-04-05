@@ -1,0 +1,79 @@
+# P3 定向调参实验：
+# - 当正式 mode benchmark 表明 overflow 主要由 histogram_input 主导时，优先调以下三类量：
+#   1. fast_loop.syndrome_limit
+#   2. fast_loop.histogram_range_limit
+#   3. model.sigma_measurement
+# - 暂不继续沿 gain_scale 方向盲调。
+experiment:
+  name: hardware_hil_histogram_tuning
+  stage: p3_hil_histogram_tuning
+
+base_config: hardware_hil.yaml
+
+paths:
+  output_root: runs
+
+tuning:
+  baseline_candidate: baseline_current
+
+  short_timing:
+    n_slow_updates: 240
+    n_fast_cycles: 960000
+
+  confirm_timing:
+    n_slow_updates: 900
+    n_fast_cycles: 3600000
+
+  selection:
+    ler_tolerance_abs: 0.015
+    confirm_top_k: 4
+
+  candidates:
+    - name: baseline_current
+      overrides: {}
+
+    - name: hist_range_125
+      overrides:
+        fast_loop:
+          histogram_range_limit: 1.5666426716443753
+
+    - name: hist_range_150
+      overrides:
+        fast_loop:
+          histogram_range_limit: 1.8799712059732502
+
+    - name: syndrome_110_hist_150
+      overrides:
+        fast_loop:
+          syndrome_limit: 1.3786455510470502
+          histogram_range_limit: 1.8799712059732502
+
+    - name: hist_150_sigma_meas_004
+      overrides:
+        fast_loop:
+          histogram_range_limit: 1.8799712059732502
+        model:
+          sigma_measurement: 0.04
+
+    - name: hist_150_sigma_meas_003
+      overrides:
+        fast_loop:
+          histogram_range_limit: 1.8799712059732502
+        model:
+          sigma_measurement: 0.03
+
+    - name: syndrome_110_hist_150_sigma_meas_004
+      overrides:
+        fast_loop:
+          syndrome_limit: 1.3786455510470502
+          histogram_range_limit: 1.8799712059732502
+        model:
+          sigma_measurement: 0.04
+
+    - name: syndrome_115_hist_150_sigma_meas_003
+      overrides:
+        fast_loop:
+          syndrome_limit: 1.441311257912825
+          histogram_range_limit: 1.8799712059732502
+        model:
+          sigma_measurement: 0.03

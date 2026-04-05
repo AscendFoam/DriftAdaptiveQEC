@@ -1,0 +1,123 @@
+# P3 参数调优实验第三轮：
+# - 针对前两轮“clip/alpha/beta 改动有限”的结论，
+# - 本轮引入更直接的整体增益缩放 `gain_scale`，用来整体收紧 K 的谱半径。
+experiment:
+  name: hardware_hil_overflow_tuning_v3
+  stage: p3_hil_tuning
+
+base_config: hardware_hil.yaml
+
+paths:
+  output_root: runs
+
+tuning:
+  baseline_candidate: baseline_current
+
+  short_timing:
+    n_slow_updates: 240
+    n_fast_cycles: 960000
+
+  confirm_timing:
+    n_slow_updates: 900
+    n_fast_cycles: 3600000
+
+  selection:
+    ler_tolerance_abs: 0.015
+    confirm_top_k: 4
+
+  # 第二轮后默认值：
+  # - gain_clip: [0.10, 1.20]
+  # - beta_smoothing: 0.20
+  # - alpha_bias: 0.90
+  #
+  # 第三轮重点：
+  # - 不再把主要精力放在 clip 上，而是测试整体增益缩放 gain_scale
+  # - 目标是显著降低 mean_correction_norm，从而有希望把 overflow_rate 拉下来
+  candidates:
+    - name: baseline_current
+      gain_clip: [0.10, 1.20]
+      gain_scale: 1.00
+      beta_smoothing: 0.20
+      alpha_bias: 0.90
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz
+
+    - name: gain_scale_097
+      gain_clip: [0.10, 1.20]
+      gain_scale: 0.97
+      beta_smoothing: 0.20
+      alpha_bias: 0.90
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz
+
+    - name: gain_scale_095
+      gain_clip: [0.10, 1.20]
+      gain_scale: 0.95
+      beta_smoothing: 0.20
+      alpha_bias: 0.90
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz
+
+    - name: gain_scale_093
+      gain_clip: [0.10, 1.20]
+      gain_scale: 0.93
+      beta_smoothing: 0.20
+      alpha_bias: 0.90
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz
+
+    - name: gain_scale_090
+      gain_clip: [0.10, 1.20]
+      gain_scale: 0.90
+      beta_smoothing: 0.20
+      alpha_bias: 0.90
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz
+
+    - name: gain_scale_095_alpha085
+      gain_clip: [0.10, 1.20]
+      gain_scale: 0.95
+      beta_smoothing: 0.20
+      alpha_bias: 0.85
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz
+
+    - name: gain_scale_093_alpha085
+      gain_clip: [0.10, 1.20]
+      gain_scale: 0.93
+      beta_smoothing: 0.20
+      alpha_bias: 0.85
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz
+
+    - name: gain_scale_090_alpha085
+      gain_clip: [0.10, 1.20]
+      gain_scale: 0.90
+      beta_smoothing: 0.20
+      alpha_bias: 0.85
+      backend: mock
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      inference_service_mode: subprocess
+      inference_backend: artifact_npz

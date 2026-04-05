@@ -1,0 +1,60 @@
+# Hybrid Residual-B 输入统计范围定向调参：
+# - 冻结当前 runtime-consistent residual-b 模型与慢回路模式
+# - 只调整输入统计相关范围，不再改模型权重、teacher 策略或参数映射主线
+# - 目标是在尽量不伤害 LER 的前提下，继续压低 histogram_input overflow
+
+experiment:
+  name: hybrid_b_histogram_tuning
+  stage: p4_hybrid_b_histogram_tuning
+
+base_config: experiment_runtime_b_residual.yaml
+
+paths:
+  output_root: runs
+
+tuning:
+  baseline_candidate: baseline_current
+
+  short_timing:
+    n_slow_updates: 360
+    n_fast_cycles: 1440000
+
+  confirm_timing:
+    n_slow_updates: 900
+    n_fast_cycles: 3600000
+
+  selection:
+    ler_tolerance_abs: 0.010
+    confirm_top_k: 4
+
+  candidates:
+    - name: baseline_current
+      overrides: {}
+
+    - name: hist_range_165
+      overrides:
+        fast_loop:
+          histogram_range_limit: 2.067969657
+
+    - name: hist_range_180
+      overrides:
+        fast_loop:
+          histogram_range_limit: 2.255965971
+
+    - name: syndrome_120_hist_165
+      overrides:
+        fast_loop:
+          syndrome_limit: 1.503977
+          histogram_range_limit: 2.067969657
+
+    - name: syndrome_120_hist_180
+      overrides:
+        fast_loop:
+          syndrome_limit: 1.503977
+          histogram_range_limit: 2.255965971
+
+    - name: syndrome_125_hist_180
+      overrides:
+        fast_loop:
+          syndrome_limit: 1.566643
+          histogram_range_limit: 2.255965971

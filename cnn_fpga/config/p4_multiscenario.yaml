@@ -1,0 +1,124 @@
+# P4 多场景正式 benchmark 协议：
+# - 正式冻结的 baseline 集合：Static Linear / Window Variance / EKF / CNN-FPGA
+# - 正式冻结的场景集、seed 步长、运行轮数与报告模板
+# - real_board 继续保留为条件性扩展，不进入默认主线统计
+
+experiment:
+  name: p4_multiscenario_v1
+  stage: p4_benchmark
+  seed: 20260331
+
+base_config: hardware_hil.yaml
+
+paths:
+  output_root: runs
+
+# P4 正式轮数：相比 P3 单模式长跑略收敛，以便在多模式、多场景下仍可运行。
+timing:
+  n_slow_updates: 600
+  n_fast_cycles: 2400000
+
+slow_loop:
+  mode: model_artifact
+  window_variance:
+    sigma_clip: [0.05, 0.85]
+    mu_clip: [-1.50, 1.50]
+    theta_default_deg: 0.0
+    min_anisotropy_ratio: 0.08
+  ekf:
+    initial_sigma: 0.25
+    initial_mu_q: 0.0
+    initial_mu_p: 0.0
+    initial_theta_deg: 0.0
+    process_std_sigma: 0.012
+    process_std_mu_q: 0.010
+    process_std_mu_p: 0.010
+    process_std_theta_deg: 0.80
+    measurement_std_sigma: 0.080
+    measurement_std_mu_q: 0.060
+    measurement_std_mu_p: 0.060
+    measurement_std_theta_deg: 4.00
+    covariance_floor: 1.0e-6
+
+p4_benchmark:
+  protocol:
+    protocol_id: p4_hil_v1
+    report_template_version: p4_hil_report_v1
+    repeats: 2
+    scenario_seed_stride: 1000
+    mode_seed_stride: 100000
+    real_board_policy: conditional_extension
+    frozen_baseline_set: [static_linear, window_variance, ekf, cnn_fpga]
+
+  modes:
+    - name: static_linear
+      label: Static Linear
+      slow_loop_mode: static_linear
+    - name: window_variance
+      label: Window Variance
+      slow_loop_mode: window_variance
+    - name: ekf
+      label: EKF
+      slow_loop_mode: ekf
+    - name: cnn_fpga
+      label: CNN-FPGA
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+
+  scenarios:
+    - name: static_bias_theta
+      label: Static Bias+Theta
+      overrides:
+        mock_signal:
+          type: static
+          sigma0: 0.22
+          sigma_min: 0.22
+          sigma_max: 0.22
+          mu_q0: 0.035
+          mu_p0: -0.025
+          theta_deg0: 4.0
+    - name: linear_ramp
+      label: Linear Ramp
+      overrides:
+        mock_signal:
+          type: linear
+          sigma0: 0.14
+          sigma_min: 0.08
+          sigma_max: 0.45
+          sigma_alpha: 1.0e-7
+          mu_q0: 0.010
+          mu_p0: -0.010
+          theta_deg0: 2.0
+          theta_step_std_deg: 0.10
+    - name: step_sigma_theta
+      label: Step Sigma+Theta
+      overrides:
+        mock_signal:
+          type: step
+          sigma0: 0.16
+          sigma_min: 0.08
+          sigma_max: 0.50
+          jump_round: 1200000
+          delta_sigma: 0.20
+          mu_q0: 0.000
+          mu_p0: 0.000
+          delta_mu_q: 0.040
+          delta_mu_p: -0.040
+          theta_deg0: 0.0
+          delta_theta_deg: 8.0
+    - name: periodic_drift
+      label: Periodic Drift
+      overrides:
+        mock_signal:
+          type: periodic
+          sigma0: 0.24
+          sigma_min: 0.10
+          sigma_max: 0.42
+          sigma_amplitude: 0.07
+          sigma_frequency: 1.0e-6
+          mu_q0: 0.015
+          mu_p0: -0.015
+          theta_deg0: 0.0
+          theta_amplitude_deg: 7.0
+          theta_frequency: 1.3e-6
+          theta_step_std_deg: 0.15

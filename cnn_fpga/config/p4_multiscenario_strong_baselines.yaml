@@ -1,0 +1,98 @@
+# P4 强 baseline 对比配置：
+# - 在当前长配置正式口径上，引入更强经典自适应 baseline
+# - 当前版本加入 `RLS Residual-B` 和 `UKF`
+# - `Particle Filter` 后续继续在此基础上扩展
+
+experiment:
+  name: p4_multiscenario_strong_baselines_v1
+  stage: p4_strong_baselines
+  seed: 20260403
+
+base_config: p4_multiscenario_hybrid_b_long.yaml
+
+p4_benchmark:
+  protocol:
+    protocol_id: p4_strong_baselines_v1
+    frozen_baseline_set: [ekf, ukf, constant_residual_mu, rls_residual_b, hybrid_residual_b]
+
+  modes:
+    - name: ekf
+      label: EKF
+      slow_loop_mode: ekf
+
+    - name: ukf
+      label: UKF
+      slow_loop_mode: ukf
+      overrides:
+        slow_loop:
+          ukf:
+            initial_velocity_std_sigma: 0.008
+            initial_velocity_std_mu_q: 0.008
+            initial_velocity_std_mu_p: 0.008
+            initial_velocity_std_theta_deg: 0.6
+            process_std_sigma: 0.006
+            process_std_mu_q: 0.006
+            process_std_mu_p: 0.006
+            process_std_theta_deg: 0.45
+            process_std_v_sigma: 0.0015
+            process_std_v_mu_q: 0.0015
+            process_std_v_mu_p: 0.0015
+            process_std_v_theta_deg: 0.12
+            measurement_std_sigma: 0.08
+            measurement_std_mu_q: 0.05
+            measurement_std_mu_p: 0.05
+            measurement_std_theta_deg: 4.0
+            alpha: 0.3
+            beta: 2.0
+            kappa: 0.0
+
+    - name: constant_residual_mu
+      label: Constant Residual-Mu
+      slow_loop_mode: constant_residual_mu
+      overrides:
+        paths:
+          dataset_dir: artifacts/datasets/runtime_mu_residual_v1
+        slow_loop:
+          constant_residual_mu:
+            teacher_mode: window_variance
+            use_dataset_train_mean: true
+        postprocess:
+          ema_alpha: 0.35
+          ema_apply_to: mu
+
+    - name: rls_residual_b
+      label: RLS Residual-B
+      slow_loop_mode: rls_residual_b
+      overrides:
+        slow_loop:
+          rls_residual_b:
+            teacher_mode: ekf
+            forgetting_factor: 0.995
+            init_covariance: 25.0
+            covariance_floor: 1.0e-6
+            residual_clip_b: 0.12
+            ema_alpha: 0.35
+            ema_apply_to: b
+
+    - name: hybrid_residual_b
+      label: Hybrid Residual-B
+      slow_loop_mode: hybrid_residual_b
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/runtime_b_residual_v1
+        slow_loop:
+          inference_service:
+            label_names: [b_q, b_p]
+          hybrid_residual_b:
+            teacher_mode: window_variance
+            context_windows: 5
+            context_padding: edge_repeat
+            include_histogram_deltas: true
+            include_teacher_prediction: true
+            include_teacher_params: true
+            include_teacher_deltas: true
+            residual_scale_b: 1.0
+            residual_clip_b: 0.12
+            ema_alpha: 0.35
+            ema_apply_to: b

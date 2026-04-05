@@ -11,6 +11,7 @@ import hashlib
 import json
 import re
 from ast import literal_eval
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
@@ -20,6 +21,16 @@ def load_yaml_config(path: str | Path) -> Dict[str, Any]:
     cfg_path = Path(path).expanduser().resolve()
     if not cfg_path.exists():
         raise FileNotFoundError(f"Config file not found: {cfg_path}")
+    data = _load_yaml_file(cfg_path)
+    base_ref = data.get("base_config")
+    if not base_ref:
+        return data
+    base_cfg = load_yaml_config((cfg_path.parent / str(base_ref)).resolve())
+    return _deep_merge(base_cfg, {key: value for key, value in data.items() if key != "base_config"})
+
+
+def _load_yaml_file(cfg_path: Path) -> Dict[str, Any]:
+    """Load one YAML file without resolving `base_config`."""
     try:
         import yaml  # type: ignore
     except ImportError as exc:
@@ -33,6 +44,16 @@ def load_yaml_config(path: str | Path) -> Dict[str, Any]:
     if not isinstance(data, dict):
         raise ValueError(f"YAML root must be a mapping: {cfg_path}")
     return data
+
+
+def _deep_merge(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]:
+    merged = deepcopy(base)
+    for key, value in override.items():
+        if isinstance(value, dict) and isinstance(merged.get(key), dict):
+            merged[key] = _deep_merge(merged[key], value)
+        else:
+            merged[key] = deepcopy(value)
+    return merged
 
 
 def config_hash(config: Dict[str, Any], length: int = 12) -> str:

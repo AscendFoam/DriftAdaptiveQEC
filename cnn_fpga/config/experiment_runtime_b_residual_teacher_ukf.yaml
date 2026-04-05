@@ -1,0 +1,22 @@
+# Hybrid Residual-B ablation：
+# - 只改 teacher，从 `window_variance` 切到 `ukf`
+# - 其余训练目标、输入语义保持与当前主模型一致
+
+experiment:
+  name: runtime_b_residual_teacher_ukf_v1
+  stage: p4_ablation_teacher_ukf
+  seed: 20260404
+
+base_config: experiment_runtime_b_residual.yaml
+
+paths:
+  dataset_dir: artifacts/datasets/runtime_b_residual_teacher_ukf_v1
+  model_dir: artifacts/models/runtime_b_residual_teacher_ukf_v1
+  report_dir: artifacts/reports/runtime_b_residual_teacher_ukf_v1
+
+runtime_dataset:
+  teacher_mode: ukf
+
+slow_loop:
+  hybrid_residual_b:
+    teacher_mode: ukf

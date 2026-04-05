@@ -7,6 +7,8 @@ experiment:
 # 输出路径：行为仿真结果落盘目录
 paths:
   output_root: runs
+  # P2 正式主模型切到 theta 定向增强版 static_theta_v2。
+  model_dir: artifacts/models/static_theta_v2
 
 # 工程默认参数：与快慢回路基线一致
 hardware_defaults:
@@ -14,6 +16,27 @@ hardware_defaults:
   t_fast_us: 5.0
   window_size: 2048
   t_slow_update_ms: 20.0
+
+# 运行时调度参数：P2 行为仿真也按双回路节拍推进
+runtime:
+  t_fast_us: 5.0
+  window_size: 2048
+  t_slow_update_ms: 20.0
+  # 20ms / 5us = 4000 cycles，对应一次慢回路更新节拍。
+  window_stride: 4000
+  max_pending_windows: 2
+  commit_delay_cycles: 1
+  guard_cycles_after_commit: 0
+
+# 快回路行为参数：这里的直方图和固定点配置会真正进入 fast_loop_emulator
+fast_loop:
+  fixed_point: Q4.20
+  enable_fixed_point: true
+  histogram_bins: 32
+  syndrome_limit: 1.2533141373155001
+  correction_limit: 2.5066282746310002
+  use_full_qec_model: true
+  overflow_alert_ratio: 0.05
 
 # 参数映射策略：与主实验文档保持一致，方便对齐
 param_mapping:
@@ -24,15 +47,17 @@ param_mapping:
 
 # 仿真规模：轮数与重复次数
 simulation:
-  n_rounds: 4000
-  repeats: 12
+  # 这里保留 repeats 给多次重复统计；具体快回路周期数由 timing 控制。
+  n_rounds: 30000
+  repeats: 6
 
 # 线性解码和噪声基础参数
 model:
   gain: 0.9
   theta_deg: 0.0
   sigma_measurement: 0.05
-  sigma_ratio_p: 1.0
+  # 与 theta_v2 训练数据保持一致：使用各向异性椭圆噪声，否则 theta 在统计上不可辨识。
+  sigma_ratio_p: 0.55
   mu_q: 0.0
   mu_p: 0.0
 
@@ -42,6 +67,70 @@ measurement:
   measurement_efficiency: 0.95
   ancilla_error_rate: 0.01
   add_shot_noise: true
+
+# 慢回路配置：默认切到 model_artifact，直接使用最新浮点主模型
+slow_loop:
+  mode: model_artifact
+  fallback_sigma: 0.25
+  fallback_mu_q: 0.0
+  fallback_mu_p: 0.0
+  fallback_theta_deg: 0.0
+  # 公平 oracle 基线至少延迟一个窗口，避免直接读取当前窗口真值。
+  oracle_delay_windows: 1
+  prediction_noise:
+    sigma_std: 0.01
+    mu_std: 0.005
+    theta_deg_std: 0.75
+  fixed_baseline:
+    sigma: 0.25
+    mu_q: 0.0
+    mu_p: 0.0
+    theta_deg: 0.0
+  model_artifact:
+    path:
+    use_latest_model_dir_artifact: true
+    artifact_selector: latest_float
+
+# P2 也保留延迟/失败模型，用于验证“行为正确性 + 时序预算”
+timing:
+  n_slow_updates: 6
+  n_fast_cycles: 30000
+  slow_update_budget_us: 5000.0
+  fast_cycle_budget_us: 1.5
+
+latency_model:
+  dma_mean_us: 10.0
+  dma_std_us: 2.0
+  preprocess_mean_us: 60.0
+  preprocess_std_us: 12.0
+  inference_mean_us: 900.0
+  inference_std_us: 150.0
+  writeback_mean_us: 20.0
+  writeback_std_us: 5.0
+  commit_ack_mean_us: 5.0
+  commit_ack_std_us: 1.0
+
+fast_path_model:
+  latency_mean_us: 1.0
+  latency_std_us: 0.12
+
+error_model:
+  dma_timeout_prob: 1.0e-4
+  axi_write_fail_prob: 5.0e-5
+  cnn_infer_fail_prob: 2.0e-5
+
+# P2 模式对比：使用两个公平基线 + 浮点模型 + int8 模型
+benchmark_modes:
+  - name: fixed_baseline
+    slow_loop_mode: fixed_baseline
+  - name: oracle_delayed
+    slow_loop_mode: oracle_delayed
+  - name: model_artifact
+    slow_loop_mode: model_artifact
+    artifact_selector: latest_float
+  - name: int8_artifact
+    slow_loop_mode: model_artifact
+    artifact_selector: latest_int8
 
 # 漂移场景集合：用于行为仿真稳定性验证
 drift:

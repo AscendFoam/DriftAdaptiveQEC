@@ -1,0 +1,78 @@
+# P4 正式对比配置：
+# - 保留旧 `CNN-FPGA` 作为绝对参数回归对照组
+# - 新增 `Constant Residual-Mu` 作为公平常数补偿 baseline
+# - 主方案切到 `Hybrid Residual-B`
+
+experiment:
+  name: p4_multiscenario_hybrid_b_v1
+  stage: p4_b_repair_benchmark
+  seed: 20260402
+
+base_config: experiment_runtime_b_residual.yaml
+
+p4_benchmark:
+  protocol:
+    protocol_id: p4_hil_hybrid_b_v1
+    frozen_baseline_set: [window_variance, ekf, constant_residual_mu, cnn_fpga, hybrid_residual_b]
+
+  modes:
+    - name: window_variance
+      label: Window Variance
+      slow_loop_mode: window_variance
+
+    - name: ekf
+      label: EKF
+      slow_loop_mode: ekf
+
+    - name: constant_residual_mu
+      label: Constant Residual-Mu
+      slow_loop_mode: constant_residual_mu
+      overrides:
+        paths:
+          dataset_dir: artifacts/datasets/runtime_mu_residual_v1
+        slow_loop:
+          constant_residual_mu:
+            teacher_mode: window_variance
+            use_dataset_train_mean: true
+        postprocess:
+          ema_alpha: 0.35
+          ema_apply_to: mu
+
+    - name: cnn_fpga
+      label: CNN-FPGA
+      slow_loop_mode: model_artifact
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/static_theta_v2
+        slow_loop:
+          inference_service:
+            label_names: [sigma, mu_q, mu_p, theta_deg]
+          context_windows: 1
+          include_histogram_deltas: false
+          include_teacher_prediction: false
+          include_teacher_params: false
+          include_teacher_deltas: false
+
+    - name: hybrid_residual_b
+      label: Hybrid Residual-B
+      slow_loop_mode: hybrid_residual_b
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/runtime_b_residual_v1
+        slow_loop:
+          inference_service:
+            label_names: [b_q, b_p]
+          hybrid_residual_b:
+            teacher_mode: window_variance
+            context_windows: 5
+            context_padding: edge_repeat
+            include_histogram_deltas: true
+            include_teacher_prediction: true
+            include_teacher_params: true
+            include_teacher_deltas: true
+            residual_scale_b: 1.0
+            residual_clip_b: 0.12
+            ema_alpha: 0.35
+            ema_apply_to: b

@@ -1,0 +1,96 @@
+# Teacher-guided residual Particle Filter smoke：
+# - 该配置只验证 residual-b 语义的 PF 是否已经能接入当前 P4 运行时主线
+# - 暂不作为正式结论 benchmark
+
+experiment:
+  name: p4_particle_filter_residual_smoke_v1
+  stage: p4_particle_filter_residual_smoke
+  seed: 20260404
+
+base_config: p4_multiscenario_hybrid_b_long.yaml
+
+timing:
+  n_slow_updates: 120
+  n_fast_cycles: 480000
+
+p4_benchmark:
+  protocol:
+    protocol_id: p4_particle_filter_residual_smoke_v1
+    repeats: 1
+    frozen_baseline_set: [ukf, rls_residual_b, particle_filter_residual_b, hybrid_residual_b]
+
+  modes:
+    - name: ukf
+      label: UKF
+      slow_loop_mode: ukf
+      overrides:
+        slow_loop:
+          ukf:
+            initial_velocity_std_sigma: 0.008
+            initial_velocity_std_mu_q: 0.008
+            initial_velocity_std_mu_p: 0.008
+            initial_velocity_std_theta_deg: 0.6
+            process_std_sigma: 0.006
+            process_std_mu_q: 0.006
+            process_std_mu_p: 0.006
+            process_std_theta_deg: 0.45
+            process_std_v_sigma: 0.0015
+            process_std_v_mu_q: 0.0015
+            process_std_v_mu_p: 0.0015
+            process_std_v_theta_deg: 0.12
+
+    - name: rls_residual_b
+      label: RLS Residual-B
+      slow_loop_mode: rls_residual_b
+      overrides:
+        postprocess:
+          ema_alpha: 0.35
+          ema_apply_to: b
+        slow_loop:
+          rls_residual_b:
+            teacher_mode: ukf
+            forgetting_factor: 0.995
+            init_covariance: 25.0
+            covariance_floor: 1.0e-6
+            residual_clip_b: 0.12
+
+    - name: particle_filter_residual_b
+      label: PF Residual-B
+      slow_loop_mode: particle_filter_residual_b
+      overrides:
+        postprocess:
+          ema_alpha: 0.35
+          ema_apply_to: b
+        slow_loop:
+          particle_filter_residual_b:
+            teacher_mode: ukf
+            n_particles: 256
+            residual_clip_b: 0.12
+            initial_std_b: 0.02
+            process_std_b: 0.008
+            measurement_std_b: 0.03
+            resample_ess_ratio: 0.5
+            rejuvenation_std_b: 0.003
+
+    - name: hybrid_residual_b
+      label: Hybrid Residual-B
+      slow_loop_mode: hybrid_residual_b
+      artifact_selector: latest_float
+      overrides:
+        paths:
+          model_dir: artifacts/models/runtime_b_residual_v1
+        slow_loop:
+          inference_service:
+            label_names: [b_q, b_p]
+          hybrid_residual_b:
+            teacher_mode: window_variance
+            context_windows: 5
+            context_padding: edge_repeat
+            include_histogram_deltas: true
+            include_teacher_prediction: true
+            include_teacher_params: true
+            include_teacher_deltas: true
+            residual_scale_b: 1.0
+            residual_clip_b: 0.12
+            ema_alpha: 0.35
+            ema_apply_to: b
