@@ -1,0 +1,310 @@
+{
+  "run_name": "tiny_cnn_20260405_205708_339305f633db",
+  "config_hash": "339305f633db",
+  "dataset_dir": "D:\\Codes\\Quantum\\DriftAdaptiveQEC\\artifacts\\datasets\\runtime_b_residual_no_teacher_params_v1",
+  "dataset_manifest": {
+    "config_hash": "51db70f8c56a",
+    "config_path": "/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/cnn_fpga/config/experiment_runtime_b_residual_no_teacher_params.yaml",
+    "dataset_dir": "/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/artifacts/datasets/runtime_b_residual_no_teacher_params_v1",
+    "reference_mode": "static_linear",
+    "teacher_mode": "window_variance",
+    "label_semantics": "residual_b",
+    "context_windows": 5,
+    "context_padding": "edge_repeat",
+    "include_histogram_deltas": true,
+    "include_teacher_prediction": true,
+    "include_teacher_params": false,
+    "include_teacher_deltas": true,
+    "windows_per_scenario": 512,
+    "n_samples_total": 2048,
+    "histogram_shape": [
+      19,
+      32,
+      32
+    ],
+    "input_channel_names": [
+      "hist_t-4",
+      "hist_t-3",
+      "hist_t-2",
+      "hist_t-1",
+      "hist_t",
+      "hist_delta_t-3_minus_t-4",
+      "hist_delta_t-2_minus_t-3",
+      "hist_delta_t-1_minus_t-2",
+      "hist_delta_t_minus_t-1",
+      "teacher_sigma",
+      "teacher_mu_q",
+      "teacher_mu_p",
+      "teacher_theta_deg",
+      "teacher_delta_sigma",
+      "teacher_delta_mu_q",
+      "teacher_delta_mu_p",
+      "teacher_delta_theta_deg",
+      "teacher_delta_b_q",
+      "teacher_delta_b_p"
+    ],
+    "label_names": [
+      "b_q",
+      "b_p"
+    ],
+    "teacher_label_names": [
+      "sigma",
+      "mu_q",
+      "mu_p",
+      "theta_deg"
+    ],
+    "teacher_runtime_param_names": [
+      "b_q",
+      "b_p"
+    ],
+    "n_train": 1638,
+    "n_val": 204,
+    "n_test": 206,
+    "scenarios": [
+      "static_bias_theta",
+      "linear_ramp",
+      "step_sigma_theta",
+      "periodic_drift"
+    ],
+    "split": {
+      "train": 0.8,
+      "val": 0.1,
+      "test": 0.1
+    },
+    "label_stats": {
+      "train": {
+        "mean": [
+          0.002265887800604105,
+          -0.0025596939958631992
+        ],
+        "std": [
+          0.0016187616856768727,
+          0.0017658600118011236
+        ],
+        "min": [
+          -0.0010269744088873267,
+          -0.007552150171250105
+        ],
+        "max": [
+          0.0055678836070001125,
+          0.0015661435900256038
+        ]
+      },
+      "val": {
+        "mean": [
+          0.0023731128312647343,
+          -0.0026607373729348183
+        ],
+        "std": [
+          0.0016940687783062458,
+          0.0017939774552360177
+        ],
+        "min": [
+          -0.0007888372638262808,
+          -0.007199187763035297
+        ],
+        "max": [
+          0.005137473810464144,
+          0.0007620542892254889
+        ]
+      },
+      "test": {
+        "mean": [
+          0.0022523042280226946,
+          -0.002555465791374445
+        ],
+        "std": [
+          0.001612951746210456,
+          0.0017317734891548753
+        ],
+        "min": [
+          -0.0007261022692546248,
+          -0.006795874331146479
+        ],
+        "max": [
+          0.00498460466042161,
+          0.0010673123179003596
+        ]
+      },
+      "all": {
+        "mean": [
+          0.002275204285979271,
+          -0.0025693324860185385
+        ],
+        "std": [
+          0.001626168261282146,
+          0.001765550347045064
+        ],
+        "min": [
+          -0.0010269744088873267,
+          -0.007552150171250105
+        ],
+        "max": [
+          0.0055678836070001125,
+          0.0015661435900256038
+        ]
+      }
+    },
+    "files": {
+      "train": "/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/artifacts/datasets/runtime_b_residual_no_teacher_params_v1/train.npz",
+      "val": "/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/artifacts/datasets/runtime_b_residual_no_teacher_params_v1/val.npz",
+      "test": "/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/artifacts/datasets/runtime_b_residual_no_teacher_params_v1/test.npz"
+    }
+  },
+  "model_path": "D:\\Codes\\Quantum\\DriftAdaptiveQEC\\runs\\p4_no_teacher_params_stability\\stability_20260405_205653\\generated\\seed_20260406\\hybrid_no_teacher_params\\models\\tiny_cnn_20260405_205708_339305f633db.npz",
+  "model_type": "tiny_cnn",
+  "train_split": "train",
+  "val_split": "val",
+  "n_train": 1638,
+  "n_val": 204,
+  "training_backend": "torch",
+  "training_device": "cuda",
+  "train_metrics": {
+    "mse": 1.985875844849247e-06,
+    "mae": 0.0012297699593592452,
+    "r2_mean": 0.29652096968449526,
+    "per_label": {
+      "b_q": {
+        "mse": 2.1869067943582323e-06,
+        "mae": 0.0012916753103666655,
+        "r2": 0.1654262556739845
+      },
+      "b_p": {
+        "mse": 1.7848448953402618e-06,
+        "mae": 0.0011678646083518247,
+        "r2": 0.427615683695006
+      }
+    }
+  },
+  "val_metrics": {
+    "mse": 2.4120329365624002e-06,
+    "mae": 0.0013735592704042466,
+    "r2_mean": 0.20091513180547876,
+    "per_label": {
+      "b_q": {
+        "mse": 2.630421762173417e-06,
+        "mae": 0.0014250538016694048,
+        "r2": 0.08343440646144418
+      },
+      "b_p": {
+        "mse": 2.193644110951383e-06,
+        "mae": 0.0013220647391390887,
+        "r2": 0.31839585714951335
+      }
+    }
+  },
+  "tiny_cnn": {
+    "conv_channels": 16,
+    "kernel_size": 3,
+    "hidden_dim": 96,
+    "batch_size": 64,
+    "epochs": 36,
+    "learning_rate": 0.002,
+    "weight_decay": 0.0001,
+    "patience": 8,
+    "backend": "torch",
+    "device": "auto",
+    "label_weights": {
+      "b_q": 2.0,
+      "b_p": 2.0
+    }
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "batch_loss_mean": 18.475678210075085,
+      "train_loss_norm": 1.8971178531646729,
+      "val_loss_norm": 2.0196533203125
+    },
+    {
+      "epoch": 2,
+      "batch_loss_mean": 1.8670336741667528,
+      "train_loss_norm": 1.7362926006317139,
+      "val_loss_norm": 1.8658369779586792
+    },
+    {
+      "epoch": 3,
+      "batch_loss_mean": 1.7180890716039217,
+      "train_loss_norm": 1.7278831005096436,
+      "val_loss_norm": 1.8694089651107788
+    },
+    {
+      "epoch": 4,
+      "batch_loss_mean": 1.6752233780347383,
+      "train_loss_norm": 1.5769009590148926,
+      "val_loss_norm": 1.7750465869903564
+    },
+    {
+      "epoch": 5,
+      "batch_loss_mean": 1.5954903410031245,
+      "train_loss_norm": 1.527090311050415,
+      "val_loss_norm": 1.7688359022140503
+    },
+    {
+      "epoch": 6,
+      "batch_loss_mean": 1.5331913003554711,
+      "train_loss_norm": 1.5184857845306396,
+      "val_loss_norm": 1.739666223526001
+    },
+    {
+      "epoch": 7,
+      "batch_loss_mean": 1.4833857738054717,
+      "train_loss_norm": 1.4242937564849854,
+      "val_loss_norm": 1.7510366439819336
+    },
+    {
+      "epoch": 8,
+      "batch_loss_mean": 1.4650659607006953,
+      "train_loss_norm": 1.406957983970642,
+      "val_loss_norm": 1.7073118686676025
+    },
+    {
+      "epoch": 9,
+      "batch_loss_mean": 1.4468298508570745,
+      "train_loss_norm": 1.353051781654358,
+      "val_loss_norm": 1.7463339567184448
+    },
+    {
+      "epoch": 10,
+      "batch_loss_mean": 1.3652291481311505,
+      "train_loss_norm": 1.3328691720962524,
+      "val_loss_norm": 1.7529046535491943
+    },
+    {
+      "epoch": 11,
+      "batch_loss_mean": 1.297533590060014,
+      "train_loss_norm": 1.2887557744979858,
+      "val_loss_norm": 1.8254550695419312
+    },
+    {
+      "epoch": 12,
+      "batch_loss_mean": 1.315269438120035,
+      "train_loss_norm": 1.1911101341247559,
+      "val_loss_norm": 1.794729232788086
+    },
+    {
+      "epoch": 13,
+      "batch_loss_mean": 1.2014840566194975,
+      "train_loss_norm": 1.2498911619186401,
+      "val_loss_norm": 1.80069899559021
+    },
+    {
+      "epoch": 14,
+      "batch_loss_mean": 1.2914414405822754,
+      "train_loss_norm": 1.088747501373291,
+      "val_loss_norm": 1.8085908889770508
+    },
+    {
+      "epoch": 15,
+      "batch_loss_mean": 1.1244656191422389,
+      "train_loss_norm": 1.0783519744873047,
+      "val_loss_norm": 1.948013424873352
+    },
+    {
+      "epoch": 16,
+      "batch_loss_mean": 1.0605931534216955,
+      "train_loss_norm": 0.9707785248756409,
+      "val_loss_norm": 1.9072593450546265
+    }
+  ]
+}

@@ -7,7 +7,7 @@ from typing import Any, Dict, Tuple
 
 import numpy as np
 
-from physics.gkp_state import LATTICE_CONST
+from physics.constants import LATTICE_CONST
 
 from cnn_fpga.runtime.param_bank import DecoderRuntimeParams
 

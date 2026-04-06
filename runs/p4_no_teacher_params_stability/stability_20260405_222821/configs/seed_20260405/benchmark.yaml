@@ -1,0 +1,375 @@
+experiment:
+  name: p4_no_teacher_params_stability_seed_20260405
+  stage: p4_ablation_features
+  seed: 20260405
+paths:
+  output_root: D:\Codes\Quantum\DriftAdaptiveQEC\runs\p4_no_teacher_params_stability\stability_20260405_222821\benchmark_runs
+  model_dir: artifacts/models/runtime_b_residual_v1
+  dataset_dir: artifacts/datasets/runtime_b_residual_v1
+  report_dir: artifacts/reports/runtime_b_residual_v1
+hardware_defaults:
+  fixed_point: Q4.20
+  t_fast_us: 5.0
+  window_size: 2048
+  t_slow_update_ms: 20.0
+runtime:
+  t_fast_us: 5.0
+  window_size: 2048
+  t_slow_update_ms: 20.0
+  window_stride: 4000
+  max_pending_windows: 2
+  commit_delay_cycles: 1
+  guard_cycles_after_commit: 0
+fast_loop:
+  fixed_point: Q4.20
+  enable_fixed_point: true
+  histogram_bins: 32
+  syndrome_limit: 1.566643
+  histogram_range_limit: 2.255965971
+  correction_limit: 2.5066282746310002
+  use_full_qec_model: true
+  overflow_alert_ratio: 0.05
+param_mapping:
+  alpha_bias: 0.9
+  beta_smoothing: 0.2
+  gain_clip:
+  - 0.1
+  - 1.2
+  gain_scale: 1.0
+  aggressive_gain_ratio: 0.9
+  aggressive_bias_ratio: 0.25
+  aggressive_correction_ratio: 0.7
+  theta_clip_deg:
+  - -20.0
+  - 20.0
+  sigma_ratio_p: 0.55
+model:
+  gain: 0.9
+  theta_deg: 0.0
+  sigma_measurement: 0.03
+  sigma_ratio_p: 0.55
+  mu_q: 0.0
+  mu_p: 0.0
+measurement:
+  delta: 0.3
+  measurement_efficiency: 0.95
+  ancilla_error_rate: 0.01
+  add_shot_noise: true
+slow_loop:
+  mode: hybrid_residual_b
+  fallback_sigma: 0.25
+  fallback_mu_q: 0.0
+  fallback_mu_p: 0.0
+  fallback_theta_deg: 0.0
+  oracle_delay_windows: 1
+  prediction_noise:
+    sigma_std: 0.01
+    mu_std: 0.005
+    theta_deg_std: 0.75
+  fixed_baseline:
+    sigma: 0.25
+    mu_q: 0.0
+    mu_p: 0.0
+    theta_deg: 0.0
+  model_artifact:
+    path: null
+    use_latest_model_dir_artifact: true
+    artifact_selector: latest_float
+  inference_service:
+    mode: inproc
+    backend: artifact_npz
+    python_executable: .venvs/tf311/bin/python
+    worker_module: cnn_fpga.runtime.inference_worker
+    request_timeout_s: 10.0
+    label_names:
+    - b_q
+    - b_p
+    tflite:
+      path: null
+  window_variance:
+    sigma_clip:
+    - 0.05
+    - 0.85
+    mu_clip:
+    - -1.5
+    - 1.5
+    theta_default_deg: 0.0
+    min_anisotropy_ratio: 0.08
+  ekf:
+    initial_sigma: 0.25
+    initial_mu_q: 0.0
+    initial_mu_p: 0.0
+    initial_theta_deg: 0.0
+    process_std_sigma: 0.012
+    process_std_mu_q: 0.01
+    process_std_mu_p: 0.01
+    process_std_theta_deg: 0.8
+    measurement_std_sigma: 0.08
+    measurement_std_mu_q: 0.06
+    measurement_std_mu_p: 0.06
+    measurement_std_theta_deg: 4.0
+    covariance_floor: 1.0e-06
+  hybrid_residual_b:
+    teacher_mode: window_variance
+    context_windows: 5
+    context_padding: edge_repeat
+    include_histogram_deltas: true
+    include_teacher_prediction: true
+    include_teacher_params: true
+    include_teacher_deltas: true
+    residual_scale_b: 1.0
+    residual_clip_b: 0.12
+    ema_alpha: 0.35
+    ema_apply_to: b
+axi:
+  poll_interval_cycles: 1
+  commit_timeout_cycles: 8192
+dma:
+  histogram_buffer_bytes: 4096
+  buffer_count: 2
+hil:
+  backend: mock
+  board: ZCU111
+  bitstream_version: fpga_linear_v1
+  board_io:
+    axi_uio_path: /dev/uio0
+    axi_map_size_bytes: 4096
+    axi_base_offset: 0
+    dma_buffer_path: /dev/uio1
+    dma_dtype: float32
+    allow_missing_device: true
+timing:
+  n_slow_updates: 900
+  n_fast_cycles: 3600000
+  slow_update_budget_us: 5000.0
+  fast_cycle_budget_us: 1.5
+latency_model:
+  dma_mean_us: 10.0
+  dma_std_us: 2.0
+  preprocess_mean_us: 60.0
+  preprocess_std_us: 12.0
+  inference_mean_us: 900.0
+  inference_std_us: 150.0
+  writeback_mean_us: 20.0
+  writeback_std_us: 5.0
+  commit_ack_mean_us: 5.0
+  commit_ack_std_us: 1.0
+fast_path_model:
+  latency_mean_us: 1.0
+  latency_std_us: 0.12
+error_model:
+  dma_timeout_prob: 0.0001
+  axi_write_fail_prob: 5.0e-05
+  cnn_infer_fail_prob: 2.0e-05
+mock_signal:
+  type: random_walk
+  sigma0: 0.24
+  sigma_min: 0.05
+  sigma_max: 0.65
+  sigma_step_std: 0.004
+  mu_q0: 0.0
+  mu_p0: 0.0
+  mu_step_std: 0.002
+  theta_deg0: 0.0
+  theta_amplitude_deg: 6.0
+  theta_frequency: 0.01
+  theta_step_std_deg: 0.25
+benchmark_modes:
+- name: fixed_baseline_mock
+  backend: mock
+  slow_loop_mode: fixed_baseline
+  inference_service_mode: subprocess
+- name: float_artifact_mock
+  backend: mock
+  slow_loop_mode: model_artifact
+  artifact_selector: latest_float
+  inference_service_mode: subprocess
+- name: int8_artifact_mock
+  backend: mock
+  slow_loop_mode: model_artifact
+  artifact_selector: latest_int8
+  inference_service_mode: subprocess
+  inference_backend: tflite
+- name: real_board
+  backend: board
+  slow_loop_mode: model_artifact
+  artifact_selector: latest_int8
+  inference_service_mode: subprocess
+  inference_backend: tflite
+p4_benchmark:
+  protocol:
+    protocol_id: p4_no_teacher_params_stability_seed_20260405
+    report_template_version: p4_hil_report_v1
+    repeats: 4
+    scenario_seed_stride: 1000
+    mode_seed_stride: 100000
+    real_board_policy: conditional_extension
+    frozen_baseline_set:
+    - ukf
+    - hybrid_full
+    - hybrid_no_hist_deltas
+    - hybrid_no_teacher_prediction
+    - hybrid_no_teacher_params
+    - hybrid_no_teacher_deltas
+  modes:
+  - name: ukf
+    label: UKF
+    slow_loop_mode: ukf
+    overrides:
+      slow_loop:
+        ukf:
+          initial_velocity_std_sigma: 0.008
+          initial_velocity_std_mu_q: 0.008
+          initial_velocity_std_mu_p: 0.008
+          initial_velocity_std_theta_deg: 0.6
+          process_std_sigma: 0.006
+          process_std_mu_q: 0.006
+          process_std_mu_p: 0.006
+          process_std_theta_deg: 0.45
+          process_std_v_sigma: 0.0015
+          process_std_v_mu_q: 0.0015
+          process_std_v_mu_p: 0.0015
+          process_std_v_theta_deg: 0.12
+  - name: hybrid_full
+    label: Hybrid Full
+    slow_loop_mode: hybrid_residual_b
+    artifact_selector: latest_float
+    overrides:
+      paths:
+        model_dir: D:\Codes\Quantum\DriftAdaptiveQEC\runs\p4_no_teacher_params_stability\stability_20260405_222821\generated\seed_20260405\hybrid_full\models
+      slow_loop:
+        inference_service:
+          label_names:
+          - b_q
+          - b_p
+        hybrid_residual_b:
+          teacher_mode: window_variance
+          context_windows: 5
+          context_padding: edge_repeat
+          include_histogram_deltas: true
+          include_teacher_prediction: true
+          include_teacher_params: true
+          include_teacher_deltas: true
+          residual_scale_b: 1.0
+          residual_clip_b: 0.12
+          ema_alpha: 0.35
+          ema_apply_to: b
+  - name: hybrid_no_teacher_params
+    label: Hybrid No TeacherParams
+    slow_loop_mode: hybrid_residual_b
+    artifact_selector: latest_float
+    overrides:
+      paths:
+        model_dir: D:\Codes\Quantum\DriftAdaptiveQEC\runs\p4_no_teacher_params_stability\stability_20260405_222821\generated\seed_20260405\hybrid_no_teacher_params\models
+      slow_loop:
+        inference_service:
+          label_names:
+          - b_q
+          - b_p
+        hybrid_residual_b:
+          teacher_mode: window_variance
+          context_windows: 5
+          context_padding: edge_repeat
+          include_histogram_deltas: true
+          include_teacher_prediction: true
+          include_teacher_params: false
+          include_teacher_deltas: true
+          residual_scale_b: 1.0
+          residual_clip_b: 0.12
+          ema_alpha: 0.35
+          ema_apply_to: b
+  scenarios:
+  - name: static_bias_theta
+    label: Static Bias+Theta
+    overrides:
+      mock_signal:
+        type: static
+        sigma0: 0.22
+        sigma_min: 0.22
+        sigma_max: 0.22
+        mu_q0: 0.035
+        mu_p0: -0.025
+        theta_deg0: 4.0
+  - name: linear_ramp
+    label: Linear Ramp
+    overrides:
+      mock_signal:
+        type: linear
+        sigma0: 0.14
+        sigma_min: 0.08
+        sigma_max: 0.45
+        sigma_alpha: 1.0e-07
+        mu_q0: 0.01
+        mu_p0: -0.01
+        theta_deg0: 2.0
+        theta_step_std_deg: 0.1
+  - name: step_sigma_theta
+    label: Step Sigma+Theta
+    overrides:
+      mock_signal:
+        type: step
+        sigma0: 0.16
+        sigma_min: 0.08
+        sigma_max: 0.5
+        jump_round: 1200000
+        delta_sigma: 0.2
+        mu_q0: 0.0
+        mu_p0: 0.0
+        delta_mu_q: 0.04
+        delta_mu_p: -0.04
+        theta_deg0: 0.0
+        delta_theta_deg: 8.0
+  - name: periodic_drift
+    label: Periodic Drift
+    overrides:
+      mock_signal:
+        type: periodic
+        sigma0: 0.24
+        sigma_min: 0.1
+        sigma_max: 0.42
+        sigma_amplitude: 0.07
+        sigma_frequency: 1.0e-06
+        mu_q0: 0.015
+        mu_p0: -0.015
+        theta_deg0: 0.0
+        theta_amplitude_deg: 7.0
+        theta_frequency: 1.3e-06
+        theta_step_std_deg: 0.15
+runtime_dataset:
+  scenarios_from_p4: true
+  reference_mode: static_linear
+  teacher_mode: window_variance
+  label_semantics: residual_b
+  context_windows: 5
+  context_padding: edge_repeat
+  include_histogram_deltas: true
+  include_teacher_prediction: true
+  include_teacher_params: true
+  include_teacher_deltas: true
+  windows_per_scenario: 512
+  scenario_seed_stride: 1000
+  split:
+    train: 0.8
+    val: 0.1
+    test: 0.1
+training:
+  model_type: tiny_cnn
+  max_train_samples: 50000
+  max_val_samples: 10000
+  tiny_cnn:
+    conv_channels: 16
+    kernel_size: 3
+    hidden_dim: 96
+    batch_size: 64
+    epochs: 36
+    learning_rate: 0.002
+    weight_decay: 0.0001
+    patience: 8
+    label_weights:
+      b_q: 2.0
+      b_p: 2.0
+evaluation:
+  target_split: test
+postprocess:
+  ema_alpha: 0.35
+  ema_apply_to: b

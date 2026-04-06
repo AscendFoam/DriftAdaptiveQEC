@@ -1,54 +1,49 @@
 """Runtime scaffolding for dual-loop CNN-FPGA scheduling."""
 
-# 中文说明：
-# - 该子模块用于承载“快回路持续运行 + 慢回路窗口更新”的调度骨架。
-# - 当前首版聚焦双 bank 参数切换、时延注入和双回路调度，不直接依赖真实板卡。
+from __future__ import annotations
 
-from .latency_injector import LatencyInjector, LatencySample, StageLatencySpec
-from .fast_loop_emulator import FastLoopConfig, FastLoopEmulator, NoiseProvider
-from .inference_service import (
-    ArtifactHistogramPredictor,
-    BaseHistogramPredictor,
-    InferenceService,
-    InferenceServiceConfig,
-    InferenceServiceError,
-    InProcInferenceService,
-    SubprocessInferenceService,
-    TFLiteHistogramPredictor,
-    build_inference_service,
-    resolve_model_path,
-)
-from .param_bank import CommitResult, DecoderRuntimeParams, ParamBank, PendingCommit
-from .scheduler import DualLoopScheduler, SchedulerConfig, SchedulerEvent, SlowUpdateJob, WindowFrame
-from .slow_loop_runtime import SlowLoopRuntime, SlowLoopRuntimeConfig, SlowLoopRuntimeError
+from importlib import import_module
 
-__all__ = [
-    "ArtifactHistogramPredictor",
-    "BaseHistogramPredictor",
-    "CommitResult",
-    "DecoderRuntimeParams",
-    "DualLoopScheduler",
-    "FastLoopConfig",
-    "FastLoopEmulator",
-    "InferenceService",
-    "InferenceServiceConfig",
-    "InferenceServiceError",
-    "InProcInferenceService",
-    "LatencyInjector",
-    "LatencySample",
-    "NoiseProvider",
-    "ParamBank",
-    "PendingCommit",
-    "SchedulerConfig",
-    "SchedulerEvent",
-    "SlowUpdateJob",
-    "SlowLoopRuntime",
-    "SlowLoopRuntimeConfig",
-    "SlowLoopRuntimeError",
-    "StageLatencySpec",
-    "SubprocessInferenceService",
-    "TFLiteHistogramPredictor",
-    "WindowFrame",
-    "build_inference_service",
-    "resolve_model_path",
-]
+
+_EXPORTS = {
+    "LatencyInjector": "cnn_fpga.runtime.latency_injector",
+    "LatencySample": "cnn_fpga.runtime.latency_injector",
+    "StageLatencySpec": "cnn_fpga.runtime.latency_injector",
+    "FastLoopConfig": "cnn_fpga.runtime.fast_loop_emulator",
+    "FastLoopEmulator": "cnn_fpga.runtime.fast_loop_emulator",
+    "NoiseProvider": "cnn_fpga.runtime.fast_loop_emulator",
+    "ArtifactHistogramPredictor": "cnn_fpga.runtime.inference_service",
+    "BaseHistogramPredictor": "cnn_fpga.runtime.inference_service",
+    "InferenceService": "cnn_fpga.runtime.inference_service",
+    "InferenceServiceConfig": "cnn_fpga.runtime.inference_service",
+    "InferenceServiceError": "cnn_fpga.runtime.inference_service",
+    "InProcInferenceService": "cnn_fpga.runtime.inference_service",
+    "SubprocessInferenceService": "cnn_fpga.runtime.inference_service",
+    "TFLiteHistogramPredictor": "cnn_fpga.runtime.inference_service",
+    "build_inference_service": "cnn_fpga.runtime.inference_service",
+    "resolve_model_path": "cnn_fpga.runtime.inference_service",
+    "CommitResult": "cnn_fpga.runtime.param_bank",
+    "DecoderRuntimeParams": "cnn_fpga.runtime.param_bank",
+    "ParamBank": "cnn_fpga.runtime.param_bank",
+    "PendingCommit": "cnn_fpga.runtime.param_bank",
+    "DualLoopScheduler": "cnn_fpga.runtime.scheduler",
+    "SchedulerConfig": "cnn_fpga.runtime.scheduler",
+    "SchedulerEvent": "cnn_fpga.runtime.scheduler",
+    "SlowUpdateJob": "cnn_fpga.runtime.scheduler",
+    "WindowFrame": "cnn_fpga.runtime.scheduler",
+    "SlowLoopRuntime": "cnn_fpga.runtime.slow_loop_runtime",
+    "SlowLoopRuntimeConfig": "cnn_fpga.runtime.slow_loop_runtime",
+    "SlowLoopRuntimeError": "cnn_fpga.runtime.slow_loop_runtime",
+}
+
+__all__ = list(_EXPORTS)
+
+
+def __getattr__(name: str):
+    module_name = _EXPORTS.get(name)
+    if module_name is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    module = import_module(module_name)
+    value = getattr(module, name)
+    globals()[name] = value
+    return value

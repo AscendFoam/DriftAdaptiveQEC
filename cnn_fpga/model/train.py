@@ -169,6 +169,8 @@ def main() -> int:
             "val_split": args.val_split,
             "n_train": int(x_train_raw.shape[0]),
             "n_val": int(x_val_raw.shape[0]),
+            "training_backend": extra_report.get("backend", cnn_cfg.backend),
+            "training_device": extra_report.get("device", cnn_cfg.device),
             "train_metrics": train_metrics,
             "val_metrics": val_metrics,
             "tiny_cnn": {
@@ -180,6 +182,8 @@ def main() -> int:
                 "learning_rate": cnn_cfg.learning_rate,
                 "weight_decay": cnn_cfg.weight_decay,
                 "patience": cnn_cfg.patience,
+                "backend": cnn_cfg.backend,
+                "device": cnn_cfg.device,
                 "label_weights": dict(cnn_cfg.label_weights or {}),
             },
             "history": extra_report["history"],

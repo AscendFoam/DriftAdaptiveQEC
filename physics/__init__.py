@@ -1,33 +1,31 @@
-"""
-Physics Layer for Drift-Adaptive QEC
+"""Physics Layer for Drift-Adaptive QEC."""
 
-This module provides physically accurate simulations of:
-- Approximate GKP state preparation
-- Quantum noise channels (photon loss, thermal noise, etc.)
-- Syndrome measurement with finite squeezing effects
-- Error correction protocols
-- Logical error tracking
+from __future__ import annotations
 
-中文说明：
-- 该模块是物理仿真层统一入口，集中导出最常用类和函数。
-- 目标是让上层实验脚本通过稳定API访问噪声、测量、纠错与逻辑错误统计能力。
-"""
+from importlib import import_module
 
-from .gkp_state import ApproximateGKPState, GKPStateFactory
-from .noise_channels import QuantumNoiseChannel, PhotonLossChannel, ThermalNoiseChannel
-from .syndrome_measurement import SyndromeMeasurement, RealisticSyndromeMeasurement
-from .error_correction import GKPErrorCorrector, LinearDecoder
-from .logical_tracking import LogicalErrorTracker
 
-__all__ = [
-    'ApproximateGKPState',
-    'GKPStateFactory',
-    'QuantumNoiseChannel',
-    'PhotonLossChannel',
-    'ThermalNoiseChannel',
-    'SyndromeMeasurement',
-    'RealisticSyndromeMeasurement',
-    'GKPErrorCorrector',
-    'LinearDecoder',
-    'LogicalErrorTracker',
-]
+_EXPORTS = {
+    "ApproximateGKPState": "physics.gkp_state",
+    "GKPStateFactory": "physics.gkp_state",
+    "QuantumNoiseChannel": "physics.noise_channels",
+    "PhotonLossChannel": "physics.noise_channels",
+    "ThermalNoiseChannel": "physics.noise_channels",
+    "SyndromeMeasurement": "physics.syndrome_measurement",
+    "RealisticSyndromeMeasurement": "physics.syndrome_measurement",
+    "GKPErrorCorrector": "physics.error_correction",
+    "LinearDecoder": "physics.error_correction",
+    "LogicalErrorTracker": "physics.logical_tracking",
+}
+
+__all__ = list(_EXPORTS)
+
+
+def __getattr__(name: str):
+    module_name = _EXPORTS.get(name)
+    if module_name is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    module = import_module(module_name)
+    value = getattr(module, name)
+    globals()[name] = value
+    return value

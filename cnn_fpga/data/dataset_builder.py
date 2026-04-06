@@ -12,7 +12,7 @@ from typing import Dict, Tuple
 
 import numpy as np
 
-from physics.gkp_state import LATTICE_CONST
+from physics.constants import LATTICE_CONST
 
 from cnn_fpga.utils.config import config_hash, ensure_dir, get_path, load_yaml_config, save_json
 

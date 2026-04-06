@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Tuple
+from typing import Any, Dict, Tuple
 
 import numpy as np
 
@@ -26,6 +26,8 @@ class TinyCNNConfig:
     patience: int = 5
     seed: int = 1234
     label_weights: Dict[str, float] | None = None
+    backend: str = "numpy"
+    device: str = "auto"
 
     @classmethod
     def from_config(cls, config: Dict) -> "TinyCNNConfig":
@@ -46,6 +48,8 @@ class TinyCNNConfig:
             patience=int(cnn_cfg.get("patience", 5)),
             seed=int(cnn_cfg.get("seed", experiment.get("seed", 1234))),
             label_weights=dict(cnn_cfg.get("label_weights", {})),
+            backend=str(cnn_cfg.get("backend", "numpy")).lower(),
+            device=str(cnn_cfg.get("device", "auto")).lower(),
         )
 
 
@@ -141,6 +145,52 @@ def _normalize_inputs(x: np.ndarray, x_mean: np.ndarray, x_std: np.ndarray) -> n
         std = np.asarray(x_std, dtype=np.float64).reshape(1, -1, 1, 1)
         return (array - mean) / std
     raise ValueError(f"Unsupported input shape for normalization: {array.shape}")
+
+
+def _build_label_weights(label_names, config: TinyCNNConfig) -> np.ndarray:
+    weights = np.ones(len(label_names), dtype=np.float64)
+    if config.label_weights:
+        for idx, name in enumerate(label_names):
+            weights[idx] = float(config.label_weights.get(str(name), 1.0))
+    return weights
+
+
+def _build_tiny_cnn_artifact(
+    *,
+    model_params: Dict[str, np.ndarray],
+    input_shape: tuple[int, int],
+    input_channels: int,
+    label_names,
+    config: TinyCNNConfig,
+    x_mean: np.ndarray,
+    x_std: np.ndarray,
+    y_mean: np.ndarray,
+    y_std: np.ndarray,
+) -> Dict[str, np.ndarray]:
+    return {
+        "model_type": np.array(["tiny_cnn_float"]),
+        "training_backend": np.array([str(config.backend)]),
+        "conv_w": model_params["conv_w"].astype(np.float32),
+        "conv_b": model_params["conv_b"].astype(np.float32),
+        "fc1_w": model_params["fc1_w"].astype(np.float32),
+        "fc1_b": model_params["fc1_b"].astype(np.float32),
+        "fc2_w": model_params["fc2_w"].astype(np.float32),
+        "fc2_b": model_params["fc2_b"].astype(np.float32),
+        "x_mean": x_mean.astype(np.float32).reshape(-1),
+        "x_std": x_std.astype(np.float32).reshape(-1),
+        "y_mean": y_mean.astype(np.float32).reshape(-1),
+        "y_std": y_std.astype(np.float32).reshape(-1),
+        "label_names": np.asarray(label_names),
+        "input_shape": np.asarray([input_shape[0], input_shape[1]], dtype=np.int32),
+        "input_channels": np.asarray([input_channels], dtype=np.int32),
+        "conv_channels": np.asarray([config.conv_channels], dtype=np.int32),
+        "kernel_size": np.asarray([config.kernel_size], dtype=np.int32),
+        "hidden_dim": np.asarray([config.hidden_dim], dtype=np.int32),
+        "label_weights": np.asarray(
+            [float((config.label_weights or {}).get(str(name), 1.0)) for name in label_names],
+            dtype=np.float32,
+        ),
+    }
 
 
 class TinyCNN:
@@ -296,7 +346,7 @@ def _prediction_metrics(y_true: np.ndarray, y_pred: np.ndarray, label_names) -> 
     }
 
 
-def fit_tiny_cnn(
+def _fit_tiny_cnn_numpy(
     x_train: np.ndarray,
     y_train: np.ndarray,
     x_val: np.ndarray,
@@ -304,7 +354,7 @@ def fit_tiny_cnn(
     label_names,
     config: TinyCNNConfig,
 ) -> tuple[Dict[str, np.ndarray], Dict]:
-    """Train the Tiny-CNN and return artifact payload + report."""
+    """Train the Tiny-CNN with the legacy NumPy backend."""
     if x_train.ndim == 3:
         input_shape = (x_train.shape[1], x_train.shape[2])
         input_channels = 1
@@ -331,10 +381,7 @@ def fit_tiny_cnn(
     y_std = np.where(y_std < 1.0e-8, 1.0, y_std)
     y_train_norm = (y_train - y_mean) / y_std
     y_val_norm = (y_val - y_mean) / y_std
-    label_weights = np.ones(y_train.shape[1], dtype=float)
-    if config.label_weights:
-        for idx, name in enumerate(label_names):
-            label_weights[idx] = float(config.label_weights.get(str(name), 1.0))
+    label_weights = _build_label_weights(label_names, config).astype(float)
 
     step = 0
     best_params = {name: value.copy() for name, value in model.params.items()}
@@ -377,37 +424,236 @@ def fit_tiny_cnn(
                 break
 
     model.params = best_params
-    train_pred = model.predict_normalized(x_train) * y_std + y_mean
-    val_pred = model.predict_normalized(x_val) * y_std + y_mean
-    artifact = {
-        "model_type": np.array(["tiny_cnn_float"]),
-        "conv_w": model.params["conv_w"].astype(np.float32),
-        "conv_b": model.params["conv_b"].astype(np.float32),
-        "fc1_w": model.params["fc1_w"].astype(np.float32),
-        "fc1_b": model.params["fc1_b"].astype(np.float32),
-        "fc2_w": model.params["fc2_w"].astype(np.float32),
-        "fc2_b": model.params["fc2_b"].astype(np.float32),
-        "x_mean": x_mean.astype(np.float32).reshape(-1),
-        "x_std": x_std.astype(np.float32).reshape(-1),
-        "y_mean": y_mean.astype(np.float32).reshape(-1),
-        "y_std": y_std.astype(np.float32).reshape(-1),
-        "label_names": np.asarray(label_names),
-        "input_shape": np.asarray([input_shape[0], input_shape[1]], dtype=np.int32),
-        "input_channels": np.asarray([input_channels], dtype=np.int32),
-        "conv_channels": np.asarray([config.conv_channels], dtype=np.int32),
-        "kernel_size": np.asarray([config.kernel_size], dtype=np.int32),
-        "hidden_dim": np.asarray([config.hidden_dim], dtype=np.int32),
-        "label_weights": np.asarray(
-            [float((config.label_weights or {}).get(str(name), 1.0)) for name in label_names],
-            dtype=np.float32,
-        ),
-    }
+    train_pred = model.predict_normalized(x_train_norm) * y_std + y_mean
+    val_pred = model.predict_normalized(x_val_norm) * y_std + y_mean
+    artifact = _build_tiny_cnn_artifact(
+        model_params=model.params,
+        input_shape=input_shape,
+        input_channels=input_channels,
+        label_names=label_names,
+        config=config,
+        x_mean=x_mean,
+        x_std=x_std,
+        y_mean=y_mean,
+        y_std=y_std,
+    )
     report = {
+        "backend": "numpy",
+        "device": "cpu",
         "history": history,
         "train_metrics": _prediction_metrics(y_train, train_pred, label_names),
         "val_metrics": _prediction_metrics(y_val, val_pred, label_names),
     }
     return artifact, report
+
+
+def _resolve_torch_device(device_name: str):
+    try:
+        import torch
+    except ImportError as exc:  # pragma: no cover - depends on environment.
+        raise ImportError("PyTorch backend requested but torch is not installed.") from exc
+
+    requested = str(device_name).lower()
+    if requested == "auto":
+        requested = "cuda" if torch.cuda.is_available() else "cpu"
+    if requested.startswith("cuda") and not torch.cuda.is_available():
+        raise RuntimeError("PyTorch backend requested CUDA but torch.cuda.is_available() is False.")
+    return torch.device(requested)
+
+
+class _TorchTinyCNN:
+    def __init__(self, input_shape: tuple[int, int], output_dim: int, config: TinyCNNConfig, *, input_channels: int) -> None:
+        import torch
+
+        self.torch = torch
+        self.config = config
+        self.padding = _same_padding(config.kernel_size)
+        pooled_h = input_shape[0] // 2
+        pooled_w = input_shape[1] // 2
+        flat_dim = config.conv_channels * pooled_h * pooled_w
+        self.model = torch.nn.Sequential(
+            torch.nn.Conv2d(input_channels, config.conv_channels, config.kernel_size, padding=self.padding),
+            torch.nn.ReLU(),
+            torch.nn.AvgPool2d(2),
+            torch.nn.Flatten(),
+            torch.nn.Linear(flat_dim, config.hidden_dim),
+            torch.nn.ReLU(),
+            torch.nn.Linear(config.hidden_dim, output_dim),
+        )
+        self._reset_parameters(input_channels=input_channels, flat_dim=flat_dim)
+
+    def _reset_parameters(self, *, input_channels: int, flat_dim: int) -> None:
+        torch = self.torch
+        with torch.no_grad():
+            conv = self.model[0]
+            fc1 = self.model[4]
+            fc2 = self.model[6]
+            torch.nn.init.normal_(conv.weight, mean=0.0, std=_he_std(input_channels * self.config.kernel_size * self.config.kernel_size))
+            torch.nn.init.zeros_(conv.bias)
+            torch.nn.init.normal_(fc1.weight, mean=0.0, std=_he_std(flat_dim))
+            torch.nn.init.zeros_(fc1.bias)
+            torch.nn.init.normal_(fc2.weight, mean=0.0, std=_he_std(self.config.hidden_dim))
+            torch.nn.init.zeros_(fc2.bias)
+
+    def predict_normalized(self, x_batch):
+        return self.model(x_batch)
+
+
+def _predict_torch_batches(model, x: np.ndarray, *, batch_size: int, device) -> np.ndarray:
+    import torch
+
+    outputs = []
+    model.eval()
+    with torch.no_grad():
+        for start in range(0, x.shape[0], batch_size):
+            x_batch = torch.from_numpy(x[start : start + batch_size].astype(np.float32, copy=False)).to(device)
+            outputs.append(model(x_batch).detach().cpu().numpy())
+    return np.concatenate(outputs, axis=0) if outputs else np.zeros((0, 0), dtype=np.float32)
+
+
+def _torch_model_params(model) -> Dict[str, np.ndarray]:
+    state = model.state_dict()
+    return {
+        "conv_w": state["0.weight"].detach().cpu().numpy(),
+        "conv_b": state["0.bias"].detach().cpu().numpy(),
+        "fc1_w": state["4.weight"].detach().cpu().numpy().T,
+        "fc1_b": state["4.bias"].detach().cpu().numpy(),
+        "fc2_w": state["6.weight"].detach().cpu().numpy().T,
+        "fc2_b": state["6.bias"].detach().cpu().numpy(),
+    }
+
+
+def _fit_tiny_cnn_torch(
+    x_train: np.ndarray,
+    y_train: np.ndarray,
+    x_val: np.ndarray,
+    y_val: np.ndarray,
+    label_names,
+    config: TinyCNNConfig,
+) -> tuple[Dict[str, np.ndarray], Dict[str, Any]]:
+    """Train the Tiny-CNN with a PyTorch backend and export the same NPZ artifact format."""
+    import torch
+
+    if x_train.ndim == 3:
+        input_shape = (x_train.shape[1], x_train.shape[2])
+        input_channels = 1
+    elif x_train.ndim == 4:
+        input_shape = (x_train.shape[2], x_train.shape[3])
+        input_channels = int(x_train.shape[1])
+    else:
+        raise ValueError(f"Unsupported x_train shape for Tiny-CNN: {x_train.shape}")
+
+    torch.manual_seed(config.seed)
+    device = _resolve_torch_device(config.device)
+    if device.type == "cuda":
+        torch.cuda.manual_seed_all(config.seed)
+
+    x_mean, x_std = _channelwise_input_stats(x_train)
+    x_train_norm = _normalize_inputs(x_train, x_mean, x_std).astype(np.float32)
+    x_val_norm = _normalize_inputs(x_val, x_mean, x_std).astype(np.float32)
+
+    y_mean = y_train.mean(axis=0, keepdims=True)
+    y_std = y_train.std(axis=0, keepdims=True)
+    y_std = np.where(y_std < 1.0e-8, 1.0, y_std)
+    y_train_norm = ((y_train - y_mean) / y_std).astype(np.float32)
+    y_val_norm = ((y_val - y_mean) / y_std).astype(np.float32)
+    label_weights = _build_label_weights(label_names, config).astype(np.float32)
+
+    wrapper = _TorchTinyCNN(input_shape=input_shape, output_dim=y_train.shape[1], config=config, input_channels=input_channels)
+    model = wrapper.model.to(device)
+    optimizer = torch.optim.Adam(
+        [
+            {"params": [model[0].weight, model[4].weight, model[6].weight], "weight_decay": config.weight_decay},
+            {"params": [model[0].bias, model[4].bias, model[6].bias], "weight_decay": 0.0},
+        ],
+        lr=config.learning_rate,
+        betas=(config.beta1, config.beta2),
+        eps=config.adam_eps,
+    )
+
+    rng = np.random.default_rng(config.seed)
+    label_weights_t = torch.from_numpy(label_weights.reshape(1, -1)).to(device)
+    best_state = {name: value.detach().cpu().clone() for name, value in model.state_dict().items()}
+    best_val_loss = float("inf")
+    patience_left = config.patience
+    history = []
+
+    for epoch in range(config.epochs):
+        order = rng.permutation(x_train_norm.shape[0])
+        epoch_losses = []
+        model.train()
+        for start in range(0, x_train_norm.shape[0], config.batch_size):
+            batch_idx = order[start : start + config.batch_size]
+            x_batch = torch.from_numpy(x_train_norm[batch_idx]).to(device)
+            y_batch = torch.from_numpy(y_train_norm[batch_idx]).to(device)
+            pred = model(x_batch)
+            loss = torch.mean(label_weights_t * (pred - y_batch) ** 2)
+            optimizer.zero_grad(set_to_none=True)
+            loss.backward()
+            optimizer.step()
+            epoch_losses.append(float(loss.detach().cpu().item()))
+
+        train_pred_norm = _predict_torch_batches(model, x_train_norm, batch_size=config.batch_size, device=device)
+        val_pred_norm = _predict_torch_batches(model, x_val_norm, batch_size=config.batch_size, device=device)
+        train_loss = float(np.mean(label_weights.reshape(1, -1) * ((train_pred_norm - y_train_norm) ** 2)))
+        val_loss = float(np.mean(label_weights.reshape(1, -1) * ((val_pred_norm - y_val_norm) ** 2)))
+        history.append(
+            {
+                "epoch": epoch + 1,
+                "batch_loss_mean": float(np.mean(epoch_losses)) if epoch_losses else 0.0,
+                "train_loss_norm": train_loss,
+                "val_loss_norm": val_loss,
+            }
+        )
+
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
+            best_state = {name: value.detach().cpu().clone() for name, value in model.state_dict().items()}
+            patience_left = config.patience
+        else:
+            patience_left -= 1
+            if patience_left <= 0:
+                break
+
+    model.load_state_dict(best_state)
+    train_pred = _predict_torch_batches(model, x_train_norm, batch_size=config.batch_size, device=device) * y_std + y_mean
+    val_pred = _predict_torch_batches(model, x_val_norm, batch_size=config.batch_size, device=device) * y_std + y_mean
+    artifact = _build_tiny_cnn_artifact(
+        model_params=_torch_model_params(model),
+        input_shape=input_shape,
+        input_channels=input_channels,
+        label_names=label_names,
+        config=config,
+        x_mean=x_mean,
+        x_std=x_std,
+        y_mean=y_mean,
+        y_std=y_std,
+    )
+    report = {
+        "backend": "torch",
+        "device": str(device),
+        "history": history,
+        "train_metrics": _prediction_metrics(y_train, train_pred, label_names),
+        "val_metrics": _prediction_metrics(y_val, val_pred, label_names),
+    }
+    return artifact, report
+
+
+def fit_tiny_cnn(
+    x_train: np.ndarray,
+    y_train: np.ndarray,
+    x_val: np.ndarray,
+    y_val: np.ndarray,
+    label_names,
+    config: TinyCNNConfig,
+) -> tuple[Dict[str, np.ndarray], Dict[str, Any]]:
+    """Train the Tiny-CNN and return artifact payload + report."""
+    backend = str(config.backend).lower()
+    if backend == "numpy":
+        return _fit_tiny_cnn_numpy(x_train, y_train, x_val, y_val, label_names, config)
+    if backend == "torch":
+        return _fit_tiny_cnn_torch(x_train, y_train, x_val, y_val, label_names, config)
+    raise ValueError(f"Unsupported Tiny-CNN backend: {config.backend}")
 
 
 def _load_float_params(data: Dict[str, np.ndarray]) -> Dict[str, np.ndarray]:

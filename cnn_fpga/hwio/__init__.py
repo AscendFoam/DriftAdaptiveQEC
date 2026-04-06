@@ -1,31 +1,38 @@
 """Hardware-I/O layer for mock/real CNN-FPGA HIL backends."""
 
-# 中文说明：
-# - hwio 子模块把 HIL 实验入口和具体板级访问方式隔离开。
-# - 当前首版先提供 mock FPGA 后端与统一 driver API，后续可平滑替换为真实板卡实现。
+from __future__ import annotations
 
-from .axi_map import AXI_REGISTER_MAP, AxiRegisterMap
-from .board_backend import BoardBackendError, BoardBackendUnavailableError, BoardFPGA, BoardFPGAConfig
-from .dma_client import BackendDMAClient, DMAClient, DMAReadout, MemoryMappedDMAClient, MemoryMappedDMAConfig
-from .fpga_driver import FPGADriver, FPGADriverConfig, FPGADriverError
-from .mock_fpga import MockFPGA, MockFPGAConfig, MockFPGAEvent
+from importlib import import_module
 
-__all__ = [
-    "AXI_REGISTER_MAP",
-    "AxiRegisterMap",
-    "BackendDMAClient",
-    "BoardBackendError",
-    "BoardBackendUnavailableError",
-    "BoardFPGA",
-    "BoardFPGAConfig",
-    "DMAClient",
-    "DMAReadout",
-    "FPGADriver",
-    "FPGADriverConfig",
-    "FPGADriverError",
-    "MemoryMappedDMAClient",
-    "MemoryMappedDMAConfig",
-    "MockFPGA",
-    "MockFPGAConfig",
-    "MockFPGAEvent",
-]
+
+_EXPORTS = {
+    "AXI_REGISTER_MAP": "cnn_fpga.hwio.axi_map",
+    "AxiRegisterMap": "cnn_fpga.hwio.axi_map",
+    "BoardBackendError": "cnn_fpga.hwio.board_backend",
+    "BoardBackendUnavailableError": "cnn_fpga.hwio.board_backend",
+    "BoardFPGA": "cnn_fpga.hwio.board_backend",
+    "BoardFPGAConfig": "cnn_fpga.hwio.board_backend",
+    "BackendDMAClient": "cnn_fpga.hwio.dma_client",
+    "DMAClient": "cnn_fpga.hwio.dma_client",
+    "DMAReadout": "cnn_fpga.hwio.dma_client",
+    "MemoryMappedDMAClient": "cnn_fpga.hwio.dma_client",
+    "MemoryMappedDMAConfig": "cnn_fpga.hwio.dma_client",
+    "FPGADriver": "cnn_fpga.hwio.fpga_driver",
+    "FPGADriverConfig": "cnn_fpga.hwio.fpga_driver",
+    "FPGADriverError": "cnn_fpga.hwio.fpga_driver",
+    "MockFPGA": "cnn_fpga.hwio.mock_fpga",
+    "MockFPGAConfig": "cnn_fpga.hwio.mock_fpga",
+    "MockFPGAEvent": "cnn_fpga.hwio.mock_fpga",
+}
+
+__all__ = list(_EXPORTS)
+
+
+def __getattr__(name: str):
+    module_name = _EXPORTS.get(name)
+    if module_name is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    module = import_module(module_name)
+    value = getattr(module, name)
+    globals()[name] = value
+    return value

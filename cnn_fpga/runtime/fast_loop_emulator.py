@@ -9,7 +9,7 @@ from typing import Any, Callable, Deque, Dict, Optional
 import numpy as np
 
 from cnn_fpga.decoder.param_mapper import analyze_decoder_aggressiveness
-from physics.gkp_state import LATTICE_CONST
+from physics.constants import LATTICE_CONST
 from physics.logical_tracking import LogicalErrorTracker
 from physics.syndrome_measurement import MeasurementConfig, RealisticSyndromeMeasurement
 

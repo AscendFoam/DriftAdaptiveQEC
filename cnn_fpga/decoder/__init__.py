@@ -1,50 +1,44 @@
 """Decoder-side helpers for runtime parameter generation."""
 
-# 中文说明：
-# - 该子模块负责把慢回路估计的噪声参数映射为快回路使用的线性解码参数。
-# - 当前首版先实现 (sigma, mu_q, mu_p, theta_deg) -> (K, b) 的确定性映射。
+from __future__ import annotations
 
-from .linear_runtime import FixedPointFormat, LinearRuntime, LinearRuntimeConfig, LinearRuntimeResult
-from .ekf_baseline import EKFBaseline, EKFBaselineConfig
-from .param_mapper import NoisePrediction, ParamMapper, ParamMapperConfig
-from .particle_filter_baseline import (
-    ParticleFilterBaseline,
-    ParticleFilterBaselineConfig,
-    ParticleFilterResidualBBaseline,
-    ParticleFilterResidualBBaselineConfig,
-    ParticleFilterResidualBResult,
-)
-from .rls_residual_baseline import RLSResidualBBaseline, RLSResidualBBaselineConfig, RLSResidualBResult
-from .ukf_baseline import UKFBaseline, UKFBaselineConfig
-from .window_baseline import (
-    HistogramMomentEstimator,
-    HistogramMomentObservation,
-    WindowVarianceBaseline,
-    WindowVarianceConfig,
-)
+from importlib import import_module
 
-__all__ = [
-    "EKFBaseline",
-    "EKFBaselineConfig",
-    "FixedPointFormat",
-    "HistogramMomentEstimator",
-    "HistogramMomentObservation",
-    "LinearRuntime",
-    "LinearRuntimeConfig",
-    "LinearRuntimeResult",
-    "NoisePrediction",
-    "ParamMapper",
-    "ParamMapperConfig",
-    "ParticleFilterBaseline",
-    "ParticleFilterBaselineConfig",
-    "ParticleFilterResidualBBaseline",
-    "ParticleFilterResidualBBaselineConfig",
-    "ParticleFilterResidualBResult",
-    "RLSResidualBBaseline",
-    "RLSResidualBBaselineConfig",
-    "RLSResidualBResult",
-    "UKFBaseline",
-    "UKFBaselineConfig",
-    "WindowVarianceBaseline",
-    "WindowVarianceConfig",
-]
+
+_EXPORTS = {
+    "FixedPointFormat": "cnn_fpga.decoder.linear_runtime",
+    "LinearRuntime": "cnn_fpga.decoder.linear_runtime",
+    "LinearRuntimeConfig": "cnn_fpga.decoder.linear_runtime",
+    "LinearRuntimeResult": "cnn_fpga.decoder.linear_runtime",
+    "EKFBaseline": "cnn_fpga.decoder.ekf_baseline",
+    "EKFBaselineConfig": "cnn_fpga.decoder.ekf_baseline",
+    "NoisePrediction": "cnn_fpga.decoder.param_mapper",
+    "ParamMapper": "cnn_fpga.decoder.param_mapper",
+    "ParamMapperConfig": "cnn_fpga.decoder.param_mapper",
+    "ParticleFilterBaseline": "cnn_fpga.decoder.particle_filter_baseline",
+    "ParticleFilterBaselineConfig": "cnn_fpga.decoder.particle_filter_baseline",
+    "ParticleFilterResidualBBaseline": "cnn_fpga.decoder.particle_filter_baseline",
+    "ParticleFilterResidualBBaselineConfig": "cnn_fpga.decoder.particle_filter_baseline",
+    "ParticleFilterResidualBResult": "cnn_fpga.decoder.particle_filter_baseline",
+    "RLSResidualBBaseline": "cnn_fpga.decoder.rls_residual_baseline",
+    "RLSResidualBBaselineConfig": "cnn_fpga.decoder.rls_residual_baseline",
+    "RLSResidualBResult": "cnn_fpga.decoder.rls_residual_baseline",
+    "UKFBaseline": "cnn_fpga.decoder.ukf_baseline",
+    "UKFBaselineConfig": "cnn_fpga.decoder.ukf_baseline",
+    "HistogramMomentEstimator": "cnn_fpga.decoder.window_baseline",
+    "HistogramMomentObservation": "cnn_fpga.decoder.window_baseline",
+    "WindowVarianceBaseline": "cnn_fpga.decoder.window_baseline",
+    "WindowVarianceConfig": "cnn_fpga.decoder.window_baseline",
+}
+
+__all__ = list(_EXPORTS)
+
+
+def __getattr__(name: str):
+    module_name = _EXPORTS.get(name)
+    if module_name is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    module = import_module(module_name)
+    value = getattr(module, name)
+    globals()[name] = value
+    return value

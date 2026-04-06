@@ -14,7 +14,7 @@ from typing import Dict, List
 import numpy as np
 
 from physics.error_correction import LinearDecoder
-from physics.gkp_state import LATTICE_CONST
+from physics.constants import LATTICE_CONST
 from physics.logical_tracking import LogicalErrorTracker
 from physics.syndrome_measurement import MeasurementConfig, RealisticSyndromeMeasurement
 
