@@ -19,7 +19,7 @@ from typing import Any, Dict, List, Sequence
 import numpy as np
 
 from cnn_fpga.benchmark.run_hil_suite import run_hil_session
-from cnn_fpga.utils.config import config_hash, ensure_dir, load_yaml_config, now_tag, save_json
+from cnn_fpga.utils.config import config_hash, ensure_dir, load_yaml_config, now_tag, open_text, save_json, write_text
 
 
 def _arg_parser() -> argparse.ArgumentParser:
@@ -42,6 +42,11 @@ def _arg_parser() -> argparse.ArgumentParser:
         type=int,
         default=None,
         help="Optional repeat override for smoke/debug runs.",
+    )
+    parser.add_argument(
+        "--paired-seeds",
+        action="store_true",
+        help="Force all modes within a scenario/repeat to use the same seed.",
     )
     return parser
 
@@ -129,6 +134,30 @@ def _aggregate_metric(items: Sequence[Dict[str, Any]], key: str) -> Dict[str, fl
     }
 
 
+def _aggregate_per_scalar(items: Sequence[Dict[str, Any]]) -> Dict[str, Dict[str, float | None]]:
+    buckets: Dict[str, Dict[str, List[float]]] = {}
+    for item in items:
+        diag = item.get("teacher_per_scalar", {})
+        if not isinstance(diag, dict):
+            continue
+        for scalar_name, scalar_stats in diag.items():
+            if not isinstance(scalar_stats, dict):
+                continue
+            bucket = buckets.setdefault(str(scalar_name), {})
+            for stat_name, value in scalar_stats.items():
+                if value is None:
+                    continue
+                bucket.setdefault(str(stat_name), []).append(float(value))
+
+    out: Dict[str, Dict[str, float | None]] = {}
+    for scalar_name, stats in buckets.items():
+        out[scalar_name] = {}
+        for stat_name, values in stats.items():
+            array = np.asarray(values, dtype=float)
+            out[scalar_name][stat_name] = None if array.size == 0 else float(np.mean(array))
+    return out
+
+
 def _dominant_source(items: Sequence[Dict[str, Any]]) -> str:
     counts: Dict[str, int] = {}
     for item in items:
@@ -139,11 +168,53 @@ def _dominant_source(items: Sequence[Dict[str, Any]]) -> str:
 
 
 def _write_csv(path: Path, rows: List[Dict[str, Any]], fields: Sequence[str]) -> None:
-    with path.open("w", newline="", encoding="utf-8") as f:
+    ensure_dir(path.parent)
+    with open_text(path, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=list(fields))
         writer.writeheader()
         for row in rows:
             writer.writerow({field: row.get(field) for field in fields})
+
+
+def _write_per_scalar_csv(path: Path, rows: List[Dict[str, Any]]) -> None:
+    fields = [
+        "scenario",
+        "scenario_label",
+        "mode",
+        "mode_label",
+        "scalar_name",
+        "raw_mean",
+        "raw_std",
+        "raw_min",
+        "raw_max",
+        "normalized_mean",
+        "normalized_std",
+        "normalized_min",
+        "normalized_max",
+        "ablation_l2_mean",
+        "ablation_l2_std",
+        "gate_delta_mean_mean",
+        "gate_delta_l2_mean",
+    ]
+    flat_rows: List[Dict[str, Any]] = []
+    for row in rows:
+        per_scalar = row.get("teacher_per_scalar", {})
+        if not isinstance(per_scalar, dict):
+            continue
+        for scalar_name, scalar_stats in per_scalar.items():
+            if not isinstance(scalar_stats, dict):
+                continue
+            flat_rows.append(
+                {
+                    "scenario": row.get("scenario"),
+                    "scenario_label": row.get("scenario_label"),
+                    "mode": row.get("mode"),
+                    "mode_label": row.get("mode_label"),
+                    "scalar_name": scalar_name,
+                    **{field: scalar_stats.get(field) for field in fields if field not in {"scenario", "scenario_label", "mode", "mode_label", "scalar_name"}},
+                }
+            )
+    _write_csv(path, flat_rows, fields)
 
 
 def _write_report(
@@ -221,7 +292,14 @@ def _write_report(
             f"{float(item['runner_up_gap']):.6f} |"
         )
 
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    write_text(path, "\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _short_slug(value: Any, default: str, *, limit: int = 8) -> str:
+    text = "".join(ch for ch in str(value or default).lower() if ch.isalnum())
+    if not text:
+        text = default
+    return text[:limit]
 
 
 def main() -> int:
@@ -237,13 +315,16 @@ def main() -> int:
     seed_base = int(merged_base.get("experiment", {}).get("seed", 1234))
     scenario_seed_stride = int(protocol.get("scenario_seed_stride", 1000))
     mode_seed_stride = int(protocol.get("mode_seed_stride", 100000))
+    seed_pairing = str(protocol.get("seed_pairing", "independent")).lower()
+    paired_seeds = bool(args.paired_seeds or seed_pairing in {"paired", "same", "same_across_modes"})
 
     cfg_hash = config_hash(cfg)
     out_root = ensure_dir(merged_base.get("paths", {}).get("output_root", "runs"))
+    exp_slug = _short_slug(merged_base.get("experiment", {}).get("name", "p4_benchmark"), "p4b")
     run_dir = ensure_dir(
         out_root
         / "p4_benchmark"
-        / f"{merged_base.get('experiment', {}).get('name', 'p4_benchmark')}_{now_tag()}_{cfg_hash}_{os.getpid()}"
+        / f"{exp_slug}_{now_tag()}_{cfg_hash[:6]}_{os.getpid()}"
     )
 
     raw_rows: List[Dict[str, Any]] = []
@@ -257,10 +338,13 @@ def main() -> int:
         for mode_idx, mode_entry in enumerate(modes):
             mode_name = str(mode_entry.get("name"))
             mode_label = str(mode_entry.get("label", mode_name))
-            mode_run_dir = ensure_dir(run_dir / scenario_name / mode_name)
+            scenario_dir = _short_slug(scenario_name, f"s{scenario_idx}", limit=6)
+            mode_dir = _short_slug(mode_name, f"m{mode_idx}", limit=6)
+            mode_run_dir = ensure_dir(run_dir / scenario_dir / mode_dir)
             per_repeat: List[Dict[str, Any]] = []
             for repeat_idx in range(repeats):
-                seed = seed_base + scenario_idx * scenario_seed_stride + mode_idx * mode_seed_stride + repeat_idx
+                mode_offset = 0 if paired_seeds else mode_idx * mode_seed_stride
+                seed = seed_base + scenario_idx * scenario_seed_stride + mode_offset + repeat_idx
                 run_cfg = _build_run_config(merged_base, scenario_entry, mode_entry, seed)
                 run_cfg.setdefault("experiment", {})
                 run_cfg["experiment"]["name"] = f"{merged_base.get('experiment', {}).get('name', 'p4_benchmark')}_{scenario_name}_{mode_name}_rep{repeat_idx:02d}"
@@ -291,6 +375,11 @@ def main() -> int:
                     "n_commits_applied": int(summary.get("n_commits_applied", 0)),
                     "slow_update_violation_rate": float(summary.get("slow_update_violation_rate", 0.0)),
                     "fast_cycle_violation_rate": float(summary.get("fast_cycle_violation_rate", 0.0)),
+                    "teacher_contribution_l2_mean": float(summary.get("teacher_branch_diagnostics", {}).get("teacher_contribution_l2_mean", 0.0) or 0.0),
+                    "teacher_scalar_abs_mean": float(summary.get("teacher_branch_diagnostics", {}).get("teacher_scalar_abs_mean", 0.0) or 0.0),
+                    "teacher_gate_mean": float(summary.get("teacher_branch_diagnostics", {}).get("teacher_gate_mean", 0.0) or 0.0),
+                    "teacher_gate_std": float(summary.get("teacher_branch_diagnostics", {}).get("teacher_gate_std", 0.0) or 0.0),
+                    "teacher_per_scalar": dict(summary.get("teacher_branch_diagnostics", {}).get("per_scalar", {}) or {}),
                     "run_dir": str(repeat_run_dir),
                 }
                 per_repeat.append(row)
@@ -319,8 +408,13 @@ def main() -> int:
                 "n_commits_applied",
                 "slow_update_violation_rate",
                 "fast_cycle_violation_rate",
+                "teacher_contribution_l2_mean",
+                "teacher_scalar_abs_mean",
+                "teacher_gate_mean",
+                "teacher_gate_std",
             ):
                 aggregated.update(_aggregate_metric(per_repeat, metric_key))
+            aggregated["teacher_per_scalar"] = _aggregate_per_scalar(per_repeat)
             comparison_rows.append(aggregated)
 
     by_scenario_mode = {(row["scenario"], row["mode"]): row for row in comparison_rows}
@@ -369,6 +463,7 @@ def main() -> int:
     comparison_csv = run_dir / "comparison.csv"
     delta_csv = run_dir / "delta.csv"
     report_md = run_dir / "report.md"
+    per_scalar_csv = run_dir / "teacher_scalar_diagnostics.csv"
     _write_csv(
         comparison_csv,
         comparison_rows,
@@ -389,9 +484,14 @@ def main() -> int:
             "n_commits_applied_mean",
             "slow_update_violation_rate_mean",
             "fast_cycle_violation_rate_mean",
+            "teacher_contribution_l2_mean_mean",
+            "teacher_scalar_abs_mean_mean",
+            "teacher_gate_mean_mean",
+            "teacher_gate_std_mean",
             "dominant_overflow_source",
         ],
     )
+    _write_per_scalar_csv(per_scalar_csv, comparison_rows)
     _write_csv(
         delta_csv,
         delta_rows,
@@ -427,6 +527,7 @@ def main() -> int:
             "run_dir": str(run_dir),
             "comparison_csv": str(comparison_csv),
             "delta_csv": str(delta_csv),
+            "teacher_scalar_diagnostics_csv": str(per_scalar_csv),
             "report_md": str(report_md),
             "protocol": {
                 "protocol_id": protocol.get("protocol_id", "p4_protocol"),
@@ -434,6 +535,8 @@ def main() -> int:
                 "repeats": repeats,
                 "scenario_seed_stride": scenario_seed_stride,
                 "mode_seed_stride": mode_seed_stride,
+                "paired_seeds": paired_seeds,
+                "seed_pairing": "paired" if paired_seeds else "independent",
                 "real_board_policy": protocol.get("real_board_policy", "conditional_extension"),
                 "frozen_baseline_set": list(protocol.get("frozen_baseline_set", [])),
             },

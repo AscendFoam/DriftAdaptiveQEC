@@ -147,8 +147,14 @@ class BaseHistogramPredictor(ABC):
     """Abstract histogram -> noise-parameter predictor."""
 
     @abstractmethod
-    def predict(self, histogram: np.ndarray) -> NoisePrediction:
+    def predict(self, histogram: np.ndarray | tuple[np.ndarray, np.ndarray]) -> NoisePrediction:
         raise NotImplementedError
+
+    def explain(self, histogram: np.ndarray | tuple[np.ndarray, np.ndarray]) -> Dict[str, Any]:
+        prediction = self.predict(histogram)
+        return {
+            "prediction": prediction.to_dict(),
+        }
 
 
 class ArtifactHistogramPredictor(BaseHistogramPredictor):
@@ -162,7 +168,9 @@ class ArtifactHistogramPredictor(BaseHistogramPredictor):
         self.model_type = str(self.data["model_type"][0])
         self.label_names = [str(item) for item in self.data["label_names"]]
 
-    def _predict_linear(self, histogram: np.ndarray) -> np.ndarray:
+    def _predict_linear(self, histogram: np.ndarray | tuple[np.ndarray, np.ndarray]) -> np.ndarray:
+        if isinstance(histogram, tuple):
+            histogram = histogram[0]
         x = histogram.reshape(1, -1).astype(np.float64)
         x_mean = self.data["x_mean"].astype(np.float64).reshape(1, -1)
         x_std = self.data["x_std"].astype(np.float64).reshape(1, -1)
@@ -180,14 +188,22 @@ class ArtifactHistogramPredictor(BaseHistogramPredictor):
 
         raise InferenceServiceError(f"unsupported_linear_artifact:{self.model_type}")
 
-    def _predict_tiny_cnn(self, histogram: np.ndarray) -> np.ndarray:
+    def _predict_tiny_cnn(self, histogram: np.ndarray | tuple[np.ndarray, np.ndarray]) -> np.ndarray:
         try:
             from cnn_fpga.model.tiny_cnn import predict_from_loaded_artifact
         except ImportError as exc:  # pragma: no cover
             raise InferenceServiceError("tiny_cnn_artifact_support_unavailable") from exc
-        return np.asarray(predict_from_loaded_artifact(self.data, histogram.astype(np.float32)), dtype=float).reshape(-1)
+        if isinstance(histogram, tuple):
+            spatial, scalar = histogram
+            model_input = (
+                np.asarray(spatial, dtype=np.float32),
+                np.asarray(scalar, dtype=np.float32),
+            )
+        else:
+            model_input = np.asarray(histogram, dtype=np.float32)
+        return np.asarray(predict_from_loaded_artifact(self.data, model_input), dtype=float).reshape(-1)
 
-    def predict(self, histogram: np.ndarray) -> NoisePrediction:
+    def predict(self, histogram: np.ndarray | tuple[np.ndarray, np.ndarray]) -> NoisePrediction:
         if self.model_type.startswith("linear_regression"):
             prediction = self._predict_linear(histogram)
         elif self.model_type.startswith("tiny_cnn"):
@@ -209,6 +225,26 @@ class ArtifactHistogramPredictor(BaseHistogramPredictor):
                 "raw_prediction": mapping,
             },
         )
+
+    def explain(self, histogram: np.ndarray | tuple[np.ndarray, np.ndarray]) -> Dict[str, Any]:
+        if not self.model_type.startswith("tiny_cnn"):
+            return {"prediction": self.predict(histogram).to_dict()}
+        try:
+            from cnn_fpga.model.tiny_cnn import explain_from_loaded_artifact
+        except ImportError as exc:  # pragma: no cover
+            raise InferenceServiceError("tiny_cnn_artifact_support_unavailable") from exc
+        model_input: np.ndarray | tuple[np.ndarray, np.ndarray]
+        if isinstance(histogram, tuple):
+            model_input = (
+                np.asarray(histogram[0], dtype=np.float32),
+                np.asarray(histogram[1], dtype=np.float32),
+            )
+        else:
+            model_input = np.asarray(histogram, dtype=np.float32)
+        explanation = explain_from_loaded_artifact(self.data, model_input)
+        explanation["artifact_path"] = str(self.artifact_path)
+        explanation["model_type"] = self.model_type
+        return explanation
 
 
 class TFLiteHistogramPredictor(BaseHistogramPredictor):
@@ -247,7 +283,7 @@ class TFLiteHistogramPredictor(BaseHistogramPredictor):
         self.input_details = self.interpreter.get_input_details()[0]
         self.output_details = self.interpreter.get_output_details()[0]
 
-    def predict(self, histogram: np.ndarray) -> NoisePrediction:
+    def predict(self, histogram: np.ndarray | tuple[np.ndarray, np.ndarray]) -> NoisePrediction:
         if self._stub_predictor is not None:
             prediction = self._stub_predictor.predict(histogram)
             metadata = dict(prediction.metadata or {})
@@ -267,6 +303,9 @@ class TFLiteHistogramPredictor(BaseHistogramPredictor):
                 metadata=metadata,
             )
 
+        scalar_array: np.ndarray | None = None
+        if isinstance(histogram, tuple):
+            histogram, scalar_array = histogram
         input_array = np.asarray(histogram, dtype=np.float32)
         input_shape = tuple(int(x) for x in self.input_details["shape"])
         if input_array.ndim == 2:
@@ -285,6 +324,12 @@ class TFLiteHistogramPredictor(BaseHistogramPredictor):
         else:
             raise InferenceServiceError(f"unsupported_tflite_histogram_ndim:{input_array.ndim}")
         self.interpreter.set_tensor(self.input_details["index"], input_tensor)
+        if scalar_array is not None:
+            input_details = self.interpreter.get_input_details()
+            if len(input_details) < 2:
+                raise InferenceServiceError("tflite_scalar_input_not_supported_by_model")
+            scalar_tensor = np.asarray(scalar_array, dtype=np.float32).reshape(1, -1)
+            self.interpreter.set_tensor(input_details[1]["index"], scalar_tensor)
         self.interpreter.invoke()
         output = np.asarray(self.interpreter.get_tensor(self.output_details["index"]), dtype=float).reshape(-1)
         mapping = dict(zip(self.label_names, output.tolist()))
@@ -299,14 +344,23 @@ class TFLiteHistogramPredictor(BaseHistogramPredictor):
                 "label_names": list(self.label_names),
                 "raw_prediction": mapping,
             },
-        )
+            )
+
+    def explain(self, histogram: np.ndarray | tuple[np.ndarray, np.ndarray]) -> Dict[str, Any]:
+        prediction = self.predict(histogram)
+        metadata = dict(prediction.metadata or {})
+        explanation = {"prediction": prediction.to_dict()}
+        if self._stub_predictor is not None:
+            explanation.update(self._stub_predictor.explain(histogram))
+        explanation["metadata"] = metadata
+        return explanation
 
 
 class InferenceService(ABC):
     """Abstract client interface used by SlowLoopRuntime."""
 
     @abstractmethod
-    def predict(self, histogram: np.ndarray) -> NoisePrediction:
+    def predict(self, histogram: np.ndarray | tuple[np.ndarray, np.ndarray]) -> NoisePrediction:
         raise NotImplementedError
 
     def close(self) -> None:
@@ -319,8 +373,13 @@ class InProcInferenceService(InferenceService):
     def __init__(self, predictor: BaseHistogramPredictor) -> None:
         self.predictor = predictor
 
-    def predict(self, histogram: np.ndarray) -> NoisePrediction:
+    def predict(self, histogram: np.ndarray | tuple[np.ndarray, np.ndarray]) -> NoisePrediction:
         return self.predictor.predict(histogram)
+
+    def explain(self, histogram: np.ndarray | tuple[np.ndarray, np.ndarray]) -> Dict[str, Any]:
+        if hasattr(self.predictor, "explain"):
+            return getattr(self.predictor, "explain")(histogram)
+        return super().explain(histogram)
 
 
 class SubprocessInferenceService(InferenceService):
@@ -356,14 +415,37 @@ class SubprocessInferenceService(InferenceService):
         if self._proc.stdin is None or self._proc.stdout is None:
             raise InferenceServiceError("subprocess_pipe_init_failed")
 
-    def predict(self, histogram: np.ndarray) -> NoisePrediction:
+    def predict(self, histogram: np.ndarray | tuple[np.ndarray, np.ndarray]) -> NoisePrediction:
+        payload = self._request(histogram, explain=False)
+        return NoisePrediction(
+            sigma=float(payload.get("sigma", 0.0)),
+            mu_q=float(payload.get("mu_q", 0.0)),
+            mu_p=float(payload.get("mu_p", 0.0)),
+            theta_deg=float(payload.get("theta_deg", 0.0)),
+            source=str(payload.get("source", "subprocess_service")),
+            metadata=dict(payload.get("metadata", {})),
+        )
+
+    def explain(self, histogram: np.ndarray | tuple[np.ndarray, np.ndarray]) -> Dict[str, Any]:
+        return self._request(histogram, explain=True)
+
+    def _request(self, histogram: np.ndarray | tuple[np.ndarray, np.ndarray], *, explain: bool) -> Dict[str, Any]:
         if self._proc.poll() is not None:
             stderr = "" if self._proc.stderr is None else self._proc.stderr.read()
             raise InferenceServiceError(f"inference_worker_exited:{self._proc.returncode}:{stderr.strip()}")
 
         assert self._proc.stdin is not None
         assert self._proc.stdout is not None
-        self._proc.stdin.write(json.dumps({"histogram": np.asarray(histogram, dtype=float).tolist()}, ensure_ascii=False) + "\n")
+        if isinstance(histogram, tuple):
+            spatial, scalar = histogram
+            payload_obj = {
+                "histogram": np.asarray(spatial, dtype=float).tolist(),
+                "scalar_features": np.asarray(scalar, dtype=float).tolist(),
+                "explain": bool(explain),
+            }
+        else:
+            payload_obj = {"histogram": np.asarray(histogram, dtype=float).tolist(), "explain": bool(explain)}
+        self._proc.stdin.write(json.dumps(payload_obj, ensure_ascii=False) + "\n")
         self._proc.stdin.flush()
         response_line = self._proc.stdout.readline()
         if not response_line:
@@ -373,14 +455,7 @@ class SubprocessInferenceService(InferenceService):
         payload = json.loads(response_line)
         if "error" in payload:
             raise InferenceServiceError(str(payload["error"]))
-        return NoisePrediction(
-            sigma=float(payload.get("sigma", 0.0)),
-            mu_q=float(payload.get("mu_q", 0.0)),
-            mu_p=float(payload.get("mu_p", 0.0)),
-            theta_deg=float(payload.get("theta_deg", 0.0)),
-            source=str(payload.get("source", "subprocess_service")),
-            metadata=dict(payload.get("metadata", {})),
-        )
+        return payload
 
     def close(self) -> None:
         if self._proc.poll() is None:

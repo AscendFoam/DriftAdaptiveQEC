@@ -1,0 +1,36 @@
+# Reencoded teacher params smoke config:
+# - same representation change as the main reencoded variant
+# - lighter dataset build for fast verification
+
+experiment:
+  name: runtime_b_residual_reencoded_teacher_params_smoke_v1
+  stage: p4_ablation_reencoded_teacher_params_smoke
+  seed: 20260402
+
+base_config: experiment_runtime_b_residual_reencoded_teacher_params.yaml
+
+paths:
+  dataset_dir: artifacts/datasets/runtime_b_residual_reencoded_teacher_params_smoke_v1
+  model_dir: artifacts/models/runtime_b_residual_reencoded_teacher_params_smoke_v1
+  report_dir: artifacts/reports/runtime_b_residual_reencoded_teacher_params_smoke_v1
+
+runtime_dataset:
+  windows_per_scenario: 16
+  split:
+    train: 0.75
+    val: 0.125
+    test: 0.125
+
+runtime:
+  window_size: 512
+  t_slow_update_ms: 2.56
+  window_stride: 512
+
+training:
+  max_train_samples: 2000
+  max_val_samples: 400
+  tiny_cnn:
+    backend: torch
+    device: auto
+    epochs: 8
+    patience: 3

@@ -1,0 +1,31 @@
+# Runtime-consistent residual-b variant:
+# - move all teacher prediction / params / deltas out of broadcast planes
+# - normalize them as scalar features and fuse with a learned gated branch
+
+experiment:
+  name: runtime_b_residual_norm_gated_teacher_v2
+  stage: p4_ablation_norm_gated_teacher_v2
+  seed: 20260420
+
+base_config: experiment_runtime_b_residual.yaml
+
+paths:
+  dataset_dir: artifacts/datasets/runtime_b_residual_norm_gated_teacher_v2
+  model_dir: artifacts/models/runtime_b_residual_norm_gated_teacher_v2
+  report_dir: artifacts/reports/runtime_b_residual_norm_gated_teacher_v2
+
+runtime_dataset:
+  teacher_prediction_layout: scalar_branch
+  teacher_params_layout: scalar_branch
+  teacher_deltas_layout: scalar_branch
+
+training:
+  tiny_cnn:
+    scalar_fusion_mode: gated
+    scalar_gate_init_bias: 1.0
+
+slow_loop:
+  hybrid_residual_b:
+    teacher_prediction_layout: scalar_branch
+    teacher_params_layout: scalar_branch
+    teacher_deltas_layout: scalar_branch

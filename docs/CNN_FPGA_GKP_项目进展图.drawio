@@ -1,0 +1,315 @@
+<mxfile host="app.diagrams.net" modified="2026-04-17T14:10:00.000Z" agent="Codex" version="26.2.15" type="device" pages="2">
+  <diagram id="progress-main" name="项目主图">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="5000" pageHeight="3000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="m_title" value="CNN-FPGA-GKP 项目进展图：主线结论与下一步" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=28;fontStyle=1;fontColor=#1f1f1f;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="900" y="18" width="3200" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="m_subtitle" value="导师汇报主图。回答三件事：为什么要按 P0 到 P4 分阶段推进；当前已经稳定证明了什么；为什么下一步聚焦 teacher params 编码，而不是继续把 No TeacherParams 当正式主线。更新时间 2026-04-17。" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontColor=#4d4d4d;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="260" y="62" width="4480" height="34" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m_goal_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="40" y="110" width="1580" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="m_goal_head" value="项目一句话目标" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#666666;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#333333;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="40" y="110" width="1580" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="m_goal_body" value="在 GKP 量子纠错里，把快回路实时解码和慢回路漂移自适应拼成一条可部署链路：快回路保证 5 us 周期内稳定执行，慢回路利用窗口统计、classical teacher 和轻量 CNN 做低频修正，目标是在实时硬件约束下持续优于固定参数和经典自适应 baseline。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=15;fontColor=#222222;spacingLeft=14;spacingRight=12;spacingTop=12;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="54" y="164" width="1552" height="98" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m_status_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="1660" y="110" width="1580" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="m_status_head" value="当前总体判断" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cfe2f8;strokeColor=#6c8ebf;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#123b66;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="1660" y="110" width="1580" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="m_status_body" value="P0 到 P3 已依次打通物理背景、离线训练、行为级硬件一致性和软件 HIL 链路。P4 统一 benchmark 后，当前最稳正式主线仍是 Hybrid Residual-B；UKF 是最强经典 baseline；No TeacherParams 只能作为机制分析线索，不能改写正式主结论。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=15;fontColor=#123b66;spacingLeft=14;spacingRight=12;spacingTop=12;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="1674" y="164" width="1552" height="98" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m_best_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;arcSize=12;" parent="1" vertex="1">
+          <mxGeometry x="3280" y="110" width="1680" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="m_best_head" value="当前最强结果摘要" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b7e1b0;strokeColor=#82b366;strokeWidth=2;fontSize=18;fontStyle=1;fontColor=#244715;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="3280" y="110" width="1680" height="44" as="geometry" />
+        </mxCell>
+        <mxCell id="m_best_body" value="正式 benchmark：Hybrid Residual-B = 0.798332，UKF = 0.817974。P2 行为级硬件仿真中 linear_med = 0.696206 vs fixed = 0.816067，step_large = 0.731906 vs 0.937822，sinusoidal_mid = 0.759289 vs 1.019033；commit_count_mean = 7.0，快慢回路冲突率 = 0。P3 软件 HIL 中 float 与 int8 的 mock LER gap = 2.09e-04。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=15;fontColor=#16330c;spacingLeft=14;spacingRight=12;spacingTop=12;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="3294" y="164" width="1652" height="98" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m_flow_note" value="主流程统一按五段式卡片写法展开：为什么要做这个阶段、阶段目标、执行逻辑、阶段结果、结果说明了什么。这样汇报时可以把每一阶段看成一个被验证的问题，而不是一串分散实验。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1;fontSize=13;fontStyle=1;fontColor=#5b4a00;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="40" y="300" width="3260" height="34" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p0_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;arcSize=14;" parent="1" vertex="1">
+          <mxGeometry x="40" y="360" width="620" height="1520" as="geometry" />
+        </mxCell>
+        <mxCell id="p0_head" value="P0 物理仿真基线：先证明问题真实存在" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#666666;strokeWidth=2;fontSize=20;fontStyle=1;fontColor=#333333;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="40" y="360" width="620" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="p0_body" value="为什么要做这个阶段：先证明噪声漂移会让固定参数解码失配，否则后续自适应路线没有现实意义。P0 解决建模和评价口径问题。&#xa;&#xa;阶段目标：证明漂移会显著推高 LER，说明课题不是空想，而是有明确物理驱动。&#xa;&#xa;执行逻辑：1. 建立 simplified 与 full_qec 两类对照口径。2. 在 linear_low、step_mid、sinusoidal、random_walk 等场景下跑多轮统计。3. 统一用 LER 比较固定参数与理想可调口径。&#xa;&#xa;阶段结果：linear_low 0.4237 vs 0.0205；step_mid 0.42665 vs 0.01855；sinusoidal 0.42530 vs 0.02405；random_walk 0.41200 vs 0.01565。&#xa;&#xa;结果说明了什么：P0 已证明项目值得做，也建立了后续统一评价方式。但它只说明需要自适应，不说明 CNN 一定有效，更不能直接推出硬件闭环一定能拿到收益。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=13;fontColor=#222222;spacingLeft=14;spacingRight=10;spacingTop=12;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="52" y="430" width="596" height="1430" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p1_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;arcSize=14;" parent="1" vertex="1">
+          <mxGeometry x="700" y="360" width="620" height="1520" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_head" value="P1 离线训练与量化：先证明 CNN 学得出来" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b7e1b0;strokeColor=#82b366;strokeWidth=2;fontSize=20;fontStyle=1;fontColor=#244715;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="700" y="360" width="620" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="p1_body" value="为什么要做这个阶段：如果慢回路里根本没有可学习信号，直接上板或直接做 HIL 只会浪费时间。P1 解决训练可行性和量化可行性问题。&#xa;&#xa;阶段目标：证明窗口统计中存在可学习结构，模型可以稳定训练，且 int8 量化后不会灾难性掉点。&#xa;&#xa;执行逻辑：1. 构建数据集并定义目标标签。2. 训练 Tiny-CNN，检查 MSE、MAE 和 R2。3. 导出 int8 产物，对齐 float 与 int8 的离线预测口径。&#xa;&#xa;阶段结果：float 模型 MSE = 0.293336，MAE = 0.220503，R2_mean = 0.994352，theta = 0.984862；int8 模型 MSE = 0.297742，MAE = 0.221944，R2_mean = 0.994212。&#xa;&#xa;结果说明了什么：P1 已证明 CNN 可训练、可量化。但这里仍属于 offline 口径，离真实闭环部署还差运行时语义一致性，不能直接外推到 P3 或 P4 的正式收益。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=13;fontColor=#16330c;spacingLeft=14;spacingRight=10;spacingTop=12;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="712" y="430" width="596" height="1430" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p2_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1f0d9;strokeColor=#82b366;strokeWidth=2;arcSize=14;" parent="1" vertex="1">
+          <mxGeometry x="1360" y="360" width="620" height="1520" as="geometry" />
+        </mxCell>
+        <mxCell id="p2_head" value="P2 行为级硬件仿真：先证明工程口径一致" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c5e0b4;strokeColor=#82b366;strokeWidth=2;fontSize=20;fontStyle=1;fontColor=#244715;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="1360" y="360" width="620" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="p2_body" value="为什么要做这个阶段：真实部署里的量化、寄存器、bank 切换、DMA 和 AXI 延迟，往往比模型本身更容易把收益做没。P2 解决工程一致性问题。&#xa;&#xa;阶段目标：证明收益不是靠放宽数值范围或偷换语义换来的假提升，而是在行为级硬件约束下仍然成立。&#xa;&#xa;执行逻辑：1. 把 fixed_baseline、oracle_delayed、model_artifact、int8_artifact 拉到统一硬件行为级口径。2. 检查 commit、overflow、bank 切换和快慢回路冲突。3. 在多种漂移场景下与 fixed baseline 正式对比。&#xa;&#xa;阶段结果：linear_med 0.696206 vs fixed 0.816067；step_large 0.731906 vs 0.937822；sinusoidal_mid 0.759289 vs 1.019033；commit_count_mean = 7.0；fast 和 slow violation rate = 0。&#xa;&#xa;结果说明了什么：P2 是从论文可行走向工程可行的分水岭。它说明提升不是靠作弊口径拿到的，也说明量化、寄存器和时序保护设计是有效的。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=13;fontColor=#16330c;spacingLeft=14;spacingRight=10;spacingTop=12;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="1372" y="430" width="596" height="1430" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p3_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;arcSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2020" y="360" width="620" height="1520" as="geometry" />
+        </mxCell>
+        <mxCell id="p3_head" value="P3 软件 HIL：先证明真实运行时闭环打通" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe599;strokeColor=#d6b656;strokeWidth=2;fontSize=20;fontStyle=1;fontColor=#5b4a00;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="2020" y="360" width="620" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="p3_body" value="为什么要做这个阶段：软件 HIL 必须单独成阶段，因为真实 .tflite 产物、subprocess、commit 时序和 float 与 int8 一致性，都不是单纯行为级仿真能替代的。P3 解决运行时语义一致性问题。&#xa;&#xa;阶段目标：验证双回路、真实 .tflite 产物、commit 时序、float 和 int8 产物可以在软件 HIL 闭环中统一工作。&#xa;&#xa;执行逻辑：1. 接入真实 .tflite 产物与慢回路控制程序。2. 用 mock HIL 跑 fixed_baseline、float_artifact、int8_artifact 对照。3. 检查 commit 时序、闭环输出和 float 与 int8 偏差。&#xa;&#xa;阶段结果：fixed_baseline_mock = 1.1987018；float_artifact_mock = 1.1405753；int8_artifact_mock = 1.1407845；float 与 int8 的 mock LER gap = 2.09e-04。&#xa;&#xa;结果说明了什么：软件侧 HIL 链路已经打通，真实产物与量化产物也足够接近。但这里仍只是 P3 软件 HIL 完成，不等于 P3 真板 HIL 完成。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=13;fontColor=#5b4a00;spacingLeft=14;spacingRight=10;spacingTop=12;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="2032" y="430" width="596" height="1430" as="geometry" />
+        </mxCell>
+
+        <mxCell id="p4_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;arcSize=14;" parent="1" vertex="1">
+          <mxGeometry x="2680" y="360" width="620" height="1520" as="geometry" />
+        </mxCell>
+        <mxCell id="p4_head" value="P4 正式 benchmark：最后统一口径给出排序" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f4b7b4;strokeColor=#b85450;strokeWidth=2;fontSize=20;fontStyle=1;fontColor=#7a1e1e;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="2680" y="360" width="620" height="56" as="geometry" />
+        </mxCell>
+        <mxCell id="p4_body" value="为什么要做这个阶段：只有把场景、baseline、统计口径和 seeds 全部冻结，结果才具备论文级可比性。P4 解决正式对比和主线收敛问题。&#xa;&#xa;阶段目标：统一 benchmark 与 baseline 后，明确谁是当前正式主线，谁只是机制线索。&#xa;&#xa;执行逻辑：1. 冻结 scenario、seed 与统计口径。2. 统一比较 EKF、UKF、RLS Residual-B、Constant Residual-Mu、Hybrid Residual-B 和 teacher params 变体。3. 复查 No TeacherParams 是否能在 formal HIL 中稳定复现离线优势。&#xa;&#xa;阶段结果：正式 benchmark 最优为 Hybrid Residual-B = 0.798332；最强经典 baseline 为 UKF = 0.817974。No TeacherParams 在 offline 3-seed 中有优势，但 formal HIL 多 seed 会翻转。&#xa;&#xa;结果说明了什么：当前最稳正式主线仍是 Hybrid Residual-B，UKF 是最强经典参照。No TeacherParams 只能写成机制线索，不能写成已确认新主线。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=13;fontColor=#7a1e1e;spacingLeft=14;spacingRight=10;spacingTop=12;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="2692" y="430" width="596" height="1430" as="geometry" />
+        </mxCell>
+
+        <mxCell id="m_arrow_01" value="→" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=34;fontStyle=1;fontColor=#666666;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="664" y="1090" width="32" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="m_arrow_12" value="→" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=34;fontStyle=1;fontColor=#666666;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="1324" y="1090" width="32" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="m_arrow_23" value="→" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=34;fontStyle=1;fontColor=#666666;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="1984" y="1090" width="32" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="m_arrow_34" value="→" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=34;fontStyle=1;fontColor=#666666;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="2644" y="1090" width="32" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="judge_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef5fd;strokeColor=#6c8ebf;strokeWidth=2;arcSize=14;" parent="1" vertex="1">
+          <mxGeometry x="3340" y="360" width="1620" height="560" as="geometry" />
+        </mxCell>
+        <mxCell id="judge_head" value="当前主线结论" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d9e8fb;strokeColor=#6c8ebf;strokeWidth=2;fontSize=19;fontStyle=1;fontColor=#123b66;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="3340" y="360" width="1620" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="judge_body" value="1. 当前最稳正式主线仍是 Hybrid Residual-B。原因：统一 benchmark 下排序稳定，0.798332 优于 UKF 的 0.817974。&#xa;&#xa;2. 离线训练改善不等于 formal HIL 改善。原因：No TeacherParams 在 offline 3-seed 里更好，但 formal HIL 多 seed 会翻转。&#xa;&#xa;3. 后续重点应从删不删 teacher params，转向 teacher params 怎样编码。原因：现有分析更支持低方差、高冗余和与其他通道耦合方式不合适，而不是简单数值坏掉。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=15;fontColor=#123b66;spacingLeft=14;spacingRight=10;spacingTop=14;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="3354" y="424" width="1592" height="478" as="geometry" />
+        </mxCell>
+
+        <mxCell id="why_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;arcSize=14;" parent="1" vertex="1">
+          <mxGeometry x="3340" y="950" width="1620" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="why_head" value="为什么这样判断" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#666666;strokeWidth=2;fontSize=19;fontStyle=1;fontColor=#333333;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="3340" y="950" width="1620" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="why_body" value="第一，P0 证明问题真实存在，P1 证明学习模块可训练，P2 和 P3 分别把工程一致性与软件 HIL 跑通，因此 P4 的排序不是孤立数字，而是建立在前面四层验证之上的正式结论。&#xa;&#xa;第二，Hybrid Residual-B 的优势来自稳定 teacher 打底后只让 CNN 学轻量修正，这条路线同时兼顾了实时性、可部署性和泛化稳定性。&#xa;&#xa;第三，No TeacherParams 的现象很有价值，但它更像机制问题：离线里少了 teacher 通道会更干净，formal HIL 里却失去稳定底座，导致跨 seed 排序翻转。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=15;fontColor=#333333;spacingLeft=14;spacingRight=10;spacingTop=14;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="3354" y="1014" width="1592" height="438" as="geometry" />
+        </mxCell>
+
+        <mxCell id="next_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;arcSize=14;" parent="1" vertex="1">
+          <mxGeometry x="3340" y="1500" width="1620" height="760" as="geometry" />
+        </mxCell>
+        <mxCell id="next_head" value="下一步更值得做什么" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f4b7b4;strokeColor=#b85450;strokeWidth=2;fontSize=19;fontStyle=1;fontColor=#7a1e1e;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="3340" y="1500" width="1620" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="next_body" value="1. 重编码 teacher params。动作：尝试归一化、差分表示、分组表示或对数尺度。原因：当前瓶颈更像表示方式与其他通道耦合不佳。预期收获：把离线优势更稳定地转成 formal HIL 收益。&#xa;&#xa;2. 做更聚焦的 representation ablation。动作：只挑最关键 seed 和 scenario，比原编码、归一化编码、残差化编码和裁剪后的 teacher 通道。原因：不需要再用整套长跑反复证明 No TeacherParams 不是稳定主线。&#xa;&#xa;3. 用 benchmark-only 口径复验编码改动。动作：固定 P4 的 benchmark 与 baseline，只补最关键 seed 和 scenario。原因：要直接回答编码变化能否把 offline 优势转成 formal HIL 优势。&#xa;&#xa;4. 真板验证作为条件性扩展。动作：在软件 HIL 和行为级结论稳定后推进真板联调。原因：真板价值大，但不应阻塞当前主叙事。&#xa;&#xa;明确不建议：继续把大量算力优先投给 No TeacherParams 全量长跑，因为现有证据已经足够否定它是稳定更优的正式主线。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=15;fontColor=#7a1e1e;spacingLeft=14;spacingRight=10;spacingTop=14;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="3354" y="1564" width="1592" height="678" as="geometry" />
+        </mxCell>
+
+        <mxCell id="legend_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9673a6;strokeWidth=2;arcSize=14;" parent="1" vertex="1">
+          <mxGeometry x="3340" y="2290" width="1620" height="520" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_head" value="图例与口径说明" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eadcf3;strokeColor=#9673a6;strokeWidth=2;fontSize=19;fontStyle=1;fontColor=#4d2f5c;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="3340" y="2290" width="1620" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_body" value="术语解释：LER 表示逻辑错误率，越低越好。teacher params 表示慢回路 classical teacher 给出的稳定参数建议，是 CNN 修正的底座。Residual-B 表示 CNN 不重算全部参数，只补一个较小修正量。offline 表示脱离闭环的训练或验证口径。formal HIL 表示把运行时时序、量化、commit 和 benchmark 口径都固定后的正式闭环对比。&#xa;&#xa;指标解释：P0 到 P4 里最核心的是 LER；训练阶段会补充 MSE、MAE 和 R2，用来判断是否学得出。&#xa;&#xa;必须强调：离线训练改善不等于 formal HIL 改善。离线更好只能说明模型在静态数据上更会拟合，不代表放进双回路闭环后一定更好。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#4d2f5c;spacingLeft=14;spacingRight=10;spacingTop=14;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="3354" y="2354" width="1592" height="438" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_more" value="补充提示：第 2 页下半部继续补充了术语详解、FPGA 仿真方式、CNN 结构、以及快慢回路同步机制说明。若老师追问图里的英文词和工程细节，可直接切到第 2 页继续讲。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=1;fontSize=13;fontStyle=1;fontColor=#5b4a00;fontFamily=Microsoft YaHei;" parent="1" vertex="1">
+          <mxGeometry x="3340" y="2814" width="1620" height="60" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram id="mechanism-detail" name="机制细节页">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="5200" pageHeight="5200" math="0" shadow="0">
+      <root>
+        <mxCell id="d0" />
+        <mxCell id="d1" parent="d0" />
+
+        <mxCell id="d_title" value="CNN-FPGA-GKP 机制细节页：噪声、延迟、baseline、创新点与当前最优回路" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=26;fontStyle=1;fontColor=#1f1f1f;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="680" y="16" width="3840" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="d_subtitle" value="用于回答导师追问。这里不再强调阶段，而是把主图背后的机制解释补齐，说明为什么当前正式主线收敛到 Hybrid Residual-B，以及为什么后续重点转向 teacher params 编码。" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=15;fontColor=#4d4d4d;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="260" y="60" width="4680" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="noise_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;arcSize=14;" parent="d1" vertex="1">
+          <mxGeometry x="40" y="110" width="1680" height="1360" as="geometry" />
+        </mxCell>
+        <mxCell id="noise_head" value="专题 1：噪声来源，场景化验证，为什么能说明问题" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#666666;strokeWidth=2;fontSize=19;fontStyle=1;fontColor=#333333;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="40" y="110" width="1680" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="noise_body" value="静态噪声：模拟器件本底噪声长期存在但不额外漂移，用来做稳态参照。&#xa;&#xa;linear_ramp：模拟环境缓慢升温、频偏持续爬移等慢变化；固定参数会越来越落后，主要考察长期追踪能力。&#xa;&#xa;periodic_drift：模拟周期温漂、振动或时钟扰动；固定参数会在不同相位上反复错位，主要考察周期适应能力。&#xa;&#xa;step_sigma_theta：模拟噪声强度或相位参数在某一时刻突然跳变；主要考察突变恢复能力。&#xa;&#xa;static_bias_theta：模拟长期存在的偏置或标定误差；主要考察稳态偏差修正能力。&#xa;&#xa;这些场景共同回答一个问题：固定参数解码为什么会失配，以及系统到底是在跟踪什么。它们不是凑数的测试项，而是对应真实可能出现的不同漂移形式。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=2;fontSize=15;fontColor=#222222;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="70" y="190" width="1620" height="1240" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lat_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9e6;strokeColor=#d6b656;strokeWidth=2;arcSize=14;" parent="d1" vertex="1">
+          <mxGeometry x="1760" y="110" width="1580" height="1360" as="geometry" />
+        </mxCell>
+        <mxCell id="lat_head" value="专题 2：延迟预算与双回路原因" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe599;strokeColor=#d6b656;strokeWidth=2;fontSize=19;fontStyle=1;fontColor=#5b4a00;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="1760" y="110" width="1580" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="lat_body" value="快回路：T_fast = 5 us。职责是每个纠错周期都执行确定性线性解码，绝不能等待 teacher、CNN 或 DMA。&#xa;&#xa;慢回路：T_slow = 10 到 100 ms，推荐展示值 T_slow_update = 20 ms。职责是累积窗口统计，运行 classical teacher，调用轻量 CNN 做 residual 修正，再把新参数写入 shadow bank。&#xa;&#xa;为什么不是单回路 CNN：如果把全部推理都塞进 5 us 周期，任何一次推理、缓存抖动或写回延迟都可能直接破坏实时性。双回路的价值就是把实时性和适应性解耦。&#xa;&#xa;更新保护：新参数先写 shadow bank，再在安全边界 commit 切换。快回路只读 active bank，避免半更新。P2 里 commit_count_mean = 7.0，快慢回路冲突率 = 0，说明这套机制是有效的。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d6b656;strokeWidth=2;fontSize=15;fontColor=#5b4a00;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="1790" y="190" width="1520" height="1240" as="geometry" />
+        </mxCell>
+
+        <mxCell id="base_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef5fd;strokeColor=#6c8ebf;strokeWidth=2;arcSize=14;" parent="d1" vertex="1">
+          <mxGeometry x="3380" y="110" width="1780" height="1360" as="geometry" />
+        </mxCell>
+        <mxCell id="base_head" value="专题 3：baseline 设计与 MWPM 不作为主 baseline 的原因" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d9e8fb;strokeColor=#6c8ebf;strokeWidth=2;fontSize=19;fontStyle=1;fontColor=#123b66;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="3380" y="110" width="1780" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="base_body" value="正式 benchmark baseline：EKF 和 UKF 是经典状态估计器，用来衡量不依赖神经网络时能做到什么水平；RLS Residual-B 是经典递推残差修正；Constant Residual-Mu 是固定常数修正；Hybrid Residual-B 是当前主线，teacher 打底再由 CNN 做轻量 residual correction。&#xa;&#xa;工程校验 baseline：fixed_baseline、mock 口径、oracle_delayed、model_artifact、int8_artifact 等，主要用于 P2 和 P3 内部校验链路、量化和时序，不进入 P4 主排序。&#xa;&#xa;为什么 MWPM 不作为当前主 baseline：它可以作为扩展对照，但不应阻塞当前主实验线；它和当前双回路、漂移自适应、运行时参数更新的工程口径并不完全同类。当前论文主问题不是离线最强纠错器是谁，而是在实时硬件约束下，谁更适合做可部署的漂移自适应解码。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;strokeWidth=2;fontSize=15;fontColor=#123b66;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="3410" y="190" width="1720" height="1240" as="geometry" />
+        </mxCell>
+
+        <mxCell id="innov_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;arcSize=14;" parent="d1" vertex="1">
+          <mxGeometry x="40" y="1510" width="5120" height="660" as="geometry" />
+        </mxCell>
+        <mxCell id="innov_head" value="专题 4：项目创新点，论文创新点" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#666666;strokeWidth=2;fontSize=19;fontStyle=1;fontColor=#333333;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="40" y="1510" width="5120" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="innov_1" value="1. 系统创新：提出运行时一致的双回路 CNN-FPGA 解码框架，把快回路实时性、慢回路自适应和 bank commit 保护串成一条可部署链路。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef5fd;strokeColor=#6c8ebf;strokeWidth=2;fontSize=15;fontColor=#123b66;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="70" y="1590" width="1220" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="innov_2" value="2. 方法创新：学习模块不直接回归全部绝对物理参数，而是在稳定 teacher 上做 teacher-guided residual-b 修正，降低学习难度和部署风险。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=15;fontColor=#244715;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="1320" y="1590" width="1220" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="innov_3" value="3. 实验创新：建立从 P0 到 P4 的分阶段验证体系，把物理仿真、离线训练、行为级硬件一致性、软件 HIL 和正式 benchmark 串成一条可复现链路。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=15;fontColor=#5b4a00;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="2570" y="1590" width="1220" height="500" as="geometry" />
+        </mxCell>
+        <mxCell id="innov_4" value="4. 当前最值得写进论文的机制认识：最有价值的学习角色不是完全替代 teacher，而是在稳定 teacher 上做轻量 residual correction。同时已经观察到 offline 不等于 formal HIL，这不是坏消息，而是重要机制结论。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;fontSize=15;fontColor=#7a1e1e;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="3820" y="1590" width="1310" height="500" as="geometry" />
+        </mxCell>
+
+        <mxCell id="loop_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=2;arcSize=14;" parent="d1" vertex="1">
+          <mxGeometry x="40" y="2210" width="5120" height="1040" as="geometry" />
+        </mxCell>
+        <mxCell id="loop_head" value="专题 5：当前最优解码回路图，当前正式主线 Hybrid Residual-B 的抽象闭环" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#666666;strokeWidth=2;fontSize=19;fontStyle=1;fontColor=#333333;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="40" y="2210" width="5120" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="loop_note" value="这里画的是汇报级抽象回路，不展开脚本和 RTL 实现细节。主线是稳定 classical teacher 加 CNN residual correction。No TeacherParams 只保留为机制分析支线，不放进正式主回路。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#333333;spacingLeft=14;spacingRight=10;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="54" y="2278" width="5092" height="34" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lane_fast" value="快回路：FPGA 实时解码" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff9e6;strokeColor=#d6b656;strokeWidth=2;fontSize=16;fontStyle=1;fontColor=#5b4a00;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="70" y="2340" width="1460" height="820" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_slow" value="慢回路：窗口统计，teacher，CNN residual" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1faef;strokeColor=#82b366;strokeWidth=2;fontSize=16;fontStyle=1;fontColor=#244715;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="1590" y="2340" width="2140" height="820" as="geometry" />
+        </mxCell>
+        <mxCell id="lane_safe" value="安全更新路径：参数映射，bank commit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef5fd;strokeColor=#6c8ebf;strokeWidth=2;fontSize=16;fontStyle=1;fontColor=#123b66;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="3790" y="2340" width="1330" height="820" as="geometry" />
+        </mxCell>
+
+        <mxCell id="loop_1" value="1. syndrome 或测量输入&#xa;每个周期输入 q 和 p 相关测量信息" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=2;fontSize=15;fontColor=#222222;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="180" y="2450" width="1240" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="loop_2" value="2. FPGA 快回路线性解码&#xa;读取 active bank 中已提交的 K 和 b，保证每个 5 us 周期都能稳定执行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=15;fontColor=#5b4a00;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="180" y="2588" width="1240" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="loop_3" value="3. 直方图窗口累积&#xa;把一段时间内的 syndrome 统计成窗口特征，供慢回路使用" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=15;fontColor=#244715;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="1740" y="2450" width="1840" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="loop_4" value="4. 稳定 classical teacher&#xa;先给出基于物理先验和经典估计的稳定参数建议" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=15;fontColor=#244715;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="1740" y="2588" width="1840" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="loop_5" value="5. 轻量 CNN residual 修正&#xa;CNN 不重算全部参数，只在 teacher 建议上补一个小修正量" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b7e1b0;strokeColor=#82b366;strokeWidth=2;fontSize=15;fontStyle=1;fontColor=#244715;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="1740" y="2726" width="1840" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="loop_notp" value="机制分析支线：No TeacherParams&#xa;离线 3-seed 更好，但 formal HIL 多 seed 会翻转。当前只把它当作 teacher params 表征问题线索，不作为正式主回路。" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;dashPattern=8 4;fillColor=#fff2cc;strokeColor=#d79b00;strokeWidth=2;fontSize=14;fontColor=#7a4300;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="1740" y="2864" width="1840" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="loop_6" value="6. 参数映射到 K 和 b 或其他解码控制量&#xa;把 teacher 与 residual 合成后的结果映射为快回路可直接读取的控制参数" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=15;fontColor=#123b66;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="3950" y="2480" width="1010" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="loop_7" value="7. bank commit 与安全切换&#xa;新参数先写 shadow bank，再在安全边界切换，避免半更新被快回路读到" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=15;fontColor=#123b66;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="3950" y="2640" width="1010" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="loop_8" value="8. 返回快回路闭环&#xa;下一批周期继续使用已提交参数执行实时解码" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=15;fontColor=#123b66;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="3950" y="2800" width="1010" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="loop_summary" value="当前主线回路的理解方式：teacher 提供稳定底座，CNN 负责轻量 residual correction，commit 负责保护实时性边界。也正因为系统结构里 teacher 仍然承担稳定作用，所以 No TeacherParams 在 offline 变好但 formal HIL 变差，才会成为重要机制问题。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=2;fontSize=15;fontColor=#222222;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="3950" y="2960" width="1010" height="160" as="geometry" />
+        </mxCell>
+
+        <mxCell id="term_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=2;arcSize=14;" parent="d1" vertex="1">
+          <mxGeometry x="40" y="3290" width="5120" height="860" as="geometry" />
+        </mxCell>
+        <mxCell id="term_head" value="专题 6：图中英文术语与结果口径补充解释" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#666666;strokeWidth=2;fontSize=19;fontStyle=1;fontColor=#333333;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="40" y="3290" width="5120" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="term_note" value="读法建议：不要把这些英文词看成新算法名，很多只是场景标签、运行模式标签或工程校验口径。下面按它是什么、在项目里怎么用、结果该怎么理解三层说明。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#333333;spacingLeft=14;spacingRight=10;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="54" y="3356" width="5092" height="34" as="geometry" />
+        </mxCell>
+
+        <mxCell id="term_box1" value="P0 与 P2 场景标签是什么意思&#xa;&#xa;linear_low 和 linear_med：线性缓慢漂移。参数会一点点持续偏走，low 和 med 只表示漂移强度较低或中等。它主要考察系统能不能长期跟踪。&#xa;&#xa;step_mid 和 step_large：某个时刻突然跳变，mid 和 large 表示跳变幅度中等或较大。它主要考察系统遇到突变后能不能恢复。&#xa;&#xa;sinusoidal 和 sinusoidal_mid：周期起伏漂移，像温漂或机械振动引起的周期变化。它主要考察系统能不能跟住相位和周期。&#xa;&#xa;random_walk：每一步只随机漂一点，但会长期累积，像设备慢慢乱漂。它主要考察没有固定规律时的稳健性。&#xa;&#xa;fixed：固定参数解码器，不跟着噪声变化更新。图里像 linear_med = 0.696206 vs fixed = 0.816067，意思是在这个线性漂移场景里，自适应方案优于固定参数方案，且 LER 越低越好。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=2;fontSize=14;fontColor=#222222;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="70" y="3410" width="1590" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="term_box2" value="P2 与 P3 工程模式标签是什么意思&#xa;&#xa;fixed_baseline：慢回路不做学习和自适应，始终使用固定参数，是最朴素的参考线。&#xa;&#xa;oracle_delayed：使用延迟后的真实目标参数做参照，相当于有上帝视角但带延迟。它不是可部署方案，更像校验上限。&#xa;&#xa;model_artifact：直接读取训练好的浮点模型产物，例如 .npz artifact，在当前运行时里做推理。&#xa;&#xa;int8_artifact：读取量化后的 int8 模型产物，检查量化后是否仍然接近浮点结果。&#xa;&#xa;真实 .tflite 产物：从模型正式导出的部署文件，代表未来更接近 ARM 或 TFLite 侧的实际部署形式。&#xa;&#xa;subprocess：把推理服务放到独立进程里运行，模拟部署时主调度程序和模型推理服务解耦，而不是全塞在同一个 Python 进程里。&#xa;&#xa;fixed_baseline_mock、float_artifact_mock、int8_artifact_mock：这是软件 HIL 闭环下三种运行模式的 LER。float 与 int8 的 mock LER gap = 2.09e-04，表示量化部署几乎没有把排序改坏。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;strokeWidth=2;fontSize=14;fontColor=#123b66;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="1760" y="3410" width="1590" height="700" as="geometry" />
+        </mxCell>
+        <mxCell id="term_box3" value="P2 到 P4 控制与 benchmark 术语是什么意思&#xa;&#xa;commit：不是提交代码，而是在安全时刻把 shadow bank 里的新参数切换成 active bank 的动作。&#xa;&#xa;bank：参数双缓冲区 A 和 B。一个正在给快回路用，另一个给慢回路写新参数，避免半更新。&#xa;&#xa;overflow：窗口或 DMA 缓冲超限告警，说明数据可能有丢失或截断风险。&#xa;&#xa;commit_count_mean = 7.0：一次实验平均发生约 7 次参数提交，说明慢回路在工作。&#xa;&#xa;快慢回路冲突率 = 0：快回路读参数和慢回路更新参数没有撞车。&#xa;&#xa;冻结 scenario、seed 与统计口径：把测试场景、随机种子和统计方法都固定住，避免换数据、换随机性、换算法口径来挑结果。&#xa;&#xa;EKF 和 UKF：经典状态估计器。RLS Residual-B：经典递推残差修正。Constant Residual-Mu：固定常数修正。Hybrid Residual-B：teacher 打底加 CNN 轻量残差修正，是当前正式主线。teacher params 变体：在输入特征里以不同方式加入 teacher 提供的参数信息。benchmark-only：只补最关键场景和 seed 复验，不重跑整套链路。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#b85450;strokeWidth=2;fontSize=14;fontColor=#7a1e1e;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="3450" y="3410" width="1670" height="700" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arch_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;strokeWidth=2;arcSize=14;" parent="d1" vertex="1">
+          <mxGeometry x="40" y="4190" width="5120" height="930" as="geometry" />
+        </mxCell>
+        <mxCell id="arch_head" value="专题 7：项目如何仿真 FPGA，CNN 结构是什么，两者如何交互同步" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6e6e6;strokeColor=#666666;strokeWidth=2;fontSize=19;fontStyle=1;fontColor=#333333;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="40" y="4190" width="5120" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="arch_note" value="这部分回答系统到底是怎么跑起来的。重点不是 RTL 细节，而是目前项目如何用代码把板级行为、慢回路推理和参数同步机制逼真地串起来。" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#333333;spacingLeft=14;spacingRight=10;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="54" y="4256" width="5092" height="34" as="geometry" />
+        </mxCell>
+
+        <mxCell id="arch_box1" value="A. 当前项目如何仿真 FPGA&#xa;&#xa;现在不是直接跑真实板卡，而是用 FPGADriver 和 MockFPGA 这一套接口去模拟板子对外看起来是什么样。&#xa;&#xa;1. MockFPGA 模拟 AXI 寄存器、DMA 直方图缓冲、状态位、epoch 计数器和 active 或 staging bank。&#xa;2. DualLoopScheduler 按 t_fast_us = 5 us 推进快回路，并按窗口大小累积直方图。&#xa;3. LatencyInjector 为 DMA、预处理、推理、写回和 commit_ack 采样延迟，模拟真实部署里慢回路并不是零时间完成。&#xa;4. ParamBank 管理 A 和 B 双 bank 以及 commit_if_ready，保证快回路不会读到半更新参数。&#xa;&#xa;所以这里的 FPGA 仿真，本质上是板级可见行为仿真，强调接口、时序和数据流一致，不是门级 RTL 精确仿真。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eef5fd;strokeColor=#6c8ebf;strokeWidth=2;fontSize=14;fontColor=#123b66;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="70" y="4310" width="1590" height="770" as="geometry" />
+        </mxCell>
+        <mxCell id="arch_box2" value="B. CNN 模型具体结构是什么&#xa;&#xa;当前主模型是 TinyCNN，实现位置在 cnn_fpga/model/tiny_cnn.py。它不是很深的大网络，而是一个轻量回归器，便于量化和部署。&#xa;&#xa;结构可以概括为 Conv，ReLU，2x2 AvgPool，FC hidden = 32，FC output。默认配置里 conv_channels = 8，kernel_size = 3，hidden_dim = 32。&#xa;&#xa;输入：直方图窗口张量，后续也可以叠加上下文窗口、直方图差分、teacher prediction、teacher params 等通道。&#xa;&#xa;输出：早期 P1 主要预测 sigma、mu_q、mu_p、theta_deg 等噪声相关参数；在当前正式主线里，更重要的是学习相对 teacher 的轻量 residual，而不是从零回归全部绝对参数。&#xa;&#xa;模型可保存为浮点 artifact、int8 artifact，并可进一步导出为 .tflite 部署产物。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=14;fontColor=#244715;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="1760" y="4310" width="1590" height="770" as="geometry" />
+        </mxCell>
+        <mxCell id="arch_box3" value="C. FPGA 与 CNN 之间如何交互和同步&#xa;&#xa;1. 快回路每 5 us 读取 active bank 中的 K 和 b，完成一次确定性解码；快回路不等待 CNN。&#xa;2. 快回路不断把 syndrome 统计成窗口直方图，窗口满了以后通过 DMA 口径交给慢回路。&#xa;3. 慢回路通过 InferenceService 运行推理，可选 inproc 或 subprocess，后者用于模拟部署时推理服务与主程序解耦；后端可以是 artifact 或 .tflite。&#xa;4. 慢回路先跑 classical teacher，再让 CNN 给出 residual 修正，再经 ParamMapper 映射成快回路真正读取的 K 和 b。&#xa;5. 新参数先 stage_params 写进 shadow bank，再 commit_bank 安排安全切换，最终由 wait_commit_ack 等到确认。&#xa;&#xa;一句话理解：FPGA 负责高频稳定执行，CNN 负责低频提出修正建议，两者靠双 bank 和 commit 时序同步，而不是互相阻塞。" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=14;fontColor=#5b4a00;fontFamily=Microsoft YaHei;" parent="d1" vertex="1">
+          <mxGeometry x="3450" y="4310" width="1670" height="770" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

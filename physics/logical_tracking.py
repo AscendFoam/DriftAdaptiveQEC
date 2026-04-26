@@ -15,9 +15,7 @@ import numpy as np
 from typing import List, Tuple, Optional, Dict
 from dataclasses import dataclass
 
-from .gkp_state import LATTICE_CONST
-from .error_correction import LinearDecoder
-from .syndrome_measurement import MeasurementConfig, RealisticSyndromeMeasurement
+from .constants import LATTICE_CONST
 
 
 @dataclass
@@ -408,6 +406,9 @@ def simulate_error_accumulation(n_rounds: int,
         if return_history:
             stats['history'] = history
         return stats
+
+    from .error_correction import LinearDecoder
+    from .syndrome_measurement import MeasurementConfig, RealisticSyndromeMeasurement
 
     config = MeasurementConfig(
         delta=delta,

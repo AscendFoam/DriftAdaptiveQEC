@@ -17,12 +17,13 @@ from cnn_fpga.model.tiny_cnn import TinyCNNConfig, fit_tiny_cnn
 from cnn_fpga.utils.config import config_hash, ensure_dir, get_path, load_yaml_config, now_tag, save_json
 
 
-def _load_split(dataset_dir: Path, split: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+def _load_split(dataset_dir: Path, split: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     path = dataset_dir / f"{split}.npz"
     if not path.exists():
         raise FileNotFoundError(f"Dataset split not found: {path}")
     data = np.load(path)
-    return data["histograms"], data["labels"], data["label_names"]
+    scalar_features = data["scalar_features"] if "scalar_features" in data else np.zeros((data["histograms"].shape[0], 0), dtype=np.float32)
+    return data["histograms"], scalar_features, data["labels"], data["label_names"]
 
 
 def _load_dataset_manifest(dataset_dir: Path) -> Dict[str, object]:
@@ -79,8 +80,8 @@ def main() -> int:
     report_dir = ensure_dir(get_path(config, "report_dir", "artifacts/reports/default"))
     dataset_manifest = _load_dataset_manifest(dataset_dir)
 
-    x_train_raw, y_train, label_names = _load_split(dataset_dir, args.train_split)
-    x_val_raw, y_val, _ = _load_split(dataset_dir, args.val_split)
+    x_train_raw, x_train_scalar, y_train, label_names = _load_split(dataset_dir, args.train_split)
+    x_val_raw, x_val_scalar, y_val, _ = _load_split(dataset_dir, args.val_split)
 
     train_cfg = config.get("training", {})
     model_type = str(train_cfg.get("model_type", "linear_regression_baseline")).lower()
@@ -131,8 +132,10 @@ def main() -> int:
         cnn_cfg = TinyCNNConfig.from_config(config)
         artifact, extra_report = fit_tiny_cnn(
             x_train_raw.astype(np.float64),
+            x_train_scalar.astype(np.float64),
             y_train,
             x_val_raw.astype(np.float64),
+            x_val_scalar.astype(np.float64),
             y_val,
             label_names,
             cnn_cfg,
@@ -149,6 +152,18 @@ def main() -> int:
                 artifact["context_windows"] = np.array([int(dataset_manifest["context_windows"])], dtype=np.int32)
             if "input_channel_names" in dataset_manifest:
                 artifact["input_channel_names"] = np.asarray(dataset_manifest["input_channel_names"])
+            if "scalar_feature_dim" in dataset_manifest:
+                artifact["scalar_feature_dim"] = np.array([int(dataset_manifest["scalar_feature_dim"])], dtype=np.int32)
+            if "scalar_feature_names" in dataset_manifest:
+                artifact["scalar_feature_names"] = np.asarray(dataset_manifest["scalar_feature_names"])
+            if "teacher_prediction_layout" in dataset_manifest:
+                artifact["teacher_prediction_layout"] = np.array([str(dataset_manifest["teacher_prediction_layout"])])
+            if "teacher_params_layout" in dataset_manifest:
+                artifact["teacher_params_layout"] = np.array([str(dataset_manifest["teacher_params_layout"])])
+            if "teacher_deltas_layout" in dataset_manifest:
+                artifact["teacher_deltas_layout"] = np.array([str(dataset_manifest["teacher_deltas_layout"])])
+            if "teacher_scalar_features" in dataset_manifest:
+                artifact["teacher_scalar_features"] = np.asarray(dataset_manifest["teacher_scalar_features"])
             artifact["context_strategy"] = np.array(
                 [str(config.get("runtime_dataset", {}).get("context_padding", "edge_repeat"))]
             )

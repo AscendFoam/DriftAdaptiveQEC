@@ -28,7 +28,8 @@ def _load_split(dataset_dir: Path, split: str):
     if not path.exists():
         raise FileNotFoundError(f"Dataset split not found: {path}")
     data = np.load(path)
-    return data["histograms"].astype(np.float64), data["labels"].astype(np.float64)
+    scalar_features = data["scalar_features"].astype(np.float64) if "scalar_features" in data else np.zeros((data["histograms"].shape[0], 0), dtype=np.float64)
+    return data["histograms"].astype(np.float64), scalar_features, data["labels"].astype(np.float64)
 
 
 def _predict_linear(x_hist: np.ndarray, model: Dict[str, np.ndarray]) -> np.ndarray:
@@ -37,7 +38,7 @@ def _predict_linear(x_hist: np.ndarray, model: Dict[str, np.ndarray]) -> np.ndar
     return x_norm @ model["weights"] + model["bias"]
 
 
-def _predict_artifact(model_path: Path, x_hist: np.ndarray):
+def _predict_artifact(model_path: Path, x_hist: np.ndarray, x_scalar: np.ndarray):
     data = np.load(model_path, allow_pickle=True)
     model_type = str(data["model_type"][0])
     label_names = [str(item) for item in data["label_names"]]
@@ -65,7 +66,7 @@ def _predict_artifact(model_path: Path, x_hist: np.ndarray):
                 },
             )
     elif model_type.startswith("tiny_cnn"):
-        y_pred = np.asarray(predict_from_artifact(model_path, x_hist), dtype=np.float64)
+        y_pred = np.asarray(predict_from_artifact(model_path, (x_hist, x_scalar)), dtype=np.float64)
     else:
         raise ValueError(f"Unsupported artifact type: {model_type}")
     return model_type, label_names, y_pred
@@ -114,8 +115,8 @@ def main() -> int:
     split = args.split or str(config.get("evaluation", {}).get("target_split", "test"))
     model_path = Path(args.model_path).expanduser().resolve() if args.model_path else _find_latest_model(model_dir)
 
-    x_eval, y_eval = _load_split(dataset_dir, split)
-    model_type, label_names, y_pred = _predict_artifact(model_path, x_eval)
+    x_eval, x_eval_scalar, y_eval = _load_split(dataset_dir, split)
+    model_type, label_names, y_pred = _predict_artifact(model_path, x_eval, x_eval_scalar)
     metrics = _metrics(y_eval, y_pred, label_names)
 
     run_name = f"eval_{split}_{now_tag()}"

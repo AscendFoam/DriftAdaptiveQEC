@@ -18,7 +18,7 @@ import numpy as np
 
 from cnn_fpga.benchmark.run_hil_suite import HILSlowJob, _build_mock_noise_provider, _required_fast_cycles
 from cnn_fpga.hwio import FPGADriver
-from cnn_fpga.runtime import LatencyInjector, SlowLoopRuntime
+from cnn_fpga.runtime import LatencyContext, LatencyInjector, SlowLoopRuntime
 from cnn_fpga.runtime.param_bank import DecoderRuntimeParams
 from cnn_fpga.runtime.scheduler import SchedulerConfig, WindowFrame
 from cnn_fpga.runtime.slow_loop_runtime import NoisePrediction
@@ -244,7 +244,14 @@ def _capture_reference_windows(config: Dict[str, Any], n_windows: int) -> List[C
                 captures_started += 1
 
                 active_params = driver.read_active_params()
-                latency = host_latency.sample_slow_update()
+                latency = host_latency.sample_slow_update(
+                    context=LatencyContext(
+                        pending_windows=int(status.get("pending_dma_buffers", 0)),
+                        slow_job_inflight=False,
+                        pending_commit=bool(driver.has_pending_commit()),
+                        recent_slow_budget_violations=0,
+                    )
+                )
                 slow_job = HILSlowJob(
                     job_id=captures_started,
                     readout=readout,

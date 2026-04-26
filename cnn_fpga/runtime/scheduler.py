@@ -8,7 +8,7 @@ from typing import Any, Callable, Deque, Dict, List, Optional
 
 import numpy as np
 
-from .latency_injector import LatencyInjector, LatencySample
+from .latency_injector import LatencyContext, LatencyInjector, LatencySample
 from .param_bank import DecoderRuntimeParams, ParamBank
 
 
@@ -350,7 +350,14 @@ class DualLoopScheduler:
         window = self._window_queue.popleft()
         active_params = self.param_bank.read_active()
 
-        latency = self.latency_injector.sample_slow_update()
+        latency = self.latency_injector.sample_slow_update(
+            context=LatencyContext(
+                pending_windows=len(self._window_queue),
+                slow_job_inflight=self._slow_job is not None,
+                pending_commit=self.param_bank.has_pending_commit,
+                recent_slow_budget_violations=self.slow_update_budget_violations,
+            )
+        )
         self._job_counter += 1
         self._slow_job = SlowUpdateJob(
             job_id=self._job_counter,

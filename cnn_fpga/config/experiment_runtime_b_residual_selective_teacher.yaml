@@ -1,0 +1,40 @@
+# Runtime-consistent residual-b variant:
+# - keep only the teacher scalars most directly tied to residual-b correction
+# - route selected teacher values through a low-dimensional scalar branch
+
+experiment:
+  name: runtime_b_residual_selective_teacher_v1
+  stage: p4_ablation_selective_teacher
+  seed: 20260420
+
+base_config: experiment_runtime_b_residual.yaml
+
+paths:
+  dataset_dir: artifacts/datasets/runtime_b_residual_selective_teacher_v1
+  model_dir: artifacts/models/runtime_b_residual_selective_teacher_v1
+  report_dir: artifacts/reports/runtime_b_residual_selective_teacher_v1
+
+runtime_dataset:
+  teacher_prediction_layout: scalar_branch
+  teacher_params_layout: scalar_branch
+  teacher_deltas_layout: scalar_branch
+  teacher_scalar_features:
+    - teacher_sigma
+    - teacher_theta_deg
+    - teacher_b_q
+    - teacher_b_p
+    - teacher_delta_b_q
+    - teacher_delta_b_p
+
+slow_loop:
+  hybrid_residual_b:
+    teacher_prediction_layout: scalar_branch
+    teacher_params_layout: scalar_branch
+    teacher_deltas_layout: scalar_branch
+    teacher_scalar_features:
+      - teacher_sigma
+      - teacher_theta_deg
+      - teacher_b_q
+      - teacher_b_p
+      - teacher_delta_b_q
+      - teacher_delta_b_p

@@ -26,7 +26,7 @@
 - `P2` 已完成并验收通过
 - `P3` 软件链路已完成正式模式对比，并完成真实 `.tflite` 产物验收
 - `P4` 已经开始产生正式结论，且当前最优模式为 `hybrid_residual_b`
-- 但还不能称为“整体工程基本完成”，因为 `histogram_input overflow` 仍是主导瓶颈，且 `static_bias_theta` 场景下还存在跨 seed 波动待复查，真板验证也尚未补齐
+- 但还不能称为“整体工程基本完成”，因为真板验证仍未补齐，且 `teacher params` 通道在离线训练与 formal HIL 中表现出明显不一致，说明当前闭环表征设计还需继续收敛
 
 ---
 
@@ -771,7 +771,7 @@ int8 模型 test 集：
 
 当前最准确的定位是：
 
-- `P3 软件链路完成且口径已稳定，主线正式进入 P4 多场景统计对比；真板验证转为条件性扩展`
+- `P3 软件链路完成且口径已稳定，P4 主线与强 baseline 结论已经建立；当前重点转为 teacher-guided residual 表征的机制分析与闭环一致性验证，真板验证转为条件性扩展`
 
 ---
 
@@ -1718,3 +1718,422 @@ int8 模型 test 集：
 1. 复查 `No TeacherParams` 异常优势是否稳定
 2. 回写 `features` 结果到阶段结论、工程化实验方案和论文草稿
 3. 继续做论文表格、机制分析与图表整理
+
+### 14.7 2026-04-07 Windows 迁移续跑后的判断更新
+
+在 Windows + RTX4070 环境补入 `PyTorch/CUDA` 训练后端、并修复 formal HIL 的导入阻塞与路径过长问题后，又继续做了两组针对 `No TeacherParams` 的复查：
+
+1. 离线训练多 seed 复查
+2. `teacher params` 通道的数值与耦合分析
+3. formal HIL 的裁剪续跑
+
+对应结果文件位于：
+
+- 离线训练复查：
+  - [no_teacher_params_training_seed_recheck_20260405.json](/d:/Codes/Quantum/DriftAdaptiveQEC/artifacts/reports/no_teacher_params_training_seed_recheck_20260405.json)
+- 通道分析：
+  - [teacher_params_coupling_analysis_20260405.json](/d:/Codes/Quantum/DriftAdaptiveQEC/artifacts/reports/teacher_params_coupling_analysis_20260405.json)
+- formal HIL 部分结果：
+  - [p4ntp_s20260405_20260406_113228_8a5400333985_37920](/d:/Codes/Quantum/DriftAdaptiveQEC/runs/p4_ntp_bench/p4_benchmark/p4ntp_s20260405_20260406_113228_8a5400333985_37920)
+
+先看离线训练复查。基于 `seed=20260405 / 20260406 / 20260407` 的 3 组配对重训，`Hybrid No TeacherParams` 在 test split 上：
+
+- `MSE`：3/3 更好
+- `R²`：3/3 更好
+- `MAE`：2/3 更好
+
+平均变化为：
+
+- `ΔMSE = -1.5135e-07`
+- `ΔMAE = -1.5512e-05`
+- `ΔR² = +0.08576`
+
+这说明一个重要事实：
+
+- 在离线监督训练口径下，`No TeacherParams` 的优势不是单个 seed 的偶然现象
+
+再看 `teacher params` 通道分析。当前结果并不支持“归一化坏掉”这个解释，反而更支持“低方差 + 高冗余耦合”：
+
+- `teacher_b_q` 原始标准差约 `5.48e-4`
+- `teacher_b_p` 原始标准差约 `1.02e-3`
+- 训练时 `train_x_std` 与原始 `std` 基本一致
+- 归一化后通道能量约为 `1`
+
+因此当前不存在明显的数值爆炸或归一化失效。
+
+但另一方面，这两个通道与其他 teacher 标量存在明显冗余：
+
+- `teacher_b_q` 可由 `teacher prediction + teacher deltas` 线性预测到 `R² = 0.7665`
+- `teacher_b_p` 可预测到 `R² = 0.8633`
+- `teacher_b_q` 与 `teacher_mu_q` 的相关系数约 `0.597`
+- `teacher_b_p` 与 `teacher_mu_p` 的相关系数约 `0.599`
+
+因此更合理的中间解释变成了：
+
+- `teacher params` 并非“数值坏掉”
+- 而是它们本身新增信息量有限，且与 `teacher prediction / teacher deltas` 高度重叠
+- 当前把这些标量广播成整张输入通道的编码方式，可能在训练中看起来有利于拟合，但在闭环控制里反而引入冗余污染
+
+更关键的是，formal HIL 的部分续跑结果与离线训练结论方向相反。
+
+在 `seed=20260405` 的 formal HIL 部分结果中：
+
+1. `static_bias_theta`
+
+- `Hybrid Full = 0.544676`
+- `Hybrid No TeacherParams = 0.667064`
+- `UKF = 0.829061`
+
+2. `linear_ramp`
+
+- `Hybrid Full = 0.571131`
+- `Hybrid No TeacherParams = 0.704623`
+- `UKF = 0.809288`
+
+其中 `linear_ramp` 的 `No TeacherParams` 当前只完成了 2 次 repeat，但方向已经和 `static_bias_theta` 一致：`Hybrid Full` 明显优于 `No TeacherParams`。
+
+这使得当前必须更新一个关键判断：
+
+- 离线训练改善，不等于 formal HIL 改善
+
+换句话说，`No TeacherParams` 在监督学习指标上更好，并不能推出它在运行时闭环里也更好。当前更像是：
+
+1. 离线回归目标对 `teacher params` 的冗余更宽容，甚至会因为少了噪声通道而更容易优化
+2. 但在 formal HIL 中，`teacher params` 可能仍然承担了对控制映射有用的稳态信息
+3. 真正的问题不一定是“要不要删掉 teacher params”，而更可能是“当前该通道怎么编码进网络”
+
+因此本阶段结论应从原先的“继续复查 `No TeacherParams` 是否稳定更优”调整为：
+
+1. `No TeacherParams` 的离线优势已经确认存在
+2. 但 partial formal HIL 已经显示它并不构成更优正式主线，至少当前不能替代 `Hybrid Full`
+3. 后续重点不应放在继续把 `No TeacherParams` 当成默认改进方向，而应转到：
+   - `teacher params` 的重编码
+   - 标量通道是否应继续整平面广播
+   - 是否改成更低维、更去冗余、与闭环控制更一致的表示
+
+对应地，当前最合理的后续顺序是：
+
+1. 继续做裁剪后的 benchmark-only 多 seed 复查，只补最关键场景
+   - 优先 `seed=20260406 / 20260407`
+   - 优先 `static_bias_theta / linear_ramp`
+2. 设计 `teacher params` 的替代表达
+   - 例如只保留最有控制意义的分量
+   - 或改成去均值/去冗余后的低维标量
+   - 或避免把全局标量广播成整张平面通道
+3. 在新编码下再比较：
+   - `Hybrid Full`
+   - `Hybrid No TeacherParams`
+   - `Hybrid Reencoded TeacherParams`
+
+因此，当前最值得写入论文与文档的不是“去掉 teacher params 更好”，而是：
+
+- `teacher params` 在离线监督训练中表现出冗余特征
+- 但闭环 formal HIL 表明，是否保留该信息与如何编码该信息是两个不同问题
+- 当前已经观察到“离线训练改善不等于 formal HIL 改善”，这正是下一阶段最关键的机制分析点
+
+### 14.8 2026-04-17 裁剪版 formal HIL 多 seed 复查结果
+
+在上述判断基础上，又补做了一轮更聚焦的 formal HIL benchmark-only 复查。目标不是整套重跑，而是优先回答最关键的问题：
+
+- `No TeacherParams` 的 formal HIL 优势是否真的稳定
+- 当前结论是否会随着 seed 改变而翻转
+
+本轮复查配置为：
+
+- 只复用已训练好的模型，不重做训练
+- 只补 `seed=20260406 / 20260407`
+- 只补两个最关键场景：
+  - `static_bias_theta`
+  - `linear_ramp`
+- 每个场景只跑 `2 repeats`
+
+汇总结果位于：
+
+- [stability_20260407_234138/summary.json](/d:/Codes/Quantum/DriftAdaptiveQEC/runs/p4_no_teacher_params_stability/stability_20260407_234138/summary.json)
+- [stability_20260407_234138/summary.csv](/d:/Codes/Quantum/DriftAdaptiveQEC/runs/p4_no_teacher_params_stability/stability_20260407_234138/summary.csv)
+
+对应两个 seed 的 formal HIL 结果目录分别为：
+
+- [p4ntp_s20260406_20260407_234139_bbc390dee98c_13444](/d:/Codes/Quantum/DriftAdaptiveQEC/runs/p4_ntp_bench/p4_benchmark/p4ntp_s20260406_20260407_234139_bbc390dee98c_13444)
+- [p4ntp_s20260407_20260408_065121_5873d71fb755_2808](/d:/Codes/Quantum/DriftAdaptiveQEC/runs/p4_ntp_bench/p4_benchmark/p4ntp_s20260407_20260408_065121_5873d71fb755_2808)
+
+先看 `seed=20260406`。这轮结果中，`Hybrid No TeacherParams` 在两个场景都明显优于 `Hybrid Full`：
+
+1. `static_bias_theta`
+
+- `UKF = 0.827337`
+- `Hybrid Full = 0.828538`
+- `Hybrid No TeacherParams = 0.748563`
+
+2. `linear_ramp`
+
+- `UKF = 0.809570`
+- `Hybrid Full = 0.809389`
+- `Hybrid No TeacherParams = 0.762201`
+
+这一轮的结论与离线训练方向一致：`No TeacherParams` 明显更强。
+
+但 `seed=20260407` 的结果方向完全翻转。此时两个场景都由 `Hybrid Full` 明显胜出：
+
+1. `static_bias_theta`
+
+- `UKF = 0.826962`
+- `Hybrid Full = 0.673350`
+- `Hybrid No TeacherParams = 0.786860`
+
+2. `linear_ramp`
+
+- `UKF = 0.809297`
+- `Hybrid Full = 0.680321`
+- `Hybrid No TeacherParams = 0.785601`
+
+这说明什么？
+
+最重要的结论不是“哪一边又赢了”，而是：
+
+- formal HIL 结论发生了明确翻转
+
+也就是说，`No TeacherParams` 的 formal HIL 表现不是稳定压过 `Hybrid Full`，而是会随着 seed 改变而从“明显更好”变成“明显更差”。
+
+结合此前已经拿到的 `seed=20260405` partial formal HIL 结果：
+
+1. `static_bias_theta`
+
+- `Hybrid Full = 0.544676`
+- `Hybrid No TeacherParams = 0.667064`
+- `UKF = 0.829061`
+
+2. `linear_ramp`
+
+- `Hybrid Full = 0.571131`
+- `Hybrid No TeacherParams = 0.704623`
+- `UKF = 0.809288`
+
+可以把当前证据链整理为：
+
+1. 离线训练重训：
+   - `No TeacherParams` 稳定更好
+2. formal HIL / `seed=20260405`：
+   - `Hybrid Full` 更好
+3. formal HIL / `seed=20260406`：
+   - `No TeacherParams` 更好
+4. formal HIL / `seed=20260407`：
+   - `Hybrid Full` 更好
+
+因此截至当前，最稳妥、也最应该写进文档的正式判断已经不再是：
+
+- “`No TeacherParams` 更好”
+
+而应改成：
+
+- “`No TeacherParams` 的 formal HIL 优势不稳定，且会翻转”
+
+换句话说：
+
+- 现在已经足够否定“`No TeacherParams` 是稳定更优正式主线”这一说法
+- 也已经足够确认“离线训练改善，不等于 formal HIL 改善”不是一次偶然观察，而是当前这条路线的真实现象
+
+这里还需要补充一个实验口径上的重要说明。
+
+本轮稳定性脚本中的 `seed` 同时影响：
+
+1. 被复用的训练模型版本
+2. benchmark 的随机种子基线
+
+因此，这一轮结果足够回答：
+
+- formal HIL 结论会不会翻转
+
+但还不足以精确区分：
+
+- 翻转到底主要来自训练 seed
+- 还是主要来自 benchmark 随机轨迹
+- 或者两者叠加
+
+也正因为如此，当前最合理的工程解释不是“teacher params 保留/删除的二选一已经有最终答案”，而是：
+
+1. 离线回归指标更偏向于“拟合是否容易”
+2. formal HIL 更偏向于“控制策略在随机闭环中的稳定性”
+3. `teacher params` 这个信息源是否有效，与它当前的编码方式强相关
+4. 当前最值得怀疑的不是它“该不该存在”，而是它“是否应该以整平面广播通道的方式存在”
+
+因此，本节更新后，当前阶段结论可以进一步收束为：
+
+1. `Hybrid Residual-B` 仍是当前最稳妥的正式主线叙事
+2. `No TeacherParams` 不能作为稳定更优主线写入论文或汇报
+3. `teacher params` 的机制分析已经从“保留/删除开关”升级为“表征设计问题”
+4. 下一阶段更值得推进的实验不再是继续大规模做 `No TeacherParams` 长跑，而是：
+   - 固定 benchmark 随机种子流
+   - 单独比较训练 seed 与闭环 seed 的影响
+   - 设计 `Reencoded TeacherParams` 版本
+   - 用更低维、更去冗余、与控制映射更一致的方式注入 teacher 信息
+
+因此，当前最完整的结论更新应写成：
+
+- `No TeacherParams` 在离线监督训练中表现出稳定优势
+- 但它在 formal HIL 中并不稳定，且结果会随 seed 翻转
+- 所以当前真正需要解决的问题不是“删不删 teacher params”，而是“teacher params 应如何编码，才能把离线拟合优势转化为闭环收益”
+
+## 15. 2026-04-26 P4 阶段性总结更新
+
+### 15.1 从 P4 开始到当前，已完成的工作主线
+
+截至当前，`P4` 不再只是“补几组 benchmark”，而是已经完成了一条较完整的正式验证链：
+
+1. 正式主线冻结与长配置复验
+
+- 完成 `Hybrid Residual-B` 与 `EKF / UKF / Constant Residual-Mu / RLS Residual-B` 的统一 benchmark
+- 完成长配置复验与输入统计范围修正
+- 明确 `UKF` 是当前最强经典 baseline，但整体仍弱于 `Hybrid Residual-B`
+
+2. `features` 正式 ablation
+
+- 完成 `teacher prediction / teacher params / teacher deltas / histogram delta` 的正式消融
+- 发现 `histogram delta` 是关键通道
+- 发现 `No TeacherParams` 在一轮正式结果中出现异常优势，触发后续机制复查
+
+3. Windows + RTX4070 环境迁移与工程修复
+
+- 补入 `PyTorch/CUDA` 训练后端，后续训练可走 `DLEnv + torch + auto device`
+- 修复 formal HIL 启动阻塞、Windows 长路径与后台稳定性问题
+- 在 `cnn_fpga/runtime/noise_bridge.py` 中移除未实际使用的重型物理噪声顶层导入，解决 benchmark 启动阶段的导入卡顿
+
+4. `No TeacherParams` 正式复查
+
+- 完成离线训练多 seed 复查，确认其离线监督指标优势不是偶然
+- 完成 `teacher params` 数值尺度、归一化与冗余耦合分析
+- 完成裁剪版 formal HIL benchmark-only 多 seed 复查，确认它在闭环中会随 seed 翻转
+
+5. `teacher params` 编码方向的进一步试探
+
+- 不再把重点放在“删不删 teacher params”二选一
+- 转向研究“teacher 信息应如何编码进闭环模型”
+- 增加 `physical_bridge` 支线，对 `PB Bound / PB ST` 两类物理桥接映射做配对 benchmark
+
+### 15.2 当前已经比较稳定的正式结论
+
+截至本次更新，当前更稳妥的 `P4` 正式结论应收束为 5 条：
+
+1. `Hybrid Residual-B` 仍是当前正式主线
+
+- 在统一正式 benchmark 下，当前主叙事仍应保持：
+  - `Hybrid Residual-B` 作为最优学习主线
+  - `UKF` 作为最强经典 baseline
+
+2. 离线训练改善不等于 formal HIL 改善
+
+- `No TeacherParams` 在离线监督训练中表现出稳定优势
+- 但在 formal HIL 中并不稳定，且结果会随 seed 翻转
+- 因此不能把“离线更好”直接外推成“正式闭环更好”
+
+3. `teacher params` 问题更像表征设计问题，而不是简单数值失效
+
+- 当前分析不支持“归一化坏掉”这一解释
+- 更支持：
+  - 方差较低
+  - 与 `teacher prediction / teacher deltas` 高冗余
+  - 整张平面广播式编码与闭环控制语义不匹配
+
+4. `No TeacherParams` 不能作为稳定更优正式主线
+
+- 当前证据已足够否定“直接删除 `teacher params` 就能稳定更好”这一说法
+- 因此不建议继续把大规模算力投入到 `No TeacherParams` 长跑
+
+5. `physical_bridge` 当前只能作为场景特定辅助支线
+
+- 它不能替代 `Full` 成为统一主线
+- 但在某些动态场景下，可以帮助我们理解“哪些物理量更适合注入慢回路”
+
+### 15.3 `physical_bridge` 配对 benchmark 的阶段结论
+
+在 `physical_bridge` 支线中，先后完成了两轮更聚焦的 paired benchmark。
+
+第一轮是 `Full vs PB Bound` 的 4 场景正式对照：
+
+- 结果目录：
+  - [summary.json](../runs/physical_bridge_main/p4_benchmark/pbm3_20260426_172449_552c03_37264/summary.json)
+  - [comparison.csv](../runs/physical_bridge_main/p4_benchmark/pbm3_20260426_172449_552c03_37264/comparison.csv)
+
+4 个场景上的结果为：
+
+- `linear_ramp`：
+  - `Full = 0.705734`
+  - `PB Bound = 0.778066`
+- `periodic_drift`：
+  - `Full = 0.718470`
+  - `PB Bound = 0.701131`
+- `static_bias_theta`：
+  - `Full = 0.709651`
+  - `PB Bound = 0.751750`
+- `step_sigma_theta`：
+  - `Full = 0.741191`
+  - `PB Bound = 0.727280`
+
+可以直接看出：
+
+- `PB Bound` 只在
+  - `periodic_drift`
+  - `step_sigma_theta`
+  两个动态场景更好
+- 在
+  - `linear_ramp`
+  - `static_bias_theta`
+  两个场景里明显更差
+
+因此：
+
+- `PB Bound` 不能作为统一替代 `Full` 的正式主线
+- 但它可能对“周期扰动 / 突变扰动”这类动态场景更敏感
+
+第二轮是 `Full / PB Bound / PB ST` 的动态场景辅助轮：
+
+- 结果目录：
+  - [summary.json](../runs/physical_bridge_st_aux/p4_benchmark/pbst3_20260426_173934_b768b8_36892/summary.json)
+  - [comparison.csv](../runs/physical_bridge_st_aux/p4_benchmark/pbst3_20260426_173934_b768b8_36892/comparison.csv)
+
+只比较两个动态场景：
+
+1. `periodic_drift`
+
+- `Full = 0.695429`
+- `PB Bound = 0.720881`
+- `PB ST = 0.681539`
+
+这里 `PB ST` 最好。
+
+2. `step_sigma_theta`
+
+- `Full = 0.763448`
+- `PB Bound = 0.716395`
+- `PB ST = 0.792674`
+
+这里 `PB Bound` 最好，而 `PB ST` 最差。
+
+这说明：
+
+- `PB ST` 更像是“只对周期性平滑动态有帮助”的映射
+- `PB Bound` 更像是“对突变场景更有效”的映射
+- 两者都不是跨动态场景统一更优的表示
+
+因此，`physical_bridge` 当前最合理的定位应是：
+
+- 场景特定辅助机制分析支线
+- 而不是 `P4` 正式主线替代方案
+
+### 15.4 现阶段最值得写进文档和汇报的 `P4` 总结
+
+如果只用一段话概括从 `P4` 开始到现在做了什么，可以写成：
+
+- 已完成 `P4` 正式 benchmark、长配置复验、强 baseline 扩展、features ablation、多 seed formal HIL 复查，以及 `teacher params` 数值/耦合分析；进一步在 Windows + RTX4070 环境修复 benchmark 启动与长路径问题，并补做 `physical_bridge` 的 paired benchmark。当前稳定结论是：`Hybrid Residual-B` 仍为正式主线，`UKF` 为最强经典 baseline；`No TeacherParams` 的离线优势不能外推到 formal HIL，`teacher params` 的核心问题更像编码方式不合适；`physical_bridge` 只能作为场景特定辅助支线，尚不能替代 `Full`。
+
+### 15.5 当前下一步建议
+
+在本节更新之后，下一步更值得推进的顺序建议为：
+
+1. 保留 `Full` 作为正式主线，不再扩 `PB Bound` 或 `PB ST` 的全场景长跑
+2. 把重点转回 `teacher params` 的重编码
+   - 低维标量支路
+   - 去冗余表达
+   - 避免整平面广播
+3. 用 paired benchmark 继续验证新的 `teacher params` 表征，而不是继续扩大“删不删 teacher”对照规模
+4. `physical_bridge` 只在动态场景机制分析中保留，不进入主论文排序主线

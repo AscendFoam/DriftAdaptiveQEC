@@ -1,0 +1,22 @@
+# Runtime-consistent residual-b variant:
+# - keep the old gated teacher-params branch
+# - drop teacher prediction inputs while keeping teacher deltas broadcast
+
+experiment:
+  name: runtime_b_residual_norm_gated_teacher_no_prediction_v1
+  stage: p4_ablation_norm_gated_teacher_no_prediction
+  seed: 20260420
+
+base_config: experiment_runtime_b_residual_norm_gated_teacher.yaml
+
+paths:
+  dataset_dir: artifacts/datasets/runtime_b_residual_norm_gated_teacher_no_prediction_v1
+  model_dir: artifacts/models/runtime_b_residual_norm_gated_teacher_no_prediction_v1
+  report_dir: artifacts/reports/runtime_b_residual_norm_gated_teacher_no_prediction_v1
+
+runtime_dataset:
+  include_teacher_prediction: false
+
+slow_loop:
+  hybrid_residual_b:
+    include_teacher_prediction: false

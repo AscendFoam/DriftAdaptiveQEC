@@ -334,6 +334,31 @@ class FastLoopEmulator:
         )
         logical_flags = np.array([record.x_error or record.z_error for record in records], dtype=float)
         version_counts = Counter(str(record.active_version) for record in records)
+        physical_bridge_items = [
+            dict(record.noise_state.metadata.get("physical_bridge", {}))
+            for record in records
+            if isinstance(record.noise_state.metadata, dict) and isinstance(record.noise_state.metadata.get("physical_bridge"), dict)
+        ]
+        if physical_bridge_items:
+            gamma_values = np.asarray([float(item.get("gamma", 0.0)) for item in physical_bridge_items], dtype=float)
+            n_bar_values = np.asarray([float(item.get("n_bar", 0.0)) for item in physical_bridge_items], dtype=float)
+            sigma_disp_values = np.asarray([float(item.get("sigma_displacement", 0.0)) for item in physical_bridge_items], dtype=float)
+            sigma_phase_values = np.asarray([float(item.get("sigma_phase", 0.0)) for item in physical_bridge_items], dtype=float)
+            physical_bridge_summary = {
+                "enabled": True,
+                "n_cycles": int(len(physical_bridge_items)),
+                "gamma_mean": float(np.mean(gamma_values)),
+                "gamma_std": float(np.std(gamma_values)),
+                "n_bar_mean": float(np.mean(n_bar_values)),
+                "n_bar_std": float(np.std(n_bar_values)),
+                "sigma_displacement_mean": float(np.mean(sigma_disp_values)),
+                "sigma_displacement_std": float(np.std(sigma_disp_values)),
+                "sigma_phase_mean": float(np.mean(sigma_phase_values)),
+                "sigma_phase_std": float(np.std(sigma_phase_values)),
+                "effective_source": str(records[-1].noise_state.metadata.get("effective_source", "")),
+            }
+        else:
+            physical_bridge_summary = None
 
         return {
             "histogram": hist.astype(np.float32),
@@ -378,6 +403,7 @@ class FastLoopEmulator:
                 "mean_active_param_max_gain": float(np.mean([record.param_max_gain for record in records])),
                 "mean_active_param_bias_norm": float(np.mean([record.param_bias_norm for record in records])),
                 "active_version_counts": dict(version_counts),
+                "physical_bridge": physical_bridge_summary,
             },
             "window_stats": {
                 "n_cycles": len(records),

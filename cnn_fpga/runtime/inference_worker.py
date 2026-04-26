@@ -40,8 +40,17 @@ def main() -> int:
         try:
             payload = json.loads(line)
             histogram = np.asarray(payload["histogram"], dtype=np.float32)
-            prediction = predictor.predict(histogram)
-            print(json.dumps(prediction.to_dict(), ensure_ascii=False), flush=True)
+            scalar_features = payload.get("scalar_features")
+            explain = bool(payload.get("explain", False))
+            if scalar_features is None:
+                prediction = predictor.explain(histogram) if explain else predictor.predict(histogram)
+            else:
+                model_input = (histogram, np.asarray(scalar_features, dtype=np.float32))
+                prediction = predictor.explain(model_input) if explain else predictor.predict(model_input)
+            if explain:
+                print(json.dumps(prediction, ensure_ascii=False), flush=True)
+            else:
+                print(json.dumps(prediction.to_dict(), ensure_ascii=False), flush=True)
         except InferenceServiceError as exc:
             print(json.dumps({"error": exc.reason}, ensure_ascii=False), flush=True)
         except Exception as exc:  # pragma: no cover

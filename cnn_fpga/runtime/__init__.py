@@ -7,6 +7,7 @@ from importlib import import_module
 
 _EXPORTS = {
     "LatencyInjector": "cnn_fpga.runtime.latency_injector",
+    "LatencyContext": "cnn_fpga.runtime.latency_injector",
     "LatencySample": "cnn_fpga.runtime.latency_injector",
     "StageLatencySpec": "cnn_fpga.runtime.latency_injector",
     "FastLoopConfig": "cnn_fpga.runtime.fast_loop_emulator",
@@ -34,6 +35,9 @@ _EXPORTS = {
     "SlowLoopRuntime": "cnn_fpga.runtime.slow_loop_runtime",
     "SlowLoopRuntimeConfig": "cnn_fpga.runtime.slow_loop_runtime",
     "SlowLoopRuntimeError": "cnn_fpga.runtime.slow_loop_runtime",
+    "PhysicalNoiseBridge": "cnn_fpga.runtime.noise_bridge",
+    "PhysicalNoiseBridgeConfig": "cnn_fpga.runtime.noise_bridge",
+    "maybe_build_physical_noise_bridge": "cnn_fpga.runtime.noise_bridge",
 }
 
 __all__ = list(_EXPORTS)

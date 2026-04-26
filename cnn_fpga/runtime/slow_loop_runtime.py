@@ -19,7 +19,13 @@ from cnn_fpga.decoder import (
     WindowVarianceBaseline,
 )
 from cnn_fpga.decoder.param_mapper import NoisePrediction, analyze_decoder_aggressiveness
-from cnn_fpga.runtime.feature_builder import RuntimeFeatureConfig, build_feature_tensor
+from cnn_fpga.runtime.feature_builder import (
+    RuntimeFeatureConfig,
+    RuntimeFeatureSample,
+    build_feature_sample,
+    feature_channel_names,
+    scalar_feature_names,
+)
 from cnn_fpga.runtime.inference_service import InferenceService, InferenceServiceError, build_inference_service
 from cnn_fpga.runtime.param_bank import DecoderRuntimeParams
 from cnn_fpga.runtime.scheduler import WindowFrame
@@ -152,6 +158,10 @@ class SlowLoopRuntimeConfig:
                 include_teacher_prediction=bool(feature_source_cfg.get("include_teacher_prediction", slow_cfg.get("include_teacher_prediction", False))),
                 include_teacher_params=bool(feature_source_cfg.get("include_teacher_params", slow_cfg.get("include_teacher_params", False))),
                 include_teacher_deltas=bool(feature_source_cfg.get("include_teacher_deltas", slow_cfg.get("include_teacher_deltas", False))),
+                teacher_prediction_layout=str(feature_source_cfg.get("teacher_prediction_layout", slow_cfg.get("teacher_prediction_layout", "broadcast"))).lower(),
+                teacher_params_layout=str(feature_source_cfg.get("teacher_params_layout", slow_cfg.get("teacher_params_layout", "broadcast"))).lower(),
+                teacher_deltas_layout=str(feature_source_cfg.get("teacher_deltas_layout", slow_cfg.get("teacher_deltas_layout", "broadcast"))).lower(),
+                teacher_scalar_features=tuple(feature_source_cfg.get("teacher_scalar_features", slow_cfg.get("teacher_scalar_features", [])) or []),
             ),
             constant_delta_mu_q=constant_delta_mu_q,
             constant_delta_mu_p=constant_delta_mu_p,
@@ -208,6 +218,77 @@ class SlowLoopRuntime:
         self._teacher_param_context: Deque[np.ndarray] = deque(maxlen=max_history)
         self._ema_prediction: Optional[NoisePrediction] = None
         self._ema_b: Optional[np.ndarray] = None
+
+    def _teacher_branch_input_summary(
+        self,
+        artifact_input: RuntimeFeatureSample,
+        *,
+        teacher_prediction: NoisePrediction | None,
+        teacher_params: DecoderRuntimeParams | None,
+    ) -> Dict[str, Any]:
+        spatial = np.asarray(artifact_input.spatial_tensor, dtype=np.float32)
+        scalar = artifact_input.scalar_features
+        return {
+            "input_channel_names": feature_channel_names(self.config.feature_config),
+            "scalar_feature_names": scalar_feature_names(self.config.feature_config),
+            "spatial_shape": list(spatial.shape),
+            "spatial_mean_abs": float(np.mean(np.abs(spatial))),
+            "spatial_max_abs": float(np.max(np.abs(spatial))),
+            "scalar_feature_dim": 0 if scalar is None else int(np.asarray(scalar).size),
+            "scalar_features_raw": [] if scalar is None else np.asarray(scalar, dtype=float).reshape(-1).tolist(),
+            "teacher_prediction_vector": None if teacher_prediction is None else self._prediction_vector(teacher_prediction).astype(float).tolist(),
+            "teacher_b_vector": None if teacher_params is None else np.asarray(teacher_params.b, dtype=float).reshape(-1).tolist(),
+        }
+
+    def _teacher_branch_diagnostics(
+        self,
+        artifact_input: RuntimeFeatureSample,
+        *,
+        prediction: NoisePrediction,
+        teacher_prediction: NoisePrediction | None,
+        teacher_params: DecoderRuntimeParams | None,
+    ) -> Dict[str, Any]:
+        diagnostics = self._teacher_branch_input_summary(
+            artifact_input,
+            teacher_prediction=teacher_prediction,
+            teacher_params=teacher_params,
+        )
+        try:
+            inference_input: np.ndarray | tuple[np.ndarray, np.ndarray]
+            if artifact_input.scalar_features is None or artifact_input.scalar_features.size == 0:
+                inference_input = artifact_input.spatial_tensor
+            else:
+                inference_input = (artifact_input.spatial_tensor, artifact_input.scalar_features)
+            explanation = self.inference_service.explain(inference_input) if self.inference_service is not None else {}
+        except Exception as exc:  # pragma: no cover - diagnostics must never break inference
+            diagnostics["diagnostic_error"] = str(exc)
+            return diagnostics
+
+        predicted_vector = np.array(
+            [
+                float(prediction.metadata.get("raw_prediction", {}).get("b_q", prediction.mu_q)),
+                float(prediction.metadata.get("raw_prediction", {}).get("b_p", prediction.mu_p)),
+            ],
+            dtype=float,
+        )
+        diagnostics.update(
+            {
+                "artifact_explanation": explanation,
+                "teacher_contribution_vector": list(
+                    explanation.get(
+                        "teacher_contribution",
+                        predicted_vector.tolist(),
+                    )
+                ),
+                "teacher_contribution_l2": float(explanation.get("teacher_contribution_l2", 0.0)),
+                "prediction_without_teacher": explanation.get("prediction_without_teacher"),
+                "teacher_gate_mean": explanation.get("teacher_gate_mean"),
+                "teacher_gate_std": explanation.get("teacher_gate_std"),
+                "teacher_gate_min": explanation.get("teacher_gate_min"),
+                "teacher_gate_max": explanation.get("teacher_gate_max"),
+            }
+        )
+        return diagnostics
 
     @classmethod
     def from_config(cls, config: Dict[str, Any], seed: int | None = None) -> "SlowLoopRuntime":
@@ -329,7 +410,7 @@ class SlowLoopRuntime:
         *,
         teacher_prediction: NoisePrediction | None = None,
         teacher_params: DecoderRuntimeParams | None = None,
-    ) -> np.ndarray:
+    ) -> RuntimeFeatureSample:
         hist = np.asarray(histogram, dtype=np.float32)
         self._histogram_context.append(hist)
         if teacher_prediction is not None:
@@ -344,7 +425,7 @@ class SlowLoopRuntime:
         teacher_param_history = list(self._teacher_param_context) if (
             feature_cfg.include_teacher_params or feature_cfg.include_teacher_deltas
         ) else None
-        return build_feature_tensor(
+        return build_feature_sample(
             list(self._histogram_context),
             feature_cfg,
             teacher_prediction_history=teacher_prediction_history,
@@ -367,10 +448,21 @@ class SlowLoopRuntime:
             teacher_params=teacher_params,
         )
         try:
-            prediction = self.inference_service.predict(artifact_input)
+            inference_input: np.ndarray | tuple[np.ndarray, np.ndarray]
+            if artifact_input.scalar_features is None or artifact_input.scalar_features.size == 0:
+                inference_input = artifact_input.spatial_tensor
+            else:
+                inference_input = (artifact_input.spatial_tensor, artifact_input.scalar_features)
+            prediction = self.inference_service.predict(inference_input)
         except InferenceServiceError as exc:
             raise SlowLoopRuntimeError(exc.reason) from exc
         metadata = dict(prediction.metadata or {})
+        diagnostics = self._teacher_branch_diagnostics(
+            artifact_input,
+            prediction=prediction,
+            teacher_prediction=teacher_prediction,
+            teacher_params=teacher_params,
+        )
         metadata.update(
             {
                 "window_id": window.window_id,
@@ -378,6 +470,7 @@ class SlowLoopRuntime:
                 "inference_service_mode": self.config.inference_service_mode,
                 "inference_service_backend": self.config.inference_service_backend,
                 "context_windows": self.config.feature_config.context_windows,
+                "teacher_branch_diagnostics": diagnostics,
             }
         )
         return NoisePrediction(
@@ -646,8 +739,15 @@ class SlowLoopRuntime:
                 "include_teacher_prediction": self.config.feature_config.include_teacher_prediction,
                 "include_teacher_params": self.config.feature_config.include_teacher_params,
                 "include_teacher_deltas": self.config.feature_config.include_teacher_deltas,
+                "teacher_prediction_layout": self.config.feature_config.teacher_prediction_layout,
+                "teacher_params_layout": self.config.feature_config.teacher_params_layout,
+                "teacher_deltas_layout": self.config.feature_config.teacher_deltas_layout,
+                "teacher_scalar_features": list(self.config.feature_config.teacher_scalar_features),
             },
         }
+        teacher_diag = dict((residual_prediction.metadata or {}).get("teacher_branch_diagnostics", {}))
+        if teacher_diag:
+            metadata["teacher_branch_diagnostics"] = teacher_diag
         if self.config.ema_apply_to in {"b", "all"}:
             metadata["postprocess"] = {
                 "type": "ema",

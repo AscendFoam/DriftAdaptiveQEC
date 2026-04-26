@@ -1,0 +1,22 @@
+# Runtime-consistent residual-b variant:
+# - keep teacher prediction / teacher deltas
+# - reencode teacher params as a low-dimensional scalar branch instead of broadcast planes
+
+experiment:
+  name: runtime_b_residual_reencoded_teacher_params_v1
+  stage: p4_ablation_reencoded_teacher_params
+  seed: 20260402
+
+base_config: experiment_runtime_b_residual.yaml
+
+paths:
+  dataset_dir: artifacts/datasets/runtime_b_residual_reencoded_teacher_params_v1
+  model_dir: artifacts/models/runtime_b_residual_reencoded_teacher_params_v1
+  report_dir: artifacts/reports/runtime_b_residual_reencoded_teacher_params_v1
+
+runtime_dataset:
+  teacher_params_layout: scalar_branch
+
+slow_loop:
+  hybrid_residual_b:
+    teacher_params_layout: scalar_branch

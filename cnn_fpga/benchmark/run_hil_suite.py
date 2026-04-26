@@ -14,7 +14,8 @@ from typing import Dict, List
 import numpy as np
 
 from cnn_fpga.hwio import DMAReadout, FPGADriver
-from cnn_fpga.runtime import LatencyInjector, LatencySample, SchedulerConfig, SlowLoopRuntime
+from cnn_fpga.runtime import LatencyContext, LatencyInjector, LatencySample, SchedulerConfig, SlowLoopRuntime
+from cnn_fpga.runtime.noise_bridge import maybe_build_physical_noise_bridge
 from cnn_fpga.runtime.param_bank import DecoderRuntimeParams
 from cnn_fpga.utils.config import config_hash, ensure_dir, get_path, load_yaml_config, now_tag, save_json
 
@@ -54,6 +55,7 @@ def _build_mock_noise_provider(config: Dict):
     experiment = config.get("experiment", {})
     seed = int(experiment.get("seed", 1234))
     rng = np.random.default_rng(seed + 17)
+    physical_bridge = maybe_build_physical_noise_bridge(config, seed=seed + 19)
 
     signal_cfg = config.get("mock_signal", {})
     kind = str(signal_cfg.get("type", "random_walk")).lower()
@@ -126,13 +128,16 @@ def _build_mock_noise_provider(config: Dict):
 
         sigma_value = float(np.clip(sigma_value, sigma_min, sigma_max))
 
-        return {
+        payload = {
             "sigma": sigma_value,
             "mu_q": float(mu_q_value),
             "mu_p": float(mu_p_value),
             "theta_deg": theta_value,
             "metadata": {"signal_type": kind},
         }
+        if physical_bridge is not None and physical_bridge.enabled:
+            return physical_bridge.apply(epoch_id, payload)
+        return payload
 
     return _provider
 
@@ -172,6 +177,92 @@ def _required_fast_cycles(config: Dict, scheduler_cfg: SchedulerConfig) -> int:
     cycles_for_window_target = scheduler_cfg.window_size + max(0, requested_slow_updates - 1) * scheduler_cfg.resolved_window_stride
     cycles_for_slow_target = requested_slow_updates * cycles_per_slow
     return max(requested_fast_cycles, cycles_for_slow_target, cycles_for_window_target)
+
+
+def _aggregate_teacher_branch_diagnostics(slow_finished: List[Dict]) -> Dict[str, float | None]:
+    contribution_l2: List[float] = []
+    gate_means: List[float] = []
+    gate_stds: List[float] = []
+    scalar_abs_means: List[float] = []
+    scalar_stats: Dict[str, Dict[str, List[float]]] = {}
+    for item in slow_finished:
+        proposed = dict(item.get("proposed_params", {}))
+        metadata = dict(proposed.get("metadata", {}))
+        diagnostics = dict(metadata.get("teacher_branch_diagnostics", {}))
+        if not diagnostics:
+            continue
+        if diagnostics.get("teacher_contribution_l2") is not None:
+            contribution_l2.append(float(diagnostics["teacher_contribution_l2"]))
+        if diagnostics.get("teacher_gate_mean") is not None:
+            gate_means.append(float(diagnostics["teacher_gate_mean"]))
+        if diagnostics.get("teacher_gate_std") is not None:
+            gate_stds.append(float(diagnostics["teacher_gate_std"]))
+        raw_scalar = diagnostics.get("scalar_features_raw", [])
+        if isinstance(raw_scalar, list) and raw_scalar:
+            scalar_abs_means.append(float(np.mean(np.abs(np.asarray(raw_scalar, dtype=float)))))
+        explanation = diagnostics.get("artifact_explanation", {})
+        if not isinstance(explanation, dict):
+            explanation = {}
+        for scalar_item in explanation.get("per_scalar_contribution", []) or []:
+            if not isinstance(scalar_item, dict):
+                continue
+            name = str(scalar_item.get("name", "unknown"))
+            stats = scalar_stats.setdefault(
+                name,
+                {
+                    "raw": [],
+                    "normalized": [],
+                    "ablation_l2": [],
+                    "gate_delta_mean": [],
+                    "gate_delta_l2": [],
+                },
+            )
+            raw = scalar_item.get("raw")
+            normalized = scalar_item.get("normalized")
+            if isinstance(raw, (int, float)):
+                stats["raw"].append(float(raw))
+            if isinstance(normalized, (int, float)):
+                stats["normalized"].append(float(normalized))
+            if scalar_item.get("ablation_l2") is not None:
+                stats["ablation_l2"].append(float(scalar_item["ablation_l2"]))
+        for gate_item in explanation.get("per_scalar_gate_effect", []) or []:
+            if not isinstance(gate_item, dict):
+                continue
+            name = str(gate_item.get("name", "unknown"))
+            stats = scalar_stats.setdefault(
+                name,
+                {
+                    "raw": [],
+                    "normalized": [],
+                    "ablation_l2": [],
+                    "gate_delta_mean": [],
+                    "gate_delta_l2": [],
+                },
+            )
+            if gate_item.get("gate_delta_mean") is not None:
+                stats["gate_delta_mean"].append(float(gate_item["gate_delta_mean"]))
+            if gate_item.get("gate_delta_l2") is not None:
+                stats["gate_delta_l2"].append(float(gate_item["gate_delta_l2"]))
+
+    per_scalar_summary: Dict[str, Dict[str, float | None]] = {}
+    for name, stats in scalar_stats.items():
+        summary_item: Dict[str, float | None] = {}
+        for key, values in stats.items():
+            array = np.asarray(values, dtype=float)
+            summary_item[f"{key}_mean"] = None if array.size == 0 else float(np.mean(array))
+            summary_item[f"{key}_std"] = None if array.size == 0 else float(np.std(array))
+            summary_item[f"{key}_min"] = None if array.size == 0 else float(np.min(array))
+            summary_item[f"{key}_max"] = None if array.size == 0 else float(np.max(array))
+        per_scalar_summary[name] = summary_item
+
+    return {
+        "teacher_contribution_l2_mean": None if not contribution_l2 else float(np.mean(np.asarray(contribution_l2, dtype=float))),
+        "teacher_contribution_l2_std": None if not contribution_l2 else float(np.std(np.asarray(contribution_l2, dtype=float))),
+        "teacher_scalar_abs_mean": None if not scalar_abs_means else float(np.mean(np.asarray(scalar_abs_means, dtype=float))),
+        "teacher_gate_mean": None if not gate_means else float(np.mean(np.asarray(gate_means, dtype=float))),
+        "teacher_gate_std": None if not gate_stds else float(np.mean(np.asarray(gate_stds, dtype=float))),
+        "per_scalar": per_scalar_summary,
+    }
 
 
 def run_hil_session(config: Dict, run_dir: Path) -> Dict:
@@ -276,7 +367,13 @@ def run_hil_session(config: Dict, run_dir: Path) -> Dict:
             ):
                 readout = driver.read_histogram()
                 active_params = driver.read_active_params()
-                latency = host_latency.sample_slow_update()
+                latency_context = LatencyContext(
+                    pending_windows=int(status.get("pending_dma_buffers", 0)),
+                    slow_job_inflight=False,
+                    pending_commit=bool(driver.has_pending_commit()),
+                    recent_slow_budget_violations=int(slow_update_budget_violations),
+                )
+                latency = host_latency.sample_slow_update(context=latency_context)
                 ready_time_us = (
                     current_time_us
                     + latency.dma_us
@@ -338,6 +435,7 @@ def run_hil_session(config: Dict, run_dir: Path) -> Dict:
             fast_stats = {"mean_us": None, "p95_us": None, "p99_us": None}
 
         reason_counts = _extract_reason_counts(slow_failed)
+        teacher_diag_summary = _aggregate_teacher_branch_diagnostics(slow_finished)
         backend_event_counts: Dict[str, int] = {}
         for event in backend_events:
             kind = str(event["kind"])
@@ -390,6 +488,7 @@ def run_hil_session(config: Dict, run_dir: Path) -> Dict:
             "aggressive_param_bias_rate": fast_loop_summary.get("aggressive_param_bias_rate"),
             "aggressive_param_correction_rate": fast_loop_summary.get("aggressive_param_correction_rate"),
             "dominant_overflow_source": fast_loop_summary.get("dominant_overflow_source"),
+            "teacher_branch_diagnostics": teacher_diag_summary,
             "final_snapshot": final_snapshot,
         }
         save_json(run_dir / "hil_summary.json", summary)

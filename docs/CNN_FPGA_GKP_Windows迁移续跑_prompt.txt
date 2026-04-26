@@ -149,3 +149,69 @@
 5. 后续最值得做的工作不是继续盲目扩 baseline，而是先解释清楚这个异常，并确认它是否稳定
 
 请从上述状态继续，不要回退到旧的“只有 CNN 训练脚手架”的阶段理解。
+
+九、截至 2026-04-07 的 Windows 迁移续跑更新
+以下更新覆盖上面的 “No TeacherParams 可能稳定更优” 假设。
+
+1. Windows 迁移与训练后端
+   - 已补入 `PyTorch/CUDA` 训练后端，并确认 `DLEnv + RTX4070` 可正常识别 CUDA。
+   - 已修复 Windows 下 formal HIL 的重导入阻塞与路径过长问题，因此当前正式 benchmark 可以在本机继续推进。
+
+2. 离线训练复查结果
+   - 结果文件：
+     - `artifacts/reports/no_teacher_params_training_seed_recheck_20260405.json`
+   - 基于 `seed=20260405/20260406/20260407` 的 3 组重训，`Hybrid No TeacherParams` 在 test split 上：
+     - `MSE` 3/3 更好
+     - `R²` 3/3 更好
+     - `MAE` 2/3 更好
+   - 平均变化：
+     - `ΔMSE = -1.51e-7`
+     - `ΔMAE = -1.55e-5`
+     - `ΔR² = +0.0858`
+   - 因此：离线监督训练口径下，`No TeacherParams` 的优势是稳定存在的。
+
+3. `teacher params` 通道分析结果
+   - 结果文件：
+     - `artifacts/reports/teacher_params_coupling_analysis_20260405.json`
+   - 当前更像“低方差 + 高冗余”，而不是“归一化失效”：
+     - `teacher_b_q` 原始 `std ≈ 5.48e-4`
+     - `teacher_b_p` 原始 `std ≈ 1.02e-3`
+     - 训练时 `x_std` 与原始尺度一致，归一化后通道能量约为 `1`
+   - 但它们与其他 teacher 标量高度耦合：
+     - `teacher_b_q` 可由 `teacher prediction + teacher deltas` 预测到 `R² ≈ 0.767`
+     - `teacher_b_p` 可预测到 `R² ≈ 0.863`
+   - 当前最合理的解释是：
+     - `teacher params` 提供的新增信息量有限
+     - 但其“整平面广播成通道”的编码方式可能在优化和闭环控制中引入冗余污染
+
+4. formal HIL 续跑的最新结论
+   - 部分结果目录：
+     - `runs/p4_ntp_bench/p4_benchmark/p4ntp_s20260405_20260406_113228_8a5400333985_37920`
+   - 在 `seed=20260405` 上，formal HIL 已跑出的关键场景显示：
+     - `static_bias_theta`
+       - `Hybrid Full = 0.544676`
+       - `Hybrid No TeacherParams = 0.667064`
+       - `UKF = 0.829061`
+     - `linear_ramp`（当前已完成 `No TeacherParams` 2 次 repeat）
+       - `Hybrid Full = 0.571131`
+       - `Hybrid No TeacherParams = 0.704623`
+       - `UKF = 0.809288`
+   - 这与离线训练结论方向相反。
+   - 当前必须接受的新判断是：
+     - 离线训练改善，不等于 formal HIL 改善
+     - `No TeacherParams` 不能直接作为更优正式主线
+
+5. 当前后续重点
+   - 优先级 1：
+     - 把重点从“继续证明 `No TeacherParams` 更优”转到“解释为什么它离线更好、formal HIL 却更差”
+     - 重点检查 `teacher params` 的编码方式，而不只是保留/删除这个开关
+   - 优先级 2：
+     - 做裁剪后的 benchmark-only 正式复查，只补关键 seed / scenario
+     - 建议优先补：
+       - `seed=20260406/20260407`
+       - `static_bias_theta`
+       - `linear_ramp`
+   - 优先级 3：
+     - 在文档和论文叙事中明确写出：
+       - `teacher params` 离线有助于拟合并不必然转化为闭环控制收益
+       - 问题更可能出在通道编码与闭环交互，而不是简单的“是否保留该特征”

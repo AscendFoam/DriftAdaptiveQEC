@@ -15,7 +15,7 @@ import numpy as np
 from typing import Tuple, Optional
 from dataclasses import dataclass
 
-from .gkp_state import LATTICE_CONST
+from .constants import LATTICE_CONST
 
 
 @dataclass

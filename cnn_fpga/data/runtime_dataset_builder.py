@@ -12,6 +12,7 @@
 from __future__ import annotations
 
 import argparse
+import time
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
@@ -23,8 +24,14 @@ from cnn_fpga.benchmark.run_hil_suite import HILSlowJob, _build_mock_noise_provi
 from cnn_fpga.hwio import FPGADriver
 from cnn_fpga.decoder import ParamMapper
 from cnn_fpga.decoder.param_mapper import NoisePrediction
-from cnn_fpga.runtime import LatencyInjector, SlowLoopRuntime
-from cnn_fpga.runtime.feature_builder import RuntimeFeatureConfig, build_feature_tensor, feature_channel_names
+from cnn_fpga.runtime import LatencyContext, LatencyInjector, SlowLoopRuntime
+from cnn_fpga.runtime.feature_builder import (
+    RuntimeFeatureConfig,
+    build_feature_sample,
+    feature_channel_names,
+    infer_scalar_feature_dim,
+    scalar_feature_names,
+)
 from cnn_fpga.runtime.param_bank import DecoderRuntimeParams
 from cnn_fpga.runtime.scheduler import WindowFrame
 from cnn_fpga.utils.config import config_hash, ensure_dir, get_path, load_yaml_config, save_json
@@ -32,6 +39,16 @@ from cnn_fpga.utils.config import config_hash, ensure_dir, get_path, load_yaml_c
 
 LABEL_NAMES_RESIDUAL_MU = ("mu_q", "mu_p")
 LABEL_NAMES_RESIDUAL_B = ("b_q", "b_p")
+
+
+def _log(message: str) -> None:
+    timestamp = time.strftime("%H:%M:%S")
+    try:
+        print(f"[runtime_dataset_builder {timestamp}] {message}", flush=True)
+    except OSError:
+        # Long-running jobs may outlive the attached stdout handle when launched
+        # under wrappers/timeouts; logging must not crash dataset generation.
+        pass
 
 
 @dataclass(frozen=True)
@@ -160,15 +177,26 @@ def _capture_reference_windows(
 ) -> List[CapturedRuntimeWindow]:
     experiment = config.get("experiment", {})
     seed = int(experiment.get("seed", 1234))
+    t0 = time.perf_counter()
+    _log(f"[{scenario_name}] capture start: n_windows={n_windows}, seed={seed}")
     noise_provider = _build_mock_noise_provider(config)
+    _log(f"[{scenario_name}] noise provider ready in {time.perf_counter() - t0:.2f}s")
+    t_driver = time.perf_counter()
     driver = FPGADriver.from_config(config, noise_provider=noise_provider, seed=seed + 7)
+    _log(f"[{scenario_name}] driver ready in {time.perf_counter() - t_driver:.2f}s")
+    t_slow = time.perf_counter()
     slow_loop = SlowLoopRuntime.from_config(config, seed=seed + 31)
+    _log(f"[{scenario_name}] slow loop ready in {time.perf_counter() - t_slow:.2f}s")
+    t_latency = time.perf_counter()
     host_latency = LatencyInjector.from_config(config, seed=seed + 43)
+    _log(f"[{scenario_name}] host latency ready in {time.perf_counter() - t_latency:.2f}s")
 
     captured: List[CapturedRuntimeWindow] = []
     try:
+        t_start = time.perf_counter()
         driver.start()
         driver.reset_histogram()
+        _log(f"[{scenario_name}] driver started/reset in {time.perf_counter() - t_start:.2f}s")
 
         scheduler_cfg = driver.scheduler_config
         requested_cfg = deepcopy(config)
@@ -176,20 +204,39 @@ def _capture_reference_windows(
         requested_cfg["timing"]["n_slow_updates"] = int(n_windows)
         requested_cfg["timing"]["n_fast_cycles"] = int(max(n_windows * scheduler_cfg.resolved_window_stride, scheduler_cfg.window_size))
         max_cycles = _required_fast_cycles(requested_cfg, scheduler_cfg)
+        _log(
+            f"[{scenario_name}] scheduler window_size={scheduler_cfg.window_size}, "
+            f"stride={scheduler_cfg.resolved_window_stride}, max_cycles={max_cycles}"
+        )
 
         next_slow_start_time_us = 0.0
         slow_job: HILSlowJob | None = None
         awaiting_commit_ack = False
         captures_started = 0
 
-        for _ in range(max_cycles):
+        progress_interval = max(1, max_cycles // 4)
+        loop_started = time.perf_counter()
+        for cycle_idx in range(max_cycles):
             driver.advance_cycles(1)
             status = driver.read_status()
             current_epoch = int(status.get("epoch_id", driver.read_epoch()))
             current_time_us = float(status.get("time_us", driver.read_time_us()))
 
+            if cycle_idx == 0:
+                _log(
+                    f"[{scenario_name}] first cycle ok: epoch={current_epoch}, "
+                    f"time_us={current_time_us:.2f}"
+                )
+            elif (cycle_idx + 1) % progress_interval == 0:
+                _log(
+                    f"[{scenario_name}] progress cycles={cycle_idx + 1}/{max_cycles}, "
+                    f"captures={captures_started}, pending_commit={driver.has_pending_commit()}, "
+                    f"hist_ready={driver.histogram_available()}"
+                )
+
             if awaiting_commit_ack and bool(status.get("commit_ack", False)):
                 awaiting_commit_ack = False
+                _log(f"[{scenario_name}] commit ack observed at epoch={current_epoch}")
 
             if slow_job is not None and current_time_us >= slow_job.ready_time_us:
                 proposed = slow_loop(slow_job.readout.window, slow_job.active_params)
@@ -200,6 +247,10 @@ def _capture_reference_windows(
                     metadata={"job_id": slow_job.job_id, "window_id": slow_job.readout.window.window_id},
                 )
                 awaiting_commit_ack = True
+                _log(
+                    f"[{scenario_name}] slow job {slow_job.job_id} finished for window "
+                    f"{slow_job.readout.window.window_id} at epoch={current_epoch}"
+                )
                 slow_job = None
 
             if (
@@ -231,9 +282,20 @@ def _capture_reference_windows(
                     )
                 )
                 captures_started += 1
+                _log(
+                    f"[{scenario_name}] captured window {readout.window.window_id} "
+                    f"at epoch={current_epoch}, time_us={current_time_us:.2f}"
+                )
 
                 active_params = driver.read_active_params()
-                latency = host_latency.sample_slow_update()
+                latency = host_latency.sample_slow_update(
+                    context=LatencyContext(
+                        pending_windows=int(status.get("pending_dma_buffers", 0)),
+                        slow_job_inflight=False,
+                        pending_commit=bool(driver.has_pending_commit()),
+                        recent_slow_budget_violations=0,
+                    )
+                )
                 slow_job = HILSlowJob(
                     job_id=captures_started,
                     readout=readout,
@@ -248,9 +310,18 @@ def _capture_reference_windows(
                     latency=latency,
                 )
                 next_slow_start_time_us = current_time_us + scheduler_cfg.slow_update_period_us
+                _log(
+                    f"[{scenario_name}] slow job {slow_job.job_id} scheduled, "
+                    f"ready_time_us={slow_job.ready_time_us:.2f}"
+                )
 
             if captures_started >= n_windows and slow_job is None and not awaiting_commit_ack and not driver.has_pending_commit():
                 break
+
+        _log(
+            f"[{scenario_name}] capture finished with {len(captured)} windows in "
+            f"{time.perf_counter() - loop_started:.2f}s"
+        )
 
         if len(captured) < n_windows:
             raise RuntimeError(f"Only captured {len(captured)} windows, expected {n_windows}")
@@ -258,6 +329,7 @@ def _capture_reference_windows(
     finally:
         slow_loop.close()
         driver.close()
+        _log(f"[{scenario_name}] capture teardown complete")
 
 
 def _make_teacher_mode_entry(teacher_mode: str) -> Dict[str, Any]:
@@ -275,6 +347,10 @@ def _runtime_feature_config_from_dataset_cfg(runtime_dataset_cfg: Dict[str, Any]
         include_teacher_prediction=bool(runtime_dataset_cfg.get("include_teacher_prediction", False)),
         include_teacher_params=bool(runtime_dataset_cfg.get("include_teacher_params", False)),
         include_teacher_deltas=bool(runtime_dataset_cfg.get("include_teacher_deltas", False)),
+        teacher_prediction_layout=str(runtime_dataset_cfg.get("teacher_prediction_layout", "broadcast")).lower(),
+        teacher_params_layout=str(runtime_dataset_cfg.get("teacher_params_layout", "broadcast")).lower(),
+        teacher_deltas_layout=str(runtime_dataset_cfg.get("teacher_deltas_layout", "broadcast")).lower(),
+        teacher_scalar_features=tuple(runtime_dataset_cfg.get("teacher_scalar_features", []) or []),
     )
 
 
@@ -288,6 +364,15 @@ def _label_names_for_semantics(label_semantics: str) -> tuple[str, str]:
 
 
 def _split_stats(values: np.ndarray) -> Dict[str, List[float]]:
+    if values.shape[0] == 0:
+        n_labels = int(values.shape[1]) if values.ndim > 1 else 0
+        empty = [None] * n_labels
+        return {
+            "mean": empty,
+            "std": empty,
+            "min": empty,
+            "max": empty,
+        }
     return {
         "mean": values.mean(axis=0).astype(np.float64).tolist(),
         "std": values.std(axis=0).astype(np.float64).tolist(),
@@ -307,6 +392,7 @@ def _save_split(
     out_dir: Path,
     split_name: str,
     histograms: np.ndarray,
+    scalar_features: np.ndarray,
     labels: np.ndarray,
     label_names: Sequence[str],
     indices: np.ndarray,
@@ -323,6 +409,7 @@ def _save_split(
     np.savez_compressed(
         split_path,
         histograms=histograms[indices],
+        scalar_features=scalar_features[indices],
         labels=labels[indices],
         label_names=np.asarray(label_names),
         teacher_predictions=teacher_predictions[indices],
@@ -374,6 +461,7 @@ def main() -> int:
     dataset_dir = ensure_dir(get_path(cfg, "dataset_dir", "artifacts/datasets/runtime_mu_residual"))
     scenario_seed_stride = int(runtime_dataset_cfg.get("scenario_seed_stride", 1000))
     input_channel_names = feature_channel_names(feature_cfg)
+    scalar_names = scalar_feature_names(feature_cfg)
 
     plan = {
         "dataset_dir": str(dataset_dir),
@@ -386,10 +474,12 @@ def main() -> int:
         "label_semantics": label_semantics,
         "input_channels": len(input_channel_names),
         "input_channel_names": input_channel_names,
+        "scalar_feature_dim": infer_scalar_feature_dim(feature_cfg),
+        "scalar_feature_names": scalar_names,
         "scenarios": [str(item.get("name")) for item in scenarios],
         "split": split_cfg,
     }
-    print("Runtime dataset build plan:", plan)
+    _log(f"Runtime dataset build plan: {plan}")
     if args.dry_run:
         return 0
 
@@ -397,6 +487,7 @@ def main() -> int:
     teacher_mode_entry = _make_teacher_mode_entry(teacher_mode)
 
     histograms: List[np.ndarray] = []
+    scalar_features_all: List[np.ndarray] = []
     labels: List[np.ndarray] = []
     teacher_predictions_all: List[np.ndarray] = []
     target_params_all: List[np.ndarray] = []
@@ -408,19 +499,23 @@ def main() -> int:
     for scenario_idx, scenario_entry in enumerate(scenarios):
         scenario_name = str(scenario_entry.get("name"))
         scenario_seed = seed_base + scenario_idx * scenario_seed_stride
+        _log(f"[{scenario_name}] scenario start ({scenario_idx + 1}/{len(scenarios)})")
         reference_cfg = _disable_runtime_failures(
             _build_run_config(merged_base, scenario_entry, reference_mode_entry, scenario_seed)
         )
         reference_cfg.setdefault("experiment", {})
         reference_cfg["experiment"]["name"] = f"runtime_dataset_capture_{scenario_name}"
         captured = _capture_reference_windows(reference_cfg, scenario_name=scenario_name, n_windows=windows_per_scenario)
+        _log(f"[{scenario_name}] reference capture complete: {len(captured)} windows")
 
         teacher_cfg = _disable_runtime_failures(
             _build_run_config(merged_base, scenario_entry, teacher_mode_entry, scenario_seed)
         )
         teacher_cfg.setdefault("experiment", {})
         teacher_cfg["experiment"]["name"] = f"runtime_dataset_teacher_{scenario_name}"
+        t_teacher = time.perf_counter()
         teacher_runtime = SlowLoopRuntime.from_config(teacher_cfg, seed=scenario_seed + 211)
+        _log(f"[{scenario_name}] teacher runtime ready in {time.perf_counter() - t_teacher:.2f}s")
         param_mapper = ParamMapper.from_config(teacher_cfg)
         try:
             active_params = DecoderRuntimeParams.identity()
@@ -457,7 +552,7 @@ def main() -> int:
                 histogram_history.append(np.asarray(item.histogram, dtype=np.float32))
                 teacher_prediction_history.append(teacher_prediction_vec)
                 teacher_param_history.append(np.asarray(teacher_output.b, dtype=np.float32))
-                feature_tensor = build_feature_tensor(
+                feature_sample = build_feature_sample(
                     histogram_history,
                     feature_cfg,
                     teacher_prediction_history=teacher_prediction_history,
@@ -477,7 +572,11 @@ def main() -> int:
                 else:  # pragma: no cover - protected by config validation above.
                     raise ValueError(f"unsupported_label_semantics:{label_semantics}")
 
-                histograms.append(feature_tensor)
+                histograms.append(feature_sample.spatial_tensor)
+                if feature_sample.scalar_features is None:
+                    scalar_features_all.append(np.zeros((infer_scalar_feature_dim(feature_cfg),), dtype=np.float32))
+                else:
+                    scalar_features_all.append(np.asarray(feature_sample.scalar_features, dtype=np.float32).reshape(-1))
                 labels.append(label_value)
                 teacher_predictions_all.append(teacher_prediction_vec)
                 target_params_all.append(
@@ -498,8 +597,14 @@ def main() -> int:
                 active_params = teacher_output.copy()
         finally:
             teacher_runtime.close()
+            _log(f"[{scenario_name}] teacher feature/label pass complete")
 
     histogram_array = np.stack(histograms, axis=0).astype(np.float32)
+    scalar_feature_array = (
+        np.stack(scalar_features_all, axis=0).astype(np.float32)
+        if scalar_features_all
+        else np.zeros((histogram_array.shape[0], 0), dtype=np.float32)
+    )
     label_array = np.stack(labels, axis=0).astype(np.float32)
     teacher_array = np.stack(teacher_predictions_all, axis=0).astype(np.float32)
     target_array = np.stack(target_params_all, axis=0).astype(np.float32)
@@ -520,6 +625,7 @@ def main() -> int:
         dataset_dir,
         "train",
         histogram_array,
+        scalar_feature_array,
         label_array,
         label_names,
         train_idx,
@@ -535,6 +641,7 @@ def main() -> int:
         dataset_dir,
         "val",
         histogram_array,
+        scalar_feature_array,
         label_array,
         label_names,
         val_idx,
@@ -550,6 +657,7 @@ def main() -> int:
         dataset_dir,
         "test",
         histogram_array,
+        scalar_feature_array,
         label_array,
         label_names,
         test_idx,
@@ -581,10 +689,16 @@ def main() -> int:
         "include_teacher_prediction": feature_cfg.include_teacher_prediction,
         "include_teacher_params": feature_cfg.include_teacher_params,
         "include_teacher_deltas": feature_cfg.include_teacher_deltas,
+        "teacher_prediction_layout": feature_cfg.teacher_prediction_layout,
+        "teacher_params_layout": feature_cfg.teacher_params_layout,
+        "teacher_deltas_layout": feature_cfg.teacher_deltas_layout,
+        "teacher_scalar_features": list(feature_cfg.teacher_scalar_features),
         "windows_per_scenario": windows_per_scenario,
         "n_samples_total": int(histogram_array.shape[0]),
         "histogram_shape": list(histogram_array.shape[1:]),
         "input_channel_names": input_channel_names,
+        "scalar_feature_dim": int(scalar_feature_array.shape[1]),
+        "scalar_feature_names": scalar_names,
         "label_names": list(label_names),
         "teacher_label_names": ["sigma", "mu_q", "mu_p", "theta_deg"],
         "teacher_runtime_param_names": ["b_q", "b_p"],
@@ -602,8 +716,8 @@ def main() -> int:
     }
     save_json(dataset_dir / "manifest.json", manifest)
 
-    print(f"Runtime dataset written to {dataset_dir}")
-    print(f"Manifest: {dataset_dir / 'manifest.json'}")
+    _log(f"Runtime dataset written to {dataset_dir}")
+    _log(f"Manifest: {dataset_dir / 'manifest.json'}")
     return 0
 
 

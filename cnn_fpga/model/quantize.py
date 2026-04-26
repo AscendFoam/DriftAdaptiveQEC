@@ -84,20 +84,28 @@ def main() -> int:
             source_model=np.array([str(model_path)]),
         )
     elif model_type.startswith("tiny_cnn") and model_type.endswith("_float"):
-        tensor_names = ("conv_w", "conv_b", "fc1_w", "fc1_b", "fc2_w", "fc2_b")
+        tensor_names = ["conv_w", "conv_b", "fc1_w", "fc1_b", "fc2_w", "fc2_b"]
+        for optional_name in ("scalar_gate_w", "scalar_gate_b", "scalar_shift_w", "scalar_shift_b"):
+            if optional_name in data:
+                tensor_names.append(optional_name)
         q_model_type = model_type[:-6] + "_int8"
         payload: Dict[str, np.ndarray] = {
             "model_type": np.array([q_model_type]),
             "label_names": data["label_names"],
             "x_mean": data["x_mean"] if "x_mean" in data else np.zeros((int(data["input_channels"][0]),), dtype=np.float32),
             "x_std": data["x_std"] if "x_std" in data else np.ones((int(data["input_channels"][0]),), dtype=np.float32),
+            "scalar_mean": data["scalar_mean"] if "scalar_mean" in data else np.zeros((int(data["scalar_feature_dim"][0]),), dtype=np.float32) if "scalar_feature_dim" in data else np.zeros((0,), dtype=np.float32),
+            "scalar_std": data["scalar_std"] if "scalar_std" in data else np.ones((int(data["scalar_feature_dim"][0]),), dtype=np.float32) if "scalar_feature_dim" in data else np.ones((0,), dtype=np.float32),
             "y_mean": data["y_mean"],
             "y_std": data["y_std"],
             "input_shape": data["input_shape"],
             "input_channels": data["input_channels"] if "input_channels" in data else np.array([1], dtype=np.int32),
+            "scalar_feature_dim": data["scalar_feature_dim"] if "scalar_feature_dim" in data else np.array([0], dtype=np.int32),
             "conv_channels": data["conv_channels"],
             "kernel_size": data["kernel_size"],
             "hidden_dim": data["hidden_dim"],
+            "scalar_fusion_mode": data["scalar_fusion_mode"] if "scalar_fusion_mode" in data else np.array(["concat"]),
+            "scalar_gate_init_bias": data["scalar_gate_init_bias"] if "scalar_gate_init_bias" in data else np.array([2.0], dtype=np.float32),
             "source_model": np.array([str(model_path)]),
         }
         for meta_key in (
@@ -107,6 +115,11 @@ def main() -> int:
             "context_strategy",
             "residual_apply",
             "input_channel_names",
+            "scalar_feature_names",
+            "teacher_prediction_layout",
+            "teacher_params_layout",
+            "teacher_deltas_layout",
+            "teacher_scalar_features",
         ):
             if meta_key in data:
                 payload[meta_key] = data[meta_key]

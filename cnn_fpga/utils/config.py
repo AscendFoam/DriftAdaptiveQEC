@@ -9,6 +9,7 @@ from __future__ import annotations
 import datetime as dt
 import hashlib
 import json
+import os
 import re
 from ast import literal_eval
 from copy import deepcopy
@@ -67,10 +68,23 @@ def now_tag() -> str:
     return dt.datetime.now().strftime("%Y%m%d_%H%M%S")
 
 
+def _extended_path_str(path: str | Path) -> str:
+    """Return a Windows long-path-safe string while remaining a no-op elsewhere."""
+    resolved = Path(path).expanduser().resolve()
+    raw = str(resolved)
+    if os.name != "nt":
+        return raw
+    if raw.startswith("\\\\?\\"):
+        return raw
+    if raw.startswith("\\\\"):
+        return "\\\\?\\UNC\\" + raw.lstrip("\\")
+    return "\\\\?\\" + raw
+
+
 def ensure_dir(path: str | Path) -> Path:
     """Create directory when missing and return resolved Path."""
     p = Path(path).expanduser().resolve()
-    p.mkdir(parents=True, exist_ok=True)
+    os.makedirs(_extended_path_str(p), exist_ok=True)
     return p
 
 
@@ -81,12 +95,34 @@ def get_path(config: Dict[str, Any], key: str, default: str) -> Path:
     return Path(raw).expanduser().resolve()
 
 
+def open_text(path: str | Path, mode: str, *, encoding: str = "utf-8", newline: str | None = None):
+    """Open a text file with parent directory creation and Windows long-path support."""
+    out_path = Path(path).expanduser().resolve()
+    if any(flag in mode for flag in ("w", "a", "x", "+")):
+        ensure_dir(out_path.parent)
+    return open(_extended_path_str(out_path), mode, encoding=encoding, newline=newline)
+
+
+def write_text(path: str | Path, content: str, *, encoding: str = "utf-8") -> None:
+    """Atomically write UTF-8 text content."""
+    out_path = Path(path).expanduser().resolve()
+    ensure_dir(out_path.parent)
+    temp_path = out_path.with_name(f"{out_path.name}.tmp")
+    try:
+        with open(_extended_path_str(temp_path), "w", encoding=encoding, newline="") as f:
+            f.write(content)
+        os.replace(_extended_path_str(temp_path), _extended_path_str(out_path))
+    finally:
+        try:
+            if temp_path.exists():
+                temp_path.unlink()
+        except OSError:
+            pass
+
+
 def save_json(path: str | Path, payload: Dict[str, Any]) -> None:
     """Write JSON with UTF-8 and indentation."""
-    out_path = Path(path).expanduser().resolve()
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    with out_path.open("w", encoding="utf-8") as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
+    write_text(path, json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def _strip_comment(line: str) -> str:
