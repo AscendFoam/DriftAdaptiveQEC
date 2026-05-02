@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Sequence, Tuple
 
 import numpy as np
 
@@ -30,6 +30,8 @@ class TinyCNNConfig:
     device: str = "auto"
     scalar_fusion_mode: str = "concat"
     scalar_gate_init_bias: float = 2.0
+    scalar_norm_clip: float = 0.0
+    scalar_feature_weights: Tuple[float, ...] = ()
 
     @classmethod
     def from_config(cls, config: Dict) -> "TinyCNNConfig":
@@ -54,6 +56,8 @@ class TinyCNNConfig:
             device=str(cnn_cfg.get("device", "auto")).lower(),
             scalar_fusion_mode=str(cnn_cfg.get("scalar_fusion_mode", "concat")).lower(),
             scalar_gate_init_bias=float(cnn_cfg.get("scalar_gate_init_bias", 2.0)),
+            scalar_norm_clip=float(cnn_cfg.get("scalar_norm_clip", 0.0)),
+            scalar_feature_weights=tuple(float(item) for item in (cnn_cfg.get("scalar_feature_weights", []) or [])),
         )
 
 
@@ -173,6 +177,35 @@ def _resolve_scalar_fusion_mode(scalar_feature_dim: int, fusion_mode: str) -> st
     return mode
 
 
+def _clip_scalar_features(values: np.ndarray, clip_value: float) -> np.ndarray:
+    """Optionally clip normalized scalar side-branch features for runtime stability."""
+    clip_value = float(clip_value)
+    if values.size == 0 or clip_value <= 0.0 or not np.isfinite(clip_value):
+        return values
+    return np.clip(values, -clip_value, clip_value)
+
+
+def _normalize_scalar_inputs(
+    values: np.ndarray,
+    scalar_mean: np.ndarray,
+    scalar_std: np.ndarray,
+    *,
+    clip_value: float,
+    feature_weights: Sequence[float] = (),
+) -> np.ndarray:
+    """Normalize scalar side-branch features and optionally clip them."""
+    if values.shape[1] <= 0:
+        return values
+    normalized = (values - scalar_mean) / scalar_std
+    clipped = _clip_scalar_features(normalized, clip_value)
+    if not feature_weights:
+        return clipped
+    weights = np.asarray(tuple(feature_weights), dtype=clipped.dtype).reshape(1, -1)
+    if weights.shape[1] != clipped.shape[1]:
+        raise ValueError(f"scalar_feature_weights length mismatch: expected={clipped.shape[1]}, got={weights.shape[1]}")
+    return (clipped * weights).astype(clipped.dtype, copy=False)
+
+
 def _build_tiny_cnn_artifact(
     *,
     model_params: Dict[str, np.ndarray],
@@ -212,6 +245,8 @@ def _build_tiny_cnn_artifact(
         "hidden_dim": np.asarray([config.hidden_dim], dtype=np.int32),
         "scalar_fusion_mode": np.array([_resolve_scalar_fusion_mode(scalar_feature_dim, config.scalar_fusion_mode)]),
         "scalar_gate_init_bias": np.asarray([config.scalar_gate_init_bias], dtype=np.float32),
+        "scalar_norm_clip": np.asarray([config.scalar_norm_clip], dtype=np.float32),
+        "scalar_feature_weights": np.asarray(config.scalar_feature_weights, dtype=np.float32),
         "label_weights": np.asarray(
             [float((config.label_weights or {}).get(str(name), 1.0)) for name in label_names],
             dtype=np.float32,
@@ -475,8 +510,20 @@ def _fit_tiny_cnn_numpy(
     scalar_mean = x_train_scalar.mean(axis=0, keepdims=True) if x_train_scalar.shape[1] > 0 else np.zeros((1, 0), dtype=np.float64)
     scalar_std = x_train_scalar.std(axis=0, keepdims=True) if x_train_scalar.shape[1] > 0 else np.ones((1, 0), dtype=np.float64)
     scalar_std = np.where(scalar_std < 1.0e-8, 1.0, scalar_std)
-    x_train_scalar_norm = (x_train_scalar - scalar_mean) / scalar_std if x_train_scalar.shape[1] > 0 else x_train_scalar
-    x_val_scalar_norm = (x_val_scalar - scalar_mean) / scalar_std if x_val_scalar.shape[1] > 0 else x_val_scalar
+    x_train_scalar_norm = _normalize_scalar_inputs(
+        x_train_scalar,
+        scalar_mean,
+        scalar_std,
+        clip_value=config.scalar_norm_clip,
+        feature_weights=config.scalar_feature_weights,
+    )
+    x_val_scalar_norm = _normalize_scalar_inputs(
+        x_val_scalar,
+        scalar_mean,
+        scalar_std,
+        clip_value=config.scalar_norm_clip,
+        feature_weights=config.scalar_feature_weights,
+    )
 
     y_mean = y_train.mean(axis=0, keepdims=True)
     y_std = y_train.std(axis=0, keepdims=True)
@@ -751,8 +798,20 @@ def _fit_tiny_cnn_torch(
     scalar_mean = x_train_scalar.mean(axis=0, keepdims=True) if x_train_scalar.shape[1] > 0 else np.zeros((1, 0), dtype=np.float32)
     scalar_std = x_train_scalar.std(axis=0, keepdims=True) if x_train_scalar.shape[1] > 0 else np.ones((1, 0), dtype=np.float32)
     scalar_std = np.where(scalar_std < 1.0e-8, 1.0, scalar_std)
-    x_train_scalar_norm = (x_train_scalar - scalar_mean) / scalar_std if x_train_scalar.shape[1] > 0 else x_train_scalar
-    x_val_scalar_norm = (x_val_scalar - scalar_mean) / scalar_std if x_val_scalar.shape[1] > 0 else x_val_scalar
+    x_train_scalar_norm = _normalize_scalar_inputs(
+        x_train_scalar,
+        scalar_mean,
+        scalar_std,
+        clip_value=config.scalar_norm_clip,
+        feature_weights=config.scalar_feature_weights,
+    )
+    x_val_scalar_norm = _normalize_scalar_inputs(
+        x_val_scalar,
+        scalar_mean,
+        scalar_std,
+        clip_value=config.scalar_norm_clip,
+        feature_weights=config.scalar_feature_weights,
+    )
 
     y_mean = y_train.mean(axis=0, keepdims=True)
     y_std = y_train.std(axis=0, keepdims=True)
@@ -819,7 +878,7 @@ def _fit_tiny_cnn_torch(
         for start in range(0, x_train_norm.shape[0], config.batch_size):
             batch_idx = order[start : start + config.batch_size]
             x_batch = torch.from_numpy(x_train_norm[batch_idx]).to(device)
-            scalar_batch = torch.from_numpy(x_train_scalar_norm[batch_idx]).to(device)
+            scalar_batch = torch.from_numpy(x_train_scalar_norm[batch_idx].astype(np.float32, copy=False)).to(device)
             y_batch = torch.from_numpy(y_train_norm[batch_idx]).to(device)
             pred = wrapper.predict_normalized(x_batch, scalar_batch if wrapper.scalar_feature_dim > 0 else None)
             loss = torch.mean(label_weights_t * (pred - y_batch) ** 2)
@@ -895,6 +954,7 @@ def _fit_tiny_cnn_torch(
         "history": history,
         "train_metrics": _prediction_metrics(y_train, train_pred, label_names),
         "val_metrics": _prediction_metrics(y_val, val_pred, label_names),
+        "scalar_norm_clip": float(config.scalar_norm_clip),
     }
     return artifact, report
 
@@ -958,6 +1018,14 @@ def _predict_with_params(
         hidden_dim=int(artifact["hidden_dim"][0]),
         scalar_fusion_mode=str(artifact["scalar_fusion_mode"][0]) if "scalar_fusion_mode" in artifact else "concat",
         scalar_gate_init_bias=float(artifact["scalar_gate_init_bias"][0]) if "scalar_gate_init_bias" in artifact else 2.0,
+        scalar_feature_weights=tuple(
+            float(item)
+            for item in (
+                artifact["scalar_feature_weights"]
+                if "scalar_feature_weights" in artifact
+                else np.zeros((0,), dtype=np.float32)
+            )
+        ),
     )
     model = TinyCNN(
         input_shape=input_shape,
@@ -971,9 +1039,24 @@ def _predict_with_params(
     x_std = artifact["x_std"].astype(float).reshape(-1) if "x_std" in artifact else np.ones((input_channels,), dtype=float)
     scalar_mean = artifact["scalar_mean"].astype(float).reshape(1, -1) if "scalar_mean" in artifact else np.zeros((1, scalar_feature_dim), dtype=float)
     scalar_std = artifact["scalar_std"].astype(float).reshape(1, -1) if "scalar_std" in artifact else np.ones((1, scalar_feature_dim), dtype=float)
+    scalar_norm_clip = float(artifact["scalar_norm_clip"][0]) if "scalar_norm_clip" in artifact else 0.0
+    scalar_feature_weights = tuple(
+        float(item)
+        for item in (
+            artifact["scalar_feature_weights"]
+            if "scalar_feature_weights" in artifact
+            else np.zeros((0,), dtype=np.float32)
+        )
+    )
     normalized_inputs = _normalize_inputs(histogram_batch.astype(float), x_mean, x_std)
     scalar_inputs = np.asarray(scalar_batch, dtype=float).reshape(histogram_batch.shape[0], scalar_feature_dim) if scalar_feature_dim > 0 else np.zeros((histogram_batch.shape[0], 0), dtype=float)
-    normalized_scalar = (scalar_inputs - scalar_mean) / scalar_std if scalar_feature_dim > 0 else scalar_inputs
+    normalized_scalar = _normalize_scalar_inputs(
+        scalar_inputs,
+        scalar_mean,
+        scalar_std,
+        clip_value=scalar_norm_clip,
+        feature_weights=scalar_feature_weights,
+    )
     pred_norm = model.predict_normalized(normalized_inputs, normalized_scalar if scalar_feature_dim > 0 else None)
     y_mean = artifact["y_mean"].astype(float).reshape(1, -1)
     y_std = artifact["y_std"].astype(float).reshape(1, -1)
@@ -1069,20 +1152,37 @@ def explain_from_loaded_artifact(
         "label_names": label_names,
         "scalar_feature_dim": scalar_feature_dim,
         "scalar_fusion_mode": scalar_fusion_mode,
+        "scalar_norm_clip": float(data["scalar_norm_clip"][0]) if "scalar_norm_clip" in data else 0.0,
     }
     if scalar_feature_dim <= 0:
         return result
 
     scalar_mean = data["scalar_mean"].astype(float).reshape(1, -1) if "scalar_mean" in data else np.zeros((1, scalar_feature_dim), dtype=float)
     scalar_std = data["scalar_std"].astype(float).reshape(1, -1) if "scalar_std" in data else np.ones((1, scalar_feature_dim), dtype=float)
+    scalar_norm_clip = float(data["scalar_norm_clip"][0]) if "scalar_norm_clip" in data else 0.0
+    scalar_feature_weights = tuple(
+        float(item)
+        for item in (
+            data["scalar_feature_weights"]
+            if "scalar_feature_weights" in data
+            else np.zeros((0,), dtype=np.float32)
+        )
+    )
     baseline_scalar = np.repeat(scalar_mean, scalar_batch.shape[0], axis=0)
     prediction_without_teacher = _predict_with_params(params, histogram_batch, baseline_scalar, data)
     contribution = prediction - prediction_without_teacher
     scalar_names = [str(item) for item in data["scalar_feature_names"]] if "scalar_feature_names" in data else []
-    normalized_scalar = (scalar_batch - scalar_mean) / scalar_std
+    normalized_scalar = _normalize_scalar_inputs(
+        scalar_batch,
+        scalar_mean,
+        scalar_std,
+        clip_value=scalar_norm_clip,
+        feature_weights=scalar_feature_weights,
+    )
     result.update(
         {
             "scalar_feature_names": scalar_names,
+            "scalar_feature_weights": list(scalar_feature_weights),
             "scalar_features_raw": scalar_batch[0].tolist() if single_sample else scalar_batch.tolist(),
             "scalar_features_normalized": normalized_scalar[0].tolist() if single_sample else normalized_scalar.tolist(),
             "prediction_without_teacher": prediction_without_teacher[0].tolist() if single_sample else prediction_without_teacher.tolist(),

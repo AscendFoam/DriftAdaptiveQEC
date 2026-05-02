@@ -2008,11 +2008,13 @@ int8 模型 test 集：
 
 - 不再把重点放在“删不删 teacher params”二选一
 - 转向研究“teacher 信息应如何编码进闭环模型”
+- 完成 `Gated v2 / v4 / v5` 三条低维 scalar-branch + gated 注入分支的配对 benchmark 复查
+- 确认只保留 `teacher_b_q / teacher_b_p / teacher_delta_b_q / teacher_delta_b_p` 的 `Gated v5` 为当前最强 teacher-representation 候选
 - 增加 `physical_bridge` 支线，对 `PB Bound / PB ST` 两类物理桥接映射做配对 benchmark
 
 ### 15.2 当前已经比较稳定的正式结论
 
-截至本次更新，当前更稳妥的 `P4` 正式结论应收束为 5 条：
+截至本次更新，当前更稳妥的 `P4` 正式结论应收束为 6 条：
 
 1. `Hybrid Residual-B` 仍是当前正式主线
 
@@ -2034,12 +2036,22 @@ int8 模型 test 集：
   - 与 `teacher prediction / teacher deltas` 高冗余
   - 整张平面广播式编码与闭环控制语义不匹配
 
-4. `No TeacherParams` 不能作为稳定更优正式主线
+4. `Gated v5` 已可升为当前 teacher-representation 主线候选
+
+- 其设计不再保留整包 teacher 标量，而是只保留与 `residual-b` 最直接相关的 4 个量：
+  - `teacher_b_q`
+  - `teacher_b_p`
+  - `teacher_delta_b_q`
+  - `teacher_delta_b_p`
+- 在当前已完成的 3 个 seed、4 个场景 paired benchmark 中，`Gated v5` 的场景均值均优于 `Full`
+- 因此当前最值得继续扩展的不是 `v2` 或 `v4`，而是 `v5`
+
+5. `No TeacherParams` 不能作为稳定更优正式主线
 
 - 当前证据已足够否定“直接删除 `teacher params` 就能稳定更好”这一说法
 - 因此不建议继续把大规模算力投入到 `No TeacherParams` 长跑
 
-5. `physical_bridge` 当前只能作为场景特定辅助支线
+6. `physical_bridge` 当前只能作为场景特定辅助支线
 
 - 它不能替代 `Full` 成为统一主线
 - 但在某些动态场景下，可以帮助我们理解“哪些物理量更适合注入慢回路”
@@ -2124,16 +2136,217 @@ int8 模型 test 集：
 
 如果只用一段话概括从 `P4` 开始到现在做了什么，可以写成：
 
-- 已完成 `P4` 正式 benchmark、长配置复验、强 baseline 扩展、features ablation、多 seed formal HIL 复查，以及 `teacher params` 数值/耦合分析；进一步在 Windows + RTX4070 环境修复 benchmark 启动与长路径问题，并补做 `physical_bridge` 的 paired benchmark。当前稳定结论是：`Hybrid Residual-B` 仍为正式主线，`UKF` 为最强经典 baseline；`No TeacherParams` 的离线优势不能外推到 formal HIL，`teacher params` 的核心问题更像编码方式不合适；`physical_bridge` 只能作为场景特定辅助支线，尚不能替代 `Full`。
+- 已完成 `P4` 正式 benchmark、长配置复验、强 baseline 扩展、features ablation、多 seed formal HIL 复查，以及 `teacher params` 数值/耦合分析；进一步在 Windows + RTX4070 环境修复 benchmark 启动与长路径问题，并补做 `physical_bridge` 的 paired benchmark 与 `teacher-representation` 重编码分支。当前稳定结论是：`Hybrid Residual-B` 仍为正式主线，`UKF` 为最强经典 baseline；`No TeacherParams` 的离线优势不能外推到 formal HIL，`teacher params` 的核心问题更像编码方式不合适；在重编码方向上，`Gated v5` 已成为当前最强 teacher-representation 候选；`physical_bridge` 只能作为场景特定辅助支线，尚不能替代 `Full`。
 
 ### 15.5 当前下一步建议
 
 在本节更新之后，下一步更值得推进的顺序建议为：
 
 1. 保留 `Full` 作为正式主线，不再扩 `PB Bound` 或 `PB ST` 的全场景长跑
-2. 把重点转回 `teacher params` 的重编码
+2. 在 `teacher params` 重编码方向上，以 `Gated v5` 作为当前主线候选继续推进
    - 低维标量支路
    - 去冗余表达
    - 避免整平面广播
-3. 用 paired benchmark 继续验证新的 `teacher params` 表征，而不是继续扩大“删不删 teacher”对照规模
+   - 优先保留与 `residual-b` 最直接相关的 teacher 标量
+3. 用 paired benchmark 继续验证 `Gated v5`，优先扩更长配置、更多 windows 与更多 seed，而不是继续扩大“删不删 teacher”对照规模
 4. `physical_bridge` 只在动态场景机制分析中保留，不进入主论文排序主线
+
+### 15.6 `Gated v5` 重编码结果与当前定位
+
+为直接验证“真正有用的是少数 teacher 标量，而不是整包 teacher params”，新增了 `Gated v5`：
+
+- 配置文件：
+  - [experiment_runtime_b_residual_norm_gated_teacher_v5.yaml](../cnn_fpga/config/experiment_runtime_b_residual_norm_gated_teacher_v5.yaml)
+- 保留结构：
+  - histogram 主干
+  - scalar branch
+  - gated 注入
+- 仅保留 4 个 teacher 标量：
+  - `teacher_b_q`
+  - `teacher_b_p`
+  - `teacher_delta_b_q`
+  - `teacher_delta_b_p`
+
+第一轮 `seed=20260427` 的 paired 结果先在动态场景中给出强烈正信号：
+
+- 结果目录：
+  - [summary.json](../runs/teachrepr/paired_20260427_022149/summary.json)
+  - [comparison.csv](../runs/teachrepr/p4_benchmark/trp60427_20260427_022418_e94b7e_34536/comparison.csv)
+  - [teacher_scalar_diagnostics.csv](../runs/teachrepr/p4_benchmark/trp60427_20260427_022418_e94b7e_34536/teacher_scalar_diagnostics.csv)
+- `linear_ramp`：
+  - `Full = 0.793204`
+  - `Gated v5 = 0.529182`
+- `periodic_drift`：
+  - `Full = 0.767025`
+  - `Gated v5 = 0.581481`
+
+随后补做 `static_bias_theta + step_sigma_theta` 的 benchmark-only 复查，结论保持一致：
+
+- 结果目录：
+  - [summary.json](../runs/teachrepr/paired_20260427_134940/summary.json)
+  - [comparison.csv](../runs/teachrepr/p4_benchmark/trp60427_20260427_134941_e94b7e_13780/comparison.csv)
+- `static_bias_theta`：
+  - `Full = 0.770932`
+  - `Gated v5 = 0.546132`
+- `step_sigma_theta`：
+  - `Full = 0.788285`
+  - `Gated v5 = 0.533958`
+
+在此基础上，又补了 `seed=20260428 / 20260429` 的四场景 paired 对照：
+
+- 结果目录：
+  - [summary.json](../runs/teachrepr/paired_20260427_135924/summary.json)
+  - [summary.csv](../runs/teachrepr/paired_20260427_135924/summary.csv)
+  - [seed20260428 comparison.csv](../runs/teachrepr/p4_benchmark/trp60428_20260427_140021_c5010d_33612/comparison.csv)
+  - [seed20260429 comparison.csv](../runs/teachrepr/p4_benchmark/trp60429_20260427_142013_2a59bc_24060/comparison.csv)
+
+多 seed 汇总结果为：
+
+- `seed=20260427`：
+  - `Full = 0.779861`
+  - `Gated v5 = 0.547688`
+  - gap = `-0.232173`
+- `seed=20260428`：
+  - `Full = 0.798706`
+  - `Gated v5 = 0.710131`
+  - gap = `-0.088574`
+- `seed=20260429`：
+  - `Full = 0.688990`
+  - `Gated v5 = 0.674559`
+  - gap = `-0.014432`
+
+按 3 个 seed 汇总后的四场景均值为：
+
+- `static_bias_theta`：
+  - `Full = 0.751062`
+  - `Gated v5 = 0.637209`
+- `linear_ramp`：
+  - `Full = 0.764402`
+  - `Gated v5 = 0.631810`
+- `step_sigma_theta`：
+  - `Full = 0.759205`
+  - `Gated v5 = 0.638351`
+- `periodic_drift`：
+  - `Full = 0.748741`
+  - `Gated v5 = 0.669133`
+
+如何理解这组结果：
+
+1. `Gated v5` 的收益幅度会随 seed 变化，但在当前已完成的 3 个 seed 上，四场景平均均保持优于 `Full`
+2. 这比 `Gated v4` 的“仅小幅优于 Full”更强，也比早期 `Gated v2` 的单轮动态场景信号更完整
+3. 因而当前最合理的阶段判断是：
+   - `Full` 仍是正式论文排序的锚点主线
+   - `Gated v5` 升为当前 teacher-representation 重编码分支的主分析版本
+   - `Gated v2` 保留为早期机制线索，不再作为当前主分析版本
+
+因此，当前关于 `teacher params` 的结论应进一步细化为：
+
+- 问题不在于“teacher 信息整体有害”
+- 而在于“整包 teacher 标量 + 广播式编码”会带来冗余与闭环语义失配
+- 当只保留与 `residual-b` 直接相关的少量 teacher 标量，并改走低维 gated scalar branch 时，formal HIL 收益可以稳定转正
+
+### 15.7 2026-04-28 `Gated v5` 分块复验与口径修正
+
+为避免长后台任务中断后缺少诊断信息，本轮先修复了 P4 teacher-representation paired benchmark 的执行方式：
+
+- `run_p4_multiscenario_benchmark.py` 新增固定 `run_dir`、`repeat_start / repeat_stop`、`resume_only` 与 `progress.jsonl`
+- 每个 repeat 新增 `repeat_status.json`
+- 如果 HIL 子任务失败，会写出 `hil_error.json`
+- `run_p4_teacher_representation_paired.py` 改为按 repeat 分块执行，并为每个 chunk 写出 `stdout / stderr / meta` 日志
+
+随后使用该新 runner 完成一轮更稳的 `Full vs Gated v5` paired 短批次复验：
+
+- 结果目录：
+  - [summary.csv](../runs/teachrepr_v5_chunked_pair/paired_20260427_220702/summary.csv)
+  - [seed20260427 summary.json](../runs/teachrepr_v5_chunked/p4_benchmark/trp60427_resume/summary.json)
+  - [seed20260428 summary.json](../runs/teachrepr_v5_chunked/p4_benchmark/trp60428_resume/summary.json)
+  - [seed20260429 summary.json](../runs/teachrepr_v5_chunked/p4_benchmark/trp60429_resume/summary.json)
+- 口径：
+  - `3 seeds`
+  - `4 scenarios`
+  - `Full / Gated v5`
+  - `2 repeats`
+  - paired seeds
+- 完成度：
+  - 每个 seed 均有 `16` 个 `hil_summary.json`
+  - `hil_error.json = 0`
+  - coverage = `100%`
+
+跨 seed 总体均值为：
+
+- `Full = 0.758829`
+- `Gated v5 = 0.618195`
+- gap = `-0.140634`
+- `Gated v5` 在 `12` 个 seed-scenario 对照中赢下 `9` 个
+
+按 seed 汇总为：
+
+- `seed=20260427`
+  - `Full = 0.806566`
+  - `Gated v5 = 0.620511`
+  - gap = `-0.186055`
+- `seed=20260428`
+  - `Full = 0.832559`
+  - `Gated v5 = 0.594354`
+  - gap = `-0.238206`
+- `seed=20260429`
+  - `Full = 0.637363`
+  - `Gated v5 = 0.639720`
+  - gap = `+0.002358`
+
+按场景跨 seed 汇总为：
+
+- `linear_ramp`
+  - `Full = 0.759535`
+  - `Gated v5 = 0.576749`
+  - gap = `-0.182786`
+  - wins = `3/3`
+- `periodic_drift`
+  - `Full = 0.755318`
+  - `Gated v5 = 0.633610`
+  - gap = `-0.121708`
+  - wins = `2/3`
+- `static_bias_theta`
+  - `Full = 0.754010`
+  - `Gated v5 = 0.634222`
+  - gap = `-0.119788`
+  - wins = `2/3`
+- `step_sigma_theta`
+  - `Full = 0.766455`
+  - `Gated v5 = 0.628199`
+  - gap = `-0.138256`
+  - wins = `2/3`
+
+本轮结果对 `Gated v5` 的定位需要比上一版更谨慎：
+
+- `Gated v5` 仍是当前最强的 teacher-representation 候选
+- 它已经明显优于早期 `Gated v2 / v4`，并且总体均值显著优于 `Full`
+- 但它尚未完全替代 `Full` 正式主线，因为 `seed=20260429` 下四场景均值与 `Full` 基本持平并略差
+- 因此当前论文主线仍应保留 `Full / Hybrid Residual-B` 作为锚点，`Gated v5` 作为最强重编码候选分支继续验证
+
+`20260429` 的异常点说明：
+
+- `20260429` 下 `Full` 本身明显更强，四场景均值只有 `0.637363`
+- `Gated v5` 在该 seed 下没有复现 `20260427 / 20260428` 的大幅收益
+- 该 seed 中 `Gated v5` 的 `aggressive_param_rate` 很低，约 `6e-05 ~ 8e-05`
+- 相比之下，`20260427 / 20260428` 中 `Gated v5` 的收益往往伴随较高 `aggressive_param_rate`
+- 因此当前机制判断是：`Gated v5` 的收益可能依赖较强 residual 修正；当 seed 本身让 `Full` 已经较好，或者 gated 分支输出较保守时，收益会明显收缩
+
+teacher scalar 诊断进一步显示：
+
+- `teacher_b_p` 的平均贡献最大
+  - `ablation_l2 = 0.137468`
+  - `gate_delta_l2 = 4.050635`
+- `teacher_b_q` 次之
+  - `ablation_l2 = 0.067230`
+  - `gate_delta_l2 = 3.089407`
+- 两个 delta 项贡献较小
+  - `teacher_delta_b_q ablation_l2 = 0.022838`
+  - `teacher_delta_b_p ablation_l2 = 0.015060`
+
+因此下一步不宜直接扩大最长长跑，而应先做 `Gated v6` 小改版：
+
+- 保留 `teacher_b_q / teacher_b_p` 作为主 teacher 标量
+- 弱化 `teacher_delta_b_q / teacher_delta_b_p`
+- 加入更温和的 scalar clipping、gate 初值和 residual scale / clip
+- 目标不是追求单轮最低 LER，而是降低 `aggressive_param_rate`，同时尽量保留 `Gated v5` 的收益

@@ -1,0 +1,46 @@
+# Runtime-consistent residual-b variant:
+# - preserve v7's conservative residual update to keep aggressive corrections near zero
+# - further bias the scalar branch toward teacher_b_q / teacher_b_p
+# - keep delta_b scalars as auxiliary hints rather than co-equal drivers
+
+experiment:
+  name: runtime_b_residual_norm_gated_teacher_v8
+  stage: p4_ablation_norm_gated_teacher_v8
+  seed: 20260427
+
+base_config: experiment_runtime_b_residual.yaml
+
+paths:
+  dataset_dir: artifacts/datasets/runtime_b_residual_norm_gated_teacher_v8
+  model_dir: artifacts/models/runtime_b_residual_norm_gated_teacher_v8
+  report_dir: artifacts/reports/runtime_b_residual_norm_gated_teacher_v8
+
+runtime_dataset:
+  teacher_prediction_layout: scalar_branch
+  teacher_params_layout: scalar_branch
+  teacher_deltas_layout: scalar_branch
+  teacher_scalar_features:
+    - teacher_b_q
+    - teacher_b_p
+    - teacher_delta_b_q
+    - teacher_delta_b_p
+
+training:
+  tiny_cnn:
+    scalar_fusion_mode: gated
+    scalar_gate_init_bias: 0.9
+    scalar_norm_clip: 18.0
+    scalar_feature_weights: [1.35, 1.35, 0.35, 0.35]
+
+slow_loop:
+  hybrid_residual_b:
+    teacher_prediction_layout: scalar_branch
+    teacher_params_layout: scalar_branch
+    teacher_deltas_layout: scalar_branch
+    teacher_scalar_features:
+      - teacher_b_q
+      - teacher_b_p
+      - teacher_delta_b_q
+      - teacher_delta_b_p
+    residual_scale_b: 0.9
+    residual_clip_b: 0.11

@@ -1,0 +1,45 @@
+# Runtime-consistent residual-b variant:
+# - keep b_q / b_p as the main teacher scalar signals
+# - down-weight delta_b scalars and apply a milder residual update
+
+experiment:
+  name: runtime_b_residual_norm_gated_teacher_v6
+  stage: p4_ablation_norm_gated_teacher_v6
+  seed: 20260427
+
+base_config: experiment_runtime_b_residual.yaml
+
+paths:
+  dataset_dir: artifacts/datasets/runtime_b_residual_norm_gated_teacher_v6
+  model_dir: artifacts/models/runtime_b_residual_norm_gated_teacher_v6
+  report_dir: artifacts/reports/runtime_b_residual_norm_gated_teacher_v6
+
+runtime_dataset:
+  teacher_prediction_layout: scalar_branch
+  teacher_params_layout: scalar_branch
+  teacher_deltas_layout: scalar_branch
+  teacher_scalar_features:
+    - teacher_b_q
+    - teacher_b_p
+    - teacher_delta_b_q
+    - teacher_delta_b_p
+
+training:
+  tiny_cnn:
+    scalar_fusion_mode: gated
+    scalar_gate_init_bias: 0.5
+    scalar_norm_clip: 12.0
+    scalar_feature_weights: [1.0, 1.0, 0.25, 0.25]
+
+slow_loop:
+  hybrid_residual_b:
+    teacher_prediction_layout: scalar_branch
+    teacher_params_layout: scalar_branch
+    teacher_deltas_layout: scalar_branch
+    teacher_scalar_features:
+      - teacher_b_q
+      - teacher_b_p
+      - teacher_delta_b_q
+      - teacher_delta_b_p
+    residual_scale_b: 0.8
+    residual_clip_b: 0.10

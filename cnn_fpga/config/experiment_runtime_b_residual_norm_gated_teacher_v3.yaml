@@ -1,0 +1,32 @@
+# Runtime-consistent residual-b variant:
+# - same scalar-branch + gated teacher design as v2
+# - additionally clip normalized teacher scalars to limit low-variance amplification
+
+experiment:
+  name: runtime_b_residual_norm_gated_teacher_v3
+  stage: p4_ablation_norm_gated_teacher_v3
+  seed: 20260427
+
+base_config: experiment_runtime_b_residual.yaml
+
+paths:
+  dataset_dir: artifacts/datasets/runtime_b_residual_norm_gated_teacher_v3
+  model_dir: artifacts/models/runtime_b_residual_norm_gated_teacher_v3
+  report_dir: artifacts/reports/runtime_b_residual_norm_gated_teacher_v3
+
+runtime_dataset:
+  teacher_prediction_layout: scalar_branch
+  teacher_params_layout: scalar_branch
+  teacher_deltas_layout: scalar_branch
+
+training:
+  tiny_cnn:
+    scalar_fusion_mode: gated
+    scalar_gate_init_bias: 1.0
+    scalar_norm_clip: 6.0
+
+slow_loop:
+  hybrid_residual_b:
+    teacher_prediction_layout: scalar_branch
+    teacher_params_layout: scalar_branch
+    teacher_deltas_layout: scalar_branch

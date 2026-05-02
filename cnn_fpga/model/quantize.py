@@ -106,6 +106,8 @@ def main() -> int:
             "hidden_dim": data["hidden_dim"],
             "scalar_fusion_mode": data["scalar_fusion_mode"] if "scalar_fusion_mode" in data else np.array(["concat"]),
             "scalar_gate_init_bias": data["scalar_gate_init_bias"] if "scalar_gate_init_bias" in data else np.array([2.0], dtype=np.float32),
+            "scalar_norm_clip": data["scalar_norm_clip"] if "scalar_norm_clip" in data else np.array([0.0], dtype=np.float32),
+            "scalar_feature_weights": data["scalar_feature_weights"] if "scalar_feature_weights" in data else np.zeros((0,), dtype=np.float32),
             "source_model": np.array([str(model_path)]),
         }
         for meta_key in (

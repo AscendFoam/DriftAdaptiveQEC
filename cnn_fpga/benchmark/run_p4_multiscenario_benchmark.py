@@ -12,6 +12,7 @@ import csv
 import json
 import os
 import subprocess
+import traceback
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Sequence
@@ -47,6 +48,29 @@ def _arg_parser() -> argparse.ArgumentParser:
         "--paired-seeds",
         action="store_true",
         help="Force all modes within a scenario/repeat to use the same seed.",
+    )
+    parser.add_argument(
+        "--run-dir",
+        type=str,
+        default=None,
+        help="Optional fixed run directory. Useful for resumable chunked execution.",
+    )
+    parser.add_argument(
+        "--repeat-start",
+        type=int,
+        default=None,
+        help="Optional inclusive repeat start index for chunked execution.",
+    )
+    parser.add_argument(
+        "--repeat-stop",
+        type=int,
+        default=None,
+        help="Optional exclusive repeat stop index for chunked execution.",
+    )
+    parser.add_argument(
+        "--resume-only",
+        action="store_true",
+        help="Aggregate existing repeat outputs only and skip missing repeats.",
     )
     return parser
 
@@ -217,6 +241,33 @@ def _write_per_scalar_csv(path: Path, rows: List[Dict[str, Any]]) -> None:
     _write_csv(path, flat_rows, fields)
 
 
+def _append_progress(run_dir: Path, payload: Dict[str, Any]) -> None:
+    with open_text(run_dir / "progress.jsonl", "a") as f:
+        f.write(json.dumps(payload, ensure_ascii=False) + "\n")
+
+
+def _repeat_status_payload(
+    *,
+    scenario: str,
+    mode: str,
+    repeat: int,
+    seed: int,
+    status: str,
+    repeat_run_dir: Path,
+    **extra: Any,
+) -> Dict[str, Any]:
+    payload: Dict[str, Any] = {
+        "scenario": scenario,
+        "mode": mode,
+        "repeat": int(repeat),
+        "seed": int(seed),
+        "status": status,
+        "repeat_run_dir": str(repeat_run_dir),
+    }
+    payload.update(extra)
+    return payload
+
+
 def _write_report(
     path: Path,
     *,
@@ -302,6 +353,25 @@ def _short_slug(value: Any, default: str, *, limit: int = 8) -> str:
     return text[:limit]
 
 
+def _unique_short_slug(
+    value: Any,
+    default: str,
+    *,
+    seen: set[str],
+    limit: int = 8,
+) -> str:
+    base = _short_slug(value, default, limit=limit)
+    candidate = base
+    counter = 1
+    while candidate in seen:
+        suffix = str(counter)
+        trimmed = base[: max(1, limit - len(suffix))]
+        candidate = f"{trimmed}{suffix}"
+        counter += 1
+    seen.add(candidate)
+    return candidate
+
+
 def main() -> int:
     args = _arg_parser().parse_args()
     cfg_path = Path(args.config).expanduser().resolve()
@@ -312,6 +382,8 @@ def main() -> int:
     scenarios = _normalize_entries(benchmark_cfg.get("scenarios", []), args.scenario, "scenarios")
     protocol = dict(benchmark_cfg.get("protocol", {}))
     repeats = int(args.repeats if args.repeats is not None else protocol.get("repeats", 1))
+    if repeats <= 0:
+        raise ValueError(f"repeats must be positive, got {repeats}")
     seed_base = int(merged_base.get("experiment", {}).get("seed", 1234))
     scenario_seed_stride = int(protocol.get("scenario_seed_stride", 1000))
     mode_seed_stride = int(protocol.get("mode_seed_stride", 100000))
@@ -321,16 +393,70 @@ def main() -> int:
     cfg_hash = config_hash(cfg)
     out_root = ensure_dir(merged_base.get("paths", {}).get("output_root", "runs"))
     exp_slug = _short_slug(merged_base.get("experiment", {}).get("name", "p4_benchmark"), "p4b")
-    run_dir = ensure_dir(
-        out_root
-        / "p4_benchmark"
-        / f"{exp_slug}_{now_tag()}_{cfg_hash[:6]}_{os.getpid()}"
+    run_dir = (
+        ensure_dir(Path(args.run_dir).expanduser().resolve())
+        if args.run_dir
+        else ensure_dir(
+            out_root
+            / "p4_benchmark"
+            / f"{exp_slug}_{now_tag()}_{cfg_hash[:6]}_{os.getpid()}"
+        )
+    )
+
+    repeat_start = 0 if args.repeat_start is None else int(args.repeat_start)
+    repeat_stop = repeats if args.repeat_stop is None else int(args.repeat_stop)
+    if repeat_start < 0 or repeat_start > repeats:
+        raise ValueError(f"repeat_start out of range: {repeat_start} for repeats={repeats}")
+    if repeat_stop < 0 or repeat_stop > repeats:
+        raise ValueError(f"repeat_stop out of range: {repeat_stop} for repeats={repeats}")
+    if repeat_stop < repeat_start:
+        raise ValueError(f"repeat_stop must be >= repeat_start, got {repeat_stop} < {repeat_start}")
+    selected_repeat_indices = set(range(repeat_start, repeat_stop))
+
+    save_json(
+        run_dir / "launch_plan.json",
+        {
+            "config": str(cfg_path),
+            "run_dir": str(run_dir),
+            "resume_only": bool(args.resume_only),
+            "repeat_start": repeat_start,
+            "repeat_stop": repeat_stop,
+            "selected_repeat_indices": sorted(selected_repeat_indices),
+            "requested_scenarios": list(args.scenario),
+            "requested_modes": list(args.mode),
+            "repeats": repeats,
+            "paired_seeds": paired_seeds,
+            "protocol_id": protocol.get("protocol_id", "p4_protocol"),
+            "seed_base": seed_base,
+        },
     )
 
     raw_rows: List[Dict[str, Any]] = []
     comparison_rows: List[Dict[str, Any]] = []
     delta_rows: List[Dict[str, Any]] = []
     scenario_winners: List[Dict[str, Any]] = []
+    missing_runs: List[Dict[str, Any]] = []
+    scenario_dir_names: dict[str, str] = {}
+    mode_dir_names: dict[str, str] = {}
+    used_scenario_dirs: set[str] = set()
+    used_mode_dirs: set[str] = set()
+
+    for scenario_idx, scenario_entry in enumerate(scenarios):
+        scenario_name = str(scenario_entry.get("name"))
+        scenario_dir_names[scenario_name] = _unique_short_slug(
+            scenario_name,
+            f"s{scenario_idx}",
+            seen=used_scenario_dirs,
+            limit=6,
+        )
+    for mode_idx, mode_entry in enumerate(modes):
+        mode_name = str(mode_entry.get("name"))
+        mode_dir_names[mode_name] = _unique_short_slug(
+            mode_name,
+            f"m{mode_idx}",
+            seen=used_mode_dirs,
+            limit=6,
+        )
 
     for scenario_idx, scenario_entry in enumerate(scenarios):
         scenario_name = str(scenario_entry.get("name"))
@@ -338,10 +464,11 @@ def main() -> int:
         for mode_idx, mode_entry in enumerate(modes):
             mode_name = str(mode_entry.get("name"))
             mode_label = str(mode_entry.get("label", mode_name))
-            scenario_dir = _short_slug(scenario_name, f"s{scenario_idx}", limit=6)
-            mode_dir = _short_slug(mode_name, f"m{mode_idx}", limit=6)
+            scenario_dir = scenario_dir_names[scenario_name]
+            mode_dir = mode_dir_names[mode_name]
             mode_run_dir = ensure_dir(run_dir / scenario_dir / mode_dir)
             per_repeat: List[Dict[str, Any]] = []
+            missing_repeat_indices: List[int] = []
             for repeat_idx in range(repeats):
                 mode_offset = 0 if paired_seeds else mode_idx * mode_seed_stride
                 seed = seed_base + scenario_idx * scenario_seed_stride + mode_offset + repeat_idx
@@ -356,8 +483,74 @@ def main() -> int:
                         f"[resume][{scenario_name}][{mode_name}][rep={repeat_idx:02d}] "
                         f"LER={float(summary['final_ler']):.6f}, overflow={float(summary['overflow_rate']):.6f}"
                     )
+                elif args.resume_only or repeat_idx not in selected_repeat_indices:
+                    missing_repeat_indices.append(repeat_idx)
+                    missing_runs.append(
+                        {
+                            "scenario": scenario_name,
+                            "scenario_label": scenario_label,
+                            "mode": mode_name,
+                            "mode_label": mode_label,
+                            "repeat": repeat_idx,
+                            "seed": seed,
+                            "repeat_run_dir": str(repeat_run_dir),
+                        }
+                    )
+                    _append_progress(
+                        run_dir,
+                        _repeat_status_payload(
+                            scenario=scenario_name,
+                            mode=mode_name,
+                            repeat=repeat_idx,
+                            seed=seed,
+                            status="missing",
+                            repeat_run_dir=repeat_run_dir,
+                            reason="resume_only" if args.resume_only else "outside_selected_repeat_range",
+                        ),
+                    )
+                    continue
                 else:
-                    summary = run_hil_session(run_cfg, repeat_run_dir)
+                    running_payload = _repeat_status_payload(
+                        scenario=scenario_name,
+                        mode=mode_name,
+                        repeat=repeat_idx,
+                        seed=seed,
+                        status="running",
+                        repeat_run_dir=repeat_run_dir,
+                        config_experiment_name=run_cfg["experiment"]["name"],
+                    )
+                    save_json(repeat_run_dir / "repeat_status.json", running_payload)
+                    _append_progress(run_dir, running_payload)
+                    try:
+                        summary = run_hil_session(run_cfg, repeat_run_dir)
+                    except Exception as exc:
+                        error_payload = _repeat_status_payload(
+                            scenario=scenario_name,
+                            mode=mode_name,
+                            repeat=repeat_idx,
+                            seed=seed,
+                            status="failed",
+                            repeat_run_dir=repeat_run_dir,
+                            error_type=type(exc).__name__,
+                            error=str(exc),
+                            traceback=traceback.format_exc(),
+                        )
+                        save_json(repeat_run_dir / "repeat_status.json", error_payload)
+                        save_json(repeat_run_dir / "hil_error.json", error_payload)
+                        _append_progress(run_dir, error_payload)
+                        raise
+                    completed_payload = _repeat_status_payload(
+                        scenario=scenario_name,
+                        mode=mode_name,
+                        repeat=repeat_idx,
+                        seed=seed,
+                        status="completed",
+                        repeat_run_dir=repeat_run_dir,
+                        final_ler=float(summary["final_ler"]),
+                        overflow_rate=float(summary["overflow_rate"]),
+                    )
+                    save_json(repeat_run_dir / "repeat_status.json", completed_payload)
+                    _append_progress(run_dir, completed_payload)
                 row = {
                     "scenario": scenario_name,
                     "scenario_label": scenario_label,
@@ -390,6 +583,9 @@ def main() -> int:
                     f"hist_sat={row['histogram_input_saturation_rate']:.6f}"
                 )
 
+            if not per_repeat:
+                continue
+
             aggregated = {
                 "scenario": scenario_name,
                 "scenario_label": scenario_label,
@@ -398,6 +594,10 @@ def main() -> int:
                 "artifact_path": per_repeat[0].get("artifact_path"),
                 "dominant_overflow_source": _dominant_source(per_repeat),
                 "repeat_run_dirs": [item["run_dir"] for item in per_repeat],
+                "completed_repeats": len(per_repeat),
+                "expected_repeats": repeats,
+                "coverage": float(len(per_repeat) / repeats),
+                "missing_repeat_indices": missing_repeat_indices,
             }
             for metric_key in (
                 "final_ler",
@@ -421,6 +621,8 @@ def main() -> int:
     for scenario_entry in scenarios:
         scenario_name = str(scenario_entry.get("name"))
         scenario_rows = [row for row in comparison_rows if row["scenario"] == scenario_name]
+        if not scenario_rows:
+            continue
         ordered = sorted(scenario_rows, key=lambda item: (float(item["final_ler_mean"]), float(item["overflow_rate_mean"])))
         best = ordered[0]
         runner_up_gap = 0.0 if len(ordered) < 2 else float(ordered[1]["final_ler_mean"] - best["final_ler_mean"])
@@ -473,6 +675,9 @@ def main() -> int:
             "mode",
             "mode_label",
             "artifact_path",
+            "completed_repeats",
+            "expected_repeats",
+            "coverage",
             "final_ler_mean",
             "final_ler_std",
             "overflow_rate_mean",
@@ -525,6 +730,8 @@ def main() -> int:
             "config_hash": cfg_hash,
             "git_commit": _git_commit(),
             "run_dir": str(run_dir),
+            "launch_plan": str(run_dir / "launch_plan.json"),
+            "progress_log": str(run_dir / "progress.jsonl"),
             "comparison_csv": str(comparison_csv),
             "delta_csv": str(delta_csv),
             "teacher_scalar_diagnostics_csv": str(per_scalar_csv),
@@ -540,9 +747,17 @@ def main() -> int:
                 "real_board_policy": protocol.get("real_board_policy", "conditional_extension"),
                 "frozen_baseline_set": list(protocol.get("frozen_baseline_set", [])),
             },
+            "filters": {
+                "scenario": list(args.scenario),
+                "mode": list(args.mode),
+                "repeat_start": repeat_start,
+                "repeat_stop": repeat_stop,
+                "resume_only": bool(args.resume_only),
+            },
             "comparison_rows": comparison_rows,
             "delta_rows": delta_rows,
             "scenario_winners": scenario_winners,
+            "missing_runs": missing_runs,
             "raw_rows": raw_rows,
         },
     )
