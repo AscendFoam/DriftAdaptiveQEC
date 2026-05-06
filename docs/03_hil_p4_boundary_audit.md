@@ -1,0 +1,55 @@
+# HIL / P4 Boundary Audit
+
+## 1. 目的
+
+本文件用于固定恢复期对 `P3 software HIL`、`P3 real-board HIL`、`P4 benchmark`、以及 `.tflite` 部署链路的统一表述口径。
+
+它要回答的不是“这些代码能不能继续做”，而是：
+
+1. 哪些链路已经是可描述的软件实现
+2. 哪些只是 `mock` / `stub` / `placeholder`
+3. 后续文档和复验报告应该怎么写，才不会夸大完成度
+
+## 2. 结论摘要
+
+- `cnn_fpga/benchmark/run_hil_suite.py` 是真实存在的软件 HIL orchestration 入口，但它的“真实性”取决于 `hil.backend` 和 slow-loop inference artifact。
+- `cnn_fpga/hwio/mock_fpga.py` 是当前可用的板侧行为仿真后端，属于 `mock backend`，不是 `real_board`。
+- `cnn_fpga/hwio/board_backend.py` 仍是真板后端占位骨架；`cnn_fpga/hwio/fpga_driver.py` 也把 `board/real` backend 标为 future integration，不能写成“真板 HIL 已完成”。
+- `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py` 不是一条独立于 HIL 的更真实执行链，它只是批量、多场景地调用同一个 `run_hil_session(...)`。
+- `.tflite` 路径有两种：真实 `.tflite` 导出/推理路径，以及 `tflite_stub_v1` 回退路径。后者有工程价值，但不能被表述为真实 TFLite 部署完成。
+
+## 3. Boundary Matrix
+
+| Component | Intended role | Actual status now | Boundary tag | Key evidence | Recommended wording |
+| --- | --- | --- | --- | --- | --- |
+| `cnn_fpga/benchmark/run_hil_suite.py` | P3 HIL 会话入口 | 真实的软件 HIL orchestration。它通过 `hil.backend` 选择 backend，`backend == "mock"` 时构造 mock noise provider，并产出 `hil_events.json` / `hil_summary.json` | `software_hil_orchestrator` | `backend_name = ...hil.backend...`；`noise_provider = _build_mock_noise_provider(...) if backend_name == "mock"`；`save_json(... "hil_events.json")` | “软件 HIL 会话入口已存在，但结果真实性取决于 backend 与 inference artifact。” |
+| `cnn_fpga/hwio/mock_fpga.py` | 板侧 FPGA 行为仿真 | 已实现 event-driven `mock backend`，能产生 `window_ready`、`commit_applied`、`commit_ack_asserted` 等事件，并维护 DMA/param-bank 语义 | `mock_backend` | 文件注释 `Mock FPGA backend for P3 HIL event-driven validation.`；`metadata={"backend": "mock_fpga"}` | “当前 P3 可复验路径优先基于 mock FPGA backend。” |
+| `cnn_fpga/hwio/board_backend.py` + `cnn_fpga/hwio/fpga_driver.py` | 真板 MMIO/DMA backend | 仍是 `placeholder` 骨架，且 driver 层把 `board/real` backend 视为 future integration。`schedule_commit(...)` 返回大量 `None` 元信息，`step(...)` 仅刷新状态并返回空事件 | `placeholder_real_board_backend` | 文件注释 `Placeholder real-board backend...`；`return {"target_bank": None, ... "version": None, "ack_delay_us": None}`；`step(...): return []`；`fpga_driver.py` 中 `board/real` backend 被标为 reserved for future real-board integration | “真板 backend 还停在占位骨架，不能写成 real-board HIL 已完成。” |
+| `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py` | P4 多场景 benchmark 入口 | 真实存在的 benchmark 包装层，但核心执行仍直接调用 `run_hil_session(...)`，并未绕开 HIL backend 边界 | `p4_wrapper_over_hil` | `from cnn_fpga.benchmark.run_hil_suite import run_hil_session`；循环中直接 `summary = run_hil_session(...)` | “P4 benchmark 的真实性继承自同一条 HIL backend / artifact 链路。” |
+| `cnn_fpga/model/export.py` | 导出部署产物 | 优先尝试真实 `.tflite` 导出；失败时自动回退为 `.tflite.json`，格式为 `tflite_stub_v1` | `true_tflite_or_stub_export` | `report = _export_true_tflite(...)`；`except Exception` -> `_export_tflite_stub(...)`；manifest `format: "tflite_stub_v1"` | “导出链支持真实 TFLite，也支持带明确标签的 stub 回退。” |
+| `cnn_fpga/runtime/inference_service.py` | slow-loop 推理服务抽象 | `TFLiteHistogramPredictor` 同时支持真实 `.tflite` 与 `.tflite.json` stub manifest；两者输出 `source` 不同 | `true_tflite_or_stub_runtime` | stub 路径 `source="tflite_stub_service"`；真实路径 `source="tflite_service"` | “`backend=tflite` 还要继续区分真实 runtime 与 stub manifest runtime。” |
+
+## 4. 统一口径规则
+
+1. 可以写“P3 software HIL 主链存在”，但必须同时标注 `hil.backend` 和 inference artifact type。
+2. 不能写“real-board HIL 已完成”或“真板 backend 已验收”，除非后续有独立真板证据覆盖 `board_backend.py` 当前占位状态。
+3. 不能把 `P4 benchmark` 写成比 `run_hil_session(...)` 更真实的一条独立执行链；它只是同一 HIL 会话的批量包装与汇总。
+4. 不能因为配置里写了 `backend=tflite`，就默认它一定是“真实 TFLite 部署”。必须继续区分：
+   - 真实 `.tflite` -> `tflite_service`
+   - `.tflite.json` stub manifest -> `tflite_stub_service`
+5. 后续恢复期默认应优先选择“`mock backend` + 显式 artifact 标签”的最小复验路径，再考虑 `.tflite` 或 `real_board` 条件扩展。
+
+## 5. 对后续任务的约束
+
+- `T4` 应先补一条无歧义的软件 HIL 最小 bootstrap / smoke path，并显式写清：
+  - backend 是 `mock` 还是 `board`
+  - inference artifact 是 `artifact_npz`、真实 `.tflite`，还是 `.tflite.json` stub
+- `T6` 重新验收软件 HIL 最小路径时，输出摘要里必须保留 backend 与 artifact 标签。
+- `T7` 重新验收 P4 benchmark 时，必须继承同一套边界标签；不能只写“P4 已跑通”。
+
+## 6. 当前恢复期推荐表述
+
+- 可以说：`P3 software HIL scaffold exists and is mock-backed unless explicitly proven otherwise.`
+- 可以说：`P4 benchmark currently reuses the same HIL session stack and inherits its realism limits.`
+- 不可以说：`real-board HIL complete`
+- 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`

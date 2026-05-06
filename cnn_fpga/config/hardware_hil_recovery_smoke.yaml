@@ -1,0 +1,41 @@
+experiment:
+  name: hardware_hil_recovery_smoke
+  stage: p3_hil_recovery
+  seed: 20260506
+
+base_config: hardware_hil.yaml
+
+paths:
+  output_root: runs
+  model_dir: artifacts/models/static_theta_v2
+
+slow_loop:
+  mode: model_artifact
+  model_artifact:
+    path:
+    use_latest_model_dir_artifact: true
+    artifact_selector: latest_float
+  inference_service:
+    mode: inproc
+    backend: artifact_npz
+
+hil:
+  backend: mock
+
+timing:
+  n_slow_updates: 2
+  n_fast_cycles: 8000
+  slow_update_budget_us: 5000.0
+  fast_cycle_budget_us: 1.5
+
+error_model:
+  dma_timeout_prob: 0.0
+  axi_write_fail_prob: 0.0
+  cnn_infer_fail_prob: 0.0
+
+mock_signal:
+  type: static
+  sigma0: 0.24
+  mu_q0: 0.0
+  mu_p0: 0.0
+  theta_deg0: 0.0
