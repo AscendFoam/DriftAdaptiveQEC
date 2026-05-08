@@ -16,8 +16,10 @@
   - `docs/04_task_board.md`
   - `docs/07_handoff.md`
   - `docs/08_risks_and_open_questions.md`
+- 当前阶段：`Phase 1: Recovery`
 - 当前决策状态：`Repair`
   - 原因：核心代码与实验资产明显有价值，但默认环境、入口说明、治理文件和可复现性仍未恢复到可稳定接力的状态。
+  - 截至 `2026-05-08`，最小 software HIL 与最小 P4 benchmark recovery path 都已复验通过，但当前仍只到 recovery smoke 级别，不等于正式全量 benchmark 已恢复。
 
 ## 仓库结构
 

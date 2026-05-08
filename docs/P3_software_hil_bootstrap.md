@@ -82,6 +82,36 @@
 4. `n_slow_updates_finished >= 1`
 5. `n_commits_applied >= 1`
 
+截至 `2026-05-07`，该路径已在当前机器上再次复验通过：
+
+- 命令：
+  - `& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_hil_suite --config cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
+- 新运行目录：
+  - `runs/hil_suite/hardware_hil_recovery_smoke_20260507_234638_3ae9f9176104`
+- 复核结果：
+  - `backend = mock`
+  - `n_windows_ready = 2`
+  - `n_slow_updates_started = 2`
+  - `n_slow_updates_finished = 2`
+  - `n_commits_requested = 2`
+  - `n_commit_acks_observed = 2`
+  - `n_commits_applied = 2`
+  - `artifact_path = artifacts/models/static_theta_v2/tiny_cnn_20260319_151717_b87c6c227b57.npz`
+  - `inference_service_mode = inproc`
+- 事件计数：
+  - `window_ready = 2`
+  - `slow_update_started = 2`
+  - `slow_update_finished = 2`
+  - `commit_applied = 2`
+  - `commit_ack_asserted = 2`
+  - `fast_budget_violation = 1`
+
+同时需要保留一个恢复期观察：
+
+- 两次复验的 control-plane 字段一致，但 `final_ler` 与 `overflow_rate` 存在小幅差异。
+- 当前更合理的解释是“该路径已可复验，但还不是逐字确定性复现”。
+- 这不影响其作为 `T6` 最小 software HIL 路径成立，但后续若要提升到更严格 benchmark 口径，应继续追踪随机源控制。
+
 ## 7. 这条路径证明了什么
 
 它证明的是：
@@ -102,5 +132,4 @@
 这些内容应继续留给后续任务：
 
 - `T5`：缓存/生成物噪声治理
-- `T6`：重新验收一个 software HIL 最小路径
 - `T7`：重新验收一个 P4 benchmark 最小路径

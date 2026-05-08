@@ -4,7 +4,7 @@
 
 ## 当前阶段
 
-- 当前阶段：`Phase 0: Stabilization`
+- 当前阶段：`Phase 1: Recovery`
 - 决策状态：`Repair`
 - 当前唯一任务以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准
 

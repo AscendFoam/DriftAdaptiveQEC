@@ -5,30 +5,36 @@
 | ID | Risk | Level | Evidence | Mitigation |
 | --- | --- | --- | --- | --- |
 | R1 | 默认运行环境不可直接执行最小 benchmark | 中 | 默认 `python 3.13.7` 仍缺 `numpy`，但 `C:\ProgramData\anaconda3\python.exe` 已可跑通 P0 smoke | 后续所有治理文档继续显式指定推荐解释器 |
-| R2 | 根目录缺少统一依赖说明文件 | 中高 | 无 `requirements.txt`、`pyproject.toml`、`environment.yml` | 已补 `docs/P0_smoke_bootstrap.md` 与 `docs/P3_software_hil_bootstrap.md`，后续再决定是否补等价依赖文件 |
+| R2 | 根目录缺少统一依赖说明文件 | 中高 | 无 `requirements.txt`、`pyproject.toml`、`environment.yml` | 已补 `docs/P0_smoke_bootstrap.md`、`docs/P3_software_hil_bootstrap.md` 与 `docs/P4_benchmark_recovery_bootstrap.md`，后续再决定是否补等价依赖文件 |
 | R3 | 软件 HIL 与真板 HIL 边界容易被误写 | 高 | `cnn_fpga/hwio/board_backend.py` 仍是 placeholder 风格；`docs/03_hil_p4_boundary_audit.md` 已完成边界澄清 | 后续所有文档、复验与报告都必须引用 `docs/03_hil_p4_boundary_audit.md` 的统一口径 |
-| R4 | 仓库中已有大量缓存与生成物噪声 | 中 | 已跟踪 `__pycache__/`、`.pyc`，且 `runs/` 中有大量生成配置 | 后续专门做 `T5`，先立规则再清理 |
-| R5 | `run_hil_suite.py` 与 `run_p4_multiscenario_benchmark.py` 还没有完成恢复期之后的正式最小复验 | 中高 | `T4` 已跑通 bootstrap-level software HIL smoke，但还不是 `T6/T7` 的正式最小复验 | 保留 `T4` 最小路径，后续按 `T6/T7` 继续提升验证强度 |
-| R6 | `.tflite` 真导出与 stub 回退容易混淆 | 中高 | `cnn_fpga/model/export.py` 与 `cnn_fpga/runtime/inference_service.py` 同时支持两种路径，且 runtime 输出不同 `source`；`T4` 当前刻意未走 `.tflite` 路径 | 文档与日志必须显式标注 `artifact type`，并区分 `tflite_service` 与 `tflite_stub_service` |
-| R7 | 当前未跟踪文件会继续放大工作树混乱 | 中 | 恢复开始时已观察到未跟踪 `docs/reference/AI_coding_workflow.md` | 后续统一决定纳入或忽略策略 |
+| R4 | 仓库中已有大量缓存与生成物噪声 | 中 | `.gitignore` 已忽略 `__pycache__/`、`runs/`、`artifacts/`，但 Git 中仍有 `116` 个已跟踪缓存/字节码文件、`1841` 个已跟踪 `runs/` 文件、`110` 个已跟踪 `artifacts/` 文件 | 已补 `docs/06_repo_noise_governance.md` 固定“先治理后清理”；后续需单开 cleanup 任务执行物理移除 |
+| R5 | P4 目前只完成了 recovery smoke 级最小复验，还没有恢复正式 frozen 全量 benchmark | 中高 | `T7` 仅复验了 `static_bias_theta + static_linear/cnn_fpga + repeats=1`，run dir 为 `runs/p4_benchmark/p4multis_20260508_001316_0c12d7_39308`；`T8` 已明确当前证据不足以进入 `Go` | 按 `T9` 继续扩大 frozen baseline recovery 证据，但仍保持单场景、有界 smoke 范围 |
+| R6 | `.tflite` 真导出与 stub 回退容易混淆 | 中高 | `cnn_fpga/model/export.py` 与 `cnn_fpga/runtime/inference_service.py` 同时支持两种路径，且 runtime 输出不同 `source`；`T4/T7` 当前都刻意未走 `.tflite` 路径 | 文档与日志必须显式标注 `artifact type`，并区分 `tflite_service` 与 `tflite_stub_service` |
+| R7 | 虽然 `T5` 已立治理口径，但具体 cleanup 执行窗口与归档方式仍未决定 | 中 | `docs/06_repo_noise_governance.md` 只固定了分类与阶段策略，尚未执行物理 cleanup | 在 `T8` 之后单开有界 cleanup 任务，显式列出 manifest、回滚方式与验收标准 |
+| R8 | 最小 software HIL 路径当前更接近“可复验”而非“逐字确定性复现” | 中 | 两次 `hardware_hil_recovery_smoke` run 的 control-plane 字段一致，但 `final_ler` / `overflow_rate` 存在小幅差异；`physics/syndrome_measurement.py` 仍使用全局 `np.random` 路径 | 先保持 `T6` 的“可复验”表述；后续若需要更严格复现性，再单开任务统一随机源控制 |
 
 ## 当前开放问题
 
 1. 当前项目在这台机器上实际可用的 Python 环境是哪一个？
-   - 当前初步答案：
-     - P0 smoke: `C:\ProgramData\anaconda3\python.exe`
+   - 当前答案：
+     - P0/P3/P4 recovery smoke: `C:\ProgramData\anaconda3\python.exe`
      - torch 训练候选: `C:\ProgramData\anaconda3\envs\DLEnv\python.exe`
 2. 历史文档中引用的 `.venvs/tf311` 是否在本工作区外部，还是已经失效？
    - 当前已知：工作区内未找到该路径
-3. `T4/T6` 的最小 software HIL 路径，默认应该先选哪条组合？
-   - 当前答案：`hil.backend=mock` + `model_artifact` + `artifact_npz` + `inproc`
-4. 训练与 benchmark 当前分别依赖哪些最小包集？
-5. 是否需要为恢复期补一个最小 `requirements-recovery.txt` 或等价依赖文件？
-6. 已跟踪的 `.pyc` 与 `__pycache__/` 后续是仅标记，还是清理出版本库？
+3. `T4/T6/T7` 的最小 recovery 复验路径，默认应该先选哪条组合？
+   - 当前答案：
+     - software HIL: `hil.backend=mock` + `model_artifact` + `artifact_npz` + `inproc`
+     - P4 benchmark: `p4_multiscenario_recovery_smoke.yaml` + `static_bias_theta` + `static_linear/cnn_fpga` + `paired_seeds`
+4. `T7` 的 single-scenario / two-mode / repeats=1 证据，是否已经足以支撑项目从 `Repair` 进入 `Go`？
+   - 当前答案：否。`T8` 已明确继续 `Repair`，并先执行 `T9`
+5. 两次最小 software HIL 复验的 `final_ler` / `overflow_rate` 小幅差异，是否需要专门收敛到更严格的确定性复现？
+6. 训练与 benchmark 当前分别依赖哪些最小包集？
+7. 是否需要为恢复期补一个最小 `requirements-recovery.txt` 或等价依赖文件？
+8. 已跟踪的 `.pyc` / `__pycache__/`、`runs/`、`artifacts/` 何时启动有界 cleanup，并如何拆分“bootstrap 必需”与“历史归档”？
 
 ## 暂缓事项
 
-以下事项重要，但在软件 HIL / P4 最小复验闭环恢复前暂缓：
+以下事项重要，但在 `T9` 给出更强的 P4 recovery 证据前暂缓：
 
 1. `noise_channels -> effective parameters` 桥接
 2. load-aware latency injector

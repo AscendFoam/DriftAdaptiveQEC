@@ -181,3 +181,196 @@
 1. `T4` 可标记完成
 2. 当前唯一任务切换到 `T5`
 3. 后续 `T6` 若要做正式最小复验，应继承同一条 bootstrap 路径或在此基础上明确升级
+
+## D-2026-05-07-01
+
+- 日期：`2026-05-07`
+- 决策：将仓库噪声治理口径固定为“先分类治理、暂不破坏性清理；缓存/字节码后续移出版本库；`runs/` 与 `artifacts/` 在恢复期暂作历史证据保留”
+
+### 背景
+
+`T4` 已恢复最小 software HIL bootstrap，但仓库内仍混有大量历史缓存文件与实验输出。如果不先固定这些内容在恢复期的语义边界，`T6/T7` 的复验结果会继续与历史产物混淆。
+
+### 依据
+
+1. `.gitignore` 已忽略：
+   - `__pycache__/`
+   - `runs/`
+   - `artifacts/`
+2. 但 Git 中仍已有大量历史已跟踪文件：
+   - 已跟踪缓存/字节码文件：`116`
+   - 已跟踪 `runs/` 文件：`1841`
+   - 已跟踪 `artifacts/` 文件：`110`
+3. 当前工作区仍可见 `9` 个 `__pycache__` 目录，`.pyc` 总数为 `133`
+4. 当前最小 software HIL 路径仍依赖 `artifacts/models/static_theta_v2/...npz`，说明不能在恢复期直接粗暴清空历史产物
+
+### 结论
+
+恢复期对仓库噪声的统一口径固定为：
+
+1. `__pycache__/` / `.pyc`
+   - 属于应最终移出版本库的历史噪声
+   - 但 `T5` 不直接做批量删除或 untrack
+2. `runs/`
+   - 视为历史运行证据
+   - 后续文档必须引用具体 run dir，不能把整个目录写成新的事实来源
+3. `artifacts/`
+   - 先保留当前 bootstrap 所需 artifact
+   - 后续再拆分“bootstrap 必需”与“历史归档”
+4. 本地临时文档文件
+   - 立即通过 `.gitignore` 继续约束
+   - 例如 `*.drawio.dtmp`
+
+### 直接影响
+
+1. `T5` 可标记完成
+2. 新增 `docs/06_repo_noise_governance.md`
+3. 当前唯一任务切换到 `T6`
+4. 在专门 cleanup 任务出现前，后续任务默认不做 `runs/`、`artifacts/`、`__pycache__/` 的破坏性清理
+
+## D-2026-05-07-02
+
+- 日期：`2026-05-07`
+- 决策：将恢复期最小 software HIL 路径提升为“已二次复验通过，但暂按可复验而非逐字确定性复现表述”，并将当前唯一任务切换到 `T7`
+
+### 背景
+
+`T4` 已经恢复出一条最小 software HIL bootstrap 路径，但要进入 `Phase 1: Recovery`，还需要确认它不是一次性成功，也没有被历史结果语义掩盖。
+
+### 依据
+
+1. 使用同一命令再次运行：
+   - `& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_hil_suite --config cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
+2. 新运行目录：
+   - `runs/hil_suite/hardware_hil_recovery_smoke_20260507_234638_3ae9f9176104`
+3. 新 summary 结果再次确认：
+   - `backend = mock`
+   - `n_windows_ready = 2`
+   - `n_slow_updates_started = 2`
+   - `n_slow_updates_finished = 2`
+   - `n_commits_applied = 2`
+   - `artifact_path = ...static_theta_v2...npz`
+   - `inference_service_mode = inproc`
+4. 新 events 结果再次确认：
+   - `window_ready = 2`
+   - `slow_update_started = 2`
+   - `slow_update_finished = 2`
+   - `commit_applied = 2`
+   - `commit_ack_asserted = 2`
+   - `fast_budget_violation = 1`
+5. 两次复验的 control-plane 字段一致，但 `final_ler` 与 `overflow_rate` 存在小幅差异
+6. 代码侧仍可见一部分全局 `np.random` 路径，例如：
+   - `physics/syndrome_measurement.py`
+
+### 结论
+
+恢复期当前可以把这条最小 software HIL 路径表述为：
+
+1. `mock-backed software HIL` 已完成二次复验
+2. `backend`、`artifact_path`、`inference_service_mode` 已再次固定
+3. 当前更适合表述为“可复验”
+4. 暂不把它表述为“逐字确定性复现”
+
+### 直接影响
+
+1. `T6` 可标记完成
+2. `docs/P3_software_hil_bootstrap.md` 应更新为包含最新 run 证据
+3. 当前唯一任务切换到 `T7`
+4. `T7` 必须继承同一条 `mock + model_artifact + artifact_npz + inproc` 口径
+
+## D-2026-05-08-01
+
+- 日期：`2026-05-08`
+- 决策：将恢复期最小 P4 benchmark 路径固定为“`mock-backed P4 recovery smoke`，显式复用 `T6` 的 software HIL 主链，并将当前唯一任务切换到 `T8`”
+
+### 背景
+
+`T6` 已把最小 software HIL 路径重新验收到“可复验”状态，但 `run_p4_multiscenario_benchmark.py` 还没有在同一套 `mock + model_artifact + artifact_npz + inproc` 口径下完成新的最小复验。
+
+### 依据
+
+1. 新增恢复期专用 P4 配置：
+   - `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
+   - 显式固定：
+     - `hil.backend=mock`
+     - `slow_loop.inference_service.mode=inproc`
+     - `slow_loop.inference_service.backend=artifact_npz`
+     - `slow_loop.model_artifact.path=...static_theta_v2...npz`
+2. 新增恢复期专用 bootstrap 文档：
+   - `docs/P4_benchmark_recovery_bootstrap.md`
+3. 实际运行命令：
+   - `& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml --scenario static_bias_theta --mode static_linear --mode cnn_fpga --paired-seeds`
+4. 新运行目录：
+   - `runs/p4_benchmark/p4multis_20260508_001316_0c12d7_39308`
+5. 新 summary 结果确认：
+   - `protocol_id = p4_hil_recovery_smoke_v1`
+   - `scenario = static_bias_theta`
+   - `modes = static_linear, cnn_fpga`
+   - `seed_pairing = paired`
+6. 新 comparison 结果确认：
+   - `Static Linear final_ler = 1.00890625`
+   - `CNN-FPGA final_ler = 0.72109375`
+   - `CNN-FPGA artifact_path = ...static_theta_v2...npz`
+7. 新 repeat HIL summary 再次确认：
+   - `backend = mock`
+   - `n_slow_updates_finished = 8`
+   - `n_commits_applied = 8`
+   - `cnn_fpga` repeat 中 `inference_service_mode = inproc`
+
+### 结论
+
+恢复期当前可以把这条 P4 路径表述为：
+
+1. `mock-backed P4 benchmark minimal recovery path` 已完成一次新的复验
+2. 它显式复用了 `T6` 已固定的软件 HIL 主链
+3. 当前更适合表述为“P4 recovery smoke 已可复验”
+4. 暂不把它表述为“正式四场景四模式 frozen benchmark 已恢复”
+
+### 直接影响
+
+1. `T7` 可标记完成
+2. `docs/P4_benchmark_recovery_bootstrap.md` 应更新为包含最新 run 证据
+3. 当前唯一任务切换到 `T8`
+4. `T8` 需要基于 `T6 + T7` 的证据，决定项目继续 `Repair` 还是进入 `Go`
+
+## D-2026-05-08-02
+
+- 日期：`2026-05-08`
+- 决策：基于 `T6 + T7` 的现有证据，项目继续保持 `Repair`，不立即进入 `Go`
+
+### 背景
+
+`T8` 的目标不是再跑一个新 benchmark，而是判断当前仓库是否已经从“恢复可信度”跨过了进入正常开发的门槛。
+
+### 依据
+
+1. `T6` 已确认最小 software HIL 路径可复验：
+   - `runs/hil_suite/hardware_hil_recovery_smoke_20260507_234638_3ae9f9176104`
+2. `T7` 已确认最小 P4 benchmark 路径可复验：
+   - `runs/p4_benchmark/p4multis_20260508_001316_0c12d7_39308`
+3. 但 `T7` 当前仍只覆盖：
+   - `single-scenario`
+   - `two-mode`
+   - `repeats = 1`
+4. 根目录仍缺少最小依赖 manifest：
+   - 无 `requirements.txt`
+   - 无 `pyproject.toml`
+   - 无 `environment.yml`
+5. `T6` 仍保留“可复验而非逐字确定性复现”的随机性观察
+6. `docs/review/T8_gate_review.md` 已明确给出 verdict：
+   - `Continue Repair`
+
+### 结论
+
+当前最合理的 gate 判断是：
+
+1. 项目已经进入 `Phase 1: Recovery`
+2. 最小 P3/P4 recovery path 已经恢复
+3. 但现阶段证据还不足以把仓库决策状态切到 `Go`
+
+### 直接影响
+
+1. `T8` 可标记完成
+2. 当前决策状态继续保持 `Repair`
+3. 当前唯一任务切换到 `T9`
+4. `T9` 应优先扩大 P4 frozen baseline 的 recovery 证据，而不是重新发散到新功能或长跑
