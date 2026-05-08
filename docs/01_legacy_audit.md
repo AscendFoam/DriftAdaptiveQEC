@@ -1,8 +1,13 @@
-# Legacy Audit
+# Feasibility And Legacy Audit
 
 ## 1. 审计目的
 
-本轮审计只做只读核查，目标是回答：
+本文件对应 `docs/reference/AI_coding_workflow.md` 中 `01_feasibility_report.md` 的角色，并保留 legacy audit 结果。它回答两个问题：
+
+1. 项目是否值得继续
+2. 继续时哪些能力是真实代码、哪些只是 `mock` / `stub` / `placeholder`
+
+本轮审计默认只读核查，目标是回答：
 
 1. 这个项目到底已经有什么
 2. 哪些是代码已实现
@@ -37,8 +42,9 @@
   - `T10`
   - `T11`
   - `T12`
+  - `T13`
 - 当前下一唯一任务建议为：
-  - 待定义
+  - `T14: P4 frozen benchmark protocol audit and bounded run plan`
 
 说明：
 
@@ -52,9 +58,48 @@
 - `T10` 已完成二次 gate review，并继续给出 `Continue Repair`
 - `T11` 已在根目录补入 `requirements-recovery.txt`，并把它接入 `P0/P3/P4 recovery smoke` 的 bootstrap 文档
 - `T12` 已把最小 software HIL recovery smoke 的随机源链路收口到逐字一致复验
+- `T13` 已通过 recovery exit review，项目进入 `Phase 2: Controlled Development`
 - 后续 P3/P4 文档与复验结果都应沿用同一套 backend / artifact type 表述口径
 
-## 3. Feature Reality Matrix
+## 3. 可行性判断
+
+### 3.1 问题定义
+
+项目目标是在 GKP 纠错中验证一种工程可落地的快慢回路架构：FPGA 侧 fast loop 执行低延迟线性控制，CPU/CNN 侧 slow loop 根据窗口统计更新控制参数。
+
+### 3.2 可差异化点
+
+1. 不是纯离线 decoder accuracy 项目，而是带 HIL / latency / commit / overflow 指标的闭环工程实验。
+2. learned module 的角色被限制为 residual / calibration，而不是完全替代解码器。
+3. 当前文档已经明确区分 mock-backed HIL、真实 `.tflite`、stub manifest 与真板 placeholder。
+
+### 3.3 MVP 实验
+
+当前 Phase 2 MVP 不是重新训练模型，而是增强 P4 evidence：
+
+1. 审计 P4 frozen benchmark protocol。
+2. 在 bounded matrix 下扩展 P4 多场景 smoke。
+3. 经 gate review 决定是否进入更正式 benchmark。
+
+### 3.4 主要风险
+
+1. 把 recovery smoke 误写成正式 benchmark。
+2. 把 `board_backend.py` placeholder 误写成真板完成。
+3. 把 `.tflite.json` stub manifest 误写成真实 `.tflite` runtime。
+4. 在未固定环境和 run matrix 前启动长跑。
+
+### 3.5 Go / No-Go 判断
+
+当前判断：`Go`，但只允许 bounded development。
+
+理由：
+
+1. Recovery exit review 已给出 `Allow`。
+2. 最小 P3 software HIL path 已逐字一致复验。
+3. P4 recovery smoke 已覆盖单场景四模式。
+4. 仍有明确边界和风险文档，适合继续受控推进。
+
+## 4. Feature Reality Matrix
 
 | Feature | Claimed status | Evidence path | Verified? | Risk |
 | --- | --- | --- | --- | --- |
@@ -70,7 +115,7 @@
 | recovery 期根级依赖 manifest | 已新增 recovery-scoped 最小 manifest | `requirements-recovery.txt`, `docs/P0_smoke_bootstrap.md`, `docs/P3_software_hil_bootstrap.md`, `docs/P4_benchmark_recovery_bootstrap.md` | 是 | 只覆盖 `P0/P3/P4 recovery smoke`，不等于完整训练链、`.tflite` 或真板环境 |
 | 根级治理文件 | 恢复前缺失 | 根目录与 `docs/` | 是 | 高，直接影响后续接力与审查 |
 
-## 4. 关键证据
+## 5. 关键证据
 
 ### 4.1 代码主干不是空壳
 
@@ -271,7 +316,7 @@
   - `hil_summary.json` SHA256 一致
   - `hil_events.json` SHA256 一致
 
-## 5. 疑似需要后续标记或治理的问题
+## 6. 疑似需要后续标记或治理的问题
 
 1. `docs/06_repo_noise_governance.md` 已确认仓库中存在 `116` 个已跟踪缓存/字节码文件；物理 cleanup 仍未执行
 2. `runs/` 当前有 `1841` 个已跟踪文件，只能暂作历史证据，不能自动视作当前事实来源
@@ -281,7 +326,7 @@
 6. `cnn_fpga/model/export.py` 同时支持真实 `.tflite` 与 stub 回退，后续文档必须持续严区分
 7. `requirements-recovery.txt` 已经补齐 recovery 期最小 manifest，但完整训练链、`.tflite` 与真板路径仍没有统一根级环境文件
 
-## 6. 审计建议
+## 7. 审计建议
 
 基于 `T13` recovery exit review，当前更合理的建议已从 `Repair` 更新为“受控 `Go`”：
 
@@ -292,6 +337,6 @@
 
 后续优先级建议：
 
-1. 先定义下一张 bounded 开发任务包，决定是继续补更强的 P4 多场景证据，还是再拆训练/`.tflite` 的独立环境 manifest
+1. 当前先执行 `T14`，产出 P4 frozen benchmark protocol audit 与 bounded run plan
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 3. 其后再考虑单开 cleanup 任务处理 repo noise 的物理移除

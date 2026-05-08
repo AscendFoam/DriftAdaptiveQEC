@@ -5,7 +5,8 @@
 - 日期：`2026-05-08`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`待定义（Phase 1 已收尾）`
+- 当前唯一任务：`T14: P4 frozen benchmark protocol audit and bounded run plan`
+- 任务包：`docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`
 
 ## 2. 本轮已完成
 
@@ -51,6 +52,14 @@
    - `docs/review/T13_recovery_exit_review.md`
    - recovery exit 的阶段/状态切换
 14. 同步更新了治理文档中的 task board、decision log、legacy audit 与风险口径
+15. 作为 Phase 2 Captain 初始化，按 `docs/reference/AI_coding_workflow.md` 校正了 00~08 治理文档，并建立 Phase 2 任务包队列：
+   - `docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`
+   - `docs/tasks/Phase2/T15_p4_multiscenario_frozen_smoke.md`
+   - `docs/tasks/Phase2/T16_p4_evidence_gate_review.md`
+   - `docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
+   - `docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
+   - `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
+   - `docs/tasks/Phase2/T20_real_board_readiness_checklist.md`
 
 ## 3. 已验证事实
 
@@ -281,6 +290,8 @@
 8. `.tflite` 路径仍必须区分真实 runtime 与 stub 回退
 9. `T12` 已把 bounded software HIL recovery smoke 收口到逐字一致复验
 10. `T13` 已确认 recovery exit 条件满足，项目可进入受控继续开发
+11. Phase 2 首个任务选为 `T14`，先审计 P4 frozen benchmark protocol 和 bounded run plan，不直接启动长跑
+12. `T15` 是否运行多场景 bounded smoke，必须等待 `T14` 产出明确 run matrix 后再执行
 
 ## 5. 已完成任务包
 
@@ -296,6 +307,7 @@
 - `T10`：`docs/tasks/P0/T10_gate_review_after_t9.md`
 - `T11`：`docs/tasks/P0/T11_recovery_dependency_manifest.md`
 - `T12`：`docs/tasks/P0/T12_software_hil_determinism_recovery.md`
+- `T13`：`docs/tasks/P0/T13_recovery_exit_and_closeout.md`
 
 关键产出：
 
@@ -310,18 +322,44 @@
 - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
 - `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
 
-## 6. 下一步建议
+## 6. 当前唯一任务包摘要
 
-第一轮 recovery 收尾已完成，下一唯一任务应在新的开发任务包中重新定义。
+Task ID: `T14`
+
+Goal: 审计 P4 frozen benchmark 的正式口径与 recovery smoke 口径，产出可指导 `T15` 的 bounded run plan。
+
+Allowed files:
+
+- `docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`
+- `docs/P4_benchmark_development_protocol.md`
+- `docs/04_task_board.md`
+- `docs/07_handoff.md`
+- `docs/08_risks_and_open_questions.md`
+
+Forbidden scope:
+
+- 不修改 benchmark runner、config、ParamMapper 或 baseline 集合
+- 不启动正式长跑 benchmark
+- 不把 `mock-backed` 结果写成 `real_board` 或 `.tflite` 验收
+
+Verification:
+
+- 只读审计 P4 config、runner 参数与既有 run evidence
+- 不要求产生新 `runs/` 结果
+
+## 7. 下一步建议
+
+第一轮 recovery 收尾已完成，Phase 2 当前按任务板顺序推进。
 
 建议优先级：
 
-1. 先决定是否继续补 P4 多场景 frozen benchmark 的开发级证据
-2. 或者单开训练链 / `.tflite` / 真板路径的独立 manifest 与边界任务
-3. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
-4. 仍不要顺手做 `runs/`、`artifacts/`、`__pycache__/` 的大规模清理或无界扩功能
+1. 先完成 `T14`，把 P4 多场景 frozen benchmark 的 development protocol 固定下来
+2. 再由 Captain 决定是否进入 `T15` bounded smoke
+3. 之后再单开训练链 / `.tflite` / 真板路径的独立 manifest 与边界任务
+4. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
+5. 仍不要顺手做 `runs/`、`artifacts/`、`__pycache__/` 的大规模清理或无界扩功能
 
-## 7. 暂不继续的事项
+## 8. 暂不继续的事项
 
 在新任务包明确之前，暂不继续：
 

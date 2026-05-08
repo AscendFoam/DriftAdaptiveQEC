@@ -1,4 +1,6 @@
-# HIL / P4 Boundary Audit
+# Architecture And HIL / P4 Boundary Audit
+
+本文件对应 `docs/reference/AI_coding_workflow.md` 中 `03_architecture.md` 的工程边界部分。由于当前项目最容易出错的架构点是 HIL / P4 / `.tflite` 真实性边界，本文件保留原 boundary audit，并把它作为 Phase 2 Worker 的架构约束源。
 
 ## 1. 目的
 
@@ -10,7 +12,23 @@
 2. 哪些只是 `mock` / `stub` / `placeholder`
 3. 后续文档和复验报告应该怎么写，才不会夸大完成度
 
-## 2. 结论摘要
+## 2. 架构总览
+
+当前主线可以按三层理解：
+
+1. Physics / data layer
+   - `physics/` 负责 GKP 相关噪声、综合征测量与逻辑跟踪。
+   - 历史 P0/P1/P2 结果来自这一层与 benchmark 层的组合。
+2. Runtime / HIL layer
+   - `cnn_fpga/runtime/` 负责 fast loop、slow loop、feature building、latency 与 param bank。
+   - `cnn_fpga/hwio/mock_fpga.py` 提供 mock backend。
+   - `cnn_fpga/hwio/board_backend.py` 仍是 real-board placeholder。
+3. Benchmark / evidence layer
+   - `benchmark/compare_full_vs_simplified_ler.py` 是 P0 smoke 入口。
+   - `cnn_fpga/benchmark/run_hil_suite.py` 是 P3 software HIL 入口。
+   - `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py` 是 P4 benchmark wrapper，内部仍调用同一 HIL session stack。
+
+## 3. 结论摘要
 
 - `cnn_fpga/benchmark/run_hil_suite.py` 是真实存在的软件 HIL orchestration 入口，但它的“真实性”取决于 `hil.backend` 和 slow-loop inference artifact。
 - `cnn_fpga/hwio/mock_fpga.py` 是当前可用的板侧行为仿真后端，属于 `mock backend`，不是 `real_board`。
@@ -18,7 +36,7 @@
 - `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py` 不是一条独立于 HIL 的更真实执行链，它只是批量、多场景地调用同一个 `run_hil_session(...)`。
 - `.tflite` 路径有两种：真实 `.tflite` 导出/推理路径，以及 `tflite_stub_v1` 回退路径。后者有工程价值，但不能被表述为真实 TFLite 部署完成。
 
-## 3. Boundary Matrix
+## 4. Boundary Matrix
 
 | Component | Intended role | Actual status now | Boundary tag | Key evidence | Recommended wording |
 | --- | --- | --- | --- | --- | --- |
@@ -29,7 +47,7 @@
 | `cnn_fpga/model/export.py` | 导出部署产物 | 优先尝试真实 `.tflite` 导出；失败时自动回退为 `.tflite.json`，格式为 `tflite_stub_v1` | `true_tflite_or_stub_export` | `report = _export_true_tflite(...)`；`except Exception` -> `_export_tflite_stub(...)`；manifest `format: "tflite_stub_v1"` | “导出链支持真实 TFLite，也支持带明确标签的 stub 回退。” |
 | `cnn_fpga/runtime/inference_service.py` | slow-loop 推理服务抽象 | `TFLiteHistogramPredictor` 同时支持真实 `.tflite` 与 `.tflite.json` stub manifest；两者输出 `source` 不同 | `true_tflite_or_stub_runtime` | stub 路径 `source="tflite_stub_service"`；真实路径 `source="tflite_service"` | “`backend=tflite` 还要继续区分真实 runtime 与 stub manifest runtime。” |
 
-## 4. 统一口径规则
+## 5. 统一口径规则
 
 1. 可以写“P3 software HIL 主链存在”，但必须同时标注 `hil.backend` 和 inference artifact type。
 2. 不能写“real-board HIL 已完成”或“真板 backend 已验收”，除非后续有独立真板证据覆盖 `board_backend.py` 当前占位状态。
@@ -39,15 +57,16 @@
    - `.tflite.json` stub manifest -> `tflite_stub_service`
 5. 后续恢复期默认应优先选择“`mock backend` + 显式 artifact 标签”的最小复验路径，再考虑 `.tflite` 或 `real_board` 条件扩展。
 
-## 5. 对后续任务的约束
+## 6. 对后续任务的约束
 
-- `T4` 应先补一条无歧义的软件 HIL 最小 bootstrap / smoke path，并显式写清：
+- 后续所有 P3/P4 任务都必须显式写清：
   - backend 是 `mock` 还是 `board`
   - inference artifact 是 `artifact_npz`、真实 `.tflite`，还是 `.tflite.json` stub
-- `T6` 重新验收软件 HIL 最小路径时，输出摘要里必须保留 backend 与 artifact 标签。
-- `T7` 重新验收 P4 benchmark 时，必须继承同一套边界标签；不能只写“P4 已跑通”。
+- `T14/T15` 进入 P4 证据增强时，必须继承同一套边界标签；不能只写“P4 已跑通”。
+- `T18` 进入 TFLite manifest / smoke plan 时，必须区分 `tflite_service` 和 `tflite_stub_service`。
+- `T20` 进入 real-board readiness 时，不得修改 placeholder 语义或写成真板已完成。
 
-## 6. 当前恢复期推荐表述
+## 7. 当前推荐表述
 
 - 可以说：`P3 software HIL scaffold exists and is mock-backed unless explicitly proven otherwise.`
 - 可以说：`P4 benchmark currently reuses the same HIL session stack and inherits its realism limits.`

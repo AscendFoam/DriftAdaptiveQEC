@@ -12,6 +12,7 @@
 | R6 | `.tflite` 真导出与 stub 回退容易混淆 | 中高 | `cnn_fpga/model/export.py` 与 `cnn_fpga/runtime/inference_service.py` 同时支持两种路径，且 runtime 输出不同 `source`；`T4/T7` 当前都刻意未走 `.tflite` 路径 | 文档与日志必须显式标注 `artifact type`，并区分 `tflite_service` 与 `tflite_stub_service` |
 | R7 | 虽然 `T5` 已立治理口径，但具体 cleanup 执行窗口与归档方式仍未决定 | 中 | `docs/06_repo_noise_governance.md` 只固定了分类与阶段策略，尚未执行物理 cleanup | 在后续单开有界 cleanup 任务，显式列出 manifest、回滚方式与验收标准 |
 | R8 | 最小 software HIL 路径虽然已在 bounded recovery path 上完成逐字一致复验，但该结论容易被误外推到真板、`.tflite` 或正式 benchmark | 中 | `T12` 已确认 `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104` 与 `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172232_3ae9f9176104` 的 `hil_summary.json` / `hil_events.json` 哈希一致；但路径仍固定为 `mock + model_artifact + artifact_npz + inproc` | 后续文档必须继续写清结论边界，不把 bounded recovery smoke 扩写成真板或正式 benchmark 已恢复 |
+| R9 | Phase 2 若直接运行 P4 多场景 benchmark，可能隐式扩大计算范围或混淆 recovery/development/formal 口径 | 中高 | `docs/02_experiment_plan.md` 明确禁止无准备长跑；`T9` 只覆盖 `single-scenario + four-mode + repeats=1` | 当前唯一任务设为 `T14`，先做 protocol audit 与 bounded run plan，再决定是否进入 `T15` |
 
 ## 当前开放问题
 
@@ -38,11 +39,11 @@
    - 当前答案：可能需要，但不在当前恢复优先级
 8. 已跟踪的 `.pyc` / `__pycache__/`、`runs/`、`artifacts/` 何时启动有界 cleanup，并如何拆分“bootstrap 必需”与“历史归档”？
 9. 下一张继续开发任务包应该优先选哪一类？
-   - 当前候选：
-     - 补 P4 多场景 frozen benchmark 证据
-     - 补训练链独立 manifest
-     - 补 `.tflite` 路径独立 manifest / smoke
-     - 补真板路径边界与独立 bootstrap
+   - 当前答案：
+     - 已选 `T14: P4 frozen benchmark protocol audit and bounded run plan`
+     - 后续候选按 `docs/04_task_board.md` 排队：`T15` P4 bounded smoke、`T17` training manifest、`T18` `.tflite` manifest、`T19` cleanup manifest、`T20` real-board readiness
+10. `T15` 是否应直接运行多场景 P4 smoke？
+   - 当前答案：否。必须先完成 `T14`，明确 run matrix、解释器、配置、scenario/mode/repeat 与边界。
 
 ## 暂缓事项
 
@@ -53,3 +54,4 @@
 3. stateful fault injector
 4. bit-accurate control pipeline
 5. teacher-representation 新分支扩展
+6. 未经 `T14` 审计的 P4 长跑或正式 benchmark

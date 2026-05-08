@@ -622,3 +622,48 @@
 1. `AGENTS.md` 与 `README.md` 应切换到新的阶段与决策状态
 2. `docs/04_task_board.md`、`docs/07_handoff.md` 应标记 recovery 已收尾，当前唯一任务待重新定义
 3. 后续任务默认从“恢复期修复”切换为“受控继续开发”，但仍保留真实边界与验证硬规则
+
+## D-2026-05-08-08
+
+- 日期：`2026-05-08`
+- 决策：按 AI Coding 工作流重新初始化 Phase 2 任务板，并将当前唯一任务设为 `T14: P4 frozen benchmark protocol audit and bounded run plan`
+
+### 背景
+
+`T13` 已完成 recovery exit，项目进入 `Phase 2: Controlled Development`。但 `docs/04_task_board.md` 仍处于“下一任务待定义”状态，无法直接指导后续 Worker 会话。
+
+### 依据
+
+1. `docs/reference/AI_coding_workflow.md` 要求 Captain 明确：
+   - 当前唯一任务
+   - Worker 任务包
+   - Allowed files
+   - Forbidden scope
+   - Verification
+   - Docs to update
+2. `docs/02_experiment_plan.md` 的后续优先级和禁止项同时表明：
+   - P4 多场景证据重要
+   - 但不应无准备启动长时间正式 benchmark
+3. 当前已有证据边界：
+   - `T9` 只覆盖 `single-scenario + four-mode + repeats=1`
+   - `T12` 只覆盖 bounded software HIL deterministic recovery smoke
+   - `real_board` 与 `.tflite` 路径仍不能被外推
+
+### 结论
+
+Phase 2 先按以下顺序推进：
+
+1. `T14`: P4 frozen benchmark protocol audit
+2. `T15`: P4 multi-scenario frozen baseline bounded smoke
+3. `T16`: P4 evidence gate review
+4. `T17` / `T18`: training 与 `.tflite` 独立 manifest
+5. `T19` / `T20`: repo cleanup manifest 与 real-board readiness
+
+当前唯一任务为 `T14`，本任务只做 protocol audit 和 bounded run plan，不启动 benchmark 长跑。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 成为 Phase 2 Worker 会话的任务主状态。
+2. `docs/tasks/Phase2/` 新增 `T14` 至 `T20` 的任务包。
+3. `docs/07_handoff.md` 与 `docs/08_risks_and_open_questions.md` 同步更新为 `T14` 当前任务口径。
+4. 后续 Worker 不应绕过 `T14` 直接执行 `T15` 或长跑 benchmark。
