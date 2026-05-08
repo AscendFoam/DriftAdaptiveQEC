@@ -429,3 +429,48 @@
 2. `docs/P4_benchmark_recovery_bootstrap.md` 应更新为包含最新四模式 run 证据
 3. 当前唯一任务切换到 `T10`
 4. `T10` 应优先回答“`T9` 是否足以支撑进入 `Go`”，而不是继续扩 benchmark 或顺手扩功能
+
+## D-2026-05-08-04
+
+- 日期：`2026-05-08`
+- 决策：基于 `T8 + T9` 的组合证据，项目继续保持 `Repair`，不进入 `Go`，并将当前唯一任务切换到 `T11`
+
+### 背景
+
+`T9` 已经把 `P4 frozen baseline` 的 recovery 证据从“两模式最小路径”扩到“单场景四模式 smoke”。`T10` 的目标就是正式判断：这组增强后的证据，是否已经足以把仓库从 `Repair` 切到 `Go`。
+
+### 依据
+
+1. `T10` gate review 文档已完成：
+   - `docs/review/T10_gate_review.md`
+2. `T9` 已确认：
+   - `runs/p4_benchmark/p4multis_20260508_121828_0c12d7_46732`
+   - `single-scenario + four-mode + repeats=1`
+   - `backend = mock`
+   - `cnn_fpga artifact_path = ...static_theta_v2...npz`
+3. `T6` 已确认最小 software HIL 路径可复验，但仍不是逐字确定性复现：
+   - `runs/hil_suite/hardware_hil_recovery_smoke_20260507_234638_3ae9f9176104`
+4. 根目录当前仍无最小依赖 manifest：
+   - `requirements.txt`
+   - `pyproject.toml`
+   - `environment.yml`
+5. 因此当前仍存在三个关键缺口：
+   - 环境可移植性未收口
+   - software HIL 确定性复现未收口
+   - P4 仍未从单场景 smoke 提升到正式多场景 frozen benchmark
+
+### 结论
+
+当前最合理的 gate 判断是：
+
+1. 项目继续保持在 `Phase 1: Recovery`
+2. 决策状态继续维持 `Repair`
+3. `T9` 虽然显著增强了 P4 recovery 证据，但还不足以单独支撑进入 `Go`
+4. 下一唯一任务应先切到 `T11`，补 recovery 期最小依赖 manifest
+
+### 直接影响
+
+1. `T10` 可标记完成
+2. 当前决策状态继续保持 `Repair`
+3. 当前唯一任务切换到 `T11`
+4. `T11` 应优先收口 recovery smoke 的依赖 manifest，而不是继续扩 benchmark 长跑或新功能

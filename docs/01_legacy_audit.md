@@ -33,8 +33,9 @@
   - `T7`
   - `T8`
   - `T9`
+  - `T10`
 - 当前下一唯一任务建议为：
-  - `T10: 基于 T8 + T9 重新做一次 Go / Repair gate review`
+  - `T11: 补一份恢复期最小依赖 manifest（优先覆盖 P0/P3/P4 recovery smoke）`
 
 说明：
 
@@ -45,6 +46,7 @@
 - `T7` 已对最小 P4 benchmark 路径完成新的复验，并把 recovery 级 P4 配置固定到 `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
 - `T8` 已完成 gate review，并明确结论为 `Continue Repair`
 - `T9` 已把 `P4 frozen baseline` recovery 证据从两种 mode 扩到四种正式 baseline，但仍限制在 `single-scenario + repeats=1`
+- `T10` 已完成二次 gate review，并继续给出 `Continue Repair`
 - 后续 P3/P4 文档与复验结果都应沿用同一套 backend / artifact type 表述口径
 
 ## 3. Feature Reality Matrix
@@ -195,6 +197,26 @@
   - `artifact_path = ...static_theta_v2...npz`
   - `inference_service_mode = inproc`
 
+### 4.9 T10 gate review 已完成
+
+关键证据：
+
+- `docs/review/T10_gate_review.md`
+  - 已明确给出 verdict：
+    - `Continue Repair`
+  - 已明确下一唯一任务：
+    - `T11: 补一份恢复期最小依赖 manifest（优先覆盖 P0/P3/P4 recovery smoke）`
+- 根目录当前仍无：
+  - `requirements.txt`
+  - `pyproject.toml`
+  - `environment.yml`
+- `T6` 的“可复验而非逐字确定性复现”观察仍成立：
+  - `runs/hil_suite/hardware_hil_recovery_smoke_20260507_234638_3ae9f9176104/hil_summary.json`
+- `T9` 的 P4 证据虽然增强，但仍只覆盖：
+  - `single-scenario`
+  - `four-mode`
+  - `repeats = 1`
+
 ## 5. 疑似需要后续标记或治理的问题
 
 1. `docs/06_repo_noise_governance.md` 已确认仓库中存在 `116` 个已跟踪缓存/字节码文件；物理 cleanup 仍未执行
@@ -211,10 +233,10 @@
 - 原因 1：核心算法、runtime、benchmark 资产都已经存在
 - 原因 2：当前最小 P3/P4 路径都已恢复到“可复验”状态
 - 原因 3：`T9` 已把 P4 recovery 证据扩到 `single-scenario + four-mode + repeats=1`，但仍不是正式多场景 frozen benchmark
-- 原因 4：`T8` gate review 中指出的依赖 manifest 与确定性复现缺口仍未收口
+- 原因 4：`T10` gate review 已再次确认依赖 manifest 与确定性复现缺口仍未收口
 
 后续优先级建议：
 
-1. 先做 `T10`，基于 `T8 + T9` 的证据重新判断项目是否可以进入 `Go`
-2. 如果 `T10` 仍然维持 `Repair`，再从“最小依赖 manifest”与“确定性复现收口”中切出下一个唯一任务
+1. 先做 `T11`，补一份 recovery 期最小依赖 manifest，优先覆盖 `P0/P3/P4 recovery smoke`
+2. 再基于 `T11` 的结果，决定是继续收口“确定性复现”，还是再补更强的 P4 多场景证据
 3. 其后再考虑单开 cleanup 任务处理 repo noise 的物理移除

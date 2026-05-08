@@ -15,21 +15,15 @@
 - [x] T7: 重新验收一个 P4 benchmark 最小路径
 - [x] T8: 决定是否进入 `Go` 或继续 `Repair`
 - [x] T9: 重新验收一个 P4 frozen baseline 单场景全模式 smoke path
-- [ ] T10: 基于 `T8 + T9` 重新做一次 `Go / Repair` gate review
+- [x] T10: 基于 `T8 + T9` 重新做一次 `Go / Repair` gate review
+- [ ] T11: 补一份恢复期最小依赖 manifest（优先覆盖 P0/P3/P4 recovery smoke）
 
 ## Current Unique Task
 
-`T10: 基于 T8 + T9 重新做一次 Go / Repair gate review`
+`T11: 补一份恢复期最小依赖 manifest（优先覆盖 P0/P3/P4 recovery smoke）`
 
 当前已知事实：
 
-- `T8` 已完成上一轮 gate review：
-  - review doc: `docs/review/T8_gate_review.md`
-  - verdict: `Continue Repair`
-  - 当时不进入 `Go` 的主要原因：
-    - `T7` 仍只覆盖 `single-scenario + two-mode + repeats=1`
-    - 根目录仍缺最小依赖 manifest
-    - software HIL 仍是“可复验”而非“逐字确定性复现”
 - `T9` 已把 recovery 级 `P4 frozen baseline` 证据扩到单场景全模式：
   - task package:
     - `docs/tasks/P0/T9_p4_frozen_baseline_single_scenario_all_modes.md`
@@ -68,21 +62,33 @@
   - 不是 `.tflite` runtime 验收
   - 不是正式四场景 frozen benchmark 已恢复
   - 当前仍只是 `single-scenario + four-mode + repeats=1`
+- `T10` 已完成新的 gate review：
+  - review doc:
+    - `docs/review/T10_gate_review.md`
+  - verdict:
+    - `Continue Repair`
+  - 当前仍不进入 `Go`` 的主要原因：
+    - 根目录仍缺最小依赖 manifest
+    - software HIL 仍是“可复验”而非“逐字确定性复现”
+    - `T9` 仍只覆盖 `single-scenario + four-mode + repeats=1`
 - `T5` 的仓库噪声治理口径仍然生效：
   - `runs/` / `artifacts/` 仅视作历史证据
   - `__pycache__/` / `.pyc` 未来要有界移出版本库，但不在当前任务执行
 
 本任务完成标准：
 
-1. 基于 `T8 + T9` 的现有证据，重新做一次明确的 `Go / Repair` 判断
-2. 明确写出当前仍未进入 `Go` 的剩余缺口，或明确写出进入 `Go` 的依据
-3. 如果继续 `Repair`，切出下一个唯一且有界的任务，不同时打开多条线
-4. 不在 gate review 任务里顺手扩 benchmark、改主线语义或做大规模 cleanup
+1. 在仓库根目录新增一份 recovery 期最小依赖 manifest，至少覆盖：
+   - `benchmark/compare_full_vs_simplified_ler.py`
+   - `python -m cnn_fpga.benchmark.run_hil_suite --config cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
+   - `python -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml ...`
+2. 显式写清该 manifest 覆盖的是 `P0/P3/P4 recovery smoke`，而不是完整训练链或正式长跑全环境
+3. 同步更新治理文档中的环境与复用口径，避免继续完全依赖“本机解释器路径记忆”
+4. 如果无法收口，应输出可复现的阻塞与不覆盖范围，而不是扩大修改范围
 
 注意：
 
-- `T10` 不得把 `T9` 的 `single-scenario + four-mode + repeats=1` smoke 写成正式多场景 frozen benchmark 已恢复
-- `T10` 不得把 `mock-backed P4` 写成 `real_board-backed P4`
-- `T10` 不得跳过对依赖 manifest 与确定性复现缺口的重新判断
-- `T10` 不得顺手开展新训练、teacher-representation 或真板任务
-- `T10` 不得顺手做 `runs/`、`artifacts/`、`__pycache__/` 的大规模清理
+- `T11` 不得借补 manifest 顺手改 benchmark 口径、baseline 集合或 ParamMapper 主线语义
+- `T11` 不得把 `DLEnv`、`.tflite`、`real_board` 或完整训练链写成“默认已恢复环境”
+- `T11` 不得跳过对当前不覆盖范围的显式说明
+- `T11` 不得顺手开展新训练、teacher-representation 或真板任务
+- `T11` 不得顺手做 `runs/`、`artifacts/`、`__pycache__/` 的大规模清理

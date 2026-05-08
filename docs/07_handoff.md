@@ -5,7 +5,7 @@
 - 日期：`2026-05-08`
 - 阶段：`Phase 1: Recovery`
 - 决策：`Repair`
-- 当前唯一任务：`T10: 基于 T8 + T9 重新做一次 Go / Repair gate review`
+- 当前唯一任务：`T11: 补一份恢复期最小依赖 manifest（优先覆盖 P0/P3/P4 recovery smoke）`
 
 ## 2. 本轮已完成
 
@@ -34,7 +34,10 @@
 9. 完成了 `T9`，补充了：
    - `docs/tasks/P0/T9_p4_frozen_baseline_single_scenario_all_modes.md`
    - `docs/P4_benchmark_recovery_bootstrap.md` 的四模式复验证据
-10. 同步更新了治理文档中的 task board、decision log、legacy audit 与风险口径
+10. 完成了 `T10`，补充了：
+   - `docs/tasks/P0/T10_gate_review_after_t9.md`
+   - `docs/review/T10_gate_review.md`
+11. 同步更新了治理文档中的 task board、decision log、legacy audit 与风险口径
 
 ## 3. 已验证事实
 
@@ -187,17 +190,32 @@
   - 不是正式多场景 frozen benchmark 已恢复
   - 当前仍只是 `single-scenario + four-mode + repeats=1`
 
+### 3.8 T10 gate review 结论
+
+- gate review 文档：
+  - `docs/review/T10_gate_review.md`
+- 结论：
+  - `Continue Repair`
+- 当前不进入 `Go` 的主要原因：
+  - 根目录仍缺少最小依赖 manifest
+  - software HIL 仍是“可复验”而非“逐字确定性复现”
+  - `T9` 仍只覆盖 `single-scenario + four-mode + repeats=1`
+- 当前可以确认的积极结论：
+  - `T9` 已经把 P4 recovery 证据增强到“冻结 baseline 四模式单场景 smoke”
+  - 当前仓库更适合先补环境可移植性，而不是继续扩 benchmark 长跑
+
 ## 4. 当前判断
 
-项目当前的主要阻塞已经从“P4 最小路径是否还能跑”进一步转为“`T9` 的四模式单场景证据是否足以支撑进入 `Go`，以及若不足还差哪一块”：
+项目当前的主要阻塞已经从“P4 最小路径是否还能跑”进一步转为“如何把当前 recovery 级证据收口成更可移植、更可复现的仓库状态”：
 
 1. `T6` 已确认最小 software HIL 路径可复验
 2. `T7` 已确认最小 P4 benchmark 路径可复验
 3. `T8` 已明确在 `T7` 证据下仍应继续 `Repair`
 4. `T9` 已把 P4 recovery 证据扩到 `single-scenario + four-mode + repeats=1`
-5. 真板 backend 仍是 placeholder，不能被写成已验收能力
-6. `.tflite` 路径仍必须区分真实 runtime 与 stub 回退
-7. `T9` 仍不等于正式多场景 frozen benchmark 已恢复
+5. `T10` 已明确在 `T8 + T9` 证据下仍应继续 `Repair`
+6. 真板 backend 仍是 placeholder，不能被写成已验收能力
+7. `.tflite` 路径仍必须区分真实 runtime 与 stub 回退
+8. 当前最适合先收口的是 recovery 期最小依赖 manifest，而不是继续扩长跑
 
 ## 5. 已完成任务包
 
@@ -210,6 +228,7 @@
 - `T7`：`docs/tasks/P0/T7_p4_benchmark_reverification.md`
 - `T8`：`docs/tasks/P0/T8_gate_review_and_phase_decision.md`
 - `T9`：`docs/tasks/P0/T9_p4_frozen_baseline_single_scenario_all_modes.md`
+- `T10`：`docs/tasks/P0/T10_gate_review_after_t9.md`
 
 关键产出：
 
@@ -219,23 +238,24 @@
 - `docs/06_repo_noise_governance.md`
 - `docs/P4_benchmark_recovery_bootstrap.md`
 - `docs/review/T8_gate_review.md`
+- `docs/review/T10_gate_review.md`
 - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
 - `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
 
 ## 6. 下一步建议
 
-下一唯一任务建议为 `T10: 基于 T8 + T9 重新做一次 Go / Repair gate review`。
+下一唯一任务建议为 `T11: 补一份恢复期最小依赖 manifest（优先覆盖 P0/P3/P4 recovery smoke）`。
 
 执行前约束：
 
-1. 应优先复用 `T8 + T9` 已形成的现有证据，不新增长跑
-2. 应明确判断 phase / decision 是否需要变更
-3. 若继续 `Repair`，应切出下一个唯一且有界的任务，而不是同时开多条线
-4. 不要在 `T10` 顺手做 `runs/`、`artifacts/`、`__pycache__/` 的大规模清理或代码扩展
+1. 应优先覆盖 recovery 期实际已复验的 `P0/P3/P4` smoke 路径，不追求一次性覆盖完整训练链
+2. 应显式写清该 manifest 不覆盖的环境范围，例如 `DLEnv` 训练链、`.tflite`、`real_board`
+3. 应同步更新治理文档中的环境与复用口径
+4. 不要在 `T11` 顺手做 `runs/`、`artifacts/`、`__pycache__/` 的大规模清理或代码扩展
 
 ## 7. 暂不继续的事项
 
-在 `T10` 做出新的 gate review 结论前，暂不继续：
+在 `T11` 收口最小依赖 manifest 前，暂不继续：
 
 1. 新的 teacher-representation benchmark 扩展
 2. 长时间 P4 正式长跑
