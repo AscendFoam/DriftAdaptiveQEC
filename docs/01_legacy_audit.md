@@ -32,8 +32,9 @@
   - `T6`
   - `T7`
   - `T8`
+  - `T9`
 - 当前下一唯一任务建议为：
-  - `T9: 重新验收一个 P4 frozen baseline 单场景全模式 smoke path`
+  - `T10: 基于 T8 + T9 重新做一次 Go / Repair gate review`
 
 说明：
 
@@ -43,6 +44,7 @@
 - `T6` 已对最小 software HIL 路径完成新的复验，并再次确认 `mock + model_artifact + artifact_npz + inproc`
 - `T7` 已对最小 P4 benchmark 路径完成新的复验，并把 recovery 级 P4 配置固定到 `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
 - `T8` 已完成 gate review，并明确结论为 `Continue Repair`
+- `T9` 已把 `P4 frozen baseline` recovery 证据从两种 mode 扩到四种正式 baseline，但仍限制在 `single-scenario + repeats=1`
 - 后续 P3/P4 文档与复验结果都应沿用同一套 backend / artifact type 表述口径
 
 ## 3. Feature Reality Matrix
@@ -54,7 +56,7 @@
 | P2 行为级硬件仿真 | 已有硬件行为仿真与模式 benchmark | `cnn_fpga/benchmark/run_hardware_emulation.py`, `cnn_fpga/benchmark/run_p2_mode_benchmark.py` | 代码存在 | 当前环境未复验 |
 | P3 软件 HIL | 已有 HIL 主流程、mock backend、驱动抽象、推理服务 | `cnn_fpga/benchmark/run_hil_suite.py`, `cnn_fpga/hwio/mock_fpga.py`, `cnn_fpga/runtime/inference_service.py`, `docs/03_hil_p4_boundary_audit.md`, `docs/P3_software_hil_bootstrap.md`, `runs/hil_suite/hardware_hil_recovery_smoke_20260507_234638_3ae9f9176104/hil_summary.json` | 最小路径已二次复验 | control-plane 已稳定，但数值结果仍存在小幅 run-to-run 波动 |
 | P3 真板 HIL | 当前是 placeholder real-board backend | `cnn_fpga/hwio/board_backend.py`, `docs/CNN_FPGA_GKP_阶段结论.md`, `docs/03_hil_p4_boundary_audit.md` | 是 | 真实设备节点和地址表缺失，不能写成已完成 |
-| P4 多场景 benchmark | 已有统一 benchmark 汇总脚本，且最小 recovery path 已复验 | `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`, `docs/P4_benchmark_recovery_bootstrap.md`, `runs/p4_benchmark/p4multis_20260508_001316_0c12d7_39308/summary.json` | 最小 recovery path 已复验 | 当前只覆盖 `single-scenario + two-mode + repeats=1` recovery smoke，不等于正式全量 frozen benchmark 已恢复 |
+| P4 多场景 benchmark | 已有统一 benchmark 汇总脚本，且最小 recovery path 与 frozen baseline 单场景全模式 smoke 都已复验 | `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`, `docs/P4_benchmark_recovery_bootstrap.md`, `runs/p4_benchmark/p4multis_20260508_001316_0c12d7_39308/summary.json`, `runs/p4_benchmark/p4multis_20260508_121828_0c12d7_46732/summary.json` | 两级 recovery 证据已复验 | 当前仍只覆盖 `single-scenario + four-mode + repeats=1` smoke，不等于正式多场景 frozen benchmark 已恢复 |
 | teacher-representation 多版本分支 | 已有 v2-v9 配置与配对 benchmark 入口 | `cnn_fpga/config/experiment_runtime_b_residual_norm_gated_teacher_v*.yaml`, `cnn_fpga/benchmark/run_p4_teacher_representation_paired.py` | 代码存在 | 当前不应继续扩分支，先恢复可信度 |
 | 真板 backend 语义 | placeholder/骨架状态 | `cnn_fpga/hwio/board_backend.py` | 是 | 若表述不严谨，极易误导项目完成度判断 |
 | `.tflite` 真导出路径 | 代码支持真导出与 stub 回退双路径 | `cnn_fpga/model/export.py`, `cnn_fpga/runtime/inference_service.py`, `docs/03_hil_p4_boundary_audit.md` | 边界已审计 | 必须明确区分真实 `.tflite`、artifact 与 stub manifest |
@@ -159,13 +161,47 @@
   - `inference_service_mode = inproc`
   - `artifact_path = ...static_theta_v2...npz`
 
+### 4.8 T9 单场景全模式 frozen baseline smoke 已复验
+
+关键证据：
+
+- `docs/tasks/P0/T9_p4_frozen_baseline_single_scenario_all_modes.md`
+  - 已把 `T9` 的目标、边界、验证命令与文档更新范围固定
+- `runs/p4_benchmark/p4multis_20260508_121828_0c12d7_46732/summary.json`
+  - `protocol_id = p4_hil_recovery_smoke_v1`
+  - `scenario = static_bias_theta`
+  - `modes = static_linear, window_variance, ekf, cnn_fpga`
+  - `seed_pairing = paired`
+- `runs/p4_benchmark/p4multis_20260508_121828_0c12d7_46732/comparison.csv`
+  - `Static Linear final_ler = 0.99575`
+  - `Window Variance final_ler = 0.57440625`
+  - `EKF final_ler = 0.6795`
+  - `CNN-FPGA final_ler = 0.7248125`
+  - scenario winner: `window_variance`
+- `runs/p4_benchmark/p4multis_20260508_121828_0c12d7_46732/static/static/repeat_00/hil_summary.json`
+  - `backend = mock`
+  - `artifact_path = null`
+  - `inference_service_mode = inproc`
+- `runs/p4_benchmark/p4multis_20260508_121828_0c12d7_46732/static/window/repeat_00/hil_summary.json`
+  - `backend = mock`
+  - `artifact_path = null`
+  - `inference_service_mode = inproc`
+- `runs/p4_benchmark/p4multis_20260508_121828_0c12d7_46732/static/ekf/repeat_00/hil_summary.json`
+  - `backend = mock`
+  - `artifact_path = null`
+  - `inference_service_mode = inproc`
+- `runs/p4_benchmark/p4multis_20260508_121828_0c12d7_46732/static/cnnfpg/repeat_00/hil_summary.json`
+  - `backend = mock`
+  - `artifact_path = ...static_theta_v2...npz`
+  - `inference_service_mode = inproc`
+
 ## 5. 疑似需要后续标记或治理的问题
 
 1. `docs/06_repo_noise_governance.md` 已确认仓库中存在 `116` 个已跟踪缓存/字节码文件；物理 cleanup 仍未执行
 2. `runs/` 当前有 `1841` 个已跟踪文件，只能暂作历史证据，不能自动视作当前事实来源
 3. `artifacts/` 当前有 `110` 个已跟踪文件，且 `T4/T6/T7` 的最小复验路径仍依赖其中的 `static_theta_v2` `.npz`
 4. `T6` 已确认 software HIL control-plane 复验成功，但 `final_ler` 与 `overflow_rate` 在两次 run 之间存在小幅差异，说明当前更接近“可复验”而非“逐字确定性复现”
-5. `T7` 已确认 P4 recovery smoke 可以复用同一条 HIL 主链，但目前还不等于正式四场景四模式 frozen benchmark 已恢复
+5. `T9` 已确认 P4 recovery smoke 可以把 frozen baseline 集扩到四种正式 baseline，但目前还不等于正式多场景 frozen benchmark 已恢复
 6. `cnn_fpga/model/export.py` 同时支持真实 `.tflite` 与 stub 回退，后续文档必须持续严区分
 
 ## 6. 审计建议
@@ -174,11 +210,11 @@
 
 - 原因 1：核心算法、runtime、benchmark 资产都已经存在
 - 原因 2：当前最小 P3/P4 路径都已恢复到“可复验”状态
-- 原因 3：但 `T7` 仍只是 recovery smoke 级别的最小 P4 复验，不是正式 frozen 全量长跑
-- 原因 4：`T8` gate review 已明确指出依赖 manifest 与确定性复现仍未收口
+- 原因 3：`T9` 已把 P4 recovery 证据扩到 `single-scenario + four-mode + repeats=1`，但仍不是正式多场景 frozen benchmark
+- 原因 4：`T8` gate review 中指出的依赖 manifest 与确定性复现缺口仍未收口
 
 后续优先级建议：
 
-1. 先做 `T9`，把 P4 frozen baseline 集从两种 mode 扩到四种正式 baseline，但仍限制在单场景 smoke
-2. 再基于 `T8 + T9` 的证据，决定项目是否可以进入 `Go`
+1. 先做 `T10`，基于 `T8 + T9` 的证据重新判断项目是否可以进入 `Go`
+2. 如果 `T10` 仍然维持 `Repair`，再从“最小依赖 manifest”与“确定性复现收口”中切出下一个唯一任务
 3. 其后再考虑单开 cleanup 任务处理 repo noise 的物理移除

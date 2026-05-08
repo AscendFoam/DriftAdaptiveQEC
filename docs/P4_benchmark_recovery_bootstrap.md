@@ -10,37 +10,49 @@
 2. 它复用的是哪条 HIL 入口
 3. 它到底跑的是哪种 backend 与哪类 inference artifact
 
-## 2. 当前推荐最小路径
+## 2. 当前推荐路径
 
-恢复期当前推荐的最小 P4 benchmark 路径是：
+恢复期当前推荐保留两条有界 `P4` 复用路径：
 
-- interpreter: `C:\ProgramData\anaconda3\python.exe`
-- entry: `python -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark`
-- config: `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
-- scenario filter: `static_bias_theta`
-- mode filters:
-  - `static_linear`
-  - `cnn_fpga`
-- paired seeds: `true`
+- 最快最小路径：
+  - interpreter: `C:\ProgramData\anaconda3\python.exe`
+  - entry: `python -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark`
+  - config: `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
+  - scenario filter: `static_bias_theta`
+  - mode filters:
+    - `static_linear`
+    - `cnn_fpga`
+  - paired seeds: `true`
+- 当前 frozen baseline 验收路径：
+  - interpreter: `C:\ProgramData\anaconda3\python.exe`
+  - entry: `python -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark`
+  - config: `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
+  - scenario filter: `static_bias_theta`
+  - mode filters:
+    - `static_linear`
+    - `window_variance`
+    - `ekf`
+    - `cnn_fpga`
+  - paired seeds: `true`
+
+两条路径共同固定：
+
 - HIL backend: `mock`
-- slow-loop mode:
-  - `static_linear` -> `static_linear`
-  - `cnn_fpga` -> `model_artifact`
 - inference service mode: `inproc`
-- inference backend: `artifact_npz`
+- `cnn_fpga` inference backend: `artifact_npz`
 - fixed artifact path: `artifacts/models/static_theta_v2/tiny_cnn_20260319_151717_b87c6c227b57.npz`
 
-这条路径的含义是：
+这两条路径的共同含义是：
 
-- 它是 `P4 benchmark wrapper over software HIL`
-- 它复用的是 `T6` 已复验的 `mock-backed software HIL` 主链
-- 它不是 `real_board`
-- 它不是 `.tflite` runtime
-- 它也不是正式 P4 长跑配置
+- 它们都是 `P4 benchmark wrapper over software HIL`
+- 它们复用的是 `T6` 已复验的 `mock-backed software HIL` 主链
+- 它们不是 `real_board`
+- 它们不是 `.tflite` runtime
+- 它们也不是正式多场景 P4 长跑配置
 
 ## 3. 为什么选择这条路径
 
-选择这条最小路径，是因为它同时满足三件事：
+选择这些有界路径，是因为它们同时满足三件事：
 
 1. 仍然走 `run_p4_multiscenario_benchmark.py -> run_hil_session(...)` 的真实 P4 入口
 2. 保留最小 benchmark 对照，而不是退化成单次 HIL smoke
@@ -72,12 +84,20 @@
 7. 显式覆盖 `hil.backend: mock`
 8. 将 `n_slow_updates` 缩到 `8`
 9. 将 `error_model` 的三类失败概率临时设为 `0.0`
-10. 保留 `frozen_baseline_set` 口径，但 recovery 最小复验只筛一个场景、两种模式
+10. 保留 `frozen_baseline_set` 口径，但 recovery 复验只筛一个场景，并在有界范围内运行两种模式或四种模式
 
 ## 5. 运行命令
 
+最快最小路径：
+
 ```powershell
 & 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml --scenario static_bias_theta --mode static_linear --mode cnn_fpga --paired-seeds
+```
+
+当前 frozen baseline 单场景全模式 smoke：
+
+```powershell
+& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml --scenario static_bias_theta --mode static_linear --mode window_variance --mode ekf --mode cnn_fpga --paired-seeds
 ```
 
 ## 6. 预期输出
@@ -93,14 +113,14 @@
 后续复核时，应优先确认：
 
 1. `summary.json` 中 `filters.scenario == ["static_bias_theta"]`
-2. `summary.json` 中 `filters.mode == ["static_linear", "cnn_fpga"]`
+2. `summary.json` 中 `filters.mode` 与实际执行的 mode 集一致
 3. `summary.json` 中 `protocol.seed_pairing == "paired"`
 4. `comparison.csv` 中 `cnn_fpga` 行的 `artifact_path` 指向固定 `.npz`
 5. 相关 repeat 目录下的 `hil_summary.json` 继续体现：
    - `backend == "mock"`
    - `inference_service_mode == "inproc"`
 
-截至 `2026-05-08`，该路径已在当前机器上完成一次新的最小复验：
+截至 `2026-05-08`，最快最小路径已在当前机器上完成一次新的两模式复验：
 
 - 命令：
   - `& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml --scenario static_bias_theta --mode static_linear --mode cnn_fpga --paired-seeds`
@@ -126,6 +146,38 @@
   - `n_slow_updates_finished = 8`
   - `n_commits_applied = 8`
 
+截至 `2026-05-08`，frozen baseline 单场景全模式 smoke 也已在当前机器上完成一次新的四模式复验：
+
+- 命令：
+  - `& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml --scenario static_bias_theta --mode static_linear --mode window_variance --mode ekf --mode cnn_fpga --paired-seeds`
+- 新运行目录：
+  - `runs/p4_benchmark/p4multis_20260508_121828_0c12d7_46732`
+- launch / filter 结果：
+  - `protocol_id = p4_hil_recovery_smoke_v1`
+  - `repeats = 1`
+  - `seed_pairing = paired`
+  - `scenario = static_bias_theta`
+  - `modes = static_linear, window_variance, ekf, cnn_fpga`
+- comparison 结果：
+  - `Static Linear final_ler = 0.99575`
+  - `Static Linear overflow_rate = 0.00246875`
+  - `Window Variance final_ler = 0.57440625`
+  - `Window Variance overflow_rate = 0.00221875`
+  - `EKF final_ler = 0.6795`
+  - `EKF overflow_rate = 0.0019375`
+  - `CNN-FPGA final_ler = 0.7248125`
+  - `CNN-FPGA overflow_rate = 0.00290625`
+  - winner: `window_variance`
+  - `runner_up_gap = 0.10509375`
+- repeat HIL summary 结果：
+  - 四个 mode 都是 `backend = mock`
+  - 四个 mode 都是 `inference_service_mode = inproc`
+  - `static_linear / window_variance / ekf` 的 `artifact_path = null`
+  - `cnn_fpga` 的 `artifact_path = artifacts/models/static_theta_v2/tiny_cnn_20260319_151717_b87c6c227b57.npz`
+  - 四个 mode 都有：
+    - `n_slow_updates_finished = 8`
+    - `n_commits_applied = 8`
+
 ## 7. 这条路径证明了什么
 
 它证明的是：
@@ -145,4 +197,4 @@
 
 这些内容应继续留给后续任务：
 
-- `T9`：重新验收一个 P4 frozen baseline 单场景全模式 smoke path
+- `T10`：基于 `T8 + T9` 重新做一次 `Go / Repair` gate review

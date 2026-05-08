@@ -5,7 +5,7 @@
 - 日期：`2026-05-08`
 - 阶段：`Phase 1: Recovery`
 - 决策：`Repair`
-- 当前唯一任务：`T9: 重新验收一个 P4 frozen baseline 单场景全模式 smoke path`
+- 当前唯一任务：`T10: 基于 T8 + T9 重新做一次 Go / Repair gate review`
 
 ## 2. 本轮已完成
 
@@ -31,7 +31,10 @@
 8. 完成了 `T8`，补充了：
    - `docs/tasks/P0/T8_gate_review_and_phase_decision.md`
    - `docs/review/T8_gate_review.md`
-9. 同步更新了治理文档中的 task board、decision log、legacy audit 与风险口径
+9. 完成了 `T9`，补充了：
+   - `docs/tasks/P0/T9_p4_frozen_baseline_single_scenario_all_modes.md`
+   - `docs/P4_benchmark_recovery_bootstrap.md` 的四模式复验证据
+10. 同步更新了治理文档中的 task board、decision log、legacy audit 与风险口径
 
 ## 3. 已验证事实
 
@@ -144,16 +147,57 @@
 - 当前可以确认的积极结论：
   - 最小 P3/P4 recovery path 都已经重新变成可接力的事实
 
+### 3.7 T9 frozen baseline 单场景全模式 smoke 结果
+
+- 命令：
+  - `& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml --scenario static_bias_theta --mode static_linear --mode window_variance --mode ekf --mode cnn_fpga --paired-seeds`
+- 新运行目录：
+  - `runs/p4_benchmark/p4multis_20260508_121828_0c12d7_46732`
+- 新 protocol / filter 关键结果：
+  - `protocol_id = p4_hil_recovery_smoke_v1`
+  - `repeats = 1`
+  - `seed_pairing = paired`
+  - `scenario = static_bias_theta`
+  - `modes = static_linear, window_variance, ekf, cnn_fpga`
+- 新 comparison 关键结果：
+  - `Static Linear final_ler = 0.99575`
+  - `Static Linear overflow_rate = 0.00246875`
+  - `Window Variance final_ler = 0.57440625`
+  - `Window Variance overflow_rate = 0.00221875`
+  - `EKF final_ler = 0.6795`
+  - `EKF overflow_rate = 0.0019375`
+  - `CNN-FPGA final_ler = 0.7248125`
+  - `CNN-FPGA overflow_rate = 0.00290625`
+  - scenario winner: `window_variance`
+  - `runner_up_gap = 0.10509375`
+- 新 repeat HIL summary 关键结果：
+  - 四个 mode 的 repeat summary 都是 `backend = mock`
+  - 四个 mode 的 repeat summary 都是 `inference_service_mode = inproc`
+  - 四个 mode 的 repeat summary 都有：
+    - `n_slow_updates_finished = 8`
+    - `n_commits_applied = 8`
+  - `static_linear / window_variance / ekf` repeat 中：
+    - `artifact_path = null`
+  - `cnn_fpga` repeat 中：
+    - `artifact_path = artifacts/models/static_theta_v2/tiny_cnn_20260319_151717_b87c6c227b57.npz`
+- 当前表述边界：
+  - 该路径是 `mock-backed P4 recovery smoke`
+  - 不是 `real_board`
+  - 不是 `.tflite` runtime 验收
+  - 不是正式多场景 frozen benchmark 已恢复
+  - 当前仍只是 `single-scenario + four-mode + repeats=1`
+
 ## 4. 当前判断
 
-项目当前的主要阻塞已经从“P4 最小路径是否还能跑”进一步转为“如何把 recovery 级证据继续增强到足以支撑 Go 判定”：
+项目当前的主要阻塞已经从“P4 最小路径是否还能跑”进一步转为“`T9` 的四模式单场景证据是否足以支撑进入 `Go`，以及若不足还差哪一块”：
 
 1. `T6` 已确认最小 software HIL 路径可复验
 2. `T7` 已确认最小 P4 benchmark 路径可复验
-3. `T8` 已明确当前仍应继续 `Repair`
-4. 真板 backend 仍是 placeholder，不能被写成已验收能力
-5. `.tflite` 路径仍必须区分真实 runtime 与 stub 回退
-6. `T7` 仍只是 `single-scenario + two-mode + repeats=1` recovery smoke，不等于正式 frozen 全量 benchmark 已恢复
+3. `T8` 已明确在 `T7` 证据下仍应继续 `Repair`
+4. `T9` 已把 P4 recovery 证据扩到 `single-scenario + four-mode + repeats=1`
+5. 真板 backend 仍是 placeholder，不能被写成已验收能力
+6. `.tflite` 路径仍必须区分真实 runtime 与 stub 回退
+7. `T9` 仍不等于正式多场景 frozen benchmark 已恢复
 
 ## 5. 已完成任务包
 
@@ -165,6 +209,7 @@
 - `T6`：`docs/tasks/P0/T6_software_hil_reverification.md`
 - `T7`：`docs/tasks/P0/T7_p4_benchmark_reverification.md`
 - `T8`：`docs/tasks/P0/T8_gate_review_and_phase_decision.md`
+- `T9`：`docs/tasks/P0/T9_p4_frozen_baseline_single_scenario_all_modes.md`
 
 关键产出：
 
@@ -179,18 +224,18 @@
 
 ## 6. 下一步建议
 
-下一唯一任务建议为 `T9: 重新验收一个 P4 frozen baseline 单场景全模式 smoke path`。
+下一唯一任务建议为 `T10: 基于 T8 + T9 重新做一次 Go / Repair gate review`。
 
 执行前约束：
 
-1. 应优先复用 `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
-2. 应把 mode 过滤从 `static_linear/cnn_fpga` 扩到 frozen baseline 全集
-3. 仍要显式写清 backend、artifact type、run dir 与过滤条件
-4. 不要在 `T9` 顺手做 `runs/`、`artifacts/`、`__pycache__/` 的大规模清理
+1. 应优先复用 `T8 + T9` 已形成的现有证据，不新增长跑
+2. 应明确判断 phase / decision 是否需要变更
+3. 若继续 `Repair`，应切出下一个唯一且有界的任务，而不是同时开多条线
+4. 不要在 `T10` 顺手做 `runs/`、`artifacts/`、`__pycache__/` 的大规模清理或代码扩展
 
 ## 7. 暂不继续的事项
 
-在 `T9` 形成更强的 P4 recovery 证据前，暂不继续：
+在 `T10` 做出新的 gate review 结论前，暂不继续：
 
 1. 新的 teacher-representation benchmark 扩展
 2. 长时间 P4 正式长跑

@@ -374,3 +374,58 @@
 2. 当前决策状态继续保持 `Repair`
 3. 当前唯一任务切换到 `T9`
 4. `T9` 应优先扩大 P4 frozen baseline 的 recovery 证据，而不是重新发散到新功能或长跑
+
+## D-2026-05-08-03
+
+- 日期：`2026-05-08`
+- 决策：将恢复期 `P4 frozen baseline` 证据提升为“`single-scenario + four-mode + repeats=1` smoke 已复验”，并将当前唯一任务切换到 `T10`
+
+### 背景
+
+`T8` 的 gate review 已明确指出，`T7` 的 `single-scenario + two-mode + repeats=1` 证据还不足以支撑进入 `Go`。因此先执行 `T9`，在不扩到正式多场景长跑的前提下，把单场景 mode 集补齐到冻结的四类 baseline。
+
+### 依据
+
+1. `T9` task package 已固定：
+   - `docs/tasks/P0/T9_p4_frozen_baseline_single_scenario_all_modes.md`
+2. 实际运行命令：
+   - `& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml --scenario static_bias_theta --mode static_linear --mode window_variance --mode ekf --mode cnn_fpga --paired-seeds`
+3. 新运行目录：
+   - `runs/p4_benchmark/p4multis_20260508_121828_0c12d7_46732`
+4. `summary.json` 已确认：
+   - `protocol_id = p4_hil_recovery_smoke_v1`
+   - `scenario = static_bias_theta`
+   - `modes = static_linear, window_variance, ekf, cnn_fpga`
+   - `seed_pairing = paired`
+5. `comparison.csv` 已确认：
+   - `Static Linear final_ler = 0.99575`
+   - `Window Variance final_ler = 0.57440625`
+   - `EKF final_ler = 0.6795`
+   - `CNN-FPGA final_ler = 0.7248125`
+   - scenario winner: `window_variance`
+6. 各 mode 的 repeat HIL summary 已继续确认：
+   - 四个 mode 都是 `backend = mock`
+   - 四个 mode 都是 `inference_service_mode = inproc`
+   - `static_linear / window_variance / ekf` 的 `artifact_path = null`
+   - `cnn_fpga` 的 `artifact_path = ...static_theta_v2...npz`
+7. 当前边界仍然成立：
+   - 这仍是 `mock-backed P4 recovery smoke`
+   - 不是 `real_board`
+   - 不是 `.tflite` runtime 验收
+   - 不是正式多场景 frozen benchmark
+
+### 结论
+
+当前最合理的仓库状态表述是：
+
+1. `T9` 已完成
+2. 恢复期 `P4` 证据已从“两模式最小路径”扩到“冻结 baseline 四模式单场景 smoke”
+3. 但 `T9` 本身还不直接改变 `Repair / Go` 决策状态
+4. 下一唯一任务应切换到 `T10`，对 `T8 + T9` 的组合证据重新做一次 gate review
+
+### 直接影响
+
+1. `T9` 可标记完成
+2. `docs/P4_benchmark_recovery_bootstrap.md` 应更新为包含最新四模式 run 证据
+3. 当前唯一任务切换到 `T10`
+4. `T10` 应优先回答“`T9` 是否足以支撑进入 `Go`”，而不是继续扩 benchmark 或顺手扩功能
