@@ -12,7 +12,7 @@ Implements GKP syndrome measurement with realistic effects:
 """
 
 import numpy as np
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 from dataclasses import dataclass
 
 from .constants import LATTICE_CONST
@@ -77,16 +77,37 @@ class RealisticSyndromeMeasurement:
     σ_meas ∝ Δ
     """
 
-    def __init__(self, config: Optional[MeasurementConfig] = None):
+    def __init__(
+        self,
+        config: Optional[MeasurementConfig] = None,
+        *,
+        rng: Optional[np.random.Generator] = None,
+    ):
         """
         Args:
             config: Measurement configuration
+            rng: Optional deterministic RNG used by recovery/runtime paths
         """
         self.config = config or MeasurementConfig()
         self.lattice = LATTICE_CONST
+        self._rng = rng
 
         # Compute measurement noise variance
         self._compute_noise_variance()
+
+    def _normal(self, mean: float, std: float, size: Optional[int | tuple[int, ...]] = None):
+        if self._rng is None:
+            return np.random.normal(mean, std, size=size)
+        return self._rng.normal(mean, std, size=size)
+
+    def _random(self) -> float:
+        if self._rng is None:
+            return float(np.random.random())
+        return float(self._rng.random())
+
+    def _random_sign(self) -> float:
+        sample = float(self._normal(0.0, 1.0))
+        return 1.0 if sample >= 0.0 else -1.0
 
     def _compute_noise_variance(self):
         """Compute measurement noise from configuration"""
@@ -127,23 +148,23 @@ class RealisticSyndromeMeasurement:
             return syndrome_ideal
 
         # Add measurement noise
-        measurement_noise = np.random.normal(0, self.sigma_meas, size=2)
+        measurement_noise = self._normal(0, self.sigma_meas, size=2)
 
         # Shot noise (detector noise)
         if self.config.add_shot_noise:
-            shot_noise = np.random.normal(0, 0.1, size=2)
+            shot_noise = self._normal(0, 0.1, size=2)
         else:
             shot_noise = 0
 
         syndrome_noisy = syndrome_ideal + measurement_noise + shot_noise
 
         # Ancilla errors (rare bit flips in measurement)
-        if np.random.rand() < self.config.ancilla_error_rate:
+        if self._random() < self.config.ancilla_error_rate:
             # Random offset by half lattice
-            if np.random.rand() > 0.5:
-                syndrome_noisy[0] += self.lattice / 2 * np.sign(np.random.randn())
+            if self._random() > 0.5:
+                syndrome_noisy[0] += self.lattice / 2 * self._random_sign()
             else:
-                syndrome_noisy[1] += self.lattice / 2 * np.sign(np.random.randn())
+                syndrome_noisy[1] += self.lattice / 2 * self._random_sign()
 
         return syndrome_noisy
 

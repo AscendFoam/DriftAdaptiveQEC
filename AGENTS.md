@@ -1,11 +1,11 @@
 # AGENTS
 
-本仓库采用恢复期治理模式，目标不是继续堆新功能，而是先把已有成果整理成“可验证、可复现、可接力”的状态。
+本仓库已完成第一轮恢复期治理收尾。当前目标是在不破坏已恢复可信度的前提下，围绕已验证路径继续受控开发。
 
 ## 当前阶段
 
-- 当前阶段：`Phase 1: Recovery`
-- 决策状态：`Repair`
+- 当前阶段：`Phase 2: Controlled Development`
+- 决策状态：`Go`
 - 当前唯一任务以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准
 
 ## 开始任何工作前必须阅读
@@ -64,22 +64,21 @@
 2. 不得把 `board_backend.py` 的 placeholder 语义写成真实板级完成
 3. 不得静默改动正式 benchmark 口径、baseline 集合、ParamMapper 主线语义
 4. 不得把 `runs/`、`artifacts/` 中的历史结果改写为新的“事实来源”
-5. 不得在恢复期顺手启动新的 teacher-representation 长跑
+5. 不得无任务包顺手启动新的 teacher-representation 长跑或正式长跑 benchmark
 6. 不得跳过验证就更新阶段结论类文档
 
-## 恢复期默认允许的任务类型
+## 当前阶段默认允许的任务类型
 
-- 确认依赖与入口
-- 恢复最小 smoke path
-- 标记 mock/stub/placeholder 边界
-- 补治理文件
-- 补最小测试或最小 bootstrap 说明
-- 修复阻塞运行的最小问题
+- 在已验证路径上做有界开发
+- 补更强的 benchmark / benchmark 边界证据
+- 为训练链、`.tflite` 或真板路径补独立 manifest / bootstrap / smoke
+- 补有界 cleanup 任务
+- 补最小测试、回归验证或治理文件
 
-## 恢复期默认禁止的任务类型
+## 当前阶段默认禁止的任务类型
 
-- 大规模重构
-- 新模型主线切换
-- 新论文分支大规模展开
+- 无任务包的大规模重构
+- 无验证支撑的新模型主线切换
+- 无边界说明的新论文分支大规模展开
 - 真板联调语义扩写成既成事实
 - 在无验证前提下重写阶段结论文档

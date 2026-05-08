@@ -1,0 +1,16 @@
+# Minimal recovery dependency manifest for P0/P3/P4 smoke paths.
+# Verified against the recovery docs on 2026-05-08.
+#
+# Covered entry points:
+# - benchmark/compare_full_vs_simplified_ler.py --no-plot
+# - python -m cnn_fpga.benchmark.run_hil_suite --config cnn_fpga/config/hardware_hil_recovery_smoke.yaml
+# - python -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml ...
+#
+# Intentionally not covered:
+# - torch training / DLEnv-only paths
+# - tensorflow / tflite-runtime export or runtime
+# - real-board HIL backend
+# - optional P0 plotting when dropping --no-plot (matplotlib)
+
+numpy
+PyYAML

@@ -474,3 +474,151 @@
 2. 当前决策状态继续保持 `Repair`
 3. 当前唯一任务切换到 `T11`
 4. `T11` 应优先收口 recovery smoke 的依赖 manifest，而不是继续扩 benchmark 长跑或新功能
+
+## D-2026-05-08-05
+
+- 日期：`2026-05-08`
+- 决策：在根目录新增 `requirements-recovery.txt` 作为 recovery-scoped 最小依赖 manifest，并显式保持它不是完整仓库环境文件
+
+### 背景
+
+`T10` 的 gate review 已明确指出：当前最容易收口、也最影响接力效率的缺口，就是根目录仍没有一份作用域诚实的最小依赖说明。`T11` 的目标就是把已经复验过的 `P0/P3/P4 recovery smoke` 路径，收口成一个可直接引用的根级 manifest。
+
+### 依据
+
+1. 当前已复验的 recovery 入口只有三类：
+   - `benchmark/compare_full_vs_simplified_ler.py --no-plot`
+   - `python -m cnn_fpga.benchmark.run_hil_suite --config cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
+   - `python -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml ...`
+2. 这些 recovery 入口的第三方依赖边界当前可收口到：
+   - `numpy`
+   - `PyYAML`
+3. `benchmark/compare_full_vs_simplified_ler.py` 中的 `matplotlib` 只在去掉 `--no-plot` 时才会触发，因此不应被写成 recovery smoke 的必需依赖
+4. `torch`、`tensorflow`、`tflite-runtime` 与 `real_board` backend 只属于训练链、`.tflite` 或真板路径，不属于当前已复验的 recovery smoke 默认范围
+5. 当前推荐解释器分工仍成立：
+   - recovery smoke：`C:\ProgramData\anaconda3\python.exe`
+   - 训练候选：`C:\ProgramData\anaconda3\envs\DLEnv\python.exe`
+
+### 结论
+
+恢复期当前采用如下依赖口径：
+
+1. 根目录新增 `requirements-recovery.txt`
+2. 它只覆盖 `P0/P3/P4 recovery smoke`
+3. 它故意不命名为 `requirements.txt`，避免被误读为“完整仓库环境已恢复”
+4. 它故意不引入 `torch`、`tensorflow`、`tflite-runtime`、`matplotlib`
+5. 训练链、`.tflite` 路径与真板路径仍需继续按恢复期边界单独说明
+
+### 直接影响
+
+1. `T11` 可标记完成
+2. `README.md` 与 `docs/P0_smoke_bootstrap.md`、`docs/P3_software_hil_bootstrap.md`、`docs/P4_benchmark_recovery_bootstrap.md` 应改为显式引用 `requirements-recovery.txt`
+3. 根目录“完全没有 manifest”的风险已收口为“只有 recovery-scoped manifest，完整环境仍未统一”
+4. 当前唯一任务切换到 `T12`
+5. `T12` 应优先收口 software HIL recovery smoke 的随机源与确定性表述，而不是继续扩 benchmark 长跑或新功能
+
+## D-2026-05-08-06
+
+- 日期：`2026-05-08`
+- 决策：将恢复期最小 software HIL recovery smoke 的表述从“可复验”提升为“在固定 seed 链路下已完成逐字一致复验”，但严格限定在 `mock + model_artifact + artifact_npz + inproc` 这条 bounded 路径内
+
+### 背景
+
+`T11` 已经补齐 recovery-scoped manifest，但 `T6/T10` 仍保留一个关键缺口：`hardware_hil_recovery_smoke` 的 control-plane 字段虽然稳定，`final_ler` 与 `overflow_rate` 仍存在小幅 run-to-run 差异。`T12` 的目标就是在不改 benchmark 主线语义的前提下，把这个 bounded recovery path 的随机源收口到更强的可复现状态。
+
+### 依据
+
+1. `physics/syndrome_measurement.py`
+   - `RealisticSyndromeMeasurement` 现支持注入显式 `rng`
+   - recovery 路径的测量噪声、shot noise 与 ancilla 扰动不再依赖全局 `np.random`
+2. `cnn_fpga/runtime/fast_loop_emulator.py`
+   - 快回路误差采样继续使用 `default_rng(seed)`
+   - 综合征测量额外拆出 `default_rng(seed + 1)`
+   - 两类随机源已显式分离且都挂在同一条 seed 链上
+3. `run_hil_suite.py` 当前 recovery seed 链路已明确：
+   - mock noise provider: `seed + 17`
+   - physical noise bridge: `seed + 19`
+   - driver / mock backend: `seed + 7`
+   - slow loop runtime: `seed + 31`
+   - host latency injector: `seed + 43`
+4. 使用同一命令连续复验两次：
+   - `& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_hil_suite --config cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
+   - `& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_hil_suite --config cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
+5. 两次新运行目录分别为：
+   - `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104`
+   - `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172232_3ae9f9176104`
+6. 文件级对比结果：
+   - `hil_summary.json` SHA256 完全一致
+   - `hil_events.json` SHA256 完全一致
+7. 两次 run 的共同关键结果：
+   - `backend = mock`
+   - `artifact_path = ...static_theta_v2...npz`
+   - `inference_service_mode = inproc`
+   - `n_slow_updates_finished = 2`
+   - `n_commits_applied = 2`
+   - `final_ler = 0.454375`
+   - `overflow_rate = 0.002`
+
+### 结论
+
+恢复期当前可以把这条最小 software HIL 路径表述为：
+
+1. `mock-backed software HIL recovery smoke` 已完成逐字一致复验
+2. 它的确定性结论仅限于当前 bounded 路径与当前机器上的 seed 链
+3. 这不等于 `real_board` 已恢复
+4. 这也不等于 `.tflite` runtime 或正式多场景 P4 benchmark 已恢复
+
+### 直接影响
+
+1. `T12` 可标记完成
+2. `docs/P3_software_hil_bootstrap.md` 应更新为包含新的确定性复验证据与随机源链路说明
+3. `docs/01_legacy_audit.md`、`docs/04_task_board.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 应同步移除“该路径仍有 run-to-run 数值漂移”的旧表述
+4. 当前唯一任务清空，等待下一张任务包
+
+## D-2026-05-08-07
+
+- 日期：`2026-05-08`
+- 决策：第一轮 `Phase 1: Recovery` 收尾完成，项目退出恢复期，进入 `Phase 2: Controlled Development`，决策状态切换为 `Go`
+
+### 背景
+
+`T10` 时点仍不能进入 `Go`，因为当时还缺少 recovery-scoped manifest 与 bounded software HIL 的确定性收口。`T11` 和 `T12` 完成后，需要再做一次正式的 recovery exit review，判断当前仓库是否已经满足工作流里“Recovery-Ready”的退出条件。
+
+### 依据
+
+1. `docs/reference/AI_coding_workflow.md` 第 4 节迁移/恢复工作流给出的退出标准，当前已满足：
+   - 最小路径可按文档运行
+   - MVP 范围明确
+   - task board / handoff / risks 稳定
+   - smoke / 等价验证存在
+   - mock / stub / placeholder 已标记
+   - 不再依赖旧长 session 才能理解仓库状态
+2. `T11` 已完成：
+   - 根目录新增 `requirements-recovery.txt`
+   - recovery 期最小依赖边界已固定
+3. `T12` 已完成：
+   - bounded software HIL recovery smoke 已逐字一致复验
+4. `P0/P3/P4` 的 bounded recovery 入口都已有新的文档化证据：
+   - `docs/P0_smoke_bootstrap.md`
+   - `docs/P3_software_hil_bootstrap.md`
+   - `docs/P4_benchmark_recovery_bootstrap.md`
+5. `docs/review/T13_recovery_exit_review.md`
+   - 已给出 verdict：`Allow`
+
+### 结论
+
+当前最合理的仓库状态表述是：
+
+1. 第一轮恢复期目标已完成
+2. 项目可以从 `Repair` 切换到 `Go`
+3. 这里的 `Go` 只代表“允许继续做 bounded 开发任务”
+4. 它不代表：
+   - `real_board` 已恢复
+   - 真实 `.tflite` runtime 已恢复
+   - 正式多场景 frozen benchmark 已恢复
+
+### 直接影响
+
+1. `AGENTS.md` 与 `README.md` 应切换到新的阶段与决策状态
+2. `docs/04_task_board.md`、`docs/07_handoff.md` 应标记 recovery 已收尾，当前唯一任务待重新定义
+3. 后续任务默认从“恢复期修复”切换为“受控继续开发”，但仍保留真实边界与验证硬规则

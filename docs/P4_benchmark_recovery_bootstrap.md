@@ -10,7 +10,32 @@
 2. 它复用的是哪条 HIL 入口
 3. 它到底跑的是哪种 backend 与哪类 inference artifact
 
-## 2. 当前推荐路径
+## 2. 先装哪份依赖
+
+恢复期当前推荐先安装根目录的：
+
+- `requirements-recovery.txt`
+
+安装命令：
+
+```powershell
+python -m pip install -r requirements-recovery.txt
+```
+
+当前这份 manifest 只承诺覆盖：
+
+1. `mock-backed P4 recovery smoke`
+2. `mock-backed software HIL` 的 `artifact_npz + inproc` 复用路径
+3. `P0/P3/P4 recovery smoke` 所需的 `numpy + PyYAML`
+
+它当前不承诺覆盖：
+
+1. `real_board` HIL backend
+2. `.tflite` runtime / export
+3. 正式多场景长跑 benchmark
+4. `DLEnv` 训练链
+
+## 3. 当前推荐路径
 
 恢复期当前推荐保留两条有界 `P4` 复用路径：
 
@@ -50,7 +75,7 @@
 - 它们不是 `.tflite` runtime
 - 它们也不是正式多场景 P4 长跑配置
 
-## 3. 为什么选择这条路径
+## 4. 为什么选择这条路径
 
 选择这些有界路径，是因为它们同时满足三件事：
 
@@ -69,7 +94,7 @@
 - 正式四场景四模式长跑
   - 因为当前任务目标是“最小复验”，不是恢复正式 benchmark 时长
 
-## 4. 当前 recovery smoke 配置
+## 5. 当前 recovery smoke 配置
 
 - [cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml](/d:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml)
 
@@ -86,7 +111,7 @@
 9. 将 `error_model` 的三类失败概率临时设为 `0.0`
 10. 保留 `frozen_baseline_set` 口径，但 recovery 复验只筛一个场景，并在有界范围内运行两种模式或四种模式
 
-## 5. 运行命令
+## 6. 运行命令
 
 最快最小路径：
 
@@ -100,7 +125,7 @@
 & 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml --scenario static_bias_theta --mode static_linear --mode window_variance --mode ekf --mode cnn_fpga --paired-seeds
 ```
 
-## 6. 预期输出
+## 7. 预期输出
 
 运行成功后，会在 `runs/p4_benchmark/` 下生成一条 `p4multi_*` 目录，至少包含：
 
@@ -178,7 +203,7 @@
     - `n_slow_updates_finished = 8`
     - `n_commits_applied = 8`
 
-## 7. 这条路径证明了什么
+## 8. 这条路径证明了什么
 
 它证明的是：
 
@@ -186,7 +211,7 @@
 2. `run_p4_multiscenario_benchmark.py` 可以在恢复期继续复用 `mock + artifact_npz + inproc` 的 HIL 主链
 3. 恢复期可以先在不碰 `.tflite`、不碰 `real_board` 的前提下恢复 P4 最小 benchmark 复验
 
-## 8. 这条路径不证明什么
+## 9. 这条路径不证明什么
 
 它不证明：
 

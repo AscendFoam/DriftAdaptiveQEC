@@ -19,6 +19,7 @@
 - 默认环境不可直接复现实验，当前最明显阻塞是缺依赖与入口说明
 - `.tflite` 部署链路同时存在真实导出/runtime 与 stub 回退路径
 - 仓库此前缺少治理文件，导致“代码真实状态”和“开发流程状态”没有被固定
+- 截至 `2026-05-08`，第一轮恢复期收尾已完成，仓库可退出 `Phase 1: Recovery`，进入受控继续开发
 
 ### 2.2 恢复推进状态
 
@@ -34,8 +35,10 @@
   - `T8`
   - `T9`
   - `T10`
+  - `T11`
+  - `T12`
 - 当前下一唯一任务建议为：
-  - `T11: 补一份恢复期最小依赖 manifest（优先覆盖 P0/P3/P4 recovery smoke）`
+  - 待定义
 
 说明：
 
@@ -47,6 +50,8 @@
 - `T8` 已完成 gate review，并明确结论为 `Continue Repair`
 - `T9` 已把 `P4 frozen baseline` recovery 证据从两种 mode 扩到四种正式 baseline，但仍限制在 `single-scenario + repeats=1`
 - `T10` 已完成二次 gate review，并继续给出 `Continue Repair`
+- `T11` 已在根目录补入 `requirements-recovery.txt`，并把它接入 `P0/P3/P4 recovery smoke` 的 bootstrap 文档
+- `T12` 已把最小 software HIL recovery smoke 的随机源链路收口到逐字一致复验
 - 后续 P3/P4 文档与复验结果都应沿用同一套 backend / artifact type 表述口径
 
 ## 3. Feature Reality Matrix
@@ -56,12 +61,13 @@
 | P0 full vs simplified 基线脚本 | 已存在最小对比脚本 | `benchmark/compare_full_vs_simplified_ler.py` | 部分验证 | 默认环境缺 `numpy`，当前无法在系统 Python 下直接运行 |
 | P1 数据与训练链 | 已有数据集构建、训练、评估、量化入口 | `cnn_fpga/data/dataset_builder.py`, `cnn_fpga/model/train.py`, `cnn_fpga/model/evaluate.py`, `cnn_fpga/model/quantize.py` | 代码存在 | 依赖矩阵未确认，当前未复跑 |
 | P2 行为级硬件仿真 | 已有硬件行为仿真与模式 benchmark | `cnn_fpga/benchmark/run_hardware_emulation.py`, `cnn_fpga/benchmark/run_p2_mode_benchmark.py` | 代码存在 | 当前环境未复验 |
-| P3 软件 HIL | 已有 HIL 主流程、mock backend、驱动抽象、推理服务 | `cnn_fpga/benchmark/run_hil_suite.py`, `cnn_fpga/hwio/mock_fpga.py`, `cnn_fpga/runtime/inference_service.py`, `docs/03_hil_p4_boundary_audit.md`, `docs/P3_software_hil_bootstrap.md`, `runs/hil_suite/hardware_hil_recovery_smoke_20260507_234638_3ae9f9176104/hil_summary.json` | 最小路径已二次复验 | control-plane 已稳定，但数值结果仍存在小幅 run-to-run 波动 |
+| P3 软件 HIL | 已有 HIL 主流程、mock backend、驱动抽象、推理服务 | `cnn_fpga/benchmark/run_hil_suite.py`, `cnn_fpga/hwio/mock_fpga.py`, `cnn_fpga/runtime/inference_service.py`, `docs/03_hil_p4_boundary_audit.md`, `docs/P3_software_hil_bootstrap.md`, `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104/hil_summary.json`, `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172232_3ae9f9176104/hil_summary.json` | bounded 最小路径已逐字一致复验 | 结论仅限 `mock + model_artifact + artifact_npz + inproc`，不等于真板或 `.tflite` 路径已恢复 |
 | P3 真板 HIL | 当前是 placeholder real-board backend | `cnn_fpga/hwio/board_backend.py`, `docs/CNN_FPGA_GKP_阶段结论.md`, `docs/03_hil_p4_boundary_audit.md` | 是 | 真实设备节点和地址表缺失，不能写成已完成 |
 | P4 多场景 benchmark | 已有统一 benchmark 汇总脚本，且最小 recovery path 与 frozen baseline 单场景全模式 smoke 都已复验 | `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`, `docs/P4_benchmark_recovery_bootstrap.md`, `runs/p4_benchmark/p4multis_20260508_001316_0c12d7_39308/summary.json`, `runs/p4_benchmark/p4multis_20260508_121828_0c12d7_46732/summary.json` | 两级 recovery 证据已复验 | 当前仍只覆盖 `single-scenario + four-mode + repeats=1` smoke，不等于正式多场景 frozen benchmark 已恢复 |
 | teacher-representation 多版本分支 | 已有 v2-v9 配置与配对 benchmark 入口 | `cnn_fpga/config/experiment_runtime_b_residual_norm_gated_teacher_v*.yaml`, `cnn_fpga/benchmark/run_p4_teacher_representation_paired.py` | 代码存在 | 当前不应继续扩分支，先恢复可信度 |
 | 真板 backend 语义 | placeholder/骨架状态 | `cnn_fpga/hwio/board_backend.py` | 是 | 若表述不严谨，极易误导项目完成度判断 |
 | `.tflite` 真导出路径 | 代码支持真导出与 stub 回退双路径 | `cnn_fpga/model/export.py`, `cnn_fpga/runtime/inference_service.py`, `docs/03_hil_p4_boundary_audit.md` | 边界已审计 | 必须明确区分真实 `.tflite`、artifact 与 stub manifest |
+| recovery 期根级依赖 manifest | 已新增 recovery-scoped 最小 manifest | `requirements-recovery.txt`, `docs/P0_smoke_bootstrap.md`, `docs/P3_software_hil_bootstrap.md`, `docs/P4_benchmark_recovery_bootstrap.md` | 是 | 只覆盖 `P0/P3/P4 recovery smoke`，不等于完整训练链、`.tflite` 或真板环境 |
 | 根级治理文件 | 恢复前缺失 | 根目录与 `docs/` | 是 | 高，直接影响后续接力与审查 |
 
 ## 4. 关键证据
@@ -100,7 +106,11 @@
 
 关键证据：
 
-- 根目录没有：
+- 根目录现已新增：
+  - `requirements-recovery.txt`
+- 但它只覆盖：
+  - `P0/P3/P4 recovery smoke`
+- 根目录仍没有完整仓库环境文件：
   - `requirements.txt`
   - `pyproject.toml`
   - `environment.yml`
@@ -210,33 +220,78 @@
   - `requirements.txt`
   - `pyproject.toml`
   - `environment.yml`
-- `T6` 的“可复验而非逐字确定性复现”观察仍成立：
-  - `runs/hil_suite/hardware_hil_recovery_smoke_20260507_234638_3ae9f9176104/hil_summary.json`
+- 这是 `T10` 时点的历史背景：
+  - 当时 `T6` 的“可复验而非逐字确定性复现”观察仍成立
+  - 对应 run 为 `runs/hil_suite/hardware_hil_recovery_smoke_20260507_234638_3ae9f9176104/hil_summary.json`
 - `T9` 的 P4 证据虽然增强，但仍只覆盖：
   - `single-scenario`
   - `four-mode`
   - `repeats = 1`
+
+### 4.10 T11 recovery 期最小依赖 manifest 已完成
+
+关键证据：
+
+- `docs/tasks/P0/T11_recovery_dependency_manifest.md`
+  - 已把 `T11` 的作用域、验证命令与文档更新范围固定
+- `requirements-recovery.txt`
+  - 当前 manifest 仅包含：
+    - `numpy`
+    - `PyYAML`
+  - 已明确覆盖：
+    - `benchmark/compare_full_vs_simplified_ler.py --no-plot`
+    - `python -m cnn_fpga.benchmark.run_hil_suite --config cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
+    - `python -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml ...`
+  - 已明确不覆盖：
+    - `torch` 训练链
+    - `tensorflow` / `tflite-runtime`
+    - `.tflite` export/runtime
+    - `real_board` HIL backend
+- `README.md`
+  - 已改为显式引用 `requirements-recovery.txt`
+- `docs/P0_smoke_bootstrap.md`、`docs/P3_software_hil_bootstrap.md`、`docs/P4_benchmark_recovery_bootstrap.md`
+  - 已改为显式引用同一份 root manifest
+
+### 4.11 T12 software HIL recovery smoke 确定性收口已完成
+
+关键证据：
+
+- `docs/tasks/P0/T12_software_hil_determinism_recovery.md`
+  - 已把 `T12` 的作用域、验证命令与文档更新范围固定
+- `physics/syndrome_measurement.py`
+  - `RealisticSyndromeMeasurement` 已支持显式 `rng`
+  - recovery 路径的测量噪声不再依赖全局 `np.random`
+- `cnn_fpga/runtime/fast_loop_emulator.py`
+  - 已把快回路误差 RNG 与测量噪声 RNG 分离
+- `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104/hil_summary.json`
+- `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172232_3ae9f9176104/hil_summary.json`
+  - `final_ler = 0.454375`
+  - `overflow_rate = 0.002`
+- 两次 run 的文件级对比
+  - `hil_summary.json` SHA256 一致
+  - `hil_events.json` SHA256 一致
 
 ## 5. 疑似需要后续标记或治理的问题
 
 1. `docs/06_repo_noise_governance.md` 已确认仓库中存在 `116` 个已跟踪缓存/字节码文件；物理 cleanup 仍未执行
 2. `runs/` 当前有 `1841` 个已跟踪文件，只能暂作历史证据，不能自动视作当前事实来源
 3. `artifacts/` 当前有 `110` 个已跟踪文件，且 `T4/T6/T7` 的最小复验路径仍依赖其中的 `static_theta_v2` `.npz`
-4. `T6` 已确认 software HIL control-plane 复验成功，但 `final_ler` 与 `overflow_rate` 在两次 run 之间存在小幅差异，说明当前更接近“可复验”而非“逐字确定性复现”
+4. `T12` 已把 bounded software HIL recovery smoke 收口到逐字一致复验，但这不外推到 `real_board` 或 `.tflite`
 5. `T9` 已确认 P4 recovery smoke 可以把 frozen baseline 集扩到四种正式 baseline，但目前还不等于正式多场景 frozen benchmark 已恢复
 6. `cnn_fpga/model/export.py` 同时支持真实 `.tflite` 与 stub 回退，后续文档必须持续严区分
+7. `requirements-recovery.txt` 已经补齐 recovery 期最小 manifest，但完整训练链、`.tflite` 与真板路径仍没有统一根级环境文件
 
 ## 6. 审计建议
 
-建议继续按 `Repair` 路线推进，当前不直接宣布 `Go`：
+基于 `T13` recovery exit review，当前更合理的建议已从 `Repair` 更新为“受控 `Go`”：
 
 - 原因 1：核心算法、runtime、benchmark 资产都已经存在
-- 原因 2：当前最小 P3/P4 路径都已恢复到“可复验”状态
+- 原因 2：当前最小 P3/P4 路径都已恢复，其中 software HIL bounded path 已做到逐字一致复验
 - 原因 3：`T9` 已把 P4 recovery 证据扩到 `single-scenario + four-mode + repeats=1`，但仍不是正式多场景 frozen benchmark
-- 原因 4：`T10` gate review 已再次确认依赖 manifest 与确定性复现缺口仍未收口
+- 原因 4：`T11/T12` 已分别收口 recovery 期 manifest 与 software HIL 确定性，剩余缺口已经从“阻止接力”降为“下一阶段的 bounded 开发任务”
 
 后续优先级建议：
 
-1. 先做 `T11`，补一份 recovery 期最小依赖 manifest，优先覆盖 `P0/P3/P4 recovery smoke`
-2. 再基于 `T11` 的结果，决定是继续收口“确定性复现”，还是再补更强的 P4 多场景证据
+1. 先定义下一张 bounded 开发任务包，决定是继续补更强的 P4 多场景证据，还是再拆训练/`.tflite` 的独立环境 manifest
+2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 3. 其后再考虑单开 cleanup 任务处理 repo noise 的物理移除

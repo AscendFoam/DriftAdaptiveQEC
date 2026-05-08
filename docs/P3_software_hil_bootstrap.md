@@ -10,7 +10,31 @@
 2. 它到底跑的是哪种 backend
 3. 它用的是哪类 inference artifact
 
-## 2. 当前推荐最小路径
+## 2. 先装哪份依赖
+
+恢复期当前推荐先安装根目录的：
+
+- `requirements-recovery.txt`
+
+安装命令：
+
+```powershell
+python -m pip install -r requirements-recovery.txt
+```
+
+当前这份 manifest 只承诺覆盖：
+
+1. `mock + model_artifact + artifact_npz + inproc` 这条 software HIL 最小路径
+2. `P0/P3/P4 recovery smoke` 复用所需的 `numpy + PyYAML`
+
+它当前不承诺覆盖：
+
+1. `real_board` HIL backend
+2. `.tflite` runtime / export
+3. `subprocess + .venvs/tf311`
+4. `DLEnv` 训练链
+
+## 3. 当前推荐最小路径
 
 恢复期当前推荐的软件 HIL 最小路径是：
 
@@ -30,7 +54,7 @@
 - 它不是 `.tflite` runtime
 - 它也不依赖 `.venvs/tf311`
 
-## 3. 为什么选择这条路径
+## 4. 为什么选择这条路径
 
 选择这条最小路径，是因为它同时满足三件事：
 
@@ -47,7 +71,7 @@
 - `inference_service.mode=subprocess`
   - 因为主配置默认会碰到 `.venvs/tf311/bin/python`
 
-## 4. 当前最小 smoke 配置
+## 5. 当前最小 smoke 配置
 
 - [cnn_fpga/config/hardware_hil_recovery_smoke.yaml](/d:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/config/hardware_hil_recovery_smoke.yaml)
 
@@ -61,13 +85,13 @@
 6. 将 `error_model` 故障概率临时设为 `0.0`
 7. 将 `mock_signal.type` 设为 `static`
 
-## 5. 运行命令
+## 6. 运行命令
 
 ```powershell
 & 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_hil_suite --config cnn_fpga/config/hardware_hil_recovery_smoke.yaml
 ```
 
-## 6. 预期输出
+## 7. 预期输出
 
 运行成功后，会在 `runs/hil_suite/` 下生成一条 `hardware_hil_recovery_smoke_*` 目录，至少包含：
 
@@ -82,13 +106,14 @@
 4. `n_slow_updates_finished >= 1`
 5. `n_commits_applied >= 1`
 
-截至 `2026-05-07`，该路径已在当前机器上再次复验通过：
+截至 `2026-05-08`，该路径已在当前机器上完成新的确定性复验：
 
 - 命令：
   - `& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_hil_suite --config cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
 - 新运行目录：
-  - `runs/hil_suite/hardware_hil_recovery_smoke_20260507_234638_3ae9f9176104`
-- 复核结果：
+  - `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104`
+  - `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172232_3ae9f9176104`
+- 两次 run 的共同复核结果：
   - `backend = mock`
   - `n_windows_ready = 2`
   - `n_slow_updates_started = 2`
@@ -98,21 +123,36 @@
   - `n_commits_applied = 2`
   - `artifact_path = artifacts/models/static_theta_v2/tiny_cnn_20260319_151717_b87c6c227b57.npz`
   - `inference_service_mode = inproc`
-- 事件计数：
-  - `window_ready = 2`
-  - `slow_update_started = 2`
-  - `slow_update_finished = 2`
-  - `commit_applied = 2`
-  - `commit_ack_asserted = 2`
-  - `fast_budget_violation = 1`
+  - `final_ler = 0.454375`
+  - `overflow_rate = 0.002`
+- 逐字比对结果：
+  - `hil_summary.json` 的 SHA256 一致
+  - `hil_events.json` 的 SHA256 一致
 
-同时需要保留一个恢复期观察：
+`T12` 对随机源链路的收口说明：
 
-- 两次复验的 control-plane 字段一致，但 `final_ler` 与 `overflow_rate` 存在小幅差异。
-- 当前更合理的解释是“该路径已可复验，但还不是逐字确定性复现”。
-- 这不影响其作为 `T6` 最小 software HIL 路径成立，但后续若要提升到更严格 benchmark 口径，应继续追踪随机源控制。
+- `run_hil_suite.py`
+  - mock noise provider: `seed + 17`
+  - physical noise bridge: `seed + 19`
+  - driver / mock backend: `seed + 7`
+  - slow loop runtime: `seed + 31`
+  - host latency injector: `seed + 43`
+- `mock_fpga.py`
+  - `FastLoopEmulator` 接收派生 seed
+- `fast_loop_emulator.py`
+  - 快回路误差采样使用 `self._rng = default_rng(seed)`
+  - 综合征测量噪声使用独立 `self._measurement_rng = default_rng(seed + 1)`
+- `physics/syndrome_measurement.py`
+  - `RealisticSyndromeMeasurement` 现可接收显式 `rng`
+  - recovery 路径已不再依赖全局 `np.random` 进行测量噪声采样
 
-## 7. 这条路径证明了什么
+当前更准确的恢复期表述是：
+
+- 这条 `mock + model_artifact + artifact_npz + inproc` 的 bounded software HIL recovery smoke
+- 已在当前机器上完成逐字一致复验
+- 但它仍然不是 `real_board` HIL，也不是 `.tflite` runtime 验收
+
+## 8. 这条路径证明了什么
 
 它证明的是：
 
@@ -120,7 +160,7 @@
 2. `run_hil_suite.py -> FPGADriver(mock) -> SlowLoopRuntime(model_artifact)` 这条主链在当前环境上仍能启动并产出摘要
 3. 恢复期可以先在不碰 `.tflite`、不碰 `real_board` 的前提下继续推进 P3/P4 入口修复
 
-## 8. 这条路径不证明什么
+## 9. 这条路径不证明什么
 
 它不证明：
 

@@ -185,6 +185,7 @@ class FastLoopEmulator:
         self.linear_runtime = linear_runtime or LinearRuntime.from_config({})
         self.noise_provider = noise_provider or (lambda _epoch_id, _time_us: {})
         self._rng = np.random.default_rng(seed)
+        self._measurement_rng = np.random.default_rng(None if seed is None else seed + 1)
 
         self.measurement = RealisticSyndromeMeasurement(
             MeasurementConfig(
@@ -192,7 +193,8 @@ class FastLoopEmulator:
                 measurement_efficiency=config.measurement_efficiency,
                 ancilla_error_rate=config.ancilla_error_rate,
                 add_shot_noise=config.add_shot_noise,
-            )
+            ),
+            rng=self._measurement_rng,
         )
         self.tracker = LogicalErrorTracker()
         self._window_records: Deque[FastCycleRecord] = deque(maxlen=config.window_size)

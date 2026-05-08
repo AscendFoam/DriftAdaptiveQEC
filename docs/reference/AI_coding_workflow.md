@@ -1,6 +1,4 @@
-# 00d AI Coding 工作流
-
-本文件用来指导后续项目开发中的 AI coding 会话管理。
+# AI Coding 工作流
 
 定位：这是操作手册，不是新的调度系统。项目状态仍以仓库文件为准，AI 会话只是临时执行者。
 
@@ -16,9 +14,9 @@
 
 ## 1. 角色分工
 
-### 你
+### Project Manager
 
-最终裁决者。只做 4 件事：
+项目负责人。最终裁决者。只做 4 件事：
 
 1. 批准是否立项。
 2. 选择当前唯一任务。
@@ -197,8 +195,9 @@ Stop: 不建项目
 3. 建立 `docs/04_task_board.md`。
 4. 写入 `docs/07_handoff.md`。
 5. 把第一个任务设为 `Current Unique Task`。
+6. 把每一个任务包写入 `docs/tasks`中(若无此目录需创建)，注意同一个milestone的任务包放入相同的文件夹。
 
-任务板格式：
+任务任务板格式：
 
 ```markdown
 # Task Board
@@ -284,6 +283,8 @@ Reviewer prompt：
 - Missing tests
 - Suspicious implementation details
 - Recommended next action
+
+请将输出的内容写入 `docs/review` 目录下，以 `TaskID_review.md` 格式命名。
 ```
 
 高风险任务用 adversarial review：
@@ -314,7 +315,7 @@ BLOCK:
 
 每个 milestone 结束后暂停开发，做一次里程碑审查。
 
-输出：`reviews/` 下的 milestone review。
+输出：`docs/review/` 目录下，以 `TaskID_milestone_review.md` 格式命名。
 
 审查问题：
 
@@ -355,211 +356,7 @@ L4: 重点项目
 L5: 核心项目
 ```
 
-## 4. 已开发一部分项目的工作流
-
-适用于长 session 开发过、开发到一半、快完成但缺审查、文档和代码可能不一致的项目。
-
-核心目标：先恢复可信度，再继续开发。
-
-### B0. 冻结旧状态
-
-不要继续加功能。先做：
-
-```text
-1. git status
-2. 记录当前分支和未提交改动
-3. 如果可以，提交 checkpoint
-4. 收集旧 session summary 到 docs/legacy_context/
-```
-
-旧 session summary 只能当线索，不能当事实。
-
-### B1. 只读 Legacy Audit
-
-工具：Claude Code 或 Codex 只读会话。
-
-输出建议：
-
-```text
-docs/01_legacy_audit.md
-docs/00_project_snapshot.md
-```
-
-如果项目已经采用九件套，就把审计结论写入现有 `docs/07_handoff.md` 和 `docs/08_risks_and_open_questions.md`。
-
-Audit prompt：
-
-```text
-当前项目是一个已经由 coding agent 开发过的项目。
-
-本轮只读审计，不要改代码。
-
-请检查：
-1. 项目目标和当前 MVP 是否清楚
-2. README/docs 声称完成了什么
-3. 代码实际完成了什么
-4. 入口命令和依赖是否清楚
-5. 测试覆盖情况
-6. 疑似 mock/stub/hardcode/placeholder
-7. 文档与代码不一致处
-8. 下一步唯一恢复任务
-
-所有判断必须引用文件路径。
-```
-
-建议建立 Feature Reality Matrix：
-
-```markdown
-| Feature | Claimed status | Evidence path | Verified? | Risk |
-|---|---|---|---|---|
-| ... | ... | ... | yes/no | ... |
-```
-
-### B2. 重建治理文件
-
-如果旧项目没有清晰治理文件，先补最小集合：
-
-```text
-AGENTS.md
-CLAUDE.md
-docs/02_experiment_plan.md 或 docs/00_project_snapshot.md
-docs/04_task_board.md
-docs/07_handoff.md
-docs/08_risks_and_open_questions.md
-```
-
-迁移期任务板应以恢复可信度为主：
-
-```markdown
-## Phase 0: Stabilization
-
-- [ ] T0: 冻结 legacy 状态并完成只读审计
-- [ ] T1: 确认依赖和最小入口
-- [ ] T2: 跑通最小 demo 或记录阻塞
-- [ ] T3: 审计核心算法或核心 pipeline
-- [ ] T4: 补核心路径 smoke test
-- [ ] T5: 标记 mock/stub/hardcode
-
-## Current Unique Task
-
-T1
-```
-
-迁移期禁止：
-
-```text
-新增功能
-大规模重构
-改技术栈
-补复杂 UI
-把旧文档改成完成态宣传稿
-```
-
-### B3. 最小运行验证
-
-工具：Codex Worker。
-
-任务目标：找出项目能否跑起来。
-
-Worker 只做：
-
-```text
-1. 找依赖文件
-2. 找入口命令
-3. 运行最小 demo / test / pipeline
-4. 记录真实输出或报错
-5. 只修阻塞运行的最小问题
-6. 更新 handoff
-```
-
-分流：
-
-```text
-能跑: 进入测试补强
-不能跑但阻塞明确: 先修环境或入口
-不能跑且结构混乱: 进入 Salvage
-```
-
-### B4. 核心可信度审查
-
-工具：Claude Code adversarial reviewer。
-
-重点审：
-
-```text
-1. 核心算法是否真实实现
-2. 是否只是 baseline 换名
-3. 是否有 hardcoded 示例输入
-4. 是否有 mock 结果伪装真实结果
-5. 指标是否真实计算
-6. 是否有数据泄漏
-7. baseline 是否公平
-8. 随机性和结果是否可复现
-```
-
-结论：
-
-```text
-Allow: 可恢复正常开发
-Conditional: 先补验证或修核心问题
-Block: 不允许继续加功能
-```
-
-### B5. Recovery 开发循环
-
-迁移期每个任务都应是修复型任务：
-
-```text
-验证...
-补齐...测试
-删除或标记...伪实现
-替换...mock
-固定...入口
-复现...实验
-```
-
-不要写：
-
-```text
-继续优化...
-顺手增加...
-全面重构...
-```
-
-当满足以下条件，迁移才算完成：
-
-```text
-1. 能按文档跑最小路径
-2. MVP 范围明确
-3. task board 明确
-4. handoff 明确
-5. 核心功能可信等级至少 L2
-6. 有 smoke test 或等价验证
-7. mock/stub/hardcode 已标记
-8. 不再依赖旧长 session
-```
-
-### B6. Go / Repair / Salvage / Stop
-
-迁移审查后做一次决策：
-
-```text
-Go:
-  项目能跑，核心功能可信，继续开发成本合理。
-
-Repair:
-  方向对，代码有价值，但入口、测试、文档不足。
-
-Salvage:
-  局部模块有价值，整体结构混乱。新建 clean branch/repo，只搬可验证模块。
-
-Stop:
-  idea 不成立、撞车严重、结果不可信或继续收益低。
-```
-
-这个决策要写入 `docs/05_decision_log.md` 或对应 review 记录。
-
-## 5. 多 Worker 使用规则
+## 4. 多 Worker 使用规则
 
 默认顺序执行。只有满足以下条件才开多个 worker：
 
@@ -579,7 +376,7 @@ agent/claude-review-T12
 recovery/salvage-mvp
 ```
 
-## 6. 每天实际操作顺序
+## 5. 每天实际操作顺序
 
 ### 开始
 
@@ -639,7 +436,7 @@ docs/05_decision_log.md（如有关键决策）
 5. 下一步唯一任务是什么
 ```
 
-## 7. 完成标准
+## 6. 完成标准
 
 一个 AI coding 任务只有同时满足下面条件，才算完成：
 

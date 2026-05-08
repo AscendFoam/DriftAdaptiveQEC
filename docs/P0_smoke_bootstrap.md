@@ -6,7 +6,32 @@
 
 目标是让后续会话不用重新猜环境，就能复用当前已验证通过的 P0 smoke 路径。
 
-## 2. 当前推荐解释器分工
+## 2. 先装哪份依赖
+
+恢复期当前推荐先安装根目录的：
+
+- `requirements-recovery.txt`
+
+安装命令：
+
+```powershell
+python -m pip install -r requirements-recovery.txt
+```
+
+它当前只覆盖：
+
+1. `benchmark/compare_full_vs_simplified_ler.py --no-plot`
+2. `python -m cnn_fpga.benchmark.run_hil_suite --config cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
+3. `python -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml ...`
+
+它当前不覆盖：
+
+1. `DLEnv` 训练链
+2. `.tflite` runtime / export
+3. `real_board` HIL backend
+4. 去掉 `--no-plot` 后所需的 `matplotlib`
+
+## 3. 当前推荐解释器分工
 
 ### 最小 smoke 解释器
 
@@ -38,13 +63,13 @@
 - 当前也已确认具备 `numpy + yaml + torch`
 - 但恢复期最小 smoke 不依赖它
 
-## 3. 当前已验证的最小 smoke 命令
+## 4. 当前已验证的最小 smoke 命令
 
 ```powershell
 & 'C:\ProgramData\anaconda3\python.exe' benchmark/compare_full_vs_simplified_ler.py --n-rounds 10 --repeats 2 --no-plot --output-dir runs/smoke_test_anaconda
 ```
 
-## 4. 预期输出
+## 5. 预期输出
 
 运行成功后应得到：
 
@@ -57,7 +82,7 @@
 - `simplified_final_ler_mean = 0.000000`
 - `final_gap_mean = 0.150000`
 
-## 5. 复核命令
+## 6. 复核命令
 
 ### 读 summary
 
@@ -71,7 +96,7 @@ Get-Content -Raw -Encoding UTF8 "runs/smoke_test_anaconda/n10_r2_s0.250_summary.
 Get-Content -Raw -Encoding UTF8 "runs/smoke_test_anaconda/n10_r2_s0.250_ler_curve_compare.csv"
 ```
 
-## 6. 当前不处理的内容
+## 7. 当前不处理的内容
 
 本文件不负责：
 
