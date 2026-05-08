@@ -39,7 +39,7 @@
 
 ### Milestone 2A: Benchmark Evidence Hardening
 
-- [ ] T14: P4 frozen benchmark protocol audit and bounded run plan
+- [x] T14: P4 frozen benchmark protocol audit and bounded run plan
   - Task package: `docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`
 - [ ] T15: P4 multi-scenario frozen baseline bounded smoke
   - Task package: `docs/tasks/Phase2/T15_p4_multiscenario_frozen_smoke.md`
@@ -65,45 +65,54 @@
 
 ## Current Unique Task
 
-`T14: P4 frozen benchmark protocol audit and bounded run plan`
+`T15: P4 multi-scenario frozen baseline bounded smoke`
 
 为什么现在做它：
 
-1. `T9` 已完成 `single-scenario + four-mode + repeats=1` 的 P4 recovery smoke。
-2. `T13` 已允许项目进入 `Go`，但 `Go` 只代表可以继续做 bounded 开发任务。
-3. `docs/02_experiment_plan.md` 明确禁止无准备地启动长时间正式多场景 benchmark。
-4. 因此下一步应先审计正式/开发级 P4 benchmark 口径、确认最小 bounded 扩展方案，再决定是否运行更强证据。
+1. `T14` review verdict = `PASS`，且无 blocking issue。
+2. `docs/P4_benchmark_development_protocol.md` 已固定 `T15` 的 bounded matrix。
+3. `T15` 只允许执行双场景、五模式、`repeats=2` 的 development bounded run，不恢复完整四场景 formal benchmark。
+4. 该任务直接承接 `T9` 的单场景四模式 recovery smoke，用于给 `T16` gate review 提供更强但仍有边界的 P4 evidence。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T14`
-2. Worker 任务包：`docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`
+1. 当前唯一任务：`T15`
+2. Worker 任务包：`docs/tasks/Phase2/T15_p4_multiscenario_frozen_smoke.md`
 3. Allowed files：
-   - `docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`
+   - `docs/tasks/Phase2/T15_p4_multiscenario_frozen_smoke.md`
    - `docs/P4_benchmark_development_protocol.md`
+   - `docs/P4_benchmark_recovery_bootstrap.md`
    - `docs/04_task_board.md`
    - `docs/07_handoff.md`
    - `docs/08_risks_and_open_questions.md`
+   - 新产生的 `runs/p4_benchmark/...` 输出目录
 4. Forbidden scope：
    - 不改 `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`
    - 不改 `cnn_fpga/decoder/param_mapper.py`
    - 不改正式 benchmark baseline 集合或场景定义
-   - 不启动长跑 benchmark
+   - 不改 `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
+   - 不运行超出 `docs/P4_benchmark_development_protocol.md` Section 6 的 matrix
+   - 不把 bounded development run 写成正式四场景 formal benchmark
    - 不把 `mock-backed` 结果写成 `real_board` 或 `.tflite` 验收
 5. Verification：
-   - 只读检查相关 P4 config、runner 参数与既有 run evidence
-   - 可运行轻量只读命令，例如 `Select-String` / `Get-Content`
-   - 不要求产生新 `runs/` 结果
+   - 按 `docs/P4_benchmark_development_protocol.md` Section 7 的命令运行
+   - 检查新 run 的 `summary.json`、`comparison.csv`、`delta.csv`、`report.md`、`progress.jsonl`
+   - 检查各 repeat `hil_summary.json` 中 backend / artifact / inference mode 标签
 6. Docs to update：
-   - 新增或更新 `docs/P4_benchmark_development_protocol.md`
-   - 根据结论更新 `docs/07_handoff.md`
+   - 更新 `docs/P4_benchmark_development_protocol.md`
+   - 更新 `docs/P4_benchmark_recovery_bootstrap.md`
+   - 更新 `docs/07_handoff.md`
    - 必要时更新 `docs/08_risks_and_open_questions.md`
 
-## Done Criteria For T14
+## Done Criteria For T15
 
-1. 明确正式 P4 frozen benchmark 与 recovery smoke 的区别。
-2. 明确下一步可运行的 bounded smoke 参数，包括 scenario、mode、repeat、seed pairing、解释器与配置。
-3. 明确不允许本任务直接改变 benchmark 口径。
-4. 输出能被 `T15` 直接复用的 Worker 运行计划。
-5. 未修改代码、未产生新事实性 benchmark 结论。
-
+1. 运行范围严格等于：
+   - scenarios: `static_bias_theta`, `linear_ramp`
+   - modes: `ekf`, `ukf`, `constant_residual_mu`, `rls_residual_b`, `hybrid_residual_b`
+   - repeats: `2`
+   - seed policy: `--paired-seeds`
+   - config: `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
+2. 未修改 benchmark runner、config、baseline 集合、场景定义或 ParamMapper 语义。
+3. 记录新 run dir 与关键 summary/comparison 字段。
+4. 明确写清该结果是 `development bounded run`，不是正式四场景 formal benchmark。
+5. 为 `T16` gate review 留下足够证据。

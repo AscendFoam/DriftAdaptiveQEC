@@ -66,3 +66,47 @@ Docs to update:
 
 Reviewer type: `normal`
 
+## Worker Output Summary
+
+Status: completed as a documentation-only bounded audit.
+
+Produced:
+
+- `docs/P4_benchmark_development_protocol.md`
+- `docs/07_handoff.md`
+- `docs/08_risks_and_open_questions.md`
+- `docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`
+
+Key conclusions:
+
+1. `T9` evidence remains recovery smoke only:
+   - `static_bias_theta`
+   - `static_linear / window_variance / ekf / cnn_fpga`
+   - `repeats=1`
+   - `mock + artifact_npz + inproc`
+2. `T15` should not reopen the full formal four-scenario run immediately.
+3. Recommended `T15` bounded matrix is:
+   - scenarios: `static_bias_theta`, `linear_ramp`
+   - modes: `ekf`, `ukf`, `constant_residual_mu`, `rls_residual_b`, `hybrid_residual_b`
+   - repeats: `2`
+   - paired seeds: `true`
+   - interpreter: `C:\ProgramData\anaconda3\python.exe`
+   - config: `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
+4. Existing runner CLI already supports the needed controls:
+   - `--scenario`
+   - `--mode`
+   - `--repeats`
+   - `--paired-seeds`
+   - `--run-dir`
+   - `--repeat-start`
+   - `--repeat-stop`
+   - `--resume-only`
+
+Verification performed:
+
+- read-only check of:
+  - `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
+  - `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
+  - `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`
+- no new benchmark run launched
+- no code or benchmark semantics changed

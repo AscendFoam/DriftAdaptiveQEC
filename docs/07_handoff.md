@@ -5,8 +5,8 @@
 - 日期：`2026-05-08`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T14: P4 frozen benchmark protocol audit and bounded run plan`
-- 任务包：`docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`
+- 当前唯一任务：`T15: P4 multi-scenario frozen baseline bounded smoke`
+- 任务包：`docs/tasks/Phase2/T15_p4_multiscenario_frozen_smoke.md`
 
 ## 2. 本轮已完成
 
@@ -347,14 +347,34 @@ Verification:
 - 只读审计 P4 config、runner 参数与既有 run evidence
 - 不要求产生新 `runs/` 结果
 
+Current `T14` output status:
+
+- `docs/P4_benchmark_development_protocol.md` has now been added as the Phase 2 P4 development protocol.
+- `docs/review/T14_protocol_audit_review.md` verdict = `PASS`
+- Non-blocking review notes were accepted and addressed:
+  - `T14` worker output summary now lists all modified docs.
+  - `docs/P4_benchmark_development_protocol.md` now explains the strong-baseline config inheritance from `p4_multiscenario_hybrid_b_long.yaml`.
+- The document fixes three layers of wording:
+  - recovery smoke
+  - development bounded run
+  - formal frozen benchmark
+- It also fixes the recommended `T15` bounded matrix:
+  - scenarios: `static_bias_theta`, `linear_ramp`
+  - modes: `ekf`, `ukf`, `constant_residual_mu`, `rls_residual_b`, `hybrid_residual_b`
+  - repeats: `2`
+  - seed policy: `--paired-seeds`
+  - interpreter: `C:\ProgramData\anaconda3\python.exe`
+  - config: `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
+- `T14` does not reopen the full four-scenario formal run and does not change benchmark semantics.
+
 ## 7. 下一步建议
 
 第一轮 recovery 收尾已完成，Phase 2 当前按任务板顺序推进。
 
 建议优先级：
 
-1. 先完成 `T14`，把 P4 多场景 frozen benchmark 的 development protocol 固定下来
-2. 再由 Captain 决定是否进入 `T15` bounded smoke
+1. 现在可以进入 `T15`，但只能使用 `docs/P4_benchmark_development_protocol.md` 中定义的双场景、五模式、`repeats=2` bounded matrix
+2. `T15` 完成后应进入 `T16` gate review，而不是继续扩大 benchmark
 3. 之后再单开训练链 / `.tflite` / 真板路径的独立 manifest 与边界任务
 4. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 5. 仍不要顺手做 `runs/`、`artifacts/`、`__pycache__/` 的大规模清理或无界扩功能
