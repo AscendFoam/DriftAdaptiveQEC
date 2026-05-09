@@ -225,12 +225,63 @@ Any `T15` report must explicitly state:
    - stop at bounded evidence,
    - or redirect effort to manifests / training / `.tflite` / cleanup tasks.
 
-## 10. What T14 Explicitly Does Not Claim
+## 10. T15 Execution Record
 
-`T14` does not claim:
+`T15` has now been executed under the bounded matrix defined above.
+
+- Run dir: `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
+- Interpreter: `C:\ProgramData\anaconda3\python.exe`
+- Config: `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
+- Scenarios:
+  - `static_bias_theta`
+  - `linear_ramp`
+- Modes:
+  - `ekf`
+  - `ukf`
+  - `constant_residual_mu`
+  - `rls_residual_b`
+  - `hybrid_residual_b`
+- Repeats: `2`
+- Seed policy: `--paired-seeds`
+
+Execution note:
+
+- the first full command exceeded the single shell timeout window;
+- the run was then resumed on the same `run_dir`, which is allowed by Section 7.2 and did not change benchmark semantics;
+- final `summary.json` reports `missing_runs = []` and full coverage for all scenario/mode pairs.
+
+Key bounded results:
+
+- `static_bias_theta`
+  - winner: `hybrid_residual_b`
+  - `final_ler_mean = 0.8109015277777778`
+  - runner-up: `ukf`
+  - `runner_up_gap = 0.014468888888888864`
+- `linear_ramp`
+  - winner: `hybrid_residual_b`
+  - `final_ler_mean = 0.7877551388888888`
+  - runner-up: `ukf`
+  - `runner_up_gap = 0.023445694444444554`
+
+Boundary checks observed in the generated evidence:
+
+- all modes remained `backend = mock`
+- all checked repeats remained `inference_service_mode = inproc`
+- `hybrid_residual_b` used artifact:
+  - `artifacts/models/runtime_b_residual_v1/tiny_cnn_20260401_083648_2fc740424c0d.npz`
+- dominant overflow source stayed `histogram_input`
+- `correction_saturation_rate_mean = 0.0`
+- `aggressive_param_rate_mean = 0.0`
+
+This execution upgrades the project from single-scenario recovery smoke to bounded multi-scenario development evidence. It still does not restore the full four-scenario formal frozen benchmark.
+
+## 11. What T14 And T15 Still Do Not Claim
+
+`T14` and `T15` do not claim:
 
 1. formal P4 frozen benchmark has been restored;
 2. historical strong-baseline conclusions have been re-run on this machine;
 3. `real_board` HIL is ready;
 4. `.tflite` runtime is restored;
-5. `T15` should bypass Captain review and directly expand beyond the bounded matrix above.
+5. the full four-scenario formal matrix has been re-opened;
+6. later workers may expand beyond the bounded matrix above without a new task package.

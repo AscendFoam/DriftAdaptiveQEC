@@ -2,11 +2,11 @@
 
 ## 1. 当前状态
 
-- 日期：`2026-05-08`
+- 日期：`2026-05-09`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T15: P4 multi-scenario frozen baseline bounded smoke`
-- 任务包：`docs/tasks/Phase2/T15_p4_multiscenario_frozen_smoke.md`
+- 当前唯一任务：`T16: P4 benchmark evidence review and next-gate decision`
+- 任务包：`docs/tasks/Phase2/T16_p4_evidence_gate_review.md`
 
 ## 2. 本轮已完成
 
@@ -60,6 +60,19 @@
    - `docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
    - `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
    - `docs/tasks/Phase2/T20_real_board_readiness_checklist.md`
+16. 完成了 `T14`，补充了：
+   - `docs/P4_benchmark_development_protocol.md`
+   - `docs/review/T14_protocol_audit_review.md`
+17. 完成了 `T15`，补充了：
+   - `docs/tasks/Phase2/T15_p4_multiscenario_frozen_smoke.md` 的 Worker output
+   - `docs/P4_benchmark_development_protocol.md` 的 T15 execution record
+   - `docs/P4_benchmark_recovery_bootstrap.md` 的 T15 关系说明
+   - `docs/review/T15_frozen_smoke_review.md`
+   - 新 run dir：`runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
+18. Captain 已按 `PASS_WITH_WARNINGS` 处理 `T15` review：
+   - N1 accepted：handoff / task board 状态由 Captain 修正
+   - N2 deferred：`hybrid_residual_b` teacher diagnostics 全零交给 `T16` gate review 判断
+   - N3 accepted：strong-baseline config 不含 `static_linear` / `cnn_fpga`，所以 delta rows 为 null 是预期设计后果
 
 ## 3. 已验证事实
 
@@ -276,6 +289,45 @@
   - `docs/P4_benchmark_recovery_bootstrap.md`
   都已改为显式引用 `requirements-recovery.txt`
 
+### 3.11 T15 P4 development bounded run 结果
+
+- Review 文档：
+  - `docs/review/T15_frozen_smoke_review.md`
+- Review verdict：
+  - `PASS_WITH_WARNINGS`
+  - Blocking issues: none
+- 命令口径：
+  - interpreter: `C:\ProgramData\anaconda3\python.exe`
+  - config: `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
+  - scenarios: `static_bias_theta`, `linear_ramp`
+  - modes: `ekf`, `ukf`, `constant_residual_mu`, `rls_residual_b`, `hybrid_residual_b`
+  - repeats: `2`
+  - seed policy: `--paired-seeds`
+- 新运行目录：
+  - `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
+- 运行完整性：
+  - `missing_runs = []`
+  - 10 个 scenario/mode comparison rows 均 `coverage = 1.0`
+  - `raw_rows` 共 20 行，即 `2 scenario x 5 mode x 2 repeat`
+- 新 comparison 关键结果：
+  - `static_bias_theta` winner: `hybrid_residual_b`
+  - `static_bias_theta hybrid_residual_b final_ler_mean = 0.8109015277777778`
+  - `static_bias_theta runner_up = ukf`
+  - `static_bias_theta runner_up_gap = 0.014468888888888864`
+  - `linear_ramp` winner: `hybrid_residual_b`
+  - `linear_ramp hybrid_residual_b final_ler_mean = 0.7877551388888888`
+  - `linear_ramp runner_up = ukf`
+  - `linear_ramp runner_up_gap = 0.023445694444444554`
+- 边界：
+  - 该 run 是 `development bounded run`
+  - 仍是 `mock-backed P4 wrapper over software HIL`
+  - 不是 `real_board`
+  - 不是 `.tflite` runtime 验收
+  - 不是正式四场景 frozen benchmark 已恢复
+- Review warning 需后续判断：
+  - `hybrid_residual_b` 的 teacher diagnostics 全零，可能是指标收集缺口或 runner 指标路径 bug；不阻塞 LER 证据，但影响机制分析深度
+  - `delta_rows` 对 `static_linear` / `cnn_fpga` 为 null 是预期，因为 strong-baseline config 不包含这两个 mode
+
 ## 4. 当前判断
 
 项目当前判断已经从“是否还能退出 Recovery”切换为“在继续开发前，下一张 bounded 任务包应该优先补哪块正式证据或环境说明”：
@@ -290,8 +342,10 @@
 8. `.tflite` 路径仍必须区分真实 runtime 与 stub 回退
 9. `T12` 已把 bounded software HIL recovery smoke 收口到逐字一致复验
 10. `T13` 已确认 recovery exit 条件满足，项目可进入受控继续开发
-11. Phase 2 首个任务选为 `T14`，先审计 P4 frozen benchmark protocol 和 bounded run plan，不直接启动长跑
-12. `T15` 是否运行多场景 bounded smoke，必须等待 `T14` 产出明确 run matrix 后再执行
+11. `T14` 已完成 P4 frozen benchmark protocol audit 和 bounded run plan
+12. `T15` 已完成双场景、五模式、`repeats=2` 的 development bounded run
+13. `T15` review 为 `PASS_WITH_WARNINGS`；当前没有 blocking issue，但 teacher diagnostics 全零需要 `T16` 判断
+14. 下一步应进入 `T16` gate review，而不是继续扩大 benchmark
 
 ## 5. 已完成任务包
 
@@ -308,6 +362,8 @@
 - `T11`：`docs/tasks/P0/T11_recovery_dependency_manifest.md`
 - `T12`：`docs/tasks/P0/T12_software_hil_determinism_recovery.md`
 - `T13`：`docs/tasks/P0/T13_recovery_exit_and_closeout.md`
+- `T14`：`docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`
+- `T15`：`docs/tasks/Phase2/T15_p4_multiscenario_frozen_smoke.md`
 
 关键产出：
 
@@ -319,53 +375,42 @@
 - `docs/P4_benchmark_recovery_bootstrap.md`
 - `docs/review/T8_gate_review.md`
 - `docs/review/T10_gate_review.md`
+- `docs/review/T14_protocol_audit_review.md`
+- `docs/review/T15_frozen_smoke_review.md`
+- `docs/P4_benchmark_development_protocol.md`
 - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
 - `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
 
 ## 6. 当前唯一任务包摘要
 
-Task ID: `T14`
+Task ID: `T16`
 
-Goal: 审计 P4 frozen benchmark 的正式口径与 recovery smoke 口径，产出可指导 `T15` 的 bounded run plan。
+Goal: 对 `T14 + T15` 的 P4 benchmark 证据做 gate review，决定是否允许继续扩大 benchmark、转向环境 manifest，或暂停。
 
 Allowed files:
 
-- `docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`
-- `docs/P4_benchmark_development_protocol.md`
+- `docs/tasks/Phase2/T16_p4_evidence_gate_review.md`
+- `docs/review/T16_p4_evidence_gate_review.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
+- `docs/05_decision_log.md`
 
 Forbidden scope:
 
-- 不修改 benchmark runner、config、ParamMapper 或 baseline 集合
-- 不启动正式长跑 benchmark
+- 不运行新的 benchmark
+- 不修改代码或 config
+- 不把 `T15` bounded run 升级为正式论文或正式四场景 benchmark 结论
 - 不把 `mock-backed` 结果写成 `real_board` 或 `.tflite` 验收
 
 Verification:
 
-- 只读审计 P4 config、runner 参数与既有 run evidence
-- 不要求产生新 `runs/` 结果
-
-Current `T14` output status:
-
-- `docs/P4_benchmark_development_protocol.md` has now been added as the Phase 2 P4 development protocol.
-- `docs/review/T14_protocol_audit_review.md` verdict = `PASS`
-- Non-blocking review notes were accepted and addressed:
-  - `T14` worker output summary now lists all modified docs.
-  - `docs/P4_benchmark_development_protocol.md` now explains the strong-baseline config inheritance from `p4_multiscenario_hybrid_b_long.yaml`.
-- The document fixes three layers of wording:
-  - recovery smoke
-  - development bounded run
-  - formal frozen benchmark
-- It also fixes the recommended `T15` bounded matrix:
-  - scenarios: `static_bias_theta`, `linear_ramp`
-  - modes: `ekf`, `ukf`, `constant_residual_mu`, `rls_residual_b`, `hybrid_residual_b`
-  - repeats: `2`
-  - seed policy: `--paired-seeds`
-  - interpreter: `C:\ProgramData\anaconda3\python.exe`
-  - config: `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
-- `T14` does not reopen the full four-scenario formal run and does not change benchmark semantics.
+- 只读审查，无新运行
+- 输出 `docs/review/T16_p4_evidence_gate_review.md`
+- gate conclusion 只能为 `Allow` / `Conditional` / `Block`
+- 必须处理 `T15` review warnings：
+  - N2 teacher diagnostics 全零
+  - N3 delta rows 为 null
 
 ## 7. 下一步建议
 
@@ -373,8 +418,8 @@ Current `T14` output status:
 
 建议优先级：
 
-1. 现在可以进入 `T15`，但只能使用 `docs/P4_benchmark_development_protocol.md` 中定义的双场景、五模式、`repeats=2` bounded matrix
-2. `T15` 完成后应进入 `T16` gate review，而不是继续扩大 benchmark
+1. `T15` 已完成，下一步应进入 `T16` gate review，而不是继续扩大 benchmark
+2. `T16` 应重点判断：当前双场景 bounded evidence 是否足够，还是需要再补 `step_sigma_theta / periodic_drift`
 3. 之后再单开训练链 / `.tflite` / 真板路径的独立 manifest 与边界任务
 4. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 5. 仍不要顺手做 `runs/`、`artifacts/`、`__pycache__/` 的大规模清理或无界扩功能

@@ -667,3 +667,52 @@ Phase 2 先按以下顺序推进：
 2. `docs/tasks/Phase2/` 新增 `T14` 至 `T20` 的任务包。
 3. `docs/07_handoff.md` 与 `docs/08_risks_and_open_questions.md` 同步更新为 `T14` 当前任务口径。
 4. 后续 Worker 不应绕过 `T14` 直接执行 `T15` 或长跑 benchmark。
+
+## D-2026-05-09-01
+
+- 日期：`2026-05-09`
+- 决策：接受 `T15` 的 `PASS_WITH_WARNINGS` review，标记 `T15` 完成，并将当前唯一任务切换为 `T16: P4 benchmark evidence review and next-gate decision`
+
+### 背景
+
+`T15` 已按 `T14` 固定的 bounded matrix 完成双场景、五模式、`repeats=2` 的 P4 development run。`docs/review/T15_frozen_smoke_review.md` 给出 verdict：`PASS_WITH_WARNINGS`，且没有 blocking issue。
+
+### Warning 分类
+
+1. N1: handoff 多个状态节未同步更新
+   - 分类：`accepted`
+   - 处理：Captain 在本次整合中更新 `docs/04_task_board.md` 与 `docs/07_handoff.md`
+2. N2: `hybrid_residual_b` teacher diagnostics 全零
+   - 分类：`deferred`
+   - 处理：写入 `docs/08_risks_and_open_questions.md` 的 R10，并要求 `T16` gate review 判断
+3. N3: `delta_rows` 全部为 null
+   - 分类：`accepted`
+   - 处理：记录为 strong-baseline config 不包含 `static_linear` / `cnn_fpga` 的预期后果，提醒 `T16` 不要误判
+
+### 依据
+
+1. `T15` matrix 与 `T14` protocol 完全匹配：
+   - scenarios: `static_bias_theta`, `linear_ramp`
+   - modes: `ekf`, `ukf`, `constant_residual_mu`, `rls_residual_b`, `hybrid_residual_b`
+   - repeats: `2`
+   - seed policy: `paired`
+2. 新 run dir：
+   - `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
+3. Review 已确认：
+   - `missing_runs = []`
+   - 10 个 comparison rows 均 `coverage = 1.0`
+   - no forbidden scope violation
+   - no code / config / ParamMapper changes
+
+### 结论
+
+`T15` 可以标记完成，但其结果只升级为 `development bounded run` evidence，不升级为正式四场景 frozen benchmark 结论。
+
+下一唯一任务为 `T16`。`T16` 只做 gate review，不运行新 benchmark。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T15` 完成，并切换 `Current Unique Task` 到 `T16`。
+2. `docs/07_handoff.md` 补齐 `T14/T15` 完成记录、T15 evidence 与当前任务摘要。
+3. `docs/08_risks_and_open_questions.md` 增加 R10，并记录 warning 分类。
+4. 在 `T16` 完成前，不继续扩大 P4 benchmark。

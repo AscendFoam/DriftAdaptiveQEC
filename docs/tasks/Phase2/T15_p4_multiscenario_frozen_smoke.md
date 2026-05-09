@@ -62,3 +62,66 @@ Docs to update:
 
 Reviewer type: `normal`
 
+## Worker Output Summary
+
+Status: completed with a bounded development run plus resumable continuation on the same run directory.
+
+Run executed:
+
+- interpreter:
+  - `C:\ProgramData\anaconda3\python.exe`
+- config:
+  - `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
+- run dir:
+  - `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
+- scenarios:
+  - `static_bias_theta`
+  - `linear_ramp`
+- modes:
+  - `ekf`
+  - `ukf`
+  - `constant_residual_mu`
+  - `rls_residual_b`
+  - `hybrid_residual_b`
+- repeats:
+  - `2`
+- seed policy:
+  - `paired`
+
+Execution notes:
+
+1. the first full command exceeded the single shell timeout window;
+2. the run was resumed on the same `run_dir`, which is explicitly allowed by `docs/P4_benchmark_development_protocol.md` Section 7.2;
+3. final `summary.json` reports:
+   - `missing_runs = []`
+   - full coverage for all scenario/mode pairs.
+
+Key results:
+
+- `static_bias_theta`
+  - winner: `hybrid_residual_b`
+  - `final_ler_mean = 0.8109015277777778`
+  - runner-up: `ukf`
+  - `runner_up_gap = 0.014468888888888864`
+- `linear_ramp`
+  - winner: `hybrid_residual_b`
+  - `final_ler_mean = 0.7877551388888888`
+  - runner-up: `ukf`
+  - `runner_up_gap = 0.023445694444444554`
+
+Boundary checks:
+
+- all scenario/mode rows remain `mock-backed`
+- checked repeat summaries remain `inference_service_mode = inproc`
+- checked repeat summaries keep honest artifact labels:
+  - non-learned baselines: `artifact_path = null`
+  - `hybrid_residual_b`: `artifacts/models/runtime_b_residual_v1/tiny_cnn_20260401_083648_2fc740424c0d.npz`
+- dominant overflow source remains `histogram_input`
+- no correction saturation or aggressive-param evidence was introduced by this bounded run
+
+Docs updated:
+
+- `docs/P4_benchmark_development_protocol.md`
+- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/07_handoff.md`
+- `docs/08_risks_and_open_questions.md`

@@ -23,6 +23,7 @@ Forbidden scope:
 
 Inputs to read:
 
+- `docs/review/T15_frozen_smoke_review.md`
 - `docs/P4_benchmark_development_protocol.md`
 - `docs/P4_benchmark_recovery_bootstrap.md`
 - `docs/03_hil_p4_boundary_audit.md`
@@ -36,6 +37,9 @@ Expected output:
   - `Allow`: 允许下一步扩大 P4 benchmark
   - `Conditional`: 允许但附条件
   - `Block`: 暂停 P4 扩展，转入其他任务
+- 必须显式处理 `T15` review warning：
+  - N2: `hybrid_residual_b` teacher diagnostics 全零，判断是否影响 gate
+  - N3: `delta_rows` 为 null，说明这是 strong-baseline config 不含 `static_linear` / `cnn_fpga` 的预期后果还是需要后续补报表
 
 Verification:
 
@@ -51,4 +55,3 @@ Docs to update:
 - `docs/05_decision_log.md`（若改变决策状态）
 
 Reviewer type: `milestone`
-

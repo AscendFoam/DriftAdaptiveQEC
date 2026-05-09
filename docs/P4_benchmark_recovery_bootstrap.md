@@ -223,3 +223,36 @@ python -m pip install -r requirements-recovery.txt
 这些内容应继续留给后续任务：
 
 - `T10`：基于 `T8 + T9` 重新做一次 `Go / Repair` gate review
+- `T15`：在 `docs/P4_benchmark_development_protocol.md` 约束下执行双场景、五模式、`repeats=2` 的 development bounded run
+
+## 10. 与 T15 的关系
+
+`T15` 已经在当前机器上完成一条更强但仍有边界的 development run：
+
+- run dir:
+  - `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
+- config:
+  - `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
+- scenarios:
+  - `static_bias_theta`
+  - `linear_ramp`
+- modes:
+  - `ekf`
+  - `ukf`
+  - `constant_residual_mu`
+  - `rls_residual_b`
+  - `hybrid_residual_b`
+- repeats:
+  - `2`
+- seed policy:
+  - `paired`
+
+该 run 不属于 recovery smoke 本身，而属于 `docs/P4_benchmark_development_protocol.md` 中定义的 `development bounded run`。
+
+它与本文件记录的 recovery smoke 的关系应固定写法如下：
+
+1. recovery smoke 仍是最小复用途径；
+2. `T15` 是在 formal strong-baseline config family 上做的 bounded development extension；
+3. 两者都还是 `mock-backed P4 wrapper over software HIL`；
+4. 两者都不应写成 `real_board` 或 `.tflite` runtime 验收；
+5. `T15` 也不等于正式四场景 frozen benchmark 已恢复。
