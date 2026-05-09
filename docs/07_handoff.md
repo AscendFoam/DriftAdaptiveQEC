@@ -5,8 +5,8 @@
 - 日期：`2026-05-09`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T16: P4 benchmark evidence review and next-gate decision`
-- 任务包：`docs/tasks/Phase2/T16_p4_evidence_gate_review.md`
+- 当前唯一任务：`T17: Training-chain independent manifest and bootstrap（已完成，等待 Captain 指定下一任务）`
+- 任务包：`docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
 
 ## 2. 本轮已完成
 
@@ -73,6 +73,21 @@
    - N1 accepted：handoff / task board 状态由 Captain 修正
    - N2 deferred：`hybrid_residual_b` teacher diagnostics 全零交给 `T16` gate review 判断
    - N3 accepted：strong-baseline config 不含 `static_linear` / `cnn_fpga`，所以 delta rows 为 null 是预期设计后果
+19. 完成了 `T16`，补充了：
+   - `docs/review/T16_p4_evidence_gate_review.md`
+   - `docs/tasks/Phase2/T16_p4_evidence_gate_review.md` 的 Worker output
+20. `T16` gate review verdict = `Conditional`：
+   - 允许继续 Phase 2 受控开发
+   - 不把 `T15` 升级为正式四场景 frozen benchmark 已恢复
+   - 当前更适合优先转向 `T17 / T18` 这类独立 manifest / boundary 任务
+   - `hybrid_residual_b` teacher diagnostics 全零保留为非阻塞风险
+21. 完成了 `T17`，补充了：
+   - `docs/training_chain_bootstrap.md`
+   - `docs/tasks/Phase2/T17_training_manifest_bootstrap.md` 的 Worker output
+22. `T17` 将训练链环境说明与 recovery smoke 依赖说明显式拆开：
+   - `requirements-recovery.txt` 继续只覆盖 `P0/P3/P4 recovery smoke`
+   - `docs/training_chain_bootstrap.md` 单独记录训练链推荐解释器、训练入口、双后端边界与未覆盖项
+   - 本轮没有启动训练长跑，也没有把 `DLEnv` 写成跨机器保证
 
 ## 3. 已验证事实
 
@@ -345,7 +360,9 @@
 11. `T14` 已完成 P4 frozen benchmark protocol audit 和 bounded run plan
 12. `T15` 已完成双场景、五模式、`repeats=2` 的 development bounded run
 13. `T15` review 为 `PASS_WITH_WARNINGS`；当前没有 blocking issue，但 teacher diagnostics 全零需要 `T16` 判断
-14. 下一步应进入 `T16` gate review，而不是继续扩大 benchmark
+14. `T16` 已完成，结论为 `Conditional`
+15. 当前更适合优先转向 `T17 / T18` 这类独立 manifest / boundary 任务，而不是继续扩大 P4 benchmark
+16. `T17` 已完成，训练链环境说明现已独立收口，但 `.tflite`、真板和训练长跑复验仍未覆盖
 
 ## 5. 已完成任务包
 
@@ -380,37 +397,40 @@
 - `docs/P4_benchmark_development_protocol.md`
 - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
 - `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
+- `docs/training_chain_bootstrap.md`
 
 ## 6. 当前唯一任务包摘要
 
-Task ID: `T16`
+Task ID: `T17`
 
-Goal: 对 `T14 + T15` 的 P4 benchmark 证据做 gate review，决定是否允许继续扩大 benchmark、转向环境 manifest，或暂停。
+Goal: 为训练链补独立 manifest 与 bootstrap，不把它混入 `requirements-recovery.txt`。
 
 Allowed files:
 
-- `docs/tasks/Phase2/T16_p4_evidence_gate_review.md`
-- `docs/review/T16_p4_evidence_gate_review.md`
+- `docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
+- `docs/training_chain_bootstrap.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/05_decision_log.md`
+
 
 Forbidden scope:
 
-- 不运行新的 benchmark
-- 不修改代码或 config
-- 不把 `T15` bounded run 升级为正式论文或正式四场景 benchmark 结论
-- 不把 `mock-backed` 结果写成 `real_board` 或 `.tflite` 验收
+- 不改训练代码
+- 不启动训练长跑
+- 不改模型主线
+- 不把 DLEnv 探测结果写成跨机器保证
 
 Verification:
 
-- 只读审查，无新运行
-- 输出 `docs/review/T16_p4_evidence_gate_review.md`
-- gate conclusion 只能为 `Allow` / `Conditional` / `Block`
-- 必须处理 `T15` review warnings：
-  - N2 teacher diagnostics 全零
-  - N3 delta rows 为 null
+- 至少运行只读环境探测或 `--help` / import 级检查
+- 不要求完整训练
+
+当前状态：
+
+- `T17` 已完成
+- 训练链 bootstrap 已补齐
+- 未改变全局阶段与决策状态，仍为 `Phase 2: Controlled Development` / `Go`
 
 ## 7. 下一步建议
 
@@ -418,9 +438,9 @@ Verification:
 
 建议优先级：
 
-1. `T15` 已完成，下一步应进入 `T16` gate review，而不是继续扩大 benchmark
-2. `T16` 应重点判断：当前双场景 bounded evidence 是否足够，还是需要再补 `step_sigma_theta / periodic_drift`
-3. 之后再单开训练链 / `.tflite` / 真板路径的独立 manifest 与边界任务
+1. `T17` 已完成；下一任务仍应由 Captain 明确指定，不在本轮自动领取
+2. 当前更适合继续按边界拆分方式推进 `.tflite` manifest / boundary 任务
+3. 训练链 bootstrap 已独立收口，但暂不把这件事扩写为跨机器完整训练环境已恢复
 4. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 5. 仍不要顺手做 `runs/`、`artifacts/`、`__pycache__/` 的大规模清理或无界扩功能
 

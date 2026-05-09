@@ -43,12 +43,12 @@
   - Task package: `docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`
 - [x] T15: P4 multi-scenario frozen baseline bounded smoke
   - Task package: `docs/tasks/Phase2/T15_p4_multiscenario_frozen_smoke.md`
-- [ ] T16: P4 benchmark evidence review and next-gate decision
+- [x] T16: P4 benchmark evidence review and next-gate decision
   - Task package: `docs/tasks/Phase2/T16_p4_evidence_gate_review.md`
 
 ### Milestone 2B: Environment Manifests
 
-- [ ] T17: Training-chain independent manifest and bootstrap
+- [x] T17: Training-chain independent manifest and bootstrap
   - Task package: `docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
 - [ ] T18: TFLite export/runtime manifest and boundary smoke plan
   - Task package: `docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
@@ -65,49 +65,44 @@
 
 ## Current Unique Task
 
-`T16: P4 benchmark evidence review and next-gate decision`
+`T17: Training-chain independent manifest and bootstrap（已完成，等待 Captain 指定下一任务）`
 
 为什么现在做它：
 
-1. `T15` review verdict = `PASS_WITH_WARNINGS`，且无 blocking issue。
-2. `T15` 已按 `T14` matrix 完成双场景、五模式、`repeats=2` 的 development bounded run。
-3. Review warning 已分类：N1 accepted 并由 Captain 修正文档状态；N2 deferred 给 `T16`；N3 accepted 作为 strong-baseline config 下的预期设计后果。
-4. 下一步应先做 gate review，判断是否继续扩大 P4 benchmark、转向环境 manifest，或暂停 P4 扩展。
+1. `T16` milestone review verdict = `PASS_WITH_WARNINGS`，且没有 blocking issue。
+2. `T16` gate verdict = `Conditional`：允许继续受控开发，但不建议继续扩大 P4 benchmark。
+3. `T16` milestone warning 已分类：review 深度问题 accepted；R5/R9 是否降级 deferred 到后续 risks 维护；teacher diagnostics 判断仍保留为 R10 非阻塞风险。
+4. 当前更适合先补训练链独立 manifest/bootstrap，再按需推进 `.tflite` 或其他边界任务。
+5. `T17` 已完成：训练链入口、推荐解释器、双后端边界与未覆盖项已独立收口到 `docs/training_chain_bootstrap.md`，且没有混入 `requirements-recovery.txt`。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T16`
-2. Worker 任务包：`docs/tasks/Phase2/T16_p4_evidence_gate_review.md`
+1. 当前唯一任务：`T17`
+2. Worker 任务包：`docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
 3. Allowed files：
-   - `docs/tasks/Phase2/T16_p4_evidence_gate_review.md`
-   - `docs/review/T16_p4_evidence_gate_review.md`
+   - `docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
    - `docs/04_task_board.md`
    - `docs/07_handoff.md`
    - `docs/08_risks_and_open_questions.md`
-   - `docs/05_decision_log.md`
+   - `requirements-train.txt` 或 `docs/training_chain_bootstrap.md`
 4. Forbidden scope：
-   - 不运行新的 benchmark
-   - 不修改代码或 config
-   - 不把 `T15` bounded run 升级为正式四场景 formal benchmark 结论
-   - 不把 `mock-backed` 结果写成 `real_board` 或 `.tflite` 验收
-   - 不自动领取 `T17` 或扩大 P4 run
+   - 不改训练代码
+   - 不启动训练长跑
+   - 不改模型主线
+   - 不把 DLEnv 探测结果写成跨机器保证
 5. Verification：
-   - 只读审查 `T14 + T15` 的 protocol、run evidence、review warning 与风险记录
-   - 输出 `docs/review/T16_p4_evidence_gate_review.md`
-   - 结论只能是 `Allow` / `Conditional` / `Block`
+   - 至少运行只读环境探测或 `--help` / import 级检查
+   - 不要求完整训练
 6. Docs to update：
-   - 新增 `docs/review/T16_p4_evidence_gate_review.md`
+   - 新增 `requirements-train.txt` 或 `docs/training_chain_bootstrap.md`
    - 更新 `docs/04_task_board.md`
    - 更新 `docs/07_handoff.md`
    - 更新 `docs/08_risks_and_open_questions.md`
-   - 若改变决策状态则更新 `docs/05_decision_log.md`
 
-## Done Criteria For T16
+## Done Criteria For T17
 
-1. 读取 `docs/review/T15_frozen_smoke_review.md` 并处理 warning：
-   - N2 teacher diagnostics 全零必须进入 gate 判断或 deferred risk
-   - N3 delta rows 为 null 应作为 config 设计后果解释清楚
-2. 判断当前双场景 bounded evidence 是否支持继续扩大 P4 benchmark。
-3. 明确下一步建议：扩大到剩余场景、转向 manifest、或暂停 P4。
-4. 不产生新的 benchmark run。
-5. 不把 `T15` 写成正式四场景 frozen benchmark 已恢复。
+1. 产出训练链独立 manifest 或 bootstrap 文档。
+2. 明确解释器、依赖边界、可运行 smoke 命令与未覆盖项。
+3. 不改训练代码、不跑训练长跑。
+4. 不把 DLEnv 探测结果写成跨机器保证。
+5. 为后续 `T18` / `T19` / `T20` 留出清晰边界。

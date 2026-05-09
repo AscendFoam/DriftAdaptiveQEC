@@ -46,3 +46,14 @@ Docs to update:
 
 Reviewer type: `normal`
 
+## Worker Output Summary
+
+- Output type: `docs/training_chain_bootstrap.md`
+- No training code changed
+- No long training run started
+- Verification used import-level and `--help` checks only
+- Updated docs:
+  - `docs/training_chain_bootstrap.md`
+  - `docs/04_task_board.md`
+  - `docs/07_handoff.md`
+  - `docs/08_risks_and_open_questions.md`

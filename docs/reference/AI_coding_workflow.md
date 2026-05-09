@@ -215,6 +215,17 @@ T1: ...
 ### A4. 单任务开发循环
 
 每个任务都按下面顺序执行。
+#### 0. Captain接手任务
+```text
+现在你将作为这个[项目名称]项目的继续推进的captain。
+需要你仔细阅读 
+ @docs/02_experiment_plan.md
+ (了解项目背景、开发记录等知识)和 
+ @docs/reference/AI_coding_workflow.md
+ ，按照文档的要求，继续像新项目那样启动后续开发任务，把除02以外的 docs 中的00~08文档修改成 
+ @docs/reference/AI_coding_workflow.md
+ 中要求的形式。主要是要给出合适的04_task_board.md，用于指导后续worker会话完成每一个具体task。
+```
 
 #### 1. Captain 生成任务包
 
@@ -266,7 +277,12 @@ Reviewer prompt：
 ```text
 你是 Claude Code reviewer。
 
-只读审查本次 diff，不要修改文件。
+只读审查本次 diff（可通过git查询），不要修改文件。
+
+worker根据 
+[粘贴 Task ID 和任务包]
+完成了T16任务，并给出了以下总结：
+[粘贴 worker 最后报告]
 
 重点检查：
 1. 是否真的完成任务
@@ -298,6 +314,10 @@ Reviewer prompt：
 Captain 根据 review 做判断：
 
 ```text
+你是captain，需要你对 reviewer的
+[粘贴 reviewer 最后报告] 
+做判断：
+"
 PASS:
   标记任务完成，更新 handoff，推荐下一任务但不执行。
 
@@ -309,6 +329,11 @@ BLOCK:
   让 worker 只修 blocking issue。
   同一任务最多自动复审一次。
   第二次仍 BLOCK，则停止，交给用户裁决。
+"
+
+判断结束后更新除02以外的00~08治理文档。
+接下来是否可提交git并让worker推进[Task ID]?
+如果没有新任务的任务包，需要你写入任务包到 @docs/tasks 中。
 ```
 
 ### A5. 里程碑闸门

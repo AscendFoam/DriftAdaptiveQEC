@@ -55,3 +55,14 @@ Docs to update:
 - `docs/05_decision_log.md`（若改变决策状态）
 
 Reviewer type: `milestone`
+
+## Worker Output Summary
+
+- Review result: `Conditional`
+- No new benchmark run executed
+- No code or config changes made
+- Updated docs:
+  - `docs/review/T16_p4_evidence_gate_review.md`
+  - `docs/04_task_board.md`
+  - `docs/07_handoff.md`
+  - `docs/08_risks_and_open_questions.md`
