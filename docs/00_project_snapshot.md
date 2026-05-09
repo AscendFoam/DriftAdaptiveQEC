@@ -204,12 +204,12 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T14: P4 frozen benchmark protocol audit and bounded run plan`
+- `T18: TFLite export/runtime manifest and boundary smoke plan`
 
 ## 12. 快照结论
 
 当前项目的核心问题已经从“有没有可靠治理层和入口”切换为“如何在不夸大完成度的前提下继续增强证据”。Phase 2 的默认策略是：
 
-1. 先补 P4 benchmark protocol 与 bounded evidence。
-2. 再补训练链、`.tflite`、真板路径的独立 manifest / readiness。
+1. P4 benchmark protocol 与 bounded evidence 已完成第一轮受控增强，当前 gate 结论为 `Conditional`。
+2. 训练链独立 bootstrap 已完成，当前优先补 `.tflite` export/runtime manifest 与 boundary smoke plan。
 3. 对 repo noise 做有界 cleanup，而不是大规模重写历史产物。

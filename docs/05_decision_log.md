@@ -719,34 +719,70 @@ Phase 2 先按以下顺序推进：
 
 ## D-2026-05-09-02
 
-- ???`2026-05-09`
-- ????? `T16` milestone review ? `PASS_WITH_WARNINGS`????? `T16` gate verdict?????? `T17` ????????
+- 日期：`2026-05-09`
+- 决策：接受 `T16` milestone review 的 `PASS_WITH_WARNINGS`，保留 `T16` gate verdict = `Conditional`，并将当前唯一任务切换为 `T17: Training-chain independent manifest and bootstrap`
 
-### ??
+### 背景
 
-`T16` gate review ????verdict ? `Conditional`??? milestone review ??? `PASS_WITH_WARNINGS`???? blocking issue?
+`T16` gate review 已完成，verdict = `Conditional`。随后 `docs/review/T16_milestone_review.md` 给出 `PASS_WITH_WARNINGS`，且没有 blocking issue。
 
-### Warning ??
+### Warning 分类
 
-1. N1: `T16` review ????????? handoff / task board ??
-   - ???`accepted`
-   - ?????? `docs/04_task_board.md` ? `docs/07_handoff.md` ??
-2. N2: `T16` review ??????R5/R9 ?????????
-   - ???`deferred`
-   - ???????? `docs/08_risks_and_open_questions.md`????????
+1. N1: `T16` review 深度和 handoff / task board 状态一致性问题
+   - 分类：`accepted`
+   - 处理：Captain 在 `docs/04_task_board.md` 与 `docs/07_handoff.md` 中修正状态口径
+2. N2: `T16` review 未充分讨论 R5/R9 风险是否可降级
+   - 分类：`deferred`
+   - 处理：暂不降级 R5/R9，后续风险维护任务再判断
 
-### ??
+### 依据
 
-1. `T16` gate verdict ??? `Conditional`?????????????????? P4 benchmark?
-2. `T16` milestone review ???? blocking issue?
-3. ??????????????? P4?????????? manifest/bootstrap `T17`?
+1. `T16` gate verdict = `Conditional`，允许继续 Phase 2 受控开发，但不建议继续扩大 P4 benchmark。
+2. `T16` milestone review 没有 blocking issue。
+3. 当前更适合转向训练链、`.tflite` 等独立 manifest / boundary 任务。
 
-### ??
+### 结论
 
-`T16` milestone review ????? gate ?????? Captain ??????????????? `T17`?
+`T16` 可以标记完成，但 P4 证据仍保持 `Conditional` 边界；下一唯一任务切换为 `T17`。
 
-### ????
+### 直接影响
 
-1. `docs/04_task_board.md` ??????? `T17`?
-2. `docs/07_handoff.md` ?????????? `T17`?
-3. `docs/08_risks_and_open_questions.md` ?? R10??? R11??? `T16` ? warning ??????????
+1. `docs/04_task_board.md` 切换当前唯一任务为 `T17`。
+2. `docs/07_handoff.md` 同步 `T16` 完成记录与 `T17` 任务摘要。
+3. `docs/08_risks_and_open_questions.md` 保留 R10，并继续把 R5/R9 作为未降级风险。
+
+## D-2026-05-10-01
+
+- 日期：`2026-05-10`
+- 决策：接受 `T17` review 的 `PASS`，标记 `T17` 完成，并将当前唯一任务切换为 `T18: TFLite export/runtime manifest and boundary smoke plan`
+
+### 背景
+
+`T17` 已完成训练链独立 bootstrap。`docs/review/T17_review.md` 给出 verdict：`PASS`，没有 blocking issue。
+
+### Non-blocking 观察
+
+1. N1: `torch = 2.8.0.dev20250405+cu128` 是 dev build
+   - 分类：`accepted`
+   - 处理：当前 bootstrap 已明确它只是本机环境探测结果；后续不把该版本写成跨机器保证
+2. N2: 未产出 `requirements-train.txt`
+   - 分类：`accepted`
+   - 处理：任务允许选择 `requirements-train.txt` 或 `docs/training_chain_bootstrap.md`；在 dev torch 场景下先采用文档化 bootstrap 更诚实。若后续需要训练链可移植性，再单开依赖锁定任务
+
+### 依据
+
+1. `docs/training_chain_bootstrap.md` 已独立说明训练链推荐解释器、入口、依赖边界与未覆盖项。
+2. `requirements-recovery.txt` 仍只覆盖 `P0/P3/P4 recovery smoke`，没有被混写成训练链 manifest。
+3. Worker 没有修改训练代码、没有启动训练长跑、没有改模型主线。
+4. Verification 已达到任务包要求：DLEnv import 级检查与 `python -m cnn_fpga.model.train --help`。
+
+### 结论
+
+`T17` 可以标记完成。下一唯一任务为 `T18`，用于收口 `.tflite` export/runtime 路径的 manifest 与 boundary smoke plan。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T17` 完成，并切换 `Current Unique Task` 到 `T18`。
+2. `docs/07_handoff.md` 补齐 `T17` review 判定、warning 处理和 `T18` 任务摘要。
+3. `docs/08_risks_and_open_questions.md` 记录训练链 dev build / requirements-train 后续风险，并把当前下一任务更新为 `T18`。
+4. `T18` 任务包已经存在：`docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`。

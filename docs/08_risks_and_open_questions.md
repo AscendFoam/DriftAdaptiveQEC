@@ -14,6 +14,7 @@
 | R8 | 最小 software HIL 路径虽然已在 bounded recovery path 上完成逐字一致复验，但该结论容易被误外推到真板、`.tflite` 或正式 benchmark | 中 | `T12` 已确认 `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104` 与 `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172232_3ae9f9176104` 的 `hil_summary.json` / `hil_events.json` 哈希一致；但路径仍固定为 `mock + model_artifact + artifact_npz + inproc` | 后续文档必须继续写清结论边界，不把 bounded recovery smoke 扩写成真板或正式 benchmark 已恢复 |
 | R9 | 在 `T15` 已完成后，若继续直接扩大到剩余场景或更长 repeat，仍可能隐式越过 bounded/development/formal 边界 | 中高 | `T15` 已按协议跑完 `static_bias_theta + linear_ramp`、五模式、`repeats=2`；`docs/02_experiment_plan.md` 仍禁止无准备长跑 | `T16` 后仍不应自动追加 `step_sigma_theta`、`periodic_drift` 或更大 repeat；任何进一步 P4 扩展都必须新开任务包 |
 | R10 | `hybrid_residual_b` 的 teacher diagnostics 在 T15 summary 中全零，可能影响机制分析深度 | 中 | `docs/review/T15_frozen_smoke_review.md` N2 指出所有 10 个 comparison rows 的 `teacher_contribution_l2_mean`、`teacher_scalar_abs_mean`、`teacher_gate_mean`、`teacher_gate_std` 均为 0，且 `teacher_per_scalar = {}` | `T16` 已将其判为非阻塞风险：在路径未澄清前，不把 teacher diagnostics 用作机制结论；当前优先转向 manifest / boundary 任务，而不是为了该指标直接重开 benchmark |
+| R11 | 训练链 bootstrap 记录了本机 `torch` dev build，但尚未形成可移植依赖锁定 | 中 | `docs/review/T17_review.md` N1/N2 指出 `torch = 2.8.0.dev20250405+cu128` 是 dev build，且本轮未产出 `requirements-train.txt`；`docs/training_chain_bootstrap.md` 只承诺本机 `DLEnv` 探测结果 | 不把 `DLEnv` 或 dev torch 写成跨机器保证；若后续需要训练链可移植性，单开 `requirements-train.txt` / lockfile 任务，并显式说明 dev build 渠道限制 |
 
 ## 当前开放问题
 
@@ -41,8 +42,8 @@
 8. 已跟踪的 `.pyc` / `__pycache__/`、`runs/`、`artifacts/` 何时启动有界 cleanup，并如何拆分“bootstrap 必需”与“历史归档”？
 9. 下一张继续开发任务包应该优先选哪一类？
    - 当前答案：
-     - `T17` 已完成，当前更适合优先进入 `T18` `.tflite` manifest / boundary 任务
-     - 是否实际切到哪一个，仍由 Captain 明确指定
+     - `T17` 已完成并通过 review。
+     - 当前唯一任务已切到 `T18` `.tflite` manifest / boundary smoke plan。
 10. `T15` 是否应直接运行多场景 P4 smoke？
    - 当前答案：已执行完成。
      - run dir: `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
@@ -61,6 +62,11 @@
      - N1 handoff 状态不一致：`accepted`，Captain 已修正 04/07 文档状态。
      - N2 `hybrid_residual_b` teacher diagnostics 全零：`T16` 已判定为非阻塞风险，继续保留在 R10。
      - N3 `delta_rows` 为 null：`accepted`，这是 strong-baseline config 不包含 `static_linear` / `cnn_fpga` 的预期后果，不应误判为缺失结果。
+12. `T17` 的 review warning 如何处理？
+   - 当前答案：
+     - Verdict：`PASS`。
+     - N1 `torch` dev build：`accepted`，只作为本机环境事实记录，不写成跨机器保证，风险保留到 R11。
+     - N2 未产出 `requirements-train.txt`：`accepted`，因为任务允许用 `docs/training_chain_bootstrap.md` 收口；训练链可移植性后续单开任务。
 
 ## 暂缓事项
 

@@ -65,44 +65,45 @@
 
 ## Current Unique Task
 
-`T17: Training-chain independent manifest and bootstrap（已完成，等待 Captain 指定下一任务）`
+`T18: TFLite export/runtime manifest and boundary smoke plan`
 
 为什么现在做它：
 
-1. `T16` milestone review verdict = `PASS_WITH_WARNINGS`，且没有 blocking issue。
-2. `T16` gate verdict = `Conditional`：允许继续受控开发，但不建议继续扩大 P4 benchmark。
-3. `T16` milestone warning 已分类：review 深度问题 accepted；R5/R9 是否降级 deferred 到后续 risks 维护；teacher diagnostics 判断仍保留为 R10 非阻塞风险。
-4. 当前更适合先补训练链独立 manifest/bootstrap，再按需推进 `.tflite` 或其他边界任务。
-5. `T17` 已完成：训练链入口、推荐解释器、双后端边界与未覆盖项已独立收口到 `docs/training_chain_bootstrap.md`，且没有混入 `requirements-recovery.txt`。
+1. `T17` review verdict = `PASS`，没有 blocking issue。
+2. `T17` 已完成训练链独立 bootstrap，并明确没有把 `DLEnv` 写成跨机器保证。
+3. `T17` reviewer 的 `torch` dev build 与未产出 `requirements-train.txt` 观察均为非阻塞；训练链可移植性后续再单开任务，不影响进入 `T18`。
+4. `.tflite` 路径已有真实导出/runtime 与 `tflite_stub_v1` 两类代码路径，但当前 Phase 2 尚未重新复验真实 runtime。
+5. 当前更适合先补 `.tflite` manifest / boundary smoke plan，再决定是否执行实际 smoke 或转入 cleanup / real-board readiness。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T17`
-2. Worker 任务包：`docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
+1. 当前唯一任务：`T18`
+2. Worker 任务包：`docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
 3. Allowed files：
-   - `docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
+   - `docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
+   - `docs/TFLite_runtime_bootstrap.md`
    - `docs/04_task_board.md`
    - `docs/07_handoff.md`
    - `docs/08_risks_and_open_questions.md`
-   - `requirements-train.txt` 或 `docs/training_chain_bootstrap.md`
 4. Forbidden scope：
-   - 不改训练代码
-   - 不启动训练长跑
-   - 不改模型主线
-   - 不把 DLEnv 探测结果写成跨机器保证
+   - 不改 `cnn_fpga/model/export.py`
+   - 不改 `cnn_fpga/runtime/inference_service.py`
+   - 不把 `.tflite.json` stub manifest 写成真实 `.tflite` runtime
+   - 不改 HIL benchmark 口径
 5. Verification：
-   - 至少运行只读环境探测或 `--help` / import 级检查
-   - 不要求完整训练
+   - 只读代码审计加环境探测
+   - 如环境具备，可运行最小 `--help` 或 import smoke
+   - 不得强行改代码绕过依赖
 6. Docs to update：
-   - 新增 `requirements-train.txt` 或 `docs/training_chain_bootstrap.md`
+   - 新增 `docs/TFLite_runtime_bootstrap.md`
    - 更新 `docs/04_task_board.md`
    - 更新 `docs/07_handoff.md`
    - 更新 `docs/08_risks_and_open_questions.md`
 
-## Done Criteria For T17
+## Done Criteria For T18
 
-1. 产出训练链独立 manifest 或 bootstrap 文档。
-2. 明确解释器、依赖边界、可运行 smoke 命令与未覆盖项。
-3. 不改训练代码、不跑训练长跑。
-4. 不把 DLEnv 探测结果写成跨机器保证。
-5. 为后续 `T18` / `T19` / `T20` 留出清晰边界。
+1. 产出 `.tflite` export/runtime 独立 bootstrap 文档。
+2. 明确真实 `.tflite` 与 `tflite_stub_v1` 的边界、依赖和 smoke 命令。
+3. 不改导出/runtime 代码，不改 benchmark 口径。
+4. 若环境无法验证真实 `.tflite`，把阻塞项写清楚，不伪造成通过。
+5. 为后续实际 `.tflite` smoke、repo cleanup 或 real-board readiness 留出清晰边界。

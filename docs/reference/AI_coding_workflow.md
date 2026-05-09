@@ -227,6 +227,36 @@ T1: ...
  中要求的形式。主要是要给出合适的04_task_board.md，用于指导后续worker会话完成每一个具体task。
 ```
 
+或者
+
+```text
+现在你将作为这个[项目名称]项目的继续推进的captain。
+需要你仔细阅读 
+ @docs/02_experiment_plan.md
+ (了解项目背景、开发记录等知识)、 
+ @docs/reference/AI_coding_workflow.md 以及docs目录中的00~08治理文档(前面提到的02重点读)
+ ，按照文档的要求，继续像新项目那样启动后续开发任务，而现在需要你对reviewer的审查结果
+ [粘贴 reviewer 最后报告] 
+做判断：
+"
+PASS:
+  标记任务完成，更新 handoff，推荐下一任务但不执行。
+
+PASS_WITH_WARNINGS:
+  把 warning 分类为 accepted / deferred / rejected。
+  deferred 写入 risks。
+
+BLOCK:
+  让 worker 只修 blocking issue。
+  同一任务最多自动复审一次。
+  第二次仍 BLOCK，则停止，交给用户裁决。
+"
+
+判断结束后更新除02以外的00~08治理文档。
+接下来是否可提交git并让worker推进[Task ID]?
+如果没有新任务的任务包，需要你写入任务包到 @docs/tasks 中。
+```
+
 #### 1. Captain 生成任务包
 
 任务包模板：

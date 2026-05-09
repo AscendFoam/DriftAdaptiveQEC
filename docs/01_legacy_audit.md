@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T14: P4 frozen benchmark protocol audit and bounded run plan`
+  - `T18: TFLite export/runtime manifest and boundary smoke plan`
 
 说明：
 
@@ -337,6 +337,6 @@
 
 后续优先级建议：
 
-1. 当前先执行 `T14`，产出 P4 frozen benchmark protocol audit 与 bounded run plan
+1. `T14` 至 `T17` 已完成；当前先执行 `T18`，为 `.tflite` export/runtime 路径补独立 manifest 与 boundary smoke plan
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 3. 其后再考虑单开 cleanup 任务处理 repo noise 的物理移除

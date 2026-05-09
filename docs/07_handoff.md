@@ -2,11 +2,11 @@
 
 ## 1. 当前状态
 
-- 日期：`2026-05-09`
+- 日期：`2026-05-10`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T17: Training-chain independent manifest and bootstrap（已完成，等待 Captain 指定下一任务）`
-- 任务包：`docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
+- 当前唯一任务：`T18: TFLite export/runtime manifest and boundary smoke plan`
+- 任务包：`docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
 
 ## 2. 本轮已完成
 
@@ -88,6 +88,12 @@
    - `requirements-recovery.txt` 继续只覆盖 `P0/P3/P4 recovery smoke`
    - `docs/training_chain_bootstrap.md` 单独记录训练链推荐解释器、训练入口、双后端边界与未覆盖项
    - 本轮没有启动训练长跑，也没有把 `DLEnv` 写成跨机器保证
+23. Captain 已按 `PASS` 处理 `T17` review：
+   - N1 accepted：`torch = 2.8.0.dev20250405+cu128` 是本机 dev build 事实，不能写成跨机器保证
+   - N2 accepted：本任务允许用 `docs/training_chain_bootstrap.md` 替代 `requirements-train.txt`；训练链可移植性如需增强，后续单开任务
+24. 当前唯一任务已切换为 `T18`：
+   - 目标是为 `.tflite` export/runtime 路径补独立 manifest 与 boundary smoke plan
+   - 必须区分真实 `.tflite` 与 `.tflite.json` / `tflite_stub_v1`
 
 ## 3. 已验证事实
 
@@ -362,7 +368,8 @@
 13. `T15` review 为 `PASS_WITH_WARNINGS`；当前没有 blocking issue，但 teacher diagnostics 全零需要 `T16` 判断
 14. `T16` 已完成，结论为 `Conditional`
 15. 当前更适合优先转向 `T17 / T18` 这类独立 manifest / boundary 任务，而不是继续扩大 P4 benchmark
-16. `T17` 已完成，训练链环境说明现已独立收口，但 `.tflite`、真板和训练长跑复验仍未覆盖
+16. `T17` 已完成，训练链环境说明现已独立收口，但训练链可移植性仍未锁定
+17. 当前唯一任务为 `T18`，优先收口 `.tflite` export/runtime manifest 与 boundary smoke plan；真板和训练长跑复验仍未覆盖
 
 ## 5. 已完成任务包
 
@@ -381,6 +388,8 @@
 - `T13`：`docs/tasks/P0/T13_recovery_exit_and_closeout.md`
 - `T14`：`docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`
 - `T15`：`docs/tasks/Phase2/T15_p4_multiscenario_frozen_smoke.md`
+- `T16`：`docs/tasks/Phase2/T16_p4_evidence_gate_review.md`
+- `T17`：`docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
 
 关键产出：
 
@@ -394,6 +403,9 @@
 - `docs/review/T10_gate_review.md`
 - `docs/review/T14_protocol_audit_review.md`
 - `docs/review/T15_frozen_smoke_review.md`
+- `docs/review/T16_p4_evidence_gate_review.md`
+- `docs/review/T16_milestone_review.md`
+- `docs/review/T17_review.md`
 - `docs/P4_benchmark_development_protocol.md`
 - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
 - `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
@@ -401,14 +413,14 @@
 
 ## 6. 当前唯一任务包摘要
 
-Task ID: `T17`
+Task ID: `T18`
 
-Goal: 为训练链补独立 manifest 与 bootstrap，不把它混入 `requirements-recovery.txt`。
+Goal: 为 `.tflite` export/runtime 路径补独立 manifest 与 boundary smoke plan，继续严格区分真实 `.tflite` 与 `tflite_stub_v1`。
 
 Allowed files:
 
-- `docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
-- `docs/training_chain_bootstrap.md`
+- `docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
+- `docs/TFLite_runtime_bootstrap.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
@@ -416,20 +428,21 @@ Allowed files:
 
 Forbidden scope:
 
-- 不改训练代码
-- 不启动训练长跑
-- 不改模型主线
-- 不把 DLEnv 探测结果写成跨机器保证
+- 不改 `cnn_fpga/model/export.py`
+- 不改 `cnn_fpga/runtime/inference_service.py`
+- 不把 `.tflite.json` stub manifest 写成真实 `.tflite` runtime
+- 不改 HIL benchmark 口径
 
 Verification:
 
-- 至少运行只读环境探测或 `--help` / import 级检查
-- 不要求完整训练
+- 只读代码审计加环境探测
+- 如环境具备，可运行最小 `--help` 或 import smoke
+- 不得强行改代码绕过依赖
 
 当前状态：
 
-- `T17` 已完成
-- 训练链 bootstrap 已补齐
+- `T18` 等待 Worker 执行
+- `T18` 任务包已存在
 - 未改变全局阶段与决策状态，仍为 `Phase 2: Controlled Development` / `Go`
 
 ## 7. 下一步建议
@@ -438,8 +451,8 @@ Verification:
 
 建议优先级：
 
-1. `T17` 已完成；下一任务仍应由 Captain 明确指定，不在本轮自动领取
-2. 当前更适合继续按边界拆分方式推进 `.tflite` manifest / boundary 任务
+1. 下一任务为 `T18`，Worker 只应按任务包推进 `.tflite` manifest / boundary smoke plan
+2. 当前只做 manifest / smoke plan，不顺手改 `.tflite` export/runtime 代码
 3. 训练链 bootstrap 已独立收口，但暂不把这件事扩写为跨机器完整训练环境已恢复
 4. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 5. 仍不要顺手做 `runs/`、`artifacts/`、`__pycache__/` 的大规模清理或无界扩功能
