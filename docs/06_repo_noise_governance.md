@@ -71,6 +71,7 @@
 - 但 Git 历史中仍已有大量已跟踪噪声，这说明当前问题主要是“历史已跟踪文件”，而不是“缺少忽略规则”。
 - 已跟踪缓存/字节码文件：`116`
   - 分布于 `9` 个 `__pycache__` 目录
+  - `T19` 只读清点确认：上述 `116` 个文件全部位于 `__pycache__` 目录内，额外散落的已跟踪 `.pyc` 文件数为 `0`
 - 当前工作区 `.pyc` 文件总数：`133`
 - 已跟踪 `runs/` 文件数：`1841`
 - 已跟踪 `artifacts/` 文件数：`110`
@@ -138,9 +139,21 @@
    - 哪些 `artifacts/` 被认定为 bootstrap 必需
 3. cleanup 前必须明确回滚方式和验收标准。
 
+`T19` 已补出：
+
+- `docs/cleanup_tracked_cache_manifest.md`
+- 显式目标目录清单（9 个 `__pycache__` 目录）
+- `git rm --cached -r -- ...` 草案
+- `git restore --staged -- ...` 回滚草案
+- 验收标准：`git ls-files | rg "__pycache__|\\.pyc$"` 归零
+
+但 `T19` 仍未执行物理 cleanup。
+
 ## 8. 对后续任务的约束
 
 - `T14/T15` 若进入 P4 证据增强，仍必须显式写清 backend 与 inference artifact type。
 - `T17/T18` 只能补 manifest / bootstrap，不应把环境说明写成完整验证完成。
 - `T19` 只允许先处理 tracked cache cleanup manifest；`runs/` 和 `artifacts/` 另行拆分。
 - `T19` 不执行物理删除，不执行 `git rm`，只做只读清点与 cleanup 方案。
+- 若后续进入执行任务，作用域仍应限制在 `docs/cleanup_tracked_cache_manifest.md` 列出的 9 个目录内。
+- `T19` review verdict = `PASS`；后续如要执行 physical untrack，仍必须单开任务，不得借 `T20` 或真板 readiness 任务顺手 cleanup。

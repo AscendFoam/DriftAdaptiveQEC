@@ -55,7 +55,7 @@
 
 ### Milestone 2C: Repository Hygiene
 
-- [ ] T19: Bounded cleanup manifest for tracked cache files
+- [x] T19: Bounded cleanup manifest for tracked cache files
   - Task package: `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
 
 ### Milestone 2D: Hardware Boundary Readiness
@@ -65,47 +65,55 @@
 
 ## Current Unique Task
 
-`T19: Bounded cleanup manifest for tracked cache files`
+`T20: Real-board HIL readiness checklist without implementation claims`
 
 为什么现在做它：
 
-1. `T18` review verdict = `PASS`，没有 blocking issue。
-2. `T18` 已完成 `.tflite` export/runtime manifest 与 boundary smoke plan。
-3. `T18` 的 non-blocking issue 只是推荐表述的 Markdown 格式问题，分类为 `accepted`，不影响交接。
-4. 真实 `.tflite` runtime 仍未恢复，已作为 R12 保留；不应借当前轮次继续扩写 `.tflite` 实体能力。
-5. 当前更适合进入 repo hygiene 的只读 cleanup manifest，先把已跟踪缓存/字节码文件清点与执行方案写清楚。
+1. `T19` review verdict = `PASS`，没有 blocking issue。
+2. `T19` 已完成 tracked cache cleanup manifest，并把已跟踪 `.pyc` / `__pycache__/` 的边界和回滚方案固定下来。
+3. `T19` 的 non-blocking issue 仅是命令写法与统计口径说明，均为 `accepted`，不影响 cleanup 边界。
+4. 物理 cleanup 仍未执行，且必须作为后续独立任务处理，不能借当前轮次顺手落地。
+5. 真板路径仍是 placeholder 语义，当前更适合进入 real-board readiness checklist，先固定设备、地址、权限、日志与禁止表述。
+6. `T20` 是当前最小的下一步有界任务，可继续保持边界诚实而不扩写真板完成事实。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T19`
-2. Worker 任务包：`docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
+1. 当前唯一任务：`T20`
+2. Worker 任务包：`docs/tasks/Phase2/T20_real_board_readiness_checklist.md`
 3. Allowed files：
-   - `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
-   - `docs/cleanup_tracked_cache_manifest.md`
-   - `docs/06_repo_noise_governance.md`
+   - `docs/tasks/Phase2/T20_real_board_readiness_checklist.md`
+   - `docs/real_board_hil_readiness.md`
+   - `docs/03_hil_p4_boundary_audit.md`
    - `docs/04_task_board.md`
    - `docs/07_handoff.md`
    - `docs/08_risks_and_open_questions.md`
 4. Forbidden scope：
-   - 不删除 `runs/`
-   - 不删除 `artifacts/`
-   - 不执行批量破坏性命令，除非 Captain 后续明确批准 cleanup 执行任务
-   - 不改源码
+   - 不改 `cnn_fpga/hwio/board_backend.py`
+   - 不改 `cnn_fpga/hwio/fpga_driver.py`
+   - 不写真实板级完成
+   - 不运行需要硬件设备的命令
+   - 不把 mock backend 证据外推到 real board
 5. Verification：
-   - 只读清点
-   - 可使用 `git ls-files` / `rg --files` 统计目标文件
-   - 不执行删除、不执行 `git rm`
+   - 只读审计
+   - 不调用硬件
+   - 核对 placeholder / mock / real-board 语义边界
 6. Docs to update：
-   - 新增 `docs/cleanup_tracked_cache_manifest.md`
-   - 更新 `docs/06_repo_noise_governance.md`
+   - 更新 `docs/03_hil_p4_boundary_audit.md`
    - 更新 `docs/04_task_board.md`
    - 更新 `docs/07_handoff.md`
    - 更新 `docs/08_risks_and_open_questions.md`
 
-## Done Criteria For T19
+预期 Worker 只读产出：
 
-1. 产出 tracked cache cleanup manifest。
-2. 明确目标文件类别、只读清点结果、cleanup 命令草案、回滚方式与验收标准。
-3. 不执行删除，不执行 `git rm`，不改源码。
-4. 不触碰 `runs/` 和 `artifacts/`。
-5. 为后续 Captain 决定是否执行物理 cleanup 留出清晰边界。
+- `docs/real_board_hil_readiness.md`
+- placeholder 证据清点与禁止表述清单
+- 真板 readiness 前置条件与最小 smoke 验收标准
+- 未修改 `board_backend.py`
+
+## Done Criteria For T20
+
+1. 产出 real-board HIL readiness checklist。
+2. 明确当前 `board_backend.py` / `fpga_driver.py` 的 placeholder 证据。
+3. 明确真板任务前置条件、设备/地址/权限/日志需求与最小 smoke 验收标准。
+4. 不修改真板代码，不调用硬件命令。
+5. 不把 `mock` backend、软件 HIL 或计划项写成 real-board HIL 已完成。

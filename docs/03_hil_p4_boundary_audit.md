@@ -65,6 +65,7 @@
 - `T14/T15` 进入 P4 证据增强时，必须继承同一套边界标签；不能只写“P4 已跑通”。
 - `T18` 进入 TFLite manifest / smoke plan 时，必须区分 `tflite_service` 和 `tflite_stub_service`。
 - `T20` 进入 real-board readiness 时，不得修改 placeholder 语义或写成真板已完成。
+- `T20` 的预期输出只能是 readiness checklist / 缺口清单 / 最小 smoke 验收标准；除非后续另开任务并具备真实设备证据，否则不得把 `board_backend.py` 的 placeholder 状态升级为已验收能力。
 
 ## 7. 当前推荐表述
 

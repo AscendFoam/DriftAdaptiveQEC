@@ -818,3 +818,45 @@ Phase 2 先按以下顺序推进：
 2. `docs/07_handoff.md` 补齐 `T18` review 判定与 `T19` 任务摘要。
 3. `docs/06_repo_noise_governance.md`、`docs/08_risks_and_open_questions.md` 进入 cleanup manifest 口径。
 4. `T19` 任务包已经存在：`docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`。
+
+## D-2026-05-10-03
+
+- 日期：`2026-05-10`
+- 决策：接受 `T19` review 的 `PASS`，标记 `T19` 完成，并将当前唯一任务切换为 `T20: Real-board HIL readiness checklist without implementation claims`
+
+### 背景
+
+`T19` 已完成 tracked cache cleanup manifest。`docs/review/T19_review.md` 给出 verdict：`PASS`，没有 blocking issue。
+
+### Warning 分类
+
+1. N1: `docs/cleanup_tracked_cache_manifest.md` 第 4.1 节 preflight 命令中的 glob 模式在 PowerShell 下可能存在 shell 展开差异
+   - 分类：`accepted`
+   - 处理：作为后续 cleanup 执行任务的命令写法注意；当前 T19 是只读 manifest，不影响结论
+2. N2: tracked `.pyc` = `116` 与工作区 `.pyc` 总数 `133` 的差异未在 manifest 中显式解释
+   - 分类：`accepted`
+   - 处理：差异来自未跟踪/忽略缓存；当前任务只处理已跟踪文件，不影响 manifest 结论
+
+### 依据
+
+1. `docs/cleanup_tracked_cache_manifest.md` 已完成：
+   - tracked `.pyc` files = `116`
+   - tracked `__pycache__` directories = `9`
+   - tracked standalone `.pyc` outside `__pycache__` = `0`
+   - cleanup command draft、rollback plan 与 acceptance criteria
+2. Reviewer 独立验证清点数字全部匹配。
+3. 本轮未执行 `git rm`，未删除文件，未触碰 `runs/` 或 `artifacts/`。
+4. `T20` 任务包已经存在，且下一步应转向真板边界 readiness，而不是顺手执行物理 cleanup。
+
+### 结论
+
+`T19` 可以标记完成。下一唯一任务为 `T20`，用于为 real-board HIL 路径补 readiness checklist 与缺口清单。
+
+`T20` 只能做只读 readiness 审计，不实现真板 backend，不调用硬件命令，也不能把 `board_backend.py` 的 placeholder 语义写成真实板级完成。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T19` 完成，并切换 `Current Unique Task` 到 `T20`。
+2. `docs/07_handoff.md` 补齐 `T19` review 判定、warning 处理和 `T20` 任务摘要。
+3. `docs/08_risks_and_open_questions.md` 记录 `T19` warning 分类，并明确 `T20` 只读边界。
+4. 不执行物理 cleanup；如需 untrack 缓存文件，必须后续单开 cleanup 执行任务。

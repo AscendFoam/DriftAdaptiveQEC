@@ -204,7 +204,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T19: Bounded cleanup manifest for tracked cache files`
+- `T20: Real-board HIL readiness checklist without implementation claims`
 
 ## 12. 快照结论
 
@@ -212,4 +212,4 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 1. P4 benchmark protocol 与 bounded evidence 已完成第一轮受控增强，当前 gate 结论为 `Conditional`。
 2. 训练链与 `.tflite` 独立 bootstrap 已完成，但都不等于跨机器完整环境或真实 `.tflite` runtime 已恢复。
-3. 当前优先为已跟踪缓存/字节码文件补有界 cleanup manifest；只做清点与计划，不执行物理删除。
+3. `T19` 已完成并通过 review，当前优先转向 real-board readiness checklist；只做只读审计，不写成真板完成。
