@@ -906,3 +906,225 @@ Phase 2 先按以下顺序推进：
 2. 新增 `docs/tasks/Phase2/T21_phase2_milestone_review.md`。
 3. `docs/07_handoff.md` 补齐 `T20` review 判定、warning 分类和 `T21` 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 保留 R13，并新增/更新后续真板执行任务必须处理的 N1/N2/N3 deferred 风险。
+
+## D-2026-05-10-05
+
+- 日期：`2026-05-10`
+- 决策：`T21` 的 Phase 2 milestone gate 输出为 `Conditional`；项目继续保持在 `Phase 2: Controlled Development` / `Go`，但不升级当前证据为 formal benchmark、真实 `.tflite` runtime、physical cleanup 或 real-board validation
+
+### 背景
+
+`T14` 至 `T20` 已完成本轮 Phase 2 队列，覆盖了：
+
+1. P4 benchmark evidence hardening
+2. training / `.tflite` manifest
+3. tracked cache cleanup manifest
+4. real-board readiness checklist
+
+在直接进入真板 smoke、physical cleanup 或新的 formal benchmark 前，需要先做一次 milestone review。
+
+### 依据
+
+1. `docs/review/T21_phase2_milestone_review.md` 已完成，并给出 `Conditional`。
+2. `T15` 仍只是 `development_smoke`，不是 formal four-scenario frozen benchmark。
+3. `T18` 只确认 `.tflite` 代码路径与 stub 边界，真实 runtime 仍不可用。
+4. `T19` 只形成 cleanup manifest，尚未执行物理 cleanup。
+5. `T20` 只形成 readiness checklist，尚未进入真板 smoke / validation。
+6. `R13/R14` 表明真板路径仍缺平台、权限、地址表来源与量化阈值。
+
+### 结论
+
+当前最合理的 gate 判断是：
+
+1. 允许继续留在 `Phase 2: Controlled Development`
+2. 允许继续开 bounded 下一任务
+3. 不允许把当前阶段升级写成：
+   - formal P4 benchmark 已恢复
+   - 真实 `.tflite` runtime 已恢复
+   - physical cleanup 已完成
+   - real-board HIL 已验证
+
+### Captain 收口判断
+
+`T21` 本身是 milestone review 工作，本轮不再启用重复 reviewer。Captain 接受该 review 的 `Conditional` gate 输出，并按 `PASS_WITH_WARNINGS` 收口：
+
+1. `Conditional` gate：`accepted`
+   - 处理：项目继续保持 `Phase 2: Controlled Development` / `Go`
+2. formal P4 benchmark 未恢复：`deferred`
+   - 处理：继续保留 R5/R9，不升级 `T15` 证据等级
+3. 真实 `.tflite` runtime 未恢复：`deferred`
+   - 处理：继续保留 R12
+4. physical cleanup 未执行：`deferred`
+   - 处理：继续保留 R7
+5. real-board HIL 未验证：`deferred`
+   - 处理：继续保留 R13/R14
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T21` 完成，并切换 `Current Unique Task` 到 `T22`。
+2. 新增 `docs/tasks/Phase2/T22_real_board_smoke_execution_plan.md`。
+3. `docs/07_handoff.md` 记录 `T21` 的 gate 输出、Captain 收口判断与 `T22` 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 保留 milestone gate 风险与下一任务边界。
+
+## D-2026-05-10-06
+
+- 日期：`2026-05-10`
+- 决策：接受 `T22` adversarial review 的 `PASS_WITH_WARNINGS`，标记 `T22` 完成，并将当前唯一任务切换为 `T23: Paper claims evidence roadmap toward publishable results`
+
+### 背景
+
+`T22` 已产出 `docs/real_board_smoke_execution_plan.md`，将 `T20` 后遗留的真板前置模糊点具体化：
+
+1. host platform decision points：Linux / Windows / WSL / remote board host
+2. AXI/register map 审计清单，直接对应 `cnn_fpga/hwio/axi_map.py`
+3. DMA buffer 审计清单，直接对应 `cnn_fpga/hwio/dma_client.py`
+4. Layer A-D 量化阈值草案和 fail-fast budget
+5. future evidence pack 与 prohibited wording
+
+`docs/review/T22_review.md` 给出 `PASS_WITH_WARNINGS`，blocking issues 为无。
+
+### Warning 分类
+
+1. N1：5 个 out-of-scope 文件被修改
+   - 分类：`accepted`
+   - Captain 判断：这些修改属于 Captain 在 `T21` gate / `T22` 初始化期间对 00/01/05/06 与 T21 任务包做的治理同步，不归为 T22 Worker 越界。后续任务包会更明确区分 Worker allowed files 与 Captain 整合文件。
+2. N2：`AXI_REGISTER_MAP` preflight 直接 `print(...)` 只会输出 dataclass repr
+   - 分类：`deferred`
+   - 处理：写入后续执行风险。若未来进入真板执行任务，preflight 应输出格式化地址表，而不是只依赖 repr。
+3. N3：`byte_count = 4096` 依赖 `32 x 32 float32` histogram 假设
+   - 分类：`deferred`
+   - 处理：写入后续执行风险。若未来进入真板执行任务，必须用实际 bitstream / DMA contract 确认 histogram shape 与 element dtype。
+
+### 结论
+
+1. `T22` 完成，但它仍只是 execution plan，不是 hardware validation。
+2. `R13/R14` 继续有效，需在真实硬件任务中用设备、权限、寄存器活性、DMA 和 commit/ack 证据关闭。
+3. 当前不应直接启动真板、formal benchmark、`.tflite` runtime 或 cleanup 执行任务。
+4. 为了以高质量论文为目标继续推进，下一步优先建立论文 claim / evidence / gap / figure / task roadmap。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T22` 完成，并切换 `Current Unique Task` 到 `T23`。
+2. 新增 `docs/tasks/Phase2/T23_paper_claims_evidence_roadmap.md`。
+3. `docs/07_handoff.md` 记录 `T22` 的 review 判定、warning 分类与 `T23` 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 保留真板执行风险，并新增论文 claim 过度外推风险。
+
+## D-2026-05-10-07
+
+- 日期：`2026-05-10`
+- 决策：根据 Project Manager 反馈，撤回“最近任务直接转向 paper claims roadmap”的安排；保留“发表论文”为远期目标，但把当前唯一任务改为 `T23: P4 formal benchmark protocol lock and evidence gap audit`
+
+### 背景
+
+Project Manager 明确指出：论文发表是最终目标，但当前仍应一步步推进，不应把最近任务直接安排成论文 claim / evidence roadmap。Captain 重新阅读 00~08 治理文档和 `docs/reference/AI_coding_workflow.md` 后，确认当前最关键缺口仍是证据等级，而不是论文写作本身。
+
+### 依据
+
+1. `docs/06_repo_noise_governance.md` 中 formal benchmark 定义要求预先冻结 protocol、baseline、seed、repeat，并通过 review。
+2. `docs/review/T21_phase2_milestone_review.md` 已确认 `T15` 仍为 `development_smoke`，不能升级成 formal benchmark。
+3. `docs/review/T22_review.md` 已确认 real-board execution plan 通过，但它不是 hardware validation。
+4. `docs/02_experiment_plan.md` 的路线建议仍把 formal HIL / P4 paired benchmark 作为模型与论文结论的关键证据。
+
+### 结论
+
+1. 远期目标：形成可投稿论文所需的可信工程与实验链。
+2. 中期路线：按 benchmark formalization、机制证据、复现/部署边界、真板 gate、论文收口逐步推进。
+3. 当前唯一任务：`T23` 只锁定 P4 formal benchmark protocol，不运行 benchmark。
+4. 后续 paper claim/evidence ledger 推迟到 formal P4 和机制证据更清楚之后。
+
+### 直接影响
+
+1. 删除/替换原 `docs/tasks/Phase2/T23_paper_claims_evidence_roadmap.md`。
+2. 新增 `docs/tasks/Phase2/T23_p4_formal_benchmark_protocol_lock.md`。
+3. `docs/04_task_board.md` 重写 T23 及 T24+ 后续大纲。
+4. `docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步当前任务和风险口径。
+
+## D-2026-05-10-08
+
+- 日期：`2026-05-10`
+- 决策：阅读 `docs/reference/进一步的深度研究结果.md` 与 `docs/CNN_FPGA_GKP_paper_inspired分支实验设计草案.md` 后，维持 `T23` 当前大方向，但增强 `T23` 的输入与验收要求，并小幅调整后续 pending roadmap
+
+### 背景
+
+新深度研究报告给出的关键结论是：
+
+1. 目前未发现与“GKP syndrome histogram -> CNN slow loop -> FPGA-friendly linear fast path parameter update”完全同构的工作。
+2. 但相邻方向已很接近，包括 GKP soft-information decoding、hardware-conditioned neural decoder、real-time/FPGA QEC decoder、drift-aware calibration / prior update。
+3. 项目叙事应收窄到 teacher-anchored residual calibration / histogram-conditioned slow loop / fixed-point linear fast path / atomic commit / software-HIL-to-runtime boundary。
+4. 后续优先级应是 formal benchmark protocol、机制诊断、statcalib baseline、true `.tflite` runtime，再考虑 real-board smoke。
+
+### 判断
+
+这份报告不要求推翻当前 `T23`。相反，它支持当前“先锁 P4 formal benchmark protocol”的方向。
+
+需要调整的是任务细节：
+
+1. `T23` 必须读取该深度研究报告和 paper-inspired 草案。
+2. `T23` 的 protocol lock 必须显式评估：
+   - strong classical / soft-information / calibration / learned baseline classes
+   - static / drift / random-walk / sinusoidal / burst-reset scenario families
+   - training-seed 与 evaluation-seed 分离
+   - confidence interval 或 stopping rule
+   - latency / commit / rollback / fallback metrics
+   - statcalib baseline 是否必须先实现
+   - true `.tflite` runtime 为什么应优先于 real-board smoke 支撑 deployment claim
+3. 若 formal execution 条件未满足，`T23` 应建议 prerequisite closure task，而不是强行进入 `T24` execution。
+
+### 直接影响
+
+1. `docs/tasks/Phase2/T23_p4_formal_benchmark_protocol_lock.md` 增加深度研究报告和 paper-inspired 草案作为输入。
+2. `docs/04_task_board.md` 保持当前唯一任务为 `T23`，但增强 expected output，并将 `T24` 改为由 T23 gate 决定“先补 prerequisite 还是执行”。
+3. `docs/04_task_board.md` 的后续 pending roadmap 增加 calibration/statcalib baseline feasibility gate。
+4. `docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步该判断。
+
+## D-2026-05-10-09
+
+- 日期：`2026-05-10`
+- 决策：接受 `T23` adversarial review 的 `PASS_WITH_WARNINGS`，标记 `T23` 完成，并将当前唯一任务切换为 `T24: P4 bounded formal software revalidation execution`
+
+### 背景
+
+`T23` 已产出 `docs/P4_benchmark_formal_protocol.md`，锁定了下一步 P4 formal software revalidation 的证据等级、frozen matrix、baseline 集合、seed/repeat、统计报告、compute budget、evidence pack 与 go/no-go 条件。
+
+`docs/review/T23_review.md` 给出 `PASS_WITH_WARNINGS`，blocking issues 为无。
+
+### Warning 分类
+
+1. N1：7 个文件超出 T23 Worker allowed list
+   - 分类：`accepted`
+   - Captain 判断：这些修改属于治理同步，与 T22 相同，不改变 T23 技术结论；后续任务包继续更明确区分 Worker allowed files 与 Captain 整合文件
+2. N2：T23 protocol 未写出 T24 exact CLI shape
+   - 分类：`deferred`
+   - 处理：写入 risks，并在 `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md` 中固定 repeat-chunked CLI shape
+3. N3：`histogram_input_saturation_rate_mean` 与 `correction_saturation_rate_mean` 未被 reviewer 逐项验证
+   - 分类：`deferred`
+   - 处理：写入 risks；T24 必须报告这些字段是否实际出现在 runner 输出中
+4. N4：`fast_cycle_violation_rate_mean` 未被 reviewer 逐项验证
+   - 分类：`deferred`
+   - 处理：写入 risks；T24 必须报告该字段是否实际出现在 runner 输出中
+
+### 依据
+
+1. `docs/P4_benchmark_formal_protocol.md` 明确写出 `T23 did not run benchmark`。
+2. Protocol 已把 `T24` gate 锁定为：
+   - `GO_FOR_BOUNDED_FORMAL_SOFTWARE_REVALIDATION`
+   - `NO_GO_FOR_SCOPE_EXPANSION_INSIDE_T24`
+3. Frozen execution scope 为：
+   - `static_bias_theta / linear_ramp / step_sigma_theta / periodic_drift`
+   - `ekf / ukf / constant_residual_mu / rls_residual_b / hybrid_residual_b`
+   - `paired_seeds`
+   - `repeats=2`
+4. `statcalib`、soft-information comparator、额外 drift family、CI-driven stopping、真实 `.tflite` runtime 与真板 smoke 均已被明确排除出 T24。
+
+### 结论
+
+`T23` 可以标记完成。下一唯一任务为 `T24`，用于执行 bounded formal software revalidation。
+
+`T24` 可以运行 P4 benchmark，但只能在 mock-backed software HIL 边界内运行 frozen set；不得改源码、改 config、改 benchmark 语义或夹带部署/真板/机制扩展任务。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T23` 完成，并切换 `Current Unique Task` 到 `T24`。
+2. 新增 `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`。
+3. `docs/07_handoff.md` 记录 `T23` review 判定、warning 分类与 `T24` 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 新增 T24 exact CLI / metric availability 风险。

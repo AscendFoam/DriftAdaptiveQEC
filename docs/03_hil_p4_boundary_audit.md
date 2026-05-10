@@ -68,11 +68,19 @@
 - `T20` 的预期输出只能是 readiness checklist / 缺口清单 / 最小 smoke 验收标准；除非后续另开任务并具备真实设备证据，否则不得把 `board_backend.py` 的 placeholder 状态升级为已验收能力。
 - `T20` 已补出 `docs/real_board_hil_readiness.md`，后续真板任务应优先引用其中的 placeholder 证据、前置条件、最小 smoke 验收标准与禁止表述。
 - `T21` 若作为 milestone review，必须继续区分 `readiness checklist` 与 `hardware validation`；任何只读总结都不能把 `board_backend.py` 的占位状态改写成现实板级完成。
+- `T22` 若制定 real-board smoke execution plan，也只能产出计划、审计清单和量化阈值草案；除非后续真实硬件任务产出设备、寄存器、DMA 与 commit/ack 证据，否则仍不得写成 `hardware_validated`。
+- `T22` 已补出 `docs/real_board_smoke_execution_plan.md`，后续真板任务应优先引用其中的 host-platform decision points、AXI/DMA 审计清单、Layer A-D 量化阈值草案与 evidence pack 要求。
+- 即使 `docs/real_board_smoke_execution_plan.md` 已存在，也只能写成 `execution plan exists, but it has not been executed`，不得因为 plan 文档就升级为真板已验证。
+- `T23` 若锁定 P4 formal benchmark protocol，也只能产出协议、矩阵、预算、evidence pack 与 go/no-go 条件；不得把 protocol lock 写成 formal benchmark 已执行。
+- `T24` 若执行 formal software revalidation，也只能在 `mock-backed P4 wrapper over software HIL` 边界内运行 `docs/P4_benchmark_formal_protocol.md` 锁定的 frozen set；不得把结果写成 `.tflite` runtime 或 `real_board` validation。
 
 ## 7. 当前推荐表述
 
 - 可以说：`P3 software HIL scaffold exists and is mock-backed unless explicitly proven otherwise.`
 - 可以说：`P4 benchmark currently reuses the same HIL session stack and inherits its realism limits.`
 - 可以说：`real-board readiness checklist exists, but hardware validation evidence does not.`
+- 可以说：`real-board smoke execution plan exists, but it has not been executed.`
+- 可以说：`P4 formal benchmark protocol may be locked, but no formal benchmark result exists until an execution task runs and is reviewed.`
+- 可以说：`P4 formal software revalidation may be executed as mock-backed software HIL evidence, but it is not deployment or hardware validation.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`

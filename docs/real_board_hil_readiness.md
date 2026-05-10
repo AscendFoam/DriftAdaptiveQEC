@@ -162,3 +162,14 @@
 2. 不把 mock 结果当作板级结果。
 3. 不跳过设备/权限/日志证据。
 4. 不在无最小 smoke 证据时更新阶段结论。
+
+`T22` 已补出 [docs/real_board_smoke_execution_plan.md](docs/real_board_smoke_execution_plan.md) 作为计划层输出。
+
+后续任何真板执行任务在运行命令前，必须先在以下宿主模型中选定一种并写入任务包：
+
+1. Linux local host
+2. Windows local host
+3. WSL
+4. remote board host
+
+在此之前，不得默认 `/dev/uio*` 权限模型就是目标执行模型，也不得把 `axi_uio_path` / `dma_buffer_path` 写成已被板级验证的事实。

@@ -285,3 +285,13 @@ This execution upgrades the project from single-scenario recovery smoke to bound
 4. `.tflite` runtime is restored;
 5. the full four-scenario formal matrix has been re-opened;
 6. later workers may expand beyond the bounded matrix above without a new task package.
+
+## 12. Relationship To T23 Formal Protocol
+
+`T23` adds `docs/P4_benchmark_formal_protocol.md` as the locked next-step reference for the recovered four-scenario frozen-set revalidation path.
+
+Use the two protocol documents as follows:
+
+1. this document remains the boundary for `T15`-style development evidence
+2. `docs/P4_benchmark_formal_protocol.md` defines the later formal software benchmark revalidation scope
+3. neither document upgrades the current project state to `.tflite` runtime or `real_board` validation

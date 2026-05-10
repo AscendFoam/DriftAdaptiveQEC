@@ -5,8 +5,8 @@
 - 日期：`2026-05-10`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T21: Phase 2 milestone review and next-phase decision`
-- 任务包：`docs/tasks/Phase2/T21_phase2_milestone_review.md`
+- 当前唯一任务：`T24: P4 bounded formal software revalidation execution`
+- 任务包：`docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`
 
 ## 2. 本轮已完成
 
@@ -121,6 +121,44 @@
    - 固定了 `board_backend.py` / `fpga_driver.py` 的 placeholder 证据点
    - 固定了真板前置条件、最小 smoke 验收标准与禁止表述
    - 未调用硬件，未修改真板代码，`T20` 已收口
+32. `T21` 已完成并由 Captain 接受为 `PASS_WITH_WARNINGS`：
+   - 新增 `docs/review/T21_phase2_milestone_review.md`
+   - gate decision = `Conditional`
+   - 推荐下一唯一任务为 `T22: Real-board smoke execution plan with platform / AXI-map audit and quantitative acceptance thresholds`
+   - 本轮未运行 benchmark、未执行 cleanup、未调用硬件
+   - `Conditional` gate 被接受，但 formal P4 benchmark、真实 `.tflite` runtime、physical cleanup 与 real-board validation 仍保持 deferred 风险
+33. 当前唯一任务已切换为 `T22`：
+   - 目标是为后续真板 smoke 制定 execution plan
+   - 任务仍不调用硬件、不实现真板 backend、不运行 `backend=board` HIL
+34. `T22` 的 Worker 计划层输出已就位，并在随后进入 reviewer / Captain 收口：
+   - 新增 `docs/real_board_smoke_execution_plan.md`
+   - 已补 target platform decision points：Linux / Windows / WSL / remote board host
+   - 已补 AXI/register map 审计清单，直接对应 `axi_map.py`
+   - 已补 DMA buffer 审计清单，直接对应 `dma_client.py`
+   - 已补 Layer A-D 量化阈值草案、fail-fast budget、future evidence pack 与 prohibited wording
+   - 本轮仍未调用硬件、未运行 `backend=board` HIL、未将产物写成 real-board validation
+35. `T22` 已完成并由 Captain 接受为 `PASS_WITH_WARNINGS`：
+   - `docs/review/T22_review.md` verdict = `PASS_WITH_WARNINGS`
+   - Blocking issues: none
+   - N1 out-of-scope governance files：`accepted`，归属 Captain 整合阶段，不归为 Worker 越界
+   - N2 preflight `AXI_REGISTER_MAP` repr：`deferred`，后续硬件执行任务需格式化地址表输出
+   - N3 `byte_count = 4096` 假设：`deferred`，后续硬件执行任务需用实际 bitstream / DMA contract 确认
+36. 当前唯一任务已切换为 `T23`：
+   - 原先曾短暂安排为 paper claims roadmap，但 Project Manager 已澄清论文是远期目标，不应作为最近任务一步到位推进
+   - 当前 T23 已改为 P4 formal benchmark protocol lock and evidence gap audit
+   - 不运行 benchmark、不训练、不调用硬件、不执行 cleanup
+   - 任务产物不得把 protocol lock 写成 formal benchmark 结果
+37. `T23` 已完成并由 Captain 接受为 `PASS_WITH_WARNINGS`：
+   - `docs/review/T23_review.md` verdict = `PASS_WITH_WARNINGS`
+   - Blocking issues: none
+   - N1 out-of-scope governance sync：`accepted`
+   - N2 exact CLI shape：`deferred`，写入 R19，并在 T24 任务包中固定
+   - N3/N4 requested metric availability：`deferred`，写入 R19，T24 必须报告实际可用字段与缺失字段
+   - `docs/P4_benchmark_formal_protocol.md` 明确写出 `T23 did not run benchmark`
+38. 当前唯一任务已切换为 `T24`：
+   - 目标是执行 `4 scenarios x 5 modes x repeats=2` 的 bounded formal software revalidation
+   - 任务仍固定为 `mock-backed` software HIL，不是 `.tflite` runtime，不是真板验证
+   - `statcalib`、soft-information comparator、额外 drift family、CI-driven stopping、true `.tflite` runtime 与真板 smoke 都不得塞进 T24
 
 ## 3. 已验证事实
 
@@ -400,8 +438,19 @@
 18. `T18` review 已通过，真实 `.tflite` runtime 不可用继续保留为 R12
 19. `T19` 已通过 review 并完成，tracked cache cleanup manifest 已就位，但物理 cleanup 仍未执行
 20. `T20` 已完成并通过 adversarial review，real-board readiness checklist 已就位，但仍不是真板验证
-21. 当前唯一任务为 `T21`，只做 Phase 2 milestone review，不运行 benchmark、不执行 cleanup、不调用硬件
-22. `T21` 的 worker 任务包已创建，等待后续推进
+21. `T21` 的 milestone gate 输出为 `Conditional`，Captain 已接受该结论并按 `PASS_WITH_WARNINGS` 收口
+22. `T22` 已完成 real-board smoke execution plan，并由 Captain 接受为 `PASS_WITH_WARNINGS`
+23. `T23` 已完成 protocol lock，并由 Captain 接受为 `PASS_WITH_WARNINGS`
+24. 当前阶段仍为 `Phase 2: Controlled Development` / `Go`；T23 不改变 formal benchmark、`.tflite` runtime、cleanup 或 real-board validation 的证据等级
+25. `docs/reference/进一步的深度研究结果.md` 已读；`T23` 已将强 classical / soft-information / calibration / learned baseline、更多 drift scenario、seed/CI/latency/commit/fallback 指标与 statcalib baseline 进入条件分类为 adopted / deferred / rejected
+26. 当前唯一任务为 `T24`，可以运行 P4 benchmark，但只允许执行 historical frozen-set 的 bounded formal software revalidation
+27. T24 执行必须保持：
+   - `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
+   - `static_bias_theta / linear_ramp / step_sigma_theta / periodic_drift`
+   - `ekf / ukf / constant_residual_mu / rls_residual_b / hybrid_residual_b`
+   - `paired_seeds`
+   - `repeats=2`
+   - `mock-backed` software HIL
 
 ## 5. 已完成任务包
 
@@ -425,6 +474,9 @@
 - `T18`：`docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
 - `T19`：`docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
 - `T20`：`docs/tasks/Phase2/T20_real_board_readiness_checklist.md`
+- `T21`：`docs/tasks/Phase2/T21_phase2_milestone_review.md`
+- `T22`：`docs/tasks/Phase2/T22_real_board_smoke_execution_plan.md`
+- `T23`：`docs/tasks/Phase2/T23_p4_formal_benchmark_protocol_lock.md`
 
 关键产出：
 
@@ -444,49 +496,63 @@
 - `docs/review/T18_review.md`
 - `docs/review/T19_review.md`
 - `docs/review/T20_review.md`
+- `docs/review/T21_phase2_milestone_review.md`
+- `docs/review/T22_review.md`
+- `docs/review/T23_review.md`
 - `docs/P4_benchmark_development_protocol.md`
+- `docs/P4_benchmark_formal_protocol.md`
 - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
 - `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
 - `docs/training_chain_bootstrap.md`
 - `docs/TFLite_runtime_bootstrap.md`
 - `docs/cleanup_tracked_cache_manifest.md`
 - `docs/real_board_hil_readiness.md`
+- `docs/real_board_smoke_execution_plan.md`
 
 ## 6. 当前唯一任务包摘要
 
-Task ID: `T21`
+Task ID: `T24`
 
-Goal: 对 Phase 2 已完成任务做 milestone review，判断当前证据是否允许进入下一阶段、继续扩展 Phase 2，或先补 cleanup / 真板执行前置任务。
+Goal: 执行 `T23` 已锁定的 P4 frozen-set formal software revalidation，补齐四场景、五模式、`repeats=2` 的 evidence pack。
 
 Allowed files:
 
-- `docs/tasks/Phase2/T21_phase2_milestone_review.md`
-- `docs/review/T21_phase2_milestone_review.md`
+- `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`
+- `docs/P4_benchmark_formal_protocol.md`
 - `docs/04_task_board.md`
-- `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-
+- `runs/p4_benchmark/T24_formal_software_revalidation_*`
 
 Forbidden scope:
 
-- 不运行新的 benchmark
-- 不执行物理 cleanup
-- 不调用硬件或真板命令
-- 不改源码、配置或 benchmark 口径
-- 不把 `T15` development run 写成 formal benchmark
-- 不把 `T20` readiness checklist 写成 real-board validation
+- 不改源码
+- 不改 benchmark 口径、baseline 集合或 ParamMapper 语义
+- 不改 config 文件语义
+- 不运行训练、`.tflite` runtime、cleanup 或硬件命令
+- 不新增 `statcalib`、soft-information comparator、额外 scenario family 或 teacher-representation 长跑
+- 不把 mock-backed software formal revalidation 写成 `.tflite` runtime、`real_board` 或 paper-grade final benchmark
 
 Verification:
 
-- 只读 milestone review
-- 核对 `T14`-`T20` 证据等级与剩余风险
-- 输出 `Allow` / `Conditional` / `Block` gate decision
+- 使用 `C:\ProgramData\anaconda3\python.exe`
+- 使用 `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
+- 锁定 `static_bias_theta / linear_ramp / step_sigma_theta / periodic_drift`
+- 锁定 `ekf / ukf / constant_residual_mu / rls_residual_b / hybrid_residual_b`
+- 使用 `--paired-seeds` 与 `--repeats 2`
+- 如需切块，只用 `--repeat-start/--repeat-stop`，不得按单场景切块改变 seed 语义
+- final evidence pack 必须完整记录 `missing_runs`、coverage、统计字段实际可用性和边界声明
 
 当前状态：
 
-- `T20` 已完成并通过 adversarial review
-- `docs/real_board_hil_readiness.md` 已形成真板 readiness checklist、前置条件与最小 smoke 验收标准
+- `T23` 已完成并由 Captain 接受为 `PASS_WITH_WARNINGS`
+- `docs/review/T23_review.md` 已形成 adversarial review 输出
+- N1 governance sync 已接受；N2/N3/N4 已 deferred 到 R19 与 T24 任务包
+- `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md` 已创建
+- 当前 T24 gate 为：
+  - `GO_FOR_BOUNDED_FORMAL_SOFTWARE_REVALIDATION`
+  - `NO_GO_FOR_SCOPE_EXPANSION_INSIDE_T24`
+- `T24` 可以运行 P4 benchmark，但只允许执行 frozen-set mock-backed software HIL revalidation
 - 未改变全局阶段与决策状态，仍为 `Phase 2: Controlled Development` / `Go`
 
 ## 7. 下一步建议
@@ -495,17 +561,19 @@ Verification:
 
 建议优先级：
 
-1. 下一任务为 `T21`，Worker 只应按任务包推进 Phase 2 milestone review
-2. 当前已完成只读 readiness checklist，但仍禁止写成真板已完成
-3. `.tflite` bootstrap 已独立收口，但真实 runtime 仍未可用
-4. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
-5. 不要顺手扩写真板实现，也不要把 software HIL 证据外推为真板证据
+1. 下一任务为 `T24`，Worker 只应按任务包执行 bounded formal software revalidation
+2. 可以提交当前治理与任务包更新后再让 Worker 推进 `T24`
+3. T24 必须使用固定 run dir 和 exact CLI shape；如需切块，只按 repeat range 切块
+4. T24 必须报告 requested metrics 的实际可用性，不得静默省略 N3/N4 涉及字段
+5. T24 完成后进入 `T25` adversarial gate review；Captain 收口前不启动机制、`.tflite` 或真板任务
+6. 论文发表是远期目标，当前仍按证据增强和边界收口逐步推进
 
 ## 8. 暂不继续的事项
 
-在新任务包明确之前，暂不继续：
+在 T24 完成并 review 前，暂不继续：
 
 1. 新的 teacher-representation benchmark 扩展
-2. 长时间 P4 正式长跑
+2. 超出 frozen-set 的 P4 正式长跑或 CI-driven stopping
 3. 真板 backend 能力扩写
 4. 任何未获 Captain 明确批准的物理 repo cleanup
+5. `statcalib`、soft-information comparator 或额外 scenario family 实现

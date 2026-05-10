@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T21: Phase 2 milestone review and next-phase decision`
+  - `T23: P4 formal benchmark protocol lock and evidence gap audit`
 
 说明：
 
@@ -337,6 +337,6 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T20` 已完成；当前先执行 `T21`，为 Phase 2 做一次 milestone review
+1. `T14` 至 `T23` 已完成；当前下一唯一任务为 `T24`，只执行 P4 frozen-set bounded formal software revalidation
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
-3. `T21` 只做只读 milestone review，不运行 benchmark、不执行 cleanup、不调用硬件
+3. `T24` 可运行 P4 benchmark，但只限 `4 scenarios x 5 modes x repeats=2`、`paired_seeds`、`mock-backed software HIL`；不得把 `statcalib`、soft-information、`.tflite` runtime、真板 smoke 或论文 claim 夹带进同一任务

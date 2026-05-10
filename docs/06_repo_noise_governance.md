@@ -51,6 +51,7 @@
 - P3 software HIL recovery smoke：`docs/P3_software_hil_bootstrap.md`
 - P4 recovery smoke：`docs/P4_benchmark_recovery_bootstrap.md`
 - Phase 2 P4 development protocol：`docs/P4_benchmark_development_protocol.md`（由 `T14` 产出）
+- Phase 2 P4 formal software protocol：`docs/P4_benchmark_formal_protocol.md`（由 `T23` 产出，尚未等同于 execution result）
 
 ### 2.4 禁止的评估写法
 
@@ -158,3 +159,6 @@
 - 若后续进入执行任务，作用域仍应限制在 `docs/cleanup_tracked_cache_manifest.md` 列出的 9 个目录内。
 - `T19` review verdict = `PASS`；后续如要执行 physical untrack，仍必须单开任务，不得借 `T20` 或真板 readiness 任务顺手 cleanup。
 - `T21` milestone review 也不得执行 physical untrack；cleanup 执行仍必须在独立任务中按 `docs/cleanup_tracked_cache_manifest.md` 落地。
+- `T22` real-board smoke execution plan 不得顺手执行 cleanup，也不得把 `runs/` / `artifacts/` 纳入物理清理。
+- `T23` P4 formal protocol lock 不得顺手执行 cleanup，也不得把历史 `runs/` / `artifacts/` 改写成新的 formal 事实来源；只能引用具体路径来定义 evidence pack 和缺口。
+- `T24` P4 formal software revalidation 可以新增一个 `runs/p4_benchmark/T24_formal_software_revalidation_*` 运行目录，但不得清理、改写或重标历史 `runs/` / `artifacts/`；所有新结论必须引用该具体 run dir。

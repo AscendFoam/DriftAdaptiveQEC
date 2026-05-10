@@ -204,12 +204,12 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T21: Phase 2 milestone review and next-phase decision`
+- `T24: P4 bounded formal software revalidation execution`
 
 ## 12. 快照结论
 
 当前项目的核心问题已经从“有没有可靠治理层和入口”切换为“如何在不夸大完成度的前提下继续增强证据”。Phase 2 的默认策略是：
 
-1. P4 benchmark protocol 与 bounded evidence 已完成第一轮受控增强，当前 gate 结论为 `Conditional`。
+1. P4 benchmark protocol 与 bounded evidence 已完成第一轮受控增强；`T23` 已通过 `PASS_WITH_WARNINGS`，并把下一步 gate 锁定为 `GO_FOR_BOUNDED_FORMAL_SOFTWARE_REVALIDATION` + `NO_GO_FOR_SCOPE_EXPANSION_INSIDE_T24`。
 2. 训练链与 `.tflite` 独立 bootstrap 已完成，但都不等于跨机器完整环境或真实 `.tflite` runtime 已恢复。
-3. `T20` 已完成并通过 adversarial review，当前优先转向 Phase 2 milestone review；先判断下一阶段路线，不直接进入真板 smoke 或新 benchmark。
+3. `T24` 可以作为下一唯一任务执行 frozen-set formal software revalidation，但它仍只能产生 `mock-backed` software HIL formal benchmark 证据；不得外推为 `.tflite` runtime、真板验证或 paper-grade expanded benchmark。

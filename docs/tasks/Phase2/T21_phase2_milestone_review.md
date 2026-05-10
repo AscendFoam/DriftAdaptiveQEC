@@ -61,3 +61,22 @@ Docs to update:
 - `docs/05_decision_log.md`（Captain 整合阶段，如 gate decision 发生）
 
 Reviewer type: `milestone`
+
+## Worker Output Summary
+
+- Output type: `docs/review/T21_phase2_milestone_review.md`
+- Read-only review confirmed:
+  - `T14-T20` queue is complete as a bounded Phase 2 milestone
+  - current evidence remains mixed across `development_smoke`, bootstrap, manifest, and readiness layers
+  - gate decision = `Conditional`
+- Recommended next unique task:
+  - `T22: Real-board smoke execution plan with platform / AXI-map audit and quantitative acceptance thresholds`
+- No benchmark was run
+- No cleanup was executed
+- No hardware command was executed
+- Updated docs:
+  - `docs/review/T21_phase2_milestone_review.md`
+  - `docs/04_task_board.md`
+  - `docs/05_decision_log.md`
+  - `docs/07_handoff.md`
+  - `docs/08_risks_and_open_questions.md`
