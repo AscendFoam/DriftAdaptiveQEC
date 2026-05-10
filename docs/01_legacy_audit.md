@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T20: Real-board HIL readiness checklist without implementation claims`
+  - `T21: Phase 2 milestone review and next-phase decision`
 
 说明：
 
@@ -337,6 +337,6 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T19` 已完成；当前先执行 `T20`，为真板 HIL 路径制定 readiness checklist
+1. `T14` 至 `T20` 已完成；当前先执行 `T21`，为 Phase 2 做一次 milestone review
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
-3. `T20` 只做只读 readiness 审计，不实现真板 backend，不改写 placeholder 语义
+3. `T21` 只做只读 milestone review，不运行 benchmark、不执行 cleanup、不调用硬件

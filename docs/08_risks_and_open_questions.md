@@ -16,6 +16,8 @@
 | R10 | `hybrid_residual_b` 的 teacher diagnostics 在 T15 summary 中全零，可能影响机制分析深度 | 中 | `docs/review/T15_frozen_smoke_review.md` N2 指出所有 10 个 comparison rows 的 `teacher_contribution_l2_mean`、`teacher_scalar_abs_mean`、`teacher_gate_mean`、`teacher_gate_std` 均为 0，且 `teacher_per_scalar = {}` | `T16` 已将其判为非阻塞风险：在路径未澄清前，不把 teacher diagnostics 用作机制结论；当前优先转向 manifest / boundary 任务，而不是为了该指标直接重开 benchmark |
 | R11 | 训练链 bootstrap 记录了本机 `torch` dev build，但尚未形成可移植依赖锁定 | 中 | `docs/review/T17_review.md` N1/N2 指出 `torch = 2.8.0.dev20250405+cu128` 是 dev build，且本轮未产出 `requirements-train.txt`；`docs/training_chain_bootstrap.md` 只承诺本机 `DLEnv` 探测结果 | 不把 `DLEnv` 或 dev torch 写成跨机器保证；若后续需要训练链可移植性，单开 `requirements-train.txt` / lockfile 任务，并显式说明 dev build 渠道限制 |
 | R12 | `.tflite` 路径已有代码与入口，但真实 TensorFlow / TFLite 运行时在当前机器上不可用 | 高 | `docs/TFLite_runtime_bootstrap.md` 已记录 `tensorflow = False`、`tflite_runtime = False`；`export.py`、`evaluate_tflite.py`、`validate_export.py` 入口存在，但真实 runtime 需独立环境 | 继续把真实 `.tflite`、stub manifest 与 HIL benchmark 边界写清；若后续要跑真实 runtime，单开环境任务或在具备依赖的机器上做独立 smoke |
+| R13 | 真板 HIL 入口存在配置骨架，但距离可执行真板 smoke 仍缺设备、权限、寄存器一致性与日志证据 | 高 | `board_backend.py` 仍是 placeholder；设备缺失时会触发 `board_device_missing:...`；`schedule_commit(...)` 仍返回 `target_bank=None`、`version=None`、`ack_delay_us=None`；`step(...)` 返回空事件；`docs/real_board_hil_readiness.md` 已固定前置条件与验收标准 | 后续若推进真板路径，必须单开执行任务，逐层补齐设备存在、寄存器活性、DMA 读出与 commit/ack round-trip 证据，在此之前禁止写成 real-board HIL 已完成 |
+| R14 | T20 readiness checklist 中的寄存器名、验收阈值与权限模型仍需在后续真板执行任务中重新具体化 | 中高 | `docs/review/T20_review.md` N1/N2/N3 指出：寄存器名称来源未直接审计 `axi_map.py` / DMA 代码；Layer A-D 缺少量化阈值；权限描述偏 Linux，当前工作机是 Windows | 在任何真板 smoke execution plan 前，先确认目标 OS / driver 模型，直接审计地址表与 RTL/driver 来源，并补 timeout、histogram shape、epoch 变化、commit/ack 等量化阈值 |
 
 ## 当前开放问题
 
@@ -47,8 +49,8 @@
      - `T19` review verdict = `PASS`，但只制定 tracked cache cleanup manifest，不执行删除，不处理 `runs/` / `artifacts/` 物理清理。
 9. 下一张继续开发任务包应该优先选哪一类？
    - 当前答案：
-     - `T19` 已完成并通过 review。
-     - 当前唯一任务为 `T20` real-board HIL readiness checklist，任务包已存在：`docs/tasks/Phase2/T20_real_board_readiness_checklist.md`。
+     - `T20` 已完成并通过 adversarial review。
+     - 当前唯一任务为 `T21` Phase 2 milestone review，任务包已存在：`docs/tasks/Phase2/T21_phase2_milestone_review.md`。
 10. `T15` 是否应直接运行多场景 P4 smoke？
    - 当前答案：已执行完成。
      - run dir: `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
@@ -86,8 +88,25 @@
      - N2 tracked `.pyc` = `116` 与工作区 `.pyc` 总数 `133` 的差异说明：`accepted`，差异来自未跟踪/忽略缓存，不影响 T19 只处理已跟踪文件的结论。
 15. T20 是否可以开始？
    - 当前答案：
-     - 可以作为下一 Worker 任务推进，但仅限只读 readiness checklist。
-     - 不得修改 `board_backend.py` / `fpga_driver.py`，不得调用硬件命令，不得写成 real-board HIL 已完成。
+     - 已完成并通过 adversarial review。
+     - 产物仍只是 readiness checklist，不是 real-board validation。
+16. T20 当前补出的主要结论是什么？
+   - 当前答案：
+     - `docs/real_board_hil_readiness.md` 已形成。
+     - 当前真板路径仍应标记为 `placeholder_real_board_backend`。
+     - 后续真板 smoke 至少要补齐设备存在、寄存器活性、DMA histogram 读出、commit/ack round-trip 四层证据。
+     - 在这些证据出现前，不得把 `board` backend、`/dev/uio*` 配置项或现有 HIL 日志写成真板完成。
+17. T20 的 review warning 如何处理？
+   - 当前答案：
+     - Verdict：`PASS`，Captain 按 `PASS_WITH_WARNINGS` 收口。
+     - N1 寄存器名来源不透明：`deferred`，后续真板执行任务必须直接审计 `axi_map.py` / DMA 代码与 RTL 地址表。
+     - N2 验收标准缺量化阈值：`deferred`，后续真板 smoke plan 必须补 timeout、shape、epoch 变化与 commit/ack 阈值。
+     - N3 权限描述偏 Linux：`deferred`，后续任务必须先确认目标平台是 Linux 还是 Windows，并据此更新权限/driver 模型。
+18. T21 为什么不是直接真板 smoke？
+   - 当前答案：
+     - `T14` 至 `T20` 已完成一个 Phase 2 任务队列，应先做 milestone review。
+     - 真板 smoke 还缺 R13/R14 所列设备、权限、地址表、量化阈值与平台确认。
+     - 直接执行真板 smoke 可能把 readiness checklist 误当成 hardware validation。
 
 ## 暂缓事项
 

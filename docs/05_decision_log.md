@@ -860,3 +860,49 @@ Phase 2 先按以下顺序推进：
 2. `docs/07_handoff.md` 补齐 `T19` review 判定、warning 处理和 `T20` 任务摘要。
 3. `docs/08_risks_and_open_questions.md` 记录 `T19` warning 分类，并明确 `T20` 只读边界。
 4. 不执行物理 cleanup；如需 untrack 缓存文件，必须后续单开 cleanup 执行任务。
+
+## D-2026-05-10-04
+
+- 日期：`2026-05-10`
+- 决策：接受 `T20` adversarial review 的 `PASS`，按 `PASS_WITH_WARNINGS` 收口 warning，标记 `T20` 完成，并将当前唯一任务切换为 `T21: Phase 2 milestone review and next-phase decision`
+
+### 背景
+
+`T20` 已完成 real-board HIL readiness checklist。`docs/review/T20_review.md` 给出 verdict：`PASS`，没有 blocking issue。
+
+### Warning 分类
+
+1. N1: `docs/real_board_hil_readiness.md` 第 3.3 节寄存器名称来源不透明
+   - 分类：`deferred`
+   - 处理：写入 risks/open questions；后续真板执行任务如引用这些寄存器名，必须直接审计 `axi_map.py` / DMA 相关代码和 RTL 地址表
+2. N2: 第 4 节验收标准缺少量化阈值
+   - 分类：`deferred`
+   - 处理：写入 risks/open questions；后续真板 smoke execution plan 必须补充平台/bitstream 相关 timeout、shape、epoch 变化等阈值
+3. N3: 第 3.2 节权限描述偏 Linux
+   - 分类：`deferred`
+   - 处理：写入 risks/open questions；后续真板任务必须先确认目标主机是 Linux 还是 Windows，并按平台更新权限/driver 说明
+
+### 依据
+
+1. `docs/real_board_hil_readiness.md` 已完成：
+   - 当前 placeholder 证据
+   - 真板任务前置条件
+   - 设备/地址/权限/日志需求
+   - Layer A-D 最小 smoke 验收标准
+   - 禁止表述
+2. Reviewer 独立验证 `board_backend.py` / `fpga_driver.py` 的 placeholder 证据全部匹配。
+3. 本轮未修改 `cnn_fpga/`，未调用硬件命令，未把 mock/software HIL 外推为真板完成。
+4. `T14` 至 `T20` 已完成 Phase 2 原任务队列，下一步应先做 milestone review，而不是直接进入真板 smoke 或新 benchmark。
+
+### 结论
+
+`T20` 可以标记完成，但其产物只是 readiness checklist，不是 real-board validation。
+
+下一唯一任务为 `T21`。`T21` 只做 Phase 2 milestone review 和 next-phase decision，不运行 benchmark、不执行 cleanup、不调用硬件。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T20` 完成，并切换 `Current Unique Task` 到 `T21`。
+2. 新增 `docs/tasks/Phase2/T21_phase2_milestone_review.md`。
+3. `docs/07_handoff.md` 补齐 `T20` review 判定、warning 分类和 `T21` 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 保留 R13，并新增/更新后续真板执行任务必须处理的 N1/N2/N3 deferred 风险。

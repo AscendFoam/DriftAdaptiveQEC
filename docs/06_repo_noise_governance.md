@@ -157,3 +157,4 @@
 - `T19` 不执行物理删除，不执行 `git rm`，只做只读清点与 cleanup 方案。
 - 若后续进入执行任务，作用域仍应限制在 `docs/cleanup_tracked_cache_manifest.md` 列出的 9 个目录内。
 - `T19` review verdict = `PASS`；后续如要执行 physical untrack，仍必须单开任务，不得借 `T20` 或真板 readiness 任务顺手 cleanup。
+- `T21` milestone review 也不得执行 physical untrack；cleanup 执行仍必须在独立任务中按 `docs/cleanup_tracked_cache_manifest.md` 落地。

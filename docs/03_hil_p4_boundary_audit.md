@@ -66,10 +66,13 @@
 - `T18` 进入 TFLite manifest / smoke plan 时，必须区分 `tflite_service` 和 `tflite_stub_service`。
 - `T20` 进入 real-board readiness 时，不得修改 placeholder 语义或写成真板已完成。
 - `T20` 的预期输出只能是 readiness checklist / 缺口清单 / 最小 smoke 验收标准；除非后续另开任务并具备真实设备证据，否则不得把 `board_backend.py` 的 placeholder 状态升级为已验收能力。
+- `T20` 已补出 `docs/real_board_hil_readiness.md`，后续真板任务应优先引用其中的 placeholder 证据、前置条件、最小 smoke 验收标准与禁止表述。
+- `T21` 若作为 milestone review，必须继续区分 `readiness checklist` 与 `hardware validation`；任何只读总结都不能把 `board_backend.py` 的占位状态改写成现实板级完成。
 
 ## 7. 当前推荐表述
 
 - 可以说：`P3 software HIL scaffold exists and is mock-backed unless explicitly proven otherwise.`
 - 可以说：`P4 benchmark currently reuses the same HIL session stack and inherits its realism limits.`
+- 可以说：`real-board readiness checklist exists, but hardware validation evidence does not.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`

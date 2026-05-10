@@ -5,8 +5,8 @@
 - 日期：`2026-05-10`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T20: Real-board HIL readiness checklist without implementation claims`
-- 任务包：`docs/tasks/Phase2/T20_real_board_readiness_checklist.md`
+- 当前唯一任务：`T21: Phase 2 milestone review and next-phase decision`
+- 任务包：`docs/tasks/Phase2/T21_phase2_milestone_review.md`
 
 ## 2. 本轮已完成
 
@@ -109,9 +109,18 @@
    - `docs/cleanup_tracked_cache_manifest.md` 已固定 tracked cache cleanup 的 9 个目录、命令草案、回滚方案与验收标准
    - tracked `.pyc` 文件共 `116` 个，全部位于 `9` 个 `__pycache__` 目录中
    - 未执行任何物理 cleanup，`runs/` 与 `artifacts/` 仍保持不触碰
-29. 当前唯一任务已切换为 `T20`：
-   - 目标是为真板 HIL 路径补 readiness checklist 与缺口清单
-   - 任务必须继续保持 `board_backend.py` 的 placeholder 语义，不得写成真板完成
+29. `T20` 已完成并通过 adversarial review：
+   - `docs/review/T20_review.md` verdict = `PASS`
+   - `docs/real_board_hil_readiness.md` 已形成真板 readiness checklist、前置条件与最小 smoke 验收标准
+   - 产物仍只是 readiness / acceptance criteria，不是真板验证
+30. 当前唯一任务已切换为 `T21`：
+   - 目标是做 Phase 2 milestone review 和 next-phase decision
+   - 任务只做只读 review，不运行 benchmark、不执行 cleanup、不调用硬件
+31. `T20` 的只读 Worker 输出已就位：
+   - 新增 `docs/real_board_hil_readiness.md`
+   - 固定了 `board_backend.py` / `fpga_driver.py` 的 placeholder 证据点
+   - 固定了真板前置条件、最小 smoke 验收标准与禁止表述
+   - 未调用硬件，未修改真板代码，`T20` 已收口
 
 ## 3. 已验证事实
 
@@ -390,7 +399,9 @@
 17. `T18` 已完成，`.tflite` export/runtime 与 stub 边界现已独立收口，但真实 runtime 依赖仍未满足
 18. `T18` review 已通过，真实 `.tflite` runtime 不可用继续保留为 R12
 19. `T19` 已通过 review 并完成，tracked cache cleanup manifest 已就位，但物理 cleanup 仍未执行
-20. 当前唯一任务为 `T20`，只做 real-board HIL readiness checklist，不实现真板 backend、不改写 placeholder 语义
+20. `T20` 已完成并通过 adversarial review，real-board readiness checklist 已就位，但仍不是真板验证
+21. 当前唯一任务为 `T21`，只做 Phase 2 milestone review，不运行 benchmark、不执行 cleanup、不调用硬件
+22. `T21` 的 worker 任务包已创建，等待后续推进
 
 ## 5. 已完成任务包
 
@@ -413,6 +424,7 @@
 - `T17`：`docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
 - `T18`：`docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
 - `T19`：`docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
+- `T20`：`docs/tasks/Phase2/T20_real_board_readiness_checklist.md`
 
 关键产出：
 
@@ -431,47 +443,50 @@
 - `docs/review/T17_review.md`
 - `docs/review/T18_review.md`
 - `docs/review/T19_review.md`
+- `docs/review/T20_review.md`
 - `docs/P4_benchmark_development_protocol.md`
 - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
 - `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
 - `docs/training_chain_bootstrap.md`
 - `docs/TFLite_runtime_bootstrap.md`
 - `docs/cleanup_tracked_cache_manifest.md`
+- `docs/real_board_hil_readiness.md`
 
 ## 6. 当前唯一任务包摘要
 
-Task ID: `T20`
+Task ID: `T21`
 
-Goal: 为真板 HIL 路径补 readiness checklist 与缺口清单，不实现真板 backend，也不改写 placeholder 语义。
+Goal: 对 Phase 2 已完成任务做 milestone review，判断当前证据是否允许进入下一阶段、继续扩展 Phase 2，或先补 cleanup / 真板执行前置任务。
 
 Allowed files:
 
-- `docs/tasks/Phase2/T20_real_board_readiness_checklist.md`
-- `docs/real_board_hil_readiness.md`
-- `docs/03_hil_p4_boundary_audit.md`
+- `docs/tasks/Phase2/T21_phase2_milestone_review.md`
+- `docs/review/T21_phase2_milestone_review.md`
 - `docs/04_task_board.md`
+- `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
 
 
 Forbidden scope:
 
-- 不改 `cnn_fpga/hwio/board_backend.py`
-- 不改 `cnn_fpga/hwio/fpga_driver.py`
-- 不写真实板级完成
-- 不运行需要硬件设备的命令
-- 不把 mock backend 证据外推到 real board
+- 不运行新的 benchmark
+- 不执行物理 cleanup
+- 不调用硬件或真板命令
+- 不改源码、配置或 benchmark 口径
+- 不把 `T15` development run 写成 formal benchmark
+- 不把 `T20` readiness checklist 写成 real-board validation
 
 Verification:
 
-- 只读审计
-- 不调用硬件
-- 核对 placeholder / mock / real-board 语义边界
+- 只读 milestone review
+- 核对 `T14`-`T20` 证据等级与剩余风险
+- 输出 `Allow` / `Conditional` / `Block` gate decision
 
 当前状态：
 
-- `T19` 已完成并通过 review
-- `docs/cleanup_tracked_cache_manifest.md` 已形成只读清点、命令草案、回滚方案与验收标准
+- `T20` 已完成并通过 adversarial review
+- `docs/real_board_hil_readiness.md` 已形成真板 readiness checklist、前置条件与最小 smoke 验收标准
 - 未改变全局阶段与决策状态，仍为 `Phase 2: Controlled Development` / `Go`
 
 ## 7. 下一步建议
@@ -480,8 +495,8 @@ Verification:
 
 建议优先级：
 
-1. 下一任务为 `T20`，Worker 只应按任务包推进 real-board readiness checklist
-2. 真板路径仍是 placeholder 语义，禁止写成已完成
+1. 下一任务为 `T21`，Worker 只应按任务包推进 Phase 2 milestone review
+2. 当前已完成只读 readiness checklist，但仍禁止写成真板已完成
 3. `.tflite` bootstrap 已独立收口，但真实 runtime 仍未可用
 4. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 5. 不要顺手扩写真板实现，也不要把 software HIL 证据外推为真板证据

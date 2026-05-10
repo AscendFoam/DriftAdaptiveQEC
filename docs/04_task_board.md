@@ -60,60 +60,67 @@
 
 ### Milestone 2D: Hardware Boundary Readiness
 
-- [ ] T20: Real-board HIL readiness checklist without implementation claims
+- [x] T20: Real-board HIL readiness checklist without implementation claims
   - Task package: `docs/tasks/Phase2/T20_real_board_readiness_checklist.md`
+
+### Milestone 2E: Phase 2 Gate
+
+- [ ] T21: Phase 2 milestone review and next-phase decision
+  - Task package: `docs/tasks/Phase2/T21_phase2_milestone_review.md`
 
 ## Current Unique Task
 
-`T20: Real-board HIL readiness checklist without implementation claims`
+`T21: Phase 2 milestone review and next-phase decision`
 
 为什么现在做它：
 
-1. `T19` review verdict = `PASS`，没有 blocking issue。
-2. `T19` 已完成 tracked cache cleanup manifest，并把已跟踪 `.pyc` / `__pycache__/` 的边界和回滚方案固定下来。
-3. `T19` 的 non-blocking issue 仅是命令写法与统计口径说明，均为 `accepted`，不影响 cleanup 边界。
-4. 物理 cleanup 仍未执行，且必须作为后续独立任务处理，不能借当前轮次顺手落地。
-5. 真板路径仍是 placeholder 语义，当前更适合进入 real-board readiness checklist，先固定设备、地址、权限、日志与禁止表述。
-6. `T20` 是当前最小的下一步有界任务，可继续保持边界诚实而不扩写真板完成事实。
+1. `T20` adversarial review verdict = `PASS`，没有 blocking issue。
+2. `T20` 已完成 real-board readiness checklist，但该产物仍只是 readiness / acceptance criteria，不是真板验证。
+3. `T20` 的 non-blocking issues 影响后续真板执行任务设计，分类为 `deferred` 并写入 risks/open questions。
+4. `T14` 至 `T20` 已覆盖 Phase 2 原计划的 benchmark、manifest、repo hygiene 与 hardware readiness 任务。
+5. 直接进入真板 smoke、物理 cleanup 或新的 benchmark 前，需要先做一次 Phase 2 milestone gate。
+6. `T21` 只做只读 milestone review 和下一阶段决策，不运行 benchmark、不执行 cleanup、不调用硬件。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T20`
-2. Worker 任务包：`docs/tasks/Phase2/T20_real_board_readiness_checklist.md`
+1. 当前唯一任务：`T21`
+2. Worker 任务包：`docs/tasks/Phase2/T21_phase2_milestone_review.md`
 3. Allowed files：
-   - `docs/tasks/Phase2/T20_real_board_readiness_checklist.md`
-   - `docs/real_board_hil_readiness.md`
-   - `docs/03_hil_p4_boundary_audit.md`
+   - `docs/tasks/Phase2/T21_phase2_milestone_review.md`
+   - `docs/review/T21_phase2_milestone_review.md`
    - `docs/04_task_board.md`
+   - `docs/05_decision_log.md`
    - `docs/07_handoff.md`
    - `docs/08_risks_and_open_questions.md`
 4. Forbidden scope：
-   - 不改 `cnn_fpga/hwio/board_backend.py`
-   - 不改 `cnn_fpga/hwio/fpga_driver.py`
-   - 不写真实板级完成
-   - 不运行需要硬件设备的命令
-   - 不把 mock backend 证据外推到 real board
+   - 不运行新的 benchmark
+   - 不执行物理 cleanup
+   - 不调用硬件或真板命令
+   - 不改源码、配置或 benchmark 口径
+   - 不把 `T15` development run 写成 formal benchmark
+   - 不把 `T20` readiness checklist 写成 real-board validation
 5. Verification：
-   - 只读审计
-   - 不调用硬件
-   - 核对 placeholder / mock / real-board 语义边界
+   - 只读 milestone review
+   - 核对 `T14`-`T20` 证据等级与剩余风险
+   - 输出 `Allow` / `Conditional` / `Block` gate decision
 6. Docs to update：
-   - 更新 `docs/03_hil_p4_boundary_audit.md`
    - 更新 `docs/04_task_board.md`
+   - 更新 `docs/05_decision_log.md`
    - 更新 `docs/07_handoff.md`
    - 更新 `docs/08_risks_and_open_questions.md`
 
 预期 Worker 只读产出：
 
-- `docs/real_board_hil_readiness.md`
-- placeholder 证据清点与禁止表述清单
-- 真板 readiness 前置条件与最小 smoke 验收标准
-- 未修改 `board_backend.py`
+- `docs/review/T21_phase2_milestone_review.md`
+- Phase 2 completed task summary (`T14`-`T20`)
+- evidence level assessment
+- remaining blockers / warnings
+- gate decision 与推荐下一唯一任务
 
-## Done Criteria For T20
+## Done Criteria For T21
 
-1. 产出 real-board HIL readiness checklist。
-2. 明确当前 `board_backend.py` / `fpga_driver.py` 的 placeholder 证据。
-3. 明确真板任务前置条件、设备/地址/权限/日志需求与最小 smoke 验收标准。
-4. 不修改真板代码，不调用硬件命令。
-5. 不把 `mock` backend、软件 HIL 或计划项写成 real-board HIL 已完成。
+1. 产出 Phase 2 milestone review。
+2. 覆盖 `T14` 至 `T20` 的完成状态、证据等级与边界。
+3. 明确 remaining blockers / warnings，尤其是 P4 formal benchmark、`.tflite` runtime、physical cleanup、real-board readiness。
+4. 给出 `Allow` / `Conditional` / `Block` gate decision。
+5. 推荐下一唯一任务，但不执行下一任务。
