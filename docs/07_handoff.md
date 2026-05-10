@@ -5,8 +5,8 @@
 - 日期：`2026-05-10`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T18: TFLite export/runtime manifest and boundary smoke plan`
-- 任务包：`docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
+- 当前唯一任务：`T19: Bounded cleanup manifest for tracked cache files`
+- 任务包：`docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
 
 ## 2. 本轮已完成
 
@@ -94,6 +94,19 @@
 24. 当前唯一任务已切换为 `T18`：
    - 目标是为 `.tflite` export/runtime 路径补独立 manifest 与 boundary smoke plan
    - 必须区分真实 `.tflite` 与 `.tflite.json` / `tflite_stub_v1`
+25. 完成了 `T18`，补充了：
+   - `docs/TFLite_runtime_bootstrap.md`
+   - `docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md` 的 Worker output
+26. `T18` 将 `.tflite` 路径的真实 runtime 依赖与 stub 边界显式拆开：
+   - 当前机器未安装 `tensorflow` / `tflite_runtime`
+   - `export.py`、`evaluate_tflite.py`、`validate_export.py` 入口存在，但真实 runtime 不能写成已恢复事实
+   - `tflite_stub_v1` 仅是可追溯回退，不等于真实部署
+27. Captain 已按 `PASS` 处理 `T18` review：
+   - Blocking issues: none
+   - N1 accepted：推荐表述中的 Markdown 引号嵌套只是排版提醒，不影响结论，也不写入 risks
+28. 当前唯一任务已切换为 `T19`：
+   - 目标是为已跟踪 `__pycache__/` 与 `.pyc` 文件制定 cleanup manifest
+   - 本任务只做只读清点和计划，不执行删除，不触碰 `runs/` 或 `artifacts/`
 
 ## 3. 已验证事实
 
@@ -369,7 +382,9 @@
 14. `T16` 已完成，结论为 `Conditional`
 15. 当前更适合优先转向 `T17 / T18` 这类独立 manifest / boundary 任务，而不是继续扩大 P4 benchmark
 16. `T17` 已完成，训练链环境说明现已独立收口，但训练链可移植性仍未锁定
-17. 当前唯一任务为 `T18`，优先收口 `.tflite` export/runtime manifest 与 boundary smoke plan；真板和训练长跑复验仍未覆盖
+17. `T18` 已完成，`.tflite` export/runtime 与 stub 边界现已独立收口，但真实 runtime 依赖仍未满足
+18. `T18` review 已通过，真实 `.tflite` runtime 不可用继续保留为 R12
+19. 当前唯一任务为 `T19`，只做 tracked cache cleanup manifest，不执行物理 cleanup
 
 ## 5. 已完成任务包
 
@@ -390,6 +405,7 @@
 - `T15`：`docs/tasks/Phase2/T15_p4_multiscenario_frozen_smoke.md`
 - `T16`：`docs/tasks/Phase2/T16_p4_evidence_gate_review.md`
 - `T17`：`docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
+- `T18`：`docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
 
 关键产出：
 
@@ -406,21 +422,24 @@
 - `docs/review/T16_p4_evidence_gate_review.md`
 - `docs/review/T16_milestone_review.md`
 - `docs/review/T17_review.md`
+- `docs/review/T18_review.md`
 - `docs/P4_benchmark_development_protocol.md`
 - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
 - `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
 - `docs/training_chain_bootstrap.md`
+- `docs/TFLite_runtime_bootstrap.md`
 
 ## 6. 当前唯一任务包摘要
 
-Task ID: `T18`
+Task ID: `T19`
 
-Goal: 为 `.tflite` export/runtime 路径补独立 manifest 与 boundary smoke plan，继续严格区分真实 `.tflite` 与 `tflite_stub_v1`。
+Goal: 为已跟踪的 `__pycache__/` 与 `.pyc` 文件制定有界 cleanup manifest 与验收标准。
 
 Allowed files:
 
-- `docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
-- `docs/TFLite_runtime_bootstrap.md`
+- `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
+- `docs/cleanup_tracked_cache_manifest.md`
+- `docs/06_repo_noise_governance.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
@@ -428,21 +447,21 @@ Allowed files:
 
 Forbidden scope:
 
-- 不改 `cnn_fpga/model/export.py`
-- 不改 `cnn_fpga/runtime/inference_service.py`
-- 不把 `.tflite.json` stub manifest 写成真实 `.tflite` runtime
-- 不改 HIL benchmark 口径
+- 不删除 `runs/`
+- 不删除 `artifacts/`
+- 不执行批量破坏性命令，除非 Captain 后续明确批准 cleanup 执行任务
+- 不改源码
 
 Verification:
 
-- 只读代码审计加环境探测
-- 如环境具备，可运行最小 `--help` 或 import smoke
-- 不得强行改代码绕过依赖
+- 只读清点
+- 可使用 `git ls-files` / `rg --files` 统计目标文件
+- 不执行删除、不执行 `git rm`
 
 当前状态：
 
-- `T18` 等待 Worker 执行
-- `T18` 任务包已存在
+- `T19` 等待 Worker 执行
+- `T19` 任务包已存在
 - 未改变全局阶段与决策状态，仍为 `Phase 2: Controlled Development` / `Go`
 
 ## 7. 下一步建议
@@ -451,9 +470,9 @@ Verification:
 
 建议优先级：
 
-1. 下一任务为 `T18`，Worker 只应按任务包推进 `.tflite` manifest / boundary smoke plan
-2. 当前只做 manifest / smoke plan，不顺手改 `.tflite` export/runtime 代码
-3. 训练链 bootstrap 已独立收口，但暂不把这件事扩写为跨机器完整训练环境已恢复
+1. 下一任务为 `T19`，Worker 只应按任务包推进 tracked cache cleanup manifest
+2. 当前只做只读清点和 cleanup 方案，不执行物理删除
+3. `.tflite` bootstrap 已独立收口，但真实 runtime 仍未可用
 4. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 5. 仍不要顺手做 `runs/`、`artifacts/`、`__pycache__/` 的大规模清理或无界扩功能
 
@@ -464,4 +483,4 @@ Verification:
 1. 新的 teacher-representation benchmark 扩展
 2. 长时间 P4 正式长跑
 3. 真板 backend 能力扩写
-4. 大规模 repo cleanup
+4. 任何未获 Captain 明确批准的物理 repo cleanup

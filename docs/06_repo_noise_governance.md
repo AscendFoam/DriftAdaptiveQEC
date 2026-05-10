@@ -143,3 +143,4 @@
 - `T14/T15` 若进入 P4 证据增强，仍必须显式写清 backend 与 inference artifact type。
 - `T17/T18` 只能补 manifest / bootstrap，不应把环境说明写成完整验证完成。
 - `T19` 只允许先处理 tracked cache cleanup manifest；`runs/` 和 `artifacts/` 另行拆分。
+- `T19` 不执行物理删除，不执行 `git rm`，只做只读清点与 cleanup 方案。

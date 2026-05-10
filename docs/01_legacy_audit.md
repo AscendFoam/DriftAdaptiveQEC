@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T18: TFLite export/runtime manifest and boundary smoke plan`
+  - `T19: Bounded cleanup manifest for tracked cache files`
 
 说明：
 
@@ -337,6 +337,6 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T17` 已完成；当前先执行 `T18`，为 `.tflite` export/runtime 路径补独立 manifest 与 boundary smoke plan
+1. `T14` 至 `T18` 已完成；当前先执行 `T19`，为已跟踪缓存/字节码文件制定 cleanup manifest
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
-3. 其后再考虑单开 cleanup 任务处理 repo noise 的物理移除
+3. `T19` 只做只读清点与计划，不执行物理 cleanup，不触碰 `runs/` 或 `artifacts/`

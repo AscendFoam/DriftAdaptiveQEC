@@ -50,7 +50,7 @@
 
 - [x] T17: Training-chain independent manifest and bootstrap
   - Task package: `docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
-- [ ] T18: TFLite export/runtime manifest and boundary smoke plan
+- [x] T18: TFLite export/runtime manifest and boundary smoke plan
   - Task package: `docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
 
 ### Milestone 2C: Repository Hygiene
@@ -65,45 +65,47 @@
 
 ## Current Unique Task
 
-`T18: TFLite export/runtime manifest and boundary smoke plan`
+`T19: Bounded cleanup manifest for tracked cache files`
 
 为什么现在做它：
 
-1. `T17` review verdict = `PASS`，没有 blocking issue。
-2. `T17` 已完成训练链独立 bootstrap，并明确没有把 `DLEnv` 写成跨机器保证。
-3. `T17` reviewer 的 `torch` dev build 与未产出 `requirements-train.txt` 观察均为非阻塞；训练链可移植性后续再单开任务，不影响进入 `T18`。
-4. `.tflite` 路径已有真实导出/runtime 与 `tflite_stub_v1` 两类代码路径，但当前 Phase 2 尚未重新复验真实 runtime。
-5. 当前更适合先补 `.tflite` manifest / boundary smoke plan，再决定是否执行实际 smoke 或转入 cleanup / real-board readiness。
+1. `T18` review verdict = `PASS`，没有 blocking issue。
+2. `T18` 已完成 `.tflite` export/runtime manifest 与 boundary smoke plan。
+3. `T18` 的 non-blocking issue 只是推荐表述的 Markdown 格式问题，分类为 `accepted`，不影响交接。
+4. 真实 `.tflite` runtime 仍未恢复，已作为 R12 保留；不应借当前轮次继续扩写 `.tflite` 实体能力。
+5. 当前更适合进入 repo hygiene 的只读 cleanup manifest，先把已跟踪缓存/字节码文件清点与执行方案写清楚。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T18`
-2. Worker 任务包：`docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
+1. 当前唯一任务：`T19`
+2. Worker 任务包：`docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
 3. Allowed files：
-   - `docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
-   - `docs/TFLite_runtime_bootstrap.md`
+   - `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
+   - `docs/cleanup_tracked_cache_manifest.md`
+   - `docs/06_repo_noise_governance.md`
    - `docs/04_task_board.md`
    - `docs/07_handoff.md`
    - `docs/08_risks_and_open_questions.md`
 4. Forbidden scope：
-   - 不改 `cnn_fpga/model/export.py`
-   - 不改 `cnn_fpga/runtime/inference_service.py`
-   - 不把 `.tflite.json` stub manifest 写成真实 `.tflite` runtime
-   - 不改 HIL benchmark 口径
+   - 不删除 `runs/`
+   - 不删除 `artifacts/`
+   - 不执行批量破坏性命令，除非 Captain 后续明确批准 cleanup 执行任务
+   - 不改源码
 5. Verification：
-   - 只读代码审计加环境探测
-   - 如环境具备，可运行最小 `--help` 或 import smoke
-   - 不得强行改代码绕过依赖
+   - 只读清点
+   - 可使用 `git ls-files` / `rg --files` 统计目标文件
+   - 不执行删除、不执行 `git rm`
 6. Docs to update：
-   - 新增 `docs/TFLite_runtime_bootstrap.md`
+   - 新增 `docs/cleanup_tracked_cache_manifest.md`
+   - 更新 `docs/06_repo_noise_governance.md`
    - 更新 `docs/04_task_board.md`
    - 更新 `docs/07_handoff.md`
    - 更新 `docs/08_risks_and_open_questions.md`
 
-## Done Criteria For T18
+## Done Criteria For T19
 
-1. 产出 `.tflite` export/runtime 独立 bootstrap 文档。
-2. 明确真实 `.tflite` 与 `tflite_stub_v1` 的边界、依赖和 smoke 命令。
-3. 不改导出/runtime 代码，不改 benchmark 口径。
-4. 若环境无法验证真实 `.tflite`，把阻塞项写清楚，不伪造成通过。
-5. 为后续实际 `.tflite` smoke、repo cleanup 或 real-board readiness 留出清晰边界。
+1. 产出 tracked cache cleanup manifest。
+2. 明确目标文件类别、只读清点结果、cleanup 命令草案、回滚方式与验收标准。
+3. 不执行删除，不执行 `git rm`，不改源码。
+4. 不触碰 `runs/` 和 `artifacts/`。
+5. 为后续 Captain 决定是否执行物理 cleanup 留出清晰边界。

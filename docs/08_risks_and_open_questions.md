@@ -15,6 +15,7 @@
 | R9 | 在 `T15` 已完成后，若继续直接扩大到剩余场景或更长 repeat，仍可能隐式越过 bounded/development/formal 边界 | 中高 | `T15` 已按协议跑完 `static_bias_theta + linear_ramp`、五模式、`repeats=2`；`docs/02_experiment_plan.md` 仍禁止无准备长跑 | `T16` 后仍不应自动追加 `step_sigma_theta`、`periodic_drift` 或更大 repeat；任何进一步 P4 扩展都必须新开任务包 |
 | R10 | `hybrid_residual_b` 的 teacher diagnostics 在 T15 summary 中全零，可能影响机制分析深度 | 中 | `docs/review/T15_frozen_smoke_review.md` N2 指出所有 10 个 comparison rows 的 `teacher_contribution_l2_mean`、`teacher_scalar_abs_mean`、`teacher_gate_mean`、`teacher_gate_std` 均为 0，且 `teacher_per_scalar = {}` | `T16` 已将其判为非阻塞风险：在路径未澄清前，不把 teacher diagnostics 用作机制结论；当前优先转向 manifest / boundary 任务，而不是为了该指标直接重开 benchmark |
 | R11 | 训练链 bootstrap 记录了本机 `torch` dev build，但尚未形成可移植依赖锁定 | 中 | `docs/review/T17_review.md` N1/N2 指出 `torch = 2.8.0.dev20250405+cu128` 是 dev build，且本轮未产出 `requirements-train.txt`；`docs/training_chain_bootstrap.md` 只承诺本机 `DLEnv` 探测结果 | 不把 `DLEnv` 或 dev torch 写成跨机器保证；若后续需要训练链可移植性，单开 `requirements-train.txt` / lockfile 任务，并显式说明 dev build 渠道限制 |
+| R12 | `.tflite` 路径已有代码与入口，但真实 TensorFlow / TFLite 运行时在当前机器上不可用 | 高 | `docs/TFLite_runtime_bootstrap.md` 已记录 `tensorflow = False`、`tflite_runtime = False`；`export.py`、`evaluate_tflite.py`、`validate_export.py` 入口存在，但真实 runtime 需独立环境 | 继续把真实 `.tflite`、stub manifest 与 HIL benchmark 边界写清；若后续要跑真实 runtime，单开环境任务或在具备依赖的机器上做独立 smoke |
 
 ## 当前开放问题
 
@@ -37,13 +38,17 @@
    - 当前答案：
      - recovery smoke root manifest: `numpy + PyYAML`
      - 训练链当前单独记录在 `docs/training_chain_bootstrap.md`，推荐解释器为本机 `DLEnv`
+     - `.tflite` 路径当前单独记录在 `docs/TFLite_runtime_bootstrap.md`，真实 runtime 依赖尚未满足
 7. 是否需要再为训练链、`.tflite` 或真板路径补独立 manifest？
-   - 当前答案：训练链 bootstrap 已补；`.tflite` 与真板路径仍需要后续独立任务
+   - 当前答案：训练链 bootstrap 已补；`.tflite` bootstrap 已补；真板路径仍需要后续独立任务
 8. 已跟踪的 `.pyc` / `__pycache__/`、`runs/`、`artifacts/` 何时启动有界 cleanup，并如何拆分“bootstrap 必需”与“历史归档”？
+   - 当前答案：
+     - 当前唯一任务已切到 `T19`，但 `T19` 只制定 tracked cache cleanup manifest。
+     - `T19` 不执行删除，不处理 `runs/` / `artifacts/` 物理清理。
 9. 下一张继续开发任务包应该优先选哪一类？
    - 当前答案：
-     - `T17` 已完成并通过 review。
-     - 当前唯一任务已切到 `T18` `.tflite` manifest / boundary smoke plan。
+     - `T18` 已完成并通过 review。
+     - 当前唯一任务已切到 `T19` tracked cache cleanup manifest。
 10. `T15` 是否应直接运行多场景 P4 smoke？
    - 当前答案：已执行完成。
      - run dir: `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
@@ -67,6 +72,13 @@
      - Verdict：`PASS`。
      - N1 `torch` dev build：`accepted`，只作为本机环境事实记录，不写成跨机器保证，风险保留到 R11。
      - N2 未产出 `requirements-train.txt`：`accepted`，因为任务允许用 `docs/training_chain_bootstrap.md` 收口；训练链可移植性后续单开任务。
+13. `T18` 的主要结论是什么？
+   - 当前答案：
+     - Verdict：`PASS`。
+     - N1 推荐表述 Markdown 格式问题：`accepted`，只作排版提醒，不写入 risks。
+     - `.tflite` export/runtime 代码路径存在。
+     - `tflite_stub_v1` 是明确的回退路径，不等于真实部署。
+     - 本机未安装 `tensorflow` / `tflite_runtime`，因此真实 `.tflite` runtime 仍未恢复。
 
 ## 暂缓事项
 

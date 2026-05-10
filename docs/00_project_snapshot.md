@@ -9,7 +9,7 @@
 ## 2. 基本信息
 
 - 快照日期：`2026-05-05`
-- 最近更新：`2026-05-08`
+- 最近更新：`2026-05-10`
 - 当前分支：`main`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
@@ -204,12 +204,12 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T18: TFLite export/runtime manifest and boundary smoke plan`
+- `T19: Bounded cleanup manifest for tracked cache files`
 
 ## 12. 快照结论
 
 当前项目的核心问题已经从“有没有可靠治理层和入口”切换为“如何在不夸大完成度的前提下继续增强证据”。Phase 2 的默认策略是：
 
 1. P4 benchmark protocol 与 bounded evidence 已完成第一轮受控增强，当前 gate 结论为 `Conditional`。
-2. 训练链独立 bootstrap 已完成，当前优先补 `.tflite` export/runtime manifest 与 boundary smoke plan。
-3. 对 repo noise 做有界 cleanup，而不是大规模重写历史产物。
+2. 训练链与 `.tflite` 独立 bootstrap 已完成，但都不等于跨机器完整环境或真实 `.tflite` runtime 已恢复。
+3. 当前优先为已跟踪缓存/字节码文件补有界 cleanup manifest；只做清点与计划，不执行物理删除。

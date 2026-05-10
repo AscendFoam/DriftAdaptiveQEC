@@ -786,3 +786,35 @@ Phase 2 先按以下顺序推进：
 2. `docs/07_handoff.md` 补齐 `T17` review 判定、warning 处理和 `T18` 任务摘要。
 3. `docs/08_risks_and_open_questions.md` 记录训练链 dev build / requirements-train 后续风险，并把当前下一任务更新为 `T18`。
 4. `T18` 任务包已经存在：`docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`。
+
+## D-2026-05-10-02
+
+- 日期：`2026-05-10`
+- 决策：接受 `T18` review 的 `PASS`，标记 `T18` 完成，并将当前唯一任务切换为 `T19: Bounded cleanup manifest for tracked cache files`
+
+### 背景
+
+`T18` 已完成 `.tflite` export/runtime manifest 与 boundary smoke plan。`docs/review/T18_review.md` 给出 verdict：`PASS`，没有 blocking issue。
+
+### Warning 分类
+
+1. N1: 推荐表述中的 Markdown 引号嵌套不够整洁
+   - 分类：`accepted`
+   - 处理：只作为文档排版提醒，不影响当前结论，也不写入 risks
+
+### 依据
+
+1. `docs/TFLite_runtime_bootstrap.md` 已完成，真实 `.tflite` runtime 不可用被明确写成阻塞事实。
+2. `T18` 没有修改导出/runtime 代码，也没有改 benchmark 口径。
+3. 当前更适合进入 repo hygiene 的只读 cleanup manifest 阶段。
+
+### 结论
+
+`T18` 可以标记完成。下一唯一任务为 `T19`，用于为已跟踪缓存/字节码文件制定有界 cleanup manifest。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 切换当前唯一任务为 `T19`。
+2. `docs/07_handoff.md` 补齐 `T18` review 判定与 `T19` 任务摘要。
+3. `docs/06_repo_noise_governance.md`、`docs/08_risks_and_open_questions.md` 进入 cleanup manifest 口径。
+4. `T19` 任务包已经存在：`docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`。
