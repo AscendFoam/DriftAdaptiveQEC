@@ -73,7 +73,8 @@
 - 即使 `docs/real_board_smoke_execution_plan.md` 已存在，也只能写成 `execution plan exists, but it has not been executed`，不得因为 plan 文档就升级为真板已验证。
 - `T23` 若锁定 P4 formal benchmark protocol，也只能产出协议、矩阵、预算、evidence pack 与 go/no-go 条件；不得把 protocol lock 写成 formal benchmark 已执行。
 - `T24` 已执行并通过 Captain 收口为 `PASS_WITH_WARNINGS`，但其结果仍只能在 `mock-backed P4 wrapper over software HIL` 边界内使用；不得把结果写成 `.tflite` runtime 或 `real_board` validation。
-- `T25` 只能审查 T24 evidence pack、边界声明、warning 分类与后续风险，不得运行新 benchmark 或扩展 frozen set。
+- `T25` 已完成 result-boundary gate review；T24 可作为 completed frozen-set formal software revalidation，但仍不能升级为 runtime / board / paper-grade evidence。
+- `T27` 只能审计 teacher diagnostics 与机制证据路径，不得运行新 benchmark、修改 runner 或扩展 frozen set。
 
 ## 7. 当前推荐表述
 
@@ -83,5 +84,6 @@
 - 可以说：`real-board smoke execution plan exists, but it has not been executed.`
 - 可以说：`P4 frozen-set formal software revalidation has been executed and reviewed as mock-backed software HIL evidence.`
 - 可以说：`P4 formal software revalidation is not deployment, true TFLite runtime, or hardware validation.`
+- 可以说：`Teacher diagnostics remain an unresolved mechanism-evidence gap and are under audit.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`

@@ -1171,3 +1171,74 @@ Project Manager 明确指出：论文发表是最终目标，但当前仍应一�
 2. 新增 `docs/tasks/Phase2/T25_p4_formal_evidence_gate_review.md`。
 3. `docs/07_handoff.md` 记录 T24 review 判定、warning 分类与 T25 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 更新 R10 并新增 R20。
+
+## D-2026-05-11-02
+
+- 日期：`2026-05-11`
+- 决策：记录 `T25` Worker gate-review draft 已产出，但在 Captain 手动收口前，不标记 `T25` 完成，也不切换当前唯一任务
+
+### 背景
+
+`T25` 的目标是对 `T24` evidence pack 做只读 adversarial gate review，并更新结果边界。用户已明确要求本轮不要直接标记 task 已结束，因为后续还会手动交给 claude code 审核。
+
+### Worker draft 结论
+
+1. `docs/review/T25_p4_formal_evidence_gate_review.md` 已形成草案，verdict = `PASS_WITH_WARNINGS`
+2. `T24` 可被视为 completed frozen-set formal software revalidation
+3. 该结论仍严格限定为 `mock-backed software HIL only`
+4. `correction_saturation_rate_mean` structural zero 继续 `deferred` 到 `R20`
+5. `teacher_scalar_diagnostics.csv` header-only / teacher diagnostics 全零继续 `deferred` 到 `R10`
+6. `docs/04_task_board.md` 中 T24 task-board environment-note warning 继续 `accepted`
+7. Worker 推荐的下一唯一任务是 `T27: Teacher diagnostics path audit and mechanism-evidence repair plan`
+
+### 结论
+
+当前最合理做法是：
+
+1. 保留 `Current Unique Task = T25`
+2. 把 T25 review draft、for-human explanation 和治理同步写入仓库
+3. 不提前把 `T27` 写成已开始
+4. 等 Captain 手动审阅和收口后，再决定是否正式切换下一唯一任务
+
+### 直接影响
+
+1. `docs/review/T25_p4_formal_evidence_gate_review.md` 新增 gate-review draft。
+2. `docs/for_human/T25_explanation.md` 新增给人读的简明说明。
+3. `docs/04_task_board.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 T25 draft 结论，但保持当前唯一任务不变。
+4. `docs/tasks/Phase2/T25_p4_formal_evidence_gate_review.md` 需要补 Worker output，记录本轮只读检查和剩余风险。
+
+## D-2026-05-11-03
+
+- 日期：`2026-05-11`
+- 决策：Captain 接受 `T25` gate review 的 `PASS_WITH_WARNINGS`，标记 `T25` 完成，并将当前唯一任务切换为 `T27: Teacher diagnostics path audit and mechanism-evidence repair plan`
+
+### 背景
+
+`T25` 本身是只读 review / gate 任务。用户已说明本轮不启用 Claude Code 重复 review，因此 Captain 直接按项目治理规则对 `docs/review/T25_p4_formal_evidence_gate_review.md` 做收口判断。
+
+### Warning 分类
+
+1. N1：`correction_saturation_rate_mean` 在 T24 所有 20 个 scenario/mode rows 中结构性为 `0.0`
+   - 分类：`deferred`
+   - 处理：继续挂 R20；后续机制审计需判断这是 metric collection dead path、真实零值，还是当前参数区间 not applicable
+2. N2：T24 task-board environment-note warning
+   - 分类：`accepted`
+   - 处理：归为 Captain 治理同步提示，不影响 T24/T25 结论，不写入新风险
+3. N3：`teacher_scalar_diagnostics.csv` header-only / teacher diagnostics 全零
+   - 分类：`deferred`
+   - 处理：继续挂 R10；优先进入 `T27` 做路径审计和机制证据修复计划
+
+### 结论
+
+`T25` 可以标记完成。T24 可作为 completed frozen-set formal software revalidation，但该证据等级只在 `mock-backed software HIL` 边界内成立。
+
+不得将 T24/T25 外推为真实 `.tflite` runtime、`real_board` validation、paper-grade expanded benchmark、statcalib comparator 结果或 CI-driven stopping 结果。
+
+下一唯一任务不切到 `T26`。虽然 `T26` 仍是路线图中的 pending 项，但 T25 gate 推荐先处理 deferred 链最长的 R10 teacher diagnostics 问题；Captain 接受该推荐，将当前唯一任务切换为 `T27`。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T25` 完成，并切换 `Current Unique Task` 到 `T27`。
+2. 新增 `docs/tasks/Phase2/T27_teacher_diagnostics_path_audit.md`。
+3. `docs/07_handoff.md` 记录 T25 Captain verdict、warning 分类与 T27 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 更新 T25 状态、R10/R20 后续路径与 T26/T27 优先级判断。

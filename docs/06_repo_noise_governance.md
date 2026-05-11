@@ -163,3 +163,4 @@
 - `T23` P4 formal protocol lock 不得顺手执行 cleanup，也不得把历史 `runs/` / `artifacts/` 改写成新的 formal 事实来源；只能引用具体路径来定义 evidence pack 和缺口。
 - `T24` P4 formal software revalidation 可以新增一个 `runs/p4_benchmark/T24_formal_software_revalidation_*` 运行目录，但不得清理、改写或重标历史 `runs/` / `artifacts/`；所有新结论必须引用该具体 run dir。
 - `T25` gate review 不得新增 run dir，也不得把 T24 run 外推为 `.tflite` runtime、真板验证或 paper-grade expanded benchmark；若需要后续机制审计或部署验证，必须新开任务包。
+- `T27` teacher diagnostics audit 只能只读引用既有 T15/T24 run outputs 和源码路径；不得新增 run dir，不得把 header-only diagnostics 改写成机制证据已完成。

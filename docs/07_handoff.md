@@ -5,8 +5,8 @@
 - 日期：`2026-05-11`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T25: P4 formal evidence gate review and result-boundary update`
-- 任务包：`docs/tasks/Phase2/T25_p4_formal_evidence_gate_review.md`
+- 当前唯一任务：`T27: Teacher diagnostics path audit and mechanism-evidence repair plan`
+- 任务包：`docs/tasks/Phase2/T27_teacher_diagnostics_path_audit.md`
 
 ## 2. 本轮已完成
 
@@ -175,10 +175,18 @@
      - N1 `correction_saturation_rate_mean` structural zero：`deferred`，写入 risks，后续机制审计需判断 metric collection bug / genuine zero / not applicable
      - N2 `docs/04_task_board.md` 中环境提示越出 T24 执行结果口径：`accepted`，按 Captain 治理同步说明处理，不影响 T24 verdict
      - N3 `teacher_scalar_diagnostics.csv` header-only / teacher diagnostics 全零：`deferred`，写入 risks，并要求 T25 后优先安排机制证据审计
-40. 当前唯一任务已切换为 `T25`：
-   - 目标是只读审查 T24 evidence pack、warning 分类、边界声明和 result-boundary
-   - 不运行新 benchmark、不改源码、不改 config、不执行 cleanup、不调用硬件
-   - 任务包：`docs/tasks/Phase2/T25_p4_formal_evidence_gate_review.md`
+40. `T25` 已完成并由 Captain 接受为 `PASS_WITH_WARNINGS`：
+   - `docs/review/T25_p4_formal_evidence_gate_review.md` verdict = `PASS_WITH_WARNINGS`
+   - T24 可作为 completed frozen-set formal software revalidation，但仅限 `mock-backed` software HIL
+   - N1 `correction_saturation_rate_mean` structural zero = `deferred` / R20
+   - N2 T24 task-board environment-note warning = `accepted`
+   - N3 `teacher_scalar_diagnostics.csv` header-only / teacher diagnostics 全零 = `deferred` / R10
+   - T25 本身是 review 任务，本轮未启用重复 Claude review
+41. 当前唯一任务已切换为 `T27`：
+   - 目标是只读追踪 teacher diagnostics 生成、聚合、写出路径，并形成机制证据修复计划
+   - 可相邻检查 `correction_saturation_rate_mean` structural zero 的指标路径
+   - 不运行新 benchmark、不改源码、不改 config、不执行 cleanup、不调用硬件、不新增 run dir
+   - 任务包：`docs/tasks/Phase2/T27_teacher_diagnostics_path_audit.md`
 
 ## 3. 已验证事实
 
@@ -471,7 +479,8 @@
    - Mock-backed software HIL only
 28. `T24` adversarial review 已完成，Captain 接受为 `PASS_WITH_WARNINGS`；T24 可标记完成，但 evidence boundary 仍限定为 `mock-backed` software HIL formal software revalidation
 29. `correction_saturation_rate_mean` 全零与 teacher diagnostics header-only 是 deferred 机制证据缺口，不阻塞 T24 LER ranking，但必须进入 T25/T27 后续收口
-30. 当前唯一任务为 `T25` gate review；T25 不执行新 benchmark，只判断 T24 证据等级、边界和下一任务优先级
+30. `T25` gate review 已完成，Captain verdict = `PASS_WITH_WARNINGS`；T25 不执行新 benchmark，只判断 T24 证据等级、边界和下一任务优先级
+31. 当前唯一任务为 `T27`；T27 只读审计 teacher diagnostics / zero-metric 路径并提出机制证据修复计划，不执行修复或新 run
 
 ## 5. 已完成任务包
 
@@ -523,6 +532,7 @@
 - `docs/review/T22_review.md`
 - `docs/review/T23_review.md`
 - `docs/review/T24_review.md`
+- `docs/review/T25_p4_formal_evidence_gate_review.md`
 - `docs/P4_benchmark_development_protocol.md`
 - `docs/P4_benchmark_formal_protocol.md`
 - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
@@ -535,37 +545,47 @@
 
 ## 6. 当前唯一任务包摘要
 
-`T25` 已创建任务包，等待 Worker 执行只读 adversarial gate review。
+`T27` 已创建任务包，等待 Worker 执行只读 teacher diagnostics path audit。
 
-T24 已收口事实：
+T25 已收口事实：
 
 - Run dir: `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743`
 - `missing_runs = []`，20/20 scenario/mode pairs `coverage = 1.0`，40 repeat-runs
 - 四场景 winner 均为 `hybrid_residual_b`，runner-up 均为 `ukf`
 - 请求统计字段全部存在于 `comparison.csv`；`correction_saturation_rate_mean` 全为 0.0；teacher diagnostics 全零
 - Mock-backed software HIL only
-- `docs/review/T24_review.md` verdict = `PASS_WITH_WARNINGS`，blocking issues = none
+- `docs/review/T25_p4_formal_evidence_gate_review.md` verdict = `PASS_WITH_WARNINGS`，blocking issues = none
+- T24 可作为 completed frozen-set formal software revalidation，但不得升级为 `.tflite` runtime、`real_board` 或 paper-grade expanded benchmark
+- N1 correction saturation structural zero = `deferred` / R20；N2 task-board environment note = `accepted`；N3 teacher diagnostics header-only = `deferred` / R10
 
-T25 任务边界：
+T27 任务边界：
 
-- 只读审查 T24 evidence pack、warning 处理、result-boundary 与下一任务建议
-- 不运行 benchmark、不改代码、不改 config、不执行 cleanup、不调用硬件
+- 只读审计 teacher diagnostics 的生成、聚合、写出路径
+- 可相邻检查 `correction_saturation_rate_mean` structural zero 是否共享 dead path
+- 输出最小机制证据修复计划与下一任务建议，但不执行修复
+- 不运行 benchmark、不改代码、不改 config、不执行 cleanup、不调用硬件、不新增 run dir
 - 未改变全局阶段与决策状态，仍为 `Phase 2: Controlled Development` / `Go`
+
+T27 Worker 必须输出：
+
+- teacher diagnostics 数据源、runner 汇总、CSV 写出路径的只读链路说明
+- header-only / all-zero 的直接原因分类，或最小可验证假设
+- R10/R20 是否仍 open，以及后续最小修复任务建议
 
 ## 7. 下一步建议
 
-下一步应交给 Worker 执行 `T25` adversarial gate review。
+下一步应交给 Worker 执行 `T27: Teacher diagnostics path audit and mechanism-evidence repair plan`。
 
 建议优先级：
 
-1. T25 审查 T24 的 evidence pack 完整性、metric availability、边界声明和证据缺口
-2. T25 将 T24 结果边界写清楚：可作为 frozen-set formal software revalidation，不可作为 `.tflite` runtime、`real_board` 或 paper-grade expanded benchmark
-3. T25 收口后，再决定下一优先级；当前建议优先处理 teacher diagnostics / correction saturation 机制证据缺口
-4. 论文发表是远期目标，当前仍按证据增强和边界收口逐步推进
+1. 先只读追踪 `teacher_scalar_diagnostics.csv` 为什么 header-only，以及 teacher diagnostics 在 T15/T24 中为何全零。
+2. 同步检查 `correction_saturation_rate_mean` 的指标路径，判断它与 teacher diagnostics 是否共享 missing/dead path。
+3. 只产出审计结论和最小修复计划，不运行 benchmark、不改代码、不补 statcalib baseline。
+4. `T26` 仍保留为路线图中的 pending 任务，但当前不建议先执行；T25 gate 已推荐优先处理 R10 机制证据缺口。
 
 ## 8. 暂不继续的事项
 
-在 T25 gate review 完成前，暂不继续：
+在 T27 完成前，暂不继续：
 
 1. 新的 teacher-representation benchmark 扩展
 2. 超出 frozen-set 的 P4 正式长跑或 CI-driven stopping

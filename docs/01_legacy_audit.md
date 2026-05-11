@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T25: P4 formal evidence gate review and result-boundary update`
+  - `T27: Teacher diagnostics path audit and mechanism-evidence repair plan`
 
 说明：
 
@@ -60,6 +60,7 @@
 - `T12` 已把最小 software HIL recovery smoke 的随机源链路收口到逐字一致复验
 - `T13` 已通过 recovery exit review，项目进入 `Phase 2: Controlled Development`
 - `T24` 已完成 frozen-set formal software revalidation，并由 Captain 接受为 `PASS_WITH_WARNINGS`
+- `T25` 已完成 result-boundary gate review，并确认 T24 只能作为 `mock-backed` software HIL formal software revalidation
 - 后续 P3/P4 文档与复验结果都应沿用同一套 backend / artifact type 表述口径
 
 ## 3. 可行性判断
@@ -338,6 +339,6 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T24` 已完成；当前下一唯一任务为 `T25`，只做 T24 evidence gate review 与 result-boundary update
+1. `T14` 至 `T25` 已完成；当前下一唯一任务为 `T27`，只做 teacher diagnostics 路径审计与机制证据修复计划
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
-3. `T25` 不运行新 benchmark，不补新 baseline，不改 runner；只判断 T24 证据能支持什么、不能支持什么，并把 deferred 机制缺口写入风险和后续任务。
+3. `T27` 不运行新 benchmark、不改源码、不补新 baseline；只追踪 teacher diagnostics 与相关 zero-metric 的来源，并产出后续最小修复计划。

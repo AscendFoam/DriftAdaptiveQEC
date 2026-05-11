@@ -204,13 +204,13 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T25: P4 formal evidence gate review and result-boundary update`
+- `T27: Teacher diagnostics path audit and mechanism-evidence repair plan`
 
 ## 12. 快照结论
 
 当前项目的核心问题已经从“有没有可靠治理层和入口”切换为“如何在不夸大完成度的前提下继续增强证据”。Phase 2 的默认策略是：
 
-1. P4 benchmark protocol 与 bounded evidence 已完成第一轮受控增强；`T24` 已完成 frozen-set formal software revalidation，并由 Captain 接受为 `PASS_WITH_WARNINGS`。
+1. P4 benchmark protocol 与 bounded evidence 已完成第一轮受控增强；`T24` 已完成 frozen-set formal software revalidation，`T25` gate review 已接受该结果边界。
 2. 训练链与 `.tflite` 独立 bootstrap 已完成，但都不等于跨机器完整环境或真实 `.tflite` runtime 已恢复。
 3. `T24` 证据等级仍限定为 `mock-backed` software HIL formal benchmark；不得外推为 `.tflite` runtime、真板验证或 paper-grade expanded benchmark。
-4. 当前唯一任务 `T25` 只做 adversarial gate review 与结果边界收口，不运行新 benchmark、不改代码、不扩展 baseline/scenario。
+4. 当前唯一任务 `T27` 只做 teacher diagnostics 路径审计与机制证据修复计划；不运行新 benchmark、不改代码、不扩展 baseline/scenario。
