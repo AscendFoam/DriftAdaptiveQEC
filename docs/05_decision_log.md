@@ -1278,3 +1278,49 @@ Project Manager 明确指出：论文发表是最终目标，但当前仍应一�
 2. 新增 `docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md`。
 3. `docs/07_handoff.md` 记录 T27 Captain verdict、warning 分类与 T28 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 更新 R10/R20，并新增 R21 记录 missing-vs-zero 语义风险。
+
+## D-2026-05-12-01
+
+- 日期：`2026-05-12`
+- 决策：接受 `T28` independent review 的 `PASS_WITH_WARNINGS`，标记 `T28` 完成，并将当前唯一任务切换为 `T29: P4 markdown report header cleanup after T28`
+
+### 背景
+
+`T28` 已完成 teacher diagnostics missing-vs-zero 语义修复与最小 smoke。`docs/review/T28_review.md` 给出 `PASS_WITH_WARNINGS`，blocking issues 为无。Reviewer 确认：
+
+1. `comparison.csv` 已显式区分 `not_applicable` 与 `not_generated`。
+2. 缺失 teacher diagnostics 不再被机器可读输出静默压成 `0.0`。
+3. `correction_saturation_rate_mean = 0.0` 仍保留为独立 fast-loop 指标的真实观察零值。
+4. T24 历史 run 未被改写。
+5. T28 smoke 输出隔离在 `runs/p4_benchmark/T28_teacher_diag_semantics_smoke_manual_20260511`。
+
+### Warning 分类
+
+1. N1：`_write_report()` 中 markdown report 旧 header 未删除，导致两行 header 列数不一致
+   - 分类：`deferred`
+   - 处理：写入 R22，并新开 `T29` 做一行级报告格式修复
+2. N2：tracked `.pyc` 文件因执行产生 side-effect diff
+   - 分类：`rejected as technical signal`
+   - 处理：不作为有意义技术改动提交；按 `T19` / `docs/06_repo_noise_governance.md` 的 tracked-cache 口径排除或另行 cleanup
+3. N3：`comparison.csv` column order changed
+   - 分类：`accepted`
+   - 处理：这是 T28 missing-vs-zero 语义修复的预期接口变化；后续 consumer 应按列名而非位置解析
+4. Missing focused tests
+   - 分类：`deferred`
+   - 处理：写入 R23；T28 smoke 对本轮可接受，但后续再改 aggregation/report writer 时应补 focused unit test 或静态格式测试
+5. S1/S2/S3 suspicious implementation details
+   - 分类：`accepted`
+   - 处理：均符合 T28 语义修复目标；未来若启用 scalar-branch generated path，再重新审查 `teacher_contribution_vector` 行为
+
+### 结论
+
+`T28` 可以标记完成。`R21` 对当前 writer 语义可关闭：当前输出已经能区分 `not_generated` / `not_applicable` / observed zero。`R10` 进一步缩窄但不关闭，因为这只是可观察性和输出语义修复，不是完整 teacher mechanism evidence repair。
+
+下一唯一任务不切到 `T26` 或 `T36`。应先执行 `T29`，修复 T28 review 指出的 markdown report 重复表头，避免后续机制分析或 statcalib 任务继承破损的人读 report。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T28` 完成，并切换 `Current Unique Task` 到 `T29`。
+2. 新增 `docs/tasks/Phase2/T29_p4_report_header_cleanup.md`。
+3. `docs/07_handoff.md` 记录 T28 Captain verdict、warning 分类与 T29 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 更新 R10/R21，并新增 R22/R23。

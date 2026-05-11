@@ -165,3 +165,5 @@
 - `T25` gate review 不得新增 run dir，也不得把 T24 run 外推为 `.tflite` runtime、真板验证或 paper-grade expanded benchmark；若需要后续机制审计或部署验证，必须新开任务包。
 - `T27` teacher diagnostics audit 只能只读引用既有 T15/T24 run outputs 和源码路径；不得新增 run dir，不得把 header-only diagnostics 改写成机制证据已完成。
 - `T28` teacher diagnostics 语义修复若需要最小 smoke，只能新增 T28 专属 run dir；不得改写 T15/T24 历史 outputs，也不得把最小 smoke 结果升级为新的 formal benchmark。
+- `T28` 执行产生的 tracked `.pyc` 改动不应作为有意义结果提交；若提交前需要处理，应按 T19 tracked-cache governance 排除或后续单开 cleanup，不得混入技术结论。
+- `T29` P4 markdown report cleanup 不得新增 run dir，也不得清理、改写或重标 T28 smoke outputs；只允许修复报告表头格式和必要文档记录。

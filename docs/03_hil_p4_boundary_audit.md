@@ -76,6 +76,7 @@
 - `T25` 已完成 result-boundary gate review；T24 可作为 completed frozen-set formal software revalidation，但仍不能升级为 runtime / board / paper-grade evidence。
 - `T27` 已完成 teacher diagnostics 与机制证据路径审计；它只缩窄 R10/R20，不代表机制证据已修复。
 - `T28` 若修复 teacher diagnostics missing-vs-zero 语义，只能在 `mock-backed` software HIL 边界内做最小代码/报告语义修复与 smoke，不得扩展 frozen set、baseline、`.tflite` runtime 或真板范围。
+- `T28` 已完成 missing-vs-zero writer 语义修复和最小 smoke，但 review 发现 P4 markdown report 存在重复表头；`T29` 只能修该报告格式问题，不得改变 benchmark 语义。
 
 ## 7. 当前推荐表述
 
@@ -85,6 +86,6 @@
 - 可以说：`real-board smoke execution plan exists, but it has not been executed.`
 - 可以说：`P4 frozen-set formal software revalidation has been executed and reviewed as mock-backed software HIL evidence.`
 - 可以说：`P4 formal software revalidation is not deployment, true TFLite runtime, or hardware validation.`
-- 可以说：`Teacher diagnostics root cause has been narrowed, but the mechanism-evidence path is not repaired yet.`
+- 可以说：`Teacher diagnostics missing-vs-zero output semantics have been repaired for the current writer path, but this is still not a full mechanism-evidence repair.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`

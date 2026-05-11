@@ -179,18 +179,40 @@ def _required_fast_cycles(config: Dict, scheduler_cfg: SchedulerConfig) -> int:
     return max(requested_fast_cycles, cycles_for_slow_target, cycles_for_window_target)
 
 
-def _aggregate_teacher_branch_diagnostics(slow_finished: List[Dict]) -> Dict[str, float | None]:
+def _aggregate_teacher_branch_diagnostics(slow_finished: List[Dict]) -> Dict[str, object]:
     contribution_l2: List[float] = []
     gate_means: List[float] = []
     gate_stds: List[float] = []
     scalar_abs_means: List[float] = []
     scalar_stats: Dict[str, Dict[str, List[float]]] = {}
+    status_counts: Dict[str, int] = {}
+    reason_counts: Dict[str, int] = {}
+    support_boundaries: set[str] = set()
+    scalar_fusion_modes: set[str] = set()
+    scalar_feature_dims: List[int] = []
+    diagnostics_seen = 0
     for item in slow_finished:
         proposed = dict(item.get("proposed_params", {}))
         metadata = dict(proposed.get("metadata", {}))
         diagnostics = dict(metadata.get("teacher_branch_diagnostics", {}))
         if not diagnostics:
             continue
+        diagnostics_seen += 1
+        status = str(diagnostics.get("teacher_diagnostics_status", "unknown"))
+        status_counts[status] = status_counts.get(status, 0) + 1
+        reason = diagnostics.get("teacher_diagnostics_status_reason")
+        if reason is not None:
+            reason_key = str(reason)
+            reason_counts[reason_key] = reason_counts.get(reason_key, 0) + 1
+        support_boundary = diagnostics.get("teacher_diagnostics_support_boundary")
+        if support_boundary is not None:
+            support_boundaries.add(str(support_boundary))
+        scalar_fusion_mode = diagnostics.get("scalar_fusion_mode")
+        if scalar_fusion_mode is not None:
+            scalar_fusion_modes.add(str(scalar_fusion_mode))
+        scalar_feature_dim = diagnostics.get("scalar_feature_dim")
+        if scalar_feature_dim is not None:
+            scalar_feature_dims.append(int(scalar_feature_dim))
         if diagnostics.get("teacher_contribution_l2") is not None:
             contribution_l2.append(float(diagnostics["teacher_contribution_l2"]))
         if diagnostics.get("teacher_gate_mean") is not None:
@@ -255,7 +277,36 @@ def _aggregate_teacher_branch_diagnostics(slow_finished: List[Dict]) -> Dict[str
             summary_item[f"{key}_max"] = None if array.size == 0 else float(np.max(array))
         per_scalar_summary[name] = summary_item
 
+    if diagnostics_seen == 0:
+        resolved_status = "not_applicable"
+        resolved_reason = "mode_does_not_emit_teacher_diagnostics"
+    elif len(status_counts) == 1:
+        resolved_status = next(iter(status_counts))
+        resolved_reason = next(iter(reason_counts)) if len(reason_counts) == 1 else "mixed_or_unspecified"
+    else:
+        resolved_status = "mixed"
+        resolved_reason = "mixed"
+
     return {
+        "teacher_diagnostics_status": resolved_status,
+        "teacher_diagnostics_status_reason": resolved_reason,
+        "teacher_diagnostics_status_counts": status_counts,
+        "teacher_diagnostics_windows_observed": diagnostics_seen,
+        "teacher_diagnostics_generated_windows": int(status_counts.get("generated", 0)),
+        "teacher_diagnostics_support_boundary": None
+        if not support_boundaries
+        else next(iter(sorted(support_boundaries)))
+        if len(support_boundaries) == 1
+        else "mixed",
+        "teacher_scalar_feature_dim_mean": None
+        if not scalar_feature_dims
+        else float(np.mean(np.asarray(scalar_feature_dims, dtype=float))),
+        "teacher_scalar_feature_dim_max": None if not scalar_feature_dims else int(max(scalar_feature_dims)),
+        "teacher_scalar_fusion_mode": None
+        if not scalar_fusion_modes
+        else next(iter(sorted(scalar_fusion_modes)))
+        if len(scalar_fusion_modes) == 1
+        else "mixed",
         "teacher_contribution_l2_mean": None if not contribution_l2 else float(np.mean(np.asarray(contribution_l2, dtype=float))),
         "teacher_contribution_l2_std": None if not contribution_l2 else float(np.std(np.asarray(contribution_l2, dtype=float))),
         "teacher_scalar_abs_mean": None if not scalar_abs_means else float(np.mean(np.asarray(scalar_abs_means, dtype=float))),

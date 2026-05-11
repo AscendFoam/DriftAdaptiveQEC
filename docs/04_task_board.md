@@ -108,22 +108,29 @@
   - Captain verdict: `PASS_WITH_WARNINGS`
   - R10 narrowed: hybrid path uses broadcast teacher features while scalar explain diagnostics require `scalar_feature_dim > 0`; data is not generated for current hybrid path, and downstream CSV coercion masks absence as `0.0`
   - R20 narrowed: independent fast-loop correction saturation path; current T24 `0.0` is not caused by teacher diagnostics dead path
-- [ ] T28: Teacher diagnostics missing-vs-zero semantics repair and minimal smoke
+- [x] T28: Teacher diagnostics missing-vs-zero semantics repair and minimal smoke
   - Task package: `docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md`
-- [ ] T29: Paper-inspired statcalib branch design gate, no long run until approved
+  - Review output: `docs/review/T28_review.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - R10 further narrowed: current outputs explicitly distinguish `not_applicable` and `not_generated`; mechanism evidence still not fully repaired
+  - R21 closed for current writer semantics: missing teacher diagnostics are no longer silently coerced to `0.0`
+  - Deferred follow-up: duplicate markdown report header row in `_write_report()`
+- [ ] T29: P4 markdown report header cleanup after T28
+  - Task package: `docs/tasks/Phase2/T29_p4_report_header_cleanup.md`
+- [ ] T30: Paper-inspired statcalib branch design gate, no long run until approved
   - Task package: pending
 - [ ] T36: `seed=20260429` failure-mechanism diagnosis, bounded no-new-branch scope
   - Task package: pending
 
 ### Milestone 2J: Reproducibility And Deployment Boundary
 
-- [ ] T30: Training-chain portable dependency lock plan
+- [ ] T31: Training-chain portable dependency lock plan
   - Task package: pending
-- [ ] T31: True `.tflite` runtime smoke, only if environment is available
+- [ ] T32: True `.tflite` runtime smoke, only if environment is available
   - Task package: pending
-- [ ] T32: Tracked cache physical cleanup execution, only within T19 manifest
+- [ ] T33: Tracked cache physical cleanup execution, only within T19 manifest
   - Task package: pending
-- [ ] T33: Real-board smoke execution gate, only if hardware host and bitstream evidence are ready
+- [ ] T37: Real-board smoke execution gate, only if hardware host and bitstream evidence are ready
   - Task package: pending
 
 ### Milestone 2K: Paper Assembly Readiness
@@ -139,38 +146,41 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T28: Teacher diagnostics missing-vs-zero semantics repair and minimal smoke`
+`T29: P4 markdown report header cleanup after T28`
 
 状态说明：
 
-- `T27` 已完成只读 path audit，Captain verdict = `PASS_WITH_WARNINGS`
-- `R10` 已缩窄：当前 T24 `hybrid_residual_b` 使用 broadcast teacher 特征；`tiny_cnn.py` explain 只在 `scalar_feature_dim > 0` 时产出 teacher scalar diagnostics，因此当前 hybrid path 的 teacher diagnostics 是 `data not generated`
-- `R10` 仍未修复：下游 aggregation / CSV 会把部分缺失值压成 `0.0`，掩盖 `not generated` 与 `true zero`
-- `R20` 已缩窄：`correction_saturation_rate_mean` 走独立 fast-loop saturation counter 路径，不与 teacher diagnostics 共享死路径；当前 T24 更像现参数区间下未触发 saturation
-- `T28` 只修 teacher diagnostics missing-vs-zero 语义，并做最小 smoke 验证；不扩 formal benchmark、baseline/scenario、`.tflite` 或真板范围
+- `T28` 已完成 teacher diagnostics missing-vs-zero 语义修复与最小 smoke，Captain verdict = `PASS_WITH_WARNINGS`
+- `R21` 对当前 writer 语义可关闭：`not_generated` / `not_applicable` 不再静默写成 `0.0`
+- `R10` 进一步缩窄，但仍不能写成 teacher 机制证据完全修复
+- `T28` review 发现 `_write_report()` 中旧 markdown header 未删除，导致 report 表格有重复表头且列数不一致
+- `T29` 只修复该 markdown report header 问题，不运行新 benchmark、不改 benchmark 语义
 
 为什么现在做它：
 
-1. `T27` 已经把 teacher diagnostics 缺口定位到当前 teacher feature layout 与 explain 机制之间的语义不匹配。
-2. 如果不先修复 `not generated` 与 `true zero` 的输出语义，后续机制分析、statcalib 设计或论文 claim ledger 都会继续继承模糊指标。
-3. T28 可以用最小代码/报告语义修复和最小 smoke 收口 R10 的可观察性问题，而不扩大 benchmark 口径。
-4. `R20` 不需要在 T28 中扩大 stress run；只需保持 T27 的缩窄结论，不把当前零值当作全局机制结论。
+1. T28 的机器可读输出已经达成目标，但 markdown report 是人读 evidence pack 的一部分。
+2. 重复表头是一个真实但局部的报告格式 bug，修复成本小，且避免后续 statcalib/seed 诊断继承坏报告。
+3. 该修复不需要新 benchmark，只需要最小静态/格式验证。
+4. 在 T29 前，不应推进 T26/statcalib 或 T36 seed 诊断。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T28`
-2. `T27` 已按 `PASS_WITH_WARNINGS` 收口。
-3. T27 accepted / narrowed warning：
-   - R20 correction saturation structural zero = 独立 fast-loop path；当前 T24 零值不再按 teacher diagnostics dead path 处理，但不关闭 R20 的全局触发性问题。
-4. T27 deferred warnings：
-   - R10 hybrid teacher diagnostics = `data not generated`，需要后续 repair。
-   - downstream CSV `0.0` coercion masks missing-vs-zero semantics，需要后续 repair。
-5. T28 任务包：`docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md`
+1. 当前唯一任务：`T29`
+2. `T28` 已按 `PASS_WITH_WARNINGS` 收口。
+3. T28 accepted warnings：
+   - N3 `comparison.csv` column order changed = `accepted`，这是 T28 语义修复的预期接口变化。
+   - S1/S2/S3 suspicious details = `accepted`，均符合当前修复语义或未来路径影响可控。
+4. T28 deferred warnings：
+   - N1 duplicate markdown report header row = `deferred`，进入 T29。
+   - Missing focused tests = `deferred`，记录到 risks；T28 smoke 可接受，但后续 aggregation 修改应补测试。
+5. T28 rejected / not committed warning：
+   - N2 tracked `.pyc` side-effect = `rejected as technical signal`，不得作为有意义改动提交；按 T19/T28 噪声治理处理。
+6. T29 任务包：`docs/tasks/Phase2/T29_p4_report_header_cleanup.md`
 
-## Done Criteria For T28
+## Done Criteria For T29
 
-1. 最小修复 teacher diagnostics 输出语义，使 downstream 报告能区分 `not generated` 与 `true zero`。
-2. 明确当前 broadcast teacher path 与 scalar teacher diagnostics 的支持边界，避免把未生成诊断写成已解释机制。
-3. 用最小 smoke 验证修复后的字段语义；可新增 T28 专属 run dir，但不得扩展 formal benchmark 口径。
-4. 更新必要的 review/for-human 文档和任务包 Worker output。
-5. 不新增 baseline/scenario，不实现 statcalib，不触碰 `.tflite` runtime 或真板路径，不改写 T15/T24 历史 outputs。
+1. 删除 `_write_report()` 中重复的旧 markdown report header，使 report 表格列数一致。
+2. 只做最小代码修复和验证，不运行 benchmark、不新增 run dir。
+3. 验证 `_write_report()` 相关 markdown header 只有一行且与 separator / data row 列数一致。
+4. 更新 T29 review/for-human 文档与任务包 Worker output。
+5. 不扩展 teacher diagnostics 语义、不改 formal benchmark 口径、不触碰 `.tflite` 或真板路径。

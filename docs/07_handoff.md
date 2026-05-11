@@ -5,8 +5,8 @@
 - 日期：`2026-05-11`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T28: Teacher diagnostics missing-vs-zero semantics repair and minimal smoke`
-- 任务包：`docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md`
+- 当前唯一任务：`T29: P4 markdown report header cleanup after T28`
+- 任务包：`docs/tasks/Phase2/T29_p4_report_header_cleanup.md`
 
 ## 2. 本轮已完成
 
@@ -196,6 +196,18 @@
    - 目标是最小修复 teacher diagnostics missing-vs-zero 输出语义，并用最小 smoke 验证
    - 不扩 formal benchmark、baseline/scenario、statcalib、`.tflite` runtime 或真板范围
    - 任务包：`docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md`
+44. `T28` 已完成并由 Captain 接受为 `PASS_WITH_WARNINGS`：
+   - `docs/review/T28_review.md` verdict = `PASS_WITH_WARNINGS`
+   - T28 输出现在显式区分 `not_applicable` / `not_generated` / observed zero
+   - R21 对当前 writer 语义可关闭；R10 进一步缩窄但不关闭
+   - N1 duplicate markdown report header row = `deferred`，进入 T29
+   - N2 tracked `.pyc` side-effect = `rejected as technical signal`，不应作为有意义改动提交
+   - N3 comparison column order change = `accepted`
+   - Missing focused tests = `deferred`，记录为后续 aggregation/report writer 风险
+45. 当前唯一任务已切换为 `T29`：
+   - 目标是修复 `run_p4_multiscenario_benchmark.py::_write_report()` 的重复 markdown header
+   - 不运行 benchmark、不新增 run dir、不改变 teacher diagnostics 语义或 benchmark 口径
+   - 任务包：`docs/tasks/Phase2/T29_p4_report_header_cleanup.md`
 
 ## 3. 已验证事实
 
@@ -490,7 +502,8 @@
 29. `correction_saturation_rate_mean` 全零与 teacher diagnostics header-only 是 deferred 机制证据缺口，不阻塞 T24 LER ranking，但必须进入 T25/T27 后续收口
 30. `T25` gate review 已完成，Captain verdict = `PASS_WITH_WARNINGS`；T25 不执行新 benchmark，只判断 T24 证据等级、边界和下一任务优先级
 31. `T27` 已完成，Captain verdict = `PASS_WITH_WARNINGS`；R10/R20 已缩窄但未全部关闭
-32. 当前唯一任务为 `T28`；T28 只做 teacher diagnostics missing-vs-zero 语义修复与最小 smoke，不扩展 formal benchmark 或部署边界
+32. `T28` 已完成，Captain verdict = `PASS_WITH_WARNINGS`；R21 对当前 writer 语义可关闭，但 R10 不关闭
+33. 当前唯一任务为 `T29`；T29 只修 P4 markdown report 重复表头，不运行 benchmark、不扩展 formal benchmark 或部署边界
 
 ## 5. 已完成任务包
 
@@ -520,6 +533,7 @@
 - `T24`：`docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`
 - `T25`：`docs/tasks/Phase2/T25_p4_formal_evidence_gate_review.md`
 - `T27`：`docs/tasks/Phase2/T27_teacher_diagnostics_path_audit.md`
+- `T28`：`docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md`
 
 关键产出：
 
@@ -545,6 +559,7 @@
 - `docs/review/T24_review.md`
 - `docs/review/T25_p4_formal_evidence_gate_review.md`
 - `docs/review/T27_teacher_diagnostics_path_audit.md`
+- `docs/review/T28_review.md`
 - `docs/P4_benchmark_development_protocol.md`
 - `docs/P4_benchmark_formal_protocol.md`
 - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
@@ -557,49 +572,48 @@
 
 ## 6. 当前唯一任务包摘要
 
-`T28` 已创建任务包，等待 Worker 执行 teacher diagnostics missing-vs-zero semantics repair and minimal smoke。
+`T29` 已创建任务包，等待 Worker 执行 P4 markdown report header cleanup。
 
-T27 已收口事实：
+T28 已收口事实：
 
-- Run dir: `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743`
-- `missing_runs = []`，20/20 scenario/mode pairs `coverage = 1.0`，40 repeat-runs
-- 四场景 winner 均为 `hybrid_residual_b`，runner-up 均为 `ukf`
-- 请求统计字段全部存在于 `comparison.csv`；`correction_saturation_rate_mean` 全为 0.0；teacher diagnostics 全零
-- Mock-backed software HIL only
-- `docs/review/T27_teacher_diagnostics_path_audit.md` verdict = `PASS_WITH_WARNINGS`，blocking issues = none
-- R10 root cause 已缩窄为 broadcast teacher layout 与 scalar explain diagnostics 前提不匹配，当前 hybrid path 是 `data not generated`
-- downstream CSV `0.0` coercion 会掩盖 `not generated` 与 `true zero`
-- R20 不共享 teacher diagnostics 死路径；当前 T24 零值来自独立 fast-loop saturation path
+- `docs/review/T28_review.md` verdict = `PASS_WITH_WARNINGS`，blocking issues = none
+- T28 smoke dir: `runs/p4_benchmark/T28_teacher_diag_semantics_smoke_manual_20260511`
+- `comparison.csv` 已显式区分：
+  - `ukf` -> `teacher_diagnostics_status = not_applicable`
+  - `hybrid_residual_b` -> `teacher_diagnostics_status = not_generated`
+- missing teacher diagnostics numeric fields now remain empty / null instead of `0.0`
+- `correction_saturation_rate_mean = 0.0` remains present as an independent observed zero
+- T24 historical run was not modified
 
-T28 任务边界：
+T29 任务边界：
 
-- 允许最小修复 teacher diagnostics 输出语义，使报告能区分 `not generated` / `not applicable` / `true zero`
-- 允许一个 T28 专属最小 smoke run，用于验证语义修复；不得视为 formal benchmark
-- 不新增 baseline/scenario，不实现 statcalib，不触碰 `.tflite` runtime 或真板路径，不改写 T15/T24 历史 outputs
+- 只修复 `_write_report()` 的 duplicate markdown header row
+- 不运行 benchmark、不新增 run dir
+- 不改变 teacher diagnostics semantics、comparison CSV columns、aggregation behavior、baseline/scenario set 或 formal benchmark protocol
 - 未改变全局阶段与决策状态，仍为 `Phase 2: Controlled Development` / `Go`
 
-T28 Worker 必须输出：
+T29 Worker 必须输出：
 
 - changed files
-- exact missing-vs-zero repair semantics
-- minimal smoke / focused verification commands and outputs
-- R10/R21 是否仍 open、narrowed 或可部分关闭
-- explicit statement that T24 historical evidence was not rewritten
+- exact header cleanup
+- py_compile result
+- static/format check showing one header row and matching column counts
+- explicit statement that no benchmark/run dir was created
 
 ## 7. 下一步建议
 
-下一步应交给 Worker 执行 `T28: Teacher diagnostics missing-vs-zero semantics repair and minimal smoke`。
+下一步应交给 Worker 执行 `T29: P4 markdown report header cleanup after T28`。
 
 建议优先级：
 
-1. 修复 downstream 输出语义，使缺失 teacher diagnostics 不再静默显示为 `0.0`。
-2. 明确 broadcast teacher path 与 scalar teacher diagnostics 的支持边界。
-3. 用最小 smoke 验证，不扩大 formal benchmark 口径。
-4. `T26` 仍保留为路线图中的 pending 任务，但当前不建议先执行；T27 已证明 teacher diagnostics 可观察性需要先修。
+1. 删除 `_write_report()` 中旧的 11-column markdown header。
+2. 做 py_compile 和静态 markdown column-count 验证。
+3. 不运行 benchmark，不新增 run dir。
+4. `T26` 和 `T36` 均保留为后续候选；T29 完成后再决定下一唯一任务。
 
 ## 8. 暂不继续的事项
 
-在 T28 完成前，暂不继续：
+在 T29 完成前，暂不继续：
 
 1. 新的 teacher-representation benchmark 扩展
 2. 超出 frozen-set 的 P4 正式长跑或 CI-driven stopping

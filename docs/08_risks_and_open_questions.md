@@ -13,18 +13,20 @@
 | R7 | 虽然 `T5` 已立治理口径，`T19` 也已补出缓存 cleanup manifest，但具体 cleanup 执行窗口与归档方式仍未决定 | 中 | `docs/06_repo_noise_governance.md` 与 `docs/cleanup_tracked_cache_manifest.md` 已固定缓存 cleanup 的目标目录、命令草案、回滚方式与验收标准，但尚未执行物理 cleanup | 在后续单开有界 cleanup 执行任务，严格按 manifest 落地，并继续把 `runs/` / `artifacts/` 留在独立任务中处理 |
 | R8 | 最小 software HIL 路径虽然已在 bounded recovery path 上完成逐字一致复验，但该结论容易被误外推到真板、`.tflite` 或正式 benchmark | 中 | `T12` 已确认 `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104` 与 `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172232_3ae9f9176104` 的 `hil_summary.json` / `hil_events.json` 哈希一致；但路径仍固定为 `mock + model_artifact + artifact_npz + inproc` | 后续文档必须继续写清结论边界，不把 bounded recovery smoke 扩写成真板或正式 benchmark 已恢复 |
 | R9 | T24 已完成 formal frozen-set revalidation，但若继续扩大到更多 repeat、CI-driven stopping 或 extra drift families，仍可能隐式越过 frozen-set/formal 边界 | 中 | T24 已按 locked protocol 跑完 `4 scenarios x 5 modes x repeats=2`；`docs/P4_benchmark_formal_protocol.md` 已锁定边界 | T24 后仍不应自动追加更大 repeat、额外 scenario 或 statcalib comparator；任何进一步 P4 扩展都必须新开任务包 |
-| R10 | `hybrid_residual_b` 的 teacher diagnostics 从 T15 到 T24 仍全零，机制解释深度受限 | 中 | `docs/review/T27_teacher_diagnostics_path_audit.md` 已将主因缩窄为：当前 T24 hybrid path 使用 broadcast teacher features，而 `tiny_cnn.py` explain 只在 `scalar_feature_dim > 0` 时生成 scalar teacher diagnostics；因此当前 hybrid path 是 `data not generated` | R10 remains open but narrowed；T28 只修 missing-vs-zero 可观察性和支持边界，不得把最小 smoke 写成机制证据完全修复 |
+| R10 | `hybrid_residual_b` 的 teacher diagnostics 从 T15 到 T24 仍全零，机制解释深度受限 | 中 | `docs/review/T27_teacher_diagnostics_path_audit.md` 已将主因缩窄为 broadcast teacher features 不触发 scalar explain diagnostics；`docs/review/T28_review.md` 确认当前输出已显式标记 `not_generated` / `not_applicable` | R10 remains open but further narrowed；T28 修复的是可观察性和输出语义，不是完整 teacher mechanism evidence repair |
 | R11 | 训练链 bootstrap 记录了本机 `torch` dev build，但尚未形成可移植依赖锁定 | 中 | `docs/review/T17_review.md` N1/N2 指出 `torch = 2.8.0.dev20250405+cu128` 是 dev build，且本轮未产出 `requirements-train.txt`；`docs/training_chain_bootstrap.md` 只承诺本机 `DLEnv` 探测结果 | 不把 `DLEnv` 或 dev torch 写成跨机器保证；若后续需要训练链可移植性，单开 `requirements-train.txt` / lockfile 任务，并显式说明 dev build 渠道限制 |
 | R12 | `.tflite` 路径已有代码与入口，但真实 TensorFlow / TFLite 运行时在当前机器上不可用 | 高 | `docs/TFLite_runtime_bootstrap.md` 已记录 `tensorflow = False`、`tflite_runtime = False`；`export.py`、`evaluate_tflite.py`、`validate_export.py` 入口存在，但真实 runtime 需独立环境 | 继续把真实 `.tflite`、stub manifest 与 HIL benchmark 边界写清；若后续要跑真实 runtime，单开环境任务或在具备依赖的机器上做独立 smoke |
 | R13 | 真板 HIL 入口存在配置骨架，但距离可执行真板 smoke 仍缺设备、权限、寄存器一致性与日志证据 | 高 | `board_backend.py` 仍是 placeholder；设备缺失时会触发 `board_device_missing:...`；`schedule_commit(...)` 仍返回 `target_bank=None`、`version=None`、`ack_delay_us=None`；`step(...)` 返回空事件；`docs/real_board_hil_readiness.md` 已固定前置条件与验收标准 | 后续若推进真板路径，必须单开执行任务，逐层补齐设备存在、寄存器活性、DMA 读出与 commit/ack round-trip 证据，在此之前禁止写成 real-board HIL 已完成 |
 | R14 | T22 已把寄存器来源、DMA 审计清单和量化阈值草案具体化，但真实宿主、bitstream 与 DMA contract 仍未验证 | 中高 | `docs/real_board_smoke_execution_plan.md` 已直接映射 `axi_map.py` / `dma_client.py`，`docs/review/T22_review.md` 确认 AXI/DMA 审计清单与源码吻合；但 N2 指出 preflight 输出格式仍需改进，N3 指出 `byte_count = 4096` 依赖 `32 x 32 float32` 假设 | 后续若进入真板执行任务，必须先选择宿主模型，再用实际 bitstream / RTL / DMA contract 确认地址表、histogram shape、element dtype、timeout 与 commit/ack 阈值 |
 | R15 | Phase 2 当前已完成一轮 milestone queue，但证据仍混合停留在 development / bootstrap / manifest / readiness 层，若直接升级到 formal benchmark、真实 `.tflite` runtime、physical cleanup 或 real-board validation，容易再次打破边界诚实 | 高 | `docs/review/T21_phase2_milestone_review.md` verdict = `Conditional`；`T15` 仍只是 `development_smoke`；`T18` 真实 runtime 不可用；`T19` 未执行 cleanup；`T20` 不是真板验证 | 保持 `Phase 2: Controlled Development` / `Go`，继续只开 bounded 下一任务；优先补 `T22` 这类 execution-plan 级文档任务，而不是直接进入高风险执行任务 |
-| R16 | 把“最终要发论文”误压缩成最近任务直接写论文 claim，容易跳过 formal benchmark、机制诊断和部署边界证据 | 高 | `T24` 已完成 frozen-set formal software revalidation，`T25` 已确认其 result boundary，`T27` 已缩窄 teacher diagnostics 缺口；但 `T18` 未恢复真实 `.tflite` runtime，`T22` 不是 hardware validation，R10/R21 仍未修复 | Paper claim/evidence ledger 仍应推迟到机制证据更清楚之后；当前 `T28` 只做 teacher diagnostics missing-vs-zero 语义修复与最小 smoke |
+| R16 | 把“最终要发论文”误压缩成最近任务直接写论文 claim，容易跳过 formal benchmark、机制诊断和部署边界证据 | 高 | `T24` 已完成 frozen-set formal software revalidation，`T25` 已确认其 result boundary，`T27/T28` 已缩窄并修复 teacher diagnostics 输出语义；但 `T18` 未恢复真实 `.tflite` runtime，`T22` 不是 hardware validation，R10 仍不是完整机制证据 | Paper claim/evidence ledger 仍应推迟到机制证据更清楚之后；当前 `T29` 只修 P4 markdown report header |
 | R17 | 深度研究报告建议的 formal benchmark 范围可能显著扩大，若无分级采纳会把 T23 变成不可执行的大任务 | 中高 | `docs/reference/进一步的深度研究结果.md` 建议加入强 classical / soft-information / calibration / learned baseline 类别、更多 drift families、训练/评测 seed 分离、置信区间、latency/commit/rollback 指标和 statcalib baseline | T23 只做 protocol lock：必须把建议分类为 adopted / deferred / rejected，并通过 go/no-go 判断 T24 是执行 formal run 还是先补 prerequisite |
-| R18 | `T24` 已按 frozen-set scope 完成，但若后续把 `statcalib`、soft-information、额外 drift families、CI-driven stopping、`.tflite` runtime 或真板边界并入同一任务，仍会重新打破 scope | 中高 | `docs/P4_benchmark_formal_protocol.md` 已把 `T24` gate 锁为 `GO_FOR_BOUNDED_FORMAL_SOFTWARE_REVALIDATION` + `NO_GO_FOR_SCOPE_EXPANSION_INSIDE_T24`；T24 实际完成 matrix 为 `4 scenarios x 5 modes x 2 repeats`；T25 已接受该边界 | `T28` 不实现 `statcalib`、soft-information、额外 scenario family、true `.tflite` 或真板边界；这些继续放在后续独立任务 |
+| R18 | `T24` 已按 frozen-set scope 完成，但若后续把 `statcalib`、soft-information、额外 drift families、CI-driven stopping、`.tflite` runtime 或真板边界并入同一任务，仍会重新打破 scope | 中高 | `docs/P4_benchmark_formal_protocol.md` 已把 `T24` gate 锁为 `GO_FOR_BOUNDED_FORMAL_SOFTWARE_REVALIDATION` + `NO_GO_FOR_SCOPE_EXPANSION_INSIDE_T24`；T24 实际完成 matrix 为 `4 scenarios x 5 modes x 2 repeats`；T25 已接受该边界 | `T29` 不实现 `statcalib`、soft-information、额外 scenario family、true `.tflite` 或真板边界；这些继续放在后续独立任务 |
 | R19 | T24 formal execution 已固定 exact CLI 和报告了 metric availability | 已收口 | T24 已使用 repeat-chunked CLI shape，所有请求统计字段已存在于 `comparison.csv`；`correction_saturation_rate_mean` 全零、teacher diagnostics 全零已报告为缺口 | R19 已由 T24 Worker 收口；后续若 runner 更新指标路径，需重新验证 |
 | R20 | `correction_saturation_rate_mean` 在 T24 所有 20 个 scenario/mode rows 中结构性为 0.0；T27 已证明它不共享 teacher diagnostics 死路径，但尚未证明所有参数区间都不会触发 | 中 | `docs/review/T27_teacher_diagnostics_path_audit.md` 指出该字段来自 `fast_loop_emulator.py` 独立 saturation counter，并由 HIL summary 转抄到 `comparison.csv`；当前 T24 更像现参数区间下 genuine zero | R20 remains open but materially narrowed；不在 T28 中扩大 stress run，后续如需证明触发性应单开 edge/stress 任务 |
-| R21 | Teacher diagnostics downstream output 会把 `not generated` 静默压成 `0.0`，混淆 missing-vs-zero 语义 | 中高 | `docs/review/T27_teacher_diagnostics_path_audit.md` 指出 P4 writer 从 HIL summary 取值时会把缺失/`null` teacher diagnostics 写为 `0.0`，使未生成看起来像真零 | 当前唯一任务 T28 应最小修复输出语义，保留 `not generated` / `not applicable` / `true zero` 区分；不得改写 T15/T24 历史 outputs |
+| R21 | Teacher diagnostics downstream missing-vs-zero writer 语义已由 T28 修复 | 已收口 | `docs/review/T28_review.md` 确认 T28 smoke 中 `ukf` 为 `not_applicable`、`hybrid_residual_b` 为 `not_generated`，missing numeric teacher diagnostics 保持 empty/null，`correction_saturation_rate_mean = 0.0` 保持为独立 observed zero | R21 对当前 writer 语义关闭；未来若再次改 aggregation/report writer，应保留 `not_generated` / `not_applicable` / `true zero` 区分 |
+| R22 | T28 后 `_write_report()` markdown report 存在重复 header row，导致人读 report 表格列数不一致 | 低 | `docs/review/T28_review.md` N1 指出 `run_p4_multiscenario_benchmark.py::_write_report()` 同时保留旧 11-column header 和新 12-column header | 当前唯一任务 T29 做一行级 report header cleanup；不运行 benchmark、不改 benchmark 语义 |
+| R23 | Aggregation/report writer 缺少 focused unit/static tests，未来可能再次出现格式或 null-semantics 回归 | 中 | `docs/review/T28_review.md` Missing Tests 指出相关路径没有现成 tests；T28 依赖 py_compile 和 bounded smoke 验证 | T28 可接受；后续再改 aggregation/report writer 时应补 focused unit test 或静态 report-shape check |
 
 ## 当前开放问题
 
@@ -38,8 +40,9 @@ Current T24-T28 status note:
 - T24 仍为 mock-backed software HIL，不是 `.tflite` runtime、不是 `real_board`。
 - `T25` Captain 已接受 gate review 为 `PASS_WITH_WARNINGS`；结论是 T24 可视为 completed frozen-set formal software revalidation，但边界仍严格限定为 mock-backed software HIL only。
 - `T27` Captain 已接受 path audit 为 `PASS_WITH_WARNINGS`；R10 已缩窄为 broadcast teacher layout 与 scalar explain diagnostics 前提不匹配，R20 已缩窄为独立 fast-loop saturation path。
-- 当前唯一任务：`T28: Teacher diagnostics missing-vs-zero semantics repair and minimal smoke`，任务包 `docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md`。
-- `T26` 仍是路线图中的 pending 任务，但当前不作为下一任务执行；T27 已证明 teacher diagnostics 可观察性需要先修。
+- `T28` Captain 已接受 review 为 `PASS_WITH_WARNINGS`；R21 对当前 writer 语义已收口，R10 进一步缩窄但不关闭。
+- 当前唯一任务：`T29: P4 markdown report header cleanup after T28`，任务包 `docs/tasks/Phase2/T29_p4_report_header_cleanup.md`。
+- `T26` / `T36` 仍是路线图中的 pending 候选，但当前不作为下一任务执行；T29 先修复 T28 遗留的人读 report 格式问题。
 - R13 当前仍然有效：真板路径还缺设备存在、权限、寄存器活性、DMA 读出和 commit/ack round-trip 的真实证据。
 - R14 当前仍然有效但已收窄：AXI/DMA 代码侧审计已具体化，真实宿主、bitstream 与 DMA contract 仍未验证。
 - R19 已收口：T24 已固定 CLI shape 并报告 metric availability。
@@ -72,8 +75,8 @@ Current T24-T28 status note:
      - `T19` review verdict = `PASS`，但只制定 tracked cache cleanup manifest，不执行删除，不处理 `runs/` / `artifacts/` 物理清理。
 9. 下一张继续开发任务包应该优先选哪一类？
    - 当前答案：
-     - `T27` 已完成并由 Captain 接受为 `PASS_WITH_WARNINGS`。
-     - 当前唯一任务为 `T28` Teacher diagnostics missing-vs-zero semantics repair and minimal smoke，任务包已存在：`docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md`。
+     - `T28` 已完成并由 Captain接受为 `PASS_WITH_WARNINGS`。
+     - 当前唯一任务为 `T29` P4 markdown report header cleanup after T28，任务包已存在：`docs/tasks/Phase2/T29_p4_report_header_cleanup.md`。
 10. `T15` 是否应直接运行多场景 P4 smoke？
    - 当前答案：已执行完成。
      - run dir: `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
@@ -212,7 +215,7 @@ Current T24-T28 status note:
 34. T26 是否可以作为下一任务直接交给 Worker？
    - 当前答案：
      - 不建议。
-     - `T26` 仍保留为 pending 路线图项，但 T27 已明确 teacher diagnostics 可观察性和 missing-vs-zero 语义需要先修；当前唯一任务已切换为 `T28`。
+     - `T26` 仍保留为 pending 路线图项，但当前唯一任务已切换为 `T29`，先修复 T28 遗留的 P4 markdown report header 问题。
 35. T27 当前 path audit 的结论是什么？
    - 当前答案：
      - Captain 接受 verdict = `PASS_WITH_WARNINGS`。
@@ -221,9 +224,20 @@ Current T24-T28 status note:
      - downstream CSV `0.0` coercion 是独立 missing-vs-zero 语义风险，写入 R21。
 36. T28 是否可以交给 Worker？
    - 当前答案：
+     - 已执行完成，并由 Captain 接受为 `PASS_WITH_WARNINGS`。
+     - T28 smoke 已验证 missing-vs-zero 输出语义。
+37. T28 reviewer warnings 如何处理？
+   - 当前答案：
+     - N1 duplicate markdown report header row：`deferred`，写入 R22，并作为 T29 当前唯一任务。
+     - N2 tracked `.pyc` side-effect：`rejected as technical signal`，不作为有意义改动提交。
+     - N3 `comparison.csv` column order changed：`accepted`，属于 T28 语义修复的预期接口变化。
+     - Missing focused tests：`deferred`，写入 R23。
+     - S1/S2/S3：`accepted`，符合当前修复语义。
+38. T29 是否可以交给 Worker？
+   - 当前答案：
      - 可以，但必须先提交当前治理与任务包更新。
-     - Worker 只能按 `docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md` 做最小修复与最小 smoke。
-     - Worker 不得扩 formal benchmark、baseline/scenario、statcalib、`.tflite` runtime、真板路径或改写 T15/T24 历史 outputs。
+     - Worker 只能按 `docs/tasks/Phase2/T29_p4_report_header_cleanup.md` 做最小 report header cleanup。
+     - Worker 不得运行 benchmark、新增 run dir、改变 teacher diagnostics 语义或 benchmark 口径。
 
 ## 暂缓事项
 

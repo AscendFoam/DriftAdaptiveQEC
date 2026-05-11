@@ -119,3 +119,84 @@ Update this task package with Worker Output and Verification Record.
 ## Captain Notes
 
 T26 remains pending but is not the current task. Statcalib or paper-claim work should wait until the teacher diagnostics output semantics are no longer ambiguous.
+
+## Worker Output
+
+- Updated `cnn_fpga/runtime/slow_loop_runtime.py` to emit explicit teacher diagnostics status instead of implicitly coercing missing diagnostics to zero.
+- Updated `cnn_fpga/benchmark/run_hil_suite.py` to aggregate teacher diagnostics status/support-boundary fields and preserve missing numeric diagnostics as `null`.
+- Updated `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py` to write explicit teacher diagnostics status fields into `comparison.csv` and to preserve missing diagnostics as empty/`null` instead of `0.0`.
+- Created:
+  - `docs/review/T28_teacher_diagnostics_semantics_repair.md`
+  - `docs/for_human/T28_explanation.md`
+
+Exact repaired semantics:
+
+- `not_applicable`:
+  - mode/path does not emit teacher diagnostics
+- `not_generated`:
+  - teacher features are enabled, but current path uses broadcast teacher features and therefore does not produce scalar-branch diagnostics
+- `generated`:
+  - scalar-branch diagnostics were actually emitted
+- `diagnostic_error`:
+  - explain path raised an exception
+
+No formal benchmark matrix, baseline set, scenario set, seed policy, ParamMapper semantics, historical `runs/`, or historical `artifacts/` outputs were changed.
+
+## Verification Record
+
+Static verification:
+
+- Command:
+  - `& 'C:\ProgramData\anaconda3\python.exe' -m py_compile cnn_fpga/runtime/slow_loop_runtime.py cnn_fpga/benchmark/run_hil_suite.py cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`
+- Result:
+  - passed
+
+Minimal smoke verification:
+
+- The direct full P4 runner invocation under:
+  - `runs/p4_benchmark/T28_teacher_diag_semantics_smoke_20260511`
+  exceeded the interactive timeout and was not used as final evidence.
+- Final bounded smoke used one T28-specific run dir only:
+  - `runs/p4_benchmark/T28_teacher_diag_semantics_smoke_manual_20260511`
+- Verification shape:
+  - `static_bias_theta`
+  - `ukf`
+  - `hybrid_residual_b`
+  - `repeats = 1`
+  - `n_slow_updates = 2`
+  - `n_fast_cycles = 8000`
+  - current `run_hil_session(...)` path plus current P4 aggregation / CSV writer functions
+
+Observed verification results:
+
+1. `comparison.csv` distinguishes status explicitly:
+   - `ukf` -> `teacher_diagnostics_status = not_applicable`
+   - `hybrid_residual_b` -> `teacher_diagnostics_status = not_generated`
+2. For `hybrid_residual_b`, numeric teacher diagnostics are now empty rather than `0.0`:
+   - `teacher_contribution_l2_mean_mean`
+   - `teacher_scalar_abs_mean_mean`
+   - `teacher_gate_mean_mean`
+   - `teacher_gate_std_mean`
+3. `teacher_scalar_diagnostics.csv` remains header-only for the broadcast hybrid path, but this is now paired with explicit `not_generated` status in the comparison row.
+4. `correction_saturation_rate_mean = 0.0` remains present in both rows, which preserves the distinction between a genuine observed zero and missing teacher diagnostics.
+
+Human-facing review docs created:
+
+- `docs/review/T28_teacher_diagnostics_semantics_repair.md`
+- `docs/for_human/T28_explanation.md`
+
+## Captain Acceptance
+
+- Verdict accepted: `PASS_WITH_WARNINGS`
+- Blocking issues: none
+- Warning classification:
+  - N1 duplicate markdown report header row in `_write_report()`: `deferred`, tracked as R22 and assigned to T29
+  - N2 tracked `.pyc` side-effect files: `rejected as technical signal`; do not treat as meaningful implementation output
+  - N3 `comparison.csv` column order changed: `accepted`, expected for the missing-vs-zero semantics interface update
+  - Missing focused tests: `deferred`, tracked as R23
+  - S1/S2/S3 implementation details: `accepted`
+- Risk result:
+  - R21 closed for current writer semantics
+  - R10 remains open but further narrowed
+  - R20 unchanged from T27 narrowing
+- Next unique task: `T29: P4 markdown report header cleanup after T28`

@@ -231,6 +231,17 @@ class SlowLoopRuntime:
         return {
             "input_channel_names": feature_channel_names(self.config.feature_config),
             "scalar_feature_names": scalar_feature_names(self.config.feature_config),
+            "teacher_diagnostics_support_boundary": "scalar_branch_only",
+            "teacher_feature_layout": {
+                "teacher_prediction_layout": self.config.feature_config.teacher_prediction_layout,
+                "teacher_params_layout": self.config.feature_config.teacher_params_layout,
+                "teacher_deltas_layout": self.config.feature_config.teacher_deltas_layout,
+            },
+            "teacher_features_enabled": bool(
+                self.config.feature_config.include_teacher_prediction
+                or self.config.feature_config.include_teacher_params
+                or self.config.feature_config.include_teacher_deltas
+            ),
             "spatial_shape": list(spatial.shape),
             "spatial_mean_abs": float(np.mean(np.abs(spatial))),
             "spatial_max_abs": float(np.max(np.abs(spatial))),
@@ -253,6 +264,14 @@ class SlowLoopRuntime:
             teacher_prediction=teacher_prediction,
             teacher_params=teacher_params,
         )
+        if not bool(diagnostics.get("teacher_features_enabled", False)):
+            diagnostics.update(
+                {
+                    "teacher_diagnostics_status": "not_applicable",
+                    "teacher_diagnostics_status_reason": "teacher_features_disabled",
+                }
+            )
+            return diagnostics
         try:
             inference_input: np.ndarray | tuple[np.ndarray, np.ndarray]
             if artifact_input.scalar_features is None or artifact_input.scalar_features.size == 0:
@@ -262,25 +281,39 @@ class SlowLoopRuntime:
             explanation = self.inference_service.explain(inference_input) if self.inference_service is not None else {}
         except Exception as exc:  # pragma: no cover - diagnostics must never break inference
             diagnostics["diagnostic_error"] = str(exc)
+            diagnostics["teacher_diagnostics_status"] = "diagnostic_error"
+            diagnostics["teacher_diagnostics_status_reason"] = "inference_service_explain_failed"
             return diagnostics
 
-        predicted_vector = np.array(
-            [
-                float(prediction.metadata.get("raw_prediction", {}).get("b_q", prediction.mu_q)),
-                float(prediction.metadata.get("raw_prediction", {}).get("b_p", prediction.mu_p)),
-            ],
-            dtype=float,
-        )
+        scalar_feature_dim = int(diagnostics.get("scalar_feature_dim", 0) or 0)
+        diagnostics["artifact_explanation"] = explanation
+        if explanation.get("scalar_fusion_mode") is not None:
+            diagnostics["scalar_fusion_mode"] = explanation.get("scalar_fusion_mode")
+
+        if scalar_feature_dim <= 0:
+            diagnostics.update(
+                {
+                    "teacher_diagnostics_status": "not_generated",
+                    "teacher_diagnostics_status_reason": "broadcast_teacher_features_do_not_emit_scalar_branch_diagnostics",
+                    "teacher_contribution_vector": None,
+                    "teacher_contribution_l2": None,
+                    "prediction_without_teacher": None,
+                    "teacher_gate_mean": None,
+                    "teacher_gate_std": None,
+                    "teacher_gate_min": None,
+                    "teacher_gate_max": None,
+                }
+            )
+            return diagnostics
+
         diagnostics.update(
             {
-                "artifact_explanation": explanation,
-                "teacher_contribution_vector": list(
-                    explanation.get(
-                        "teacher_contribution",
-                        predicted_vector.tolist(),
-                    )
-                ),
-                "teacher_contribution_l2": float(explanation.get("teacher_contribution_l2", 0.0)),
+                "teacher_diagnostics_status": "generated",
+                "teacher_diagnostics_status_reason": "scalar_branch_teacher_diagnostics_generated",
+                "teacher_contribution_vector": explanation.get("teacher_contribution"),
+                "teacher_contribution_l2": None
+                if explanation.get("teacher_contribution_l2") is None
+                else float(explanation.get("teacher_contribution_l2")),
                 "prediction_without_teacher": explanation.get("prediction_without_teacher"),
                 "teacher_gate_mean": explanation.get("teacher_gate_mean"),
                 "teacher_gate_std": explanation.get("teacher_gate_std"),

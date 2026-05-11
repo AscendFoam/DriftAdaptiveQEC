@@ -150,11 +150,17 @@ def _build_run_config(base_config: Dict[str, Any], scenario_entry: Dict[str, Any
     return cfg
 
 
-def _aggregate_metric(items: Sequence[Dict[str, Any]], key: str) -> Dict[str, float]:
-    values = np.asarray([float(item[key]) for item in items], dtype=float)
+def _aggregate_metric(items: Sequence[Dict[str, Any]], key: str) -> Dict[str, float | None]:
+    values = [item.get(key) for item in items if item.get(key) is not None]
+    if not values:
+        return {
+            f"{key}_mean": None,
+            f"{key}_std": None,
+        }
+    values_array = np.asarray([float(value) for value in values], dtype=float)
     return {
-        f"{key}_mean": float(np.mean(values)),
-        f"{key}_std": float(np.std(values)),
+        f"{key}_mean": float(np.mean(values_array)),
+        f"{key}_std": float(np.std(values_array)),
     }
 
 
@@ -180,6 +186,27 @@ def _aggregate_per_scalar(items: Sequence[Dict[str, Any]]) -> Dict[str, Dict[str
             array = np.asarray(values, dtype=float)
             out[scalar_name][stat_name] = None if array.size == 0 else float(np.mean(array))
     return out
+
+
+def _optional_float(value: Any) -> float | None:
+    if value is None:
+        return None
+    return float(value)
+
+
+def _aggregate_status_field(
+    items: Sequence[Dict[str, Any]],
+    key: str,
+    *,
+    default: str | None,
+) -> str | None:
+    values = [str(item[key]) for item in items if item.get(key) not in (None, "")]
+    if not values:
+        return default
+    unique_values = sorted(set(values))
+    if len(unique_values) == 1:
+        return unique_values[0]
+    return "mixed"
 
 
 def _dominant_source(items: Sequence[Dict[str, Any]]) -> str:
@@ -289,7 +316,8 @@ def _write_report(
         "## Scenario Comparison",
         "",
         "| Scenario | Mode | LER Mean | LER Std | Overflow Mean | Hist Sat Mean | Commit Mean | Slow Viol Mean | Fast Viol Mean | Dominant Source | Artifact |",
-        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- |",
+        "| Scenario | Mode | LER Mean | LER Std | Overflow Mean | Hist Sat Mean | Commit Mean | Slow Viol Mean | Fast Viol Mean | Dominant Source | Teacher Diag | Artifact |",
+        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |",
     ]
     for row in comparison_rows:
         def _fmt(value: Any) -> str:
@@ -304,6 +332,7 @@ def _write_report(
             f"{_fmt(row['overflow_rate_mean'])} | {_fmt(row['histogram_input_saturation_rate_mean'])} | "
             f"{_fmt(row['n_commits_applied_mean'])} | {_fmt(row['slow_update_violation_rate_mean'])} | "
             f"{_fmt(row['fast_cycle_violation_rate_mean'])} | {row['dominant_overflow_source']} | "
+            f"{row.get('teacher_diagnostics_status') or ''} | "
             f"{row.get('artifact_path') or ''} |"
         )
 
@@ -568,10 +597,36 @@ def main() -> int:
                     "n_commits_applied": int(summary.get("n_commits_applied", 0)),
                     "slow_update_violation_rate": float(summary.get("slow_update_violation_rate", 0.0)),
                     "fast_cycle_violation_rate": float(summary.get("fast_cycle_violation_rate", 0.0)),
-                    "teacher_contribution_l2_mean": float(summary.get("teacher_branch_diagnostics", {}).get("teacher_contribution_l2_mean", 0.0) or 0.0),
-                    "teacher_scalar_abs_mean": float(summary.get("teacher_branch_diagnostics", {}).get("teacher_scalar_abs_mean", 0.0) or 0.0),
-                    "teacher_gate_mean": float(summary.get("teacher_branch_diagnostics", {}).get("teacher_gate_mean", 0.0) or 0.0),
-                    "teacher_gate_std": float(summary.get("teacher_branch_diagnostics", {}).get("teacher_gate_std", 0.0) or 0.0),
+                    "teacher_diagnostics_status": str(
+                        summary.get("teacher_branch_diagnostics", {}).get("teacher_diagnostics_status", "not_applicable")
+                    ),
+                    "teacher_diagnostics_status_reason": str(
+                        summary.get("teacher_branch_diagnostics", {}).get(
+                            "teacher_diagnostics_status_reason",
+                            "mode_does_not_emit_teacher_diagnostics",
+                        )
+                    ),
+                    "teacher_diagnostics_support_boundary": summary.get("teacher_branch_diagnostics", {}).get(
+                        "teacher_diagnostics_support_boundary"
+                    ),
+                    "teacher_diagnostics_generated_windows": int(
+                        summary.get("teacher_branch_diagnostics", {}).get("teacher_diagnostics_generated_windows", 0)
+                    ),
+                    "teacher_scalar_feature_dim": _optional_float(
+                        summary.get("teacher_branch_diagnostics", {}).get("teacher_scalar_feature_dim_mean")
+                    ),
+                    "teacher_contribution_l2_mean": _optional_float(
+                        summary.get("teacher_branch_diagnostics", {}).get("teacher_contribution_l2_mean")
+                    ),
+                    "teacher_scalar_abs_mean": _optional_float(
+                        summary.get("teacher_branch_diagnostics", {}).get("teacher_scalar_abs_mean")
+                    ),
+                    "teacher_gate_mean": _optional_float(
+                        summary.get("teacher_branch_diagnostics", {}).get("teacher_gate_mean")
+                    ),
+                    "teacher_gate_std": _optional_float(
+                        summary.get("teacher_branch_diagnostics", {}).get("teacher_gate_std")
+                    ),
                     "teacher_per_scalar": dict(summary.get("teacher_branch_diagnostics", {}).get("per_scalar", {}) or {}),
                     "run_dir": str(repeat_run_dir),
                 }
@@ -598,6 +653,24 @@ def main() -> int:
                 "expected_repeats": repeats,
                 "coverage": float(len(per_repeat) / repeats),
                 "missing_repeat_indices": missing_repeat_indices,
+                "teacher_diagnostics_status": _aggregate_status_field(
+                    per_repeat,
+                    "teacher_diagnostics_status",
+                    default="not_applicable",
+                ),
+                "teacher_diagnostics_status_reason": _aggregate_status_field(
+                    per_repeat,
+                    "teacher_diagnostics_status_reason",
+                    default="mode_does_not_emit_teacher_diagnostics",
+                ),
+                "teacher_diagnostics_support_boundary": _aggregate_status_field(
+                    per_repeat,
+                    "teacher_diagnostics_support_boundary",
+                    default=None,
+                ),
+                "teacher_diagnostics_generated_repeats": sum(
+                    1 for item in per_repeat if item.get("teacher_diagnostics_status") == "generated"
+                ),
             }
             for metric_key in (
                 "final_ler",
@@ -608,6 +681,7 @@ def main() -> int:
                 "n_commits_applied",
                 "slow_update_violation_rate",
                 "fast_cycle_violation_rate",
+                "teacher_scalar_feature_dim",
                 "teacher_contribution_l2_mean",
                 "teacher_scalar_abs_mean",
                 "teacher_gate_mean",
@@ -689,6 +763,11 @@ def main() -> int:
             "n_commits_applied_mean",
             "slow_update_violation_rate_mean",
             "fast_cycle_violation_rate_mean",
+            "teacher_diagnostics_status",
+            "teacher_diagnostics_status_reason",
+            "teacher_diagnostics_support_boundary",
+            "teacher_diagnostics_generated_repeats",
+            "teacher_scalar_feature_dim_mean",
             "teacher_contribution_l2_mean_mean",
             "teacher_scalar_abs_mean_mean",
             "teacher_gate_mean_mean",
