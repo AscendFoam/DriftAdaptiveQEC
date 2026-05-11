@@ -162,3 +162,67 @@ Docs to update:
 - `docs/08_risks_and_open_questions.md`
 
 Reviewer type: `adversarial`
+
+## Worker Output
+
+### Changed files
+
+- `docs/P4_benchmark_formal_protocol.md` — added T24 execution record (Section 15)
+- `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md` — this Worker output section
+- `docs/04_task_board.md` — T24 status update
+- `docs/07_handoff.md` — T24 completion record
+- `docs/08_risks_and_open_questions.md` — risk updates
+
+### Commands run
+
+All commands used `C:\ProgramData\anaconda3\python.exe` with config `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml` and fixed run dir `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743`.
+
+1. **Chunk 1 (repeat 0)**: `--scenario static_bias_theta --scenario linear_ramp --scenario step_sigma_theta --scenario periodic_drift --mode ekf --mode ukf --mode constant_residual_mu --mode rls_residual_b --mode hybrid_residual_b --paired-seeds --repeats 2 --run-dir <run_dir> --repeat-start 0 --repeat-stop 1`
+   - Completed: 20/20 repeat-runs (repeat 0 for all scenario/mode pairs)
+   - Exit code: 0
+
+2. **Chunk 2 (repeat 1)**: Same CLI with `--repeat-start 1 --repeat-stop 2`
+   - Completed: 20/20 repeat-runs (repeat 1 for all scenario/mode pairs)
+   - Exit code: 0
+
+3. **Resume-only**: Same CLI with `--resume-only`
+   - All 40 repeat-runs resumed from existing output
+   - Exit code: 0
+
+Total wall-clock: approximately 20 hours (started 2026-05-10 20:08, completed 2026-05-11 ~15:51).
+
+### Verification results
+
+1. `summary.json` exists: **PASS**
+2. `missing_runs = []`: **PASS**
+3. `comparison.csv` has exactly 20 scenario/mode rows: **PASS**
+4. All rows have `completed_repeats = 2`, `expected_repeats = 2`, `coverage = 1.0`: **PASS**
+5. `raw_rows` count = 40: **PASS**
+6. `launch_plan.json` records `repeats = 2` and `paired_seeds = true`: **PASS**
+7. Metric availability:
+   - `histogram_input_saturation_rate_mean`: present, non-zero (equals overflow_rate)
+   - `correction_saturation_rate_mean`: present, all 0.0
+   - `fast_cycle_violation_rate_mean`: present, non-zero but very small (~1.5e-05)
+8. Evidence gaps reported (not silently omitted):
+   - `correction_saturation_rate_mean` = 0.0 for all rows
+   - `teacher_scalar_diagnostics.csv` has header only (no data rows)
+   - All teacher diagnostic metrics = 0.0 (consistent with T15/T16 deferred gap)
+   - `delta.csv` = all null (expected: strong-baseline config excludes `static_linear`/`cnn_fpga`)
+9. Boundary statement: mock-backed software HIL only: **PASS**
+
+### Per-scenario results
+
+| Scenario | Winner | Winner LER | Runner-Up | Gap |
+| --- | --- | ---: | ---: | ---: |
+| `static_bias_theta` | `hybrid_residual_b` | 0.810902 | `ukf` | 0.014469 |
+| `linear_ramp` | `hybrid_residual_b` | 0.787755 | `ukf` | 0.023446 |
+| `step_sigma_theta` | `hybrid_residual_b` | 0.788800 | `ukf` | 0.022748 |
+| `periodic_drift` | `hybrid_residual_b` | 0.806392 | `ukf` | 0.015166 |
+
+### Remaining risks
+
+1. Teacher diagnostics (`hybrid_residual_b`) remain all-zero — mechanism analysis gap deferred from T15/T16, non-blocking for LER ranking.
+2. `correction_saturation_rate_mean` is always 0.0 — may indicate metric collection limitation or genuine absence of correction saturation in these parameter regimes.
+3. This run is mock-backed software HIL only — not `.tflite` runtime, not `real_board`, not paper-grade expanded benchmark.
+4. `repeats=2` with fixed paired seeds is sufficient for formal revalidation of the historical frozen set, but does not provide confidence intervals or CI-driven stopping.
+5. `statcalib`, soft-information comparators, extra drift families, true `.tflite` runtime and real-board smoke remain deferred to later tasks.

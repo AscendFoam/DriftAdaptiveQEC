@@ -1128,3 +1128,46 @@ Project Manager 明确指出：论文发表是最终目标，但当前仍应一�
 2. 新增 `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`。
 3. `docs/07_handoff.md` 记录 `T23` review 判定、warning 分类与 `T24` 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 新增 T24 exact CLI / metric availability 风险。
+
+## D-2026-05-11-01
+
+- 日期：`2026-05-11`
+- 决策：接受 `T24` adversarial review 的 `PASS_WITH_WARNINGS`，标记 `T24` 完成，并将当前唯一任务切换为 `T25: P4 formal evidence gate review and result-boundary update`
+
+### 背景
+
+`T24` 已完成 `4 scenarios x 5 modes x repeats=2` frozen-set formal software revalidation。`docs/review/T24_review.md` 给出 `PASS_WITH_WARNINGS`，blocking issues 为无。
+
+已验证事实：
+
+1. Run dir：`runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743`
+2. `missing_runs = []`
+3. 20/20 scenario/mode rows `coverage = 1.0`
+4. 40 repeat-runs completed
+5. 四场景 winner 均为 `hybrid_residual_b`，runner-up 均为 `ukf`
+6. 结果仍为 `mock-backed` software HIL only
+
+### Warning 分类
+
+1. N1：`correction_saturation_rate_mean` 在所有 20 行中结构性为 0.0
+   - 分类：`deferred`
+   - 处理：写入 R20；后续机制审计需判断是 metric collection bug、真实零值，还是当前参数区间 not applicable
+2. N2：`docs/04_task_board.md` 中出现一行环境提示，略超出 T24 execution result 口径
+   - 分类：`accepted`
+   - 处理：视为 Captain 治理同步提示，不影响 T24 结果，也不写入风险
+3. N3：`teacher_scalar_diagnostics.csv` 只有 header，teacher diagnostics 全零
+   - 分类：`deferred`
+   - 处理：继续归入 R10；T25 后应优先安排 `T27` 或等价机制证据审计
+
+### 结论
+
+`T24` 可以标记完成，证据等级为 frozen-set formal software revalidation，但边界必须保持为 `mock-backed software HIL`。
+
+不得将 T24 外推为 `.tflite` runtime、`real_board` validation、paper-grade expanded benchmark、statcalib comparator 结果或 CI-driven stopping 结果。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 T24 Captain verdict，并将 `Current Unique Task` 固定为 `T25`。
+2. 新增 `docs/tasks/Phase2/T25_p4_formal_evidence_gate_review.md`。
+3. `docs/07_handoff.md` 记录 T24 review 判定、warning 分类与 T25 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 更新 R10 并新增 R20。

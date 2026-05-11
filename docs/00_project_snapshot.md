@@ -9,7 +9,7 @@
 ## 2. 基本信息
 
 - 快照日期：`2026-05-05`
-- 最近更新：`2026-05-10`
+- 最近更新：`2026-05-11`
 - 当前分支：`main`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
@@ -204,12 +204,13 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T24: P4 bounded formal software revalidation execution`
+- `T25: P4 formal evidence gate review and result-boundary update`
 
 ## 12. 快照结论
 
 当前项目的核心问题已经从“有没有可靠治理层和入口”切换为“如何在不夸大完成度的前提下继续增强证据”。Phase 2 的默认策略是：
 
-1. P4 benchmark protocol 与 bounded evidence 已完成第一轮受控增强；`T23` 已通过 `PASS_WITH_WARNINGS`，并把下一步 gate 锁定为 `GO_FOR_BOUNDED_FORMAL_SOFTWARE_REVALIDATION` + `NO_GO_FOR_SCOPE_EXPANSION_INSIDE_T24`。
+1. P4 benchmark protocol 与 bounded evidence 已完成第一轮受控增强；`T24` 已完成 frozen-set formal software revalidation，并由 Captain 接受为 `PASS_WITH_WARNINGS`。
 2. 训练链与 `.tflite` 独立 bootstrap 已完成，但都不等于跨机器完整环境或真实 `.tflite` runtime 已恢复。
-3. `T24` 可以作为下一唯一任务执行 frozen-set formal software revalidation，但它仍只能产生 `mock-backed` software HIL formal benchmark 证据；不得外推为 `.tflite` runtime、真板验证或 paper-grade expanded benchmark。
+3. `T24` 证据等级仍限定为 `mock-backed` software HIL formal benchmark；不得外推为 `.tflite` runtime、真板验证或 paper-grade expanded benchmark。
+4. 当前唯一任务 `T25` 只做 adversarial gate review 与结果边界收口，不运行新 benchmark、不改代码、不扩展 baseline/scenario。

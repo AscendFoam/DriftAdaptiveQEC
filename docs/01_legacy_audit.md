@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T23: P4 formal benchmark protocol lock and evidence gap audit`
+  - `T25: P4 formal evidence gate review and result-boundary update`
 
 说明：
 
@@ -59,6 +59,7 @@
 - `T11` 已在根目录补入 `requirements-recovery.txt`，并把它接入 `P0/P3/P4 recovery smoke` 的 bootstrap 文档
 - `T12` 已把最小 software HIL recovery smoke 的随机源链路收口到逐字一致复验
 - `T13` 已通过 recovery exit review，项目进入 `Phase 2: Controlled Development`
+- `T24` 已完成 frozen-set formal software revalidation，并由 Captain 接受为 `PASS_WITH_WARNINGS`
 - 后续 P3/P4 文档与复验结果都应沿用同一套 backend / artifact type 表述口径
 
 ## 3. 可行性判断
@@ -108,7 +109,7 @@
 | P2 行为级硬件仿真 | 已有硬件行为仿真与模式 benchmark | `cnn_fpga/benchmark/run_hardware_emulation.py`, `cnn_fpga/benchmark/run_p2_mode_benchmark.py` | 代码存在 | 当前环境未复验 |
 | P3 软件 HIL | 已有 HIL 主流程、mock backend、驱动抽象、推理服务 | `cnn_fpga/benchmark/run_hil_suite.py`, `cnn_fpga/hwio/mock_fpga.py`, `cnn_fpga/runtime/inference_service.py`, `docs/03_hil_p4_boundary_audit.md`, `docs/P3_software_hil_bootstrap.md`, `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104/hil_summary.json`, `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172232_3ae9f9176104/hil_summary.json` | bounded 最小路径已逐字一致复验 | 结论仅限 `mock + model_artifact + artifact_npz + inproc`，不等于真板或 `.tflite` 路径已恢复 |
 | P3 真板 HIL | 当前是 placeholder real-board backend | `cnn_fpga/hwio/board_backend.py`, `docs/CNN_FPGA_GKP_阶段结论.md`, `docs/03_hil_p4_boundary_audit.md` | 是 | 真实设备节点和地址表缺失，不能写成已完成 |
-| P4 多场景 benchmark | 已有统一 benchmark 汇总脚本，且最小 recovery path 与 frozen baseline 单场景全模式 smoke 都已复验 | `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`, `docs/P4_benchmark_recovery_bootstrap.md`, `runs/p4_benchmark/p4multis_20260508_001316_0c12d7_39308/summary.json`, `runs/p4_benchmark/p4multis_20260508_121828_0c12d7_46732/summary.json` | 两级 recovery 证据已复验 | 当前仍只覆盖 `single-scenario + four-mode + repeats=1` smoke，不等于正式多场景 frozen benchmark 已恢复 |
+| P4 多场景 benchmark | 已有统一 benchmark 汇总脚本；最小 recovery path、frozen baseline 单场景全模式 smoke、以及 T24 frozen-set formal software revalidation 都已复验 | `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`, `docs/P4_benchmark_recovery_bootstrap.md`, `docs/P4_benchmark_formal_protocol.md`, `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/summary.json` | `mock-backed` software HIL formal revalidation 已完成 | 当前证据仍不是 `.tflite` runtime、真板验证或 paper-grade expanded benchmark；teacher diagnostics 与 correction saturation 机制解释仍有缺口 |
 | teacher-representation 多版本分支 | 已有 v2-v9 配置与配对 benchmark 入口 | `cnn_fpga/config/experiment_runtime_b_residual_norm_gated_teacher_v*.yaml`, `cnn_fpga/benchmark/run_p4_teacher_representation_paired.py` | 代码存在 | 当前不应继续扩分支，先恢复可信度 |
 | 真板 backend 语义 | placeholder/骨架状态 | `cnn_fpga/hwio/board_backend.py` | 是 | 若表述不严谨，极易误导项目完成度判断 |
 | `.tflite` 真导出路径 | 代码支持真导出与 stub 回退双路径 | `cnn_fpga/model/export.py`, `cnn_fpga/runtime/inference_service.py`, `docs/03_hil_p4_boundary_audit.md` | 边界已审计 | 必须明确区分真实 `.tflite`、artifact 与 stub manifest |
@@ -337,6 +338,6 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T23` 已完成；当前下一唯一任务为 `T24`，只执行 P4 frozen-set bounded formal software revalidation
+1. `T14` 至 `T24` 已完成；当前下一唯一任务为 `T25`，只做 T24 evidence gate review 与 result-boundary update
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
-3. `T24` 可运行 P4 benchmark，但只限 `4 scenarios x 5 modes x repeats=2`、`paired_seeds`、`mock-backed software HIL`；不得把 `statcalib`、soft-information、`.tflite` runtime、真板 smoke 或论文 claim 夹带进同一任务
+3. `T25` 不运行新 benchmark，不补新 baseline，不改 runner；只判断 T24 证据能支持什么、不能支持什么，并把 deferred 机制缺口写入风险和后续任务。

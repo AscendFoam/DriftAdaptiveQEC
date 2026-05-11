@@ -72,7 +72,8 @@
 - `T22` 已补出 `docs/real_board_smoke_execution_plan.md`，后续真板任务应优先引用其中的 host-platform decision points、AXI/DMA 审计清单、Layer A-D 量化阈值草案与 evidence pack 要求。
 - 即使 `docs/real_board_smoke_execution_plan.md` 已存在，也只能写成 `execution plan exists, but it has not been executed`，不得因为 plan 文档就升级为真板已验证。
 - `T23` 若锁定 P4 formal benchmark protocol，也只能产出协议、矩阵、预算、evidence pack 与 go/no-go 条件；不得把 protocol lock 写成 formal benchmark 已执行。
-- `T24` 若执行 formal software revalidation，也只能在 `mock-backed P4 wrapper over software HIL` 边界内运行 `docs/P4_benchmark_formal_protocol.md` 锁定的 frozen set；不得把结果写成 `.tflite` runtime 或 `real_board` validation。
+- `T24` 已执行并通过 Captain 收口为 `PASS_WITH_WARNINGS`，但其结果仍只能在 `mock-backed P4 wrapper over software HIL` 边界内使用；不得把结果写成 `.tflite` runtime 或 `real_board` validation。
+- `T25` 只能审查 T24 evidence pack、边界声明、warning 分类与后续风险，不得运行新 benchmark 或扩展 frozen set。
 
 ## 7. 当前推荐表述
 
@@ -80,7 +81,7 @@
 - 可以说：`P4 benchmark currently reuses the same HIL session stack and inherits its realism limits.`
 - 可以说：`real-board readiness checklist exists, but hardware validation evidence does not.`
 - 可以说：`real-board smoke execution plan exists, but it has not been executed.`
-- 可以说：`P4 formal benchmark protocol may be locked, but no formal benchmark result exists until an execution task runs and is reviewed.`
-- 可以说：`P4 formal software revalidation may be executed as mock-backed software HIL evidence, but it is not deployment or hardware validation.`
+- 可以说：`P4 frozen-set formal software revalidation has been executed and reviewed as mock-backed software HIL evidence.`
+- 可以说：`P4 formal software revalidation is not deployment, true TFLite runtime, or hardware validation.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`

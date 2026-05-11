@@ -344,3 +344,147 @@ T24 must keep the full scenario and mode selection in every runner invocation. I
 3. final `--resume-only`
 
 Do not split by a single scenario at a time, because scenario filtering changes the local `scenario_idx` used by the runner seed construction.
+
+## 15. T24 Execution Record
+
+### 15.1 Execution summary
+
+- **Task**: `T24: P4 bounded formal software revalidation execution`
+- **Date**: `2026-05-10` to `2026-05-11`
+- **Interpreter**: `C:\ProgramData\anaconda3\python.exe`
+- **Config**: `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
+- **Config hash**: `b82874392710`
+- **Git commit**: `0c82ee1`
+- **Run dir**: `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743`
+
+### 15.2 Exact CLI shape (repeat-chunked)
+
+Chunk 1 (repeat 0):
+
+```bash
+'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark \
+  --config cnn_fpga/config/p4_multiscenario_strong_baselines.yaml \
+  --scenario static_bias_theta --scenario linear_ramp \
+  --scenario step_sigma_theta --scenario periodic_drift \
+  --mode ekf --mode ukf --mode constant_residual_mu \
+  --mode rls_residual_b --mode hybrid_residual_b \
+  --paired-seeds --repeats 2 \
+  --run-dir runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743 \
+  --repeat-start 0 --repeat-stop 1
+```
+
+Chunk 2 (repeat 1):
+
+```bash
+'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark \
+  --config cnn_fpga/config/p4_multiscenario_strong_baselines.yaml \
+  --scenario static_bias_theta --scenario linear_ramp \
+  --scenario step_sigma_theta --scenario periodic_drift \
+  --mode ekf --mode ukf --mode constant_residual_mu \
+  --mode rls_residual_b --mode hybrid_residual_b \
+  --paired-seeds --repeats 2 \
+  --run-dir runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743 \
+  --repeat-start 1 --repeat-stop 2
+```
+
+Final resume-only:
+
+```bash
+'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark \
+  --config cnn_fpga/config/p4_multiscenario_strong_baselines.yaml \
+  --scenario static_bias_theta --scenario linear_ramp \
+  --scenario step_sigma_theta --scenario periodic_drift \
+  --mode ekf --mode ukf --mode constant_residual_mu \
+  --mode rls_residual_b --mode hybrid_residual_b \
+  --paired-seeds --repeats 2 \
+  --run-dir runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743 \
+  --resume-only
+```
+
+Execution was chunked. `--resume-only` was used. Chunking preserved the full scenario order and seed semantics.
+
+### 15.3 Protocol verification
+
+| Check | Result |
+| --- | --- |
+| `summary.json` exists | Yes |
+| `missing_runs = []` | Yes |
+| `comparison.csv` has exactly 20 scenario/mode rows | Yes (20 rows) |
+| All rows have `completed_repeats = 2`, `expected_repeats = 2` | Yes |
+| All rows have `coverage = 1.0` | Yes |
+| `raw_rows` count = 40 | Yes (40 repeat-runs) |
+| `launch_plan.json` records `repeats = 2` and `paired_seeds = true` | Yes (in `protocol` sub-object) |
+| All 40 `hil_summary.json` files exist | Yes |
+| All 40 `repeat_status.json` files exist | Yes |
+| Backend = `mock` for all repeats | Yes |
+
+### 15.4 Coverage per scenario/mode
+
+| Scenario | EKF | UKF | Constant Residual-Mu | RLS Residual-B | Hybrid Residual-B |
+| --- | --- | --- | --- | --- | --- |
+| `static_bias_theta` | 2/2 | 2/2 | 2/2 | 2/2 | 2/2 |
+| `linear_ramp` | 2/2 | 2/2 | 2/2 | 2/2 | 2/2 |
+| `step_sigma_theta` | 2/2 | 2/2 | 2/2 | 2/2 | 2/2 |
+| `periodic_drift` | 2/2 | 2/2 | 2/2 | 2/2 | 2/2 |
+
+All 20 scenario/mode pairs have `coverage = 1.0`.
+
+### 15.5 Per-scenario winners and runner-up gaps
+
+| Scenario | Winner | Winner LER Mean | Runner-Up | Runner-Up LER Mean | Gap |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `static_bias_theta` | `hybrid_residual_b` | 0.810902 | `ukf` | 0.825370 | 0.014469 |
+| `linear_ramp` | `hybrid_residual_b` | 0.787755 | `ukf` | 0.811201 | 0.023446 |
+| `step_sigma_theta` | `hybrid_residual_b` | 0.788800 | `ukf` | 0.811547 | 0.022748 |
+| `periodic_drift` | `hybrid_residual_b` | 0.806392 | `ukf` | 0.821558 | 0.015166 |
+
+All four scenarios are won by `hybrid_residual_b`. `ukf` is the runner-up in all four scenarios.
+
+### 15.6 Metric availability table
+
+| Metric | Present in CSV | Values |
+| --- | --- | --- |
+| `final_ler_mean` | Yes | 0.787755 -- 0.838110 |
+| `final_ler_std` | Yes | 0.000040 -- 0.001885 |
+| `overflow_rate_mean` | Yes | 0.002443 -- 0.002698 |
+| `histogram_input_saturation_rate_mean` | Yes | equals `overflow_rate_mean` |
+| `correction_saturation_rate_mean` | Yes | all 0.0 |
+| `aggressive_param_rate_mean` | Yes | all 0.0 |
+| `n_commits_applied_mean` | Yes | 899.5 or 900.0 |
+| `slow_update_violation_rate_mean` | Yes | all 0.0 |
+| `fast_cycle_violation_rate_mean` | Yes | 1.5e-05 or 1.625e-05 or 1.68e-05 (non-zero but very small) |
+| `teacher_contribution_l2_mean_mean` | Yes | all 0.0 |
+| `teacher_scalar_abs_mean_mean` | Yes | all 0.0 |
+| `teacher_gate_mean_mean` | Yes | all 0.0 |
+| `teacher_gate_std_mean` | Yes | all 0.0 |
+
+**T24 evidence gaps**:
+
+1. `correction_saturation_rate_mean` is present but always 0.0. This is either a metric collection limitation or genuinely no correction saturation in these runs.
+2. `teacher_scalar_diagnostics.csv` exists but contains only a header row (no data rows). Teacher diagnostics are empty, consistent with T15 observation.
+3. `teacher_contribution_l2_mean`, `teacher_scalar_abs_mean`, `teacher_gate_mean`, `teacher_gate_std` are all 0.0 for all modes, including `hybrid_residual_b`. This is a known mechanism-analysis gap deferred from T15/T16.
+4. `delta.csv` contains only null delta values because `static_linear` and `cnn_fpga` are not in the strong-baseline frozen set. This is expected per T15 review N3.
+
+### 15.7 Boundary statement
+
+This T24 execution record describes a **mock-backed software HIL formal software revalidation** only.
+
+- This is **not** `.tflite` runtime evidence.
+- This is **not** `real_board` evidence.
+- This is **not** a paper-grade expanded benchmark.
+- The `backend` for all 40 repeat-runs is `mock`.
+- The artifact used for `hybrid_residual_b` is `artifacts/models/runtime_b_residual_v1/tiny_cnn_20260401_083648_2fc740424c0d.npz` loaded via `inproc` / `artifact_npz`.
+
+### 15.8 Evidence pack completeness
+
+| File | Present |
+| --- | --- |
+| `launch_plan.json` | Yes |
+| `progress.jsonl` | Yes |
+| `summary.json` | Yes |
+| `comparison.csv` | Yes |
+| `delta.csv` | Yes |
+| `teacher_scalar_diagnostics.csv` | Yes (header only) |
+| `report.md` | Yes |
+| 40x `hil_summary.json` | Yes |
+| 40x `repeat_status.json` | Yes |

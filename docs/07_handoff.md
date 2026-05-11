@@ -2,11 +2,11 @@
 
 ## 1. 当前状态
 
-- 日期：`2026-05-10`
+- 日期：`2026-05-11`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T24: P4 bounded formal software revalidation execution`
-- 任务包：`docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`
+- 当前唯一任务：`T25: P4 formal evidence gate review and result-boundary update`
+- 任务包：`docs/tasks/Phase2/T25_p4_formal_evidence_gate_review.md`
 
 ## 2. 本轮已完成
 
@@ -159,6 +159,26 @@
    - 目标是执行 `4 scenarios x 5 modes x repeats=2` 的 bounded formal software revalidation
    - 任务仍固定为 `mock-backed` software HIL，不是 `.tflite` runtime，不是真板验证
    - `statcalib`、soft-information comparator、额外 drift family、CI-driven stopping、true `.tflite` runtime 与真板 smoke 都不得塞进 T24
+39. `T24` Worker 已完成执行：
+   - Run dir: `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743`
+   - 执行方式：repeat-chunked（`--repeat-start 0 --repeat-stop 1`，然后 `--repeat-start 1 --repeat-stop 2`，最后 `--resume-only`）
+   - `missing_runs = []`，20/20 scenario/mode pairs `coverage = 1.0`，40 repeat-runs
+   - 四场景 winner 均为 `hybrid_residual_b`，runner-up 均为 `ukf`
+   - 请求的统计字段全部存在于 `comparison.csv`
+   - `correction_saturation_rate_mean` 全为 0.0，`teacher_scalar_diagnostics.csv` 仅有 header 行
+   - Mock-backed software HIL only，不是 `.tflite` runtime、不是 `real_board`、不是 paper-grade expanded benchmark
+   - `docs/P4_benchmark_formal_protocol.md` 已更新 T24 execution record (Section 15)
+   - `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md` 已更新 Worker output
+   - `docs/review/T24_review.md` verdict = `PASS_WITH_WARNINGS`，blocking issues = none
+   - Captain 已接受 T24 为 `PASS_WITH_WARNINGS`
+   - Warning 分类：
+     - N1 `correction_saturation_rate_mean` structural zero：`deferred`，写入 risks，后续机制审计需判断 metric collection bug / genuine zero / not applicable
+     - N2 `docs/04_task_board.md` 中环境提示越出 T24 执行结果口径：`accepted`，按 Captain 治理同步说明处理，不影响 T24 verdict
+     - N3 `teacher_scalar_diagnostics.csv` header-only / teacher diagnostics 全零：`deferred`，写入 risks，并要求 T25 后优先安排机制证据审计
+40. 当前唯一任务已切换为 `T25`：
+   - 目标是只读审查 T24 evidence pack、warning 分类、边界声明和 result-boundary
+   - 不运行新 benchmark、不改源码、不改 config、不执行 cleanup、不调用硬件
+   - 任务包：`docs/tasks/Phase2/T25_p4_formal_evidence_gate_review.md`
 
 ## 3. 已验证事实
 
@@ -443,14 +463,15 @@
 23. `T23` 已完成 protocol lock，并由 Captain 接受为 `PASS_WITH_WARNINGS`
 24. 当前阶段仍为 `Phase 2: Controlled Development` / `Go`；T23 不改变 formal benchmark、`.tflite` runtime、cleanup 或 real-board validation 的证据等级
 25. `docs/reference/进一步的深度研究结果.md` 已读；`T23` 已将强 classical / soft-information / calibration / learned baseline、更多 drift scenario、seed/CI/latency/commit/fallback 指标与 statcalib baseline 进入条件分类为 adopted / deferred / rejected
-26. 当前唯一任务为 `T24`，可以运行 P4 benchmark，但只允许执行 historical frozen-set 的 bounded formal software revalidation
-27. T24 执行必须保持：
-   - `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
-   - `static_bias_theta / linear_ramp / step_sigma_theta / periodic_drift`
-   - `ekf / ukf / constant_residual_mu / rls_residual_b / hybrid_residual_b`
-   - `paired_seeds`
-   - `repeats=2`
-   - `mock-backed` software HIL
+26. `T24` Worker 已完成四场景、五模式、`repeats=2` formal software revalidation：`missing_runs = []`，所有 `coverage = 1.0`，40 repeat-runs
+27. T24 结果：
+   - 四场景 winner 均为 `hybrid_residual_b`，runner-up 均为 `ukf`
+   - 请求统计字段全部存在于 `comparison.csv`
+   - `correction_saturation_rate_mean` 全为 0.0，teacher diagnostics 全零（与 T15 一致）
+   - Mock-backed software HIL only
+28. `T24` adversarial review 已完成，Captain 接受为 `PASS_WITH_WARNINGS`；T24 可标记完成，但 evidence boundary 仍限定为 `mock-backed` software HIL formal software revalidation
+29. `correction_saturation_rate_mean` 全零与 teacher diagnostics header-only 是 deferred 机制证据缺口，不阻塞 T24 LER ranking，但必须进入 T25/T27 后续收口
+30. 当前唯一任务为 `T25` gate review；T25 不执行新 benchmark，只判断 T24 证据等级、边界和下一任务优先级
 
 ## 5. 已完成任务包
 
@@ -477,6 +498,8 @@
 - `T21`：`docs/tasks/Phase2/T21_phase2_milestone_review.md`
 - `T22`：`docs/tasks/Phase2/T22_real_board_smoke_execution_plan.md`
 - `T23`：`docs/tasks/Phase2/T23_p4_formal_benchmark_protocol_lock.md`
+- `T24`：`docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`
+- `T25`：`docs/tasks/Phase2/T25_p4_formal_evidence_gate_review.md`
 
 关键产出：
 
@@ -499,6 +522,7 @@
 - `docs/review/T21_phase2_milestone_review.md`
 - `docs/review/T22_review.md`
 - `docs/review/T23_review.md`
+- `docs/review/T24_review.md`
 - `docs/P4_benchmark_development_protocol.md`
 - `docs/P4_benchmark_formal_protocol.md`
 - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
@@ -511,66 +535,37 @@
 
 ## 6. 当前唯一任务包摘要
 
-Task ID: `T24`
+`T25` 已创建任务包，等待 Worker 执行只读 adversarial gate review。
 
-Goal: 执行 `T23` 已锁定的 P4 frozen-set formal software revalidation，补齐四场景、五模式、`repeats=2` 的 evidence pack。
+T24 已收口事实：
 
-Allowed files:
+- Run dir: `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743`
+- `missing_runs = []`，20/20 scenario/mode pairs `coverage = 1.0`，40 repeat-runs
+- 四场景 winner 均为 `hybrid_residual_b`，runner-up 均为 `ukf`
+- 请求统计字段全部存在于 `comparison.csv`；`correction_saturation_rate_mean` 全为 0.0；teacher diagnostics 全零
+- Mock-backed software HIL only
+- `docs/review/T24_review.md` verdict = `PASS_WITH_WARNINGS`，blocking issues = none
 
-- `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`
-- `docs/P4_benchmark_formal_protocol.md`
-- `docs/04_task_board.md`
-- `docs/07_handoff.md`
-- `docs/08_risks_and_open_questions.md`
-- `runs/p4_benchmark/T24_formal_software_revalidation_*`
+T25 任务边界：
 
-Forbidden scope:
-
-- 不改源码
-- 不改 benchmark 口径、baseline 集合或 ParamMapper 语义
-- 不改 config 文件语义
-- 不运行训练、`.tflite` runtime、cleanup 或硬件命令
-- 不新增 `statcalib`、soft-information comparator、额外 scenario family 或 teacher-representation 长跑
-- 不把 mock-backed software formal revalidation 写成 `.tflite` runtime、`real_board` 或 paper-grade final benchmark
-
-Verification:
-
-- 使用 `C:\ProgramData\anaconda3\python.exe`
-- 使用 `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
-- 锁定 `static_bias_theta / linear_ramp / step_sigma_theta / periodic_drift`
-- 锁定 `ekf / ukf / constant_residual_mu / rls_residual_b / hybrid_residual_b`
-- 使用 `--paired-seeds` 与 `--repeats 2`
-- 如需切块，只用 `--repeat-start/--repeat-stop`，不得按单场景切块改变 seed 语义
-- final evidence pack 必须完整记录 `missing_runs`、coverage、统计字段实际可用性和边界声明
-
-当前状态：
-
-- `T23` 已完成并由 Captain 接受为 `PASS_WITH_WARNINGS`
-- `docs/review/T23_review.md` 已形成 adversarial review 输出
-- N1 governance sync 已接受；N2/N3/N4 已 deferred 到 R19 与 T24 任务包
-- `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md` 已创建
-- 当前 T24 gate 为：
-  - `GO_FOR_BOUNDED_FORMAL_SOFTWARE_REVALIDATION`
-  - `NO_GO_FOR_SCOPE_EXPANSION_INSIDE_T24`
-- `T24` 可以运行 P4 benchmark，但只允许执行 frozen-set mock-backed software HIL revalidation
+- 只读审查 T24 evidence pack、warning 处理、result-boundary 与下一任务建议
+- 不运行 benchmark、不改代码、不改 config、不执行 cleanup、不调用硬件
 - 未改变全局阶段与决策状态，仍为 `Phase 2: Controlled Development` / `Go`
 
 ## 7. 下一步建议
 
-第一轮 recovery 收尾已完成，Phase 2 当前按任务板顺序推进。
+下一步应交给 Worker 执行 `T25` adversarial gate review。
 
 建议优先级：
 
-1. 下一任务为 `T24`，Worker 只应按任务包执行 bounded formal software revalidation
-2. 可以提交当前治理与任务包更新后再让 Worker 推进 `T24`
-3. T24 必须使用固定 run dir 和 exact CLI shape；如需切块，只按 repeat range 切块
-4. T24 必须报告 requested metrics 的实际可用性，不得静默省略 N3/N4 涉及字段
-5. T24 完成后进入 `T25` adversarial gate review；Captain 收口前不启动机制、`.tflite` 或真板任务
-6. 论文发表是远期目标，当前仍按证据增强和边界收口逐步推进
+1. T25 审查 T24 的 evidence pack 完整性、metric availability、边界声明和证据缺口
+2. T25 将 T24 结果边界写清楚：可作为 frozen-set formal software revalidation，不可作为 `.tflite` runtime、`real_board` 或 paper-grade expanded benchmark
+3. T25 收口后，再决定下一优先级；当前建议优先处理 teacher diagnostics / correction saturation 机制证据缺口
+4. 论文发表是远期目标，当前仍按证据增强和边界收口逐步推进
 
 ## 8. 暂不继续的事项
 
-在 T24 完成并 review 前，暂不继续：
+在 T25 gate review 完成前，暂不继续：
 
 1. 新的 teacher-representation benchmark 扩展
 2. 超出 frozen-set 的 P4 正式长跑或 CI-driven stopping
