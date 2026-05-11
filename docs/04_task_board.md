@@ -102,11 +102,17 @@
 
 - [ ] T26: Calibration/statcalib baseline feasibility gate and minimal design plan
   - Task package: pending
-- [ ] T27: Teacher diagnostics path audit and mechanism-evidence repair plan
+- [x] T27: Teacher diagnostics path audit and mechanism-evidence repair plan
   - Task package: `docs/tasks/Phase2/T27_teacher_diagnostics_path_audit.md`
-- [ ] T28: `seed=20260429` failure-mechanism diagnosis, bounded no-new-branch scope
-  - Task package: pending
+  - Review output: `docs/review/T27_teacher_diagnostics_path_audit.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - R10 narrowed: hybrid path uses broadcast teacher features while scalar explain diagnostics require `scalar_feature_dim > 0`; data is not generated for current hybrid path, and downstream CSV coercion masks absence as `0.0`
+  - R20 narrowed: independent fast-loop correction saturation path; current T24 `0.0` is not caused by teacher diagnostics dead path
+- [ ] T28: Teacher diagnostics missing-vs-zero semantics repair and minimal smoke
+  - Task package: `docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md`
 - [ ] T29: Paper-inspired statcalib branch design gate, no long run until approved
+  - Task package: pending
+- [ ] T36: `seed=20260429` failure-mechanism diagnosis, bounded no-new-branch scope
   - Task package: pending
 
 ### Milestone 2J: Reproducibility And Deployment Boundary
@@ -133,39 +139,38 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T27: Teacher diagnostics path audit and mechanism-evidence repair plan`
+`T28: Teacher diagnostics missing-vs-zero semantics repair and minimal smoke`
 
 状态说明：
 
-- `T25` 已完成 gate review，Captain verdict = `PASS_WITH_WARNINGS`
-- `T24` 可作为 completed frozen-set formal software revalidation，但仅限 `mock-backed` software HIL
-- `T24` 不得外推为 `.tflite` runtime、`real_board` HIL 或 paper-grade expanded benchmark
-- `T25` warning 分类已收口：N1 correction saturation structural zero = `deferred` / R20；N2 task-board environment note = `accepted`；N3 teacher diagnostics header-only = `deferred` / R10
-- `T25` 建议下一唯一任务为 `T27`，Captain 接受该优先级
-- `T27` 只做 teacher diagnostics 路径审计和机制证据修复计划，不运行新 benchmark、不改代码、不补新 baseline
+- `T27` 已完成只读 path audit，Captain verdict = `PASS_WITH_WARNINGS`
+- `R10` 已缩窄：当前 T24 `hybrid_residual_b` 使用 broadcast teacher 特征；`tiny_cnn.py` explain 只在 `scalar_feature_dim > 0` 时产出 teacher scalar diagnostics，因此当前 hybrid path 的 teacher diagnostics 是 `data not generated`
+- `R10` 仍未修复：下游 aggregation / CSV 会把部分缺失值压成 `0.0`，掩盖 `not generated` 与 `true zero`
+- `R20` 已缩窄：`correction_saturation_rate_mean` 走独立 fast-loop saturation counter 路径，不与 teacher diagnostics 共享死路径；当前 T24 更像现参数区间下未触发 saturation
+- `T28` 只修 teacher diagnostics missing-vs-zero 语义，并做最小 smoke 验证；不扩 formal benchmark、baseline/scenario、`.tflite` 或真板范围
 
 为什么现在做它：
 
-1. `T15` 到 `T24` 多次出现 teacher diagnostics 全零 / header-only 现象。
-2. `T25` 已确认该问题不阻塞 T24 LER ranking，但会限制 `hybrid_residual_b` 的机制解释可信度。
-3. `R10` 是当前最长 deferred 链；`R20` correction saturation structural zero 可在同一只读审计中作为相邻 zero-metric 问题检查。
-4. 在机制证据路径没有厘清前，不宜先推进 statcalib 设计、论文 claim ledger、`.tflite` runtime 或真板执行。
+1. `T27` 已经把 teacher diagnostics 缺口定位到当前 teacher feature layout 与 explain 机制之间的语义不匹配。
+2. 如果不先修复 `not generated` 与 `true zero` 的输出语义，后续机制分析、statcalib 设计或论文 claim ledger 都会继续继承模糊指标。
+3. T28 可以用最小代码/报告语义修复和最小 smoke 收口 R10 的可观察性问题，而不扩大 benchmark 口径。
+4. `R20` 不需要在 T28 中扩大 stress run；只需保持 T27 的缩窄结论，不把当前零值当作全局机制结论。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T27`
-2. `T25` 已按 `PASS_WITH_WARNINGS` 收口；本轮不需要重复 Claude review，因为 T25 本身就是 review 任务。
-3. T25 accepted warning：
-   - N2 `docs/04_task_board.md` environment-note warning = `accepted`，归为 Captain 治理同步提示。
-4. T25 deferred warnings：
-   - N1 `correction_saturation_rate_mean` structural zero = `deferred`，继续挂 R20。
-   - N3 `teacher_scalar_diagnostics.csv` header-only / teacher diagnostics 全零 = `deferred`，继续挂 R10。
-5. T27 任务包：`docs/tasks/Phase2/T27_teacher_diagnostics_path_audit.md`
+1. 当前唯一任务：`T28`
+2. `T27` 已按 `PASS_WITH_WARNINGS` 收口。
+3. T27 accepted / narrowed warning：
+   - R20 correction saturation structural zero = 独立 fast-loop path；当前 T24 零值不再按 teacher diagnostics dead path 处理，但不关闭 R20 的全局触发性问题。
+4. T27 deferred warnings：
+   - R10 hybrid teacher diagnostics = `data not generated`，需要后续 repair。
+   - downstream CSV `0.0` coercion masks missing-vs-zero semantics，需要后续 repair。
+5. T28 任务包：`docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md`
 
-## Done Criteria For T27
+## Done Criteria For T28
 
-1. 只读追踪 teacher diagnostics 的生成、聚合、写出路径，并定位 `teacher_scalar_diagnostics.csv` header-only 的直接原因或最小可验证假设。
-2. 明确分类问题性质：数据未生成、聚合/写出 bug、当前模式 not applicable、或需要后续源码修复任务。
-3. 相邻检查 `correction_saturation_rate_mean` structural zero 的指标路径，判断是否与 teacher diagnostics 共享 dead path 或属于独立问题。
-4. 输出最小机制证据修复计划与下一任务建议，但不执行修复、不运行 benchmark。
-5. 不运行 benchmark、不改代码、不改 config、不执行 cleanup、不调用硬件、不新增 run dir。
+1. 最小修复 teacher diagnostics 输出语义，使 downstream 报告能区分 `not generated` 与 `true zero`。
+2. 明确当前 broadcast teacher path 与 scalar teacher diagnostics 的支持边界，避免把未生成诊断写成已解释机制。
+3. 用最小 smoke 验证修复后的字段语义；可新增 T28 专属 run dir，但不得扩展 formal benchmark 口径。
+4. 更新必要的 review/for-human 文档和任务包 Worker output。
+5. 不新增 baseline/scenario，不实现 statcalib，不触碰 `.tflite` runtime 或真板路径，不改写 T15/T24 历史 outputs。

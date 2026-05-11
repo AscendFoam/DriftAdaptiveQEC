@@ -1242,3 +1242,39 @@ Project Manager 明确指出：论文发表是最终目标，但当前仍应一�
 2. 新增 `docs/tasks/Phase2/T27_teacher_diagnostics_path_audit.md`。
 3. `docs/07_handoff.md` 记录 T25 Captain verdict、warning 分类与 T27 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 更新 T25 状态、R10/R20 后续路径与 T26/T27 优先级判断。
+
+## D-2026-05-11-04
+
+- 日期：`2026-05-11`
+- 决策：接受 `T27` teacher diagnostics path audit 的 `PASS_WITH_WARNINGS`，标记 `T27` 完成，并将当前唯一任务切换为 `T28: Teacher diagnostics missing-vs-zero semantics repair and minimal smoke`
+
+### 背景
+
+`T27` 对 `T15/T24` 的 teacher diagnostics 全零、`teacher_scalar_diagnostics.csv` header-only、以及 `correction_saturation_rate_mean` structural zero 做了只读路径审计。该任务未运行 benchmark、训练、`.tflite`、硬件或 cleanup，也未修改源码、config、run 或 artifact。
+
+### Warning 分类
+
+1. W1：`R10` 的主因已定位但未修复
+   - 分类：`deferred`
+   - 处理：继续挂 R10；T28 需要修复 missing-vs-zero 语义，并明确 broadcast teacher path 与 scalar diagnostics 的支持边界
+2. W2：P4 writer / aggregation 层把缺失 teacher diagnostics 压成 `0.0`
+   - 分类：`deferred`
+   - 处理：新增/并入 R21；后续不得再把 `not generated` 静默写成 `true zero`
+3. W3：`R20` 不共享 teacher diagnostics 死路径，当前 T24 零值更像当前参数区间下未触发 correction saturation
+   - 分类：`accepted`
+   - 处理：R20 从“疑似 metric dead path”缩窄为“独立 fast-loop path，当前参数区间未触发”；但不关闭全局 stress/edge 触发性问题
+
+### 结论
+
+`T27` 可以标记完成。它把 R10 从泛泛的“teacher diagnostics 全零”缩窄为：当前 `hybrid_residual_b` frozen config 使用 broadcast teacher features，而 `tiny_cnn.py::explain_from_loaded_artifact()` 只在 `scalar_feature_dim > 0` 时产出 teacher scalar diagnostics，因此当前 hybrid path 的 teacher diagnostics 是 `data not generated`。
+
+`T27` 同时确认 R20 不与 teacher diagnostics 共享同一条空路径；`correction_saturation_rate_mean` 来自独立 fast-loop saturation counter。当前 T24 的 `0.0` 不应再简单归类为指标未写出，但也不能外推为所有参数区间都不会触发 saturation。
+
+下一唯一任务不切到 T26/statcalib。当前必须先修复 teacher diagnostics 的可观察性和缺失语义，否则 statcalib、论文 claim 或机制解释都会继续继承混淆指标。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T27` 完成，并切换 `Current Unique Task` 到 `T28`。
+2. 新增 `docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md`。
+3. `docs/07_handoff.md` 记录 T27 Captain verdict、warning 分类与 T28 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 更新 R10/R20，并新增 R21 记录 missing-vs-zero 语义风险。

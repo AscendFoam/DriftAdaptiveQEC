@@ -113,3 +113,36 @@ Before handoff, Worker must report:
 ## Captain Notes
 
 T26 remains a pending roadmap item, but it is not the current unique task. T25 recommended T27 first because R10 is the longest deferred mechanism-evidence chain and directly affects interpretation of `hybrid_residual_b`.
+
+## Worker Output
+
+- Created `docs/review/T27_teacher_diagnostics_path_audit.md`.
+- Created `docs/for_human/T27_explanation.md`.
+- Audited the existing teacher-diagnostics path as read-only and concluded:
+  - non-hybrid modes are `not applicable` for teacher diagnostics
+  - current T24 `hybrid_residual_b` path does reach artifact inference, but teacher diagnostics are not generated because the frozen strong-baseline config uses broadcast teacher features while `tiny_cnn.py::explain_from_loaded_artifact()` only emits teacher diagnostics when `scalar_feature_dim > 0`
+  - downstream aggregation/CSV writing preserves emptiness for `per_scalar`, but also coerces several missing values to `0.0`, which hides the distinction between `not generated` and `true zero`
+  - `correction_saturation_rate_mean` is generated from an independent fast-loop saturation counter path and is not on the same dead metric path as teacher diagnostics
+
+## Verification Record
+
+- No new benchmark, training, runtime, hardware, or cleanup command was run.
+- No source, config, run, or artifact file was modified.
+- Read-only search/inspection commands used:
+  - `rg "teacher_scalar|teacher_gate|teacher_contribution|diagnostic|diagnostics|correction_saturation|saturation_rate" cnn_fpga physics benchmark docs`
+  - `rg -n "explain_from_loaded_artifact|per_scalar_contribution|per_scalar_gate_effect|teacher_contribution|gate_mean|gate_std|scalar_features_raw" cnn_fpga/model/tiny_cnn.py`
+  - `Get-ChildItem runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743 -Recurse -Filter hil_summary.json`
+  - `Get-Content` on the required docs, config, source files, `comparison.csv`, `teacher_scalar_diagnostics.csv`, and representative `hil_summary.json`
+- Created files confirmed:
+  - `docs/review/T27_teacher_diagnostics_path_audit.md`
+  - `docs/for_human/T27_explanation.md`
+
+## Captain Acceptance
+
+- Verdict accepted: `PASS_WITH_WARNINGS`
+- Blocking issues: none
+- Warning classification:
+  - R10 root cause found but not repaired: `deferred`
+  - downstream missing-vs-zero `0.0` coercion: `deferred`, tracked as R21
+  - R20 independent fast-loop saturation path: `accepted` as narrowed, but R20 remains open for future stress/edge evidence
+- Next unique task: `T28: Teacher diagnostics missing-vs-zero semantics repair and minimal smoke`
