@@ -96,3 +96,44 @@ After T29, reasonable next candidates are:
 - `T36`: `seed=20260429` failure-mechanism diagnosis
 
 Do not start either inside T29.
+
+## Worker Output
+
+- Updated `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`.
+- Created:
+  - `docs/review/T29_review.md`
+  - `docs/for_human/T29_explanation.md`
+
+Exact fix:
+
+- removed the old 11-column markdown comparison-table header row from `_write_report()`
+- kept the new 12-column header row that includes `Teacher Diag`
+- left separator and data-row rendering unchanged
+
+No benchmark/report semantics were changed beyond this local markdown cleanup.
+
+## Verification Record
+
+Static verification:
+
+- Command:
+  - `& 'C:\ProgramData\anaconda3\python.exe' -m py_compile cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`
+- Result:
+  - passed
+
+Format verification without running benchmark:
+
+- Method:
+  - invoked `_write_report()` in a temporary directory with one representative comparison row
+  - verified the generated markdown in-memory / temp-file scope only
+  - did not create a benchmark run dir
+- Observed output:
+  - `header_rows=1`
+  - `teacher_diag_header=yes`
+  - `column_counts=[12, 12, 12]`
+
+Boundary confirmation:
+
+- no benchmark, training, `.tflite`, hardware, or cleanup command was run
+- no new run directory was created
+- no historical `runs/` or `artifacts/` output was modified

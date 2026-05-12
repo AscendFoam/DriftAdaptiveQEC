@@ -2,11 +2,11 @@
 
 ## 1. 当前状态
 
-- 日期：`2026-05-11`
+- 日期：`2026-05-12`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T29: P4 markdown report header cleanup after T28`
-- 任务包：`docs/tasks/Phase2/T29_p4_report_header_cleanup.md`
+- 当前唯一任务：`T26: Calibration/statcalib baseline feasibility gate and minimal design plan`
+- 任务包：`docs/tasks/Phase2/T26_statcalib_feasibility_gate.md`
 
 ## 2. 本轮已完成
 
@@ -208,6 +208,16 @@
    - 目标是修复 `run_p4_multiscenario_benchmark.py::_write_report()` 的重复 markdown header
    - 不运行 benchmark、不新增 run dir、不改变 teacher diagnostics 语义或 benchmark 口径
    - 任务包：`docs/tasks/Phase2/T29_p4_report_header_cleanup.md`
+46. `T29` 已完成并由 Captain 接受为 `PASS`：
+   - `docs/review/T29_review.md` verdict = `PASS`
+   - 删除了 `_write_report()` 中旧的 11-column markdown header
+   - 验证结果：`py_compile` passed；静态 `_write_report()` shape check 得到 `header_rows=1`、`column_counts=[12, 12, 12]`
+   - 未运行 benchmark、未新增 run dir、未改变 benchmark 语义
+   - N1 tracked `.pyc` side-effect = accepted known repo-noise / rejected as technical signal，不作为技术改动提交
+47. 当前唯一任务已切换为 `T26`：
+   - 目标是做 calibration/statcalib baseline feasibility gate 和最小设计计划
+   - 不实现 comparator、不运行 benchmark、不新增 run dir、不改 formal benchmark protocol
+   - 任务包：`docs/tasks/Phase2/T26_statcalib_feasibility_gate.md`
 
 ## 3. 已验证事实
 
@@ -503,7 +513,8 @@
 30. `T25` gate review 已完成，Captain verdict = `PASS_WITH_WARNINGS`；T25 不执行新 benchmark，只判断 T24 证据等级、边界和下一任务优先级
 31. `T27` 已完成，Captain verdict = `PASS_WITH_WARNINGS`；R10/R20 已缩窄但未全部关闭
 32. `T28` 已完成，Captain verdict = `PASS_WITH_WARNINGS`；R21 对当前 writer 语义可关闭，但 R10 不关闭
-33. 当前唯一任务为 `T29`；T29 只修 P4 markdown report 重复表头，不运行 benchmark、不扩展 formal benchmark 或部署边界
+33. `T29` 已通过 `PASS` 收口；P4 markdown report 重复表头已修复
+34. 当前唯一任务为 `T26`；T26 只做 calibration/statcalib feasibility gate 和最小设计计划，不实现 comparator、不运行 benchmark、不扩展 formal benchmark 或部署边界
 
 ## 5. 已完成任务包
 
@@ -534,6 +545,7 @@
 - `T25`：`docs/tasks/Phase2/T25_p4_formal_evidence_gate_review.md`
 - `T27`：`docs/tasks/Phase2/T27_teacher_diagnostics_path_audit.md`
 - `T28`：`docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md`
+- `T29`：`docs/tasks/Phase2/T29_p4_report_header_cleanup.md`
 
 关键产出：
 
@@ -572,51 +584,49 @@
 
 ## 6. 当前唯一任务包摘要
 
-`T29` 已创建任务包，等待 Worker 执行 P4 markdown report header cleanup。
+`T26` 已创建任务包，等待 Worker 执行 calibration/statcalib feasibility gate。
 
-T28 已收口事实：
+T29 已收口事实：
 
-- `docs/review/T28_review.md` verdict = `PASS_WITH_WARNINGS`，blocking issues = none
-- T28 smoke dir: `runs/p4_benchmark/T28_teacher_diag_semantics_smoke_manual_20260511`
-- `comparison.csv` 已显式区分：
-  - `ukf` -> `teacher_diagnostics_status = not_applicable`
-  - `hybrid_residual_b` -> `teacher_diagnostics_status = not_generated`
-- missing teacher diagnostics numeric fields now remain empty / null instead of `0.0`
-- `correction_saturation_rate_mean = 0.0` remains present as an independent observed zero
-- T24 historical run was not modified
+- `docs/review/T29_review.md` verdict = `PASS`，blocking issues = none
+- `_write_report()` 中旧的 11-column markdown header 已删除
+- `Teacher Diag` 12-column header 保留
+- verification: `py_compile` passed；`header_rows=1`；`column_counts=[12, 12, 12]`
+- 未运行 benchmark，未新增 run dir，未改变 benchmark 语义
+- tracked `.pyc` side-effect 不作为技术改动提交
 
-T29 任务边界：
+T26 任务边界：
 
-- 只修复 `_write_report()` 的 duplicate markdown header row
-- 不运行 benchmark、不新增 run dir
-- 不改变 teacher diagnostics semantics、comparison CSV columns、aggregation behavior、baseline/scenario set 或 formal benchmark protocol
-- 未改变全局阶段与决策状态，仍为 `Phase 2: Controlled Development` / `Go`
+- 只做 docs-only/read-only feasibility gate 和最小设计计划
+- 不实现 statcalib comparator、不运行 benchmark、不新增 run dir
+- 不改变 formal benchmark protocol、baseline/scenario set、seed/repeat policy 或 result boundary
+- 不触碰 `.tflite`、真板、`runs/`、`artifacts/` 或 cleanup
 
-T29 Worker 必须输出：
+T26 Worker 必须输出：
 
-- changed files
-- exact header cleanup
-- py_compile result
-- static/format check showing one header row and matching column counts
-- explicit statement that no benchmark/run dir was created
+- `docs/statcalib_feasibility_gate.md`
+- `docs/review/T26_statcalib_feasibility_gate.md`
+- `docs/for_human/T26_explanation.md`
+- task package Worker Output / Verification Record
 
 ## 7. 下一步建议
 
-下一步应交给 Worker 执行 `T29: P4 markdown report header cleanup after T28`。
+下一步应交给 Worker 执行 `T26: Calibration/statcalib baseline feasibility gate and minimal design plan`。
 
 建议优先级：
 
-1. 删除 `_write_report()` 中旧的 11-column markdown header。
-2. 做 py_compile 和静态 markdown column-count 验证。
-3. 不运行 benchmark，不新增 run dir。
-4. `T26` 和 `T36` 均保留为后续候选；T29 完成后再决定下一唯一任务。
+1. 只读审计现有 formal protocol、benchmark runner、ParamMapper 和风险文档。
+2. 判断 calibration/statcalib comparator 的最小可行前提、缺口和 go/no-go。
+3. 输出最小设计计划与后续实现任务边界。
+4. 不运行 benchmark，不实现 comparator，不改 benchmark 口径。
 
 ## 8. 暂不继续的事项
 
-在 T29 完成前，暂不继续：
+在 T26 完成前，暂不继续：
 
 1. 新的 teacher-representation benchmark 扩展
 2. 超出 frozen-set 的 P4 正式长跑或 CI-driven stopping
 3. 真板 backend 能力扩写
 4. 任何未获 Captain 明确批准的物理 repo cleanup
 5. `statcalib`、soft-information comparator 或额外 scenario family 实现
+6. `T36` seed failure diagnosis

@@ -204,7 +204,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T29: P4 markdown report header cleanup after T28`
+- `T26: Calibration/statcalib baseline feasibility gate and minimal design plan`
 
 ## 12. 快照结论
 
@@ -215,4 +215,5 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 3. `T24` 证据等级仍限定为 `mock-backed` software HIL formal benchmark；不得外推为 `.tflite` runtime、真板验证或 paper-grade expanded benchmark。
 4. `T27` 已把 teacher diagnostics 缺口缩窄为 broadcast teacher 布局与 scalar explain 机制不匹配；`R20` 已缩窄为独立 fast-loop saturation 路径。
 5. `T28` 已完成 teacher diagnostics missing-vs-zero 语义修复与最小 smoke；`R21` 对当前 writer 语义可关闭，但 `R10` 机制证据仍未完全修复。
-6. 当前唯一任务 `T29` 只修 T28 review 指出的 P4 markdown report 重复表头问题；不运行 benchmark、不扩展 baseline/scenario、不处理 statcalib、`.tflite` 或真板范围。
+6. `T29` 已修复 T28 review 指出的 P4 markdown report 重复表头问题，并通过 independent review，Captain verdict = `PASS`。
+7. 当前唯一任务 `T26` 只做 calibration/statcalib baseline 可行性门控与最小设计计划；不实现新 comparator、不运行 benchmark、不扩展 baseline/scenario、不处理 `.tflite` 或真板范围。

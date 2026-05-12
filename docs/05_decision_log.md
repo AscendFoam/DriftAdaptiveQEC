@@ -1324,3 +1324,35 @@ Project Manager 明确指出：论文发表是最终目标，但当前仍应一�
 2. 新增 `docs/tasks/Phase2/T29_p4_report_header_cleanup.md`。
 3. `docs/07_handoff.md` 记录 T28 Captain verdict、warning 分类与 T29 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 更新 R10/R21，并新增 R22/R23。
+
+## D-2026-05-12-02
+
+- 日期：`2026-05-12`
+- 决策：接受 `T29` independent review 的 `PASS`，标记 `T29` 完成，并将当前唯一任务切换为 `T26: Calibration/statcalib baseline feasibility gate and minimal design plan`
+
+### 背景
+
+`T29` 只修复 `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py::_write_report()` 中重复旧 markdown header 的问题。`docs/review/T29_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. 代码 diff 是一行删除旧 11-column header。
+2. 新 header 保留 `Teacher Diag`，header / separator / data row 均为 12 列。
+3. 未运行 benchmark，未新增 run dir，未改变 teacher diagnostics 语义、CSV columns、aggregation、baseline/scenario、seed policy 或 formal protocol。
+
+### Warning 分类
+
+1. N1：tracked `.pyc` side-effect
+   - 分类：`accepted as known repo-noise side effect / rejected as technical signal`
+   - 处理：不写入新风险，不作为有意义技术改动提交；继续按 `T19` / `docs/06_repo_noise_governance.md` 的 tracked-cache 口径处理。
+
+### 结论
+
+`T29` 可标记完成。`R22` 可收口：T28 后遗留的人读 P4 markdown report 重复表头问题已修复，并通过最小格式验证。
+
+下一唯一任务切换到 `T26`，原因是 T24/T25 已完成 frozen-set formal software revalidation 边界收口，T27/T28/T29 已先处理 teacher diagnostics 可观察性和 report 格式问题；现在可以做 calibration/statcalib baseline 的 feasibility gate。T26 仍是只读/设计门控任务，不实现 comparator、不运行 benchmark、不扩展 formal benchmark。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T29` 完成，并切换 `Current Unique Task` 到 `T26`。
+2. 新增 `docs/tasks/Phase2/T26_statcalib_feasibility_gate.md`。
+3. `docs/07_handoff.md` 记录 T29 Captain verdict、warning 分类与 T26 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 将 R22 标为已收口，并更新当前开放问题与下一任务口径。

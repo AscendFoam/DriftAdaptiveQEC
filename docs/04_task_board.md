@@ -101,7 +101,7 @@
 ### Milestone 2I: Mechanism Evidence Hardening
 
 - [ ] T26: Calibration/statcalib baseline feasibility gate and minimal design plan
-  - Task package: pending
+  - Task package: `docs/tasks/Phase2/T26_statcalib_feasibility_gate.md`
 - [x] T27: Teacher diagnostics path audit and mechanism-evidence repair plan
   - Task package: `docs/tasks/Phase2/T27_teacher_diagnostics_path_audit.md`
   - Review output: `docs/review/T27_teacher_diagnostics_path_audit.md`
@@ -115,8 +115,13 @@
   - R10 further narrowed: current outputs explicitly distinguish `not_applicable` and `not_generated`; mechanism evidence still not fully repaired
   - R21 closed for current writer semantics: missing teacher diagnostics are no longer silently coerced to `0.0`
   - Deferred follow-up: duplicate markdown report header row in `_write_report()`
-- [ ] T29: P4 markdown report header cleanup after T28
+- [x] T29: P4 markdown report header cleanup after T28
   - Task package: `docs/tasks/Phase2/T29_p4_report_header_cleanup.md`
+  - Review output: `docs/review/T29_review.md`
+  - Captain verdict: `PASS`
+  - Fixed duplicate old markdown report header in `_write_report()`
+  - Verification: `py_compile` passed; `_write_report()` static shape check showed `header_rows=1`, `column_counts=[12, 12, 12]`
+  - Non-blocking `.pyc` side-effect is not a technical change and must not be committed as task output
 - [ ] T30: Paper-inspired statcalib branch design gate, no long run until approved
   - Task package: pending
 - [ ] T36: `seed=20260429` failure-mechanism diagnosis, bounded no-new-branch scope
@@ -146,41 +151,41 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T29: P4 markdown report header cleanup after T28`
+`T26: Calibration/statcalib baseline feasibility gate and minimal design plan`
 
 状态说明：
 
-- `T28` 已完成 teacher diagnostics missing-vs-zero 语义修复与最小 smoke，Captain verdict = `PASS_WITH_WARNINGS`
-- `R21` 对当前 writer 语义可关闭：`not_generated` / `not_applicable` 不再静默写成 `0.0`
-- `R10` 进一步缩窄，但仍不能写成 teacher 机制证据完全修复
-- `T28` review 发现 `_write_report()` 中旧 markdown header 未删除，导致 report 表格有重复表头且列数不一致
-- `T29` 只修复该 markdown report header 问题，不运行新 benchmark、不改 benchmark 语义
+- `T29` 已完成并通过 independent review，Captain verdict = `PASS`
+- `T29` 修复了 `_write_report()` 中重复旧 markdown header 的人读 report 格式问题
+- `R22` 可收口：当前 P4 markdown report header / separator / data row 列数一致
+- `R10` 仍未关闭：teacher diagnostics 可观察性已改善，但机制证据仍不完整
+- `R20` 仍未关闭：correction saturation structural zero 仍需后续独立 edge/stress 判断
+- `R23` 仍未关闭：aggregation/report writer 缺少 focused tests 的风险仍存在
+- `T26` 只做 calibration/statcalib baseline feasibility gate 与最小设计计划，不实现 comparator、不运行 benchmark、不新增长跑
 
 为什么现在做它：
 
-1. T28 的机器可读输出已经达成目标，但 markdown report 是人读 evidence pack 的一部分。
-2. 重复表头是一个真实但局部的报告格式 bug，修复成本小，且避免后续 statcalib/seed 诊断继承坏报告。
-3. 该修复不需要新 benchmark，只需要最小静态/格式验证。
-4. 在 T29 前，不应推进 T26/statcalib 或 T36 seed 诊断。
+1. T24/T25 已完成 frozen-set formal software revalidation 与 result-boundary gate，但没有纳入 calibration/statcalib comparator。
+2. T27/T28/T29 已先完成 teacher diagnostics 路径审计、missing-vs-zero 语义修复和人读 report 格式修复，避免 statcalib 任务继承破损指标输出。
+3. 直接实现 statcalib 或启动长跑会扩大 benchmark 范围；当前更稳妥的是先做 feasibility gate、输入/输出 contract、最小设计与 go/no-go。
+4. T36 seed failure diagnosis 仍重要，但它更适合在 comparator feasibility 边界明确后再排期。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T29`
-2. `T28` 已按 `PASS_WITH_WARNINGS` 收口。
-3. T28 accepted warnings：
-   - N3 `comparison.csv` column order changed = `accepted`，这是 T28 语义修复的预期接口变化。
-   - S1/S2/S3 suspicious details = `accepted`，均符合当前修复语义或未来路径影响可控。
-4. T28 deferred warnings：
-   - N1 duplicate markdown report header row = `deferred`，进入 T29。
-   - Missing focused tests = `deferred`，记录到 risks；T28 smoke 可接受，但后续 aggregation 修改应补测试。
-5. T28 rejected / not committed warning：
-   - N2 tracked `.pyc` side-effect = `rejected as technical signal`，不得作为有意义改动提交；按 T19/T28 噪声治理处理。
-6. T29 任务包：`docs/tasks/Phase2/T29_p4_report_header_cleanup.md`
+1. 当前唯一任务：`T26`
+2. `T29` 已按 `PASS` 收口。
+3. T29 accepted / non-blocking warning：
+   - N1 tracked `.pyc` side-effect = `accepted as known repo-noise side effect / rejected as technical signal`；不写入新风险，不作为有意义改动提交，继续按 T19/T28 tracked-cache governance 处理。
+4. T29 deferred warnings：
+   - none
+5. T29 rejected warnings：
+   - none beyond the `.pyc` technical-signal rejection above
+6. T26 任务包：`docs/tasks/Phase2/T26_statcalib_feasibility_gate.md`
 
-## Done Criteria For T29
+## Done Criteria For T26
 
-1. 删除 `_write_report()` 中重复的旧 markdown report header，使 report 表格列数一致。
-2. 只做最小代码修复和验证，不运行 benchmark、不新增 run dir。
-3. 验证 `_write_report()` 相关 markdown header 只有一行且与 separator / data row 列数一致。
-4. 更新 T29 review/for-human 文档与任务包 Worker output。
-5. 不扩展 teacher diagnostics 语义、不改 formal benchmark 口径、不触碰 `.tflite` 或真板路径。
+1. 只读审计现有 benchmark / baseline / ParamMapper / teacher diagnostics / protocol 文档，判断 calibration/statcalib comparator 是否具备最小可实现前提。
+2. 输出一份 feasibility gate 文档，明确 adopted / deferred / rejected 的 statcalib 设计项。
+3. 给出最小设计计划：输入、输出、配置开关、指标、验证方式、与现有 frozen-set benchmark 的隔离方式。
+4. 不实现 statcalib comparator，不运行 benchmark，不新增 run dir，不改 baseline 集合、scenario 集合、seed/repeat policy 或 formal protocol。
+5. 更新 T26 review/for-human 文档与任务包 Worker output；若发现 blocker，明确交回 Captain 判断。

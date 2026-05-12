@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T29: P4 markdown report header cleanup after T28`
+  - `T26: Calibration/statcalib baseline feasibility gate and minimal design plan`
 
 说明：
 
@@ -339,6 +339,6 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T28` 已完成；当前下一唯一任务为 `T29`，只修复 T28 review 指出的 P4 markdown report 重复表头问题
+1. `T14` 至 `T29` 已完成；当前下一唯一任务为 `T26`，只做 calibration/statcalib baseline feasibility gate 与最小设计计划
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
-3. `T29` 不运行新 benchmark、不扩展 formal benchmark、baseline/scenario、statcalib、`.tflite` 或真板范围；只做最小报告输出 cleanup。
+3. `T26` 不运行新 benchmark、不实现 statcalib、不扩展 formal benchmark、baseline/scenario、`.tflite` 或真板范围；只做只读可行性判断与后续任务设计。
