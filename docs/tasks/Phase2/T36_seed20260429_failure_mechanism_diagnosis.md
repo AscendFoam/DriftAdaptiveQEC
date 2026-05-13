@@ -114,3 +114,64 @@ Focus areas:
 ## Captain Notes
 
 If existing artifacts do not contain per-window or per-commit time series, Worker must say so explicitly and downgrade the conclusion to scenario/summary-level diagnosis. Do not generate new evidence by running the benchmark.
+
+## Worker Output
+
+- Read the required T36 inputs, including:
+  - `docs/02_experiment_plan.md`
+  - `docs/02_experiment_plan_simplified.md`
+  - `docs/04_task_board.md`
+  - `docs/07_handoff.md`
+  - `docs/08_risks_and_open_questions.md`
+  - `docs/CNN_FPGA_GKP_阶段结论.md`
+  - `docs/legacy_context/2026-05-06_CNN_FPGA_GKP_legacy_handoff.md`
+  - the required `runs/teachrepr*` summary/comparison artifacts
+- Added `docs/seed20260429_failure_diagnosis.md`.
+- Added a small read-only script at `cnn_fpga/benchmark/analyze_seed20260429_failure.py`.
+  - The script uses standard-library CSV/JSON parsing only.
+  - It reads existing artifacts and prints a deterministic JSON summary to stdout.
+  - It does not import project runtime paths or execute simulation code.
+- Added `docs/review/T36_review.md` as worker pre-review input for the later adversarial review.
+- Added `docs/for_human/T36_explanation.md`.
+- Did not run benchmark, training, `.tflite`, hardware, or cleanup commands.
+- Did not modify `runs/`, `artifacts/`, model code, configs, benchmark semantics, formal protocol, baseline/scenario set, seed/repeat policy, or result boundary.
+- Explicitly downgraded the diagnosis to summary-level / final-snapshot-level analysis because current artifacts do not expose the full committed-parameter time series.
+
+## Verification Record
+
+1. Read-only analysis script:
+   - Command:
+     - `C:\ProgramData\anaconda3\python.exe cnn_fpga\benchmark\analyze_seed20260429_failure.py`
+   - Result:
+     - passed
+     - stdout JSON summary only; no file output by design
+2. Static compile smoke:
+   - Command:
+     - `$env:PYTHONPYCACHEPREFIX = Join-Path $env:TEMP 'codex_pycache_t36'; C:\ProgramData\anaconda3\python.exe -m py_compile cnn_fpga\benchmark\analyze_seed20260429_failure.py`
+   - Result:
+     - passed
+3. No benchmark run directory created:
+   - Command:
+     - `git diff --name-only -- runs artifacts`
+   - Result:
+     - empty
+4. Allowed-file scope check:
+   - Command:
+     - `git diff --name-only`
+     - `git status --short --untracked-files=all`
+   - Result:
+     - `git diff --name-only` shows only `docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`
+     - `git status --short --untracked-files=all` shows only the five T36 allowed files:
+       - `docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`
+       - `cnn_fpga/benchmark/analyze_seed20260429_failure.py`
+       - `docs/for_human/T36_explanation.md`
+       - `docs/review/T36_review.md`
+       - `docs/seed20260429_failure_diagnosis.md`
+5. Documentation honesty:
+   - `docs/seed20260429_failure_diagnosis.md` explicitly states that:
+     - current artifacts do not expose the full per-window / per-commit committed-parameter trace
+     - `sign offset` is not answerable from the current artifacts
+     - `magnitude overshoot` and `teacher instability` remain hypotheses / partial-support items
+6. Review boundary:
+   - independent adversarial review is still pending
+   - this worker task does not update task board / handoff or mark T36 as finished
