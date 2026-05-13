@@ -204,7 +204,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T36: seed=20260429 failure-mechanism diagnosis, bounded no-new-branch scope`
+- `T38: seed=20260429 single-seed trace-export probe, bounded unchanged-semantics rerun`
 
 ## 12. 快照结论
 
@@ -218,4 +218,5 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 6. `T29` 已修复 T28 review 指出的 P4 markdown report 重复表头问题，并通过 independent review，Captain verdict = `PASS`。
 7. `T26` 已完成 calibration/statcalib baseline feasibility gate，并通过 independent review，Captain verdict = `PASS`；gate 结论为 `CONDITIONAL_GO`，只允许后续作为 separate comparator lane 推进。
 8. `T30` 已完成 statcalib comparator 的 concrete interface contract 与 interface-level tests，并通过 independent review，Captain verdict = `PASS`；该结论不等于 statcalib 已接入 slow loop、formal benchmark、`.tflite` runtime 或真板路径。
-9. 当前唯一任务 `T36` 只做 `seed=20260429` 的既有结果失败机制诊断；不重跑 benchmark、不扩展 teacher-representation 分支、不改模型、不改 formal benchmark 口径。
+9. `T36` 已完成并通过 adversarial review，Captain verdict = `PASS`；其结论将 `seed=20260429` 的收益收缩缩窄为 residual-amplitude / teacher-delta regime instability hypothesis，但不是 causal proof。
+10. 当前唯一任务 `T38` 只做 `seed=20260429` single-seed trace-export probe；允许一个 T38-scoped bounded rerun 导出 per-window trace，但不得扩展 teacher-representation 分支、baseline/scenario、formal benchmark、`.tflite` 或真板口径。

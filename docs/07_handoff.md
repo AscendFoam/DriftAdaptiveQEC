@@ -5,15 +5,15 @@
 - 日期：`2026-05-13`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T36: seed=20260429 failure-mechanism diagnosis, bounded no-new-branch scope`
-- 任务包：`docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`
+- 当前唯一任务：`T38: seed=20260429 single-seed trace-export probe, bounded unchanged-semantics rerun`
+- 任务包：`docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`
 
-Captain closeout note after T30:
+Captain closeout note after T36:
 
-- `T30` is complete. `docs/review/T30_review.md` verdict = `PASS`; blocking issues = none.
-- `cnn_fpga/decoder/statcalib.py` now contains an interface-only `StatCalibInput` / `StatCalibOutput` contract with focused tests.
-- Statcalib is not integrated into slow-loop runtime, not benchmark-validated, and not part of the frozen ranked set.
-- The active next task is `T36`, not `T30`. Any older T26/T30-next wording later in this handoff is superseded by this status block and `docs/04_task_board.md`.
+- `T36` is complete. `docs/review/T36_review.md` verdict = `PASS`; blocking issues = none.
+- `docs/seed20260429_failure_diagnosis.md` narrows the seed-specific shrinkage to a residual-amplitude / teacher-delta regime instability hypothesis.
+- T36 remains summary/final-snapshot level only; it does not prove sign offset, overshoot chronology, or exact teacher-vs-CNN attribution because existing artifacts lack per-window committed-parameter traces.
+- The active next task is `T38`, not `T36`. Any older T36-next wording later in this handoff is superseded by this status block and `docs/04_task_board.md`.
 
 ## 2. 本轮已完成
 
@@ -240,6 +240,17 @@ Captain closeout note after T30:
    - 目标是对既有 `seed=20260429` teacher-representation 结果做 bounded failure-mechanism diagnosis
    - 不重跑 benchmark、不扩新分支、不改模型、不改 formal benchmark 或部署边界
    - 任务包：`docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`
+51. `T36` 已完成并由 Captain 接受为 `PASS`：
+   - `docs/review/T36_review.md` verdict = `PASS`
+   - Blocking issues: none
+   - 诊断报告：`docs/seed20260429_failure_diagnosis.md`
+   - 小型只读脚本：`cnn_fpga/benchmark/analyze_seed20260429_failure.py`
+   - 结论：`20260429` 的收益收缩更像 residual-amplitude / teacher-delta regime instability；response lag、overflow/correction saturation、dead teacher branch 不受当前 artifacts 支持
+   - 边界：现有 artifacts 缺 per-window / per-commit trace，因此 sign offset、overshoot chronology、teacher-vs-CNN attribution 仍不能定因果
+52. 当前唯一任务已切换为 `T38`：
+   - 目标是为 `seed=20260429` 做单 seed trace-export probe
+   - 允许一个 T38-scoped bounded rerun，但必须保持 benchmark 语义、baseline/scenario、seed/repeat policy 不变
+   - 任务包：`docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`
 
 ## 3. 已验证事实
 
@@ -538,7 +549,8 @@ Captain closeout note after T30:
 33. `T29` 已通过 `PASS` 收口；P4 markdown report 重复表头已修复
 34. `T26` 已通过 `PASS` 收口；gate verdict = `CONDITIONAL_GO`，statcalib 只能作为 separate comparator lane 后续推进
 35. `T30` 已通过 `PASS` 收口；其结果是 interface-only statcalib contract 与 focused tests，不是 slow-loop integration、formal benchmark 或部署边界证据
-36. 当前唯一任务为 `T36`；T36 只做 `seed=20260429` 既有结果的 failure-mechanism diagnosis，不重跑 benchmark、不扩新分支、不改模型或部署边界
+36. `T36` 已完成，Captain verdict = `PASS`；它只读分析既有 `seed=20260429` 结果，未重跑 benchmark、未扩新分支、未改模型或部署边界
+37. 当前唯一任务为 `T38`；T38 只允许做 `seed=20260429` single-seed trace-export probe，保持 Full vs Gated v5 语义与四场景边界不变
 
 ## 5. 已完成任务包
 
@@ -573,6 +585,7 @@ Captain closeout note after T30:
 - `T26`：`docs/tasks/Phase2/T26_statcalib_feasibility_gate.md`
 - `T30`：`docs/tasks/Phase2/T30_statcalib_interface_contract.md`
 - `T36`：`docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`
+- `T38`：`docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`
 
 关键产出：
 
@@ -601,6 +614,8 @@ Captain closeout note after T30:
 - `docs/review/T28_review.md`
 - `docs/review/T29_review.md`
 - `docs/review/T30_review.md`
+- `docs/review/T36_review.md`
+- `docs/seed20260429_failure_diagnosis.md`
 - `docs/P4_benchmark_development_protocol.md`
 - `docs/P4_benchmark_formal_protocol.md`
 - `docs/statcalib_feasibility_gate.md`
@@ -616,45 +631,43 @@ Captain closeout note after T30:
 
 ## 6. 当前唯一任务包摘要
 
-`T36` 已创建任务包，等待 Worker 执行 `seed=20260429` failure-mechanism diagnosis。
+`T38` 已创建任务包，等待 Worker 执行 `seed=20260429` single-seed trace-export probe。
 
-T30 已收口事实：
+T36 已收口事实：
 
-- `docs/review/T30_review.md` verdict = `PASS`，blocking issues = none
-- `cnn_fpga/decoder/statcalib.py` 新增 interface-only typed contract
-- `tests/test_statcalib_interface.py` 新增 6 个 focused interface tests
-- verification: `unittest` passed；`py_compile` passed；`ParamMapper` / `SlowLoopRuntime` / P4 runner / config 无 diff
-- 未运行 benchmark，未新增 run dir，未改变 benchmark 语义
-- T30 不是 statcalib slow-loop integration，也不是 formal benchmark evidence
+- `docs/review/T36_review.md` verdict = `PASS`，blocking issues = none
+- `docs/seed20260429_failure_diagnosis.md` 已形成 bounded diagnosis
+- `cnn_fpga/benchmark/analyze_seed20260429_failure.py` 是标准库只读分析脚本，只打印 JSON，不写文件、不运行 simulation
+- verification: script execution passed；`py_compile` passed；`runs/` / `artifacts/` 无 diff
+- T36 不是新 benchmark、不是新模型分支、不是 formal benchmark boundary update
 
-T30 warning 分类：
+T36 warning 分类：
 
-- N1 gate doc stale non-claim：`accepted`，Captain 已修正 `docs/statcalib_feasibility_gate.md`
-- N2 `tests/` 无 `__init__.py`：`accepted`，当前 unittest 发现机制足够
-- N3 `tests/__pycache__` side-effect：`rejected as technical signal`，按 repo-noise 处理
-- N4 `from_delta_b()` residual-b baseline assumption：`deferred`，写入 R24
+- N1 unused `Iterable` import：`accepted` as cosmetic，不要求返工
+- N2 hardcoded scenario/mode folder mappings：`accepted` for bounded frozen-artifact diagnosis，未来 reusable tool 再动态发现
+- N3 worker pre-review file overwritten by adversarial review：`accepted`，Worker verification 已保留在任务包
 
-T36 任务边界：
+T38 任务边界：
 
-- 只读分析既有 `seed=20260429` / Gated v5 / Full 结果
-- 可新增一个小型诊断脚本与诊断报告，但不得重跑 benchmark
-- 不改模型、不训练、不扩 teacher-representation 分支、不改 formal benchmark protocol
-- 不触碰 `.tflite`、真板、`runs/`、`artifacts/` 或 cleanup
+- 允许一个 T38-scoped bounded rerun，只用于 trace export
+- 保持 `seed=20260429`、Full vs Gated v5、四场景和既有 benchmark 语义不变
+- 不训练、不扩 teacher-representation 分支、不新增 baseline/scenario、不改 formal benchmark protocol
+- 不触碰 `.tflite`、真板、cleanup，且不得改写历史 `runs/` / `artifacts/`
 
 ## 7. 下一步建议
 
-下一步应交给 Worker 执行 `T36: seed=20260429 failure-mechanism diagnosis, bounded no-new-branch scope`。
+下一步应交给 Worker 执行 `T38: seed=20260429 single-seed trace-export probe, bounded unchanged-semantics rerun`。
 
 建议优先级：
 
-1. 读取 `docs/02_experiment_plan.md` 的 Gated v5 / seed=20260429 章节和既有 run summaries。
-2. 从既有 CSV/JSON 中抽取 Full vs Gated v5 的 per-scenario、per-window 或可用 diagnostic signals。
-3. 输出机制判断矩阵：符号偏移、幅度过冲、响应滞后、teacher 本身不稳、gated 分支过保守。
-4. 明确哪些结论只是 hypothesis，哪些被既有 artifact 支撑。
+1. 读取 `docs/seed20260429_failure_diagnosis.md` 与 `docs/review/T36_review.md`，把 T36 的 hypothesis 当作待验证对象。
+2. 在最小代码范围内导出 per-window `teacher_b`、predicted `delta_b`、committed `b` 和 window outcome/utilization。
+3. 只跑 T38 任务包允许的 single-seed trace-export probe，不扩 formal benchmark。
+4. 输出 trace-level mechanism update，明确哪些假设被支持、削弱或仍不可回答。
 
 ## 8. 暂不继续的事项
 
-在 T36 完成前，暂不继续：
+在 T38 完成前，暂不继续：
 
 1. 新的 teacher-representation benchmark 扩展或长跑
 2. statcalib slow-loop integration 或 formal benchmark integration

@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T36: seed=20260429 failure-mechanism diagnosis, bounded no-new-branch scope`
+  - `T38: seed=20260429 single-seed trace-export probe, bounded unchanged-semantics rerun`
 
 说明：
 
@@ -339,7 +339,7 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T30` 以及 `T26` 已完成；当前下一唯一任务为 `T36`，只做 `seed=20260429` 的既有 teacher-representation 结果失败机制诊断
+1. `T14` 至 `T30`、`T26` 以及 `T36` 已完成；当前下一唯一任务为 `T38`，只做 `seed=20260429` 的 single-seed trace-export probe
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 3. `T26` gate 结论为 `CONDITIONAL_GO`，且 `T30` 已把 statcalib 收紧为 interface-only separate comparator contract；后续仍不得把 statcalib 静默并入 T24 frozen benchmark set，不得扩展 formal benchmark、baseline/scenario、`.tflite` 或真板范围。
-4. `T36` 不得启动新的 teacher-representation 长跑或新分支，只能读取既有 `seed=20260429` 结果、形成机制诊断和后续 bounded 建议。
+4. `T36` 已把 `seed=20260429` 诊断缩窄到 residual-amplitude / teacher-delta regime instability hypothesis；`T38` 不得启动新的 teacher-representation 长跑或新分支，只能在 unchanged semantics 下导出 per-window trace，验证 T36 留下的因果缺口。

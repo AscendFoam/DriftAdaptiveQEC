@@ -1437,3 +1437,44 @@ Project Manager 明确指出：论文发表是最终目标，但当前仍应一�
 2. 新增 `docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`。
 3. `docs/07_handoff.md` 记录 T30 Captain verdict、warning 分类与 T36 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 新增 R24，并更新当前开放问题与下一任务口径。
+
+## D-2026-05-13-02
+
+- 日期：`2026-05-13`
+- 决策：接受 `T36` adversarial review 的 `PASS`，标记 `T36` 完成，并将当前唯一任务切换为 `T38: seed=20260429 single-seed trace-export probe, bounded unchanged-semantics rerun`
+
+### 背景
+
+`T36` 是只读 failure-mechanism diagnosis。`docs/review/T36_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. `docs/seed20260429_failure_diagnosis.md` 已包含 artifact inventory、Full vs Gated v5 scenario summary、跨 seed comparison、机制矩阵和下一 bounded 建议。
+2. `cnn_fpga/benchmark/analyze_seed20260429_failure.py` 是标准库 CSV/JSON 读取脚本，只打印 deterministic JSON，不导入 project runtime、不运行 simulation。
+3. T36 未重跑 benchmark、未新增/改写 `runs/` 或 `artifacts/`、未改模型/config/formal protocol/baseline/scenario/seed policy。
+4. 诊断没有把 hypothesis 写成因果证明，也没有改变 `.tflite`、real-board 或 statcalib 边界。
+
+### Warning 分类
+
+1. N1：analysis script 中 `Iterable` import 未使用
+   - 分类：`accepted`
+   - 处理：cosmetic，不要求返工
+2. N2：script 中 scenario/mode folder mappings hardcoded
+   - 分类：`accepted`
+   - 处理：该脚本只面向既有 frozen artifacts；若未来做 reusable analysis tool，再要求动态发现
+3. N3：Worker pre-review file 与 adversarial review 同名并被覆盖
+   - 分类：`accepted`
+   - 处理：任务包保留 Worker Output / Verification Record；review 文件作为 reviewer 输出即可
+
+### 结论
+
+`T36` 可标记完成。它把 `seed=20260429` 的 Gated-v5 收益收缩缩窄为 residual-amplitude / teacher-delta regime instability hypothesis；同时排除了 response lag、overflow/correction saturation、dead teacher branch 作为当前 artifacts 支持的主因。
+
+但 T36 仍不是 causal proof。现有 artifacts 缺少 per-window / per-commit `teacher_b`、predicted `delta_b`、committed `b` trace，因此 sign offset、overshoot chronology、teacher-vs-CNN-vs-committed-b attribution 仍不能回答。
+
+下一唯一任务切换到 `T38`。T38 是 T36 推荐的最小后续：允许一个 T38-scoped single-seed trace-export probe，但必须保持 benchmark 语义、baseline/scenario、seed/repeat policy 不变；不得扩新分支、不得改 formal benchmark、不得触碰 `.tflite` 或真板路径。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T36` 完成，并切换 `Current Unique Task` 到 `T38`。
+2. 新增 `docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`。
+3. `docs/07_handoff.md` 记录 T36 Captain verdict、warning 分类与 T38 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 更新 R10 和当前开放问题，明确 T38 只补 trace 证据缺口，不扩大 benchmark。

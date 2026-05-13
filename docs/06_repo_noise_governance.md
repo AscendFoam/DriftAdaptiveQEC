@@ -170,4 +170,5 @@
 - `T29` review 发现的 tracked `.pyc` side-effect 继续按已知 repo-noise 处理：不作为技术改动提交，不因此开启临时 cleanup。
 - `T26` statcalib feasibility gate 只能做 docs-only/read-only 审计；不得借机清理 tracked cache、`runs/` 或 `artifacts/`。
 - `T30` statcalib comparator interface/implementation package 不得借机执行 tracked-cache cleanup、改写历史 `runs/` / `artifacts/`、或把接口 smoke 输出升级为 formal benchmark evidence；其测试产生的 `tests/__pycache__/` side-effect 只能按 repo-noise 处理，不作为任务输出提交。
-- `T36` seed failure diagnosis 只能读取既有 `runs/teachrepr*` 结果并输出诊断文档/小型分析脚本；不得新增 benchmark run dir、不得重写历史 `runs/` / `artifacts/`、不得借诊断执行 cleanup。
+- `T36` seed failure diagnosis 已完成，只读取既有 `runs/teachrepr*` 结果并输出诊断文档/小型分析脚本；不得把该诊断输出重标为新的 benchmark run evidence。
+- `T38` seed trace-export probe 允许创建一个 T38-scoped run directory，但不得重写历史 `runs/` / `artifacts/`、不得借 trace probe 执行 cleanup、不得把单 seed trace 输出升级为 formal benchmark evidence。

@@ -13,7 +13,7 @@
 | R7 | 虽然 `T5` 已立治理口径，`T19` 也已补出缓存 cleanup manifest，但具体 cleanup 执行窗口与归档方式仍未决定 | 中 | `docs/06_repo_noise_governance.md` 与 `docs/cleanup_tracked_cache_manifest.md` 已固定缓存 cleanup 的目标目录、命令草案、回滚方式与验收标准，但尚未执行物理 cleanup | 在后续单开有界 cleanup 执行任务，严格按 manifest 落地，并继续把 `runs/` / `artifacts/` 留在独立任务中处理 |
 | R8 | 最小 software HIL 路径虽然已在 bounded recovery path 上完成逐字一致复验，但该结论容易被误外推到真板、`.tflite` 或正式 benchmark | 中 | `T12` 已确认 `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104` 与 `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172232_3ae9f9176104` 的 `hil_summary.json` / `hil_events.json` 哈希一致；但路径仍固定为 `mock + model_artifact + artifact_npz + inproc` | 后续文档必须继续写清结论边界，不把 bounded recovery smoke 扩写成真板或正式 benchmark 已恢复 |
 | R9 | T24 已完成 formal frozen-set revalidation，但若继续扩大到更多 repeat、CI-driven stopping 或 extra drift families，仍可能隐式越过 frozen-set/formal 边界 | 中 | T24 已按 locked protocol 跑完 `4 scenarios x 5 modes x repeats=2`；`docs/P4_benchmark_formal_protocol.md` 已锁定边界 | T24 后仍不应自动追加更大 repeat、额外 scenario 或 statcalib comparator；任何进一步 P4 扩展都必须新开任务包 |
-| R10 | `hybrid_residual_b` 的 teacher diagnostics 从 T15 到 T24 仍全零，机制解释深度受限 | 中 | `docs/review/T27_teacher_diagnostics_path_audit.md` 已将主因缩窄为 broadcast teacher features 不触发 scalar explain diagnostics；`docs/review/T28_review.md` 确认当前输出已显式标记 `not_generated` / `not_applicable` | R10 remains open but further narrowed；T28 修复的是可观察性和输出语义，不是完整 teacher mechanism evidence repair |
+| R10 | `hybrid_residual_b` 的 teacher diagnostics / mechanism evidence 仍缺 per-window trace，因此机制解释尚不能闭环 | 中 | `docs/review/T27_teacher_diagnostics_path_audit.md` 已将主因缩窄为 broadcast teacher features 不触发 scalar explain diagnostics；`docs/review/T28_review.md` 确认当前输出已显式标记 `not_generated` / `not_applicable`；`docs/seed20260429_failure_diagnosis.md` 将 `20260429` 收益收缩缩窄为 residual-amplitude / teacher-delta regime instability hypothesis，但缺少 per-window committed-parameter trace | R10 remains open but further narrowed；T38 已开任务包，后续只允许 single-seed trace-export probe，不得扩 benchmark 或新分支 |
 | R11 | 训练链 bootstrap 记录了本机 `torch` dev build，但尚未形成可移植依赖锁定 | 中 | `docs/review/T17_review.md` N1/N2 指出 `torch = 2.8.0.dev20250405+cu128` 是 dev build，且本轮未产出 `requirements-train.txt`；`docs/training_chain_bootstrap.md` 只承诺本机 `DLEnv` 探测结果 | 不把 `DLEnv` 或 dev torch 写成跨机器保证；若后续需要训练链可移植性，单开 `requirements-train.txt` / lockfile 任务，并显式说明 dev build 渠道限制 |
 | R12 | `.tflite` 路径已有代码与入口，但真实 TensorFlow / TFLite 运行时在当前机器上不可用 | 高 | `docs/TFLite_runtime_bootstrap.md` 已记录 `tensorflow = False`、`tflite_runtime = False`；`export.py`、`evaluate_tflite.py`、`validate_export.py` 入口存在，但真实 runtime 需独立环境 | 继续把真实 `.tflite`、stub manifest 与 HIL benchmark 边界写清；若后续要跑真实 runtime，单开环境任务或在具备依赖的机器上做独立 smoke |
 | R13 | 真板 HIL 入口存在配置骨架，但距离可执行真板 smoke 仍缺设备、权限、寄存器一致性与日志证据 | 高 | `board_backend.py` 仍是 placeholder；设备缺失时会触发 `board_device_missing:...`；`schedule_commit(...)` 仍返回 `target_bank=None`、`version=None`、`ack_delay_us=None`；`step(...)` 返回空事件；`docs/real_board_hil_readiness.md` 已固定前置条件与验收标准 | 后续若推进真板路径，必须单开执行任务，逐层补齐设备存在、寄存器活性、DMA 读出与 commit/ack round-trip 证据，在此之前禁止写成 real-board HIL 已完成 |
@@ -45,7 +45,8 @@ Current T24-T29 status note:
 - `T29` Captain 已接受 review 为 `PASS`；R22 对 P4 markdown report duplicate header 已收口。
 - `T26` Captain 已接受 review 为 `PASS`；gate verdict = `CONDITIONAL_GO`，statcalib 只能作为 separate comparator lane 后续推进。
 - `T30` Captain 已接受 review 为 `PASS`；已完成 statcalib interface-only contract 和 focused tests，但不等于 slow-loop integration、formal benchmark evidence、`.tflite` runtime 或 real-board validation。
-- 当前唯一任务：`T36: seed=20260429 failure-mechanism diagnosis, bounded no-new-branch scope`，任务包 `docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`。
+- `T36` Captain 已接受 review 为 `PASS`；已完成 `seed=20260429` failure-mechanism diagnosis，结论仍是 summary/final-snapshot-level hypothesis，不是 causal proof。
+- 当前唯一任务：`T38: seed=20260429 single-seed trace-export probe, bounded unchanged-semantics rerun`，任务包 `docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`。
 - R13 当前仍然有效：真板路径还缺设备存在、权限、寄存器活性、DMA 读出和 commit/ack round-trip 的真实证据。
 - R14 当前仍然有效但已收窄：AXI/DMA 代码侧审计已具体化，真实宿主、bitstream 与 DMA contract 仍未验证。
 - R19 已收口：T24 已固定 CLI shape 并报告 metric availability。
@@ -81,7 +82,8 @@ Current T24-T29 status note:
      - `T29` 已完成并由 Captain 接受为 `PASS`。
      - `T26` 已完成并由 Captain 接受为 `PASS`。
      - `T30` 已完成并由 Captain 接受为 `PASS`。
-     - 当前唯一任务为 `T36` seed=20260429 failure-mechanism diagnosis，任务包已存在：`docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`。
+     - `T36` 已完成并由 Captain 接受为 `PASS`。
+     - 当前唯一任务为 `T38` seed=20260429 single-seed trace-export probe，任务包已存在：`docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`。
 10. `T15` 是否应直接运行多场景 P4 smoke？
    - 当前答案：已执行完成。
      - run dir: `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
@@ -258,9 +260,20 @@ Current T24-T29 status note:
      - N4 residual-b baseline assumption：`deferred`，已写入 R24。
 42. T36 是否可以交给 Worker？
    - 当前答案：
-     - 可以，但只能做只读/分析型 failure-mechanism diagnosis。
-     - 允许读取既有 `runs/teachrepr*` 结果并产出诊断报告/小型分析脚本。
-     - 禁止重跑 benchmark、训练、扩新分支、改模型、改 formal benchmark 口径、触碰 `.tflite` 或真板路径。
+     - 不再提交；T36 已完成并通过 Captain `PASS` 收口。
+     - T36 已读取既有 `runs/teachrepr*` 结果并产出 `docs/seed20260429_failure_diagnosis.md` 与只读分析脚本。
+     - T36 结论：`20260429` 更像 residual-amplitude / teacher-delta regime instability，但缺少 per-window trace，不能证明 sign offset、overshoot chronology 或 teacher-vs-CNN attribution。
+43. T36 reviewer warnings 如何处理？
+   - 当前答案：
+     - Verdict：`PASS`。
+     - N1 unused `Iterable` import：`accepted` as cosmetic。
+     - N2 hardcoded folder mappings：`accepted`，因为该脚本是 bounded frozen-artifact diagnostic，不是 reusable production tool。
+     - N3 worker pre-review file 被 adversarial review 覆盖：`accepted`，Worker verification 已保留在任务包。
+44. T38 是否可以交给 Worker？
+   - 当前答案：
+     - 可以，但只能做 `seed=20260429` single-seed trace-export probe。
+     - 允许一个 T38-scoped bounded rerun，用于导出 per-window `teacher_b`、predicted `delta_b`、committed `b` 和 window outcome/utilization。
+     - 禁止训练、扩 teacher-representation 分支、新增 baseline/scenario、改 formal benchmark protocol、触碰 `.tflite` 或真板路径。
 
 ## 暂缓事项
 
