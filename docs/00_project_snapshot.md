@@ -204,7 +204,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T26: Calibration/statcalib baseline feasibility gate and minimal design plan`
+- `T36: seed=20260429 failure-mechanism diagnosis, bounded no-new-branch scope`
 
 ## 12. 快照结论
 
@@ -216,4 +216,6 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 4. `T27` 已把 teacher diagnostics 缺口缩窄为 broadcast teacher 布局与 scalar explain 机制不匹配；`R20` 已缩窄为独立 fast-loop saturation 路径。
 5. `T28` 已完成 teacher diagnostics missing-vs-zero 语义修复与最小 smoke；`R21` 对当前 writer 语义可关闭，但 `R10` 机制证据仍未完全修复。
 6. `T29` 已修复 T28 review 指出的 P4 markdown report 重复表头问题，并通过 independent review，Captain verdict = `PASS`。
-7. 当前唯一任务 `T26` 只做 calibration/statcalib baseline 可行性门控与最小设计计划；不实现新 comparator、不运行 benchmark、不扩展 baseline/scenario、不处理 `.tflite` 或真板范围。
+7. `T26` 已完成 calibration/statcalib baseline feasibility gate，并通过 independent review，Captain verdict = `PASS`；gate 结论为 `CONDITIONAL_GO`，只允许后续作为 separate comparator lane 推进。
+8. `T30` 已完成 statcalib comparator 的 concrete interface contract 与 interface-level tests，并通过 independent review，Captain verdict = `PASS`；该结论不等于 statcalib 已接入 slow loop、formal benchmark、`.tflite` runtime 或真板路径。
+9. 当前唯一任务 `T36` 只做 `seed=20260429` 的既有结果失败机制诊断；不重跑 benchmark、不扩展 teacher-representation 分支、不改模型、不改 formal benchmark 口径。

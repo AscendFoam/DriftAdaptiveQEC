@@ -169,3 +169,5 @@
 - `T29` P4 markdown report cleanup 不得新增 run dir，也不得清理、改写或重标 T28 smoke outputs；只允许修复报告表头格式和必要文档记录。
 - `T29` review 发现的 tracked `.pyc` side-effect 继续按已知 repo-noise 处理：不作为技术改动提交，不因此开启临时 cleanup。
 - `T26` statcalib feasibility gate 只能做 docs-only/read-only 审计；不得借机清理 tracked cache、`runs/` 或 `artifacts/`。
+- `T30` statcalib comparator interface/implementation package 不得借机执行 tracked-cache cleanup、改写历史 `runs/` / `artifacts/`、或把接口 smoke 输出升级为 formal benchmark evidence；其测试产生的 `tests/__pycache__/` side-effect 只能按 repo-noise 处理，不作为任务输出提交。
+- `T36` seed failure diagnosis 只能读取既有 `runs/teachrepr*` 结果并输出诊断文档/小型分析脚本；不得新增 benchmark run dir、不得重写历史 `runs/` / `artifacts/`、不得借诊断执行 cleanup。

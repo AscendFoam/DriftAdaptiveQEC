@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T26: Calibration/statcalib baseline feasibility gate and minimal design plan`
+  - `T36: seed=20260429 failure-mechanism diagnosis, bounded no-new-branch scope`
 
 说明：
 
@@ -339,6 +339,7 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T29` 已完成；当前下一唯一任务为 `T26`，只做 calibration/statcalib baseline feasibility gate 与最小设计计划
+1. `T14` 至 `T30` 以及 `T26` 已完成；当前下一唯一任务为 `T36`，只做 `seed=20260429` 的既有 teacher-representation 结果失败机制诊断
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
-3. `T26` 不运行新 benchmark、不实现 statcalib、不扩展 formal benchmark、baseline/scenario、`.tflite` 或真板范围；只做只读可行性判断与后续任务设计。
+3. `T26` gate 结论为 `CONDITIONAL_GO`，且 `T30` 已把 statcalib 收紧为 interface-only separate comparator contract；后续仍不得把 statcalib 静默并入 T24 frozen benchmark set，不得扩展 formal benchmark、baseline/scenario、`.tflite` 或真板范围。
+4. `T36` 不得启动新的 teacher-representation 长跑或新分支，只能读取既有 `seed=20260429` 结果、形成机制诊断和后续 bounded 建议。

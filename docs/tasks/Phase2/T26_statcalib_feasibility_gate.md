@@ -98,3 +98,34 @@ Required verification is documentation-only:
 T26 is a gate, not an implementation task. If the feasibility gate is positive, the next task may be a minimal statcalib implementation package. If it is negative or conditional, the next task should target the smallest missing prerequisite instead.
 
 Do not start `T30` paper-inspired branch work or `T36` seed failure diagnosis inside T26.
+
+## Worker Output
+
+- Read the required protocol, review, risk, and code-boundary inputs for T26.
+- Checked the statcalib/calibration references in the experiment plan and deep-research notes, then kept them as background only.
+- Produced the three allowed docs:
+  - `docs/statcalib_feasibility_gate.md`
+  - `docs/review/T26_statcalib_feasibility_gate.md`
+  - `docs/for_human/T26_explanation.md`
+- Kept the gate honest: statcalib is described as a future separate comparator lane, not as an implemented or validated result.
+
+## Verification Record
+
+- Confirmed no source, config, run, or artifact files were modified.
+- Confirmed no benchmark run directory was created for T26.
+- Confirmed `docs/statcalib_feasibility_gate.md` explicitly says statcalib is not implemented and not validated.
+- Confirmed the future implementation recommendation in the gate doc includes a separate boundary, metrics/validation plan, and a no-go line for frozen-set expansion.
+
+## Captain Closeout
+
+- Closeout date: `2026-05-12`
+- Independent review: `docs/review/T26_review.md`
+- Captain verdict: `PASS`
+- Blocking issues: none
+- Non-blocking comments:
+  - accepted: worker self-review / for-human doc brevity is acceptable for a docs-only feasibility gate
+  - accepted as follow-up constraint: future implementation must tighten `StatCalibInput` / `StatCalibOutput` into exact field names, types, and status semantics
+  - deferred: none
+  - rejected: none
+- Gate result: `CONDITIONAL_GO`
+- Follow-up task: `T30: Statcalib comparator interface contract and bounded implementation package`

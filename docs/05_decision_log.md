@@ -1356,3 +1356,84 @@ Project Manager 明确指出：论文发表是最终目标，但当前仍应一�
 2. 新增 `docs/tasks/Phase2/T26_statcalib_feasibility_gate.md`。
 3. `docs/07_handoff.md` 记录 T29 Captain verdict、warning 分类与 T26 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 将 R22 标为已收口，并更新当前开放问题与下一任务口径。
+
+## D-2026-05-12-03
+
+- 日期：`2026-05-12`
+- 决策：接受 `T26` independent review 的 `PASS`，标记 `T26` 完成，并将当前唯一任务切换为 `T30: Statcalib comparator interface contract and bounded implementation package`
+
+### 背景
+
+`T26` 是 docs-only/read-only feasibility gate。`docs/review/T26_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. `docs/statcalib_feasibility_gate.md` 已形成，并给出 `CONDITIONAL_GO`。
+2. statcalib 当前仍未实现、未验证，不能从 T24-T29 结果中推断为已有 evidence。
+3. statcalib 只能作为 separate comparator lane 推进，不得静默插入 T24 frozen benchmark set。
+4. 本轮未修改 source/config/run/artifact，未运行 benchmark，未新增 run dir。
+
+### Non-blocking comments
+
+1. Worker self-review doc 较薄
+   - 分类：`accepted`
+   - 处理：对 docs-only gate 可接受；后续 implementation task 必须给出更完整 audit trail
+2. For-human doc 很简短
+   - 分类：`accepted`
+   - 处理：不阻塞 T26；后续如进入实现/验证，应补更清晰的人读解释
+3. `StatCalibInput` / `StatCalibOutput` 仍是概念级接口
+   - 分类：`accepted as follow-up constraint`
+   - 处理：写入 T30 任务包，要求先收紧 exact field names / types / status semantics
+
+### 结论
+
+`T26` 可标记完成。Gate verdict = `CONDITIONAL_GO`：允许后续做最小 statcalib comparator lane，但前提是保持 separate comparator boundary，不改 frozen benchmark semantics。
+
+下一唯一任务切换到 `T30`。`T30` 不直接启动长跑、不扩展 formal benchmark、不触碰 `.tflite` 或真板范围；它只负责把 T26 的概念设计收紧为具体接口契约、最小实现边界和可审查的 bounded implementation package。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T26` 完成，并切换 `Current Unique Task` 到 `T30`。
+2. 新增 `docs/tasks/Phase2/T30_statcalib_interface_contract.md`。
+3. `docs/07_handoff.md` 记录 T26 Captain verdict、non-blocking comments 与 T30 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 更新 R18 与当前开放问题，明确 statcalib 后续仍不得改写 frozen benchmark 边界。
+
+## D-2026-05-13-01
+
+- 日期：`2026-05-13`
+- 决策：接受 `T30` independent adversarial review 的 `PASS`，标记 `T30` 完成，并将当前唯一任务切换为 `T36: seed=20260429 failure-mechanism diagnosis, bounded no-new-branch scope`
+
+### 背景
+
+`T30` 是 statcalib comparator 的接口契约与最小实现边界任务。`docs/review/T30_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. 新增 `cnn_fpga/decoder/statcalib.py`，定义 `StatCalibInput` / `StatCalibOutput`、status/reason、provenance 和 `DecoderRuntimeParams` conversion boundary。
+2. 新增 `tests/test_statcalib_interface.py`，覆盖 generated / not_generated / not_applicable / invalid input 等关键接口语义。
+3. `ParamMapper`、`SlowLoopRuntime`、P4 benchmark runner、config、formal protocol、baseline/scenario/seed/repeat policy 均未改变。
+4. T30 未新增 benchmark run dir，未把 statcalib 加入 frozen ranked set，未触碰 `.tflite` 或真板范围。
+
+### Warning 分类
+
+1. N1：`docs/statcalib_feasibility_gate.md` 的 T26 非声明仍写着 no source code changed，T30 后已过期
+   - 分类：`accepted`
+   - 处理：Captain closeout 已在 gate 文档中按 T26/T30 时点修正，明确 T30 仅新增 interface-only source/tests，不等于 benchmark validation
+2. N2：`tests/` 目录无 `__init__.py`
+   - 分类：`accepted`
+   - 处理：当前 `python -m unittest tests.test_statcalib_interface` 可发现并通过；若测试目录增长，再单开测试布局整理
+3. N3：测试产生 `tests/__pycache__` side-effect
+   - 分类：`rejected as technical signal`
+   - 处理：按 T19/T28/T29 repo-noise 口径，不作为有意义技术改动提交
+4. N4：`from_delta_b()` 使用 `prior.b + delta_b`，是最小 residual-b baseline
+   - 分类：`deferred`
+   - 处理：写入 R24；未来 statcalib integration/calibration logic 必须重新验证，不能把当前接口 helper 外推为完整 calibration comparator
+
+### 结论
+
+`T30` 可标记完成。它完成的是 interface-level contract 和 focused tests，不是 slow-loop runtime integration、formal benchmark evidence、`.tflite` runtime 或 real-board validation。
+
+下一唯一任务切换到 `T36`。理由是 `docs/02_experiment_plan.md` 已把 `seed=20260429` 的 Gated v5 收益收缩列为第一优先机制诊断；当前可以只读取既有结果做 bounded diagnosis，不需要重跑 benchmark 或扩新分支。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T30` 完成，并切换 `Current Unique Task` 到 `T36`。
+2. 新增 `docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`。
+3. `docs/07_handoff.md` 记录 T30 Captain verdict、warning 分类与 T36 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 新增 R24，并更新当前开放问题与下一任务口径。

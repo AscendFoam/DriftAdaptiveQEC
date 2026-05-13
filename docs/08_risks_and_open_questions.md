@@ -19,14 +19,15 @@
 | R13 | 真板 HIL 入口存在配置骨架，但距离可执行真板 smoke 仍缺设备、权限、寄存器一致性与日志证据 | 高 | `board_backend.py` 仍是 placeholder；设备缺失时会触发 `board_device_missing:...`；`schedule_commit(...)` 仍返回 `target_bank=None`、`version=None`、`ack_delay_us=None`；`step(...)` 返回空事件；`docs/real_board_hil_readiness.md` 已固定前置条件与验收标准 | 后续若推进真板路径，必须单开执行任务，逐层补齐设备存在、寄存器活性、DMA 读出与 commit/ack round-trip 证据，在此之前禁止写成 real-board HIL 已完成 |
 | R14 | T22 已把寄存器来源、DMA 审计清单和量化阈值草案具体化，但真实宿主、bitstream 与 DMA contract 仍未验证 | 中高 | `docs/real_board_smoke_execution_plan.md` 已直接映射 `axi_map.py` / `dma_client.py`，`docs/review/T22_review.md` 确认 AXI/DMA 审计清单与源码吻合；但 N2 指出 preflight 输出格式仍需改进，N3 指出 `byte_count = 4096` 依赖 `32 x 32 float32` 假设 | 后续若进入真板执行任务，必须先选择宿主模型，再用实际 bitstream / RTL / DMA contract 确认地址表、histogram shape、element dtype、timeout 与 commit/ack 阈值 |
 | R15 | Phase 2 当前已完成一轮 milestone queue，但证据仍混合停留在 development / bootstrap / manifest / readiness 层，若直接升级到 formal benchmark、真实 `.tflite` runtime、physical cleanup 或 real-board validation，容易再次打破边界诚实 | 高 | `docs/review/T21_phase2_milestone_review.md` verdict = `Conditional`；`T15` 仍只是 `development_smoke`；`T18` 真实 runtime 不可用；`T19` 未执行 cleanup；`T20` 不是真板验证 | 保持 `Phase 2: Controlled Development` / `Go`，继续只开 bounded 下一任务；优先补 `T22` 这类 execution-plan 级文档任务，而不是直接进入高风险执行任务 |
-| R16 | 把“最终要发论文”误压缩成最近任务直接写论文 claim，容易跳过 formal benchmark、机制诊断和部署边界证据 | 高 | `T24` 已完成 frozen-set formal software revalidation，`T25` 已确认其 result boundary，`T27/T28` 已缩窄并修复 teacher diagnostics 输出语义，`T29` 已修复人读 report header；但 `T18` 未恢复真实 `.tflite` runtime，`T22` 不是 hardware validation，R10 仍不是完整机制证据 | Paper claim/evidence ledger 仍应推迟到机制证据更清楚之后；当前 `T26` 只做 statcalib feasibility gate，不写论文 claim |
+| R16 | 把“最终要发论文”误压缩成最近任务直接写论文 claim，容易跳过 formal benchmark、机制诊断和部署边界证据 | 高 | `T24` 已完成 frozen-set formal software revalidation，`T25` 已确认其 result boundary，`T27/T28` 已缩窄并修复 teacher diagnostics 输出语义，`T29` 已修复人读 report header，`T26` 已完成 statcalib feasibility gate；但 `T18` 未恢复真实 `.tflite` runtime，`T22` 不是 hardware validation，R10 仍不是完整机制证据 | Paper claim/evidence ledger 仍应推迟到机制证据更清楚之后；当前 `T30` 只做 statcalib interface contract / bounded implementation package，不写论文 claim |
 | R17 | 深度研究报告建议的 formal benchmark 范围可能显著扩大，若无分级采纳会把 T23 变成不可执行的大任务 | 中高 | `docs/reference/进一步的深度研究结果.md` 建议加入强 classical / soft-information / calibration / learned baseline 类别、更多 drift families、训练/评测 seed 分离、置信区间、latency/commit/rollback 指标和 statcalib baseline | T23 只做 protocol lock：必须把建议分类为 adopted / deferred / rejected，并通过 go/no-go 判断 T24 是执行 formal run 还是先补 prerequisite |
-| R18 | `T24` 已按 frozen-set scope 完成，但若后续把 `statcalib`、soft-information、额外 drift families、CI-driven stopping、`.tflite` runtime 或真板边界并入同一任务，仍会重新打破 scope | 中高 | `docs/P4_benchmark_formal_protocol.md` 已把 `T24` gate 锁为 `GO_FOR_BOUNDED_FORMAL_SOFTWARE_REVALIDATION` + `NO_GO_FOR_SCOPE_EXPANSION_INSIDE_T24`；T24 实际完成 matrix 为 `4 scenarios x 5 modes x 2 repeats`；T25 已接受该边界 | `T26` 只允许评估 `statcalib` feasibility 和最小设计；不得实现 comparator、soft-information、额外 scenario family、true `.tflite` 或真板边界 |
+| R18 | `T24` 已按 frozen-set scope 完成，但若后续把 `statcalib`、soft-information、额外 drift families、CI-driven stopping、`.tflite` runtime 或真板边界并入同一任务，仍会重新打破 scope | 中高 | `docs/P4_benchmark_formal_protocol.md` 已把 `T24` gate 锁为 `GO_FOR_BOUNDED_FORMAL_SOFTWARE_REVALIDATION` + `NO_GO_FOR_SCOPE_EXPANSION_INSIDE_T24`；T24 实际完成 matrix 为 `4 scenarios x 5 modes x 2 repeats`；T25 已接受该边界；T26 gate verdict = `CONDITIONAL_GO` for separate comparator lane only | `T30` 只允许收紧 statcalib concrete interface contract 与 separate comparator lane 最小实现边界；不得把 comparator 并入 frozen ranked set，不得扩展 soft-information、额外 scenario family、true `.tflite` 或真板边界 |
 | R19 | T24 formal execution 已固定 exact CLI 和报告了 metric availability | 已收口 | T24 已使用 repeat-chunked CLI shape，所有请求统计字段已存在于 `comparison.csv`；`correction_saturation_rate_mean` 全零、teacher diagnostics 全零已报告为缺口 | R19 已由 T24 Worker 收口；后续若 runner 更新指标路径，需重新验证 |
 | R20 | `correction_saturation_rate_mean` 在 T24 所有 20 个 scenario/mode rows 中结构性为 0.0；T27 已证明它不共享 teacher diagnostics 死路径，但尚未证明所有参数区间都不会触发 | 中 | `docs/review/T27_teacher_diagnostics_path_audit.md` 指出该字段来自 `fast_loop_emulator.py` 独立 saturation counter，并由 HIL summary 转抄到 `comparison.csv`；当前 T24 更像现参数区间下 genuine zero | R20 remains open but materially narrowed；不在 T28 中扩大 stress run，后续如需证明触发性应单开 edge/stress 任务 |
 | R21 | Teacher diagnostics downstream missing-vs-zero writer 语义已由 T28 修复 | 已收口 | `docs/review/T28_review.md` 确认 T28 smoke 中 `ukf` 为 `not_applicable`、`hybrid_residual_b` 为 `not_generated`，missing numeric teacher diagnostics 保持 empty/null，`correction_saturation_rate_mean = 0.0` 保持为独立 observed zero | R21 对当前 writer 语义关闭；未来若再次改 aggregation/report writer，应保留 `not_generated` / `not_applicable` / `true zero` 区分 |
 | R22 | T28 后 `_write_report()` markdown report 存在重复 header row，导致人读 report 表格列数不一致 | 已收口 | `docs/review/T29_review.md` verdict = `PASS`；旧 11-column header 已删除；验证得到 `header_rows=1`、`column_counts=[12, 12, 12]` | R22 已由 T29 收口；未来若再改 aggregation/report writer，应按 R23 补 focused test 或静态 report-shape check |
 | R23 | Aggregation/report writer 缺少 focused unit/static tests，未来可能再次出现格式或 null-semantics 回归 | 中 | `docs/review/T28_review.md` Missing Tests 指出相关路径没有现成 tests；T28 依赖 py_compile 和 bounded smoke 验证 | T28 可接受；后续再改 aggregation/report writer 时应补 focused unit test 或静态 report-shape check |
+| R24 | T30 的 `from_delta_b()` 只是最小 residual-b interface helper，未来若把它误当完整 statcalib/calibration comparator，可能把接口 contract 外推成未验证算法能力 | 中 | `docs/review/T30_review.md` N4 指出当前 baseline 逻辑为 `prior.b + delta_b`，适合 residual-b comparator contract，但不是完整 calibration logic；T30 只做 interface-level tests | 后续 statcalib slow-loop integration 或 benchmark task 必须重新验证 calibration objective、fallback semantics、status propagation 和 ranking boundary，不得直接把 T30 helper 写成 validated statcalib comparator |
 
 ## 当前开放问题
 
@@ -42,8 +43,9 @@ Current T24-T29 status note:
 - `T27` Captain 已接受 path audit 为 `PASS_WITH_WARNINGS`；R10 已缩窄为 broadcast teacher layout 与 scalar explain diagnostics 前提不匹配，R20 已缩窄为独立 fast-loop saturation path。
 - `T28` Captain 已接受 review 为 `PASS_WITH_WARNINGS`；R21 对当前 writer 语义已收口，R10 进一步缩窄但不关闭。
 - `T29` Captain 已接受 review 为 `PASS`；R22 对 P4 markdown report duplicate header 已收口。
-- 当前唯一任务：`T26: Calibration/statcalib baseline feasibility gate and minimal design plan`，任务包 `docs/tasks/Phase2/T26_statcalib_feasibility_gate.md`。
-- `T36` 仍是路线图中的 pending 候选，但当前不作为下一任务执行；T26 先锁定 statcalib/calibration comparator 的可行性与边界。
+- `T26` Captain 已接受 review 为 `PASS`；gate verdict = `CONDITIONAL_GO`，statcalib 只能作为 separate comparator lane 后续推进。
+- `T30` Captain 已接受 review 为 `PASS`；已完成 statcalib interface-only contract 和 focused tests，但不等于 slow-loop integration、formal benchmark evidence、`.tflite` runtime 或 real-board validation。
+- 当前唯一任务：`T36: seed=20260429 failure-mechanism diagnosis, bounded no-new-branch scope`，任务包 `docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`。
 - R13 当前仍然有效：真板路径还缺设备存在、权限、寄存器活性、DMA 读出和 commit/ack round-trip 的真实证据。
 - R14 当前仍然有效但已收窄：AXI/DMA 代码侧审计已具体化，真实宿主、bitstream 与 DMA contract 仍未验证。
 - R19 已收口：T24 已固定 CLI shape 并报告 metric availability。
@@ -77,7 +79,9 @@ Current T24-T29 status note:
 9. 下一张继续开发任务包应该优先选哪一类？
    - 当前答案：
      - `T29` 已完成并由 Captain 接受为 `PASS`。
-     - 当前唯一任务为 `T26` calibration/statcalib baseline feasibility gate，任务包已存在：`docs/tasks/Phase2/T26_statcalib_feasibility_gate.md`。
+     - `T26` 已完成并由 Captain 接受为 `PASS`。
+     - `T30` 已完成并由 Captain 接受为 `PASS`。
+     - 当前唯一任务为 `T36` seed=20260429 failure-mechanism diagnosis，任务包已存在：`docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`。
 10. `T15` 是否应直接运行多场景 P4 smoke？
    - 当前答案：已执行完成。
      - run dir: `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
@@ -240,8 +244,23 @@ Current T24-T29 status note:
      - N1 tracked `.pyc` side-effect 按 known repo-noise / rejected technical signal 处理，不作为技术改动提交。
 39. T26 是否可以提交给 Worker 推进？
    - 当前答案：
-     - 可以，但只限 `docs/tasks/Phase2/T26_statcalib_feasibility_gate.md` 定义的只读门控范围。
-     - Worker 不得实现 comparator、运行 benchmark、新增 run dir、修改 source/config、改 formal protocol、触碰 `.tflite` 或真板路径。
+     - 不再提交；T26 已完成并通过 Captain `PASS` 收口。
+     - T26 的 follow-up 是 T30：只允许收紧 interface contract 与 separate comparator lane 最小实现边界，不得运行 benchmark、新增 formal run dir、改 formal protocol、触碰 `.tflite` 或真板路径。
+40. T30 是否可以提交给 Worker 推进？
+   - 当前答案：
+     - 不再提交；T30 已完成并通过 Captain `PASS` 收口。
+     - T30 的 output 是 interface-only statcalib contract 和 focused tests，不是 slow-loop integration 或 formal benchmark evidence。
+41. T30 reviewer warnings 如何处理？
+   - 当前答案：
+     - N1 gate doc stale non-claim：`accepted`，Captain 已修正 `docs/statcalib_feasibility_gate.md`。
+     - N2 `tests/` 无 `__init__.py`：`accepted`，当前 unittest 发现机制足够；后续测试目录增长时再整理。
+     - N3 `tests/__pycache__` side-effect：`rejected as technical signal`，不作为有意义技术改动提交。
+     - N4 residual-b baseline assumption：`deferred`，已写入 R24。
+42. T36 是否可以交给 Worker？
+   - 当前答案：
+     - 可以，但只能做只读/分析型 failure-mechanism diagnosis。
+     - 允许读取既有 `runs/teachrepr*` 结果并产出诊断报告/小型分析脚本。
+     - 禁止重跑 benchmark、训练、扩新分支、改模型、改 formal benchmark 口径、触碰 `.tflite` 或真板路径。
 
 ## 暂缓事项
 
@@ -251,6 +270,7 @@ Current T24-T29 status note:
 2. load-aware latency injector
 3. stateful fault injector
 4. bit-accurate control pipeline
-5. teacher-representation 新分支扩展
+5. teacher-representation 新分支扩展或长跑
 6. 未经 `T14` 审计的 P4 长跑或正式 benchmark
 7. 未经新任务包批准的 P4 剩余场景补跑
+8. statcalib slow-loop integration 或 formal benchmark integration
