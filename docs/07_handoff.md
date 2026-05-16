@@ -2,18 +2,19 @@
 
 ## 1. 当前状态
 
-- 日期：`2026-05-13`
+- 日期：`2026-05-16`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T38: seed=20260429 single-seed trace-export probe, bounded unchanged-semantics rerun`
-- 任务包：`docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`
+- 当前唯一任务：`T31: Training-chain portable dependency lock plan`
+- 任务包：`docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md`
 
-Captain closeout note after T36:
+Captain closeout note after T38 and Milestone 2I:
 
-- `T36` is complete. `docs/review/T36_review.md` verdict = `PASS`; blocking issues = none.
-- `docs/seed20260429_failure_diagnosis.md` narrows the seed-specific shrinkage to a residual-amplitude / teacher-delta regime instability hypothesis.
-- T36 remains summary/final-snapshot level only; it does not prove sign offset, overshoot chronology, or exact teacher-vs-CNN attribution because existing artifacts lack per-window committed-parameter traces.
-- The active next task is `T38`, not `T36`. Any older T36-next wording later in this handoff is superseded by this status block and `docs/04_task_board.md`.
+- `T38` is complete. `docs/review/T38_review.md` verdict = `PASS`; blocking issues = none.
+- T38 warnings N1/N2/N3/N4 are all `accepted`; there are no `deferred` or `rejected` warnings from this review.
+- `docs/review/Milestone2I_review.md` verdict = `Conditional Allow`.
+- `R10` is narrowed by trace-level evidence but remains open; T38 is not mitigation, multi-seed confirmation, formal benchmark expansion, `.tflite` runtime validation, or real-board validation.
+- The active next task is `T31`, not `T38`. Any older T38-next wording later in this handoff is superseded by this status block and `docs/04_task_board.md`.
 
 ## 2. 本轮已完成
 
@@ -675,3 +676,24 @@ T38 任务边界：
 4. 真板 backend 能力扩写
 5. 任何未获 Captain 明确批准的物理 repo cleanup
 6. paper-inspired 新分支实现
+
+## 9. 2026-05-16 Captain Supersession
+
+This section supersedes older T38-next wording in sections above.
+
+45. T38 reviewer warnings 如何处理？
+   - 当前答案：
+     - Verdict：`PASS`；blocking issues: none。
+     - N1 unused imports：`accepted` as cosmetic。
+     - N2 `missing_runs = 0` wording versus JSON `missing_runs: []`：`accepted`，未来文档应写精确数据格式。
+     - N3 report 未显式解释 `sqrt(2) * 0.12` 常数：`accepted`，只影响说明清晰度。
+     - N4 initial timeout and same-dir resume：`accepted`，最终 evidence 完整。
+46. Milestone 2I 是否允许进入下一里程碑？
+   - 当前答案：
+     - 允许，但结论是 `Conditional Allow`。
+     - 已完成 bounded mechanism-evidence hardening；仍未关闭 clean-environment reproducibility、mitigation、多 seed confirmation、真实 `.tflite` runtime 和真板 validation。
+47. T31 是否可以交给 Worker？
+   - 当前答案：
+     - 可以。当前唯一任务是 `T31: Training-chain portable dependency lock plan`。
+     - Allowed files: `docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md`, `docs/training_chain_portable_dependency_lock_plan.md`, `docs/review/T31_review.md`, `docs/for_human/T31_explanation.md`。
+     - Worker 只允许做 read-only interpreter/package inventory 和 dependency-lock planning；不得安装依赖、运行训练、运行 benchmark、创建 `runs/` 或 `artifacts/`、修改 source/config/protocol/baseline/seed policy。

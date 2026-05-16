@@ -9,12 +9,20 @@
 ## 2. 基本信息
 
 - 快照日期：`2026-05-05`
-- 最近更新：`2026-05-12`
+- 最近更新：`2026-05-16`
 - 当前分支：`main`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
 - 当前决策状态：`Go`
 - 当前唯一任务来源：`docs/04_task_board.md`
+
+## 2026-05-16 Captain Update
+
+- `T38` reviewer verdict accepted by Captain as `PASS`.
+- `T38` warnings are all classified as `accepted`; there are no `deferred` or `rejected` warnings from this review.
+- Milestone 2I review is recorded in `docs/review/Milestone2I_review.md`; verdict = `Conditional Allow`.
+- Current unique task is now `T31: Training-chain portable dependency lock plan`.
+- `T31` is a documentation/environment-boundary task only. It must not install packages, run training, run benchmark, create new `runs/` or `artifacts/`, or modify `docs/02_experiment_plan.md`.
 
 ## 3. 解决什么问题
 

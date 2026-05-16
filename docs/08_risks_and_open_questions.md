@@ -287,3 +287,26 @@ Current T24-T29 status note:
 6. 未经 `T14` 审计的 P4 长跑或正式 benchmark
 7. 未经新任务包批准的 P4 剩余场景补跑
 8. statcalib slow-loop integration 或 formal benchmark integration
+
+## 2026-05-16 Captain Update
+
+45. T38 review 如何裁决？
+   - 当前答案：
+     - Captain verdict = `PASS`。
+     - N1/N2/N3/N4 全部归类为 `accepted`。
+     - 没有 `deferred` warning，因此未从 T38 warning 分类新增 risk。
+46. Milestone 2I 是否允许进入下一里程碑？
+   - 当前答案：
+     - `docs/review/Milestone2I_review.md` verdict = `Conditional Allow`。
+     - 允许进入下一 bounded milestone，但不允许把 T38 写成 full causal proof、mitigation success、clean-env proof、runtime validation 或 real-board validation。
+47. 当前下一唯一任务是什么？
+   - 当前答案：
+     - `T31: Training-chain portable dependency lock plan`。
+     - 任务包为 `docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md`。
+     - T31 只做 clean-environment / dependency-lock plan，不安装依赖、不训练、不运行 benchmark、不创建 `runs/` 或 `artifacts/`。
+
+### Risk Status Update
+
+- `R10` remains open but narrowed: T38 provides trace-level evidence for seed=20260429, but does not provide mitigation, multi-seed confirmation, or upstream root-cause isolation.
+- `R11` remains open: training-chain portability is not yet proven. T31 is created to plan the dependency-lock and clean-environment boundary without claiming verification.
+- `R20`, `R23`, and `R24` remain valid and are not closed by T38 or the Milestone 2I review.

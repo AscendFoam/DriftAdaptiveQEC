@@ -1478,3 +1478,43 @@ Project Manager 明确指出：论文发表是最终目标，但当前仍应一�
 2. 新增 `docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`。
 3. `docs/07_handoff.md` 记录 T36 Captain verdict、warning 分类与 T38 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 更新 R10 和当前开放问题，明确 T38 只补 trace 证据缺口，不扩大 benchmark。
+
+## D-2026-05-16-01
+
+- 日期：`2026-05-16`
+- 决策：接受 `T38` adversarial review 的 `PASS`，标记 `T38` 完成；完成 Milestone 2I comprehensive review，结论为 `Conditional Allow`；将当前唯一任务切换为 `T31: Training-chain portable dependency lock plan`
+
+### 背景
+
+`T38` 是 `seed=20260429` single-seed trace-export probe。`docs/review/T38_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. Required trace fields are present for `4798 / 4798` trace rows.
+2. Required report sections are present in `docs/seed20260429_trace_export_diagnosis.md`.
+3. Scope stayed bounded to unchanged benchmark semantics and a T38-scoped run root.
+4. T38 did not expand baseline/scenario/seed policy and did not touch `.tflite`, real-board, or statcalib integration boundaries.
+
+### Warning 分类
+
+1. N1 unused imports in `cnn_fpga/benchmark/analyze_seed20260429_trace.py`: `accepted` as cosmetic.
+2. N2 task package wording `missing_runs = 0` versus JSON `missing_runs: []`: `accepted`; semantically equivalent, but future task packages should state exact data format.
+3. N3 report does not explicitly explain `max_abs_delta_b=0.169705627 = sqrt(2) * 0.12`: `accepted`; clarity improvement only.
+4. N4 initial tool timeout followed by successful resume in the same run dir: `accepted`; final evidence has `missing_runs=[]`, `raw_rows=16`, `comparison_rows=8`.
+
+No T38 warnings are `deferred`; no new risk entry is required from warning classification.
+
+### Milestone 2I Review
+
+`docs/review/Milestone2I_review.md` records the comprehensive milestone review. Verdict = `Conditional Allow`.
+
+Milestone 2I is complete within its bounded scope: mechanism-evidence hardening and trace-level diagnosis improved confidence, but it does not close clean-environment reproducibility, mitigation, multi-seed confirmation, true `.tflite` runtime validation, or real-board validation.
+
+### 结论
+
+`T38` is complete and accepted as `PASS`. `R10` is narrowed but remains open. The next unique task is `T31`, because Milestone 2I review identifies training-chain portability and clean-environment reproducibility as the most appropriate next bounded milestone entry.
+
+### 直接影响
+
+1. `docs/04_task_board.md` marks `T38` complete and switches `Current Unique Task` to `T31`.
+2. `docs/review/Milestone2I_review.md` is added as the milestone review output.
+3. `docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md` is added as the next task package.
+4. `docs/07_handoff.md` and `docs/08_risks_and_open_questions.md` are updated to preserve the T38 warning classification and T31 execution boundary.

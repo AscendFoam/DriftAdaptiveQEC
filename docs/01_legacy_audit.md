@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T38: seed=20260429 single-seed trace-export probe, bounded unchanged-semantics rerun`
+  - `T31: Training-chain portable dependency lock plan`
 
 说明：
 
@@ -62,6 +62,13 @@
 - `T24` 已完成 frozen-set formal software revalidation，并由 Captain 接受为 `PASS_WITH_WARNINGS`
 - `T25` 已完成 result-boundary gate review，并确认 T24 只能作为 `mock-backed` software HIL formal software revalidation
 - 后续 P3/P4 文档与复验结果都应沿用同一套 backend / artifact type 表述口径
+
+### 2026-05-16 Captain Update
+
+- `T38` has been accepted as `PASS`; it produced bounded seed=20260429 trace-export evidence without changing benchmark semantics.
+- Milestone 2I is closed as `Conditional Allow`, not as full causal proof, true `.tflite` runtime validation, real-board validation, or paper-grade benchmark completion.
+- `R10` is narrowed by T38 trace evidence but remains open because mitigation, multi-seed confirmation, and upstream root-cause isolation are still absent.
+- Current unique task is `T31`, focused on training-chain portable dependency-lock planning and clean-environment reproducibility boundaries.
 
 ## 3. 可行性判断
 

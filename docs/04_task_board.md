@@ -140,13 +140,19 @@
   - Review output: `docs/review/T36_review.md`
   - Captain verdict: `PASS`
   - Conclusion: existing artifacts narrow `seed=20260429` to a residual-amplitude / teacher-delta regime instability hypothesis, but do not expose per-window committed-parameter traces; no benchmark rerun or branch expansion occurred
-- [ ] T38: `seed=20260429` single-seed trace-export probe, bounded unchanged-semantics rerun
+- [x] T38: `seed=20260429` single-seed trace-export probe, bounded unchanged-semantics rerun
   - Task package: `docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`
+  - Trace diagnosis: `docs/seed20260429_trace_export_diagnosis.md`
+  - Review output: `docs/review/T38_review.md`
+  - Captain verdict: `PASS`
+  - Run root: `runs/T38_seed20260429_trace_probe_20260513`
+  - Result: `4798` trace rows with required fields present; combined committed-`b` instability is trace-supported for `seed=20260429`, but still seed-bounded diagnostic evidence
+  - Milestone gate: `docs/review/Milestone2I_review.md` verdict = `Conditional Allow`
 
 ### Milestone 2J: Reproducibility And Deployment Boundary
 
 - [ ] T31: Training-chain portable dependency lock plan
-  - Task package: pending
+  - Task package: `docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md`
 - [ ] T32: True `.tflite` runtime smoke, only if environment is available
   - Task package: pending
 - [ ] T33: Tracked cache physical cleanup execution, only within T19 manifest
@@ -167,45 +173,48 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T38: seed=20260429 single-seed trace-export probe, bounded unchanged-semantics rerun`
+`T31: Training-chain portable dependency lock plan`
 
 状态说明：
 
-- `T36` 已完成并通过 adversarial review，Captain verdict = `PASS`
-- `T36` 只读取既有 `runs/teachrepr*` artifacts，未重跑 benchmark、未扩 teacher-representation 分支、未改变模型/config/formal benchmark/runtime/board 边界
-- T36 review non-blocking comments：
-  - N1 unused `Iterable` import：`accepted` as cosmetic，不要求返工
-  - N2 hardcoded artifact folder mappings：`accepted` for bounded diagnostic script；未来 reusable tool 需动态发现
-  - N3 worker pre-review file overwritten by adversarial review：`accepted`，任务包已保留 Worker verification record
-- `R10` 仍未关闭：T36 将失败机制缩窄到 residual-amplitude / teacher-delta regime instability hypothesis，但缺少 per-window trace，不能给出因果证明
+- `T38` 已完成并通过 adversarial review，Captain verdict = `PASS`
+- T38 review non-blocking comments：
+  - N1 unused imports：`accepted` as cosmetic，不要求返工
+  - N2 `missing_runs = 0` vs actual `missing_runs = []`：`accepted`，语义等价但后续文档应更精确
+  - N3 `max_abs_delta_b` 常数缺少几何解释：`accepted`，不影响结论；`sqrt(2) * 0.12` 解释可在后续引用中补充
+  - N4 initial timeout + resume：`accepted`，确认是同一 T38 run dir 的 resumable probe
+- `Milestone 2I` 已完成 milestone review，verdict = `Conditional Allow`
+- `R10` 仍未关闭但显著缩窄：T38 trace 支持 combined committed-`b` instability；上游 teacher vs CNN residual root cause 尚未完全隔离
 - `R20` 仍未关闭：correction saturation structural zero 仍需后续独立 edge/stress 判断
 - `R23` 仍未关闭：aggregation/report writer 缺少 focused tests 的风险仍存在
 - `R24` 仍有效：statcalib 目前只是接口级 residual-b contract，不能外推为完整 calibration comparator 或 benchmark evidence
-- `T38` 是 T36 推荐的最小后续：只为 `seed=20260429` 导出 per-window trace，保持 benchmark 语义、baseline/scenario、seed/repeat policy 不变
+- `T31` 是 Milestone 2J 的进入任务：只做 training-chain portable dependency lock plan，不安装包、不运行训练、不改源码
 
 为什么现在做它：
 
-1. T36 已确认现有 artifacts 足以排除 response lag / overflow / dead teacher branch，但不足以判断 sign offset、overshoot chronology 或 teacher/CNN/committed-b 的具体归因。
-2. Reviewer 推荐的最小后续是单 seed trace-export；该任务直接补 T36 证据缺口，而不是扩大 benchmark 或新增模型分支。
-3. T38 可以保持 `Full` vs `Gated v5`、四场景、`seed=20260429` 与既有语义不变，只增加可审查 trace 输出。
-4. 在获得 trace 前，直接推进新 teacher branch、statcalib integration、paper claim 或 formal benchmark expansion 都会把 hypothesis 写得过满。
+1. Milestone 2I 已把机制证据从 summary-level hypothesis 推进到 single-seed trace-supported diagnosis。
+2. Milestone review 的最弱项是 clean-environment reproducibility；training chain 仍只有本机 bootstrap 和 dev torch 事实，没有 portable lock plan。
+3. 在做 mitigation probe、paper claim、TFLite 或真板前，应先把训练链依赖边界写清，避免后续结果无法复现。
+4. T31 是 docs/environment-boundary task，不会改变模型、benchmark、formal protocol 或部署边界。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T38`
-2. `T36` 已按 `PASS` 收口。
-3. T36 review blocking issues：
+1. 当前唯一任务：`T31`
+2. `T38` 已按 `PASS` 收口。
+3. T38 review blocking issues：
    - none
-4. T36 non-blocking comments：
-   - accepted: unused `Iterable` import is cosmetic
-   - accepted: hardcoded folder mappings are acceptable for bounded frozen-artifact diagnosis
-   - accepted: adversarial review overwrote worker pre-review file; Worker verification remains in the task package
-5. T38 任务包：`docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`
+4. T38 non-blocking comments：
+   - accepted: unused imports are cosmetic
+   - accepted: `missing_runs` format wording is semantically correct but should be precise in future
+   - accepted: constant `max_abs_delta_b` explanation could be clearer but does not affect trace validity
+   - accepted: timeout/resume was one resumable T38 probe, not multiple independent runs
+5. Milestone 2I review：`docs/review/Milestone2I_review.md`
+6. T31 任务包：`docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md`
 
-## Done Criteria For T38
+## Done Criteria For T31
 
-1. Add the smallest trace-export instrumentation needed to capture per-window `teacher_b`, predicted `delta_b`, committed `b`, and window-level outcome/utilization for `seed=20260429`.
-2. Preserve benchmark semantics: no new model branch, no new baseline, no scenario expansion, no formal benchmark protocol change, no `.tflite` or real-board path.
-3. Execute only the bounded single-seed trace-export probe specified in the task package, and write outputs to a clearly T38-scoped run/report path.
-4. Compare the trace against T36 hypotheses without upgrading the result to broad formal benchmark evidence.
-5. Update the T38 task package, review output, for-human explanation, and trace diagnosis report as required by the package.
+1. Inventory local training interpreters and package evidence without mutating environments.
+2. Map training entrypoint dependencies for static theta, residual-b, and Gated-v5 / teacher representation paths.
+3. Propose a portable dependency-lock strategy while separating local `DLEnv` facts from portable guarantees.
+4. Do not install packages, run training/benchmark, create `runs/` or `artifacts/`, or repurpose `requirements-recovery.txt`.
+5. Update the T31 task package, review output, for-human explanation, and dependency lock plan document as required by the package.

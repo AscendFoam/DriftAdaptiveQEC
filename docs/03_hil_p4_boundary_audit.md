@@ -79,6 +79,8 @@
 - `T28` 已完成 missing-vs-zero writer 语义修复和最小 smoke；`T29` 已修复 P4 markdown report 重复表头并通过 review。`T26` 已完成 calibration/statcalib docs-only feasibility gate，结论为 `CONDITIONAL_GO`；`T30` 已完成 statcalib separate comparator interface contract 和 interface-level tests，但未接入 slow loop、未进入 frozen benchmark、未形成 runtime/board evidence。
 - `T36` 已完成 `seed=20260429` teacher-representation 收益收缩诊断，结论仍是 summary/final-snapshot-level hypothesis；不得把该诊断输出写成新的 benchmark evidence。
 - `T38` 若做 `seed=20260429` trace-export probe，只能在 unchanged semantics 下补 per-window trace；不得启动新长跑、不得扩 baseline/scenario、不得改变 P3/P4/HIL 边界。
+- `T38` 已完成并通过 Captain `PASS` 收口；其输出只能表述为 single-seed trace-level mechanism evidence，不能表述为 formal benchmark、runtime validation、real-board validation 或 mitigation success。
+- `T31` 只允许补 training-chain portable dependency-lock plan；不得改变 P3/P4/HIL 边界，不得安装依赖、运行训练、运行 benchmark、创建 run/artifact，或把本机 `DLEnv` 事实写成跨机器保证。
 
 ## 7. 当前推荐表述
 
@@ -90,6 +92,7 @@
 - 可以说：`P4 formal software revalidation is not deployment, true TFLite runtime, or hardware validation.`
 - 可以说：`statcalib now has an interface-only contract and tests, but it is not integrated into slow-loop or formal benchmark evidence.`
 - 可以说：`T36 narrows seed=20260429 to a residual-amplitude / teacher-delta hypothesis, but trace-level causality is still open.`
+- 可以说：`T38 adds bounded single-seed trace evidence for seed=20260429, but R10 remains open until mitigation and broader confirmation exist.`
 - 可以说：`Teacher diagnostics missing-vs-zero output semantics have been repaired for the current writer path, but this is still not a full mechanism-evidence repair.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`

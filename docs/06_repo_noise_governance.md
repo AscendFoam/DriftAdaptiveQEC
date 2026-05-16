@@ -172,3 +172,5 @@
 - `T30` statcalib comparator interface/implementation package 不得借机执行 tracked-cache cleanup、改写历史 `runs/` / `artifacts/`、或把接口 smoke 输出升级为 formal benchmark evidence；其测试产生的 `tests/__pycache__/` side-effect 只能按 repo-noise 处理，不作为任务输出提交。
 - `T36` seed failure diagnosis 已完成，只读取既有 `runs/teachrepr*` 结果并输出诊断文档/小型分析脚本；不得把该诊断输出重标为新的 benchmark run evidence。
 - `T38` seed trace-export probe 允许创建一个 T38-scoped run directory，但不得重写历史 `runs/` / `artifacts/`、不得借 trace probe 执行 cleanup、不得把单 seed trace 输出升级为 formal benchmark evidence。
+- `T38` 已完成；其 run root 只能作为 T38-scoped trace evidence 引用，不能重标为 formal benchmark、clean-environment proof、runtime validation 或 real-board validation。
+- `T31` 不允许创建或修改 `runs/` / `artifacts/`，不允许执行 cleanup，不允许安装/升级/删除依赖；如需读取本机 package evidence，只能作为 read-only inventory 写入文档并明确其非跨机器保证。
