@@ -83,6 +83,8 @@
 - `T31` 只允许补 training-chain portable dependency-lock plan；不得改变 P3/P4/HIL 边界，不得安装依赖、运行训练、运行 benchmark、创建 run/artifact，或把本机 `DLEnv` 事实写成跨机器保证。
 - `T31` 已完成并通过 Captain `PASS` 收口；其输出是 dependency-lock planning evidence，不是 clean-environment rebuild proof。
 - `T39` 只允许在 training-chain CPU-only clean-environment 范围内产出 draft lock 和 dry-run bootstrap；不得扩展到 GPU/CUDA portability、`.tflite` runtime、P3/P4 benchmark、real-board HIL、cleanup、baseline/scenario/seed policy 或正式训练结果。
+- `T39` 已完成并通过 Captain `PASS` 收口；其输出是 clean-environment draft lock 与 dry-run/import-level bootstrap evidence，不是 real-training result、benchmark、`.tflite` runtime validation 或 real-board validation。
+- `T40` 只允许在同一 clean CPU-only lane 内执行一次最小 real-training smoke，并把 `model_dir` / `report_dir` 重定向到 task-scoped isolated directories；不得改写 canonical historical `artifacts/models/*`、`artifacts/reports/*`，不得扩展到 benchmark、`.tflite` runtime、P3/P4/HIL、real-board、cleanup 或 GPU/CUDA portability。
 
 ## 7. 当前推荐表述
 
@@ -97,6 +99,7 @@
 - 可以说：`T38 adds bounded single-seed trace evidence for seed=20260429, but R10 remains open until mitigation and broader confirmation exist.`
 - 可以说：`Teacher diagnostics missing-vs-zero output semantics have been repaired for the current writer path, but this is still not a full mechanism-evidence repair.`
 - 可以说：`T31 produced a training-chain portable dependency-lock plan, but did not rebuild a clean environment.`
-- 可以说：`T39 may create a CPU-only clean-environment draft lock and dry-run bootstrap, but it is not a training run, benchmark, GPU portability proof, TFLite runtime validation, or real-board validation.`
+- 可以说：`T39 completed a CPU-only clean-environment draft lock and dry-run bootstrap, but it is not a real training run, benchmark, GPU portability proof, TFLite runtime validation, or real-board validation.`
+- 可以说：`T40 may run one isolated CPU-only minimal training smoke, but it is still not a benchmark, TFLite runtime validation, GPU portability proof, or real-board validation.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`

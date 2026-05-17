@@ -136,3 +136,106 @@ Focus areas:
 ## Captain Notes
 
 T39 is still a bounded reproducibility task, not a model-development task. If the environment cannot be created cleanly, a precise blocker report is acceptable and better than mutating the known-good local environments.
+
+## Worker Output
+
+- Read the required T39 inputs, including:
+  - `README.md`
+  - `AGENTS.md`
+  - `docs/00_project_snapshot.md`
+  - `docs/01_legacy_audit.md`
+  - `docs/02_experiment_plan.md`
+  - `docs/04_task_board.md`
+  - `docs/07_handoff.md`
+  - `docs/08_risks_and_open_questions.md`
+  - `docs/training_chain_bootstrap.md`
+  - `docs/training_chain_portable_dependency_lock_plan.md`
+  - `requirements-recovery.txt`
+  - `cnn_fpga/model/train.py`
+  - `cnn_fpga/data/dataset_builder.py`
+  - `cnn_fpga/data/runtime_dataset_builder.py`
+  - `cnn_fpga/config/experiment_static_theta_v2.yaml`
+  - `cnn_fpga/config/experiment_runtime_b_residual.yaml`
+  - `cnn_fpga/config/experiment_runtime_b_residual_norm_gated_teacher_v5.yaml`
+- Created a clean local environment:
+  - `.venvs/t39_train_cpu_py312/`
+  - interpreter: `D:\Codes\Quantum\DriftAdaptiveQEC\.venvs\t39_train_cpu_py312\Scripts\python.exe`
+- Added `requirements-train-cpu-win-py312.txt` as a CPU-only draft dependency artifact for the T39 dry-run/import-level scope.
+- Added `docs/training_chain_cpu_cleanenv_bootstrap.md`.
+- Added `docs/review/T39_review.md` as worker pre-review notes for later adversarial review.
+- Added `docs/for_human/T39_explanation.md`.
+- Updated this task package with worker output and verification records.
+- Did not modify:
+  - `docs/02_experiment_plan.md`
+  - `requirements-recovery.txt`
+  - source code
+  - model configs
+  - benchmark configs
+  - formal protocol
+  - baseline/scenario/seed/repeat policy
+- Did not run:
+  - training
+  - benchmark
+  - `.tflite`
+  - hardware
+  - cleanup
+- Did not mutate `DLEnv`.
+
+## Verification Record
+
+1. Clean environment creation:
+   - command:
+     - `& 'C:\ProgramData\anaconda3\python.exe' -m venv .venvs/t39_train_cpu_py312`
+   - result:
+     - passed
+     - created a clean Python `3.12` environment outside `DLEnv`
+2. Initial install attempt in sandbox:
+   - command:
+     - `& '.venvs\t39_train_cpu_py312\Scripts\python.exe' -m pip install numpy PyYAML`
+   - result:
+     - failed because outbound package download was blocked in the sandbox
+     - no fallback to `DLEnv` was used
+3. Approved clean-env dependency install:
+   - command:
+     - `& '.venvs\t39_train_cpu_py312\Scripts\python.exe' -m pip install numpy PyYAML`
+   - result:
+     - passed after approval
+     - installed:
+       - `numpy==2.4.5`
+       - `PyYAML==6.0.3`
+4. Environment metadata checks:
+   - commands:
+     - `& '.venvs\t39_train_cpu_py312\Scripts\python.exe' --version`
+     - `& '.venvs\t39_train_cpu_py312\Scripts\python.exe' -m pip list`
+   - result:
+     - `Python 3.12.7`
+     - packages present:
+       - `numpy 2.4.5`
+       - `PyYAML 6.0.3`
+       - `pip 24.2`
+5. Allowed dry-run/import-level verification:
+   - command:
+     - `& '.venvs\t39_train_cpu_py312\Scripts\python.exe' -m cnn_fpga.data.dataset_builder --config cnn_fpga/config/experiment_static_theta_v2.yaml --dry-run`
+   - result:
+     - passed
+     - printed dataset build plan only
+   - command:
+     - `& '.venvs\t39_train_cpu_py312\Scripts\python.exe' -m cnn_fpga.data.runtime_dataset_builder --config cnn_fpga/config/experiment_runtime_b_residual.yaml --dry-run`
+   - result:
+     - passed
+     - printed runtime dataset build plan only
+   - command:
+     - `& '.venvs\t39_train_cpu_py312\Scripts\python.exe' -m cnn_fpga.model.train --help`
+   - result:
+     - passed
+     - CLI help printed successfully
+6. Required git boundary checks:
+   - commands:
+     - `git diff --name-only -- runs artifacts`
+     - `git diff --name-only -- requirements-recovery.txt`
+   - result:
+     - both returned empty output
+7. Boundary honesty:
+   - `requirements-train-cpu-win-py312.txt` is separate from `requirements-recovery.txt`
+   - `docs/training_chain_cpu_cleanenv_bootstrap.md` explicitly limits claims to clean-env creation plus dry-run/import-level verification
+   - worker did not mark T39 as finished in task board or handoff

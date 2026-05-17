@@ -72,9 +72,9 @@
 
 ### 2026-05-17 Captain Update
 
-- `T31` has been accepted as `PASS`; it produced a training-chain portable dependency-lock plan without installing packages, running training, or modifying `runs/` / `artifacts` / `requirements-recovery.txt`.
-- `R11` is narrowed but remains open: T31 is not a clean-environment rebuild or full training reproducibility proof.
-- Current unique task is `T39`, focused on CPU-only clean-environment draft lock creation and dry-run/import-level bootstrap verification.
+- `T39` has been accepted as `PASS`; it produced a clean CPU-only environment artifact, a draft dependency lock, and dry-run/import-level bootstrap evidence without modifying `runs/`, `artifacts/`, source code, configs, or `requirements-recovery.txt`.
+- `R11` is further narrowed but remains open: T39 is not a real clean-environment training execution or full training reproducibility proof.
+- Current unique task is `T40`, focused on one bounded CPU-only clean-environment minimal real-training smoke with isolated output paths.
 
 ## 3. 可行性判断
 
@@ -352,8 +352,8 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T31`、`T36`、`T38` 已完成；当前下一唯一任务为 `T39`，只做 training-chain CPU-only clean-environment draft lock and dry-run bootstrap
+1. `T14` 至 `T31`、`T36`、`T38`、`T39` 已完成；当前下一唯一任务为 `T40`，只做 training-chain CPU-only clean-environment minimal real-training smoke
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 3. `T26` gate 结论为 `CONDITIONAL_GO`，且 `T30` 已把 statcalib 收紧为 interface-only separate comparator contract；后续仍不得把 statcalib 静默并入 T24 frozen benchmark set，不得扩展 formal benchmark、baseline/scenario、`.tflite` 或真板范围。
 4. `T36/T38` 已把 `seed=20260429` 诊断推进到 single-seed trace-supported mechanism evidence，但仍不是 mitigation 或 multi-seed causal proof。
-5. `T31` 已把训练链依赖边界从本机 bootstrap 推进到 portable dependency-lock plan；`T39` 是下一步最小 clean-environment 验证任务，仍不得把本机 `DLEnv` 或 dev torch 写成跨机器保证。
+5. `T31` 已把训练链依赖边界从本机 bootstrap 推进到 portable dependency-lock plan；`T39` 已把它推进到 clean-environment draft lock + dry-run/import-level bootstrap；`T40` 是下一步最小 real-training smoke 任务，仍不得把本机 `DLEnv`、dev torch、GPU/CUDA 或 canonical artifact paths 写成跨机器保证。

@@ -157,8 +157,14 @@
   - Review output: `docs/review/T31_review.md`
   - Captain verdict: `PASS`
   - Result: training-chain local interpreter/package facts and CPU-vs-GPU lock strategy are documented; clean-environment rebuild remains unverified
-- [ ] T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap
+- [x] T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap
   - Task package: `docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md`
+  - Bootstrap output: `docs/training_chain_cpu_cleanenv_bootstrap.md`
+  - Review output: `docs/review/T39_review.md`
+  - Captain verdict: `PASS`
+  - Result: clean CPU-only environment, draft dependency lock, and dry-run/import-level bootstrap are verified; real clean-environment training execution remains unverified
+- [ ] T40: Training-chain CPU-only clean-environment minimal real-training smoke
+  - Task package: `docs/tasks/Phase2/T40_training_chain_cpu_cleanenv_minimal_train_smoke.md`
 - [ ] T32: True `.tflite` runtime smoke, only if environment is available
   - Task package: pending
 - [ ] T33: Tracked cache physical cleanup execution, only within T19 manifest
@@ -179,49 +185,49 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap`
+`T40: Training-chain CPU-only clean-environment minimal real-training smoke`
 
 状态说明：
 
-- `T31` 已完成并通过 adversarial review，Captain verdict = `PASS`
-- T31 review blocking issues：
+- `T39` 已完成并通过 adversarial review，Captain verdict = `PASS`
+- T39 review blocking issues：
   - none
-- T31 review non-blocking comments：
-  - N1 markdown subsection numbering inconsistency：`accepted`，cosmetic only
-  - N2 `docs/training_chain_bootstrap.md` later alignment with T31 two-lane plan：`accepted`，future alignment only，不阻塞 T31
-  - N3 worker self-review file overwritten by adversarial review：`accepted`，符合当前 review 流程
-- 没有 T31 `deferred` warning；不因 T31 review 新增 risk
+- T39 review non-blocking comments：
+  - N1 version pin specificity：`accepted`，适合作为 draft lock 范围
+  - N2 bootstrap doc records `pip list` but not `pip freeze`：`accepted`，对 2-package env 无实质差异
+  - N3 sandbox/escalation note is documented transparently：`accepted`
+- 没有 T39 `deferred` warning；不因 T39 review 新增 risk
 - `R10` 仍未关闭但显著缩窄：T38 trace 支持 combined committed-`b` instability；上游 teacher vs CNN residual root cause 尚未完全隔离
 - `R20` 仍未关闭：correction saturation structural zero 仍需后续独立 edge/stress 判断
 - `R23` 仍未关闭：aggregation/report writer 缺少 focused tests 的风险仍存在
 - `R24` 仍有效：statcalib 目前只是接口级 residual-b contract，不能外推为完整 calibration comparator 或 benchmark evidence
-- `R11` 仍有效但已缩窄：T31 已补 portable dependency-lock plan，但 clean-environment CPU lock 尚未实际创建或验证
-- `T39` 是 Milestone 2J 的下一 bounded reproducibility task：只做 CPU-only clean-environment draft lock 和 dry-run bootstrap
+- `R11` 仍有效但已进一步缩窄：T39 已补 clean-environment CPU draft lock 与 dry-run/import-level bootstrap，但 real clean-environment training execution 尚未验证
+- `T40` 是 Milestone 2J 的下一 bounded reproducibility task：只做 CPU-only clean-environment 最小 real-training smoke，并把输出隔离到 task-scoped directories
 
 为什么现在做它：
 
-1. T31 已确认当前训练链配置默认不强制 `torch`，CPU-only dependency lane 是合理的下一步。
-2. clean-environment reproducibility 仍未验证；T39 将把 T31 的 plan 推进到一个 Windows/Python 3.12 CPU-only draft lock 和 dry-run bootstrap。
-3. 先做 dry-run/import-level 验证，可以避免把训练输出、benchmark 输出或新 artifacts 混入环境边界任务。
-4. T39 不改变模型、benchmark、formal protocol、baseline/scenario、`.tflite` 或真板边界。
+1. T39 已确认当前训练链在 clean CPU-only environment 中可完成依赖安装与 dry-run/import-level bootstrap。
+2. `R11` 还缺最后一段关键证据：至少一次 real clean-environment training execution，而不是只看 `--help` / `--dry-run`。
+3. 训练入口会按 config 中的 `model_dir` / `report_dir` 写输出，因此必须先单开一个 task-scoped smoke task，把输出重定向到隔离目录，避免污染历史 artifacts。
+4. T40 不改变模型主线、benchmark、formal protocol、baseline/scenario、`.tflite` 或真板边界。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T39`
-2. `T31` 已按 `PASS` 收口。
-3. T31 review blocking issues：
+1. 当前唯一任务：`T40`
+2. `T39` 已按 `PASS` 收口。
+3. T39 review blocking issues：
    - none
-4. T31 non-blocking comments：
-   - accepted: markdown numbering inconsistency is cosmetic
-   - accepted: T17 bootstrap doc can later reference T31 two-lane plan, but this is not T31 scope
-   - accepted: worker self-review scaffold was overwritten by adversarial review as expected
-5. T31 plan：`docs/training_chain_portable_dependency_lock_plan.md`
-6. T39 任务包：`docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md`
+4. T39 non-blocking comments：
+   - accepted: exact `==` pins are appropriate for a draft lock
+   - accepted: `pip list` is sufficient for a 2-package clean env artifact
+   - accepted: sandbox/escalation note is transparent and acceptable
+5. T39 bootstrap：`docs/training_chain_cpu_cleanenv_bootstrap.md`
+6. T40 任务包：`docs/tasks/Phase2/T40_training_chain_cpu_cleanenv_minimal_train_smoke.md`
 
-## Done Criteria For T39
+## Done Criteria For T40
 
-1. Create or use a clean Python `3.12` CPU-only environment that is not `DLEnv`.
-2. Install only the minimal CPU training dependencies approved by T31, or document the exact blocker if environment creation/network access is unavailable.
-3. Produce one CPU-only draft dependency spec/lock artifact without repurposing `requirements-recovery.txt`.
-4. Run only dry-run/import-level verification: `dataset_builder --dry-run`, `runtime_dataset_builder --dry-run`, and `train --help`.
-5. Do not run training, benchmark, `.tflite`, hardware, cleanup, or GPU/CUDA portability validation.
+1. Reuse the verified clean Python `3.12` CPU-only environment from T39, without mutating `DLEnv`.
+2. Create one task-scoped derived config that inherits a canonical training config but redirects `model_dir` and `report_dir` to isolated T40-only paths.
+3. Run one bounded real CPU-only training smoke through `python -m cnn_fpga.model.train --config <derived-config>`.
+4. Verify outputs exist only in T40-isolated directories and that canonical historical `artifacts/models/*` and `artifacts/reports/*` remain untouched.
+5. Do not run benchmark, `.tflite`, hardware, cleanup, GPU/CUDA validation, or broader training sweeps.

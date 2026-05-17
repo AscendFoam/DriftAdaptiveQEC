@@ -26,11 +26,12 @@
 
 ## 2026-05-17 Captain Update
 
-- `T31` reviewer verdict accepted by Captain as `PASS`.
-- `T31` warnings are all classified as `accepted`; there are no `deferred` or `rejected` warnings from this review.
-- `R11` remains open but narrowed: training-chain portability now has a plan, but no clean-environment CPU lock has been created or verified.
-- Current unique task is now `T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap`.
-- `T39` may create/use an ignored clean environment and produce a CPU-only draft dependency spec, but must not run training, benchmark, `.tflite`, hardware, cleanup, or GPU/CUDA portability validation.
+- `T39` reviewer verdict accepted by Captain as `PASS`.
+- T39 blocking issues: none.
+- T39 non-blocking comments N1/N2/N3 are all classified as `accepted`; there are no `deferred` or `rejected` warnings from this review.
+- `R11` remains open but is further narrowed: a clean CPU-only environment and draft lock have now been created and dry-run/import-level bootstrap has been verified, but no real clean-environment training execution has been run yet.
+- Current unique task is now `T40: Training-chain CPU-only clean-environment minimal real-training smoke`.
+- `T40` may run one bounded real CPU-only training smoke in an isolated task-scoped output path, but must not modify canonical historical model/report directories, run benchmark, `.tflite`, hardware, cleanup, or claim GPU/CUDA portability.
 
 ## 3. 解决什么问题
 
@@ -220,7 +221,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap`
+- `T40: Training-chain CPU-only clean-environment minimal real-training smoke`
 
 ## 12. 快照结论
 
@@ -237,4 +238,5 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 9. `T36` 已完成并通过 adversarial review，Captain verdict = `PASS`；其结论将 `seed=20260429` 的收益收缩缩窄为 residual-amplitude / teacher-delta regime instability hypothesis，但不是 causal proof。
 10. `T38` 已完成并通过 Captain `PASS` 收口；它只提供 single-seed trace-level mechanism evidence，不是 mitigation success、formal benchmark、`.tflite` runtime 或 real-board validation。
 11. `T31` 已完成并通过 adversarial review，Captain verdict = `PASS`；产物是 training-chain portable dependency-lock plan，不是 clean-environment rebuild proof。
-12. 当前唯一任务 `T39` 只允许创建 CPU-only clean-environment draft lock 和 dry-run bootstrap；不得运行训练、benchmark、`.tflite`、真板、cleanup 或 GPU portability work。
+12. `T39` 已完成并通过 adversarial review，Captain verdict = `PASS`；它证明了 clean CPU-only environment、draft lock 和 dry-run/import-level bootstrap 可复现，但不等于 real training reproducibility。
+13. 当前唯一任务 `T40` 只允许在 clean CPU-only environment 中执行一次最小 real-training smoke，并把输出重定向到 task-scoped isolated directories；不得改写 canonical historical `artifacts/models/*` 或 `artifacts/reports/*`，不得运行 benchmark、`.tflite`、真板、cleanup 或 GPU portability work。

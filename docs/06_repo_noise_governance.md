@@ -176,3 +176,5 @@
 - `T31` 不允许创建或修改 `runs/` / `artifacts/`，不允许执行 cleanup，不允许安装/升级/删除依赖；如需读取本机 package evidence，只能作为 read-only inventory 写入文档并明确其非跨机器保证。
 - `T31` 已完成并通过 Captain `PASS` 收口；它不是 clean-environment execution，也不改变 `requirements-recovery.txt` 的 recovery-smoke scope。
 - `T39` 允许创建 ignored local environment `.venvs/t39_train_cpu_py312/` 和一个 CPU-only training dependency spec，但不得创建或修改 `runs/` / `artifacts/`，不得执行 cleanup，不得运行真实训练/benchmark/`.tflite`/hardware。若 dry-run flag 不存在，必须记录 blocker 或使用不会落盘的 import/help-level check，不得静默替换成真实数据生成。
+- `T39` 已完成并通过 Captain `PASS` 收口；其 clean environment、draft lock 与 bootstrap docs 可提交，但 `.venvs/t39_train_cpu_py312/` 仍是 ignored local state，不得作为仓库产物提交。
+- `T40` 允许复用 `.venvs/t39_train_cpu_py312/` 并创建 task-scoped derived config 与 task-scoped output directories，但只允许把真实训练输出写到 T40-isolated paths；不得改写 canonical historical `artifacts/models/*`、`artifacts/reports/*`、`runs/`，不得借机执行 cleanup、benchmark、`.tflite` 或 hardware 操作。

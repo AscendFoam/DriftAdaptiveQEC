@@ -1560,3 +1560,45 @@ Milestone 2I is complete within its bounded scope: mechanism-evidence hardening 
 2. 新增 `docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md`。
 3. `docs/07_handoff.md` 记录 T31 Captain verdict、warning 分类与 T39 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 更新 R11：training-chain portability 已有 lock plan，但 clean-environment CPU lock 仍未实际创建/验证。
+
+## D-2026-05-17-02
+
+- 日期：`2026-05-17`
+- 决策：接受 `T39` adversarial review 的 `PASS`，标记 `T39` 完成，并将当前唯一任务切换为 `T40: Training-chain CPU-only clean-environment minimal real-training smoke`
+
+### 背景
+
+`T39` 是 Milestone 2J 的 clean-environment draft lock and dry-run bootstrap task。`docs/review/T39_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. `requirements-train-cpu-win-py312.txt`、`docs/training_chain_cpu_cleanenv_bootstrap.md`、任务包 Worker Output、`docs/review/T39_review.md`、`docs/for_human/T39_explanation.md` 五项输出均到位。
+2. clean environment 与 `DLEnv` 分离，且只安装了 `numpy==2.4.5` 与 `PyYAML==6.0.3`。
+3. 只运行了 `dataset_builder --dry-run`、`runtime_dataset_builder --dry-run`、`train --help`；未运行 training、benchmark、`.tflite`、hardware 或 cleanup。
+4. 未修改 source/config/protocol/baseline/scenario/seed policy，未改写 `runs/`、`artifacts/` 或 `requirements-recovery.txt`。
+
+### Warning 分类
+
+1. N1：exact version pins are resolved-on-date rather than compatibility-matrix analyzed
+   - 分类：`accepted`
+   - 处理：对 draft lock 范围合适，不构成阻塞
+2. N2：bootstrap doc records `pip list` rather than `pip freeze`
+   - 分类：`accepted`
+   - 处理：clean env 仅 2 个直接包，artifact file 本身已相当于 freeze 记录
+3. N3：initial sandbox/network failure is documented transparently
+   - 分类：`accepted`
+   - 处理：这是权限/执行轨迹透明记录，不是绕过边界
+
+没有 T39 `deferred` warning，因此不新增 risk。
+
+### 结论
+
+`T39` 可标记完成。它把 `R11` 从“只有 plan”推进到“clean CPU-only environment、draft lock、dry-run/import-level bootstrap 已验证”，但仍不等于 real clean-environment training execution，更不等于 full training reproducibility。
+
+下一唯一任务切换到 `T40`。理由是：`R11` 当前最短闭环缺口已不再是 lock planning 或 dry-run，而是一次最小 real-training smoke；同时 `train.py` 会按 config 中的 `model_dir` / `report_dir` 落盘，因此必须通过单独 task package 强制使用 task-scoped isolated output paths，避免污染 canonical historical artifacts。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T39` 完成，并切换 `Current Unique Task` 到 `T40`。
+2. 新增 `docs/tasks/Phase2/T40_training_chain_cpu_cleanenv_minimal_train_smoke.md`。
+3. `docs/07_handoff.md` 记录 T39 Captain verdict、warning 分类与 T40 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 更新 `R11`：clean-env draft lock/dry-run 已验证，但 real clean-environment training execution 仍未验证。
+5. `docs/06_repo_noise_governance.md` 补充 T40 的 isolated-output noise boundary，禁止改写 canonical `artifacts/models/*` / `artifacts/reports/*`。
