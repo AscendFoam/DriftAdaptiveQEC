@@ -9,7 +9,7 @@
 ## 2. 基本信息
 
 - 快照日期：`2026-05-05`
-- 最近更新：`2026-05-16`
+- 最近更新：`2026-05-17`
 - 当前分支：`main`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
@@ -23,6 +23,14 @@
 - Milestone 2I review is recorded in `docs/review/Milestone2I_review.md`; verdict = `Conditional Allow`.
 - Current unique task is now `T31: Training-chain portable dependency lock plan`.
 - `T31` is a documentation/environment-boundary task only. It must not install packages, run training, run benchmark, create new `runs/` or `artifacts/`, or modify `docs/02_experiment_plan.md`.
+
+## 2026-05-17 Captain Update
+
+- `T31` reviewer verdict accepted by Captain as `PASS`.
+- `T31` warnings are all classified as `accepted`; there are no `deferred` or `rejected` warnings from this review.
+- `R11` remains open but narrowed: training-chain portability now has a plan, but no clean-environment CPU lock has been created or verified.
+- Current unique task is now `T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap`.
+- `T39` may create/use an ignored clean environment and produce a CPU-only draft dependency spec, but must not run training, benchmark, `.tflite`, hardware, cleanup, or GPU/CUDA portability validation.
 
 ## 3. 解决什么问题
 
@@ -212,7 +220,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T38: seed=20260429 single-seed trace-export probe, bounded unchanged-semantics rerun`
+- `T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap`
 
 ## 12. 快照结论
 
@@ -227,4 +235,6 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 7. `T26` 已完成 calibration/statcalib baseline feasibility gate，并通过 independent review，Captain verdict = `PASS`；gate 结论为 `CONDITIONAL_GO`，只允许后续作为 separate comparator lane 推进。
 8. `T30` 已完成 statcalib comparator 的 concrete interface contract 与 interface-level tests，并通过 independent review，Captain verdict = `PASS`；该结论不等于 statcalib 已接入 slow loop、formal benchmark、`.tflite` runtime 或真板路径。
 9. `T36` 已完成并通过 adversarial review，Captain verdict = `PASS`；其结论将 `seed=20260429` 的收益收缩缩窄为 residual-amplitude / teacher-delta regime instability hypothesis，但不是 causal proof。
-10. 当前唯一任务 `T38` 只做 `seed=20260429` single-seed trace-export probe；允许一个 T38-scoped bounded rerun 导出 per-window trace，但不得扩展 teacher-representation 分支、baseline/scenario、formal benchmark、`.tflite` 或真板口径。
+10. `T38` 已完成并通过 Captain `PASS` 收口；它只提供 single-seed trace-level mechanism evidence，不是 mitigation success、formal benchmark、`.tflite` runtime 或 real-board validation。
+11. `T31` 已完成并通过 adversarial review，Captain verdict = `PASS`；产物是 training-chain portable dependency-lock plan，不是 clean-environment rebuild proof。
+12. 当前唯一任务 `T39` 只允许创建 CPU-only clean-environment draft lock 和 dry-run bootstrap；不得运行训练、benchmark、`.tflite`、真板、cleanup 或 GPU portability work。

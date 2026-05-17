@@ -81,6 +81,8 @@
 - `T38` 若做 `seed=20260429` trace-export probe，只能在 unchanged semantics 下补 per-window trace；不得启动新长跑、不得扩 baseline/scenario、不得改变 P3/P4/HIL 边界。
 - `T38` 已完成并通过 Captain `PASS` 收口；其输出只能表述为 single-seed trace-level mechanism evidence，不能表述为 formal benchmark、runtime validation、real-board validation 或 mitigation success。
 - `T31` 只允许补 training-chain portable dependency-lock plan；不得改变 P3/P4/HIL 边界，不得安装依赖、运行训练、运行 benchmark、创建 run/artifact，或把本机 `DLEnv` 事实写成跨机器保证。
+- `T31` 已完成并通过 Captain `PASS` 收口；其输出是 dependency-lock planning evidence，不是 clean-environment rebuild proof。
+- `T39` 只允许在 training-chain CPU-only clean-environment 范围内产出 draft lock 和 dry-run bootstrap；不得扩展到 GPU/CUDA portability、`.tflite` runtime、P3/P4 benchmark、real-board HIL、cleanup、baseline/scenario/seed policy 或正式训练结果。
 
 ## 7. 当前推荐表述
 
@@ -94,5 +96,7 @@
 - 可以说：`T36 narrows seed=20260429 to a residual-amplitude / teacher-delta hypothesis, but trace-level causality is still open.`
 - 可以说：`T38 adds bounded single-seed trace evidence for seed=20260429, but R10 remains open until mitigation and broader confirmation exist.`
 - 可以说：`Teacher diagnostics missing-vs-zero output semantics have been repaired for the current writer path, but this is still not a full mechanism-evidence repair.`
+- 可以说：`T31 produced a training-chain portable dependency-lock plan, but did not rebuild a clean environment.`
+- 可以说：`T39 may create a CPU-only clean-environment draft lock and dry-run bootstrap, but it is not a training run, benchmark, GPU portability proof, TFLite runtime validation, or real-board validation.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`

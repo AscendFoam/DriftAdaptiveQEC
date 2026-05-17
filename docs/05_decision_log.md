@@ -1518,3 +1518,45 @@ Milestone 2I is complete within its bounded scope: mechanism-evidence hardening 
 2. `docs/review/Milestone2I_review.md` is added as the milestone review output.
 3. `docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md` is added as the next task package.
 4. `docs/07_handoff.md` and `docs/08_risks_and_open_questions.md` are updated to preserve the T38 warning classification and T31 execution boundary.
+
+## D-2026-05-17-01
+
+- 日期：`2026-05-17`
+- 决策：接受 `T31` adversarial review 的 `PASS`，标记 `T31` 完成，并将当前唯一任务切换为 `T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap`
+
+### 背景
+
+`T31` 是 Milestone 2J 的 training-chain portable dependency-lock planning task。`docs/review/T31_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. `docs/training_chain_portable_dependency_lock_plan.md` 覆盖了 T31 要求的 8 类输出：本机解释器 inventory、package evidence、static-theta / residual-b / Gated-v5 dependency map、CPU-vs-GPU lock strategy、可提交内容与 local-only evidence、clean-environment bootstrap proposal、explicit non-claims、下一 bounded task 建议。
+2. 本轮只修改 T31 allowed files，未修改 source/config/protocol/baseline/scenario/seed policy。
+3. 未安装、升级或删除依赖，未运行训练、benchmark、`.tflite`、硬件或 cleanup。
+4. 未创建或修改 `runs/` / `artifacts/`，也未 repurpose `requirements-recovery.txt`。
+5. T31 文档明确区分 local `DLEnv` / CUDA / dev-torch facts 与 portable guarantees。
+
+### Warning 分类
+
+1. N1：`docs/training_chain_portable_dependency_lock_plan.md` 的 subsection heading 应为 `### 4.1` 等，而不是 `## 4.1`
+   - 分类：`accepted`
+   - 处理：cosmetic only，不影响 T31 结论；后续文档整理时可修正。
+2. N2：`docs/training_chain_bootstrap.md` 仍把 `DLEnv` 写作训练推荐解释器，而 T31 形成了更细的 two-lane view
+   - 分类：`accepted`
+   - 处理：未来 alignment 可让 bootstrap doc 引用 T31 two-lane plan；不属于 T31 blocking scope。
+3. N3：Worker self-review file 被 adversarial review 覆盖
+   - 分类：`accepted`
+   - 处理：符合当前 reviewer 输出流程；任务包保留 Worker Output / Verification Record 即可。
+
+没有 T31 `deferred` warning；不因 T31 review 新增 risk。
+
+### 结论
+
+`T31` 可标记完成。它把训练链环境状态从“本机 bootstrap notes + dev torch facts”推进为“可审计的 portable dependency-lock plan”，但仍不等于 clean-environment rebuild proof，也不等于 full training reproducibility。
+
+下一唯一任务切换到 `T39`。理由是 T31 已确认当前训练配置默认不强制 `torch` / CUDA，CPU-only training dependency lane 是最低风险的可复现性后续。T39 只允许创建或使用 clean Python `3.12` CPU-only 环境、产出 draft lock/spec，并运行 dry-run/import-level entrypoint checks；不得运行训练、benchmark、`.tflite`、真板、cleanup 或 GPU portability work。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T31` 完成，并切换 `Current Unique Task` 到 `T39`。
+2. 新增 `docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md`。
+3. `docs/07_handoff.md` 记录 T31 Captain verdict、warning 分类与 T39 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 更新 R11：training-chain portability 已有 lock plan，但 clean-environment CPU lock 仍未实际创建/验证。

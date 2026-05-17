@@ -174,3 +174,5 @@
 - `T38` seed trace-export probe 允许创建一个 T38-scoped run directory，但不得重写历史 `runs/` / `artifacts/`、不得借 trace probe 执行 cleanup、不得把单 seed trace 输出升级为 formal benchmark evidence。
 - `T38` 已完成；其 run root 只能作为 T38-scoped trace evidence 引用，不能重标为 formal benchmark、clean-environment proof、runtime validation 或 real-board validation。
 - `T31` 不允许创建或修改 `runs/` / `artifacts/`，不允许执行 cleanup，不允许安装/升级/删除依赖；如需读取本机 package evidence，只能作为 read-only inventory 写入文档并明确其非跨机器保证。
+- `T31` 已完成并通过 Captain `PASS` 收口；它不是 clean-environment execution，也不改变 `requirements-recovery.txt` 的 recovery-smoke scope。
+- `T39` 允许创建 ignored local environment `.venvs/t39_train_cpu_py312/` 和一个 CPU-only training dependency spec，但不得创建或修改 `runs/` / `artifacts/`，不得执行 cleanup，不得运行真实训练/benchmark/`.tflite`/hardware。若 dry-run flag 不存在，必须记录 blocker 或使用不会落盘的 import/help-level check，不得静默替换成真实数据生成。

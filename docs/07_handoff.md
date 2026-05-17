@@ -2,19 +2,18 @@
 
 ## 1. 当前状态
 
-- 日期：`2026-05-16`
+- 日期：`2026-05-17`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T31: Training-chain portable dependency lock plan`
-- 任务包：`docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md`
+- 当前唯一任务：`T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap`
+- 任务包：`docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md`
 
-Captain closeout note after T38 and Milestone 2I:
+Captain closeout note after T31:
 
-- `T38` is complete. `docs/review/T38_review.md` verdict = `PASS`; blocking issues = none.
-- T38 warnings N1/N2/N3/N4 are all `accepted`; there are no `deferred` or `rejected` warnings from this review.
-- `docs/review/Milestone2I_review.md` verdict = `Conditional Allow`.
-- `R10` is narrowed by trace-level evidence but remains open; T38 is not mitigation, multi-seed confirmation, formal benchmark expansion, `.tflite` runtime validation, or real-board validation.
-- The active next task is `T31`, not `T38`. Any older T38-next wording later in this handoff is superseded by this status block and `docs/04_task_board.md`.
+- `T31` is complete. `docs/review/T31_review.md` verdict = `PASS`; blocking issues = none.
+- T31 warnings N1/N2/N3 are all `accepted`; there are no `deferred` or `rejected` warnings from this review.
+- `R11` is narrowed by T31 planning evidence but remains open; T31 is not a clean-environment rebuild, not real lockfile execution, and not full training reproducibility.
+- The active next task is `T39`, not `T31` or `T38`. Any older T38/T31-next wording later in this handoff is superseded by this status block and `docs/04_task_board.md`.
 
 ## 2. 本轮已完成
 
@@ -616,7 +615,11 @@ Captain closeout note after T38 and Milestone 2I:
 - `docs/review/T29_review.md`
 - `docs/review/T30_review.md`
 - `docs/review/T36_review.md`
+- `docs/review/T38_review.md`
+- `docs/review/Milestone2I_review.md`
+- `docs/review/T31_review.md`
 - `docs/seed20260429_failure_diagnosis.md`
+- `docs/seed20260429_trace_export_diagnosis.md`
 - `docs/P4_benchmark_development_protocol.md`
 - `docs/P4_benchmark_formal_protocol.md`
 - `docs/statcalib_feasibility_gate.md`
@@ -625,6 +628,7 @@ Captain closeout note after T38 and Milestone 2I:
 - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
 - `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
 - `docs/training_chain_bootstrap.md`
+- `docs/training_chain_portable_dependency_lock_plan.md`
 - `docs/TFLite_runtime_bootstrap.md`
 - `docs/cleanup_tracked_cache_manifest.md`
 - `docs/real_board_hil_readiness.md`
@@ -632,43 +636,46 @@ Captain closeout note after T38 and Milestone 2I:
 
 ## 6. 当前唯一任务包摘要
 
-`T38` 已创建任务包，等待 Worker 执行 `seed=20260429` single-seed trace-export probe。
+`T39` 已创建任务包，等待 Worker 执行 CPU-only clean-environment draft lock and dry-run bootstrap。
 
-T36 已收口事实：
+T31 已收口事实：
 
-- `docs/review/T36_review.md` verdict = `PASS`，blocking issues = none
-- `docs/seed20260429_failure_diagnosis.md` 已形成 bounded diagnosis
-- `cnn_fpga/benchmark/analyze_seed20260429_failure.py` 是标准库只读分析脚本，只打印 JSON，不写文件、不运行 simulation
-- verification: script execution passed；`py_compile` passed；`runs/` / `artifacts/` 无 diff
-- T36 不是新 benchmark、不是新模型分支、不是 formal benchmark boundary update
+- `docs/review/T31_review.md` verdict = `PASS`，blocking issues = none
+- `docs/training_chain_portable_dependency_lock_plan.md` 已形成 training-chain portable dependency-lock plan
+- T31 inventory 覆盖 `DLEnv`、base Anaconda、system Python，并明确 `DLEnv` / dev torch / CUDA 只是 local evidence
+- T31 dependency map 覆盖 static theta、residual-b、Gated-v5 / teacher-feature training paths
+- T31 推荐 two-lane strategy：CPU-portable lane + GPU-local lane
+- T31 未安装依赖、未运行训练/benchmark/`.tflite`/硬件/cleanup、未修改 `runs/` / `artifacts/` / source / configs / `requirements-recovery.txt`
 
-T36 warning 分类：
+T31 warning 分类：
 
-- N1 unused `Iterable` import：`accepted` as cosmetic，不要求返工
-- N2 hardcoded scenario/mode folder mappings：`accepted` for bounded frozen-artifact diagnosis，未来 reusable tool 再动态发现
-- N3 worker pre-review file overwritten by adversarial review：`accepted`，Worker verification 已保留在任务包
+- N1 markdown subsection numbering inconsistency：`accepted` as cosmetic
+- N2 `docs/training_chain_bootstrap.md` later alignment：`accepted` as future alignment
+- N3 worker self-review overwritten by adversarial review：`accepted`
+- 没有 `deferred` warning；没有因 T31 新增 risk
 
-T38 任务边界：
+T39 任务边界：
 
-- 允许一个 T38-scoped bounded rerun，只用于 trace export
-- 保持 `seed=20260429`、Full vs Gated v5、四场景和既有 benchmark 语义不变
-- 不训练、不扩 teacher-representation 分支、不新增 baseline/scenario、不改 formal benchmark protocol
-- 不触碰 `.tflite`、真板、cleanup，且不得改写历史 `runs/` / `artifacts/`
+- 允许创建 ignored local environment `.venvs/t39_train_cpu_py312/`
+- 允许新增 `requirements-train-cpu-win-py312.txt`
+- 只运行 dry-run/import-level checks：`dataset_builder --dry-run`、`runtime_dataset_builder --dry-run`、`train --help`
+- 不训练、不跑 benchmark、不跑 `.tflite`、不碰真板、不做 cleanup、不验证 GPU/CUDA portability
+- 不修改 `requirements-recovery.txt`，不创建或修改 `runs/` / `artifacts/`
 
 ## 7. 下一步建议
 
-下一步应交给 Worker 执行 `T38: seed=20260429 single-seed trace-export probe, bounded unchanged-semantics rerun`。
+下一步应交给 Worker 执行 `T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap`。
 
 建议优先级：
 
-1. 读取 `docs/seed20260429_failure_diagnosis.md` 与 `docs/review/T36_review.md`，把 T36 的 hypothesis 当作待验证对象。
-2. 在最小代码范围内导出 per-window `teacher_b`、predicted `delta_b`、committed `b` 和 window outcome/utilization。
-3. 只跑 T38 任务包允许的 single-seed trace-export probe，不扩 formal benchmark。
-4. 输出 trace-level mechanism update，明确哪些假设被支持、削弱或仍不可回答。
+1. 读取 `docs/training_chain_portable_dependency_lock_plan.md` 与 `docs/review/T31_review.md`，把 T31 的 two-lane strategy 当作任务边界。
+2. 创建或使用 clean Python `3.12` CPU-only 环境，避免 mutating `DLEnv`。
+3. 产出 `requirements-train-cpu-win-py312.txt` draft，并记录 exact install/bootstrap commands。
+4. 只做 dry-run/import-level verification，不创建 `runs/` 或 `artifacts/`。
 
 ## 8. 暂不继续的事项
 
-在 T38 完成前，暂不继续：
+在 T39 完成前，暂不继续：
 
 1. 新的 teacher-representation benchmark 扩展或长跑
 2. statcalib slow-loop integration 或 formal benchmark integration
@@ -676,6 +683,8 @@ T38 任务边界：
 4. 真板 backend 能力扩写
 5. 任何未获 Captain 明确批准的物理 repo cleanup
 6. paper-inspired 新分支实现
+7. GPU/CUDA training lock 或 dev torch portability claim
+8. 真实 `.tflite` runtime smoke
 
 ## 9. 2026-05-16 Captain Supersession
 
@@ -697,3 +706,25 @@ This section supersedes older T38-next wording in sections above.
      - 可以。当前唯一任务是 `T31: Training-chain portable dependency lock plan`。
      - Allowed files: `docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md`, `docs/training_chain_portable_dependency_lock_plan.md`, `docs/review/T31_review.md`, `docs/for_human/T31_explanation.md`。
      - Worker 只允许做 read-only interpreter/package inventory 和 dependency-lock planning；不得安装依赖、运行训练、运行 benchmark、创建 `runs/` 或 `artifacts/`、修改 source/config/protocol/baseline/seed policy。
+
+## 10. 2026-05-17 Captain Supersession
+
+This section supersedes older T38/T31-next wording in sections above.
+
+48. T31 reviewer warnings 如何处理？
+   - 当前答案：
+     - Verdict：`PASS`；blocking issues: none。
+     - N1 markdown subsection numbering：`accepted` as cosmetic。
+     - N2 `docs/training_chain_bootstrap.md` later alignment：`accepted` as future alignment。
+     - N3 worker self-review overwritten by adversarial review：`accepted`。
+     - 没有 `deferred` warning，因此未新增 risk。
+49. T31 是否允许进入下一 reproducibility step？
+   - 当前答案：
+     - 允许。
+     - T31 已完成 plan-level dependency boundary，但未实际创建 clean environment 或 lockfile。
+     - R11 仍 open but narrowed。
+50. T39 是否可以交给 Worker？
+   - 当前答案：
+     - 可以。当前唯一任务是 `T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap`。
+     - Allowed files: `docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md`, `docs/training_chain_cpu_cleanenv_bootstrap.md`, `docs/review/T39_review.md`, `docs/for_human/T39_explanation.md`, `requirements-train-cpu-win-py312.txt`，以及 ignored local env `.venvs/t39_train_cpu_py312/`。
+     - Worker 只允许做 CPU-only clean-env draft lock 与 dry-run/import-level checks；不得训练、benchmark、`.tflite`、真板、cleanup 或 GPU/CUDA portability validation。

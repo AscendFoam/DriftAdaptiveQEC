@@ -117,3 +117,80 @@ Focus areas:
 ## Captain Notes
 
 T31 is deliberately a plan/manifest-boundary task. It should make the next reproducibility step executable without pretending the clean environment already exists.
+
+## Worker Output
+
+- Read the required T31 inputs, including:
+  - `README.md`
+  - `docs/00_project_snapshot.md`
+  - `docs/01_legacy_audit.md`
+  - `docs/02_experiment_plan.md`
+  - `docs/04_task_board.md`
+  - `docs/07_handoff.md`
+  - `docs/08_risks_and_open_questions.md`
+  - `docs/training_chain_bootstrap.md`
+  - `requirements-recovery.txt`
+  - `cnn_fpga/model/train.py`
+  - `cnn_fpga/config/experiment_static_theta_v2.yaml`
+  - `cnn_fpga/config/experiment_runtime_b_residual.yaml`
+  - `cnn_fpga/config/experiment_runtime_b_residual_norm_gated_teacher_v5.yaml`
+- Collected read-only interpreter/package evidence from:
+  - `C:\ProgramData\anaconda3\envs\DLEnv\python.exe`
+  - `C:\ProgramData\anaconda3\python.exe`
+  - `C:\Python313\python.exe`
+- Added `docs/training_chain_portable_dependency_lock_plan.md`.
+- Added `docs/review/T31_review.md`; independent adversarial review later overwrote this file with final verdict `PASS`.
+- Added `docs/for_human/T31_explanation.md`.
+- Updated this task package with worker output and verification records.
+- Did not install, upgrade, or remove packages.
+- Did not run training, benchmark, `.tflite`, hardware, or cleanup commands.
+- Did not modify `runs/`, `artifacts/`, source code, configs, formal protocol, baseline/scenario set, or `requirements-recovery.txt`.
+- Explicitly separated:
+  - local `DLEnv` / CUDA / dev-torch facts
+  - from portable CPU-lock candidate statements
+
+## Verification Record
+
+1. Interpreter version probes:
+   - `C:\ProgramData\anaconda3\envs\DLEnv\python.exe --version`
+   - `C:\ProgramData\anaconda3\python.exe --version`
+   - `C:\Python313\python.exe --version`
+   - Result:
+     - `DLEnv = Python 3.12.9`
+     - `base Anaconda = Python 3.12.7`
+     - `system Python = Python 3.13.7`
+2. Package evidence probes:
+   - `C:\ProgramData\anaconda3\envs\DLEnv\python.exe -m pip freeze`
+   - `C:\ProgramData\anaconda3\python.exe -m pip freeze`
+   - `C:\ProgramData\anaconda3\envs\DLEnv\python.exe -c "import numpy, yaml, torch; ..."`
+   - `C:\ProgramData\anaconda3\python.exe -c "import numpy, yaml; ..."`
+   - `C:\Python313\python.exe -c "import importlib.util; ..."`
+   - Result:
+     - local `DLEnv` torch/CUDA facts captured
+     - base Anaconda confirmed as `numpy + PyYAML` without `torch`
+     - system Python confirmed insufficient for the training chain
+3. Entrypoint/import probes:
+   - `C:\ProgramData\anaconda3\envs\DLEnv\python.exe -m cnn_fpga.model.train --help`
+   - `C:\ProgramData\anaconda3\python.exe -m cnn_fpga.model.train --help`
+   - `C:\ProgramData\anaconda3\python.exe -m cnn_fpga.data.dataset_builder --help`
+   - `C:\ProgramData\anaconda3\python.exe -m cnn_fpga.data.runtime_dataset_builder --help`
+   - Result:
+     - all four probes passed
+4. No package mutation:
+   - no install/update/remove command was used during T31
+5. No `runs/` or `artifacts/` modification:
+   - `git -c core.excludesFile=NUL diff --name-only -- runs artifacts`
+   - Result:
+     - empty
+6. `requirements-recovery.txt` boundary preserved:
+   - checked by inspection during T31; no edit was made and the T31 plan explicitly keeps recovery scope separate from training-chain lock scope
+7. Documentation honesty:
+   - `docs/training_chain_portable_dependency_lock_plan.md` explicitly distinguishes:
+     - local `DLEnv` facts
+     - portable CPU-lock candidates
+     - non-claims / not-yet-verified areas
+8. Closeout boundary:
+   - independent adversarial review completed with verdict `PASS`
+   - Captain accepted T31 as `PASS` on `2026-05-17`
+   - T31 is now marked complete in `docs/04_task_board.md`
+   - next unique task: `T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap`

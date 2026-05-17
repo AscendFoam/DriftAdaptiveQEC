@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T31: Training-chain portable dependency lock plan`
+  - `T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap`
 
 说明：
 
@@ -69,6 +69,12 @@
 - Milestone 2I is closed as `Conditional Allow`, not as full causal proof, true `.tflite` runtime validation, real-board validation, or paper-grade benchmark completion.
 - `R10` is narrowed by T38 trace evidence but remains open because mitigation, multi-seed confirmation, and upstream root-cause isolation are still absent.
 - Current unique task is `T31`, focused on training-chain portable dependency-lock planning and clean-environment reproducibility boundaries.
+
+### 2026-05-17 Captain Update
+
+- `T31` has been accepted as `PASS`; it produced a training-chain portable dependency-lock plan without installing packages, running training, or modifying `runs/` / `artifacts` / `requirements-recovery.txt`.
+- `R11` is narrowed but remains open: T31 is not a clean-environment rebuild or full training reproducibility proof.
+- Current unique task is `T39`, focused on CPU-only clean-environment draft lock creation and dry-run/import-level bootstrap verification.
 
 ## 3. 可行性判断
 
@@ -346,7 +352,8 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T30`、`T26` 以及 `T36` 已完成；当前下一唯一任务为 `T38`，只做 `seed=20260429` 的 single-seed trace-export probe
+1. `T14` 至 `T31`、`T36`、`T38` 已完成；当前下一唯一任务为 `T39`，只做 training-chain CPU-only clean-environment draft lock and dry-run bootstrap
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 3. `T26` gate 结论为 `CONDITIONAL_GO`，且 `T30` 已把 statcalib 收紧为 interface-only separate comparator contract；后续仍不得把 statcalib 静默并入 T24 frozen benchmark set，不得扩展 formal benchmark、baseline/scenario、`.tflite` 或真板范围。
-4. `T36` 已把 `seed=20260429` 诊断缩窄到 residual-amplitude / teacher-delta regime instability hypothesis；`T38` 不得启动新的 teacher-representation 长跑或新分支，只能在 unchanged semantics 下导出 per-window trace，验证 T36 留下的因果缺口。
+4. `T36/T38` 已把 `seed=20260429` 诊断推进到 single-seed trace-supported mechanism evidence，但仍不是 mitigation 或 multi-seed causal proof。
+5. `T31` 已把训练链依赖边界从本机 bootstrap 推进到 portable dependency-lock plan；`T39` 是下一步最小 clean-environment 验证任务，仍不得把本机 `DLEnv` 或 dev torch 写成跨机器保证。

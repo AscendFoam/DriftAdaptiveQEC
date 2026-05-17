@@ -14,7 +14,7 @@
 | R8 | 最小 software HIL 路径虽然已在 bounded recovery path 上完成逐字一致复验，但该结论容易被误外推到真板、`.tflite` 或正式 benchmark | 中 | `T12` 已确认 `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104` 与 `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172232_3ae9f9176104` 的 `hil_summary.json` / `hil_events.json` 哈希一致；但路径仍固定为 `mock + model_artifact + artifact_npz + inproc` | 后续文档必须继续写清结论边界，不把 bounded recovery smoke 扩写成真板或正式 benchmark 已恢复 |
 | R9 | T24 已完成 formal frozen-set revalidation，但若继续扩大到更多 repeat、CI-driven stopping 或 extra drift families，仍可能隐式越过 frozen-set/formal 边界 | 中 | T24 已按 locked protocol 跑完 `4 scenarios x 5 modes x repeats=2`；`docs/P4_benchmark_formal_protocol.md` 已锁定边界 | T24 后仍不应自动追加更大 repeat、额外 scenario 或 statcalib comparator；任何进一步 P4 扩展都必须新开任务包 |
 | R10 | `hybrid_residual_b` 的 teacher diagnostics / mechanism evidence 仍缺 per-window trace，因此机制解释尚不能闭环 | 中 | `docs/review/T27_teacher_diagnostics_path_audit.md` 已将主因缩窄为 broadcast teacher features 不触发 scalar explain diagnostics；`docs/review/T28_review.md` 确认当前输出已显式标记 `not_generated` / `not_applicable`；`docs/seed20260429_failure_diagnosis.md` 将 `20260429` 收益收缩缩窄为 residual-amplitude / teacher-delta regime instability hypothesis，但缺少 per-window committed-parameter trace | R10 remains open but further narrowed；T38 已开任务包，后续只允许 single-seed trace-export probe，不得扩 benchmark 或新分支 |
-| R11 | 训练链 bootstrap 记录了本机 `torch` dev build，但尚未形成可移植依赖锁定 | 中 | `docs/review/T17_review.md` N1/N2 指出 `torch = 2.8.0.dev20250405+cu128` 是 dev build，且本轮未产出 `requirements-train.txt`；`docs/training_chain_bootstrap.md` 只承诺本机 `DLEnv` 探测结果 | 不把 `DLEnv` 或 dev torch 写成跨机器保证；若后续需要训练链可移植性，单开 `requirements-train.txt` / lockfile 任务，并显式说明 dev build 渠道限制 |
+| R11 | 训练链已有 portable dependency-lock plan，但 clean-environment CPU lock 尚未实际创建或验证 | 中 | `docs/training_chain_portable_dependency_lock_plan.md` 已由 T31 产出并通过 `docs/review/T31_review.md` `PASS`；计划确认 CPU-only lane 合理、`DLEnv` / dev torch 只属于 local evidence，但 T31 未创建 clean environment、未产出 real lockfile、未运行 dry-run bootstrap | 不把 T31 plan 写成 clean-env proof；下一 bounded task `T39` 只允许创建 CPU-only draft lock 和 dry-run/import-level bootstrap，不运行训练或 benchmark |
 | R12 | `.tflite` 路径已有代码与入口，但真实 TensorFlow / TFLite 运行时在当前机器上不可用 | 高 | `docs/TFLite_runtime_bootstrap.md` 已记录 `tensorflow = False`、`tflite_runtime = False`；`export.py`、`evaluate_tflite.py`、`validate_export.py` 入口存在，但真实 runtime 需独立环境 | 继续把真实 `.tflite`、stub manifest 与 HIL benchmark 边界写清；若后续要跑真实 runtime，单开环境任务或在具备依赖的机器上做独立 smoke |
 | R13 | 真板 HIL 入口存在配置骨架，但距离可执行真板 smoke 仍缺设备、权限、寄存器一致性与日志证据 | 高 | `board_backend.py` 仍是 placeholder；设备缺失时会触发 `board_device_missing:...`；`schedule_commit(...)` 仍返回 `target_bank=None`、`version=None`、`ack_delay_us=None`；`step(...)` 返回空事件；`docs/real_board_hil_readiness.md` 已固定前置条件与验收标准 | 后续若推进真板路径，必须单开执行任务，逐层补齐设备存在、寄存器活性、DMA 读出与 commit/ack round-trip 证据，在此之前禁止写成 real-board HIL 已完成 |
 | R14 | T22 已把寄存器来源、DMA 审计清单和量化阈值草案具体化，但真实宿主、bitstream 与 DMA contract 仍未验证 | 中高 | `docs/real_board_smoke_execution_plan.md` 已直接映射 `axi_map.py` / `dma_client.py`，`docs/review/T22_review.md` 确认 AXI/DMA 审计清单与源码吻合；但 N2 指出 preflight 输出格式仍需改进，N3 指出 `byte_count = 4096` 依赖 `32 x 32 float32` 假设 | 后续若进入真板执行任务，必须先选择宿主模型，再用实际 bitstream / RTL / DMA contract 确认地址表、histogram shape、element dtype、timeout 与 commit/ack 阈值 |
@@ -46,7 +46,9 @@ Current T24-T29 status note:
 - `T26` Captain 已接受 review 为 `PASS`；gate verdict = `CONDITIONAL_GO`，statcalib 只能作为 separate comparator lane 后续推进。
 - `T30` Captain 已接受 review 为 `PASS`；已完成 statcalib interface-only contract 和 focused tests，但不等于 slow-loop integration、formal benchmark evidence、`.tflite` runtime 或 real-board validation。
 - `T36` Captain 已接受 review 为 `PASS`；已完成 `seed=20260429` failure-mechanism diagnosis，结论仍是 summary/final-snapshot-level hypothesis，不是 causal proof。
-- 当前唯一任务：`T38: seed=20260429 single-seed trace-export probe, bounded unchanged-semantics rerun`，任务包 `docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`。
+- `T38` Captain 已接受 review 为 `PASS`；single-seed trace evidence 支持 `seed=20260429` 的 combined committed-`b` instability，但不是 mitigation、multi-seed causal proof、formal benchmark、`.tflite` runtime 或 real-board validation。
+- `T31` Captain 已接受 review 为 `PASS`；已产出 `docs/training_chain_portable_dependency_lock_plan.md`，但不是 clean-environment rebuild proof。
+- 当前唯一任务：`T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap`，任务包 `docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md`。
 - R13 当前仍然有效：真板路径还缺设备存在、权限、寄存器活性、DMA 读出和 commit/ack round-trip 的真实证据。
 - R14 当前仍然有效但已收窄：AXI/DMA 代码侧审计已具体化，真实宿主、bitstream 与 DMA contract 仍未验证。
 - R19 已收口：T24 已固定 CLI shape 并报告 metric availability。
@@ -83,7 +85,9 @@ Current T24-T29 status note:
      - `T26` 已完成并由 Captain 接受为 `PASS`。
      - `T30` 已完成并由 Captain 接受为 `PASS`。
      - `T36` 已完成并由 Captain 接受为 `PASS`。
-     - 当前唯一任务为 `T38` seed=20260429 single-seed trace-export probe，任务包已存在：`docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`。
+     - `T38` 已完成并由 Captain 接受为 `PASS`。
+     - `T31` 已完成并由 Captain 接受为 `PASS`。
+     - 当前唯一任务为 `T39` training-chain CPU-only clean-environment draft lock and dry-run bootstrap，任务包已存在：`docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md`。
 10. `T15` 是否应直接运行多场景 P4 smoke？
    - 当前答案：已执行完成。
      - run dir: `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
@@ -308,5 +312,26 @@ Current T24-T29 status note:
 ### Risk Status Update
 
 - `R10` remains open but narrowed: T38 provides trace-level evidence for seed=20260429, but does not provide mitigation, multi-seed confirmation, or upstream root-cause isolation.
-- `R11` remains open: training-chain portability is not yet proven. T31 is created to plan the dependency-lock and clean-environment boundary without claiming verification.
+- `R11` remains open but narrowed: T31 produced a portable dependency-lock plan, but the CPU-only clean environment and draft lock still need T39-style dry-run verification.
 - `R20`, `R23`, and `R24` remain valid and are not closed by T38 or the Milestone 2I review.
+
+## 2026-05-17 Captain Update
+
+48. T31 review 如何裁决？
+   - 当前答案：
+     - Captain verdict = `PASS`。
+     - Blocking issues: none。
+     - N1 markdown subsection numbering：`accepted` as cosmetic。
+     - N2 later alignment with `docs/training_chain_bootstrap.md`：`accepted` as future alignment。
+     - N3 worker self-review overwritten by adversarial review：`accepted`。
+     - 没有 `deferred` warning，因此未从 T31 warning 分类新增 risk。
+49. T31 是否关闭 R11？
+   - 当前答案：
+     - 不关闭。
+     - T31 已把 R11 从“只有本机 bootstrap notes”缩窄为“已有 portable dependency-lock plan”。
+     - clean Python `3.12` CPU environment、draft lock artifact、dry-run bootstrap 仍未实际验证。
+50. 当前下一唯一任务是什么？
+   - 当前答案：
+     - `T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap`。
+     - 任务包为 `docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md`。
+     - T39 不得运行训练、benchmark、`.tflite`、真板、cleanup 或 GPU/CUDA portability work。
