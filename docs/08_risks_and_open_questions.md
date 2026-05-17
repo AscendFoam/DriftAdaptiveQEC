@@ -48,7 +48,7 @@ Current T24-T29 status note:
 - `T36` Captain 已接受 review 为 `PASS`；已完成 `seed=20260429` failure-mechanism diagnosis，结论仍是 summary/final-snapshot-level hypothesis，不是 causal proof。
 - `T38` Captain 已接受 review 为 `PASS`；single-seed trace evidence 支持 `seed=20260429` 的 combined committed-`b` instability，但不是 mitigation、multi-seed causal proof、formal benchmark、`.tflite` runtime 或 real-board validation。
 - `T31` Captain 已接受 review 为 `PASS`；已产出 `docs/training_chain_portable_dependency_lock_plan.md`，但不是 clean-environment rebuild proof。
-- 当前唯一任务：`T35: Paper draft skeleton and reviewer-risk audit`，任务包 `docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`。
+- 当前唯一任务：`T42: Paper Background / Related Work scaffold and method-positioning calibration`，任务包 `docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`。
 - R13 当前仍然有效：真板路径还缺设备存在、权限、寄存器活性、DMA 读出和 commit/ack round-trip 的真实证据。
 - R14 当前仍然有效但已收窄：AXI/DMA 代码侧审计已具体化，真实宿主、bitstream 与 DMA contract 仍未验证。
 - R19 已收口：T24 已固定 CLI shape 并报告 metric availability。
@@ -342,3 +342,38 @@ Current T24-T29 status note:
      - `T35: Paper draft skeleton and reviewer-risk audit`。
      - 任务包为 `docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`。
      - T35 只允许做 docs-only paper skeleton 与 reviewer-risk audit；不得运行新实验、不得升级 evidence level、不得改写阶段结论或 repo facts。
+
+52. T35 review 如何裁决？
+   - 当前答案：
+     - Captain verdict = `PASS`。
+     - Blocking issues: none。
+     - N1 title candidates are unusually conservative：`accepted`。
+     - N2 skeleton omits Background / Related Work section：`accepted`。
+     - N3 section-by-section hotspot table uses generic labels：`accepted`。
+     - N4 worker pre-review overwritten by adversarial review：`accepted`。
+     - 没有 `deferred` warning，因此未从 T35 warning 分类新增 risk。
+53. Milestone 2K 是否已经完成？
+   - 当前答案：
+     - 是。`T34 + T35` 都已完成并通过 Captain `PASS` 收口。
+     - 但这只代表 paper-assembly readiness 已到位，不代表可以跳过 paper-positioning gate、也不代表 blocked evidence 已升级。
+54. 当前下一唯一任务是什么？
+   - 当前答案：
+     - `T41: Milestone 2K paper-assembly gate review and next-phase decision`。
+     - 任务包为 `docs/tasks/Phase2/T41_paper_assembly_milestone_review.md`。
+     - T41 只允许做 read-only milestone review；不得运行新实验、不得升级 evidence level、不得改写阶段结论或 repo facts。
+55. T41 review 如何裁决？
+   - 当前答案：
+     - Captain verdict = `PASS`。
+     - Blocking issues: none。
+     - N1 T34 review path typo：`accepted`，并已在 Captain integration 中修正。
+     - N2 T41 human explanation count typo：`accepted`，并已在 Captain integration 中修正。
+     - 没有 `deferred` warning，因此未从 T41 warning 分类新增 risk。
+56. Milestone 2K 当前状态是什么？
+   - 当前答案：
+     - 已正式关闭，gate verdict = `Allow`。
+     - 但这不代表 blocked evidence 已升级；它只代表 paper-assembly readiness 已可进入下一步结构扩展。
+57. 当前下一唯一任务是什么？
+   - 当前答案：
+     - `T42: Paper Background / Related Work scaffold and method-positioning calibration`。
+     - 任务包为 `docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`。
+     - T42 只允许做 docs-only 结构扩展与定位校准；不得运行新实验、不得升级 evidence level、不得改写阶段结论或 repo facts。

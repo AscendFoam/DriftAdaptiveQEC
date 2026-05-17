@@ -72,9 +72,10 @@
 
 ### 2026-05-17 Captain Update
 
-- `T34` has been accepted as `PASS`; it produced a bounded claim/evidence ledger and figure-table outline without touching code, configs, `runs/`, `artifacts`, `.tflite`, or hardware scope.
-- T34 review comments are non-blocking and remain documentation-quality notes only; they do not introduce new repository or evidence risks.
-- Current unique task is `T35`, focused on docs-only paper draft skeletoning and reviewer-risk audit, not on new experiments or evidence upgrades.
+- `T41` has been accepted as `PASS`; it produced a bounded paper-assembly milestone review without touching code, configs, `runs/`, `artifacts`, `.tflite`, or hardware scope.
+- T41 review comments are non-blocking and remain document-correction notes only; they do not introduce new repository or evidence risks.
+- Milestone 2K is now formally closed with verdict `Allow`.
+- Current unique task is `T42`, focused on a docs-only Background / Related Work scaffold and method-positioning calibration, not on new experiments or evidence upgrades.
 
 ## 3. 可行性判断
 
@@ -352,7 +353,7 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T31`、`T33`、`T34`、`T36`、`T38`、`T39`、`T40` 已完成；当前下一唯一任务为 `T35`，只做 docs-only paper draft skeleton and reviewer-risk audit
+1. `T14` 至 `T31`、`T33`、`T34`、`T35`、`T36`、`T38`、`T39`、`T40`、`T41` 已完成；当前下一唯一任务为 `T42`，只做 docs-only Background / Related Work scaffold and method-positioning calibration
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 3. `T26` gate 结论为 `CONDITIONAL_GO`，且 `T30` 已把 statcalib 收紧为 interface-only separate comparator contract；后续仍不得把 statcalib 静默并入 T24 frozen benchmark set，不得扩展 formal benchmark、baseline/scenario、`.tflite` 或真板范围。
 4. `T36/T38` 已把 `seed=20260429` 诊断推进到 single-seed trace-supported mechanism evidence，但仍不是 mitigation 或 multi-seed causal proof。

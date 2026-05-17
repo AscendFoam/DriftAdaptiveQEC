@@ -182,4 +182,6 @@
 - `T33` 已完成并通过 Captain `PASS` 收口；其结论仅限“manifest-listed tracked cache 已从 Git index 中移除”，不得外推为 `runs/`、`artifacts`、`.pytest_cache/`、`.mypy_cache/` 或其他 repo-noise 已被清理。
 - `T34` 只允许做 docs-only 的 claim/evidence ledger 与 figure-table outline；不得借论文收口任务顺手触碰任何 cleanup、运行结果或 evidence-level 语义。
 - `T34` 已完成并通过 Captain `PASS` 收口；其输出不改变任何 repo-noise 事实。
-- `T35` 只允许做 docs-only 的 paper draft skeleton 与 reviewer-risk audit；不得借写作任务顺手触碰任何 cleanup、运行结果或 evidence-level 语义。
+- `T35` 已完成并通过 Captain `PASS` 收口；其输出只是 docs-only 的 paper draft skeleton 与 reviewer-risk audit，不改变任何 repo-noise 事实。
+- `T41` 已完成并通过 Captain `PASS` 收口；其输出只是 Milestone 2K paper-assembly gate review，不改变任何 repo-noise 事实。
+- `T42` 若推进，只允许做 docs-only 的 Background / Related Work scaffold 与 method-positioning calibration；不得借写作结构任务顺手触碰任何 cleanup、运行结果或 evidence-level 语义。

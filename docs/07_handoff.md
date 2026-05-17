@@ -5,15 +5,15 @@
 - 日期：`2026-05-17`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T35: Paper draft skeleton and reviewer-risk audit`
-- 任务包：`docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`
+- 当前唯一任务：`T42: Paper Background / Related Work scaffold and method-positioning calibration`
+- 任务包：`docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`
 
-Captain closeout note after T34:
+Captain closeout note after T41:
 
-- `T34` is complete. `docs/review/T34_review.md` verdict = `PASS`; blocking issues = none.
-- T34 comments N1-N4 are non-blocking and treated as `accepted` drafting-quality notes; there are no `deferred` warnings from this review.
-- T34 does not change any risk status, evidence level, or repo-noise fact boundary. It only adds a bounded paper-assembly ledger artifact.
-- The active next task is `T35`, not `T34`, `T33`, `T40`, `T39`, `T31`, or `T38`. Any older T34/T33-next wording later in this handoff is superseded by this status block and `docs/04_task_board.md`.
+- `T41` is complete. `docs/review/T41_review.md` verdict = `PASS`; blocking issues = none.
+- T41 comments are non-blocking and were handled as minor document corrections; there are no `deferred` warnings from this review.
+- T41 does not change any risk status, evidence level, or repo-noise fact boundary. It closes Milestone 2K and sets the paper-positioning gate outcome only.
+- The active next task is `T42`, not `T41`, `T35`, `T34`, `T33`, `T40`, `T39`, `T31`, or `T38`. Any older T41/T35-next wording later in this handoff is superseded by this status block and `docs/04_task_board.md`.
 
 ## 2. 本轮已完成
 
@@ -636,62 +636,58 @@ Captain closeout note after T34:
 
 ## 6. 当前唯一任务包摘要
 
-`T35` 已创建任务包，等待 Worker 执行 docs-only 的 paper draft skeleton 与 reviewer-risk audit。
+`T41` 已完成，Milestone 2K 现已由 gate review 正式关闭；当前等待 Worker 执行的是 docs-only 的 `T42` 结构扩展任务。
 
-T34 已收口事实：
+T41 已收口事实：
 
-- `docs/review/T34_review.md` verdict = `PASS`，blocking issues = none
-- `docs/paper_claim_evidence_ledger.md` 已形成：
-  - claim ledger `C1`-`C11`
-  - figure outline `F1`-`F3`
-  - table outline `T1`-`T5`
-  - blocked-claim summary
-  - wording guardrails for future paper drafting
-- ledger 已显式保留：
-  - mock-backed software HIL vs real-board validation
-  - true `.tflite` runtime vs stub/fallback path
-  - frozen-set formal software revalidation vs paper-grade expanded benchmark
-  - one clean-environment CPU-only smoke vs full reproducibility / portability
-  - statcalib interface-contract evidence vs integrated comparator evidence
+- `docs/review/T41_review.md` verdict = `PASS`，blocking issues = none
+- `docs/review/Milestone2K_review.md` 已形成：
+  - verdict = `Allow`
+  - minimum safe paper positioning
+  - blocked claims that still prevent stronger positioning
+  - explicit decision that Background / Related Work must be added before prose expansion
+  - next unique task recommendation = `T42`
+- `docs/for_human/T41_explanation.md` 已形成：
+  - Milestone 2K 现在证明了什么
+  - 它仍然不能证明什么
+  - 为什么下一步是补结构而不是直接开写全文或切回部署工作
 - 未修改 source、config、`runs/`、`artifacts`、benchmark protocol、`.tflite`、hardware 或治理结论文档
 
-T34 review notes：
+T41 review notes：
 
-- N1 C9 direct evidence paths one hop indirect：`accepted`
-- N2 float/int8 quantization-gap claim omitted from ledger：`accepted`
-- N3 historical ablation conclusions omitted from ledger：`accepted`
-- N4 worker pre-review overwritten by adversarial review：`accepted`
-- 没有 `deferred` warning；没有因 T34 新增 risk
+- N1 T34 review path typo：`accepted` and fixed during Captain integration
+- N2 T41 human explanation count typo：`accepted` and fixed during Captain integration
+- 没有 `deferred` warning；没有因 T41 新增 risk
 
-T35 任务边界：
+T42 任务边界：
 
-- 只允许基于现有 ledger 形成 paper draft skeleton 与 reviewer-risk audit
+- 只允许在现有 `docs/paper_draft_skeleton.md` 基础上补 Background / Related Work scaffold 与 method-positioning calibration
 - 只允许引用具体 claim IDs、figure/table IDs、evidence path、review 结论、risk 和边界
-- 必须显式保留 mock-backed software HIL、true `.tflite` runtime、real-board validation、training reproducibility、statcalib integration 的现有边界
+- 必须显式校准 conservative vs method-forward title positioning，并把 introduction contribution bullets 对齐到 claim ledger
 - 不得修改 source、benchmark protocol、`runs/`、`artifacts`、阶段结论文档或任何历史实验事实
 - 不得运行 benchmark、training、`.tflite`、hardware 或 cleanup
 
 ## 7. 下一步建议
 
-下一步应交给 Worker 执行 `T35: Paper draft skeleton and reviewer-risk audit`。
+下一步应交给 Worker 执行 `T42: Paper Background / Related Work scaffold and method-positioning calibration`。
 
 建议优先级：
 
-1. 读取 `docs/paper_claim_evidence_ledger.md` 及相关治理/背景文档，把 skeleton 每个 section 绑定到现有 claim IDs 和 figure/table IDs。
-2. 输出 `docs/paper_draft_skeleton.md`，但只做 section/subsection scaffold，不写会越过当前 evidence 边界的完整论证 prose。
-3. 输出 `docs/paper_reviewer_risk_audit.md`，逐项列出 novelty、evidence-grade、overclaim、reproducibility、deployment、mechanism 等 reviewer 风险。
-4. 明确写出哪些 objection 可以仅靠 wording 降风险，哪些必须依赖后续 evidence-upgrade task 才能缓解。
+1. 在 `docs/paper_draft_skeleton.md` 中新增 Background / Related Work section scaffold，并把它绑定到现有 claim IDs、figure/table IDs 和 method framing。
+2. 输出一个 method-positioning calibration note，明确 conservative title 与 method-forward title 的安全边界和推荐方案。
+3. 校准 introduction contribution bullets，确保 `C1`-`C5`、`C9` 可写，`C6`、`C7`、`C8`、`C10`、`C11` 仍保持 blocked。
+4. 保持 docs-only，不进入 full prose drafting。
 
 ## 8. 暂不继续的事项
 
-在 T35 完成前，暂不继续：
+在 T42 完成前，暂不继续：
 
 1. 新的 teacher-representation benchmark 扩展或长跑
 2. statcalib slow-loop integration 或 formal benchmark integration
 3. 超出 frozen-set 的 P4 正式长跑或 CI-driven stopping
 4. 真板 backend 能力扩写
 5. 任何新的 repo cleanup 扩展
-6. paper-inspired 新分支实现
+6. full paper prose expansion 或 paper-inspired 新分支实现
 7. GPU/CUDA training lock 或 dev torch portability claim
 8. 真实 `.tflite` runtime smoke
 
@@ -756,6 +752,6 @@ This section supersedes older T38/T31-next wording in sections above.
      - `R4` 已缩窄，`R7` 对 tracked-cache lane 已收口。
 54. 当前下一唯一任务是什么？
    - 当前答案：
-     - `T35: Paper draft skeleton and reviewer-risk audit`。
-     - 任务包为 `docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`。
-     - Worker 只允许做 docs-only paper skeleton 与 reviewer-risk audit；不得运行新实验、不得升级 evidence level、不得改写阶段结论或 repo facts。
+     - `T42: Paper Background / Related Work scaffold and method-positioning calibration`。
+     - 任务包为 `docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`。
+     - Worker 只允许做 docs-only 结构扩展与定位校准；不得运行新实验、不得升级 evidence level、不得改写阶段结论或 repo facts。

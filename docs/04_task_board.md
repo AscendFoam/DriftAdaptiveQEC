@@ -187,8 +187,26 @@
   - Review output: `docs/review/T34_review.md`
   - Captain verdict: `PASS`
   - Result: bounded claim/evidence ledger and figure-table outline are in place; paper assembly can proceed without silently upgrading mock/stub/smoke/readiness evidence
-- [ ] T35: Paper draft skeleton and reviewer-risk audit
+- [x] T35: Paper draft skeleton and reviewer-risk audit
   - Task package: `docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`
+  - Output: `docs/paper_draft_skeleton.md`
+  - Output: `docs/paper_reviewer_risk_audit.md`
+  - Review output: `docs/review/T35_review.md`
+  - Captain verdict: `PASS`
+  - Result: bounded manuscript skeleton and reviewer-risk audit are in place; Milestone 2K paper-assembly readiness is complete without upgrading blocked evidence
+
+### Milestone 2L: Paper Positioning Gate
+
+- [x] T41: Milestone 2K paper-assembly gate review and next-phase decision
+  - Task package: `docs/tasks/Phase2/T41_paper_assembly_milestone_review.md`
+  - Output: `docs/review/Milestone2K_review.md`
+  - Captain verdict: `PASS`
+  - Result: Milestone 2K is formally closable with verdict `Allow`; minimum safe paper positioning and the need for Background / Related Work before prose expansion are now explicit
+
+### Milestone 2M: Paper Framing And Scaffold Extension
+
+- [ ] T42: Paper Background / Related Work scaffold and method-positioning calibration
+  - Task package: `docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`
 
 Long-term objective:
 
@@ -196,51 +214,49 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T35: Paper draft skeleton and reviewer-risk audit`
+`T42: Paper Background / Related Work scaffold and method-positioning calibration`
 
 状态说明：
 
-- `T34` 已完成并通过 adversarial review，Captain verdict = `PASS`
-- T34 review blocking issues：
+- `T41` 已完成并通过 review，Captain verdict = `PASS`
+- T41 review blocking issues：
   - none
-- T34 review non-blocking comments：
-  - N1 C9 direct evidence paths are one hop indirect：`accepted`
-  - N2 float/int8 quantization-gap claim omitted from the ledger：`accepted`
-  - N3 historical ablation conclusions omitted from the ledger：`accepted`
-  - N4 worker pre-review overwritten by adversarial review：`accepted`
+- T41 review non-blocking comments：
+  - N1 T34 review path mis-cited in `Milestone2K_review.md`：fixed during Captain integration
+  - N2 T41 human explanation counted 18 challenge points instead of 20：fixed during Captain integration
 - `R10` 仍未关闭但显著缩窄：T38 trace 支持 combined committed-`b` instability；上游 teacher vs CNN residual root cause 尚未完全隔离
 - `R20` 仍未关闭：correction saturation structural zero 仍需后续独立 edge/stress 判断
 - `R23` 仍未关闭：aggregation/report writer 缺少 focused tests 的风险仍存在
 - `R24` 仍有效：statcalib 目前只是接口级 residual-b contract，不能外推为完整 calibration comparator 或 benchmark evidence
 - `R11` 仍有效但已进一步缩窄：T40 已补 clean-environment CPU real-training smoke，但 full training reproducibility、GPU/CUDA portability、Linux portability 仍未验证
 - `R12` 仍有效：当前机器上真实 `.tflite` runtime 依赖仍未满足，因此 `T32` 继续保持 pending
-- `R4` 与 `R7` 保持 T33 收口后的状态不变；T34 不新增 repo-noise 风险
-- `T35` 是当前下一唯一任务：只做 docs-only 的 paper draft skeleton 与 reviewer-risk audit
+- `R4` 与 `R7` 保持 T33 收口后的状态不变；T41 不新增 repo-noise 风险
+- Milestone 2K 已由 `T41` 正式关闭；当前下一唯一任务是 `T42`，只做 docs-only 的 Background / Related Work scaffold 与 method-positioning calibration
 
 为什么现在做它：
 
-1. `T34` 已把 paper-assembly 的 claim/evidence 边界账本建立起来，后续写作不需要再从零开始判断哪些结论可写。
+1. `T34`、`T35`、`T41` 已把 paper-assembly 的 ledger、skeleton、reviewer-risk audit 和 milestone gate 结论建立起来，后续不需要再从零开始判断哪些结论可写、哪些定位可用。
 2. `T32` 仍被当前机器缺少 `tensorflow / tflite_runtime` 明确阻塞，`T37` 仍被硬件/bitstream 前提阻塞。
-3. `T35` 是当前唯一未完成、且不依赖新环境、新硬件或新运行结果的 bounded docs-only task。
-4. `T35` 只搭 paper draft skeleton 并做 reviewer-risk audit，不改 benchmark、训练、`.tflite`、真板或历史实验事实来源。
+3. `T41` 已明确要求在 prose expansion 前先补 Background / Related Work scaffold，并对 title / method positioning 做校准。
+4. `T42` 是当前唯一不依赖新环境、新硬件或新运行结果、且能直接提升论文结构完整性的 bounded docs-only task。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T35`
-2. `T34` 已按 `PASS` 收口。
-3. T34 review blocking issues：
+1. 当前唯一任务：`T42`
+2. `T41` 已按 `PASS` 收口。
+3. T41 review blocking issues：
    - none
-4. T34 non-blocking comments：
-  - accepted: C9 direct evidence paths can stay review-linked at this stage
-  - accepted: omitted historical quantization/ablation claims are future drafting choices, not current blockers
-  - accepted: worker pre-review overwrite follows the established review flow
-5. T34 review output：`docs/review/T34_review.md`
-6. T35 任务包：`docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`
+4. T41 non-blocking comments：
+  - accepted and fixed: T34 review path typo in `docs/review/Milestone2K_review.md`
+  - accepted and fixed: challenge-point count typo in `docs/for_human/T41_explanation.md`
+5. T41 review output：`docs/review/T41_review.md`
+6. T42 任务包：`docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`
 
-## Done Criteria For T35
+## Done Criteria For T42
 
-1. Produce a bounded paper draft skeleton that maps section-by-section to the existing ledger and concrete evidence paths.
-2. Produce a reviewer-risk audit that lists likely overclaim, evidence-gap, and wording-failure points for the current paper state.
-3. Keep all hard boundaries around mock-backed software HIL, true `.tflite` runtime, real-board validation, training reproducibility, and statcalib integration explicit.
-4. Do not modify source code, benchmark protocol, historical run/artifact facts, or stage-conclusion documents.
-5. Do not run new benchmark, training, `.tflite`, hardware, or cleanup work.
+1. Add a bounded Background / Related Work scaffold to `docs/paper_draft_skeleton.md`.
+2. Produce a method-positioning calibration note that compares conservative vs method-forward framing and states the recommended safe choice.
+3. Calibrate title candidates and introduction contribution bullets against `C1`-`C11` so blocked claims remain blocked.
+4. Do not write full paper prose, run experiments, or upgrade evidence levels.
+5. Do not modify source code, benchmark protocol, historical run/artifact facts, or stage-conclusion documents.
+6. Do not run new benchmark, training, `.tflite`, hardware, or cleanup work.

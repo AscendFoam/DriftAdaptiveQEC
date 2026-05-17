@@ -1729,3 +1729,89 @@ Milestone 2I is complete within its bounded scope: mechanism-evidence hardening 
 2. 新增 `docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`。
 3. `docs/07_handoff.md` 记录 T34 Captain verdict 与 T35 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 仅更新当前唯一任务口径；不新增 risk。
+
+## D-2026-05-17-06
+
+- 日期：`2026-05-17`
+- 决策：接受 `T35` adversarial review 的 `PASS`，标记 `T35` 完成，并将当前唯一任务切换为 `T41: Milestone 2K paper-assembly gate review and next-phase decision`
+
+### 背景
+
+`T35` 是 Milestone 2K 的 docs-only paper draft skeleton and reviewer-risk audit task。`docs/review/T35_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. `docs/paper_draft_skeleton.md` 已按 section-level scaffold 绑定 claim IDs 与 figure/table IDs。
+2. `docs/paper_reviewer_risk_audit.md` 已把 novelty、evidence-grade、overclaim、reproducibility/deployment、ablation/mechanism 风险绑定到具体 claim/risk。
+3. `C6`、`C7`、`C8`、`C10`、`C11` 等 blocked claims 没有被静默升级。
+4. 本轮没有 source、config、`runs/`、`artifacts`、benchmark protocol、`.tflite`、hardware 或治理结论文档越界修改。
+
+### Review Notes
+
+1. N1 title candidates are unusually conservative
+   - 处理：`accepted`
+2. N2 skeleton omits Background / Related Work section
+   - 处理：`accepted`
+3. N3 section-by-section hotspot table uses generic labels
+   - 处理：`accepted`
+4. N4 worker pre-review overwritten by adversarial review
+   - 处理：`accepted`
+
+这些都不是 blocking issue，也不需要写入新的 risks。
+
+### 结论
+
+`T35` 可标记完成。它把 Milestone 2K 从“只有 ledger”推进到“ledger + draft skeleton + reviewer-risk audit”三件套齐备的状态，但没有把任何 mock、stub、smoke、readiness 或 partial evidence 升级为更强结论。
+
+下一唯一任务切换到 `T41`。理由是：
+
+1. Milestone 2K（`T34 + T35`）已经完成，下一步最合理的是先做里程碑 gate review，而不是直接跳入 prose expansion。
+2. `T32` 与 `T37` 仍分别被 `.tflite` runtime 依赖和硬件/bitstream 前提阻塞。
+3. `T41` 可以在不引入新实验的前提下，明确 paper positioning、Background / Related Work 是否必须先补、以及下一个真正应推进的 bounded task。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T35` 完成，并切换 `Current Unique Task` 到 `T41`。
+2. 新增 `docs/tasks/Phase2/T41_paper_assembly_milestone_review.md`。
+3. `docs/07_handoff.md` 记录 T35 Captain verdict、non-blocking note 处理与 T41 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 仅更新当前唯一任务口径；不新增 risk。
+
+## D-2026-05-17-07
+
+- 日期：`2026-05-17`
+- 决策：接受 `T41` review 的 `PASS`，标记 `T41` 完成，并将当前唯一任务切换为 `T42: Paper Background / Related Work scaffold and method-positioning calibration`
+
+### 背景
+
+`T41` 是 Milestone 2K 的 read-only paper-assembly gate review task。`docs/review/T41_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. `docs/review/Milestone2K_review.md` 给出 `Allow`，并明确 Milestone 2K 可关闭。
+2. minimum safe paper positioning 与 `docs/paper_reviewer_risk_audit.md` 一致，没有升级 blocked claims。
+3. Background / Related Work 必须在 prose expansion 前先补。
+4. 推荐下一唯一任务为 `T42`，范围仍是 docs-only。
+
+### Review Notes
+
+1. N1 T34 review path mis-cited in `docs/review/Milestone2K_review.md`
+   - 处理：`accepted`
+   - 说明：Captain integration 已修正为 `docs/review/T34_review.md`
+2. N2 `docs/for_human/T41_explanation.md` 把 challenge-point count 写成 18，实际为 20
+   - 处理：`accepted`
+   - 说明：Captain integration 已修正计数
+
+这些都不是 blocking issue，也不需要写入新的 risks。
+
+### 结论
+
+`T41` 可标记完成。它正式关闭 Milestone 2K，并把后续论文推进从“先做 gate”推进到“可以开始补 Background / Related Work 与 method-positioning calibration”，但没有把任何 mock、stub、smoke、readiness 或 partial evidence 升级为更强结论。
+
+下一唯一任务切换到 `T42`。理由是：
+
+1. `T41` 已明确要求在 prose expansion 前先补 Background / Related Work scaffold。
+2. `T35` review 的 conservative-title 问题和 `T41` milestone review 的 method-forward compromise 需要一个独立的校准任务来收口。
+3. `T32` 与 `T37` 仍分别被 `.tflite` runtime 依赖和硬件/bitstream 前提阻塞，不适合作为当前唯一任务。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T41` 完成，并切换 `Current Unique Task` 到 `T42`。
+2. 新增 `docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`。
+3. `docs/07_handoff.md` 记录 T41 Captain verdict、non-blocking note 处理与 T42 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 仅更新当前唯一任务口径；不新增 risk。

@@ -26,12 +26,12 @@
 
 ## 2026-05-17 Captain Update
 
-- `T34` reviewer verdict accepted by Captain as `PASS`.
-- T34 blocking issues: none.
-- T34 non-blocking comments N1-N4 are treated as `accepted` documentation follow-up notes, not as new risks or blockers.
-- `T34` establishes a bounded paper-assembly claim/evidence ledger and figure-table outline without upgrading any mock-backed, stub, readiness, or smoke evidence level.
-- Current unique task is now `T35: Paper draft skeleton and reviewer-risk audit`.
-- `T35` is docs-only. It may assemble a section-level draft skeleton and reviewer-risk audit, but must not run new experiments, rewrite evidence levels, or overclaim `.tflite` / real-board / full reproducibility completion.
+- `T41` reviewer verdict accepted by Captain as `PASS`.
+- T41 blocking issues: none.
+- T41 non-blocking comments are minor documentation corrections only; they do not introduce new risks or blockers.
+- `T41` closes Milestone 2K and confirms the minimum safe paper positioning without upgrading any mock-backed, stub, readiness, or smoke evidence level.
+- Current unique task is now `T42: Paper Background / Related Work scaffold and method-positioning calibration`.
+- `T42` is docs-only. It may extend the manuscript scaffold with Background / Related Work and calibrate title/method positioning, but must not run new experiments, rewrite evidence levels, or overclaim `.tflite` / real-board / full reproducibility completion.
 
 ## 3. 解决什么问题
 
@@ -221,7 +221,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T35: Paper draft skeleton and reviewer-risk audit`
+- `T42: Paper Background / Related Work scaffold and method-positioning calibration`
 
 ## 12. 快照结论
 
@@ -240,4 +240,4 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 11. `T31` 已完成并通过 adversarial review，Captain verdict = `PASS`；产物是 training-chain portable dependency-lock plan，不是 clean-environment rebuild proof。
 12. `T39` 已完成并通过 adversarial review，Captain verdict = `PASS`；它证明了 clean CPU-only environment、draft lock 和 dry-run/import-level bootstrap 可复现，但不等于 real training reproducibility。
 13. `T40` 已完成并通过 adversarial review，Captain verdict = `PASS`；它证明了 clean CPU-only environment 已能完成一次真实的最小训练 smoke，但不等于 full training reproducibility、GPU/CUDA portability、Linux portability、`.tflite` runtime 或 benchmark readiness。
-14. `T34` 已完成并通过 Captain `PASS` 收口；当前唯一任务 `T35` 只允许做 docs-only 的 paper draft skeleton 与 reviewer-risk audit，不得触碰代码、`runs/`、`artifacts`、benchmark、`.tflite`、真板或阶段结论文档。
+14. `T41` 已完成并通过 Captain `PASS` 收口；Milestone 2K 已正式由 gate review 关闭，但当前唯一任务 `T42` 只允许做 docs-only 的 Background / Related Work scaffold 与 method-positioning calibration，不得触碰代码、`runs/`、`artifacts`、benchmark、`.tflite`、真板或阶段结论文档。

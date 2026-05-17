@@ -146,8 +146,15 @@ This task is still docs-only. The worker is not writing the full paper and is no
 
 ## Worker Output
 
-- Pending.
+- Added `docs/paper_draft_skeleton.md` as a bounded manuscript scaffold.
+- Added `docs/paper_reviewer_risk_audit.md` as an adversarial reviewer-risk and wording-trap audit.
+- Added `docs/review/T35_review.md` with worker-side pre-review notes and residual-risk checks.
+- Added `docs/for_human/T35_explanation.md` with a short Chinese explanation of scope and boundaries.
+- Preserved T34 ledger boundaries explicitly; no attempt was made to upgrade blocked evidence or expand experiment scope.
 
 ## Verification Record
 
-- Pending.
+- Checked that every major section in `docs/paper_draft_skeleton.md` includes explicit claim IDs and figure/table IDs where applicable.
+- Checked that `docs/paper_reviewer_risk_audit.md` ties objections to concrete claim states, blocker categories, or open-risk IDs such as `R5`, `R9`, `R10`, `R11`, `R12`, `R13`, `R14`, `R20`, and `R24`.
+- Checked that blocked claims `C6`, `C7`, `C8`, `C10`, and `C11` remain blocked and are called out as non-completed evidence.
+- Verified separately that no code, config, `runs/`, or `artifacts` paths were modified by this task.
