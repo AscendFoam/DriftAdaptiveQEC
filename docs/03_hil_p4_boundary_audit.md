@@ -86,6 +86,8 @@
 - `T39` 已完成并通过 Captain `PASS` 收口；其输出是 clean-environment draft lock 与 dry-run/import-level bootstrap evidence，不是 real-training result、benchmark、`.tflite` runtime validation 或 real-board validation。
 - `T40` 只允许在同一 clean CPU-only lane 内执行一次最小 real-training smoke，并把 `model_dir` / `report_dir` 重定向到 task-scoped isolated directories；不得改写 canonical historical `artifacts/models/*`、`artifacts/reports/*`，不得扩展到 benchmark、`.tflite` runtime、P3/P4/HIL、real-board、cleanup 或 GPU/CUDA portability。
 - `T40` 已完成并通过 Captain `PASS` 收口；其输出是 clean CPU-only lane 的 one-run training smoke evidence，不是 benchmark、true `.tflite` runtime validation、GPU portability proof 或 real-board validation。
+- `T33` 是 repo-hygiene execution task，不改变任何 HIL / P4 / `.tflite` / real-board evidence level；它只能把 manifest-listed tracked cache 从 Git index 中移除，不能被表述为新的实验或部署证据。
+- `T34` 若推进，只允许整理 claim/evidence ledger 与 figure-table outline；它不能把 mock-backed software HIL、stub `.tflite`、clean-env smoke 或 readiness 文档升级成更高 evidence level。
 
 ## 7. 当前推荐表述
 

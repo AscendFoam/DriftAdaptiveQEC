@@ -7,10 +7,10 @@
 | R1 | 默认运行环境不可直接执行最小 benchmark | 中 | 默认 `python 3.13.7` 仍缺 `numpy`，但 `C:\ProgramData\anaconda3\python.exe` 已可跑通 P0 smoke | 后续所有治理文档继续显式指定推荐解释器 |
 | R2 | 根目录虽已补 recovery-scoped manifest，但完整训练链、`.tflite` 与真板环境仍无统一依赖说明 | 中 | `requirements-recovery.txt` 只覆盖 `P0/P3/P4 recovery smoke`，且显式不含 `torch`、`tensorflow`、`tflite-runtime`；`docs/training_chain_bootstrap.md` 已补训练链 bootstrap，但还不是跨机器完整依赖锁定 | 继续保持作用域诚实；训练链已独立说明，`.tflite` 与真板路径仍需单开有界 manifest / bootstrap 任务 |
 | R3 | 软件 HIL 与真板 HIL 边界容易被误写 | 高 | `cnn_fpga/hwio/board_backend.py` 仍是 placeholder 风格；`docs/03_hil_p4_boundary_audit.md` 已完成边界澄清；`T20` 当前任务只允许补 readiness checklist，不允许实现或宣称真板完成 | 后续所有文档、复验与报告都必须引用 `docs/03_hil_p4_boundary_audit.md` 的统一口径；`T20` 只做只读 readiness 审计 |
-| R4 | 仓库中已有大量缓存与生成物噪声 | 中 | `.gitignore` 已忽略 `__pycache__/`、`runs/`、`artifacts/`，但 Git 中仍有 `116` 个已跟踪缓存/字节码文件、`1841` 个已跟踪 `runs/` 文件、`110` 个已跟踪 `artifacts/` 文件；`T19` 已确认这 `116` 个文件全部位于 `9` 个 `__pycache__` 目录中 | 已补 `docs/06_repo_noise_governance.md` 与 `docs/cleanup_tracked_cache_manifest.md` 固定“先治理后清理”；后续仍需单开 cleanup 执行任务做物理移除 |
+| R4 | 仓库中仍有历史生成物噪声，容易混淆当前事实来源 | 中 | `.gitignore` 已忽略 `__pycache__`、`runs/`、`artifacts/`；`T33` 已将先前 `116` 个 tracked `.pyc` 文件从 Git index 中移除，因此 tracked cache/bytecode 已归零，但 Git 中仍有 `1841` 个已跟踪 `runs/` 文件、`110` 个已跟踪 `artifacts/` 文件 | 对 tracked cache 的 bounded cleanup 已完成；后续如需处理 `runs/` / `artifacts/`，必须单开独立 cleanup 任务，并继续禁止把整目录改写成新的事实来源 |
 | R5 | P4 目前已完成四场景、五模式、`repeats=2` 的 formal software revalidation，但仍为 mock-backed software HIL，不是 `.tflite` runtime、不是 `real_board`、不是 paper-grade expanded benchmark | 中 | T24 run dir: `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743`；`missing_runs = []`，`coverage = 1.0`；四场景 winner 均为 `hybrid_residual_b` | T24 已完成 formal frozen-set software revalidation；但仍不可写成 paper-grade benchmark 或 runtime/board validation；后续如要升级证据等级，需新增 statcalib comparator、CI-driven stopping 或 runtime/board 路径 |
 | R6 | `.tflite` 真导出与 stub 回退容易混淆 | 中高 | `cnn_fpga/model/export.py` 与 `cnn_fpga/runtime/inference_service.py` 同时支持两种路径，且 runtime 输出不同 `source`；`T4/T7` 当前都刻意未走 `.tflite` 路径 | 文档与日志必须显式标注 `artifact type`，并区分 `tflite_service` 与 `tflite_stub_service` |
-| R7 | 虽然 `T5` 已立治理口径，`T19` 也已补出缓存 cleanup manifest，但具体 cleanup 执行窗口与归档方式仍未决定 | 中 | `docs/06_repo_noise_governance.md` 与 `docs/cleanup_tracked_cache_manifest.md` 已固定缓存 cleanup 的目标目录、命令草案、回滚方式与验收标准，但尚未执行物理 cleanup | 在后续单开有界 cleanup 执行任务，严格按 manifest 落地，并继续把 `runs/` / `artifacts/` 留在独立任务中处理 |
+| R7 | `T19` manifest 对应的 tracked-cache physical cleanup execution | 已收口 | `T33` 已按 `docs/cleanup_tracked_cache_manifest.md` 对 9 个 manifest-listed `__pycache__` 目录执行 bounded untrack；`git ls-files | rg "__pycache__|\\.pyc$"` 已归零 | `R7` 对 tracked-cache lane 已关闭；`runs/` / `artifacts/` 如需处理仍必须另开任务 |
 | R8 | 最小 software HIL 路径虽然已在 bounded recovery path 上完成逐字一致复验，但该结论容易被误外推到真板、`.tflite` 或正式 benchmark | 中 | `T12` 已确认 `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104` 与 `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172232_3ae9f9176104` 的 `hil_summary.json` / `hil_events.json` 哈希一致；但路径仍固定为 `mock + model_artifact + artifact_npz + inproc` | 后续文档必须继续写清结论边界，不把 bounded recovery smoke 扩写成真板或正式 benchmark 已恢复 |
 | R9 | T24 已完成 formal frozen-set revalidation，但若继续扩大到更多 repeat、CI-driven stopping 或 extra drift families，仍可能隐式越过 frozen-set/formal 边界 | 中 | T24 已按 locked protocol 跑完 `4 scenarios x 5 modes x repeats=2`；`docs/P4_benchmark_formal_protocol.md` 已锁定边界 | T24 后仍不应自动追加更大 repeat、额外 scenario 或 statcalib comparator；任何进一步 P4 扩展都必须新开任务包 |
 | R10 | `hybrid_residual_b` 的 teacher diagnostics / mechanism evidence 仍缺 per-window trace，因此机制解释尚不能闭环 | 中 | `docs/review/T27_teacher_diagnostics_path_audit.md` 已将主因缩窄为 broadcast teacher features 不触发 scalar explain diagnostics；`docs/review/T28_review.md` 确认当前输出已显式标记 `not_generated` / `not_applicable`；`docs/seed20260429_failure_diagnosis.md` 将 `20260429` 收益收缩缩窄为 residual-amplitude / teacher-delta regime instability hypothesis，但缺少 per-window committed-parameter trace | R10 remains open but further narrowed；T38 已开任务包，后续只允许 single-seed trace-export probe，不得扩 benchmark 或新分支 |
@@ -48,7 +48,7 @@ Current T24-T29 status note:
 - `T36` Captain 已接受 review 为 `PASS`；已完成 `seed=20260429` failure-mechanism diagnosis，结论仍是 summary/final-snapshot-level hypothesis，不是 causal proof。
 - `T38` Captain 已接受 review 为 `PASS`；single-seed trace evidence 支持 `seed=20260429` 的 combined committed-`b` instability，但不是 mitigation、multi-seed causal proof、formal benchmark、`.tflite` runtime 或 real-board validation。
 - `T31` Captain 已接受 review 为 `PASS`；已产出 `docs/training_chain_portable_dependency_lock_plan.md`，但不是 clean-environment rebuild proof。
-- 当前唯一任务：`T33: Tracked cache physical cleanup execution, only within T19 manifest`，任务包 `docs/tasks/Phase2/T33_tracked_cache_physical_cleanup_execution.md`。
+- 当前唯一任务：`T34: Paper claim/evidence ledger and figure-table outline`，任务包 `docs/tasks/Phase2/T34_paper_claim_evidence_ledger.md`。
 - R13 当前仍然有效：真板路径还缺设备存在、权限、寄存器活性、DMA 读出和 commit/ack round-trip 的真实证据。
 - R14 当前仍然有效但已收窄：AXI/DMA 代码侧审计已具体化，真实宿主、bitstream 与 DMA contract 仍未验证。
 - R19 已收口：T24 已固定 CLI shape 并报告 metric availability。
@@ -339,6 +339,6 @@ Current T24-T29 status note:
      - full training reproducibility、GPU/CUDA portability、Linux portability 仍未验证。
 51. 当前下一唯一任务是什么？
    - 当前答案：
-     - `T33: Tracked cache physical cleanup execution, only within T19 manifest`。
-     - 任务包为 `docs/tasks/Phase2/T33_tracked_cache_physical_cleanup_execution.md`。
-     - T33 只允许按 T19 manifest 做 bounded tracked-cache cleanup；不得触碰 `runs/`、`artifacts/`、source、benchmark、`.tflite` 或真板边界。
+     - `T34: Paper claim/evidence ledger and figure-table outline`。
+     - 任务包为 `docs/tasks/Phase2/T34_paper_claim_evidence_ledger.md`。
+     - T34 只允许做 docs-only claim/evidence ledger 与 figure-table outline；不得运行新实验、不得升级 evidence level、不得改写阶段结论或 repo facts。

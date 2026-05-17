@@ -70,9 +70,9 @@
   - `runs/`
   - `artifacts/`
 - 但 Git 历史中仍已有大量已跟踪噪声，这说明当前问题主要是“历史已跟踪文件”，而不是“缺少忽略规则”。
-- 已跟踪缓存/字节码文件：`116`
-  - 分布于 `9` 个 `__pycache__` 目录
-  - `T19` 只读清点确认：上述 `116` 个文件全部位于 `__pycache__` 目录内，额外散落的已跟踪 `.pyc` 文件数为 `0`
+- 当前 Git index 中已跟踪缓存/字节码文件：`0`
+  - `T33` 已按 `T19` manifest 将先前 `116` 个 tracked `.pyc` 文件从 Git index 中移除
+  - 上述 tracked cache 仅涉及 `9` 个 `__pycache__` 目录；未扩展到任何非 manifest 路径
 - 当前工作区 `.pyc` 文件总数：`133`
 - 已跟踪 `runs/` 文件数：`1841`
 - 已跟踪 `artifacts/` 文件数：`110`
@@ -94,7 +94,7 @@
 
 | 类别 | 路径模式 | 当前状态 | Phase 0 是否保留 | 当前治理口径 | 后续动作 |
 | --- | --- | --- | --- | --- | --- |
-| A | `**/__pycache__/`, `*.pyc` | 已忽略，但历史上已有已跟踪文件 | 是 | `T5` 不做批量删除或 untrack；后续禁止再把新缓存文件纳入版本库 | 未来单开有界 cleanup 任务，将其清理出版本库 |
+| A | `**/__pycache__/`, `*.pyc` | 已忽略；`T33` 已完成历史 tracked cache 的 bounded untrack | 是 | 不再把新的缓存文件纳入版本库；不得借机扩展到其他 cleanup 范围 | 对 tracked cache 本身无需继续执行；其他噪声类型仍需独立任务 |
 | B | `runs/` | 已忽略，但历史运行结果大量已跟踪 | 是 | 视为历史证据，不视为新的事实来源；`T6/T7` 必须引用具体 run dir，而不是笼统引用 `runs/` | 后续区分“保留摘要”与“归档移出” |
 | C | `artifacts/` | 已忽略，但历史模型/数据/报告已跟踪 | 是 | 暂保留，因为当前恢复期最小路径仍依赖部分 `.npz` artifact；不可默认把整个目录当作源码一部分 | 后续拆分为“bootstrap 必需”和“历史归档”两类 |
 | D | 本地临时文档文件，例如 `*.drawio.dtmp` | 容易制造工作树噪声 | 否 | 立即通过 `.gitignore` 忽略，不进入治理结论文档 | 保持忽略即可 |
@@ -148,7 +148,7 @@
 - `git restore --staged -- ...` 回滚草案
 - 验收标准：`git ls-files | rg "__pycache__|\\.pyc$"` 归零
 
-但 `T19` 仍未执行物理 cleanup。
+随后 `T33` 已按该 manifest 执行 bounded physical cleanup，并通过 Captain `PASS` 收口。
 
 ## 8. 对后续任务的约束
 
@@ -179,4 +179,5 @@
 - `T39` 已完成并通过 Captain `PASS` 收口；其 clean environment、draft lock 与 bootstrap docs 可提交，但 `.venvs/t39_train_cpu_py312/` 仍是 ignored local state，不得作为仓库产物提交。
 - `T40` 允许复用 `.venvs/t39_train_cpu_py312/` 并创建 task-scoped derived config 与 task-scoped output directories，但只允许把真实训练输出写到 T40-isolated paths；不得改写 canonical historical `artifacts/models/*`、`artifacts/reports/*`、`runs/`，不得借机执行 cleanup、benchmark、`.tflite` 或 hardware 操作。
 - `T40` 已完成并通过 Captain `PASS` 收口；其 T40-isolated outputs 只能作为 smoke evidence 引用，不得重标为 canonical historical model/report facts。
-- `T33` 只允许按 `docs/cleanup_tracked_cache_manifest.md` 中列出的 9 个 `__pycache__` 目录执行 bounded untrack/cleanup；不得扩大到 `runs/`、`artifacts/`、`.pytest_cache/`、`.mypy_cache/` 或任何未在 manifest 中列出的路径。
+- `T33` 已完成并通过 Captain `PASS` 收口；其结论仅限“manifest-listed tracked cache 已从 Git index 中移除”，不得外推为 `runs/`、`artifacts`、`.pytest_cache/`、`.mypy_cache/` 或其他 repo-noise 已被清理。
+- `T34` 只允许做 docs-only 的 claim/evidence ledger 与 figure-table outline；不得借论文收口任务顺手触碰任何 cleanup、运行结果或 evidence-level 语义。

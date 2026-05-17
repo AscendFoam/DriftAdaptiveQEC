@@ -171,15 +171,18 @@
   - Result: clean CPU-only environment completed one real training smoke with isolated outputs; full training reproducibility and broader portability remain unverified
 - [ ] T32: True `.tflite` runtime smoke, only if environment is available
   - Task package: pending
-- [ ] T33: Tracked cache physical cleanup execution, only within T19 manifest
+- [x] T33: Tracked cache physical cleanup execution, only within T19 manifest
   - Task package: `docs/tasks/Phase2/T33_tracked_cache_physical_cleanup_execution.md`
+  - Review output: `docs/review/T33_review.md`
+  - Captain verdict: `PASS`
+  - Result: 116 tracked `.pyc` files across 9 manifest-listed `__pycache__` directories were removed from the Git index; `runs/`, `artifacts`, source, config, benchmark, `.tflite`, and hardware scope remained untouched
 - [ ] T37: Real-board smoke execution gate, only if hardware host and bitstream evidence are ready
   - Task package: pending
 
 ### Milestone 2K: Paper Assembly Readiness
 
 - [ ] T34: Paper claim/evidence ledger and figure-table outline
-  - Task package: pending
+  - Task package: `docs/tasks/Phase2/T34_paper_claim_evidence_ledger.md`
 - [ ] T35: Paper draft skeleton and reviewer-risk audit
   - Task package: pending
 
@@ -189,49 +192,47 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T33: Tracked cache physical cleanup execution, only within T19 manifest`
+`T34: Paper claim/evidence ledger and figure-table outline`
 
 状态说明：
 
-- `T40` 已完成并通过 adversarial review，Captain verdict = `PASS`
-- T40 review blocking issues：
+- `T33` 已完成并通过 adversarial review，Captain verdict = `PASS`
+- T33 review blocking issues：
   - none
-- T40 review non-blocking comments：
-  - N1 worker pre-review file overlap：`accepted`，属任务包设计痕迹而非 worker 越界
-  - N2 dataset manifest contains legacy macOS paths：`accepted`，属继承的历史 metadata，不是 T40 新引入行为
-  - N3 R11 narrowing not yet recorded：`deferred to Captain`，已在治理同步中吸收
+- T33 review non-blocking comments：
+  - N1 `index.lock` permission friction on Windows：`accepted`，属环境摩擦，不构成 scope 或 correctness 问题
 - `R10` 仍未关闭但显著缩窄：T38 trace 支持 combined committed-`b` instability；上游 teacher vs CNN residual root cause 尚未完全隔离
 - `R20` 仍未关闭：correction saturation structural zero 仍需后续独立 edge/stress 判断
 - `R23` 仍未关闭：aggregation/report writer 缺少 focused tests 的风险仍存在
 - `R24` 仍有效：statcalib 目前只是接口级 residual-b contract，不能外推为完整 calibration comparator 或 benchmark evidence
 - `R11` 仍有效但已进一步缩窄：T40 已补 clean-environment CPU real-training smoke，但 full training reproducibility、GPU/CUDA portability、Linux portability 仍未验证
 - `R12` 仍有效：当前机器上真实 `.tflite` runtime 依赖仍未满足，因此 `T32` 继续保持 pending
-- `T33` 是当前下一唯一任务：只按 `T19` manifest 执行 tracked `__pycache__/` / `.pyc` physical cleanup
+- `R4` 已进一步缩窄：tracked cache/bytecode 已由 T33 从 Git index 中清零，但历史 tracked `runs/` / `artifacts` 噪声仍在
+- `R7` 对 tracked-cache lane 已收口：T33 已执行 T19 manifest 定义的 bounded physical cleanup
+- `T34` 是当前下一唯一任务：只做 docs-only 的 paper claim/evidence ledger 与 figure-table outline
 
 为什么现在做它：
 
-1. T40 已把 clean CPU-only lane 推进到 one-run real-training smoke，`R11` 已进一步缩窄。
-2. `T32` 仍被当前机器缺少 `tensorflow / tflite_runtime` 明确阻塞，`T37` 仍被硬件/bitstream前提阻塞。
-3. `T33` 已有 `T19` 的只读 manifest、目标路径、命令草案、rollback plan 与 acceptance criteria，属于当前唯一不依赖新增环境/硬件前提的 bounded task。
-4. T33 只处理 tracked cache，不改 benchmark、训练、`.tflite`、真板或历史实验事实来源。
+1. `T33` 已把 tracked-cache cleanup lane 按 manifest 收口，相关仓库噪声风险已缩窄。
+2. `T32` 仍被当前机器缺少 `tensorflow / tflite_runtime` 明确阻塞，`T37` 仍被硬件/bitstream 前提阻塞。
+3. `T34` 是当前唯一未完成、且不依赖新环境、新硬件或新运行结果的 bounded task。
+4. `T34` 只整理 claim/evidence 和 figure-table planning，不改 benchmark、训练、`.tflite`、真板或历史实验事实来源。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T33`
-2. `T40` 已按 `PASS` 收口。
-3. T40 review blocking issues：
+1. 当前唯一任务：`T34`
+2. `T33` 已按 `PASS` 收口。
+3. T33 review blocking issues：
    - none
-4. T40 non-blocking comments：
-   - accepted: worker pre-review overlap is a task-package design artifact
-   - accepted: legacy macOS dataset-manifest paths are inherited metadata only
-   - deferred-to-Captain: R11 narrowing is now synchronized into governance docs
-5. T40 smoke output：`docs/training_chain_cpu_cleanenv_train_smoke.md`
-6. T33 任务包：`docs/tasks/Phase2/T33_tracked_cache_physical_cleanup_execution.md`
+4. T33 non-blocking comments：
+  - accepted: Windows `index.lock` permission friction is environmental only
+5. T33 review output：`docs/review/T33_review.md`
+6. T34 任务包：`docs/tasks/Phase2/T34_paper_claim_evidence_ledger.md`
 
-## Done Criteria For T33
+## Done Criteria For T34
 
-1. Execute cleanup only against the 9 `__pycache__` target directories enumerated in `docs/cleanup_tracked_cache_manifest.md`.
-2. Untrack tracked `__pycache__/` / `.pyc` files without touching working-tree source content.
-3. Verify `git ls-files | rg "__pycache__|\\.pyc$"` returns `0` lines after cleanup.
-4. Verify `runs/` and `artifacts/` remain outside the change set.
-5. Do not modify source code, benchmark semantics, `.tflite` scope, hardware scope, or any path outside the T19 manifest.
+1. Produce a bounded claim/evidence ledger tied to concrete existing evidence paths, not generalized folder claims.
+2. Produce a figure/table outline that labels each item as supported, partially supported, or blocked by current evidence.
+3. Explicitly preserve all hard boundaries around mock-backed software HIL, true `.tflite` runtime, real-board validation, and training reproducibility.
+4. Do not modify source code, benchmark protocol, historical run/artifact facts, or stage-conclusion documents.
+5. Do not run new benchmark, training, `.tflite`, hardware, or cleanup work.

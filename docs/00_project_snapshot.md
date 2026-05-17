@@ -26,12 +26,13 @@
 
 ## 2026-05-17 Captain Update
 
-- `T40` reviewer verdict accepted by Captain as `PASS`.
-- T40 blocking issues: none.
-- T40 non-blocking comments N1/N2 are `accepted`; N3 is `deferred to Captain` and is now integrated by updating `R11`.
-- `R11` remains open but is further narrowed: the clean CPU-only environment has now executed one real training smoke, not just dry-run/import-level bootstrap; full reproducibility and broader portability are still unverified.
-- Current unique task is now `T33: Tracked cache physical cleanup execution, only within T19 manifest`.
-- `T33` may untrack only the 9 manifest-listed `__pycache__` directories / tracked `.pyc` files, but must not touch `runs/`, `artifacts/`, source code, benchmark semantics, `.tflite`, hardware, or broader cleanup scope.
+- `T33` reviewer verdict accepted by Captain as `PASS`.
+- T33 blocking issues: none.
+- T33 non-blocking comment N1 (`index.lock` permission friction on Windows) is classified as `accepted`; it does not indicate scope drift or result corruption.
+- `R4` is narrowed: the previously tracked 116 `.pyc` files across 9 manifest-listed `__pycache__` directories have now been removed from the Git index by T33, while historical tracked `runs/` and `artifacts` noise remains open.
+- `R7` is closed for the tracked-cache execution lane: the bounded physical cleanup defined by `T19` has now been executed by `T33`.
+- Current unique task is now `T34: Paper claim/evidence ledger and figure-table outline`.
+- `T34` is docs-only. It may assemble claim/evidence boundaries and figure-table planning, but must not run new experiments, rewrite evidence levels, or overclaim `.tflite` / real-board / full reproducibility completion.
 
 ## 3. 解决什么问题
 
@@ -221,7 +222,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T33: Tracked cache physical cleanup execution, only within T19 manifest`
+- `T34: Paper claim/evidence ledger and figure-table outline`
 
 ## 12. 快照结论
 
@@ -240,4 +241,4 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 11. `T31` 已完成并通过 adversarial review，Captain verdict = `PASS`；产物是 training-chain portable dependency-lock plan，不是 clean-environment rebuild proof。
 12. `T39` 已完成并通过 adversarial review，Captain verdict = `PASS`；它证明了 clean CPU-only environment、draft lock 和 dry-run/import-level bootstrap 可复现，但不等于 real training reproducibility。
 13. `T40` 已完成并通过 adversarial review，Captain verdict = `PASS`；它证明了 clean CPU-only environment 已能完成一次真实的最小训练 smoke，但不等于 full training reproducibility、GPU/CUDA portability、Linux portability、`.tflite` runtime 或 benchmark readiness。
-14. 当前唯一任务 `T33` 只允许按 `T19` manifest 执行 tracked `__pycache__/` / `.pyc` physical cleanup；不得触碰 `runs/`、`artifacts/`、源代码、benchmark、`.tflite`、真板或更大范围仓库清理。
+14. `T33` 已完成并通过 Captain `PASS` 收口；当前唯一任务 `T34` 只允许做 docs-only 的 claim/evidence ledger 与 figure-table outline，不得触碰代码、`runs/`、`artifacts`、benchmark、`.tflite`、真板或阶段结论文档。

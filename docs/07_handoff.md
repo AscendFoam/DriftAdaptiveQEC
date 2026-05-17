@@ -5,15 +5,15 @@
 - 日期：`2026-05-17`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T33: Tracked cache physical cleanup execution, only within T19 manifest`
-- 任务包：`docs/tasks/Phase2/T33_tracked_cache_physical_cleanup_execution.md`
+- 当前唯一任务：`T34: Paper claim/evidence ledger and figure-table outline`
+- 任务包：`docs/tasks/Phase2/T34_paper_claim_evidence_ledger.md`
 
-Captain closeout note after T40:
+Captain closeout note after T33:
 
-- `T40` is complete. `docs/review/T40_review.md` verdict = `PASS`; blocking issues = none.
-- T40 warnings N1/N2 are `accepted`; N3 was `deferred` to Captain and is now integrated by updating `R11`.
-- `R11` is further narrowed by T40 execution evidence but remains open; T40 is one bounded clean-environment real-training smoke, not full training reproducibility.
-- The active next task is `T33`, not `T40`, `T39`, `T31`, or `T38`. Any older T40/T39-next wording later in this handoff is superseded by this status block and `docs/04_task_board.md`.
+- `T33` is complete. `docs/review/T33_review.md` verdict = `PASS`; blocking issues = none.
+- T33 warning N1 (`index.lock` permission friction on Windows) is `accepted`; there are no `deferred` warnings from this review.
+- `R4` is narrowed: tracked `.pyc` / `__pycache__` entries are now zero in the Git index after T33. `R7` is closed for the tracked-cache execution lane.
+- The active next task is `T34`, not `T33`, `T40`, `T39`, `T31`, or `T38`. Any older T33/T40-next wording later in this handoff is superseded by this status block and `docs/04_task_board.md`.
 
 ## 2. 本轮已完成
 
@@ -636,63 +636,49 @@ Captain closeout note after T40:
 
 ## 6. 当前唯一任务包摘要
 
-`T39` 已创建任务包，等待 Worker 执行 CPU-only clean-environment draft lock and dry-run bootstrap。
+`T34` 已创建任务包，等待 Worker 执行 docs-only 的 paper claim/evidence ledger 与 figure-table outline。
 
-T31 已收口事实：
+T33 已收口事实：
 
-- `docs/review/T31_review.md` verdict = `PASS`，blocking issues = none
-- `docs/training_chain_portable_dependency_lock_plan.md` 已形成 training-chain portable dependency-lock plan
-- T31 inventory 覆盖 `DLEnv`、base Anaconda、system Python，并明确 `DLEnv` / dev torch / CUDA 只是 local evidence
-- T31 dependency map 覆盖 static theta、residual-b、Gated-v5 / teacher-feature training paths
-- T31 推荐 two-lane strategy：CPU-portable lane + GPU-local lane
-- T31 未安装依赖、未运行训练/benchmark/`.tflite`/硬件/cleanup、未修改 `runs/` / `artifacts/` / source / configs / `requirements-recovery.txt`
+- `docs/review/T33_review.md` verdict = `PASS`，blocking issues = none
+- `T19` manifest 固定的 9 个 `__pycache__` 目录、116 个 tracked `.pyc` 文件已按 manifest 从 Git index 中移除
+- `git ls-files | rg "__pycache__|\\.pyc$"` 已归零
+- `runs/`、`artifacts`、source、config、benchmark、`.tflite`、hardware scope 均未被触碰
+- working tree 中的 `.pyc` 文件仍可能存在，但因 `.gitignore` 已忽略，不再属于 tracked repo noise
 
-T31 warning 分类：
+T33 warning 分类：
 
-- N1 markdown subsection numbering inconsistency：`accepted` as cosmetic
-- N2 `docs/training_chain_bootstrap.md` later alignment：`accepted` as future alignment
-- N3 worker self-review overwritten by adversarial review：`accepted`
-- 没有 `deferred` warning；没有因 T31 新增 risk
+- N1 Windows `index.lock` permission friction：`accepted`
+- 没有 `deferred` warning；没有因 T33 新增 risk
 
-T40 已收口事实：
+T34 任务边界：
 
-- `docs/review/T40_review.md` verdict = `PASS`，blocking issues = none
-- 已复用 clean local env `.venvs/t39_train_cpu_py312/`
-- 已新增 `cnn_fpga/config/task_tmp/T40_static_theta_train_smoke.yaml`
-- 已完成一次 bounded real CPU-only `tiny_cnn` training smoke
-- 输出仅位于 `artifacts/t40_train_smoke/models/static_theta_v2/` 与 `artifacts/t40_train_smoke/reports/static_theta_v2/`
-- 未修改 canonical `artifacts/models/*` / `artifacts/reports/*`
-- 未修改 `runs/`、`requirements-recovery.txt`、source、canonical config
-- 未运行 benchmark、`.tflite`、hardware 或 cleanup
-
-T33 任务边界：
-
-- 只允许按 `docs/cleanup_tracked_cache_manifest.md` 执行 tracked `__pycache__/` / `.pyc` cleanup
-- 只允许触碰 manifest 列出的 9 个目标目录
-- 必须保留 `runs/` / `artifacts/` 非触碰边界
-- 不得修改 source、benchmark、`.tflite`、真板、formal protocol 或其他 repo-noise 范围
-- cleanup 前后都必须做 `git ls-files` / `git status` 边界验证
+- 只允许整理现有 claim/evidence ledger 与 figure-table outline
+- 只允许引用具体 evidence path、review 结论、risk 和边界，不得把目录整体写成“事实来源”
+- 必须显式保留 mock-backed software HIL、true `.tflite` runtime、real-board validation、training reproducibility 的现有边界
+- 不得修改 source、benchmark protocol、`runs/`、`artifacts`、阶段结论文档或任何历史实验事实
+- 不得运行 benchmark、training、`.tflite`、hardware 或 cleanup
 
 ## 7. 下一步建议
 
-下一步应交给 Worker 执行 `T33: Tracked cache physical cleanup execution, only within T19 manifest`。
+下一步应交给 Worker 执行 `T34: Paper claim/evidence ledger and figure-table outline`。
 
 建议优先级：
 
-1. 读取 `docs/cleanup_tracked_cache_manifest.md` 与 `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`，把 T19 manifest 当作唯一执行清单。
-2. 执行前先做 preflight，确认目标仍只包含 tracked `__pycache__/` / `.pyc` 路径。
-3. 只对 manifest 列出的 9 个目录执行 bounded untrack/cleanup。
-4. 执行后验证 `git ls-files | rg "__pycache__|\\.pyc$"` 为 `0`，且 `runs/` / `artifacts/` 未进入变更。
+1. 读取当前治理文档、`docs/02_experiment_plan.md` 以及 paper 相关背景文档，先列出“可说/不可说/仍阻塞”的 claim ledger。
+2. 把每个 claim 绑定到具体 evidence path、review verdict、open risk 或 blocker，不允许写无路径的泛化结论。
+3. 在同一输出中给出 figure/table outline，并把每项标成 `supported` / `partial` / `blocked`。
+4. 明确写出 `.tflite`、real-board、full reproducibility、paper-grade expanded benchmark 目前仍不能作为已完成 claim。
 
 ## 8. 暂不继续的事项
 
-在 T33 完成前，暂不继续：
+在 T34 完成前，暂不继续：
 
 1. 新的 teacher-representation benchmark 扩展或长跑
 2. statcalib slow-loop integration 或 formal benchmark integration
 3. 超出 frozen-set 的 P4 正式长跑或 CI-driven stopping
 4. 真板 backend 能力扩写
-5. 任何未获 Captain 明确批准的物理 repo cleanup
+5. 任何新的 repo cleanup 扩展
 6. paper-inspired 新分支实现
 7. GPU/CUDA training lock 或 dev torch portability claim
 8. 真实 `.tflite` runtime smoke
@@ -749,6 +735,15 @@ This section supersedes older T38/T31-next wording in sections above.
      - N3 R11 narrowing governance sync：`deferred`，已由 Captain 写回 risks/governance。
 52. T33 是否可以交给 Worker？
    - 当前答案：
-     - 可以。当前唯一任务是 `T33: Tracked cache physical cleanup execution, only within T19 manifest`。
-     - Allowed files 见 `docs/tasks/Phase2/T33_tracked_cache_physical_cleanup_execution.md`。
-     - Worker 只允许按 manifest 做 bounded tracked-cache cleanup；不得触碰 `runs/`、`artifacts/`、source、benchmark、`.tflite` 或真板边界。
+     - 不再提交。`T33` 已完成并通过 Captain `PASS` 收口。
+53. T33 review 结果如何处理？
+   - 当前答案：
+     - Verdict：`PASS`；blocking issues: none。
+     - N1 Windows `index.lock` permission friction：`accepted`。
+     - 没有 `deferred` warning，因此未因 T33 新增 risk。
+     - `R4` 已缩窄，`R7` 对 tracked-cache lane 已收口。
+54. 当前下一唯一任务是什么？
+   - 当前答案：
+     - `T34: Paper claim/evidence ledger and figure-table outline`。
+     - 任务包为 `docs/tasks/Phase2/T34_paper_claim_evidence_ledger.md`。
+     - Worker 只允许做 docs-only ledger/outline；不得运行新实验、不得升级 evidence level、不得改写阶段结论或 repo facts。

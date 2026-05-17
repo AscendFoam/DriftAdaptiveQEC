@@ -1645,3 +1645,44 @@ Milestone 2I is complete within its bounded scope: mechanism-evidence hardening 
 2. 新增 `docs/tasks/Phase2/T33_tracked_cache_physical_cleanup_execution.md`。
 3. `docs/07_handoff.md` 记录 T40 Captain verdict、warning 分类与 T33 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 更新 `R11` 与当前唯一任务口径。
+
+## D-2026-05-17-04
+
+- 日期：`2026-05-17`
+- 决策：接受 `T33` adversarial review 的 `PASS`，标记 `T33` 完成，并将当前唯一任务切换为 `T34: Paper claim/evidence ledger and figure-table outline`
+
+### 背景
+
+`T33` 是 Milestone 2J 的 bounded tracked-cache physical cleanup execution task。`docs/review/T33_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. 116 个 tracked `.pyc` 文件全部位于 `T19` manifest 固定的 9 个 `__pycache__` 目录中，并已按 manifest 通过 `git rm --cached` 从 Git index 中移除。
+2. `git ls-files | rg "__pycache__|\\.pyc$"` 已归零。
+3. `runs/`、`artifacts`、source、config、benchmark、`.tflite`、hardware scope 均未被触碰。
+4. 唯一 non-blocking issue 是 Windows 下 `index.lock` 权限摩擦，最终结果一致且正确。
+
+### Warning 分类
+
+1. N1：`index.lock` permission issue
+   - 分类：`accepted`
+   - 处理：属环境摩擦，不构成 scope 或 correctness 问题
+
+没有 T33 `deferred` warning，因此不因 T33 review 新增 risk。
+
+### 结论
+
+`T33` 可标记完成。它把 tracked-cache cleanup 从“manifest/plan 已就位”推进到“bounded physical execution 已完成”，但没有扩展为更大范围的 repo cleanup。
+
+下一唯一任务切换到 `T34`。理由是：
+
+1. `T32` 仍被 `R12` 阻塞：当前机器缺少 `tensorflow` / `tflite_runtime`，真实 `.tflite` runtime 仍不可执行。
+2. `T37` 仍被硬件/bitstream/readiness 前提阻塞。
+3. `T34` 是当前唯一未完成、且不依赖新环境、新硬件或新运行结果的 bounded docs-only task。
+4. `T34` 可以为后续论文收口建立 claim/evidence 边界账本，但不会升级任何 evidence level。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T33` 完成，并切换 `Current Unique Task` 到 `T34`。
+2. 新增 `docs/tasks/Phase2/T34_paper_claim_evidence_ledger.md`。
+3. `docs/07_handoff.md` 记录 T33 Captain verdict、warning 分类与 T34 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 更新 `R4`、`R7` 与当前唯一任务口径。
+5. `docs/06_repo_noise_governance.md` 更新 tracked-cache lane 已执行完成的 repo-noise 事实边界。

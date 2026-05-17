@@ -144,8 +144,75 @@ This is a repo-hygiene execution task, not a code or experiment task. Do not "im
 
 ## Worker Output
 
-- Pending.
+- Read the required T33 inputs, including:
+  - `README.md`
+  - `AGENTS.md`
+  - `docs/00_project_snapshot.md`
+  - `docs/01_legacy_audit.md`
+  - `docs/02_experiment_plan.md`
+  - `docs/04_task_board.md`
+  - `docs/07_handoff.md`
+  - `docs/08_risks_and_open_questions.md`
+  - `docs/06_repo_noise_governance.md`
+  - `docs/cleanup_tracked_cache_manifest.md`
+  - `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
+  - `.gitignore`
+- Confirmed the T19 manifest still limited cleanup to these 9 tracked `__pycache__` directories:
+  - `cnn_fpga/__pycache__`
+  - `cnn_fpga/benchmark/__pycache__`
+  - `cnn_fpga/data/__pycache__`
+  - `cnn_fpga/decoder/__pycache__`
+  - `cnn_fpga/hwio/__pycache__`
+  - `cnn_fpga/model/__pycache__`
+  - `cnn_fpga/runtime/__pycache__`
+  - `cnn_fpga/utils/__pycache__`
+  - `physics/__pycache__`
+- Ran the required preflight inventory:
+  - `git ls-files -- "cnn_fpga/__pycache__/*" "cnn_fpga/benchmark/__pycache__/*" "cnn_fpga/data/__pycache__/*" "cnn_fpga/decoder/__pycache__/*" "cnn_fpga/hwio/__pycache__/*" "cnn_fpga/model/__pycache__/*" "cnn_fpga/runtime/__pycache__/*" "cnn_fpga/utils/__pycache__/*" "physics/__pycache__/*"`
+  - confirmed 116 tracked `.pyc` files across the 9 manifest directories
+- Executed the bounded cleanup exactly for the manifest-listed directories:
+  - `git rm --cached -r -- cnn_fpga/__pycache__ cnn_fpga/benchmark/__pycache__ cnn_fpga/data/__pycache__ cnn_fpga/decoder/__pycache__ cnn_fpga/hwio/__pycache__ cnn_fpga/model/__pycache__ cnn_fpga/runtime/__pycache__ cnn_fpga/utils/__pycache__ physics/__pycache__`
+- Did not touch:
+  - `runs/`
+  - `artifacts/`
+  - source code
+  - benchmark semantics
+  - `.tflite` paths
+  - hardware paths
+  - any non-manifest cache directories
+- Updated:
+  - `docs/review/T33_review.md`
+  - `docs/for_human/T33_explanation.md`
+  - this task package
+- Did not mark the task board as complete.
 
 ## Verification Record
 
-- Pending.
+1. Preflight inventory:
+   - command:
+     - `git ls-files -- "cnn_fpga/__pycache__/*" "cnn_fpga/benchmark/__pycache__/*" "cnn_fpga/data/__pycache__/*" "cnn_fpga/decoder/__pycache__/*" "cnn_fpga/hwio/__pycache__/*" "cnn_fpga/model/__pycache__/*" "cnn_fpga/runtime/__pycache__/*" "cnn_fpga/utils/__pycache__/*" "physics/__pycache__/*"`
+   - result:
+     - returned 116 tracked `.pyc` paths
+2. Cleanup execution:
+   - command:
+     - `git rm --cached -r -- cnn_fpga/__pycache__ cnn_fpga/benchmark/__pycache__ cnn_fpga/data/__pycache__ cnn_fpga/decoder/__pycache__ cnn_fpga/hwio/__pycache__ cnn_fpga/model/__pycache__ cnn_fpga/runtime/__pycache__ cnn_fpga/utils/__pycache__ physics/__pycache__`
+   - result:
+     - passed
+     - removed all manifest-listed tracked cache files from Git index
+3. Post-cleanup verification:
+   - command:
+     - `git ls-files | rg "__pycache__|\\.pyc$"`
+   - result:
+     - returned 0 lines
+   - command:
+     - `git diff --name-only -- runs artifacts`
+   - result:
+     - empty output
+   - command:
+     - `git diff --name-only -- . ":(exclude)cnn_fpga/__pycache__" ":(exclude)cnn_fpga/benchmark/__pycache__" ":(exclude)cnn_fpga/data/__pycache__" ":(exclude)cnn_fpga/decoder/__pycache__" ":(exclude)cnn_fpga/hwio/__pycache__" ":(exclude)cnn_fpga/model/__pycache__" ":(exclude)cnn_fpga/runtime/__pycache__" ":(exclude)cnn_fpga/utils/__pycache__" ":(exclude)physics/__pycache__"`
+   - result:
+     - no non-manifest path changes were introduced
+4. Scope check:
+   - result:
+     - only the 9 manifest-listed cache directories were cleaned
+     - `runs/` and `artifacts/` were not touched
