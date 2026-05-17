@@ -48,7 +48,7 @@ Current T24-T29 status note:
 - `T36` Captain 已接受 review 为 `PASS`；已完成 `seed=20260429` failure-mechanism diagnosis，结论仍是 summary/final-snapshot-level hypothesis，不是 causal proof。
 - `T38` Captain 已接受 review 为 `PASS`；single-seed trace evidence 支持 `seed=20260429` 的 combined committed-`b` instability，但不是 mitigation、multi-seed causal proof、formal benchmark、`.tflite` runtime 或 real-board validation。
 - `T31` Captain 已接受 review 为 `PASS`；已产出 `docs/training_chain_portable_dependency_lock_plan.md`，但不是 clean-environment rebuild proof。
-- 当前唯一任务：`T34: Paper claim/evidence ledger and figure-table outline`，任务包 `docs/tasks/Phase2/T34_paper_claim_evidence_ledger.md`。
+- 当前唯一任务：`T35: Paper draft skeleton and reviewer-risk audit`，任务包 `docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`。
 - R13 当前仍然有效：真板路径还缺设备存在、权限、寄存器活性、DMA 读出和 commit/ack round-trip 的真实证据。
 - R14 当前仍然有效但已收窄：AXI/DMA 代码侧审计已具体化，真实宿主、bitstream 与 DMA contract 仍未验证。
 - R19 已收口：T24 已固定 CLI shape 并报告 metric availability。
@@ -339,6 +339,6 @@ Current T24-T29 status note:
      - full training reproducibility、GPU/CUDA portability、Linux portability 仍未验证。
 51. 当前下一唯一任务是什么？
    - 当前答案：
-     - `T34: Paper claim/evidence ledger and figure-table outline`。
-     - 任务包为 `docs/tasks/Phase2/T34_paper_claim_evidence_ledger.md`。
-     - T34 只允许做 docs-only claim/evidence ledger 与 figure-table outline；不得运行新实验、不得升级 evidence level、不得改写阶段结论或 repo facts。
+     - `T35: Paper draft skeleton and reviewer-risk audit`。
+     - 任务包为 `docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`。
+     - T35 只允许做 docs-only paper skeleton 与 reviewer-risk audit；不得运行新实验、不得升级 evidence level、不得改写阶段结论或 repo facts。

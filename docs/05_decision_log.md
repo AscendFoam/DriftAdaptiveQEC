@@ -1686,3 +1686,46 @@ Milestone 2I is complete within its bounded scope: mechanism-evidence hardening 
 3. `docs/07_handoff.md` 记录 T33 Captain verdict、warning 分类与 T34 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 更新 `R4`、`R7` 与当前唯一任务口径。
 5. `docs/06_repo_noise_governance.md` 更新 tracked-cache lane 已执行完成的 repo-noise 事实边界。
+
+## D-2026-05-17-05
+
+- 日期：`2026-05-17`
+- 决策：接受 `T34` adversarial review 的 `PASS`，标记 `T34` 完成，并将当前唯一任务切换为 `T35: Paper draft skeleton and reviewer-risk audit`
+
+### 背景
+
+`T34` 是 Milestone 2K 的 docs-only paper claim/evidence ledger and figure-table outline task。`docs/review/T34_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. claim ledger、figure outline、table outline 都已落地，且所有 `supported` / `partial` / `blocked` 标注与 concrete evidence paths、risk IDs 一致。
+2. mock-backed software HIL、true `.tflite` runtime、real-board validation、clean-env one-run smoke、statcalib interface-contract evidence 等关键边界都被显式保留。
+3. 本轮没有 source、config、`runs/`、`artifacts`、`docs/02_experiment_plan.md` 或治理文档越界修改。
+
+### Review Notes
+
+1. N1 `C9` direct evidence paths are one hop indirect
+   - 处理：`accepted`
+2. N2 float/int8 quantization-gap claim omitted from ledger
+   - 处理：`accepted`
+3. N3 historical ablation conclusions omitted from ledger
+   - 处理：`accepted`
+4. N4 worker pre-review overwritten by adversarial review
+   - 处理：`accepted`
+
+这些都不是 blocking issue，也不需要写入新的 risks。
+
+### 结论
+
+`T34` 可标记完成。它把 paper assembly 从“靠人工记忆边界”推进到“有显式 claim/evidence ledger 可引用”的状态，但没有把任何历史、mock、stub、smoke 或 readiness 证据升级成更强结论。
+
+下一唯一任务切换到 `T35`。理由是：
+
+1. `T35` 是 Milestone 2K 中与 `T34` 直接衔接的下一个 bounded docs-only task。
+2. `T32` 与 `T37` 仍分别被 `.tflite` 运行时依赖和硬件/bitstream 前提阻塞。
+3. 基于现有 ledger 先做 paper skeleton 与 reviewer-risk audit，能继续收紧写作边界，而不引入新的实验或环境前提。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T34` 完成，并切换 `Current Unique Task` 到 `T35`。
+2. 新增 `docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`。
+3. `docs/07_handoff.md` 记录 T34 Captain verdict 与 T35 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 仅更新当前唯一任务口径；不新增 risk。

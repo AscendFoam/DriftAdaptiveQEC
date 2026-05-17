@@ -181,3 +181,5 @@
 - `T40` 已完成并通过 Captain `PASS` 收口；其 T40-isolated outputs 只能作为 smoke evidence 引用，不得重标为 canonical historical model/report facts。
 - `T33` 已完成并通过 Captain `PASS` 收口；其结论仅限“manifest-listed tracked cache 已从 Git index 中移除”，不得外推为 `runs/`、`artifacts`、`.pytest_cache/`、`.mypy_cache/` 或其他 repo-noise 已被清理。
 - `T34` 只允许做 docs-only 的 claim/evidence ledger 与 figure-table outline；不得借论文收口任务顺手触碰任何 cleanup、运行结果或 evidence-level 语义。
+- `T34` 已完成并通过 Captain `PASS` 收口；其输出不改变任何 repo-noise 事实。
+- `T35` 只允许做 docs-only 的 paper draft skeleton 与 reviewer-risk audit；不得借写作任务顺手触碰任何 cleanup、运行结果或 evidence-level 语义。

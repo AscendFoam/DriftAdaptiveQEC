@@ -181,10 +181,14 @@
 
 ### Milestone 2K: Paper Assembly Readiness
 
-- [ ] T34: Paper claim/evidence ledger and figure-table outline
+- [x] T34: Paper claim/evidence ledger and figure-table outline
   - Task package: `docs/tasks/Phase2/T34_paper_claim_evidence_ledger.md`
+  - Output: `docs/paper_claim_evidence_ledger.md`
+  - Review output: `docs/review/T34_review.md`
+  - Captain verdict: `PASS`
+  - Result: bounded claim/evidence ledger and figure-table outline are in place; paper assembly can proceed without silently upgrading mock/stub/smoke/readiness evidence
 - [ ] T35: Paper draft skeleton and reviewer-risk audit
-  - Task package: pending
+  - Task package: `docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`
 
 Long-term objective:
 
@@ -192,47 +196,51 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T34: Paper claim/evidence ledger and figure-table outline`
+`T35: Paper draft skeleton and reviewer-risk audit`
 
 状态说明：
 
-- `T33` 已完成并通过 adversarial review，Captain verdict = `PASS`
-- T33 review blocking issues：
+- `T34` 已完成并通过 adversarial review，Captain verdict = `PASS`
+- T34 review blocking issues：
   - none
-- T33 review non-blocking comments：
-  - N1 `index.lock` permission friction on Windows：`accepted`，属环境摩擦，不构成 scope 或 correctness 问题
+- T34 review non-blocking comments：
+  - N1 C9 direct evidence paths are one hop indirect：`accepted`
+  - N2 float/int8 quantization-gap claim omitted from the ledger：`accepted`
+  - N3 historical ablation conclusions omitted from the ledger：`accepted`
+  - N4 worker pre-review overwritten by adversarial review：`accepted`
 - `R10` 仍未关闭但显著缩窄：T38 trace 支持 combined committed-`b` instability；上游 teacher vs CNN residual root cause 尚未完全隔离
 - `R20` 仍未关闭：correction saturation structural zero 仍需后续独立 edge/stress 判断
 - `R23` 仍未关闭：aggregation/report writer 缺少 focused tests 的风险仍存在
 - `R24` 仍有效：statcalib 目前只是接口级 residual-b contract，不能外推为完整 calibration comparator 或 benchmark evidence
 - `R11` 仍有效但已进一步缩窄：T40 已补 clean-environment CPU real-training smoke，但 full training reproducibility、GPU/CUDA portability、Linux portability 仍未验证
 - `R12` 仍有效：当前机器上真实 `.tflite` runtime 依赖仍未满足，因此 `T32` 继续保持 pending
-- `R4` 已进一步缩窄：tracked cache/bytecode 已由 T33 从 Git index 中清零，但历史 tracked `runs/` / `artifacts` 噪声仍在
-- `R7` 对 tracked-cache lane 已收口：T33 已执行 T19 manifest 定义的 bounded physical cleanup
-- `T34` 是当前下一唯一任务：只做 docs-only 的 paper claim/evidence ledger 与 figure-table outline
+- `R4` 与 `R7` 保持 T33 收口后的状态不变；T34 不新增 repo-noise 风险
+- `T35` 是当前下一唯一任务：只做 docs-only 的 paper draft skeleton 与 reviewer-risk audit
 
 为什么现在做它：
 
-1. `T33` 已把 tracked-cache cleanup lane 按 manifest 收口，相关仓库噪声风险已缩窄。
+1. `T34` 已把 paper-assembly 的 claim/evidence 边界账本建立起来，后续写作不需要再从零开始判断哪些结论可写。
 2. `T32` 仍被当前机器缺少 `tensorflow / tflite_runtime` 明确阻塞，`T37` 仍被硬件/bitstream 前提阻塞。
-3. `T34` 是当前唯一未完成、且不依赖新环境、新硬件或新运行结果的 bounded task。
-4. `T34` 只整理 claim/evidence 和 figure-table planning，不改 benchmark、训练、`.tflite`、真板或历史实验事实来源。
+3. `T35` 是当前唯一未完成、且不依赖新环境、新硬件或新运行结果的 bounded docs-only task。
+4. `T35` 只搭 paper draft skeleton 并做 reviewer-risk audit，不改 benchmark、训练、`.tflite`、真板或历史实验事实来源。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T34`
-2. `T33` 已按 `PASS` 收口。
-3. T33 review blocking issues：
+1. 当前唯一任务：`T35`
+2. `T34` 已按 `PASS` 收口。
+3. T34 review blocking issues：
    - none
-4. T33 non-blocking comments：
-  - accepted: Windows `index.lock` permission friction is environmental only
-5. T33 review output：`docs/review/T33_review.md`
-6. T34 任务包：`docs/tasks/Phase2/T34_paper_claim_evidence_ledger.md`
+4. T34 non-blocking comments：
+  - accepted: C9 direct evidence paths can stay review-linked at this stage
+  - accepted: omitted historical quantization/ablation claims are future drafting choices, not current blockers
+  - accepted: worker pre-review overwrite follows the established review flow
+5. T34 review output：`docs/review/T34_review.md`
+6. T35 任务包：`docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`
 
-## Done Criteria For T34
+## Done Criteria For T35
 
-1. Produce a bounded claim/evidence ledger tied to concrete existing evidence paths, not generalized folder claims.
-2. Produce a figure/table outline that labels each item as supported, partially supported, or blocked by current evidence.
-3. Explicitly preserve all hard boundaries around mock-backed software HIL, true `.tflite` runtime, real-board validation, and training reproducibility.
+1. Produce a bounded paper draft skeleton that maps section-by-section to the existing ledger and concrete evidence paths.
+2. Produce a reviewer-risk audit that lists likely overclaim, evidence-gap, and wording-failure points for the current paper state.
+3. Keep all hard boundaries around mock-backed software HIL, true `.tflite` runtime, real-board validation, training reproducibility, and statcalib integration explicit.
 4. Do not modify source code, benchmark protocol, historical run/artifact facts, or stage-conclusion documents.
 5. Do not run new benchmark, training, `.tflite`, hardware, or cleanup work.

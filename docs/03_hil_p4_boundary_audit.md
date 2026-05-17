@@ -88,6 +88,8 @@
 - `T40` 已完成并通过 Captain `PASS` 收口；其输出是 clean CPU-only lane 的 one-run training smoke evidence，不是 benchmark、true `.tflite` runtime validation、GPU portability proof 或 real-board validation。
 - `T33` 是 repo-hygiene execution task，不改变任何 HIL / P4 / `.tflite` / real-board evidence level；它只能把 manifest-listed tracked cache 从 Git index 中移除，不能被表述为新的实验或部署证据。
 - `T34` 若推进，只允许整理 claim/evidence ledger 与 figure-table outline；它不能把 mock-backed software HIL、stub `.tflite`、clean-env smoke 或 readiness 文档升级成更高 evidence level。
+- `T34` 已完成并通过 Captain `PASS` 收口；其输出是 paper-assembly ledger artifact，不是新的 benchmark、runtime、training 或 board evidence。
+- `T35` 若推进，只允许基于现有 ledger 形成 paper draft skeleton 与 reviewer-risk audit；它不能补写不存在的证据，也不能把历史 pre-recovery 结论静默升级为当前已复验事实。
 
 ## 7. 当前推荐表述
 

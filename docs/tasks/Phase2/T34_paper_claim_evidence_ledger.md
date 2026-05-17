@@ -156,8 +156,35 @@ This task is intentionally documentation-only. Do not turn it into paper draftin
 
 ## Worker Output
 
-- Pending.
+- Added `docs/paper_claim_evidence_ledger.md` with:
+  - scope / non-claims
+  - claim ledger `C1`-`C11`
+  - figure outline `F1`-`F3`
+  - table outline `T1`-`T5`
+  - blocked-claim summary
+  - wording guardrails for future paper drafting
+- Added `docs/review/T34_review.md` as worker pre-review notes.
+- Added `docs/for_human/T34_explanation.md` as a short Chinese explanation of what this ledger does and does not prove.
+- Kept the ledger intentionally boundary-first:
+  - mock-backed software HIL separated from real-board validation
+  - true `.tflite` runtime separated from stub/fallback path
+  - frozen-set formal software revalidation separated from paper-grade expanded benchmark
+  - clean CPU-only one-run training smoke separated from full reproducibility / portability
+  - `statcalib` interface-contract evidence separated from integrated comparator evidence
 
 ## Verification Record
 
-- Pending.
+- Verified every `supported` or `partial` claim cites concrete existing evidence paths in docs and/or historical `runs/` / `artifacts/`.
+- Verified every `blocked` claim cites a concrete blocker path and corresponding open risk where applicable:
+  - `R10`
+  - `R11`
+  - `R12`
+  - `R13`
+  - `R14`
+  - `R24`
+- Verified the ledger explicitly preserves the hard boundaries around:
+  - mock-backed software HIL
+  - true `.tflite` runtime
+  - real-board validation
+  - training reproducibility / portability
+- Verified this turn introduced no source, config, `runs/`, or `artifacts` edits outside the T34 allowed files.
