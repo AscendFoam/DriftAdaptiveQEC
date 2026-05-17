@@ -72,9 +72,9 @@
 
 ### 2026-05-17 Captain Update
 
-- `T39` has been accepted as `PASS`; it produced a clean CPU-only environment artifact, a draft dependency lock, and dry-run/import-level bootstrap evidence without modifying `runs/`, `artifacts/`, source code, configs, or `requirements-recovery.txt`.
-- `R11` is further narrowed but remains open: T39 is not a real clean-environment training execution or full training reproducibility proof.
-- Current unique task is `T40`, focused on one bounded CPU-only clean-environment minimal real-training smoke with isolated output paths.
+- `T40` has been accepted as `PASS`; it produced one bounded clean CPU-only real-training smoke with isolated output paths, without modifying canonical historical artifacts, source code, configs, or `requirements-recovery.txt`.
+- `R11` is further narrowed but remains open: T40 is still not full training reproducibility, GPU/CUDA portability, Linux portability, or a broader training validation proof.
+- Current unique task is `T33`, focused on bounded tracked-cache physical cleanup strictly within the T19 manifest.
 
 ## 3. 可行性判断
 
@@ -352,8 +352,8 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T31`、`T36`、`T38`、`T39` 已完成；当前下一唯一任务为 `T40`，只做 training-chain CPU-only clean-environment minimal real-training smoke
+1. `T14` 至 `T31`、`T36`、`T38`、`T39`、`T40` 已完成；当前下一唯一任务为 `T33`，只做 tracked cache physical cleanup execution within the T19 manifest
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 3. `T26` gate 结论为 `CONDITIONAL_GO`，且 `T30` 已把 statcalib 收紧为 interface-only separate comparator contract；后续仍不得把 statcalib 静默并入 T24 frozen benchmark set，不得扩展 formal benchmark、baseline/scenario、`.tflite` 或真板范围。
 4. `T36/T38` 已把 `seed=20260429` 诊断推进到 single-seed trace-supported mechanism evidence，但仍不是 mitigation 或 multi-seed causal proof。
-5. `T31` 已把训练链依赖边界从本机 bootstrap 推进到 portable dependency-lock plan；`T39` 已把它推进到 clean-environment draft lock + dry-run/import-level bootstrap；`T40` 是下一步最小 real-training smoke 任务，仍不得把本机 `DLEnv`、dev torch、GPU/CUDA 或 canonical artifact paths 写成跨机器保证。
+5. `T31` 已把训练链依赖边界从本机 bootstrap 推进到 portable dependency-lock plan；`T39` 已把它推进到 clean-environment draft lock + dry-run/import-level bootstrap；`T40` 已把它推进到 one real clean-environment training smoke；但仍不得把本机 `DLEnv`、dev torch、GPU/CUDA 或 smoke-scale结果写成跨机器保证或完整训练可复现结论。

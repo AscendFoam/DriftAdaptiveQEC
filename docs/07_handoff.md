@@ -5,15 +5,15 @@
 - 日期：`2026-05-17`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T40: Training-chain CPU-only clean-environment minimal real-training smoke`
-- 任务包：`docs/tasks/Phase2/T40_training_chain_cpu_cleanenv_minimal_train_smoke.md`
+- 当前唯一任务：`T33: Tracked cache physical cleanup execution, only within T19 manifest`
+- 任务包：`docs/tasks/Phase2/T33_tracked_cache_physical_cleanup_execution.md`
 
-Captain closeout note after T39:
+Captain closeout note after T40:
 
-- `T39` is complete. `docs/review/T39_review.md` verdict = `PASS`; blocking issues = none.
-- T39 warnings N1/N2/N3 are all `accepted`; there are no `deferred` or `rejected` warnings from this review.
-- `R11` is further narrowed by T39 execution evidence but remains open; T39 is not a real clean-environment training execution and not full training reproducibility.
-- The active next task is `T40`, not `T39`, `T31`, or `T38`. Any older T39/T31-next wording later in this handoff is superseded by this status block and `docs/04_task_board.md`.
+- `T40` is complete. `docs/review/T40_review.md` verdict = `PASS`; blocking issues = none.
+- T40 warnings N1/N2 are `accepted`; N3 was `deferred` to Captain and is now integrated by updating `R11`.
+- `R11` is further narrowed by T40 execution evidence but remains open; T40 is one bounded clean-environment real-training smoke, not full training reproducibility.
+- The active next task is `T33`, not `T40`, `T39`, `T31`, or `T38`. Any older T40/T39-next wording later in this handoff is superseded by this status block and `docs/04_task_board.md`.
 
 ## 2. 本轮已完成
 
@@ -654,39 +654,39 @@ T31 warning 分类：
 - N3 worker self-review overwritten by adversarial review：`accepted`
 - 没有 `deferred` warning；没有因 T31 新增 risk
 
-T39 已收口事实：
+T40 已收口事实：
 
-- `docs/review/T39_review.md` verdict = `PASS`，blocking issues = none
-- 已创建 clean local env `.venvs/t39_train_cpu_py312/`，并确认其独立于 `DLEnv`
-- 已新增 `requirements-train-cpu-win-py312.txt`
-- 已完成 allowed dry-run/import-level checks：`dataset_builder --dry-run`、`runtime_dataset_builder --dry-run`、`train --help`
-- 未修改 `requirements-recovery.txt`
-- 未创建或修改 `runs/` / `artifacts/`
-- 未运行 training、benchmark、`.tflite`、hardware 或 cleanup
+- `docs/review/T40_review.md` verdict = `PASS`，blocking issues = none
+- 已复用 clean local env `.venvs/t39_train_cpu_py312/`
+- 已新增 `cnn_fpga/config/task_tmp/T40_static_theta_train_smoke.yaml`
+- 已完成一次 bounded real CPU-only `tiny_cnn` training smoke
+- 输出仅位于 `artifacts/t40_train_smoke/models/static_theta_v2/` 与 `artifacts/t40_train_smoke/reports/static_theta_v2/`
+- 未修改 canonical `artifacts/models/*` / `artifacts/reports/*`
+- 未修改 `runs/`、`requirements-recovery.txt`、source、canonical config
+- 未运行 benchmark、`.tflite`、hardware 或 cleanup
 
-T40 任务边界：
+T33 任务边界：
 
-- 允许复用 `.venvs/t39_train_cpu_py312/`
-- 允许新增 task-scoped derived config 和 task-scoped output docs
-- 允许执行一次 bounded real CPU-only training smoke
-- 必须把 `model_dir` / `report_dir` 重定向到 T40-isolated output paths
-- 不得修改 canonical historical `artifacts/models/*` / `artifacts/reports/*`
-- 不跑 benchmark、不跑 `.tflite`、不碰真板、不做 cleanup、不验证 GPU/CUDA portability
+- 只允许按 `docs/cleanup_tracked_cache_manifest.md` 执行 tracked `__pycache__/` / `.pyc` cleanup
+- 只允许触碰 manifest 列出的 9 个目标目录
+- 必须保留 `runs/` / `artifacts/` 非触碰边界
+- 不得修改 source、benchmark、`.tflite`、真板、formal protocol 或其他 repo-noise 范围
+- cleanup 前后都必须做 `git ls-files` / `git status` 边界验证
 
 ## 7. 下一步建议
 
-下一步应交给 Worker 执行 `T40: Training-chain CPU-only clean-environment minimal real-training smoke`。
+下一步应交给 Worker 执行 `T33: Tracked cache physical cleanup execution, only within T19 manifest`。
 
 建议优先级：
 
-1. 读取 `docs/training_chain_cpu_cleanenv_bootstrap.md` 与 `docs/review/T39_review.md`，把 T39 的 clean-env evidence 当作前置边界。
-2. 基于 canonical config 创建一个 task-scoped derived config，重定向 `model_dir` / `report_dir` 到 T40-isolated paths。
-3. 在 `.venvs/t39_train_cpu_py312/` 中只执行一次 bounded real CPU-only training smoke。
-4. 验证输出只落在 T40-isolated paths，且 canonical historical `artifacts/models/*` / `artifacts/reports/*`、`runs/` 仍无改写。
+1. 读取 `docs/cleanup_tracked_cache_manifest.md` 与 `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`，把 T19 manifest 当作唯一执行清单。
+2. 执行前先做 preflight，确认目标仍只包含 tracked `__pycache__/` / `.pyc` 路径。
+3. 只对 manifest 列出的 9 个目录执行 bounded untrack/cleanup。
+4. 执行后验证 `git ls-files | rg "__pycache__|\\.pyc$"` 为 `0`，且 `runs/` / `artifacts/` 未进入变更。
 
 ## 8. 暂不继续的事项
 
-在 T40 完成前，暂不继续：
+在 T33 完成前，暂不继续：
 
 1. 新的 teacher-representation benchmark 扩展或长跑
 2. statcalib slow-loop integration 或 formal benchmark integration
@@ -741,8 +741,14 @@ This section supersedes older T38/T31-next wording in sections above.
      - N2 `pip list` vs `pip freeze`：`accepted`。
      - N3 sandbox/escalation note：`accepted`。
      - 没有 `deferred` warning，因此未新增 risk。
-51. T40 是否可以交给 Worker？
+51. T40 review 结果如何处理？
    - 当前答案：
-     - 可以。当前唯一任务是 `T40: Training-chain CPU-only clean-environment minimal real-training smoke`。
-     - Allowed files 见 `docs/tasks/Phase2/T40_training_chain_cpu_cleanenv_minimal_train_smoke.md`。
-     - Worker 只允许做一次 bounded real CPU-only training smoke，并把输出隔离到 T40-scoped paths；不得 benchmark、`.tflite`、真板、cleanup 或 GPU/CUDA portability validation。
+     - Verdict：`PASS`；blocking issues: none。
+     - N1 worker pre-review overlap：`accepted`。
+     - N2 legacy macOS dataset-manifest paths：`accepted`。
+     - N3 R11 narrowing governance sync：`deferred`，已由 Captain 写回 risks/governance。
+52. T33 是否可以交给 Worker？
+   - 当前答案：
+     - 可以。当前唯一任务是 `T33: Tracked cache physical cleanup execution, only within T19 manifest`。
+     - Allowed files 见 `docs/tasks/Phase2/T33_tracked_cache_physical_cleanup_execution.md`。
+     - Worker 只允许按 manifest 做 bounded tracked-cache cleanup；不得触碰 `runs/`、`artifacts/`、source、benchmark、`.tflite` 或真板边界。

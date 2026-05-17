@@ -1602,3 +1602,46 @@ Milestone 2I is complete within its bounded scope: mechanism-evidence hardening 
 3. `docs/07_handoff.md` 记录 T39 Captain verdict、warning 分类与 T40 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 更新 `R11`：clean-env draft lock/dry-run 已验证，但 real clean-environment training execution 仍未验证。
 5. `docs/06_repo_noise_governance.md` 补充 T40 的 isolated-output noise boundary，禁止改写 canonical `artifacts/models/*` / `artifacts/reports/*`。
+
+## D-2026-05-17-03
+
+- 日期：`2026-05-17`
+- 决策：接受 `T40` adversarial review 的 `PASS`，标记 `T40` 完成，并将当前唯一任务切换为 `T33: Tracked cache physical cleanup execution, only within T19 manifest`
+
+### 背景
+
+`T40` 是 Milestone 2J 的 clean CPU-only minimal real-training smoke task。`docs/review/T40_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. `cnn_fpga/config/task_tmp/T40_static_theta_train_smoke.yaml` 正确继承 canonical config，并把 `model_dir` / `report_dir` 重定向到 `artifacts/t40_train_smoke/...`。
+2. `.venvs/t39_train_cpu_py312/` 中的一次真实训练 smoke 已成功完成，训练报告记录 `training_backend = numpy`、`training_device = cpu`。
+3. canonical historical `artifacts/models/*`、`artifacts/reports/*`、`runs/`、`requirements-recovery.txt` 与 source/config 主线均未被修改。
+4. 文档诚实记录了 T40 能验证与不能验证的边界，没有把 smoke 夸写成 full reproducibility。
+
+### Warning 分类
+
+1. N1：worker pre-review file overlap
+   - 分类：`accepted`
+   - 处理：属 task-package design artifact，不构成 worker 错误
+2. N2：dataset manifest contains legacy macOS paths
+   - 分类：`accepted`
+   - 处理：属于历史数据元信息，不是 T40 新引入功能风险
+3. N3：R11 narrowing not yet recorded
+   - 分类：`deferred`
+   - 处理：由 Captain 同步进治理文档；不返工 worker
+
+### 结论
+
+`T40` 可标记完成。它把 `R11` 从“clean-env 只做过 draft lock + dry-run/import”推进到“clean-env 已完成 one real-training smoke”，但仍不等于 full training reproducibility、GPU/CUDA portability、Linux portability 或 production-scale training validation。
+
+下一唯一任务切换到 `T33`。理由是：
+
+1. `T32` 仍被 `R12` 阻塞：当前机器缺少 `tensorflow` / `tflite_runtime`，真实 `.tflite` runtime 不可执行。
+2. `T37` 仍被硬件/bitstream/readiness 前提阻塞。
+3. `T33` 已有 `T19` 只读 manifest 作为唯一执行清单，是当前唯一既有边界又可立即执行的 bounded task。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T40` 完成，并切换 `Current Unique Task` 到 `T33`。
+2. 新增 `docs/tasks/Phase2/T33_tracked_cache_physical_cleanup_execution.md`。
+3. `docs/07_handoff.md` 记录 T40 Captain verdict、warning 分类与 T33 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 更新 `R11` 与当前唯一任务口径。

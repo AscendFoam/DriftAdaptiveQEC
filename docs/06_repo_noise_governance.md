@@ -178,3 +178,5 @@
 - `T39` 允许创建 ignored local environment `.venvs/t39_train_cpu_py312/` 和一个 CPU-only training dependency spec，但不得创建或修改 `runs/` / `artifacts/`，不得执行 cleanup，不得运行真实训练/benchmark/`.tflite`/hardware。若 dry-run flag 不存在，必须记录 blocker 或使用不会落盘的 import/help-level check，不得静默替换成真实数据生成。
 - `T39` 已完成并通过 Captain `PASS` 收口；其 clean environment、draft lock 与 bootstrap docs 可提交，但 `.venvs/t39_train_cpu_py312/` 仍是 ignored local state，不得作为仓库产物提交。
 - `T40` 允许复用 `.venvs/t39_train_cpu_py312/` 并创建 task-scoped derived config 与 task-scoped output directories，但只允许把真实训练输出写到 T40-isolated paths；不得改写 canonical historical `artifacts/models/*`、`artifacts/reports/*`、`runs/`，不得借机执行 cleanup、benchmark、`.tflite` 或 hardware 操作。
+- `T40` 已完成并通过 Captain `PASS` 收口；其 T40-isolated outputs 只能作为 smoke evidence 引用，不得重标为 canonical historical model/report facts。
+- `T33` 只允许按 `docs/cleanup_tracked_cache_manifest.md` 中列出的 9 个 `__pycache__` 目录执行 bounded untrack/cleanup；不得扩大到 `runs/`、`artifacts/`、`.pytest_cache/`、`.mypy_cache/` 或任何未在 manifest 中列出的路径。

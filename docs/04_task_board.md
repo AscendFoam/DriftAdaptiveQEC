@@ -163,12 +163,16 @@
   - Review output: `docs/review/T39_review.md`
   - Captain verdict: `PASS`
   - Result: clean CPU-only environment, draft dependency lock, and dry-run/import-level bootstrap are verified; real clean-environment training execution remains unverified
-- [ ] T40: Training-chain CPU-only clean-environment minimal real-training smoke
+- [x] T40: Training-chain CPU-only clean-environment minimal real-training smoke
   - Task package: `docs/tasks/Phase2/T40_training_chain_cpu_cleanenv_minimal_train_smoke.md`
+  - Smoke output: `docs/training_chain_cpu_cleanenv_train_smoke.md`
+  - Review output: `docs/review/T40_review.md`
+  - Captain verdict: `PASS`
+  - Result: clean CPU-only environment completed one real training smoke with isolated outputs; full training reproducibility and broader portability remain unverified
 - [ ] T32: True `.tflite` runtime smoke, only if environment is available
   - Task package: pending
 - [ ] T33: Tracked cache physical cleanup execution, only within T19 manifest
-  - Task package: pending
+  - Task package: `docs/tasks/Phase2/T33_tracked_cache_physical_cleanup_execution.md`
 - [ ] T37: Real-board smoke execution gate, only if hardware host and bitstream evidence are ready
   - Task package: pending
 
@@ -185,49 +189,49 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T40: Training-chain CPU-only clean-environment minimal real-training smoke`
+`T33: Tracked cache physical cleanup execution, only within T19 manifest`
 
 状态说明：
 
-- `T39` 已完成并通过 adversarial review，Captain verdict = `PASS`
-- T39 review blocking issues：
+- `T40` 已完成并通过 adversarial review，Captain verdict = `PASS`
+- T40 review blocking issues：
   - none
-- T39 review non-blocking comments：
-  - N1 version pin specificity：`accepted`，适合作为 draft lock 范围
-  - N2 bootstrap doc records `pip list` but not `pip freeze`：`accepted`，对 2-package env 无实质差异
-  - N3 sandbox/escalation note is documented transparently：`accepted`
-- 没有 T39 `deferred` warning；不因 T39 review 新增 risk
+- T40 review non-blocking comments：
+  - N1 worker pre-review file overlap：`accepted`，属任务包设计痕迹而非 worker 越界
+  - N2 dataset manifest contains legacy macOS paths：`accepted`，属继承的历史 metadata，不是 T40 新引入行为
+  - N3 R11 narrowing not yet recorded：`deferred to Captain`，已在治理同步中吸收
 - `R10` 仍未关闭但显著缩窄：T38 trace 支持 combined committed-`b` instability；上游 teacher vs CNN residual root cause 尚未完全隔离
 - `R20` 仍未关闭：correction saturation structural zero 仍需后续独立 edge/stress 判断
 - `R23` 仍未关闭：aggregation/report writer 缺少 focused tests 的风险仍存在
 - `R24` 仍有效：statcalib 目前只是接口级 residual-b contract，不能外推为完整 calibration comparator 或 benchmark evidence
-- `R11` 仍有效但已进一步缩窄：T39 已补 clean-environment CPU draft lock 与 dry-run/import-level bootstrap，但 real clean-environment training execution 尚未验证
-- `T40` 是 Milestone 2J 的下一 bounded reproducibility task：只做 CPU-only clean-environment 最小 real-training smoke，并把输出隔离到 task-scoped directories
+- `R11` 仍有效但已进一步缩窄：T40 已补 clean-environment CPU real-training smoke，但 full training reproducibility、GPU/CUDA portability、Linux portability 仍未验证
+- `R12` 仍有效：当前机器上真实 `.tflite` runtime 依赖仍未满足，因此 `T32` 继续保持 pending
+- `T33` 是当前下一唯一任务：只按 `T19` manifest 执行 tracked `__pycache__/` / `.pyc` physical cleanup
 
 为什么现在做它：
 
-1. T39 已确认当前训练链在 clean CPU-only environment 中可完成依赖安装与 dry-run/import-level bootstrap。
-2. `R11` 还缺最后一段关键证据：至少一次 real clean-environment training execution，而不是只看 `--help` / `--dry-run`。
-3. 训练入口会按 config 中的 `model_dir` / `report_dir` 写输出，因此必须先单开一个 task-scoped smoke task，把输出重定向到隔离目录，避免污染历史 artifacts。
-4. T40 不改变模型主线、benchmark、formal protocol、baseline/scenario、`.tflite` 或真板边界。
+1. T40 已把 clean CPU-only lane 推进到 one-run real-training smoke，`R11` 已进一步缩窄。
+2. `T32` 仍被当前机器缺少 `tensorflow / tflite_runtime` 明确阻塞，`T37` 仍被硬件/bitstream前提阻塞。
+3. `T33` 已有 `T19` 的只读 manifest、目标路径、命令草案、rollback plan 与 acceptance criteria，属于当前唯一不依赖新增环境/硬件前提的 bounded task。
+4. T33 只处理 tracked cache，不改 benchmark、训练、`.tflite`、真板或历史实验事实来源。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T40`
-2. `T39` 已按 `PASS` 收口。
-3. T39 review blocking issues：
+1. 当前唯一任务：`T33`
+2. `T40` 已按 `PASS` 收口。
+3. T40 review blocking issues：
    - none
-4. T39 non-blocking comments：
-   - accepted: exact `==` pins are appropriate for a draft lock
-   - accepted: `pip list` is sufficient for a 2-package clean env artifact
-   - accepted: sandbox/escalation note is transparent and acceptable
-5. T39 bootstrap：`docs/training_chain_cpu_cleanenv_bootstrap.md`
-6. T40 任务包：`docs/tasks/Phase2/T40_training_chain_cpu_cleanenv_minimal_train_smoke.md`
+4. T40 non-blocking comments：
+   - accepted: worker pre-review overlap is a task-package design artifact
+   - accepted: legacy macOS dataset-manifest paths are inherited metadata only
+   - deferred-to-Captain: R11 narrowing is now synchronized into governance docs
+5. T40 smoke output：`docs/training_chain_cpu_cleanenv_train_smoke.md`
+6. T33 任务包：`docs/tasks/Phase2/T33_tracked_cache_physical_cleanup_execution.md`
 
-## Done Criteria For T40
+## Done Criteria For T33
 
-1. Reuse the verified clean Python `3.12` CPU-only environment from T39, without mutating `DLEnv`.
-2. Create one task-scoped derived config that inherits a canonical training config but redirects `model_dir` and `report_dir` to isolated T40-only paths.
-3. Run one bounded real CPU-only training smoke through `python -m cnn_fpga.model.train --config <derived-config>`.
-4. Verify outputs exist only in T40-isolated directories and that canonical historical `artifacts/models/*` and `artifacts/reports/*` remain untouched.
-5. Do not run benchmark, `.tflite`, hardware, cleanup, GPU/CUDA validation, or broader training sweeps.
+1. Execute cleanup only against the 9 `__pycache__` target directories enumerated in `docs/cleanup_tracked_cache_manifest.md`.
+2. Untrack tracked `__pycache__/` / `.pyc` files without touching working-tree source content.
+3. Verify `git ls-files | rg "__pycache__|\\.pyc$"` returns `0` lines after cleanup.
+4. Verify `runs/` and `artifacts/` remain outside the change set.
+5. Do not modify source code, benchmark semantics, `.tflite` scope, hardware scope, or any path outside the T19 manifest.
