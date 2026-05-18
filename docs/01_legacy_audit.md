@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap`
+  - `T44: Research Reality Recovery Mode setup and evidence-gap ledger`
 
 说明：
 
@@ -72,10 +72,17 @@
 
 ### 2026-05-17 Captain Update
 
-- `T41` has been accepted as `PASS`; it produced a bounded paper-assembly milestone review without touching code, configs, `runs/`, `artifacts`, `.tflite`, or hardware scope.
-- T41 review comments are non-blocking and remain document-correction notes only; they do not introduce new repository or evidence risks.
-- Milestone 2K is now formally closed with verdict `Allow`.
-- Current unique task is `T42`, focused on a docs-only Background / Related Work scaffold and method-positioning calibration, not on new experiments or evidence upgrades.
+- `T42` has been accepted as `PASS`; it produced a bounded Background / Related Work scaffold and method-positioning calibration without touching code, configs, `runs/`, `artifacts`, `.tflite`, or hardware scope.
+- T42 review comments are non-blocking and remain framing-guidance notes only; they do not introduce new repository or evidence risks.
+- The current paper framing is now calibrated to a working method-forward title with evidence-bounded body text; this is a drafting choice, not an evidence upgrade.
+- At that time, the current unique task was `T43`, focused on a docs-only bounded prose draft for Background / Related Work, not on new experiments or evidence upgrades.
+
+### 2026-05-18 Captain Update
+
+- `T43` has been accepted as `PASS`.
+- T43 warnings are all classified as `accepted`; no `deferred` warning remains from this review.
+- The project now enters `Research Reality Recovery Mode` because the user explicitly requested that paper expansion pause until evidence/material truth is re-frozen and audited.
+- Current unique task is `T44`, focused on a docs-only recovery baseline: claim/evidence truth, reproducibility gaps, figure/result readiness, and paper-claim risk.
 
 ## 3. 可行性判断
 

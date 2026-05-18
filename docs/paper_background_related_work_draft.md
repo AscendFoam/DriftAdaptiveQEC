@@ -1,0 +1,67 @@
+# Background and Related Work
+
+## 1. GKP Quantum Error Correction and the Adaptive Decoding Problem
+
+The Gottesman--Kitaev--Preskill (GKP) code [1, 2] encodes a logical qubit into the continuous-variable phase space of a bosonic oscillator. Logical information is protected by confining the oscillator's displacement to a lattice of points in phase space. Error correction proceeds by measuring stabilizer syndromes---integer-valued outcomes that reveal the displacement error modulo the lattice spacing---and applying corrective displacements that return the state to the nearest lattice point.
+
+In a noiseless, time-invariant setting, the decoding rule is straightforward: the syndrome $s$ is mapped to a correction $\Delta$ through a linear transformation $\Delta = K s + b$, where $K$ encodes the gain structure determined by the noise covariance and $b$ captures any displacement bias. In practice, however, physical noise parameters drift over time. Displacement noise amplitude $\sigma$ may change, the bias $(\mu_q, \mu_p)$ may shift, and the noise covariance may rotate by an angle $\theta$. A decoder that uses fixed $(K, b)$ calibrated at one operating point will gradually become mismatched as these parameters drift, causing the logical error rate (LER) to rise above what the hardware could otherwise sustain.
+
+This mismatch motivates adaptive decoding: the decoder must track the evolving noise parameters and update its correction rule in real time. The central engineering challenge is that this adaptation must occur under strict latency constraints imposed by the quantum hardware---corrections must be applied within microseconds to prevent error accumulation---while statistical estimation of drift parameters requires aggregating syndrome data over many measurement cycles. This tension between latency and estimation accuracy is the fundamental motivation for the dual-loop architecture described in the next subsection.
+
+## 2. Dual-Loop Time-Scale Separation for Real-Time Decoding
+
+The dual-loop architecture separates the decoding task into two operating at different time scales, following a structure common in control engineering but adapted specifically for GKP syndrome processing.
+
+The fast loop operates at the syndrome measurement cycle rate---on the order of $5\,\mu\mathrm{s}$ per correction in the target hardware regime. At each cycle, the fast loop executes a deterministic linear decoding operation $\Delta = K s + b$, where $s$ is the current syndrome measurement and $(K, b)$ are the decoder parameters currently loaded in a dual-buffered parameter bank. The fast loop does not perform any learning or estimation; it applies the correction rule atomically using whatever parameters are currently committed. This ensures that every correction is completed within the latency budget, regardless of what the slow loop is doing.
+
+The slow loop operates at a much longer time scale---typically $10$--$100\,\mathrm{ms}$, corresponding to the accumulation of $10^3$--$10^4$ syndrome measurements into a $32 \times 32$ syndrome histogram window. From this histogram, the slow loop estimates the current noise parameters and computes updated $(K, b)$ values for the fast loop. The key constraint is that parameter updates must be committed atomically via bank switching: the fast loop continues using the old parameters until the new set is fully written and committed, preventing partial-update inconsistencies.
+
+This time-scale separation introduces a fundamental design choice: what estimator or model should the slow loop use to map accumulated syndrome statistics to updated decoder parameters? The choice of slow-loop method determines both the tracking accuracy and the computational budget required per update.
+
+## 3. Machine-Learning-Assisted QEC Decoding
+
+The application of machine learning to quantum error correction decoding has received growing attention. Early work demonstrated that neural networks can learn efficient decoding strategies for surface codes [3, 4], outperforming minimum-weight perfect matching (MWPM) decoders on certain noise models. Subsequent work extended neural decoders to handle circuit-level noise [5], approximate message-passing decoding [6], and real-time decoding under latency constraints [7].
+
+However, the majority of ML-based decoding work has focused on discrete-variable codes---primarily surface codes and topological codes---where syndromes are binary detection events and the decoding problem maps naturally to classification or graph matching. GKP codes present a qualitatively different setting: syndromes are continuous-valued displacement measurements, the noise model is characterized by continuous drift parameters, and the decoding rule is a parametric linear operation rather than a combinatorial search.
+
+In the GKP context, a natural application of ML is to replace or augment the slow-loop estimator. Rather than using a classical adaptive filter to track drift, a small neural network can learn to map syndrome histogram statistics directly to updated decoder parameters. The present work follows this direction, using a lightweight convolutional neural network (Tiny-CNN) as the slow-loop estimator within a dual-loop GKP decoding pipeline.
+
+A key distinction between this work and prior ML-based decoding is the scope of the learned component. Rather than training a neural network to perform end-to-end decoding---replacing the entire fast-loop correction rule---the present approach trains the network to estimate only specific slow-loop parameters, keeping the fast-loop linear decoding structure intact. This architectural choice is motivated by the real-time constraint: the fast loop must execute deterministically within microseconds, a requirement that favors fixed-point linear operations over learned inference at the fast-loop level.
+
+## 4. Classical Adaptive Estimators for Drift Tracking
+
+Before introducing the neural slow-loop estimator, it is useful to characterize the classical alternatives that serve as baselines. Several standard adaptive estimation methods can be applied to the drift-tracking problem in the slow loop.
+
+The **Extended Kalman Filter (EKF)** linearizes the parameter estimation problem around the current state estimate and updates recursively as each new measurement arrives. EKF provides a principled framework for tracking slowly varying parameters but requires careful tuning of process and measurement noise covariances. In the present benchmark, EKF serves as a representative recursive Bayesian estimator.
+
+The **Unscented Kalman Filter (UKF)** avoids explicit linearization by propagating a set of sigma points through the nonlinear observation model and recovering the updated mean and covariance from the transformed points. UKF typically handles nonlinearities more robustly than EKF and has become the strongest classical baseline in the present evaluation. The UKF implementation used here preserves full covariance estimation with symmetric and positive-definite stabilization.
+
+The **Window Variance** estimator computes sample statistics (mean, variance, and covariance) over a fixed-length sliding window of syndrome measurements. This is the simplest non-trivial adaptive method: it makes no dynamical model assumptions and responds directly to the empirical distribution of recent measurements. In the present system, Window Variance serves as the classical teacher estimator whose output the neural residual corrector augments.
+
+The **Recursive Least Squares (RLS)** estimator performs online least-squares regression with exponential forgetting. RLS adapts its parameter estimates by minimizing a weighted sum of squared residuals, with recent observations weighted more heavily than older ones. The RLS variant used here is configured to estimate residual corrections, making it a direct classical competitor to the neural residual approach.
+
+The **Constant Residual-Mu** baseline applies a fixed correction offset estimated from the initial calibration, providing a reference point for how much adaptation is needed. If this baseline performs comparably to adaptive methods, it indicates that the drift is too slow or too small to require active tracking under the given protocol.
+
+These five classical estimators collectively define the competitive landscape that any neural slow-loop method must surpass to demonstrate meaningful improvement. The frozen-set formal benchmark reported in this paper evaluates the proposed hybrid residual-b decoder against all five baselines under four drift scenarios, using mock-backed software hardware-in-the-loop (HIL) revalidation [supported claims C2, C3].
+
+## 5. Teacher-Guided Residual Correction: Why Learning a Residual Differs from Direct Regression
+
+A central design decision in the present work is the choice of learning target for the slow-loop neural estimator. Two natural alternatives exist:
+
+1. **Direct absolute regression**: The neural network learns to map syndrome histogram statistics directly to the full set of noise parameters $(\sigma, \mu_q, \mu_p, \theta)$ or equivalently to the full decoder parameters $(K, b)$.
+
+2. **Teacher-guided residual correction**: A classical teacher estimator (e.g., Window Variance) first produces an estimate of the decoder parameters. The neural network then learns only the residual correction $\delta b$ to the teacher's bias estimate $b$, leaving the gain $K$ and the teacher's main estimate intact.
+
+The choice between these approaches is not merely an implementation detail. Experimental evidence from the teacher-representation investigation conducted in this project demonstrates a systematic disconnect between offline training metrics and online decoding performance. Specifically, variants that achieved superior $R^2$ scores in offline regression---including variants that removed teacher parameters entirely---exhibited unstable or degraded performance under formal HIL benchmarking. This finding is consistent across multiple random seeds and drift scenarios, leading to the stable conclusion that offline training improvement does not reliably predict formal HIL improvement [stable conclusion 9.1 item 7].
+
+The teacher-guided residual approach addresses this disconnect through two mechanisms. First, the classical teacher provides a stable, interpretable baseline estimate that anchors the correction within the physically plausible parameter range. Even if the neural residual is temporarily inaccurate, the teacher's estimate prevents the committed parameters from drifting far from the correct operating point. Second, by restricting the neural network to learning a lower-dimensional residual correction rather than the full parameter set, the learning problem becomes simpler: the network needs only to capture the systematic estimation errors of the teacher, not the full mapping from histograms to parameters.
+
+This architectural principle---combining a stable classical estimator with a learned correction---has analogues in control engineering (feedforward-plus-feedback structures, disturbance observers) and in machine learning (residual learning in deep networks, boosting). Its application to real-time GKP decoding is, to the best of our knowledge, novel. The key insight is that the residual correction operates on the same quantity ($b$) that the fast loop actually uses, creating a direct alignment between the learning objective and the runtime control objective.
+
+In the frozen-set formal benchmark, the hybrid residual-b decoder---which combines Window Variance as the classical teacher with a Tiny-CNN residual corrector---wins all four drift scenarios against all five classical baselines under mock-backed software HIL revalidation [supported claim C3]. The runner-up in all four scenarios is UKF, the strongest purely classical baseline. Notably, the advantage of hybrid residual-b does not arise from more aggressive control: correction saturation rate and aggressive parameter rate are both zero across all tested configurations [stable conclusion 9.1 item 3].
+
+## 6. Evidence Boundaries in Quantum System Validation
+
+A practical challenge in quantum systems research is the gap between software simulation evidence and hardware validation evidence. Many proposed quantum error correction schemes are evaluated primarily through numerical simulation, with hardware demonstrations reported separately and often under different conditions. This practice creates an implicit evidence boundary: results obtained in simulation do not automatically transfer to hardware, and the specific conditions under which they do or do not transfer are frequently left implicit.
+
+The present work encounters this boundary directly. The formal benchmark results are obtained under mock-backed software HIL---a software environment that emulates the hardware interface but does not execute on physical quantum hardware. The training chain has been verified through one clean-environment CPU-only training smoke [supported claim C5], but full cross-platform training reproducibility remains unverified [blocked claim C6]. True TFLite runtime validation and real-board HIL execution are not yet available on the current machine [blocked claims C7, C8]. Being explicit about these evidence boundaries is important for two reasons: it allows readers to correctly interpret the scope of the reported results, and it identifies the specific evidence upgrades needed to strengthen the claims in future work.

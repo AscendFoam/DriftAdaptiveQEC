@@ -159,3 +159,18 @@ Focus areas:
 ## Captain Notes
 
 This task is still docs-only. It is not the full drafting task. It exists to make sure that when prose expansion starts later, the paper has the right structural home for prior work and the right calibrated framing for the current evidence level.
+
+## Verification Record
+
+- Worker completed T42 on `2026-05-17`.
+- All required inputs read and cross-checked.
+- `docs/paper_draft_skeleton.md` updated: Background / Related Work scaffold added (6 subsections) between Introduction and Method; title candidates reorganized into conservative and method-forward groups with recommended framing; introduction contribution bullets calibrated against C1–C11.
+- `docs/paper_method_positioning_calibration.md` produced: conservative vs method-forward framing comparison, recommended safe framing (method-forward title, evidence-bounded body), contribution-bullet calibration table, 8 forbidden phrase categories.
+- `docs/review/T42_review.md` produced with verdict = `PASS`.
+- `docs/for_human/T42_explanation.md` produced with Chinese human-facing explanation.
+- Blocked claims (C6, C7, C8, C10, C11) remain blocked in all outputs.
+- Background / Related Work scaffold is present and structurally integrated.
+- Contribution bullets remain consistent with C1–C11 status distribution.
+- Calibration note clearly distinguishes safe vs unsafe framing.
+- No code, config, `runs/`, or `artifacts` changes were introduced.
+- No forbidden scope violations detected.

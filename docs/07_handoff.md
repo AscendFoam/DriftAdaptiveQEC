@@ -2,11 +2,19 @@
 
 ## 1. 当前状态
 
-- 日期：`2026-05-17`
+- 日期：`2026-05-18`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
-- 当前唯一任务：`T42: Paper Background / Related Work scaffold and method-positioning calibration`
-- 任务包：`docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`
+- 当前子模式：`Research Reality Recovery Mode`
+- 当前唯一任务：`T44: Research Reality Recovery Mode setup and evidence-gap ledger`
+- 任务包：`docs/tasks/Phase2/T44_research_reality_recovery_mode_setup_and_evidence_gap_ledger.md`
+
+Captain closeout note after T43:
+
+- `T43` is complete. `docs/review/T43_review.md` verdict = `PASS`; blocking issues = none.
+- T43 comments are non-blocking and were handled as `accepted`: subsection-6 neutrality, placeholder citation markers, drafting annotations, and inline claim-reference formatting all remain later cleanup items, not evidence blockers.
+- T43 does not change any risk status, evidence level, hardware status, `.tflite` status, reproducibility status, or repo-noise fact boundary.
+- After T43, the project does not continue into more paper prose by default. The active next task is `T44`, which explicitly switches the project into recovery-first claim/evidence/material audit mode.
 
 Captain closeout note after T41:
 
@@ -14,6 +22,13 @@ Captain closeout note after T41:
 - T41 comments are non-blocking and were handled as minor document corrections; there are no `deferred` warnings from this review.
 - T41 does not change any risk status, evidence level, or repo-noise fact boundary. It closes Milestone 2K and sets the paper-positioning gate outcome only.
 - The active next task is `T42`, not `T41`, `T35`, `T34`, `T33`, `T40`, `T39`, `T31`, or `T38`. Any older T41/T35-next wording later in this handoff is superseded by this status block and `docs/04_task_board.md`.
+
+Captain closeout note after T42:
+
+- `T42` is complete. `docs/review/T42_review.md` verdict = `PASS`; blocking issues = none.
+- T42 comments are non-blocking and were handled as accepted framing guidance: subsection-6 wording was softened to neutral survey language, and the method-forward title remains only a working recommendation pending later human/Captain override.
+- T42 does not change any risk status, evidence level, hardware status, `.tflite` status, or repo-noise fact boundary. It extends the paper scaffold only.
+- The active next task is `T43`, not `T42`, `T41`, `T35`, `T34`, `T33`, `T40`, `T39`, `T31`, or `T38`. Any older T42-next wording later in this handoff is superseded by this status block and `docs/04_task_board.md`.
 
 ## 2. 本轮已完成
 
@@ -636,60 +651,44 @@ Captain closeout note after T41:
 
 ## 6. 当前唯一任务包摘要
 
-`T41` 已完成，Milestone 2K 现已由 gate review 正式关闭；当前等待 Worker 执行的是 docs-only 的 `T42` 结构扩展任务。
+当前唯一任务已切换为 `T44: Research Reality Recovery Mode setup and evidence-gap ledger`，任务包为 `docs/tasks/Phase2/T44_research_reality_recovery_mode_setup_and_evidence_gap_ledger.md`。
 
-T41 已收口事实：
+T44 任务边界：
 
-- `docs/review/T41_review.md` verdict = `PASS`，blocking issues = none
-- `docs/review/Milestone2K_review.md` 已形成：
-  - verdict = `Allow`
-  - minimum safe paper positioning
-  - blocked claims that still prevent stronger positioning
-  - explicit decision that Background / Related Work must be added before prose expansion
-  - next unique task recommendation = `T42`
-- `docs/for_human/T41_explanation.md` 已形成：
-  - Milestone 2K 现在证明了什么
-  - 它仍然不能证明什么
-  - 为什么下一步是补结构而不是直接开写全文或切回部署工作
-- 未修改 source、config、`runs/`、`artifacts`、benchmark protocol、`.tflite`、hardware 或治理结论文档
-
-T41 review notes：
-
-- N1 T34 review path typo：`accepted` and fixed during Captain integration
-- N2 T41 human explanation count typo：`accepted` and fixed during Captain integration
-- 没有 `deferred` warning；没有因 T41 新增 risk
-
-T42 任务边界：
-
-- 只允许在现有 `docs/paper_draft_skeleton.md` 基础上补 Background / Related Work scaffold 与 method-positioning calibration
-- 只允许引用具体 claim IDs、figure/table IDs、evidence path、review 结论、risk 和边界
-- 必须显式校准 conservative vs method-forward title positioning，并把 introduction contribution bullets 对齐到 claim ledger
-- 不得修改 source、benchmark protocol、`runs/`、`artifacts`、阶段结论文档或任何历史实验事实
+- 只允许做 docs-only recovery baseline
+- 只允许冻结 claim / evidence / material truth
+- 只允许产出 `docs/reality_recovery/00_freeze_snapshot.md` 到 `06_human_brief.md`
 - 不得运行 benchmark、training、`.tflite`、hardware 或 cleanup
+- 不得修改 source、benchmark protocol、`runs/`、`artifacts`、阶段结论文档或任何历史实验事实
+- 不得继续论文 prose 扩写
+
+T43 历史收口事实：
+
+- `docs/review/T43_review.md` verdict = `PASS`，blocking issues = none
+- T43 warnings 全部为 `accepted`
+- T43 没有 `deferred` warning，因此没有新增风险
+- T43 只产生 bounded Background / Related Work prose draft，不产生 evidence upgrade
 
 ## 7. 下一步建议
 
-下一步应交给 Worker 执行 `T42: Paper Background / Related Work scaffold and method-positioning calibration`。
+当前建议交给 Worker 执行 `T44` recovery baseline。
 
 建议优先级：
 
-1. 在 `docs/paper_draft_skeleton.md` 中新增 Background / Related Work section scaffold，并把它绑定到现有 claim IDs、figure/table IDs 和 method framing。
-2. 输出一个 method-positioning calibration note，明确 conservative title 与 method-forward title 的安全边界和推荐方案。
-3. 校准 introduction contribution bullets，确保 `C1`-`C5`、`C9` 可写，`C6`、`C7`、`C8`、`C10`、`C11` 仍保持 blocked。
-4. 保持 docs-only，不进入 full prose drafting。
+1. 冻结当前 claim / evidence / material truth。
+2. 产出 claim-evidence table、code truth audit、experiment reproducibility audit、figure/result ledger 和 paper claim risk table。
+3. 写出 human brief，明确哪些已验证、哪些未验证、哪些可疑、哪些不能继续宣称。
+4. 保持 docs-only，不进入任何新的 prose 扩写。
 
 ## 8. 暂不继续的事项
 
-在 T42 完成前，暂不继续：
+在 T44 完成前，暂不继续：
 
-1. 新的 teacher-representation benchmark 扩展或长跑
-2. statcalib slow-loop integration 或 formal benchmark integration
-3. 超出 frozen-set 的 P4 正式长跑或 CI-driven stopping
-4. 真板 backend 能力扩写
-5. 任何新的 repo cleanup 扩展
-6. full paper prose expansion 或 paper-inspired 新分支实现
-7. GPU/CUDA training lock 或 dev torch portability claim
-8. 真实 `.tflite` runtime smoke
+1. 任何新的 prose 扩写
+2. 新的实验、训练、`.tflite`、硬件或 cleanup
+3. 任何 evidence level 升级
+4. 任何 benchmark scope 扩展
+5. 任何对 `docs/02_experiment_plan.md` 的修改
 
 ## 9. 2026-05-16 Captain Supersession
 

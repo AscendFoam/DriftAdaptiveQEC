@@ -8,10 +8,14 @@
 
 - 当前阶段：`Phase 2: Controlled Development`
 - 决策状态：`Go`
+- 当前子模式：`Research Reality Recovery Mode`
 - 状态来源：
   - `docs/review/T13_recovery_exit_review.md` verdict = `Allow`
   - `docs/02_experiment_plan.md`
   - `docs/reference/AI_coding_workflow.md`
+- 子模式触发：
+  - `2026-05-18` 用户明确要求按 `docs/reference/科研纠偏意见.md` 进入 recovery-first 推进
+  - 当前优先级从“继续扩 prose”切换为“先冻结 claim/evidence/material truth，再补证据、图表、复现与边界缺口”
 - 当前任务原则：
   - 每轮只推进一个 bounded task
   - 每个任务包必须有 Allowed files / Forbidden scope / Verification / Docs to update
@@ -205,58 +209,82 @@
 
 ### Milestone 2M: Paper Framing And Scaffold Extension
 
-- [ ] T42: Paper Background / Related Work scaffold and method-positioning calibration
+- [x] T42: Paper Background / Related Work scaffold and method-positioning calibration
   - Task package: `docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`
+  - Output: `docs/paper_method_positioning_calibration.md`
+  - Review output: `docs/review/T42_review.md`
+  - Captain verdict: `PASS`
+  - Result: Background / Related Work scaffold and method-positioning calibration are now in place; the working paper framing is method-forward title plus evidence-bounded body text, without upgrading blocked claims
+
+### Milestone 2N: Paper Background Prose Draft
+
+- [x] T43: Paper Background / Related Work bounded prose draft
+  - Task package: `docs/tasks/Phase2/T43_paper_background_related_work_prose_draft.md`
+  - Output: `docs/paper_background_related_work_draft.md`
+  - Review output: `docs/review/T43_review.md`
+  - Captain verdict: `PASS`
+  - Warning classification:
+    - N1 subsection-6 neutrality = `accepted`
+    - N2 placeholder citation markers = `accepted`
+    - N3 internal drafting annotations = `accepted`
+    - N4 inline claim-reference formatting inconsistency = `accepted`
+  - Result: bounded Background / Related Work prose draft exists, but it does not authorize continued paper expansion ahead of evidence/material recovery
+
+### Milestone 2O: Research Reality Recovery Mode
+
+- [ ] T44: Research Reality Recovery Mode setup and evidence-gap ledger
+  - Task package: `docs/tasks/Phase2/T44_research_reality_recovery_mode_setup_and_evidence_gap_ledger.md`
 
 Long-term objective:
 
-以发表质量为最终目标，但最近任务仍按“证据口径锁定 -> 有界执行 -> gate review -> 机制解释 -> 复现/部署边界 -> 论文收口”的顺序推进。除 `Current Unique Task` 外，上述 pending 项只是路线图，不可直接执行。
+以论文级质量为最终目标，但当前先进入 `Research Reality Recovery Mode`。后续任务顺序改为“真实性冻结 -> claim/evidence/material 台账 -> 复现/图表/结果缺口审计 -> 风险收口 -> 再决定是否恢复论文扩写”。除 `Current Unique Task` 外，其他 pending 项只代表路线图，不可直接执行。
 
 ## Current Unique Task
 
-`T42: Paper Background / Related Work scaffold and method-positioning calibration`
+`T44: Research Reality Recovery Mode setup and evidence-gap ledger`
 
 状态说明：
 
-- `T41` 已完成并通过 review，Captain verdict = `PASS`
-- T41 review blocking issues：
+- `T43` 已完成并通过 review，Captain verdict = `PASS`
+- T43 review blocking issues：
   - none
-- T41 review non-blocking comments：
-  - N1 T34 review path mis-cited in `Milestone2K_review.md`：fixed during Captain integration
-  - N2 T41 human explanation counted 18 challenge points instead of 20：fixed during Captain integration
-- `R10` 仍未关闭但显著缩窄：T38 trace 支持 combined committed-`b` instability；上游 teacher vs CNN residual root cause 尚未完全隔离
-- `R20` 仍未关闭：correction saturation structural zero 仍需后续独立 edge/stress 判断
-- `R23` 仍未关闭：aggregation/report writer 缺少 focused tests 的风险仍存在
-- `R24` 仍有效：statcalib 目前只是接口级 residual-b contract，不能外推为完整 calibration comparator 或 benchmark evidence
-- `R11` 仍有效但已进一步缩窄：T40 已补 clean-environment CPU real-training smoke，但 full training reproducibility、GPU/CUDA portability、Linux portability 仍未验证
-- `R12` 仍有效：当前机器上真实 `.tflite` runtime 依赖仍未满足，因此 `T32` 继续保持 pending
-- `R4` 与 `R7` 保持 T33 收口后的状态不变；T41 不新增 repo-noise 风险
-- Milestone 2K 已由 `T41` 正式关闭；当前下一唯一任务是 `T42`，只做 docs-only 的 Background / Related Work scaffold 与 method-positioning calibration
+- T43 review non-blocking issues：
+  - N1 subsection-6 neutrality：`accepted`
+  - N2 placeholder citation markers：`accepted`
+  - N3 internal drafting annotations：`accepted`
+  - N4 inline claim-reference formatting inconsistency：`accepted`
+- T43 没有 `deferred` warning，因此本轮不新增风险条目
+- 当前项目保持 `Phase 2: Controlled Development / Go`，但子模式切换为 `Research Reality Recovery Mode`
+- 论文 prose 扩写在 T43 后暂停；当前优先级改为补 claim/evidence/material/figure/reproducibility truth baseline
+- `R10`、`R11`、`R12`、`R13`、`R14`、`R20`、`R23`、`R24` 仍未收口，且目前缺少面向论文成稿的统一 figure/result/material ledger
+- `T32` 仍被当前机器缺少真实 `.tflite` runtime 依赖阻塞，`T37` 仍被硬件/bitstream 前提阻塞
 
 为什么现在做它：
 
-1. `T34`、`T35`、`T41` 已把 paper-assembly 的 ledger、skeleton、reviewer-risk audit 和 milestone gate 结论建立起来，后续不需要再从零开始判断哪些结论可写、哪些定位可用。
-2. `T32` 仍被当前机器缺少 `tensorflow / tflite_runtime` 明确阻塞，`T37` 仍被硬件/bitstream 前提阻塞。
-3. `T41` 已明确要求在 prose expansion 前先补 Background / Related Work scaffold，并对 title / method positioning 做校准。
-4. `T42` 是当前唯一不依赖新环境、新硬件或新运行结果、且能直接提升论文结构完整性的 bounded docs-only task。
+1. 用户已明确要求按 `docs/reference/科研纠偏意见.md` 先做 recovery，而不是继续把 paper prose 往前推。
+2. `T34` 到 `T43` 已经产出 skeleton、ledger、定位校准和 bounded prose draft，但这些产物不能替代证据充分性、图表充分性和复现充分性审计。
+3. 当前最缺的不是再多一段 prose，而是一份把“哪些能写、哪些不能写、哪些还缺材料”冻结清楚的 recovery baseline。
+4. `T44` 是 docs-only bounded task，不依赖新环境、新硬件或新运行结果，且能为后续 recovery 任务建立统一入口。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T42`
-2. `T41` 已按 `PASS` 收口。
-3. T41 review blocking issues：
+1. 当前唯一任务：`T44`
+2. `T43` 已按 `PASS` 收口。
+3. T43 review blocking issues：
    - none
-4. T41 non-blocking comments：
-  - accepted and fixed: T34 review path typo in `docs/review/Milestone2K_review.md`
-  - accepted and fixed: challenge-point count typo in `docs/for_human/T41_explanation.md`
-5. T41 review output：`docs/review/T41_review.md`
-6. T42 任务包：`docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`
+4. T43 non-blocking comments：
+   - accepted: subsection-6 neutrality needs to remain modest
+   - accepted: placeholder citation markers must later be resolved via shared bibliography
+   - accepted: internal drafting annotations must be cleaned during manuscript assembly, not now
+   - accepted: inline claim-reference formatting should be normalized later
+5. T43 review output：`docs/review/T43_review.md`
+6. T44 任务包：`docs/tasks/Phase2/T44_research_reality_recovery_mode_setup_and_evidence_gap_ledger.md`
 
-## Done Criteria For T42
+## Done Criteria For T44
 
-1. Add a bounded Background / Related Work scaffold to `docs/paper_draft_skeleton.md`.
-2. Produce a method-positioning calibration note that compares conservative vs method-forward framing and states the recommended safe choice.
-3. Calibrate title candidates and introduction contribution bullets against `C1`-`C11` so blocked claims remain blocked.
-4. Do not write full paper prose, run experiments, or upgrade evidence levels.
-5. Do not modify source code, benchmark protocol, historical run/artifact facts, or stage-conclusion documents.
-6. Do not run new benchmark, training, `.tflite`, hardware, or cleanup work.
+1. Freeze the current truth/evidence boundary in `docs/reality_recovery/00_freeze_snapshot.md`.
+2. Build a `supported / partial / blocked` claim-evidence table for current paper-facing claims.
+3. Audit code truth, experiment reproducibility, figure/result readiness, and paper-claim risk in separate recovery docs.
+4. Produce a short human-facing brief that says whether paper writing should continue right now.
+5. Stay docs-only: no code, config, benchmark, training, `.tflite`, hardware, cleanup, `runs/`, or `artifacts` changes.
+6. Do not modify `docs/02_experiment_plan.md` or silently upgrade any evidence level.

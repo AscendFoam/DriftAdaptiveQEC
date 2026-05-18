@@ -28,6 +28,7 @@
 | R22 | T28 后 `_write_report()` markdown report 存在重复 header row，导致人读 report 表格列数不一致 | 已收口 | `docs/review/T29_review.md` verdict = `PASS`；旧 11-column header 已删除；验证得到 `header_rows=1`、`column_counts=[12, 12, 12]` | R22 已由 T29 收口；未来若再改 aggregation/report writer，应按 R23 补 focused test 或静态 report-shape check |
 | R23 | Aggregation/report writer 缺少 focused unit/static tests，未来可能再次出现格式或 null-semantics 回归 | 中 | `docs/review/T28_review.md` Missing Tests 指出相关路径没有现成 tests；T28 依赖 py_compile 和 bounded smoke 验证 | T28 可接受；后续再改 aggregation/report writer 时应补 focused unit test 或静态 report-shape check |
 | R24 | T30 的 `from_delta_b()` 只是最小 residual-b interface helper，未来若把它误当完整 statcalib/calibration comparator，可能把接口 contract 外推成未验证算法能力 | 中 | `docs/review/T30_review.md` N4 指出当前 baseline 逻辑为 `prior.b + delta_b`，适合 residual-b comparator contract，但不是完整 calibration logic；T30 只做 interface-level tests | 后续 statcalib slow-loop integration 或 benchmark task 必须重新验证 calibration objective、fallback semantics、status propagation 和 ranking boundary，不得直接把 T30 helper 写成 validated statcalib comparator |
+| R25 | 论文叙事与 recovery baseline 曾一度跑在证据材料前面，若继续在未冻结 truth 的情况下推进 prose，很容易再次把 draft 当成事实来源 | 高 | `T43` 已经产出 bounded Background / Related Work prose draft，但用户明确要求改入 `Research Reality Recovery Mode`，优先补 claim/evidence/material/figure/reproducibility baseline | 先完成 `T44` recovery baseline，再决定是否恢复任何 prose 扩写；恢复前不把 draft、skeleton 或 framing 当成证据升级 |
 
 ## 当前开放问题
 
@@ -48,7 +49,7 @@ Current T24-T29 status note:
 - `T36` Captain 已接受 review 为 `PASS`；已完成 `seed=20260429` failure-mechanism diagnosis，结论仍是 summary/final-snapshot-level hypothesis，不是 causal proof。
 - `T38` Captain 已接受 review 为 `PASS`；single-seed trace evidence 支持 `seed=20260429` 的 combined committed-`b` instability，但不是 mitigation、multi-seed causal proof、formal benchmark、`.tflite` runtime 或 real-board validation。
 - `T31` Captain 已接受 review 为 `PASS`；已产出 `docs/training_chain_portable_dependency_lock_plan.md`，但不是 clean-environment rebuild proof。
-- 当前唯一任务：`T42: Paper Background / Related Work scaffold and method-positioning calibration`，任务包 `docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`。
+- 当前唯一任务：`T44: Research Reality Recovery Mode setup and evidence-gap ledger`，任务包 `docs/tasks/Phase2/T44_research_reality_recovery_mode_setup_and_evidence_gap_ledger.md`。
 - R13 当前仍然有效：真板路径还缺设备存在、权限、寄存器活性、DMA 读出和 commit/ack round-trip 的真实证据。
 - R14 当前仍然有效但已收窄：AXI/DMA 代码侧审计已具体化，真实宿主、bitstream 与 DMA contract 仍未验证。
 - R19 已收口：T24 已固定 CLI shape 并报告 metric availability。
@@ -87,7 +88,7 @@ Current T24-T29 status note:
      - `T36` 已完成并由 Captain 接受为 `PASS`。
      - `T38` 已完成并由 Captain 接受为 `PASS`。
      - `T31` 已完成并由 Captain 接受为 `PASS`。
-     - 当前唯一任务为 `T39` training-chain CPU-only clean-environment draft lock and dry-run bootstrap，任务包已存在：`docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md`。
+     - 当前唯一任务为 `T44: Research Reality Recovery Mode setup and evidence-gap ledger`，任务包已存在：`docs/tasks/Phase2/T44_research_reality_recovery_mode_setup_and_evidence_gap_ledger.md`。
 10. `T15` 是否应直接运行多场景 P4 smoke？
    - 当前答案：已执行完成。
      - run dir: `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`

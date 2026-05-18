@@ -1789,6 +1789,49 @@ Milestone 2I is complete within its bounded scope: mechanism-evidence hardening 
 4. 推荐下一唯一任务为 `T42`，范围仍是 docs-only。
 
 ### Review Notes
+## D-2026-05-18-08
+
+- Date: `2026-05-18`
+- Decision: accept `T42` review as `PASS`, mark `T42` complete, and switch the current unique task to `T43: Paper Background / Related Work bounded prose draft`.
+
+### Rationale
+
+`T42` is a bounded docs-only framing task reviewed in `docs/review/T42_review.md` with verdict `PASS` and no blocking issues. The reviewer comments are non-blocking and are treated as accepted framing guidance:
+1. N1 accepted and integrated: subsection-6 wording should remain neutral survey language rather than self-justifying novelty language.
+2. N2 accepted and integrated: the method-forward title direction is retained only as a working framing recommendation, not as a locked human-final title.
+3. N3 accepted as normal workflow: worker pre-review being superseded by adversarial review does not create a repository or evidence risk.
+
+No `deferred` warnings remain from `T42`, so no new risk item is opened here.
+
+### Consequences
+
+1. `docs/04_task_board.md` marks `T42` complete and switches `Current Unique Task` to `T43`.
+2. `docs/07_handoff.md` records T42 closeout, clarifies that the current working framing is method-forward title plus evidence-bounded body text, and points Worker to `T43`.
+3. `docs/08_risks_and_open_questions.md` is synchronized so T42 adds no new deferred risks and T43 is the next active task.
+4. `docs/03_hil_p4_boundary_audit.md` and `docs/06_repo_noise_governance.md` are synchronized so T42/T43 remain explicitly docs-only and non-evidence-upgrading.
+5. The next recommended Worker task is `docs/tasks/Phase2/T43_paper_background_related_work_prose_draft.md`, and it must not expand into full-manuscript drafting, experiments, `.tflite`, hardware, cleanup, or claim upgrades.
+
+## D-2026-05-18-09
+
+- Date: `2026-05-18`
+- Decision: accept `T43` review as `PASS`, classify all `T43` warnings as `accepted`, mark `T43` complete, and switch the current unique task to `T44: Research Reality Recovery Mode setup and evidence-gap ledger`.
+
+### Rationale
+
+`T43` is a bounded docs-only prose draft reviewed in `docs/review/T43_review.md` with verdict `PASS` and no blocking issues. The reviewer comments are all non-blocking and were handled as `accepted`:
+1. N1 subsection-6 neutrality: accepted. It is wording guidance only.
+2. N2 placeholder citation markers: accepted. They are later bibliography work, not an evidence blocker.
+3. N3 drafting annotations: accepted. They are drafting scaffolding, not repo facts.
+4. N4 inline claim-format inconsistency: accepted. It is cosmetic cleanup for later assembly.
+
+No `deferred` warnings remain from `T43`, so no new risk item is opened here. The user explicitly requested that paper expansion pause until evidence/material truth is re-frozen and audited, so the project now enters `Research Reality Recovery Mode`.
+
+### Consequences
+
+1. `docs/04_task_board.md` already carries `T44` as the current unique task and Milestone 2O.
+2. `docs/07_handoff.md`, `docs/00_project_snapshot.md`, `docs/01_legacy_audit.md`, and `docs/08_risks_and_open_questions.md` are synchronized to point to `T44`.
+3. `docs/tasks/Phase2/T44_research_reality_recovery_mode_setup_and_evidence_gap_ledger.md` already exists, so no new task package is needed.
+4. The next recommended Worker task is `T44`, and it must only build the recovery baseline: claim/evidence truth, reproducibility gaps, figure/result readiness, and paper-claim risk.
 
 1. N1 T34 review path mis-cited in `docs/review/Milestone2K_review.md`
    - 处理：`accepted`

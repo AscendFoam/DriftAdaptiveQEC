@@ -9,7 +9,7 @@
 ## 2. 基本信息
 
 - 快照日期：`2026-05-05`
-- 最近更新：`2026-05-17`
+- 最近更新：`2026-05-18`
 - 当前分支：`main`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
@@ -26,12 +26,20 @@
 
 ## 2026-05-17 Captain Update
 
-- `T41` reviewer verdict accepted by Captain as `PASS`.
-- T41 blocking issues: none.
-- T41 non-blocking comments are minor documentation corrections only; they do not introduce new risks or blockers.
-- `T41` closes Milestone 2K and confirms the minimum safe paper positioning without upgrading any mock-backed, stub, readiness, or smoke evidence level.
-- Current unique task is now `T42: Paper Background / Related Work scaffold and method-positioning calibration`.
-- `T42` is docs-only. It may extend the manuscript scaffold with Background / Related Work and calibrate title/method positioning, but must not run new experiments, rewrite evidence levels, or overclaim `.tflite` / real-board / full reproducibility completion.
+- `T42` reviewer verdict accepted by Captain as `PASS`.
+- T42 blocking issues: none.
+- T42 non-blocking comments were accepted as framing guidance; the subsection-6 novelty wording was neutralized and the method-forward title was kept as a working recommendation pending any later human override.
+- `T42` completes the Background / Related Work scaffold and method-positioning calibration without upgrading any mock-backed, stub, readiness, or smoke evidence level.
+- At that time, the current unique task was `T43: Paper Background / Related Work bounded prose draft`.
+- `T43` is docs-only. It may draft only the Background / Related Work prose under the already locked evidence boundaries and working method-forward framing; it must not run new experiments, rewrite evidence levels, or overclaim `.tflite` / real-board / full reproducibility completion.
+
+## 2026-05-18 Captain Update
+
+- `T43` reviewer verdict accepted by Captain as `PASS`.
+- T43 warnings are all classified as `accepted`; there are no `deferred` warnings from this review.
+- The project now enters `Research Reality Recovery Mode` before any further prose expansion.
+- Current unique task is now `T44: Research Reality Recovery Mode setup and evidence-gap ledger`.
+- `T44` is docs-only. It must freeze claim/evidence/material truth and build the recovery baseline before any more manuscript drafting, experiments, or evidence upgrades.
 
 ## 3. 解决什么问题
 
@@ -221,7 +229,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T42: Paper Background / Related Work scaffold and method-positioning calibration`
+- `T44: Research Reality Recovery Mode setup and evidence-gap ledger`
 
 ## 12. 快照结论
 

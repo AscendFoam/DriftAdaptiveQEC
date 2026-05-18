@@ -92,6 +92,8 @@
 - `T35` 已完成并通过 Captain `PASS` 收口；其输出只是一份 paper draft skeleton 与 reviewer-risk audit，不是新的 runtime、board、benchmark 或 reproducibility evidence。
 - `T41` 已完成并通过 Captain `PASS` 收口；其输出只是 Milestone 2K paper-assembly gate review，不是新的 runtime、board、benchmark 或 reproducibility evidence。
 - `T42` 若推进，只允许做 docs-only 的 Background / Related Work scaffold 与 method-positioning calibration；它不能补写不存在的证据，也不能把历史 pre-recovery 结论静默升级为当前已复验事实。
+- `T43` 已完成并由 Captain 以 `PASS` 收口；其输出只是 Background / Related Work prose draft，不得把 prose 文字升级为新的 HIL / benchmark / `.tflite` / hardware 证据。
+- `T44` 进入 `Research Reality Recovery Mode` 后，只允许冻结和审计 claim/evidence/material truth；不得借 recovery baseline 任务改写任何 HIL、P4、`.tflite` 或真板边界。
 
 ## 7. 当前推荐表述
 
@@ -108,5 +110,8 @@
 - 可以说：`T31 produced a training-chain portable dependency-lock plan, but did not rebuild a clean environment.`
 - 可以说：`T39 completed a CPU-only clean-environment draft lock and dry-run bootstrap, but it is not a real training run, benchmark, GPU portability proof, TFLite runtime validation, or real-board validation.`
 - 可以说：`T40 completed one isolated CPU-only minimal training smoke, but it is still not a benchmark, TFLite runtime validation, GPU portability proof, or real-board validation.`
+- 可以说：`T42 completed only a docs-only Background / Related Work scaffold plus method-positioning calibration; it does not upgrade any HIL, benchmark, TFLite, reproducibility, or hardware evidence.`
+- 可以说：`T43 is limited to Background / Related Work prose drafting under the same evidence boundary; it is not full-manuscript expansion and cannot be used to claim stronger validation status.`
+- 可以说：`Research Reality Recovery Mode is a governance freeze and audit mode, not an evidence upgrade.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`

@@ -185,3 +185,7 @@
 - `T35` 已完成并通过 Captain `PASS` 收口；其输出只是 docs-only 的 paper draft skeleton 与 reviewer-risk audit，不改变任何 repo-noise 事实。
 - `T41` 已完成并通过 Captain `PASS` 收口；其输出只是 Milestone 2K paper-assembly gate review，不改变任何 repo-noise 事实。
 - `T42` 若推进，只允许做 docs-only 的 Background / Related Work scaffold 与 method-positioning calibration；不得借写作结构任务顺手触碰任何 cleanup、运行结果或 evidence-level 语义。
+- `T42` 已由 Captain 以 `PASS` 收口；其结论只代表论文结构与 framing 校准完成，不代表任何代码、benchmark、`.tflite`、硬件、`runs/`、`artifacts` 或 cleanup 事实发生升级。
+- `T43` 仍是 docs-only 的 Background / Related Work prose drafting 任务；其输出只是草稿文本，不是新的仓库事实源，也不得把 framing 语言静默升级成更强验证结论。
+- `T43` 已由 Captain 以 `PASS` 收口；即使 prose draft 存在，也不得把它作为新的事实源覆盖 `runs/`、`artifacts`、review 文档或风险文档中的既有边界。
+- `T44` 进入 `Research Reality Recovery Mode` 后，只允许新增 recovery baseline 文档；不得借 recovery 文档任务顺手清理、重命名、重标记或重解释 `runs/`、`artifacts`、`.pyc`、`.tflite`、benchmark outputs 或历史报告。
