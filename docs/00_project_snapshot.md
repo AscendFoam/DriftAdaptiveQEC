@@ -249,3 +249,20 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 12. `T39` 已完成并通过 adversarial review，Captain verdict = `PASS`；它证明了 clean CPU-only environment、draft lock 和 dry-run/import-level bootstrap 可复现，但不等于 real training reproducibility。
 13. `T40` 已完成并通过 adversarial review，Captain verdict = `PASS`；它证明了 clean CPU-only environment 已能完成一次真实的最小训练 smoke，但不等于 full training reproducibility、GPU/CUDA portability、Linux portability、`.tflite` runtime 或 benchmark readiness。
 14. `T41` 已完成并通过 Captain `PASS` 收口；Milestone 2K 已正式由 gate review 关闭，但当前唯一任务 `T42` 只允许做 docs-only 的 Background / Related Work scaffold 与 method-positioning calibration，不得触碰代码、`runs/`、`artifacts`、benchmark、`.tflite`、真板或阶段结论文档。
+
+## 13. T44 后的拟议路线图（非当前任务）
+
+T44 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是：
+
+1. `T45`：paper-grade benchmark expansion protocol lock and gap audit
+2. `T46`：multi-seed mechanism/intervention plan and trace pack
+3. `T47`：paper ablation result-pack and material ledger
+
+更后面的 milestone 方向可粗略分为：
+
+- benchmark hardening
+- deployment boundary boosters
+- reproducibility and material pack
+- paper re-open gate
+
+这些都只是后续路线图，不是当前唯一任务，也不是已执行事实。

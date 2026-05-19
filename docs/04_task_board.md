@@ -232,8 +232,48 @@
 
 ### Milestone 2O: Research Reality Recovery Mode
 
-- [ ] T44: Research Reality Recovery Mode setup and evidence-gap ledger
+- [x] T44: Research Reality Recovery Mode setup and evidence-gap ledger
   - Task package: `docs/tasks/Phase2/T44_research_reality_recovery_mode_setup_and_evidence_gap_ledger.md`
+  - Review output: `docs/review/T44_review.md`
+  - Captain verdict: `PASS`
+  - Result: recovery baseline, claim/evidence freeze, reproducibility audit, figure/result ledger, and paper-risk table are now in place; paper prose remains paused
+
+### Milestone 2O.5: Theory Analysis For Mainline Loop
+
+- [x] T53: Mainline theory analysis document for the full GKP correction loop
+  - Task package: `docs/tasks/Phase2/T53_mainline_theory_analysis_document.md`
+  - Output: `docs/mainline_theory_analysis.md`
+  - Review output: `docs/review/T53_review.md`
+  - Captain verdict: `PASS`
+  - Result: a bounded mainline theory walkthrough now exists for personal understanding and later paper support; it explains the full GKP correction loop from approximate-code definition to runtime `(K, b)` execution without upgrading any blocked `.tflite`, real-board, or paper-grade evidence
+
+### Milestone 2P: Mainline Evidence Hardening (proposed)
+
+- [ ] T45: Paper-grade benchmark expansion protocol lock and gap audit
+  - Task package: `docs/tasks/Phase2/T45_paper_grade_benchmark_expansion_protocol_lock_and_gap_audit.md`
+- [ ] T46: Multi-seed mechanism/intervention plan and trace pack
+  - Task package: `docs/tasks/Phase2/T46_multi_seed_mechanism_intervention_plan_and_trace_pack.md`
+- [ ] T47: Paper ablation result-pack and material ledger
+  - Task package: `docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
+
+### Milestone 2Q: Deployment Boundary Boosters (proposed)
+
+- [ ] T48: True `.tflite` runtime smoke gate
+  - Task package: pending
+- [ ] T49: Real-board smoke execution gate
+  - Task package: pending
+
+### Milestone 2R: Reproducibility And Material Pack (proposed)
+
+- [ ] T50: Training reproducibility and material-regeneration pack
+  - Task package: pending
+
+### Milestone 2S: Paper Re-open Gate (proposed)
+
+- [ ] T51: Paper positioning re-gate after evidence hardening
+  - Task package: pending
+- [ ] T52: Manuscript expansion gate for the next bounded prose wave
+  - Task package: pending
 
 Long-term objective:
 
@@ -241,50 +281,49 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T44: Research Reality Recovery Mode setup and evidence-gap ledger`
+`T45: Paper-grade benchmark expansion protocol lock and gap audit`
 
 状态说明：
 
-- `T43` 已完成并通过 review，Captain verdict = `PASS`
-- T43 review blocking issues：
+- `T53` 已完成并通过 review，Captain verdict = `PASS`
+- T53 review blocking issues：
   - none
-- T43 review non-blocking issues：
-  - N1 subsection-6 neutrality：`accepted`
-  - N2 placeholder citation markers：`accepted`
-  - N3 internal drafting annotations：`accepted`
-  - N4 inline claim-reference formatting inconsistency：`accepted`
-- T43 没有 `deferred` warning，因此本轮不新增风险条目
+- T53 non-blocking issues：
+  - N1 historical stronger `.tflite` wording elsewhere in the repo：`accepted`
+  - N2 theory text mixes current code truth with historical result anchors by design：`accepted`
+  - N3 gated-branch formula is contract-level rather than a full interpretability derivation：`accepted`
 - 当前项目保持 `Phase 2: Controlled Development / Go`，但子模式切换为 `Research Reality Recovery Mode`
-- 论文 prose 扩写在 T43 后暂停；当前优先级改为补 claim/evidence/material/figure/reproducibility truth baseline
-- `R10`、`R11`、`R12`、`R13`、`R14`、`R20`、`R23`、`R24` 仍未收口，且目前缺少面向论文成稿的统一 figure/result/material ledger
+- 论文 prose 扩写在 T43 后暂停；T44 已先把 claim/evidence/material truth baseline 冻结清楚，T53 进一步补上了当前主线的公式化理论说明
+- 当前重新回到 recovery 结论导出的论文主线证据硬化任务；下一步优先是 `T45`，先决定 frozen-set 结果是否足以支撑投稿叙事，还是必须先开受控 benchmark expansion lane
+- 该任务必须仍保持 docs-only，且不得把参考文档中的扩展 benchmark 设想直接升级成当前已存在 evidence
+- `R10`、`R11`、`R12`、`R13`、`R14`、`R20`、`R23`、`R24` 仍未收口，且目前缺少面向论文成稿的统一 ablation/result/material pack
 - `T32` 仍被当前机器缺少真实 `.tflite` runtime 依赖阻塞，`T37` 仍被硬件/bitstream 前提阻塞
 
 为什么现在做它：
 
-1. 用户已明确要求按 `docs/reference/科研纠偏意见.md` 先做 recovery，而不是继续把 paper prose 往前推。
-2. `T34` 到 `T43` 已经产出 skeleton、ledger、定位校准和 bounded prose draft，但这些产物不能替代证据充分性、图表充分性和复现充分性审计。
-3. 当前最缺的不是再多一段 prose，而是一份把“哪些能写、哪些不能写、哪些还缺材料”冻结清楚的 recovery baseline。
-4. `T44` 是 docs-only bounded task，不依赖新环境、新硬件或新运行结果，且能为后续 recovery 任务建立统一入口。
+1. `T44` 已证明当前 paper-facing truth boundary 仍偏窄，下一步需要先判断 frozen-set 结果是否足以支撑投稿故事。
+2. `T53` 已把当前主线理论解释补齐，因此现在可以把注意力重新放回 paper-grade evidence gap，而不是继续扩解释文。
+3. 仓库里已经有 `docs/deep_research_reports/进一步的深度研究结果.md` 与 `docs/reference/延伸改进思路.md` 这类候选扩展来源，但还缺一份明确的 benchmark-expansion protocol lock。
+4. `T45` 仍是 docs-only bounded task，不依赖新环境、新硬件或新运行结果，适合作为 `T46/T47` 之前的最小 gate。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T44`
-2. `T43` 已按 `PASS` 收口。
-3. T43 review blocking issues：
+1. 当前唯一任务：`T45`
+2. `T53` 已按 `PASS` 收口。
+3. T53 review blocking issues：
    - none
-4. T43 non-blocking comments：
-   - accepted: subsection-6 neutrality needs to remain modest
-   - accepted: placeholder citation markers must later be resolved via shared bibliography
-   - accepted: internal drafting annotations must be cleaned during manuscript assembly, not now
-   - accepted: inline claim-reference formatting should be normalized later
-5. T43 review output：`docs/review/T43_review.md`
-6. T44 任务包：`docs/tasks/Phase2/T44_research_reality_recovery_mode_setup_and_evidence_gap_ledger.md`
+4. T53 non-blocking comments：
+   - accepted: legacy stronger `.tflite` wording elsewhere does not change T53 boundary honesty
+   - accepted: historical numeric anchors remain explanatory anchors, not new validation
+   - accepted: gated-branch formula is intentionally contract-level
+5. T53 review output：`docs/review/T53_review.md`
+6. T45 任务包：`docs/tasks/Phase2/T45_paper_grade_benchmark_expansion_protocol_lock_and_gap_audit.md`
 
-## Done Criteria For T44
+## Done Criteria For T45
 
-1. Freeze the current truth/evidence boundary in `docs/reality_recovery/00_freeze_snapshot.md`.
-2. Build a `supported / partial / blocked` claim-evidence table for current paper-facing claims.
-3. Audit code truth, experiment reproducibility, figure/result readiness, and paper-claim risk in separate recovery docs.
-4. Produce a short human-facing brief that says whether paper writing should continue right now.
-5. Stay docs-only: no code, config, benchmark, training, `.tflite`, hardware, cleanup, `runs/`, or `artifacts` changes.
-6. Do not modify `docs/02_experiment_plan.md` or silently upgrade any evidence level.
+1. Produce a benchmark-expansion protocol note that classifies candidate expansion items as adopted / deferred / rejected.
+2. Keep frozen-set formal evidence separate from any future expansion lane.
+3. Decide whether the paper can remain frozen-set only without silently weakening the submission story.
+4. Stay docs-only: no code, config, benchmark, training, `.tflite`, hardware, cleanup, `runs/`, or `artifacts` changes.
+5. Treat `docs/reference/延伸改进思路.md` as reference-only rather than current mainline truth.
+6. Do not silently upgrade any evidence level or widen the ranked benchmark set inside this task.

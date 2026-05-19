@@ -2,12 +2,28 @@
 
 ## 1. 当前状态
 
-- 日期：`2026-05-18`
+- 日期：`2026-05-19`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T44: Research Reality Recovery Mode setup and evidence-gap ledger`
-- 任务包：`docs/tasks/Phase2/T44_research_reality_recovery_mode_setup_and_evidence_gap_ledger.md`
+- 当前唯一任务：`T45: Paper-grade benchmark expansion protocol lock and gap audit`
+- 任务包：`docs/tasks/Phase2/T45_paper_grade_benchmark_expansion_protocol_lock_and_gap_audit.md`
+
+Captain closeout note after T53:
+
+- `T53` is complete. `docs/review/T53_review.md` verdict = `PASS`; blocking issues = none.
+- T53 adds a bounded mainline theory document for personal understanding and later paper support, without changing any code, benchmark, runtime, or deployment boundary.
+- T53 correctly explains the repository’s current narrow claim: teacher-anchored residual-`b` correction inside a dual-loop, runtime-constrained linear fast path.
+- T53 does not upgrade true `.tflite` runtime, real-board HIL, or paper-grade benchmark breadth.
+- The active next task is `T45`, not `T53`, because the next unresolved paper-facing question is whether the frozen-set benchmark story is sufficient or whether a controlled expansion lane must be formalized first.
+
+Captain closeout note after T44:
+
+- `T44` is complete. `docs/review/T44_review.md` verdict = `PASS`; blocking issues = none.
+- T44 correctly freezes the paper-facing truth boundary without upgrading any evidence level.
+- T44 outputs now exist for freeze snapshot, claim/evidence table, code truth audit, reproducibility audit, figure/result ledger, paper-risk table, and human brief.
+- T44 concludes that current evidence supports a bounded paper plan, not a strong full-paper submission package, and recommends the next bounded lanes `T45-T47`.
+- The active next task is `T53`, not `T44`, because the user then requested a mainline theory-analysis document aimed at personal understanding rather than further paper expansion or new experiments.
 
 Captain closeout note after T43:
 
@@ -218,6 +234,26 @@ Captain closeout note after T42:
    - 目标是最小修复 teacher diagnostics missing-vs-zero 输出语义，并用最小 smoke 验证
    - 不扩 formal benchmark、baseline/scenario、statcalib、`.tflite` runtime 或真板范围
    - 任务包：`docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md`
+
+## 3. T44 后的拟议路线图（非当前任务）
+
+`T44` 已完成，`T53` 也已作为解释性 docs-only 任务收口。下面这些是 recovery 结论导出的下一轮 paper-facing bounded task 路线图；其中只有 `T45` 已被激活为当前唯一任务，其余仍是后续路线图：
+
+1. `T45`：paper-grade benchmark expansion protocol lock and gap audit
+   - 先决定 benchmark 是否需要显式扩展，还是继续保持 frozen-set only
+2. `T46`：multi-seed mechanism/intervention plan and trace pack
+   - 把单 seed 诊断推进到更可信的机制路径设计
+3. `T47`：paper ablation result-pack and material ledger
+   - 冻结论文图表、表格和 ablation 缺口
+
+后续 milestone 的粗略方向：
+
+- `Milestone 2P`: mainline evidence hardening
+- `Milestone 2Q`: deployment boundary boosters
+- `Milestone 2R`: reproducibility and material pack
+- `Milestone 2S`: paper re-open gate
+
+这些只表示“下一步应该长什么样”，不表示现在可以执行。
 44. `T28` 已完成并由 Captain 接受为 `PASS_WITH_WARNINGS`：
    - `docs/review/T28_review.md` verdict = `PASS_WITH_WARNINGS`
    - T28 输出现在显式区分 `not_applicable` / `not_generated` / observed zero
@@ -565,7 +601,7 @@ Captain closeout note after T42:
 34. `T26` 已通过 `PASS` 收口；gate verdict = `CONDITIONAL_GO`，statcalib 只能作为 separate comparator lane 后续推进
 35. `T30` 已通过 `PASS` 收口；其结果是 interface-only statcalib contract 与 focused tests，不是 slow-loop integration、formal benchmark 或部署边界证据
 36. `T36` 已完成，Captain verdict = `PASS`；它只读分析既有 `seed=20260429` 结果，未重跑 benchmark、未扩新分支、未改模型或部署边界
-37. 当前唯一任务为 `T38`；T38 只允许做 `seed=20260429` single-seed trace-export probe，保持 Full vs Gated v5 语义与四场景边界不变
+37. 在当时时点，当前唯一任务为 `T38`；T38 只允许做 `seed=20260429` single-seed trace-export probe，保持 Full vs Gated v5 语义与四场景边界不变
 
 ## 5. 已完成任务包
 
@@ -651,43 +687,43 @@ Captain closeout note after T42:
 
 ## 6. 当前唯一任务包摘要
 
-当前唯一任务已切换为 `T44: Research Reality Recovery Mode setup and evidence-gap ledger`，任务包为 `docs/tasks/Phase2/T44_research_reality_recovery_mode_setup_and_evidence_gap_ledger.md`。
+当前唯一任务已切换为 `T45: Paper-grade benchmark expansion protocol lock and gap audit`，任务包为 `docs/tasks/Phase2/T45_paper_grade_benchmark_expansion_protocol_lock_and_gap_audit.md`。
 
-T44 任务边界：
+T45 任务边界：
 
-- 只允许做 docs-only recovery baseline
-- 只允许冻结 claim / evidence / material truth
-- 只允许产出 `docs/reality_recovery/00_freeze_snapshot.md` 到 `06_human_brief.md`
+- 只允许做 docs-only benchmark expansion protocol lock 和 gap audit
+- 只允许分类 candidate expansion items 为 `adopted / deferred / rejected`
 - 不得运行 benchmark、training、`.tflite`、hardware 或 cleanup
-- 不得修改 source、benchmark protocol、`runs/`、`artifacts`、阶段结论文档或任何历史实验事实
-- 不得继续论文 prose 扩写
+- 不得修改 source、benchmark code/config、`runs/`、`artifacts`
+- 不得把 future expansion lane 写成当前已存在 evidence
+- 不得把 `docs/reference/延伸改进思路.md` 反向升级成当前主线 truth
 
-T43 历史收口事实：
+T53 历史收口事实：
 
-- `docs/review/T43_review.md` verdict = `PASS`，blocking issues = none
-- T43 warnings 全部为 `accepted`
-- T43 没有 `deferred` warning，因此没有新增风险
-- T43 只产生 bounded Background / Related Work prose draft，不产生 evidence upgrade
+- `docs/review/T53_review.md` verdict = `PASS`，blocking issues = none
+- T53 只补一份主线理论说明书，不产生任何 evidence upgrade
+- T53 保持 true `.tflite` runtime、real-board HIL 和 paper-grade benchmark breadth 全部 blocked
+- T53 使后续 `T45-T47` 可以在更清楚的主线理论叙事下继续推进
 
 ## 7. 下一步建议
 
-当前建议交给 Worker 执行 `T44` recovery baseline。
+当前建议交给 Worker 执行 `T45` benchmark expansion protocol lock。
 
 建议优先级：
 
-1. 冻结当前 claim / evidence / material truth。
-2. 产出 claim-evidence table、code truth audit、experiment reproducibility audit、figure/result ledger 和 paper claim risk table。
-3. 写出 human brief，明确哪些已验证、哪些未验证、哪些可疑、哪些不能继续宣称。
-4. 保持 docs-only，不进入任何新的 prose 扩写。
+1. 先判断 frozen-set formal evidence 是否足以支撑当前论文故事。
+2. 把 candidate benchmark expansion items 分类为 `adopted / deferred / rejected`。
+3. 写清未来若要扩 benchmark，至少还需要哪些 metrics、comparators 和 protocol guardrails。
+4. 保持 docs-only，不进入任何新的 benchmark execution。
 
 ## 8. 暂不继续的事项
 
-在 T44 完成前，暂不继续：
+在 T45 完成前，暂不继续：
 
-1. 任何新的 prose 扩写
-2. 新的实验、训练、`.tflite`、硬件或 cleanup
+1. 任何 benchmark execution 或 benchmark scope 实施扩展
+2. 新的训练、`.tflite`、硬件或 cleanup
 3. 任何 evidence level 升级
-4. 任何 benchmark scope 扩展
+4. 任何把参考研究建议写成当前 formal result 的做法
 5. 任何对 `docs/02_experiment_plan.md` 的修改
 
 ## 9. 2026-05-16 Captain Supersession
@@ -707,7 +743,7 @@ This section supersedes older T38-next wording in sections above.
      - 已完成 bounded mechanism-evidence hardening；仍未关闭 clean-environment reproducibility、mitigation、多 seed confirmation、真实 `.tflite` runtime 和真板 validation。
 47. T31 是否可以交给 Worker？
    - 当前答案：
-     - 可以。当前唯一任务是 `T31: Training-chain portable dependency lock plan`。
+     - 可以。在当时时点，当前唯一任务是 `T31: Training-chain portable dependency lock plan`。
      - Allowed files: `docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md`, `docs/training_chain_portable_dependency_lock_plan.md`, `docs/review/T31_review.md`, `docs/for_human/T31_explanation.md`。
      - Worker 只允许做 read-only interpreter/package inventory 和 dependency-lock planning；不得安装依赖、运行训练、运行 benchmark、创建 `runs/` 或 `artifacts/`、修改 source/config/protocol/baseline/seed policy。
 
