@@ -25,6 +25,14 @@ Produce a mechanism plan that answers, in writing:
 4. what would count as diagnostic evidence versus causal evidence
 5. how to keep the scope small enough that the task remains bounded
 
+## Scope Guidance
+
+- Anchor the plan on the existing `seed=20260429` diagnosis lane first.
+- If additional seeds are proposed, state the selection logic explicitly rather than turning the task into a new benchmark run list.
+- Treat intervention ideas as future trace-design ideas unless they can be supported by existing artifacts.
+- Keep diagnostic evidence and causal evidence separate; the task may describe a causal path, but it must not claim causal proof.
+- Prefer a minimum comparison pack that can still be read as a stepwise bridge from single-seed diagnosis to a later execution task.
+
 ## Allowed Files
 
 Worker may modify only:
@@ -60,6 +68,13 @@ It may define:
 - intervention/counterfactual ideas
 - acceptance thresholds for diagnostic vs causal language
 - what should remain out of scope until later
+
+The plan should also make explicit which comparison rows are minimally needed, for example:
+
+- per-scenario / per-mode / per-repeat trace rows
+- a cross-seed summary table
+- a diagnostic-vs-intervention comparison note
+- a list of fields that must be present in trace exports before any future execution task
 
 But it must not:
 
@@ -103,4 +118,3 @@ Required verification is documentation-only:
 T46 should answer a simple question:
 
 - what is the smallest believable next step that can move `seed=20260429` from a single-seed diagnosis toward a real mechanism story?
-

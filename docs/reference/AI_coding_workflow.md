@@ -346,6 +346,7 @@ worker根据
 1. 对这个task先做通俗易懂的解释；
 2. 对这个task的实现进行详细解释，包括任务的目标、任务流程、代码变化/配置文件的变化、对后续开发的意义(这可能需要你参考 @docs/02_experiment_plan.md 、 @docs/04_task_board.md 、 @docs/07_handoff.md 等文档进行思考)等
 3. 为什么你给出了第一件事中的review结果？
+4. 如果Worker已经写了review和explanation文档，看看是否有误以及可否有补充的地方。
 ```
 
 高风险任务用 adversarial review：

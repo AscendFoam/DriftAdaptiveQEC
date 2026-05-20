@@ -9,7 +9,7 @@
 ## 2. 基本信息
 
 - 快照日期：`2026-05-05`
-- 最近更新：`2026-05-18`
+- 最近更新：`2026-05-19`
 - 当前分支：`main`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
@@ -40,6 +40,14 @@
 - The project now enters `Research Reality Recovery Mode` before any further prose expansion.
 - Current unique task is now `T44: Research Reality Recovery Mode setup and evidence-gap ledger`.
 - `T44` is docs-only. It must freeze claim/evidence/material truth and build the recovery baseline before any more manuscript drafting, experiments, or evidence upgrades.
+
+## 2026-05-19 Captain Update
+
+- `T45` reviewer verdict accepted by Captain as `PASS`.
+- T45 warnings are all classified as `accepted`; there are no `deferred` warnings from this review.
+- `T45` freezes the benchmark-expansion protocol at the policy level only; it does not execute a broader benchmark lane.
+- Current unique task is now `T46: Multi-seed mechanism/intervention plan and trace pack`.
+- `T46` is docs-only. It must stay on the mechanism-evidence boundary and must not become a new benchmark, training, `.tflite`, hardware, or cleanup task.
 
 ## 3. 解决什么问题
 
@@ -229,7 +237,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T44: Research Reality Recovery Mode setup and evidence-gap ledger`
+- `T46: Multi-seed mechanism/intervention plan and trace pack`
 
 ## 12. 快照结论
 
@@ -250,13 +258,13 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 13. `T40` 已完成并通过 adversarial review，Captain verdict = `PASS`；它证明了 clean CPU-only environment 已能完成一次真实的最小训练 smoke，但不等于 full training reproducibility、GPU/CUDA portability、Linux portability、`.tflite` runtime 或 benchmark readiness。
 14. `T41` 已完成并通过 Captain `PASS` 收口；Milestone 2K 已正式由 gate review 关闭，但当前唯一任务 `T42` 只允许做 docs-only 的 Background / Related Work scaffold 与 method-positioning calibration，不得触碰代码、`runs/`、`artifacts`、benchmark、`.tflite`、真板或阶段结论文档。
 
-## 13. T44 后的拟议路线图（非当前任务）
+## 13. T45 后的拟议路线图（非当前任务）
 
-T44 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是：
+T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是：
 
-1. `T45`：paper-grade benchmark expansion protocol lock and gap audit
-2. `T46`：multi-seed mechanism/intervention plan and trace pack
-3. `T47`：paper ablation result-pack and material ledger
+1. `T46`：multi-seed mechanism/intervention plan and trace pack
+2. `T47`：paper ablation result-pack and material ledger
+3. `T48`：true `.tflite` runtime booster, only if environment is available
 
 更后面的 milestone 方向可粗略分为：
 

@@ -1730,6 +1730,28 @@ Milestone 2I is complete within its bounded scope: mechanism-evidence hardening 
 3. `docs/07_handoff.md` 记录 T34 Captain verdict 与 T35 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 仅更新当前唯一任务口径；不新增 risk。
 
+## D-2026-05-19-01
+
+- Date: `2026-05-19`
+- Decision: accept `T45` review as `PASS`, classify all `T45` warnings as `accepted`, mark `T45` complete, and switch the current unique task to `T46: Multi-seed mechanism/intervention plan and trace pack`.
+
+### Rationale
+
+`T45` is a bounded docs-only benchmark-expansion protocol task reviewed in `docs/review/T45_review.md` with verdict `PASS` and no blocking issues. The reviewer comments are all non-blocking and were handled as `accepted`:
+1. N1 worker self-review overwritten by adversarial review: accepted as standard review practice.
+2. N2 `sinusoidal` rejection rationale could be stronger: accepted, because T45 is a protocol-lock task rather than an execution task.
+3. N3 exact future drift grids remain intentionally unlocked: accepted, because later execution tasks must lock them before running.
+4. N4 worker human-facing explanation filename mismatch: accepted, because worker-facing and reviewer-facing explanation files serve different purposes.
+
+No `deferred` warnings remain from `T45`, so no new risk item is opened here.
+
+### Consequences
+
+1. `docs/04_task_board.md` marks `T45` complete and switches `Current Unique Task` to `T46`.
+2. `docs/07_handoff.md` records T45 closeout and points Worker to `T46`.
+3. `docs/08_risks_and_open_questions.md` is synchronized so `R17/R18` reflect that protocol lock now exists while mechanism evidence remains open.
+4. `docs/tasks/Phase2/T46_multi_seed_mechanism_intervention_plan_and_trace_pack.md` already exists, so no brand-new task package is needed; it should instead be treated as the next active bounded task.
+
 ## D-2026-05-17-06
 
 - 日期：`2026-05-17`

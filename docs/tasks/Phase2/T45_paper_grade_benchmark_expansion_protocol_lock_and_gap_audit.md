@@ -109,3 +109,36 @@ T45 should answer a simple but important question:
 
 - can the paper stay frozen-set only and still be honest enough to submit, or do we need a bounded benchmark expansion lane before claiming stronger method value?
 
+## Verification Record
+
+- Worker completed T45 on `2026-05-19`.
+- Required inputs read and cross-checked:
+  - `docs/04_task_board.md`
+  - `docs/07_handoff.md`
+  - `docs/08_risks_and_open_questions.md`
+  - `docs/P4_benchmark_formal_protocol.md`
+  - `docs/paper_claim_evidence_ledger.md`
+  - `docs/paper_reviewer_risk_audit.md`
+  - `docs/reality_recovery/00_freeze_snapshot.md`
+  - `docs/reality_recovery/01_claim_evidence_table.md`
+  - `docs/reference/延伸改进思路.md`
+  - `docs/deep_research_reports/进一步的深度研究结果.md`
+- Produced outputs:
+  - `docs/paper_benchmark_expansion_protocol.md`
+  - `docs/review/T45_review.md`
+  - `docs/for_human/T45_explanation.md`
+- Protocol decisions captured:
+  1. current frozen-set software benchmark remains the anchor evidence and is not rewritten
+  2. paper-grade broadening, if pursued, must use a separate bounded expansion lane
+  3. `statcalib` comparator inclusion is recommended only as a separately labeled future lane
+  4. extra drift-family ideas were classified into adopted / deferred / rejected buckets rather than treated as current truth
+  5. deployment-boundary items (`.tflite`, `real_board`) remain outside this benchmark-expansion protocol
+- Verification checks completed:
+  1. no source, config, `runs/`, or `artifacts` files were modified
+  2. no benchmark execution, training, `.tflite`, or hardware command was started
+  3. the protocol explicitly keeps frozen-set evidence separate from any future expansion lane
+  4. `docs/reference/延伸改进思路.md` and the deep-research report are treated as reference-only inputs, not as current mainline truth
+- Scope discipline:
+  - no benchmark code or config edits
+  - no silent expansion of the frozen ranked set
+  - no task-board or handoff status change

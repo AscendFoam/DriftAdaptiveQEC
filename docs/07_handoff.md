@@ -6,8 +6,16 @@
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T45: Paper-grade benchmark expansion protocol lock and gap audit`
-- 任务包：`docs/tasks/Phase2/T45_paper_grade_benchmark_expansion_protocol_lock_and_gap_audit.md`
+- 当前唯一任务：`T46: Multi-seed mechanism/intervention plan and trace pack`
+- 任务包：`docs/tasks/Phase2/T46_multi_seed_mechanism_intervention_plan_and_trace_pack.md`
+
+Captain closeout note after T45:
+
+- `T45` is complete. `docs/review/T45_review.md` verdict = `PASS`; blocking issues = none.
+- T45 freezes the benchmark-expansion protocol at the policy level without changing any benchmark code, config, runtime path, or deployment boundary.
+- T45 correctly keeps the T24 frozen set separate from any future expansion lane and does not upgrade reference ideas into current evidence.
+- T45 warnings are all classified as `accepted`; there are no `deferred` or `rejected` warning items from this review.
+- The active next task is `T46`, not `T45`, because the next tightest paper-facing gap is still mechanism evidence rather than benchmark-policy wording.
 
 Captain closeout note after T53:
 
@@ -235,15 +243,13 @@ Captain closeout note after T42:
    - 不扩 formal benchmark、baseline/scenario、statcalib、`.tflite` runtime 或真板范围
    - 任务包：`docs/tasks/Phase2/T28_teacher_diagnostics_semantics_repair.md`
 
-## 3. T44 后的拟议路线图（非当前任务）
+## 3. T45 后的拟议路线图（非当前任务）
 
-`T44` 已完成，`T53` 也已作为解释性 docs-only 任务收口。下面这些是 recovery 结论导出的下一轮 paper-facing bounded task 路线图；其中只有 `T45` 已被激活为当前唯一任务，其余仍是后续路线图：
+`T45` 已完成，`T53` 也已作为解释性 docs-only 任务收口。下面这些是 recovery 结论导出的下一轮 paper-facing bounded task 路线图；其中只有 `T46` 已被激活为当前唯一任务，其余仍是后续路线图：
 
-1. `T45`：paper-grade benchmark expansion protocol lock and gap audit
-   - 先决定 benchmark 是否需要显式扩展，还是继续保持 frozen-set only
-2. `T46`：multi-seed mechanism/intervention plan and trace pack
+1. `T46`：multi-seed mechanism/intervention plan and trace pack
    - 把单 seed 诊断推进到更可信的机制路径设计
-3. `T47`：paper ablation result-pack and material ledger
+2. `T47`：paper ablation result-pack and material ledger
    - 冻结论文图表、表格和 ablation 缺口
 
 后续 milestone 的粗略方向：
@@ -687,38 +693,38 @@ Captain closeout note after T42:
 
 ## 6. 当前唯一任务包摘要
 
-当前唯一任务已切换为 `T45: Paper-grade benchmark expansion protocol lock and gap audit`，任务包为 `docs/tasks/Phase2/T45_paper_grade_benchmark_expansion_protocol_lock_and_gap_audit.md`。
+当前唯一任务已切换为 `T46: Multi-seed mechanism/intervention plan and trace pack`，任务包为 `docs/tasks/Phase2/T46_multi_seed_mechanism_intervention_plan_and_trace_pack.md`。
 
-T45 任务边界：
+T46 任务边界：
 
-- 只允许做 docs-only benchmark expansion protocol lock 和 gap audit
-- 只允许分类 candidate expansion items 为 `adopted / deferred / rejected`
+- 只允许做 docs-only multi-seed mechanism/intervention plan 和 trace pack
+- 只允许定义 minimal seed selection logic、trace-field requirements、intervention/counterfactual ideas、diagnostic vs causal evidence separation
 - 不得运行 benchmark、training、`.tflite`、hardware 或 cleanup
 - 不得修改 source、benchmark code/config、`runs/`、`artifacts`
-- 不得把 future expansion lane 写成当前已存在 evidence
-- 不得把 `docs/reference/延伸改进思路.md` 反向升级成当前主线 truth
+- 不得把单 seed diagnosis 升级成 causal proof
+- 不得把 trace-plan 文档写成新的验证结果
 
-T53 历史收口事实：
+T45 历史收口事实：
 
-- `docs/review/T53_review.md` verdict = `PASS`，blocking issues = none
-- T53 只补一份主线理论说明书，不产生任何 evidence upgrade
-- T53 保持 true `.tflite` runtime、real-board HIL 和 paper-grade benchmark breadth 全部 blocked
-- T53 使后续 `T45-T47` 可以在更清楚的主线理论叙事下继续推进
+- `docs/review/T45_review.md` verdict = `PASS`，blocking issues = none
+- T45 只补一份 benchmark-expansion protocol lock，不产生任何 evidence upgrade
+- T45 保持 frozen-set evidence 与 future expansion lane 分离
+- T45 使后续 `T46-T47` 可以在更清楚的 paper-facing evidence 叙事下继续推进
 
 ## 7. 下一步建议
 
-当前建议交给 Worker 执行 `T45` benchmark expansion protocol lock。
+当前建议交给 Worker 执行 `T46` mechanism/intervention plan and trace pack。
 
 建议优先级：
 
-1. 先判断 frozen-set formal evidence 是否足以支撑当前论文故事。
-2. 把 candidate benchmark expansion items 分类为 `adopted / deferred / rejected`。
-3. 写清未来若要扩 benchmark，至少还需要哪些 metrics、comparators 和 protocol guardrails。
+1. 先把 `seed=20260429` 这一条单 seed 机制线索扩成最小 multi-seed / intervention plan。
+2. 写清 diagnostic evidence 与 causal evidence 的边界。
+3. 列出未来执行所需的 trace fields、comparison rows 与 acceptance thresholds。
 4. 保持 docs-only，不进入任何新的 benchmark execution。
 
 ## 8. 暂不继续的事项
 
-在 T45 完成前，暂不继续：
+在 T46 完成前，暂不继续：
 
 1. 任何 benchmark execution 或 benchmark scope 实施扩展
 2. 新的训练、`.tflite`、硬件或 cleanup

@@ -84,6 +84,14 @@
 - The project now enters `Research Reality Recovery Mode` because the user explicitly requested that paper expansion pause until evidence/material truth is re-frozen and audited.
 - Current unique task is `T44`, focused on a docs-only recovery baseline: claim/evidence truth, reproducibility gaps, figure/result readiness, and paper-claim risk.
 
+### 2026-05-19 Captain Update
+
+- `T45` has been accepted as `PASS`.
+- T45 warnings are all classified as `accepted`; there are no `deferred` warnings from this review.
+- `T45` locks the benchmark-expansion protocol only; it does not widen the executed benchmark set or upgrade evidence.
+- Current unique task is now `T46: Multi-seed mechanism/intervention plan and trace pack`.
+- `T46` is docs-only and remains a mechanism-evidence planning gate, not an execution or benchmark task.
+
 ## 3. 可行性判断
 
 ### 3.1 问题定义

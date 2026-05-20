@@ -249,8 +249,11 @@
 
 ### Milestone 2P: Mainline Evidence Hardening (proposed)
 
-- [ ] T45: Paper-grade benchmark expansion protocol lock and gap audit
+- [x] T45: Paper-grade benchmark expansion protocol lock and gap audit
   - Task package: `docs/tasks/Phase2/T45_paper_grade_benchmark_expansion_protocol_lock_and_gap_audit.md`
+  - Review output: `docs/review/T45_review.md`
+  - Captain verdict: `PASS`
+  - Result: benchmark-expansion protocol is now frozen at the policy level; frozen-set evidence stays separate from any future expansion lane, and `docs/reference/延伸改进思路.md` remains reference-only
 - [ ] T46: Multi-seed mechanism/intervention plan and trace pack
   - Task package: `docs/tasks/Phase2/T46_multi_seed_mechanism_intervention_plan_and_trace_pack.md`
 - [ ] T47: Paper ablation result-pack and material ledger
@@ -281,7 +284,7 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T45: Paper-grade benchmark expansion protocol lock and gap audit`
+`T46: Multi-seed mechanism/intervention plan and trace pack`
 
 状态说明：
 
@@ -292,38 +295,39 @@ Long-term objective:
   - N1 historical stronger `.tflite` wording elsewhere in the repo：`accepted`
   - N2 theory text mixes current code truth with historical result anchors by design：`accepted`
   - N3 gated-branch formula is contract-level rather than a full interpretability derivation：`accepted`
-- 当前项目保持 `Phase 2: Controlled Development / Go`，但子模式切换为 `Research Reality Recovery Mode`
+- 当前项目保持 `Phase 2: Controlled Development / Go`，但子模式仍为 `Research Reality Recovery Mode`
 - 论文 prose 扩写在 T43 后暂停；T44 已先把 claim/evidence/material truth baseline 冻结清楚，T53 进一步补上了当前主线的公式化理论说明
-- 当前重新回到 recovery 结论导出的论文主线证据硬化任务；下一步优先是 `T45`，先决定 frozen-set 结果是否足以支撑投稿叙事，还是必须先开受控 benchmark expansion lane
-- 该任务必须仍保持 docs-only，且不得把参考文档中的扩展 benchmark 设想直接升级成当前已存在 evidence
-- `R10`、`R11`、`R12`、`R13`、`R14`、`R20`、`R23`、`R24` 仍未收口，且目前缺少面向论文成稿的统一 ablation/result/material pack
+- T45 已把 benchmark 扩展协议锁定，当前重点转向 `T46`：先把单 seed 机制线索扩成最小多 seed / intervention plan，而不是继续扩 benchmark
+- 该任务必须仍保持 docs-only，且不得把单 seed 诊断升级成 causal proof
+- `R10`、`R11`、`R12`、`R13`、`R14`、`R20`、`R23`、`R24` 仍未收口，且目前缺少面向论文成稿的统一 mechanism/intervention pack
 - `T32` 仍被当前机器缺少真实 `.tflite` runtime 依赖阻塞，`T37` 仍被硬件/bitstream 前提阻塞
 
 为什么现在做它：
 
-1. `T44` 已证明当前 paper-facing truth boundary 仍偏窄，下一步需要先判断 frozen-set 结果是否足以支撑投稿故事。
-2. `T53` 已把当前主线理论解释补齐，因此现在可以把注意力重新放回 paper-grade evidence gap，而不是继续扩解释文。
-3. 仓库里已经有 `docs/deep_research_reports/进一步的深度研究结果.md` 与 `docs/reference/延伸改进思路.md` 这类候选扩展来源，但还缺一份明确的 benchmark-expansion protocol lock。
-4. `T45` 仍是 docs-only bounded task，不依赖新环境、新硬件或新运行结果，适合作为 `T46/T47` 之前的最小 gate。
+1. `T45` 已把当前 benchmark 扩展边界锁定，因此可以把注意力转回最紧的机制缺口。
+2. `T53` 已把当前主线理论解释补齐，现在更适合推进机制/介入 trace 计划，而不是继续扩 benchmark。
+3. 单 seed 的 `seed=20260429` 诊断仍不足以支撑更强机制叙事，`T46` 正好补这一层。
+4. `T46` 仍是 docs-only bounded task，不依赖新环境、新硬件或新运行结果，适合作为 `T47` 之前的最小 gate。
 
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T45`
-2. `T53` 已按 `PASS` 收口。
-3. T53 review blocking issues：
+1. 当前唯一任务：`T46`
+2. `T45` 已按 `PASS` 收口。
+3. T45 review blocking issues：
    - none
-4. T53 non-blocking comments：
-   - accepted: legacy stronger `.tflite` wording elsewhere does not change T53 boundary honesty
-   - accepted: historical numeric anchors remain explanatory anchors, not new validation
-   - accepted: gated-branch formula is intentionally contract-level
-5. T53 review output：`docs/review/T53_review.md`
-6. T45 任务包：`docs/tasks/Phase2/T45_paper_grade_benchmark_expansion_protocol_lock_and_gap_audit.md`
+4. T45 non-blocking comments：
+   - accepted: worker self-review overwritten by adversarial review
+   - accepted: `sinusoidal` is not required as a separate mandatory family at protocol-lock stage
+   - accepted: exact future drift grids remain intentionally unlocked
+   - accepted: human-facing explanation filename mismatch is non-blocking
+5. T45 review output：`docs/review/T45_review.md`
+6. T46 任务包：`docs/tasks/Phase2/T46_multi_seed_mechanism_intervention_plan_and_trace_pack.md`
 
-## Done Criteria For T45
+## Done Criteria For T46
 
-1. Produce a benchmark-expansion protocol note that classifies candidate expansion items as adopted / deferred / rejected.
-2. Keep frozen-set formal evidence separate from any future expansion lane.
-3. Decide whether the paper can remain frozen-set only without silently weakening the submission story.
+1. Produce a mechanism plan that classifies the current mechanism gap, trace needs, and diagnostic-vs-causal boundary.
+2. Keep single-seed diagnosis separate from any causal claim.
+3. Define the smallest believable multi-seed / intervention trace pack without turning it into a broad mechanism project.
 4. Stay docs-only: no code, config, benchmark, training, `.tflite`, hardware, cleanup, `runs/`, or `artifacts` changes.
-5. Treat `docs/reference/延伸改进思路.md` as reference-only rather than current mainline truth.
-6. Do not silently upgrade any evidence level or widen the ranked benchmark set inside this task.
+5. Keep the task bounded and executable as a planning gate.
+6. Do not silently upgrade any evidence level or make causal claims that are not yet supported.
