@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T44: Research Reality Recovery Mode setup and evidence-gap ledger`
+  - `T54: Phase A multi-seed trace-only generalization probe`
 
 说明：
 
@@ -91,6 +91,14 @@
 - `T45` locks the benchmark-expansion protocol only; it does not widen the executed benchmark set or upgrade evidence.
 - Current unique task is now `T46: Multi-seed mechanism/intervention plan and trace pack`.
 - `T46` is docs-only and remains a mechanism-evidence planning gate, not an execution or benchmark task.
+
+### 2026-05-22 Captain Update
+
+- `T46` has been accepted as `PASS`.
+- T46 non-blocking comments are all treated as `accepted`; no `deferred` warning remains from this review.
+- T46 successfully freezes the mechanism-evidence execution boundary: current evidence is still single-seed diagnostic, and any stronger claim needs a bounded multi-seed trace lane before any intervention or paper-material freeze.
+- Current unique task is now `T54: Phase A multi-seed trace-only generalization probe`.
+- `T54` is not benchmark expansion and not paper assembly. It is a bounded trace-only execution task that reuses the existing T38 path, stays inside the frozen four scenarios and Full vs Gated v5 comparison, and does not yet run any intervention.
 
 ## 3. 可行性判断
 
@@ -368,7 +376,7 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T31`、`T33`、`T34`、`T35`、`T36`、`T38`、`T39`、`T40`、`T41` 已完成；当前下一唯一任务为 `T42`，只做 docs-only Background / Related Work scaffold and method-positioning calibration
+1. `T14` 至 `T46`、`T53` 已完成；当前下一唯一任务为 `T54`，只做 bounded multi-seed trace-only generalization probe，不直接进入 intervention、paper material ledger、`.tflite` runtime 或真板范围
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 3. `T26` gate 结论为 `CONDITIONAL_GO`，且 `T30` 已把 statcalib 收紧为 interface-only separate comparator contract；后续仍不得把 statcalib 静默并入 T24 frozen benchmark set，不得扩展 formal benchmark、baseline/scenario、`.tflite` 或真板范围。
 4. `T36/T38` 已把 `seed=20260429` 诊断推进到 single-seed trace-supported mechanism evidence，但仍不是 mitigation 或 multi-seed causal proof。

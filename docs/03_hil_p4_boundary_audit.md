@@ -95,7 +95,8 @@
 - `T43` 已完成并由 Captain 以 `PASS` 收口；其输出只是 Background / Related Work prose draft，不得把 prose 文字升级为新的 HIL / benchmark / `.tflite` / hardware 证据。
 - `T44` 进入 `Research Reality Recovery Mode` 后，只允许冻结和审计 claim/evidence/material truth；不得借 recovery baseline 任务改写任何 HIL、P4、`.tflite` 或真板边界。
 - `T45` 已完成并由 Captain 以 `PASS` 收口；它只锁定 benchmark-expansion protocol，不改变任何 HIL / P4 / `.tflite` / real-board 边界。
-- `T46` 只允许做 docs-only 的 multi-seed mechanism/intervention plan 与 trace pack；不得借机执行 benchmark、扩分支、改协议、触碰真板 / `.tflite` / cleanup，或把计划文档写成新的实验结果。
+- `T46` 已完成并由 Captain 以 `PASS` 收口；其输出只是 docs-only 的 multi-seed mechanism/intervention plan 与 trace pack，不是新的实验结果。
+- `T54` 只允许在既有 `Full` vs `Gated v5`、冻结四场景、trace-only 的 teacher-representation lane 内做 bounded multi-seed generalization probe；不得借机扩 baseline、扩 scenario、改协议、跑 intervention、触碰真板 / `.tflite` / cleanup，或把 trace-only evidence 写成 causal proof。
 
 ## 7. 当前推荐表述
 

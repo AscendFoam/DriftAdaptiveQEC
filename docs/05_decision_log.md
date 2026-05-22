@@ -1880,3 +1880,78 @@ No `deferred` warnings remain from `T43`, so no new risk item is opened here. Th
 2. 新增 `docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`。
 3. `docs/07_handoff.md` 记录 T41 Captain verdict、non-blocking note 处理与 T42 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 仅更新当前唯一任务口径；不新增 risk。
+
+## D-2026-05-22-01
+
+- 日期：`2026-05-22`
+- 决策：复核最近提交后，确认项目可以进入 `T46`，并将 `docs/tasks/Phase2/T46_multi_seed_mechanism_intervention_plan_and_trace_pack.md` 收紧为更规范的执行型任务包。
+
+### 背景
+
+用户指出最近对项目做了一轮未提前同步的改进，因此需要重新核对 `docs/04_task_board.md` 与最近 Git 提交，判断当前唯一任务是否仍应停在 `T46`，以及 `T46` 任务包是否已经足够清晰可执行。
+
+### 依据
+
+1. `2026-05-18` 的提交 `84c3fb7` 已完成 `T42/T43` 收口，并把项目切入 `Research Reality Recovery Mode`。
+2. `2026-05-19` 的提交 `8b32318` 已完成 `T44` recovery baseline 与 `T53` 主线理论分析，补齐了 truth freeze、claim/evidence ledger 与当前主线理论说明。
+3. `2026-05-20` 的提交 `4857bf5` 已完成 `T45` 收口，把 benchmark-expansion lane 锁成 protocol/gap-audit，而不是执行任务，并正式把当前唯一任务切到 `T46`。
+4. 最近这些提交主要新增的是 recovery、theory、protocol 与 README 类文档，没有新增更强的多 seed 机制执行证据，也没有新增 `.tflite` runtime、real-board 或更广 benchmark 的已验证事实。
+5. 因此当前最紧的缺口仍然是 `R10` 所代表的机制证据闭环缺口，而不是 benchmark 扩展、部署边界升级或继续 paper prose。
+
+### 结论
+
+可以进入 `T46`，而且现在进入比此前更合理：
+
+1. `T44` 已把 paper-facing truth baseline 冻结清楚，避免 `T46` 在错误事实边界上做机制规划。
+2. `T53` 已提供当前主线的理论解释，使 `T46` 可以把 trace / intervention 设计与主线公式语义对齐。
+3. `T45` 已把 benchmark expansion 与 mechanism lane 分开，减少了 `T46` 被误写成 benchmark-scope expansion 的风险。
+4. 但最近提交并没有新增 multi-seed causal evidence，所以不能跳过 `T46` 直接进入 `T47` 或更后续的 paper/material lane。
+
+### 直接影响
+
+1. `docs/tasks/Phase2/T46_multi_seed_mechanism_intervention_plan_and_trace_pack.md` 被补充了 `Docs To Update`、`Forbidden Scope`、更完整的 `Required Inputs`、输出结构、verification 项和 review no-go triggers。
+2. `docs/07_handoff.md` 当前任务摘要同步提醒，以任务包中的新边界与 no-go 规则为准。
+3. `docs/04_task_board.md` 现状判断保持不变：当前唯一任务仍是 `T46`。
+
+## D-2026-05-22-02
+
+- 日期：`2026-05-22`
+- 决策：接受 `T46` review 的 `PASS`，标记 `T46` 完成，并将当前唯一任务切换为 `T54: Phase A multi-seed trace-only generalization probe`。
+
+### 背景
+
+`T46` 是一张 docs-only 的机制证据规划任务。`docs/review/T46_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. `docs/seed_mechanism_multi_seed_plan.md` 结构完整，包含 claim-boundary、seed-selection、trace-field inventory、future execution-pack 四张关键表。
+2. `T36/T38` 的 single-seed evidence 没有被静默升级为 multi-seed confirmation 或 causal proof。
+3. T46 保持了与 benchmark expansion、deployment validation、paper material freeze 的分离。
+4. Worker 没有越界修改 source、config、`runs/`、`artifacts` 或治理文档。
+
+### Warning 处理
+
+T46 review 的非阻塞评论全部按 `accepted` 处理：
+
+1. N1 相邻 seed `20260430` 与 seed-spacing wording tension：`accepted`
+2. N2 working tree 中可见 Captain-level governance sync：`accepted`
+3. N3 Phase A 未给 wall-clock estimate：`accepted`
+4. N4 未直接回引 `docs/paper_claim_evidence_ledger.md`：`accepted`
+5. N5 worker self-review accurate：`informational`
+
+没有 `deferred` 或 `rejected` warning，因此不因 T46 review 新增 risk。
+
+### 结论
+
+`T46` 可标记完成。但下一步不应直接进入旧版 `T47`。
+
+原因是：
+
+1. `T46` 自己已经给出明确 phased recommendation：先做 Phase A multi-seed trace-only probe，再决定是否值得开 intervention lane。
+2. 如果 `committed-b` instability 不能在极小多 seed 包里复现，那么直接进入 `T47` paper material ledger 会让 paper-facing material freeze 跑在机制证据前面。
+3. 因此当前更合理的下一唯一任务是新增 `T54`，而不是让 Worker 立即执行 `T47`。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T46` 完成，并切换 `Current Unique Task` 到 `T54`。
+2. 新增 `docs/tasks/Phase2/T54_multi_seed_trace_only_generalization_probe.md`。
+3. `docs/07_handoff.md` 记录 T46 Captain closeout 和 T54 任务摘要。
+4. `docs/08_risks_and_open_questions.md` 更新 `R10` 的下一收口路径与当前唯一任务口径。

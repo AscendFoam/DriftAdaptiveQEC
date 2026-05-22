@@ -9,7 +9,7 @@
 ## 2. 基本信息
 
 - 快照日期：`2026-05-05`
-- 最近更新：`2026-05-19`
+- 最近更新：`2026-05-22`
 - 当前分支：`main`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
@@ -48,6 +48,15 @@
 - `T45` freezes the benchmark-expansion protocol at the policy level only; it does not execute a broader benchmark lane.
 - Current unique task is now `T46: Multi-seed mechanism/intervention plan and trace pack`.
 - `T46` is docs-only. It must stay on the mechanism-evidence boundary and must not become a new benchmark, training, `.tflite`, hardware, or cleanup task.
+
+## 2026-05-22 Captain Update
+
+- `T46` reviewer verdict accepted by Captain as `PASS`.
+- T46 non-blocking comments are all treated as `accepted`; there are no `deferred` or `rejected` warning items from this review.
+- `T46` successfully freezes the smallest believable multi-seed / intervention evidence plan without upgrading any single-seed evidence into multi-seed confirmation or causal proof.
+- The project does not jump directly to the old `T47` paper-material lane after T46.
+- Current unique task is now `T54: Phase A multi-seed trace-only generalization probe`.
+- `T54` is a bounded execution task that stays inside the existing Full vs Gated v5, frozen-four-scenario, trace-only mechanism lane. It must not run interventions, widen the benchmark set, or touch `.tflite`, hardware, or cleanup scope.
 
 ## 3. 解决什么问题
 
@@ -237,7 +246,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T46: Multi-seed mechanism/intervention plan and trace pack`
+- `T54: Phase A multi-seed trace-only generalization probe`
 
 ## 12. 快照结论
 
@@ -256,13 +265,15 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 11. `T31` 已完成并通过 adversarial review，Captain verdict = `PASS`；产物是 training-chain portable dependency-lock plan，不是 clean-environment rebuild proof。
 12. `T39` 已完成并通过 adversarial review，Captain verdict = `PASS`；它证明了 clean CPU-only environment、draft lock 和 dry-run/import-level bootstrap 可复现，但不等于 real training reproducibility。
 13. `T40` 已完成并通过 adversarial review，Captain verdict = `PASS`；它证明了 clean CPU-only environment 已能完成一次真实的最小训练 smoke，但不等于 full training reproducibility、GPU/CUDA portability、Linux portability、`.tflite` runtime 或 benchmark readiness。
-14. `T41` 已完成并通过 Captain `PASS` 收口；Milestone 2K 已正式由 gate review 关闭，但当前唯一任务 `T42` 只允许做 docs-only 的 Background / Related Work scaffold 与 method-positioning calibration，不得触碰代码、`runs/`、`artifacts`、benchmark、`.tflite`、真板或阶段结论文档。
+14. `T41` 已完成并通过 Captain `PASS` 收口；Milestone 2K 已正式由 gate review 关闭，并为后续 `T42-T46` 的 paper-boundary 与 mechanism-planning 任务提供了边界前置。
+15. `T46` 已完成并通过 Captain `PASS` 收口；它把 `seed=20260429` 的单 seed 机制诊断收束成了一个明确的多 seed / intervention 计划，但没有升级任何 evidence level。
+16. 当前唯一任务 `T54` 是 `T46` 的 Phase A 执行跟进：只做 bounded multi-seed trace-only probe，先判断 committed-`b` instability 是否在 20260429 之外复现，再决定是否需要后续 intervention lane。
 
 ## 13. T45 后的拟议路线图（非当前任务）
 
 T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是：
 
-1. `T46`：multi-seed mechanism/intervention plan and trace pack
+1. `T54`：Phase A multi-seed trace-only generalization probe
 2. `T47`：paper ablation result-pack and material ledger
 3. `T48`：true `.tflite` runtime booster, only if environment is available
 

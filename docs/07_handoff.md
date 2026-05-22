@@ -2,12 +2,19 @@
 
 ## 1. 当前状态
 
-- 日期：`2026-05-19`
+- 日期：`2026-05-22`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T46: Multi-seed mechanism/intervention plan and trace pack`
-- 任务包：`docs/tasks/Phase2/T46_multi_seed_mechanism_intervention_plan_and_trace_pack.md`
+- 当前唯一任务：`T54: Phase A multi-seed trace-only generalization probe`
+- 任务包：`docs/tasks/Phase2/T54_multi_seed_trace_only_generalization_probe.md`
+
+Captain closeout note after T46:
+
+- `T46` is complete. `docs/review/T46_review.md` verdict = `PASS`; blocking issues = none.
+- T46 correctly freezes the mechanism-evidence plan without upgrading any single-seed result into multi-seed confirmation or causal proof.
+- T46 non-blocking comments are all treated as `accepted`; there are no `deferred` or `rejected` warning items from this review.
+- The active next task is `T54`, not `T47`, because the plan itself says the project still needs a bounded multi-seed trace-only generalization check before intervention or paper-material freezing.
 
 Captain closeout note after T45:
 
@@ -245,12 +252,12 @@ Captain closeout note after T42:
 
 ## 3. T45 后的拟议路线图（非当前任务）
 
-`T45` 已完成，`T53` 也已作为解释性 docs-only 任务收口。下面这些是 recovery 结论导出的下一轮 paper-facing bounded task 路线图；其中只有 `T46` 已被激活为当前唯一任务，其余仍是后续路线图：
+`T45`、`T46` 和 `T53` 已完成；下面这些是 recovery 结论导出的下一轮 bounded 路线图。当前被激活的是 `T54`，而不是直接进入旧版 `T47`：
 
-1. `T46`：multi-seed mechanism/intervention plan and trace pack
-   - 把单 seed 诊断推进到更可信的机制路径设计
+1. `T54`：Phase A multi-seed trace-only generalization probe
+   - 先判断 committed-`b` instability 是否在 `20260429` 之外复现
 2. `T47`：paper ablation result-pack and material ledger
-   - 冻结论文图表、表格和 ablation 缺口
+   - 只在更清楚的机制证据基础上再冻结论文图表、表格和 ablation 缺口
 
 后续 milestone 的粗略方向：
 
@@ -693,43 +700,43 @@ Captain closeout note after T42:
 
 ## 6. 当前唯一任务包摘要
 
-当前唯一任务已切换为 `T46: Multi-seed mechanism/intervention plan and trace pack`，任务包为 `docs/tasks/Phase2/T46_multi_seed_mechanism_intervention_plan_and_trace_pack.md`。
+当前唯一任务已切换为 `T54: Phase A multi-seed trace-only generalization probe`，任务包为 `docs/tasks/Phase2/T54_multi_seed_trace_only_generalization_probe.md`。
 
-T46 任务边界：
+T54 任务边界：
 
-- 只允许做 docs-only multi-seed mechanism/intervention plan 和 trace pack
-- 只允许定义 minimal seed selection logic、trace-field requirements、intervention/counterfactual ideas、diagnostic vs causal evidence separation
-- 不得运行 benchmark、training、`.tflite`、hardware 或 cleanup
-- 不得修改 source、benchmark code/config、`runs/`、`artifacts`
-- 不得把单 seed diagnosis 升级成 causal proof
-- 不得把 trace-plan 文档写成新的验证结果
+- 允许做 bounded trace-only execution，但只限 `Full` vs `Gated v5`、冻结四场景、总 seed 数不超过 6
+- 必须优先复用现有 `20260429` T38 trace 输出，并先 preflight `20260427/20260428` 是否可直接复用
+- 不得运行 intervention variant、不得扩 baseline、不得扩 scenario、不得改 benchmark semantics
+- 不得修改 source、benchmark code/config、`.tflite`、hardware 或 cleanup 相关文件
+- 所有新增执行产物必须收敛到一个 T54-scoped run root
+- 不得把 trace-only evidence 升级成 causal proof 或 paper-grade benchmark evidence
 
-T45 历史收口事实：
+T46 历史收口事实：
 
-- `docs/review/T45_review.md` verdict = `PASS`，blocking issues = none
-- T45 只补一份 benchmark-expansion protocol lock，不产生任何 evidence upgrade
-- T45 保持 frozen-set evidence 与 future expansion lane 分离
-- T45 使后续 `T46-T47` 可以在更清楚的 paper-facing evidence 叙事下继续推进
+- `docs/review/T46_review.md` verdict = `PASS`，blocking issues = none
+- T46 只冻结 multi-seed / intervention evidence plan，不产生任何 execution evidence upgrade
+- T46 保持单 seed diagnosis、multi-seed confirmation 与 causal evidence 三者分离
+- T46 明确给出下一步应先做 Phase A trace-only probe，而不是直接冻结 paper ablation/material ledger
 
 ## 7. 下一步建议
 
-当前建议交给 Worker 执行 `T46` mechanism/intervention plan and trace pack。
+当前建议交给 Worker 执行 `T54` Phase A multi-seed trace-only generalization probe。
 
 建议优先级：
 
-1. 先把 `seed=20260429` 这一条单 seed 机制线索扩成最小 multi-seed / intervention plan。
-2. 写清 diagnostic evidence 与 causal evidence 的边界。
-3. 列出未来执行所需的 trace fields、comparison rows 与 acceptance thresholds。
-4. 保持 docs-only，不进入任何新的 benchmark execution。
+1. 先复用 `20260429` 的 T38 trace 输出，并对 `20260427/20260428` 做 field-complete preflight。
+2. 对 `20260425`、`20260430`、`20260510` 做 bounded trace-only rerun，判断模式是否跨 seed 复现。
+3. 先产出 cross-seed diagnostic summary，再决定是否值得开 intervention lane。
+4. 不直接进入 `T47`，也不运行任何 intervention、`.tflite`、硬件或 cleanup。
 
 ## 8. 暂不继续的事项
 
-在 T46 完成前，暂不继续：
+在 T54 完成前，暂不继续：
 
-1. 任何 benchmark execution 或 benchmark scope 实施扩展
-2. 新的训练、`.tflite`、硬件或 cleanup
-3. 任何 evidence level 升级
-4. 任何把参考研究建议写成当前 formal result 的做法
+1. 任何 intervention variant execution
+2. 任何 benchmark scope 扩展或 paper-grade benchmark 叙事升级
+3. 直接推进旧版 `T47` paper material ledger
+4. 新的训练、`.tflite`、硬件或 cleanup
 5. 任何对 `docs/02_experiment_plan.md` 的修改
 
 ## 9. 2026-05-16 Captain Supersession
