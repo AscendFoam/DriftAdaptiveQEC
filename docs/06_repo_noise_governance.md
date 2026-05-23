@@ -191,4 +191,5 @@
 - `T44` 进入 `Research Reality Recovery Mode` 后，只允许新增 recovery baseline 文档；不得借 recovery 文档任务顺手清理、重命名、重标记或重解释 `runs/`、`artifacts`、`.pyc`、`.tflite`、benchmark outputs 或历史报告。
 - `T45` 已由 Captain 以 `PASS` 收口；其输出只是 benchmark-expansion protocol lock，不是 benchmark execution，也不改变任何 repo-noise 事实。
 - `T46` 已由 Captain 以 `PASS` 收口；其输出只是 docs-only 的 multi-seed mechanism/intervention plan 与 trace pack，不改变任何 repo-noise 事实。
-- `T54` 允许创建一个 T54-scoped run root 来承载多 seed trace-only probe，但不得改写历史 `runs/` / `artifacts/`、不得创建多个分散 run roots、不得借机执行 cleanup，也不得把 trace-only outputs 重标为 formal benchmark、`.tflite` runtime 或 real-board validation 事实。
+- `T54` 已完成并由 Captain 按 `PASS` 收口；其 `runs/T54_multi_seed_trace_phase_a_20260522/` run root 与新建的 `runs/teachrepr/p4_benchmark/trp60425_resume`、`trp60430_resume`、`trp60510_resume` 都只可视为新输出目录，不得回写为历史事实重标或 cleanup 依据。
+- `T55` 允许创建一个 T55-scoped run root，并且任务内生成的 benchmark config、helper script 与 benchmark output 都必须收敛在这个单一 run root 内；不得再向 run root 外分散写出新 benchmark 目录、不得改写历史 `runs/` / `artifacts/`、不得借机执行 cleanup，也不得把 intervention outputs 重标为 formal benchmark、`.tflite` runtime 或 real-board validation 事实。

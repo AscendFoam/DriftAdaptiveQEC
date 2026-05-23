@@ -2,19 +2,36 @@
 
 ## 1. 当前状态
 
-- 日期：`2026-05-22`
+- 日期：`2026-05-23`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T54: Phase A multi-seed trace-only generalization probe`
-- 任务包：`docs/tasks/Phase2/T54_multi_seed_trace_only_generalization_probe.md`
+- 当前唯一任务：`T55: Phase B multi-seed I1 residual-clip intervention probe`
+- 任务包：`docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md`
+
+2026-05-23 Captain supersession:
+
+- Current unique task: `T55: Phase B multi-seed I1 residual-clip intervention probe`
+- Task package: `docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md`
+- `T54` is complete and accepted as `PASS`.
+- T54 warning classification: all non-blocking items are `accepted`; there are no `deferred` or `rejected` items.
+- The committed-`b` instability pattern is now bounded multi-seed diagnostic evidence with quiet / classic / universal qualifications.
+- `C4` remains `partial`; do not jump directly to `T47`.
+
+Captain closeout note after T54:
+
+- `T54` is complete. `docs/review/T54_review.md` verdict = `PASS`; blocking issues = none.
+- T54 upgrades the mechanism story from single-seed diagnostic evidence to bounded multi-seed diagnostic generalization across the locked 6-seed pack.
+- T54 warnings are all classified as `accepted`; there are no `deferred` or `rejected` warning items from this review.
+- T54 refines the observed pattern into quiet / classic / universal categories, so `C4` remains `partial` and the project still lacks bounded intervention evidence.
+- The active next task is `T55`, not `T47`, because the next smallest unresolved gap is the pure I1 intervention question rather than paper-material freezing.
 
 Captain closeout note after T46:
 
 - `T46` is complete. `docs/review/T46_review.md` verdict = `PASS`; blocking issues = none.
 - T46 correctly freezes the mechanism-evidence plan without upgrading any single-seed result into multi-seed confirmation or causal proof.
 - T46 non-blocking comments are all treated as `accepted`; there are no `deferred` or `rejected` warning items from this review.
-- The active next task is `T54`, not `T47`, because the plan itself says the project still needs a bounded multi-seed trace-only generalization check before intervention or paper-material freezing.
+- The active next task recorded at the end of T46 was `T54`, but that recommendation is now superseded by T54 closeout and the current-task switch to `T55`.
 
 Captain closeout note after T45:
 
@@ -738,6 +755,48 @@ T46 历史收口事实：
 3. 直接推进旧版 `T47` paper material ledger
 4. 新的训练、`.tflite`、硬件或 cleanup
 5. 任何对 `docs/02_experiment_plan.md` 的修改
+
+## 8A. 2026-05-23 Captain Supersession For T55
+
+This section supersedes the older T54-current-task wording in Sections 6-8 above.
+
+### Current unique task
+
+- Current unique task: `T55: Phase B multi-seed I1 residual-clip intervention probe`
+- Task package: `docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md`
+- Task type: bounded intervention execution on the same mock-backed P4 wrapper over software HIL path
+
+### T54 closeout facts
+
+- `docs/review/T54_review.md` verdict = `PASS`; blocking issues = none
+- T54 warning classification: all non-blocking items are `accepted`
+- T54 conclusion: the committed-`b` instability pattern is broadly repeated with qualifications across the locked 6-seed pack
+- The observed multi-seed picture now includes quiet / classic / universal categories
+- `C4` remains `partial`; T54 does not provide causal proof and does not justify skipping intervention evidence
+
+### T55 execution boundary
+
+- Reuse the same 6 seeds: `20260425`, `20260427`, `20260428`, `20260429`, `20260430`, `20260510`
+- Reuse the same frozen four scenarios and repeat count `2`
+- Reuse existing model assets; do not retrain
+- Run exactly one config-only intervention: lower Gated v5 `residual_clip_b` from `0.12` to `0.06`
+- Keep generated config(s), helper script(s), outputs, and summaries inside one T55-scoped run root
+- Do not edit source code, source-tree config, `.tflite`, hardware, cleanup, or paper-material scope
+
+### Next recommended worker action
+
+1. Build a seed/model reuse manifest for the locked 6-seed pack.
+2. Generate task-scoped benchmark config(s) inside the T55 run root only.
+3. Execute only the pure I1 clip-lowered intervention variant.
+4. Compare intervention outputs against the reused T54 baseline references.
+5. Produce a bounded intervention report that classifies the intervention as helpful, harmful, mixed, or no-clear-effect.
+
+### Do not continue yet
+
+1. Do not jump directly to `T47`.
+2. Do not run any second intervention variant.
+3. Do not expand benchmark scope, comparator scope, `.tflite`, hardware, or cleanup scope.
+4. Do not edit `docs/02_experiment_plan.md`.
 
 ## 9. 2026-05-16 Captain Supersession
 

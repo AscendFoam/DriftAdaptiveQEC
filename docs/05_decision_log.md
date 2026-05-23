@@ -1913,6 +1913,50 @@ No `deferred` warnings remain from `T43`, so no new risk item is opened here. Th
 2. `docs/07_handoff.md` 当前任务摘要同步提醒，以任务包中的新边界与 no-go 规则为准。
 3. `docs/04_task_board.md` 现状判断保持不变：当前唯一任务仍是 `T46`。
 
+## D-2026-05-23-01
+
+- 日期：`2026-05-23`
+- 决策：接受 `T54` review 的 `PASS`，标记 `T54` 完成，并将当前唯一任务切换为 `T55: Phase B multi-seed I1 residual-clip intervention probe`。
+
+### 背景
+
+`T54` 是 `T46` 所定义的 Phase A multi-seed trace-only generalization probe。`docs/review/T54_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. `docs/multi_seed_trace_generalization_probe.md` 结构完整，包含命令、复用/重跑矩阵、字段可用性、跨 seed 汇总、结论与 non-claims。
+2. 任务保持在既有 `T38` trace/export 路径之内，只使用锁定的 6-seed pack、冻结四场景、`Full` vs `Gated v5`，没有运行 intervention。
+3. 最终结论是 “broadly repeated with qualifications”，而不是把单 seed 结果直接升级成 causal proof 或 paper-grade benchmark evidence。
+4. Worker 没有修改 source、benchmark code、source-tree config、tests、runtime、hardware、training 文件或治理文档。
+
+### Warning 处理
+
+T54 review 的非阻塞评论全部按 `accepted` 处理：
+
+1. N1 新 benchmark run dirs 写在 T54 单一 run root 之外，但属于新增目录而不是历史覆盖：`accepted`
+2. N2 新 rerun seeds 的 seed reuse manifest 元数据不完整：`accepted`
+3. N3 复用 seeds 与新 rerun seeds 采用了不同 paired-seed conventions：`accepted`
+4. N4 `cross_seed_analysis.py` 是 run-root-local helper script：`accepted`
+5. N5 机制结论由 “broadly repeated” 精化为 “broadly repeated with qualifications”：`accepted`
+
+没有 `deferred` 或 `rejected` warning，因此这次不新增由 warning classification 触发的 risk。
+
+### 结论
+
+`T54` 可以标记完成，但项目仍不应直接跳到旧版 `T47`。
+
+原因是：
+
+1. `T54` 只回答了 generalization 问题，把 `committed-b` instability 从单 seed 诊断升级为 bounded multi-seed diagnostic evidence。
+2. `T54` 同时表明机制图景比单 seed 版本更复杂，存在 quiet / classic / universal 三类表现，因此 `C4` 仍保持 `partial`。
+3. 当前最小仍未关闭的缺口是 targeted intervention evidence，而不是 paper ablation/material packaging。
+4. 因此下一唯一任务应是新增 `T55`：在同一 6-seed pack 与冻结四场景下，只做一个 pure I1 residual-clip lower-bound intervention probe，判断该 intervention 是 helpful、harmful、mixed，还是 no-clear-effect。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T54` 完成，并切换 `Current Unique Task` 到 `T55`。
+2. 新增 `docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md`。
+3. `docs/07_handoff.md` 记录 T54 Captain closeout，并把当前唯一任务包摘要、下一步建议、暂不继续事项切换到 `T55`。
+4. `docs/08_risks_and_open_questions.md` 保持 `R10` / `R18` 指向 `T55` 作为下一条 bounded mechanism lane。
+
 ## D-2026-05-22-02
 
 - 日期：`2026-05-22`

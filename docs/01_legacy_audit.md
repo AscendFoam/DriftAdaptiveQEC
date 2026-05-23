@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T54: Phase A multi-seed trace-only generalization probe`
+  - `T55: Phase B multi-seed I1 residual-clip intervention probe`
 
 说明：
 
@@ -99,6 +99,14 @@
 - T46 successfully freezes the mechanism-evidence execution boundary: current evidence is still single-seed diagnostic, and any stronger claim needs a bounded multi-seed trace lane before any intervention or paper-material freeze.
 - Current unique task is now `T54: Phase A multi-seed trace-only generalization probe`.
 - `T54` is not benchmark expansion and not paper assembly. It is a bounded trace-only execution task that reuses the existing T38 path, stays inside the frozen four scenarios and Full vs Gated v5 comparison, and does not yet run any intervention.
+
+### 2026-05-23 Captain Update
+
+- `T54` has been accepted as `PASS`.
+- T54 non-blocking comments are all treated as `accepted`; no `deferred` warning remains from this review.
+- T54 confirms that the committed-`b` instability pattern generalizes beyond `seed=20260429`, but only as bounded diagnostic evidence with important quiet/classic/universal qualifications; it does not close `C4`.
+- The next active task is not `T47`. The current unique task is now `T55: Phase B multi-seed I1 residual-clip intervention probe`.
+- `T55` must stay on the same mock-backed P4 wrapper over software HIL path, reuse existing model assets, and test only one config-only intervention variant before any paper-material freeze is revisited.
 
 ## 3. 可行性判断
 
@@ -376,7 +384,7 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T46`、`T53` 已完成；当前下一唯一任务为 `T54`，只做 bounded multi-seed trace-only generalization probe，不直接进入 intervention、paper material ledger、`.tflite` runtime 或真板范围
+1. `T14` 至 `T46`、`T53`、`T54` 已完成；当前下一唯一任务为 `T55`，只做 bounded multi-seed I1 residual-clip intervention probe，不直接进入 `T47`、`.tflite` runtime 或真板范围
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 3. `T26` gate 结论为 `CONDITIONAL_GO`，且 `T30` 已把 statcalib 收紧为 interface-only separate comparator contract；后续仍不得把 statcalib 静默并入 T24 frozen benchmark set，不得扩展 formal benchmark、baseline/scenario、`.tflite` 或真板范围。
 4. `T36/T38` 已把 `seed=20260429` 诊断推进到 single-seed trace-supported mechanism evidence，但仍不是 mitigation 或 multi-seed causal proof。

@@ -189,8 +189,35 @@ If `T54` does not show a repeated pattern beyond `20260429`, then the project sh
 
 ## Worker Output
 
-- Pending.
+- Worker started T54 on `2026-05-22`, completed on `2026-05-23`.
+- All required inputs read and cross-checked.
+- Preflight for existing seeds 20260427 and 20260428: both have complete benchmark artifacts with all 19 required trace fields present. No rerun needed.
+- Trace export for seed 20260427: 4,800 rows, all fields present. Reused from `runs/teachrepr_v5_chunked/p4_benchmark/trp60427_resume`.
+- Trace export for seed 20260428: 4,798 rows, all fields present. Reused from `runs/teachrepr_v5_chunked/p4_benchmark/trp60428_resume`.
+- Trace export for seed 20260429: 4,798 rows, all fields present. Reused from T38 `runs/T38_seed20260429_trace_probe_20260513/trace_export`.
+- New seed pipeline (20260425, 20260430, 20260510): completed via paired runner with DLEnv. All 3 new seeds: dataset building + training + benchmark completed.
+- Trace export for seed 20260425: 14,396 rows, all fields present.
+- Trace export for seed 20260430: 14,396 rows, all fields present.
+- Trace export for seed 20260510: 14,398 rows, all fields present.
+- Cross-seed analysis produced for all 6 seeds: `cross_seed_comparison.csv` (72 rows), `delta_b_amplitude_by_seed.csv` (72 rows), `mechanism_summary.csv` (72 rows). Total: 57,586 trace rows.
+- Key finding: committed-b instability pattern is **broadly repeated with qualifications** across 6 seeds. 5/6 seeds show Gated v5 instability. Seed 20260425 is quiet (no instability in either mode). Seed 20260510 shows instability in BOTH modes.
+- `docs/multi_seed_trace_generalization_probe.md` updated with complete 6-seed report (8 sections, 4 required tables).
+- `docs/review/T54_review.md` updated with verdict `PASS`, 5 non-blocking issues.
+- `docs/for_human/T54_explanation.md` updated with Chinese human-facing explanation covering all 6 seeds.
+- Trace evidence not upgraded to causal proof or paper-grade benchmark evidence.
+- Frozen-set benchmark boundary not reopened; probe uses existing frozen four scenarios and Full vs Gated v5 only.
+- No source code, config, or governance file was modified.
+- No intervention variants were run.
 
 ## Verification Record
 
-- Pending.
+1. Only allowed docs changed: `docs/multi_seed_trace_generalization_probe.md` (new), `docs/review/T54_review.md` (new), `docs/for_human/T54_explanation.md` (new), and this task package (modified for Worker Output / Verification Record). New run root created at `runs/T54_multi_seed_trace_phase_a_20260522/`. New benchmark run dirs at `runs/teachrepr/p4_benchmark/trp604{25,30,510}_resume/` are new (not historical overwrites).
+2. No source code, config, test, runtime, hardware, or training file was modified. The paired runner uses existing code paths without modification.
+3. No historical `runs/` or `artifacts/` path was overwritten. All new benchmark run dirs are new directories.
+4. All new execution stayed inside the fixed four scenarios and two modes (Full and Gated v5).
+5. The report does not claim causal proof, intervention success, `.tflite` runtime validation, or real-board validation. All language stays at diagnostic level.
+6. The probe keeps T54 separate from T47 (ablation result-pack), T48 (TFLite runtime), and T49 (real-board smoke).
+7. Field availability confirmed for all 6 seeds: all 19 required trace fields present.
+8. The mechanism generalization verdict is "broadly repeated with qualifications" based on all 6 seeds. This is honest diagnostic evidence, not causal proof. Three seed categories identified: quiet (20260425), classic (20260427/20260428/20260429/20260430), universal instability (20260510).
+9. Total seed ceiling of 6 respected. No seeds outside the T46 locked pack were used.
+10. The seed reuse manifest (`runs/T54_multi_seed_trace_phase_a_20260522/seed_reuse_manifest.json`) records which seeds were reused from existing artifacts and which required rerun.

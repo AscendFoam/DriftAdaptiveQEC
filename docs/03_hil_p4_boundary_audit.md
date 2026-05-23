@@ -96,7 +96,8 @@
 - `T44` 进入 `Research Reality Recovery Mode` 后，只允许冻结和审计 claim/evidence/material truth；不得借 recovery baseline 任务改写任何 HIL、P4、`.tflite` 或真板边界。
 - `T45` 已完成并由 Captain 以 `PASS` 收口；它只锁定 benchmark-expansion protocol，不改变任何 HIL / P4 / `.tflite` / real-board 边界。
 - `T46` 已完成并由 Captain 以 `PASS` 收口；其输出只是 docs-only 的 multi-seed mechanism/intervention plan 与 trace pack，不是新的实验结果。
-- `T54` 只允许在既有 `Full` vs `Gated v5`、冻结四场景、trace-only 的 teacher-representation lane 内做 bounded multi-seed generalization probe；不得借机扩 baseline、扩 scenario、改协议、跑 intervention、触碰真板 / `.tflite` / cleanup，或把 trace-only evidence 写成 causal proof。
+- `T54` 已完成并由 Captain 按 `PASS` 收口；它只把单 seed 诊断升级为 bounded multi-seed trace-only diagnostic generalization，不改变当前 mock-backed P4 wrapper over software HIL 的事实边界。
+- `T55` 只允许在同一条 mock-backed P4 wrapper over software HIL lane 内做一个 config-only 的 I1 干预测试：复用既有 6-seed 模型资产，只测试 `residual_clip_b: 0.06` 的 Gated v5 intervention，不得借机扩 baseline、扩 scenario、重训模型、触碰真板 / `.tflite` / cleanup，或把 intervention result 写成 causal proof。
 
 ## 7. 当前推荐表述
 

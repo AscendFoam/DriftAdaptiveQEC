@@ -261,8 +261,15 @@
   - Captain verdict: `PASS`
   - Warning handling: all non-blocking comments `accepted`; no `deferred` or `rejected` items
   - Result: the project now has a bounded multi-seed / intervention evidence plan, but current mechanism evidence is still only single-seed diagnostic and has not been upgraded to multi-seed confirmation or causal proof
-- [ ] T54: Phase A multi-seed trace-only generalization probe
+- [x] T54: Phase A multi-seed trace-only generalization probe
   - Task package: `docs/tasks/Phase2/T54_multi_seed_trace_only_generalization_probe.md`
+  - Output: `docs/multi_seed_trace_generalization_probe.md`
+  - Review output: `docs/review/T54_review.md`
+  - Captain verdict: `PASS`
+  - Warning handling: all non-blocking comments `accepted`; no `deferred` or `rejected` items
+  - Result: the committed-`b` instability pattern is broadly repeated with qualifications across the locked 6-seed pack, but this remains bounded diagnostic evidence and `C4` stays `partial`
+- [ ] T55: Phase B multi-seed I1 residual-clip intervention probe
+  - Task package: `docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md`
 - [ ] T47: Paper ablation result-pack and material ledger
   - Task package: `docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
 
@@ -291,7 +298,7 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T54: Phase A multi-seed trace-only generalization probe`
+`T55: Phase B multi-seed I1 residual-clip intervention probe`
 
 状态说明：
 
@@ -317,9 +324,23 @@ Long-term objective:
 3. 如果 `T54` 不显示跨 seed 重现，项目就不应直接跳到 `T47` 或更强机制措辞。
 4. `T54` 虽然是执行任务，但仍复用既有 trace/export 路径，不需要打开 `.tflite`、real-board、benchmark expansion 或 cleanup 范围。
 
+Captain supersession for current-task status:
+
+- `T54` is complete and accepted as `PASS`.
+- T54 warning classification: all non-blocking items are `accepted`; there are no `deferred` or `rejected` items.
+- The committed-`b` instability pattern is now bounded multi-seed diagnostic evidence: broadly repeated with qualifications across the locked 6-seed pack.
+- `C4` remains `partial`; the project still lacks bounded intervention evidence and should not jump directly to `T47`.
+- The current unique task is `T55: Phase B multi-seed I1 residual-clip intervention probe`.
+
 ## Captain Output For Current Task
 
-1. 当前唯一任务：`T54`
+- Current unique task: `T55`
+- Latest completed review: `docs/review/T54_review.md` with verdict `PASS`
+- Warning classification for T54: all non-blocking items `accepted`; no `deferred` / `rejected`
+- Next worker-facing task package: `docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md`
+- Legacy T46/T54 planning lines immediately below are superseded by this T55 status note
+
+1. 当前唯一任务：`T55`
 2. `T46` 已按 `PASS` 收口。
 3. T46 review blocking issues：
    - none
@@ -328,14 +349,14 @@ Long-term objective:
    - accepted: pre-existing Captain governance sync visible in the same working tree
    - accepted: no Phase A wall-clock estimate at planning-gate stage
    - accepted: no direct back-reference to `docs/paper_claim_evidence_ledger.md`
-5. T46 review output：`docs/review/T46_review.md`
-6. T54 任务包：`docs/tasks/Phase2/T54_multi_seed_trace_only_generalization_probe.md`
+5. T54 review output：`docs/review/T54_review.md`
+6. T55 任务包：`docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md`
 
-## Done Criteria For T54
+## Done Criteria For T55
 
-1. Reuse existing `20260429` T38 trace outputs and preflight `20260427/20260428` before deciding whether rerun is necessary.
-2. Keep execution strictly inside the locked seed pack, the frozen four scenarios, and the `Full` vs `Gated v5` trace-only lane.
-3. Produce a cross-seed trace summary that can honestly classify the pattern as isolated, partially repeated, or broadly repeated.
-4. Do not run intervention variants yet.
-5. Do not modify code, config, benchmark semantics, `.tflite`, hardware, cleanup, or paper-material scope.
-6. Keep all new outputs inside one T54-scoped run root and preserve historical `runs/` / `artifacts/` unchanged.
+1. Reuse the same locked 6-seed pack, frozen four scenarios, and repeat count `2`.
+2. Reuse existing model assets and baseline references; do not retrain and do not rerun unnecessary baseline modes.
+3. Test exactly one config-only intervention: lower Gated v5 `residual_clip_b` from `0.12` to `0.06`.
+4. Keep generated benchmark config(s), helper script(s), outputs, and summaries inside one T55-scoped run root.
+5. Do not modify source code, benchmark code, source-tree configs, `.tflite`, hardware, cleanup, or paper-material scope.
+6. Produce a bounded intervention report that stays at intervention evidence level and does not claim causal proof.
