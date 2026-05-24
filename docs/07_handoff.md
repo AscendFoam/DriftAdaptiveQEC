@@ -2,21 +2,30 @@
 
 ## 1. 当前状态
 
-- 日期：`2026-05-23`
+- 日期：`2026-05-24`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T55: Phase B multi-seed I1 residual-clip intervention probe`
-- 任务包：`docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md`
+- 当前唯一任务：`T56: Post-I1 mechanism claim reframing gate`
+- 任务包：`docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
 
-2026-05-23 Captain supersession:
+2026-05-24 Captain supersession:
 
-- Current unique task: `T55: Phase B multi-seed I1 residual-clip intervention probe`
-- Task package: `docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md`
-- `T54` is complete and accepted as `PASS`.
-- T54 warning classification: all non-blocking items are `accepted`; there are no `deferred` or `rejected` items.
-- The committed-`b` instability pattern is now bounded multi-seed diagnostic evidence with quiet / classic / universal qualifications.
-- `C4` remains `partial`; do not jump directly to `T47`.
+- Current unique task: `T56: Post-I1 mechanism claim reframing gate`
+- Task package: `docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
+- `T55` is complete and accepted as `PASS`.
+- T55 warning classification: all non-blocking items are `accepted`; there are no `deferred` or `rejected` items.
+- The pure I1 lower-clip intervention is mixed and mostly harmful across the locked 6-seed pack.
+- The simple harmful-instability framing is not supported as a general mechanism explanation, and `C4` remains `partial`.
+- Do not jump directly to `T47`.
+
+Captain closeout note after T55:
+
+- `T55` is complete. `docs/review/T55_review.md` verdict = `PASS`; blocking issues = none.
+- T55 adds the first bounded targeted intervention evidence on the same 6-seed pack and frozen four scenarios.
+- T55 warnings are all classified as `accepted`; there are no `deferred` or `rejected` warning items from this review.
+- T55 concludes that the pure I1 lower-clip intervention is mixed and mostly harmful (harms 4/6, helps 2/6), so the earlier simple harmful-instability framing is not supported as a general explanation.
+- The active next task is `T56`, not `T47`, because the project now needs a mechanism-claim reframing gate before any paper-material packaging or second intervention decision.
 
 Captain closeout note after T54:
 
@@ -797,6 +806,44 @@ This section supersedes the older T54-current-task wording in Sections 6-8 above
 2. Do not run any second intervention variant.
 3. Do not expand benchmark scope, comparator scope, `.tflite`, hardware, or cleanup scope.
 4. Do not edit `docs/02_experiment_plan.md`.
+
+## 8B. 2026-05-24 Captain Supersession For T56
+
+This section supersedes the older T55-current-task wording in Sections 1 and 8A above.
+
+### Current unique task
+
+- Current unique task: `T56: Post-I1 mechanism claim reframing gate`
+- Task package: `docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
+- Task type: docs-only post-I1 evidence-interpretation and next-lane gate task
+
+### T55 closeout facts
+
+- `docs/review/T55_review.md` verdict = `PASS`; blocking issues = none
+- T55 warning classification: all non-blocking items are `accepted`
+- T55 intervention result: mixed and mostly harmful across the locked 6-seed pack
+- The simple mechanism framing “high committed-b is harmful” is not supported as a general explanation
+- `C4` remains `partial`
+
+### T56 execution boundary
+
+- Read and synthesize `T36`, `T38`, `T46`, `T54`, and `T55`
+- Update claim wording only in bounded docs
+- Do not run new benchmark, trace export, second intervention, `.tflite`, hardware, cleanup, or comparator execution
+- Do not edit governance docs or `docs/02_experiment_plan.md`
+
+### Next recommended worker action
+
+1. Produce a retain / weaken / retire / reframe / still-open mechanism-claim table.
+2. Update `docs/paper_claim_evidence_ledger.md` only where `T55` changes claim status or wording boundary.
+3. State whether `T47` can proceed only under conditioned hedge wording.
+4. State whether any second intervention lane is `no-go`, `deferred`, or `conditionally justified`.
+
+### Do not continue yet
+
+1. Do not jump directly to `T47` as unconditional next work.
+2. Do not run a second intervention variant.
+3. Do not reopen benchmark expansion, `.tflite`, hardware, or cleanup scope.
 
 ## 9. 2026-05-16 Captain Supersession
 

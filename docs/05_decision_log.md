@@ -1913,6 +1913,54 @@ No `deferred` warnings remain from `T43`, so no new risk item is opened here. Th
 2. `docs/07_handoff.md` 当前任务摘要同步提醒，以任务包中的新边界与 no-go 规则为准。
 3. `docs/04_task_board.md` 现状判断保持不变：当前唯一任务仍是 `T46`。
 
+## D-2026-05-24-01
+
+- 日期：`2026-05-24`
+- 决策：接受 `T55` review 的 `PASS`，标记 `T55` 完成，并将当前唯一任务切换为 `T56: Post-I1 mechanism claim reframing gate`。
+
+### 背景
+
+`T55` 是 `T54` 之后的 Phase B 单变体 intervention probe。`docs/review/T55_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. 任务保持在锁定的 6-seed pack、冻结四场景、`repeats=2` 和单一 pure I1 lower-clip intervention 范围内。
+2. Worker 没有重训模型、没有修改 source-tree code/config，也没有打开 `.tflite`、真板、cleanup 或 benchmark-expansion 范围。
+3. 报告的主要实证结论是 I1 intervention 为 mixed 且整体偏 harmful，不支持把 “high committed-b is harmful” 继续当成一般机制解释。
+4. `C4` 仍保持 `partial`，并且 `T47` 不应被视为自动可推进的下一任务。
+
+### Warning 处理
+
+T55 review 的非阻塞评论全部按 `accepted` 处理：
+
+1. N1 顶层 `summary.json` 在最终 resume 后一度变 stale，但底层 per-repeat data 完整且 reviewer 已重新聚合：`accepted`
+2. N2 run root 中残留 `benchmark_test/` smoke 产物：`accepted`
+3. N3 T54 baseline comparison 使用 per-seed 平均 LER 而非 per-repeat pairing：`accepted`
+4. N4 缺少单独的 `intervention_trace_summary.csv` / `seed_model_reuse_manifest.json` 文件名，但信息已由现有 report / CSV / `manifest.json` 覆盖：`accepted`
+5. N5 report 中 “expected I1 effect” 属于诊断性解释而非实测 trace comparison：`accepted`
+
+Suspicious implementation details 也不升格为阻塞：
+
+1. S1 未对 I1 run 产出独立 trace export：`accepted`
+2. S2 I1 benchmark timing 继承 `n_slow_updates=900`，与部分 T54 旧 seed baseline 的 `300` 不完全同源：`accepted`
+
+没有 `deferred` 或 `rejected` warning，因此这次不新增由 warning classification 触发的 risk。
+
+### 结论
+
+`T55` 可以标记完成，但当前项目不应直接切入 `T47`。
+
+原因是：
+
+1. `T55` 已经提供 targeted intervention evidence，因此 `R10` 的状态发生了变化：问题不再是“缺 intervention evidence”，而是“现有 intervention evidence 使原先的简单 harmful-instability 叙事站不住脚”。
+2. 这意味着项目先需要一个 docs-only gate 来重写 mechanism claim boundary，而不是马上做 paper ablation/material packaging。
+3. 因此下一唯一任务应是新增 `T56`：对 `T36/T38/T54/T55` 的 mechanism claims 做 retain / weaken / retire / reframe / still-open 收口，并明确 `T47` 是否可在带 hedge 的前提下推进。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T55` 完成，并切换 `Current Unique Task` 到 `T56`。
+2. 新增 `docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`。
+3. `docs/07_handoff.md` 记录 T55 Captain closeout，并把当前唯一任务包摘要切换到 `T56`。
+4. `docs/08_risks_and_open_questions.md` 更新 `R10`：现在不是缺 intervention evidence，而是已有 intervention evidence 但需要机制叙事重构。
+
 ## D-2026-05-23-01
 
 - 日期：`2026-05-23`

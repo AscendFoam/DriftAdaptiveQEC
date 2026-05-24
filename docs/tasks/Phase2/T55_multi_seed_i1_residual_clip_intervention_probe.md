@@ -189,8 +189,34 @@ If `T55` shows no useful intervention signal, then the project should not rush i
 
 ## Worker Output
 
-- Pending.
+- Worker started T55 on `2026-05-23`, completed on `2026-05-24`.
+- All required inputs read and cross-checked.
+- T55 run root created at `runs/T55_multi_seed_i1_probe_20260523/`.
+- Generated 6 seed-specific benchmark configs in `configs/` using `p4_multiscenario_strong_baselines.yaml` as base, with I1 mode `hybrid_gated_teacher_v5_i1` (`residual_clip_b: 0.06`).
+- All 6 seeds reuse existing Gated v5 model artifacts from T54 — no retraining.
+- Seed/model reuse documented in `manifest.json`.
+- Benchmark execution: 48 HIL sessions (6 seeds × 4 scenarios × 2 repeats), all completed with `n_slow_updates=900`.
+- I1 benchmark outputs at `benchmark_output/s{seed}/` (8/8 repeats per seed).
+- Cross-seed analysis: `analysis/intervention_comparison.csv` (24 rows), `analysis/intervention_summary.csv` (6 rows), `analysis/intervention_summary.json`.
+- Key finding: I1 lower-clip intervention is MIXED — harms 4/6 seeds (20260425, 20260427, 20260428, 20260429), helps 2/6 seeds (20260430, 20260510). Mean cross-seed gap: +0.128 (overall harmful).
+- `docs/multi_seed_i1_intervention_probe.md` updated with complete 6-seed intervention report (9 sections).
+- `docs/review/T55_review.md` updated with verdict `PASS`.
+- `docs/for_human/T55_explanation.md` updated with Chinese human-facing explanation.
+- Intervention evidence not upgraded to causal proof.
+- Frozen-set benchmark boundary not reopened.
+- No source code, config, or governance file was modified.
+- No second intervention variant was run.
+- C4 should remain `partial` based on this intervention evidence.
 
 ## Verification Record
 
-- Pending.
+1. Only allowed docs changed: `docs/multi_seed_i1_intervention_probe.md` (new), `docs/review/T55_review.md` (new), `docs/for_human/T55_explanation.md` (new), and this task package (modified for Worker Output / Verification Record). New run root created at `runs/T55_multi_seed_i1_probe_20260523/`.
+2. No source code, source-tree config, test, runtime, hardware, or training file was modified. The runner only generates seed-specific benchmark configs inside the T55 run root.
+3. No historical `runs/` or `artifacts/` path was overwritten. All new benchmark output directories are new.
+4. Only one intervention variant executed: pure I1 lower clip (0.06). No v6/v7/v8/v9 proxy used.
+5. All new execution stayed inside the locked 6-seed pack, frozen four scenarios, and repeats=2.
+6. The report does not claim causal proof, full mechanism closure, `.tflite` runtime validation, or real-board validation. All language stays at bounded intervention evidence level.
+7. The intervention remained a pure I1 lower-clip change. Only `slow_loop.hybrid_residual_b.residual_clip_b` changed from 0.12 to 0.06.
+8. Existing model artifacts reused from T54 without retraining.
+9. T54 baseline references reused for Full and Gated v5 without rebaselining.
+10. Total I1 runs: 48 HIL sessions (6 seeds × 4 scenarios × 2 repeats). All 48/48 completed with valid summaries.

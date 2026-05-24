@@ -9,7 +9,7 @@
 ## 2. 基本信息
 
 - 快照日期：`2026-05-05`
-- 最近更新：`2026-05-23`
+- 最近更新：`2026-05-24`
 - 当前分支：`main`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
@@ -66,6 +66,16 @@
 - The project still does not jump directly to `T47`.
 - Current unique task is now `T55: Phase B multi-seed I1 residual-clip intervention probe`.
 - `T55` is a bounded config-only intervention task: it reuses existing seed/model assets, tests only one Gated v5 intervention (`residual_clip_b: 0.06`) on the same 6 seeds and frozen four scenarios, and does not reopen training, `.tflite`, hardware, cleanup, or benchmark-expansion scope.
+
+## 2026-05-24 Captain Update
+
+- `T55` reviewer verdict accepted by Captain as `PASS`.
+- T55 non-blocking comments are all treated as `accepted`; there are no `deferred` or `rejected` warning items from this review.
+- `T55` adds the first bounded multi-seed intervention evidence, and the result is mixed and mostly harmful: the pure I1 lower-clip intervention harms 4/6 seeds and helps 2/6.
+- The simple mechanism framing “high committed-`b` is harmful” is not supported as a general explanation; `C4` remains `partial`.
+- The project still does not jump directly to `T47`.
+- Current unique task is now `T56: Post-I1 mechanism claim reframing gate`.
+- `T56` is docs-only. It must freeze which mechanism claims remain valid after `T55`, which claims must be weakened or reframed, and whether any later `T47` or second-intervention lane is still justified.
 
 ## 3. 解决什么问题
 
@@ -255,7 +265,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T55: Phase B multi-seed I1 residual-clip intervention probe`
+- `T56: Post-I1 mechanism claim reframing gate`
 
 ## 12. 快照结论
 
@@ -276,13 +286,13 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 13. `T40` 已完成并通过 adversarial review，Captain verdict = `PASS`；它证明了 clean CPU-only environment 已能完成一次真实的最小训练 smoke，但不等于 full training reproducibility、GPU/CUDA portability、Linux portability、`.tflite` runtime 或 benchmark readiness。
 14. `T41` 已完成并通过 Captain `PASS` 收口；Milestone 2K 已正式由 gate review 关闭，并为后续 `T42-T46` 的 paper-boundary 与 mechanism-planning 任务提供了边界前置。
 15. `T46` 已完成并通过 Captain `PASS` 收口；它把 `seed=20260429` 的单 seed 机制诊断收束成了一个明确的多 seed / intervention 计划，但没有升级任何 evidence level。
-16. 当前唯一任务 `T55` 是 `T46` 的 Phase B 执行跟进：在 `T54` 已确认跨 seed 诊断复现之后，只做一个 config-only 的 I1 干预测试，判断 lower-clip 是否会帮助、伤害或基本无影响。
+16. `T55` 已完成并表明 pure I1 lower-clip intervention 为 mixed 且整体偏 harmful；因此当前唯一任务切到 `T56`，先对机制 claim 做重构收口，再决定是否还能推进 `T47` 或任何第二个 intervention lane。
 
 ## 13. T45 后的拟议路线图（非当前任务）
 
 T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是：
 
-1. `T55`：Phase B multi-seed I1 residual-clip intervention probe
+1. `T56`：Post-I1 mechanism claim reframing gate
 2. `T47`：paper ablation result-pack and material ledger
 3. `T48`：true `.tflite` runtime booster, only if environment is available
 

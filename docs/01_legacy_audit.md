@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T55: Phase B multi-seed I1 residual-clip intervention probe`
+  - `T56: Post-I1 mechanism claim reframing gate`
 
 说明：
 
@@ -107,6 +107,16 @@
 - T54 confirms that the committed-`b` instability pattern generalizes beyond `seed=20260429`, but only as bounded diagnostic evidence with important quiet/classic/universal qualifications; it does not close `C4`.
 - The next active task is not `T47`. The current unique task is now `T55: Phase B multi-seed I1 residual-clip intervention probe`.
 - `T55` must stay on the same mock-backed P4 wrapper over software HIL path, reuse existing model assets, and test only one config-only intervention variant before any paper-material freeze is revisited.
+
+### 2026-05-24 Captain Update
+
+- `T55` has been accepted as `PASS`.
+- T55 non-blocking comments are all treated as `accepted`; no `deferred` warning remains from this review.
+- T55 provides the first bounded targeted intervention evidence, and that evidence is mixed and mostly harmful rather than a clean mitigation success.
+- The simple harmful-instability framing is no longer a defensible general mechanism claim. `C4` remains `partial`.
+- The next active task is not `T47`. The current unique task is now `T56: Post-I1 mechanism claim reframing gate`.
+- `T56` is docs-only and exists to freeze which mechanism claims remain valid after `T55`, whether any second intervention is still justified, and under what hedge boundary `T47` could later proceed.
+- Any older T55-next wording later in this file is superseded by this status block and `docs/04_task_board.md`.
 
 ## 3. 可行性判断
 

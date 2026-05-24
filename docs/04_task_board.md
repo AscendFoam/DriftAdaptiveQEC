@@ -268,8 +268,15 @@
   - Captain verdict: `PASS`
   - Warning handling: all non-blocking comments `accepted`; no `deferred` or `rejected` items
   - Result: the committed-`b` instability pattern is broadly repeated with qualifications across the locked 6-seed pack, but this remains bounded diagnostic evidence and `C4` stays `partial`
-- [ ] T55: Phase B multi-seed I1 residual-clip intervention probe
+- [x] T55: Phase B multi-seed I1 residual-clip intervention probe
   - Task package: `docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md`
+  - Output: `docs/multi_seed_i1_intervention_probe.md`
+  - Review output: `docs/review/T55_review.md`
+  - Captain verdict: `PASS`
+  - Warning handling: all non-blocking comments `accepted`; no `deferred` or `rejected` items
+  - Result: pure I1 lower-clip intervention is mixed and mostly harmful (harms 4/6, helps 2/6); the simple “high committed-b is harmful” mechanism framing is not supported as a general explanation, and `C4` remains `partial`
+- [ ] T56: Post-I1 mechanism claim reframing gate
+  - Task package: `docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
 - [ ] T47: Paper ablation result-pack and material ledger
   - Task package: `docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
 
@@ -298,7 +305,7 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T55: Phase B multi-seed I1 residual-clip intervention probe`
+`T56: Post-I1 mechanism claim reframing gate`
 
 状态说明：
 
@@ -332,15 +339,24 @@ Captain supersession for current-task status:
 - `C4` remains `partial`; the project still lacks bounded intervention evidence and should not jump directly to `T47`.
 - The current unique task is `T55: Phase B multi-seed I1 residual-clip intervention probe`.
 
+Captain supersession after T55:
+
+- `T55` is complete and accepted as `PASS`.
+- T55 warning classification: all non-blocking items are `accepted`; there are no `deferred` or `rejected` items.
+- The pure I1 lower-clip intervention is mixed and mostly harmful across the locked 6-seed pack.
+- The earlier simple framing "high committed-b is harmful" is not supported as a general mechanism explanation.
+- `C4` remains `partial`; the next bounded lane is `T56`, not `T47`.
+- The current unique task is now `T56: Post-I1 mechanism claim reframing gate`.
+
 ## Captain Output For Current Task
 
-- Current unique task: `T55`
-- Latest completed review: `docs/review/T54_review.md` with verdict `PASS`
-- Warning classification for T54: all non-blocking items `accepted`; no `deferred` / `rejected`
-- Next worker-facing task package: `docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md`
-- Legacy T46/T54 planning lines immediately below are superseded by this T55 status note
+- Current unique task: `T56`
+- Latest completed review: `docs/review/T55_review.md` with verdict `PASS`
+- Warning classification for T55: all non-blocking items `accepted`; no `deferred` / `rejected`
+- Next worker-facing task package: `docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
+- Legacy T46/T54/T55 planning lines immediately below are superseded by this T56 status note
 
-1. 当前唯一任务：`T55`
+1. 当前唯一任务：`T56`
 2. `T46` 已按 `PASS` 收口。
 3. T46 review blocking issues：
    - none
@@ -349,14 +365,14 @@ Captain supersession for current-task status:
    - accepted: pre-existing Captain governance sync visible in the same working tree
    - accepted: no Phase A wall-clock estimate at planning-gate stage
    - accepted: no direct back-reference to `docs/paper_claim_evidence_ledger.md`
-5. T54 review output：`docs/review/T54_review.md`
-6. T55 任务包：`docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md`
+5. T55 review output：`docs/review/T55_review.md`
+6. T56 任务包：`docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
 
-## Done Criteria For T55
+## Done Criteria For T56
 
-1. Reuse the same locked 6-seed pack, frozen four scenarios, and repeat count `2`.
-2. Reuse existing model assets and baseline references; do not retrain and do not rerun unnecessary baseline modes.
-3. Test exactly one config-only intervention: lower Gated v5 `residual_clip_b` from `0.12` to `0.06`.
-4. Keep generated benchmark config(s), helper script(s), outputs, and summaries inside one T55-scoped run root.
-5. Do not modify source code, benchmark code, source-tree configs, `.tflite`, hardware, cleanup, or paper-material scope.
-6. Produce a bounded intervention report that stays at intervention evidence level and does not claim causal proof.
+1. Produce a claim table that honestly reflects what `T36` / `T38` / `T54` / `T55` support, weaken, or contradict.
+2. Explicitly state which mechanism claims are retained, weakened, retired, reframed, or still open.
+3. Decide whether `T47` can proceed only under conditioned mechanism-hedge wording, not as unconditional next work.
+4. Decide whether any second intervention lane is `no-go`, `deferred`, or `conditionally justified`, without running anything new.
+5. Do not modify source code, configs, run roots, `.tflite`, hardware, cleanup, or governance scope.
+6. Keep the gate at evidence-interpretation level and do not upgrade results into causal proof or full mechanism closure.
