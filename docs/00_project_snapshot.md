@@ -77,6 +77,15 @@
 - Current unique task is now `T56: Post-I1 mechanism claim reframing gate`.
 - `T56` is docs-only. It must freeze which mechanism claims remain valid after `T55`, which claims must be weakened or reframed, and whether any later `T47` or second-intervention lane is still justified.
 
+## 2026-05-24 Captain Update (T56 closeout)
+
+- `T56` reviewer verdict accepted by Captain as `PASS`.
+- T56 non-blocking comments are all treated as `accepted`; there are no `deferred` or `rejected` warning items from this review.
+- T56 freezes the current mechanism-claim boundary into retain / weaken / retire / reframe / still-open and confirms that the simple harmful-instability story cannot be kept as a general explanation.
+- A second intervention lane is not auto-approved; it remains deferred pending a better question.
+- Current unique task is now `T47: Paper ablation result-pack and material ledger`.
+- `T47` is docs-only and may proceed only under the mechanism-hedge boundary defined by `T56`; it is not unconditional paper expansion or mechanism closure.
+
 ## 3. 解决什么问题
 
 该项目围绕 “CNN + FPGA 快慢回路进行近似 GKP 码解码” 展开，当前主代码与实验材料主要分布在：
@@ -265,7 +274,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T56: Post-I1 mechanism claim reframing gate`
+- `T47: Paper ablation result-pack and material ledger`
 
 ## 12. 快照结论
 
@@ -286,15 +295,15 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 13. `T40` 已完成并通过 adversarial review，Captain verdict = `PASS`；它证明了 clean CPU-only environment 已能完成一次真实的最小训练 smoke，但不等于 full training reproducibility、GPU/CUDA portability、Linux portability、`.tflite` runtime 或 benchmark readiness。
 14. `T41` 已完成并通过 Captain `PASS` 收口；Milestone 2K 已正式由 gate review 关闭，并为后续 `T42-T46` 的 paper-boundary 与 mechanism-planning 任务提供了边界前置。
 15. `T46` 已完成并通过 Captain `PASS` 收口；它把 `seed=20260429` 的单 seed 机制诊断收束成了一个明确的多 seed / intervention 计划，但没有升级任何 evidence level。
-16. `T55` 已完成并表明 pure I1 lower-clip intervention 为 mixed 且整体偏 harmful；因此当前唯一任务切到 `T56`，先对机制 claim 做重构收口，再决定是否还能推进 `T47` 或任何第二个 intervention lane。
+16. `T55` 已完成并表明 pure I1 lower-clip intervention 为 mixed 且整体偏 harmful；随后 `T56` 已完成机制 claim 重构收口，因此当前唯一任务切到 `T47`，但它只能作为带 hedge 的 docs-only paper-material lane 推进。
 
 ## 13. T45 后的拟议路线图（非当前任务）
 
 T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是：
 
-1. `T56`：Post-I1 mechanism claim reframing gate
-2. `T47`：paper ablation result-pack and material ledger
-3. `T48`：true `.tflite` runtime booster, only if environment is available
+1. `T47`：paper ablation result-pack and material ledger
+2. `T48`：true `.tflite` runtime booster, only if environment is available
+3. `T49`：real-board smoke execution gate, only if hardware host and bitstream evidence are ready
 
 更后面的 milestone 方向可粗略分为：
 

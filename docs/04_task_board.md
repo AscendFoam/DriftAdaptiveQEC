@@ -275,10 +275,16 @@
   - Captain verdict: `PASS`
   - Warning handling: all non-blocking comments `accepted`; no `deferred` or `rejected` items
   - Result: pure I1 lower-clip intervention is mixed and mostly harmful (harms 4/6, helps 2/6); the simple “high committed-b is harmful” mechanism framing is not supported as a general explanation, and `C4` remains `partial`
-- [ ] T56: Post-I1 mechanism claim reframing gate
+- [x] T56: Post-I1 mechanism claim reframing gate
   - Task package: `docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
+  - Output: `docs/post_t55_mechanism_claim_reframing_gate.md`
+  - Review output: `docs/review/T56_review.md`
+  - Captain verdict: `PASS`
+  - Warning handling: all non-blocking comments `accepted`; no `deferred` or `rejected` items
+  - Result: mechanism claims are now explicitly retain / weaken / retire / reframe / still-open; `T47` may proceed only under conditioned mechanism-hedge wording
 - [ ] T47: Paper ablation result-pack and material ledger
   - Task package: `docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
+  - Status: hedge-conditioned downstream paper-material lane; not unconditional next work
 
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
@@ -305,74 +311,54 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T56: Post-I1 mechanism claim reframing gate`
+`T47: Paper ablation result-pack and material ledger`
 
 状态说明：
 
-- `T53` 已完成并通过 review，Captain verdict = `PASS`
-- T53 review blocking issues：
-  - none
-- T53 non-blocking issues：
-  - N1 historical stronger `.tflite` wording elsewhere in the repo：`accepted`
-  - N2 theory text mixes current code truth with historical result anchors by design：`accepted`
-  - N3 gated-branch formula is contract-level rather than a full interpretability derivation：`accepted`
+- `T56` 已完成并通过 review，Captain verdict = `PASS`
+- `docs/review/T56_review.md` blocking issues：none
+- `T56` review 的所有 non-blocking comments 均分类为 `accepted`
+- `T56` 已把当前 mechanism claims 明确收口为 retain / weaken / retire / reframe / still-open
+- `T55` 的 pure I1 lower-clip intervention 结论保持不变：mixed 且整体偏 harmful（harms `4/6`，helps `2/6`）
+- 旧的简单叙事 “high committed-`b` is harmful” 不再能作为一般机制解释
+- `C4` 仍然是 `partial`
+- 第二条 intervention lane 当前不是自动下一步；结论是 `deferred pending better question`
 - 当前项目保持 `Phase 2: Controlled Development / Go`，但子模式仍为 `Research Reality Recovery Mode`
-- 论文 prose 扩写在 T43 后暂停；T44 已先把 claim/evidence/material truth baseline 冻结清楚，T53 进一步补上了当前主线的公式化理论说明
-- `T46` 已通过 review 并由 Captain 接受为 `PASS`；它完成了机制执行边界冻结，但没有提供任何新的 multi-seed execution evidence
-- 当前重点转向 `T54`：先做 Phase A multi-seed trace-only generalization probe，再决定是否需要 intervention lane 或更后面的 paper material lane
-- `T54` 必须保持在既有 `T38` 路径之内：Full vs Gated v5、冻结四场景、trace-only、总 seed 数不超过 6
-- `R10`、`R11`、`R12`、`R13`、`R14`、`R20`、`R23`、`R24` 仍未收口；`T46` 已冻结 unified mechanism/intervention plan，但项目仍缺少 multi-seed execution evidence
-- `T32` 仍被当前机器缺少真实 `.tflite` runtime 依赖阻塞，`T37` 仍被硬件/bitstream 前提阻塞
+- `T47` 现在只是一个 downstream paper-material lane，而且只能在 `T56` 规定的 mechanism-hedge 边界下推进
 
 为什么现在做它：
 
-1. `T46` 已明确：当前最大的剩余机制缺口不是“如何写计划”，而是“该模式是否在多 seed 上复现”。
-2. `T54` 是 `T46` 推荐的 Phase A，能先回答 generalization 问题，而不抢跑 intervention 或 paper material freeze。
-3. 如果 `T54` 不显示跨 seed 重现，项目就不应直接跳到 `T47` 或更强机制措辞。
-4. `T54` 虽然是执行任务，但仍复用既有 trace/export 路径，不需要打开 `.tflite`、real-board、benchmark expansion 或 cleanup 范围。
-
-Captain supersession for current-task status:
-
-- `T54` is complete and accepted as `PASS`.
-- T54 warning classification: all non-blocking items are `accepted`; there are no `deferred` or `rejected` items.
-- The committed-`b` instability pattern is now bounded multi-seed diagnostic evidence: broadly repeated with qualifications across the locked 6-seed pack.
-- `C4` remains `partial`; the project still lacks bounded intervention evidence and should not jump directly to `T47`.
-- The current unique task is `T55: Phase B multi-seed I1 residual-clip intervention probe`.
-
-Captain supersession after T55:
-
-- `T55` is complete and accepted as `PASS`.
-- T55 warning classification: all non-blocking items are `accepted`; there are no `deferred` or `rejected` items.
-- The pure I1 lower-clip intervention is mixed and mostly harmful across the locked 6-seed pack.
-- The earlier simple framing "high committed-b is harmful" is not supported as a general mechanism explanation.
-- `C4` remains `partial`; the next bounded lane is `T56`, not `T47`.
-- The current unique task is now `T56: Post-I1 mechanism claim reframing gate`.
+1. `T56` 已经完成当前这轮 mechanism-claim reframing，当前最小可继续推进的任务不再是新 intervention，而是把 paper-facing ablation/result/material 缺口做诚实台账。
+2. `T47` 是 docs-only 任务，能在不打开 benchmark expansion、`.tflite`、真板、cleanup 或第二 intervention 范围的前提下，冻结“哪些 paper materials 已 ready / partial / missing”。
+3. 但 `T47` 不能被写成“机制已解决后自然进入论文扩写”；它必须保留 `T56` 给出的 hedge wording 与 non-claims。
+4. 如果 `T47` 无法在 hedge boundary 下完成诚实收口，则应停留在 deferred，而不是借 paper-material lane 静默升级 claim strength。
 
 ## Captain Output For Current Task
 
-- Current unique task: `T56`
-- Latest completed review: `docs/review/T55_review.md` with verdict `PASS`
-- Warning classification for T55: all non-blocking items `accepted`; no `deferred` / `rejected`
-- Next worker-facing task package: `docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
-- Legacy T46/T54/T55 planning lines immediately below are superseded by this T56 status note
+- Current unique task: `T47`
+- Latest completed review: `docs/review/T56_review.md` with verdict `PASS`
+- Warning classification for T56: all non-blocking items `accepted`; no `deferred` / `rejected`
+- Next worker-facing task package: `docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
+- `T47` is allowed to proceed only as a hedge-conditioned docs-only paper-material lane
 
-1. 当前唯一任务：`T56`
-2. `T46` 已按 `PASS` 收口。
-3. T46 review blocking issues：
+1. 当前唯一任务：`T47`
+2. `T56` 已按 `PASS` 收口。
+3. T56 review blocking issues：
    - none
-4. T46 non-blocking comments：
-   - accepted: adjacent-seed wording tension around `20260430`
-   - accepted: pre-existing Captain governance sync visible in the same working tree
-   - accepted: no Phase A wall-clock estimate at planning-gate stage
-   - accepted: no direct back-reference to `docs/paper_claim_evidence_ledger.md`
-5. T55 review output：`docs/review/T55_review.md`
-6. T56 任务包：`docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
+4. T56 non-blocking comments：
+   - accepted: worker self-review overwritten by adversarial review
+   - accepted: claim-table summary wording count inconsistency
+   - accepted: governance sync items in `docs/08_risks_and_open_questions.md`
+   - accepted: governance sync items in `docs/04_task_board.md`
+   - accepted: C4 boundary wording in ledger is long but justified
+5. T56 review output：`docs/review/T56_review.md`
+6. T47 任务包：`docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
 
-## Done Criteria For T56
+## Done Criteria For T47
 
-1. Produce a claim table that honestly reflects what `T36` / `T38` / `T54` / `T55` support, weaken, or contradict.
-2. Explicitly state which mechanism claims are retained, weakened, retired, reframed, or still open.
-3. Decide whether `T47` can proceed only under conditioned mechanism-hedge wording, not as unconditional next work.
-4. Decide whether any second intervention lane is `no-go`, `deferred`, or `conditionally justified`, without running anything new.
-5. Do not modify source code, configs, run roots, `.tflite`, hardware, cleanup, or governance scope.
-6. Keep the gate at evidence-interpretation level and do not upgrade results into causal proof or full mechanism closure.
+1. Produce a paper-pack ledger that classifies figures, tables, and ablation/result materials into ready / partial / missing.
+2. Keep all mechanism-facing wording explicitly bounded by the `T56` claim table and hedge boundary.
+3. State clearly whether the current paper can proceed with the existing evidence pack, and if not, exactly what remains missing.
+4. Preserve the distinction between “paper material pack frozen” and “mechanism solved”.
+5. Do not modify source code, configs, run roots, `.tflite`, hardware, cleanup outputs, or `docs/02_experiment_plan.md`.
+6. Do not reopen second-intervention execution, benchmark expansion, comparator expansion, `.tflite` runtime, or real-board scope.

@@ -6,18 +6,27 @@
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T56: Post-I1 mechanism claim reframing gate`
-- 任务包：`docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
+- 当前唯一任务：`T47: Paper ablation result-pack and material ledger`
+- 任务包：`docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
 
 2026-05-24 Captain supersession:
 
-- Current unique task: `T56: Post-I1 mechanism claim reframing gate`
-- Task package: `docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
-- `T55` is complete and accepted as `PASS`.
-- T55 warning classification: all non-blocking items are `accepted`; there are no `deferred` or `rejected` items.
-- The pure I1 lower-clip intervention is mixed and mostly harmful across the locked 6-seed pack.
-- The simple harmful-instability framing is not supported as a general mechanism explanation, and `C4` remains `partial`.
-- Do not jump directly to `T47`.
+- Current unique task: `T47: Paper ablation result-pack and material ledger`
+- Task package: `docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
+- `T56` is complete and accepted as `PASS`.
+- T56 warning classification: all non-blocking items are `accepted`; there are no `deferred` or `rejected` items.
+- Mechanism claims are now explicitly reframed into retain / weaken / retire / reframe / still-open.
+- The pure I1 lower-clip intervention remains mixed and mostly harmful across the locked 6-seed pack; the simple harmful-instability framing is not supported as a general mechanism explanation, and `C4` remains `partial`.
+- Any second intervention lane remains `deferred pending better question`.
+- `T47` may proceed, but only as a docs-only hedge-conditioned paper-material lane. Do not treat it as unconditional paper expansion or mechanism closure.
+
+Captain closeout note after T56:
+
+- `T56` is complete. `docs/review/T56_review.md` verdict = `PASS`; blocking issues = none.
+- T56 warnings are all classified as `accepted`; there are no `deferred` or `rejected` warning items from this review.
+- T56 freezes the current mechanism-claim boundary after `T55`: some claims are retained, some weakened, some retired, one reframed, and some remain explicitly open.
+- T56 also changes the interpretation of the next step: the project does not auto-open a second intervention lane, and `T47` is only allowed as a downstream paper-material ledger under explicit mechanism-hedge wording.
+- The active next task is `T47`, but only in that restricted docs-only form.
 
 Captain closeout note after T55:
 
@@ -844,6 +853,44 @@ This section supersedes the older T55-current-task wording in Sections 1 and 8A 
 1. Do not jump directly to `T47` as unconditional next work.
 2. Do not run a second intervention variant.
 3. Do not reopen benchmark expansion, `.tflite`, hardware, or cleanup scope.
+
+## 8C. 2026-05-24 Captain Supersession For T47
+
+This section supersedes the older T56-current-task wording in Sections 1 and 8B above.
+
+### Current unique task
+
+- Current unique task: `T47: Paper ablation result-pack and material ledger`
+- Task package: `docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
+- Task type: docs-only hedge-conditioned paper-material lane
+
+### T56 closeout facts
+
+- `docs/review/T56_review.md` verdict = `PASS`; blocking issues = none
+- T56 warning classification: all non-blocking items are `accepted`
+- T56 claim table has already reframed the mechanism story into retain / weaken / retire / reframe / still-open
+- The simple “high committed-b is harmful” explanation remains unsupported as a general mechanism claim
+- `C4` remains `partial`
+
+### T47 execution boundary
+
+- Read and synthesize `T56` plus the existing paper-assembly / recovery baseline docs
+- Stay docs-only and preserve the T56 hedge wording
+- Do not run new benchmark, trace export, intervention, `.tflite`, hardware, cleanup, or comparator execution
+- Do not edit governance docs or `docs/02_experiment_plan.md`
+
+### Next recommended worker action
+
+1. Produce a ready / partial / missing ledger for figures, tables, and ablation/material items.
+2. Keep every mechanism-facing statement bounded by the T56 claim table.
+3. State clearly whether the paper can proceed with the current evidence pack or what is still missing.
+4. Preserve the distinction between frozen paper materials and solved mechanism.
+
+### Do not continue yet
+
+1. Do not convert this lane into a new intervention or benchmark task.
+2. Do not reopen `.tflite`, real-board, or cleanup scope.
+3. Do not upgrade the mechanism claim beyond the T56 boundary.
 
 ## 9. 2026-05-16 Captain Supersession
 

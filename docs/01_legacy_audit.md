@@ -44,7 +44,7 @@
   - `T12`
   - `T13`
 - 当前下一唯一任务建议为：
-  - `T56: Post-I1 mechanism claim reframing gate`
+  - `T47: Paper ablation result-pack and material ledger`
 
 说明：
 
@@ -114,8 +114,10 @@
 - T55 non-blocking comments are all treated as `accepted`; no `deferred` warning remains from this review.
 - T55 provides the first bounded targeted intervention evidence, and that evidence is mixed and mostly harmful rather than a clean mitigation success.
 - The simple harmful-instability framing is no longer a defensible general mechanism claim. `C4` remains `partial`.
-- The next active task is not `T47`. The current unique task is now `T56: Post-I1 mechanism claim reframing gate`.
-- `T56` is docs-only and exists to freeze which mechanism claims remain valid after `T55`, whether any second intervention is still justified, and under what hedge boundary `T47` could later proceed.
+- `T56` is complete and accepted as `PASS`.
+- T56 warnings are all classified as `accepted`; no `deferred` warning remains from this review.
+- The current unique task is now `T47: Paper ablation result-pack and material ledger`.
+- `T47` is docs-only and may proceed only under the hedge boundary defined by `T56`; it is not unconditional paper expansion or mechanism closure.
 - Any older T55-next wording later in this file is superseded by this status block and `docs/04_task_board.md`.
 
 ## 3. 可行性判断
@@ -394,7 +396,7 @@
 
 后续优先级建议：
 
-1. `T14` 至 `T46`、`T53`、`T54` 已完成；当前下一唯一任务为 `T55`，只做 bounded multi-seed I1 residual-clip intervention probe，不直接进入 `T47`、`.tflite` runtime 或真板范围
+1. `T14` 至 `T56`、`T53`、`T54`、`T55` 已完成；当前下一唯一任务为 `T47`，只做 hedge-conditioned paper ablation result-pack and material ledger，不直接进入 `.tflite` runtime 或真板范围
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 3. `T26` gate 结论为 `CONDITIONAL_GO`，且 `T30` 已把 statcalib 收紧为 interface-only separate comparator contract；后续仍不得把 statcalib 静默并入 T24 frozen benchmark set，不得扩展 formal benchmark、baseline/scenario、`.tflite` 或真板范围。
 4. `T36/T38` 已把 `seed=20260429` 诊断推进到 single-seed trace-supported mechanism evidence，但仍不是 mitigation 或 multi-seed causal proof。

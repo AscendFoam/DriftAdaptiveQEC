@@ -99,7 +99,8 @@
 - `T54` 已完成并由 Captain 按 `PASS` 收口；它只把单 seed 诊断升级为 bounded multi-seed trace-only diagnostic generalization，不改变当前 mock-backed P4 wrapper over software HIL 的事实边界。
 - `T55` 只允许在同一条 mock-backed P4 wrapper over software HIL lane 内做一个 config-only 的 I1 干预测试：复用既有 6-seed 模型资产，只测试 `residual_clip_b: 0.06` 的 Gated v5 intervention，不得借机扩 baseline、扩 scenario、重训模型、触碰真板 / `.tflite` / cleanup，或把 intervention result 写成 causal proof。
 - `T55` 已完成并由 Captain 按 `PASS` 收口；它仍然只提供 mock-backed software-HIL lane 内的 bounded intervention evidence，不升级任何 runtime / board / paper-grade 边界事实。
-- `T56` 只允许做 docs-only 的 post-I1 mechanism-claim reframing gate：它可以重写 claim wording 和 next-lane recommendation，但不得运行任何新 benchmark、trace export、`.tflite`、真板、cleanup 或 comparator 执行。
+- `T56` 已完成并通过 `PASS` 收口；其作用只是在 docs-only 层面重写 claim wording 和 next-lane recommendation，不能运行任何新 benchmark、trace export、`.tflite`、真板、cleanup 或 comparator 执行。
+- `T47` 现在只能作为 hedge-conditioned docs-only paper-material lane 推进；它不改变 HIL / P4 / `.tflite` / real-board 边界。
 
 ## 7. 当前推荐表述
 

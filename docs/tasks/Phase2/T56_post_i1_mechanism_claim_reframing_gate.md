@@ -135,8 +135,27 @@ The point is not to write prettier prose. The point is to make the repository ho
 
 ## Worker Output
 
-- Pending.
+- Created `docs/post_t55_mechanism_claim_reframing_gate.md` with:
+  - Status recap from T36 through T55
+  - 10-row claim table (3 retain, 4 weaken, 2 retire, 1 reframe, 2 still-open) with supporting/contradicting tasks and exact wording boundaries
+  - Section on what T55 changed in the mechanism story
+  - Second intervention lane verdict: `deferred pending better question`
+  - T47 recommendation: can proceed only under conditioned mechanism-hedge wording
+  - Explicit non-claims (9 items)
+- Updated `docs/paper_claim_evidence_ledger.md`:
+  - C4 claim wording updated to reflect T54/T55 multi-seed evidence and I1 mixed results
+  - C4 evidence paths expanded to include T54/T55 probe documents and reviews
+  - F1 figure boundary updated to note instability mostly helps
+  - Wording guardrail #4 expanded to prohibit "high committed-b is harmful" and "instability = defect"
+- Created `docs/review/T56_review.md` with scope check, claim-table honesty check, no-upgrade check, T47 conditioning check, and second-intervention check
+- Created `docs/for_human/T56_explanation.md` with human-facing summary
+- No source code, config, test, runtime, hardware, training, run-root, or governance files were modified
+- No new benchmark, training, trace export, `.tflite`, hardware, cleanup, or comparator execution was run
 
 ## Verification Record
 
-- Pending.
+1. **Only allowed docs changed:** Confirmed. Five files modified/created, all within the allowed set.
+2. **No source, config, test, runtime, training, hardware, or run-root file changed:** Confirmed. No `.py`, `.yaml`, `.yml`, or run-root files were touched.
+3. **Gate does not upgrade mechanism evidence into causal proof or closure:** Confirmed. All new text uses diagnostic hedging language. "Causal proof," "mechanism proven," and "root cause identified" appear only in non-claim or negative context.
+4. **T47 recommendation is conditional and hedge-aware:** Confirmed. Gate Section 5 states T47 "can proceed, but only under explicit mechanism-hedge wording" with 5 specific hedge boundaries. T47 is explicitly not recommended as unconditional next work.
+5. **Any follow-up intervention recommendation is explicitly bounded and not auto-approved:** Confirmed. Gate Section 4 verdict is `deferred pending better question` with explicit prerequisites before any I2/I3 execution would be justified.

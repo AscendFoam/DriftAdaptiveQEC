@@ -1961,6 +1961,48 @@ Suspicious implementation details 也不升格为阻塞：
 3. `docs/07_handoff.md` 记录 T55 Captain closeout，并把当前唯一任务包摘要切换到 `T56`。
 4. `docs/08_risks_and_open_questions.md` 更新 `R10`：现在不是缺 intervention evidence，而是已有 intervention evidence 但需要机制叙事重构。
 
+## D-2026-05-24-02
+
+- 日期：`2026-05-24`
+- 决策：接受 `T56` review 的 `PASS`，标记 `T56` 完成，并将当前唯一任务切换为 `T47: Paper ablation result-pack and material ledger`。
+
+### 背景
+
+`T56` 是一张 docs-only 的 post-I1 mechanism-claim reframing gate。`docs/review/T56_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. `T36/T38/T54/T55` 的 evidence floor 已被诚实收口为 retain / weaken / retire / reframe / still-open。
+2. 现有 intervention evidence 使 “high committed-`b` is harmful” 不能继续作为一般机制解释。
+3. `T47` 只能作为 hedge-conditioned paper-material lane 推进，不能被写成自动的下一 intervention 或机制闭环。
+4. Worker 没有越界修改 source、config、`runs/`、`artifacts` 或治理文档。
+
+### Warning 处理
+
+T56 review 的非阻塞评论全部按 `accepted` 处理：
+
+1. N1 worker self-review was overwritten by adversarial review：`accepted`
+2. N2 claim-table summary wording count inconsistency：`accepted`
+3. N3 governance sync items in `docs/08_risks_and_open_questions.md`：`accepted`
+4. N4 governance sync items in `docs/04_task_board.md`：`accepted`
+5. N5 C4 boundary wording is long but justified：`accepted`
+
+没有 `deferred` 或 `rejected` warning，因此不因 T56 review 新增 risk。
+
+### 结论
+
+`T56` 可标记完成。下一步可以进入 `T47`，但只能作为 docs-only 的 hedge-conditioned paper-material lane。
+
+原因是：
+
+1. `T56` 已经完成 mechanism-claim reframing，当前最小可继续推进的内容不是新 intervention，而是 paper-facing ablation/result/material 台账。
+2. `T47` 可以冻结 ready / partial / missing 的 paper materials，而不打开 benchmark expansion、`.tflite`、真板、cleanup 或第二 intervention 范围。
+3. `T47` 不能被写成“机制已解决后自然进入论文扩写”；它必须保留 `T56` 给出的 hedge wording 与 non-claims。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 标记 `T56` 完成，并切换 `Current Unique Task` 到 `T47`。
+2. `docs/07_handoff.md` 记录 T56 Captain closeout，并把当前唯一任务包摘要切换到 `T47`。
+3. `docs/08_risks_and_open_questions.md` 更新 `R10`、`R18` 与当前唯一任务口径。
+
 ## D-2026-05-23-01
 
 - 日期：`2026-05-23`

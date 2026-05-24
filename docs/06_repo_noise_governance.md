@@ -194,4 +194,5 @@
 - `T54` 已完成并由 Captain 按 `PASS` 收口；其 `runs/T54_multi_seed_trace_phase_a_20260522/` run root 与新建的 `runs/teachrepr/p4_benchmark/trp60425_resume`、`trp60430_resume`、`trp60510_resume` 都只可视为新输出目录，不得回写为历史事实重标或 cleanup 依据。
 - `T55` 允许创建一个 T55-scoped run root，并且任务内生成的 benchmark config、helper script 与 benchmark output 都必须收敛在这个单一 run root 内；不得再向 run root 外分散写出新 benchmark 目录、不得改写历史 `runs/` / `artifacts/`、不得借机执行 cleanup，也不得把 intervention outputs 重标为 formal benchmark、`.tflite` runtime 或 real-board validation 事实。
 - `T55` 已完成并由 Captain 按 `PASS` 收口；其 `runs/T55_multi_seed_i1_probe_20260523/` 只可视为 T55-scoped intervention evidence 目录。run root 内的 `benchmark_test/` 残留属于 accepted debris，不得被误写成正式 deliverable、也不得在无新任务包前提下顺手 cleanup。
-- `T56` 是 docs-only gate，默认不允许创建、修改或清理任何 run root、analysis artifact 或 benchmark output 目录。
+- `T56` 已由 Captain 以 `PASS` 收口；其 docs-only 边界已完成，不允许被回写成 run root、analysis artifact 或 benchmark output 目录操作。
+- `T47` 若推进，也只能是 hedge-conditioned docs-only paper-material lane，默认不允许创建、修改或清理任何 run root、analysis artifact 或 benchmark output 目录。

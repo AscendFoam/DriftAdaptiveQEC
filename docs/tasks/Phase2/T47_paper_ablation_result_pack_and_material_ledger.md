@@ -6,12 +6,15 @@
 - Current phase: `Phase 2: Controlled Development`
 - Decision state: `Go`
 - Task type: docs-only planning gate
+- Current gating context: `T56` has closed, and any execution of this task must remain hedge-conditioned by the `T56` claim boundary
 
 ## Why This Task Exists
 
 `T44` shows that the paper is still missing a stable, paper-grade figure/result/material pack.
 
 This task exists to freeze the minimal set of ablation/result/material items the paper actually needs, without pretending the evidence already exists.
+
+After `T55` and `T56`, this task is no longer a generic "next paper task". It is a downstream paper-material lane that may only proceed after the mechanism claims are explicitly reframed and only if the hedge wording is preserved.
 
 ## Goal
 
@@ -22,6 +25,7 @@ Produce a paper-pack ledger that answers, in writing:
 3. which are missing
 4. which ablation results are still needed for the paper thesis
 5. what regeneration path each paper asset should have
+6. which claims must remain hedged because `T55` weakened the earlier simple mechanism story
 
 ## Allowed Files
 
@@ -65,6 +69,15 @@ But it must not:
 - rewrite historical run dirs as if they were newly generated
 - claim ablation completeness that is not yet supported
 
+## Hedge Boundary
+
+If this task is later activated, it must remain conditioned on the `T56` outcome:
+
+1. treat `T36` / `T38` / `T54` / `T55` as the evidence floor, not as proof of closure
+2. keep `T47` from being written as unconditional next work
+3. preserve the distinction between "paper pack frozen" and "mechanism solved"
+4. avoid any wording that upgrades the mechanism story beyond the `T56` claim table
+
 ## Expected Output
 
 Create `docs/paper_ablation_result_pack.md` with:
@@ -98,4 +111,6 @@ Required verification is documentation-only:
 T47 should answer a simple question:
 
 - what exactly is still missing from the paper figure/result/material pack, and what is the minimum clean way to freeze that gap?
+
+But the answer must stay faithful to `T56`: if the hedge wording cannot be preserved, then `T47` should remain deferred.
 
