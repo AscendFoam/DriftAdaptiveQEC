@@ -196,3 +196,8 @@
 - `T55` 已完成并由 Captain 按 `PASS` 收口；其 `runs/T55_multi_seed_i1_probe_20260523/` 只可视为 T55-scoped intervention evidence 目录。run root 内的 `benchmark_test/` 残留属于 accepted debris，不得被误写成正式 deliverable、也不得在无新任务包前提下顺手 cleanup。
 - `T56` 已由 Captain 以 `PASS` 收口；其 docs-only 边界已完成，不允许被回写成 run root、analysis artifact 或 benchmark output 目录操作。
 - `T47` 若推进，也只能是 hedge-conditioned docs-only paper-material lane，默认不允许创建、修改或清理任何 run root、analysis artifact 或 benchmark output 目录。
+## 2026-05-24 Captain Update (T47/T57 repo-noise supersession)
+
+- `T47` 已由 Captain 以 `PASS` 收口；其输出只限 docs-only paper-material ledger，不得被回写成新的 run-root、analysis artifact 或 benchmark output 目录操作。
+- 当前唯一任务 `T57` 只允许创建一个 `runs/p4_benchmark/T57_fr7_feature_teacher_ablation_*` 作用域内的 run root。
+- 除该单一 T57-scoped run root 外，不得新建、改写或清理任何其他 `runs/`、`artifacts/`、analysis artifact 或 benchmark output 目录，也不得借 `T57` 触碰 source-tree code/config。

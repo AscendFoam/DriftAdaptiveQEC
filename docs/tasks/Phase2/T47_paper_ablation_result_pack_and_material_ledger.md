@@ -114,3 +114,25 @@ T47 should answer a simple question:
 
 But the answer must stay faithful to `T56`: if the hedge wording cannot be preserved, then `T47` should remain deferred.
 
+## Worker Output
+
+- Created `docs/paper_ablation_result_pack.md` with:
+  - Ready / partial / missing ledger with 11 figure entries and 5 table entries
+  - Ablation-specific gap analysis (FR7 identified as largest missing item)
+  - Regeneration paths for each asset with concrete data sources and estimated effort
+  - Paper-readiness assessment: can proceed but only with explicit limitations
+  - T56 hedge conditioning table mapping paper sections to claim-table constraints
+  - 9 explicit non-claims
+- Created `docs/review/T47_review.md` with scope check, hedge-conditioning check, non-claims check, and T56 boundary preservation check
+- Created `docs/for_human/T47_explanation.md` with human-facing summary
+- No source code, config, run-root, `.tflite`, hardware, cleanup, or governance files were modified
+- No new benchmark, training, trace export, intervention, or comparator execution was run
+
+## Verification Record
+
+1. **Only allowed docs changed:** Confirmed. Four files modified/created, all within the allowed set.
+2. **No source, config, test, runtime, training, hardware, or run-root file changed:** Confirmed. No `.py`, `.yaml`, `.yml`, or run-root files were touched.
+3. **T56 hedge wording preserved:** Confirmed. All mechanism-facing statements use T56 claim table wording. C4 remains `partial`. The simple "high committed-b is harmful" framing does not appear in any output.
+4. **T47 is not presented as unconditional next work:** Confirmed. The ledger explicitly states that FR7 (feature ablation) is missing and that the paper can proceed only with explicit limitation wording.
+5. **No claim upgrade:** Confirmed. No claim is upgraded from `partial` to `supported` or from `missing` to `ready`. The FR7 gap is explicitly stated as requiring new execution.
+

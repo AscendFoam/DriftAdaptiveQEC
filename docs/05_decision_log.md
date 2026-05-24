@@ -2089,3 +2089,39 @@ T46 review 的非阻塞评论全部按 `accepted` 处理：
 2. 新增 `docs/tasks/Phase2/T54_multi_seed_trace_only_generalization_probe.md`。
 3. `docs/07_handoff.md` 记录 T46 Captain closeout 和 T54 任务摘要。
 4. `docs/08_risks_and_open_questions.md` 更新 `R10` 的下一收口路径与当前唯一任务口径。
+## D-2026-05-24-03
+
+- 日期：`2026-05-24`
+- 决策：接受 `T47` review 的 `PASS`，标记 `T47` 完成，并将当前唯一任务切换为 `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`。
+
+### 背景
+
+`T47` 是 `T56` 之后的 hedge-conditioned docs-only paper-material lane。`docs/review/T47_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
+
+1. `docs/paper_ablation_result_pack.md` 已按边界要求冻结 ready / partial / missing 的 ablation/material ledger。
+2. 当前输出没有把 `C4`、机制解释、`.tflite`、真板、formal benchmark expansion 或第二 intervention 写成已完成事实。
+3. `FR7` 被明确保留为 `missing`，没有被历史 pre-T24 证据冒充为 formal protocol evidence。
+4. 该任务没有触碰 source、config、历史 run-root、`.tflite`、硬件或 cleanup 范围。
+
+### Warning 处理
+
+T47 review 的 non-blocking items 全部按 `accepted` 处理：
+
+1. N1 Worker Output 中 figure-entry count 误写：`accepted`
+2. N2 worker summary 超出严格 Allowed Files：`accepted`
+3. N3 F2 ready-without-drawn-figure classification：`accepted`
+4. N4 F3 blocked carry-forward note：`accepted`
+5. N5 conceptual regeneration paths instead of executable scripts：`accepted`
+
+没有 `deferred` 或 `rejected` warning，因此这次不新增由 warning classification 触发的 risk。
+
+### 结论
+
+`T47` 可以标记完成，但它没有关闭 `FR7`，只是把这个 gap 更诚实地冻结了出来。当前最小且合理的下一步不是恢复更宽的 paper prose、`.tflite`、真板、benchmark expansion、comparator expansion 或新 intervention，而是新增 `T57`，在锁定 `T24` protocol 的前提下做 bounded FR7 re-execution。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T47 -> PASS` 并将当前唯一任务切换到 `T57`。
+2. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`。
+3. `docs/08_risks_and_open_questions.md` 同步 T47 warning 分类与 `T57` 当前任务口径；不新增由 T47 warning 触发的 risk。
+4. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T47` 收口和 `T57` 边界。

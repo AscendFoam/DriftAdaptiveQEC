@@ -313,3 +313,10 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - paper re-open gate
 
 这些都只是后续路线图，不是当前唯一任务，也不是已执行事实。
+## 2026-05-24 Captain Update (T47 closeout supersession)
+
+- `T47` has now been accepted as `PASS`.
+- `T47` warnings `N1-N5` are all `accepted`; there are no `deferred` or `rejected` items.
+- `T47` only froze the paper-facing ablation/material ledger honestly; it did not close `FR7`.
+- The current unique task is now `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`.
+- `T57` must stay bounded to the locked `T24` protocol and must not reopen `.tflite`, real-board, cleanup, benchmark-expansion, comparator-expansion, or intervention scope.

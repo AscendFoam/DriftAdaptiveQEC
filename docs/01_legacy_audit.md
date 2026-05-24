@@ -401,3 +401,10 @@
 3. `T26` gate 结论为 `CONDITIONAL_GO`，且 `T30` 已把 statcalib 收紧为 interface-only separate comparator contract；后续仍不得把 statcalib 静默并入 T24 frozen benchmark set，不得扩展 formal benchmark、baseline/scenario、`.tflite` 或真板范围。
 4. `T36/T38` 已把 `seed=20260429` 诊断推进到 single-seed trace-supported mechanism evidence，但仍不是 mitigation 或 multi-seed causal proof。
 5. `T31` 已把训练链依赖边界从本机 bootstrap 推进到 portable dependency-lock plan；`T39` 已把它推进到 clean-environment draft lock + dry-run/import-level bootstrap；`T40` 已把它推进到 one real clean-environment training smoke；但仍不得把本机 `DLEnv`、dev torch、GPU/CUDA 或 smoke-scale结果写成跨机器保证或完整训练可复现结论。
+### 2026-05-24 Captain Update (T47 closeout supersession)
+
+- `T47` has now been accepted as `PASS`.
+- T47 warnings `N1-N5` are all classified as `accepted`; there is no `deferred` warning from this review.
+- `T47` closes the docs-only paper-material freeze honestly and keeps `FR7` explicit as the largest remaining ablation gap.
+- The current unique task is now `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`.
+- `T57` is a bounded execution task only. It must not retrain, modify source-tree code/config, or reopen `.tflite`, real-board, cleanup, comparator-expansion, or benchmark-expansion scope.

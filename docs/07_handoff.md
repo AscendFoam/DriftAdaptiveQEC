@@ -1,3 +1,11 @@
+## 2026-05-24 Captain Final Supersession
+
+- Current unique task: `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`
+- Task package: `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`
+- `T47` is already complete and accepted as `PASS`.
+- T47 warning classification: `N1-N5 = accepted`; there are no `deferred` or `rejected` items.
+- `T57` may proceed only as a bounded FR7 re-execution under the locked `T24` protocol.
+
 # Handoff
 
 ## 1. 当前状态
@@ -19,6 +27,16 @@
 - The pure I1 lower-clip intervention remains mixed and mostly harmful across the locked 6-seed pack; the simple harmful-instability framing is not supported as a general mechanism explanation, and `C4` remains `partial`.
 - Any second intervention lane remains `deferred pending better question`.
 - `T47` may proceed, but only as a docs-only hedge-conditioned paper-material lane. Do not treat it as unconditional paper expansion or mechanism closure.
+
+## 2026-05-24 Captain Update (T47 closeout)
+
+- `T47` review accepted by Captain as `PASS`.
+- Blocking issues: none.
+- Warning classification for T47: all non-blocking items `accepted`; there are no `deferred` or `rejected` warning items from this review.
+- `T47` is complete. The paper-facing ablation/material ledger is frozen honestly, and `FR7` remains the largest missing ablation item.
+- Current unique task is now `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`.
+- `T57` is bounded to the frozen four scenarios, the fixed six-mode feature-ablation set, and `repeats=2`. It must not retrain, touch source-tree code/config, or reopen `.tflite`, real-board, cleanup, benchmark expansion, comparator expansion, or intervention scope.
+- Next worker-facing task package: `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`.
 
 Captain closeout note after T56:
 

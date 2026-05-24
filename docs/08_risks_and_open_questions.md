@@ -381,3 +381,15 @@ Current T24-T29 status note:
      - `T42: Paper Background / Related Work scaffold and method-positioning calibration`。
      - 任务包为 `docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`。
      - T42 只允许做 docs-only 结构扩展与定位校准；不得运行新实验、不得升级 evidence level、不得改写阶段结论或 repo facts。
+## 2026-05-24 Captain Update (T47 closeout supersession)
+
+- `T47` review 已由 Captain 接受为 `PASS`。
+- Warning classification:
+  - N1 figure-entry miscount = `accepted`
+  - N2 worker-summary boundary drift = `accepted`
+  - N3 F2 ready-without-drawn-figure classification = `accepted`
+  - N4 F3 blocked carry-forward note = `accepted`
+  - N5 conceptual regeneration paths instead of executable scripts = `accepted`
+- 没有 `deferred` 或 `rejected` warning，因此这次不新增由 warning classification 触发的 risk。
+- `T47` 已完成，但 `FR7` 仍是最大的显式 ablation gap。
+- 当前唯一任务已切换为 `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`，任务包为 `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`。

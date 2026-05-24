@@ -122,3 +122,8 @@
 - 可以说：`Research Reality Recovery Mode is a governance freeze and audit mode, not an evidence upgrade.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`
+## 2026-05-24 Captain Update (T47/T57 boundary supersession)
+
+- `T47` 已完成并由 Captain 以 `PASS` 收口；其输出只是在 docs-only 层面冻结 paper ablation/material ledger，不改变任何 HIL / P4 / `.tflite` / real-board 边界。
+- 当前唯一任务 `T57` 仍处在同一条 mock-backed P4 wrapper over software HIL 边界内。
+- `T57` 只能作为锁定 `T24` protocol 的 FR7 feature/teacher ablation bounded re-execution 推进，不得被改写成 benchmark expansion、`.tflite` runtime validation、real-board validation 或 mechanism closure。

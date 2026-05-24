@@ -291,6 +291,8 @@ Worker prompt：
 本轮只完成以下任务：
 [粘贴 Task ID 和任务包]
 
+注意，如果需要某些依赖在默认的python环境中不存在的话，先去conda找是否有环境存在这个依赖，如果每个环境都没有这个依赖的话，就新建一个环境安装这个依赖。
+
 规则：
 1. 只改 Allowed files。
 2. 不做 Forbidden scope。
@@ -299,6 +301,7 @@ Worker prompt：
 5. 更新任务包指定的 docs。
 6. 不直接标记task已结束，因为我会手动让claude code审核。
 7. 最后报告：改了什么、如何验证、剩余风险。
+8. 将你最后报告的内容同步写入 `docs/worker_summary` 目录下，以 `TaskID_worker_summary.md` 格式命名。
 ```
 
 #### 3. Reviewer 审查

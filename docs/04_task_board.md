@@ -282,9 +282,21 @@
   - Captain verdict: `PASS`
   - Warning handling: all non-blocking comments `accepted`; no `deferred` or `rejected` items
   - Result: mechanism claims are now explicitly retain / weaken / retire / reframe / still-open; `T47` may proceed only under conditioned mechanism-hedge wording
-- [ ] T47: Paper ablation result-pack and material ledger
+- [x] T47: Paper ablation result-pack and material ledger
   - Task package: `docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
-  - Status: hedge-conditioned downstream paper-material lane; not unconditional next work
+  - Output: `docs/paper_ablation_result_pack.md`
+  - Review output: `docs/review/T47_review.md`
+  - Captain verdict: `PASS`
+  - Warning handling:
+    - N1 figure-entry miscount in Worker Output = `accepted`
+    - N2 worker summary outside strict Allowed Files boundary = `accepted`
+    - N3 F2 ready-without-drawn-figure classification = `accepted`
+    - N4 F3 blocked carry-forward note = `accepted`
+    - N5 conceptual regeneration paths instead of executable scripts = `accepted`
+  - Result: the paper ablation/material ledger is now frozen honestly; FR7 remains missing and is now the next bounded execution gap
+- [ ] T57: FR7 feature/teacher ablation re-execution under locked T24 protocol
+  - Task package: `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`
+  - Status: current bounded execution lane to close the largest remaining ablation-pack gap without widening benchmark scope
 
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
@@ -311,7 +323,7 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T47: Paper ablation result-pack and material ledger`
+`T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`
 
 状态说明：
 
@@ -335,11 +347,11 @@ Long-term objective:
 
 ## Captain Output For Current Task
 
-- Current unique task: `T47`
-- Latest completed review: `docs/review/T56_review.md` with verdict `PASS`
-- Warning classification for T56: all non-blocking items `accepted`; no `deferred` / `rejected`
-- Next worker-facing task package: `docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
-- `T47` is allowed to proceed only as a hedge-conditioned docs-only paper-material lane
+- Current unique task: `T57`
+- Latest completed review: `docs/review/T47_review.md` with verdict `PASS`
+- Warning classification for T47: all non-blocking items `accepted`; no `deferred` / `rejected`
+- Next worker-facing task package: `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`
+- `T57` is allowed to proceed only as a bounded FR7 re-execution under the locked `T24` protocol
 
 1. 当前唯一任务：`T47`
 2. `T56` 已按 `PASS` 收口。
@@ -362,3 +374,19 @@ Long-term objective:
 4. Preserve the distinction between “paper material pack frozen” and “mechanism solved”.
 5. Do not modify source code, configs, run roots, `.tflite`, hardware, cleanup outputs, or `docs/02_experiment_plan.md`.
 6. Do not reopen second-intervention execution, benchmark expansion, comparator expansion, `.tflite` runtime, or real-board scope.
+ 
+## 2026-05-24 Captain Update (T47 closeout)
+ 
+- `T47` review is accepted as `PASS`.
+- Blocking issues: none.
+- Warning classification:
+  - N1 figure-entry miscount in Worker Output = `accepted`
+  - N2 worker summary outside strict Allowed Files boundary = `accepted`
+  - N3 F2 ready-without-drawn-figure classification = `accepted`
+  - N4 F3 blocked carry-forward note = `accepted`
+  - N5 conceptual regeneration paths instead of executable scripts = `accepted`
+- No `deferred` or `rejected` warning remains from this review, so no new risk item is opened by warning classification alone.
+- `T47` is now complete. Its paper-facing ledger is frozen honestly, and `FR7` is explicitly confirmed as the largest remaining ablation-pack gap.
+- Current unique task is now `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`.
+- `T57` must stay inside the frozen four scenarios, the fixed six-mode feature-ablation set, and `repeats=2`. It must not retrain, touch source-tree code/config, or reopen `.tflite`, real-board, cleanup, benchmark expansion, comparator expansion, or intervention scope.
+- Worker-facing task package: `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`.
