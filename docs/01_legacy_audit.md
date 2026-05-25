@@ -408,3 +408,12 @@
 - `T47` closes the docs-only paper-material freeze honestly and keeps `FR7` explicit as the largest remaining ablation gap.
 - The current unique task is now `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`.
 - `T57` is a bounded execution task only. It must not retrain, modify source-tree code/config, or reopen `.tflite`, real-board, cleanup, comparator-expansion, or benchmark-expansion scope.
+
+### 2026-05-25 Branch-local Pro-report Audit Addendum
+
+本段记录 `codex-pro-research-governance-plan` 分支的新增审计判断，不覆盖 legacy/main 事实。
+
+- GPT-Pro 调研报告没有发现完全等同于“GKP syndrome histogram -> affine `(K,b)` drift update -> teacher-anchored neural residual”的既有工作。
+- 但报告确认：如果论文写宽，将与 GKP analog soft information、adaptive decoder priors、calibration-conditioned FiLM decoders、AI pre-decoders、real-time FPGA decoders 高度相邻。
+- 因此后续 feasibility 判断仍是 `Go`，但 paper-quality 方向必须补强为：local LMMSE/affine approximation 理论边界、强 classical/oracle/ML baseline、soft-information/adaptive-prior comparator 讨论、runtime evidence 分层、hardware claim hedge。
+- 该 addendum 不授权运行新 benchmark，也不改变 T57 的 frozen protocol。

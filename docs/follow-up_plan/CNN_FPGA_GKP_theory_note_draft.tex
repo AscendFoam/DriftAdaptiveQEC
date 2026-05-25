@@ -8,10 +8,12 @@
 
 \title{A Teacher-Anchored Residual Calibration Framework for Drift-Adaptive GKP Decoding}
 \author{Draft research note for advisor discussion}
-\date{May 24, 2026}
+\date{May 25, 2026}
 
 \begin{document}
 \maketitle
+\tableofcontents
+\newpage
 
 \section*{Evidence Boundary of This Note}
 
@@ -25,23 +27,24 @@ story remains partial and should not be written as causal closure.
 
 \begin{abstract}
 Approximate Gottesman--Kitaev--Preskill (GKP) quantum error correction relies on
-continuous-valued syndrome information to infer displacement errors in an
-oscillator. In nonstationary hardware settings, however, the effective noise
-statistics that determine the best syndrome-to-correction map can drift over
-time, making a fixed decoder suboptimal. This note outlines a two-timescale
-decoding framework in which a low-latency fast loop applies an FPGA-friendly
-affine correction, while a slower learned calibration loop updates the affine
-parameters from recent syndrome statistics. The fast loop executes
+finite-energy oscillator code states and continuous-valued syndrome information
+to infer displacement errors. In nonstationary hardware settings, however, the
+effective noise statistics that determine the best syndrome-to-correction map
+can drift over time, making a fixed decoder suboptimal. This note outlines a
+two-timescale decoding framework in which a low-latency fast loop applies an
+FPGA-friendly affine correction, while a slower learned calibration loop updates
+the affine parameters from recent syndrome statistics. The fast loop executes
 \(\Delta_t = K_t s_t + b_t\), where \(s_t\) is the current GKP syndrome and
 \((K_t,b_t)\) are quantized runtime parameters. The slow loop uses a classical
 teacher estimator as a stable anchor and trains a lightweight CNN only to
 predict residual calibration terms, with the current mainline focusing on
-residual corrections to \(b_t\). This design is motivated by local linear-MMSE
-approximations to GKP displacement estimation, by the modular learned-decoder
-trend in recent QEC literature, and by the need to keep the real-time path
-deterministic and low latency. The intended contribution is not a generic
-neural replacement for GKP decoding, but a deployment-constrained, teacher-
-anchored residual calibration layer for drift-adaptive GKP correction.
+residual corrections to \(b_t\). This design is motivated by the
+finite-squeezing structure of physical GKP states, local linear-MMSE
+approximations to GKP displacement estimation, the modular learned-decoder trend
+in recent QEC literature, and the need to keep the real-time path deterministic
+and low latency. The intended contribution is not a generic neural replacement
+for GKP decoding, but a deployment-constrained, teacher-anchored residual
+calibration layer for drift-adaptive GKP correction.
 \end{abstract}
 
 \section{Introduction}
@@ -50,10 +53,13 @@ Bosonic codes provide a route to protecting quantum information by encoding a
 logical qubit into the Hilbert space of an oscillator. Among them, the GKP code
 is especially attractive because small displacement errors in phase space can be
 diagnosed by continuous-valued modular syndrome measurements
-\cite{gkp2001}. In an idealized setting, a decoder can map each syndrome to a
-corrective displacement. In realistic devices, however, finite-energy code
-states, measurement inefficiency, ancilla noise, drift, and calibration error
-make the syndrome distribution time dependent.
+\cite{gkp2001}. Physical GKP codewords are necessarily approximate finite-
+energy states rather than ideal non-normalizable combs, and modern reviews of
+the code emphasize that this approximation is central to implementation and
+fault-tolerant scaling \cite{grimsmo2021}. In an idealized setting, a decoder
+can map each syndrome to a corrective displacement. In realistic devices,
+however, finite-energy code states, measurement inefficiency, ancilla noise,
+drift, and calibration error make the syndrome distribution time dependent.
 
 This time dependence creates a practical tension. A high-quality decoder may
 need to exploit analog soft information and nonstationary noise statistics, as
@@ -91,13 +97,16 @@ nearby literature.
 
 The target paper can be positioned around four contributions.
 
-\paragraph{1. A two-timescale adaptive affine formulation for approximate GKP
-decoding.}
+\paragraph{1. A two-timescale adaptive affine formulation for finite-energy GKP
+decoding under effective noise drift.}
 We formulate the real-time correction path as an affine estimator
 \(\Delta_t=K_t s_t+b_t\) whose parameters are adapted from recent syndrome
 statistics. This links the GKP continuous-syndrome picture to a hardware-
 compatible runtime contract: the expensive inference problem is moved out of the
 per-shot path, while the fast loop remains a quantized matrix-vector operation.
+The formulation makes the physical noise ingredients explicit: finite
+squeezing, displacement noise, measurement noise, bias drift, and covariance
+rotation are compressed into an effective state that the slow loop can estimate.
 
 \paragraph{2. A teacher-anchored residual calibration strategy.}
 Rather than train a CNN to output all noise parameters or all decoder parameters
@@ -152,6 +161,23 @@ Physical GKP states must be approximate finite-energy states, so the comb peaks
 are broadened and enveloped. This finite-energy structure is not a detail: it
 sets an intrinsic noise floor and affects the syndrome statistics seen by the
 decoder.
+
+Following the standard finite-energy picture summarized by Grimsmo and Puri
+\cite{grimsmo2021}, an approximate GKP codeword can be viewed as an ideal comb
+acted on by an energy-damping envelope. A common mathematical model is
+\begin{equation}
+    |\widetilde{\mu}_L\rangle
+    \propto
+    e^{-\Delta^2 \hat a^\dagger \hat a}|\mu_L\rangle ,
+\end{equation}
+where \(\Delta\) controls the envelope and peak width, and the ideal code is
+recovered only in the unphysical limit \(\Delta\rightarrow 0\). Equivalently,
+finite squeezing turns exact lattice spikes into Gaussian peaks under a global
+envelope. This has two consequences for the present project. First, the
+syndrome is intrinsically analog and noisy even before additional hardware noise
+is applied. Second, the decoder should treat the observed histogram as a
+finite-energy, finite-resolution statistical object rather than as an exact
+ideal-code syndrome distribution.
 
 \subsection{Syndrome measurement as modular displacement information}
 
@@ -220,6 +246,83 @@ logical decision boundary, for example
 \end{equation}
 and similarly for the \(p\)-quadrature. This is why closed-loop logical error
 rate is a stronger evaluation target than offline parameter-regression error.
+
+\section{Noise and Drift Setting}
+
+\subsection{Physical noise ingredients}
+
+The theoretical noise model used by this project separates physical ingredients
+from the low-dimensional effective state exposed to the runtime decoder. The
+physical ingredients are:
+\begin{enumerate}
+    \item finite GKP squeezing, represented as broadened comb peaks and an
+    energy envelope in the approximate code state;
+    \item additive displacement noise in the \(q\) and \(p\) quadratures;
+    \item measurement noise, including finite readout precision, inefficiency,
+    shot noise, and auxiliary-state imperfections;
+    \item coherent or slowly varying displacement bias, represented by a
+    nonzero mean \((\mu_q,\mu_p)\);
+    \item anisotropic or rotated covariance, represented by different principal
+    widths and an angle \(\vartheta\).
+\end{enumerate}
+Photon loss, thermal excitation, dephasing, and ancilla faults can all be
+projected into this effective displacement-and-measurement picture over the
+timescale of the decoder update. This projection is not meant to erase the
+underlying physics; it is the interface that lets a low-latency affine fast path
+respond to hardware drift without carrying a full device-level simulator in the
+real-time loop.
+
+\subsection{Effective runtime state}
+
+The slow loop summarizes the current noise condition as
+\begin{equation}
+    \theta_t^{\rm noise}
+    =
+    (\sigma_t,\mu_{q,t},\mu_{p,t},\vartheta_t),
+\end{equation}
+or, in the anisotropic version, as
+\begin{equation}
+    \theta_t^{\rm noise}
+    =
+    (\sigma_{q,t},\sigma_{p,t},\mu_{q,t},\mu_{p,t},\vartheta_t).
+\end{equation}
+Here \(\sigma\) controls the effective displacement scale, \(\mu_q\) and
+\(\mu_p\) encode syndrome-center bias, and \(\vartheta\) rotates the covariance
+axes. The teacher and CNN do not need to identify every microscopic noise source
+separately; they need to estimate the effective statistics that determine the
+affine correction parameters.
+
+\subsection{Drift scenarios}
+
+The project treats drift as slow time variation in
+\(\theta_t^{\rm noise}\). Four canonical scenarios define the current mainline
+drift vocabulary:
+\begin{enumerate}
+    \item \textbf{static bias}: a stationary nonzero displacement mean or fixed
+    covariance orientation;
+    \item \textbf{linear ramp}: gradual monotonic change in scale, bias, or
+    orientation;
+    \item \textbf{step change}: an abrupt calibration jump, such as a sudden
+    change in \(\sigma_t\) or \(\vartheta_t\);
+    \item \textbf{periodic drift}: oscillatory variation caused by repeatable
+    calibration or environmental cycles.
+\end{enumerate}
+These scenarios are sufficient to define a clean adaptive-decoding problem:
+a fixed affine decoder is calibrated for one distribution, while the actual
+syndrome distribution moves. A slow-loop estimator should track the changing
+histogram and stage new \((K,b)\) parameters before the fast path becomes badly
+mismatched.
+
+\subsection{Connection to affine decoding}
+
+Under a local Gaussian approximation, the effective state determines the affine
+map. Increased displacement scale changes the optimal gain \(K\); mean bias
+changes the offset \(b\); covariance rotation introduces cross-quadrature
+coupling; measurement noise reduces the useful information in the syndrome and
+therefore shrinks the gain. This is why the runtime interface is written in
+terms of \((K,b)\) rather than a free-form neural correction. The neural branch
+can improve calibration only insofar as it produces better runtime parameters
+for the current effective noise-and-drift state.
 
 \section{Model Architecture}
 
@@ -396,6 +499,12 @@ Before a full submission, the most important additions are:
 D. Gottesman, A. Kitaev, and J. Preskill,
 ``Encoding a qubit in an oscillator,''
 \emph{Physical Review A}, 2001.
+
+\bibitem{grimsmo2021}
+A. L. Grimsmo and S. Puri,
+``Quantum Error Correction with the Gottesman-Kitaev-Preskill Code,''
+\emph{PRX Quantum}, vol. 2, p. 020101, 2021.
+doi: 10.1103/PRXQuantum.2.020101.
 
 \bibitem{noh2022}
 K. Noh, C. Chamberland, and F. G. S. L. Brandao,

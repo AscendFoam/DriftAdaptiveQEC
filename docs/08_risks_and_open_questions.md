@@ -29,6 +29,17 @@
 | R23 | Aggregation/report writer 缺少 focused unit/static tests，未来可能再次出现格式或 null-semantics 回归 | 中 | `docs/review/T28_review.md` Missing Tests 指出相关路径没有现成 tests；T28 依赖 py_compile 和 bounded smoke 验证 | T28 可接受；后续再改 aggregation/report writer 时应补 focused unit test 或静态 report-shape check |
 | R24 | T30 的 `from_delta_b()` 只是最小 residual-b interface helper，未来若把它误当完整 statcalib/calibration comparator，可能把接口 contract 外推成未验证算法能力 | 中 | `docs/review/T30_review.md` N4 指出当前 baseline 逻辑为 `prior.b + delta_b`，适合 residual-b comparator contract，但不是完整 calibration logic；T30 只做 interface-level tests | 后续 statcalib slow-loop integration 或 benchmark task 必须重新验证 calibration objective、fallback semantics、status propagation 和 ranking boundary，不得直接把 T30 helper 写成 validated statcalib comparator |
 | R25 | 论文叙事与 recovery baseline 曾一度跑在证据材料前面，若继续在未冻结 truth 的情况下推进 prose，很容易再次把 draft 当成事实来源 | 高 | `T43` 已经产出 bounded Background / Related Work prose draft，但用户明确要求改入 `Research Reality Recovery Mode`，优先补 claim/evidence/material/figure/reproducibility baseline | 先完成 `T44` recovery baseline，再决定是否恢复任何 prose 扩写；恢复前不把 draft、skeleton 或 framing 当成证据升级 |
+| R26 | GPT-Pro 调研显示论文若使用过宽 novelty claim，会与 GKP soft information、adaptive priors、calibration-conditioned decoder、real-time FPGA QEC decoder 文献发生高风险相邻或撞车 | 高 | `docs/reference/GPT-Pro的调研分析.md` 明确指出没有 exact collision，但 `first adaptive neural QEC decoder`、`first calibration-conditioned decoder`、`first FPGA QEC decoder` 等 claim 高风险 | 后续 manuscript / related work 任务必须采用窄 claim：deployment-constrained teacher-anchored residual calibration for affine GKP decoding；避免 first-claim；明确 software-HIL-only |
+| R27 | 当前 benchmark / baseline 套件距离 paper-grade 仍不足，容易被 oracle affine、ML/Bayes、nearest-lattice、teacher-only、FiLM-style、direct-CNN、soft-information/adaptive-prior baseline 追问 | 高 | GPT-Pro 报告建议补强 baseline matrix；当前 T24/T57 仍是 frozen-set mock-backed software HIL 范围 | T60 之后必须先锁定 strong-baseline protocol，再决定 bounded execution；不得把 T24/T57 的 frozen ranking 外推为 SOTA |
+| R28 | 理论 draft 中 affine decoder、correction displacement 符号、local LMMSE 条件、modular posterior 多峰局限如果不收紧，会被审稿人质疑为理论过强 | 中高 | GPT-Pro 报告指出 `Delta_t` 是 error estimate 还是 corrective displacement 需要统一，affine rule 只能作为 local approximation | T59 / manuscript theory task 必须修正 notation table、local branch 条件、failure cases 和 residual-b rationale |
+| R29 | runtime / deployment 叙事若只写 FPGA-friendly 而缺 latency、fixed-point degradation、stale update、commit/fallback、saturation metrics，会被真实 FPGA QEC decoder 文献压制 | 高 | GPT-Pro 报告列出 Yang/Rigetti-Riverlane/Ziad/Maurer 等 real-time FPGA QEC 邻近工作；当前真实 `.tflite` 与真板仍未完成 | 后续 T63/T48/T49 必须分层推进；在完成前只能写 mock-backed software HIL 与 FPGA-friendly design，不写 FPGA-validated |
+
+## 2026-05-25 Branch-local Risk Note
+
+- 这些风险是 `codex-pro-research-governance-plan` 分支的规划性风险，不是 main 上新增的已完成事实。
+- 外部 GPT-Pro 报告没有把项目判成 exact collision，但把“写宽就撞车”的方向说得很明确。
+- 因此 branch 的风险控制重点是：窄 claim、强 baseline、local approximation notation、runtime evidence ladder。
+- 只要 `T57` 还在跑，这些都只能作为后续治理计划，不能抢占当前唯一任务。
 
 ## 当前开放问题
 

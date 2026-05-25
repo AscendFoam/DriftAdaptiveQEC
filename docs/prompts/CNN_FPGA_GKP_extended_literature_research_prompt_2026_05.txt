@@ -1,0 +1,279 @@
+请作为“量子纠错 + 连续变量/GKP 编码 + 学习型解码器 + 实时硬件系统”方向的深度研究助手，围绕下面的项目背景进行一次扩展文献调研。你的任务不是泛泛总结量子纠错，而是找到能直接支撑、挑战或改进本项目后续实验与论文写作的文献、开源实现、技术报告和系统案例。
+
+请优先联网检索最新资料，覆盖 arXiv、Google Scholar、Semantic Scholar、INSPIRE/ADS、出版社页面、机构技术博客、GitHub/Zenodo 数据或代码仓库。所有关键结论都要给出可点击链接、DOI/arXiv ID 或明确出处。若某篇文章很新、尚未正式发表，请标注 preprint 状态与版本日期。
+
+一、项目背景
+
+项目名：DriftAdaptiveQEC
+
+当前研究主题：
+
+面向近似 Gottesman-Kitaev-Preskill（GKP）量子纠错中的非平稳噪声漂移，构建一套 teacher-anchored residual calibration 的双时间尺度解码框架。
+
+当前最核心的技术形式：
+
+1. 快回路 fast loop
+   - 运行在 FPGA / FPGA-like runtime 侧。
+   - 每个 fast cycle 接收 GKP syndrome `s_t = (s_q, s_p)`。
+   - 执行低延迟仿射校正：
+     `Delta_t = K_t s_t + b_t`
+   - 强调 fixed-point、低延迟、确定性、clip/saturation 诊断、双缓冲 parameter bank、stage-and-commit。
+
+2. 慢回路 slow loop
+   - 周期性读取最近窗口的 syndrome histogram。
+   - 典型输入是多窗口 `32 x 32` histogram、histogram delta、teacher 估计和少量 scalar features。
+   - 输出用于更新 fast loop 真正消费的 runtime parameters，当前主线聚焦 `b_t` 的 residual correction。
+
+3. teacher-anchored residual calibration
+   - 不把 CNN 作为完整 GKP decoder 的替代品。
+   - 保留经典 teacher / estimator 作为稳定锚点，例如 window variance、EKF/UKF/RLS 类估计器。
+   - CNN 只学习对 runtime control bias `b` 的残差修正：
+     `b_next = teacher_b + delta_b`
+   - 目标是让 learned module 成为硬件友好的 residual calibrator，而不是无约束 black-box decoder。
+
+4. 当前证据边界
+   - 已有的是 mock-backed software HIL 和 frozen-set software revalidation。
+   - 不要默认已有真实 FPGA board validation。
+   - 不要默认已有真实 `.tflite` runtime validation。
+   - 不要把 software smoke、mock HIL 或历史 run 写成真实板级完成。
+   - 当前机制解释仍需 hedge：T55 后不能简单写成“high committed-b is harmful”的单调因果故事。
+
+二、请重点围绕的调研目标
+
+目标 1：扩展相关工作谱系
+
+请不仅查“GKP + neural decoder”，还要稍微放宽范围，覆盖所有与本项目背景和技术原理贴近的方向：
+
+1. GKP / bosonic codes / continuous-variable QEC
+   - GKP encoding、finite squeezing、shift-error decoding、analog syndrome information。
+   - surface-GKP、concatenated GKP-surface、GKP-QLDPC、cat/binomial/GKP bosonic code。
+   - noisy auxiliary states、circuit-level GKP soft information、多模 GKP decoding。
+
+2. soft information decoding
+   - GKP analog information decoding。
+   - superconducting qubit readout soft information。
+   - decoder priors、LLR、measurement confidence、calibration-conditioned decoding。
+   - 如何把 continuous measurement / confidence 传给外层 decoder。
+
+3. learning-assisted QEC decoders
+   - CNN / RNN / transformer / graph neural decoder。
+   - neural pre-decoder、neural MWPM、learned edge weights、learned priors。
+   - hybrid classical-neural decoder，而不是纯黑盒 decoder。
+   - teacher-guided、residual learning、calibration layer、low-dimensional conditioning、FiLM/gating。
+
+4. drift-adaptive / calibration-aware QEC
+   - hardware drift、calibration-conditioned decoder、online prior optimization。
+   - reinforcement-learning control of QEC。
+   - decoder prior tuning、noise model learning from syndrome statistics。
+   - 时间尺度分离：慢校准 / 快解码。
+
+5. real-time / low-latency / FPGA or ASIC QEC
+   - FPGA-based neural-network decoder。
+   - real-time surface-code QEC。
+   - deterministic latency、closed-loop feedback、QEC cycle time。
+   - fixed-point、resource budget、hardware/software co-design、HIL protocol。
+
+6. benchmark and evaluation methodology
+   - frozen-set benchmark、paired seeds、multi-scenario evaluation。
+   - latency, stale update, commit failure, fallback, saturation, overflow。
+   - code-capacity vs phenomenological vs circuit-level noise。
+   - 如何公平比较 learned decoder 与 classical baseline。
+
+目标 2：判断撞车风险和差异化空间
+
+请明确回答：
+
+1. 是否已有文献几乎提出了“从 GKP syndrome histogram 估计漂移并更新仿射 decoder 参数 `(K,b)`”？
+2. 是否已有文献提出“teacher + neural residual correction”用于 GKP 或类似 QEC runtime adaptation？
+3. 是否已有文献在 FPGA / embedded / real-time 约束下做过 GKP 或 bosonic decoder？
+4. 是否已有文献把 calibration / hardware drift 通过 FiLM、gating、prior optimization 或类似机制接入 QEC decoder？
+5. 本项目如果只停留在 mock-backed software HIL，最容易被哪些已有工作压制？
+6. 本项目如果补上 true `.tflite` runtime 或 real-board smoke，差异化是否显著增强？
+
+请给每个最相似工作一个 collision risk：
+
+- High：主题、输入、输出、部署约束都高度重合。
+- Medium：技术路线或问题设置相近，但输出目标、码族或部署层不同。
+- Low：只提供背景或局部方法启发。
+
+目标 3：为后续实验设计找可借鉴点
+
+请从文献中提取可以转化为本项目后续实验的具体建议。至少覆盖：
+
+1. 更合理的 GKP / bosonic noise drift model。
+2. 更强 classical baseline，例如 UKF/RLS/PF/statcalib/BP+OSD/MWPM/Union-Find 在何种扩展场景下才公平。
+3. soft-information comparator 应该怎么定义，如何与 hard-decision baseline 做公平消融。
+4. calibration/prior optimization baseline 如何进入慢回路。
+5. learned residual branch 应该预测什么：`delta_b`、edge weights、priors、measurement confidence、fallback gate 还是其他量。
+6. histogram feature 是否足够，是否需要加入 continuous residual、centroid、anisotropy、higher moments、window stability、teacher confidence。
+7. 如何设计 latency-aware、fixed-point-aware、hardware-aware 训练目标。
+8. 如何把 offline accuracy 与 closed-loop HIL / logical error rate 对齐。
+9. 如何设置 ablation，证明收益来自 soft information / residual calibration / teacher anchoring，而不是模型容量或 baseline 未调好。
+
+目标 4：为论文写作找背景、叙事和引用
+
+请把文献按论文写作用途分类：
+
+1. Background anchors
+   - GKP 基础、bosonic code、surface-GKP、analog information。
+
+2. Method neighbors
+   - learned decoder、neural pre-decoder、calibration-conditioned decoder、prior optimization、hybrid neural-classical decoder。
+
+3. System neighbors
+   - real-time QEC、FPGA/ASIC decoder、low-latency feedback、HIL/deployment。
+
+4. Benchmark pressure
+   - 审稿人可能要求加入的强 baseline、noise model、scenario、statistical test。
+
+5. Differentiation references
+   - 可用来说明本项目不是“纯 neural decoder”，而是“hardware-aware teacher-anchored residual calibration for drift-adaptive GKP decoding”的文献。
+
+三、已有种子文献
+
+请至少从这些种子文献出发做 citation chasing 和 related-work expansion：
+
+1. Gottesman, Kitaev, Preskill, "Encoding a qubit in an oscillator", 2001.
+2. Noh, Chamberland, Brandao, "Low overhead fault-tolerant quantum error correction with the surface-GKP code", 2022.
+3. Berent et al., "Analog information decoding of bosonic quantum LDPC codes", 2024.
+4. Borah et al., "Fault Tolerant Decoding of QLDPC-GKP Codes with Circuit Level Soft Information", 2025.
+5. Roy et al., "Decoding Multimode Gottesman-Kitaev-Preskill Codes with Noisy Auxiliary States", 2025.
+6. Chamberland et al., "Fast and accurate AI-based pre-decoders for surface codes", 2026.
+7. Stein et al., "Calibration-Conditioned FiLM Decoders for Low-Latency Decoding of Quantum Error Correction Evaluated on IBM Repetition-Code Experiments", 2026.
+8. Sivak, Newman, Klimov, "Optimization of decoder priors for accurate quantum error correction", 2024.
+9. Yang et al., "Real-time Surface-Code Error Correction Using an FPGA-based Neural-Network Decoder", 2026.
+10. Bausch et al., "Learning high-accuracy error decoding for quantum processors", 2024.
+11. Peled et al., "Neural Minimum Weight Perfect Matching for Quantum Error Codes", 2026.
+12. Hanisch, Hétényi, Wootton, "Soft information decoding with superconducting qubits", 2025.
+13. Google Quantum AI / DeepMind, "Reinforcement Learning Control of Quantum Error Correction", 2026.
+
+如果你发现这些文献中的标题、作者、年份或状态有误，请直接修正并标注“seed correction”。
+
+四、推荐检索关键词
+
+请使用并扩展以下关键词组合：
+
+- "GKP code analog information decoding"
+- "GKP soft information decoder"
+- "surface-GKP decoder maximum likelihood"
+- "bosonic QLDPC analog syndrome"
+- "QLDPC GKP circuit-level soft information"
+- "multimode GKP noisy auxiliary states decoder"
+- "neural decoder quantum error correction real time"
+- "FPGA neural network decoder surface code"
+- "low latency quantum error correction decoder FPGA"
+- "calibration conditioned decoder quantum error correction"
+- "FiLM decoder quantum error correction"
+- "decoder priors quantum error correction optimization"
+- "syndrome statistics noise learning decoder"
+- "neural minimum weight perfect matching quantum error codes"
+- "soft information decoding superconducting qubits"
+- "reinforcement learning control quantum error correction"
+- "hardware aware neural decoder quantum error correction"
+- "drift adaptive quantum error correction decoder"
+- "teacher guided residual learning decoder"
+- "hybrid classical neural decoder quantum error correction"
+- "histogram syndrome decoder GKP"
+- "fixed point quantum error correction decoder FPGA"
+- "hardware-in-the-loop quantum error correction decoder"
+
+五、输出报告格式
+
+请输出一份结构化中文报告，必须包含以下章节。
+
+1. Executive Summary
+   - 用 8-12 条 bullet 概括最重要发现。
+   - 明确本项目的最大撞车风险、最大差异化空间、最应该新增的 3-5 类文献。
+
+2. Search Scope and Method
+   - 列出数据库、检索关键词、时间范围、筛选规则。
+   - 明确是否覆盖了最近 6-12 个月的 preprint。
+
+3. Most Similar Works Matrix
+   每篇至少包含：
+   - Title
+   - Authors
+   - Year / version date
+   - Venue / arXiv ID / DOI / URL
+   - Code/data availability
+   - Problem setting
+   - Input information
+   - Decoder/model
+   - Output/control target
+   - Hardware/deployment status
+   - Overlap with DriftAdaptiveQEC
+   - Collision risk: High / Medium / Low
+   - What to borrow
+   - Why still different
+
+4. Literature Map by Theme
+   至少分成：
+   - GKP and bosonic soft-information decoding
+   - Concatenated GKP / surface-GKP / QLDPC-GKP
+   - Learned and hybrid QEC decoders
+   - Calibration / drift / prior optimization
+   - Real-time and FPGA/ASIC QEC decoders
+   - Benchmark methodology and deployment validation
+
+5. Direct Implications for This Project
+   请逐条回答：
+   - 现有 `Delta = K s + b` fast path 是否有理论支撑？
+   - teacher-anchored residual-b 是否有清晰差异化？
+   - syndrome histogram 是否可能太弱，应该补哪些 soft features？
+   - 当前 mock-backed software HIL 对论文足够吗？缺什么会被审稿人追问？
+   - 如果加入 statcalib / soft-information / prior optimization baseline，应该怎么设计才公平？
+
+6. Recommended New Papers to Add to `relative_papers/`
+   - 给出 15-30 篇建议新增文献。
+   - 按优先级 P0/P1/P2 排序。
+   - 每篇说明“为什么值得加入”和“预期放入论文哪个小节”。
+
+7. Benchmark and Experiment Recommendations
+   - 推荐最小新增 benchmark，不要无限扩张。
+   - 区分 must-have、nice-to-have、defer。
+   - 明确哪些 baseline 属于当前 GKP 漂移主线，哪些只有扩展到 surface/QLDPC 后才公平。
+   - 明确需要的 ablation：hard vs soft, teacher-only vs residual, histogram-only vs histogram+delta, static prior vs adaptive prior, float vs fixed-point, offline vs closed-loop。
+
+8. Paper Positioning and Claims
+   - 给出建议的 related work 结构。
+   - 给出推荐标题/贡献表述的修正建议。
+   - 明确哪些 claim 可以写，哪些 claim 必须避免。
+   - 尤其避免：
+     - “CNN 完全替代经典 decoder”
+     - “真实 FPGA / real-board 已验证”
+     - “完整 `.tflite` runtime 已恢复”
+     - “机制已经因果闭环”
+
+9. Risk Register
+   - 列出至少 10 个由文献调研触发的叙事风险或实验风险。
+   - 每个风险包含：risk、triggering literature、impact、mitigation。
+
+10. Actionable Next Steps
+   - 给出 1 周、2-4 周、投稿前 三个时间尺度的建议。
+   - 每条建议必须能转化为一个 bounded task package。
+   - 不要建议“一次性重写项目”或“直接扩大所有 benchmark”。
+
+六、质量要求
+
+1. 不要只输出论文摘要堆砌。必须判断每篇文献和本项目的具体关系。
+2. 不要把同一个方向重复列很多相似论文而不给优先级。
+3. 不要遗漏 real-time / FPGA / hardware-aware QEC，因为这是本项目重要差异化来源。
+4. 不要遗漏 soft information / calibration / prior optimization，因为这是 GKP 和漂移自适应的核心理论支撑。
+5. 对每个相似工作都要说明“重合在哪里”和“差异在哪里”。
+6. 若找不到直接撞车文献，也要说明检索证据和可能的盲区。
+7. 报告中凡是涉及最新论文、作者、版本、venue、代码仓库的事实，都必须给出处。
+8. 明确区分：
+   - 已验证事实
+   - 文献中的外部结果
+   - 对本项目的推断
+   - 后续建议
+
+七、最终交付
+
+请最终交付一份可直接用于后续工作的中文深度研究报告，并在末尾附：
+
+1. BibTeX / citation key 建议列表。
+2. 推荐加入 Zotero 的优先文献清单。
+3. 推荐写入 `relative_papers/` 的新增论文清单。
+4. 一版 6-10 段的 Related Work 写作骨架。
+5. 一版“如果审稿人质疑 novelty，应如何回应”的 rebuttal-style 要点。

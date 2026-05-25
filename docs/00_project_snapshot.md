@@ -10,7 +10,7 @@
 
 - 快照日期：`2026-05-05`
 - 最近更新：`2026-05-24`
-- 当前分支：`main`
+- 当前分支：`codex-pro-research-governance-plan`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
 - 当前决策状态：`Go`
@@ -320,3 +320,12 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - `T47` only froze the paper-facing ablation/material ledger honestly; it did not close `FR7`.
 - The current unique task is now `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`.
 - `T57` must stay bounded to the locked `T24` protocol and must not reopen `.tflite`, real-board, cleanup, benchmark-expansion, comparator-expansion, or intervention scope.
+
+## 2026-05-25 Branch-local Overlay
+
+本段只描述 `codex-pro-research-governance-plan` 分支的增量计划；上文的 `main` 事实仍保持原边界。
+
+- 外部 GPT-Pro 调研报告 `docs/reference/GPT-Pro的调研分析.md` 被采纳为规划输入，不是实验结果或 evidence upgrade。
+- 报告没有发现 exact collision，但确认四类高风险邻近文献线：GKP soft-information decoding、syndrome-statistics adaptive priors、calibration-conditioned neural decoders、real-time FPGA QEC decoders。
+- 本分支的治理重点是把论文定位收窄为 deployment-constrained teacher-anchored residual calibration for affine GKP decoding，并明确当前证据仍只到 mock-backed software HIL / frozen-set revalidation。
+- `T57` 仍是当前执行任务；post-T57 的新增任务应优先处理 related work 重构、理论符号一致性、强 baseline/benchmark protocol、runtime evidence 分层，而不是抢跑新长跑实验。

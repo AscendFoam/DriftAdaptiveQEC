@@ -12,11 +12,13 @@
 - `docs/legacy_context/2026-05-06_CNN_FPGA_GKP_legacy_handoff.md` — 最新工程交接（v8/v9 失败分析）
 - `docs/00_project_snapshot.md` ~ `docs/08_risks_and_open_questions.md` — 恢复期治理文件（T1-T13）
 
+> 分支增量说明：`codex-pro-research-governance-plan` 分支会在不推翻 main 事实的前提下，优先吸收外部 GPT-Pro 调研结果，重排论文定位、baseline 套件和证据分层；这部分是后续治理计划，不是新实验事实。
+
 **最后更新：** 2026-05-08
 **当前阶段：** Phase 2: Controlled Development
 **当前唯一任务：** 待定义
 **决策状态：** Go（受控继续开发）
-**当前分支：** `main`
+**当前分支：** `codex-pro-research-governance-plan`
 
 ---
 
@@ -99,7 +101,7 @@
 - **仓库名**：`DriftAdaptiveQEC`
 - **正式项目名**：CNN-FPGA 协同 GKP 漂移自适应解码系统
 - **定位**：工程系统型量子纠错研究项目，兼具方法机制贡献
-- **当前分支**：`main`
+- **当前分支**：`codex-pro-research-governance-plan`
 - **Git 用户**：AscendFoam
 - **代码版本**：`cnn_fpga.__version__ = "0.1.0"`
 - **最近提交**：`35e32e1` (docs: 更新决策日志、任务板和交接文档以反映T10完成)
@@ -1909,8 +1911,32 @@ Captain 生成任务包 → Worker 执行 → Reviewer 审查 → Captain 整合
 | 2026-05-07 | Phase 1 前半 (T5–T6) | 仓库噪声治理 + software HIL 二次复验 |
 | 2026-05-08 | Phase 1 后半 (T7–T13) | P4 recovery smoke + 两次 gate review + manifest + 确定性复验 + exit review |
 | 2026-05-08 | Phase 2 开始 | 项目退出 Recovery，决策 Go。当前唯一任务待定义。本集成文档完成 |
+| 2026-05-25 | Pro-report governance branch | `codex-pro-research-governance-plan` 分支吸收 GPT-Pro 调研，把后续论文路线收紧到窄 claim、强 baseline、runtime evidence ladder 和 related-work 重构；不改变 T57 当前执行边界 |
 
 ---
+
+## 15. Branch-local Plan After GPT-Pro Review
+
+本节只适用于 `codex-pro-research-governance-plan` 分支，是对 `docs/reference/GPT-Pro的调研分析.md` 的治理吸收。它不是新实验结果，也不覆盖 main 上已有事实。
+
+### 15.1 核心判断
+
+- 没有发现 exact collision：目前未见同时具备 GKP syndrome histogram、online affine `(K,b)` update、classical teacher anchor、neural residual calibration、deployment constraint 的既有工作。
+- 但宽口径 claim 风险很高：GKP analog soft information、adaptive priors、calibration-conditioned FiLM decoder、AI predecoder、FPGA real-time decoder 都是近邻。
+- 论文主张应收窄为：deployment-constrained teacher-anchored residual calibration for drift-adaptive affine GKP decoding。
+
+### 15.2 后续实验/写作优先级
+
+1. 先做 related work 重构和 claim 收口，不写 “first adaptive neural decoder” 或 “FPGA demonstrated”。
+2. 再锁定 strong-baseline protocol：nearest-lattice、static affine、oracle affine、wrapped-Gaussian/ML、teacher-only、direct CNN、FiLM-style、residual variants。
+3. 再补 theory repair：`Delta_t` 符号、local LMMSE 条件、modular posterior 多峰局限、residual-`b` rationale。
+4. 最后分层推进 runtime evidence：mock-backed HIL、true `.tflite` runtime、real-board FPGA。
+
+### 15.3 不变边界
+
+- `T57` 仍是当前唯一任务。
+- GPT-Pro 报告不授权新长跑、不授权 source/config 修改、不授权 benchmark expansion。
+- 所有 post-T57 任务仍必须单独任务包化，并明确 Allowed files / Forbidden scope / Verification。
 
 **文档结束。** 本文件是项目 Captain AI 的唯一切入点。新 Captain 会话启动时只需完整阅读本文件，即可获得继续开发所需的全部上下文、约束、优先级和历史判断。如有不明确之处，对应的原始详情可从第 14.1 节索引的源文档中查找。
 

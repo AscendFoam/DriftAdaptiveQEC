@@ -1,5 +1,33 @@
 # Decision Log
 
+## D-2026-05-25-01
+
+- 日期：`2026-05-25`
+- 分支：`codex-pro-research-governance-plan`
+- 决策：将 GPT-Pro 调研报告采纳为 post-T57 论文质量治理输入，但不改变当前唯一任务 `T57`
+
+### 背景
+
+用户已获得外部 Pro 模型对 `CNN_FPGA_GKP_theory_note_draft.tex` 的深度调研报告。报告判断当前项目没有 exact collision，但如果论文写宽，会与 GKP soft information、adaptive decoder priors、calibration-conditioned decoders、real-time FPGA QEC decoders 等方向高度相邻。
+
+### 依据
+
+1. `docs/reference/GPT-Pro的调研分析.md`
+2. 当前 `T57` 仍在运行，且任务包禁止 benchmark expansion、comparator expansion、`.tflite`、real-board 和 source/config 修改
+3. 现有证据仍限定为 mock-backed software HIL / frozen-set revalidation
+
+### 结论
+
+1. 不抢跑 `T57`，也不把外部调研写成新实验事实。
+2. 在本分支中更新 00~08 治理文档，把 GPT-Pro 报告转化为 post-T57 路线图。
+3. 后续优先补：related work 重构、theory notation / local-affine boundary、strong baseline and benchmark protocol、runtime evidence ladder。
+
+### 直接影响
+
+1. 当前唯一任务仍是 `T57`。
+2. `T58+` 任务建议应按 Pro 报告重排，但仍必须等被明确提升为 Current Unique Task 后才能执行。
+3. 论文草稿不得使用 “first adaptive neural QEC decoder”、“first FPGA QEC decoder”、“true `.tflite` runtime validated” 或类似过宽 claim。
+
 ## D-2026-05-05-01
 
 - 日期：`2026-05-05`

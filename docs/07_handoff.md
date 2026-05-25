@@ -6,6 +6,27 @@
 - T47 warning classification: `N1-N5 = accepted`; there are no `deferred` or `rejected` items.
 - `T57` may proceed only as a bounded FR7 re-execution under the locked `T24` protocol.
 
+## 2026-05-25 Branch-local Supersession For Pro-report Governance
+
+- Active branch: `codex-pro-research-governance-plan`
+- This branch incorporates `docs/reference/GPT-Pro的调研分析.md` as planning input only.
+- Current unique task remains `T57`; do not interrupt or widen the worker's T57 run.
+- GPT-Pro report conclusion: no exact collision found, but broad paper claims would collide with GKP soft-information decoding, adaptive decoder priors, calibration-conditioned decoders, and real-time FPGA QEC decoders.
+- Next branch-local governance priority: prepare post-T57 tasks for related-work restructuring, strong-baseline protocol, theory notation/boundary repair, and runtime evidence ladder.
+
+### Branch-local follow-up order
+
+After `T57` completes, the branch-local preferred order is:
+
+1. `T58` evidence gate and ledger sync
+2. `T59` theory / notation / related-work alignment
+3. `T60` strong-baseline protocol concretization
+4. `T61` statcalib comparator gate
+5. `T62` expanded benchmark execution, only after protocol review
+6. `T63` deployment-metric evidence pack
+7. `T64` reproducible material-regeneration pack
+8. `T65` paper re-open gate
+
 # Handoff
 
 ## 1. 当前状态

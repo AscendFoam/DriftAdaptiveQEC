@@ -2,6 +2,8 @@
 
 本文件对应 `docs/reference/AI_coding_workflow.md` 中 `06_eval_protocol.md` 的当前项目版本，同时保留恢复期形成的 repo noise governance。Phase 2 的所有 Worker 应先按本文件确定“什么算验证通过”，再记录或引用新结果。
 
+> Branch-local note (`codex-pro-research-governance-plan`): GPT-Pro 调研报告只改变后续评价设计和论文要求，不改变任何现有 run/artifact 的证据等级。
+
 ## 1. 目的
 
 本文件有两个目的：
@@ -23,6 +25,17 @@
 | `development_smoke` | 在受控开发任务中扩展场景、mode 或环境，但仍非正式长跑 | “development evidence，需附边界” |
 | `formal_benchmark` | 预先冻结 protocol、baseline、seed、repeat，并通过 review | “正式 benchmark 结果” |
 | `hardware_validated` | 真实板级 backend、设备、日志与验收齐备 | “real-board validated” |
+
+### 2.1.1 Branch-local paper-quality evidence ladder
+
+GPT-Pro 调研后，论文级评价还应额外区分：
+
+| Paper-quality layer | 含义 | 当前状态 |
+| --- | --- | --- |
+| `local_affine_theory` | 清楚说明 affine fast path 是 local approximation，不是全局最优 GKP decoder | 待整合进后续 manuscript task |
+| `strong_baseline_protocol` | 预先冻结 oracle/static/teacher/ML/direct-CNN/FiLM-style/residual ablation baseline | 待 T60 之后定义 |
+| `runtime_contract_metrics` | 报告 latency、fixed-point degradation、stale update、commit/fallback、saturation | 当前仍不完整 |
+| `true_runtime_or_board_evidence` | 真实 `.tflite` runtime 或真板 evidence | 当前未完成 |
 
 当前最高已确认等级：
 

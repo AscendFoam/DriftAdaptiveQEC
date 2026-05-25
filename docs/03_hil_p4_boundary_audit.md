@@ -2,6 +2,8 @@
 
 本文件对应 `docs/reference/AI_coding_workflow.md` 中 `03_architecture.md` 的工程边界部分。由于当前项目最容易出错的架构点是 HIL / P4 / `.tflite` 真实性边界，本文件保留原 boundary audit，并把它作为 Phase 2 Worker 的架构约束源。
 
+> Branch-local note (`codex-pro-research-governance-plan`): 外部 GPT-Pro 调研没有改变这里的真实性边界；它只会影响后续论文叙事、baseline 选择和证据分层写法。以下仍然是 main 上已经成立的边界事实。
+
 ## 1. 目的
 
 本文件用于固定恢复期对 `P3 software HIL`、`P3 real-board HIL`、`P4 benchmark`、以及 `.tflite` 部署链路的统一表述口径。

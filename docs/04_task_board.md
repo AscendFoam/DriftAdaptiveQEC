@@ -21,6 +21,8 @@
   - 每个任务包必须有 Allowed files / Forbidden scope / Verification / Docs to update
   - 不把 `mock`、`stub`、`placeholder`、计划项或未来能力写成完成事实
 
+> Branch-local note (`codex-pro-research-governance-plan`): 这条分支会在不更改当前唯一任务 `T57` 的前提下，为 T58+ 预备 post-Pro-review 计划项；这些计划项只属于后续治理路线，不会抢占 T57 的执行边界。
+
 ## Phase 0: Stabilization
 
 - [x] T0: 冻结 legacy 状态并完成只读审计
@@ -298,6 +300,59 @@
   - Task package: `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`
   - Status: current bounded execution lane to close the largest remaining ablation-pack gap without widening benchmark scope
 
+### Milestone 2P.5: Post-T57 Paper-Quality Evidence Roadmap (proposed)
+
+说明：`T48`-`T52` 是更早预留的 deployment / reproducibility / paper gate 任务号；`T58` 起是 `T57` 之后新增的论文质量补强路线。除非被明确提升为 `Current Unique Task`，以下任务都只是路线图，不可直接执行。
+
+分支增量说明：`codex-pro-research-governance-plan` 会把这组任务作为 GPT-Pro 调研后的后续治理路线，而不是把它们写成 main 上已经发生的事实。
+
+- [ ] T58: Post-FR7 evidence gate and ablation-ledger synchronization
+  - Task package: pending
+  - Goal: review the T57 run pack, classify FR7 as `ready` / `partial` / `missing`, and synchronize `paper_ablation_result_pack` / claim ledger wording without upgrading mechanism claims.
+  - Boundary: docs/review gate only; no new benchmark execution, no retraining, no `.tflite`, no real-board scope.
+- [ ] T59: Approximate-GKP / noise-drift theory alignment for manuscript notes
+  - Task package: pending
+  - Goal: align the paper-facing theory draft, Chinese note, Zotero citations, approximate-GKP finite-energy background, and the project's effective noise/drift vocabulary.
+  - Boundary: theory/prose/citation task only; it must not convert theory framing into completed experimental evidence.
+- [ ] T60: Paper-grade expanded benchmark protocol concretization
+  - Task package: pending
+  - Goal: turn the T45 policy-level benchmark expansion into an executable but still bounded task package, with frozen-set anchor, seed split, confidence intervals, metric table, and explicit compute budget.
+  - Candidate additions: unseen drift families such as random-walk, sinusoidal/periodic variants beyond the frozen case, burst/reset changes, and stronger reporting for latency, stale-parameter, commit/fallback, and saturation metrics.
+  - Boundary: protocol lock first; no execution until the task package is reviewed.
+- [ ] T61: Statcalib comparator integration gate
+  - Task package: pending
+  - Goal: decide whether the T30 interface-only `statcalib` contract can become a separate comparator lane, then run a minimal bounded integration smoke if the gate passes.
+  - Boundary: must not silently insert statcalib into T24/T57 frozen evidence or change ParamMapper mainline semantics.
+- [ ] T62: Paper-grade benchmark expansion execution lane
+  - Task package: pending after T60/T61
+  - Goal: execute the approved expanded benchmark matrix and produce paper-grade tables with uncertainty estimates, separated train/eval seeds, and honest failure/timeout reporting.
+  - Boundary: mock-backed software evaluation unless a separate runtime/board task has already supplied stronger evidence.
+- [ ] T63: Deployment-metric evidence pack
+  - Task package: pending
+  - Goal: collect fixed-point, clipping/saturation, stage-and-commit, stale-parameter, fallback, and latency evidence as measured quantities rather than prose assumptions.
+  - Boundary: may reuse software-HIL and emulator paths; true `.tflite` or board evidence remains separate unless T48/T49 complete.
+- [ ] T64: Reproducible material-regeneration pack
+  - Task package: pending
+  - Goal: freeze figure/table regeneration commands, source run roots, environment notes, and paper material manifests for advisor/reviewer inspection.
+  - Boundary: do not rewrite historical `runs/` or `artifacts/` as new fact sources.
+- [ ] T65: Paper re-open gate after post-T57 evidence hardening
+  - Task package: pending
+  - Goal: decide whether manuscript prose can safely resume, which claims are allowed, and which figures/tables are ready for the next draft wave.
+  - Boundary: gate/review task only; no broad prose expansion unless it explicitly passes.
+
+### Branch-local post-Pro priorities (planning only)
+
+These are not current tasks. They are the expected branch-local order after `T57` and after the GPT-Pro review is folded in:
+
+1. `T58` evidence gate and ledger sync
+2. `T59` theory / notation / related-work alignment
+3. `T60` strong-baseline protocol concretization
+4. `T61` statcalib comparator gate
+5. `T62` expanded benchmark execution, only after protocol review
+6. `T63` deployment-metric evidence pack
+7. `T64` reproducible material-regeneration pack
+8. `T65` paper re-open gate
+
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
 - [ ] T48: True `.tflite` runtime smoke gate
@@ -336,14 +391,15 @@ Long-term objective:
 - `C4` 仍然是 `partial`
 - 第二条 intervention lane 当前不是自动下一步；结论是 `deferred pending better question`
 - 当前项目保持 `Phase 2: Controlled Development / Go`，但子模式仍为 `Research Reality Recovery Mode`
-- `T47` 现在只是一个 downstream paper-material lane，而且只能在 `T56` 规定的 mechanism-hedge 边界下推进
+- `T47` 已完成 paper-material ledger 收口，并明确 `FR7` 是当前最大 ablation 缺口
+- `T57` 是当前唯一任务，只允许在 locked `T24` protocol 下重跑 FR7 feature/teacher ablation，不允许扩大 benchmark 或启动 deployment scope
 
 为什么现在做它：
 
-1. `T56` 已经完成当前这轮 mechanism-claim reframing，当前最小可继续推进的任务不再是新 intervention，而是把 paper-facing ablation/result/material 缺口做诚实台账。
-2. `T47` 是 docs-only 任务，能在不打开 benchmark expansion、`.tflite`、真板、cleanup 或第二 intervention 范围的前提下，冻结“哪些 paper materials 已 ready / partial / missing”。
-3. 但 `T47` 不能被写成“机制已解决后自然进入论文扩写”；它必须保留 `T56` 给出的 hedge wording 与 non-claims。
-4. 如果 `T47` 无法在 hedge boundary 下完成诚实收口，则应停留在 deferred，而不是借 paper-material lane 静默升级 claim strength。
+1. `T47` 已经完成 paper-facing ablation/result/material 台账，并把 `FR7` 确认为最大缺口。
+2. `T57` 是当前最小可执行补强任务：它只重跑已冻结的 feature/teacher ablation lane，不打开 benchmark expansion、`.tflite`、真板、cleanup、statcalib 或第二 intervention 范围。
+3. `T57` 的目标不是证明机制闭环，而是诚实判定 FR7 是否可从 `missing` 升级为 `partial` 或 `ready`。
+4. 如果 `T57` 仍无法补齐 FR7，论文必须保留这个缺口，而不是借 ablation 表静默升级 claim strength。
 
 ## Captain Output For Current Task
 
@@ -353,20 +409,14 @@ Long-term objective:
 - Next worker-facing task package: `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`
 - `T57` is allowed to proceed only as a bounded FR7 re-execution under the locked `T24` protocol
 
-1. 当前唯一任务：`T47`
-2. `T56` 已按 `PASS` 收口。
-3. T56 review blocking issues：
-   - none
-4. T56 non-blocking comments：
-   - accepted: worker self-review overwritten by adversarial review
-   - accepted: claim-table summary wording count inconsistency
-   - accepted: governance sync items in `docs/08_risks_and_open_questions.md`
-   - accepted: governance sync items in `docs/04_task_board.md`
-   - accepted: C4 boundary wording in ledger is long but justified
-5. T56 review output：`docs/review/T56_review.md`
-6. T47 任务包：`docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
+1. 当前唯一任务：`T57`
+2. `T47` 已按 `PASS` 收口。
+3. 当前 worker-facing task package：`docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`
+4. `T57` allowed scope：locked `T24` protocol、四个 frozen scenarios、六个 feature/teacher modes、`repeats=2`。
+5. `T57` forbidden scope：不得 retrain，不得改 source/config/test/runtime/hardware/training，不得扩 comparator、drift family、benchmark expansion、`.tflite` 或 real-board scope。
+6. `T57` 完成后推荐先走 `T58` evidence gate，再决定是否进入 post-T57 paper-quality roadmap。
 
-## Done Criteria For T47
+## Archived Done Criteria For T47
 
 1. Produce a paper-pack ledger that classifies figures, tables, and ablation/result materials into ready / partial / missing.
 2. Keep all mechanism-facing wording explicitly bounded by the `T56` claim table and hedge boundary.

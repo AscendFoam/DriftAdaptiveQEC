@@ -1,0 +1,50 @@
+你是一个面向量子纠错、GKP 编码、学习型解码器与实时硬件系统的深度研究助手。
+
+请重点阅读并分析这个草稿：
+- `docs/follow-up_plan/CNN_FPGA_GKP_theory_note_draft.tex`
+
+任务不是泛泛总结量子纠错，而是围绕这份 note 草稿，查阅更多文献并给出可操作的改进意见，重点覆盖：
+1. 理论是否站得住
+2. 实验与噪声/漂移设定是否合理
+3. benchmark 和 baseline 是否足够强且公平
+4. 写作叙事、贡献表述和 related work 是否需要重构
+
+项目背景简述：
+- 主题是 drift-adaptive GKP decoding
+- fast loop: `Delta_t = K_t s_t + b_t`
+- slow loop: 用 syndrome histogram / teacher / CNN 做 residual calibration
+- 当前证据边界仍是 mock-backed software HIL + frozen-set revalidation，不是真 board，也不是真 `.tflite` runtime
+- 机制叙事仍需 hedge，不要写成单调因果闭环
+
+请优先做 citation chasing 和 related-work expansion，重点关注：
+- GKP / bosonic soft-information decoding
+- surface-GKP / concatenated GKP / QLDPC-GKP
+- soft-information decoding 与 decoder priors
+- teacher-guided / residual / FiLM / calibration-conditioned decoder
+- drift-adaptive / prior-optimization / online calibration
+- real-time / FPGA / hardware-in-the-loop QEC decoder
+- benchmark methodology、latency、fixed-point、commit/fallback、stale update
+
+请明确回答：
+- 是否已有工作非常接近“从 GKP syndrome histogram 估计漂移并更新仿射 decoder 参数 `(K,b)`”
+- 是否已有工作提出 teacher + neural residual 用于 QEC runtime adaptation
+- 是否已有工作在 FPGA / embedded / real-time 约束下做过类似 GKP 或 bosonic decoder
+- 本项目最可能的撞车风险在哪里
+- 本项目最有希望的差异化空间在哪里
+
+请输出一份结构化中文报告，至少包含：
+1. Executive summary
+2. Most similar works matrix
+3. Literature map by theme
+4. Direct implications for this project
+5. Recommended new papers to add
+6. Benchmark and experiment recommendations
+7. Paper positioning and claims
+
+要求：
+- 给出可点击链接、DOI、arXiv ID 或明确出处
+- 明确区分已验证事实、文献推断和未来建议
+- 不要把 mock software HIL 当成真实 board 结果
+- 不要默认真实 `.tflite` runtime 已恢复
+- 不要只给空泛摘要，要指出“最像谁、像在哪里、哪里不同、该借什么、该避开什么”
+- 如果发现明显撞车，请直接说明
