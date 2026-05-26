@@ -2125,3 +2125,107 @@ T47 review 的 non-blocking items 全部按 `accepted` 处理：
 2. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`。
 3. `docs/08_risks_and_open_questions.md` 同步 T47 warning 分类与 `T57` 当前任务口径；不新增由 T47 warning 触发的 risk。
 4. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T47` 收口和 `T57` 边界。
+
+## D-2026-05-26-02
+
+- 鏃ユ湡锛歚2026-05-26`
+- 鍐崇瓥锛氭帴鍙?`T58` review 鐨?`PASS_WITH_WARNINGS`锛屾爣璁?`T58` 瀹屾垚锛屽苟灏嗗綋鍓嶅敮涓€浠诲姟鍒囨崲涓?`T59: Statcalib separate comparator lane integration and bounded smoke`銆?
+
+### 鑳屾櫙
+
+`T58` 鏄?`FR6` 鐨?docs-only figure-pack 鏀跺彛浠诲姟銆俙docs/review/T58_review.md` 缁欏嚭 `PASS_WITH_WARNINGS`锛宐locking issues 涓烘棤銆俁eviewer 纭锛?
+
+1. `FR6` 鐨?figure-pack 浜х墿銆乧aption銆乫igure-data snapshot 鍜?paper-facing ledger 鏇存柊宸插叿浣撳苟涓?bounded form 瀛樺湪銆?
+2. `T58` 娌℃湁鎶?`T54/T55/T56` 鐨勮瘉鎹鎺ㄤ负 causal proof銆乣.tflite` validation銆乺eal-board validation 鎴?expanded benchmark evidence銆?
+3. `FR6` 鐜板湪鍙互鎸?ready` 鐨?bounded descriptive figure-pack 鎰忎箟鏀跺彛锛屼絾 `R10` 鍜?`C4` 鐨勮竟鐣屼笉鍙樸€?
+4. review 鍚屾椂鎸囧嚭锛宍FR8` 鐩稿叧鐨?statcalib` 材料缂哄彛浠嶇劧瀛樺湪锛屼笖褰撳墠浠撳簱杩樻病鏈?integrated comparator lane锛屽洜姝や笉鑳界洿鎺ユ妸涓嬩竴姝ュ啓鎴?FR8 result table銆?
+
+### Warning 澶勭悊
+
+T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
+
+1. N1 mixed governance diff provenance = `accepted`
+2. N2 FR6 deliverable completeness note = `accepted`
+3. N3 task-local seed-category derivation = `accepted`
+4. N4 worker self-review is not final acceptance review = `accepted`
+
+娌℃湁 `deferred` 鎴?`rejected` warning锛屽洜姝よ繖娆′笉鏂板鐢?warning classification 瑙﹀彂鐨?risk銆?
+
+### 缁撹
+
+`T58` 鍙互鏍囪瀹屾垚锛屼絾瀹冨叧闂殑鍙槸 `FR6` 鐨?paper-facing figure-pack gap锛屼笉鏄?mechanism closure锛屼笉鏄?`R10` causal closure锛屼篃涓嶆槸 `FR8` statcalib comparator evidence銆傚綋鍓嶆渶灏忎笖鍚堢悊鐨勪笅涓€姝ヤ笉鏄?`.tflite`銆佺湡鏉裤€乀50/T51/T52` 鎴栫洿鎺ョ敓鎴?`FR8` 琛ㄦ牸锛岃€屾槸鏂板 `T59`锛屽厛鎶?`statcalib` 浣滀负 separate comparator lane 鎺ュ叆 slow-loop / bounded P4 smoke锛岀敤鏈€灏忚瘉鎹湅瀹冩槸鍚︾湡姝ｅ彲鎵ц銆?
+
+### 鐩存帴褰卞搷
+
+1. `docs/04_task_board.md` 璁板綍 `T58 -> PASS_WITH_WARNINGS`锛屽苟灏?`Current Unique Task` 鍒囨崲鍒?`T59`銆?
+2. 鏂板浠诲姟鍖?`docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`銆?
+3. `docs/07_handoff.md` 鍒囨崲褰撳墠 worker-facing task package 鍒?`T59`銆?
+4. `docs/00_project_snapshot.md`銆乣docs/01_legacy_audit.md`銆乣docs/03_hil_p4_boundary_audit.md`銆乣docs/06_repo_noise_governance.md`銆乣docs/08_risks_and_open_questions.md` 鍚屾 `T58` 鏀跺彛鍜?`T59` 杈圭晫銆?
+
+## D-2026-05-26-03
+
+- 日期：`2026-05-26`
+- 决策：接受 `T58_review.md` 的 `PASS_WITH_WARNINGS`，标记 `T58` 完成，并将当前唯一任务切换为 `T59: Statcalib separate comparator lane integration and bounded smoke`。
+
+### 背景
+
+`T58` 是 `FR6` 的 docs-only figure-pack 收口任务。依据 `docs/review/T58_review.md`：
+
+1. blocking issues = none
+2. `FR6` figure-pack、caption、figure data 与 paper-facing ledgers 已形成一致的 bounded descriptive package
+3. 本次收口没有把 `T54/T55/T56` 证据升级成 causal proof、`.tflite` validation、real-board validation 或 expanded benchmark evidence
+4. 当前真正仍缺的是 `FR8` 相关的 integrated `statcalib` comparator lane，而不是继续扩写 paper prose
+
+### Warning 处理
+
+本次 warning 分类如下：
+
+1. `N1` mixed-governance diff provenance = `accepted`
+2. `N2` FR6 deliverable completeness note = `accepted`
+3. `N3` task-local seed-category derivation = `accepted`
+4. `N4` worker self-review is not final acceptance review = `accepted`
+
+没有新的 `deferred` 或 `rejected` warning，因此本次不新增由 warning classification 触发的 risk。
+
+### 结论
+
+`T58` 可以完成，但它关闭的只是 `FR6` 的 bounded descriptive figure-pack gap，不是 `R10` causal closure，也不会把 `C4` 升级为 `supported`。下一步不能直接写 `FR8` 正式结果表；更小且更诚实的步骤是新增 `T59`，先把 `statcalib` 作为 separate comparator lane 接入并完成一轮 bounded smoke。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T58 -> PASS_WITH_WARNINGS`，并切换 `Current Unique Task` 到 `T59`
+2. 新增任务包 `docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T59`
+4. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md`、`docs/08_risks_and_open_questions.md` 同步 `T58` 收口与 `T59` 边界
+
+## D-2026-05-26-01
+
+- 日期：`2026-05-26`
+- 决策：接受 `T57` review 的 `PASS`，标记 `T57` 完成，并将当前唯一任务切换为 `T58: FR6 multi-seed mechanism/intervention figure pack`。
+
+### 背景
+
+`T57` 是在锁定 `T24` formal benchmark 协议下，对 `FR7` 做的 bounded feature/teacher ablation re-execution。`docs/review/T57_review.md` 确认：
+
+1. scope 仍严格锁定在 4 个 frozen scenarios、6 个固定模式和 `repeats=2`
+2. coverage 为 `4 x 6 x 2 = 48`，完整覆盖 `coverage=1.0`
+3. `FR7` 现在可以作为 frozen-set result table 收口
+4. `hybrid_no_teacher_params` 在 4 个场景里都成为最佳模式，因此简单的 teacher-params-necessary 叙事不再安全
+5. reviewer 建议下一个最小合理任务是 `FR6`，而不是继续追加 `FR7` 或提前进入 `FR8`
+
+### Warning 处理
+
+- `T57` review 没有新的 blocking issue。
+- `T57` review 也没有新的 non-blocking item 需要再做 `accepted / deferred / rejected` 分类。
+- 因此这次不会因为 warning classification 新增 risk。
+
+### 结论
+
+`T57` 可以标记完成，但它关闭的是 `FR7` 的 bounded 表格缺口，不是 `R10` 的 causal closure，也不是架构归因证明。后续 paper lane 必须继续避免把 teacher params 写成必要正贡献因素。当前最小且合理的下一步是新增 `T58`，仅利用既有 `T54/T55/T56` 证据完成 `FR6` 的 docs-only figure-pack 收口。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T57 -> PASS`，并将 `Current Unique Task` 切换到 `T58`
+2. 新增任务包 `docs/tasks/Phase2/T58_fr6_multi_seed_mechanism_intervention_figure_pack.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T58`
+4. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md`、`docs/08_risks_and_open_questions.md` 同步 `T57` 收口和 `T58` 边界

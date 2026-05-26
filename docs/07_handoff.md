@@ -1,21 +1,30 @@
-## 2026-05-24 Captain Final Supersession
+## 2026-05-26 Captain Final Supersession
 
-- Current unique task: `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`
-- Task package: `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`
-- `T47` is already complete and accepted as `PASS`.
-- T47 warning classification: `N1-N5 = accepted`; there are no `deferred` or `rejected` items.
-- `T57` may proceed only as a bounded FR7 re-execution under the locked `T24` protocol.
+- Current unique task: `T59: Statcalib separate comparator lane integration and bounded smoke`
+- Task package: `docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`
+- `T58` is complete and accepted as `PASS_WITH_WARNINGS`.
+- T58 warning classification: `N1 accepted`, `N2 accepted`, `N3 accepted`, `N4 accepted`.
+- T58 review contains no `deferred` / `rejected` warning item, so no new warning-derived risk is opened.
+- `FR6` is now closed as a bounded descriptive figure pack only; it is not `R10` causal closure and does not upgrade `C4` beyond `partial`.
+- `T59` may proceed only as a separate `statcalib` comparator-lane integration + bounded smoke task on the mainline experiment branch.
+- `T59` must not touch theory-only branch materials and must not rewrite frozen `T24` semantics.
 
 # Handoff
 
 ## 1. 当前状态
 
-- 日期：`2026-05-24`
+- 日期：`2026-05-26`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T47: Paper ablation result-pack and material ledger`
-- 任务包：`docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
+- 当前唯一任务：`T59: Statcalib separate comparator lane integration and bounded smoke`
+- 任务包：`docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`
+
+Captain supersession note:
+
+- The authoritative current task for all new worker action is `T59: Statcalib separate comparator lane integration and bounded smoke`.
+- Authoritative task package: `docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`.
+- If any older line in this file still mentions `T58` as current, treat it as historical text only.
 
 2026-05-24 Captain supersession:
 
@@ -37,6 +46,29 @@
 - Current unique task is now `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`.
 - `T57` is bounded to the frozen four scenarios, the fixed six-mode feature-ablation set, and `repeats=2`. It must not retrain, touch source-tree code/config, or reopen `.tflite`, real-board, cleanup, benchmark expansion, comparator expansion, or intervention scope.
 - Next worker-facing task package: `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`.
+
+## 2026-05-26 Captain Update (T57 closeout)
+
+- `T57` review accepted by Captain as `PASS`.
+- Blocking issues: none.
+- `T57` review does not introduce any new `deferred` or `rejected` warning item.
+- `T57` is complete. `FR7` is now a bounded frozen-set ready result table, but the mechanism interpretation remains explicitly non-causal.
+- The strongest paper-facing caution from `T57` is that `hybrid_no_teacher_params` wins all 4 scenarios, so simple teacher-necessity attribution remains unsafe.
+- Current unique task is now `T58: FR6 multi-seed mechanism/intervention figure pack`.
+- `T58` is docs-only. It must reuse existing `T54/T55/T56` evidence, must not run new benchmark or intervention work, and must not touch theory-only branch materials.
+- Next worker-facing task package: `docs/tasks/Phase2/T58_fr6_multi_seed_mechanism_intervention_figure_pack.md`.
+
+## 2026-05-26 Captain Update (T58 closeout)
+
+- `T58` review accepted by Captain as `PASS_WITH_WARNINGS`.
+- Blocking issues: none.
+- T58 warning classification: `N1 accepted`, `N2 accepted`, `N3 accepted`, `N4 accepted`.
+- `T58` review introduces no `deferred` or `rejected` warning item, so no new warning-derived risk is opened.
+- `T58` is complete. `FR6` is now closed as a bounded descriptive figure pack built from existing `T54/T55/T56` evidence only.
+- `T58` does not close `R10`, does not upgrade `C4` beyond `partial`, and does not upgrade `.tflite`, real-board, or expanded benchmark evidence.
+- Current unique task is now `T59: Statcalib separate comparator lane integration and bounded smoke`.
+- `T59` is a mainline experiment-branch bounded integration/smoke task. It must keep `statcalib` as a separate comparator lane, must not rewrite frozen `T24` semantics, and must not touch theory-only branch materials.
+- Next worker-facing task package: `docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`.
 
 Captain closeout note after T56:
 

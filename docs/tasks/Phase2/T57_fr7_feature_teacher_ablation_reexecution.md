@@ -199,3 +199,36 @@ Review should be treated as `BLOCK` if any of the following happen:
 
 If `T57` still leaves FR7 incomplete, the paper must keep the gap explicit rather than silently strengthening the claim.
 
+## Worker Output
+
+Worker execution completed on `2026-05-26`.
+
+Summary:
+
+1. Re-executed the full FR7 matrix inside `runs/p4_benchmark/T57_fr7_feature_teacher_ablation_20260524_000000`.
+2. Completed both repeat chunks and regenerated the full `4 scenarios x 6 modes x 2 repeats = 48` bounded run set.
+3. Generated `summary.json`, `comparison.csv`, `delta.csv`, `report.md`, `summary_pack/*`, and `provenance_manifest.json` inside the single allowed T57 run root.
+4. Created `docs/fr7_feature_teacher_ablation_reexecution.md` and updated the allowed paper-facing ledgers so FR7 is no longer treated as missing.
+5. Kept all wording bounded: FR7 is now a ready frozen-set result table, but not causal proof and not expanded benchmark evidence.
+
+Key bounded result:
+
+- `hybrid_no_teacher_params` is the best mode in all 4 scenarios under this reused ablation lane.
+- `hybrid_no_hist_deltas` degrades against `hybrid_full` in all 4 scenarios.
+- `hybrid_no_teacher_prediction` also degrades against `hybrid_full` in all 4 scenarios.
+- `hybrid_no_teacher_deltas` is near-neutral/mixed overall.
+
+## Verification Notes
+
+Verification performed:
+
+1. Confirmed `summary.json` reports `comparison_row_count=24`, `missing_runs_count=0`, and `bad_rows_count=0`; every comparison row has `completed_repeats=2` and `coverage=1.0`.
+2. Confirmed execution stayed inside the locked 4 scenarios, 6 modes, paired-seed policy, and `repeats=2`.
+3. Confirmed no source-tree code/config/test paths under `cnn_fpga`, `physics`, or `tests` were modified by this task.
+4. Confirmed no historical `runs/` or `artifacts/` paths outside the single T57 run root were modified by this task.
+5. Confirmed updated docs keep explicit non-claim language around causal proof, expanded benchmark evidence, `.tflite`, and real-board validation.
+
+Residual risk:
+
+- FR7 closes the missing-result-table gap, but it does not close the T56 mechanism hedge.
+- The bounded result weakens the simple historical architectural-attribution story, so paper wording must stay descriptive and non-causal.

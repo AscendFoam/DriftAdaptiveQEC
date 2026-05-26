@@ -9,7 +9,7 @@
 ## 2. 基本信息
 
 - 快照日期：`2026-05-05`
-- 最近更新：`2026-05-24`
+- 最近更新：`2026-05-26`
 - 当前分支：`main`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
@@ -320,3 +320,23 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - `T47` only froze the paper-facing ablation/material ledger honestly; it did not close `FR7`.
 - The current unique task is now `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`.
 - `T57` must stay bounded to the locked `T24` protocol and must not reopen `.tflite`, real-board, cleanup, benchmark-expansion, comparator-expansion, or intervention scope.
+
+## 2026-05-26 Captain Update (T57 closeout supersession)
+
+- `T57` has now been accepted as `PASS`.
+- `T57` review introduces no blocking issue and no new warning item that needs `accepted / deferred / rejected` classification beyond the verdict itself.
+- Therefore no new risk item is opened by warning classification for `T57`.
+- `T57` closes `FR7` as a bounded frozen-set result-table gap, but it does not upgrade causal interpretation, mechanism closure, expanded benchmark evidence, `.tflite` validation, or real-board validation.
+- The strongest boundary update from `T57` is that `hybrid_no_teacher_params` is best in all 4 frozen scenarios, so the paper must not claim teacher params are a necessary positive contributor to the win.
+- The current unique task is now `T58: FR6 multi-seed mechanism/intervention figure pack`.
+- `T58` is docs-only, must reuse existing `T54/T55/T56` evidence, must not create new `runs/` or `artifacts/`, and must stay separate from theory-only branch materials.
+
+## 2026-05-26 Captain Update (T58 closeout supersession)
+
+- `T58` has now been accepted as `PASS_WITH_WARNINGS`.
+- T58 warning classification is: `N1 accepted`, `N2 accepted`, `N3 accepted`, `N4 accepted`.
+- There is no `deferred` or `rejected` warning item from `T58`, so no new risk is opened by warning classification.
+- `T58` closes `FR6` only as a bounded descriptive figure pack. It does not close `R10`, and it does not upgrade `C4` beyond `partial`.
+- The largest remaining mainline paper-material gap is now `FR8`, but the repository still lacks an integrated `statcalib` comparator lane.
+- The current unique task is now `T59: Statcalib separate comparator lane integration and bounded smoke`.
+- `T59` stays on the mainline experiment-evidence lane, must remain isolated from theory-only branch materials, and must not rewrite frozen `T24` benchmark semantics.

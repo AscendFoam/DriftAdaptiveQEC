@@ -201,3 +201,22 @@
 - `T47` 已由 Captain 以 `PASS` 收口；其输出只限 docs-only paper-material ledger，不得被回写成新的 run-root、analysis artifact 或 benchmark output 目录操作。
 - 当前唯一任务 `T57` 只允许创建一个 `runs/p4_benchmark/T57_fr7_feature_teacher_ablation_*` 作用域内的 run root。
 - 除该单一 T57-scoped run root 外，不得新建、改写或清理任何其他 `runs/`、`artifacts/`、analysis artifact 或 benchmark output 目录，也不得借 `T57` 触碰 source-tree code/config。
+
+## 2026-05-26 Captain Update (T58/T59 repo-noise supersession)
+
+- `T58` 已由 Captain 接受为 `PASS_WITH_WARNINGS`；其新增 figure assets 现在只应被视为 `T58` 的 task-scoped paper-material output，不得被重写成新的 benchmark/run 事实。
+- 当前唯一任务切换为 `T59: Statcalib separate comparator lane integration and bounded smoke`。
+- `T59` 允许的新增落盘范围只包括：
+  - task-scoped docs
+  - focused tests
+  - one statcalib-specific config file
+  - one task-scoped run root: `runs/p4_benchmark/T59_statcalib_lane_smoke_*`
+- 除上述单一 T59-scoped run root 外，不得新建、改写或 cleanup 任何其他 `runs/`、`artifacts/`、analysis-output 或 benchmark-output 目录。
+- `T59` 不得借机执行 repo cleanup，也不得把 mainline experiment evidence 与 theory-only branch materials 混写。
+
+## 2026-05-26 Captain Update (T57/T58 repo-noise supersession)
+
+- `T57` 已由 Captain 接受为 `PASS`；其 task-scoped run root 现在只应被视为历史证据，不得被重写成可变当前事实。
+- 当前唯一任务 `T58` 为 docs-only，禁止创建或修改任何 `runs/`、`artifacts/`、benchmark output 或 analysis-output 目录。
+- 如果 `T58` 需要生成 figure assets，只允许写入 `docs/figure_assets/T58_fr6_multi_seed_mechanism_intervention/`。
+- `T58` 不得触碰 source-tree code/config，不得触发 cleanup，也不得把 mainline experiment evidence 与 theory-only branch materials 混写。

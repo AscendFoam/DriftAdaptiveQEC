@@ -6,146 +6,113 @@ This document is a hedge-conditioned paper-material ledger, not a paper draft an
 
 It inherits the T56 claim table boundaries:
 
-- mechanism claims are explicitly classified as retain / weaken / retire / reframe / still-open
 - C4 remains `partial`; no claim is upgraded to causal proof or mechanism closure
 - the simple "high committed-b is harmful" framing is not supported as a general explanation
 - any second intervention lane remains `deferred pending better question`
-- all mechanism-facing statements below are bounded by the T56 wording guardrails
+- all mechanism-facing statements below stay inside the T56 wording guardrails
 
-This ledger builds on the existing `docs/reality_recovery/04_figure_and_result_ledger.md` (frozen 2026-05-19) and extends it with regeneration paths, ablation-specific gaps, and a paper-readiness assessment conditioned on T56.
+It is updated by T57 and T58 to reflect that FR7 and FR6 are no longer historical-only gaps. The new evidence is still bounded to the frozen software-HIL and six-seed mechanism lanes and must not be over-read as broader benchmark expansion or causal closure.
 
-## 1. Ablation/Result Pack Scope
+## 1. Ready / Partial / Missing Ledger
 
-### What is in scope
-
-1. Frozen-set benchmark ranking (C2, C3): the core empirical result
-2. Seed=20260429 mechanism-diagnosis figure (C4 partial): bounded single-seed diagnostic
-3. System architecture figure: dual-loop / param-bank / HIL boundary schematic
-4. Scenario-wise benchmark summary: bar charts or LER curves per scenario
-5. Feature/teacher ablation status: what ablation evidence exists and what is missing
-6. Latency/commit/violation summary table
-7. Benchmark boundary / evidence-level table
-8. Training reproducibility boundary table
-9. Deployment / readiness boundary table
-10. Statcalib comparator status table (interface-only)
-
-### What is out of scope (not in this pack)
-
-- Multi-seed mechanism/intervention figure (deferred by T56)
-- True `.tflite` runtime latency/accuracy figure (blocked by R12)
-- Real-board smoke evidence figure/table (blocked by R13, R14)
-- Statcalib integrated comparator result table (blocked by R24)
-- Cross-platform training reproducibility figure (blocked by R11)
-- Any expanded benchmark beyond the frozen set (blocked by R5, R9)
-
-## 2. Ready / Partial / Missing Ledger
-
-### 2.1 Figures
-
-| ID | Item | Status | Source data path(s) | Regeneration path | T56 hedge note |
+| ID | Item | Status | Source data path(s) | Regeneration path | T56/T57 hedge note |
 | --- | --- | --- | --- | --- | --- |
-| F1 | Seed=20260429 mechanism-diagnosis figure: per-window `teacher_b`, `delta_b`, committed `b`, window outcome | `partial` | `runs/T38_seed20260429_trace_probe_20260513/trace_export/trace_rows.csv`<br>`runs/T38_seed20260429_trace_probe_20260513/trace_export/paired_repeat_comparison.csv` | Manual script from `trace_rows.csv` columns: `teacher_b_q/p`, `predicted_delta_b_q/p`, `committed_b_q/p`, window outcome fields | Must be captioned as single-seed diagnostic evidence, not causal proof. T56 M4 retired "high committed-b is harmful" — do not use this figure to imply the instability is harmful. |
-| F2 | Benchmark evidence-boundary diagram: P3 software HIL, T24 revalidation, TFLite boundary, real-board readiness | `ready` | `docs/03_hil_p4_boundary_audit.md`<br>`docs/P4_benchmark_formal_protocol.md`<br>`docs/TFLite_runtime_bootstrap.md`<br>`docs/real_board_hil_readiness.md` | Schematic figure; draw.io or equivalent based on boundary descriptions in source docs | No direct mechanism claim. Safe as boundary diagram. |
-| F3 | Training portability / reproducibility figure | `blocked` | `docs/training_chain_portable_dependency_lock_plan.md`<br>`docs/training_chain_cpu_cleanenv_train_smoke.md` | Not producible. Replace with boundary table (T3). | N/A — blocked by R11. |
-| FR1 | System architecture figure: fast loop / slow loop / param bank / HIL boundary | `partial` | `physics/` runtime files<br>`cnn_fpga/runtime/`<br>`cnn_fpga/hwio/` | Schematic figure based on `docs/02_experiment_plan.md` Section 2 and code structure. Generation script not yet frozen. | Architecture is mechanism-neutral. No T56 hedge needed. |
-| FR4 | Scenario-wise benchmark summary figure: LER bar or line per scenario | `partial` | `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/comparison.csv` | Python script reading `comparison.csv`, grouping by scenario and mode, plotting `final_ler_mean` with error bars from `final_ler_std`. Script does not exist as a reusable asset. | Not mechanism-adjacent. Safe if focused on frozen-set ranking. |
-| FR6 | Multi-seed mechanism/intervention figure | `missing` | No data. T55 intervention results exist but T56 defers second intervention and reframes the mechanism story. | Cannot produce. T56 section 4 verdict: `deferred pending better question`. Any such figure would require a reframed intervention question and new execution task. | T56 M10: second intervention is `still-open` and deferred. Do not claim interventional causal evidence. |
-| FR7 | Feature/teacher ablation result table | `missing` | Historical P4 features ablation results exist but predate T24 frozen-set protocol. No formal revalidation under current locked protocol. | Requires a bounded re-execution of feature ablation under the T24 protocol (Full vs No HistDelta vs No TeacherPred vs No TeacherParams vs No TeacherDelta). This is the single largest evidence gap in the current ablation pack. | Ablation table would interact with T56 M9 (weakened: seed categories do not predict intervention outcomes). The ablation must not be used to support a "which feature causes failure" causal claim. |
-| FR8 | Statcalib comparator result table | `missing` | `cnn_fpga/decoder/statcalib.py` (interface only) | No integrated slow-loop run exists. Requires statcalib integration task beyond current roadmap. | N/A — blocked by R24. |
-| FR10 | True `.tflite` runtime latency/accuracy figure | `blocked` | `docs/TFLite_runtime_bootstrap.md` | Not producible. Requires TFLite runtime environment. | N/A — blocked by R12. |
-| FR11 | Real-board smoke evidence figure/table | `blocked` | `docs/real_board_hil_readiness.md` | Not producible. Requires hardware and bitstream. | N/A — blocked by R13, R14. |
-| FR12 | Latency / commit / violation summary table | `partial` | T24 `comparison.csv` and `summary.json` fields: `fast_cycle_violation_rate_mean`, `slow_update_violation_rate_mean`, `n_commits_applied`, `correction_saturation_rate_mean`, `aggressive_param_rate_mean` | Python script extracting these fields from T24 summary files. Shape and format not frozen. Correction saturation is structural zero (R20), requiring a footnote. | Not mechanism-adjacent. Safe if bounded to T24 observations. |
+| F1 | Seed=20260429 mechanism-diagnosis figure: per-window `teacher_b`, `delta_b`, committed `b`, window outcome | `partial` | `runs/T38_seed20260429_trace_probe_20260513/trace_export/trace_rows.csv`<br>`runs/T38_seed20260429_trace_probe_20260513/trace_export/paired_repeat_comparison.csv` | Manual script from `trace_rows.csv` columns: `teacher_b_q/p`, `predicted_delta_b_q/p`, `committed_b_q/p`, window outcome fields | Single-seed diagnostic only; not causal proof. |
+| F2 | Benchmark evidence-boundary diagram: P3 software HIL, T24 revalidation, TFLite boundary, real-board readiness | `ready` | `docs/03_hil_p4_boundary_audit.md`<br>`docs/P4_benchmark_formal_protocol.md`<br>`docs/TFLite_runtime_bootstrap.md`<br>`docs/real_board_hil_readiness.md` | Schematic figure from boundary docs | Safe as boundary diagram. |
+| FR1 | System architecture figure: fast loop / slow loop / param bank / HIL boundary | `partial` | `physics/` runtime files<br>`cnn_fpga/runtime/`<br>`cnn_fpga/hwio/` | Schematic figure based on code structure and experiment plan | Architecture-neutral; no mechanism claim. |
+| FR4 | Scenario-wise benchmark summary figure | `partial` | `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/comparison.csv` | Plot from `comparison.csv`; regeneration script still not frozen in governance docs | Safe if kept to frozen-set ranking. |
+| FR6 | Multi-seed mechanism/intervention figure | `ready` | `docs/fr6_multi_seed_mechanism_intervention_figure_pack.md`<br>`docs/figure_assets/T58_fr6_multi_seed_mechanism_intervention/fr6_multi_seed_mechanism_intervention.svg`<br>`docs/figure_assets/T58_fr6_multi_seed_mechanism_intervention/figure_data.csv`<br>`docs/figure_assets/T58_fr6_multi_seed_mechanism_intervention/figure_manifest.json`<br>`runs/T54_multi_seed_trace_phase_a_20260522/cross_seed_comparison.csv`<br>`runs/T55_multi_seed_i1_probe_20260523/analysis/intervention_summary.csv` | Regenerate with `docs/figure_assets/T58_fr6_multi_seed_mechanism_intervention/build_figure.py` | Ready as a descriptive figure pack only. Do not claim multi-seed causal closure. |
+| FR7 | Feature/teacher ablation result table | `ready` | `runs/p4_benchmark/T57_fr7_feature_teacher_ablation_20260524_000000/summary.json`<br>`runs/p4_benchmark/T57_fr7_feature_teacher_ablation_20260524_000000/comparison.csv`<br>`runs/p4_benchmark/T57_fr7_feature_teacher_ablation_20260524_000000/summary_pack/table.csv`<br>`runs/p4_benchmark/T57_fr7_feature_teacher_ablation_20260524_000000/provenance_manifest.json` | Already regenerated under the locked T24 protocol by T57 | Ready as a bounded frozen-set table only. Not causal attribution and not proof that every teacher channel is necessary. |
+| FR8 | Statcalib comparator result table | `missing` | `cnn_fpga/decoder/statcalib.py` (interface only) | No integrated slow-loop run exists | Blocked by R24. |
+| FR12 | Latency / commit / violation summary table | `partial` | T24/T57 `comparison.csv` and `summary.json` timing and commit fields | Scriptable from summary files; shape still not frozen in governance docs | Safe as bounded software-HIL observation table. |
 
-### 2.2 Tables
+## 2. FR6 Outcome Summary
 
-| ID | Item | Status | Source data path(s) | Regeneration path | T56 hedge note |
-| --- | --- | --- | --- | --- | --- |
-| T1 | Frozen-set benchmark ranking summary | `ready` | `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/comparison.csv` | `comparison.csv` contains all rows: scenario, mode, `final_ler_mean`, `final_ler_std`, `overflow_rate_mean`, etc. Generate LaTeX/markdown table by grouping scenario and ranking by `final_ler_mean`. | Must be labeled `mock-backed software HIL formal software revalidation`. Not "comprehensive benchmark." |
-| T2 | Benchmark boundary / evidence-level table | `ready` | `docs/03_hil_p4_boundary_audit.md`<br>`docs/P4_benchmark_formal_protocol.md` | Manual table from protocol docs; no data generation needed. | Safe because it is a non-claim boundary table. |
-| T3 | Training reproducibility boundary table | `ready` | `docs/training_chain_portable_dependency_lock_plan.md`<br>`docs/training_chain_cpu_cleanenv_train_smoke.md` | Manual table from bootstrap docs. | No mechanism claim. Safe as boundary table. |
-| T4 | Deployment / readiness boundary table | `ready` | `docs/03_hil_p4_boundary_audit.md`<br>`docs/TFLite_runtime_bootstrap.md`<br>`docs/real_board_hil_readiness.md` | Manual table from boundary docs. | No mechanism claim. Safe as non-claim table. |
-| T5 | Statcalib comparator status table | `partial` | `cnn_fpga/decoder/statcalib.py`<br>`tests/test_statcalib_interface.py` | Manual table from interface code and tests. Benchmark-evidence cells must remain `blocked`. | N/A — statcalib is orthogonal to mechanism. |
+T58 closes the paper-material FR6 gap by turning the existing T54/T55/T56 evidence chain into a reproducible figure pack without running new experiments.
 
-### 2.3 Ablation-Specific Items
+Key bounded readings from `docs/figure_assets/T58_fr6_multi_seed_mechanism_intervention/figure_data.csv`:
 
-The paper thesis requires feature/teacher ablation evidence to support the claim that the teacher-guided residual-b design is the key contributor to the frozen-set win. The current ablation evidence situation:
-
-| Ablation question | Existing evidence | Status in this pack | Gap |
+| Question | T58 bounded answer | Evidence status | Caution |
 | --- | --- | --- | --- |
-| Does removing histogram delta degrade LER? | Historical (pre-T24): Yes, LER degrades below UKF | `missing` from T24 formal protocol | No formal re-execution under locked protocol and 6-seed pack |
-| Does removing teacher prediction degrade LER? | Historical (pre-T24): Yes, but still above UKF | `missing` from T24 formal protocol | Same — historical only |
-| Does removing teacher params improve LER? | Historical (pre-T24): Apparent advantage, but flips with seed | `missing` from T24 formal protocol | Known to be seed-dependent; T56 M2 weakened the "primary cause" framing |
-| Does removing teacher deltas degrade LER? | Historical (pre-T24): Minimal effect | `missing` from T24 formal protocol | Marginal channel; lowest priority for revalidation |
-| Is the Gated v5 advantage reproducible under T24 protocol? | Historical (pre-T24): Yes, 3 seed × 4 scenario | `partial` | Not re-executed under T24 locked protocol with 6-seed pack |
-| Is the I1 intervention harmful or helpful? | T55: Mostly harmful (4/6 harmed) | `present` under T55 protocol | Not an ablation; it is an intervention. T56 M4 retired "high committed-b is harmful" |
+| Does the instability pattern appear outside the original borderline seed? | Yes. The six-seed figure reproduces the `quiet`, `classic`, and `universal` cross-seed picture already established by T54. | `present` | Descriptive category summary only; not causal proof. |
+| Does Gated v5 usually beat Full in the six-seed pack? | Mostly yes. Panel A shows four clear negative-gap classic seeds, one near-tie quiet seed, and one near-tie universal seed. | `present` | Bound to the six-seed T54 evidence pack only. |
+| Does the tested I1 clip-reduction intervention reliably help? | No. Panel B shows it is harmful in four seeds, mixed/no-clear-effect in one, and helpful in one. | `present` | One bounded intervention lane only; not mechanism closure. |
+| Can the paper now cite a bounded multi-seed mechanism/intervention figure? | Yes. T58 provides a final figure, a companion export, a figure-data snapshot, a provenance manifest, and a caption. | `present` | The figure must stay descriptive and non-causal. |
 
-## 3. Regeneration Paths Summary
+## 3. FR7 Outcome Summary
 
-| Asset | Regeneration type | Concrete steps | Estimated effort |
+T57 closes the historical-only FR7 gap by re-running the full 4-scenario x 6-mode x 2-repeat matrix under the locked T24 feature-ablation protocol.
+
+Key bounded readings from `runs/p4_benchmark/T57_fr7_feature_teacher_ablation_20260524_000000/summary_pack/table.csv`:
+
+| Question | T57 bounded answer | Evidence status | Caution |
 | --- | --- | --- | --- |
-| F1 | Custom script | Read `trace_rows.csv`, plot per-window committed-b / teacher-b / delta-b with window-outcome overlay | Low (data exists, one-seed) |
-| F2 | Manual draw | Schematic from boundary descriptions in source docs | Low |
-| FR1 | Manual draw | System architecture from code structure and experiment plan Section 2 | Medium |
-| FR4 | Python script | Read `comparison.csv`, group by scenario, bar chart with error bars | Low |
-| FR12 | Python script | Extract timing/commit/violation fields from T24 summary files | Low |
-| T1 | Python script | Read `comparison.csv`, group by scenario, rank by `final_ler_mean` | Low |
-| T2-T5 | Manual | From source docs | Low |
-| FR7 | **New execution needed** | Re-run feature ablation under T24 protocol: 5 variants × 4 scenarios × 2 repeats × paired seeds | High (~40 runs) |
+| Does `hybrid_full` still beat `ukf` on average? | Yes. Average LER improves from `0.817382` to `0.798545` (`dLER=-0.018837`). | `present` | Frozen-set software-HIL only. |
+| Does removing histogram delta hurt vs `hybrid_full`? | Yes, in all 4 scenarios and on average (`dLER=+0.028178`). It is also slightly worse than `ukf` on average. | `present` | Supports usefulness of this channel under the frozen lane, not causal proof. |
+| Does removing teacher prediction hurt vs `hybrid_full`? | Yes, in all 4 scenarios and on average (`dLER=+0.008706`), though it still remains slightly better than `ukf` on average. | `present` | Bounded evidence only. |
+| Does removing teacher params hurt vs `hybrid_full`? | No. It improves in all 4 scenarios and is the best mode in every scenario (`dLER=-0.048924`). | `present` | This weakens any simple "teacher params are a necessary positive contributor" story. |
+| Does removing teacher deltas materially hurt vs `hybrid_full`? | Only marginally overall (`dLER=+0.001784`) with mixed per-scenario sign and `aggressive_param` becoming the dominant overflow source. | `present` | Treat as near-neutral/mixed, not a strong necessity signal. |
 
-## 4. Paper-Readiness Assessment
+## 4. Paper-Readiness Assessment After T57/T58
 
-### Can the current paper proceed without additional ablation evidence?
+### What is now available
 
-**Yes, but with explicit limitations.**
+1. A formal FR7 ablation table exists under the locked T24 feature-ablation lane.
+2. A formal FR6 figure pack now exists under the locked T54/T55/T56 six-seed evidence lane.
+3. The paper can now cite feature/teacher ablation evidence without relying on historical pre-T24 runs.
+4. The paper can now cite a bounded multi-seed mechanism/intervention figure without treating old narrative text as the figure itself.
+5. The result pack now includes both a frozen-set ablation provenance manifest and an FR6 figure-pack provenance manifest.
 
-The current evidence pack supports a bounded paper thesis:
+### What this does not justify
 
-1. A working dual-loop teacher-guided residual-b decoding framework exists and is operational under mock-backed software HIL (C1).
-2. Under the frozen-set formal protocol, hybrid_residual_b wins all four drift scenarios against five classical baselines (C2, C3).
-3. One clean-environment CPU-only training smoke has been executed (C5).
-4. A statcalib interface contract and focused tests exist (C9).
-5. A bounded single-seed trace-supported mechanism diagnosis is available (C4 partial).
-6. The system boundary, deployment gap, and evidence limitations are well-documented.
+1. It does not prove a causal mechanism for the benchmark win.
+2. It does not justify the claim that the complete teacher-guided residual design is uniformly optimal.
+3. It does not justify the claim that teacher params are a necessary positive contributor, because the bounded FR7 table shows the opposite pattern under this reused ablation lane.
+4. It does not close the broader mechanism-claim gap, TFLite, real-board, training portability, or expanded-benchmark gaps.
 
-**What the paper cannot claim without FR7 (feature ablation re-execution):**
+### Updated paper stance
 
-1. **"Teacher-guided residual-b is the key design choice that causes the benchmark win"** — without formal ablation evidence under the locked T24 protocol, the paper cannot attribute the win to specific architectural features. The historical ablation evidence is pre-T24 and was not re-executed under the frozen protocol.
-2. **"Histogram delta is the critical input channel supporting the win"** — same reason. The historical ablation conclusion (experiment plan stable conclusion 9.1 item 8) is not backed by T24-grade evidence.
-3. **"Removing teacher params harms performance"** — the historical ablation evidence showed seed-dependent flip, and T56 further weakened the causal interpretation.
+- FR6 is no longer a blocker for citing a bounded multi-seed mechanism/intervention figure.
+- FR7 is no longer a blocker for citing a bounded ablation table.
+- FR6 and FR7 do remain blockers for any strong causal or architectural attribution sentence that assumes the mechanism story is closed or that more teacher channels explain the win.
+- The safest paper reading is:
+  `Under the frozen T24 software-HIL lane, histogram delta removal clearly hurts, teacher prediction removal mildly hurts, teacher delta removal is near-neutral/mixed, and the reused no-teacher-params variant unexpectedly performs best.`
+  For the six-seed mechanism lane, the safest reading is:
+  `The instability pattern is broadly present across the locked six-seed pack, and the tested clip-reduction intervention is mixed and mostly harmful; this is descriptive evidence, not causal proof.`
 
-**What the paper can claim without FR7:**
+## 5. Regeneration Paths Summary
 
-1. The frozen-set ranking result (who won, by how much) — this is fully supported by T24.
-2. The single-seed trace diagnosis — this is supported by T38/T54/T56, with explicit C4 partial wording.
-3. The system architecture and boundary — this is documentation, not experimental evidence.
+| Asset | Regeneration type | Concrete steps | Current status |
+| --- | --- | --- | --- |
+| F1 | Custom script | Read `trace_rows.csv`, plot per-window committed-b / teacher-b / delta-b with window-outcome overlay | Data ready; figure script not frozen |
+| F2 | Manual draw | Draw schematic from boundary docs | Ready |
+| FR1 | Manual draw | Schematic from code structure and experiment plan | Partial |
+| FR4 | Python script | Read T24 `comparison.csv`, plot grouped scenario bars/lines | Partial |
+| FR6 | Existing bounded execution + task-scoped figure script | Use `docs/figure_assets/T58_fr6_multi_seed_mechanism_intervention/build_figure.py` to regenerate the figure assets from frozen T54/T55 summaries | Ready |
+| FR7 | Existing bounded execution | Use T57 run root plus `summary_pack/table.csv` and `summary_pack/report.md` | Ready |
+| FR12 | Python script | Extract timing/commit/violation fields from T24/T57 summary files | Partial |
 
-**Recommended stance:**
+## 6. Explicit Non-Claims
 
-- If the paper can be positioned as an **evidence-bounded methods description** with the frozen-set ranking as the core empirical result and explicit disclosure of the ablation gap, then FR7 is a quality booster rather than a hard blocker.
-- If the paper needs to make **strong architectural attribution claims** ("the teacher-guided residual design explains the win"), then FR7 becomes a hard blocker and must be re-executed before submission.
+The following statements must not appear in the paper as completed evidence-backed claims:
 
-### T56 Hedge Conditioning for Paper Claims
+1. `Teacher-guided residual-b is proven to be the optimal design choice.`  
+   T57 shows the bounded no-teacher-params variant performs best in all 4 scenarios.
+2. `Teacher params are a necessary positive contributor to the frozen-set win.`  
+   T57 contradicts that strong reading under the reused ablation lane.
+3. `FR7 closes the mechanism story.`  
+   FR7 closes the result-table gap, not the causal-mechanism gap.
+4. `Histogram delta is the single cause of the win.`  
+   T57 only shows bounded degradation when that channel is removed.
+5. `Teacher-delta removal proves this channel does not matter.`  
+   The signal is mixed and near-neutral, not a universal zero-effect proof.
+6. `The FR6 figure proves the mechanism story.`  
+   T58 only provides a descriptive figure pack built from existing T54/T55/T56 evidence.
+7. `The paper now has comprehensive empirical coverage.`  
+   FR8, TFLite, real-board, training portability, and expanded-benchmark gaps remain.
 
-Every paper-facing claim that touches the mechanism story must respect these boundaries from the T56 claim table:
+## 7. Verdict
 
-| Paper section | T56 constraint | Required wording guardrail |
-| --- | --- | --- |
-| Abstract | M4 retired, M8 reframed | Do not write "instability is harmful" or "instability must be fixed." If mentioned, write "committed-b instability is broadly present and mostly correlates with Gv5 advantage." |
-| Introduction / contribution bullets | C4 partial, M2 weakened | Contribution must not claim mechanism understanding beyond single-seed diagnostic evidence. |
-| Mechanism subsection | M1 retain, M3 retain, M7 still-open | May state that seed=20260429 shows committed-b instability (M1) and the pattern generalizes to 5/6 seeds (M3). Must not claim teacher-delta causation (M7 still-open). |
-| Results / F1 caption | M4 retired, M8 reframed | Figure caption must state "single-seed diagnostic trace, not causal proof." Must not imply the instability is harmful. |
-| Limitations section | All T56 non-claims | Must surface C4 partial status, M7/M10 still-open, and the deferred second-intervention lane. |
+After T57/T58, FR6 and FR7 should be treated as `ready` for bounded paper-material use.
 
-## 5. Explicit Non-Claims
-
-The following statements must not appear in the paper as completed evidence-backed claims, even if they could be supported by future ablation re-execution:
-
-1. **"Feature/teacher ablation is complete under the formal protocol."** — FR7 is missing. Only historical pre-T24 ablation evidence exists.
-2. **"Teacher-guided residual-b is proven to be the optimal design choice."** — Requires ablation evidence under formal protocol that does not exist yet.
-3. **"The committed-b instability is harmful and should be reduced."** — T56 M4 retired this claim. M8 reframes it as a feature, not a defect.
-4. **"The multi-seed mechanism story is understood."** — T56 M7 (teacher-delta causation) is `still-open`. M10 (second intervention) is `still-open` and deferred.
-5. **"The second intervention lane is justified and will be executed."** — T56 Section 4 verdict: `deferred pending better question`.
-6. **"The paper makes comprehensive empirical claims."** — The ablation result pack is intentionally bounded. FR7 is missing. FR6 is deferred.
-7. **"The ablation result pack is complete and frozen."** — Two of the three missing items (FR7, FR6) from the original ledger remain unresolved. Only FR8 (statcalib) is intentionally deferred by roadmap.
-8. **"The mechanism-evidence gap is closed."** — C4 remains `partial`. M2, M4, M6, M9 are weakened or retired. M7 and M10 remain `still-open`.
-9. **"T47 closes the material gap for paper submission."** — This ledger identifies the gaps. It does not create new evidence. The paper may proceed only with explicit disclosure of the remaining ablation and mechanism gaps.
+The new limitation is no longer "FR6 or FR7 is missing." The new limitation is interpretive: the completed FR6 figure and FR7 table still point to a more complicated non-causal story than the historical narrative, so paper wording must stay descriptive and bounded.

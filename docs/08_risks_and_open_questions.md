@@ -393,3 +393,27 @@ Current T24-T29 status note:
 - 没有 `deferred` 或 `rejected` warning，因此这次不新增由 warning classification 触发的 risk。
 - `T47` 已完成，但 `FR7` 仍是最大的显式 ablation gap。
 - 当前唯一任务已切换为 `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`，任务包为 `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`。
+
+## 2026-05-26 Captain Update (T58 closeout supersession)
+
+- `T58` review 已由 Captain 接受为 `PASS_WITH_WARNINGS`。
+- Warning classification:
+  - `N1` = `accepted`
+  - `N2` = `accepted`
+  - `N3` = `accepted`
+  - `N4` = `accepted`
+- 没有新的 `deferred` 或 `rejected` warning，因此本次不新增由 warning classification 触发的 risk。
+- `T58` 关闭的是 `FR6` 的 bounded figure-pack 缺口，不是 `R10` 的 causal closure，也不是 `C4` 的支持级升级。
+- 当前 mainline 最大缺口已切换为 `FR8 / statcalib integrated comparator result table`，而当前最小下一步不是直接写 `FR8`，而是先做 `T59` 的 separate comparator lane integration + bounded smoke。
+- 当前唯一任务切换为 `T59: Statcalib separate comparator lane integration and bounded smoke`，任务包为 `docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`。
+- `R24` 继续有效：在 `T59` 之前和之后，都不得把 `statcalib` interface/helper 或 smoke lane 外推为已验证的正式 comparator evidence。
+
+## 2026-05-26 Captain Update (T57 closeout supersession)
+
+- `T57` review 已由 Captain 接受为 `PASS`。
+- `T57` review 没有新的 blocking issue，也没有新的 non-blocking item 需要再做 `accepted / deferred / rejected` 分类，因此不会新增由 warning classification 触发的 risk。
+- `FR7` 现在可以作为 bounded frozen-set ready result table 收口，但 `R10` 仍然开放；`T57` 不是 causal proof，不是 mechanism closure，也不是 expanded benchmark evidence。
+- 当前最强的 paper-risk 边界是：`hybrid_no_teacher_params` 在 4 个 frozen scenarios 中都成为最佳模式，因此 teacher-parameter necessity 仍然不能宣称成立。
+- 当前最大的 paper-material gap 已切换为 `FR6`；`FR8` 仍然排在后续。
+- 当前唯一任务切换为 `T58: FR6 multi-seed mechanism/intervention figure pack`，任务包为 `docs/tasks/Phase2/T58_fr6_multi_seed_mechanism_intervention_figure_pack.md`。
+- `T58` 是 docs-only，必须复用既有 `T54/T55/T56` 证据，不得启动新的 benchmark、trace、intervention、`.tflite`、real-board、training、cleanup 或 theory-branch 工作。

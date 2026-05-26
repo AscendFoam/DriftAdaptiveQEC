@@ -127,3 +127,19 @@
 - `T47` 已完成并由 Captain 以 `PASS` 收口；其输出只是在 docs-only 层面冻结 paper ablation/material ledger，不改变任何 HIL / P4 / `.tflite` / real-board 边界。
 - 当前唯一任务 `T57` 仍处在同一条 mock-backed P4 wrapper over software HIL 边界内。
 - `T57` 只能作为锁定 `T24` protocol 的 FR7 feature/teacher ablation bounded re-execution 推进，不得被改写成 benchmark expansion、`.tflite` runtime validation、real-board validation 或 mechanism closure。
+
+## 2026-05-26 Captain Update (T58/T59 boundary supersession)
+
+- `T58` 已由 Captain 接受为 `PASS_WITH_WARNINGS`；其 warning `N1-N4` 全部按 `accepted` 处理，且没有新的 `deferred` / `rejected` warning。
+- `T58` 只关闭 `FR6` 的 docs-only figure-pack 缺口，不改变任何 HIL / P4 / `.tflite` / real-board 边界事实。
+- 当前唯一任务切换为 `T59: Statcalib separate comparator lane integration and bounded smoke`。
+- `T59` 允许新增一个单独标记的 `statcalib` slow-loop comparator lane，但不得把它静默插入 frozen `T24` ranked set，也不得改写 `ParamMapper` 现有主线语义。
+- `T59` 的 bounded smoke 产出即使成功，也仍只属于 mock-backed software-HIL lane 的 bounded integration evidence；它不是 `.tflite` validation，不是 real-board validation，也不是 `FR8` 正式结果表本身。
+
+## 2026-05-26 Captain Update (T57/T58 boundary supersession)
+
+- `T57` 已由 Captain 接受为 `PASS`；其输出仍严格停留在同一条 mock-backed `P4` wrapper over software-HIL truth boundary 内。
+- `T57` 关闭的只是 `FR7` 的 frozen-set result-table gap，不得被改写成 mechanism closure、causal proof、expanded benchmark evidence、`.tflite` validation 或 real-board validation。
+- `T57` 进一步收紧了 paper wording 边界：由于 `hybrid_no_teacher_params` 在 4 个 frozen scenarios 中都成为最佳模式，teacher params necessary 的表述不再安全。
+- 当前唯一任务切换为 `T58: FR6 multi-seed mechanism/intervention figure pack`。
+- `T58` 是 docs-only 任务，只能复用既有 `T54/T55/T56` 证据，且不得运行任何新的 benchmark、trace export、intervention、retraining、`.tflite` 或 real-board 工作。

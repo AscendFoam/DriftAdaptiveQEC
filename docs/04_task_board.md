@@ -294,9 +294,27 @@
     - N4 F3 blocked carry-forward note = `accepted`
     - N5 conceptual regeneration paths instead of executable scripts = `accepted`
   - Result: the paper ablation/material ledger is now frozen honestly; FR7 remains missing and is now the next bounded execution gap
-- [ ] T57: FR7 feature/teacher ablation re-execution under locked T24 protocol
+- [x] T57: FR7 feature/teacher ablation re-execution under locked T24 protocol
   - Task package: `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`
-  - Status: current bounded execution lane to close the largest remaining ablation-pack gap without widening benchmark scope
+  - Output: `docs/fr7_feature_teacher_ablation_reexecution.md`
+  - Review output: `docs/review/T57_review.md`
+  - Captain verdict: `PASS`
+  - Warning handling: no blocking issues and no new `deferred` / `rejected` warning items
+  - Result: FR7 is now a ready frozen-set result table, but it does not close causal interpretation and it weakens any simple "teacher params are necessary for the win" story
+- [x] T58: FR6 multi-seed mechanism/intervention figure pack
+  - Task package: `docs/tasks/Phase2/T58_fr6_multi_seed_mechanism_intervention_figure_pack.md`
+  - Output: `docs/fr6_multi_seed_mechanism_intervention_figure_pack.md`
+  - Review output: `docs/review/T58_review.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - Warning handling:
+    - N1 mixed-governance diff provenance = `accepted`
+    - N2 FR6 deliverable completeness note = `accepted`
+    - N3 task-local seed-category derivation = `accepted`
+    - N4 worker self-review is not final acceptance review = `accepted`
+  - Result: FR6 is now a ready bounded descriptive figure pack; it does not close `R10` and does not upgrade `C4` beyond `partial`
+- [ ] T59: Statcalib separate comparator lane integration and bounded smoke
+  - Task package: `docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`
+  - Status: current mainline integration/smoke lane to unlock FR8 honestly without changing frozen T24 semantics
 
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
@@ -323,58 +341,57 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`
+`T59: Statcalib separate comparator lane integration and bounded smoke`
 
 状态说明：
 
-- `T56` 已完成并通过 review，Captain verdict = `PASS`
-- `docs/review/T56_review.md` blocking issues：none
-- `T56` review 的所有 non-blocking comments 均分类为 `accepted`
-- `T56` 已把当前 mechanism claims 明确收口为 retain / weaken / retire / reframe / still-open
-- `T55` 的 pure I1 lower-clip intervention 结论保持不变：mixed 且整体偏 harmful（harms `4/6`，helps `2/6`）
-- 旧的简单叙事 “high committed-`b` is harmful” 不再能作为一般机制解释
-- `C4` 仍然是 `partial`
-- 第二条 intervention lane 当前不是自动下一步；结论是 `deferred pending better question`
-- 当前项目保持 `Phase 2: Controlled Development / Go`，但子模式仍为 `Research Reality Recovery Mode`
-- `T47` 现在只是一个 downstream paper-material lane，而且只能在 `T56` 规定的 mechanism-hedge 边界下推进
+- `T58` 已完成并通过 review，Captain verdict = `PASS_WITH_WARNINGS`
+- `docs/review/T58_review.md` blocking issues：none
+- `T58` warning classification：`N1 accepted`、`N2 accepted`、`N3 accepted`、`N4 accepted`
+- `T58` 没有新的 `deferred` / `rejected` warning，因此没有新的 warning-derived risk
+- `T58` 已把 `FR6` 收口为 bounded descriptive figure pack，但这不是 `R10` 的 causal closure，也不会把 `C4` 升级为 `supported`
+- `FR8` 现在是最大的 mainline paper-material gap，但当前仓库仍缺 integrated `statcalib` comparator lane
+- 当前项目保持 `Phase 2: Controlled Development / Go`，但子模式仍是 `Research Reality Recovery Mode`
+- `T59` 是 mainline experiment-evidence lane 上的 bounded integration/smoke 任务，且必须与 theory-only branch materials 保持隔离
 
 为什么现在做它：
 
-1. `T56` 已经完成当前这轮 mechanism-claim reframing，当前最小可继续推进的任务不再是新 intervention，而是把 paper-facing ablation/result/material 缺口做诚实台账。
-2. `T47` 是 docs-only 任务，能在不打开 benchmark expansion、`.tflite`、真板、cleanup 或第二 intervention 范围的前提下，冻结“哪些 paper materials 已 ready / partial / missing”。
-3. 但 `T47` 不能被写成“机制已解决后自然进入论文扩写”；它必须保留 `T56` 给出的 hedge wording 与 non-claims。
-4. 如果 `T47` 无法在 hedge boundary 下完成诚实收口，则应停留在 deferred，而不是借 paper-material lane 静默升级 claim strength。
+1. `T57` 与 `T58` 已分别收口 `FR7` 和 `FR6`，当前最小且合理的 mainline gap 只剩 `FR8`。
+2. `FR8` 不能直接写成正式结果表，因为当前仓库只有 `T26` feasibility gate 和 `T30` interface contract，还没有 slow-loop / benchmark integration lane。
+3. `T59` 把下一步压缩为“separate statcalib comparator lane integration + bounded smoke”，先证明该 lane 能否在不改写 frozen `T24` semantics 的前提下 end-to-end 运行。
+4. `T59` 必须保持 mainline experiment branch 与 theory-only branch 的隔离；如果做不到，就不能把 `FR8` 推向 paper-facing evidence。
 
 ## Captain Output For Current Task
 
-- Current unique task: `T57`
-- Latest completed review: `docs/review/T47_review.md` with verdict `PASS`
-- Warning classification for T47: all non-blocking items `accepted`; no `deferred` / `rejected`
-- Next worker-facing task package: `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`
-- `T57` is allowed to proceed only as a bounded FR7 re-execution under the locked `T24` protocol
+- Current unique task: `T59`
+- Latest completed review: `docs/review/T58_review.md` with verdict `PASS_WITH_WARNINGS`
+- Warning classification for T58: `N1 accepted`, `N2 accepted`, `N3 accepted`, `N4 accepted`; no `deferred` / `rejected`
+- Next worker-facing task package: `docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`
+- `T59` is allowed to proceed only as a separate statcalib comparator lane integration + bounded smoke task; no frozen-set rewrite and no theory-branch edits
 
-1. 当前唯一任务：`T47`
-2. `T56` 已按 `PASS` 收口。
-3. T56 review blocking issues：
+1. 当前唯一任务：`T59`
+2. `T58` 已按 `PASS_WITH_WARNINGS` 收口。
+3. T58 review blocking issues：
    - none
-4. T56 non-blocking comments：
-   - accepted: worker self-review overwritten by adversarial review
-   - accepted: claim-table summary wording count inconsistency
-   - accepted: governance sync items in `docs/08_risks_and_open_questions.md`
-   - accepted: governance sync items in `docs/04_task_board.md`
-   - accepted: C4 boundary wording in ledger is long but justified
-5. T56 review output：`docs/review/T56_review.md`
-6. T47 任务包：`docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
+4. T58 warning handling：
+   - N1 accepted
+   - N2 accepted
+   - N3 accepted
+   - N4 accepted
+   - no new `deferred` / `rejected` warning
+   - no new risk opened by warning classification
+5. T58 review output：`docs/review/T58_review.md`
+6. T59 任务包：`docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`
 
-## Done Criteria For T47
+## Done Criteria For T59
 
-1. Produce a paper-pack ledger that classifies figures, tables, and ablation/result materials into ready / partial / missing.
-2. Keep all mechanism-facing wording explicitly bounded by the `T56` claim table and hedge boundary.
-3. State clearly whether the current paper can proceed with the existing evidence pack, and if not, exactly what remains missing.
-4. Preserve the distinction between “paper material pack frozen” and “mechanism solved”.
-5. Do not modify source code, configs, run roots, `.tflite`, hardware, cleanup outputs, or `docs/02_experiment_plan.md`.
-6. Do not reopen second-intervention execution, benchmark expansion, comparator expansion, `.tflite` runtime, or real-board scope.
- 
+1. Add a separate `statcalib` slow-loop comparator lane without rewriting frozen `T24` ranked-set semantics.
+2. Complete one bounded task-scoped smoke run and record the exact command, config, interpreter, and run root.
+3. Show that `statcalib` appears as a separately labeled mode in the smoke outputs and that its status/reason semantics propagate end-to-end.
+4. Keep all changes inside the T59 allowed-file set, plus one task-scoped run root only.
+5. Do not touch `.tflite`, real-board, training, cleanup, benchmark expansion, historical `runs/` / `artifacts/`, theory-only branch materials, or `docs/02_experiment_plan.md`.
+6. If the bounded smoke cannot produce an executable comparator lane honestly, report that boundary explicitly instead of upgrading `FR8`.
+
 ## 2026-05-24 Captain Update (T47 closeout)
  
 - `T47` review is accepted as `PASS`.
@@ -390,3 +407,15 @@ Long-term objective:
 - Current unique task is now `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`.
 - `T57` must stay inside the frozen four scenarios, the fixed six-mode feature-ablation set, and `repeats=2`. It must not retrain, touch source-tree code/config, or reopen `.tflite`, real-board, cleanup, benchmark expansion, comparator expansion, or intervention scope.
 - Worker-facing task package: `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`.
+
+## 2026-05-26 Captain Update (T57 closeout)
+
+- `T57` review is accepted as `PASS`.
+- Blocking issues: none.
+- `T57` review does not introduce any new non-blocking item that needs `accepted / deferred / rejected` classification beyond the verdict itself.
+- Therefore no new risk item is opened by warning classification for `T57`.
+- `T57` closes `FR7` as a bounded frozen-set result-table gap, but it does not close `R10` and does not justify causal or architectural-attribution upgrades.
+- The strongest bounded caution from `T57` is that `hybrid_no_teacher_params` becomes best in all 4 scenarios, so the paper must not claim that teacher params are a necessary positive contributor to the win.
+- Current unique task is now `T58: FR6 multi-seed mechanism/intervention figure pack`.
+- `T58` is docs-only. It must reuse existing `T54/T55/T56` evidence, must not run new benchmark/trace/intervention work, and must not touch theory-only branch materials.
+- Worker-facing task package: `docs/tasks/Phase2/T58_fr6_multi_seed_mechanism_intervention_figure_pack.md`.

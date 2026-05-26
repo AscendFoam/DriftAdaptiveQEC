@@ -408,3 +408,22 @@
 - `T47` closes the docs-only paper-material freeze honestly and keeps `FR7` explicit as the largest remaining ablation gap.
 - The current unique task is now `T57: FR7 feature/teacher ablation re-execution under locked T24 protocol`.
 - `T57` is a bounded execution task only. It must not retrain, modify source-tree code/config, or reopen `.tflite`, real-board, cleanup, comparator-expansion, or benchmark-expansion scope.
+
+### 2026-05-26 Captain Update (T57 closeout supersession)
+
+- `T57` has now been accepted as `PASS`.
+- `T57` review contains no blocking issue and no new non-blocking item that needs separate `accepted / deferred / rejected` handling.
+- No new risk item is opened by warning classification for `T57`.
+- `T57` closes `FR7` only as a bounded frozen-set result-table gap. It does not close `R10`, and it does not justify causal or architecture-attribution upgrades.
+- The most important legacy-boundary correction from `T57` is that `hybrid_no_teacher_params` becomes best in all 4 frozen scenarios, which weakens any simple teacher-parameter-necessity story.
+- The current unique task is now `T58: FR6 multi-seed mechanism/intervention figure pack`.
+- `T58` remains a docs-only mainline paper-material task and must not be mixed with theory-only branch materials.
+
+### 2026-05-26 Captain Update (T58 closeout supersession)
+
+- `T58` has been accepted as `PASS_WITH_WARNINGS`.
+- T58 warnings are classified as: `N1 accepted`, `N2 accepted`, `N3 accepted`, `N4 accepted`.
+- No `deferred` or `rejected` warning remains from this review, so no new risk item is opened by warning classification.
+- `T58` does not change any HIL / P4 / `.tflite` / real-board truth boundary. It only closes `FR6` as a bounded descriptive figure pack built from existing `T54/T55/T56` evidence.
+- The current unique task is now `T59: Statcalib separate comparator lane integration and bounded smoke`.
+- `T59` is the smallest honest next step toward `FR8`: integrate a separate `statcalib` comparator lane and prove bounded end-to-end executability without mixing with theory-only branch materials or altering frozen `T24` semantics.

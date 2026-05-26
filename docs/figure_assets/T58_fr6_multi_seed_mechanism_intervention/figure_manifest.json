@@ -1,0 +1,161 @@
+{
+  "task_id": "T58",
+  "generated_at_utc": "2026-05-26T10:56:18.319023+00:00",
+  "generator_script": "build_figure.py",
+  "output_files": [
+    "fr6_multi_seed_mechanism_intervention.svg",
+    "fr6_multi_seed_mechanism_intervention.png",
+    "figure_data.csv",
+    "figure_manifest.json",
+    "caption.md"
+  ],
+  "sources": {
+    "t54_cross_seed_comparison_csv": {
+      "path": "runs/T54_multi_seed_trace_phase_a_20260522/cross_seed_comparison.csv",
+      "columns_used": [
+        "seed_source",
+        "mode",
+        "mean_window_ler",
+        "max_delta_b_norm",
+        "max_committed_b_norm"
+      ],
+      "aggregation": "For each seed_source and mode, take the simple mean of mean_window_ler across all available rows; take the max of max_delta_b_norm and max_committed_b_norm."
+    },
+    "t55_intervention_summary_csv": {
+      "path": "runs/T55_multi_seed_i1_probe_20260523/analysis/intervention_summary.csv",
+      "columns_used": [
+        "seed",
+        "verdict",
+        "mean_gap_i1_minus_bl",
+        "n_scenarios_with_data"
+      ],
+      "aggregation": "Use per-seed mean_gap_i1_minus_bl and verdict directly from the summary table."
+    }
+  },
+  "derived_definitions": {
+    "baseline_gap_gv5_minus_full": "gated_v5_mean_ler - full_mean_ler; negative means Gated v5 is better.",
+    "i1_mean_gap_minus_baseline": "mean(I1) - mean(Gated v5 baseline); positive means I1 is worse.",
+    "instability_rule": "mode is treated as unstable if max_delta_b_norm > 0.08 and max_committed_b_norm > 0.5",
+    "seed_category_rule": {
+      "quiet": "Neither Full nor Gated v5 meets the instability rule.",
+      "classic": "Gated v5 meets the instability rule and Full does not.",
+      "universal": "Both Full and Gated v5 meet the instability rule.",
+      "other": "Fallback category if a new pattern appears."
+    }
+  },
+  "seed_rows": [
+    {
+      "seed": "20260425",
+      "full_mean_ler": 0.6625968954793279,
+      "gated_v5_mean_ler": 0.6635034122356245,
+      "baseline_gap_gv5_minus_full": 0.0009065167562966048,
+      "full_max_delta_b_norm": 0.008809384472408203,
+      "full_max_committed_b_norm": 0.021162353335081957,
+      "gated_v5_max_delta_b_norm": 0.03388437228200247,
+      "gated_v5_max_committed_b_norm": 0.016482336002959463,
+      "full_instability": false,
+      "gated_v5_instability": false,
+      "seed_category": "quiet",
+      "t54_rows_full": 8,
+      "t54_rows_gated_v5": 8,
+      "i1_mean_gap_minus_baseline": 0.163289,
+      "i1_verdict": "harmful",
+      "t55_n_scenarios": 4
+    },
+    {
+      "seed": "20260427",
+      "full_mean_ler": 0.6539845784505209,
+      "gated_v5_mean_ler": 0.5086322021484375,
+      "baseline_gap_gv5_minus_full": -0.14535237630208342,
+      "full_max_delta_b_norm": 0.016151414679847268,
+      "full_max_committed_b_norm": 0.08782839050001534,
+      "gated_v5_max_delta_b_norm": 0.14745959426477895,
+      "gated_v5_max_committed_b_norm": 0.7389653830602737,
+      "full_instability": false,
+      "gated_v5_instability": true,
+      "seed_category": "classic",
+      "t54_rows_full": 8,
+      "t54_rows_gated_v5": 8,
+      "i1_mean_gap_minus_baseline": 0.287166,
+      "i1_verdict": "harmful",
+      "t55_n_scenarios": 4
+    },
+    {
+      "seed": "20260428",
+      "full_mean_ler": 0.6005233244114496,
+      "gated_v5_mean_ler": 0.5215257666342235,
+      "baseline_gap_gv5_minus_full": -0.07899755777722617,
+      "full_max_delta_b_norm": 0.02698898757187755,
+      "full_max_committed_b_norm": 0.2006488947594322,
+      "gated_v5_max_delta_b_norm": 0.16970562748477142,
+      "gated_v5_max_committed_b_norm": 0.6347555558484029,
+      "full_instability": false,
+      "gated_v5_instability": true,
+      "seed_category": "classic",
+      "t54_rows_full": 4,
+      "t54_rows_gated_v5": 4,
+      "i1_mean_gap_minus_baseline": 0.057395,
+      "i1_verdict": "harmful",
+      "t55_n_scenarios": 4
+    },
+    {
+      "seed": "20260429",
+      "full_mean_ler": 0.631455864353514,
+      "gated_v5_mean_ler": 0.5035074988570118,
+      "baseline_gap_gv5_minus_full": -0.12794836549650213,
+      "full_max_delta_b_norm": 0.028354391778409094,
+      "full_max_committed_b_norm": 0.2009455549614431,
+      "gated_v5_max_delta_b_norm": 0.16970562748477142,
+      "gated_v5_max_committed_b_norm": 0.8726964725964433,
+      "full_instability": false,
+      "gated_v5_instability": true,
+      "seed_category": "classic",
+      "t54_rows_full": 4,
+      "t54_rows_gated_v5": 4,
+      "i1_mean_gap_minus_baseline": 0.322245,
+      "i1_verdict": "harmful",
+      "t55_n_scenarios": 4
+    },
+    {
+      "seed": "20260430",
+      "full_mean_ler": 0.6629127138274781,
+      "gated_v5_mean_ler": 0.4921361550328876,
+      "baseline_gap_gv5_minus_full": -0.17077655879459047,
+      "full_max_delta_b_norm": 0.008786008075408578,
+      "full_max_committed_b_norm": 0.021950234791097555,
+      "gated_v5_max_delta_b_norm": 0.16970562748477142,
+      "gated_v5_max_committed_b_norm": 0.8729286884864241,
+      "full_instability": false,
+      "gated_v5_instability": true,
+      "seed_category": "classic",
+      "t54_rows_full": 4,
+      "t54_rows_gated_v5": 4,
+      "i1_mean_gap_minus_baseline": -0.024372,
+      "i1_verdict": "mixed_or_no_clear_effect",
+      "t55_n_scenarios": 4
+    },
+    {
+      "seed": "20260510",
+      "full_mean_ler": 0.4924942846773228,
+      "gated_v5_mean_ler": 0.4885409646605314,
+      "baseline_gap_gv5_minus_full": -0.0039533200167914395,
+      "full_max_delta_b_norm": 0.16970562748477142,
+      "full_max_committed_b_norm": 0.8757710996175265,
+      "gated_v5_max_delta_b_norm": 0.16970562748477142,
+      "gated_v5_max_committed_b_norm": 0.8757815520850881,
+      "full_instability": true,
+      "gated_v5_instability": true,
+      "seed_category": "universal",
+      "t54_rows_full": 8,
+      "t54_rows_gated_v5": 8,
+      "i1_mean_gap_minus_baseline": -0.035533,
+      "i1_verdict": "helpful",
+      "t55_n_scenarios": 4
+    }
+  ],
+  "non_claims": [
+    "No new experiment was run to build this figure pack.",
+    "The figure does not prove causality or close the mechanism story.",
+    "The figure does not expand benchmark scope beyond the frozen six-seed pack."
+  ]
+}
