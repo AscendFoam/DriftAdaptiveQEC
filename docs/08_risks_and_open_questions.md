@@ -29,6 +29,8 @@
 | R23 | Aggregation/report writer 缺少 focused unit/static tests，未来可能再次出现格式或 null-semantics 回归 | 中 | `docs/review/T28_review.md` Missing Tests 指出相关路径没有现成 tests；T28 依赖 py_compile 和 bounded smoke 验证 | T28 可接受；后续再改 aggregation/report writer 时应补 focused unit test 或静态 report-shape check |
 | R24 | T30 的 `from_delta_b()` 只是最小 residual-b interface helper，未来若把它误当完整 statcalib/calibration comparator，可能把接口 contract 外推成未验证算法能力 | 中 | `docs/review/T30_review.md` N4 指出当前 baseline 逻辑为 `prior.b + delta_b`，适合 residual-b comparator contract，但不是完整 calibration logic；T30 只做 interface-level tests | 后续 statcalib slow-loop integration 或 benchmark task 必须重新验证 calibration objective、fallback semantics、status propagation 和 ranking boundary，不得直接把 T30 helper 写成 validated statcalib comparator |
 | R25 | 论文叙事与 recovery baseline 曾一度跑在证据材料前面，若继续在未冻结 truth 的情况下推进 prose，很容易再次把 draft 当成事实来源 | 高 | `T43` 已经产出 bounded Background / Related Work prose draft，但用户明确要求改入 `Research Reality Recovery Mode`，优先补 claim/evidence/material/figure/reproducibility baseline | 先完成 `T44` recovery baseline，再决定是否恢复任何 prose 扩写；恢复前不把 draft、skeleton 或 framing 当成证据升级 |
+| R26 | `T59` 把 `statcalib.teacher_mode` 带入了通用 fallback 链；若不隔离，未来 mixed config 可能让 statcalib 子配置隐式影响非 statcalib mode 语义 | 中 | `docs/review/T59_review.md` 指出 cross-mode coupling risk；`cnn_fpga/runtime/slow_loop_runtime.py` 的 `teacher_mode` fallback 链在 `T59` 后包含 `statcalib_cfg.get("teacher_mode", ...)` | 先执行 `T60`，把 `statcalib.teacher_mode` lookup 限制到 `mode=statcalib`，并补回归测试；在完成前不得开启 `FR8` |
+| R27 | `T59` integrated smoke 虽然证明了 lane 可运行，但 dirty-worktree provenance、缺失 negative/aggregation regression coverage、以及 unexpectedly strong generated-only result 共同意味着它还不能被当作 formal comparator evidence | 中高 | `docs/review/T59_review.md`；`docs/statcalib_comparator_lane_smoke.md`；`runs/p4_benchmark/t59statc_20260526_211532_3a3d00_23740/summary.json` 记录 `git_commit=a40adca` 但对应的是 dirty worktree smoke；当前 smoke 仅显示 `generated` 路径且 statcalib 显著领先 | 先执行 `T60` 做语义隔离与回归硬化；之后如要推进 `FR8`，必须新开 bounded fairness/robustness sanity task，并继续禁止把 `T59` 直接写成 formal comparator ranking |
 
 ## 当前开放问题
 
@@ -417,3 +419,15 @@ Current T24-T29 status note:
 - 当前最大的 paper-material gap 已切换为 `FR6`；`FR8` 仍然排在后续。
 - 当前唯一任务切换为 `T58: FR6 multi-seed mechanism/intervention figure pack`，任务包为 `docs/tasks/Phase2/T58_fr6_multi_seed_mechanism_intervention_figure_pack.md`。
 - `T58` 是 docs-only，必须复用既有 `T54/T55/T56` 证据，不得启动新的 benchmark、trace、intervention、`.tflite`、real-board、training、cleanup 或 theory-branch 工作。
+
+## 2026-05-26 Captain Update (T59 closeout supersession)
+
+- `T59` review has been accepted by Captain as `PASS_WITH_WARNINGS`.
+- Warning classification:
+  - `W1` cross-mode `teacher_mode` fallback coupling = `deferred` -> `R26`
+  - `W2` smoke-doc key-name mismatch = `accepted`
+  - `W3` dirty-worktree smoke provenance weakness = `deferred` -> `R27`
+- Additional carry-forward concerns from the review's missing-tests and suspicious-details sections are now covered by `R26` and `R27` rather than treated as closed.
+- `T59` closes separate-lane integration and one bounded smoke only. It does not open `FR8`, and it does not close `R24`.
+- The current unique task is now `T60: Statcalib lane isolation and regression hardening`, task package `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`.
+- `R26` and `R27` must be treated as pre-FR8 blockers.

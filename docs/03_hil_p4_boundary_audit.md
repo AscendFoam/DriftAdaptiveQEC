@@ -143,3 +143,12 @@
 - `T57` 进一步收紧了 paper wording 边界：由于 `hybrid_no_teacher_params` 在 4 个 frozen scenarios 中都成为最佳模式，teacher params necessary 的表述不再安全。
 - 当前唯一任务切换为 `T58: FR6 multi-seed mechanism/intervention figure pack`。
 - `T58` 是 docs-only 任务，只能复用既有 `T54/T55/T56` 证据，且不得运行任何新的 benchmark、trace export、intervention、retraining、`.tflite` 或 real-board 工作。
+
+## 2026-05-26 Captain Update (T59/T60 boundary supersession)
+
+- `T59` has been accepted as `PASS_WITH_WARNINGS`; its warning classification is `W1 deferred`, `W2 accepted`, `W3 deferred`.
+- `T59` only closes separate-lane integration and one bounded smoke. It does not open `FR8`, and it does not upgrade the evidence to formal comparator ranking.
+- The deferred items from `T59` confirm that pre-FR8 work is still required at the semantics and regression-coverage layer.
+- The current unique task is now `T60: Statcalib lane isolation and regression hardening`.
+- `T60` may harden `statcalib` semantics and tests only. It must not create a new run root, rerun the T59 smoke, widen benchmark scope, or touch theory-only branch materials.
+- Even after T60, any future fairness or `FR8` task remains inside the same mock-backed software-HIL truth boundary unless a later task explicitly upgrades that evidence.

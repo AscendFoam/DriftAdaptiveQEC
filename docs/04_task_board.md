@@ -312,9 +312,19 @@
     - N3 task-local seed-category derivation = `accepted`
     - N4 worker self-review is not final acceptance review = `accepted`
   - Result: FR6 is now a ready bounded descriptive figure pack; it does not close `R10` and does not upgrade `C4` beyond `partial`
-- [ ] T59: Statcalib separate comparator lane integration and bounded smoke
+- [x] T59: Statcalib separate comparator lane integration and bounded smoke
   - Task package: `docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`
-  - Status: current mainline integration/smoke lane to unlock FR8 honestly without changing frozen T24 semantics
+  - Output: `docs/statcalib_comparator_lane_smoke.md`
+  - Review output: `docs/review/T59_review.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - Warning handling:
+    - W1 cross-mode `teacher_mode` fallback coupling = `deferred`
+    - W2 smoke-doc key-name mismatch = `accepted`
+    - W3 dirty-worktree smoke provenance weakness = `deferred`
+  - Result: T59 closes the first integrated statcalib lane smoke gap, but it does not open FR8 and does not constitute formal comparator evidence
+- [ ] T60: Statcalib lane isolation and regression hardening
+  - Task package: `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`
+  - Status: current bounded hardening lane to isolate statcalib semantics and add regression coverage before any fairness or FR8 task
 
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
@@ -341,56 +351,55 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T59: Statcalib separate comparator lane integration and bounded smoke`
+`T60: Statcalib lane isolation and regression hardening`
 
-状态说明：
+Status:
 
-- `T58` 已完成并通过 review，Captain verdict = `PASS_WITH_WARNINGS`
-- `docs/review/T58_review.md` blocking issues：none
-- `T58` warning classification：`N1 accepted`、`N2 accepted`、`N3 accepted`、`N4 accepted`
-- `T58` 没有新的 `deferred` / `rejected` warning，因此没有新的 warning-derived risk
-- `T58` 已把 `FR6` 收口为 bounded descriptive figure pack，但这不是 `R10` 的 causal closure，也不会把 `C4` 升级为 `supported`
-- `FR8` 现在是最大的 mainline paper-material gap，但当前仓库仍缺 integrated `statcalib` comparator lane
-- 当前项目保持 `Phase 2: Controlled Development / Go`，但子模式仍是 `Research Reality Recovery Mode`
-- `T59` 是 mainline experiment-evidence lane 上的 bounded integration/smoke 任务，且必须与 theory-only branch materials 保持隔离
+- `T59` is complete and accepted as `PASS_WITH_WARNINGS`.
+- `docs/review/T59_review.md` reports no blocking issue.
+- Warning classification for `T59` is:
+  - W1 cross-mode `teacher_mode` fallback coupling = `deferred`
+  - W2 smoke-doc key-name mismatch = `accepted`
+  - W3 dirty-worktree smoke provenance weakness = `deferred`
+- Deferred items from `T59` are now tracked in risks and must be treated as pre-FR8 blockers.
+- `T59` proves separate-lane integration, status propagation, and one bounded smoke only. It does not open `FR8`, does not close `R24`, and does not upgrade the evidence to formal comparator ranking.
+- The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
+- `T60` is a code/test hardening task only and must remain isolated from theory-only branch materials.
 
-为什么现在做它：
+Why this task is next:
 
-1. `T57` 与 `T58` 已分别收口 `FR7` 和 `FR6`，当前最小且合理的 mainline gap 只剩 `FR8`。
-2. `FR8` 不能直接写成正式结果表，因为当前仓库只有 `T26` feasibility gate 和 `T30` interface contract，还没有 slow-loop / benchmark integration lane。
-3. `T59` 把下一步压缩为“separate statcalib comparator lane integration + bounded smoke”，先证明该 lane 能否在不改写 frozen `T24` semantics 的前提下 end-to-end 运行。
-4. `T59` 必须保持 mainline experiment branch 与 theory-only branch 的隔离；如果做不到，就不能把 `FR8` 推向 paper-facing evidence。
+1. `T59` already proved that the statcalib lane can execute end-to-end in one bounded smoke.
+2. The smallest remaining blockers are no longer "can it run?" but "is the lane isolated?" and "is the new semantics regression-covered?"
+3. A direct `FR8` task would be premature while cross-mode coupling and branch-coverage gaps remain open.
+4. `T60` deliberately does not reopen benchmark execution; it hardens semantics first.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T59`
-- Latest completed review: `docs/review/T58_review.md` with verdict `PASS_WITH_WARNINGS`
-- Warning classification for T58: `N1 accepted`, `N2 accepted`, `N3 accepted`, `N4 accepted`; no `deferred` / `rejected`
-- Next worker-facing task package: `docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`
-- `T59` is allowed to proceed only as a separate statcalib comparator lane integration + bounded smoke task; no frozen-set rewrite and no theory-branch edits
+- Current unique task: `T60`
+- Latest completed review: `docs/review/T59_review.md` with verdict `PASS_WITH_WARNINGS`
+- Warning classification for T59: `W1 deferred`, `W2 accepted`, `W3 deferred`
+- Next worker-facing task package: `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`
+- `T60` is allowed to proceed only as a bounded lane-isolation + regression-hardening task; no new smoke, no new run root, and no theory-branch edits
 
-1. 当前唯一任务：`T59`
-2. `T58` 已按 `PASS_WITH_WARNINGS` 收口。
-3. T58 review blocking issues：
+1. Current unique task: `T60`
+2. `T59` is closed as `PASS_WITH_WARNINGS`.
+3. T59 blocking issues:
    - none
-4. T58 warning handling：
-   - N1 accepted
-   - N2 accepted
-   - N3 accepted
-   - N4 accepted
-   - no new `deferred` / `rejected` warning
-   - no new risk opened by warning classification
-5. T58 review output：`docs/review/T58_review.md`
-6. T59 任务包：`docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`
+4. T59 warning handling:
+   - W1 deferred
+   - W2 accepted
+   - W3 deferred
+5. T59 review output: `docs/review/T59_review.md`
+6. T60 task package: `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`
 
-## Done Criteria For T59
+## Done Criteria For T60
 
-1. Add a separate `statcalib` slow-loop comparator lane without rewriting frozen `T24` ranked-set semantics.
-2. Complete one bounded task-scoped smoke run and record the exact command, config, interpreter, and run root.
-3. Show that `statcalib` appears as a separately labeled mode in the smoke outputs and that its status/reason semantics propagate end-to-end.
-4. Keep all changes inside the T59 allowed-file set, plus one task-scoped run root only.
-5. Do not touch `.tflite`, real-board, training, cleanup, benchmark expansion, historical `runs/` / `artifacts/`, theory-only branch materials, or `docs/02_experiment_plan.md`.
-6. If the bounded smoke cannot produce an executable comparator lane honestly, report that boundary explicitly instead of upgrading `FR8`.
+1. Isolate `statcalib.teacher_mode` so it cannot affect non-statcalib modes implicitly.
+2. Add direct estimator tests for negative, clip-boundary, and error paths.
+3. Add direct aggregation/report regression tests for `statcalib_*` fields, including `not_applicable` behavior for non-statcalib modes.
+4. Keep all changes inside the T60 allowed-file set.
+5. Do not create any new run root, rerun the T59 smoke, or modify historical benchmark artifacts.
+6. Do not touch `.tflite`, real-board, cleanup, training, benchmark expansion, fairness ranking, theory-only branch materials, or `docs/02_experiment_plan.md`.
 
 ## 2026-05-24 Captain Update (T47 closeout)
  

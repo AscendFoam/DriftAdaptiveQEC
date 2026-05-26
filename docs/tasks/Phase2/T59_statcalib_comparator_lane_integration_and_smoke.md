@@ -242,8 +242,21 @@ This task must stay on `main`-branch experiment work and must remain isolated fr
 
 ### What changed
 
-- Pending.
+- Added a distinct `statcalib` slow-loop mode in `cnn_fpga/runtime/slow_loop_runtime.py`.
+- Added a minimal teacher-anchored statcalib estimator plus histogram-summary helper in `cnn_fpga/decoder/statcalib.py`.
+- Added statcalib status propagation to `cnn_fpga/benchmark/run_hil_suite.py` and `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`.
+- Added task-scoped config `cnn_fpga/config/p4_multiscenario_statcalib_smoke.yaml`.
+- Added focused runtime tests in `tests/test_statcalib_runtime_smoke.py`.
+- Produced the bounded smoke run at `runs/p4_benchmark/t59statc_20260526_211532_3a3d00_23740`.
 
 ### Verification Notes
 
-- Pending.
+- Focused tests passed:
+  - `C:\ProgramData\anaconda3\python.exe -m unittest tests.test_statcalib_interface tests.test_statcalib_runtime_smoke`
+- Static verification passed:
+  - `C:\ProgramData\anaconda3\python.exe -m py_compile cnn_fpga/decoder/statcalib.py cnn_fpga/runtime/slow_loop_runtime.py cnn_fpga/benchmark/run_hil_suite.py cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py tests/test_statcalib_interface.py tests/test_statcalib_runtime_smoke.py`
+- Bounded smoke completed with the required matrix. The first foreground command hit Codex timeout; completion resumed with the same matrix and fixed `--run-dir`:
+  - `C:\ProgramData\anaconda3\python.exe -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_statcalib_smoke.yaml --scenario static_bias_theta --scenario linear_ramp --mode ukf --mode hybrid_residual_b --mode statcalib --paired-seeds --repeats 1 --run-dir runs/p4_benchmark/t59statc_20260526_211532_3a3d00_23740`
+- `comparison.csv` contains separately labeled `statcalib` rows for both scenarios, each with `coverage=1.0`.
+- `hil_summary.json` for the statcalib repeats shows `statcalib_status=generated`, `statcalib_reason=statcalib_params_emitted`, and `statcalib_generated_windows=600`.
+- Forbidden scopes remained untouched: no theory-only docs, no governance docs, no `param_mapper.py`, and no historical run root rewrites.

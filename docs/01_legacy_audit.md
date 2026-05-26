@@ -427,3 +427,12 @@
 - `T58` does not change any HIL / P4 / `.tflite` / real-board truth boundary. It only closes `FR6` as a bounded descriptive figure pack built from existing `T54/T55/T56` evidence.
 - The current unique task is now `T59: Statcalib separate comparator lane integration and bounded smoke`.
 - `T59` is the smallest honest next step toward `FR8`: integrate a separate `statcalib` comparator lane and prove bounded end-to-end executability without mixing with theory-only branch materials or altering frozen `T24` semantics.
+
+### 2026-05-26 Captain Update (T59 closeout supersession)
+
+- `T59` has been accepted as `PASS_WITH_WARNINGS`.
+- T59 warnings are classified as: `W1 deferred`, `W2 accepted`, `W3 deferred`.
+- The deferred items are now written into risks and remain open before any `FR8` task.
+- `T59` does not change any HIL / P4 / `.tflite` / real-board truth boundary. It only closes the first integrated `statcalib` lane smoke gap.
+- The current unique task is now `T60: Statcalib lane isolation and regression hardening`.
+- `T60` is the smallest honest next step after T59: isolate cross-mode semantics and harden regression coverage without reopening benchmark execution or mixing with theory-only branch materials.

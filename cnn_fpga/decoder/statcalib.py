@@ -80,6 +80,33 @@ def _coerce_prediction_mapping(value: Mapping[str, Any] | None) -> Dict[str, flo
     return out
 
 
+def summarize_histogram(histogram: np.ndarray | list[list[float]]) -> Dict[str, float]:
+    """Return a small, serializable histogram summary for statcalib provenance."""
+
+    hist = np.asarray(histogram, dtype=float)
+    if hist.ndim != 2:
+        raise ValueError(f"histogram must have rank 2, got shape {hist.shape}")
+    if not np.all(np.isfinite(hist)):
+        raise ValueError("histogram must contain only finite values")
+    mass = float(np.sum(hist))
+    if mass <= 0.0:
+        q_mean = 0.0
+        p_mean = 0.0
+    else:
+        q_axis = np.arange(hist.shape[0], dtype=float)
+        p_axis = np.arange(hist.shape[1], dtype=float)
+        q_weights = np.sum(hist, axis=1)
+        p_weights = np.sum(hist, axis=0)
+        q_mean = float(np.dot(q_axis, q_weights) / mass)
+        p_mean = float(np.dot(p_axis, p_weights) / mass)
+    return {
+        "mass": mass,
+        "q_mean": q_mean,
+        "p_mean": p_mean,
+        "max_bin": float(np.max(hist)) if hist.size else 0.0,
+    }
+
+
 @dataclass(frozen=True)
 class StatCalibInput:
     """Typed statcalib comparator input contract."""
@@ -287,3 +314,71 @@ class StatCalibOutput:
             "metadata": dict(self.metadata),
         }
 
+
+def run_statcalib_estimator(
+    statcalib_input: StatCalibInput,
+    *,
+    residual_scale_b: float = 1.0,
+    residual_clip_b: float = 0.12,
+    signal_threshold: float = 1.0e-3,
+    source: str = "statcalib",
+) -> StatCalibOutput:
+    """Emit a bounded teacher-anchored residual-b correction from simple window features."""
+
+    try:
+        signal_q = float(statcalib_input.calibration_features.get("mean_syndrome_q", 0.0))
+        signal_p = float(statcalib_input.calibration_features.get("mean_syndrome_p", 0.0))
+        valid_window = float(statcalib_input.calibration_features.get("valid_window", 1.0))
+        histogram_mass = float(statcalib_input.histogram_summary.get("mass", 0.0))
+        signal_norm = float(np.linalg.norm([signal_q, signal_p]))
+        base_metadata = {
+            "estimator": "teacher_anchored_window_mean_syndrome",
+            "residual_scale_b": float(residual_scale_b),
+            "residual_clip_b": float(residual_clip_b),
+            "signal_threshold": float(signal_threshold),
+            "signal_norm": signal_norm,
+            "valid_window": bool(valid_window >= 0.5),
+            "histogram_mass": histogram_mass,
+        }
+        if valid_window < 0.5 or histogram_mass <= 0.0 or signal_norm < float(signal_threshold):
+            return StatCalibOutput.not_generated(
+                source=source,
+                reason=STATCALIB_REASON_SIGNAL_INSUFFICIENT,
+                provenance={
+                    "window_id": statcalib_input.window_id,
+                    "slow_update_index": statcalib_input.slow_update_index,
+                    "input_source": statcalib_input.source,
+                },
+                metadata=base_metadata,
+            )
+
+        delta_b = np.clip(
+            float(residual_scale_b) * np.array([signal_q, signal_p], dtype=float),
+            -float(residual_clip_b),
+            float(residual_clip_b),
+        )
+        return StatCalibOutput.from_delta_b(
+            statcalib_input,
+            delta_b=delta_b,
+            source=source,
+            metadata={
+                **base_metadata,
+                "delta_b_pre_clip": [
+                    float(residual_scale_b) * signal_q,
+                    float(residual_scale_b) * signal_p,
+                ],
+            },
+        )
+    except Exception as exc:
+        return StatCalibOutput.diagnostic_error(
+            source=source,
+            provenance={
+                "window_id": statcalib_input.window_id,
+                "slow_update_index": statcalib_input.slow_update_index,
+                "input_source": statcalib_input.source,
+            },
+            metadata={
+                "estimator": "teacher_anchored_window_mean_syndrome",
+                "error": str(exc),
+            },
+        )

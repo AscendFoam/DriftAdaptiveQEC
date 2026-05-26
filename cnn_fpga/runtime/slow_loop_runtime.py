@@ -19,6 +19,12 @@ from cnn_fpga.decoder import (
     WindowVarianceBaseline,
 )
 from cnn_fpga.decoder.param_mapper import NoisePrediction, analyze_decoder_aggressiveness
+from cnn_fpga.decoder.statcalib import (
+    STATCALIB_STATUS_GENERATED,
+    StatCalibInput,
+    run_statcalib_estimator,
+    summarize_histogram,
+)
 from cnn_fpga.runtime.feature_builder import (
     RuntimeFeatureConfig,
     RuntimeFeatureSample,
@@ -73,6 +79,7 @@ class SlowLoopRuntimeConfig:
     residual_clip_mu: float = 0.25
     residual_scale_b: float = 1.0
     residual_clip_b: float = 0.25
+    statcalib_signal_threshold: float = 1.0e-3
     ema_alpha: float = 1.0
     ema_apply_to: str = "mu"
 
@@ -86,6 +93,7 @@ class SlowLoopRuntimeConfig:
         service_cfg = slow_cfg.get("inference_service", {})
         hybrid_cfg = slow_cfg.get("hybrid_residual_mu", {})
         hybrid_b_cfg = slow_cfg.get("hybrid_residual_b", {})
+        statcalib_cfg = slow_cfg.get("statcalib", {})
         rls_b_cfg = slow_cfg.get("rls_residual_b", {})
         pf_b_cfg = slow_cfg.get("particle_filter_residual_b", {})
         constant_mu_cfg = slow_cfg.get("constant_residual_mu", {})
@@ -97,10 +105,13 @@ class SlowLoopRuntimeConfig:
             feature_source_cfg = hybrid_cfg
         elif mode == "hybrid_residual_b":
             feature_source_cfg = hybrid_b_cfg
+        elif mode == "statcalib":
+            feature_source_cfg = statcalib_cfg
         elif mode == "rls_residual_b":
             feature_source_cfg = rls_b_cfg
         elif mode == "particle_filter_residual_b":
             feature_source_cfg = pf_b_cfg
+        b_residual_cfg = hybrid_b_cfg if mode != "statcalib" else statcalib_cfg
 
         constant_delta_mu_q = float(constant_mu_cfg.get("delta_mu_q", 0.0))
         constant_delta_mu_p = float(constant_mu_cfg.get("delta_mu_p", 0.0))
@@ -146,7 +157,10 @@ class SlowLoopRuntimeConfig:
                         "teacher_mode",
                         pf_b_cfg.get(
                             "teacher_mode",
-                            rls_b_cfg.get("teacher_mode", hybrid_cfg.get("teacher_mode", "window_variance")),
+                            rls_b_cfg.get(
+                                "teacher_mode",
+                                statcalib_cfg.get("teacher_mode", hybrid_cfg.get("teacher_mode", "window_variance")),
+                            ),
                         ),
                     ),
                 )
@@ -167,8 +181,9 @@ class SlowLoopRuntimeConfig:
             constant_delta_mu_p=constant_delta_mu_p,
             residual_scale_mu=float(hybrid_cfg.get("residual_scale_mu", 1.0)),
             residual_clip_mu=float(hybrid_cfg.get("residual_clip_mu", 0.25)),
-            residual_scale_b=float(hybrid_b_cfg.get("residual_scale_b", 1.0)),
-            residual_clip_b=float(hybrid_b_cfg.get("residual_clip_b", 0.25)),
+            residual_scale_b=float(b_residual_cfg.get("residual_scale_b", 1.0)),
+            residual_clip_b=float(b_residual_cfg.get("residual_clip_b", 0.25)),
+            statcalib_signal_threshold=float(statcalib_cfg.get("signal_threshold", 1.0e-3)),
             ema_alpha=float(post_cfg.get("ema_alpha", rls_b_cfg.get("ema_alpha", hybrid_cfg.get("ema_alpha", 1.0)))),
             ema_apply_to=str(
                 post_cfg.get(
@@ -675,6 +690,121 @@ class SlowLoopRuntime:
             metadata=metadata,
         )
 
+    def _build_statcalib_input(
+        self,
+        window: WindowFrame,
+        *,
+        teacher_prediction: NoisePrediction,
+        teacher_params: DecoderRuntimeParams,
+    ) -> StatCalibInput:
+        histogram = self._extract_histogram(window)
+        diagnostics = dict(window.payload.get("diagnostics", {}))
+        window_stats = dict(window.payload.get("window_stats", {}))
+        return StatCalibInput(
+            window_id=window.window_id,
+            slow_update_index=window.window_id,
+            prior_decoder_params=teacher_params,
+            histogram_summary=summarize_histogram(histogram),
+            calibration_features={
+                "mean_syndrome_q": float(window_stats.get("mean_syndrome_q", 0.0)),
+                "mean_syndrome_p": float(window_stats.get("mean_syndrome_p", 0.0)),
+                "std_syndrome_q": float(window_stats.get("std_syndrome_q", 0.0)),
+                "std_syndrome_p": float(window_stats.get("std_syndrome_p", 0.0)),
+                "overflow_ratio": float(diagnostics.get("overflow_ratio", 0.0)),
+                "window_ler": float(diagnostics.get("window_ler", 0.0)),
+                "valid_window": 1.0 if bool(diagnostics.get("valid_window", False)) else 0.0,
+            },
+            source="statcalib_runtime",
+            teacher_prediction={
+                "sigma": float(teacher_prediction.sigma),
+                "mu_q": float(teacher_prediction.mu_q),
+                "mu_p": float(teacher_prediction.mu_p),
+                "theta_deg": float(teacher_prediction.theta_deg),
+            },
+            teacher_decoder_params=teacher_params,
+            provenance={
+                "runtime_mode": self.config.mode,
+                "teacher_mode": self.config.teacher_mode,
+            },
+            metadata={
+                "window_stats": window_stats,
+                "window_diagnostics": diagnostics,
+            },
+        )
+
+    def _predict_statcalib(self, window: WindowFrame, active_params: DecoderRuntimeParams) -> DecoderRuntimeParams:
+        teacher_prediction = self._predict_teacher(window)
+        teacher_params = self.param_mapper.map_prediction(teacher_prediction, previous_params=active_params)
+        statcalib_input = self._build_statcalib_input(
+            window,
+            teacher_prediction=teacher_prediction,
+            teacher_params=teacher_params,
+        )
+        statcalib_output = run_statcalib_estimator(
+            statcalib_input,
+            residual_scale_b=self.config.residual_scale_b,
+            residual_clip_b=self.config.residual_clip_b,
+            signal_threshold=self.config.statcalib_signal_threshold,
+            source="statcalib",
+        )
+        if statcalib_output.status == STATCALIB_STATUS_GENERATED:
+            generated = statcalib_output.to_runtime_params()
+            b_next = generated.b.copy()
+            metadata = dict(generated.metadata)
+            if self.config.ema_apply_to in {"b", "all"}:
+                b_next = self._apply_b_postprocess(b_next)
+                metadata["postprocess"] = {
+                    "type": "ema",
+                    "alpha": float(np.clip(self.config.ema_alpha, 0.0, 1.0)),
+                    "apply_to": self.config.ema_apply_to,
+                }
+            aggressiveness = analyze_decoder_aggressiveness(
+                generated.K,
+                b_next,
+                gain_upper_bound=self.param_mapper.config.gain_clip[1],
+                correction_limit=self.param_mapper.config.correction_limit,
+                aggressive_gain_ratio=self.param_mapper.config.aggressive_gain_ratio,
+                aggressive_bias_ratio=self.param_mapper.config.aggressive_bias_ratio,
+            )
+            metadata.update(
+                {
+                    "prediction": teacher_prediction.to_dict(),
+                    "teacher_prediction": teacher_prediction.to_dict(),
+                    "teacher_params": teacher_params.to_dict(),
+                    "runtime_mode": self.config.mode,
+                    "teacher_mode": self.config.teacher_mode,
+                    "statcalib_input": statcalib_input.to_dict(),
+                    "statcalib_output": statcalib_output.to_dict(),
+                    "param_aggressiveness": aggressiveness,
+                }
+            )
+            return DecoderRuntimeParams(K=generated.K, b=b_next, metadata=metadata)
+
+        metadata = {
+            "prediction": teacher_prediction.to_dict(),
+            "teacher_prediction": teacher_prediction.to_dict(),
+            "teacher_params": teacher_params.to_dict(),
+            "runtime_mode": self.config.mode,
+            "teacher_mode": self.config.teacher_mode,
+            "statcalib_status": statcalib_output.status,
+            "statcalib_reason": statcalib_output.reason,
+            "statcalib_source": statcalib_output.source,
+            "statcalib_provenance": dict(statcalib_output.provenance),
+            "statcalib_metadata": dict(statcalib_output.metadata),
+            "statcalib_input": statcalib_input.to_dict(),
+            "statcalib_output": statcalib_output.to_dict(),
+            "statcalib_fallback": "teacher_params",
+            "param_aggressiveness": analyze_decoder_aggressiveness(
+                teacher_params.K,
+                teacher_params.b,
+                gain_upper_bound=self.param_mapper.config.gain_clip[1],
+                correction_limit=self.param_mapper.config.correction_limit,
+                aggressive_gain_ratio=self.param_mapper.config.aggressive_gain_ratio,
+                aggressive_bias_ratio=self.param_mapper.config.aggressive_bias_ratio,
+            ),
+        }
+        return DecoderRuntimeParams(K=teacher_params.K.copy(), b=teacher_params.b.copy(), metadata=metadata)
+
     def _apply_postprocess(self, prediction: NoisePrediction) -> NoisePrediction:
         alpha = float(np.clip(self.config.ema_alpha, 0.0, 1.0))
         if alpha >= 1.0 or self._ema_prediction is None:
@@ -926,6 +1056,16 @@ class SlowLoopRuntime:
             return DecoderRuntimeParams(K=proposed.K, b=proposed.b, metadata=metadata)
         if self.config.mode == "particle_filter_residual_b":
             proposed = self._predict_particle_filter_residual_b(window, active_params)
+            metadata = dict(proposed.metadata)
+            metadata.update(
+                {
+                    "window_id": window.window_id,
+                    "window_diagnostics": dict(window.payload.get("diagnostics", {})),
+                }
+            )
+            return DecoderRuntimeParams(K=proposed.K, b=proposed.b, metadata=metadata)
+        if self.config.mode == "statcalib":
+            proposed = self._predict_statcalib(window, active_params)
             metadata = dict(proposed.metadata)
             metadata.update(
                 {

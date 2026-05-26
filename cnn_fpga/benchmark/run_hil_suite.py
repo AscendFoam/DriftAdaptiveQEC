@@ -316,6 +316,58 @@ def _aggregate_teacher_branch_diagnostics(slow_finished: List[Dict]) -> Dict[str
     }
 
 
+def _aggregate_statcalib_diagnostics(slow_finished: List[Dict]) -> Dict[str, object]:
+    status_counts: Dict[str, int] = {}
+    reason_counts: Dict[str, int] = {}
+    windows_observed = 0
+    emitted_param_windows = 0
+    fallback_counts: Dict[str, int] = {}
+    signal_norms: List[float] = []
+    for item in slow_finished:
+        proposed = dict(item.get("proposed_params", {}))
+        metadata = dict(proposed.get("metadata", {}))
+        status = metadata.get("statcalib_status")
+        if status is None:
+            continue
+        windows_observed += 1
+        status_key = str(status)
+        status_counts[status_key] = status_counts.get(status_key, 0) + 1
+        reason = metadata.get("statcalib_reason")
+        if reason is not None:
+            reason_key = str(reason)
+            reason_counts[reason_key] = reason_counts.get(reason_key, 0) + 1
+        if status_key == "generated":
+            emitted_param_windows += 1
+        fallback = metadata.get("statcalib_fallback")
+        if fallback is not None:
+            fallback_key = str(fallback)
+            fallback_counts[fallback_key] = fallback_counts.get(fallback_key, 0) + 1
+        statcalib_meta = dict(metadata.get("statcalib_metadata", {}))
+        signal_norm = statcalib_meta.get("signal_norm")
+        if signal_norm is not None:
+            signal_norms.append(float(signal_norm))
+
+    if windows_observed == 0:
+        resolved_status = "not_applicable"
+        resolved_reason = "mode_does_not_emit_statcalib"
+    elif len(status_counts) == 1:
+        resolved_status = next(iter(status_counts))
+        resolved_reason = next(iter(reason_counts)) if len(reason_counts) == 1 else "mixed_or_unspecified"
+    else:
+        resolved_status = "mixed"
+        resolved_reason = "mixed"
+
+    return {
+        "statcalib_status": resolved_status,
+        "statcalib_reason": resolved_reason,
+        "statcalib_status_counts": status_counts,
+        "statcalib_windows_observed": windows_observed,
+        "statcalib_generated_windows": emitted_param_windows,
+        "statcalib_fallback_counts": fallback_counts,
+        "statcalib_signal_norm_mean": None if not signal_norms else float(np.mean(np.asarray(signal_norms, dtype=float))),
+    }
+
+
 def run_hil_session(config: Dict, run_dir: Path) -> Dict:
     experiment = config.get("experiment", {})
     seed = int(experiment.get("seed", 1234))
@@ -487,6 +539,7 @@ def run_hil_session(config: Dict, run_dir: Path) -> Dict:
 
         reason_counts = _extract_reason_counts(slow_failed)
         teacher_diag_summary = _aggregate_teacher_branch_diagnostics(slow_finished)
+        statcalib_diag_summary = _aggregate_statcalib_diagnostics(slow_finished)
         backend_event_counts: Dict[str, int] = {}
         for event in backend_events:
             kind = str(event["kind"])
@@ -540,6 +593,7 @@ def run_hil_session(config: Dict, run_dir: Path) -> Dict:
             "aggressive_param_correction_rate": fast_loop_summary.get("aggressive_param_correction_rate"),
             "dominant_overflow_source": fast_loop_summary.get("dominant_overflow_source"),
             "teacher_branch_diagnostics": teacher_diag_summary,
+            "statcalib_diagnostics": statcalib_diag_summary,
             "final_snapshot": final_snapshot,
         }
         save_json(run_dir / "hil_summary.json", summary)

@@ -1,13 +1,13 @@
 ## 2026-05-26 Captain Final Supersession
 
-- Current unique task: `T59: Statcalib separate comparator lane integration and bounded smoke`
-- Task package: `docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`
-- `T58` is complete and accepted as `PASS_WITH_WARNINGS`.
-- T58 warning classification: `N1 accepted`, `N2 accepted`, `N3 accepted`, `N4 accepted`.
-- T58 review contains no `deferred` / `rejected` warning item, so no new warning-derived risk is opened.
-- `FR6` is now closed as a bounded descriptive figure pack only; it is not `R10` causal closure and does not upgrade `C4` beyond `partial`.
-- `T59` may proceed only as a separate `statcalib` comparator-lane integration + bounded smoke task on the mainline experiment branch.
-- `T59` must not touch theory-only branch materials and must not rewrite frozen `T24` semantics.
+- Current unique task: `T60: Statcalib lane isolation and regression hardening`
+- Task package: `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`
+- `T59` is complete and accepted as `PASS_WITH_WARNINGS`.
+- T59 warning classification: `W1 deferred`, `W2 accepted`, `W3 deferred`.
+- Deferred items from `T59` are now tracked in risks and must be treated as pre-FR8 blockers.
+- `T59` closes integrated-lane smoke execution only. It is not `FR8` formal comparator evidence.
+- `T60` may proceed only as a code/test hardening task on the mainline experiment branch.
+- `T60` must not create a new run root, rerun `T59`, touch theory-only branch materials, or rewrite frozen `T24` semantics.
 
 # Handoff
 
@@ -17,14 +17,14 @@
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T59: Statcalib separate comparator lane integration and bounded smoke`
-- 任务包：`docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`
+- 当前唯一任务：`T60: Statcalib lane isolation and regression hardening`
+- 任务包：`docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`
 
 Captain supersession note:
 
-- The authoritative current task for all new worker action is `T59: Statcalib separate comparator lane integration and bounded smoke`.
-- Authoritative task package: `docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`.
-- If any older line in this file still mentions `T58` as current, treat it as historical text only.
+- The authoritative current task for all new worker action is `T60: Statcalib lane isolation and regression hardening`.
+- Authoritative task package: `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`.
+- If any older line in this file still mentions `T59` or `T58` as current, treat it as historical text only.
 
 2026-05-24 Captain supersession:
 
@@ -69,6 +69,21 @@ Captain supersession note:
 - Current unique task is now `T59: Statcalib separate comparator lane integration and bounded smoke`.
 - `T59` is a mainline experiment-branch bounded integration/smoke task. It must keep `statcalib` as a separate comparator lane, must not rewrite frozen `T24` semantics, and must not touch theory-only branch materials.
 - Next worker-facing task package: `docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`.
+
+## 2026-05-26 Captain Update (T59 closeout)
+
+- `T59` review accepted by Captain as `PASS_WITH_WARNINGS`.
+- Blocking issues: none.
+- Warning classification:
+  - `W1` cross-mode `teacher_mode` fallback coupling = `deferred`
+  - `W2` smoke-doc key-name mismatch = `accepted`
+  - `W3` dirty-worktree smoke provenance weakness = `deferred`
+- Deferred items from `T59` are now written into risks and remain open before any `FR8` task.
+- `T59` is complete. It closes separate-lane integration, status propagation, and one bounded smoke only.
+- `T59` does not open `FR8`, does not close `R24`, and does not upgrade the evidence to formal comparator ranking.
+- Current unique task is now `T60: Statcalib lane isolation and regression hardening`.
+- `T60` is a mainline experiment-branch code/test hardening task. It must isolate `statcalib.teacher_mode`, add regression coverage, create no new run root, and remain separate from theory-only branch materials.
+- Next worker-facing task package: `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`.
 
 Captain closeout note after T56:
 

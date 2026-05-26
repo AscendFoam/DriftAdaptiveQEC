@@ -315,8 +315,8 @@ def _write_report(
         "",
         "## Scenario Comparison",
         "",
-        "| Scenario | Mode | LER Mean | LER Std | Overflow Mean | Hist Sat Mean | Commit Mean | Slow Viol Mean | Fast Viol Mean | Dominant Source | Teacher Diag | Artifact |",
-        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- |",
+        "| Scenario | Mode | LER Mean | LER Std | Overflow Mean | Hist Sat Mean | Commit Mean | Slow Viol Mean | Fast Viol Mean | Dominant Source | Teacher Diag | Statcalib | Artifact |",
+        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- | --- | --- |",
     ]
     for row in comparison_rows:
         def _fmt(value: Any) -> str:
@@ -332,6 +332,7 @@ def _write_report(
             f"{_fmt(row['n_commits_applied_mean'])} | {_fmt(row['slow_update_violation_rate_mean'])} | "
             f"{_fmt(row['fast_cycle_violation_rate_mean'])} | {row['dominant_overflow_source']} | "
             f"{row.get('teacher_diagnostics_status') or ''} | "
+            f"{row.get('statcalib_status') or ''} | "
             f"{row.get('artifact_path') or ''} |"
         )
 
@@ -627,6 +628,21 @@ def main() -> int:
                         summary.get("teacher_branch_diagnostics", {}).get("teacher_gate_std")
                     ),
                     "teacher_per_scalar": dict(summary.get("teacher_branch_diagnostics", {}).get("per_scalar", {}) or {}),
+                    "statcalib_status": str(
+                        summary.get("statcalib_diagnostics", {}).get("statcalib_status", "not_applicable")
+                    ),
+                    "statcalib_reason": str(
+                        summary.get("statcalib_diagnostics", {}).get(
+                            "statcalib_reason",
+                            "mode_does_not_emit_statcalib",
+                        )
+                    ),
+                    "statcalib_generated_windows": int(
+                        summary.get("statcalib_diagnostics", {}).get("statcalib_generated_windows", 0)
+                    ),
+                    "statcalib_signal_norm_mean": _optional_float(
+                        summary.get("statcalib_diagnostics", {}).get("statcalib_signal_norm_mean")
+                    ),
                     "run_dir": str(repeat_run_dir),
                 }
                 per_repeat.append(row)
@@ -670,6 +686,19 @@ def main() -> int:
                 "teacher_diagnostics_generated_repeats": sum(
                     1 for item in per_repeat if item.get("teacher_diagnostics_status") == "generated"
                 ),
+                "statcalib_status": _aggregate_status_field(
+                    per_repeat,
+                    "statcalib_status",
+                    default="not_applicable",
+                ),
+                "statcalib_reason": _aggregate_status_field(
+                    per_repeat,
+                    "statcalib_reason",
+                    default="mode_does_not_emit_statcalib",
+                ),
+                "statcalib_generated_repeats": sum(
+                    1 for item in per_repeat if item.get("statcalib_status") == "generated"
+                ),
             }
             for metric_key in (
                 "final_ler",
@@ -685,6 +714,8 @@ def main() -> int:
                 "teacher_scalar_abs_mean",
                 "teacher_gate_mean",
                 "teacher_gate_std",
+                "statcalib_generated_windows",
+                "statcalib_signal_norm_mean",
             ):
                 aggregated.update(_aggregate_metric(per_repeat, metric_key))
             aggregated["teacher_per_scalar"] = _aggregate_per_scalar(per_repeat)
@@ -766,6 +797,11 @@ def main() -> int:
             "teacher_diagnostics_status_reason",
             "teacher_diagnostics_support_boundary",
             "teacher_diagnostics_generated_repeats",
+            "statcalib_status",
+            "statcalib_reason",
+            "statcalib_generated_repeats",
+            "statcalib_generated_windows_mean",
+            "statcalib_signal_norm_mean_mean",
             "teacher_scalar_feature_dim_mean",
             "teacher_contribution_l2_mean_mean",
             "teacher_scalar_abs_mean_mean",

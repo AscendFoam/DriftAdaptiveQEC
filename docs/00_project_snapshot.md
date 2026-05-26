@@ -340,3 +340,12 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - The largest remaining mainline paper-material gap is now `FR8`, but the repository still lacks an integrated `statcalib` comparator lane.
 - The current unique task is now `T59: Statcalib separate comparator lane integration and bounded smoke`.
 - `T59` stays on the mainline experiment-evidence lane, must remain isolated from theory-only branch materials, and must not rewrite frozen `T24` benchmark semantics.
+
+## 2026-05-26 Captain Update (T59 closeout supersession)
+
+- `T59` has now been accepted as `PASS_WITH_WARNINGS`.
+- T59 warning classification is: `W1 deferred`, `W2 accepted`, `W3 deferred`.
+- The deferred items have been written into the risk ledger and must be treated as pre-FR8 blockers.
+- `T59` closes separate-lane integration, status propagation, and one bounded smoke only. It does not open `FR8`, and it does not upgrade the evidence to formal comparator ranking.
+- The current unique task is now `T60: Statcalib lane isolation and regression hardening`.
+- `T60` stays on the mainline experiment-evidence lane, must create no new run root, must remain isolated from theory-only branch materials, and must not rewrite frozen `T24` semantics.

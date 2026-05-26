@@ -220,3 +220,11 @@
 - 当前唯一任务 `T58` 为 docs-only，禁止创建或修改任何 `runs/`、`artifacts/`、benchmark output 或 analysis-output 目录。
 - 如果 `T58` 需要生成 figure assets，只允许写入 `docs/figure_assets/T58_fr6_multi_seed_mechanism_intervention/`。
 - `T58` 不得触碰 source-tree code/config，不得触发 cleanup，也不得把 mainline experiment evidence 与 theory-only branch materials 混写。
+
+## 2026-05-26 Captain Update (T59/T60 repo-noise supersession)
+
+- `T59` has been accepted as `PASS_WITH_WARNINGS`; its run root `runs/p4_benchmark/t59statc_20260526_211532_3a3d00_23740` must now be treated as frozen historical evidence and must not be regenerated or rewritten.
+- The current unique task is now `T60: Statcalib lane isolation and regression hardening`.
+- `T60` is not allowed to create any new run root, benchmark output, analysis-output, or artifact directory.
+- `T60` may modify only the allowed source/test/docs files and may add only task-scoped test modules.
+- `T60` must not use repo cleanup as a side goal, and it must keep mainline experiment evidence separate from theory-only branch materials.

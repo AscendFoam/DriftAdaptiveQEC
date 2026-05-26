@@ -2229,3 +2229,39 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 2. 新增任务包 `docs/tasks/Phase2/T58_fr6_multi_seed_mechanism_intervention_figure_pack.md`
 3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T58`
 4. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md`、`docs/08_risks_and_open_questions.md` 同步 `T57` 收口和 `T58` 边界
+
+## D-2026-05-26-04
+
+- 日期：`2026-05-26`
+- 决策：接受 `T59_review.md` 的 `PASS_WITH_WARNINGS`，标记 `T59` 完成，并将当前唯一任务切换为 `T60: Statcalib lane isolation and regression hardening`。
+
+### 背景
+
+`T59` 的目标是把 `statcalib` 作为 separate comparator lane 接入 slow-loop/runtime/benchmark 链路，并用一个 bounded smoke 证明它能端到端运行。依据 `docs/review/T59_review.md` 和本轮 captain 复核：
+
+1. blocking issues = none
+2. focused tests 和 `py_compile` 均通过
+3. `runs/p4_benchmark/t59statc_20260526_211532_3a3d00_23740` 的 bounded smoke 真实存在，且 `comparison.csv` / `summary.json` 中已出现独立 `mode=statcalib` 与 `statcalib_status` / `statcalib_reason`
+4. 但当前结果仍只是 integration evidence，不是 `FR8` formal comparator evidence
+
+### Warning 处理
+
+本次 warning 分类如下：
+
+1. `W1` cross-mode `teacher_mode` fallback coupling = `deferred`
+2. `W2` smoke-doc key-name mismatch = `accepted`
+3. `W3` dirty-worktree smoke provenance weakness = `deferred`
+
+另外，review 中的 missing-tests / suspicious-details 结论不单独再开新的 warning 编号，而是并入 `R26` / `R27` 继续跟踪。
+
+### 结论
+
+`T59` 可以完成，但它关闭的只是 "integrated lane can execute once" 这一层缺口，不是 `FR8` 正式结果表，也不是 formal comparator ranking。下一步最小且更诚实的动作不是直接开 `FR8`，而是先做 `T60`，把 cross-mode semantics 和 regression coverage 硬化到足以承接后续 fairness / robustness 审计。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T59 -> PASS_WITH_WARNINGS`，并切换 `Current Unique Task` 到 `T60`
+2. 新增任务包 `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T60`
+4. `docs/08_risks_and_open_questions.md` 新增 `R26` / `R27`，并同步 `T59` warning 分类
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T59` 收口与 `T60` 边界
