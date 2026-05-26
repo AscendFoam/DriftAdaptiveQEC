@@ -349,3 +349,13 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - `T59` closes separate-lane integration, status propagation, and one bounded smoke only. It does not open `FR8`, and it does not upgrade the evidence to formal comparator ranking.
 - The current unique task is now `T60: Statcalib lane isolation and regression hardening`.
 - `T60` stays on the mainline experiment-evidence lane, must create no new run root, must remain isolated from theory-only branch materials, and must not rewrite frozen `T24` semantics.
+
+## 2026-05-27 Captain Update (T60 closeout supersession)
+
+- `T60` has now been accepted as `PASS`.
+- `T60` review introduces no blocking issue and no new warning item that needs `accepted / deferred / rejected` classification.
+- `T60` closes the T59 cross-mode semantics blocker; `W1` is resolved and `R26` should now be treated as closed.
+- `R27` remains open but narrower: the regression-coverage gap is closed, while provenance-clean fairness/robustness sanity is still missing before any `FR8` task.
+- `T60` hardens semantics and tests only; it does not upgrade the lane into formal comparator evidence.
+- The current unique task is now `T61: Statcalib clean-provenance fairness sanity rerun`.
+- `T61` must stay on the mainline experiment branch, start from a clean committed worktree, create at most one T61-scoped run root, and remain separate from theory-only branch materials.

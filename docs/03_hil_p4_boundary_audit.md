@@ -152,3 +152,12 @@
 - The current unique task is now `T60: Statcalib lane isolation and regression hardening`.
 - `T60` may harden `statcalib` semantics and tests only. It must not create a new run root, rerun the T59 smoke, widen benchmark scope, or touch theory-only branch materials.
 - Even after T60, any future fairness or `FR8` task remains inside the same mock-backed software-HIL truth boundary unless a later task explicitly upgrades that evidence.
+
+## 2026-05-27 Captain Update (T60/T61 boundary supersession)
+
+- `T60` has been accepted as `PASS`; it introduces no new warning item and does not change any HIL / P4 / `.tflite` / real-board truth boundary.
+- `T60` closes the T59 cross-mode semantics blocker and regression-gap blocker only. It does not convert the statcalib lane into formal comparator evidence.
+- `R26` should now be treated as closed. `R27` remains open and is now limited to provenance-clean fairness/robustness sanity before any `FR8` task.
+- The current unique task is now `T61: Statcalib clean-provenance fairness sanity rerun`.
+- `T61` still stays fully inside the same mock-backed software-HIL truth boundary: same T59 smoke config family, same two scenarios, same three modes, `--paired-seeds`, and only `repeats=2` as a bounded CLI-strengthening step.
+- Even if `T61` succeeds, that result still is not `.tflite` runtime validation, real-board validation, or `FR8` by itself.

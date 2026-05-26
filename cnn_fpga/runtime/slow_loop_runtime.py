@@ -112,6 +112,20 @@ class SlowLoopRuntimeConfig:
         elif mode == "particle_filter_residual_b":
             feature_source_cfg = pf_b_cfg
         b_residual_cfg = hybrid_b_cfg if mode != "statcalib" else statcalib_cfg
+        shared_teacher_mode = str(
+            constant_mu_cfg.get(
+                "teacher_mode",
+                pf_b_cfg.get(
+                    "teacher_mode",
+                    rls_b_cfg.get("teacher_mode", hybrid_cfg.get("teacher_mode", "window_variance")),
+                ),
+            )
+        ).lower()
+        teacher_mode = (
+            str(statcalib_cfg.get("teacher_mode", shared_teacher_mode)).lower()
+            if mode == "statcalib"
+            else str(feature_source_cfg.get("teacher_mode", shared_teacher_mode)).lower()
+        )
 
         constant_delta_mu_q = float(constant_mu_cfg.get("delta_mu_q", 0.0))
         constant_delta_mu_p = float(constant_mu_cfg.get("delta_mu_p", 0.0))
@@ -150,21 +164,7 @@ class SlowLoopRuntimeConfig:
             fixed_mu_q=float(fixed_cfg.get("mu_q", model_cfg.get("mu_q", 0.0))),
             fixed_mu_p=float(fixed_cfg.get("mu_p", model_cfg.get("mu_p", 0.0))),
             fixed_theta_deg=float(fixed_cfg.get("theta_deg", model_cfg.get("theta_deg", 0.0))),
-            teacher_mode=str(
-                feature_source_cfg.get(
-                    "teacher_mode",
-                    constant_mu_cfg.get(
-                        "teacher_mode",
-                        pf_b_cfg.get(
-                            "teacher_mode",
-                            rls_b_cfg.get(
-                                "teacher_mode",
-                                statcalib_cfg.get("teacher_mode", hybrid_cfg.get("teacher_mode", "window_variance")),
-                            ),
-                        ),
-                    ),
-                )
-            ).lower(),
+            teacher_mode=teacher_mode,
             feature_config=RuntimeFeatureConfig(
                 context_windows=int(feature_source_cfg.get("context_windows", slow_cfg.get("context_windows", 1))),
                 context_padding=str(feature_source_cfg.get("context_padding", slow_cfg.get("context_padding", "edge_repeat"))).lower(),

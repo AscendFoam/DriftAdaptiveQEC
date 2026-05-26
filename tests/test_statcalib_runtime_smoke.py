@@ -90,6 +90,35 @@ class StatCalibRuntimeSmokeTest(unittest.TestCase):
         teacher_b = np.asarray(proposed.metadata["teacher_params"]["b"], dtype=float)
         np.testing.assert_allclose(proposed.b, teacher_b, atol=1.0e-8)
 
+    def test_statcalib_teacher_mode_does_not_leak_into_other_modes(self) -> None:
+        cfg = SlowLoopRuntimeConfig.from_config(
+            {
+                "slow_loop": {
+                    "mode": "hybrid_residual_b",
+                    "statcalib": {"teacher_mode": "ekf"},
+                    "hybrid_residual_b": {},
+                    "hybrid_residual_mu": {},
+                    "constant_residual_mu": {},
+                    "particle_filter_residual_b": {},
+                    "rls_residual_b": {},
+                }
+            }
+        )
+
+        self.assertEqual(cfg.teacher_mode, "window_variance")
+
+    def test_statcalib_mode_uses_statcalib_teacher_mode(self) -> None:
+        cfg = SlowLoopRuntimeConfig.from_config(
+            {
+                "slow_loop": {
+                    "mode": "statcalib",
+                    "statcalib": {"teacher_mode": "ekf"},
+                }
+            }
+        )
+
+        self.assertEqual(cfg.teacher_mode, "ekf")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -205,3 +205,28 @@ Review should be treated as `BLOCK` if any of the following happen:
 `T59` is complete and accepted as `PASS_WITH_WARNINGS`.
 
 This task exists to harden semantics and regression coverage before any later fairness sanity check or `FR8` task. It must not reopen benchmark execution.
+
+## Worker Output
+
+### What changed
+
+- Hardened `cnn_fpga/runtime/slow_loop_runtime.py` so `slow_loop.statcalib.teacher_mode` is only consulted when `mode=statcalib`.
+- Extended `tests/test_statcalib_runtime_smoke.py` with direct teacher-mode isolation regression coverage.
+- Added `tests/test_statcalib_estimator.py` covering invalid-window, zero-mass, below-threshold, clip-boundary, and diagnostic-error estimator branches.
+- Added `tests/test_statcalib_aggregation.py` covering statcalib aggregation defaults, generated/mixed semantics, benchmark status-field behavior, and report-column visibility.
+- Added task-scoped closeout docs:
+  - `docs/statcalib_lane_isolation_and_regression_hardening.md`
+  - `docs/review/T60_review.md`
+  - `docs/for_human/T60_explanation.md`
+  - `docs/worker_summary/T60_worker_summary.md`
+
+### Verification Notes
+
+- Focused unit tests passed:
+  - `C:\ProgramData\anaconda3\python.exe -m unittest tests.test_statcalib_interface tests.test_statcalib_runtime_smoke tests.test_statcalib_estimator tests.test_statcalib_aggregation`
+- Static verification passed:
+  - `C:\ProgramData\anaconda3\python.exe -m py_compile cnn_fpga/decoder/statcalib.py cnn_fpga/runtime/slow_loop_runtime.py cnn_fpga/benchmark/run_hil_suite.py cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py tests/test_statcalib_interface.py tests/test_statcalib_runtime_smoke.py tests/test_statcalib_estimator.py tests/test_statcalib_aggregation.py`
+- Range checks passed:
+  - `git diff --name-only -- runs cnn_fpga/config docs/reference docs/follow-up_plan docs/02_experiment_plan.md docs/04_task_board.md docs/07_handoff.md docs/08_risks_and_open_questions.md cnn_fpga/decoder/param_mapper.py`
+  - `git status --short -- runs cnn_fpga/config`
+- No new smoke was run, no new run root was created, and no config file was modified in this task.

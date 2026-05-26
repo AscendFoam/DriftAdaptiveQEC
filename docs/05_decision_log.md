@@ -2265,3 +2265,38 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T60`
 4. `docs/08_risks_and_open_questions.md` 新增 `R26` / `R27`，并同步 `T59` warning 分类
 5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T59` 收口与 `T60` 边界
+
+## D-2026-05-27-01
+
+- 日期：`2026-05-27`
+- 决策：接受 `T60_review.md` 的 `PASS`，标记 `T60` 完成，并将当前唯一任务切换为 `T61: Statcalib clean-provenance fairness sanity rerun`。
+
+### 背景
+
+`T60` 的目标是收口 `T59` 留下的语义与回归覆盖问题，而不是继续扩 benchmark scope。依据 `docs/review/T60_review.md` 与本轮 captain 复核：
+
+1. blocking issues = none
+2. focused unit tests 与 `py_compile` 均通过
+3. `slow_loop.statcalib.teacher_mode` 已不再泄漏到非 `statcalib` mode
+4. 直接 estimator / aggregation / report 回归覆盖已补齐
+5. 没有新 run root、没有 config 变更、没有 theory-branch 混写
+
+### Warning 处理
+
+- `T60` review 没有新的 warning 项需要做 `accepted / deferred / rejected` 分类。
+- `T59` 遗留 warning 中：
+  - `W1` cross-mode `teacher_mode` fallback coupling 现已由 `T60` 解决
+  - `W2` 保持 `accepted`
+  - `W3` 继续保留在 `R27`
+
+### 结论
+
+`T60` 可以完成，并且它关闭的是 pre-FR8 的语义/回归覆盖 blocker，不是 `FR8` 正式 comparator evidence。当前最小且更诚实的下一步不是直接开 `FR8`，而是新增 `T61`：在 clean committed worktree 上，对 `T59` 的 bounded statcalib smoke 做一轮 provenance-clean fairness sanity rerun，确认那个异常强的结果是否仍然成立。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T60 -> PASS`，并切换 `Current Unique Task` 到 `T61`
+2. 新增任务包 `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T61`
+4. `docs/08_risks_and_open_questions.md` 关闭 `R26`，并把 `R27` 缩窄为 provenance/fairness blocker
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T60` 收口与 `T61` 边界

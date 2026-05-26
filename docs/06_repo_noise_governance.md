@@ -228,3 +228,12 @@
 - `T60` is not allowed to create any new run root, benchmark output, analysis-output, or artifact directory.
 - `T60` may modify only the allowed source/test/docs files and may add only task-scoped test modules.
 - `T60` must not use repo cleanup as a side goal, and it must keep mainline experiment evidence separate from theory-only branch materials.
+
+## 2026-05-27 Captain Update (T60/T61 repo-noise supersession)
+
+- `T60` has been accepted as `PASS`; it created no new run root and did not modify any historical benchmark artifact.
+- The current unique task is now `T61: Statcalib clean-provenance fairness sanity rerun`.
+- `T61` may create exactly one new run root under `runs/p4_benchmark/T61_statcalib_fairness_sanity_*`.
+- `T61` must not regenerate, resume into, or rewrite `runs/p4_benchmark/t59statc_20260526_211532_3a3d00_23740` or any other historical run root.
+- `T61` must not modify source code, source-tree config, tracked governance docs, theory-only branch materials, or use repo cleanup as a side goal.
+- Because `T61` exists partly to repair provenance weakness, the rerun must start from a clean committed worktree before any task-local docs are written.

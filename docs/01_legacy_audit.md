@@ -436,3 +436,13 @@
 - `T59` does not change any HIL / P4 / `.tflite` / real-board truth boundary. It only closes the first integrated `statcalib` lane smoke gap.
 - The current unique task is now `T60: Statcalib lane isolation and regression hardening`.
 - `T60` is the smallest honest next step after T59: isolate cross-mode semantics and harden regression coverage without reopening benchmark execution or mixing with theory-only branch materials.
+
+### 2026-05-27 Captain Update (T60 closeout supersession)
+
+- `T60` has been accepted as `PASS`.
+- `T60` review adds no new warning item that needs separate `accepted / deferred / rejected` handling.
+- `T60` closes the cross-mode leakage concern from `T59`; `R26` should now be treated as closed.
+- `R27` remains open, but only as a provenance/fairness sanity blocker before any `FR8` task; the regression-coverage part has already been closed by `T60`.
+- `T60` does not change any HIL / P4 / `.tflite` / real-board truth boundary. It only hardens semantics and tests on the existing mainline lane.
+- The current unique task is now `T61: Statcalib clean-provenance fairness sanity rerun`.
+- `T61` is the smallest honest next step: rerun the bounded T59 matrix from a clean committed worktree, with no source/config edits and no theory-branch mixing.

@@ -322,9 +322,16 @@
     - W2 smoke-doc key-name mismatch = `accepted`
     - W3 dirty-worktree smoke provenance weakness = `deferred`
   - Result: T59 closes the first integrated statcalib lane smoke gap, but it does not open FR8 and does not constitute formal comparator evidence
-- [ ] T60: Statcalib lane isolation and regression hardening
+- [x] T60: Statcalib lane isolation and regression hardening
   - Task package: `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`
-  - Status: current bounded hardening lane to isolate statcalib semantics and add regression coverage before any fairness or FR8 task
+  - Output: `docs/statcalib_lane_isolation_and_regression_hardening.md`
+  - Review output: `docs/review/T60_review.md`
+  - Captain verdict: `PASS`
+  - Warning handling: no blocking issues and no new `accepted / deferred / rejected` warning item
+  - Result: T60 closes the cross-mode semantics and regression-coverage blocker from T59; it closes `W1`/`R26`, but it does not close `R27` and does not open FR8
+- [ ] T61: Statcalib clean-provenance fairness sanity rerun
+  - Task package: `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`
+  - Status: current bounded sanity lane to re-check the surprising T59 outcome on a clean committed worktree before any FR8 task
 
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
@@ -351,55 +358,52 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T60: Statcalib lane isolation and regression hardening`
+`T61: Statcalib clean-provenance fairness sanity rerun`
 
 Status:
 
-- `T59` is complete and accepted as `PASS_WITH_WARNINGS`.
-- `docs/review/T59_review.md` reports no blocking issue.
-- Warning classification for `T59` is:
-  - W1 cross-mode `teacher_mode` fallback coupling = `deferred`
-  - W2 smoke-doc key-name mismatch = `accepted`
-  - W3 dirty-worktree smoke provenance weakness = `deferred`
-- Deferred items from `T59` are now tracked in risks and must be treated as pre-FR8 blockers.
-- `T59` proves separate-lane integration, status propagation, and one bounded smoke only. It does not open `FR8`, does not close `R24`, and does not upgrade the evidence to formal comparator ranking.
+- `T60` is complete and accepted as `PASS`.
+- `docs/review/T60_review.md` reports no blocking issue.
+- `T60` introduces no new warning item that needs `accepted / deferred / rejected` classification.
+- `T59` warning `W1` is now closed by `T60`, and `R26` should be treated as closed.
+- `R27` remains open and is now narrower: the regression-coverage gap is closed, but provenance-clean fairness/robustness sanity is still missing before any `FR8` task.
+- `T60` closes semantics hardening only. It does not open `FR8`, does not close `R24`, and does not upgrade the evidence to formal comparator ranking.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T60` is a code/test hardening task only and must remain isolated from theory-only branch materials.
+- `T61` is a bounded rerun/audit task only and must remain isolated from theory-only branch materials.
 
 Why this task is next:
 
-1. `T59` already proved that the statcalib lane can execute end-to-end in one bounded smoke.
-2. The smallest remaining blockers are no longer "can it run?" but "is the lane isolated?" and "is the new semantics regression-covered?"
-3. A direct `FR8` task would be premature while cross-mode coupling and branch-coverage gaps remain open.
-4. `T60` deliberately does not reopen benchmark execution; it hardens semantics first.
+1. `T60` has already closed the cross-mode semantics and regression-coverage blocker from `T59`.
+2. The smallest remaining blocker is no longer code semantics; it is whether the surprisingly strong `statcalib` outcome survives a clean-provenance bounded rerun.
+3. A direct `FR8` task would still be premature while `R27` remains open.
+4. `T61` reuses the existing T59 smoke matrix and only strengthens the sanity signal by requiring clean provenance and `repeats=2`, without widening into the full FR8 matrix.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T60`
-- Latest completed review: `docs/review/T59_review.md` with verdict `PASS_WITH_WARNINGS`
-- Warning classification for T59: `W1 deferred`, `W2 accepted`, `W3 deferred`
-- Next worker-facing task package: `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`
-- `T60` is allowed to proceed only as a bounded lane-isolation + regression-hardening task; no new smoke, no new run root, and no theory-branch edits
+- Current unique task: `T61`
+- Latest completed review: `docs/review/T60_review.md` with verdict `PASS`
+- T60 warning handling: no new warning item; `T59` warning `W1` is now closed
+- Next worker-facing task package: `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`
+- `T61` is allowed to proceed only as a bounded clean-provenance sanity rerun; it may create one T61-scoped run root, but it must not change source/config semantics or touch theory-branch materials
 
-1. Current unique task: `T60`
-2. `T59` is closed as `PASS_WITH_WARNINGS`.
-3. T59 blocking issues:
+1. Current unique task: `T61`
+2. `T60` is closed as `PASS`.
+3. T60 blocking issues:
    - none
-4. T59 warning handling:
-   - W1 deferred
-   - W2 accepted
-   - W3 deferred
-5. T59 review output: `docs/review/T59_review.md`
-6. T60 task package: `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`
+4. T60 warning handling:
+   - no new warning item
+   - T59 W1 closed
+5. T60 review output: `docs/review/T60_review.md`
+6. T61 task package: `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`
 
-## Done Criteria For T60
+## Done Criteria For T61
 
-1. Isolate `statcalib.teacher_mode` so it cannot affect non-statcalib modes implicitly.
-2. Add direct estimator tests for negative, clip-boundary, and error paths.
-3. Add direct aggregation/report regression tests for `statcalib_*` fields, including `not_applicable` behavior for non-statcalib modes.
-4. Keep all changes inside the T60 allowed-file set.
-5. Do not create any new run root, rerun the T59 smoke, or modify historical benchmark artifacts.
-6. Do not touch `.tflite`, real-board, cleanup, training, benchmark expansion, fairness ranking, theory-only branch materials, or `docs/02_experiment_plan.md`.
+1. Confirm the worktree is clean before the bounded rerun starts.
+2. Reuse the existing T59 smoke config and matrix shape, but rerun it under a T61-scoped run root with `repeats=2`.
+3. Keep the matrix bounded to `static_bias_theta` / `linear_ramp` and `ukf` / `hybrid_residual_b` / `statcalib`, with `--paired-seeds`.
+4. Document whether the strong `statcalib` advantage persists, weakens, or collapses under clean-provenance rerun conditions.
+5. Keep all changes inside the T61 allowed-file set plus one T61-scoped run root only.
+6. Do not touch source code, source-tree config, `.tflite`, real-board, cleanup, training, benchmark expansion, theory-only branch materials, or `docs/02_experiment_plan.md`.
 
 ## 2026-05-24 Captain Update (T47 closeout)
  

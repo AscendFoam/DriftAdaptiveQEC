@@ -1,29 +1,30 @@
-## 2026-05-26 Captain Final Supersession
+## 2026-05-27 Captain Final Supersession
 
-- Current unique task: `T60: Statcalib lane isolation and regression hardening`
-- Task package: `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`
-- `T59` is complete and accepted as `PASS_WITH_WARNINGS`.
-- T59 warning classification: `W1 deferred`, `W2 accepted`, `W3 deferred`.
-- Deferred items from `T59` are now tracked in risks and must be treated as pre-FR8 blockers.
-- `T59` closes integrated-lane smoke execution only. It is not `FR8` formal comparator evidence.
-- `T60` may proceed only as a code/test hardening task on the mainline experiment branch.
-- `T60` must not create a new run root, rerun `T59`, touch theory-only branch materials, or rewrite frozen `T24` semantics.
+- Current unique task: `T61: Statcalib clean-provenance fairness sanity rerun`
+- Task package: `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`
+- `T60` is complete and accepted as `PASS`.
+- T60 introduces no new warning item requiring `accepted / deferred / rejected` classification.
+- `T59` warning `W1` is resolved by `T60`, and `R26` should now be treated as closed.
+- `R27` remains open and narrower: the regression-gap portion is closed, but provenance-clean fairness/robustness sanity is still missing before any `FR8` task.
+- `T60` closes semantics/regression blockers only. It is not `FR8` formal comparator evidence.
+- `T61` may proceed only as a clean-provenance bounded sanity rerun on the mainline experiment branch.
+- `T61` must start from a clean committed worktree, may create one T61-scoped run root, and must not change source/config semantics or touch theory-only branch materials.
 
 # Handoff
 
 ## 1. 当前状态
 
-- 日期：`2026-05-26`
+- 日期：`2026-05-27`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T60: Statcalib lane isolation and regression hardening`
-- 任务包：`docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`
+- 当前唯一任务：`T61: Statcalib clean-provenance fairness sanity rerun`
+- 任务包：`docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`
 
 Captain supersession note:
 
-- The authoritative current task for all new worker action is `T60: Statcalib lane isolation and regression hardening`.
-- Authoritative task package: `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`.
+- The authoritative current task for all new worker action is `T61: Statcalib clean-provenance fairness sanity rerun`.
+- Authoritative task package: `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`.
 - If any older line in this file still mentions `T59` or `T58` as current, treat it as historical text only.
 
 2026-05-24 Captain supersession:
@@ -84,6 +85,18 @@ Captain supersession note:
 - Current unique task is now `T60: Statcalib lane isolation and regression hardening`.
 - `T60` is a mainline experiment-branch code/test hardening task. It must isolate `statcalib.teacher_mode`, add regression coverage, create no new run root, and remain separate from theory-only branch materials.
 - Next worker-facing task package: `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`.
+
+## 2026-05-27 Captain Update (T60 closeout)
+
+- `T60` review accepted by Captain as `PASS`.
+- Blocking issues: none.
+- `T60` review introduces no new warning item that needs `accepted / deferred / rejected` handling.
+- `T60` closes the T59 cross-mode semantics blocker: `W1` is resolved and `R26` should now be treated as closed.
+- `R27` remains open, but narrower: T60 closes the regression-coverage gap and leaves only the clean-provenance / fairness-sanity blocker before any `FR8` task.
+- `T60` is complete. It hardens semantics and tests only; it does not rerun benchmark evidence and does not upgrade the lane to formal comparator ranking.
+- Current unique task is now `T61: Statcalib clean-provenance fairness sanity rerun`.
+- `T61` is a mainline experiment-branch bounded rerun/audit task. It must start from a clean committed worktree, reuse the existing T59 smoke matrix with `repeats=2`, create exactly one T61-scoped run root, and remain separate from theory-only branch materials.
+- Next worker-facing task package: `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`.
 
 Captain closeout note after T56:
 
