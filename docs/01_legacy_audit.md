@@ -464,3 +464,11 @@
 - `T62` does not open `FR8` automatically and does not close `R24`.
 - The current unique task is now `T63: FR8 statcalib comparator gate review`.
 - `T63` is the smallest honest next step: a docs-only gate discussion that decides whether a bounded FR8 task should exist at all, using only already existing repository evidence.
+
+### 2026-05-27 Captain Update (T63 closeout supersession)
+
+- `T63` has now been accepted as `PASS`.
+- `T63` changes no code, no benchmark artifact, and no deployment-boundary fact. It only closes the question of whether one bounded FR8 task may be opened next.
+- The legacy/truth boundary remains unchanged: current `statcalib` evidence is still mock-backed software-HIL only, and `.tflite` / real-board validation remain outside the mainline evidence pack.
+- `T24` remains the authoritative historical frozen-set formal software revalidation record. `T64` must not relabel or silently rewrite that record.
+- The current unique task is now `T64: FR8 statcalib extension-lane bounded benchmark`.

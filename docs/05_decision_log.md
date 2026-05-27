@@ -2392,3 +2392,47 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T63`
 4. `docs/08_risks_and_open_questions.md` 将 `R27` 标记为已收口，同时保留 `R24` 与 `FR8` gate 边界
 5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T62` 收口与 `T63` 边界
+
+## D-2026-05-27-04
+
+- 日期：`2026-05-27`
+- 决策：接受 `T63_review.md` 的 `PASS`，标记 `T63` 完成，并将当前唯一任务切换为 `T64: FR8 statcalib extension-lane bounded benchmark`
+
+### 背景
+
+`T63` 的目标不是产生新 benchmark evidence，而是回答一个更窄的问题：在 `T59` 到 `T62` 之后，仓库是否已经具备打开一个有界 `FR8` 执行任务的前提，还是还需要再做一个更小的前置 prerequisite。
+
+依据 `docs/review/T63_review.md`、`docs/fr8_statcalib_comparator_gate_review.md` 和已有 `T59/T60/T61/T62` 本地证据：
+
+1. `statcalib` separate-lane integration 已由 `T59` 建立
+2. cross-mode leakage 与 regression hardening 已由 `T60` 关闭
+3. provenance-clean bounded fairness sanity blocker 已由 `T62` 关闭
+4. 当前剩余 gap 已不再是“能不能开 FR8”，而是“如何在不改写 frozen table 的前提下做一个诚实的 extension-lane task”
+
+### Warning 处理
+
+- `T63` verdict = `PASS`
+- blocking issues = none
+- `T63` review 没有新的 warning 项需要做 `accepted / deferred / rejected` 分类
+- 因此本轮不新增 warning-derived risk
+
+### 结论
+
+`T63` 可以完成，但它只关闭 pre-FR8 gate-discussion lane，不是 `FR8` evidence 本身。
+
+当前最小且更诚实的下一步是新建 `T64`：
+
+- 保持 `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml` 的 frozen 四场景 / 五模式协议边界
+- 只把 `statcalib` 作为 separately labeled extension lane 加入
+- 保持 `--paired-seeds` 与 `--repeats 2`
+- 如需分块，只允许按 repeat range 分块
+- 保持 clean provenance
+- 明确禁止把 `T64` 写成 `.tflite`、real-board、paper-grade expansion，或 historical `T24` rewrite
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T63 -> PASS`，并切换 `Current Unique Task` 到 `T64`
+2. 新增任务包 `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T64`
+4. `docs/08_risks_and_open_questions.md` 保持 `R27` 已收口，并将 `R24` 明确为 `T64` 的 scope/reporting constraint
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T63` 收口与 `T64` 边界

@@ -178,3 +178,11 @@
 - `T62` remains bounded mock-backed software-HIL evidence only. It is not `FR8`, not `.tflite` validation, and not real-board validation.
 - The current unique task is now `T63: FR8 statcalib comparator gate review`.
 - `T63` is docs-only and stays entirely inside the same boundary: it may review whether a bounded FR8 task should exist, but it must not itself generate new comparator evidence or upgrade the current truth boundary.
+
+## 2026-05-27 Captain Update (T63/T64 boundary supersession)
+
+- `T63` has now been accepted as `PASS`.
+- `T63` does not change any HIL / P4 / `.tflite` / real-board truth boundary. It only concludes that one bounded FR8 extension-lane task may proceed next.
+- The current unique task is now `T64: FR8 statcalib extension-lane bounded benchmark`.
+- `T64` must stay inside the same truth boundary: mock-backed software-HIL only, not `.tflite`, not real-board, not paper-grade expansion.
+- `T64` may compare `statcalib` against the frozen benchmark set only as a separately labeled extension lane. It must not silently rewrite the historical `T24` frozen ranked table or overstate the minimal heuristic lane as a completed formal comparator.

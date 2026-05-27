@@ -459,3 +459,13 @@ Current T24-T29 status note:
 - `T62` still does not open `FR8`, and it does not close `R24`.
 - The current unique task is now `T63: FR8 statcalib comparator gate review`, task package `docs/tasks/Phase2/T63_fr8_statcalib_comparator_gate_review.md`.
 - `T63` is docs-only and exists to decide whether a bounded FR8 task should exist at all, not to start FR8 automatically.
+
+## 2026-05-27 Captain Update (T63 closeout supersession)
+
+- `T63` review has been accepted by Captain as `PASS`.
+- `T63` review introduces no new warning item that needs `accepted / deferred / rejected` handling.
+- No new risk item is opened by warning classification for `T63`.
+- `R27` remains closed by `T62`.
+- `R24` remains open, but after `T63` it should be treated as the main scope/reporting constraint on `T64`, not as a blocker that requires another pre-FR8 prerequisite task.
+- The current unique task is now `T64: FR8 statcalib extension-lane bounded benchmark`, task package `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`.
+- `T64` must keep `statcalib` as a separately labeled extension lane, preserve the historical frozen ranked table, and remain inside mock-backed software-HIL scope only.

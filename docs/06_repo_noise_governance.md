@@ -254,3 +254,12 @@
 - `T63` is docs-only and must not create or modify any run root, artifact directory, benchmark output directory, or analysis-output directory.
 - `T63` must not modify source code, tests, source-tree config, tracked governance docs outside its allowed-file set, or theory-only branch materials.
 - `T63` must not use repo cleanup as a side goal, and it must not relabel any historical run root into formal comparator evidence.
+
+## 2026-05-27 Captain Update (T63/T64 repo-noise supersession)
+
+- `T63` has now been accepted as `PASS`; it created no run root and did not modify any historical artifact directory.
+- The current unique task is now `T64: FR8 statcalib extension-lane bounded benchmark`.
+- `T64` may create exactly one new run root under `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_*`.
+- `T64` may add at most one task-scoped derived config file under `cnn_fpga/config/` if the extension lane cannot be expressed through the existing CLI/config combination without changing frozen semantics.
+- `T64` must not regenerate, resume into, rewrite, or relabel the historical `T24`, `T59`, `T61`, or `T62` run roots.
+- `T64` must not use repo cleanup as a side goal, and it must keep mainline experiment evidence separate from theory-only branch materials.

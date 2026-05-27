@@ -379,3 +379,12 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - `T62` still does not upgrade the evidence beyond mock-backed software-HIL bounded sanity evidence and does not open `FR8` automatically.
 - The current unique task is now `T63: FR8 statcalib comparator gate review`.
 - `T63` is docs-only and exists to decide whether a bounded FR8 task should exist at all, without mixing mainline experiment evidence with theory-only branch materials.
+
+## 2026-05-27 Captain Update (T63 closeout supersession)
+
+- `T63` has now been accepted as `PASS`.
+- `T63` is a docs-only gate review. It does not itself create new comparator evidence and it does not upgrade any `.tflite`, real-board, or paper-grade benchmark claim.
+- `T63` concludes that `R27` remains closed by `T62` and that no further pre-FR8 prerequisite is needed before one bounded extension-lane execution task.
+- `R24` remains open, but after `T63` it is treated as the main scope/reporting constraint for the next task rather than as a blocker that requires another gate loop.
+- The current unique task is now `T64: FR8 statcalib extension-lane bounded benchmark`.
+- `T64` must remain on the mainline experiment branch, keep `statcalib` as a separately labeled extension lane, preserve the historical frozen five-mode table, and stay inside mock-backed software-HIL scope only.

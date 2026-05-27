@@ -1,12 +1,12 @@
 ## 2026-05-27 Captain Final Supersession
 
-- Current unique task: `T63: FR8 statcalib comparator gate review`
-- Task package: `docs/tasks/Phase2/T63_fr8_statcalib_comparator_gate_review.md`
-- `T62` has been judged `PASS`.
-- `T62` closed the specific clean-provenance blocker that caused `T61` to fail.
-- `R26` remains closed by `T60`.
-- `R27` should now be treated as closed by `T62`; the remaining question is whether the repository is ready to open a bounded `FR8` task at all.
-- `T63` is docs-only. It is not `FR8` formal comparator evidence and must not run new experiments or touch theory-only branch materials.
+- Current unique task: `T64: FR8 statcalib extension-lane bounded benchmark`
+- Task package: `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`
+- `T63` has been judged `PASS`.
+- `T63` closes the pre-FR8 gate-discussion lane and concludes that one bounded extension-lane execution task may proceed next.
+- `R27` remains closed by `T62`.
+- `R24` remains open, but after `T63` it is a scope/reporting constraint on `T64`, not a reason to open another prerequisite gate loop.
+- `T64` remains bounded mock-backed software-HIL work only. It is not `.tflite` validation, not real-board validation, and not permission to rewrite the historical `T24` frozen ranked table.
 
 # Handoff
 
@@ -16,16 +16,16 @@
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T61: Statcalib clean-provenance fairness sanity rerun`
-- 任务包：`docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`
+- 当前唯一任务：`T64: FR8 statcalib extension-lane bounded benchmark`
+- 任务包：`docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`
 
 Captain supersession note:
 
-- The authoritative current task for all new worker action is `T63: FR8 statcalib comparator gate review`.
-- Authoritative task package: `docs/tasks/Phase2/T63_fr8_statcalib_comparator_gate_review.md`.
-- `T62` is complete and accepted as `PASS`.
-- If any older line in this file still mentions `T62`, `T61`, `T60`, `T59`, or `T58` as current, treat it as historical text only.
-- `T63` is a docs-only gate discussion. It is not permission to start `FR8` automatically.
+- The authoritative current task for all new worker action is `T64: FR8 statcalib extension-lane bounded benchmark`.
+- Authoritative task package: `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`.
+- `T63` is complete and accepted as `PASS`.
+- If any older line in this file still mentions `T63`, `T62`, `T61`, `T60`, `T59`, or `T58` as current, treat it as historical text only.
+- `T64` is the single bounded next step after the gate. It is not permission to widen comparator scope, deployment scope, or theory-branch scope.
 
 2026-05-24 Captain supersession:
 
@@ -120,6 +120,17 @@ Captain supersession note:
 - Current unique task is now `T63: FR8 statcalib comparator gate review`.
 - `T63` is docs-only. It must decide whether a bounded FR8 task should exist at all, using only already existing repository evidence and without touching theory-only branch materials.
 - Next worker-facing task package: `docs/tasks/Phase2/T63_fr8_statcalib_comparator_gate_review.md`.
+
+## 2026-05-27 Captain Update (T63 closeout)
+
+- `T63` review accepted by Captain as `PASS`.
+- Blocking issues: none.
+- `T63` review introduces no new warning item that needs `accepted / deferred / rejected` handling.
+- `T63` closes the pre-FR8 gate-discussion lane only. It is not FR8 evidence and it does not close `R24`.
+- `R27` remains closed by `T62`.
+- Current unique task is now `T64: FR8 statcalib extension-lane bounded benchmark`.
+- `T64` must preserve the historical frozen five-mode table, add `statcalib` only as a separately labeled extension lane, keep clean provenance, and remain isolated from theory-only branch materials.
+- Next worker-facing task package: `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`.
 
 Captain closeout note after T56:
 
