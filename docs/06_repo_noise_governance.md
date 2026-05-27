@@ -237,3 +237,12 @@
 - `T61` must not regenerate, resume into, or rewrite `runs/p4_benchmark/t59statc_20260526_211532_3a3d00_23740` or any other historical run root.
 - `T61` must not modify source code, source-tree config, tracked governance docs, theory-only branch materials, or use repo cleanup as a side goal.
 - Because `T61` exists partly to repair provenance weakness, the rerun must start from a clean committed worktree before any task-local docs are written.
+
+## 2026-05-27 Captain Update (T61/T62 repo-noise supersession)
+
+- `T61` has been judged `BLOCK`; its run root `runs/p4_benchmark/T61_statcalib_fairness_sanity_20260527_015239` must now be treated as frozen blocked evidence and must not be resumed, regenerated, or rewritten.
+- The current unique task is now `T62: Statcalib provenance-isolated fairness rerun`.
+- `T62` may create exactly one new run root under `runs/p4_benchmark/T62_statcalib_provenance_isolated_*`.
+- `T62` must not regenerate, resume into, or rewrite the historical `T59` run root or the blocked `T61` run root.
+- `T62` must run in one uninterrupted invocation. If the host wrapper times out or the run is interrupted, the task must stop rather than resume into the same run root.
+- `T62` must not modify source code, source-tree config, tracked governance docs, theory-only branch materials, or use repo cleanup as a side goal.

@@ -161,3 +161,12 @@
 - The current unique task is now `T61: Statcalib clean-provenance fairness sanity rerun`.
 - `T61` still stays fully inside the same mock-backed software-HIL truth boundary: same T59 smoke config family, same two scenarios, same three modes, `--paired-seeds`, and only `repeats=2` as a bounded CLI-strengthening step.
 - Even if `T61` succeeds, that result still is not `.tflite` runtime validation, real-board validation, or `FR8` by itself.
+
+## 2026-05-27 Captain Update (T61/T62 boundary supersession)
+
+- `T61` has been judged `BLOCK`; the fairness signal persisted, but the clean-provenance goal failed because the final artifact was not anchored to one single clean commit identity.
+- That blocked result does not change any HIL / P4 / `.tflite` / real-board truth boundary.
+- `T61` remains only a blocked mock-backed software-HIL sanity rerun artifact; it is not `FR8`, not `.tflite` validation, and not real-board validation.
+- The current unique task is now `T62: Statcalib provenance-isolated fairness rerun`.
+- `T62` stays inside the exact same mock-backed software-HIL truth boundary: same T59/T61 config family, same two scenarios, same three modes, `--paired-seeds`, and `repeats=2`.
+- `T62` is allowed to repair provenance isolation only. It must not widen comparator scope, change source/config semantics, or mix mainline experiment work with theory-only branch materials.

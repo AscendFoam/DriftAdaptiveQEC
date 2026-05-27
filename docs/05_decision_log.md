@@ -2300,3 +2300,47 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T61`
 4. `docs/08_risks_and_open_questions.md` 关闭 `R26`，并把 `R27` 缩窄为 provenance/fairness blocker
 5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T60` 收口与 `T61` 边界
+## D-2026-05-27-02
+
+- 日期：`2026-05-27`
+- 决策：接受 `T61_review.md` 的 `BLOCK`，不标记 `T61` 完成，并将当前唯一任务切换为 `T62: Statcalib provenance-isolated fairness rerun`
+
+### 背景
+
+`T61` 的目标不是一般性的 fairness sanity rerun，而是 **clean-provenance** fairness sanity rerun。它被创建出来，是为了关闭 `T59` dirty-worktree smoke 留下的 `R27`。
+
+### 依据
+
+1. `docs/review/T61_review.md` 的 blocking 判断与仓库事实一致：
+   - clean launch `HEAD=9174065`
+   - final `runs/p4_benchmark/T61_statcalib_fairness_sanity_20260527_015239/summary.json` records `git_commit=6058f42`
+2. `git reflog --date=iso --all` shows a mid-run checkout away from `main`
+3. `git diff --name-only 9174065 6058f42 -- cnn_fpga tests` is non-empty, so launch and finish identities are not interchangeable
+4. `T61` 的 bounded result signal did persist:
+   - same two scenarios
+   - same three modes
+   - `statcalib` still wins both scenarios
+5. 但 persisted fairness signal 不等于 provenance blocker 已关闭
+
+### 结论
+
+`T61` 不能按 `PASS` 或 `PASS_WITH_WARNINGS` 收口，因为它没有完成自己被指派去关闭的 blocker。更准确地说：
+
+- fairness sanity 这一半做到了
+- clean provenance 这一半没有做到
+
+因此：
+
+- `T61` verdict = `BLOCK`
+- `T61` 不完成
+- `R27` 继续保持打开
+- 下一步只允许修 blocking issue，不允许跳到 `FR8`
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T61 -> BLOCK`，并将 `Current Unique Task` 切换到 `T62`
+2. 新增任务包 `docs/tasks/Phase2/T62_statcalib_provenance_isolated_fairness_rerun.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T62`
+4. `docs/08_risks_and_open_questions.md` 更新 `R27` 的具体 T61 证据与 `T62` 缓解动作
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T61` blocked closeout 与 `T62` 边界
+6. 因为这是同一 provenance blocker 的单次自动重试，若 `T62` 仍然 `BLOCK`，Captain 应停止自动推进并交由用户裁决

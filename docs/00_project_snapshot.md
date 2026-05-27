@@ -359,3 +359,13 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - `T60` hardens semantics and tests only; it does not upgrade the lane into formal comparator evidence.
 - The current unique task is now `T61: Statcalib clean-provenance fairness sanity rerun`.
 - `T61` must stay on the mainline experiment branch, start from a clean committed worktree, create at most one T61-scoped run root, and remain separate from theory-only branch materials.
+
+## 2026-05-27 Captain Update (T61 closeout supersession)
+
+- `T61` has been judged `BLOCK`.
+- `T61` preserved the bounded fairness signal, but it did not close the clean-provenance blocker it was created to repair.
+- The concrete blocker is now explicit: clean launch `HEAD=9174065`, final `summary.json git_commit=6058f42`, and mid-run branch movement means the run lacks one defensible commit identity.
+- `R26` remains closed by `T60`.
+- `R27` remains open and is now a pure provenance-isolation blocker before any later `FR8` gate discussion.
+- The current unique task is now `T62: Statcalib provenance-isolated fairness rerun`.
+- `T62` is blocking-only, must stay on the mainline experiment branch, must not touch theory-only materials, and is the single automatic retry for this blocker.

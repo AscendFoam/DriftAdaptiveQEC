@@ -30,7 +30,7 @@
 | R24 | T30 的 `from_delta_b()` 只是最小 residual-b interface helper，未来若把它误当完整 statcalib/calibration comparator，可能把接口 contract 外推成未验证算法能力 | 中 | `docs/review/T30_review.md` N4 指出当前 baseline 逻辑为 `prior.b + delta_b`，适合 residual-b comparator contract，但不是完整 calibration logic；T30 只做 interface-level tests | 后续 statcalib slow-loop integration 或 benchmark task 必须重新验证 calibration objective、fallback semantics、status propagation 和 ranking boundary，不得直接把 T30 helper 写成 validated statcalib comparator |
 | R25 | 论文叙事与 recovery baseline 曾一度跑在证据材料前面，若继续在未冻结 truth 的情况下推进 prose，很容易再次把 draft 当成事实来源 | 高 | `T43` 已经产出 bounded Background / Related Work prose draft，但用户明确要求改入 `Research Reality Recovery Mode`，优先补 claim/evidence/material/figure/reproducibility baseline | 先完成 `T44` recovery baseline，再决定是否恢复任何 prose 扩写；恢复前不把 draft、skeleton 或 framing 当成证据升级 |
 | R26 | `T59` 的 cross-mode `teacher_mode` fallback leakage | 已收口 | `docs/review/T60_review.md` 已确认 `slow_loop.statcalib.teacher_mode` 不再泄漏到非 `statcalib` mode；`tests/test_statcalib_runtime_smoke.py` 新增了 mode isolation 回归覆盖 | `R26` 已由 `T60` 收口；未来若再改 `SlowLoopRuntimeConfig.from_config()`，必须保持 `statcalib.teacher_mode` 仅在 `mode=statcalib` 生效 |
-| R27 | `T59/T60` 之后，statcalib lane 仍缺 provenance-clean fairness sanity evidence；T59 的 dirty-worktree smoke 与 unexpectedly strong generated-only result 仍不足以支撑 formal comparator evidence | 中高 | `docs/review/T59_review.md`；`docs/review/T60_review.md`；`docs/statcalib_comparator_lane_smoke.md`；`runs/p4_benchmark/t59statc_20260526_211532_3a3d00_23740/summary.json` 记录 `git_commit=a40adca` 对应 dirty-worktree smoke；`T60` 已关闭 regression-coverage gap，但没有重跑矩阵 | 先执行 `T61` clean-provenance fairness sanity rerun；在 `T61` 完成前不得开启 `FR8`，也不得把 `T59/T60` 直接写成 formal comparator ranking |
+| R27 | `statcalib` lane 仍缺 provenance-clean fairness sanity evidence，尚不足以支撑任何 `FR8` gate 或 formal comparator ranking | 中高 | `docs/review/T59_review.md`；`docs/review/T60_review.md`；`docs/review/T61_review.md`；`docs/statcalib_comparator_lane_smoke.md`；`docs/statcalib_fairness_sanity.md`；`runs/p4_benchmark/t59statc_20260526_211532_3a3d00_23740/summary.json`；`runs/p4_benchmark/T61_statcalib_fairness_sanity_20260527_015239/summary.json`。T59 是 dirty-worktree smoke；T61 虽从 clean `HEAD=9174065` 启动，但 final `summary.json git_commit=6058f42`，且存在 mid-run branch movement，因此 provenance 仍未闭合 | 执行 `T62` provenance-isolated fairness rerun：clean committed `main`、单次 uninterrupted invocation、no same-run resume、launch/finish/summary commit identity 全一致；在 `T62` 收口前，不得开启 `FR8`，也不得把 `T59/T60/T61` 直接写成 formal comparator ranking |
 
 ## 当前开放问题
 
@@ -441,3 +441,12 @@ Current T24-T29 status note:
 - `T60` closes semantics/test hardening only. It does not open `FR8`, and it does not close `R24`.
 - The current unique task is now `T61: Statcalib clean-provenance fairness sanity rerun`, task package `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`.
 - `T61` remains a pre-FR8 blocker-clearing task only; it must not be rewritten into formal comparator evidence, `.tflite` validation, or real-board validation.
+
+## 2026-05-27 Captain Update (T61 closeout supersession)
+
+- `T61` review has been accepted by Captain as `BLOCK`.
+- `T61` preserved the bounded fairness signal, but it did not close the clean-provenance blocker it was created to repair.
+- `R27` therefore remains open with concrete evidence from `T61`: clean launch `HEAD=9174065`, final `summary.json git_commit=6058f42`, and mid-run branch movement mean the run still lacks one defensible commit identity.
+- No new warning-derived risk item is opened from T61 because the verdict is `BLOCK`, not `PASS_WITH_WARNINGS`.
+- The current unique task is now `T62: Statcalib provenance-isolated fairness rerun`, task package `docs/tasks/Phase2/T62_statcalib_provenance_isolated_fairness_rerun.md`.
+- `T62` is the single automatic retry for the same blocker. If `T62` still returns `BLOCK`, Captain should stop automatic progression and return the issue to the user.

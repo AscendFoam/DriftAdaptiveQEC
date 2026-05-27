@@ -1,14 +1,13 @@
 ## 2026-05-27 Captain Final Supersession
 
-- Current unique task: `T61: Statcalib clean-provenance fairness sanity rerun`
-- Task package: `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`
-- `T60` is complete and accepted as `PASS`.
-- T60 introduces no new warning item requiring `accepted / deferred / rejected` classification.
-- `T59` warning `W1` is resolved by `T60`, and `R26` should now be treated as closed.
-- `R27` remains open and narrower: the regression-gap portion is closed, but provenance-clean fairness/robustness sanity is still missing before any `FR8` task.
-- `T60` closes semantics/regression blockers only. It is not `FR8` formal comparator evidence.
-- `T61` may proceed only as a clean-provenance bounded sanity rerun on the mainline experiment branch.
-- `T61` must start from a clean committed worktree, may create one T61-scoped run root, and must not change source/config semantics or touch theory-only branch materials.
+- Current unique task: `T62: Statcalib provenance-isolated fairness rerun`
+- Task package: `docs/tasks/Phase2/T62_statcalib_provenance_isolated_fairness_rerun.md`
+- `T61` has been judged `BLOCK`.
+- `T61` preserved the fairness signal but did not close the clean-provenance blocker it was created to repair.
+- `R26` remains closed by `T60`.
+- `R27` remains open with concrete T61 evidence: launch clean commit drifted from the final `summary.json` commit and the blocked run also shows same-run resume noise.
+- `T62` is the single blocking-only automatic retry for this provenance issue. It is not `FR8` formal comparator evidence.
+- `T62` must start from a clean committed `main` worktree, run in one uninterrupted invocation, may create one T62-scoped run root, and must not change source/config semantics or touch theory-only branch materials.
 
 # Handoff
 
@@ -23,9 +22,11 @@
 
 Captain supersession note:
 
-- The authoritative current task for all new worker action is `T61: Statcalib clean-provenance fairness sanity rerun`.
-- Authoritative task package: `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`.
-- If any older line in this file still mentions `T59` or `T58` as current, treat it as historical text only.
+- The authoritative current task for all new worker action is `T62: Statcalib provenance-isolated fairness rerun`.
+- Authoritative task package: `docs/tasks/Phase2/T62_statcalib_provenance_isolated_fairness_rerun.md`.
+- `T61` is blocked, not complete.
+- If any older line in this file still mentions `T61`, `T59`, or `T58` as current, treat it as historical text only.
+- Because this is the single automatic retry for the same provenance blocker, if `T62` still returns `BLOCK`, Captain should stop and return the issue to the user instead of opening another auto-retry task.
 
 2026-05-24 Captain supersession:
 
@@ -97,6 +98,17 @@ Captain supersession note:
 - Current unique task is now `T61: Statcalib clean-provenance fairness sanity rerun`.
 - `T61` is a mainline experiment-branch bounded rerun/audit task. It must start from a clean committed worktree, reuse the existing T59 smoke matrix with `repeats=2`, create exactly one T61-scoped run root, and remain separate from theory-only branch materials.
 - Next worker-facing task package: `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`.
+
+## 2026-05-27 Captain Update (T61 closeout)
+
+- `T61` review accepted by Captain as `BLOCK`.
+- Blocking issues:
+  - launch clean `HEAD=9174065`, but final `summary.json git_commit=6058f42`
+  - mid-run branch movement means the rerun does not have a single defensible commit identity
+- `T61` is not complete. It preserved the bounded fairness signal, but it did not repair the provenance blocker.
+- Current unique task is now `T62: Statcalib provenance-isolated fairness rerun`.
+- `T62` is blocking-only. It must rerun the exact same bounded matrix on clean committed `main`, in one uninterrupted invocation, with no same-run resume and no theory-branch mixing.
+- Next worker-facing task package: `docs/tasks/Phase2/T62_statcalib_provenance_isolated_fairness_rerun.md`.
 
 Captain closeout note after T56:
 

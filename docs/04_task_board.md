@@ -331,7 +331,14 @@
   - Result: T60 closes the cross-mode semantics and regression-coverage blocker from T59; it closes `W1`/`R26`, but it does not close `R27` and does not open FR8
 - [ ] T61: Statcalib clean-provenance fairness sanity rerun
   - Task package: `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`
-  - Status: current bounded sanity lane to re-check the surprising T59 outcome on a clean committed worktree before any FR8 task
+  - Output: `docs/statcalib_fairness_sanity.md`
+  - Review output: `docs/review/T61_review.md`
+  - Captain verdict: `BLOCK`
+  - Blocking issue: launch clean `HEAD=9174065`, but final `summary.json git_commit=6058f42`; mid-run branch movement means the task did not close the clean-provenance blocker it was created to repair
+  - Result: the bounded fairness signal persisted, but `R27` remains open and `T61` is not complete
+- [ ] T62: Statcalib provenance-isolated fairness rerun
+  - Task package: `docs/tasks/Phase2/T62_statcalib_provenance_isolated_fairness_rerun.md`
+  - Status: current blocking-only retry to close the T61 provenance blocker without widening into FR8 or touching source/config semantics
 
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
@@ -358,52 +365,54 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T61: Statcalib clean-provenance fairness sanity rerun`
+`T62: Statcalib provenance-isolated fairness rerun`
 
 Status:
 
-- `T60` is complete and accepted as `PASS`.
-- `docs/review/T60_review.md` reports no blocking issue.
-- `T60` introduces no new warning item that needs `accepted / deferred / rejected` classification.
-- `T59` warning `W1` is now closed by `T60`, and `R26` should be treated as closed.
-- `R27` remains open and is now narrower: the regression-coverage gap is closed, but provenance-clean fairness/robustness sanity is still missing before any `FR8` task.
-- `T60` closes semantics hardening only. It does not open `FR8`, does not close `R24`, and does not upgrade the evidence to formal comparator ranking.
+- `T61` has been reviewed as `BLOCK`.
+- `T61` did not close its own target blocker: the bounded fairness signal persisted, but the final run artifact did not preserve a single clean commit identity.
+- `R26` remains closed by `T60`.
+- `R27` remains open and now has concrete T61 evidence: clean-launch `HEAD` drifted from the final `summary.json git_commit`, and the blocked run also shows same-run resume noise.
+- `T61` does not open `FR8`, does not close `R24`, and does not upgrade the evidence to formal comparator ranking.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T61` is a bounded rerun/audit task only and must remain isolated from theory-only branch materials.
+- `T62` is the single blocking-only automatic retry for this provenance issue and must remain isolated from theory-only branch materials.
+- If `T62` still returns `BLOCK`, automatic progression stops and the issue returns to the user for arbitration.
 
 Why this task is next:
 
-1. `T60` has already closed the cross-mode semantics and regression-coverage blocker from `T59`.
-2. The smallest remaining blocker is no longer code semantics; it is whether the surprisingly strong `statcalib` outcome survives a clean-provenance bounded rerun.
-3. A direct `FR8` task would still be premature while `R27` remains open.
-4. `T61` reuses the existing T59 smoke matrix and only strengthens the sanity signal by requiring clean provenance and `repeats=2`, without widening into the full FR8 matrix.
+1. `T60` already closed the cross-mode semantics and regression-coverage blocker from `T59`.
+2. `T61` preserved the fairness signal but failed the provenance goal, so the blocker is now narrower and more concrete.
+3. A direct `FR8` task is still premature while `R27` remains open.
+4. `T62` fixes only the blocking issue: rerun the same bounded matrix under provenance-isolated conditions, with no source/config changes and no same-run resume.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T61`
-- Latest completed review: `docs/review/T60_review.md` with verdict `PASS`
-- T60 warning handling: no new warning item; `T59` warning `W1` is now closed
-- Next worker-facing task package: `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`
-- `T61` is allowed to proceed only as a bounded clean-provenance sanity rerun; it may create one T61-scoped run root, but it must not change source/config semantics or touch theory-branch materials
+- Current unique task: `T62`
+- Latest reviewed task: `docs/review/T61_review.md` with verdict `BLOCK`
+- T61 blocking issue: launch clean commit and final summary commit do not match; the task therefore did not close the clean-provenance blocker
+- Next worker-facing task package: `docs/tasks/Phase2/T62_statcalib_provenance_isolated_fairness_rerun.md`
+- `T62` is allowed to proceed only as a blocking-only provenance retry; it may create one T62-scoped run root, but it must not change source/config semantics or touch theory-branch materials
 
-1. Current unique task: `T61`
-2. `T60` is closed as `PASS`.
-3. T60 blocking issues:
-   - none
-4. T60 warning handling:
-   - no new warning item
-   - T59 W1 closed
-5. T60 review output: `docs/review/T60_review.md`
-6. T61 task package: `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`
+1. Current unique task: `T62`
+2. `T61` is blocked, not complete.
+3. T61 blocking issues:
+   - clean-launch commit and final summary commit drifted
+   - mid-run branch movement broke single-commit provenance
+4. T61 warning handling:
+   - not applicable; verdict is `BLOCK`
+5. T61 review output: `docs/review/T61_review.md`
+6. T62 task package: `docs/tasks/Phase2/T62_statcalib_provenance_isolated_fairness_rerun.md`
 
-## Done Criteria For T61
+## Done Criteria For T62
 
-1. Confirm the worktree is clean before the bounded rerun starts.
-2. Reuse the existing T59 smoke config and matrix shape, but rerun it under a T61-scoped run root with `repeats=2`.
+1. Confirm the worktree is clean and the branch is `main` before the bounded rerun starts.
+2. Reuse the existing T59/T61 smoke config and matrix shape, but rerun it under a T62-scoped run root with `repeats=2`.
 3. Keep the matrix bounded to `static_bias_theta` / `linear_ramp` and `ukf` / `hybrid_residual_b` / `statcalib`, with `--paired-seeds`.
-4. Document whether the strong `statcalib` advantage persists, weakens, or collapses under clean-provenance rerun conditions.
-5. Keep all changes inside the T61 allowed-file set plus one T61-scoped run root only.
-6. Do not touch source code, source-tree config, `.tflite`, real-board, cleanup, training, benchmark expansion, theory-only branch materials, or `docs/02_experiment_plan.md`.
+4. Execute the run in one uninterrupted invocation with no same-run resume.
+5. Confirm launch commit, finish commit, and `summary.json git_commit` all match.
+6. Document whether the strong `statcalib` advantage persists, weakens, or collapses under provenance-isolated rerun conditions.
+7. Keep all changes inside the T62 allowed-file set plus one T62-scoped run root only.
+8. Do not touch source code, source-tree config, `.tflite`, real-board, cleanup, training, benchmark expansion, theory-only branch materials, or `docs/02_experiment_plan.md`.
 
 ## 2026-05-24 Captain Update (T47 closeout)
  

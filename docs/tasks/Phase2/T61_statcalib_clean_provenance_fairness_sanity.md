@@ -207,3 +207,51 @@ Review should be treated as `BLOCK` if any of the following happen:
 `T60` is complete and accepted as `PASS`.
 
 This task exists to repair the remaining provenance/fairness blocker before any later `FR8` discussion. It must not be merged with source changes or theory-branch work.
+
+## Worker Output
+
+### What changed
+
+1. Executed the bounded T61 sanity matrix in the single allowed run root:
+   - `runs/p4_benchmark/T61_statcalib_fairness_sanity_20260527_015239`
+2. Created:
+   - `docs/statcalib_fairness_sanity.md`
+   - `docs/review/T61_review.md`
+   - `docs/for_human/T61_explanation.md`
+   - `docs/worker_summary/T61_worker_summary.md`
+3. Appended the worker output back into this task package on `main`.
+
+### Verification record
+
+1. Preflight cleanliness passed:
+   - `git status --short` had no repo status entries before the run
+   - preflight `git rev-parse --short HEAD` was `9174065`
+2. Matrix boundary stayed locked:
+   - config: `cnn_fpga/config/p4_multiscenario_statcalib_smoke.yaml`
+   - scenarios: `static_bias_theta`, `linear_ramp`
+   - modes: `ukf`, `hybrid_residual_b`, `statcalib`
+   - `--paired-seeds`
+   - `--repeats 2`
+3. Only one T61 run root exists:
+   - `runs/p4_benchmark/T61_statcalib_fairness_sanity_20260527_015239`
+4. T61 output integrity:
+   - `summary.json` exists
+   - `missing_runs_count=0`
+   - all rows have `coverage=1.0`
+   - all rows have `completed_repeats=2`
+5. T59 comparison outcome:
+   - `statcalib` remained the winner in both scenarios
+   - `statcalib_status=generated`
+   - `statcalib_reason=statcalib_params_emitted`
+   - `statcalib_generated_windows_mean=600.0`
+6. Remaining blocker:
+   - final `summary.json` anchor is `git_commit=6058f42`
+   - clean-start anchor was `9174065`
+   - `git reflog` shows an in-flight checkout during execution
+   - therefore the strong result persisted, but provenance was not fully repaired
+
+### Residual risk
+
+- This remains mock-backed software HIL evidence only.
+- This should not be promoted into `FR8`.
+- The next honest prerequisite is a provenance-isolated rerun path, not a formal comparator claim.

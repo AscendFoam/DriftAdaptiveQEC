@@ -446,3 +446,12 @@
 - `T60` does not change any HIL / P4 / `.tflite` / real-board truth boundary. It only hardens semantics and tests on the existing mainline lane.
 - The current unique task is now `T61: Statcalib clean-provenance fairness sanity rerun`.
 - `T61` is the smallest honest next step: rerun the bounded T59 matrix from a clean committed worktree, with no source/config edits and no theory-branch mixing.
+
+### 2026-05-27 Captain Update (T61 closeout supersession)
+
+- `T61` has been judged `BLOCK`.
+- The bounded fairness result persisted, but the task failed its own clean-provenance objective because the final artifact commit anchor drifted away from the clean launch commit during execution.
+- `T61` therefore does not close `R27` and does not open `FR8`.
+- No new warning-classification-driven risk item is opened from T61 because the verdict is `BLOCK`, not `PASS_WITH_WARNINGS`.
+- The current unique task is now `T62: Statcalib provenance-isolated fairness rerun`.
+- `T62` is the smallest honest next step: rerun the exact same bounded matrix in a provenance-isolated way, with no source/config edits, no same-run resume, and no theory-branch mixing.
