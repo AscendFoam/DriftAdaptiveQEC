@@ -170,3 +170,11 @@
 - The current unique task is now `T62: Statcalib provenance-isolated fairness rerun`.
 - `T62` stays inside the exact same mock-backed software-HIL truth boundary: same T59/T61 config family, same two scenarios, same three modes, `--paired-seeds`, and `repeats=2`.
 - `T62` is allowed to repair provenance isolation only. It must not widen comparator scope, change source/config semantics, or mix mainline experiment work with theory-only branch materials.
+
+## 2026-05-27 Captain Update (T62/T63 boundary supersession)
+
+- `T62` has now been accepted as `PASS`.
+- `T62` closes the specific provenance blocker from `T61`, but it does not change any HIL / P4 / `.tflite` / real-board truth boundary.
+- `T62` remains bounded mock-backed software-HIL evidence only. It is not `FR8`, not `.tflite` validation, and not real-board validation.
+- The current unique task is now `T63: FR8 statcalib comparator gate review`.
+- `T63` is docs-only and stays entirely inside the same boundary: it may review whether a bounded FR8 task should exist, but it must not itself generate new comparator evidence or upgrade the current truth boundary.

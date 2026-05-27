@@ -1,13 +1,12 @@
 ## 2026-05-27 Captain Final Supersession
 
-- Current unique task: `T62: Statcalib provenance-isolated fairness rerun`
-- Task package: `docs/tasks/Phase2/T62_statcalib_provenance_isolated_fairness_rerun.md`
-- `T61` has been judged `BLOCK`.
-- `T61` preserved the fairness signal but did not close the clean-provenance blocker it was created to repair.
+- Current unique task: `T63: FR8 statcalib comparator gate review`
+- Task package: `docs/tasks/Phase2/T63_fr8_statcalib_comparator_gate_review.md`
+- `T62` has been judged `PASS`.
+- `T62` closed the specific clean-provenance blocker that caused `T61` to fail.
 - `R26` remains closed by `T60`.
-- `R27` remains open with concrete T61 evidence: launch clean commit drifted from the final `summary.json` commit and the blocked run also shows same-run resume noise.
-- `T62` is the single blocking-only automatic retry for this provenance issue. It is not `FR8` formal comparator evidence.
-- `T62` must start from a clean committed `main` worktree, run in one uninterrupted invocation, may create one T62-scoped run root, and must not change source/config semantics or touch theory-only branch materials.
+- `R27` should now be treated as closed by `T62`; the remaining question is whether the repository is ready to open a bounded `FR8` task at all.
+- `T63` is docs-only. It is not `FR8` formal comparator evidence and must not run new experiments or touch theory-only branch materials.
 
 # Handoff
 
@@ -22,11 +21,11 @@
 
 Captain supersession note:
 
-- The authoritative current task for all new worker action is `T62: Statcalib provenance-isolated fairness rerun`.
-- Authoritative task package: `docs/tasks/Phase2/T62_statcalib_provenance_isolated_fairness_rerun.md`.
-- `T61` is blocked, not complete.
-- If any older line in this file still mentions `T61`, `T59`, or `T58` as current, treat it as historical text only.
-- Because this is the single automatic retry for the same provenance blocker, if `T62` still returns `BLOCK`, Captain should stop and return the issue to the user instead of opening another auto-retry task.
+- The authoritative current task for all new worker action is `T63: FR8 statcalib comparator gate review`.
+- Authoritative task package: `docs/tasks/Phase2/T63_fr8_statcalib_comparator_gate_review.md`.
+- `T62` is complete and accepted as `PASS`.
+- If any older line in this file still mentions `T62`, `T61`, `T60`, `T59`, or `T58` as current, treat it as historical text only.
+- `T63` is a docs-only gate discussion. It is not permission to start `FR8` automatically.
 
 2026-05-24 Captain supersession:
 
@@ -109,6 +108,18 @@ Captain supersession note:
 - Current unique task is now `T62: Statcalib provenance-isolated fairness rerun`.
 - `T62` is blocking-only. It must rerun the exact same bounded matrix on clean committed `main`, in one uninterrupted invocation, with no same-run resume and no theory-branch mixing.
 - Next worker-facing task package: `docs/tasks/Phase2/T62_statcalib_provenance_isolated_fairness_rerun.md`.
+
+## 2026-05-27 Captain Update (T62 closeout)
+
+- `T62` review accepted by Captain as `PASS`.
+- Blocking issues: none.
+- `T62` review introduces no new warning item that needs `accepted / deferred / rejected` handling.
+- `T62` closes the specific provenance blocker that caused `T61` to fail: launch / finish / `summary.json` commit identity now matches across one clean `main` invocation.
+- `R27` should now be treated as closed by `T62`.
+- `T62` still does not open `FR8`, does not close `R24`, and does not upgrade the evidence beyond mock-backed software-HIL bounded sanity evidence.
+- Current unique task is now `T63: FR8 statcalib comparator gate review`.
+- `T63` is docs-only. It must decide whether a bounded FR8 task should exist at all, using only already existing repository evidence and without touching theory-only branch materials.
+- Next worker-facing task package: `docs/tasks/Phase2/T63_fr8_statcalib_comparator_gate_review.md`.
 
 Captain closeout note after T56:
 

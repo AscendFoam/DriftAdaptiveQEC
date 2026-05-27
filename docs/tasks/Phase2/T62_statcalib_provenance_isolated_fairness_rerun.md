@@ -252,3 +252,55 @@ Review should be treated as `BLOCK` if any of the following happen:
 `T61` is blocked, not complete.
 
 This task is the single allowed automatic retry for the same provenance blocker. If `T62` still returns `BLOCK`, Captain should stop automatic progression and return the issue to the user instead of opening another auto-retry task.
+
+## Worker Output
+
+### What changed
+
+1. Executed the bounded T62 sanity matrix in the single allowed run root:
+   - `runs/p4_benchmark/T62_statcalib_provenance_isolated_20260527_122943`
+2. Created:
+   - `docs/statcalib_provenance_isolated_fairness_rerun.md`
+   - `docs/review/T62_review.md`
+   - `docs/for_human/T62_explanation.md`
+   - `docs/worker_summary/T62_worker_summary.md`
+3. Appended the worker output into this task package.
+
+### Verification record
+
+1. Preflight passed:
+   - launch branch = `main`
+   - `git status --short` had no repo status entries
+   - launch `HEAD = e2773d3`
+2. Matrix boundary stayed locked:
+   - config: `cnn_fpga/config/p4_multiscenario_statcalib_smoke.yaml`
+   - scenarios: `static_bias_theta`, `linear_ramp`
+   - modes: `ukf`, `hybrid_residual_b`, `statcalib`
+   - `--paired-seeds`
+   - `--repeats 2`
+3. Execution stayed within the T62 one-shot rule:
+   - one foreground invocation only
+   - no same-run resume
+   - one T62 run root only
+4. Output integrity:
+   - `summary.json` exists
+   - `missing_runs_count=0`
+   - all rows have `coverage=1.0`
+   - all rows have `completed_repeats=2`
+5. Provenance closure:
+   - finish branch = `main`
+   - finish `HEAD = e2773d3`
+   - `summary.json git_commit = e2773d3`
+   - `progress.jsonl` duplicate `running` entries for the same repeat key = none
+6. T59/T61/T62 comparison outcome:
+   - `statcalib` remained the winner in both scenarios
+   - `statcalib_status=generated`
+   - `statcalib_reason=statcalib_params_emitted`
+   - `statcalib_generated_windows_mean=600.0`
+   - T62 aggregated comparison rows match T61 numerically
+
+### Residual risk
+
+- T62 closes the T61 provenance blocker, but it is still not `FR8`.
+- The evidence remains mock-backed software HIL only.
+- Any later `FR8` task still requires a separate gate decision rather than automatic promotion.

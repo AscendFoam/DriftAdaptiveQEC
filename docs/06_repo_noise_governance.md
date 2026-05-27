@@ -246,3 +246,11 @@
 - `T62` must not regenerate, resume into, or rewrite the historical `T59` run root or the blocked `T61` run root.
 - `T62` must run in one uninterrupted invocation. If the host wrapper times out or the run is interrupted, the task must stop rather than resume into the same run root.
 - `T62` must not modify source code, source-tree config, tracked governance docs, theory-only branch materials, or use repo cleanup as a side goal.
+
+## 2026-05-27 Captain Update (T62/T63 repo-noise supersession)
+
+- `T62` has been accepted as `PASS`; its run root `runs/p4_benchmark/T62_statcalib_provenance_isolated_20260527_122943` must now be treated as frozen historical evidence and must not be regenerated or rewritten.
+- The current unique task is now `T63: FR8 statcalib comparator gate review`.
+- `T63` is docs-only and must not create or modify any run root, artifact directory, benchmark output directory, or analysis-output directory.
+- `T63` must not modify source code, tests, source-tree config, tracked governance docs outside its allowed-file set, or theory-only branch materials.
+- `T63` must not use repo cleanup as a side goal, and it must not relabel any historical run root into formal comparator evidence.

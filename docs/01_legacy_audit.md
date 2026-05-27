@@ -455,3 +455,12 @@
 - No new warning-classification-driven risk item is opened from T61 because the verdict is `BLOCK`, not `PASS_WITH_WARNINGS`.
 - The current unique task is now `T62: Statcalib provenance-isolated fairness rerun`.
 - `T62` is the smallest honest next step: rerun the exact same bounded matrix in a provenance-isolated way, with no source/config edits, no same-run resume, and no theory-branch mixing.
+
+### 2026-05-27 Captain Update (T62 closeout supersession)
+
+- `T62` has now been accepted as `PASS`.
+- `T62` closes the specific provenance blocker that caused `T61` to fail, so `R27` should now be treated as closed.
+- `T62` does not change any HIL / P4 / `.tflite` / real-board truth boundary. It still remains bounded mock-backed software-HIL sanity evidence only.
+- `T62` does not open `FR8` automatically and does not close `R24`.
+- The current unique task is now `T63: FR8 statcalib comparator gate review`.
+- `T63` is the smallest honest next step: a docs-only gate discussion that decides whether a bounded FR8 task should exist at all, using only already existing repository evidence.

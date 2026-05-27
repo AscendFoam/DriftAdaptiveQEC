@@ -2344,3 +2344,51 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 4. `docs/08_risks_and_open_questions.md` 更新 `R27` 的具体 T61 证据与 `T62` 缓解动作
 5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T61` blocked closeout 与 `T62` 边界
 6. 因为这是同一 provenance blocker 的单次自动重试，若 `T62` 仍然 `BLOCK`，Captain 应停止自动推进并交由用户裁决
+
+## D-2026-05-27-03
+
+- 日期：`2026-05-27`
+- 决策：接受 `T62_review.md` 的 `PASS`，标记 `T62` 完成，关闭 `R27`，并将当前唯一任务切换为 `T63: FR8 statcalib comparator gate review`
+
+### 背景
+
+`T62` 的目标非常窄：它不是新的 comparator 扩张任务，而是 `T61` clean-provenance blocker 的单次 blocking-only 自动重试。只有当以下条件同时成立时，`T62` 才能被接受为 `PASS`：
+
+1. clean committed `main` preflight
+2. one uninterrupted invocation
+3. one T62-scoped run root only
+4. launch / finish / `summary.json` commit identity match
+5. bounded fairness signal persists without widening matrix or touching source/config semantics
+
+### 依据
+
+依据 `docs/review/T62_review.md`、`docs/statcalib_provenance_isolated_fairness_rerun.md` 与 `runs/p4_benchmark/T62_statcalib_provenance_isolated_20260527_122943/summary.json`，当前仓库事实是：
+
+1. `T62` verdict = `PASS`
+2. blocking issues = none
+3. launch branch = `main`，launch `HEAD = e2773d3`
+4. finish branch = `main`，finish `HEAD = e2773d3`
+5. `summary.json git_commit = e2773d3`
+6. `progress.jsonl` 无 duplicate `running` repeat key
+7. bounded `statcalib` winner signal 在两场景上继续存在
+
+### 结论
+
+`T62` 可以完成，因为它真正关闭了 `T61` 被创建来修复的那个 blocker：当前仓库已经拥有一份 provenance-clean 的 bounded fairness sanity rerun。
+
+但这仍然 **不等于**：
+
+- `FR8` 已打开
+- formal comparator ranking 已成立
+- `.tflite` runtime 已验证
+- real-board 已验证
+
+因此，最小且更诚实的下一步不是直接执行 `FR8`，而是新建 `T63`，做一个 docs-only gate review，决定是否应当开启一个 bounded FR8 task，或者是否还需要一个更小的前置 prerequisite。
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T62 -> PASS`，并将 `Current Unique Task` 切换到 `T63`
+2. 新增任务包 `docs/tasks/Phase2/T63_fr8_statcalib_comparator_gate_review.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T63`
+4. `docs/08_risks_and_open_questions.md` 将 `R27` 标记为已收口，同时保留 `R24` 与 `FR8` gate 边界
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T62` 收口与 `T63` 边界

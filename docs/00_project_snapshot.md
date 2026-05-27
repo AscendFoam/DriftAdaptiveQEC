@@ -369,3 +369,13 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - `R27` remains open and is now a pure provenance-isolation blocker before any later `FR8` gate discussion.
 - The current unique task is now `T62: Statcalib provenance-isolated fairness rerun`.
 - `T62` is blocking-only, must stay on the mainline experiment branch, must not touch theory-only materials, and is the single automatic retry for this blocker.
+
+## 2026-05-27 Captain Update (T62 closeout supersession)
+
+- `T62` has now been accepted as `PASS`.
+- `T62` closes the specific blocker that caused `T61` to fail: the repository now has one provenance-clean bounded fairness sanity rerun for the current `statcalib` smoke lane.
+- `R26` remains closed by `T60`.
+- `R27` should now be treated as closed by `T62`.
+- `T62` still does not upgrade the evidence beyond mock-backed software-HIL bounded sanity evidence and does not open `FR8` automatically.
+- The current unique task is now `T63: FR8 statcalib comparator gate review`.
+- `T63` is docs-only and exists to decide whether a bounded FR8 task should exist at all, without mixing mainline experiment evidence with theory-only branch materials.
