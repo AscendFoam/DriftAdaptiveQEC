@@ -9,17 +9,19 @@
 - finish branch: `main`
 - finish `HEAD`: `1e59f24`
 - `summary.json git_commit`: `1e59f24`
-- execution shape: one-shot full-matrix run under one fixed T64 run root
+- execution shape: one full-matrix invocation under one fixed T64 run root
 - frozen five-mode subset vs `T24`: exact match across all 20 frozen comparison rows
 
 This result pack stays inside the required boundary:
 
 - mock-backed software-HIL only
 - bounded `FR8` extension-lane evidence only
+- separate extension lane only
 - not a rewrite of `T24`
 - not `.tflite` validation
 - not real-board validation
 - not paper-grade expanded benchmark evidence by itself
+- not a mature calibration comparator validation result
 
 ## Preflight Result
 
@@ -59,24 +61,47 @@ Exact benchmark command:
 
 Execution note:
 
-- one detached one-shot invocation only
-- no repeat-range chunking
-- no resume against the same run root
+- artifact-visible execution shape: one full-matrix invocation under one fixed T64 run root
+- not repeat-range chunked
+- not resumed into the same run root
+- the report does not infer whether the invocation was foreground or detached, because that transport detail is not encoded in the preserved benchmark artifacts
 
-## Run Root And Post-Run Provenance
+## Provenance Source Classification
 
-- run root: `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658`
-- finish timestamp from `summary.json`: `2026-05-29 12:01:16 +08:00`
-- finish branch: `main`
-- finish `HEAD`: `1e59f24`
+Artifact-recorded fields:
+
+- `summary.json["run_dir"]`: `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658`
 - `summary.json["git_commit"]`: `1e59f24`
-- T64-scoped run-root count under `runs/p4_benchmark/`: `1`
+- `summary.json["launch_plan"]`: `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658/launch_plan.json`
+- `summary.json["progress_log"]`: `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658/progress.jsonl`
+- `summary.json["comparison_csv"]`: `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658/comparison.csv`
+- `launch_plan.json["config"]`: `cnn_fpga/config/p4_multiscenario_statcalib_extension_lane.yaml`
+- `launch_plan.json["resume_only"]`: `false`
+- `launch_plan.json["repeat_start"]`: `0`
+- `launch_plan.json["repeat_stop"]`: `2`
+- `launch_plan.json["requested_scenarios"]`: `static_bias_theta, linear_ramp, step_sigma_theta, periodic_drift`
+- `launch_plan.json["requested_modes"]`: `ekf, ukf, constant_residual_mu, rls_residual_b, hybrid_residual_b, statcalib`
+- `summary.json["protocol"]["paired_seeds"]`: `true`
+- `summary.json["protocol"]["repeats"]`: `2`
 
-All three provenance anchors match:
+Observed outside preserved artifacts:
 
-1. launch `HEAD`
-2. finish `HEAD`
-3. `summary.json git_commit`
+- launch timestamp from live preflight observation: `2026-05-27 22:11:07 +08:00`
+- launch branch from live preflight observation: `main`
+- launch `HEAD` from live preflight observation: `1e59f24`
+- finish branch from post-run repo observation: `main`
+- finish `HEAD` from post-run repo observation: `1e59f24`
+
+Auxiliary filesystem metadata:
+
+- `summary.json` LastWriteTime: `2026-05-29 12:01:16 +08:00`
+
+Cross-check:
+
+1. launch `HEAD` observed at preflight = `1e59f24`
+2. finish `HEAD` observed after completion = `1e59f24`
+3. `summary.json["git_commit"]` = `1e59f24`
+4. T64-scoped run-root count under `runs/p4_benchmark/` = `1`
 
 ## Coverage And Integrity
 
@@ -117,6 +142,8 @@ The frozen subset in `T64` matches `T24` exactly for every frozen `(scenario, mo
 
 `statcalib` is reported only as a separately labeled sixth lane.
 
+The lane still uses the same minimal comparator semantics already bounded by `T59` / `T60` / `T62`. This report does not reclassify it as a mature calibration comparator or deployment-ready alternative.
+
 | Scenario | StatCalib `final_ler_mean +- std` | Status | Reason | Generated Windows Mean | Signal Norm Mean |
 | --- | --- | --- | --- | ---: | ---: |
 | `static_bias_theta` | `0.431708 +- 0.000412` | `generated` | `statcalib_params_emitted` | `899.5` | `0.186567` |
@@ -153,5 +180,6 @@ What T64 does not close:
 3. any claim beyond mock-backed software-HIL
 4. paper-grade expanded benchmark evidence by itself
 5. any claim that the historical `T24` frozen ranked table has been replaced
+6. any claim that `statcalib` has been upgraded from a separately labeled extension lane into a mature calibration comparator
 
 The practical interpretation is narrow: `statcalib` now has a clean, bounded, separately labeled four-scenario extension-lane result pack. That is stronger than the earlier smoke evidence, but it is still not deployment-boundary validation.

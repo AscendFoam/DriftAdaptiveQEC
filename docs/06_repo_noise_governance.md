@@ -271,3 +271,12 @@
 - `T65` must create no new run root, no new benchmark-output directory, and no new artifact directory outside its allowed-file set.
 - `T65` may add only task-scoped docs, one audit helper, and one focused test module.
 - `T65` must not modify any file under `runs/`, must not use repo cleanup as a side goal, and must keep mainline experiment evidence separate from theory-only branch materials.
+
+## 2026-05-29 Captain Update (T65/T66 repo-noise supersession)
+
+- `T65` has now been accepted as `PASS_WITH_WARNINGS`; it created no run root and did not modify any historical artifact directory under `runs/`.
+- The current unique task is now `T66: FR8 statcalib sensitivity bounded benchmark`.
+- `T66` may create exactly one new run root under `runs/p4_benchmark/T66_statcalib_sensitivity_*`.
+- `T66` may add at most one task-scoped derived config file and one task-scoped summary helper plus focused tests.
+- `T66` must not regenerate, resume into, rewrite, or relabel the historical `T24`, `T59`, `T61`, `T62`, or `T64` run roots.
+- `T66` must not modify any historical file under `runs/`, must not use repo cleanup as a side goal, and must keep mainline experiment evidence separate from theory-only branch materials.

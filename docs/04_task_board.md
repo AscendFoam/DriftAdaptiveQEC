@@ -359,8 +359,18 @@
     - N2 finish-timestamp provenance wording drift = `deferred`
     - N3 extension-lane over-interpretation boundary = `deferred`
   - Result: T64 closes one clean-provenance bounded FR8 extension-lane benchmark on the locked four-scenario protocol without rewriting `T24`, but the evidence remains mock-backed software-HIL only
-- [ ] T65: FR8 extension-lane consistency guard and report closeout
+- [x] T65: FR8 extension-lane consistency guard and report closeout
   - Task package: `docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`
+  - Output: `docs/fr8_statcalib_extension_lane_consistency_audit.md`
+  - Review output: `docs/review/T65_review.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - Warning handling:
+    - N1 mixed-diff scope acceptance depends on explicit user/captain clarification = `accepted`
+    - N2 T64-specific audit helper is intentionally narrow, not generic FR8 framework = `accepted`
+    - N3 review wording should have stated the clarification dependency more explicitly = `accepted`
+  - Result: T65 closes the T64 report/artifact consistency gap and makes the T64 result pack self-audited and safer to reuse, but it does not close `R24`
+- [ ] T66: FR8 statcalib sensitivity bounded benchmark
+  - Task package: `docs/tasks/Phase2/T66_fr8_statcalib_sensitivity_bounded_benchmark.md`
 
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
@@ -387,42 +397,42 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T65: FR8 extension-lane consistency guard and report closeout`
+`T66: FR8 statcalib sensitivity bounded benchmark`
 
 Status:
 
-- `T64` has been reviewed as `PASS_WITH_WARNINGS`.
-- `T64` closes one clean-provenance bounded FR8 extension-lane benchmark on the locked four-scenario protocol.
-- `T64` warning handling is: `N1 deferred -> R28`, `N2 deferred -> R28`, `N3 deferred -> R24`.
-- `T24` remains the authoritative historical frozen ranked table; `T64` matched it exactly across all 20 frozen comparison rows and must continue to preserve that anchor.
-- `T65` is a hardening task only. It does not create new benchmark evidence.
-- Current evidence still remains bounded mock-backed software-HIL evidence only.
+- `T65` has been reviewed as `PASS_WITH_WARNINGS`.
+- T65 warning handling is: `N1 accepted`, `N2 accepted`, `N3 accepted`.
+- `T65` closes `R28`: the T64 report pack is now backed by an explicit consistency audit helper, focused regression coverage, and a bounded audit doc.
+- `T64` remains a bounded mock-backed software-HIL extension-lane result pack only; it is still not `.tflite`, real-board, or a mature calibration-comparator claim.
+- `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
+- The largest remaining mainline gap is now `R24`, not report wording drift.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T65` must remain isolated from theory-only branch materials and must not create, rewrite, or relabel any run root.
+- `T66` must remain isolated from theory-only branch materials and must not rewrite historical run roots.
 
 Why this task is next:
 
-1. `T64` already created the bounded extension-lane evidence pack, so the smallest remaining gap is no longer execution.
-2. The remaining review findings are report/artifact consistency and carry-forward boundary discipline, not another benchmark run.
-3. `T65` is materially stronger than a docs typo fix because it adds an automated audit helper and focused regression coverage, but it is still materially smaller than any new FR8 execution.
-4. Closing `R28` before any broader FR8 reuse keeps the repository honest without widening comparator scope, deployment scope, or theory-branch scope.
+1. `T65` has already closed the report/artifact consistency gap, so the next unresolved question is substantive, not editorial.
+2. `R24` is now the main open comparator-scope risk: the repository still does not know whether the T64 statcalib win is robust or just a narrow heuristic point.
+3. `T66` is materially stronger than a smoke or docs-only task because it runs a predeclared bounded sensitivity matrix and requires a reusable summary pack.
+4. `T66` still keeps the project honest because it does not rewrite `T24`, does not widen into `.tflite` or real-board, and does not touch theory-branch materials.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T65`
-- Latest reviewed task: `docs/review/T64_review.md` with verdict `PASS_WITH_WARNINGS`
-- T64 closeout: the bounded extension-lane benchmark is complete; warning classification is `N1 deferred`, `N2 deferred`, `N3 deferred`
-- Next worker-facing task package: `docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`
-- `T65` may correct the T64 report wording and add audit/test guardrails only; it must not create a new run root, change comparator semantics, or touch theory-branch materials
+- Current unique task: `T66`
+- Latest reviewed task: `docs/review/T65_review.md` with verdict `PASS_WITH_WARNINGS`
+- T65 closeout: the T64 result pack is now self-audited; warning classification is `N1 accepted`, `N2 accepted`, `N3 accepted`
+- Next worker-facing task package: `docs/tasks/Phase2/T66_fr8_statcalib_sensitivity_bounded_benchmark.md`
+- `T66` may add one bounded sensitivity benchmark lane and one task-scoped summary helper only; it must not change statcalib/runtime semantics, rewrite `T24`, or touch theory-branch materials
 
-1. Current unique task: `T65`
-2. `T64` is complete and accepted as `PASS_WITH_WARNINGS`.
-3. T64 warning handling:
-   - `N1` execution-shape wording drift = `deferred`
-   - `N2` finish-timestamp provenance wording drift = `deferred`
-   - `N3` extension-lane over-interpretation boundary = `deferred`
-4. T64 review output: `docs/review/T64_review.md`
-5. T65 task package: `docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`
+1. Current unique task: `T66`
+2. `T65` is complete and accepted as `PASS_WITH_WARNINGS`.
+3. T65 warning handling:
+   - `N1` mixed-diff scope acceptance depends on explicit user/captain clarification = `accepted`
+   - `N2` T64-specific audit helper is intentionally narrow = `accepted`
+   - `N3` review wording should have stated the clarification dependency explicitly = `accepted`
+4. T65 review output: `docs/review/T65_review.md`
+5. T66 task package: `docs/tasks/Phase2/T66_fr8_statcalib_sensitivity_bounded_benchmark.md`
 
 ## Done Criteria For T65
 

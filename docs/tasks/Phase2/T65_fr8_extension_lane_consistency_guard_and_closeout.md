@@ -224,17 +224,34 @@ Review should be treated as `BLOCK` if any of the following happen:
 
 ### Status
 
-- Not started yet
+- Completed within allowed scope
 - Task end-state not marked here; waiting for Worker completion and external review
 
 ### What Changed
 
-- Pending
+1. Updated `docs/fr8_statcalib_extension_lane_benchmark.md` to:
+   - replace loose execution-shape wording with artifact-visible wording
+   - remove the false `finish timestamp from summary.json` attribution
+   - distinguish artifact-recorded fields, live repo observations, and auxiliary filesystem metadata
+2. Added `cnn_fpga/benchmark/audit_fr8_extension_lane_consistency.py`
+3. Added `tests/test_fr8_extension_lane_consistency.py`
+4. Added `docs/fr8_statcalib_extension_lane_consistency_audit.md`
+5. Added `docs/review/T65_review.md`
+6. Added `docs/for_human/T65_explanation.md`
+7. Added `docs/worker_summary/T65_worker_summary.md`
 
 ### Verification Notes
 
-- Pending
+1. `C:\ProgramData\anaconda3\python.exe -m unittest tests.test_fr8_extension_lane_consistency`
+   - passed (`Ran 5 tests`, `OK`)
+2. `C:\ProgramData\anaconda3\python.exe -m py_compile cnn_fpga/benchmark/audit_fr8_extension_lane_consistency.py`
+   - passed
+3. `C:\ProgramData\anaconda3\python.exe -m cnn_fpga.benchmark.audit_fr8_extension_lane_consistency --task-package docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md --report docs/fr8_statcalib_extension_lane_benchmark.md --run-dir runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658 --frozen-baseline-run-dir runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743`
+   - passed (`8/8` audit checks)
+4. No new run root was created
+5. No file under `runs/` was modified
 
 ### Remaining Risk
 
-- Pending
+- `T65` closes the report/artifact consistency hardening gap, but it does not close the substantive comparator-scope caution behind `R24`.
+- `T64` remains mock-backed software-HIL evidence only and is still not `.tflite`, real-board, or mature calibration-comparator validation.

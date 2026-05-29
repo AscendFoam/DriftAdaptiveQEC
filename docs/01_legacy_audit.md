@@ -483,3 +483,13 @@
   - `R28` is newly open because the T64 report wording is not yet strongly self-audited against its artifacts
 - The current unique task is now `T65: FR8 extension-lane consistency guard and report closeout`.
 - `T65` is bounded hardening only. It must not create new experimental evidence or touch theory-only branch materials.
+
+## 2026-05-29 Captain Update (T65 closeout supersession)
+
+- `T65` has now been accepted as `PASS_WITH_WARNINGS`.
+- T65 warning classification is: `N1 accepted`, `N2 accepted`, `N3 accepted`.
+- No new warning-derived risk item is opened by `T65`.
+- `R28` should now be treated as closed by `T65`.
+- `R24` remains open because the repository still has only a minimal statcalib comparator semantics path, not a mature validated calibration comparator.
+- The current unique task is now `T66: FR8 statcalib sensitivity bounded benchmark`.
+- `T66` is the next bounded mainline task because the remaining question is substantive robustness, not report wording: the repository still needs to know whether the T64 statcalib win survives a small predeclared heuristic sensitivity grid.

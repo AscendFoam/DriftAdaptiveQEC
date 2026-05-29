@@ -199,3 +199,13 @@
 - `R28` is now open because the report wording around execution shape and finish-timestamp provenance still needs an explicit consistency guard.
 - The current unique task is now `T65: FR8 extension-lane consistency guard and report closeout`.
 - `T65` must harden report/audit consistency only. It must not change benchmark semantics, create a new run root, or widen deployment-boundary claims.
+
+## 2026-05-29 Captain Update (T65/T66 boundary supersession)
+
+- `T65` has now been accepted as `PASS_WITH_WARNINGS`.
+- `T65` changes no HIL / P4 / `.tflite` / real-board truth boundary. It closes report/audit consistency only.
+- `R28` should now be treated as closed: the T64 pack is self-audited against its run artifacts and frozen-subset anchor.
+- `R24` remains open: even after T65, the statcalib lane is still only a separately labeled bounded extension lane, not a mature validated calibration comparator.
+- The current unique task is now `T66: FR8 statcalib sensitivity bounded benchmark`.
+- `T66` must remain inside the same truth boundary: mock-backed software-HIL only, not `.tflite`, not real-board, not paper-grade benchmark expansion.
+- `T66` may probe only a predeclared bounded statcalib sensitivity grid under clean provenance; it must not rewrite the historical `T24` frozen ranked table or change statcalib/runtime semantics.

@@ -398,3 +398,13 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - `T64` closes one clean-provenance bounded FR8 extension-lane benchmark on the locked four-scenario protocol and preserves the historical `T24` frozen subset exactly.
 - The current unique task is now `T65: FR8 extension-lane consistency guard and report closeout`.
 - `T65` is a code/test/docs hardening task only. It must create no new run root and must stay separate from theory-only branch materials.
+
+## 2026-05-29 Captain Update (T65 closeout supersession)
+
+- `T65` has now been accepted as `PASS_WITH_WARNINGS`.
+- T65 warning classification is: `N1 accepted`, `N2 accepted`, `N3 accepted`.
+- No new risk item is opened by warning classification for `T65`.
+- `T65` closes `R28`: the T64 result pack is now backed by an explicit audit helper, focused regression coverage, and a bounded consistency-audit document.
+- `R24` remains open as the dominant mainline comparator-scope risk.
+- The current unique task is now `T66: FR8 statcalib sensitivity bounded benchmark`.
+- `T66` is a bounded execution-and-summary task only. It may probe a small predeclared statcalib sensitivity grid, but it must not rewrite `T24`, change statcalib/runtime semantics, widen into `.tflite` or real-board scope, or mix with theory-only branch materials.

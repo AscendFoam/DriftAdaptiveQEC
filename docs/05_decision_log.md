@@ -2486,3 +2486,53 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T65`
 4. `docs/08_risks_and_open_questions.md` 保持 `R24` 打开，并新增 `R28`
 5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T64` 收口与 `T65` 边界
+## D-2026-05-29-02
+
+- 日期：`2026-05-29`
+- 决策：接受 `T65_review.md` 的 `PASS_WITH_WARNINGS`，标记 `T65` 完成，并将当前唯一任务切换为 `T66: FR8 statcalib sensitivity bounded benchmark`
+
+### 背景
+
+`T65` 的目标不是新增实验，而是把 `T64` 的 bounded FR8 extension-lane result pack 做成一个更强的 self-audited artifact。根据 `docs/review/T65_review.md`、`docs/fr8_statcalib_extension_lane_consistency_audit.md`、`cnn_fpga/benchmark/audit_fr8_extension_lane_consistency.py` 与 `tests/test_fr8_extension_lane_consistency.py`：
+
+1. T64 报告中的 execution-shape wording drift 已修正
+2. finish-timestamp provenance wording drift 已修正
+3. 仓库现在有一个轻量 audit helper，可对照 `summary.json`、`launch_plan.json`、`progress.jsonl` 与 T24 frozen-subset anchor 做一致性检查
+4. focused regression coverage 已补上
+5. T65 本身未创建新的 run root，也未改写任何历史 `runs/` 文件
+
+### Warning 分类
+
+本次 warning 分类如下：
+
+1. `N1` mixed-diff scope acceptance depends on explicit user/captain clarification = `accepted`
+2. `N2` T64-specific audit helper is intentionally narrow, not generic FR8 framework = `accepted`
+3. `N3` review wording should have stated the clarification dependency more explicitly = `accepted`
+
+因此：
+
+1. 无新的 `deferred`
+2. 无新的 `rejected`
+3. 不新增由 warning classification 触发的新 risk
+
+### 结论
+
+`T65` 可以完成，并且它关闭的是 `R28`：T64 result pack 的 report/artifact consistency gap 已通过显式 audit helper、focused tests 与 bounded audit doc 收紧。
+
+但 `T65` 不关闭 `R24`。当前更重要的剩余问题不再是报告措辞，而是 T64 中 `statcalib` 的 bounded 优势是否具有最小程度的 robustness，还是仅仅是一个狭窄 heuristic point。
+
+因此当前最小且更诚实的下一步不是继续做 docs-only 修补，也不是直接跳到 `.tflite`、real-board 或 theory lane，而是新增 `T66`：
+
+1. 保持 T24 frozen table 作为锚点
+2. 保持 locked four-scenario mainline protocol
+3. 仅对 statcalib 做一个预声明的小型 sensitivity grid
+4. 保持 clean provenance
+5. 不允许改动 statcalib/runtime 语义
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T65 -> PASS_WITH_WARNINGS`，并切换 `Current Unique Task` 到 `T66`
+2. 新增任务包 `docs/tasks/Phase2/T66_fr8_statcalib_sensitivity_bounded_benchmark.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T66`
+4. `docs/08_risks_and_open_questions.md` 关闭 `R28`，并保持 `R24` 为当前主导风险
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T65` 收口与 `T66` 边界

@@ -1,15 +1,15 @@
 ## 2026-05-29 Captain Final Supersession
 
-- Current unique task: `T65: FR8 extension-lane consistency guard and report closeout`
-- Task package: `docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`
-- `T64` has been judged `PASS_WITH_WARNINGS`.
-- T64 warning classification:
-  - `N1` execution-shape wording drift = `deferred` -> `R28`
-  - `N2` finish-timestamp provenance wording drift = `deferred` -> `R28`
-  - `N3` extension-lane over-interpretation boundary = `deferred` -> `R24`
-- `T64` closes one clean-provenance bounded FR8 extension-lane benchmark on the locked four-scenario protocol.
-- `T24` remains the authoritative historical frozen ranked table; `T64` must not be used to rewrite it.
-- `T65` is code/test/docs hardening only. It must not create a new run root, widen comparator scope, or mix mainline experiment work with theory-only branch materials.
+- Current unique task: `T66: FR8 statcalib sensitivity bounded benchmark`
+- Task package: `docs/tasks/Phase2/T66_fr8_statcalib_sensitivity_bounded_benchmark.md`
+- `T65` has been judged `PASS_WITH_WARNINGS`.
+- T65 warning classification:
+  - `N1` mixed-diff scope acceptance depends on explicit user/captain clarification = `accepted`
+  - `N2` T64-specific audit helper is intentionally narrow, not generic FR8 framework = `accepted`
+  - `N3` review wording should have stated the clarification dependency more explicitly = `accepted`
+- `T65` closes `R28` and makes the T64 result pack self-audited and safer to reuse.
+- `T24` remains the authoritative historical frozen ranked table; `T64/T65` must not be used to rewrite it.
+- `T66` is a bounded sensitivity benchmark only. It must not change statcalib/runtime semantics, widen into `.tflite` or real-board, or mix mainline experiment work with theory-only branch materials.
 
 # Handoff
 
@@ -24,11 +24,26 @@
 
 Captain supersession note:
 
-- The authoritative current task for all new worker action is `T65: FR8 extension-lane consistency guard and report closeout`.
-- Authoritative task package: `docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`.
-- `T64` is complete and accepted as `PASS_WITH_WARNINGS`.
-- If any older line in this file still mentions `T64`, `T63`, `T62`, `T61`, `T60`, `T59`, or `T58` as current, treat it as historical text only.
-- `T65` is the single bounded next step after T64 closeout. It is not permission to widen comparator scope, deployment scope, or theory-branch scope.
+- The authoritative current task for all new worker action is `T66: FR8 statcalib sensitivity bounded benchmark`.
+- Authoritative task package: `docs/tasks/Phase2/T66_fr8_statcalib_sensitivity_bounded_benchmark.md`.
+- `T65` is complete and accepted as `PASS_WITH_WARNINGS`.
+- If any older line in this file still mentions `T65`, `T64`, `T63`, `T62`, `T61`, `T60`, `T59`, or `T58` as current, treat it as historical text only.
+- `T66` is the single bounded next step after T65 closeout. It is not permission to widen comparator scope, deployment scope, or theory-branch scope.
+
+## 2026-05-29 Captain Update (T65 closeout)
+
+- `T65` review accepted by Captain as `PASS_WITH_WARNINGS`.
+- Blocking issues: none.
+- Warning classification:
+  - `N1` mixed-diff scope acceptance depends on explicit user/captain clarification = `accepted`
+  - `N2` T64-specific audit helper is intentionally narrow, not generic FR8 framework = `accepted`
+  - `N3` review wording should have stated the clarification dependency more explicitly = `accepted`
+- `T65` is complete. It closes the T64 report/artifact consistency gap and makes the T64 result pack self-audited through code, tests, and an explicit audit doc.
+- `R28` should now be treated as closed by `T65`.
+- `T65` does not close `R24`, does not validate `.tflite`, does not validate real-board behavior, and does not upgrade statcalib into a mature calibration comparator.
+- Current unique task is now `T66: FR8 statcalib sensitivity bounded benchmark`.
+- `T66` must keep the T24 frozen table authoritative, rerun only bounded anchor-plus-variant lanes, preserve clean provenance, and remain separate from theory-only branch materials.
+- Next worker-facing task package: `docs/tasks/Phase2/T66_fr8_statcalib_sensitivity_bounded_benchmark.md`.
 
 ## 2026-05-29 Captain Update (T64 closeout)
 
