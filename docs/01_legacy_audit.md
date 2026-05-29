@@ -472,3 +472,14 @@
 - The legacy/truth boundary remains unchanged: current `statcalib` evidence is still mock-backed software-HIL only, and `.tflite` / real-board validation remain outside the mainline evidence pack.
 - `T24` remains the authoritative historical frozen-set formal software revalidation record. `T64` must not relabel or silently rewrite that record.
 - The current unique task is now `T64: FR8 statcalib extension-lane bounded benchmark`.
+
+### 2026-05-29 Captain Update (T64 closeout supersession)
+
+- `T64` has now been accepted as `PASS_WITH_WARNINGS`.
+- `T64` does not change any legacy truth boundary about `.tflite`, real-board, or paper-grade expanded benchmark evidence.
+- What `T64` adds is narrower: one clean-provenance bounded extension-lane result pack in which the historical `T24` frozen five-mode subset is preserved exactly and `statcalib` is reported only as a sixth separately labeled lane.
+- The remaining legacy-risk correction is also now clearer:
+  - `R24` remains open because the lane is still a minimal comparator semantics path, not a mature validated calibration comparator
+  - `R28` is newly open because the T64 report wording is not yet strongly self-audited against its artifacts
+- The current unique task is now `T65: FR8 extension-lane consistency guard and report closeout`.
+- `T65` is bounded hardening only. It must not create new experimental evidence or touch theory-only branch materials.

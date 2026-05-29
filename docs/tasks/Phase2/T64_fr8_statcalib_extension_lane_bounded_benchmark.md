@@ -309,3 +309,57 @@ Review should be treated as `BLOCK` if any of the following happen:
 The next step is now execution, not another gate. But it remains bounded execution only.
 
 This task must stay on `main`-branch experiment work and must remain isolated from the user's separate theory branch.
+
+## Worker Output
+
+### Status
+
+- Completed within allowed scope
+- Task end-state not marked here; waiting for external review as requested
+
+### What Changed
+
+1. Created the task-scoped derived config:
+   - `cnn_fpga/config/p4_multiscenario_statcalib_extension_lane.yaml`
+2. Executed the bounded extension-lane benchmark in:
+   - `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658`
+3. Wrote the result pack:
+   - `docs/fr8_statcalib_extension_lane_benchmark.md`
+   - `docs/review/T64_review.md`
+   - `docs/for_human/T64_explanation.md`
+   - `docs/worker_summary/T64_worker_summary.md`
+
+### Verification Notes
+
+1. Preflight passed on clean `main`:
+   - launch timestamp: `2026-05-27 22:11:07 +08:00`
+   - launch `HEAD`: `1e59f24`
+2. The run preserved the locked benchmark boundary:
+   - scenarios: `static_bias_theta`, `linear_ramp`, `step_sigma_theta`, `periodic_drift`
+   - modes: `ekf`, `ukf`, `constant_residual_mu`, `rls_residual_b`, `hybrid_residual_b`, `statcalib`
+   - `statcalib` appended last
+   - `--paired-seeds`
+   - `--repeats 2`
+3. Provenance passed:
+   - finish branch: `main`
+   - finish `HEAD`: `1e59f24`
+   - `summary.json git_commit`: `1e59f24`
+4. Output integrity passed:
+   - `comparison_rows_count=24`
+   - `raw_rows_count=48`
+   - `missing_runs_count=0`
+   - all rows have `coverage=1.0`
+   - all rows have `completed_repeats=2`
+   - `progress.jsonl` has no duplicate `running` key
+5. Frozen-table preservation passed:
+   - T64 frozen subset matches historical `T24` exactly across all 20 frozen comparison rows
+6. Extension-lane result:
+   - `statcalib` won all four scenarios as a separate lane
+   - `statcalib_status=generated`
+   - `statcalib_reason=statcalib_params_emitted`
+
+### Remaining Risk
+
+- Evidence remains mock-backed software-HIL only.
+- `T64` does not validate `.tflite` or real-board behavior.
+- `T64` does not rewrite or replace the historical `T24` frozen benchmark evidence.

@@ -349,8 +349,18 @@
   - Review output: `docs/review/T63_review.md`
   - Captain verdict: `PASS`
   - Result: T63 closes the pre-FR8 gate-discussion lane honestly; the repository may now open exactly one bounded FR8 extension-lane task, but T63 is not itself FR8 evidence and does not close `R24`
-- [ ] T64: FR8 statcalib extension-lane bounded benchmark
+- [x] T64: FR8 statcalib extension-lane bounded benchmark
   - Task package: `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`
+  - Output: `docs/fr8_statcalib_extension_lane_benchmark.md`
+  - Review output: `docs/review/T64_review.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - Warning handling:
+    - N1 execution-shape wording drift in the result doc = `deferred`
+    - N2 finish-timestamp provenance wording drift = `deferred`
+    - N3 extension-lane over-interpretation boundary = `deferred`
+  - Result: T64 closes one clean-provenance bounded FR8 extension-lane benchmark on the locked four-scenario protocol without rewriting `T24`, but the evidence remains mock-backed software-HIL only
+- [ ] T65: FR8 extension-lane consistency guard and report closeout
+  - Task package: `docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`
 
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
@@ -377,50 +387,52 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T64: FR8 statcalib extension-lane bounded benchmark`
+`T65: FR8 extension-lane consistency guard and report closeout`
 
 Status:
 
-- `T63` has been reviewed as `PASS`.
-- `T63` concludes that `R27` remains closed by `T62`.
-- `T63` concludes that no additional pre-FR8 prerequisite is needed before one bounded extension-lane execution task.
-- `R24` remains open, but after `T63` it is treated as the main reporting/scope constraint for the next task rather than as a blocker that requires another gate loop.
+- `T64` has been reviewed as `PASS_WITH_WARNINGS`.
+- `T64` closes one clean-provenance bounded FR8 extension-lane benchmark on the locked four-scenario protocol.
+- `T64` warning handling is: `N1 deferred -> R28`, `N2 deferred -> R28`, `N3 deferred -> R24`.
+- `T24` remains the authoritative historical frozen ranked table; `T64` matched it exactly across all 20 frozen comparison rows and must continue to preserve that anchor.
+- `T65` is a hardening task only. It does not create new benchmark evidence.
 - Current evidence still remains bounded mock-backed software-HIL evidence only.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T64` must remain isolated from theory-only branch materials and must not silently rewrite the historical `T24` frozen-set evidence.
+- `T65` must remain isolated from theory-only branch materials and must not create, rewrite, or relabel any run root.
 
 Why this task is next:
 
-1. `T59` through `T62` already closed the separate-lane integration, semantics hardening, regression hardening, and provenance-clean rerun blockers.
-2. `T63` then judged that the smallest honest next step is one bounded `FR8` extension-lane run, not another abstract precondition review.
-3. `T64` stays materially smaller than a benchmark expansion because it reuses the locked four scenarios, the frozen five-mode ordering, paired seeds, and `repeats=2`.
-4. The only new evidence opened by `T64` is whether `statcalib` can be reported honestly as a separately labeled extension lane under the same frozen benchmark boundary.
+1. `T64` already created the bounded extension-lane evidence pack, so the smallest remaining gap is no longer execution.
+2. The remaining review findings are report/artifact consistency and carry-forward boundary discipline, not another benchmark run.
+3. `T65` is materially stronger than a docs typo fix because it adds an automated audit helper and focused regression coverage, but it is still materially smaller than any new FR8 execution.
+4. Closing `R28` before any broader FR8 reuse keeps the repository honest without widening comparator scope, deployment scope, or theory-branch scope.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T64`
-- Latest reviewed task: `docs/review/T63_review.md` with verdict `PASS`
-- T63 closeout: the pre-FR8 gate is now complete; exactly one bounded FR8 extension-lane task may proceed next, but T63 itself is not FR8 evidence
-- Next worker-facing task package: `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`
-- `T64` may run only the bounded extension-lane benchmark, must keep `statcalib` separate from the frozen ranked table, and must not touch theory-branch materials
+- Current unique task: `T65`
+- Latest reviewed task: `docs/review/T64_review.md` with verdict `PASS_WITH_WARNINGS`
+- T64 closeout: the bounded extension-lane benchmark is complete; warning classification is `N1 deferred`, `N2 deferred`, `N3 deferred`
+- Next worker-facing task package: `docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`
+- `T65` may correct the T64 report wording and add audit/test guardrails only; it must not create a new run root, change comparator semantics, or touch theory-branch materials
 
-1. Current unique task: `T64`
-2. `T63` is complete and accepted as `PASS`.
-3. T63 warning handling:
-   - not applicable; no new warning-classification action is required
-4. T63 review output: `docs/review/T63_review.md`
-5. T64 task package: `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`
+1. Current unique task: `T65`
+2. `T64` is complete and accepted as `PASS_WITH_WARNINGS`.
+3. T64 warning handling:
+   - `N1` execution-shape wording drift = `deferred`
+   - `N2` finish-timestamp provenance wording drift = `deferred`
+   - `N3` extension-lane over-interpretation boundary = `deferred`
+4. T64 review output: `docs/review/T64_review.md`
+5. T65 task package: `docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`
 
-## Done Criteria For T64
+## Done Criteria For T65
 
-1. Start from a clean committed `main` worktree and record launch / finish / `summary.json` commit identity.
-2. Preserve the locked four-scenario set and the frozen five-mode ordering from `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`.
-3. Add `statcalib` only as a separately labeled extension lane; do not silently rewrite the historical frozen ranked table.
-4. Keep `--paired-seeds` and `--repeats 2`; if chunking is needed, chunk only by repeat range under one fixed run root.
-5. Create at most one T64-scoped run root and at most one task-scoped derived config if the CLI cannot express the extension lane directly.
-6. Report the frozen five-mode subset separately from the `statcalib` extension-lane comparison.
-7. State explicitly that current evidence remains mock-backed software-HIL only, not `.tflite`, not real-board, and not a rewrite of `T24`.
-8. Keep all changes inside the T64 allowed-file set only, and do not touch `docs/02_experiment_plan.md`.
+1. Correct the T64 result-doc wording so execution shape and finish-timestamp provenance match the actual artifacts and accepted T64 task semantics.
+2. Add one lightweight audit helper that checks T64 report consistency against `summary.json`, `launch_plan.json`, `progress.jsonl`, and the frozen-subset anchor from `T24`.
+3. Add focused regression coverage for the new audit logic.
+4. Produce one explicit consistency-audit doc for T64.
+5. Create no new run root and do not modify any historical file under `runs/`.
+6. Keep the T64 boundary explicit: mock-backed software-HIL only, separate extension lane only, not `.tflite`, not real-board, not a rewrite of `T24`.
+7. Keep all changes inside the T65 allowed-file set only, and do not touch `docs/02_experiment_plan.md`.
 
 ## 2026-05-24 Captain Update (T47 closeout)
  

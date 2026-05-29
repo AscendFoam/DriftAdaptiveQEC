@@ -1,31 +1,48 @@
-## 2026-05-27 Captain Final Supersession
+## 2026-05-29 Captain Final Supersession
 
-- Current unique task: `T64: FR8 statcalib extension-lane bounded benchmark`
-- Task package: `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`
-- `T63` has been judged `PASS`.
-- `T63` closes the pre-FR8 gate-discussion lane and concludes that one bounded extension-lane execution task may proceed next.
-- `R27` remains closed by `T62`.
-- `R24` remains open, but after `T63` it is a scope/reporting constraint on `T64`, not a reason to open another prerequisite gate loop.
-- `T64` remains bounded mock-backed software-HIL work only. It is not `.tflite` validation, not real-board validation, and not permission to rewrite the historical `T24` frozen ranked table.
+- Current unique task: `T65: FR8 extension-lane consistency guard and report closeout`
+- Task package: `docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`
+- `T64` has been judged `PASS_WITH_WARNINGS`.
+- T64 warning classification:
+  - `N1` execution-shape wording drift = `deferred` -> `R28`
+  - `N2` finish-timestamp provenance wording drift = `deferred` -> `R28`
+  - `N3` extension-lane over-interpretation boundary = `deferred` -> `R24`
+- `T64` closes one clean-provenance bounded FR8 extension-lane benchmark on the locked four-scenario protocol.
+- `T24` remains the authoritative historical frozen ranked table; `T64` must not be used to rewrite it.
+- `T65` is code/test/docs hardening only. It must not create a new run root, widen comparator scope, or mix mainline experiment work with theory-only branch materials.
 
 # Handoff
 
 ## 1. 当前状态
 
-- 日期：`2026-05-27`
+- 日期：`2026-05-29`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T64: FR8 statcalib extension-lane bounded benchmark`
-- 任务包：`docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`
+- 当前唯一任务：`T65: FR8 statcalib extension-lane consistency guard and report closeout`
+- 任务包：`docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`
 
 Captain supersession note:
 
-- The authoritative current task for all new worker action is `T64: FR8 statcalib extension-lane bounded benchmark`.
-- Authoritative task package: `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`.
-- `T63` is complete and accepted as `PASS`.
-- If any older line in this file still mentions `T63`, `T62`, `T61`, `T60`, `T59`, or `T58` as current, treat it as historical text only.
-- `T64` is the single bounded next step after the gate. It is not permission to widen comparator scope, deployment scope, or theory-branch scope.
+- The authoritative current task for all new worker action is `T65: FR8 extension-lane consistency guard and report closeout`.
+- Authoritative task package: `docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`.
+- `T64` is complete and accepted as `PASS_WITH_WARNINGS`.
+- If any older line in this file still mentions `T64`, `T63`, `T62`, `T61`, `T60`, `T59`, or `T58` as current, treat it as historical text only.
+- `T65` is the single bounded next step after T64 closeout. It is not permission to widen comparator scope, deployment scope, or theory-branch scope.
+
+## 2026-05-29 Captain Update (T64 closeout)
+
+- `T64` review accepted by Captain as `PASS_WITH_WARNINGS`.
+- Blocking issues: none.
+- Warning classification:
+  - `N1` execution-shape wording drift in `docs/fr8_statcalib_extension_lane_benchmark.md` = `deferred` -> `R28`
+  - `N2` finish-timestamp provenance wording drift in `docs/fr8_statcalib_extension_lane_benchmark.md` = `deferred` -> `R28`
+  - `N3` extension-lane over-interpretation boundary = `deferred` -> `R24`
+- `T64` is complete. It closes one bounded FR8 extension-lane benchmark with clean provenance and exact frozen-subset preservation against `T24`.
+- `T64` does not close `R24`, does not validate `.tflite`, does not validate real-board behavior, and does not authorize a rewrite of the historical `T24` frozen ranked table.
+- Current unique task is now `T65: FR8 extension-lane consistency guard and report closeout`.
+- `T65` must harden report/artifact consistency and regression guards only. It must create no run root, modify no historical benchmark artifact, and remain separate from theory-only branch materials.
+- Next worker-facing task package: `docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`.
 
 2026-05-24 Captain supersession:
 

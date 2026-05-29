@@ -263,3 +263,11 @@
 - `T64` may add at most one task-scoped derived config file under `cnn_fpga/config/` if the extension lane cannot be expressed through the existing CLI/config combination without changing frozen semantics.
 - `T64` must not regenerate, resume into, rewrite, or relabel the historical `T24`, `T59`, `T61`, or `T62` run roots.
 - `T64` must not use repo cleanup as a side goal, and it must keep mainline experiment evidence separate from theory-only branch materials.
+
+## 2026-05-29 Captain Update (T64/T65 repo-noise supersession)
+
+- `T64` has now been accepted as `PASS_WITH_WARNINGS`; its run root `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658` must now be treated as frozen historical evidence and must not be regenerated, resumed into, or rewritten.
+- The current unique task is now `T65: FR8 extension-lane consistency guard and report closeout`.
+- `T65` must create no new run root, no new benchmark-output directory, and no new artifact directory outside its allowed-file set.
+- `T65` may add only task-scoped docs, one audit helper, and one focused test module.
+- `T65` must not modify any file under `runs/`, must not use repo cleanup as a side goal, and must keep mainline experiment evidence separate from theory-only branch materials.

@@ -388,3 +388,13 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - `R24` remains open, but after `T63` it is treated as the main scope/reporting constraint for the next task rather than as a blocker that requires another gate loop.
 - The current unique task is now `T64: FR8 statcalib extension-lane bounded benchmark`.
 - `T64` must remain on the mainline experiment branch, keep `statcalib` as a separately labeled extension lane, preserve the historical frozen five-mode table, and stay inside mock-backed software-HIL scope only.
+
+## 2026-05-29 Captain Update (T64 closeout supersession)
+
+- `T64` has now been accepted as `PASS_WITH_WARNINGS`.
+- T64 warning classification is: `N1 deferred`, `N2 deferred`, `N3 deferred`.
+- `N1` and `N2` open `R28`: the current T64 result pack is experimentally acceptable, but its report/artifact consistency still depends too much on manual wording discipline.
+- `N3` remains under `R24`: even after T64, `statcalib` is still only a separately labeled bounded extension lane, not a mature validated calibration comparator.
+- `T64` closes one clean-provenance bounded FR8 extension-lane benchmark on the locked four-scenario protocol and preserves the historical `T24` frozen subset exactly.
+- The current unique task is now `T65: FR8 extension-lane consistency guard and report closeout`.
+- `T65` is a code/test/docs hardening task only. It must create no new run root and must stay separate from theory-only branch materials.

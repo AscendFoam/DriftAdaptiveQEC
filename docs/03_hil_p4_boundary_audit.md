@@ -186,3 +186,16 @@
 - The current unique task is now `T64: FR8 statcalib extension-lane bounded benchmark`.
 - `T64` must stay inside the same truth boundary: mock-backed software-HIL only, not `.tflite`, not real-board, not paper-grade expansion.
 - `T64` may compare `statcalib` against the frozen benchmark set only as a separately labeled extension lane. It must not silently rewrite the historical `T24` frozen ranked table or overstate the minimal heuristic lane as a completed formal comparator.
+
+## 2026-05-29 Captain Update (T64/T65 boundary supersession)
+
+- `T64` has now been accepted as `PASS_WITH_WARNINGS`.
+- `T64` changes no HIL / P4 / `.tflite` / real-board truth boundary. It adds one clean-provenance bounded extension-lane benchmark only.
+- The strongest boundary fact after T64 is still narrow:
+  - `T24` remains the historical frozen ranked table
+  - `statcalib` remains only a separately labeled extension lane
+  - current evidence remains mock-backed software-HIL only
+- `R24` remains open because T64 does not transform the minimal statcalib lane into a mature validated calibration comparator.
+- `R28` is now open because the report wording around execution shape and finish-timestamp provenance still needs an explicit consistency guard.
+- The current unique task is now `T65: FR8 extension-lane consistency guard and report closeout`.
+- `T65` must harden report/audit consistency only. It must not change benchmark semantics, create a new run root, or widen deployment-boundary claims.

@@ -2436,3 +2436,53 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T64`
 4. `docs/08_risks_and_open_questions.md` 保持 `R27` 已收口，并将 `R24` 明确为 `T64` 的 scope/reporting constraint
 5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T63` 收口与 `T64` 边界
+
+## D-2026-05-29-01
+
+- 日期：`2026-05-29`
+- 决策：接受 `T64_review.md` 的 `PASS_WITH_WARNINGS`，标记 `T64` 完成，并将当前唯一任务切换为 `T65: FR8 extension-lane consistency guard and report closeout`
+
+### 背景
+
+`T64` 的目标不是重写历史 frozen benchmark，而是在 locked four-scenario protocol 下，新增一份 clean-provenance 的 `statcalib` extension-lane bounded benchmark，并明确它仍然只是 mock-backed software-HIL evidence。
+
+依据 `docs/review/T64_review.md`、`docs/fr8_statcalib_extension_lane_benchmark.md`、`cnn_fpga/config/p4_multiscenario_statcalib_extension_lane.yaml` 与 `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658/*`，当前仓库事实是：
+
+1. blocking issues = none
+2. T64 只新增了一个 task-scoped derived config 和一个 T64-scoped run root
+3. launch / finish / `summary.json git_commit` 一致
+4. locked four scenarios、frozen five-mode ordering、`statcalib` appended-last、`paired_seeds`、`repeats=2` 都被保留
+5. T64 的 frozen five-mode subset 与历史 `T24` 在 20 个 frozen comparison rows 上完全一致
+6. 但 T64 结果文档仍有两个明确的 report/provenance wording drift
+
+### Warning 分类
+
+本次 warning 分类如下：
+
+1. `N1` execution-shape wording drift in `docs/fr8_statcalib_extension_lane_benchmark.md` = `deferred`
+2. `N2` finish-timestamp provenance wording drift in `docs/fr8_statcalib_extension_lane_benchmark.md` = `deferred`
+3. `N3` extension-lane over-interpretation boundary = `deferred`
+
+对应风险处理：
+
+1. `N1` 与 `N2` 写入 `R28`
+2. `N3` 继续写入 `R24`
+
+### 结论
+
+`T64` 可以完成，但它关闭的是一份 bounded FR8 extension-lane benchmark 缺口，而不是 paper-grade expanded benchmark、`.tflite` validation、real-board validation 或完整 calibration comparator validation。
+
+当前最小且更诚实的下一步不是继续跑新 benchmark，而是新增 `T65`：
+
+1. 修正 T64 报告措辞与 provenance 归因
+2. 增加一个轻量 audit helper
+3. 增加 focused regression coverage
+4. 产出一份显式 consistency-audit doc
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T64 -> PASS_WITH_WARNINGS`，并切换 `Current Unique Task` 到 `T65`
+2. 新增任务包 `docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T65`
+4. `docs/08_risks_and_open_questions.md` 保持 `R24` 打开，并新增 `R28`
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T64` 收口与 `T65` 边界
