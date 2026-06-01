@@ -369,8 +369,18 @@
     - N2 T64-specific audit helper is intentionally narrow, not generic FR8 framework = `accepted`
     - N3 review wording should have stated the clarification dependency more explicitly = `accepted`
   - Result: T65 closes the T64 report/artifact consistency gap and makes the T64 result pack self-audited and safer to reuse, but it does not close `R24`
-- [ ] T66: FR8 statcalib sensitivity bounded benchmark
+- [x] T66: FR8 statcalib sensitivity bounded benchmark
   - Task package: `docs/tasks/Phase2/T66_fr8_statcalib_sensitivity_bounded_benchmark.md`
+  - Output: `docs/statcalib_sensitivity_bounded_benchmark.md`
+  - Review output: `docs/review/T66_review.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - Warning handling:
+    - `N1` duplicate-running progress-log artifact after same-run-root timeout relaunch = `accepted`
+    - `N2` aggregate-best vs stability-best split = `deferred`
+    - `N3` `static_bias_theta / statcalib_high_threshold` best row still carries aggregate `statcalib_status = mixed` = `deferred`
+  - Result: T66 closes one bounded local-grid robustness gap under clean provenance, but it does not close `R24` and does not upgrade statcalib into a mature calibration comparator
+- [ ] T67: FR8 statcalib teacher-anchor dependence bounded benchmark
+  - Task package: `docs/tasks/Phase2/T67_fr8_statcalib_teacher_anchor_dependence_bounded_benchmark.md`
 
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
@@ -397,42 +407,43 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T66: FR8 statcalib sensitivity bounded benchmark`
+`T67: FR8 statcalib teacher-anchor dependence bounded benchmark`
 
 Status:
 
-- `T65` has been reviewed as `PASS_WITH_WARNINGS`.
-- T65 warning handling is: `N1 accepted`, `N2 accepted`, `N3 accepted`.
-- `T65` closes `R28`: the T64 report pack is now backed by an explicit consistency audit helper, focused regression coverage, and a bounded audit doc.
-- `T64` remains a bounded mock-backed software-HIL extension-lane result pack only; it is still not `.tflite`, real-board, or a mature calibration-comparator claim.
+- `T66` has been reviewed as `PASS_WITH_WARNINGS`.
+- T66 warning handling is: `N1 accepted`, `N2 deferred -> R24`, `N3 deferred -> R24`.
+- `T66` closes the local heuristic-grid question: the T64 extension-lane win survives one predeclared five-point statcalib sensitivity grid under clean provenance.
+- `T66` still does not close `R24`: aggregate-best and stability-best variants differ, and the `static_bias_theta / statcalib_high_threshold` scenario-best row still carries aggregate `statcalib_status = mixed`.
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
-- The largest remaining mainline gap is now `R24`, not report wording drift.
+- `T64/T65/T66` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
+- The largest remaining mainline gap is still `R24`, but after T66 it is no longer local-parameter fragility. It is teacher-anchor dependence.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T66` must remain isolated from theory-only branch materials and must not rewrite historical run roots.
+- `T67` must remain isolated from theory-only branch materials and must not rewrite historical run roots.
 
 Why this task is next:
 
-1. `T65` has already closed the report/artifact consistency gap, so the next unresolved question is substantive, not editorial.
-2. `R24` is now the main open comparator-scope risk: the repository still does not know whether the T64 statcalib win is robust or just a narrow heuristic point.
-3. `T66` is materially stronger than a smoke or docs-only task because it runs a predeclared bounded sensitivity matrix and requires a reusable summary pack.
-4. `T66` still keeps the project honest because it does not rewrite `T24`, does not widen into `.tflite` or real-board, and does not touch theory-branch materials.
+1. `T66` has already answered the local-parameter robustness question, so another nearby sensitivity tweak would be redundant.
+2. `R24` is still open because the repository still does not know whether the extension-lane gain is structurally tied to one teacher anchor.
+3. `T67` is materially stronger than a simple follow-up because it runs a new bounded cross-anchor matrix and requires a grouped teacher-anchor summary pack.
+4. `T67` still keeps the project honest because it does not rewrite `T24`, does not widen into `.tflite` or real-board, and does not touch theory-branch materials.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T66`
-- Latest reviewed task: `docs/review/T65_review.md` with verdict `PASS_WITH_WARNINGS`
-- T65 closeout: the T64 result pack is now self-audited; warning classification is `N1 accepted`, `N2 accepted`, `N3 accepted`
-- Next worker-facing task package: `docs/tasks/Phase2/T66_fr8_statcalib_sensitivity_bounded_benchmark.md`
-- `T66` may add one bounded sensitivity benchmark lane and one task-scoped summary helper only; it must not change statcalib/runtime semantics, rewrite `T24`, or touch theory-branch materials
+- Current unique task: `T67`
+- Latest reviewed task: `docs/review/T66_review.md` with verdict `PASS_WITH_WARNINGS`
+- T66 closeout: warning classification is `N1 accepted`, `N2 deferred -> R24`, `N3 deferred -> R24`
+- Next worker-facing task package: `docs/tasks/Phase2/T67_fr8_statcalib_teacher_anchor_dependence_bounded_benchmark.md`
+- `T67` may add one bounded teacher-anchor benchmark lane and one task-scoped summary helper only; it must not change statcalib/runtime semantics, rewrite `T24`, or touch theory-branch materials
 
-1. Current unique task: `T66`
-2. `T65` is complete and accepted as `PASS_WITH_WARNINGS`.
-3. T65 warning handling:
-   - `N1` mixed-diff scope acceptance depends on explicit user/captain clarification = `accepted`
-   - `N2` T64-specific audit helper is intentionally narrow = `accepted`
-   - `N3` review wording should have stated the clarification dependency explicitly = `accepted`
-4. T65 review output: `docs/review/T65_review.md`
-5. T66 task package: `docs/tasks/Phase2/T66_fr8_statcalib_sensitivity_bounded_benchmark.md`
+1. Current unique task: `T67`
+2. `T66` is complete and accepted as `PASS_WITH_WARNINGS`.
+3. T66 warning handling:
+   - `N1` duplicate-running progress-log artifact after same-run-root timeout relaunch = `accepted`
+   - `N2` aggregate-best vs stability-best split = `deferred -> R24`
+   - `N3` `static_bias_theta / statcalib_high_threshold` best row still carries aggregate `statcalib_status = mixed` = `deferred -> R24`
+4. T66 review output: `docs/review/T66_review.md`
+5. T67 task package: `docs/tasks/Phase2/T67_fr8_statcalib_teacher_anchor_dependence_bounded_benchmark.md`
 
 ## Done Criteria For T65
 

@@ -280,3 +280,12 @@
 - `T66` may add at most one task-scoped derived config file and one task-scoped summary helper plus focused tests.
 - `T66` must not regenerate, resume into, rewrite, or relabel the historical `T24`, `T59`, `T61`, `T62`, or `T64` run roots.
 - `T66` must not modify any historical file under `runs/`, must not use repo cleanup as a side goal, and must keep mainline experiment evidence separate from theory-only branch materials.
+
+## 2026-06-01 Captain Update (T66/T67 repo-noise supersession)
+
+- `T66` has now been accepted as `PASS_WITH_WARNINGS`; its run root `runs/p4_benchmark/T66_statcalib_sensitivity_20260529_210906` must now be treated as frozen historical evidence and must not be regenerated, resumed into, or rewritten.
+- The current unique task is now `T67: FR8 statcalib teacher-anchor dependence bounded benchmark`.
+- `T67` may create exactly one new run root under `runs/p4_benchmark/T67_statcalib_teacher_anchor_*`.
+- `T67` may add at most one task-scoped derived config file and one task-scoped summary helper plus focused tests.
+- `T67` must not regenerate, resume into, rewrite, or relabel the historical `T24`, `T59`, `T61`, `T62`, `T64`, or `T66` run roots.
+- `T67` must not modify any historical file under `runs/`, must not use repo cleanup as a side goal, and must keep mainline experiment evidence separate from theory-only branch materials.

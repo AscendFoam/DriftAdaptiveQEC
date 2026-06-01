@@ -408,3 +408,12 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - `R24` remains open as the dominant mainline comparator-scope risk.
 - The current unique task is now `T66: FR8 statcalib sensitivity bounded benchmark`.
 - `T66` is a bounded execution-and-summary task only. It may probe a small predeclared statcalib sensitivity grid, but it must not rewrite `T24`, change statcalib/runtime semantics, widen into `.tflite` or real-board scope, or mix with theory-only branch materials.
+
+## 2026-06-01 Captain Update (T66 closeout supersession)
+
+- `T66` has now been accepted as `PASS_WITH_WARNINGS`.
+- T66 warning classification is: `N1 accepted`, `N2 deferred -> R24`, `N3 deferred -> R24`.
+- `T66` closes one bounded local-grid robustness gap: the T64 extension-lane win survives a predeclared five-point statcalib sensitivity grid under clean provenance.
+- `T66` does not close `R24`: aggregate-best and stability-best variants still differ, and the `static_bias_theta / statcalib_high_threshold` scenario-best row still carries aggregate `statcalib_status = mixed`.
+- The current unique task is now `T67: FR8 statcalib teacher-anchor dependence bounded benchmark`.
+- `T67` stays on the mainline experiment-evidence lane, must keep `T24` authoritative, must keep statcalib as a separate extension lane, and must stay separate from theory-only branch materials.

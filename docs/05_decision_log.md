@@ -2536,3 +2536,55 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T66`
 4. `docs/08_risks_and_open_questions.md` 关闭 `R28`，并保持 `R24` 为当前主导风险
 5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T65` 收口与 `T66` 边界
+
+## D-2026-06-01-01
+
+- 日期：`2026-06-01`
+- 决策：接受 `T66_review.md` 的 `PASS_WITH_WARNINGS`，标记 `T66` 完成，并将当前唯一任务切换为 `T67: FR8 statcalib teacher-anchor dependence bounded benchmark`
+
+### 背景
+
+`T66` 的目标不是继续做 report wording hardening，而是在不改 statcalib/runtime semantics 的前提下，验证 `T64` extension-lane gain 是否能穿过一个预声明的局部 sensitivity grid。
+
+依据 `docs/review/T66_review.md`、`docs/statcalib_sensitivity_bounded_benchmark.md`、`cnn_fpga/config/p4_multiscenario_statcalib_sensitivity.yaml` 与 `runs/p4_benchmark/T66_statcalib_sensitivity_20260529_210906/*`，当前仓库事实是：
+
+1. blocking issues = none
+2. `T66` 只有一个新 run root，且 `launch commit = finish commit = summary.json git_commit = ad981bb`
+3. `4 scenarios x 7 modes x repeats=2` 的 bounded matrix 完整收口，`missing_runs = []`
+4. `T66` 证明 `T64` 的 statcalib gain 不是单一点 fluke，但它没有把 statcalib 变成 mature calibration comparator
+5. review 中的主要剩余问题已经从 local sensitivity 转成 teacher-anchor dependence
+
+### Warning 分类
+
+本次 warning 分类如下：
+
+1. `N1` duplicate-running progress-log artifact after same-run-root timeout relaunch = `accepted`
+2. `N2` aggregate-best vs stability-best split = `deferred -> R24`
+3. `N3` `static_bias_theta / statcalib_high_threshold` best row still carries aggregate `statcalib_status = mixed` = `deferred -> R24`
+
+因此：
+
+1. 没有新的 `rejected`
+2. 没有新的独立 risk 编号
+3. `R24` 继续保留并被 `T66` 进一步细化
+
+### 结论
+
+`T66` 可以完成，但它关闭的是一个 bounded local-grid robustness gap，而不是 `R24` 本身。
+
+当前最小且更诚实的下一步不应再做一个简单 docs follow-up，也不应跳到 `.tflite`、real-board、training 或 theory lane，而应新增 `T67`：
+
+1. 保持 `T24` frozen table 为锚点
+2. 保持 locked four-scenario mainline protocol
+3. 只复用 `T66` 最强的两个 statcalib parameter points
+4. 只改变 `teacher_mode`
+5. 保持 clean provenance 与 `--paired-seeds`
+6. 用一个 grouped summary pack 回答 teacher-anchor dependence 问题
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T66 -> PASS_WITH_WARNINGS`，并切换 `Current Unique Task` 到 `T67`
+2. 新增任务包 `docs/tasks/Phase2/T67_fr8_statcalib_teacher_anchor_dependence_bounded_benchmark.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T67`
+4. `docs/08_risks_and_open_questions.md` 保持 `R24` 打开，并写入 `T66` 的 deferred warning 细节
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T66` 收口与 `T67` 边界

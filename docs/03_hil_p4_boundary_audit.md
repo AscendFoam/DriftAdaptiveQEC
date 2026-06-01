@@ -209,3 +209,15 @@
 - The current unique task is now `T66: FR8 statcalib sensitivity bounded benchmark`.
 - `T66` must remain inside the same truth boundary: mock-backed software-HIL only, not `.tflite`, not real-board, not paper-grade benchmark expansion.
 - `T66` may probe only a predeclared bounded statcalib sensitivity grid under clean provenance; it must not rewrite the historical `T24` frozen ranked table or change statcalib/runtime semantics.
+
+## 2026-06-01 Captain Update (T66/T67 boundary supersession)
+
+- `T66` has now been accepted as `PASS_WITH_WARNINGS`.
+- `T66` changes no HIL / P4 / `.tflite` / real-board truth boundary. It adds one bounded local sensitivity result pack only.
+- The strongest boundary fact after T66 is still narrow:
+  - `T24` remains the historical frozen ranked table
+  - `statcalib` remains only a separately labeled extension lane
+  - current evidence remains mock-backed software-HIL only
+- `R24` remains open because T66 does not prove teacher-anchor independence or mature calibration-comparator validity.
+- The current unique task is now `T67: FR8 statcalib teacher-anchor dependence bounded benchmark`.
+- `T67` must stay inside the same truth boundary: mock-backed software-HIL only, not `.tflite`, not real-board, not paper-grade benchmark expansion.

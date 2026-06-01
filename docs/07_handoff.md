@@ -1,15 +1,15 @@
-## 2026-05-29 Captain Final Supersession
+## 2026-06-01 Captain Final Supersession
 
-- Current unique task: `T66: FR8 statcalib sensitivity bounded benchmark`
-- Task package: `docs/tasks/Phase2/T66_fr8_statcalib_sensitivity_bounded_benchmark.md`
-- `T65` has been judged `PASS_WITH_WARNINGS`.
-- T65 warning classification:
-  - `N1` mixed-diff scope acceptance depends on explicit user/captain clarification = `accepted`
-  - `N2` T64-specific audit helper is intentionally narrow, not generic FR8 framework = `accepted`
-  - `N3` review wording should have stated the clarification dependency more explicitly = `accepted`
-- `T65` closes `R28` and makes the T64 result pack self-audited and safer to reuse.
-- `T24` remains the authoritative historical frozen ranked table; `T64/T65` must not be used to rewrite it.
-- `T66` is a bounded sensitivity benchmark only. It must not change statcalib/runtime semantics, widen into `.tflite` or real-board, or mix mainline experiment work with theory-only branch materials.
+- Current unique task: `T67: FR8 statcalib teacher-anchor dependence bounded benchmark`
+- Task package: `docs/tasks/Phase2/T67_fr8_statcalib_teacher_anchor_dependence_bounded_benchmark.md`
+- `T66` has been judged `PASS_WITH_WARNINGS`.
+- T66 warning classification:
+  - `N1` duplicate-running progress-log artifact after same-run-root timeout relaunch = `accepted`
+  - `N2` aggregate-best vs stability-best split = `deferred -> R24`
+  - `N3` `static_bias_theta / statcalib_high_threshold` best row still carries aggregate `statcalib_status = mixed` = `deferred -> R24`
+- `T66` closes one bounded local-grid robustness gap under clean provenance, but it does not close `R24`.
+- `T24` remains the authoritative historical frozen ranked table; `T64/T65/T66` must not be used to rewrite it.
+- `T67` is a bounded teacher-anchor dependence benchmark only. It must not change statcalib/runtime semantics, widen into `.tflite` or real-board, or mix mainline experiment work with theory-only branch materials.
 
 # Handoff
 
@@ -24,11 +24,25 @@
 
 Captain supersession note:
 
-- The authoritative current task for all new worker action is `T66: FR8 statcalib sensitivity bounded benchmark`.
-- Authoritative task package: `docs/tasks/Phase2/T66_fr8_statcalib_sensitivity_bounded_benchmark.md`.
-- `T65` is complete and accepted as `PASS_WITH_WARNINGS`.
-- If any older line in this file still mentions `T65`, `T64`, `T63`, `T62`, `T61`, `T60`, `T59`, or `T58` as current, treat it as historical text only.
-- `T66` is the single bounded next step after T65 closeout. It is not permission to widen comparator scope, deployment scope, or theory-branch scope.
+- The authoritative current task for all new worker action is `T67: FR8 statcalib teacher-anchor dependence bounded benchmark`.
+- Authoritative task package: `docs/tasks/Phase2/T67_fr8_statcalib_teacher_anchor_dependence_bounded_benchmark.md`.
+- `T66` is complete and accepted as `PASS_WITH_WARNINGS`.
+- If any older line in this file still mentions `T66`, `T65`, `T64`, `T63`, `T62`, `T61`, `T60`, `T59`, or `T58` as current, treat it as historical text only.
+- `T67` is the single bounded next step after T66 closeout. It is not permission to widen comparator scope, deployment scope, or theory-branch scope.
+
+## 2026-06-01 Captain Update (T66 closeout)
+
+- `T66` review accepted by Captain as `PASS_WITH_WARNINGS`.
+- Blocking issues: none.
+- Warning classification:
+  - `N1` duplicate-running progress-log artifact after same-run-root timeout relaunch = `accepted`
+  - `N2` aggregate-best vs stability-best split = `deferred -> R24`
+  - `N3` `static_bias_theta / statcalib_high_threshold` best row still carries aggregate `statcalib_status = mixed` = `deferred -> R24`
+- `T66` is complete. It closes one bounded local-grid robustness gap for the statcalib extension lane under clean provenance.
+- `T66` does not close `R24`, does not validate `.tflite`, does not validate real-board behavior, and does not upgrade statcalib into a mature calibration comparator.
+- Current unique task is now `T67: FR8 statcalib teacher-anchor dependence bounded benchmark`.
+- `T67` must keep the T24 frozen table authoritative, keep statcalib as a separately labeled extension lane, test teacher-anchor dependence only, and remain separate from theory-only branch materials.
+- Next worker-facing task package: `docs/tasks/Phase2/T67_fr8_statcalib_teacher_anchor_dependence_bounded_benchmark.md`.
 
 ## 2026-05-29 Captain Update (T65 closeout)
 

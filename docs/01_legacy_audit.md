@@ -493,3 +493,12 @@
 - `R24` remains open because the repository still has only a minimal statcalib comparator semantics path, not a mature validated calibration comparator.
 - The current unique task is now `T66: FR8 statcalib sensitivity bounded benchmark`.
 - `T66` is the next bounded mainline task because the remaining question is substantive robustness, not report wording: the repository still needs to know whether the T64 statcalib win survives a small predeclared heuristic sensitivity grid.
+
+## 2026-06-01 Captain Update (T66 closeout supersession)
+
+- `T66` has now been accepted as `PASS_WITH_WARNINGS`.
+- T66 warning classification is: `N1 accepted`, `N2 deferred -> R24`, `N3 deferred -> R24`.
+- `T66` corrects the remaining legacy ambiguity about local heuristic fragility: inside one bounded five-point grid, the statcalib extension-lane gain is not a single-point fluke.
+- `T66` does not turn the lane into a mature calibration comparator. `R24` remains open because the repo still has not answered whether the gain is structurally teacher-anchor-dependent.
+- The current unique task is now `T67: FR8 statcalib teacher-anchor dependence bounded benchmark`.
+- `T67` is the next bounded mainline task because the remaining honest question is cross-anchor dependence, not more local parameter tuning.

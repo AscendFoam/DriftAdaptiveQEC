@@ -4,12 +4,13 @@
 \usepackage{amsmath,amssymb}
 \usepackage{array}
 \usepackage{booktabs}
+\usepackage{caption}
 \usepackage{hyperref}
 \emergencystretch=2em
 
-\title{A Teacher-Anchored Residual Calibration Framework for Drift-Adaptive GKP Decoding}
-\author{Draft research note}
-\date{May 29, 2026}
+\title{Teacher-Anchored and Statistical Calibration for Drift-Adaptive Affine GKP Decoding}
+\author{}
+\date{}
 
 \begin{document}
 \maketitle
@@ -20,52 +21,30 @@ encodes a qubit into an oscillator and uses continuous-valued modular
 syndromes to infer displacement errors.  In realistic finite-energy GKP
 states, syndrome statistics are shaped by state-preparation width,
 measurement noise, circuit-level imperfections, and slow calibration drift.
-This note develops a two-timescale decoding framework for such settings.  A
-low-latency fast loop applies an FPGA-friendly affine correction
-\(\Delta_t = K_t s_t + b_t\), while a slower calibration loop estimates the
-current effective noise state from recent syndrome histograms and updates the
-runtime parameters.  The learned component is deliberately narrow: a
-lightweight CNN is anchored by a classical teacher estimator and predicts only
-a bounded residual calibration term, currently focused on \(b_t\), rather than
-replacing the GKP decoder end-to-end.
+This work studies a two-timescale decoding architecture for such settings.  A
+low-latency fast loop applies an affine correction
+\(\Delta_t=K_t s_t+b_t\), while a slower calibration loop estimates the current
+effective noise state from recent syndrome histograms and updates the runtime
+parameters.  This keeps the per-shot path compatible with fixed-point hardware
+execution while allowing the decoder to adapt to nonstationary noise.
 
-The method is positioned against four nearby bodies of work: analog
-soft-information decoding for bosonic/GKP codes, syndrome-statistics and
-calibration-based decoder-prior adaptation, learned low-latency QEC decoders,
-and real-time FPGA decoding systems.  The intended contribution is therefore
-not a new maximum-likelihood GKP decoder or a board-level FPGA demonstration.
-It is a deployment-constrained calibration layer whose per-shot path remains a
-fixed-point affine rule, while the slow loop performs teacher-anchored residual
-adaptation under explicit clipping, smoothing, stage-and-commit, and
-software-HIL evidence boundaries.
+The architecture is designed around a narrow and deployment-oriented role for
+learning.  A classical teacher estimator provides an interpretable baseline
+for the affine parameters, and a lightweight CNN predicts only a bounded
+residual calibration term, currently focused on the bias \(b_t\).  This differs
+from end-to-end neural decoders and from outer-code soft-information decoders:
+the learned module updates a low-dimensional physical-layer calibration
+surface, whereas the real-time path remains a deterministic affine rule.
+Software-HIL experiments over four drift scenarios show that adaptive affine
+calibration improves over filtering baselines, that histogram-delta features
+are important for the learned residual branch, and that a statistical
+calibration variant substantially reduces the logical-error proxy across the
+same drift suite.  A local sensitivity study further indicates that the
+statistical-calibration advantage is not tied to a single narrow parameter
+choice.
 \end{abstract}
 
 \tableofcontents
-
-\section{Scope and Evidence Boundary}
-
-% This document is a theory-facing draft for the front matter and early methods
-% sections of a future paper.  It is written to clarify the intended scientific
-% claim, the mathematical model, the architecture, and the benchmark structure.
-% It does not upgrade the current evidence level beyond the repository state.
-
-% The validated execution boundary remains mock-backed software HIL using
-% \texttt{artifact\_npz} and \texttt{inproc} inference for the recovered paths.
-% Existing frozen-set evidence supports a bounded software-revalidation claim.
-% It does not establish true \texttt{.tflite} runtime validation, real-board HIL,
-% or paper-grade expanded benchmark completion.  The T64 result adds a clean
-% provenance, four-scenario \texttt{statcalib} extension lane, but that lane must
-% remain separately labeled and must not rewrite the historical T24 frozen
-% five-mode table.  T65 is a consistency-guard and report-closeout task; it does
-% not create new benchmark evidence.
-
-% This boundary matters for writing.  The paper can motivate an FPGA-compatible
-% decoder contract, but it should not say that an FPGA board has validated the
-% full loop.  It can report a strong software-HIL extension-lane result for
-% \texttt{statcalib}, but it should not call that result a mature SOTA comparator
-% or a deployment result.  It can discuss residual-b mechanisms, but after the
-% post-T55 evidence the mechanism story should remain hedged rather than written
-% as causal closure.
 
 \section{Introduction}
 
@@ -73,68 +52,69 @@ Bosonic codes protect quantum information by encoding a logical qubit into the
 Hilbert space of an oscillator.  The GKP code is a central example: ideal code
 states form a periodic lattice in phase space, so small shift errors can be
 diagnosed through modular syndrome measurements and corrected by displacement
-operations \cite{gkp2001,grimsmo2021}.  This structure is attractive because
-the measured syndrome is analog rather than merely binary; it carries
-information about both the likely displacement and the confidence of the
-correction.
+operations \cite{gkp2001,grimsmo2021}.  Unlike binary stabilizer syndromes, GKP
+syndromes are analog.  Their continuous values carry information not only
+about the likely displacement, but also about how close the correction is to a
+lattice decision boundary.
 
 The practical challenge is that physical GKP states are approximate
 finite-energy states.  Their comb peaks have finite width and an envelope, and
 syndrome measurements are further affected by measurement inefficiency, noisy
-ancilla states, circuit-level imperfections, oscillator loss, and calibration
-error \cite{grimsmo2021,roy2025}.  Consequently, the effective noise model
-seen by the decoder can change over time.  A fixed syndrome-to-correction map
-may be well tuned for one operating point but mismatched after bias, variance,
-or covariance drift.
+auxiliary states, circuit-level imperfections, oscillator loss, and calibration
+error \cite{grimsmo2021,roy2025}.  Consequently, the effective noise model seen
+by the decoder can change over time.  A fixed syndrome-to-correction map may be
+well tuned for one operating point but mismatched after bias, variance, or
+covariance drift.
 
 Recent GKP and bosonic-decoding work makes clear that analog soft information
 is valuable.  Surface-GKP and concatenated bosonic-QLDPC decoders use
 continuous syndrome information to set matching weights, belief-propagation
-messages, or effective outer-code priors \cite{noh2020,noh2022,berent2024,
-borah2025}.  At the same time, recent QEC systems papers show that useful
-learned modules tend to be narrow, modular, and latency-aware rather than
-unconstrained replacements for the full decoder \cite{chamberland2026,
-stein2026}.  Hardware and calibration oriented work similarly emphasizes that
-decoder priors must be kept aligned with device statistics
-\cite{spitz2018,wagner2021,chen2022,sivak2024}.
+messages, or effective outer-code priors \cite{noh2020,noh2022,raveendran2022,
+berent2024,borah2025}.  At the same time, modern QEC decoder systems show that
+learned modules are most compelling when their latency role and integration
+boundary are explicit \cite{chamberland2026,stein2026}.  Hardware and
+calibration-oriented studies similarly emphasize that decoder priors must be
+kept aligned with device statistics \cite{spitz2018,wagner2021,dgr2023,
+chen2022,sivak2024}.
 
-This project applies that systems principle at the physical GKP correction
-layer.  The fast loop is intentionally simple:
+This work applies that systems principle at the physical GKP correction layer.
+The fast loop is intentionally simple:
 \begin{equation}
     \Delta_t = K_t s_t + b_t ,
 \end{equation}
 where \(s_t\) is the measured two-quadrature GKP syndrome and
 \((K_t,b_t)\) are quantized runtime parameters.  The slow loop observes recent
 syndrome histograms, estimates an effective noise state, and updates
-\((K_t,b_t)\) at a lower rate.  The CNN is not asked to learn the entire GKP
-decoder.  It is anchored by a classical teacher estimator and learns a bounded
-residual calibration term.
+\((K_t,b_t)\) at a lower rate.  The design therefore separates two concerns:
+the per-shot correction path is a bounded affine operation, while the
+nonstationary estimation problem is handled asynchronously through calibrated
+parameter updates.
 
-The resulting claim is deliberately narrow: this is a teacher-anchored
-residual calibration layer for a deployment-constrained affine GKP fast path.
-That narrower formulation is important because several broad claims would be
-unsafe.  The project is not the first use of GKP analog syndrome information,
-not the first adaptive decoder-prior idea, not the first calibration-conditioned
-neural QEC decoder, and not the first real-time FPGA QEC decoder.  Its niche is
-the combination of GKP physical-layer affine correction, histogram-driven
-drift adaptation, teacher-residual learning, and explicit runtime contracts.
+The main advantage of this formulation is its combination of physical
+structure, adaptation, and deployment discipline.  Compared with a fixed
+affine decoder, the parameters can track drift.  Compared with a full neural
+decoder, the online computation is smaller and more predictable.  Compared
+with outer-code soft-information methods, the adaptation target is a
+physical-layer GKP displacement rule rather than a matching graph or LDPC
+message schedule.  Compared with calibration-conditioned neural decoders, the
+slow context does not enlarge the per-shot path; it only changes the affine
+parameters staged into the runtime bank.
 
 \section{Summary of Contributions}
 
-The target paper can be organized around three contributions.
+The work can be organized around four contributions.
 
 \paragraph{1. A two-timescale adaptive affine formulation for approximate GKP
 decoding.}
-We formulate the per-shot correction path as a bounded affine estimator
-\(\Delta_t = K_t s_t + b_t\).  The expensive adaptation problem is moved into a
+The per-shot correction path is formulated as a bounded affine estimator
+\(\Delta_t=K_t s_t+b_t\).  The expensive adaptation problem is moved into a
 slow loop that estimates the current effective noise state from recent syndrome
 statistics.  This links the continuous-syndrome GKP picture to a runtime
 contract that can be implemented as a quantized matrix-vector operation.
 
 \paragraph{2. A teacher-anchored residual calibration strategy.}
-The mainline uses a classical teacher estimator to produce a stable baseline
+A classical teacher estimator produces a stable baseline
 \((K_t^{\rm teacher},b_t^{\rm teacher})\).  The CNN predicts a small residual,
-currently
 \begin{equation}
     \delta b_t=f_\phi(H_{t-c+1:t},\Delta H_t,z_t^{\rm teacher}),
 \end{equation}
@@ -143,32 +123,22 @@ and the committed parameters are
     K_t=K_t^{\rm teacher}, \qquad
     b_t={\rm EMA}\!\left(b_t^{\rm teacher}+\delta b_t\right).
 \end{equation}
-This treats learning as calibration of a low-dimensional control surface, not
-as a full neural GKP decoder.
+Learning is therefore used to calibrate a low-dimensional control surface, not
+to replace the GKP decoder end-to-end.
 
 \paragraph{3. A deployment-aware runtime architecture.}
-The architecture exposes the constraints that matter for real-time use:
-fixed-point quantization, clipping, saturation diagnostics, parameter smoothing,
-stale-parameter behavior, and double-buffered stage-and-commit updates.  These
-constraints become measurable objects in the benchmark, rather than prose
-assumptions after the algorithm is designed.
+The architecture exposes fixed-point quantization, clipping, saturation
+diagnostics, parameter smoothing, stale-parameter behavior, and double-buffered
+stage-and-commit updates.  These constraints become measurable objects in the
+benchmark rather than assumptions added after the algorithm is designed.
 
-% \paragraph{4. A paper-facing benchmark and ablation protocol.}
-% Following the structure of recent low-latency pre-decoder work
-% \cite{chamberland2026}, the evaluation should report not only final logical
-% error metrics, but also syndrome-density or correction-density proxies,
-% adaptation lag, saturation/overflow rates, fixed-point degradation, and runtime
-% boundary status.  T57 and T64 provide bounded result packs that can seed this
-% section, while the full paper still needs wider unseen-drift and deployment
-% checks.
-
-% \paragraph{5. A bounded evidence protocol for software-HIL claims.}
-% The current evidence is useful because its boundary is explicit.  T24 is the
-% authoritative frozen five-mode software-HIL revalidation.  T57 supplies a
-% bounded feature/teacher ablation table.  T64 adds a separately labeled
-% \texttt{statcalib} extension lane.  None of these results validate true
-% \texttt{.tflite} inference or real hardware; the paper should preserve that
-% distinction.
+\paragraph{4. A benchmark suite for adaptive affine calibration.}
+The numerical study compares filtering baselines, learned residual variants,
+and statistical calibration variants under four drift scenarios.  The results
+separate three questions: whether adaptive affine decoding improves over
+filtering baselines, which learned residual features matter, and whether a
+simple statistical calibration rule can provide a strong non-neural comparator
+inside the same runtime contract.
 
 \section{Brief Review of the GKP Code}
 
@@ -176,7 +146,7 @@ assumptions after the algorithm is designed.
 
 The square-lattice GKP code encodes a qubit into an oscillator by using
 periodic structure in the \(q\) and \(p\) quadratures \cite{gkp2001}.  In the
-project convention, the lattice constant is
+convention used here, the lattice constant is
 \begin{equation}
     \lambda=\sqrt{2\pi}.
 \end{equation}
@@ -187,10 +157,10 @@ for example
 \end{equation}
 Ideal comb states are not physical because they require infinite energy.
 Approximate GKP states replace the infinitely sharp comb with finitely squeezed
-peaks and an envelope.  The PRX Quantum review of the GKP code emphasizes that
-finite-energy structure is central to practical GKP QEC rather than a minor
-implementation detail \cite{grimsmo2021}.  It determines the intrinsic
-syndrome uncertainty and contributes an effective displacement-like noise.
+peaks and an envelope.  Finite-energy structure is central to practical GKP
+QEC rather than a minor implementation detail \cite{grimsmo2021}: it
+determines the intrinsic syndrome uncertainty and contributes an effective
+displacement-like noise.
 
 \subsection{Syndrome measurement as modular displacement information}
 
@@ -204,15 +174,15 @@ An ideal GKP syndrome observes this displacement modulo the lattice:
     \qquad
     s_{q,t},s_{p,t}\in[-\lambda/2,\lambda/2).
 \end{equation}
-In a finite-energy and noisy-measurement setting, the measured syndrome is more
-accurately described as
+In a finite-energy and noisy-measurement setting, the measured syndrome is
+more accurately described as
 \begin{equation}
     \tilde{s}_t={\rm mod}(e_t,\lambda)+\eta_t^{\rm meas}+\eta_t^{\rm GKP}.
 \end{equation}
-Here \(\eta_t^{\rm meas}\) represents measurement and ancilla contributions,
-while \(\eta_t^{\rm GKP}\) summarizes finite-squeezing uncertainty.  The
-decoder therefore observes a noisy modular representative, not the absolute
-displacement.
+Here \(\eta_t^{\rm meas}\) represents measurement and auxiliary-state
+contributions, while \(\eta_t^{\rm GKP}\) summarizes finite-squeezing
+uncertainty.  The decoder therefore observes a noisy modular representative,
+not the absolute displacement.
 
 \subsection{Local affine decoding and its limits}
 
@@ -244,23 +214,20 @@ where
 This derivation explains why an affine fast path is a plausible low-latency
 approximation.  It also marks the boundary of the approximation.  Near lattice
 decision boundaries, the posterior can be multimodal; maximum-likelihood,
-closest-lattice-point, or wrapped-Gaussian decoders may outperform a single
-global affine rule \cite{fukui2017,roy2025}.  
-% The paper should present the
-% affine rule as a hardware-compatible approximation, not as a global
-% Bayes-optimal GKP decoder.
+closest-lattice-point, or wrapped-Gaussian decoders can outperform a single
+global affine rule \cite{fukui2018,roy2025}.
 
 \subsection{Logical failure criterion}
 
-After correction, the residual displacement is wrapped into the GKP fundamental
-cell.  A logical error occurs when the residual crosses a logical decision
-boundary, for example
+After correction, the residual displacement is wrapped into the GKP
+fundamental cell.  A logical error occurs when the residual crosses a logical
+decision boundary, for example
 \begin{equation}
     |r_{q,t}|>\lambda/2 \quad \Rightarrow \quad X_L\ {\rm error},
 \end{equation}
-and similarly for the \(p\)-quadrature.  This is why closed-loop logical error
-rate, or the repository's \texttt{final\_ler\_mean} proxy under a fixed
-protocol, is more important than offline parameter-regression error.
+and similarly for the \(p\)-quadrature.  Closed-loop logical error probability
+is therefore the central metric; parameter-regression error is useful only when
+it correlates with the downstream correction outcome.
 
 \section{Noise and Drift Model}
 
@@ -275,14 +242,13 @@ It uses a low-dimensional effective state,
 \end{equation}
 where \(\sigma_t\) controls the displacement scale, \(\mu_{q,t}\) and
 \(\mu_{p,t}\) represent mean bias, and \(\vartheta_t\) captures covariance-axis
-rotation.  This is a deliberately compact parameterization: it can be mapped
-to affine runtime parameters and estimated from finite histogram windows.
+rotation.  This compact parameterization can be mapped to affine runtime
+parameters and estimated from finite histogram windows.
 
 \subsection{Noise sources represented by the model}
 
-The present model is best understood as an effective displacement-noise model
-with additional measurement uncertainty.  It is meant to absorb several
-physical effects:
+The model is an effective displacement-noise model with additional measurement
+uncertainty.  It absorbs several physical effects:
 \begin{enumerate}
     \item finite-energy GKP peak width and envelope effects;
     \item Gaussian random displacement noise in \(q\) and \(p\);
@@ -291,22 +257,19 @@ physical effects:
     \item syndrome measurement noise and noisy auxiliary-state contributions.
 \end{enumerate}
 This is narrower than a full circuit-level GKP noise model, but it is aligned
-with the current affine fast-path contract.
+with the affine fast-path contract.
 
 \subsection{Drift scenarios}
 
-The current frozen software-HIL protocol uses four named drift scenarios:
+The benchmark suite uses four drift scenarios:
 \begin{enumerate}
     \item \texttt{static\_bias\_theta}: a biased and rotated operating point;
     \item \texttt{linear\_ramp}: slowly changing effective noise parameters;
     \item \texttt{step\_sigma\_theta}: a sudden variance/orientation change;
     \item \texttt{periodic\_drift}: periodic nonstationarity.
 \end{enumerate}
-These scenarios are useful because they separate different adaptation demands:
-steady calibration, tracking, shock response, and periodic following.  A full
-paper should add unseen families such as random-walk drift, burst measurement
-noise, coupled bias-variance drift, faster-than-window drift, and low-shot
-histogram regimes.
+These scenarios separate different adaptation demands: steady calibration,
+tracking, shock response, and periodic following.
 
 \section{Model Architecture}
 
@@ -324,7 +287,7 @@ parameter bank, and computes
     \Delta_t=Q\!\left({\rm clip}(\Delta_t^{\rm raw},
     -\Delta_{\max},\Delta_{\max})\right),
 \end{equation}
-where \(Q(\cdot)\) denotes fixed-point quantization.  The project convention is
+where \(Q(\cdot)\) denotes fixed-point quantization.  The implementation uses
 an FPGA-oriented Q4.20 representation for syndrome values and runtime
 parameters.  The fast loop also records diagnostic counters, including
 histogram-input saturation, correction saturation, overflow, aggressive
@@ -379,8 +342,8 @@ and
     =
     {\rm ParamMapper}(\hat{\theta}_t^{\rm teacher}).
 \end{equation}
-The teacher is the stability anchor.  It keeps the learned branch near an
-interpretable calibration surface and creates meaningful ablation baselines.
+The teacher keeps the learned branch near an interpretable calibration surface
+and creates meaningful ablation baselines.
 
 \subsection{CNN residual branch}
 
@@ -398,7 +361,7 @@ Teacher-side features may include
      b_t^{\rm teacher},
      \Delta b_t^{\rm teacher},\ldots).
 \end{equation}
-The current gated branch narrows this to a small set of teacher-\(b\) and
+The gated branch narrows this to a small set of teacher-\(b\) and
 teacher-\(\Delta b\) scalars.  The learned branch predicts
 \begin{equation}
     \widehat{\delta b}_t=f_\phi(X_t^{\rm hist},z_t^{\rm teacher}),
@@ -414,6 +377,15 @@ The committed parameter is
     b_t={\rm EMA}(b_t^{\rm teacher}+\delta b_t).
 \end{equation}
 
+\subsection{Statistical calibration branch}
+
+The same affine runtime contract also supports a non-neural statistical
+calibration branch.  This branch estimates a bounded bias correction directly
+from recent syndrome statistics and emits runtime parameters through the same
+clipping, smoothing, and stage-and-commit path.  Its role is both practical and
+scientific: it tests whether the benefit comes from a general histogram-driven
+calibration principle rather than from the CNN architecture alone.
+
 \subsection{Stage-and-commit runtime contract}
 
 The slow loop does not directly mutate active fast-loop parameters.  It stages
@@ -426,8 +398,9 @@ boundary:
 (K^B,b^B), & t\ge t_{\rm commit}.
 \end{cases}
 \end{equation}
-This contract allows the benchmark to measure stale-parameter effects, update
-latency, commit success, rollback/fallback behavior, and fixed-point stability.
+This contract allows stale-parameter effects, update latency, commit success,
+rollback/fallback behavior, and fixed-point stability to be measured
+separately from logical performance.
 
 \section{Relationship to Existing Work}
 
@@ -436,158 +409,284 @@ latency, commit success, rollback/fallback behavior, and fixed-point stability.
 GKP analog syndrome information has already been shown to be valuable.  Work
 on analog QEC, surface-GKP codes, and concatenated bosonic-QLDPC decoding uses
 continuous measurement information to set decoder weights or soft messages
-\cite{fukui2017,noh2020,noh2022,berent2024,borah2025}.  This project should
-not claim novelty for using analog information itself.  Its distinction is
-that the analog statistics are compressed into a physical-layer affine GKP
-fast-path parameter update.
+\cite{fukui2018,noh2020,noh2022,raveendran2022,berent2024,borah2025}.  The
+distinction here is that the analog statistics are compressed into
+physical-layer affine GKP fast-path parameters, rather than into outer-code
+matching weights or LDPC messages.
 
 \subsection{Adaptive priors and syndrome-statistics estimation}
 
 Adaptive-weight and syndrome-statistics methods estimate decoder weights or
-noise parameters from measured data \cite{spitz2018,wagner2021}.  Calibrated
-decoders and decoder-prior optimization show that prior mismatch can materially
-affect logical performance \cite{chen2022,sivak2024}.  This project borrows
-that lesson, but maps the adaptation target to the GKP affine parameters
-\((K,b)\) and evaluates it under a stage-and-commit runtime contract.
+noise parameters from measured data \cite{spitz2018,wagner2021,dgr2023}.
+Calibrated decoders and decoder-prior optimization show that prior mismatch can
+materially affect logical performance \cite{chen2022,sivak2024}.  This work
+borrows that lesson, but maps the adaptation target to the GKP affine
+parameters \((K,b)\) and constrains the update through a stage-and-commit
+runtime contract.
 
 \subsection{Learned low-latency QEC modules}
 
-AI pre-decoders and calibration-conditioned FiLM decoders demonstrate a
-systems-oriented pattern: a learned module is useful when its input/output
-contract, latency role, and integration with a classical decoder are explicit
-\cite{chamberland2026,stein2026}.  This project follows the same philosophy,
-but its learned module is slower than the per-shot path and updates only
-calibration parameters.  The per-shot path remains affine fixed-point logic.
+AI pre-decoders, high-accuracy neural decoders, and calibration-conditioned
+FiLM decoders demonstrate a systems-oriented pattern: a learned module is most
+useful when its input/output contract, latency role, and integration with a
+classical decoder are explicit \cite{chamberland2026,stein2026,
+google2023decoder}.  The learned module here is not the per-shot decoder.  It
+is a slow calibration component that updates low-dimensional affine
+parameters; the per-shot path remains fixed-point affine logic.
 
 \subsection{Real-time and FPGA QEC decoders}
 
-Real-time QEC decoders and FPGA-integrated systems have already reported
-low-latency hardware decoding in stabilizer-code settings \cite{yang2026,
-caune2024}.  Those works define the standard for true deployment claims:
-closed-loop timing, worst-case latency, resource use, and hardware integration.
-The present project is not yet at that evidence level.  The safe near-term
-claim is FPGA-friendly architecture and software-HIL validation, not FPGA
-demonstration.
+Real-time QEC decoders and FPGA-integrated systems have reported low-latency
+hardware decoding in stabilizer-code settings \cite{caune2024,yang2026,
+ziad2024,maurer2025}.  Real-time bosonic QEC has also been demonstrated in
+experimental feedback systems \cite{sivak2023,lachance2024}.  These works set
+the standard for full deployment claims: closed-loop timing, worst-case
+latency, resource use, and hardware integration.  The contribution here is a
+hardware-compatible GKP affine calibration contract and a software-HIL
+evaluation of its drift-adaptive behavior.
+
+\section{Experimental Setup}
+
+\subsection{Software-HIL protocol}
+
+The numerical experiments use a software-HIL protocol that preserves the fast
+loop, slow loop, parameter-bank, and staged-commit interfaces while executing
+the underlying experiment in software.  This protocol is sufficient for
+comparing adaptive calibration laws under identical drift trajectories and
+paired seeds.  It does not measure board-level latency or hardware resource
+use.
+
+\subsection{Scenarios and modes}
+
+The four drift scenarios are:
+\begin{center}
+\small
+\begin{tabular}{ll}
+\toprule
+Scenario key & Interpretation \\
+\midrule
+\texttt{static\_bias\_theta} & biased and rotated operating point \\
+\texttt{linear\_ramp} & slowly changing effective noise parameters \\
+\texttt{step\_sigma\_theta} & sudden variance/orientation change \\
+\texttt{periodic\_drift} & periodic nonstationarity \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The main comparison includes filtering baselines, residual affine baselines,
+the learned hybrid residual branch, and statistical calibration variants.  The
+reported metric is \(\texttt{final\_ler\_mean}\), where lower values indicate
+fewer logical failures under the fixed software-HIL protocol.
 
 \section{Numerical Results and Benchmark Plan}
 
-% \subsection{Current bounded evidence}
+\subsection{Four-scenario affine benchmark}
 
-% The current paper-facing evidence should be reported in layers.
+Table~\ref{tab:five-mode-benchmark} compares five affine decoding modes under
+the four drift scenarios.  The learned hybrid residual branch is the best mode
+among these five in all four scenarios, with UKF as the strongest filtering
+baseline.
 
-% \begin{center}
-% \small
-% \begin{tabular}{>{\raggedright\arraybackslash}p{0.20\linewidth}
-%                 >{\raggedright\arraybackslash}p{0.34\linewidth}
-%                 >{\raggedright\arraybackslash}p{0.34\linewidth}}
-% \toprule
-% Evidence item & Supported reading & Boundary \\
-% \midrule
-% T24 frozen set & In the locked four-scenario, five-mode software-HIL matrix,
-% \texttt{hybrid\_residual\_b} ranks first in all four scenarios. & Mock-backed
-% software HIL only; no \texttt{.tflite} or board validation. \\
-% T57 feature/teacher ablation & Histogram-delta removal clearly hurts; teacher
-% prediction removal mildly hurts; teacher-delta removal is near-neutral/mixed;
-% no-teacher-params unexpectedly performs best under the reused lane. & Useful
-% for bounded ablation, not causal proof that all teacher channels are necessary. \\
-% T64 statcalib extension lane & A separately labeled \texttt{statcalib} sixth
-% lane beats the frozen winner in all four locked scenarios with clean
-% provenance. & Extension-lane result only; must not rewrite T24 or imply mature
-% deployment validation. \\
-% T65 consistency guard & Expected to harden T64 report consistency and audit
-% coverage. & No new benchmark evidence. \\
-% \bottomrule
-% \end{tabular}
-% \end{center}
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Scenario & EKF & UKF & Const.-\(\mu\) & RLS-\(b\) & Hybrid-\(b\) \\
+\midrule
+\texttt{static\_bias\_theta} & 0.838110 & 0.825370 & 0.836658 & 0.837577 & \textbf{0.810902} \\
+\texttt{linear\_ramp} & 0.819200 & 0.811201 & 0.816911 & 0.819373 & \textbf{0.787755} \\
+\texttt{step\_sigma\_theta} & 0.822365 & 0.811548 & 0.819784 & 0.821493 & \textbf{0.788800} \\
+\texttt{periodic\_drift} & 0.832192 & 0.821558 & 0.829670 & 0.832334 & \textbf{0.806392} \\
+\bottomrule
+\end{tabular}
+\caption{Four-scenario affine benchmark.  Entries are
+\(\texttt{final\_ler\_mean}\); lower is better.}
+\label{tab:five-mode-benchmark}
+\end{table}
 
-% \subsection{T64 extension-lane table}
+\subsection{Feature and teacher ablations}
 
-% T64 preserves the T24 frozen subset exactly and appends \texttt{statcalib} as a
-% sixth lane.  The current bounded results are:
+Table~\ref{tab:feature-ablation} isolates the learned residual branch.  Removing
+histogram deltas degrades performance relative to the full hybrid model,
+indicating that temporal changes in the syndrome histogram are useful for
+tracking drift.  Removing teacher prediction also degrades the full hybrid
+model, but the no-teacher-params variant performs best in this ablation set.
+This result argues against a simple story in which every teacher-derived
+channel is uniformly beneficial.
 
-% \begin{center}
-% \small
-% \begin{tabular}{lccc}
-% \toprule
-% Scenario & Frozen winner & Winner \(\texttt{final\_ler\_mean}\) &
-% \texttt{statcalib} \(\texttt{final\_ler\_mean}\) \\
-% \midrule
-% \texttt{static\_bias\_theta} & \texttt{hybrid\_residual\_b} & 0.810902 & 0.431708 \\
-% \texttt{linear\_ramp} & \texttt{hybrid\_residual\_b} & 0.787755 & 0.467083 \\
-% \texttt{step\_sigma\_theta} & \texttt{hybrid\_residual\_b} & 0.788800 & 0.460016 \\
-% \texttt{periodic\_drift} & \texttt{hybrid\_residual\_b} & 0.806392 & 0.438751 \\
-% \bottomrule
-% \end{tabular}
-% \end{center}
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Mode & Avg. LER & \(\Delta\) vs UKF & \(\Delta\) vs Hybrid Full \\
+\midrule
+\texttt{ukf} & 0.817382 & 0.000000 & +0.018837 \\
+\texttt{hybrid\_full} & 0.798545 & -0.018837 & 0.000000 \\
+\texttt{hybrid\_no\_hist\_deltas} & 0.826723 & +0.009341 & +0.028178 \\
+\texttt{hybrid\_no\_teacher\_prediction} & 0.807251 & -0.010131 & +0.008706 \\
+\texttt{hybrid\_no\_teacher\_params} & \textbf{0.749621} & -0.067761 & -0.048924 \\
+\texttt{hybrid\_no\_teacher\_deltas} & 0.800329 & -0.017053 & +0.001784 \\
+\bottomrule
+\end{tabular}
+\caption{Feature and teacher ablation summary.  Negative
+\(\Delta\) means improvement over the reference.}
+\label{tab:feature-ablation}
+\end{table}
 
-% Lower \(\texttt{final\_ler\_mean}\) is better under this fixed repository
-% metric.  The large gap is scientifically interesting, but it should be written
-% carefully.  It supports further investigation of statistical calibration
-% baselines, not a claim that the project has already established a final
-% state-of-the-art decoder.
+\subsection{Statistical calibration as a strong comparator}
 
-% \subsection{Recommended main benchmark structure}
+Table~\ref{tab:statcalib-extension} adds a statistical calibration lane to the
+same four-scenario suite.  The statistical calibration branch beats both the
+hybrid residual branch and UKF in every scenario.  This is an important result
+for positioning the work: the central object is not only a CNN residual model,
+but a broader adaptive affine calibration contract in which non-neural
+statistical estimators can also be strong.
 
-% The full paper should follow a result structure closer to modern low-latency
-% decoder papers:
-% \begin{enumerate}
-%     \item closed-loop logical performance under drift, with paired seeds and
-%     confidence intervals;
-%     \item regret to oracle affine or wrapped-Gaussian baselines;
-%     \item adaptation lag after step drift and periodic tracking error;
-%     \item ablation tables for histogram context, teacher features, residual
-%     target, EMA, clipping, and fixed-point quantization;
-%     \item runtime-contract metrics: commit latency, stale-parameter penalty,
-%     saturation/overflow rate, fallback count, and fixed-point-vs-float gap;
-%     \item comparator lanes: nearest-lattice/hard GKP, static affine, moment
-%     teacher, EKF/UKF/RLS teacher, \texttt{statcalib}, direct CNN-to-parameters,
-%     teacher-residual-b, and a FiLM-style conditioned affine head.
-% \end{enumerate}
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Scenario & UKF & Hybrid-\(b\) & StatCalib \\
+\midrule
+\texttt{static\_bias\_theta} & 0.825370 & 0.810902 & \textbf{0.431708} \\
+\texttt{linear\_ramp} & 0.811201 & 0.787755 & \textbf{0.467083} \\
+\texttt{step\_sigma\_theta} & 0.811548 & 0.788800 & \textbf{0.460016} \\
+\texttt{periodic\_drift} & 0.821558 & 0.806392 & \textbf{0.438751} \\
+\bottomrule
+\end{tabular}
+\caption{Statistical calibration comparison under the same drift
+suite.  Entries are \(\texttt{final\_ler\_mean}\); lower is better.}
+\label{tab:statcalib-extension}
+\end{table}
 
-% \subsection{Figure and table plan}
+\subsection{Local sensitivity of statistical calibration}
 
-% The near-term paper figures can be staged as follows:
-% \begin{enumerate}
-%     \item architecture diagram: GKP syndrome, fast affine loop, slow
-%     histogram/teacher/CNN loop, parameter bank, software-HIL boundary;
-%     \item theory figure: local branch affine approximation versus modular
-%     boundary failure cases;
-%     \item frozen benchmark table: T24 five-mode scenario results;
-%     \item T57 ablation table: feature/teacher ablation with hedge wording;
-%     \item T64 extension-lane table: \texttt{statcalib} as a separately labeled
-%     sixth lane;
-%     \item runtime-contract table: quantization, saturation, commit, and stale
-%     update metrics, currently partly available and to be hardened after T65.
-% \end{enumerate}
+The statistical calibration branch was evaluated on a five-point local grid
+around the default parameter setting: default scale/clip/threshold, low
+residual scale, high residual scale, low residual clip, and high signal
+threshold.  Table~\ref{tab:statcalib-sensitivity} shows that the advantage is
+not tied to a single parameter point.  The high-threshold variant has the best
+aggregate mean LER by a very small margin, whereas the default variant wins
+three of four scenarios and has the best mean within-statcalib rank.
 
-\section{Writing Position and Near-Term Plan}
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Variant & Mean LER & Mean Rank & Scenario Wins \\
+\midrule
+\texttt{statcalib\_high\_threshold} & \textbf{0.449241} & 1.75 & 1 \\
+\texttt{statcalib\_default} & 0.449254 & \textbf{1.25} & \textbf{3} \\
+\texttt{statcalib\_high\_scale} & 0.456477 & 3.00 & 0 \\
+\texttt{statcalib\_low\_clip} & 0.481484 & 4.50 & 0 \\
+\texttt{statcalib\_low\_scale} & 0.485129 & 4.50 & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Local sensitivity of statistical calibration.  Mean rank is
+computed within the five statistical calibration variants for each scenario.}
+\label{tab:statcalib-sensitivity}
+\end{table}
 
-% The safest paper thesis is:
+\subsection{Per-scenario best statistical calibration variant}
 
-% \begin{quote}
-% We study a deployment-constrained, teacher-anchored residual calibration layer
-% for drift-adaptive affine GKP decoding.  The fast path remains a bounded
-% fixed-point affine correction, while the slow path estimates noise drift from
-% syndrome histograms and updates runtime parameters through a stage-and-commit
-% contract.
-% \end{quote}
+Table~\ref{tab:statcalib-scenario-best} reports the best statistical
+calibration variant in each scenario.  Every scenario-best variant clears both
+the UKF and hybrid residual baselines by a large margin.  The
+\texttt{static\_bias\_theta} winner is the only row with a mixed status flag,
+so that scenario is best treated as a useful but locally caveated win.
 
-% The paper should avoid claims that would collide with nearby work or exceed the
-% evidence boundary:
-% \begin{enumerate}
-%     \item not ``first adaptive neural QEC decoder'';
-%     \item not ``first calibration-conditioned decoder'';
-%     \item not ``first use of GKP analog soft information'';
-%     \item not ``FPGA-validated real-time GKP decoder'';
-%     \item not ``mechanism proven by residual-b amplitude.''
-% \end{enumerate}
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Scenario & Best variant & Best LER & Gap vs Hybrid-\(b\) \\
+\midrule
+\texttt{static\_bias\_theta} & \texttt{high\_threshold} & 0.431684 & 0.379889 \\
+\texttt{linear\_ramp} & \texttt{default} & 0.467094 & 0.321178 \\
+\texttt{step\_sigma\_theta} & \texttt{default} & 0.458834 & 0.328883 \\
+\texttt{periodic\_drift} & \texttt{default} & 0.439352 & 0.367232 \\
+\bottomrule
+\end{tabular}
+\caption{Best statistical calibration variant per scenario.  Gap is
+the hybrid residual LER minus the best statistical calibration LER.}
+\label{tab:statcalib-scenario-best}
+\end{table}
 
-% The next writing update after T65 should separate three layers: (i) the frozen
-% historical T24 table, (ii) the T64 \texttt{statcalib} extension lane, and
-% (iii) the remaining open runtime and deployment checks.  If T65 adds an audit
-% helper and corrects T64 report wording as planned, the note can cite T64 more
-% confidently as a clean, bounded extension-lane result while still keeping the
-% mock-backed software-HIL boundary explicit.
+\subsection{Mechanism probe for residual-b behavior}
+
+A multi-seed mechanism figure is available for the learned residual branch.  It
+compares seed-wise hybrid-model gaps and a lower-clip intervention.  The
+descriptive reading is that residual-b high-amplitude behavior appears in more
+than one seed, but lowering the residual clip is mixed and often harmful.  This
+supports a cautious interpretation: residual amplitude participates in some
+failure modes, but it is not a monotonic causal explanation by itself.
+
+\subsection{Unseen drift generalization}
+
+The current four scenarios cover steady bias, ramp tracking, step response, and
+periodic drift.  A stronger benchmark requires unseen drift families such as
+random-walk drift, \(1/f\)-like drift, burst measurement noise, coupled
+bias-variance drift, and faster-than-window drift.  This experiment is needed
+to distinguish genuine drift adaptation from overfitting to a small set of
+hand-designed trajectories.
+
+\subsection{Oracle and wrapped-Gaussian baselines}
+
+The affine methods need comparison against stronger theoretical baselines:
+nearest-lattice hard decoding, static affine decoding, oracle affine decoding
+with true noise state, and wrapped-Gaussian or maximum-likelihood decoding in
+small settings.  These baselines quantify how much performance is lost because
+the fast path is affine, and how much is lost because the slow loop estimates
+the noise state imperfectly.
+
+\subsection{Runtime, quantization, and fixed-point degradation}
+
+The deployment claim depends on more than logical performance.  The benchmark
+requires fixed-point versus floating-point comparisons, saturation and
+overflow rates, commit latency, stale-parameter penalty, fallback frequency,
+and per-update slow-loop cost.  These measurements connect the mathematical
+affine rule to the real-time decoder contract.
+
+\subsection{Embedded runtime and board-level validation}
+
+Embedded inference and board-level validation are separate from software-HIL
+simulation.  The relevant measurements are exported-model equivalence, embedded
+runtime latency, host-to-device update cost, hardware resource use, and
+closed-loop timing.  These experiments are needed before replacing
+``hardware-compatible'' with a stronger hardware-demonstrated claim.
+
+\section{Discussion}
+
+\section{Conclusion}
+
+This work frames drift-adaptive GKP correction as a two-timescale affine
+calibration problem.  The fast loop remains a bounded fixed-point rule,
+\(\Delta_t=K_t s_t+b_t\), while a slower loop updates the affine parameters
+from recent syndrome statistics.  This formulation creates a practical middle
+ground between fixed decoders, which cannot track hardware drift, and full
+neural decoders, which can be difficult to place on a deterministic per-shot
+path.
+
+The numerical results support two main conclusions.  First, adaptive affine
+decoding with a teacher-anchored residual branch improves over filtering
+baselines in the four-scenario drift suite, and ablations show that temporal
+histogram changes carry useful information.  Second, statistical calibration is
+a strong comparator under the same runtime contract; its advantage persists
+under a local sensitivity grid.  Together, these results suggest that the most
+robust scientific story is not simply that a CNN is better than classical
+filters, but that low-dimensional histogram-driven calibration of an affine GKP
+fast path is a promising structure for drift-adaptive decoding.
+
+The remaining technical gap is to connect this promising software-HIL evidence
+to broader drift families, stronger oracle and wrapped-Gaussian baselines, and
+measured runtime constraints.  Those additions would test whether the affine
+calibration contract remains useful when the benchmark moves from a controlled
+drift suite toward a deployment-grade decoder evaluation.
 
 \begin{thebibliography}{99}
 
@@ -601,7 +700,7 @@ A. L. Grimsmo and S. Puri,
 ``Quantum Error Correction with the Gottesman--Kitaev--Preskill Code,''
 \emph{PRX Quantum} 2, 020101, 2021.
 
-\bibitem{fukui2017}
+\bibitem{fukui2018}
 K. Fukui, A. Tomita, A. Okamoto, and K. Fujii,
 ``High-threshold fault-tolerant quantum computation with analog quantum error
 correction,''
@@ -618,6 +717,11 @@ K. Noh, C. Chamberland, and F. G. S. L. Brandao,
 code,''
 \emph{PRX Quantum}, 2022.
 
+\bibitem{raveendran2022}
+N. Raveendran, N. Rengaswamy, F. Rozpedek, A. Raina, L. Jiang, and B. Vasic,
+``Finite-rate QLDPC-GKP coding scheme that surpasses the CSS Hamming bound,''
+\emph{Quantum}, 2022.
+
 \bibitem{berent2024}
 L. Berent et al.,
 ``Analog information decoding of bosonic quantum LDPC codes,''
@@ -625,14 +729,14 @@ L. Berent et al.,
 
 \bibitem{borah2025}
 S. K. Borah, A. K. Pradhan, N. Raveendran, M. Pacenti, and B. Vasic,
-``Fault Tolerant Decoding of QLDPC-GKP Codes with Circuit Level Soft
-Information,''
+``Fault tolerant decoding of QLDPC-GKP codes with circuit level soft
+information,''
 preprint, 2025.
 
 \bibitem{roy2025}
 M.-A. Roy, T. Pousset, and B. Royer,
-``Decoding Multimode Gottesman--Kitaev--Preskill Codes with Noisy Auxiliary
-States,''
+``Decoding multimode Gottesman--Kitaev--Preskill codes with noisy auxiliary
+states,''
 preprint, 2025.
 
 \bibitem{spitz2018}
@@ -644,6 +748,12 @@ S. Spitz, B. Tarasinski, C. W. J. Beenakker, and T. E. O'Brien,
 T. Wagner, H. Kampermann, and D. Bru{\ss},
 ``Optimal noise estimation from syndrome statistics of quantum codes,''
 \emph{Physical Review Research}, 2021.
+
+\bibitem{dgr2023}
+H. Chen et al.,
+``DGR: Tackling drifted and correlated noise in quantum error correction via
+decoding graph re-weighting,''
+preprint, 2023.
 
 \bibitem{chen2022}
 E. H. Chen et al.,
@@ -663,21 +773,47 @@ arXiv:2604.12841, 2026.
 \bibitem{stein2026}
 S. Stein, S. Kan, C. Liu, A. Harkness, S. Garner, Z. Du, Y. Ding, Y. Mao, and
 A. Li,
-``Calibration-Conditioned FiLM Decoders for Low-Latency Decoding of Quantum
-Error Correction Evaluated on IBM Repetition-Code Experiments,''
+``Calibration-conditioned FiLM decoders for low-latency decoding of quantum
+error correction evaluated on IBM repetition-code experiments,''
 preprint, 2026.
 
-\bibitem{yang2026}
-X. Yang et al.,
-``Real-time Surface-Code Error Correction Using an FPGA-based Neural-Network
-Decoder,''
-preprint, 2026.
+\bibitem{google2023decoder}
+Google Quantum AI and collaborators,
+``Learning high-accuracy error decoding for quantum processors,''
+preprint, 2023.
 
 \bibitem{caune2024}
 L. Caune et al.,
 ``Demonstrating real-time and low-latency quantum error correction with
 superconducting qubits,''
 preprint, 2024.
+
+\bibitem{yang2026}
+X. Yang et al.,
+``Real-time surface-code error correction using an FPGA-based neural-network
+decoder,''
+preprint, 2026.
+
+\bibitem{ziad2024}
+M. Ziad et al.,
+``Local clustering decoder: a fast and adaptive hardware decoder for the
+surface code,''
+preprint, 2024.
+
+\bibitem{maurer2025}
+L. Maurer et al.,
+``Real-time decoding of the gross code memory with FPGAs,''
+preprint, 2025.
+
+\bibitem{sivak2023}
+V. Sivak et al.,
+``Real-time quantum error correction beyond break-even,''
+\emph{Nature}, 2023.
+
+\bibitem{lachance2024}
+D. Lachance-Quirion et al.,
+``Autonomous quantum error correction of Gottesman--Kitaev--Preskill states,''
+\emph{Physical Review Letters}, 2024.
 
 \end{thebibliography}
 
