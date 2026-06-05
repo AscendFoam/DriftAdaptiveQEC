@@ -502,3 +502,11 @@
 - `T66` does not turn the lane into a mature calibration comparator. `R24` remains open because the repo still has not answered whether the gain is structurally teacher-anchor-dependent.
 - The current unique task is now `T67: FR8 statcalib teacher-anchor dependence bounded benchmark`.
 - `T67` is the next bounded mainline task because the remaining honest question is cross-anchor dependence, not more local parameter tuning.
+## 2026-06-05 Captain Update (T67 closeout supersession)
+
+- `T67` has now been accepted as `PASS_WITH_WARNINGS`.
+- T67 warning classification is: `N1 accepted`, `N2 accepted`, `N3 deferred -> R24`.
+- `T67` resolves the legacy ambiguity about gross teacher-anchor dependence: inside one bounded four-scenario teacher-anchor matrix, the current statcalib gain is not narrowly tied to `teacher_mode=ukf`.
+- `T67` still does not turn the lane into a mature calibration comparator. `R24` remains open because two comparison rows remain `mixed`, and the current strongest aggregate lane still is not a clean generated-only result pack.
+- The current unique task is now `T68: FR8 statcalib generated-only robustness bounded benchmark`.
+- `T68` is the next bounded mainline task because the remaining honest question is generated-only robustness under the strongest non-`ukf` teachers, not more teacher-anchor breadth.

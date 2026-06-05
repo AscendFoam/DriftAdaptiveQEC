@@ -236,3 +236,83 @@ Worker must report:
 7. whether any non-`ukf` teacher variant beats `ukf`
 8. whether any non-`ukf` teacher variant beats `hybrid_residual_b`
 9. remaining risks or interpretation limits
+
+### Worker Output
+
+- Changed files:
+  - `cnn_fpga/config/p4_multiscenario_statcalib_teacher_anchor.yaml`
+  - `cnn_fpga/benchmark/summarize_statcalib_teacher_anchor.py`
+  - `tests/test_statcalib_teacher_anchor_summary.py`
+  - `docs/statcalib_teacher_anchor_bounded_benchmark.md`
+  - `docs/review/T67_review.md`
+  - `docs/for_human/T67_explanation.md`
+  - `docs/worker_summary/T67_worker_summary.md`
+
+- Exact benchmark command executed inside the detached host launch:
+
+```powershell
+& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config C:\t67cfg_20260601_225718.yaml --scenario static_bias_theta --scenario linear_ramp --scenario step_sigma_theta --scenario periodic_drift --mode ukf --mode hybrid_residual_b --mode statcalib_default_teacher_ukf --mode statcalib_default_teacher_window_variance --mode statcalib_default_teacher_ekf --mode statcalib_high_threshold_teacher_ukf --mode statcalib_high_threshold_teacher_window_variance --mode statcalib_high_threshold_teacher_ekf --paired-seeds --repeats 2 --run-dir D:\Codes\Quantum\DriftAdaptiveQEC\runs\p4_benchmark\T67_statcalib_teacher_anchor_20260601_225718
+```
+
+- Run root:
+  - `runs/p4_benchmark/T67_statcalib_teacher_anchor_20260601_225718`
+
+- Verification outputs:
+  - `python -m py_compile cnn_fpga/benchmark/summarize_statcalib_teacher_anchor.py`: pass
+  - `python -m unittest tests.test_statcalib_teacher_anchor_summary`: `Ran 6 tests`, `OK`
+  - `python -m cnn_fpga.benchmark.summarize_statcalib_teacher_anchor --run-dir runs/p4_benchmark/T67_statcalib_teacher_anchor_20260601_225718`: pass
+  - provenance closure:
+    - launch `HEAD = 84f4468`
+    - finish `HEAD = 84f4468`
+    - `summary.json git_commit = 84f4468`
+  - integrity:
+    - `comparison.csv` rows = `32`
+    - `missing_runs = []`
+    - all comparison rows have `coverage=1.0`, `completed_repeats=2`
+    - `progress.jsonl`: `running=64`, `completed=64`, duplicate `running=0`
+  - preservation:
+    - exactly one `T67` run root exists
+    - `T24/T64/T66` historical run-root last-write times did not change
+
+- Scenario-by-scenario outcome summary:
+  - `static_bias_theta`: best = `statcalib_high_threshold_teacher_window_variance`, LER `0.430249`, gap vs `ukf` `0.396432`, gap vs `hybrid_residual_b` `0.381506`, status `mixed`
+  - `linear_ramp`: best = `statcalib_default_teacher_window_variance`, LER `0.466071`, gap vs `ukf` `0.347155`, gap vs `hybrid_residual_b` `0.322450`, status `generated`
+  - `step_sigma_theta`: best = `statcalib_default_teacher_ekf`, LER `0.458070`, gap vs `ukf` `0.354527`, gap vs `hybrid_residual_b` `0.331012`, status `generated`
+  - `periodic_drift`: best = `statcalib_default_teacher_window_variance`, LER `0.437656`, gap vs `ukf` `0.384544`, gap vs `hybrid_residual_b` `0.370817`, status `generated`
+
+- Grouped teacher-anchor outcome summary:
+  - parameter-point ranking:
+    - `default`: `window_variance > ekf > ukf`
+    - `high_threshold`: `window_variance > ekf > ukf`
+  - teacher-anchor best parameter point:
+    - `ukf`: `default` slightly better than `high_threshold`
+    - `window_variance`: `high_threshold` slightly better than `default`
+    - `ekf`: `default` and `high_threshold` tie on mean LER
+  - aggregate variant ranking:
+    1. `statcalib_high_threshold_teacher_window_variance`
+    2. `statcalib_default_teacher_window_variance`
+    3. `statcalib_default_teacher_ekf`
+    4. `statcalib_high_threshold_teacher_ekf`
+    5. `statcalib_default_teacher_ukf`
+    6. `statcalib_high_threshold_teacher_ukf`
+
+- Whether any non-`ukf` teacher variant beats `ukf`:
+  - Yes.
+  - Within both parameter points, `window_variance` and `ekf` rank ahead of `ukf`.
+
+- Whether any non-`ukf` teacher variant beats `hybrid_residual_b`:
+  - Yes.
+  - `statcalib_default_teacher_window_variance`
+  - `statcalib_default_teacher_ekf`
+  - `statcalib_high_threshold_teacher_window_variance`
+  - `statcalib_high_threshold_teacher_ekf`
+  all beat `hybrid_residual_b` in all four locked scenarios.
+
+- Remaining risks / interpretation limits:
+  - evidence remains mock-backed software-HIL only
+  - not `.tflite`
+  - not real-board
+  - does not rewrite `T24`
+  - two comparison rows remain `mixed`:
+    - `static_bias_theta / statcalib_high_threshold_teacher_window_variance`
+    - `step_sigma_theta / statcalib_high_threshold_teacher_ukf`

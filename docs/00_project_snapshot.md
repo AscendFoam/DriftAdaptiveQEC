@@ -417,3 +417,11 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - `T66` does not close `R24`: aggregate-best and stability-best variants still differ, and the `static_bias_theta / statcalib_high_threshold` scenario-best row still carries aggregate `statcalib_status = mixed`.
 - The current unique task is now `T67: FR8 statcalib teacher-anchor dependence bounded benchmark`.
 - `T67` stays on the mainline experiment-evidence lane, must keep `T24` authoritative, must keep statcalib as a separate extension lane, and must stay separate from theory-only branch materials.
+## 2026-06-05 Captain Update (T67 closeout supersession)
+
+- `T67` has now been accepted as `PASS_WITH_WARNINGS`.
+- T67 warning classification is: `N1 accepted`, `N2 accepted`, `N3 deferred -> R24`.
+- `T67` closes the gross teacher-anchor dependence question honestly: non-`ukf` teachers remain competitive and still beat both frozen anchors across all four locked scenarios.
+- `T67` does not close `R24`: the strongest aggregate statcalib lane still is not a clean generated-only result pack.
+- The current unique task is now `T68: FR8 statcalib generated-only robustness bounded benchmark`.
+- `T68` stays on the mainline experiment-evidence lane, must keep `T24` authoritative, must keep statcalib as a separate extension lane, and must stay separate from theory-only branch materials.

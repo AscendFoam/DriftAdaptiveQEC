@@ -379,8 +379,18 @@
     - `N2` aggregate-best vs stability-best split = `deferred`
     - `N3` `static_bias_theta / statcalib_high_threshold` best row still carries aggregate `statcalib_status = mixed` = `deferred`
   - Result: T66 closes one bounded local-grid robustness gap under clean provenance, but it does not close `R24` and does not upgrade statcalib into a mature calibration comparator
-- [ ] T67: FR8 statcalib teacher-anchor dependence bounded benchmark
+- [x] T67: FR8 statcalib teacher-anchor dependence bounded benchmark
   - Task package: `docs/tasks/Phase2/T67_fr8_statcalib_teacher_anchor_dependence_bounded_benchmark.md`
+  - Output: `docs/statcalib_teacher_anchor_bounded_benchmark.md`
+  - Review output: `docs/review/T67_review.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - Warning handling:
+    - `N1` source-worktree scope-external PDF diff but clean-clone launch preserved provenance = `accepted`
+    - `N2` equal-mean tie is not represented explicitly in `better_parameter_point_by_mean_ler` = `accepted`
+    - `N3` two comparison rows remain `mixed` = `deferred`
+  - Result: T67 closes the gross teacher-anchor dependence question honestly, but it does not close `R24`; the strongest aggregate statcalib lane still is not a clean generated-only result pack
+- [ ] T68: FR8 statcalib generated-only robustness bounded benchmark
+  - Task package: `docs/tasks/Phase2/T68_fr8_statcalib_generated_only_robustness_bounded_benchmark.md`
 
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
@@ -407,43 +417,44 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T67: FR8 statcalib teacher-anchor dependence bounded benchmark`
+`T68: FR8 statcalib generated-only robustness bounded benchmark`
 
 Status:
 
-- `T66` has been reviewed as `PASS_WITH_WARNINGS`.
-- T66 warning handling is: `N1 accepted`, `N2 deferred -> R24`, `N3 deferred -> R24`.
-- `T66` closes the local heuristic-grid question: the T64 extension-lane win survives one predeclared five-point statcalib sensitivity grid under clean provenance.
-- `T66` still does not close `R24`: aggregate-best and stability-best variants differ, and the `static_bias_theta / statcalib_high_threshold` scenario-best row still carries aggregate `statcalib_status = mixed`.
+- `T67` has been reviewed as `PASS_WITH_WARNINGS`.
+- T67 warning handling is: `N1 accepted`, `N2 accepted`, `N3 deferred -> R24`.
+- `T67` closes the gross teacher-anchor dependence question: the bounded statcalib win is not narrowly tied to `teacher_mode=ukf`, and non-`ukf` teachers still beat both frozen anchors across all four locked scenarios.
+- `T67` still does not close `R24`: two comparison rows remain `mixed`, and the strongest aggregate statcalib lane is still not a clean generated-only result pack.
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
-- `T64/T65/T66` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
-- The largest remaining mainline gap is still `R24`, but after T66 it is no longer local-parameter fragility. It is teacher-anchor dependence.
+- `T64/T65/T66/T67` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
+- The largest remaining mainline gap is still `R24`, but after T67 it is no longer gross teacher-anchor dependence. It is generated-only robustness under the strongest non-`ukf` teachers.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T67` must remain isolated from theory-only branch materials and must not rewrite historical run roots.
+- `T68` must remain isolated from theory-only branch materials and must not rewrite historical run roots.
 
 Why this task is next:
 
-1. `T66` has already answered the local-parameter robustness question, so another nearby sensitivity tweak would be redundant.
-2. `R24` is still open because the repository still does not know whether the extension-lane gain is structurally tied to one teacher anchor.
-3. `T67` is materially stronger than a simple follow-up because it runs a new bounded cross-anchor matrix and requires a grouped teacher-anchor summary pack.
-4. `T67` still keeps the project honest because it does not rewrite `T24`, does not widen into `.tflite` or real-board, and does not touch theory-branch materials.
+1. `T66` already answered the local-parameter robustness question under the `ukf` teacher anchor.
+2. `T67` already answered the gross teacher-anchor dependence question and showed that non-`ukf` teachers remain strong.
+3. `R24` is still open because the repository still does not know whether a predeclared non-`ukf` candidate can keep all-four-scenario wins while avoiding `mixed` rows.
+4. `T68` is materially stronger than a simple follow-up because it runs one bounded generated-only candidate matrix and requires a grouped robustness summary pack.
+5. `T68` still keeps the project honest because it does not rewrite `T24`, does not widen into `.tflite` or real-board, and does not touch theory-branch materials.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T67`
-- Latest reviewed task: `docs/review/T66_review.md` with verdict `PASS_WITH_WARNINGS`
-- T66 closeout: warning classification is `N1 accepted`, `N2 deferred -> R24`, `N3 deferred -> R24`
-- Next worker-facing task package: `docs/tasks/Phase2/T67_fr8_statcalib_teacher_anchor_dependence_bounded_benchmark.md`
-- `T67` may add one bounded teacher-anchor benchmark lane and one task-scoped summary helper only; it must not change statcalib/runtime semantics, rewrite `T24`, or touch theory-branch materials
+- Current unique task: `T68`
+- Latest reviewed task: `docs/review/T67_review.md` with verdict `PASS_WITH_WARNINGS`
+- T67 closeout: warning classification is `N1 accepted`, `N2 accepted`, `N3 deferred -> R24`
+- Next worker-facing task package: `docs/tasks/Phase2/T68_fr8_statcalib_generated_only_robustness_bounded_benchmark.md`
+- `T68` may add one bounded non-`ukf` generated-only robustness benchmark lane, one task-scoped summary helper, and focused tests only; it must not change statcalib/runtime semantics, rewrite `T24`, or touch theory-branch materials
 
-1. Current unique task: `T67`
-2. `T66` is complete and accepted as `PASS_WITH_WARNINGS`.
-3. T66 warning handling:
-   - `N1` duplicate-running progress-log artifact after same-run-root timeout relaunch = `accepted`
-   - `N2` aggregate-best vs stability-best split = `deferred -> R24`
-   - `N3` `static_bias_theta / statcalib_high_threshold` best row still carries aggregate `statcalib_status = mixed` = `deferred -> R24`
-4. T66 review output: `docs/review/T66_review.md`
-5. T67 task package: `docs/tasks/Phase2/T67_fr8_statcalib_teacher_anchor_dependence_bounded_benchmark.md`
+1. Current unique task: `T68`
+2. `T67` is complete and accepted as `PASS_WITH_WARNINGS`.
+3. T67 warning handling:
+   - `N1` source-worktree scope-external PDF diff but clean-clone launch preserved provenance = `accepted`
+   - `N2` equal-mean tie is not represented explicitly in `better_parameter_point_by_mean_ler` = `accepted`
+   - `N3` two comparison rows remain `mixed` = `deferred -> R24`
+4. T67 review output: `docs/review/T67_review.md`
+5. T68 task package: `docs/tasks/Phase2/T68_fr8_statcalib_generated_only_robustness_bounded_benchmark.md`
 
 ## Done Criteria For T65
 

@@ -1,15 +1,15 @@
-## 2026-06-01 Captain Final Supersession
+## 2026-06-05 Captain Final Supersession
 
-- Current unique task: `T67: FR8 statcalib teacher-anchor dependence bounded benchmark`
-- Task package: `docs/tasks/Phase2/T67_fr8_statcalib_teacher_anchor_dependence_bounded_benchmark.md`
-- `T66` has been judged `PASS_WITH_WARNINGS`.
-- T66 warning classification:
-  - `N1` duplicate-running progress-log artifact after same-run-root timeout relaunch = `accepted`
-  - `N2` aggregate-best vs stability-best split = `deferred -> R24`
-  - `N3` `static_bias_theta / statcalib_high_threshold` best row still carries aggregate `statcalib_status = mixed` = `deferred -> R24`
-- `T66` closes one bounded local-grid robustness gap under clean provenance, but it does not close `R24`.
-- `T24` remains the authoritative historical frozen ranked table; `T64/T65/T66` must not be used to rewrite it.
-- `T67` is a bounded teacher-anchor dependence benchmark only. It must not change statcalib/runtime semantics, widen into `.tflite` or real-board, or mix mainline experiment work with theory-only branch materials.
+- Current unique task: `T68: FR8 statcalib generated-only robustness bounded benchmark`
+- Task package: `docs/tasks/Phase2/T68_fr8_statcalib_generated_only_robustness_bounded_benchmark.md`
+- `T67` has been judged `PASS_WITH_WARNINGS`.
+- T67 warning classification:
+  - `N1` source-worktree scope-external PDF diff but clean-clone launch preserved provenance = `accepted`
+  - `N2` equal-mean tie is not represented explicitly in `better_parameter_point_by_mean_ler` = `accepted`
+  - `N3` two comparison rows remain `mixed` = `deferred -> R24`
+- `T67` closes the gross teacher-anchor dependence question, but it does not close `R24`.
+- `T24` remains the authoritative historical frozen ranked table; `T64/T65/T66/T67` must not be used to rewrite it.
+- `T68` is a bounded generated-only robustness benchmark only. It must not change statcalib/runtime semantics, widen into `.tflite` or real-board, or mix mainline experiment work with theory-only branch materials.
 
 # Handoff
 
@@ -24,11 +24,25 @@
 
 Captain supersession note:
 
-- The authoritative current task for all new worker action is `T67: FR8 statcalib teacher-anchor dependence bounded benchmark`.
-- Authoritative task package: `docs/tasks/Phase2/T67_fr8_statcalib_teacher_anchor_dependence_bounded_benchmark.md`.
-- `T66` is complete and accepted as `PASS_WITH_WARNINGS`.
+- The authoritative current task for all new worker action is `T68: FR8 statcalib generated-only robustness bounded benchmark`.
+- Authoritative task package: `docs/tasks/Phase2/T68_fr8_statcalib_generated_only_robustness_bounded_benchmark.md`.
+- `T67` is complete and accepted as `PASS_WITH_WARNINGS`.
 - If any older line in this file still mentions `T66`, `T65`, `T64`, `T63`, `T62`, `T61`, `T60`, `T59`, or `T58` as current, treat it as historical text only.
-- `T67` is the single bounded next step after T66 closeout. It is not permission to widen comparator scope, deployment scope, or theory-branch scope.
+- `T68` is the single bounded next step after T67 closeout. It is not permission to widen comparator scope, deployment scope, or theory-branch scope.
+
+## 2026-06-05 Captain Update (T67 closeout)
+
+- `T67` review accepted by Captain as `PASS_WITH_WARNINGS`.
+- Blocking issues: none.
+- Warning classification:
+  - `N1` source-worktree scope-external PDF diff but clean-clone launch preserved provenance = `accepted`
+  - `N2` equal-mean tie is not represented explicitly in `better_parameter_point_by_mean_ler` = `accepted`
+  - `N3` two comparison rows remain `mixed` = `deferred -> R24`
+- `T67` is complete. It closes the gross teacher-anchor dependence question for the bounded statcalib lane: non-`ukf` teachers remain competitive and can still beat both frozen anchors across all four locked scenarios.
+- `T67` does not close `R24`, does not validate `.tflite`, does not validate real-board behavior, and does not upgrade statcalib into a mature calibration comparator.
+- Current unique task is now `T68: FR8 statcalib generated-only robustness bounded benchmark`.
+- `T68` must keep the T24 frozen table authoritative, keep statcalib as a separately labeled extension lane, test generated-only robustness under the strongest non-`ukf` teachers only, and remain separate from theory-only branch materials.
+- Next worker-facing task package: `docs/tasks/Phase2/T68_fr8_statcalib_generated_only_robustness_bounded_benchmark.md`.
 
 ## 2026-06-01 Captain Update (T66 closeout)
 

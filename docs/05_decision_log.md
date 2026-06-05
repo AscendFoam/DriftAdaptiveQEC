@@ -2588,3 +2588,45 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T67`
 4. `docs/08_risks_and_open_questions.md` 保持 `R24` 打开，并写入 `T66` 的 deferred warning 细节
 5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T66` 收口与 `T67` 边界
+## D-2026-06-05-01
+
+- 日期：`2026-06-05`
+- 决策：接受 `T67_review.md` 的 `PASS_WITH_WARNINGS`，标记 `T67` 完成，并将当前唯一任务切换为 `T68: FR8 statcalib generated-only robustness bounded benchmark`
+
+### 背景
+
+`T67` 的目标不是扩写主表，也不是继续做 teacher breadth，而是回答一个更具体的问题：`T64/T66` 的 bounded statcalib gain 是否只是绑在 `teacher_mode=ukf` 上成立。
+
+依据 `docs/review/T67_review.md`、`docs/statcalib_teacher_anchor_bounded_benchmark.md` 与 `runs/p4_benchmark/T67_statcalib_teacher_anchor_20260601_225718/*`，当前仓库事实是：
+
+1. blocking issues = none
+2. `T67` 只产生了一个新 run root，且 `launch commit = finish commit = summary.json git_commit = 84f4468`
+3. 所有 6 条 statcalib teacher-anchor 变体都在 4 个锁定场景里同时优于两个 frozen anchors
+4. 非 `ukf` teacher 在两个参数点内都整体排在 `ukf` teacher 前面
+5. 但仍有两条 comparison row 保持 `mixed`
+
+### Warning 分类
+
+1. `N1` source-worktree scope-external PDF diff but clean-clone launch preserved provenance = `accepted`
+2. `N2` helper tie-label nuance for equal mean LER = `accepted`
+3. `N3` two comparison rows remain `mixed` = `deferred -> R24`
+
+### 结论
+
+`T67` 可以完成，但它关闭的是 gross teacher-anchor dependence gap，而不是 `R24` 本身。
+
+当前最小且更诚实的下一步不应是 docs-only follow-up，也不应跳到 `.tflite`、real-board、training 或 theory lane，而应新增 `T68`：
+
+1. 保持 `T24` frozen table 为锚点
+2. 保持 locked four-scenario mainline protocol
+3. 只聚焦最强的非 `ukf` teacher anchors
+4. 只跑一个预声明 threshold-only candidate matrix，专门回答 generated-only robustness 问题
+5. 保持 clean provenance 与 `--paired-seeds`
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T67 -> PASS_WITH_WARNINGS`，并切换 `Current Unique Task` 到 `T68`
+2. 新增任务包 `docs/tasks/Phase2/T68_fr8_statcalib_generated_only_robustness_bounded_benchmark.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T68`
+4. `docs/08_risks_and_open_questions.md` 保持 `R24` 打开，并把 `T67` 的 deferred warning 继续并入其中
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T67` 收口与 `T68` 边界

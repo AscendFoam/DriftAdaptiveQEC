@@ -221,3 +221,14 @@
 - `R24` remains open because T66 does not prove teacher-anchor independence or mature calibration-comparator validity.
 - The current unique task is now `T67: FR8 statcalib teacher-anchor dependence bounded benchmark`.
 - `T67` must stay inside the same truth boundary: mock-backed software-HIL only, not `.tflite`, not real-board, not paper-grade benchmark expansion.
+## 2026-06-05 Captain Update (T67/T68 boundary supersession)
+
+- `T67` has now been accepted as `PASS_WITH_WARNINGS`.
+- `T67` changes no HIL / P4 / `.tflite` / real-board truth boundary. It adds one bounded teacher-anchor result pack only.
+- The strongest boundary facts after T67 are still narrow:
+  - `T24` remains the historical frozen ranked table
+  - `statcalib` remains only a separately labeled extension lane
+  - current evidence remains mock-backed software-HIL only
+- `R24` remains open because T67 does not produce a clean generated-only result pack; two comparison rows remain `mixed`.
+- The current unique task is now `T68: FR8 statcalib generated-only robustness bounded benchmark`.
+- `T68` must stay inside the same truth boundary: mock-backed software-HIL only, not `.tflite`, not real-board, not paper-grade benchmark expansion.
