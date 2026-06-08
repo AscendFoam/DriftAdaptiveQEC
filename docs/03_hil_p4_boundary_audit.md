@@ -232,3 +232,15 @@
 - `R24` remains open because T67 does not produce a clean generated-only result pack; two comparison rows remain `mixed`.
 - The current unique task is now `T68: FR8 statcalib generated-only robustness bounded benchmark`.
 - `T68` must stay inside the same truth boundary: mock-backed software-HIL only, not `.tflite`, not real-board, not paper-grade benchmark expansion.
+
+## 2026-06-08 Captain Update (T68/T69 boundary supersession)
+
+- `T68` has now been accepted as `PASS_WITH_WARNINGS`.
+- `T68` changes no HIL / P4 / `.tflite` / real-board truth boundary. It adds one bounded generated-only robustness result pack only.
+- The strongest boundary facts after T68 are still narrow:
+  - `T24` remains the historical frozen ranked table
+  - `statcalib` remains only a separately labeled extension lane
+  - current evidence remains mock-backed software-HIL only
+- `R24` remains open because T68 does not yield a unique final threshold and does not make the whole predeclared grid uniformly clean.
+- The current unique task is now `T69: FR8 statcalib clean-winner tie-break bounded benchmark`.
+- `T69` must stay inside the same truth boundary: mock-backed software-HIL only, not `.tflite`, not real-board, not paper-grade benchmark expansion.

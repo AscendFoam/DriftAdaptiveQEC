@@ -271,3 +271,78 @@ Worker must report:
 8. whether any full generated-only winner exists
 9. whether the mean-best candidate and the worst-case-best candidate are the same or different
 10. remaining risks or interpretation limits
+
+### Worker Output
+
+1. Files changed
+   - `cnn_fpga/config/p4_multiscenario_statcalib_generated_only.yaml`
+   - `cnn_fpga/benchmark/summarize_statcalib_generated_only.py`
+   - `tests/test_statcalib_generated_only_summary.py`
+   - `docs/statcalib_generated_only_robustness_bounded_benchmark.md`
+   - `docs/review/T68_review.md`
+   - `docs/for_human/T68_explanation.md`
+   - `docs/worker_summary/T68_worker_summary.md`
+   - this task file
+
+2. Exact benchmark command executed
+
+```powershell
+& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config D:\Codes\Quantum\DriftAdaptiveQEC\runs\p4_benchmark\T68_statcalib_generated_only_20260605_205723\launch_config_from_clean_clone.yaml --scenario static_bias_theta --scenario linear_ramp --scenario step_sigma_theta --scenario periodic_drift --mode ukf --mode hybrid_residual_b --mode statcalib_window_variance_t001 --mode statcalib_window_variance_t003 --mode statcalib_window_variance_t005 --mode statcalib_window_variance_t010 --mode statcalib_ekf_t001 --mode statcalib_ekf_t003 --mode statcalib_ekf_t005 --mode statcalib_ekf_t010 --paired-seeds --repeats 2 --run-dir D:\Codes\Quantum\DriftAdaptiveQEC\runs\p4_benchmark\T68_statcalib_generated_only_20260605_205723
+```
+
+3. Run root path
+   - `runs/p4_benchmark/T68_statcalib_generated_only_20260605_205723`
+
+4. Verification command outputs
+   - `C:\ProgramData\anaconda3\python.exe -m py_compile cnn_fpga/benchmark/summarize_statcalib_generated_only.py`
+     - passed
+   - `C:\ProgramData\anaconda3\python.exe -m unittest tests.test_statcalib_generated_only_summary`
+     - `Ran 7 tests`
+     - `OK`
+   - `C:\ProgramData\anaconda3\python.exe -m cnn_fpga.benchmark.summarize_statcalib_generated_only --run-dir runs/p4_benchmark/T68_statcalib_generated_only_20260605_205723`
+     - passed and wrote the T68 summary pack
+
+5. Provenance summary
+   - launch clone: `C:\t68cf2b`
+   - launch branch: `main`
+   - launch `HEAD`: `bda8f2b`
+   - finish branch: `main`
+   - finish `HEAD`: `bda8f2b`
+   - `summary.json git_commit`: `bda8f2b`
+   - exactly one T68 run root was created
+   - `missing_runs = []`
+   - all comparison rows have `coverage = 1.0`
+   - all comparison rows have `completed_repeats = 2`
+   - `progress.jsonl` has `running=80`, `completed=80`, duplicate `running=0`, duplicate `completed=0`
+
+6. Scenario-by-scenario outcome summary
+   - `static_bias_theta`: best set = `window_variance_t001 = t003 = t005 = t010`, LER `0.4287575`, status `generated`
+   - `linear_ramp`: best set = `window_variance_t001 = t003 = t005 = t010`, LER `0.46627875`, status `generated`
+   - `step_sigma_theta`: best set = `window_variance_t001 = t003 = t005`, LER `0.4567119444444444`, status `generated`
+   - `periodic_drift`: best set = `window_variance_t001 = t003 = t005`, LER `0.4386234722222222`, status `generated`
+
+7. Grouped teacher/threshold outcome summary
+   - At every threshold, `window_variance` beats `ekf` by mean LER
+   - `window_variance` ranking = `t001 = t003 = t005 > t010`
+   - `ekf` ranking = `t003 = t005 = t010 > t001`
+   - mean-best candidates = `window_variance_t001 = t003 = t005`
+   - worst-case-best candidates = `window_variance_t001 = t003 = t005 = t010`
+   - relation = `different`
+
+8. Whether any full generated-only winner exists
+   - Yes
+   - Full generated-only winners:
+     - `statcalib_window_variance_t001`
+     - `statcalib_window_variance_t003`
+     - `statcalib_window_variance_t005`
+     - `statcalib_ekf_t001`
+
+9. Whether the mean-best candidate and the worst-case-best candidate are the same or different
+   - Different
+
+10. Remaining risks / interpretation limits
+   - This remains mock-backed software-HIL evidence only
+   - `T24` remains the authoritative frozen ranked table
+   - `statcalib` remains a separately labeled extension lane
+   - multiple clean winners exist, so T68 does not justify a unique-threshold claim
+   - several other candidates still contain `mixed` rows even though the bounded existence question is now closed

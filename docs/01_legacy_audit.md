@@ -510,3 +510,12 @@
 - `T67` still does not turn the lane into a mature calibration comparator. `R24` remains open because two comparison rows remain `mixed`, and the current strongest aggregate lane still is not a clean generated-only result pack.
 - The current unique task is now `T68: FR8 statcalib generated-only robustness bounded benchmark`.
 - `T68` is the next bounded mainline task because the remaining honest question is generated-only robustness under the strongest non-`ukf` teachers, not more teacher-anchor breadth.
+
+## 2026-06-08 Captain Update (T68 closeout supersession)
+
+- `T68` has now been accepted as `PASS_WITH_WARNINGS`.
+- T68 warning classification is: `N1 deferred -> R24`, `N2 deferred -> R24`, `N3 accepted`.
+- `T68` removes one remaining legacy-style ambiguity: the statcalib extension lane is no longer blocked by "maybe no full generated-only winner exists in the bounded grid".
+- `T68` still does not turn the lane into a mature calibration comparator. `R24` remains open because the strongest clean answer is still a tie set and the broader predeclared grid is still not uniformly clean.
+- The current unique task is now `T69: FR8 statcalib clean-winner tie-break bounded benchmark`.
+- `T69` is the next bounded mainline task because the remaining honest question is no longer existence, but whether the clean-winner tie set narrows under a stronger bounded repeat budget or remains the right final answer.

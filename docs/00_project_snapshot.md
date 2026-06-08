@@ -425,3 +425,12 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - `T67` does not close `R24`: the strongest aggregate statcalib lane still is not a clean generated-only result pack.
 - The current unique task is now `T68: FR8 statcalib generated-only robustness bounded benchmark`.
 - `T68` stays on the mainline experiment-evidence lane, must keep `T24` authoritative, must keep statcalib as a separate extension lane, and must stay separate from theory-only branch materials.
+
+## 2026-06-08 Captain Update (T68 closeout supersession)
+
+- `T68` has now been accepted as `PASS_WITH_WARNINGS`.
+- T68 warning classification is: `N1 deferred -> R24`, `N2 deferred -> R24`, `N3 accepted`.
+- `T68` closes the bounded generated-only existence question honestly: full generated-only winners now exist inside the predeclared grid, and the strongest clean answer is the tied `window_variance_t001 = t003 = t005` set.
+- `T68` does not close `R24`: the clean winner set is still not unique, and some other predeclared candidates remain `mixed`.
+- The current unique task is now `T69: FR8 statcalib clean-winner tie-break bounded benchmark`.
+- `T69` stays on the mainline experiment-evidence lane, must keep `T24` authoritative, must keep statcalib as a separate extension lane, and must stay separate from theory-only branch materials.

@@ -1,3 +1,17 @@
+## 2026-06-08 Captain Final Supersession
+
+- Current unique task: `T69: FR8 statcalib clean-winner tie-break bounded benchmark`
+- Task package: `docs/tasks/Phase2/T69_fr8_statcalib_clean_winner_tiebreak_bounded_benchmark.md`
+- `T68` has been judged `PASS_WITH_WARNINGS`.
+- T68 warning classification:
+  - `N1` full generated-only winner set remains a tie, not a unique final threshold = `deferred -> R24`
+  - `N2` some predeclared candidates remain `mixed` even though the bounded existence question is closed = `deferred -> R24`
+  - `N3` clean short-path clone launch boundary must remain visible in downstream retellings = `accepted`
+- `T68` closes the bounded generated-only existence question: full generated-only winners now exist in the predeclared grid, and the strongest clean answer is the tied `window_variance_t001 = t003 = t005` set.
+- `T68` does not close `R24`: the clean winner set is still not unique, and the broader predeclared grid is still not uniformly clean.
+- `T24` remains the authoritative historical frozen ranked table; `T64/T65/T66/T67/T68` must not be used to rewrite it.
+- `T69` is a bounded clean-winner tie-break/stability benchmark only. It must not change statcalib/runtime semantics, widen into `.tflite` or real-board, or mix mainline experiment work with theory-only branch materials.
+
 ## 2026-06-05 Captain Final Supersession
 
 - Current unique task: `T68: FR8 statcalib generated-only robustness bounded benchmark`
@@ -43,6 +57,20 @@ Captain supersession note:
 - Current unique task is now `T68: FR8 statcalib generated-only robustness bounded benchmark`.
 - `T68` must keep the T24 frozen table authoritative, keep statcalib as a separately labeled extension lane, test generated-only robustness under the strongest non-`ukf` teachers only, and remain separate from theory-only branch materials.
 - Next worker-facing task package: `docs/tasks/Phase2/T68_fr8_statcalib_generated_only_robustness_bounded_benchmark.md`.
+
+## 2026-06-08 Captain Update (T68 closeout)
+
+- `T68` review accepted by Captain as `PASS_WITH_WARNINGS`.
+- Blocking issues: none.
+- Warning classification:
+  - `N1` full generated-only winner set remains a tie, not a unique final threshold = `deferred -> R24`
+  - `N2` some predeclared candidates remain `mixed` even though the bounded existence question is closed = `deferred -> R24`
+  - `N3` clean short-path clone launch boundary must remain visible in downstream retellings = `accepted`
+- `T68` is complete. It closes the bounded generated-only existence question for the statcalib extension lane: there are now four full generated-only winners in the predeclared grid, and the strongest clean answer is the tied `window_variance_t001 = t003 = t005` set.
+- `T68` does not close `R24`, does not validate `.tflite`, does not validate real-board behavior, and does not upgrade statcalib into a mature calibration comparator.
+- Current unique task is now `T69: FR8 statcalib clean-winner tie-break bounded benchmark`.
+- `T69` must keep `T24` authoritative, keep statcalib as a separately labeled extension lane, stay inside the clean-winner candidate set plus frozen anchors, and remain separate from theory-only branch materials.
+- Next worker-facing task package: `docs/tasks/Phase2/T69_fr8_statcalib_clean_winner_tiebreak_bounded_benchmark.md`.
 
 ## 2026-06-01 Captain Update (T66 closeout)
 

@@ -389,8 +389,18 @@
     - `N2` equal-mean tie is not represented explicitly in `better_parameter_point_by_mean_ler` = `accepted`
     - `N3` two comparison rows remain `mixed` = `deferred`
   - Result: T67 closes the gross teacher-anchor dependence question honestly, but it does not close `R24`; the strongest aggregate statcalib lane still is not a clean generated-only result pack
-- [ ] T68: FR8 statcalib generated-only robustness bounded benchmark
+- [x] T68: FR8 statcalib generated-only robustness bounded benchmark
   - Task package: `docs/tasks/Phase2/T68_fr8_statcalib_generated_only_robustness_bounded_benchmark.md`
+  - Output: `docs/statcalib_generated_only_robustness_bounded_benchmark.md`
+  - Review output: `docs/review/T68_review.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - Warning handling:
+    - `N1` full generated-only winner set remains a tie, not a unique final threshold = `deferred -> R24`
+    - `N2` some predeclared candidates remain `mixed` even though the bounded existence question is closed = `deferred -> R24`
+    - `N3` clean short-path clone launch boundary must remain visible in downstream retellings = `accepted`
+  - Result: T68 closes the bounded generated-only existence question honestly; full generated-only winners now exist inside the predeclared grid, but the strongest clean answer is still a tied `window_variance t001/t003/t005` set and `R24` remains open
+- [ ] T69: FR8 statcalib clean-winner tie-break bounded benchmark
+  - Task package: `docs/tasks/Phase2/T69_fr8_statcalib_clean_winner_tiebreak_bounded_benchmark.md`
 
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
@@ -417,35 +427,37 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T68: FR8 statcalib generated-only robustness bounded benchmark`
+`T69: FR8 statcalib clean-winner tie-break bounded benchmark`
 
 Status:
 
-- `T67` has been reviewed as `PASS_WITH_WARNINGS`.
-- T67 warning handling is: `N1 accepted`, `N2 accepted`, `N3 deferred -> R24`.
-- `T67` closes the gross teacher-anchor dependence question: the bounded statcalib win is not narrowly tied to `teacher_mode=ukf`, and non-`ukf` teachers still beat both frozen anchors across all four locked scenarios.
-- `T67` still does not close `R24`: two comparison rows remain `mixed`, and the strongest aggregate statcalib lane is still not a clean generated-only result pack.
+- `T68` has been reviewed as `PASS_WITH_WARNINGS`.
+- T68 warning handling is: `N1 deferred -> R24`, `N2 deferred -> R24`, `N3 accepted`.
+- `T68` closes the generated-only existence question: the repo now has four full generated-only statcalib winners in the predeclared grid, and the strongest clean answer is the tied `window_variance_t001 = t003 = t005` set.
+- `T68` still does not close `R24`: the clean winner set is not unique, and some other predeclared candidates remain `mixed`.
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
-- `T64/T65/T66/T67` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
-- The largest remaining mainline gap is still `R24`, but after T67 it is no longer gross teacher-anchor dependence. It is generated-only robustness under the strongest non-`ukf` teachers.
+- `T64/T65/T66/T67/T68` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
+- The largest remaining mainline gap is still `R24`, but after T68 it is no longer "does any clean winner exist". It is whether the clean-winner tie set can be narrowed into one defensible reference point or must remain an explicit tie set.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T68` must remain isolated from theory-only branch materials and must not rewrite historical run roots.
+- `T69` must remain isolated from theory-only branch materials and must not rewrite historical run roots.
 
 Why this task is next:
 
-1. `T66` already answered the local-parameter robustness question under the `ukf` teacher anchor.
-2. `T67` already answered the gross teacher-anchor dependence question and showed that non-`ukf` teachers remain strong.
-3. `R24` is still open because the repository still does not know whether a predeclared non-`ukf` candidate can keep all-four-scenario wins while avoiding `mixed` rows.
-4. `T68` is materially stronger than a simple follow-up because it runs one bounded generated-only candidate matrix and requires a grouped robustness summary pack.
-5. `T68` still keeps the project honest because it does not rewrite `T24`, does not widen into `.tflite` or real-board, and does not touch theory-branch materials.
+1. `T68` already answered the existence question and proved that full generated-only winners do exist in the predeclared grid.
+2. `R24` is still open because the repository still does not know whether the clean-winner tie set collapses to one defensible reference point under a slightly stronger bounded repeat budget.
+3. `T69` is materially stronger than a simple docs follow-up because it reruns only the four clean winners plus frozen anchors and requires explicit tie-persistence / tie-collapse reporting.
+4. `T69` still keeps the project honest because it does not rewrite `T24`, does not widen teacher/threshold scope beyond the four clean winners, and does not widen into `.tflite` or real-board.
+5. If `T69` still ends in a tie, that is still a successful outcome because it converts the remaining ambiguity into an explicit bounded conclusion instead of forcing a single-threshold story.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T68`
-- Latest reviewed task: `docs/review/T67_review.md` with verdict `PASS_WITH_WARNINGS`
-- T67 closeout: warning classification is `N1 accepted`, `N2 accepted`, `N3 deferred -> R24`
-- Next worker-facing task package: `docs/tasks/Phase2/T68_fr8_statcalib_generated_only_robustness_bounded_benchmark.md`
-- `T68` may add one bounded non-`ukf` generated-only robustness benchmark lane, one task-scoped summary helper, and focused tests only; it must not change statcalib/runtime semantics, rewrite `T24`, or touch theory-branch materials
+- Current unique task: `T69`
+- Latest reviewed task: `docs/review/T68_review.md` with verdict `PASS_WITH_WARNINGS`
+- T68 closeout: warning classification is `N1 deferred -> R24`, `N2 deferred -> R24`, `N3 accepted`
+- Next worker-facing task package: `docs/tasks/Phase2/T69_fr8_statcalib_clean_winner_tiebreak_bounded_benchmark.md`
+- `T69` may add one bounded clean-winner tie-break benchmark lane, one task-scoped summary helper, and focused tests only; it must not change statcalib/runtime semantics, rewrite `T24`, or touch theory-branch materials
+
+Older numbered lines below this point are historical carry-forward text and are superseded by the `T69` block above.
 
 1. Current unique task: `T68`
 2. `T67` is complete and accepted as `PASS_WITH_WARNINGS`.

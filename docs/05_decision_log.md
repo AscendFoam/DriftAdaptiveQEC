@@ -2630,3 +2630,57 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T68`
 4. `docs/08_risks_and_open_questions.md` 保持 `R24` 打开，并把 `T67` 的 deferred warning 继续并入其中
 5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T67` 收口与 `T68` 边界
+
+## 2026-06-08 Captain Decision: accept T68 and open T69
+
+- 决策：接受 `T68_review.md` 的 `PASS_WITH_WARNINGS`，标记 `T68` 完成，并将当前唯一任务切换为 `T69: FR8 statcalib clean-winner tie-break bounded benchmark`
+
+### 事实基础
+
+依据 `docs/review/T68_review.md`、`docs/statcalib_generated_only_robustness_bounded_benchmark.md`、`docs/worker_summary/T68_worker_summary.md`、`runs/p4_benchmark/T68_statcalib_generated_only_20260605_205723/*`，以及本轮重新执行的：
+
+1. `python -m py_compile cnn_fpga/benchmark/summarize_statcalib_generated_only.py`
+2. `python -m unittest tests.test_statcalib_generated_only_summary`
+3. `python -m cnn_fpga.benchmark.summarize_statcalib_generated_only --run-dir runs/p4_benchmark/T68_statcalib_generated_only_20260605_205723`
+
+当前仓库事实是：
+
+1. `T68` 只产生了一个新 run root：`runs/p4_benchmark/T68_statcalib_generated_only_20260605_205723`
+2. provenance 闭合：`launch HEAD = finish HEAD = summary.json git_commit = bda8f2b`
+3. `missing_runs == []`
+4. comparison rows = `40`
+5. 所有 comparison rows 都满足 `coverage = 1.0` 且 `completed_repeats = 2`
+6. 存在 4 个 full generated-only winners：
+   - `statcalib_window_variance_t001`
+   - `statcalib_window_variance_t003`
+   - `statcalib_window_variance_t005`
+   - `statcalib_ekf_t001`
+7. strongest clean answer 不是唯一 winner，而是 `window_variance_t001 = t003 = t005`
+8. `worst-case-best` 集合还额外包含 `window_variance_t010`
+9. 预声明小网格里仍有部分候选带 `mixed` 行，因此 T68 关闭的是 existence question，不是全网格 clean closure
+
+### Warning 分类
+
+1. `N1` full generated-only winner set remains a tie, not a unique final threshold = `deferred -> R24`
+2. `N2` some predeclared candidates remain `mixed` even though the bounded existence question is closed = `deferred -> R24`
+3. `N3` clean short-path clone launch boundary must remain visible in downstream retellings = `accepted`
+
+### 结论
+
+`T68` 可以完成，但它关闭的是 bounded generated-only existence gap，而不是 `R24` 本身。
+
+当前最小且更诚实的下一步不应回到 docs-only follow-up，也不应跳到 `.tflite`、real-board、training 或 theory lane，而应新增 `T69`：
+
+1. 保持 `T24` frozen table 为锚点
+2. 保持 locked four-scenario mainline protocol
+3. 只聚焦 `T68` 的 4 个 full generated-only winners 与 2 个 frozen anchors
+4. 用略强于 `T68` 的 repeat budget 去回答 clean-winner tie set 是否会收缩为一个更稳定的 reference point
+5. 如果 tie 仍然存在，则把“tie set 就是最终诚实答案”写实，而不是强行压扁成单 winner
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T68 -> PASS_WITH_WARNINGS`，并切换 `Current Unique Task` 到 `T69`
+2. 新增任务包 `docs/tasks/Phase2/T69_fr8_statcalib_clean_winner_tiebreak_bounded_benchmark.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T69`
+4. `docs/08_risks_and_open_questions.md` 保持 `R24` 打开，并把 `T68` 的 deferred warning 继续并入其中
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T68` 收口与 `T69` 边界

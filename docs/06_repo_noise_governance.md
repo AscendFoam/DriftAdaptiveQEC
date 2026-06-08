@@ -298,3 +298,13 @@
 - `T68` may add at most one task-scoped derived config file and one task-scoped summary helper plus focused tests.
 - `T68` must not regenerate, resume into, rewrite, or relabel the historical `T24`, `T59`, `T61`, `T62`, `T64`, `T66`, or `T67` run roots.
 - `T68` must not modify any historical file under `runs/`, must not use repo cleanup as a side goal, and must keep mainline experiment evidence separate from theory-only branch materials.
+
+## 2026-06-08 Captain Update (T68/T69 repo-noise supersession)
+
+- `T68` has now been accepted as `PASS_WITH_WARNINGS`; its run root `runs/p4_benchmark/T68_statcalib_generated_only_20260605_205723` must now be treated as frozen historical evidence and must not be regenerated, resumed into, or rewritten.
+- T68 provenance was intentionally isolated through a clean short-path clone launch at `C:\t68cf2b`; downstream retellings should preserve that boundary instead of blurring the active workspace and clean launch clone.
+- The current unique task is now `T69: FR8 statcalib clean-winner tie-break bounded benchmark`.
+- `T69` may create exactly one new run root under `runs/p4_benchmark/T69_statcalib_clean_winner_tiebreak_*`.
+- `T69` may add at most one task-scoped derived config file and one task-scoped summary helper plus focused tests.
+- `T69` must not regenerate, resume into, rewrite, or relabel the historical `T24`, `T59`, `T61`, `T62`, `T64`, `T66`, `T67`, or `T68` run roots.
+- `T69` must not modify any historical file under `runs/`, must not use repo cleanup as a side goal, and must keep mainline experiment evidence separate from theory-only branch materials.
