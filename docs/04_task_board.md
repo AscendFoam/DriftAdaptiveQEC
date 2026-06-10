@@ -427,15 +427,23 @@
 
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
-- [ ] T48: True `.tflite` runtime smoke gate
-  - Task package: pending
+- [x] T48: True `.tflite` runtime smoke gate
+  - Task package: `docs/tasks/Phase2/T48_true_tflite_runtime_smoke_gate.md`
+  - Output: `docs/t48_true_tflite_runtime_gate.md`
+  - Review output: `docs/review/T48_review.md`
+  - Captain verdict: `PASS`
+  - Result: T48 closes one narrow current-host true `.tflite` runtime truth gap honestly; the repository now has one isolated `tensorflow==2.21.0` environment on this machine that can real-load and real-execute preserved `static_theta_v2` float / int8 `.tflite` artifacts and can run bounded source-vs-`.tflite` consistency checks, but this does not restore default-environment compatibility and does not upgrade the evidence to HIL, real-board, or deployment closure
 - [ ] T49: Real-board smoke execution gate
-  - Task package: pending
+  - Task package: `docs/tasks/Phase2/T49_real_board_smoke_execution_gate.md`
 
 ### Milestone 2R: Reproducibility And Material Pack (proposed)
 
-- [ ] T50: Training reproducibility and material-regeneration pack
+- [x] T50: Training reproducibility and material-regeneration pack
   - Task package: `docs/tasks/Phase2/T50_training_reproducibility_and_material_regeneration_pack.md`
+  - Output: `docs/training_reproducibility_and_material_regeneration_pack.md`
+  - Review output: `docs/review/T50_review.md`
+  - Captain verdict: `PASS`
+  - Result: T50 closes one missing mainline training reproducibility/material-regeneration gap honestly; the repository now has one code-backed pack that enumerates canonical training materials, audits preserved mainline model references, and adds one clean CPU-only bounded train+eval rerun without upgrading the claims to full reproducibility, `.tflite`, real-board, benchmark, or deployment closure
 
 ### Milestone 2S: Paper Re-open Gate (proposed)
 
@@ -450,35 +458,34 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T50: Training reproducibility and material-regeneration pack`
+`T49: Real-board smoke execution gate`
 
 Status:
 
-- `T70` has been reviewed as `PASS`.
-- `T70` introduces no warning-derived risk item.
-- `T70` closes the FR8 closure-pack gap: the repository now has a code-backed closure artifact that downstream docs can cite without flattening the extension-lane boundary or inventing a unique-threshold story.
-- `T70` still does not close `R24`: the statcalib lane remains a separately labeled extension lane only, promotion is explicitly blocked, and no unique clean reference point exists.
+- `T48` has been reviewed as `PASS`.
+- `T48` introduces no warning-derived risk item; the review's non-blocking follow-up notes are accepted as advisory carry-forward only and do not require blocker-only rework.
+- `T48` closes the missing current-host true `.tflite` runtime truth gap in a narrow form: the repository now has one isolated `tensorflow==2.21.0` environment on this machine that can real-load and real-execute preserved `static_theta_v2` float / int8 `.tflite` artifacts and can run bounded source-vs-`.tflite` consistency checks.
+- `R12` remains open but narrower: T48 does not restore default-environment compatibility, cross-host / cross-OS portability, HIL closure, real-board validation, or deployment closure.
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
 - `T64/T65/T66/T67/T68/T69/T70` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
-- `.tflite` runtime和真板任务仍然受环境/硬件前提约束，当前更小且可执行的主线缺口已经切换为训练复现与材料再生证据包。
+- `R13/R14` remain open: the real-board lane still lacks host/device-path truth, bitstream / AXI / DMA-contract confirmation, and a non-placeholder repo execution path.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T50` must remain isolated from benchmark/HIL/theory/sidecar outputs, and it must not rewrite canonical historical training artifacts.
+- `T49` must remain isolated from benchmark/HIL/sidecar/paper-reopen/theory-branch outputs, and it must not rewrite real-board readiness as real-board validation or perform write-side MMIO/DMA/register actions.
 
 Why this task is next:
 
-1. `T70` has already closed the FR8 closure-pack question honestly; opening another immediate FR8 docs-only follow-up would be redundant.
-2. `T48` / `T49` still depend on stronger `.tflite` runtime / hardware-host preconditions and are not the smallest honest next step on the current machine.
-3. `T31/T39/T40` already created a bounded clean-CPU training reproducibility lane, but the repository still lacks one authoritative, code-backed training reproducibility and material-regeneration pack.
-4. `T50` is materially stronger than a simple doc update because it requires a task-scoped helper, focused tests, one bounded clean-CPU real training rerun, and one bounded eval rerun.
-5. `T50` strengthens mainline reproducibility/material evidence without colliding with the theory-only branch, sidecar lanes, `.tflite`, or real-board boundaries.
+1. `T48` has already removed the main software-side deployment ambiguity on the current machine: preserved float / int8 `.tflite` can really run in one isolated environment.
+2. The next unresolved deployment-boundary question is no longer `.tflite` runtime truth, but whether the current host has defensible real-board preconditions.
+3. `T51/T52` paper re-open tasks remain premature before the repository truthfully closes or blocks the current-host real-board gate.
+4. `T49` is materially stronger than a docs-only task because it requires host-fact probing, read-only device-path probing, code-side AXI/DMA/placeholder audit, a task-scoped helper, focused tests, and an explicit gate verdict.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T50`
-- Latest reviewed task: `docs/review/T70_review.md` with verdict `PASS`
-- T70 closeout: no warning-derived risk item was opened from this review
-- Next worker-facing task package: `docs/tasks/Phase2/T50_training_reproducibility_and_material_regeneration_pack.md`
-- `T50` may add one task-scoped helper, one focused test module, one derived config, bounded docs, and isolated outputs only under `artifacts/t50_training_repro_pack/`; it must not modify canonical historical training artifacts, must not run benchmark/HIL/theory work, and must not widen into `.tflite` or real-board scope
+- Current unique task: `T49`
+- Latest reviewed task: `docs/review/T48_review.md` with verdict `PASS`
+- T48 closeout: no warning-derived risk item was opened from this review; review advisory notes are accepted and do not block advancement
+- Next worker-facing task package: `docs/tasks/Phase2/T49_real_board_smoke_execution_gate.md`
+- `T49` may add one task-scoped helper, one focused test module, bounded docs, and isolated outputs only under `artifacts/t49_real_board_smoke_execution_gate/`; it must not modify `board_backend.py` / `axi_map.py` / `dma_client.py`, must not modify governance docs or historical artifacts, and must not perform write-side MMIO/DMA/register actions or board benchmark execution
 
 ## 并行 Sidecar 扩展实验治理
 
@@ -492,7 +499,7 @@ Why this task is next:
 - sidecar 晋升必须经过后续 Captain gate；`PSE0` 不晋升也不执行任何 sidecar lane。
 - Post-PSE0 Wave A setup：已创建 `.wt/tcn`、`.wt/teach`、`.wt/bank`、`.wt/ctrl` 四个隔离 worktree，并分别写入 `S0_design` 任务包；未运行实验，未创建 `runs/sidecar`，未改变主线当前唯一任务机制。
 
-Older numbered lines below this point are historical carry-forward text and are superseded by the `T70` block above.
+Older numbered lines below this point are historical carry-forward text and are superseded by the current `T49` block above.
 
 1. Current unique task: `T68`
 2. `T67` is complete and accepted as `PASS_WITH_WARNINGS`.

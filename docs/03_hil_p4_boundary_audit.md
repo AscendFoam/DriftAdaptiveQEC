@@ -270,3 +270,29 @@
 - `R24` remains open because closure-pack completion does not promote the lane into a mature validated calibration comparator.
 - The current unique task is now `T50: Training reproducibility and material-regeneration pack`.
 - `T50` must stay outside the HIL/P4/deployment boundary: it may strengthen training reproducibility and material-chain evidence only, and it must not widen into `.tflite`, real-board, benchmark reruns, or theory-branch execution.
+
+## 2026-06-10 Captain Update (T50/T48 boundary supersession)
+
+- `T50` has now been accepted as `PASS`.
+- `T50` changes no HIL / P4 / `.tflite` / real-board truth boundary. It adds one training/material evidence pack and one clean CPU-only bounded train+eval rerun only.
+- The strongest boundary facts after T50 are still narrow:
+  - `T24` remains the historical frozen ranked table
+  - current FR8 evidence remains mock-backed software-HIL only
+  - current training evidence is still bounded clean CPU-only evidence only
+  - no `.tflite` runtime or real-board recovery claim is yet supported
+- `R11` remains open because T50 does not prove full reproducibility or portability.
+- The current unique task is now `T48: True .tflite runtime smoke gate`.
+- `T48` must stay inside the `.tflite` runtime truth boundary only: no benchmark/HIL widening, no real-board semantics, no training rerun expansion, and no paper-grade deployment retelling.
+
+## 2026-06-10 Captain Update (T48/T49 boundary supersession)
+
+- `T48` has now been accepted as `PASS`.
+- `T48` changes no HIL / P4 / real-board truth boundary. It only upgrades one narrow software-side runtime fact: under one isolated `tensorflow==2.21.0` environment on the current machine, preserved `static_theta_v2` float / int8 `.tflite` artifacts can really load and execute.
+- The strongest boundary facts after T48 are still narrow:
+  - `T24` remains the historical frozen ranked table
+  - current FR8 evidence remains mock-backed software-HIL only
+  - real-board validation is still absent
+  - default-environment `.tflite` compatibility is still absent
+- `board_backend.py` remains placeholder-backed, so the real-board boundary is still not crossed.
+- The current unique task is now `T49: Real-board smoke execution gate`.
+- `T49` must stay inside current-host real-board precondition truth only: no benchmark/HIL widening, no write-side MMIO/DMA/register activity, and no retelling of host-probe facts as real-board validation.

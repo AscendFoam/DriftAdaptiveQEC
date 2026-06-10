@@ -274,7 +274,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T50: Training reproducibility and material-regeneration pack`
+- `T49: Real-board smoke execution gate`
 
 ## 12. 快照结论
 
@@ -296,7 +296,8 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 14. `T41` 已完成并通过 Captain `PASS` 收口；Milestone 2K 已正式由 gate review 关闭，并为后续 `T42-T46` 的 paper-boundary 与 mechanism-planning 任务提供了边界前置。
 15. `T46` 已完成并通过 Captain `PASS` 收口；它把 `seed=20260429` 的单 seed 机制诊断收束成了一个明确的多 seed / intervention 计划，但没有升级任何 evidence level。
 16. `T70` 已完成并通过 Captain `PASS` 收口；FR8 当前已有一个 code-backed closure pack，可明确阻止 promotion 和唯一阈值外推，但这不升级为成熟 comparator、`.tflite` 或真板证据。
-17. 当前唯一任务已切换为 `T50`，用于补齐 clean CPU-only 训练复现与材料再生证据包；它是主线当前更小且更诚实的下一步，不是继续做 FR8 自由扩写，也不是直接跳到 `.tflite` 或真板。
+17. `T50` 已完成并通过 Captain `PASS` 收口；仓库现在已有一份 code-backed 训练复现与材料再生证据包，可统一引用 canonical 训练材料、主线 preserved references 和一次 clean CPU-only bounded train+eval rerun。
+18. 当前唯一任务已切换为 `T49`，用于对当前宿主的 real-board host / device / bitstream / AXI / DMA / repo-path 前提做一次有界 gate；它比直接启动真板执行或恢复 paper re-open 更小且更诚实。
 
 ## 13. T45 后的拟议路线图（非当前任务）
 
@@ -453,3 +454,21 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - `T70` does not change any truth boundary about `.tflite`, real-board, paper-grade expanded benchmark evidence, or mature calibration-comparator validation.
 - The current unique task is now `T50: Training reproducibility and material-regeneration pack`.
 - `T50` is the smallest honest next step because `.tflite` / 真板前提仍未满足，而训练复现与材料再生证据仍缺一个统一、代码驱动的主线证据包。
+
+## 2026-06-10 Captain Update (T50 closeout supersession)
+
+- `T50` has now been accepted as `PASS`.
+- `T50` introduces no warning-derived risk item from review classification.
+- `T50` closes one mainline training-material gap honestly: the repository now has one code-backed pack that ties canonical training materials, preserved mainline model references, and one clean CPU-only bounded train+eval rerun together.
+- `T50` still does not prove full training reproducibility, repeated-run stability, cross-host portability, GPU/CUDA portability, Linux portability, `.tflite` correctness, or real-board validation.
+- The current unique task is now `T48: True .tflite runtime smoke gate`.
+- `T48` is the smallest honest next step because the repo now has both preserved `.tflite` candidates and one authoritative training/material boundary artifact, while real-board execution and paper re-open still require stronger runtime/deployment truth.
+
+## 2026-06-10 Captain Update (T48 closeout supersession)
+
+- `T48` has now been accepted as `PASS`.
+- `T48` closes one narrow current-host true `.tflite` runtime gap honestly: the repository now has one isolated `tensorflow==2.21.0` environment on this machine that can real-load and real-execute preserved `static_theta_v2` float / int8 `.tflite` artifacts and can run bounded source-vs-`.tflite` consistency checks.
+- `T48` does not restore default-environment compatibility and does not upgrade the result to HIL closure, real-board validation, or deployment closure.
+- `R12` remains open, but its carry-forward shape is now narrower: the dominant remaining `.tflite` issue is no longer “current-host true runtime unconfirmed”, but “default env / portability / deployment still not closed”.
+- The current unique task is now `T49: Real-board smoke execution gate`.
+- `T49` is the next bounded mainline task because the remaining deployment-boundary question is now host/device/bitstream/AXI/DMA truth on the current machine, not software-side `.tflite` runtime truth.

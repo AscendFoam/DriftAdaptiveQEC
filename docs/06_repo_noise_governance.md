@@ -328,6 +328,25 @@
 - `T50` must not modify any canonical historical artifact under `artifacts/datasets/static_theta_v2/`, `artifacts/models/static_theta_v2/`, `artifacts/reports/static_theta_v2/`, `artifacts/datasets/runtime_b_residual_v1/`, `artifacts/models/runtime_b_residual_v1/`, or `artifacts/reports/runtime_b_residual_v1/`.
 - `T50` must not use repo cleanup as a side goal, must not import sidecar outputs as mainline facts, and must keep mainline training reproducibility evidence separate from `.tflite`, real-board, benchmark, and theory-only branch materials.
 
+## 2026-06-10 Captain Update (T50/T48 repo-noise supersession)
+
+- `T50` has now been accepted as `PASS`; it created no new run root and did not modify any historical file under `runs/` or any canonical historical training artifact directory.
+- The current unique task is now `T48: True .tflite runtime smoke gate`.
+- `T48` may create no new run root and no new file under `runs/`.
+- `T48` may add at most one task-scoped helper, one focused test module, one task-scoped derived config, one isolated `.tflite` requirements file, bounded docs, and isolated outputs only under `artifacts/t48_true_tflite_runtime_gate/`.
+- `T48` must not modify any canonical historical artifact under `artifacts/datasets/static_theta_v2/`, `artifacts/models/static_theta_v2/`, `artifacts/reports/static_theta_v2/`, `artifacts/datasets/runtime_b_residual_v1/`, `artifacts/models/runtime_b_residual_v1/`, or `artifacts/reports/runtime_b_residual_v1/`.
+- `T48` must not use repo cleanup as a side goal, must not import sidecar outputs as mainline facts, and must keep mainline `.tflite` runtime evidence separate from benchmark, HIL, real-board, and theory-only branch materials.
+
+## 2026-06-10 Captain Update (T48/T49 repo-noise supersession)
+
+- `T48` has now been accepted as `PASS`; it created no new run root and did not modify any historical file under `runs/` or any canonical historical artifact directory.
+- The current unique task is now `T49: Real-board smoke execution gate`.
+- `T49` may create no new run root and no new file under `runs/`.
+- `T49` may add at most one task-scoped helper, one focused test module, bounded docs, and isolated outputs only under `artifacts/t49_real_board_smoke_execution_gate/`.
+- `T49` must not modify `cnn_fpga/hwio/board_backend.py`, `cnn_fpga/hwio/axi_map.py`, `cnn_fpga/hwio/dma_client.py`, or any governance doc.
+- `T49` must not use repo cleanup as a side goal, must not import sidecar outputs as mainline facts, and must keep mainline real-board precondition evidence separate from benchmark, `.tflite`, and theory-only branch materials.
+- `T49` must not perform write-side MMIO/DMA/register activity; host/device probing must stay read-only and must not be relabeled as completed real-board validation.
+
 ## 2026-06-08 Captain Update（并行 sidecar repo-noise 规则）
 
 - `PSE0` 已创建 docs-only sidecar 治理与 worktree 规划文档：

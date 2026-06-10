@@ -279,4 +279,77 @@ Reviewer 在以下任一情况应返回 `BLOCK`：
 - 这是当前主线最小而有实质性的下一步，因为 `.tflite` / 真板前提仍未满足，而 FR8 主线已在 `T70` 形成 closure pack。
 - 该任务比简单文档任务更强，要求 helper、tests、真实训练复跑、真实评估复跑、材料链台账一起收口。
 - 该任务仍然必须保持边界诚实：它强化的是训练复现与材料再生证据，不是部署边界。
+## Worker Output
 
+### Files changed
+
+- `cnn_fpga/model/build_training_reproducibility_pack.py`
+- `tests/test_training_reproducibility_pack.py`
+- `cnn_fpga/config/task_tmp/T50_static_theta_repro_pack.yaml`
+- `artifacts/t50_training_repro_pack/`
+- `docs/training_reproducibility_and_material_regeneration_pack.md`
+- `docs/review/T50_review.md`
+- `docs/for_human/T50_explanation.md`
+- `docs/worker_summary/T50_worker_summary.md`
+- `docs/tasks/Phase2/T50_training_reproducibility_and_material_regeneration_pack.md`
+
+### Exact verification commands executed
+
+1. `D:\Codes\Quantum\DriftAdaptiveQEC\.venvs\t39_train_cpu_py312\Scripts\python.exe -m py_compile cnn_fpga/model/build_training_reproducibility_pack.py`
+2. `D:\Codes\Quantum\DriftAdaptiveQEC\.venvs\t39_train_cpu_py312\Scripts\python.exe -m unittest tests.test_training_reproducibility_pack`
+3. `D:\Codes\Quantum\DriftAdaptiveQEC\.venvs\t39_train_cpu_py312\Scripts\python.exe -m cnn_fpga.model.train --config cnn_fpga/config/task_tmp/T50_static_theta_repro_pack.yaml`
+4. `D:\Codes\Quantum\DriftAdaptiveQEC\.venvs\t39_train_cpu_py312\Scripts\python.exe -m cnn_fpga.model.evaluate --config cnn_fpga/config/task_tmp/T50_static_theta_repro_pack.yaml --split test --model-path artifacts/t50_training_repro_pack/models/static_theta_v2/tiny_cnn_20260610_195014_7126933acb7c.npz`
+5. `D:\Codes\Quantum\DriftAdaptiveQEC\.venvs\t39_train_cpu_py312\Scripts\python.exe -m cnn_fpga.model.build_training_reproducibility_pack --rerun-train-report artifacts/t50_training_repro_pack/reports/static_theta_v2/tiny_cnn_20260610_195014_7126933acb7c_train_report.json --rerun-eval-report artifacts/t50_training_repro_pack/reports/static_theta_v2/eval_test_20260610_195030.json`
+6. `git diff --name-only -- runs`
+7. `git diff --name-only -- artifacts/models/static_theta_v2 artifacts/reports/static_theta_v2 artifacts/models/runtime_b_residual_v1 artifacts/reports/runtime_b_residual_v1`
+8. `git diff --name-only -- requirements-recovery.txt requirements-train-cpu-win-py312.txt`
+
+### Interpreter path
+
+- `D:\Codes\Quantum\DriftAdaptiveQEC\.venvs\t39_train_cpu_py312\Scripts\python.exe`
+- Python version: `3.12.7`
+
+### Rerun outputs
+
+- model: `artifacts/t50_training_repro_pack/models/static_theta_v2/tiny_cnn_20260610_195014_7126933acb7c.npz`
+- train report: `artifacts/t50_training_repro_pack/reports/static_theta_v2/tiny_cnn_20260610_195014_7126933acb7c_train_report.json`
+- eval report: `artifacts/t50_training_repro_pack/reports/static_theta_v2/eval_test_20260610_195030.json`
+- pack: `artifacts/t50_training_repro_pack/training_reproducibility_pack.json`
+
+### Key canonical artifacts found
+
+- `artifacts/datasets/static_theta_v2/manifest.json`
+- `artifacts/models/static_theta_v2/tiny_cnn_20260319_151717_b87c6c227b57.npz`
+- `artifacts/reports/static_theta_v2/tiny_cnn_20260319_151717_b87c6c227b57_train_report.json`
+- `artifacts/datasets/runtime_b_residual_v1/manifest.json`
+- `artifacts/models/runtime_b_residual_v1/tiny_cnn_20260401_083648_2fc740424c0d.npz`
+- `artifacts/reports/runtime_b_residual_v1/tiny_cnn_20260401_083648_2fc740424c0d_train_report.json`
+
+### Mainline preserved model references
+
+1. `experiment_runtime_b_residual.yaml` 仍指向 `artifacts/models/runtime_b_residual_v1`
+2. `hardware_hil_recovery_smoke.yaml` 仍从 `artifacts/models/static_theta_v2` 取 latest float
+3. `p4_multiscenario_recovery_smoke.yaml` 仍显式指向 `artifacts/models/static_theta_v2/tiny_cnn_20260319_151717_b87c6c227b57.npz`
+4. `p4_multiscenario_statcalib_extension_lane.yaml` 的 `hybrid_residual_b` override 仍指向 `artifacts/models/runtime_b_residual_v1`
+
+### Supported reproducibility/material claims
+
+1. canonical `static_theta_v2` 材料链存在且可被代码统一枚举
+2. canonical `runtime_b_residual_v1` 材料链存在且仍支撑主线引用
+3. clean CPU-only lane 已完成一次 bounded real train+eval rerun
+4. 当前 `P3/P4/HIL` preserved model references 没有漂移到缺失路径
+
+### Unsupported reproducibility/material claims
+
+1. full training reproducibility
+2. GPU/CUDA portability
+3. Linux portability
+4. `.tflite` runtime correctness
+5. real-board validation
+6. benchmark/HIL promotion 结论
+
+### Remaining risks / interpretation limits
+
+1. `R11` 仍未关闭；本轮只把 clean CPU-only 证据推进到 one-train + one-eval bounded rerun。
+2. canonical 历史 report 不含 `training_backend` / `training_device` 字段。
+3. bounded rerun 指标明显弱于 canonical，这反映的是缩界配置，不是 canonical quality regression。

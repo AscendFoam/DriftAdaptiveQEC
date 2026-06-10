@@ -537,3 +537,20 @@
 - `R24` remains open, but its carry-forward shape is now narrower: the dominant remaining risk is overclaiming or promotion drift, not missing closure-pack infrastructure.
 - The current unique task is now `T50: Training reproducibility and material-regeneration pack`.
 - `T50` is the next bounded mainline task because the next honest repository gap is no longer FR8 closure logic but training reproducibility/material evidence that can be strengthened on the current machine without assuming `.tflite` or hardware readiness.
+
+## 2026-06-10 Captain Update (T50 closeout supersession)
+
+- `T50` has now been accepted as `PASS`.
+- `T50` does not resolve the remaining legacy ambiguity about full reproducibility or portability, but it does remove one missing infrastructure gap: the repo now has a code-backed training/material pack instead of scattered historical references only.
+- `R11` remains open, but its carry-forward shape is now narrower: the dominant remaining issue is not whether canonical materials still exist, but whether reproducibility can be strengthened beyond one bounded clean CPU-only rerun.
+- The current unique task is now `T48: True .tflite runtime smoke gate`.
+- `T48` is the next bounded mainline task because the next honest repository gap is no longer training-material bookkeeping, but true `.tflite` runtime truth on the current machine under preserved canonical artifacts.
+
+## 2026-06-10 Captain Update (T48 closeout supersession)
+
+- `T48` has now been accepted as `PASS`.
+- `T48` removes one legacy-style ambiguity: the repository no longer has to speak vaguely about whether preserved canonical `.tflite` artifacts can really execute on the current machine. Under one isolated `tensorflow==2.21.0` environment, the answer is now explicitly yes for the selected float / int8 preserved pair.
+- The legacy caution still remains: this is an isolated current-host truth only, not a restored default environment, not a cross-host portability claim, and not a real-board claim.
+- `board_backend.py` remains a placeholder real-board backend, so the historical software-vs-real-board boundary is unchanged.
+- The current unique task is now `T49: Real-board smoke execution gate`.
+- `T49` is the next bounded mainline task because the remaining deployment-boundary ambiguity has shifted from software-side `.tflite` runtime truth to current-host real-board preconditions and repo execution-path truth.

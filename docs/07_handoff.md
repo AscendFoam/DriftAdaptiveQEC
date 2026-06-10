@@ -1,13 +1,13 @@
 ## 2026-06-10 Captain Final Supersession
 
-- Current unique task: `T50: Training reproducibility and material-regeneration pack`
-- Task package: `docs/tasks/Phase2/T50_training_reproducibility_and_material_regeneration_pack.md`
-- `T70` has been judged `PASS`.
-- `T70` introduces no warning-derived risk item from review classification.
-- `T70` closes the FR8 closure-pack gap: the repository now has one code-backed closure artifact that preserves the persistent `window_variance_t001 = t003 = t005` tie set, blocks promotion, and blocks any unique-threshold retelling without a new task.
-- `T24` remains the authoritative historical frozen ranked table; `T64/T65/T66/T67/T68/T69/T70` must not be used to rewrite it.
-- `R24` remains open only as an extension-lane overclaim/promotion boundary and residual non-uniform-clean-grid boundary; it is no longer an unresolved tie-break or closure-pack execution question.
-- `T50` is the next bounded mainline task because `.tflite` / 真板前提仍未满足，而训练复现与材料再生证据仍缺一个统一、代码驱动的 pack。`T50` 必须保持在 clean CPU-only 训练 lane 内，不得碰 benchmark/HIL/theory/sidecar 主线事实。
+- Current unique task: `T49: Real-board smoke execution gate`
+- Task package: `docs/tasks/Phase2/T49_real_board_smoke_execution_gate.md`
+- `T48` has been judged `PASS`.
+- `T48` introduces no warning-derived risk item from review classification; the review's non-blocking notes are accepted as advisory carry-forward only.
+- `T48` closes one narrow current-host true `.tflite` runtime gap honestly: the repository now has one isolated `tensorflow==2.21.0` environment on this machine that can real-load and real-execute preserved `static_theta_v2` float / int8 `.tflite` artifacts and can run bounded source-vs-`.tflite` consistency checks.
+- `R12` remains open, but narrower: the repo still does not have default-environment compatibility, cross-host / cross-OS portability, HIL closure, real-board validation, or deployment closure.
+- `T49` is the next bounded mainline task because the remaining deployment-boundary question is no longer software-side `.tflite` truth, but whether the current host has defensible real-board preconditions.
+- `T49` must stay inside real-board host / device / bitstream / AXI / DMA / repo-path gate truth only: no benchmark/HIL widening, no real-board success claim, no theory-branch mixing, and no write-side MMIO/DMA/register actions.
 
 ## 2026-06-08 Captain 并行 Sidecar 治理设置
 
@@ -15,7 +15,7 @@
 - 任务包：`docs/tasks/Phase2/PSE0_parallel_sidecar_extension_governance_setup.md`
 - 治理规则：`docs/parallel_sidecar_extension_governance.md`
 - worktree 计划：`docs/parallel_sidecar_worktree_plan.md`
-- `PSE0` 不替代也不执行主线当前唯一任务；当前该任务已切换为 `T50`。
+- `PSE0` 不替代也不执行主线当前唯一任务；当前该任务已切换为 `T49`。
 - `PSE0` 不创建 worktree、branch、run root、experiment、`.tflite` smoke、real-board smoke 或 benchmark output。
 - 后续 sidecar 工作必须使用 `codex/sidecar-*` 分支、隔离 worktree 和 `runs/sidecar/<lane_id>/...` run root。
 - 后续 sidecar 输出在后续 Captain promotion gate 批准主线任务包之前，只能保持为 sidecar candidate。
@@ -29,7 +29,7 @@
   - `.wt/ctrl` -> `codex/sidecar-atomic-commit-rollback`
 - 已在各自 worktree 中写入中文 `S0_design` 任务包。
 - 本轮未运行 sidecar 实验，未创建 `runs/sidecar`，未启动 benchmark、训练、`.tflite` smoke 或 real-board smoke。
-- main 分支当前唯一主线任务已切换为 `T50`；main 分支主线工作与四个 sidecar worktree 继续保持独立。
+- main 分支当前唯一主线任务已切换为 `T49`；main 分支主线工作与四个 sidecar worktree 继续保持独立。
 - 路径说明：使用 `.wt/<short>` 是为了规避 `.worktrees/<long-name>` 在 Windows 完整 checkout 时触发的 `Filename too long`。
 
 ## 2026-06-05 Captain Final Supersession
@@ -53,16 +53,16 @@
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T50: Training reproducibility and material-regeneration pack`
-- 任务包：`docs/tasks/Phase2/T50_training_reproducibility_and_material_regeneration_pack.md`
+- 当前唯一任务：`T49: Real-board smoke execution gate`
+- 任务包：`docs/tasks/Phase2/T49_real_board_smoke_execution_gate.md`
 
 Captain continuity note:
 
-- The authoritative current task for all new worker action is `T50: Training reproducibility and material-regeneration pack`.
-- Authoritative task package: `docs/tasks/Phase2/T50_training_reproducibility_and_material_regeneration_pack.md`.
-- `T70` is complete and accepted as `PASS`.
-- If any older line below still mentions `T70` or earlier tasks as current, treat it as historical carry-forward text only.
-- `T50` is the single bounded next step after T70 closeout. It is not permission to widen into `.tflite`, real-board, benchmark reruns, theory-branch execution, or sidecar-promotion scope.
+- The authoritative current task for all new worker action is `T49: Real-board smoke execution gate`.
+- Authoritative task package: `docs/tasks/Phase2/T49_real_board_smoke_execution_gate.md`.
+- `T48` is complete and accepted as `PASS`.
+- If any older line below still mentions `T48` or earlier tasks as current, treat it as historical carry-forward text only.
+- `T49` is the single bounded next step after T48 closeout. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, or sidecar-promotion scope.
 
 ## 2026-06-05 Captain Update (T67 closeout)
 

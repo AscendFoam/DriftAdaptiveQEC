@@ -2860,3 +2860,100 @@ Wave A 采用短路径项目内 worktree：
 3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T50`
 4. `docs/08_risks_and_open_questions.md` 保持 `R24` 打开，但把 carry-forward 口径切换为引用 `T70` closure pack，而不是继续自由转述 FR8 链
 5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T70` 收口与 `T50` 边界
+
+## 2026-06-10 Captain Decision：accept T50 and open T48
+
+- 决策：接受 `docs/review/T50_review.md` 的 `PASS`，标记 `T50` 完成，并将当前唯一任务切换为 `T48: True .tflite runtime smoke gate`
+
+### 事实基础
+
+依据 `docs/review/T50_review.md`、`docs/training_reproducibility_and_material_regeneration_pack.md`、`docs/worker_summary/T50_worker_summary.md`、`docs/for_human/T50_explanation.md`、`cnn_fpga/model/build_training_reproducibility_pack.py`、`tests/test_training_reproducibility_pack.py`，以及本轮重新执行的：
+
+1. `D:\Codes\Quantum\DriftAdaptiveQEC\.venvs\t39_train_cpu_py312\Scripts\python.exe -m py_compile cnn_fpga/model/build_training_reproducibility_pack.py`
+2. `D:\Codes\Quantum\DriftAdaptiveQEC\.venvs\t39_train_cpu_py312\Scripts\python.exe -m unittest tests.test_training_reproducibility_pack`
+3. `D:\Codes\Quantum\DriftAdaptiveQEC\.venvs\t39_train_cpu_py312\Scripts\python.exe -m cnn_fpga.model.build_training_reproducibility_pack --rerun-train-report artifacts/t50_training_repro_pack/reports/static_theta_v2/tiny_cnn_20260610_195014_7126933acb7c_train_report.json --rerun-eval-report artifacts/t50_training_repro_pack/reports/static_theta_v2/eval_test_20260610_195030.json`
+4. `git diff --name-only -- runs`
+5. `git diff --name-only -- artifacts/models/static_theta_v2 artifacts/reports/static_theta_v2 artifacts/models/runtime_b_residual_v1 artifacts/reports/runtime_b_residual_v1`
+6. `git diff --name-only -- requirements-recovery.txt requirements-train-cpu-win-py312.txt`
+
+当前仓库事实是：
+
+1. helper、tests、主报告和 pack JSON 彼此一致。
+2. `T50` 没有改写 `runs/`、canonical historical training artifacts、`requirements-recovery.txt` 或 `requirements-train-cpu-win-py312.txt`。
+3. 当前仓库已经有一份 code-backed training/material pack，可统一引用：
+   - canonical `static_theta_v2`
+   - canonical `runtime_b_residual_v1`
+   - preserved mainline model references
+   - one clean CPU-only bounded train+eval rerun
+4. 本轮 Captain 没有重跑完整训练，而是以 fresh `py_compile` / `unittest` / helper / diff evidence 复核现有 train+eval artifacts 与文档边界。
+
+### 结论
+
+`T50` 可以完成，而且不需要 `PASS_WITH_WARNINGS` 收口，因为本轮没有发现需要继续保留到 verdict 级别的 warning 分类项。
+
+在 `T50` 之后，主线最小而诚实的下一步不应回到训练补缝或直接跳到真板：
+
+1. `T50` 已经把主线训练材料与 clean CPU-only 训练边界收成一个可引用的 pack。
+2. `T49` 仍受硬件宿主、bitstream 与 DMA contract 前提约束。
+3. `T51/T52` 仍不应在 true `.tflite` runtime truth 未核验前重开 paper-positioning / prose gate。
+4. 当前更适合在 main 上继续补强的是 `.tflite` runtime 真值：当前机器到底有没有真实解释器环境、preserved `.tflite` artifacts 到底能不能真实执行、artifact-vs-`.tflite` 偏差是否仍在可接受量级。
+
+因此新增 `T48`：
+
+1. 在 preserved `static_theta_v2` 材料边界内工作，而不是重训或扩 benchmark
+2. 构建 task-scoped `.tflite` runtime gate helper 与 focused tests
+3. 要求真实环境探测、preserved artifact 选择、bounded `evaluate_tflite` / `validate_export` 和显式 gate verdict
+4. 即便结论是 `NO_GO`，也必须以真实 runtime 证据收口，而不能用 stub 或文档推测代替
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T50 -> PASS`，并切换 `Current Unique Task` 到 `T48`
+2. 新增任务包 `docs/tasks/Phase2/T48_true_tflite_runtime_smoke_gate.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T48`
+4. `docs/08_risks_and_open_questions.md` 保持 `R11`、`R12` 打开，但将 carry-forward 口径分别升级为引用 `T50` training/material pack 与 `T48` true-runtime gate
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T50` 收口与 `T48` 边界
+
+## 2026-06-10 Captain Decision：accept T48 and open T49
+
+- 决策：接受 `docs/review/T48_review.md` 的 `PASS`，标记 `T48` 完成，并将当前唯一任务切换为 `T49: Real-board smoke execution gate`
+- 说明：`T48` review 中的 non-blocking notes 不上升为 `PASS_WITH_WARNINGS`；它们被接受为 advisory carry-forward，仅提醒后续不要把 helper 默认参数错当成“无参直接复跑入口”，也不影响当前 gate 结果成立
+
+依据 `docs/review/T48_review.md`、`docs/t48_true_tflite_runtime_gate.md`、`docs/worker_summary/T48_worker_summary.md`、`cnn_fpga/model/build_t48_true_tflite_runtime_gate.py`、`tests/test_t48_true_tflite_runtime_gate.py`，以及本轮重新执行的：
+
+1. `.\.venvs\t39_train_cpu_py312\Scripts\python.exe -m py_compile cnn_fpga\model\build_t48_true_tflite_runtime_gate.py`
+2. `.\.venvs\t39_train_cpu_py312\Scripts\python.exe -m unittest tests.test_t48_true_tflite_runtime_gate`
+3. `.\.venvs\t39_train_cpu_py312\Scripts\python.exe -m cnn_fpga.model.build_t48_true_tflite_runtime_gate --env-probe-json artifacts\t48_true_tflite_runtime_gate\runtime_env_probe_tf221.json --compatibility-probe-json artifacts\t48_true_tflite_runtime_gate\preserved_tflite_load_probe_tf221.json --float-eval-report artifacts\t48_true_tflite_runtime_gate\reports\static_theta_v2\eval_tflite_test_20260610_211759.json --float-validate-report artifacts\t48_true_tflite_runtime_gate\reports\static_theta_v2\validate_export_tiny_cnn_20260319_151717_b87c6c227b57_20260610_211815.json --int8-eval-report artifacts\t48_true_tflite_runtime_gate\reports\static_theta_v2\eval_tflite_test_20260610_211830.json --int8-validate-report artifacts\t48_true_tflite_runtime_gate\reports\static_theta_v2\validate_export_tiny_cnn_20260319_151717_b87c6c227b57_int8_20260319_151756_20260610_211845.json`
+4. `.venvs\t48_tf221\Scripts\python.exe` 下对 selected float / int8 preserved `.tflite` 重新执行 `tf.lite.Interpreter(...).allocate_tensors()`
+5. `git diff --name-only -- runs`
+6. `git diff --name-only -- artifacts/models/static_theta_v2 artifacts/reports/static_theta_v2 artifacts/models/runtime_b_residual_v1 artifacts/reports/runtime_b_residual_v1`
+7. `git diff --name-only -- requirements-recovery.txt requirements-train-cpu-win-py312.txt`
+
+得出：
+
+1. `T48` 的核心结论成立：当前机器上确实存在一个 isolated `tensorflow==2.21.0` 真 `.tflite` 运行时环境，可真实加载并执行 preserved `static_theta_v2` float / int8 `.tflite`。
+2. `T48` 没有改写 `runs/`、canonical historical artifacts、`requirements-recovery.txt` 或 `requirements-train-cpu-win-py312.txt`。
+3. `T48` 的 strongest supported claim 仍然是“isolated current-host true `.tflite` runtime truth”，而不是默认环境恢复、HIL closure、real-board validation 或 deployment closure。
+
+`T48` 可以完成，而且不需要 `PASS_WITH_WARNINGS` 收口，因为当前 non-blocking notes 不影响 gate verdict 成立，也不要求在同一任务内继续 blocker-only 修补。
+
+在 `T48` 之后，主线最小而诚实的下一步不应直接跳到 paper re-open，也不应直接把真板写成 ready：
+
+1. `T48` 已经去掉了当前机器的软件侧 `.tflite` 运行时不确定性。
+2. 剩余 deployment-boundary 大缺口已经切换为“当前宿主是否具备 defensible 的 real-board host / device / bitstream / AXI / DMA 前提”。
+3. `T51/T52` 论文 reopen 仍然过早，因为 hardware-side truth 仍未过 gate。
+
+因此新增 `T49`：
+
+- 任务名：`T49: Real-board smoke execution gate`
+- 任务包：`docs/tasks/Phase2/T49_real_board_smoke_execution_gate.md`
+- 任务类型：有界当前宿主真板前提 gate 任务
+- 允许结果：`GO_REAL_BOARD_SMOKE_EXECUTION_PRECONDITIONS_READY` 或三个显式 `NO_GO`
+- 强边界：只允许 host fact probe、read-only device-path probe、AXI/DMA/placeholder 审计、task-scoped helper、focused tests 和显式 gate verdict；不得执行 MMIO/DMA/register 写入，不得跑 board benchmark，不得改写 `board_backend.py`
+
+对应治理同步：
+
+1. `docs/04_task_board.md` 记录 `T48 -> PASS`，并切换 `Current Unique Task` 到 `T49`
+2. 新增任务包 `docs/tasks/Phase2/T49_real_board_smoke_execution_gate.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T49`
+4. `docs/08_risks_and_open_questions.md` 保持 `R13/R14` 打开，并将 `R12` 收窄为“isolated current-host true runtime 已确认，但 default env / portability / deployment 未闭环”
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T48` 收口与 `T49` 边界
