@@ -296,3 +296,17 @@
 - `board_backend.py` remains placeholder-backed, so the real-board boundary is still not crossed.
 - The current unique task is now `T49: Real-board smoke execution gate`.
 - `T49` must stay inside current-host real-board precondition truth only: no benchmark/HIL widening, no write-side MMIO/DMA/register activity, and no retelling of host-probe facts as real-board validation.
+
+## 2026-06-10 Captain Update (T49/T71 boundary supersession)
+
+- `T49` has now been accepted as `PASS_WITH_WARNINGS`.
+- `T49` does not cross any HIL / P4 / real-board truth boundary. It only upgrades one narrow real-board fact: on the current Windows host, the honest gate verdict is `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`.
+- The strongest boundary facts after T49 are:
+  - `T24` remains the historical frozen ranked table
+  - current FR8 evidence remains mock-backed software-HIL only
+  - current-host true `.tflite` runtime remains narrow and isolated
+  - real-board validation is still absent
+  - `board_backend.py` remains placeholder-backed
+- `T49` warning handling is `W1/W2/W3 = deferred -> R30`, so the current-host `NO_GO` stands, but the reusable gate path is not yet future-host hard enough.
+- The current unique task is now `T71: Real-board gate regeneration and host-transfer pack`.
+- `T71` must stay inside read-only real-board gate truth only: role-aware device-path readiness, checked-in artifact regeneration, and replay/regression hardening. It is not permission to open `T37`, run board smoke, or retell any result as real-board validation.

@@ -262,3 +262,54 @@ Reviewer 在以下任一情况应返回 `BLOCK`：
 - `T49` 之所以放在 `T48` 之后，是因为 `T48` 已经把当前机器的软件侧 `.tflite` 真值收清楚了；现在主线剩余的 deployment-boundary 大缺口是“当前宿主到底能不能诚实地进入真板 smoke 前提”。
 - 这不是一个 docs-only 任务。它要求当前宿主事实探测、只读 device-path probe、代码侧 AXI/DMA/placeholder 审计、task-scoped helper、focused tests 和显式 gate verdict 一起收口。
 - 若最终结论是 `NO_GO`，只要缺口定位清楚、边界真实、没有过度乐观，这仍然是有效完成，而不是失败。
+
+## Worker Output
+
+### 本轮产物
+
+- helper：`cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`
+- focused tests：`tests/test_t49_real_board_smoke_execution_gate.py`
+- artifacts：
+  - `artifacts/t49_real_board_smoke_execution_gate/host_fact_manifest.json`
+  - `artifacts/t49_real_board_smoke_execution_gate/device_path_probe.json`
+  - `artifacts/t49_real_board_smoke_execution_gate/code_side_audit.json`
+  - `artifacts/t49_real_board_smoke_execution_gate/t49_real_board_smoke_execution_gate.json`
+- docs：
+  - `docs/t49_real_board_smoke_execution_gate.md`
+  - `docs/review/T49_review.md`
+  - `docs/for_human/T49_explanation.md`
+  - `docs/worker_summary/T49_worker_summary.md`
+
+### 本轮关键结论
+
+- host probe 解释器：`C:\ProgramData\anaconda3\python.exe`
+- 当前宿主：Windows 11，`cmd /c ver = Microsoft Windows [Version 10.0.26200.8457]`
+- repo config 仍记录：`board=ZCU111`、`bitstream_version=fpga_linear_v1`
+- 当前机器上未找到可读打开的真板候选设备路径：
+  - `/dev/uio0`
+  - `/dev/uio1`
+  - `\\\\.\\XilinxDMA`
+  - `\\\\.\\XDMA`
+  - `\\\\.\\uio0`
+  - `\\\\.\\uio1`
+- `pnputil /enum-devices /connected` 没有匹配到 `Xilinx|AMD|FPGA|XDMA|UIO` 已连接设备
+- `board_backend.py` 仍属于 placeholder-only execution path
+- 最终 gate verdict：
+  - `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`
+
+### 已执行验证
+
+1. `python -m py_compile cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`
+2. `python -m unittest tests.test_t49_real_board_smoke_execution_gate`
+3. 一次真实 host fact probe
+4. 一次真实 device-path read-only probe
+5. helper 的一次真实执行
+6. 边界检查：
+   - `git diff --name-only -- runs`
+   - `git diff --name-only -- cnn_fpga/hwio/board_backend.py cnn_fpga/hwio/axi_map.py cnn_fpga/hwio/dma_client.py`
+   - `git diff --name-only -- docs/00_project_snapshot.md docs/01_legacy_audit.md docs/03_hil_p4_boundary_audit.md docs/04_task_board.md docs/05_decision_log.md docs/06_repo_noise_governance.md docs/07_handoff.md docs/08_risks_and_open_questions.md`
+
+### 剩余风险
+
+- 当前 `NO_GO` 首先由 host/device 层触发，但 bitstream / RTL / DMA contract 也仍未确认。
+- 当前宿主上的 `board` 路径依然只能写成 placeholder scaffolding，不能升级成真板 smoke 已可执行。

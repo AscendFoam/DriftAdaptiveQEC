@@ -433,8 +433,18 @@
   - Review output: `docs/review/T48_review.md`
   - Captain verdict: `PASS`
   - Result: T48 closes one narrow current-host true `.tflite` runtime truth gap honestly; the repository now has one isolated `tensorflow==2.21.0` environment on this machine that can real-load and real-execute preserved `static_theta_v2` float / int8 `.tflite` artifacts and can run bounded source-vs-`.tflite` consistency checks, but this does not restore default-environment compatibility and does not upgrade the evidence to HIL, real-board, or deployment closure
-- [ ] T49: Real-board smoke execution gate
+- [x] T49: Real-board smoke execution gate
   - Task package: `docs/tasks/Phase2/T49_real_board_smoke_execution_gate.md`
+  - Output: `docs/t49_real_board_smoke_execution_gate.md`
+  - Review output: `docs/review/T49_review.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - Warning handling:
+    - `W1` device-path readiness counts openable paths without enforcing `mmio + dma` role split = `deferred -> R30`
+    - `W2` role-aware regression and checked-in-artifact replay regression are still missing = `deferred -> R30`
+    - `W3` checked-in read-only regeneration entrypoint for the full gate artifact pack is still missing = `deferred -> R30`
+  - Result: T49 closes one honest current-host real-board gate pack with verdict `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`; no real-board smoke was executed, and `R13/R14` remain open but narrower
+- [ ] T71: Real-board gate regeneration and host-transfer pack
+  - Task package: `docs/tasks/Phase2/T71_real_board_gate_regeneration_and_host_transfer_pack.md`
 
 ### Milestone 2R: Reproducibility And Material Pack (proposed)
 
@@ -458,34 +468,36 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T49: Real-board smoke execution gate`
+`T71: Real-board gate regeneration and host-transfer pack`
 
 Status:
 
-- `T48` has been reviewed as `PASS`.
-- `T48` introduces no warning-derived risk item; the review's non-blocking follow-up notes are accepted as advisory carry-forward only and do not require blocker-only rework.
-- `T48` closes the missing current-host true `.tflite` runtime truth gap in a narrow form: the repository now has one isolated `tensorflow==2.21.0` environment on this machine that can real-load and real-execute preserved `static_theta_v2` float / int8 `.tflite` artifacts and can run bounded source-vs-`.tflite` consistency checks.
-- `R12` remains open but narrower: T48 does not restore default-environment compatibility, cross-host / cross-OS portability, HIL closure, real-board validation, or deployment closure.
+- `T49` has been reviewed as `PASS_WITH_WARNINGS`.
+- `T49` closes one honest current-host real-board gate pack: the checked-in verdict is `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`, and no real-board smoke was executed.
+- `T49` warning handling is deferred rather than blocking:
+  - `W1` role-insensitive device-path readiness logic = `deferred -> R30`
+  - `W2` missing role-aware regression and checked-in-artifact replay regression = `deferred -> R30`
+  - `W3` missing checked-in read-only regeneration entrypoint = `deferred -> R30`
+- `R13/R14` remain open but narrower: the current-host truth is no longer unknown; it is explicitly blocked by missing openable device paths, missing bound bitstream/RTL/DMA contract evidence, and a placeholder repo execution path.
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
 - `T64/T65/T66/T67/T68/T69/T70` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
-- `R13/R14` remain open: the real-board lane still lacks host/device-path truth, bitstream / AXI / DMA-contract confirmation, and a non-placeholder repo execution path.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T49` must remain isolated from benchmark/HIL/sidecar/paper-reopen/theory-branch outputs, and it must not rewrite real-board readiness as real-board validation or perform write-side MMIO/DMA/register actions.
+- `T71` must remain isolated from benchmark/HIL/sidecar/paper-reopen/theory-branch outputs, and it must not rewrite gate regeneration as real-board validation or perform write-side MMIO/DMA/register actions.
 
 Why this task is next:
 
-1. `T48` has already removed the main software-side deployment ambiguity on the current machine: preserved float / int8 `.tflite` can really run in one isolated environment.
-2. The next unresolved deployment-boundary question is no longer `.tflite` runtime truth, but whether the current host has defensible real-board preconditions.
-3. `T51/T52` paper re-open tasks remain premature before the repository truthfully closes or blocks the current-host real-board gate.
-4. `T49` is materially stronger than a docs-only task because it requires host-fact probing, read-only device-path probing, code-side AXI/DMA/placeholder audit, a task-scoped helper, focused tests, and an explicit gate verdict.
+1. `T49` has already answered the first honest current-host real-board question: this machine is presently `NO_GO`, not “unknown”.
+2. The next unresolved deployment-boundary question is now reproducibility and future-host portability of that gate, not immediate board execution on the current host.
+3. `T37` remains blocked, and `T51/T52` paper re-open tasks are still premature before the repo has a checked-in, role-aware, read-only gate regeneration path.
+4. `T71` is materially stronger than a docs-only task because it requires gate-logic hardening, a checked-in read-only artifact collector, replay/regression coverage, and one current-host regeneration pack that agrees with `T49`.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T49`
-- Latest reviewed task: `docs/review/T48_review.md` with verdict `PASS`
-- T48 closeout: no warning-derived risk item was opened from this review; review advisory notes are accepted and do not block advancement
-- Next worker-facing task package: `docs/tasks/Phase2/T49_real_board_smoke_execution_gate.md`
-- `T49` may add one task-scoped helper, one focused test module, bounded docs, and isolated outputs only under `artifacts/t49_real_board_smoke_execution_gate/`; it must not modify `board_backend.py` / `axi_map.py` / `dma_client.py`, must not modify governance docs or historical artifacts, and must not perform write-side MMIO/DMA/register actions or board benchmark execution
+- Current unique task: `T71`
+- Latest reviewed task: `docs/review/T49_review.md` with verdict `PASS_WITH_WARNINGS`
+- T49 closeout: `W1/W2/W3` are all `deferred -> R30`; they do not block closing the current-host `NO_GO`, but they do block pretending the gate path is already future-host ready
+- Next worker-facing task package: `docs/tasks/Phase2/T71_real_board_gate_regeneration_and_host_transfer_pack.md`
+- `T71` may harden `cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`, add one checked-in read-only artifact collector, add focused regression tests, add bounded docs, and write isolated outputs only under `artifacts/t71_real_board_gate_regeneration_pack/`; it must not modify `board_backend.py` / `axi_map.py` / `dma_client.py`, must not modify governance docs or historical artifacts, and must not perform write-side MMIO/DMA/register actions or board benchmark execution
 
 ## 并行 Sidecar 扩展实验治理
 
@@ -499,7 +511,7 @@ Why this task is next:
 - sidecar 晋升必须经过后续 Captain gate；`PSE0` 不晋升也不执行任何 sidecar lane。
 - Post-PSE0 Wave A setup：已创建 `.wt/tcn`、`.wt/teach`、`.wt/bank`、`.wt/ctrl` 四个隔离 worktree，并分别写入 `S0_design` 任务包；未运行实验，未创建 `runs/sidecar`，未改变主线当前唯一任务机制。
 
-Older numbered lines below this point are historical carry-forward text and are superseded by the current `T49` block above.
+Older numbered lines below this point are historical carry-forward text and are superseded by the current `T71` block above.
 
 1. Current unique task: `T68`
 2. `T67` is complete and accepted as `PASS_WITH_WARNINGS`.

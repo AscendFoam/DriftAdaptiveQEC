@@ -347,6 +347,17 @@
 - `T49` must not use repo cleanup as a side goal, must not import sidecar outputs as mainline facts, and must keep mainline real-board precondition evidence separate from benchmark, `.tflite`, and theory-only branch materials.
 - `T49` must not perform write-side MMIO/DMA/register activity; host/device probing must stay read-only and must not be relabeled as completed real-board validation.
 
+## 2026-06-10 Captain Update (T49/T71 repo-noise supersession)
+
+- `T49` has now been accepted as `PASS_WITH_WARNINGS`; it created no new run root and kept all task outputs inside `artifacts/t49_real_board_smoke_execution_gate/`.
+- `T49` warning handling is `W1/W2/W3 = deferred -> R30`, so the current-host `NO_GO` stands, but the reusable gate path still needs hardening.
+- The current unique task is now `T71: Real-board gate regeneration and host-transfer pack`.
+- `T71` may create no new run root and no new file under `runs/`.
+- `T71` may harden `cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`, add one checked-in read-only artifact collector, add focused regression tests, add bounded docs, and write isolated outputs only under `artifacts/t71_real_board_gate_regeneration_pack/`.
+- `T71` must not modify `cnn_fpga/hwio/board_backend.py`, `cnn_fpga/hwio/axi_map.py`, `cnn_fpga/hwio/dma_client.py`, or any governance doc.
+- `T71` must not rewrite `T49` historical artifacts as new facts, must not use repo cleanup as a side goal, and must keep mainline real-board gate hardening separate from benchmark, `.tflite`, paper re-open, sidecar outputs, and theory-only branch materials.
+- `T71` must not perform write-side MMIO/DMA/register activity; any host/device collection must remain read-only and must not be relabeled as completed real-board validation.
+
 ## 2026-06-08 Captain Update（并行 sidecar repo-noise 规则）
 
 - `PSE0` 已创建 docs-only sidecar 治理与 worktree 规划文档：

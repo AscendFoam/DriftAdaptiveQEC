@@ -9,7 +9,7 @@
 ## 2. 基本信息
 
 - 快照日期：`2026-05-05`
-- 最近更新：`2026-05-26`
+- 最近更新：`2026-06-10`
 - 当前分支：`main`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
@@ -472,3 +472,10 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - `R12` remains open, but its carry-forward shape is now narrower: the dominant remaining `.tflite` issue is no longer “current-host true runtime unconfirmed”, but “default env / portability / deployment still not closed”.
 - The current unique task is now `T49: Real-board smoke execution gate`.
 - `T49` is the next bounded mainline task because the remaining deployment-boundary question is now host/device/bitstream/AXI/DMA truth on the current machine, not software-side `.tflite` runtime truth.
+- `T49` has now been accepted as `PASS_WITH_WARNINGS`.
+- `T49` closes one honest current-host real-board gate pack with verdict `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`; no real-board smoke was executed.
+- `T49` warning classification is now: `W1 deferred -> R30`, `W2 deferred -> R30`, `W3 deferred -> R30`.
+- `T49` does not upgrade the repository to real-board validation, HIL closure, or deployment closure.
+- `R13/R14` remain open but narrower: the current-host truth is no longer unknown; it is explicitly blocked by missing openable device paths, missing bound bitstream/RTL/DMA contract evidence, and a placeholder repo execution path.
+- The current unique task is now `T71: Real-board gate regeneration and host-transfer pack`.
+- `T71` is the next bounded mainline task because the repo now needs a checked-in, role-aware, read-only gate regeneration path for future candidate hosts before any later real-board execution task can be opened honestly.

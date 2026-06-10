@@ -33,17 +33,18 @@
 | R27 | `statcalib` lane 缺 provenance-clean fairness sanity evidence | 已收口 | `docs/review/T59_review.md`；`docs/review/T60_review.md`；`docs/review/T61_review.md`；`docs/review/T62_review.md`；`docs/statcalib_comparator_lane_smoke.md`；`docs/statcalib_fairness_sanity.md`；`docs/statcalib_provenance_isolated_fairness_rerun.md`；`runs/p4_benchmark/t59statc_20260526_211532_3a3d00_23740/summary.json`；`runs/p4_benchmark/T61_statcalib_fairness_sanity_20260527_015239/summary.json`；`runs/p4_benchmark/T62_statcalib_provenance_isolated_20260527_122943/summary.json`。T59 是 dirty-worktree smoke；T61 clean launch 与 final `summary.json git_commit` 漂移；T62 则在 clean `main` 上完成单次 uninterrupted rerun，launch/finish/summary commit identity 全一致，且无 duplicate `running` repeat key | `R27` 已由 `T62` 收口。后续如需推进 `FR8`，仍必须经过独立 gate 任务，且不得把当前 bounded mock-backed software-HIL evidence 直接写成 formal comparator ranking |
 | R28 | T64 result-pack report/artifact consistency gap | 已收口 | `docs/review/T64_review.md`; `docs/review/T65_review.md`; `docs/fr8_statcalib_extension_lane_consistency_audit.md`; `cnn_fpga/benchmark/audit_fr8_extension_lane_consistency.py`; `tests/test_fr8_extension_lane_consistency.py`. T65 repaired the wording drift, added an explicit audit helper, added focused regression coverage, and produced a bounded audit document | Closed by `T65`. Future reuse of the frozen T64 pack should keep the audit helper, focused test, and consistency-audit doc together rather than relying on manual wording alone |
 | R29 | 并行 sidecar worktree 若过早把输出合入治理事实，可能污染主线证据口径 | 中高 | `docs/reference/GPT-Pro有关扩展实验的建议.md` 建议可以并行准备多条 sidecar 路线；`docs/parallel_sidecar_extension_governance.md` 与 `docs/parallel_sidecar_worktree_plan.md` 已定义 sidecar lane 规则；2026-06-08 已创建 Wave A 四个 `.wt/<short>` worktree 并写入各自 `S0_design` 任务包，但未运行实验、未创建 `runs/sidecar` | 保持当前 `Current Unique Task` 为唯一主线任务；要求 `codex/sidecar-*` 分支、隔离 worktree、`runs/sidecar/<lane_id>/...` run root、sidecar manifest，并要求任何 sidecar 输出进入主线候选前必须通过后续 Captain promotion gate |
+| R30 | `T49` 的 current-host 真板 gate 已经诚实收口，但可复用的 gate/regeneration 路径仍然偏脆弱：`device_path_truth` 还没有 role-aware `mmio + dma` 判定，且仓库里还没有单一 checked-in 的只读 artifact 再生成入口 | 中 | `docs/review/T49_review.md`; `docs/t49_real_board_smoke_execution_gate.md`; `cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`; `tests/test_t49_real_board_smoke_execution_gate.py`。当前 host verdict `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE` 是成立的，因为所有 candidate path 都是 `not_found`；但 future-host 复用时，若两条同角色路径可打开，现有 helper 可能过早把 device layer 判成 ready，且现有 artifact 生成链还未收敛成单一 checked-in read-only 入口 | 打开 `T71`：把 device-path ready 条件改成 role-aware `mmio + dma`，增加 checked-in read-only artifact 再生成入口，补齐 `T49` artifact replay / future-host regeneration regression，并在未来真板宿主真实暴露设备路径与 bitstream 事实前继续阻止 `T37` |
 
 ## 当前开放问题
 
 Authoritative supersession note:
 
-- The current unique task for all new worker action is `T49: Real-board smoke execution gate`.
-- The authoritative task package is `docs/tasks/Phase2/T49_real_board_smoke_execution_gate.md`.
-- `T48` has been accepted as `PASS`.
-- `T48` introduces no warning-derived risk item from review classification; its non-blocking notes are accepted as advisory carry-forward only.
-- The authoritative `.tflite` carry-forward artifacts are now `docs/t48_true_tflite_runtime_gate.md` and `artifacts/t48_true_tflite_runtime_gate/t48_true_tflite_runtime_gate.json`.
-- If older Q&A carry-forward text below still mentions `T48` or earlier tasks as current, treat it as historical text only.
+- The current unique task for all new worker action is `T71: Real-board gate regeneration and host-transfer pack`.
+- The authoritative task package is `docs/tasks/Phase2/T71_real_board_gate_regeneration_and_host_transfer_pack.md`.
+- `T49` has been accepted as `PASS_WITH_WARNINGS`.
+- `T49` warning handling is `W1/W2/W3 = deferred -> R30`.
+- The authoritative real-board carry-forward artifacts are now `docs/t49_real_board_smoke_execution_gate.md` and `artifacts/t49_real_board_smoke_execution_gate/t49_real_board_smoke_execution_gate.json`.
+- If older Q&A carry-forward text below still mentions `T49` or earlier tasks as current, treat it as historical text only.
 
 Current T24-T29 status note:
 
@@ -65,7 +66,7 @@ Current T24-T29 status note:
 - `T46` Captain 已接受 review 为 `PASS`；其非阻塞评论全部按 `accepted` 处理，没有 `deferred` warning。
 - `T54` Captain 已接受 review 为 `PASS`；其非阻塞评论全部按 `accepted` 处理，没有 `deferred` warning；当前 multi-seed 结论是 broadly repeated with qualifications，`C4` 保持 `partial`。
 - `T55` Captain 已接受 review 为 `PASS`；其非阻塞评论全部按 `accepted` 处理，没有 `deferred` warning；当前 intervention 结论是 mixed 且整体偏 harmful（harms 4/6, helps 2/6），`C4` 仍保持 `partial`。
-- 当前唯一任务：`T49: Real-board smoke execution gate`，任务包 `docs/tasks/Phase2/T49_real_board_smoke_execution_gate.md`；它只允许在当前宿主 real-board host / device / bitstream / AXI / DMA / repo-path gate 边界内工作，不得扩到 benchmark、HIL、真板成功宣称、paper reopen、theory branch 或 sidecar promotion。
+- 当前唯一任务：`T71: Real-board gate regeneration and host-transfer pack`，任务包 `docs/tasks/Phase2/T71_real_board_gate_regeneration_and_host_transfer_pack.md`；它只允许在 read-only real-board gate regeneration / replay / regression 边界内工作，不得扩到 benchmark、HIL、真板成功宣称、paper reopen、theory branch、sidecar promotion 或 `T37` 真板执行。
 - R13 当前仍然有效：真板路径还缺设备存在、权限、寄存器活性、DMA 读出和 commit/ack round-trip 的真实证据。
 - R14 当前仍然有效但已收窄：AXI/DMA 代码侧审计已具体化，真实宿主、bitstream 与 DMA contract 仍未验证。
 - R19 已收口：T24 已固定 CLI shape 并报告 metric availability。
@@ -104,7 +105,7 @@ Current T24-T29 status note:
      - `T36` 已完成并由 Captain 接受为 `PASS`。
      - `T38` 已完成并由 Captain 接受为 `PASS`。
      - `T31` 已完成并由 Captain 接受为 `PASS`。
-     - 当前唯一任务已切换为 `T49: Real-board smoke execution gate`，任务包已存在：`docs/tasks/Phase2/T49_real_board_smoke_execution_gate.md`；它要求当前宿主事实探测、只读 device-path probe、AXI/DMA/placeholder 审计、task-scoped helper、focused tests 和显式 gate verdict，而不是 docs-only 推进。
+     - 当前唯一任务已切换为 `T71: Real-board gate regeneration and host-transfer pack`，任务包已存在：`docs/tasks/Phase2/T71_real_board_gate_regeneration_and_host_transfer_pack.md`；它要求 role-aware gate 逻辑加固、checked-in 的只读 artifact 再生成入口、`T49` artifact replay 回归、以及 current-host regeneration pack，而不是 docs-only 推进或直接真板执行。
 10. `T15` 是否应直接运行多场景 P4 smoke？
    - 当前答案：已执行完成。
      - run dir: `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`

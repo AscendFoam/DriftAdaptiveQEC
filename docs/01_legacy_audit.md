@@ -118,6 +118,16 @@
 - T56 warnings are all classified as `accepted`; no `deferred` warning remains from this review.
 - The current unique task is now `T47: Paper ablation result-pack and material ledger`.
 - `T47` is docs-only and may proceed only under the hedge boundary defined by `T56`; it is not unconditional paper expansion or mechanism closure.
+
+### 2026-06-10 Captain Update
+
+- `T49` has been accepted as `PASS_WITH_WARNINGS`.
+- `T49` closes one honest current-host real-board gate pack with verdict `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`; no real-board smoke was executed.
+- `T49` warning handling is `W1/W2/W3 = deferred -> R30`, so the current-host `NO_GO` stands, but the gate path is not yet future-host hard enough.
+- This does not change the legacy audit bottom line: `board_backend.py` is still placeholder-backed, real-board validation is still absent, and mainline may not retell readiness scaffolding as completed hardware execution.
+- `R13/R14` remain open but narrower because the current-host truth is now explicit rather than unknown.
+- The current unique task is now `T71: Real-board gate regeneration and host-transfer pack`.
+- `T71` stays on the same deployment-boundary lane and exists to harden reproducibility/portability of the gate itself, not to open `T37` or claim board execution readiness.
 - Any older T55-next wording later in this file is superseded by this status block and `docs/04_task_board.md`.
 
 ## 3. 可行性判断

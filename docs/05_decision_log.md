@@ -2957,3 +2957,49 @@ Wave A 采用短路径项目内 worktree：
 3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T49`
 4. `docs/08_risks_and_open_questions.md` 保持 `R13/R14` 打开，并将 `R12` 收窄为“isolated current-host true runtime 已确认，但 default env / portability / deployment 未闭环”
 5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T48` 收口与 `T49` 边界
+## 2026-06-10 Captain Decision：accept T49 and open T71
+
+- 决策：接受 `docs/review/T49_review.md` 的 `PASS_WITH_WARNINGS`，标记 `T49` 完成，并将当前唯一任务切换为 `T71: Real-board gate regeneration and host-transfer pack`
+
+依据 `docs/review/T49_review.md`、`docs/t49_real_board_smoke_execution_gate.md`、`docs/worker_summary/T49_worker_summary.md`、`cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`、`tests/test_t49_real_board_smoke_execution_gate.py`，以及本轮重新执行的：
+
+1. `python -m py_compile cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`
+2. `python -m unittest tests.test_t49_real_board_smoke_execution_gate`
+3. `python cnn_fpga/hwio/build_t49_real_board_smoke_gate.py --output-json artifacts/t49_real_board_smoke_execution_gate/t49_real_board_smoke_execution_gate.recheck.json`
+
+得到以下收口判断：
+
+1. `T49` 的核心结论成立：当前机器上的诚实 gate verdict 是 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`。
+2. `T49` 没有执行任何 real-board smoke，也没有越界修改 `runs/`、`board_backend.py`、`axi_map.py`、`dma_client.py` 或治理文档。
+3. `T49` 最强可支持表述仍然只是“当前宿主的只读 real-board 前提 gate 已被显式核查并得到 `NO_GO`”，而不是 real-board validation、HIL closure 或 deployment closure。
+
+`T49` 之所以不是 `PASS`，而是 `PASS_WITH_WARNINGS`，是因为当前 current-host `NO_GO` 虽然成立，但 review 指出的三个问题确实应该继续保留：
+
+- `W1`：`device_path_truth` 当前只按 openable path 总数计数，没有强制 `mmio + dma` 角色同时满足
+- `W2`：缺少 role-aware regression 与 `T49` checked-in artifact replay regression
+- `W3`：host/device/code-side probe 结果还没有收敛成一个单一 checked-in 的只读再生成入口
+
+这些问题都不推翻 `T49` 当前宿主 `NO_GO` 的真实性，因此不构成 blocker；但它们会影响 future-host 复用该 gate 的可靠性，因此统一按 `deferred -> R30` 收口。
+
+在 `T49` 之后，主线不应直接打开 `T37`，也不应跳回 paper re-open：
+
+1. `T37` 仍被当前宿主缺少可读设备路径、缺少绑定到当前宿主的 bitstream/RTL/DMA contract 事实、以及 placeholder repo execution path 所阻塞。
+2. `T51/T52` 仍然过早；在 real-board lane 尚未形成可再生成的 checked-in gate 入口前，继续 paper re-open 只会再次压扁 deployment boundary 诚实性。
+
+因此新增 `T71`：
+
+- 任务名：`T71: Real-board gate regeneration and host-transfer pack`
+- 任务包：`docs/tasks/Phase2/T71_real_board_gate_regeneration_and_host_transfer_pack.md`
+- 任务目标：
+  - 把 `device_path_truth` 改成 role-aware `mmio + dma` ready 判定
+  - 增加 checked-in 的只读 artifact 再生成入口
+  - 补 `T49` artifact replay 与 current-host regeneration regression
+  - 形成 future-host 可直接复用的 host-transfer pack
+
+直接影响：
+
+1. `docs/04_task_board.md` 记录 `T49 -> PASS_WITH_WARNINGS`，并将当前唯一任务切换到 `T71`
+2. 新增任务包 `docs/tasks/Phase2/T71_real_board_gate_regeneration_and_host_transfer_pack.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T71`
+4. `docs/08_risks_and_open_questions.md` 新增 `R30`，并把 `W1/W2/W3` 统一收口到该风险
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T49` 收口与 `T71` 边界
