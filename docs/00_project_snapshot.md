@@ -274,7 +274,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T47: Paper ablation result-pack and material ledger`
+- `T50: Training reproducibility and material-regeneration pack`
 
 ## 12. 快照结论
 
@@ -295,7 +295,8 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 13. `T40` 已完成并通过 adversarial review，Captain verdict = `PASS`；它证明了 clean CPU-only environment 已能完成一次真实的最小训练 smoke，但不等于 full training reproducibility、GPU/CUDA portability、Linux portability、`.tflite` runtime 或 benchmark readiness。
 14. `T41` 已完成并通过 Captain `PASS` 收口；Milestone 2K 已正式由 gate review 关闭，并为后续 `T42-T46` 的 paper-boundary 与 mechanism-planning 任务提供了边界前置。
 15. `T46` 已完成并通过 Captain `PASS` 收口；它把 `seed=20260429` 的单 seed 机制诊断收束成了一个明确的多 seed / intervention 计划，但没有升级任何 evidence level。
-16. `T55` 已完成并表明 pure I1 lower-clip intervention 为 mixed 且整体偏 harmful；随后 `T56` 已完成机制 claim 重构收口，因此当前唯一任务切到 `T47`，但它只能作为带 hedge 的 docs-only paper-material lane 推进。
+16. `T70` 已完成并通过 Captain `PASS` 收口；FR8 当前已有一个 code-backed closure pack，可明确阻止 promotion 和唯一阈值外推，但这不升级为成熟 comparator、`.tflite` 或真板证据。
+17. 当前唯一任务已切换为 `T50`，用于补齐 clean CPU-only 训练复现与材料再生证据包；它是主线当前更小且更诚实的下一步，不是继续做 FR8 自由扩写，也不是直接跳到 `.tflite` 或真板。
 
 ## 13. T45 后的拟议路线图（非当前任务）
 
@@ -434,3 +435,21 @@ T45 结束后，基于 recovery 结论形成的下一轮 bounded task 建议是�
 - `T68` does not close `R24`: the clean winner set is still not unique, and some other predeclared candidates remain `mixed`.
 - The current unique task is now `T69: FR8 statcalib clean-winner tie-break bounded benchmark`.
 - `T69` stays on the mainline experiment-evidence lane, must keep `T24` authoritative, must keep statcalib as a separate extension lane, and must stay separate from theory-only branch materials.
+
+## 2026-06-10 Captain Update (T69 closeout supersession)
+
+- `T69` has now been accepted as `PASS_WITH_WARNINGS`.
+- T69 warning classification is: `N1 accepted`, `N2 accepted`.
+- `T69` closes the last bounded execution question in the current FR8 statcalib lane: under the locked four-scenario matrix and `repeats=4`, the strongest clean answer remains the persistent `window_variance_t001 = t003 = t005` tie set and no unique clean reference point emerges.
+- `T69` does not change any truth boundary about `.tflite`, real-board, or paper-grade expanded benchmark evidence. The lane remains mock-backed software-HIL extension-lane evidence only.
+- The current unique task is now `T70: FR8 statcalib bounded closure pack and promotion gate`.
+- `T70` is the smallest honest next step because the repo now needs one consolidated, code-backed FR8 closure pack and explicit promotion/no-promotion gate, not another threshold rerun.
+
+## 2026-06-10 Captain Update (T70 closeout supersession)
+
+- `T70` has now been accepted as `PASS`.
+- `T70` introduces no warning-derived risk item from review classification.
+- `T70` closes the FR8 closure-pack gap honestly: the repository now has one code-backed closure artifact that keeps `T24` authoritative, keeps `statcalib` as an extension lane, blocks promotion, and blocks any unique-threshold retelling without a new task.
+- `T70` does not change any truth boundary about `.tflite`, real-board, paper-grade expanded benchmark evidence, or mature calibration-comparator validation.
+- The current unique task is now `T50: Training reproducibility and material-regeneration pack`.
+- `T50` is the smallest honest next step because `.tflite` / 真板前提仍未满足，而训练复现与材料再生证据仍缺一个统一、代码驱动的主线证据包。

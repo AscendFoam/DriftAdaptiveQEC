@@ -244,3 +244,29 @@
 - `R24` remains open because T68 does not yield a unique final threshold and does not make the whole predeclared grid uniformly clean.
 - The current unique task is now `T69: FR8 statcalib clean-winner tie-break bounded benchmark`.
 - `T69` must stay inside the same truth boundary: mock-backed software-HIL only, not `.tflite`, not real-board, not paper-grade benchmark expansion.
+
+## 2026-06-10 Captain Update (T69/T70 boundary supersession)
+
+- `T69` has now been accepted as `PASS_WITH_WARNINGS`.
+- `T69` changes no HIL / P4 / `.tflite` / real-board truth boundary. It adds one bounded clean-winner tie-break result pack only.
+- The strongest boundary facts after T69 are still narrow:
+  - `T24` remains the historical frozen ranked table
+  - `statcalib` remains only a separately labeled extension lane
+  - current evidence remains mock-backed software-HIL only
+  - the strongest clean answer is a persistent three-way tie, not a unique threshold
+- `R24` remains open because T69 still does not promote the lane into a mature validated calibration comparator and does not make the broader predeclared grid uniformly clean.
+- The current unique task is now `T70: FR8 statcalib bounded closure pack and promotion gate`.
+- `T70` must stay inside the same truth boundary: no new run root, no `.tflite`, no real-board, no paper-grade benchmark expansion, and no rewrite of `T24` or historical FR8 run roots.
+
+## 2026-06-10 Captain Update (T70/T50 boundary supersession)
+
+- `T70` has now been accepted as `PASS`.
+- `T70` changes no HIL / P4 / `.tflite` / real-board truth boundary. It adds one closure artifact and two explicit gates only.
+- The strongest boundary facts after T70 are still narrow:
+  - `T24` remains the historical frozen ranked table
+  - `statcalib` remains only a separately labeled extension lane
+  - current FR8 evidence remains mock-backed software-HIL only
+  - no promotion and no unique-threshold claim are currently supported
+- `R24` remains open because closure-pack completion does not promote the lane into a mature validated calibration comparator.
+- The current unique task is now `T50: Training reproducibility and material-regeneration pack`.
+- `T50` must stay outside the HIL/P4/deployment boundary: it may strengthen training reproducibility and material-chain evidence only, and it must not widen into `.tflite`, real-board, benchmark reruns, or theory-branch execution.

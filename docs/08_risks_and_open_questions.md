@@ -27,13 +27,23 @@
 | R21 | Teacher diagnostics downstream missing-vs-zero writer 语义已由 T28 修复 | 已收口 | `docs/review/T28_review.md` 确认 T28 smoke 中 `ukf` 为 `not_applicable`、`hybrid_residual_b` 为 `not_generated`，missing numeric teacher diagnostics 保持 empty/null，`correction_saturation_rate_mean = 0.0` 保持为独立 observed zero | R21 对当前 writer 语义关闭；未来若再次改 aggregation/report writer，应保留 `not_generated` / `not_applicable` / `true zero` 区分 |
 | R22 | T28 后 `_write_report()` markdown report 存在重复 header row，导致人读 report 表格列数不一致 | 已收口 | `docs/review/T29_review.md` verdict = `PASS`；旧 11-column header 已删除；验证得到 `header_rows=1`、`column_counts=[12, 12, 12]` | R22 已由 T29 收口；未来若再改 aggregation/report writer，应按 R23 补 focused test 或静态 report-shape check |
 | R23 | Aggregation/report writer 缺少 focused unit/static tests，未来可能再次出现格式或 null-semantics 回归 | 中 | `docs/review/T28_review.md` Missing Tests 指出相关路径没有现成 tests；T28 依赖 py_compile 和 bounded smoke 验证 | T28 可接受；后续再改 aggregation/report writer 时应补 focused unit test 或静态 report-shape check |
-| R24 | Current `statcalib` lane is still only a bounded extension-lane comparator path; even after T68, if T30 helper, T59/T60/T62 smoke evidence, T64 bounded extension-lane win, T66 local sensitivity outputs, T67 teacher-anchor outputs, or T68 generated-only outputs are overstated as a full statcalib/calibration comparator, the repo would overclaim unvalidated algorithm capability | 中 | `docs/review/T30_review.md` N4; `docs/review/T59_review.md`; `docs/review/T60_review.md`; `docs/review/T62_review.md`; `docs/review/T64_review.md`; `docs/review/T65_review.md`; `docs/review/T66_review.md`; `docs/review/T67_review.md`; `docs/review/T68_review.md`. T64 proves one clean bounded extension lane under the locked protocol, T65 hardens report/artifact consistency, T66 shows that the bounded win survives one local five-point sensitivity grid, T67 shows that the bounded win is not grossly dependent on `teacher_mode=ukf`, and T68 shows that full generated-only winners do exist inside the predeclared grid; however, the strongest clean answer is still a tied `window_variance_t001 = t003 = t005` set, and some other predeclared candidates remain `mixed` | Keep `statcalib` labeled as a separately labeled extension lane in all FR8 docs, figures, and gates; carry the tie-set and residual-`mixed` caveats forward; do not upgrade T64/T65/T66/T67/T68 outputs into full calibration comparator, `.tflite`, or real-board evidence without a new bounded validation task; use T69 to test whether the clean-winner tie set narrows under a stronger but still bounded repeat budget without rewriting `T24` |
+| R24 | Current `statcalib` lane is still only a bounded extension-lane comparator path; even after T70, if T30 helper, T59/T60/T62 smoke evidence, T64 bounded extension-lane win, T66 local sensitivity outputs, T67 teacher-anchor outputs, T68 generated-only outputs, T69 tie-break outputs, or the T70 closure pack are overstated as a full statcalib/calibration comparator, the repo would overclaim unvalidated algorithm capability | 中 | `docs/review/T30_review.md` N4; `docs/review/T59_review.md`; `docs/review/T60_review.md`; `docs/review/T62_review.md`; `docs/review/T64_review.md`; `docs/review/T65_review.md`; `docs/review/T66_review.md`; `docs/review/T67_review.md`; `docs/review/T68_review.md`; `docs/review/T69_review.md`; `docs/review/T70_review.md`; `docs/fr8_statcalib_bounded_closure_pack.md`. T64 proves one clean bounded extension lane under the locked protocol, T65 hardens report/artifact consistency, T66 shows that the bounded win survives one local five-point sensitivity grid, T67 shows that the bounded win is not grossly dependent on `teacher_mode=ukf`, T68 shows that full generated-only winners do exist inside the predeclared grid, T69 shows that the strongest clean answer remains the persistent `window_variance_t001 = t003 = t005` tie set under the stronger bounded repeat budget, and T70 consolidates those facts into an explicit no-promotion / no-unique-threshold closure pack; however, no unique clean reference point emerges and the broader predeclared candidates still remain outside a uniformly clean closure story | Keep `statcalib` labeled as a separately labeled extension lane in all FR8 docs, figures, and gates; carry the persistent-tie, no-promotion, and residual non-uniform-clean-grid caveats forward; do not upgrade T64/T65/T66/T67/T68/T69/T70 outputs into full calibration comparator, `.tflite`, or real-board evidence without a new bounded validation task; cite the T70 closure pack rather than freehand retelling the FR8 lane |
 | R25 | 论文叙事与 recovery baseline 曾一度跑在证据材料前面，若继续在未冻结 truth 的情况下推进 prose，很容易再次把 draft 当成事实来源 | 高 | `T43` 已经产出 bounded Background / Related Work prose draft，但用户明确要求改入 `Research Reality Recovery Mode`，优先补 claim/evidence/material/figure/reproducibility baseline | 先完成 `T44` recovery baseline，再决定是否恢复任何 prose 扩写；恢复前不把 draft、skeleton 或 framing 当成证据升级 |
 | R26 | `T59` 的 cross-mode `teacher_mode` fallback leakage | 已收口 | `docs/review/T60_review.md` 已确认 `slow_loop.statcalib.teacher_mode` 不再泄漏到非 `statcalib` mode；`tests/test_statcalib_runtime_smoke.py` 新增了 mode isolation 回归覆盖 | `R26` 已由 `T60` 收口；未来若再改 `SlowLoopRuntimeConfig.from_config()`，必须保持 `statcalib.teacher_mode` 仅在 `mode=statcalib` 生效 |
 | R27 | `statcalib` lane 缺 provenance-clean fairness sanity evidence | 已收口 | `docs/review/T59_review.md`；`docs/review/T60_review.md`；`docs/review/T61_review.md`；`docs/review/T62_review.md`；`docs/statcalib_comparator_lane_smoke.md`；`docs/statcalib_fairness_sanity.md`；`docs/statcalib_provenance_isolated_fairness_rerun.md`；`runs/p4_benchmark/t59statc_20260526_211532_3a3d00_23740/summary.json`；`runs/p4_benchmark/T61_statcalib_fairness_sanity_20260527_015239/summary.json`；`runs/p4_benchmark/T62_statcalib_provenance_isolated_20260527_122943/summary.json`。T59 是 dirty-worktree smoke；T61 clean launch 与 final `summary.json git_commit` 漂移；T62 则在 clean `main` 上完成单次 uninterrupted rerun，launch/finish/summary commit identity 全一致，且无 duplicate `running` repeat key | `R27` 已由 `T62` 收口。后续如需推进 `FR8`，仍必须经过独立 gate 任务，且不得把当前 bounded mock-backed software-HIL evidence 直接写成 formal comparator ranking |
 | R28 | T64 result-pack report/artifact consistency gap | 已收口 | `docs/review/T64_review.md`; `docs/review/T65_review.md`; `docs/fr8_statcalib_extension_lane_consistency_audit.md`; `cnn_fpga/benchmark/audit_fr8_extension_lane_consistency.py`; `tests/test_fr8_extension_lane_consistency.py`. T65 repaired the wording drift, added an explicit audit helper, added focused regression coverage, and produced a bounded audit document | Closed by `T65`. Future reuse of the frozen T64 pack should keep the audit helper, focused test, and consistency-audit doc together rather than relying on manual wording alone |
+| R29 | 并行 sidecar worktree 若过早把输出合入治理事实，可能污染主线证据口径 | 中高 | `docs/reference/GPT-Pro有关扩展实验的建议.md` 建议可以并行准备多条 sidecar 路线；`docs/parallel_sidecar_extension_governance.md` 与 `docs/parallel_sidecar_worktree_plan.md` 已定义 sidecar lane 规则；2026-06-08 已创建 Wave A 四个 `.wt/<short>` worktree 并写入各自 `S0_design` 任务包，但未运行实验、未创建 `runs/sidecar` | 保持当前 `Current Unique Task` 为唯一主线任务；要求 `codex/sidecar-*` 分支、隔离 worktree、`runs/sidecar/<lane_id>/...` run root、sidecar manifest，并要求任何 sidecar 输出进入主线候选前必须通过后续 Captain promotion gate |
 
 ## 当前开放问题
+
+Authoritative supersession note:
+
+- The current unique task for all new worker action is `T50: Training reproducibility and material-regeneration pack`.
+- The authoritative task package is `docs/tasks/Phase2/T50_training_reproducibility_and_material_regeneration_pack.md`.
+- `T70` has been accepted as `PASS`.
+- `T70` introduces no warning-derived risk item from review classification.
+- The authoritative FR8 carry-forward artifact is now `docs/fr8_statcalib_bounded_closure_pack.md`, which preserves the persistent `window_variance_t001 = t003 = t005` tie set, explicit no-promotion, and explicit future-selection-task boundary.
+- If older Q&A carry-forward text below still mentions `T70` or earlier tasks as current, treat it as historical text only.
 
 Current T24-T29 status note:
 
@@ -55,7 +65,7 @@ Current T24-T29 status note:
 - `T46` Captain 已接受 review 为 `PASS`；其非阻塞评论全部按 `accepted` 处理，没有 `deferred` warning。
 - `T54` Captain 已接受 review 为 `PASS`；其非阻塞评论全部按 `accepted` 处理，没有 `deferred` warning；当前 multi-seed 结论是 broadly repeated with qualifications，`C4` 保持 `partial`。
 - `T55` Captain 已接受 review 为 `PASS`；其非阻塞评论全部按 `accepted` 处理，没有 `deferred` warning；当前 intervention 结论是 mixed 且整体偏 harmful（harms 4/6, helps 2/6），`C4` 仍保持 `partial`。
-- 当前唯一任务：`T47: Paper ablation result-pack and material ledger`，任务包 `docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`，且仅限 hedge-conditioned docs-only 推进。
+- 当前唯一任务：`T50: Training reproducibility and material-regeneration pack`，任务包 `docs/tasks/Phase2/T50_training_reproducibility_and_material_regeneration_pack.md`；它只允许在 clean CPU-only lane 内补训练复现与材料再生证据，不得扩到 benchmark、`.tflite`、真板、theory branch 或 sidecar promotion。
 - R13 当前仍然有效：真板路径还缺设备存在、权限、寄存器活性、DMA 读出和 commit/ack round-trip 的真实证据。
 - R14 当前仍然有效但已收窄：AXI/DMA 代码侧审计已具体化，真实宿主、bitstream 与 DMA contract 仍未验证。
 - R19 已收口：T24 已固定 CLI shape 并报告 metric availability。
@@ -94,7 +104,7 @@ Current T24-T29 status note:
      - `T36` 已完成并由 Captain 接受为 `PASS`。
      - `T38` 已完成并由 Captain 接受为 `PASS`。
      - `T31` 已完成并由 Captain 接受为 `PASS`。
-     - 当前唯一任务为 `T47: Paper ablation result-pack and material ledger`，任务包已存在：`docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`，且只允许 hedge-conditioned docs-only 推进。
+     - 当前唯一任务为 `T50: Training reproducibility and material-regeneration pack`，任务包已存在：`docs/tasks/Phase2/T50_training_reproducibility_and_material_regeneration_pack.md`；它要求 task-scoped helper、focused tests、一次 clean CPU-only 真实训练复跑和一次评估复跑，而不是 docs-only 推进。
 10. `T15` 是否应直接运行多场景 P4 smoke？
    - 当前答案：已执行完成。
      - run dir: `runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
@@ -521,3 +531,18 @@ Current T24-T29 status note:
   3. the next honest question is whether the clean-winner tie set narrows under a stronger but still bounded repeat budget, or whether the right final answer remains an explicit tie set
 - The current unique task is now `T69: FR8 statcalib clean-winner tie-break bounded benchmark`, task package `docs/tasks/Phase2/T69_fr8_statcalib_clean_winner_tiebreak_bounded_benchmark.md`.
 - `T69` exists to answer whether the `T68` clean-winner tie set persists, reduces, or collapses to one unique clean reference point without rewriting `T24` or upgrading the evidence beyond mock-backed software-HIL scope.
+
+## 2026-06-10 Captain Update (T69 risk supersession)
+
+- `T69` has been accepted as `PASS_WITH_WARNINGS`.
+- Warning classification:
+  - `N1` persistent clean tie set is the honest bounded answer, not a unique final threshold = `accepted`
+  - `N2` bounded-matrix-only conclusion must remain explicit in downstream retellings = `accepted`
+- No new standalone risk item is opened by warning classification for `T69`.
+- `T69` closes the bounded tie-break execution question: under the locked four-scenario matrix and `repeats=4`, the strongest clean answer remains the persistent `window_variance_t001 = t003 = t005` tie set and no unique clean reference point emerges.
+- `R24` remains open, but it is now narrower than before:
+  1. the repo no longer needs another immediate threshold-rerun task just to ask whether the clean tie collapses under the same bounded protocol
+  2. the remaining mainline risk is overclaiming the persistent tie set or extension-lane evidence as a unique threshold or mature calibration comparator
+  3. the broader predeclared grid still is not uniformly clean, so the lane still must not be retold as full comparator closure
+- The current unique task is now `T70: FR8 statcalib bounded closure pack and promotion gate`, task package `docs/tasks/Phase2/T70_fr8_statcalib_bounded_closure_pack_and_promotion_gate.md`.
+- `T70` exists to consolidate `T24/T64/T66/T67/T68/T69` into one code-backed closure pack and explicit promotion/no-promotion gate without creating a new run root or rewriting historical artifacts.

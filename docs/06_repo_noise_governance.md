@@ -308,3 +308,36 @@
 - `T69` may add at most one task-scoped derived config file and one task-scoped summary helper plus focused tests.
 - `T69` must not regenerate, resume into, rewrite, or relabel the historical `T24`, `T59`, `T61`, `T62`, `T64`, `T66`, `T67`, or `T68` run roots.
 - `T69` must not modify any historical file under `runs/`, must not use repo cleanup as a side goal, and must keep mainline experiment evidence separate from theory-only branch materials.
+
+## 2026-06-10 Captain Update (T69/T70 repo-noise supersession)
+
+- `T69` has now been accepted as `PASS_WITH_WARNINGS`; its run root `runs/p4_benchmark/T69_statcalib_clean_winner_tiebreak_20260608_160358` must now be treated as frozen historical evidence and must not be regenerated, resumed into, or rewritten.
+- T69 provenance was intentionally isolated through a clean short-path clone launch at `C:\t69c_1dbfbc3`; downstream retellings should preserve that boundary instead of blurring the active workspace and clean launch clone.
+- The current unique task is now `T70: FR8 statcalib bounded closure pack and promotion gate`.
+- `T70` may create no new run root and no new benchmark-output directory.
+- `T70` may add at most one task-scoped closure helper, one focused test module, and bounded docs only.
+- `T70` must not regenerate, resume into, rewrite, or relabel the historical `T24`, `T59`, `T61`, `T62`, `T64`, `T66`, `T67`, `T68`, or `T69` run roots.
+- `T70` must not use repo cleanup as a side goal, must not import sidecar outputs as mainline facts, and must keep mainline experiment evidence separate from theory-only branch materials.
+
+## 2026-06-10 Captain Update (T70/T50 repo-noise supersession)
+
+- `T70` has now been accepted as `PASS`; it created no new run root, no new benchmark-output directory, and did not modify any historical file under `runs/`.
+- The current unique task is now `T50: Training reproducibility and material-regeneration pack`.
+- `T50` may create no new run root and no new file under `runs/`.
+- `T50` may add at most one task-scoped helper, one focused test module, one task-scoped derived config, bounded docs, and isolated outputs only under `artifacts/t50_training_repro_pack/`.
+- `T50` must not modify any canonical historical artifact under `artifacts/datasets/static_theta_v2/`, `artifacts/models/static_theta_v2/`, `artifacts/reports/static_theta_v2/`, `artifacts/datasets/runtime_b_residual_v1/`, `artifacts/models/runtime_b_residual_v1/`, or `artifacts/reports/runtime_b_residual_v1/`.
+- `T50` must not use repo cleanup as a side goal, must not import sidecar outputs as mainline facts, and must keep mainline training reproducibility evidence separate from `.tflite`, real-board, benchmark, and theory-only branch materials.
+
+## 2026-06-08 Captain Update（并行 sidecar repo-noise 规则）
+
+- `PSE0` 已创建 docs-only sidecar 治理与 worktree 规划文档：
+  - `docs/parallel_sidecar_extension_governance.md`
+  - `docs/parallel_sidecar_worktree_plan.md`
+- `PSE0` 不创建 run root、benchmark-output 目录、分支、worktree 或 artifact 目录。
+- 后续 sidecar lane 不得写入 `runs/p4_benchmark/T69_statcalib_clean_winner_tiebreak_*`。
+- 除非后续 Captain 任务明确覆盖，否则后续 sidecar lane 必须使用 `runs/sidecar/<lane_id>/<timestamp_or_run_id>/` 下的 run root。
+- 后续 sidecar lane 不得 regenerate、resume into、rewrite 或 relabel 历史 `T24`、`T59`、`T61`、`T62`、`T64`、`T66`、`T67`、`T68` 或 `T69` run root。
+- sidecar run root 只属于 sidecar evidence，不得在 `docs/04_task_board.md` 中被引用为当前主线事实。
+- 如果 sidecar lane 需要长跑启动，应使用专用 worktree 或短路径 clone，并记录 `host_launch_meta.json`、`workspace_status.txt`、`command.txt`、`stdout.log` 和 `stderr.log`。
+- sidecar lane 必须保持主线实验证据、theory-only materials、`.tflite` runtime work 和 real-board work 分离，除非后续任务包明确 gate 该集成。
+- 2026-06-08 Wave A worktree 使用 `.wt/<short>`，并将 `.wt/` 与 `.worktrees/` 都加入 `.gitignore`；`.wt/` 只是隔离工作面，不是实验输出目录，也不得被当作主线事实来源。

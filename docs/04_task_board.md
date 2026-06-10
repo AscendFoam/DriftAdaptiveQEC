@@ -399,8 +399,31 @@
     - `N2` some predeclared candidates remain `mixed` even though the bounded existence question is closed = `deferred -> R24`
     - `N3` clean short-path clone launch boundary must remain visible in downstream retellings = `accepted`
   - Result: T68 closes the bounded generated-only existence question honestly; full generated-only winners now exist inside the predeclared grid, but the strongest clean answer is still a tied `window_variance t001/t003/t005` set and `R24` remains open
-- [ ] T69: FR8 statcalib clean-winner tie-break bounded benchmark
+- [x] T69: FR8 statcalib clean-winner tie-break bounded benchmark
   - Task package: `docs/tasks/Phase2/T69_fr8_statcalib_clean_winner_tiebreak_bounded_benchmark.md`
+  - Output: `docs/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
+  - Review output: `docs/review/T69_review.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - Warning handling:
+    - `N1` persistent clean tie set is the honest bounded answer, not a unique final threshold = `accepted`
+    - `N2` bounded-matrix-only conclusion must remain explicit in downstream retellings = `accepted`
+  - Result: T69 closes the bounded clean-winner tie-break question honestly; no unique clean reference point emerges, and the strongest clean answer remains the persistent `window_variance_t001 = t003 = t005` tie set. `R24` remains open as a reporting/promotion boundary only, not as an unresolved tie-break execution question
+- [x] T70: FR8 statcalib bounded closure pack and promotion gate
+  - Task package: `docs/tasks/Phase2/T70_fr8_statcalib_bounded_closure_pack_and_promotion_gate.md`
+  - Output: `docs/fr8_statcalib_bounded_closure_pack.md`
+  - Review output: `docs/review/T70_review.md`
+  - Captain verdict: `PASS`
+  - Result: T70 closes the FR8 mainline closure-pack gap honestly; the repository now has one code-backed closure artifact that preserves `T24` as the authoritative frozen ranked table, preserves `statcalib` as a separately labeled extension lane, gives an explicit `no_promotion_keep_extension_lane_only` gate, and gives an explicit `future_selection_task_required` gate for any later single-threshold choice
+
+### 并行 Sidecar 扩展实验治理
+
+- [x] PSE0：并行 sidecar 扩展实验治理设置
+  - 任务包：`docs/tasks/Phase2/PSE0_parallel_sidecar_extension_governance_setup.md`
+  - 治理输出：`docs/parallel_sidecar_extension_governance.md`
+  - worktree 规划输出：`docs/parallel_sidecar_worktree_plan.md`
+  - Captain 状态：docs-only 设置任务已完成并通过验证
+  - 边界：本任务不执行 `T69`，不创建 sidecar worktree，不启动实验，也不改变任何主线 benchmark 语义
+  - 结果：后续 sidecar lane 可在 frozen-anchor、artifact-schema、promotion-gate、run-dir 和红线规则下规划；主线当前唯一任务仍以 `Current Unique Task` 区块为准
 
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
@@ -412,7 +435,7 @@
 ### Milestone 2R: Reproducibility And Material Pack (proposed)
 
 - [ ] T50: Training reproducibility and material-regeneration pack
-  - Task package: pending
+  - Task package: `docs/tasks/Phase2/T50_training_reproducibility_and_material_regeneration_pack.md`
 
 ### Milestone 2S: Paper Re-open Gate (proposed)
 
@@ -427,37 +450,49 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T69: FR8 statcalib clean-winner tie-break bounded benchmark`
+`T50: Training reproducibility and material-regeneration pack`
 
 Status:
 
-- `T68` has been reviewed as `PASS_WITH_WARNINGS`.
-- T68 warning handling is: `N1 deferred -> R24`, `N2 deferred -> R24`, `N3 accepted`.
-- `T68` closes the generated-only existence question: the repo now has four full generated-only statcalib winners in the predeclared grid, and the strongest clean answer is the tied `window_variance_t001 = t003 = t005` set.
-- `T68` still does not close `R24`: the clean winner set is not unique, and some other predeclared candidates remain `mixed`.
+- `T70` has been reviewed as `PASS`.
+- `T70` introduces no warning-derived risk item.
+- `T70` closes the FR8 closure-pack gap: the repository now has a code-backed closure artifact that downstream docs can cite without flattening the extension-lane boundary or inventing a unique-threshold story.
+- `T70` still does not close `R24`: the statcalib lane remains a separately labeled extension lane only, promotion is explicitly blocked, and no unique clean reference point exists.
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
-- `T64/T65/T66/T67/T68` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
-- The largest remaining mainline gap is still `R24`, but after T68 it is no longer "does any clean winner exist". It is whether the clean-winner tie set can be narrowed into one defensible reference point or must remain an explicit tie set.
+- `T64/T65/T66/T67/T68/T69/T70` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
+- `.tflite` runtime和真板任务仍然受环境/硬件前提约束，当前更小且可执行的主线缺口已经切换为训练复现与材料再生证据包。
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T69` must remain isolated from theory-only branch materials and must not rewrite historical run roots.
+- `T50` must remain isolated from benchmark/HIL/theory/sidecar outputs, and it must not rewrite canonical historical training artifacts.
 
 Why this task is next:
 
-1. `T68` already answered the existence question and proved that full generated-only winners do exist in the predeclared grid.
-2. `R24` is still open because the repository still does not know whether the clean-winner tie set collapses to one defensible reference point under a slightly stronger bounded repeat budget.
-3. `T69` is materially stronger than a simple docs follow-up because it reruns only the four clean winners plus frozen anchors and requires explicit tie-persistence / tie-collapse reporting.
-4. `T69` still keeps the project honest because it does not rewrite `T24`, does not widen teacher/threshold scope beyond the four clean winners, and does not widen into `.tflite` or real-board.
-5. If `T69` still ends in a tie, that is still a successful outcome because it converts the remaining ambiguity into an explicit bounded conclusion instead of forcing a single-threshold story.
+1. `T70` has already closed the FR8 closure-pack question honestly; opening another immediate FR8 docs-only follow-up would be redundant.
+2. `T48` / `T49` still depend on stronger `.tflite` runtime / hardware-host preconditions and are not the smallest honest next step on the current machine.
+3. `T31/T39/T40` already created a bounded clean-CPU training reproducibility lane, but the repository still lacks one authoritative, code-backed training reproducibility and material-regeneration pack.
+4. `T50` is materially stronger than a simple doc update because it requires a task-scoped helper, focused tests, one bounded clean-CPU real training rerun, and one bounded eval rerun.
+5. `T50` strengthens mainline reproducibility/material evidence without colliding with the theory-only branch, sidecar lanes, `.tflite`, or real-board boundaries.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T69`
-- Latest reviewed task: `docs/review/T68_review.md` with verdict `PASS_WITH_WARNINGS`
-- T68 closeout: warning classification is `N1 deferred -> R24`, `N2 deferred -> R24`, `N3 accepted`
-- Next worker-facing task package: `docs/tasks/Phase2/T69_fr8_statcalib_clean_winner_tiebreak_bounded_benchmark.md`
-- `T69` may add one bounded clean-winner tie-break benchmark lane, one task-scoped summary helper, and focused tests only; it must not change statcalib/runtime semantics, rewrite `T24`, or touch theory-branch materials
+- Current unique task: `T50`
+- Latest reviewed task: `docs/review/T70_review.md` with verdict `PASS`
+- T70 closeout: no warning-derived risk item was opened from this review
+- Next worker-facing task package: `docs/tasks/Phase2/T50_training_reproducibility_and_material_regeneration_pack.md`
+- `T50` may add one task-scoped helper, one focused test module, one derived config, bounded docs, and isolated outputs only under `artifacts/t50_training_repro_pack/`; it must not modify canonical historical training artifacts, must not run benchmark/HIL/theory work, and must not widen into `.tflite` or real-board scope
 
-Older numbered lines below this point are historical carry-forward text and are superseded by the `T69` block above.
+## 并行 Sidecar 扩展实验治理
+
+- Captain-only 设置任务：`PSE0`
+- 任务包：`docs/tasks/Phase2/PSE0_parallel_sidecar_extension_governance_setup.md`
+- 治理规则：`docs/parallel_sidecar_extension_governance.md`
+- worktree 计划：`docs/parallel_sidecar_worktree_plan.md`
+- `PSE0` 不改变当前唯一主线任务；当前唯一任务以 `Current Unique Task` 区块为准。
+- sidecar lane 必须使用 `codex/sidecar-*` 分支、隔离 worktree 和 `runs/sidecar/<lane_id>/...` run root。
+- sidecar 输出不是主线事实，不能改写 `T24`、`T64`、`T65`、`T66`、`T67`、`T68` 或 `T69`。
+- sidecar 晋升必须经过后续 Captain gate；`PSE0` 不晋升也不执行任何 sidecar lane。
+- Post-PSE0 Wave A setup：已创建 `.wt/tcn`、`.wt/teach`、`.wt/bank`、`.wt/ctrl` 四个隔离 worktree，并分别写入 `S0_design` 任务包；未运行实验，未创建 `runs/sidecar`，未改变主线当前唯一任务机制。
+
+Older numbered lines below this point are historical carry-forward text and are superseded by the `T70` block above.
 
 1. Current unique task: `T68`
 2. `T67` is complete and accepted as `PASS_WITH_WARNINGS`.

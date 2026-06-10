@@ -519,3 +519,21 @@
 - `T68` still does not turn the lane into a mature calibration comparator. `R24` remains open because the strongest clean answer is still a tie set and the broader predeclared grid is still not uniformly clean.
 - The current unique task is now `T69: FR8 statcalib clean-winner tie-break bounded benchmark`.
 - `T69` is the next bounded mainline task because the remaining honest question is no longer existence, but whether the clean-winner tie set narrows under a stronger bounded repeat budget or remains the right final answer.
+
+## 2026-06-10 Captain Update (T69 closeout supersession)
+
+- `T69` has now been accepted as `PASS_WITH_WARNINGS`.
+- T69 warning classification is: `N1 accepted`, `N2 accepted`.
+- `T69` resolves the remaining legacy ambiguity about the bounded clean-winner tie-break question: inside the stronger `repeats=4` matrix, the `window_variance_t001 = t003 = t005` tie set persists exactly and no unique clean reference point emerges.
+- `T69` still does not turn the lane into a mature calibration comparator. `R24` remains open because the lane is still extension-only and the broader predeclared grid is still not uniformly clean.
+- The current unique task is now `T70: FR8 statcalib bounded closure pack and promotion gate`.
+- `T70` is the next bounded mainline task because the repo now needs one authoritative closure pack and promotion/no-promotion gate built from read-only historical artifacts, not another threshold rerun.
+
+## 2026-06-10 Captain Update (T70 closeout supersession)
+
+- `T70` has now been accepted as `PASS`.
+- `T70` closes the remaining legacy ambiguity about how the FR8 lane may be retold: there is now one accepted closure pack with explicit no-promotion and no-unique-threshold gates.
+- `T70` still does not turn the lane into a mature calibration comparator, and it still does not upgrade the evidence beyond mock-backed software-HIL extension-lane status.
+- `R24` remains open, but its carry-forward shape is now narrower: the dominant remaining risk is overclaiming or promotion drift, not missing closure-pack infrastructure.
+- The current unique task is now `T50: Training reproducibility and material-regeneration pack`.
+- `T50` is the next bounded mainline task because the next honest repository gap is no longer FR8 closure logic but training reproducibility/material evidence that can be strengthened on the current machine without assuming `.tflite` or hardware readiness.

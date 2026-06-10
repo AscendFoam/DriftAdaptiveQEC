@@ -266,3 +266,114 @@ Worker must report:
 8. whether each candidate remains full generated-only
 9. whether a unique clean reference point exists
 10. remaining risks or interpretation limits
+
+## Worker Output
+
+### What changed
+
+Added these 3 task-scoped files:
+
+1. `cnn_fpga/config/p4_multiscenario_statcalib_clean_winner_tiebreak.yaml`
+2. `cnn_fpga/benchmark/summarize_statcalib_clean_winner_tiebreak.py`
+3. `tests/test_statcalib_clean_winner_tiebreak_summary.py`
+
+Completed the only allowed run root:
+
+- `runs/p4_benchmark/T69_statcalib_clean_winner_tiebreak_20260608_160358`
+
+Wrote these 4 T69 documents:
+
+1. `docs/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
+2. `docs/review/T69_review.md`
+3. `docs/for_human/T69_explanation.md`
+4. `docs/worker_summary/T69_worker_summary.md`
+
+### Exact benchmark command executed
+
+```powershell
+& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config C:\t69cfg_20260608_160358.yaml --scenario static_bias_theta --scenario linear_ramp --scenario step_sigma_theta --scenario periodic_drift --mode ukf --mode hybrid_residual_b --mode statcalib_window_variance_t001 --mode statcalib_window_variance_t003 --mode statcalib_window_variance_t005 --mode statcalib_ekf_t001 --paired-seeds --repeats 4 --run-dir D:\Codes\Quantum\DriftAdaptiveQEC\runs\p4_benchmark\T69_statcalib_clean_winner_tiebreak_20260608_160358
+```
+
+### Verification
+
+Ran:
+
+1. `C:\ProgramData\anaconda3\python.exe -m py_compile cnn_fpga/benchmark/summarize_statcalib_clean_winner_tiebreak.py`
+2. `C:\ProgramData\anaconda3\python.exe -m unittest tests.test_statcalib_clean_winner_tiebreak_summary`
+   - output: `Ran 5 tests`, `OK`
+3. `C:\ProgramData\anaconda3\python.exe -m cnn_fpga.benchmark.summarize_statcalib_clean_winner_tiebreak --run-dir runs/p4_benchmark/T69_statcalib_clean_winner_tiebreak_20260608_160358`
+   - output:
+     - `final_clean_winner_classification=persistent_clean_tie_set`
+     - `t68_clean_tie_set_relation=persists`
+     - `current_clean_answer_modes=statcalib_window_variance_t001,statcalib_window_variance_t003,statcalib_window_variance_t005`
+     - `mean_best_vs_worst_case_best=same`
+
+### Explicit provenance summary
+
+1. launch branch = `main`
+2. launch `HEAD = 1dbfbc3`
+3. finish branch = `main`
+4. finish `HEAD = 1dbfbc3`
+5. `summary.json["git_commit"] = 1dbfbc3`
+6. exactly one T69 run root exists
+7. `missing_runs = []`
+8. comparison rows = `24`
+9. raw rows = `96`
+10. every comparison row has `coverage = 1.0`
+11. every comparison row has `completed_repeats = 4`
+12. historical `T24/T64/T66/T67/T68` run roots were not modified
+13. `progress.jsonl` counts:
+    - `running = 96`
+    - `completed = 96`
+    - duplicate `running = 0`
+    - duplicate `completed = 0`
+
+### Scenario-by-scenario outcome summary
+
+1. `static_bias_theta`: `window_variance_t001 = t003 = t005`, best LER `0.43027388888888884`
+2. `linear_ramp`: `window_variance_t001 = t003 = t005`, best LER `0.46622687500000004`
+3. `step_sigma_theta`: `window_variance_t001 = t003 = t005`, best LER `0.45806395833333335`
+4. `periodic_drift`: `window_variance_t001 = t003 = t005`, best LER `0.4381054166666667`
+
+### Grouped clean-winner tie-break summary
+
+1. `T68` clean-winner tie set was:
+   - `statcalib_window_variance_t001`
+   - `statcalib_window_variance_t003`
+   - `statcalib_window_variance_t005`
+2. `T69` current clean answer set is still:
+   - `statcalib_window_variance_t001`
+   - `statcalib_window_variance_t003`
+   - `statcalib_window_variance_t005`
+3. relation relative to `T68` = `persists`
+4. mean-best candidate set = worst-case-best candidate set
+5. final classification = `persistent_clean_tie_set`
+
+### Candidate generated/mixed status
+
+1. `statcalib_window_variance_t001`
+   - generated rows = `4`
+   - mixed rows = `0`
+   - full generated-only = `True`
+2. `statcalib_window_variance_t003`
+   - generated rows = `4`
+   - mixed rows = `0`
+   - full generated-only = `True`
+3. `statcalib_window_variance_t005`
+   - generated rows = `4`
+   - mixed rows = `0`
+   - full generated-only = `True`
+4. `statcalib_ekf_t001`
+   - generated rows = `4`
+   - mixed rows = `0`
+   - full generated-only = `True`
+
+### Unique clean reference point
+
+- Does a unique clean reference point exist after T69? `No`
+
+### Remaining risks
+
+1. `T69` resolves the tie-break question honestly, but the answer is still a persistent tie, not a unique threshold.
+2. Evidence remains mock-backed software-HIL extension-lane evidence only.
+3. `T24` remains the authoritative frozen ranked table and must not be rewritten using T69.

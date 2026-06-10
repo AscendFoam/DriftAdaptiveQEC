@@ -2684,3 +2684,179 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T69`
 4. `docs/08_risks_and_open_questions.md` 保持 `R24` 打开，并把 `T68` 的 deferred warning 继续并入其中
 5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T68` 收口与 `T69` 边界
+
+## D-2026-06-08-02
+
+- 日期：`2026-06-08`
+- 决策：接受并落地 `PSE0：并行 sidecar 扩展实验治理设置`，允许后续规划多个 sidecar worktree，但不在本任务中创建 worktree 或执行实验
+
+### 背景
+
+用户明确表示可以接受多个 worktree，甚至十几个，并希望在 `T69` 这类 2-4 天主线长跑之外并行准备更完备的扩展实验路线。
+
+当前仓库事实是：
+
+1. `T69` 是当前唯一主线任务，且任务包已经存在。
+2. `T69` 尚未执行。
+3. `T24` 仍是 authoritative frozen ranked table。
+4. `T64/T65/T66/T67/T68` 都只是 mock-backed software-HIL extension-lane evidence。
+5. `R24` 仍打开，当前由 `T69` 聚焦 clean-winner tie-break 问题。
+6. `docs/reference/GPT-Pro有关扩展实验的建议.md` 建议可以并行开扩展路线，但必须作为 sidecar extension lane，而不是重写主线。
+
+### 依据
+
+1. `docs/04_task_board.md` 要求后续 Worker 只能领取 `Current Unique Task` 指向的单个任务包，且每个任务包必须有 Allowed files / Forbidden scope / Verification / Docs to update。
+2. `docs/06_repo_noise_governance.md` 要求历史 run roots 不得被重写、重标或 cleanup。
+3. `docs/08_risks_and_open_questions.md` 的 `R24` 要求 statcalib 继续作为 separately labeled extension lane，不得升级为 mature comparator。
+4. GPT-Pro 扩展建议明确要求 frozen anchor、sidecar artifact、promotion gate、mock-backed boundary、`.tflite` boundary 和 statcalib boundary。
+
+### 结论
+
+项目可以开始规划多个 sidecar worktree，但必须满足：
+
+1. `T69` 仍是当前唯一主线任务。
+2. sidecar worktree 不得写入 `T69` run root。
+3. sidecar 输出必须写入 `runs/sidecar/<lane_id>/...`。
+4. sidecar 分支使用 `codex/sidecar-*`。
+5. sidecar 输出只能作为候选证据，不能进入主线事实口径。
+6. 从 sidecar 晋升到主线候选必须经过新的 Captain gate 和任务包。
+
+### 直接影响
+
+1. 新增 `docs/tasks/Phase2/PSE0_parallel_sidecar_extension_governance_setup.md`
+2. 新增 `docs/parallel_sidecar_extension_governance.md`
+3. 新增 `docs/parallel_sidecar_worktree_plan.md`
+4. `docs/04_task_board.md` 增加 PSE0 记录，但不改变 `Current Unique Task = T69`
+5. `docs/06_repo_noise_governance.md` 增加 sidecar run-root 规则
+6. `docs/07_handoff.md` 增加 sidecar governance handoff note
+7. `docs/08_risks_and_open_questions.md` 增加 `R29`，用于追踪 sidecar worktree 污染主线事实口径的风险
+
+## D-2026-06-08-03
+
+- 日期：`2026-06-08`
+- 决策：按 Wave A 创建四个 sidecar worktree，并在各自 worktree 内先写中文 `S0_design` 任务包；main 分支 `T69` 执行继续保持独立
+
+### 背景
+
+用户确认可以接受多个 worktree，并明确要求在主线 `T69` 独立保留的前提下，创建 Wave A 的多个 worktree，并分别先写 `S0_design` 任务包。
+
+### 结论
+
+Wave A 采用短路径项目内 worktree：
+
+1. `.wt/tcn` -> `codex/sidecar-temporal-tcn-residual`
+2. `.wt/teach` -> `codex/sidecar-adaptive-teacher-replay`
+3. `.wt/bank` -> `codex/sidecar-gain-scheduled-bank-sim`
+4. `.wt/ctrl` -> `codex/sidecar-atomic-commit-rollback`
+
+第一次尝试使用 `.worktrees/<long-name>` 时，完整 checkout 触发 Windows `Filename too long`；最终使用 `.wt/<short>` 并配合 `core.longpaths=true` 创建。`.wt/` 与 `.worktrees/` 均加入 `.gitignore`。
+
+### 直接影响
+
+1. Wave A worktree 已创建，但均未运行实验。
+2. 四个 `S0_design` 任务包已写入各自 worktree。
+3. 未创建 `runs/sidecar`。
+4. 未改变 `T69` 当前唯一主线任务，也未执行 `T69`。
+5. 后续 sidecar 执行必须先从对应 `S0_design` 升级为独立 `S1` 或 contract-test 任务包。
+
+## 2026-06-10 Captain Decision: accept T69 and open T70
+
+- 决策：接受 `docs/review/T69_review.md` 的 `PASS_WITH_WARNINGS`，标记 `T69` 完成，并将当前唯一任务切换为 `T70: FR8 statcalib bounded closure pack and promotion gate`
+
+### 事实基础
+
+依据 `docs/review/T69_review.md`、`docs/statcalib_clean_winner_tiebreak_bounded_benchmark.md`、`docs/worker_summary/T69_worker_summary.md`、`runs/p4_benchmark/T69_statcalib_clean_winner_tiebreak_20260608_160358/*`，以及本轮重新执行的：
+1. `C:\ProgramData\anaconda3\python.exe -m py_compile cnn_fpga/benchmark/summarize_statcalib_clean_winner_tiebreak.py`
+2. `C:\ProgramData\anaconda3\python.exe -m unittest tests.test_statcalib_clean_winner_tiebreak_summary`
+3. `C:\ProgramData\anaconda3\python.exe -m cnn_fpga.benchmark.summarize_statcalib_clean_winner_tiebreak --run-dir runs/p4_benchmark/T69_statcalib_clean_winner_tiebreak_20260608_160358`
+
+当前仓库事实是：
+
+1. `T69` 只产生了一个新 run root：`runs/p4_benchmark/T69_statcalib_clean_winner_tiebreak_20260608_160358`
+2. provenance 闭合：launch `HEAD = finish HEAD = summary.json git_commit = 1dbfbc3`
+3. `missing_runs == []`
+4. comparison rows = `24`
+5. 所有 comparison rows 都满足 `coverage = 1.0` 且 `completed_repeats = 4`
+6. 四个冻结 clean-winner candidates 都仍然是 full generated-only：
+   - `statcalib_window_variance_t001`
+   - `statcalib_window_variance_t003`
+   - `statcalib_window_variance_t005`
+   - `statcalib_ekf_t001`
+7. 三个 `window_variance` 候选在四个锁定场景中全部精确打平
+8. 三个 `window_variance` 候选在四个锁定场景中全部优于 `statcalib_ekf_t001`
+9. final classification = `persistent_clean_tie_set`
+10. unique clean reference point = `False`
+
+### Warning 分类
+
+1. `N1` persistent clean tie set is the honest bounded answer, not a unique final threshold = `accepted`
+2. `N2` bounded-matrix-only conclusion must remain explicit in downstream retellings = `accepted`
+
+### 结论
+
+`T69` 可以完成，但它关闭的是 bounded clean-winner tie-break execution question，而不是 `R24` 本身。
+当前最小且更诚实的下一步不应继续做另一个 threshold rerun，也不应跳到 `.tflite`、real-board、training、theory lane 或 sidecar promotion，而应新增 `T70`：
+1. 只读复用 `T24/T64/T66/T67/T68/T69` 的历史 artifact 与结果文档
+2. 构建一个 task-scoped closure helper 与 focused tests，而不是手写拼接结论
+3. 产出一份单独的 FR8 bounded closure pack，统一写清 extension-lane 证据链到底证明了什么、没有证明什么
+4. 明确给出 promotion / no-promotion gate：`T24` 不改写，`statcalib` 不升格为 mature comparator，不发明 unique threshold
+5. 如果未来真的需要选一个单一阈值，必须另开一项预声明 selection-criterion task，而不是从 T69 静默外推
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T69 -> PASS_WITH_WARNINGS`，并切换 `Current Unique Task` 到 `T70`
+2. 新增任务包 `docs/tasks/Phase2/T70_fr8_statcalib_bounded_closure_pack_and_promotion_gate.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T70`
+4. `docs/08_risks_and_open_questions.md` 保持 `R24` 打开，但把它缩窄为 overclaim/promotion 边界而非未完成的 tie-break 执行问题
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T69` 收口与 `T70` 边界
+
+## 2026-06-10 Captain Decision：accept T70 and open T50
+
+- 决策：接受 `docs/review/T70_review.md` 的 `PASS`，标记 `T70` 完成，并将当前唯一任务切换为 `T50: Training reproducibility and material-regeneration pack`
+
+### 事实基础
+
+依据 `docs/review/T70_review.md`、`docs/fr8_statcalib_bounded_closure_pack.md`、`docs/worker_summary/T70_worker_summary.md`、`cnn_fpga/benchmark/build_fr8_statcalib_bounded_closure_pack.py`、`tests/test_fr8_statcalib_bounded_closure_pack.py`，以及本轮重新执行的：
+
+1. `C:\ProgramData\anaconda3\python.exe -m py_compile cnn_fpga/benchmark/build_fr8_statcalib_bounded_closure_pack.py`
+2. `C:\ProgramData\anaconda3\python.exe -m unittest tests.test_fr8_statcalib_bounded_closure_pack`
+3. `C:\ProgramData\anaconda3\python.exe -m cnn_fpga.benchmark.build_fr8_statcalib_bounded_closure_pack`
+4. `@(Get-ChildItem -LiteralPath 'runs\\p4_benchmark' -Directory | Where-Object { $_.Name -like 'T70*' }).Count`
+5. `git diff --name-only -- runs`
+
+当前仓库事实是：
+
+1. `T70` 没有新建 run root，也没有重跑 benchmark。
+2. helper、tests、closure pack 文档三者结论一致。
+3. 当前最强 clean answer 仍然是：
+   - `statcalib_window_variance_t001`
+   - `statcalib_window_variance_t003`
+   - `statcalib_window_variance_t005`
+4. `unique_clean_reference_point_exists = False`
+5. `promotion_gate = no_promotion_keep_extension_lane_only`
+6. `unique_threshold_gate = future_selection_task_required`
+
+### 结论
+
+`T70` 可以完成，而且不需要 `PASS_WITH_WARNINGS` 收口，因为本轮没有发现需要继续保留到 verdict 级别的 warning 分类项。
+
+在 `T70` 之后，主线最小而诚实的下一步不应继续做 FR8 自由转述，也不应直接跳到 `.tflite` / 真板：
+
+1. `.tflite` runtime 仍受当前机器环境前提限制
+2. 真板 smoke 仍受硬件宿主与 bitstream 前提限制
+3. 当前更适合在 main 上继续补强的是训练复现与材料再生证据
+
+因此新增 `T50`：
+
+1. 只在 clean CPU-only 训练 lane 内工作
+2. 构建 task-scoped training reproducibility pack helper 与 focused tests
+3. 产出一个统一的训练材料台账与 bounded rerun/eval evidence pack
+4. 强化训练链可复用性与 paper-material 证据，而不碰 `.tflite`、真板、benchmark 或 theory branch
+
+### 直接影响
+
+1. `docs/04_task_board.md` 记录 `T70 -> PASS`，并切换 `Current Unique Task` 到 `T50`
+2. 新增任务包 `docs/tasks/Phase2/T50_training_reproducibility_and_material_regeneration_pack.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T50`
+4. `docs/08_risks_and_open_questions.md` 保持 `R24` 打开，但把 carry-forward 口径切换为引用 `T70` closure pack，而不是继续自由转述 FR8 链
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T70` 收口与 `T50` 边界
