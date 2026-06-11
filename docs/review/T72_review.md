@@ -1,88 +1,53 @@
 # T72 Review
 
-## 结论
+## Verdict
 
-`T72` 的目标已经完成，而且完成方式保持在任务包边界内：
+`PASS_WITH_WARNINGS`
 
-- `probe_limitations` 不再是固定字符串，而是来自本次执行的结构化 probe 记录
-- `source_records`、`repo_board_defaults`、`expected_byte_count_basis` 都已经改成 execution-derived / override-aware
-- `--config` / `--mmio-path` / `--dma-path` 的 focused regression 已补齐
-- `T49` replay verdict 与 `T72` current-host regeneration verdict 仍然一致，都是 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`
+核心任务已经完成：`probe_limitations` 不再写死固定文案，`source_records` / `repo_board_defaults` / `expected_byte_count_basis` 已改成 execution-derived / override-aware，新增了针对 `--config` / `--mmio-path` / `--dma-path` 的 focused regression，且 `T49` replay 与 `T72` current-host regeneration 仍稳定保持同一 `NO_GO` verdict。
 
-## 已验证的证据
+## Captain Closeout Disposition
 
-本轮实际执行了：
+- Captain verdict: `PASS_WITH_WARNINGS`
+- Warning classification:
+  - `N1` 最小 config 场景下 path provenance 仍会把代码默认值写成 `source_kind=config_field` = `deferred -> R32`
+  - `N2` Worker 原始主报告路径曾短暂落在任务包精确 allowed files 之外，但当前 `HEAD` 已整理回允许目录 = `accepted`
+  - `N3` 缺少覆盖“YAML 未显式提供 path 字段时的 provenance 回退标签” focused regression = `deferred -> R32`
+- 合并说明：
+  - `Suspicious implementation details` 与 `Non-blocking issues` 的最小 config provenance 过强表述属于同一问题，按 `N1` 合并处理
+- 收口结论：
+  - `T72` 已完成并可切离当前唯一任务
+  - `R31` 可视为已由 `T72` 收口
+  - 新的残余风险收敛为 `R32`，仅针对 future-host 最小 config 场景下的 provenance 标签精确性
 
-1. `python -m py_compile cnn_fpga/hwio/collect_t71_real_board_gate_artifacts.py`
-2. `python -m unittest tests.test_t71_real_board_gate_regeneration_pack`
-3. `python -m unittest tests.test_t72_real_board_transfer_pack_provenance_hardening`
-4. `python -m cnn_fpga.hwio.collect_t71_real_board_gate_artifacts --output-dir artifacts/t72_real_board_transfer_pack_provenance_hardening`
-5. 一次用 `T72` artifact 驱动 gate helper 的真实执行
-6. 一次用 `T49` checked-in artifact 驱动 gate helper 的 replay 执行
-7. `--config` 与 `--mmio-path` / `--dma-path` override 的 focused regression（体现在 `tests/test_t72_real_board_transfer_pack_provenance_hardening.py`）
+我复核了以下轻量证据：
 
-## 本轮值得认可的点
+- `python -m py_compile cnn_fpga/hwio/collect_t71_real_board_gate_artifacts.py`
+- `python -m unittest tests.test_t71_real_board_gate_regeneration_pack`
+- `python -m unittest tests.test_t72_real_board_transfer_pack_provenance_hardening`
+- 一次当前宿主 collector 再生成
+- 一次当前宿主 gate helper 再构建
+- 一次 `T49` checked-in artifact replay 对比
 
-### 1. provenance 不再把“未执行”伪装成“已失败”
+## Blocking issues
 
-`host_fact_manifest.json` 现在同时保存：
+- 无
 
-- `probe_execution_records`
-- `probe_limitations`
+## Non-blocking issues
 
-所以 reviewer 可以直接看到：
+- 路径 provenance 仍然不能区分“YAML 明确写了这个字段”和“`BoardFPGAConfig.from_config()` 用代码默认值补出来的字段”。`cnn_fpga/hwio/collect_t71_real_board_gate_artifacts.py:518-531` 用 `board_cfg.mmio.path` / `board_cfg.dma.path` 生成 `candidate_*_path_record`，而 `cnn_fpga/hwio/board_backend.py:69-78` 会在字段缺失时回退到 `/dev/uio0` / `/dev/uio1`。我用一个临时 config 去掉这两个键后复核，artifact 仍会写成 `source_kind=config_field`。这不影响 T72 明确覆盖的默认 config 和 CLI override 场景，但 future-host 的“最小 config”场景还不算完全 provenance-clean。
+- Worker 原始提交 `4b5b6a7` 最初把主报告落在 `docs/t72_real_board_transfer_pack_provenance_hardening.md`，不在 T72 任务包列出的精确 allowed files 里。当前 `HEAD` 已通过后续文档整理把等价内容归档到 `docs/evidence_packs/deployment_boundary/t72_real_board_transfer_pack_provenance_hardening.md`，所以我不据此 blocking，但原始提交边界并非完全严丝合缝。
 
-- 哪条 probe 成功执行
-- 哪条 probe 命令失败
-- 哪条 probe 因平台不匹配而 `not_applicable`
+## Missing tests
 
-这正是 `T71` 留下的 `W1/W2` 想收口的地方。
+- 缺少一个专门覆盖“config 缺省 `hil.board_io.axi_uio_path` / `hil.board_io.dma_buffer_path` 时如何记录 provenance”的回归测试。现有测试覆盖了默认 config、显式自定义 config、CLI override 和 verdict stability，但没有覆盖代码默认值回退这个边角场景。
 
-### 2. override 终于不是“值变了，说明文字没变”
+## Suspicious implementation details
 
-`repo_board_defaults` 和 `bitstream_evidence.source_records` 现在都带动态来源信息。
+- `candidate_mmio_path_record.config_value` 和 `candidate_dma_path_record.config_value` 取自 `BoardFPGAConfig` 归一化后的值，而不是原始 YAML 节点是否存在的事实。这让“值本身”是对的，但让“来源标签”在字段缺失场景下比代码真正能证明的更强。
 
-尤其是：
+## Recommended next action
 
-- `config_path`
-- `config_argument_kind`
-- `candidate_mmio_path_record`
-- `candidate_dma_path_record`
-
-这让 future-host 在使用 `--config` / `--mmio-path` / `--dma-path` 时，不会再出现“artifact 字段值换了，但 provenance 叙事还停留在默认 config”的问题。
-
-### 3. hardening 没有污染 verdict
-
-`artifacts/t72_real_board_transfer_pack_provenance_hardening/replay_vs_regeneration_comparison.json` 证明：
-
-- verdict 没漂移
-- strongest supported statement 没漂移
-- device / bitstream / repo execution 三层 truth status 都没漂移
-
-这说明本轮改动确实是 provenance 收紧，不是偷偷改 gate 口径。
-
-## 仍需如实保留的边界
-
-### 1. `T37` 仍然 blocked
-
-当前缺口仍然是：
-
-- 没有可只读打开的真实 `mmio` / `dma` 设备路径
-- 没有 bitstream-to-RTL / DMA / fixed-point contract 绑定事实
-- `board_backend.py` 仍是 placeholder-only
-
-### 2. 这不是 production-ready host-transfer tool
-
-本轮确实把 transfer-pack 做得更严谨，但还不能把它写成：
-
-- 真板 ready
-- 真板执行成功
-- `hardware_validated`
-- `deployment closure`
-
-## 建议
-
-建议 Captain 将 `T72` 视为对 `R31` 的直接收口候选，并重点复核两件事：
-
-1. 文档是否始终把本轮成果表述为 provenance hardening，而不是 execution readiness
-2. override-focused regression 是否足以覆盖 future-host 最常见的 config/path 迁移场景
+- Captain 可以把 `T72` 视为 `R31` 的直接收口候选，并继续保持 `T37` blocked。
+- closeout 时要继续把结果写成“read-only real-board gate / transfer-pack provenance hardening”，不能写成 real-board ready、real-board execution success、`hardware_validated` 或 deployment closure。
+- 如果后续确实关心 future-host 的最小 config 迁移，建议补一个很小的 follow-up：给 path provenance 增加 `config_field_present` / `source_kind=code_default` 一类标记，并补一条对应回归测试。

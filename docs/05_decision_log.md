@@ -1,5 +1,76 @@
 # Decision Log
 
+## D-2026-06-11-03
+
+- 日期：`2026-06-11`
+- 决策：保持 `T73` 为当前唯一任务，把 real-board execution 路线降为最低优先级 backlog，并预先定义 `T74: Paper-ready simulation result and figure pack` 作为 `T73` 后的唯一推荐下一任务
+
+### 背景
+
+用户明确说明当前暂时没有可用的 `Linux + FPGA` 硬件宿主，因此真板执行路线在近期既缺资源也缺新增证据条件。与此同时，项目更紧迫的缺口已经转向“高质量论文所需的仿真结果、图表、caption、材料索引是否充足且可追溯”。
+
+### 依据
+
+1. `T49/T71/T72` 的 strongest supported truth 仍然只是 current-host `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`、checked-in regeneration 与 transfer-pack provenance hardening；没有任何真板 execution success。
+2. 用户已明确要求把真实实验优先级放到最低，优先补论文质量所需的仿真结果与图表材料。
+3. `T73` 当前正好是 post-`T72` 的主线 claim/evidence、result/figure、risk 三台账刷新入口；它完成后，最自然的下一步是把这些主线仿真证据整理成 paper-ready result/figure pack，而不是继续推进真板路线。
+4. theory 分支已经单独存在，因此 main 分支可以继续专注实验主线与 paper-facing supporting materials，而不与 theory 工作混写。
+
+### 结论
+
+1. 维持 `T73` 作为当前唯一任务，不切回真板方向。
+2. `T37` 继续保持 `blocked + lowest-priority backlog`，直到硬件宿主条件变化。
+3. 预定义 `T74` 作为 `T73` 通过后的唯一推荐下一任务，目标是把已有主线仿真证据整理成论文可直接复用的结果表、图表、caption 与 traceability pack。
+4. main 分支后续优先顺序调整为：主线台账刷新 -> 论文可直接复用的仿真材料打包 -> supporting-material follow-up；真板执行路线后置。
+
+### 直接影响
+
+1. `docs/02_experiment_plan.md` 的 Part II 优先级改为 paper-first / board-lowest。
+2. `docs/04_task_board.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 需要同步记录 `T73 -> T74` 的主线衔接和 `T37` 的资源阻塞状态。
+3. 新增 `docs/tasks/Phase2/T74_paper_ready_simulation_result_and_figure_pack.md` 作为下一张 worker-facing 任务包。
+4. 在硬件条件变化前，main 分支可以继续提交 `T73/T74` 这类 paper-material 主线任务；不建议让 worker 切回真板 execution 准备。
+
+## D-2026-06-11-02
+
+- 日期：`2026-06-11`
+- 决策：接受 `T72` 为 `PASS_WITH_WARNINGS`，关闭 `R31`，打开 `R32`，并把主线当前唯一任务切换为 `T73: Mainline claim/evidence and result/figure/risk ledger refresh`
+
+### 背景
+
+`T72` 的任务目标不是推进真板执行，而是把 `T71` 留下的 transfer-pack provenance 问题收紧到 execution-derived / override-aware 边界，同时保持 current-host `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE` verdict 不漂移。
+
+### 依据
+
+1. `docs/review/T72_review.md` 明确给出 reviewer verdict = `PASS_WITH_WARNINGS`，blocking issues = none。
+2. fresh verification 通过：
+   - `python -m py_compile cnn_fpga/hwio/collect_t71_real_board_gate_artifacts.py`
+   - `python -m unittest tests.test_t71_real_board_gate_regeneration_pack`
+   - `python -m unittest tests.test_t72_real_board_transfer_pack_provenance_hardening`
+3. `docs/evidence_packs/deployment_boundary/t72_real_board_transfer_pack_provenance_hardening.md` 已证明：
+   - `probe_limitations` 不再把未执行探测写成固定事实
+   - default-config 与 CLI override provenance 已变为 execution-derived / override-aware
+   - `expected_byte_count_basis` 已从固定文案改为运行时推导
+   - `T49` replay 与 `T72` current-host regeneration verdict 仍一致
+4. review 剩余问题不影响 `T72` 的主目标，但会在 future-host 最小 config 场景下留下更窄的 provenance 标签精确性问题：
+   - path provenance 仍不能区分“YAML 明确提供字段”和“代码默认值补出字段”
+   - 缺少对应 focused regression
+   - 原始主报告路径曾短暂越过精确 allowed-files 边界，但当前 `HEAD` 已整理回允许目录
+
+### 结论
+
+1. `T72` 应收口为 `PASS_WITH_WARNINGS`，而不是 `BLOCK`
+2. `R31` 关闭，因为它对应的默认-config / override / probe-limitations 主问题已由 `T72` 收口
+3. 新的残余风险登记为 `R32`，主题是 future-host 最小 config 场景下 path provenance 的 `config_field` / `code_default` 标签仍不够精确
+4. `T37` 继续 blocked；`T72` 不构成真板执行放行
+5. 当前唯一任务切换为 `T73`，优先刷新主线 paper-facing claim/evidence、result/figure、risk 三套台账
+
+### 直接影响
+
+1. 可以把 `T72` closeout 与 `T73` handoff 一起提交到 `main`
+2. Worker 不应继续留在 `T72`，下一步只能领取 `T73`
+3. 后续 retelling 不得把 `T72` 写成 real-board execution success、hardware validation 或 fully provenance-clean future-host closure
+4. theory 分支继续独立；`T73` 仅在 main 分支实验主线推进
+
 ## D-2026-06-11-01
 
 - 日期：`2026-06-11`

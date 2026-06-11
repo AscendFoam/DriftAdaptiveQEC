@@ -9,7 +9,7 @@
 ## 2. 基本信息
 
 - 快照日期：`2026-05-05`
-- 最近更新：`2026-06-10`
+- 最近更新：`2026-06-11`
 - 当前分支：`main`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
@@ -18,17 +18,23 @@
 
 ## 2026-06-11 Captain Update
 
-- `T71` 已由 Captain 判定为 `PASS_WITH_WARNINGS`。
-- `T71` 完成了三个核心收口：`device_path_truth` 改为 role-aware `mmio + dma` 判定、仓库内新增 checked-in 的只读 regeneration collector、以及 `T49` replay 与 current-host regeneration 的一致性回归。
+- `T72` 已由 Captain 判定为 `PASS_WITH_WARNINGS`。
+- `T72` 解决了 `T71` 留下的主 provenance 问题：`probe_limitations` 不再把未执行探测写成固定事实，default-config / CLI override provenance 变为 execution-derived / override-aware，`expected_byte_count_basis` 改为运行时推导，且 `T49` replay 与 `T72` current-host regeneration verdict 继续一致。
 - 这次通过不代表真板执行成功，也不代表 `T37` 解锁；当前最强结论仍然只是 current-host / regenerated verdict 继续为 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`。
-- `T71` warning 分类为：
-  - `W1` 未实际探测却写死的 `probe_limitations` = `deferred -> R31`
-  - `W2` `source_records` 与 `expected_byte_count_basis` 仍对默认 config 写死 = `deferred -> R31`
-  - `W3` `--config` / `--mmio-path` / `--dma-path` 的 provenance/override 回归不足 = `deferred -> R31`
-  - `W4` collector 继续 import `BoardFPGAConfig` = `accepted`
-- `R30` 由 `T71` 关闭；新的后续缺口不再是 role-aware gate 缺失，而是 transfer-pack provenance 仍不够 execution-derived / override-safe。
-- 当前唯一任务切换为 `T72: Real-board transfer-pack provenance hardening`。
-- `T72` 仍留在 main 分支实验主线，不与单独的 theory 分支混做，也不允许扩成 benchmark、`.tflite`、真板执行或 paper reopen。
+- `T72` warning 分类为：
+  - `N1` 最小 config 场景下 path provenance 仍会把代码默认值写成 `source_kind=config_field` = `deferred -> R32`
+  - `N2` Worker 原始主报告路径曾短暂落在精确 allowed files 之外，但当前 `HEAD` 已整理回允许目录 = `accepted`
+  - `N3` 缺少覆盖 path 字段缺省回退标签的 focused regression = `deferred -> R32`
+- `R31` 已由 `T72` 收口；新的后续缺口收敛为 `R32`，它只针对 future-host 最小 config 场景下的 provenance 标签精确性。
+- 当前唯一任务切换为 `T73: Mainline claim/evidence and result/figure/risk ledger refresh`。
+- `T73` 仍留在 main 分支实验主线，不与单独的 theory 分支混做，也不允许扩成 benchmark、`.tflite`、真板执行或 paper prose reopen。
+
+## 2026-06-11 Captain 优先级调整
+
+- 用户已明确：当前暂无可用的 `Linux + FPGA` 硬件宿主，因此 real-board execution 路线不再作为近期主线。
+- main 分支当前优先补论文所需的仿真结果、图表、caption、claim/result/risk 台账与 supporting materials。
+- `T37` 继续保持 `blocked + lowest-priority backlog`；在硬件条件变化前，不让真板执行任务抢占 `T73` 及其后的 paper-material 主线任务。
+- `T73` 之后，唯一推荐的下一张主线任务是 `T74` 一类“论文可直接复用的仿真结果与图表打包”任务，而不是继续推进真板执行准备。
 
 ## 2026-05-16 Captain Update
 
@@ -288,7 +294,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T49: Real-board smoke execution gate`
+- `T73: Mainline claim/evidence and result/figure/risk ledger refresh`
 
 ## 12. 快照结论
 

@@ -3,14 +3,14 @@
 **最后更新：** 2026-06-11  
 **当前阶段：** `Phase 2: Controlled Development`  
 **当前决策状态：** `Go`  
-**当前唯一任务：** 以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准；截至本次整理为 `T72: Real-board transfer-pack provenance hardening`。
+**当前唯一任务：** 以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准；当前为 `T73`。在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，real-board 执行相关任务降为最低优先级 backlog，主线优先补论文材料、仿真结果与图表。
 
 ## 文档角色
 
 本文档现在承担两个职责：
 
 1. **Part I：项目从开始至今的规划与证据演进**  
-   只保留高层时间线、P0-P4 / T 系列关键转折、仍有效的结论，以及已被后续任务替换或降级的旧结论。
+   只保留高层时间线、P0-P4 / T 系列关键转折、仍有效的结论，以及已被后续任务替换或降级的旧结论。该部分自 2026-06-11 起接管 `docs/progress_summary/CNN_FPGA_GKP_阶段结论.md` 的当前阶段结论职责。
 2. **Part II：后续开发计划**  
    吸收 `docs/follow-up_plan/README.md` 的功能，作为后续开发、论文准备、任务候选池和计划维护的唯一入口。
 
@@ -69,7 +69,8 @@
 | 2026-05-16-24 | T31/T36/T38/T46/T54-T58 | 训练依赖、seed 20260429、机制 trace/intervention、paper material ledger 陆续补强 | 机制结论更细，但仍不能写成完整因果闭环 |
 | 2026-05-26-06-10 | T59-T70 | `statcalib` 从 smoke、isolation、fairness、FR8 benchmark、tie-break 到 closure pack | 作为 extension lane 保留；`T70` 明确 no-promotion |
 | 2026-06-10 | T48/T49/T50 | `.tflite` isolated runtime、real-board gate、training/material pack 三类边界补强 | 均为 bounded evidence，不升级为部署闭环 |
-| 2026-06-11 | T71/T72 | real-board gate pack 从 role-aware/regeneration 进入 provenance hardening | 当前唯一任务是 `T72`；仍无真板执行成功 |
+| 2026-06-11 | T71/T72 | real-board gate pack 从 role-aware/regeneration 进入 provenance hardening | `T72` 完成 provenance hardening；仍无真板执行成功 |
+| 2026-06-11 | T73 / 优先级调整 | 因当前暂无 `Linux + FPGA` 硬件宿主，主线从 real-board 执行前移改为论文材料优先 | 当前唯一任务切到 `T73`；real-board 路线降为最低优先级 backlog |
 
 ## 4. P0-P4 当前解释
 
@@ -100,15 +101,16 @@
 
 | 旧说法 / 旧入口 | 当前处理 |
 | --- | --- |
-| `docs/02_experiment_plan.md` 中 2026-05-08 的“当前唯一任务：待定义” | 已由 `docs/04_task_board.md` / `docs/07_handoff.md` 的 `T72` supersede |
+| `docs/02_experiment_plan.md` 中 2026-05-08 的“当前唯一任务：待定义” | 已由 `docs/04_task_board.md` / `docs/07_handoff.md` 的 current unique task 机制 supersede |
 | `docs/follow-up_plan/README.md` 是后续计划唯一维护入口 | 已由本文档 Part II 替代；该文件只保留为退役索引 |
+| `docs/progress_summary/CNN_FPGA_GKP_阶段结论.md` 是当前阶段结论入口 | 已由本文档 Part I 替代；该文件只保留为退役索引，历史全文归档到 `docs/legacy_context/progress_summary_retired_2026-06-11/` |
 | P3 中出现 `real_board` mode 就代表真板 HIL 近似完成 | 降级为 placeholder/gate/readiness 证据；真板执行仍未发生 |
 | `.tflite` artifact、`.tflite.json` stub、TFLite runtime、HIL runtime 可混写 | 已拆成 artifact type、stub fallback、isolated true runtime、HIL/board integration 四层 |
 | No TeacherParams 离线更好，可作为主线 | formal HIL seed 翻转，不能作为稳定更优主线 |
 | 继续追 Gated v10/v11/v12 超参可能是主路径 | 降级为低优先级；后续应改为机制诊断、protocol lock 或 sidecar |
 | `statcalib` 可自然并入 T24 frozen table | 被 `T26/T30/T64-T70` 改写为 separate extension lane，并由 `T70` 明确 no-promotion |
 | paper-ready prose 可直接推进 | 被 Research Reality Recovery Mode、claim/evidence/material ledger 和后续 result packs 约束 |
-| real-board gate pack 已足够 future-host 复用 | `T71` 关闭 R30，但 `R31/T72` 指出 provenance 仍需 execution-derived / override-safe hardening |
+| real-board gate pack 已足够 future-host 复用 | `T72` 收紧了 provenance，但在 future-host 最小 config 标签精确性与真实硬件宿主缺失前，仍不能写成 fully clean / fully reusable |
 
 ## 7. 治理工作方式
 
@@ -134,32 +136,34 @@
 
 ## 9. 当前主线任务
 
-当前唯一任务：
+当前唯一任务仍以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准。
 
-- `T72: Real-board transfer-pack provenance hardening`
-- 任务包：`docs/tasks/Phase2/T72_real_board_transfer_pack_provenance_hardening.md`
+本次整理时的状态说明：
 
-当前任务边界：
+- `T73: Mainline claim/evidence and result/figure/risk ledger refresh`
+- 任务包：`docs/tasks/Phase2/T73_mainline_claim_evidence_and_result_figure_ledger_refresh.md`
+- 状态：`Current Unique Task`
 
-- 只处理 read-only host / device / bitstream / AXI / DMA / repo-path truth 的 provenance hardening。
-- 目标是让 transfer pack 的说明从固定文案变成 execution-derived / override-aware。
-- 需要补 `--config`、`--mmio-path`、`--dma-path` 等 override provenance 的 focused regression。
-- 不得扩展到 benchmark、HIL 语义、`.tflite`、真板成功宣称、theory branch、sidecar promotion 或 write-side MMIO/DMA/register actions。
+当前主线优先级边界：
 
-`T72` 完成前，下面所有内容都是候选计划，不是当前任务。
+- `T73` 是 main 分支上的 docs-only 主线台账刷新任务，目标是把 post-`T72` 的 claim/evidence、result/figure、paper-risk 三套台账统一回写。
+- 它不是 benchmark、`.tflite`、真板执行、theory branch 或 paper prose reopen 任务。
+- 在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，`T37` 及其他 real-board execution 任务维持 `blocked + lowest-priority backlog`，不抢占当前主线。
+- 若 `T73` 完成，下一张单一主线任务应优先切到 `T74` 这类“论文可直接复用的仿真结果/图表材料打包”任务，而不是重开真板执行准备。
+
+除 `T73` 外，下面所有内容都只是候选计划，不是当前执行任务。
 
 ## 10. 后续路线总览
 
-后续开发按证据等级分层推进，不一次性展开全部方向：
+后续开发按“论文材料先行、硬件路径后置”的顺序分层推进，不一次性展开全部方向：
 
-1. 主线可信度与复现边界
-2. paper-grade benchmark expansion
-3. 机制诊断与 ablation
-4. runtime 与 `.tflite` 补强
-5. 板级语义与真板路径
-6. 工程仿真补强
-7. paper / 投稿路线
-8. sidecar / research extension
+1. 主线 paper-facing 台账与论文材料入口
+2. 仿真结果、图表、caption 与 submission-ready 材料打包
+3. 主线可信度、training / `.tflite` 复现边界补强
+4. 机制诊断与有界 ablation
+5. paper-grade benchmark expansion 规划与小步执行
+6. sidecar / 工程仿真补强
+7. 板级语义与真板路径（当前最低优先级 backlog）
 
 ## 11. 主线可信度与复现边界
 
@@ -243,20 +247,21 @@
 - `board_backend.py` 仍不能写成真实板级完成。
 - `T49/T71` 证明的是 read-only gate / regeneration / transfer pack 边界。
 - current-host verdict 仍是 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`。
-- `T72` 正在处理 transfer-pack provenance，而不是真板执行。
+- `T72` 已完成 provenance hardening；它处理的是 transfer-pack provenance，而不是真板执行。
+- 当前还缺少可用的 `Linux + FPGA` 硬件宿主，因此真板执行路线不仅证据未闭合，也处于资源受限状态。
 
 后续方向：
 
-1. 完成 `T72`：去掉未探测即写死的 provenance 文案，让 config/path provenance execution-derived / override-aware。
-2. 继续保持 host/device/bitstream/AXI/DMA/repo-path truth 的只读 gate。
+1. 在硬件条件变化前，只保留 host/device/bitstream/AXI/DMA/repo-path truth 的只读 gate、manifest 与 provenance 维护。
+2. 当前主线优先完成 `T73`、`T74` 这类 paper-facing 仿真材料任务，而不是继续把精力投入真板执行准备。
 3. 未来可补 board backend shadow state machine：register shadow、parameter bank shadow、commit ack/fail、DMA stale window。
 4. 建立板级异常事件 taxonomy：DMA stale read、partial write、commit timeout、bank mismatch、device path unavailable。
-5. 只有在设备路径、bitstream/RTL/DMA contract、地址表和权限条件满足后，才可打开真板 smoke execution task。
+5. 只有在设备路径、bitstream/RTL/DMA contract、地址表、权限条件和 `Linux + FPGA` 宿主都满足后，才可重新考虑真板 smoke execution task。
 
 边界：
 
 - 后续任何 write-side MMIO/DMA/register action 必须另有明确授权和任务包。
-- `T37` 在 real-board gate/provenance 条件满足前继续 blocked。
+- `T37` 在 real-board gate/provenance 条件满足且硬件宿主到位前继续 `blocked + lowest-priority backlog`。
 
 ## 16. 工程仿真补强方向
 
@@ -356,6 +361,13 @@
 2. teacher-anchored residual/control calibration formulation。
 3. 分层证据链：frozen-set mock-backed software-HIL、extension-lane statcalib closure、isolated true `.tflite` runtime gate、real-board read-only gate/provenance boundary。
 
+现阶段写作节奏：
+
+1. 先完成 `T73` 的主线台账刷新，确保 claim/result/risk 口径统一。
+2. 再完成 `T74` 一类 paper-ready 仿真结果/图表打包任务，把现有主线仿真证据整理成可直接写入论文的材料。
+3. training / `.tflite` 只补 boundary table、portability table 或 supporting material，不冒进写成部署闭环。
+4. real-board 材料现阶段只保留 gate/provenance 边界说明；在硬件条件变化前，不把它当作近期主结果来源。
+
 投稿前需要重新回填：
 
 - 正式结果表与 run root。
@@ -402,21 +414,20 @@ FCCM、ACM FPGA、DATE、ICCAD 等硬件向 venue 只有在补齐以下证据后
 
 | 优先层 | 候选任务 | 主要输出 | 验证 |
 | --- | --- | --- | --- |
-| Current | `T72` real-board transfer-pack provenance hardening | execution-derived / override-aware transfer pack | focused regression + docs sync |
-| P1 | claim/evidence ledger refresh | claim -> evidence -> task/review 表 | 文档自查 + reviewer |
-| P1 | result/figure ledger refresh | figure/table -> script/config/run root/review 表 | 文档自查 + reviewer |
+| Current | `T73` 主线 claim/evidence 与 result/figure/risk 三台账刷新 | post-`T72` 的 paper-facing 主台账一致化 | 文档自查 + reviewer |
+| Immediate-next | `T74` 论文可直接复用的仿真结果与图表打包 | traced result tables、figure pack、captions、material manifest | reviewer + traceability audit |
+| P1 | training/material reproducibility follow-up | repeated-run / cross-host / CPU-vs-GPU 边界表 | bounded train/eval smoke |
 | P1 | `.tflite` runtime portability audit | default env / isolated env / cross-host 差异表 | bounded runtime smoke |
 | P1 | `.tflite` isolated-env bootstrap hardening | interpreter/package/artifact/source manifest | true-runtime smoke rejects stub/fallback |
-| P1 | training/material reproducibility follow-up | repeated-run / cross-host / CPU-vs-GPU 边界表 | bounded train/eval smoke |
 | P2 | paper-grade expanded benchmark execution protocol | scenarios、baselines、metrics、seeds、stopping | protocol review first |
+| P2 | mechanism diagnosis pack | histogram/residual-b/update cadence 诊断 | focused trace / small sample |
 | P2 | GPT-Pro extension-route triage | adopted/deferred/rejected sidecar list | docs-only protocol review |
 | P2 | temporal TCN / adaptive teacher / parameter-bank sidecar design | bounded experiment spec + shared inputs | no long-run execution without new task |
-| P2 | mechanism diagnosis pack | histogram/residual-b/update cadence 诊断 | focused trace / small sample |
 | P2 | statcalib future-selection task | extension-lane candidate comparison | task-scoped helper + run root |
 | P2 | fixed-point shadow pipeline | bit width spec + shadow diff | small trace comparison |
 | P3 | board backend shadow semantics | state machine / register / DMA event model | no write-side hardware action |
-| P3 | real-board smoke execution | real device smoke | only after gate conditions satisfy |
-| P3 | paper draft reopen gate | outline, abstract, figures, related work | no claim upgrade without evidence |
+| P4-lowest | real-board smoke execution | real device smoke | only after gate conditions satisfy and hardware host becomes available |
+| P3 | paper draft reopen gate | outline, abstract, figures, related work | only after T73/T74 and supporting materials are complete |
 
 ## 22. 关键索引
 

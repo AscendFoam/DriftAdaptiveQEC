@@ -122,14 +122,20 @@
 - 可以说：`Research Reality Recovery Mode is a governance freeze and audit mode, not an evidence upgrade.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`
-## 2026-06-11 Captain Update (T71/T72 boundary supersession)
+## 2026-06-11 Captain Update (T72/T73 boundary supersession)
 
-- `T71` 已被 Captain 接受为 `PASS_WITH_WARNINGS`。
-- 它只把 current-host 真板前提 gate 提升为 code-backed、checked-in、role-aware、可 replay / regeneration 的 read-only 包；它没有执行真板 smoke，没有验证 `board_backend.py`，也没有把证据升级为 `hardware_validated`。
-- `T71` 关闭了 `R30`，但没有关闭 `R13/R14`，也没有打开 `T37`。
-- 新的边界风险是 `R31`：future-host transfer pack 的 provenance 仍存在未实际探测却写成事实、以及对 `--config` / path override 不够动态的写死说明。
-- 因此当前唯一任务切换为 `T72: Real-board transfer-pack provenance hardening`。
-- `T72` 只允许 harden read-only collector 的 provenance 与回归覆盖；不得改写 verdict 语义，不得触碰 benchmark / `.tflite` / real-board execution / theory branch。
+- `T72` 已被 Captain 接受为 `PASS_WITH_WARNINGS`。
+- 它只把 current-host 真板前提 gate / transfer-pack 提升为更严谨的 code-backed、checked-in、role-aware、可 replay / regeneration 的 read-only 包；它没有执行真板 smoke，没有验证 `board_backend.py`，也没有把证据升级为 `hardware_validated`。
+- `T72` 关闭了 `R31`，但没有关闭 `R13/R14`，也没有打开 `T37`。
+- 新的边界风险是 `R32`：future-host 最小 config 场景下，path provenance 仍不能精确区分 YAML 显式字段与代码默认值回退。
+- 因此当前唯一任务切换为 `T73: Mainline claim/evidence and result/figure/risk ledger refresh`。
+- `T73` 是 docs-only 主线台账任务；它只能刷新 claim/result/risk 口径，不得改写 HIL / `.tflite` / real-board / benchmark 证据等级。
+
+## 2026-06-11 Captain 优先级调整（paper-first / board-lowest）
+
+- 当前暂无可用的 `Linux + FPGA` 硬件宿主，因此真板执行路线在计划层面也维持 `blocked + lowest-priority backlog`。
+- 在硬件条件变化前，main 分支只保留 read-only real-board truth / gate / provenance 维护，不新增任何真板 execution 任务来抢占 `T73`、`T74` 这类 paper-material 主线任务。
+- 因而当前关于 real-board 的最强可写事实仍然只是 `T49/T71/T72` 的 gate / regeneration / provenance 边界，而不是任何执行成功或硬件验证。
 
 ## 2026-05-24 Captain Update (T47/T57 boundary supersession)
 

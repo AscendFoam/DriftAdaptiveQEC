@@ -4,11 +4,12 @@
 
 ## 当前状态
 
-- 研究背景与阶段结论主要见：
-  - `docs/legacy_context/reference_retired_2026-06-11/CNN_FPGA_GKP_工程化实验方案.md`
-  - `docs/progress_summary/CNN_FPGA_GKP_阶段结论.md`
-  - `docs/02_experiment_plan.md`（Part II 为后续开发计划唯一入口）
+- 当前阶段结论与后续计划主要见：
+  - `docs/02_experiment_plan.md`（Part I 为当前阶段结论入口，Part II 为后续开发计划唯一入口）
   - `docs/paper_notes/README.md`
+- 历史研究背景与早期阶段材料可参考：
+  - `docs/legacy_context/reference_retired_2026-06-11/CNN_FPGA_GKP_工程化实验方案.md`
+  - `docs/progress_summary/CNN_FPGA_GKP_阶段结论.md`（已退役索引，历史全文在 `docs/legacy_context/progress_summary_retired_2026-06-11/`）
 - 自 `2026-05-05` 起，项目治理以以下文件为准：
   - `docs/00_project_snapshot.md`
   - `docs/01_legacy_audit.md`
@@ -34,6 +35,7 @@
   - `docs/paper_materials/`: 论文材料、claim/evidence ledger、草稿骨架和风险审计
   - `docs/sidecar/`: sidecar 扩展实验治理与 worktree 规划
   - `docs/legacy_context/`: 已退役或只作历史参考的旧计划、旧分析和归档材料
+  - `docs/progress_summary/`: 已退役阶段结论索引；当前阶段结论统一维护在 `docs/02_experiment_plan.md`
 - `runs/`, `artifacts/`: 运行产物与历史证据
 
 ## 当前已确认的入口

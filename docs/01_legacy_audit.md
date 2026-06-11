@@ -1,5 +1,9 @@
 # Feasibility And Legacy Audit
 
+**维护状态**：legacy 真实性审计底稿
+**最后维护说明更新**：2026-06-11
+**当前事实入口**：`docs/02_experiment_plan.md`、`docs/04_task_board.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md`
+
 ## 1. 审计目的
 
 本文件对应 `docs/reference/AI_coding_workflow.md` 中 `01_feasibility_report.md` 的角色，并保留 legacy audit 结果。它回答两个问题：
@@ -12,7 +16,19 @@
 1. 这个项目到底已经有什么
 2. 哪些是代码已实现
 3. 哪些只是未来扩展或 placeholder
-4. 当前唯一恢复任务应该是什么
+4. 恢复期当时如何判断下一步接力任务
+
+## 1A. 维护边界
+
+本文件解释的是 legacy 仓库“原本有哪些真实代码、哪些只是 mock / stub / placeholder”。它不是当前任务流水账，也不是后续计划入口。
+
+因此，`docs/01_legacy_audit.md` 不应随每个 T 系列任务滚动追加。只有当新证据会改变 legacy reality matrix 时才更新，例如：
+
+- 发现某条早期代码路径此前被误判为 placeholder 或真实实现；
+- `.tflite`、HIL、real-board、benchmark 的证据等级发生会反向影响 legacy 审计判断的变化；
+- 需要修正本文件中仍指向旧路径或旧事实入口的内容。
+
+普通 Captain closeout、当前唯一任务切换、后续计划更新，应优先同步 `docs/04_task_board.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 和必要时的 `docs/02_experiment_plan.md`，不应把本文件变成第二份任务日志。
 
 ## 2. 总体结论
 
@@ -43,8 +59,7 @@
   - `T11`
   - `T12`
   - `T13`
-- 当前下一唯一任务建议为：
-  - `T47: Paper ablation result-pack and material ledger`
+- 历史恢复期下一任务建议曾多次被后续 Captain closeout supersede；当前唯一任务不由本节维护，必须以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准。
 
 说明：
 
@@ -65,12 +80,12 @@
 
 ### 2026-06-11 Captain Update
 
-- `T71` 已被接受为 `PASS_WITH_WARNINGS`。
-- 这次 closeout 没有改变 legacy audit 的底线判断：`board_backend.py` 仍是 placeholder-only，真实板级执行证据仍然缺失，mainline 仍不得把 read-only gate pack 改写成 `real-board validated`。
-- `T71` 解决的是 gate 再生成与 future-host 入口一致性，不是 `T37` 真板执行前提本身。
-- `R30` 已关闭，因为 role-aware `mmio + dma` 判定、checked-in regeneration collector 和 replay/regeneration 一致性都已补上。
-- 新的后续风险为 `R31`：transfer-pack 的 provenance 仍有写死文案和 override 回归不足，尚不能当作长期稳定的 future-host 标准入口。
-- 当前唯一任务已切换为 `T72: Real-board transfer-pack provenance hardening`；它继续停留在 main 分支 deployment-boundary hardening 车道，不触碰 theory 分支。
+- `T72` 已被接受为 `PASS_WITH_WARNINGS`。
+- 这次 closeout 没有改变 legacy audit 的底线判断：`board_backend.py` 仍是 placeholder-only，真实板级执行证据仍然缺失，mainline 仍不得把 read-only gate / transfer-pack 改写成 `real-board validated`。
+- `T72` 收紧的是 transfer-pack provenance 与 future-host 入口严谨度，不是 `T37` 真板执行前提本身。
+- `R31` 已关闭，因为默认-config / override / probe-limitations 这组三个主 provenance 问题都已补上。
+- 新的后续风险为 `R32`：最小 config 场景下 path provenance 仍不能区分“YAML 明确字段”与“代码默认值回退”，所以 future-host 入口还不能写成 fully provenance-clean。
+- 当前唯一任务已切换为 `T73: Mainline claim/evidence and result/figure/risk ledger refresh`；它是 main 分支 docs-only 主线台账刷新任务，不触碰 theory 分支。
 
 ### 2026-05-16 Captain Update
 
@@ -185,7 +200,7 @@
 | P1 数据与训练链 | 已有数据集构建、训练、评估、量化入口 | `cnn_fpga/data/dataset_builder.py`, `cnn_fpga/model/train.py`, `cnn_fpga/model/evaluate.py`, `cnn_fpga/model/quantize.py` | 代码存在 | 依赖矩阵未确认，当前未复跑 |
 | P2 行为级硬件仿真 | 已有硬件行为仿真与模式 benchmark | `cnn_fpga/benchmark/run_hardware_emulation.py`, `cnn_fpga/benchmark/run_p2_mode_benchmark.py` | 代码存在 | 当前环境未复验 |
 | P3 软件 HIL | 已有 HIL 主流程、mock backend、驱动抽象、推理服务 | `cnn_fpga/benchmark/run_hil_suite.py`, `cnn_fpga/hwio/mock_fpga.py`, `cnn_fpga/runtime/inference_service.py`, `docs/03_hil_p4_boundary_audit.md`, `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`, `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104/hil_summary.json`, `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172232_3ae9f9176104/hil_summary.json` | bounded 最小路径已逐字一致复验 | 结论仅限 `mock + model_artifact + artifact_npz + inproc`，不等于真板或 `.tflite` 路径已恢复 |
-| P3 真板 HIL | 当前是 placeholder real-board backend | `cnn_fpga/hwio/board_backend.py`, `docs/CNN_FPGA_GKP_阶段结论.md`, `docs/03_hil_p4_boundary_audit.md` | 是 | 真实设备节点和地址表缺失，不能写成已完成 |
+| P3 真板 HIL | 当前是 placeholder / gate / provenance 层证据，尚非真实板级完成 | `cnn_fpga/hwio/board_backend.py`, `docs/02_experiment_plan.md`, `docs/03_hil_p4_boundary_audit.md`, `docs/evidence_packs/deployment_boundary/` | 是 | 真实设备节点、bitstream / RTL / DMA contract 和地址表证据仍缺失，不能写成已完成 |
 | P4 多场景 benchmark | 已有统一 benchmark 汇总脚本；最小 recovery path、frozen baseline 单场景全模式 smoke、以及 T24 frozen-set formal software revalidation 都已复验 | `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`, `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`, `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`, `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/summary.json` | `mock-backed` software HIL formal revalidation 已完成 | 当前证据仍不是 `.tflite` runtime、真板验证或 paper-grade expanded benchmark；T28 已修复 teacher diagnostics missing-vs-zero writer 语义，但 R10 机制证据仍未完全修复 |
 | teacher-representation 多版本分支 | 已有 v2-v9 配置与配对 benchmark 入口 | `cnn_fpga/config/experiment_runtime_b_residual_norm_gated_teacher_v*.yaml`, `cnn_fpga/benchmark/run_p4_teacher_representation_paired.py` | 代码存在 | 当前不应继续扩分支，先恢复可信度 |
 | 真板 backend 语义 | placeholder/骨架状态 | `cnn_fpga/hwio/board_backend.py` | 是 | 若表述不严谨，极易误导项目完成度判断 |
@@ -413,9 +428,9 @@
 - 原因 3：`T9` 已把 P4 recovery 证据扩到 `single-scenario + four-mode + repeats=1`，但仍不是正式多场景 frozen benchmark
 - 原因 4：`T11/T12` 已分别收口 recovery 期 manifest 与 software HIL 确定性，剩余缺口已经从“阻止接力”降为“下一阶段的 bounded 开发任务”
 
-后续优先级建议：
+后续优先级建议（历史审计口径，已由后续任务与 `docs/02_experiment_plan.md` supersede）：
 
-1. `T14` 至 `T56`、`T53`、`T54`、`T55` 已完成；当前下一唯一任务为 `T47`，只做 hedge-conditioned paper ablation result-pack and material ledger，不直接进入 `.tflite` runtime 或真板范围
+1. `T14` 至 `T56`、`T53`、`T54`、`T55` 等历史任务已经被后续 Captain closeout 串联推进；当前唯一任务必须以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准。本节只保留“不要把 docs-only paper/material lane 直接扩写成 `.tflite` runtime 或真板范围”的边界建议。
 2. 继续保持 `mock` / `.tflite` / `real_board` 边界表述诚实
 3. `T26` gate 结论为 `CONDITIONAL_GO`，且 `T30` 已把 statcalib 收紧为 interface-only separate comparator contract；后续仍不得把 statcalib 静默并入 T24 frozen benchmark set，不得扩展 formal benchmark、baseline/scenario、`.tflite` 或真板范围。
 4. `T36/T38` 已把 `seed=20260429` 诊断推进到 single-seed trace-supported mechanism evidence，但仍不是 mitigation 或 multi-seed causal proof。

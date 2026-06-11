@@ -1,17 +1,16 @@
-## 2026-06-11 Captain Final Supersession (T71 closeout)
+## 2026-06-11 Captain Final Supersession (T72 closeout)
 
-- Current unique task: `T72: Real-board transfer-pack provenance hardening`
-- Task package: `docs/tasks/Phase2/T72_real_board_transfer_pack_provenance_hardening.md`
-- `T71` has been judged `PASS_WITH_WARNINGS`.
-- `T71` closes `R30` honestly: the repository now has one checked-in、read-only、role-aware、可 replay / regeneration 的 real-board gate pack，且 current-host regenerated verdict 仍为 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`。
-- `T71` warning classification:
-  - `W1` fixed `probe_limitations` text not derived from actual probe execution = `deferred -> R31`
-  - `W2` fixed default-config `source_records` / `expected_byte_count_basis` text = `deferred -> R31`
-  - `W3` missing focused regression for `--config` / `--mmio-path` / `--dma-path` provenance behavior = `deferred -> R31`
-  - `W4` collector keeps repo-internal `BoardFPGAConfig` import = `accepted`
-- `R13/R14` remain open, `T37` remains blocked, and `R31` is now the active deployment-boundary carry-forward risk.
-- `T72` is the next bounded mainline task because the remaining question is no longer whether the gate exists, but whether the transfer-pack provenance is execution-derived and override-safe enough for future-host reuse.
-- `T72` must stay inside read-only host / device / bitstream / AXI / DMA / repo-path truth only: no benchmark/HIL widening, no real-board success claim, no theory-branch mixing, and no write-side MMIO/DMA/register actions.
+- Current unique task: `T73: Mainline claim/evidence and result/figure/risk ledger refresh`
+- Task package: `docs/tasks/Phase2/T73_mainline_claim_evidence_and_result_figure_ledger_refresh.md`
+- `T72` has been judged `PASS_WITH_WARNINGS`.
+- `T72` closes `R31` honestly: the checked-in、read-only、role-aware real-board gate / transfer-pack now carries execution-derived probe provenance、default/override-aware source records and focused override regression coverage, while the current-host regenerated verdict remains `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`。
+- `T72` warning classification:
+  - `N1` 最小 config 场景下 path provenance 仍会把代码默认值写成 `source_kind=config_field` = `deferred -> R32`
+  - `N2` Worker 原始主报告路径曾短暂落在精确 allowed files 之外，但当前 `HEAD` 已整理回允许目录 = `accepted`
+  - `N3` 缺少覆盖 path 字段缺省回退标签的 focused regression = `deferred -> R32`
+- `R13/R14` remain open, `T37` remains blocked, `R31` is closed by `T72`, and `R32` is the new narrowed deployment-boundary carry-forward risk.
+- `T73` is the next bounded mainline task because the repo now needs one post-`T72` 的 paper-facing 主台账刷新入口，把 `T48/T50/T57/T58/T70/T72` 的现状统一回写。
+- `T73` must stay docs-only, mainline-only, and must not widen into benchmark/HIL reruns, `.tflite` execution, real-board execution, theory-branch work, or paper prose reopen.
 
 ## 2026-06-08 Captain 并行 Sidecar 治理设置
 
@@ -53,21 +52,24 @@
 
 ## 1. 当前状态
 
-- 日期：`2026-06-10`
+- 日期：`2026-06-11`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T72: Real-board transfer-pack provenance hardening`
-- 任务包：`docs/tasks/Phase2/T72_real_board_transfer_pack_provenance_hardening.md`
+- 当前唯一任务：`T73: Mainline claim/evidence and result/figure/risk ledger refresh`
+- 任务包：`docs/tasks/Phase2/T73_mainline_claim_evidence_and_result_figure_ledger_refresh.md`
+- 当前主线优先级：先补论文所需的仿真结果、图表、caption 与 supporting materials；real-board execution 因当前暂无 `Linux + FPGA` 硬件宿主而维持最低优先级 backlog
 
 Captain continuity note:
 
-- The authoritative current task for all new worker action is `T72: Real-board transfer-pack provenance hardening`.
-- Authoritative task package: `docs/tasks/Phase2/T72_real_board_transfer_pack_provenance_hardening.md`.
-- `T71` is complete and accepted as `PASS_WITH_WARNINGS`.
-- `R30` is closed by `T71`; `R31` is the new carry-forward risk for provenance hardening.
-- If any older line below still mentions `T71` or earlier tasks as current, treat it as historical carry-forward text only.
-- `T72` is the single bounded next step after T71 closeout. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or `T37` board execution.
+- The authoritative current task for all new worker action is `T73: Mainline claim/evidence and result/figure/risk ledger refresh`.
+- Authoritative task package: `docs/tasks/Phase2/T73_mainline_claim_evidence_and_result_figure_ledger_refresh.md`.
+- `T72` is complete and accepted as `PASS_WITH_WARNINGS`.
+- `R31` is closed by `T72`; `R32` is the new narrowed carry-forward risk for minimal-config provenance labeling.
+- After `T73`, the single recommended next task is `T74: Paper-ready simulation result and figure pack`.
+- `T37` / real-board execution remains `blocked + lowest-priority backlog`; it is not the next mainline step while hardware host conditions remain unavailable.
+- If any older line below still mentions `T72` or earlier tasks as current, treat it as historical carry-forward text only.
+- `T73` is the single bounded next step after T72 closeout. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or paper prose reopen.
 
 ## 2026-06-05 Captain Update (T67 closeout)
 

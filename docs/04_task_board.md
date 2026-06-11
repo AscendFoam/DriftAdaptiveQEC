@@ -180,7 +180,8 @@
   - Review output: `docs/review/T33_review.md`
   - Captain verdict: `PASS`
   - Result: 116 tracked `.pyc` files across 9 manifest-listed `__pycache__` directories were removed from the Git index; `runs/`, `artifacts`, source, config, benchmark, `.tflite`, and hardware scope remained untouched
-- [ ] T37: Real-board smoke execution gate, only if hardware host and bitstream evidence are ready
+- [ ] T37: Real-board smoke execution gate, only if `Linux + FPGA` hardware host, device path, and bitstream evidence are ready
+  - Status note: `resource-blocked / lowest-priority backlog`
   - Task package: pending
 
 ### Milestone 2K: Paper Assembly Readiness
@@ -454,8 +455,26 @@
     - `W3` `--config` / `--mmio-path` / `--dma-path` 的 provenance/override 回归不足 = `deferred -> R31`
     - `W4` collector 继续 import `BoardFPGAConfig` 作为 repo 内 config 读取入口 = `accepted`
   - Result: T71 closes the R30 gap honestly by hardening role-aware gate logic, adding a checked-in read-only collector, and proving replay/regeneration consistency; it still does not unlock `T37` or validate any real-board execution
-- [ ] T72: Real-board transfer-pack provenance hardening
+- [x] T72: Real-board transfer-pack provenance hardening
   - Task package: `docs/tasks/Phase2/T72_real_board_transfer_pack_provenance_hardening.md`
+  - Output: `docs/evidence_packs/deployment_boundary/t72_real_board_transfer_pack_provenance_hardening.md`
+  - Review output: `docs/review/T72_review.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - Warning handling:
+    - `N1` 最小 config 场景下 path provenance 仍会把代码默认值写成 `source_kind=config_field` = `deferred -> R32`
+    - `N2` Worker 原始主报告路径曾短暂落在精确 allowed files 之外，但当前 `HEAD` 已整理回允许目录 = `accepted`
+    - `N3` 缺少覆盖 path 字段缺省回退标签的 focused regression = `deferred -> R32`
+  - Result: T72 closes `R31` honestly by hardening probe provenance、default/override-aware source records、expected-byte-count derivation 和 focused override regressions；current-host verdict 仍是 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`，`T37` 继续 blocked
+
+### Milestone 2T: Mainline Paper-Facing Ledger Refresh (proposed)
+
+- [ ] T73: Mainline claim/evidence and result/figure/risk ledger refresh
+  - Task package: `docs/tasks/Phase2/T73_mainline_claim_evidence_and_result_figure_ledger_refresh.md`
+
+### Milestone 2U: Paper-Ready Simulation Material Pack (proposed)
+
+- [ ] T74: Paper-ready simulation result and figure pack
+  - Task package: `docs/tasks/Phase2/T74_paper_ready_simulation_result_and_figure_pack.md`
 
 ### Milestone 2R: Reproducibility And Material Pack (proposed)
 
@@ -477,57 +496,65 @@ Long-term objective:
 
 以论文级质量为最终目标，但当前先进入 `Research Reality Recovery Mode`。后续任务顺序改为“真实性冻结 -> claim/evidence/material 台账 -> 复现/图表/结果缺口审计 -> 风险收口 -> 再决定是否恢复论文扩写”。除 `Current Unique Task` 外，其他 pending 项只代表路线图，不可直接执行。
 
-## 2026-06-11 Captain Final Supersession (T71 closeout)
+## 2026-06-11 Captain Final Supersession (T72 closeout)
 
-- Current unique task: `T72: Real-board transfer-pack provenance hardening`
-- Task package: `docs/tasks/Phase2/T72_real_board_transfer_pack_provenance_hardening.md`
-- `T71` has been judged `PASS_WITH_WARNINGS`.
-- `T71` closes `R30` honestly: the repository now has one checked-in、read-only、role-aware、可 replay / regeneration 的 real-board gate pack，且 current-host regenerated verdict 仍是 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`。
-- `T71` warning classification:
-  - `W1` fixed `probe_limitations` text not derived from actual probing = `deferred -> R31`
-  - `W2` fixed default-config `source_records` / `expected_byte_count_basis` text = `deferred -> R31`
-  - `W3` missing focused regression for `--config` / `--mmio-path` / `--dma-path` provenance behavior = `deferred -> R31`
-  - `W4` collector keeps repo-internal `BoardFPGAConfig` import = `accepted`
-- `R13/R14` remain open, `T37` remains blocked, and `R31` is now the active deployment-boundary carry-forward risk.
-- `T72` is the next bounded mainline task because the remaining question is no longer whether the gate exists, but whether the transfer-pack provenance is execution-derived and override-safe enough for future-host reuse.
-- `T72` must stay on main only, remain isolated from theory-branch work, and must not widen into benchmark, `.tflite`, real-board execution, or paper reopen.
+- Current unique task: `T73: Mainline claim/evidence and result/figure/risk ledger refresh`
+- Task package: `docs/tasks/Phase2/T73_mainline_claim_evidence_and_result_figure_ledger_refresh.md`
+- `T72` has been judged `PASS_WITH_WARNINGS`.
+- `T72` closes `R31` honestly: the checked-in read-only real-board gate / transfer-pack now has execution-derived probe limitations、default/override-aware provenance 和 focused override regressions, while the current-host regenerated verdict remains `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`.
+- `T72` warning classification:
+  - `N1` 最小 config 场景下 path provenance 仍会把代码默认值写成 `source_kind=config_field` = `deferred -> R32`
+  - `N2` Worker 原始主报告路径曾短暂落在精确 allowed files 之外，但当前 `HEAD` 已整理回允许目录 = `accepted`
+  - `N3` 缺少覆盖 path 字段缺省回退标签的 focused regression = `deferred -> R32`
+- `R13/R14` remain open, `T37` remains blocked, `R31` is closed by `T72`, and `R32` is the new narrowed deployment-boundary carry-forward risk.
+- `T73` is next because the repo now needs one post-`T72` 主线 paper-facing 三台账刷新入口，把 `T48/T50/T57/T58/T70/T72` 的现状统一回写，而不是继续开启新的执行长跑。
+- `T73` is docs-only, mainline-only, and must not widen into benchmark, `.tflite`, real-board execution, theory-branch work, or paper prose reopen.
+
+## 2026-06-11 Captain 优先级调整（paper-first / board-lowest）
+
+- 用户已明确当前暂无可用的 `Linux + FPGA` 硬件宿主。
+- 因此 main 分支当前主线顺序调整为：`T73` 台账刷新 -> `T74` 论文可直接复用的仿真结果/图表打包 -> 其余 supporting-material tasks。
+- `T37` 继续保持 `blocked + lowest-priority backlog`，不是 `T73` 之后的下一任务。
+- 在硬件条件变化前，real-board 方向只保留 truth / gate / provenance 维护，不重新打开真板 execution 任务。
 
 ## Current Unique Task
 
-`T72: Real-board transfer-pack provenance hardening`
+`T73: Mainline claim/evidence and result/figure/risk ledger refresh`
 
 Status:
 
-- `T71` has been reviewed as `PASS_WITH_WARNINGS`.
-- `T71` closes `R30` honestly: the checked-in regeneration path now exists and the current-host regenerated verdict remains `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`.
-- `T71` warning handling is deferred rather than blocking:
-  - `W1` fixed `probe_limitations` text not derived from actual probing = `deferred -> R31`
-  - `W2` fixed default-config `source_records` / `expected_byte_count_basis` text = `deferred -> R31`
-  - `W3` missing focused regression for `--config` / `--mmio-path` / `--dma-path` provenance behavior = `deferred -> R31`
-  - `W4` collector keeps repo-internal `BoardFPGAConfig` import = `accepted`
-- `R13/R14` remain open but narrower: the current-host truth is no longer unknown; it is explicitly blocked by missing openable device paths, missing bound bitstream/RTL/DMA contract evidence, and a placeholder repo execution path.
+- `T72` has been reviewed as `PASS_WITH_WARNINGS`.
+- `T72` closes `R31` honestly without changing the current-host final gate verdict.
+- `T72` warning handling:
+  - `N1` 最小 config 场景下 path provenance 仍会把代码默认值写成 `source_kind=config_field` = `deferred -> R32`
+  - `N2` Worker 原始主报告路径曾短暂落在精确 allowed files 之外，但当前 `HEAD` 已整理回允许目录 = `accepted`
+  - `N3` 缺少覆盖 path 字段缺省回退标签的 focused regression = `deferred -> R32`
+- `R13/R14` remain open, `R32` is now the narrowed deployment-boundary carry-forward risk, and `T37` remains blocked.
+- 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 同时也是 `resource-blocked / lowest-priority backlog`。
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
 - `T64/T65/T66/T67/T68/T69/T70` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T72` must remain isolated from benchmark/HIL/sidecar/paper-reopen/theory-branch outputs, and it must not rewrite provenance hardening as real-board validation or perform write-side MMIO/DMA/register actions.
+- `T73` must remain docs-only and must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
 
 Why this task is next:
 
-1. `T49` has already answered the first honest current-host real-board question: this machine is presently `NO_GO`, not “unknown”.
-2. The next unresolved deployment-boundary question is now reproducibility and future-host portability of that gate, not immediate board execution on the current host.
-3. `T37` remains blocked, and `T51/T52` paper re-open tasks are still premature before the repo has a checked-in, role-aware, read-only gate regeneration path.
-4. `T71` is materially stronger than a docs-only task because it requires gate-logic hardening, a checked-in read-only artifact collector, replay/regression coverage, and one current-host regeneration pack that agrees with `T49`.
+1. `T48/T50/T57/T58/T70/T72` have now created multiple paper-facing evidence updates, but the mainline claim/result/risk ledgers have not been refreshed to a unified post-`T72` state.
+2. The next bottleneck is no longer another execution lane first; it is the lack of one authoritative paper-facing ledger layer that honestly reflects bounded software/runtime/deployment evidence.
+3. 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 不仅证据未满足，而且属于资源受限 backlog，不应早于 paper-material 主线任务。
+4. `T51/T52` paper re-open tasks 仍然过早；在 repo 刷新 current claim/result/risk tables 并补齐 submission-ready simulation materials 之前，不应恢复 prose 扩写。
+5. `T73` is stronger than a simple docs tidy-up because it requires cross-checking multiple recent reviews, evidence packs, figure assets, and risk boundaries without silently promoting any blocked claim.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T72`
-- Latest reviewed task: `docs/review/T71_review.md` with verdict `PASS_WITH_WARNINGS`
-- T71 closeout:
-  - `W1/W2/W3` = `deferred -> R31`
-  - `W4` = `accepted`
-  - `R30` = closed by T71
-- Next worker-facing task package: `docs/tasks/Phase2/T72_real_board_transfer_pack_provenance_hardening.md`
-- `T72` may harden only `cnn_fpga/hwio/collect_t71_real_board_gate_artifacts.py` plus focused tests/docs/task-scoped artifacts; it must not touch `board_backend.py` / `axi_map.py` / `dma_client.py`, must not modify governance docs, must not modify canonical configs, must not create `runs/`, and must not perform write-side MMIO/DMA/register actions or any board benchmark / board execution
+- Current unique task: `T73`
+- Latest reviewed task: `docs/review/T72_review.md` with verdict `PASS_WITH_WARNINGS`
+- T72 closeout:
+  - `N1/N3` = `deferred -> R32`
+  - `N2` = `accepted`
+  - `R31` = closed by T72
+- Next worker-facing task package: `docs/tasks/Phase2/T73_mainline_claim_evidence_and_result_figure_ledger_refresh.md`
+- `T73` may refresh only paper-facing ledgers / README / task-scoped explanation-review-summary docs; it must not touch governance docs, source code, tests, `runs/`, `artifacts/`, theory-branch materials, or reopen paper prose
+- 如果 `T73` 通过，唯一推荐的下一张主线任务是 `docs/tasks/Phase2/T74_paper_ready_simulation_result_and_figure_pack.md`
 
 ## 并行 Sidecar 扩展实验治理
 
