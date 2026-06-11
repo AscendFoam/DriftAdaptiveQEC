@@ -9,6 +9,7 @@ import platform
 import subprocess
 import sys
 from datetime import datetime, timezone
+from math import prod
 from pathlib import Path
 from typing import Any
 
@@ -112,6 +113,78 @@ def _repo_relative(path: Path) -> str:
 
 def _source_ref(path: Path, needle: str) -> str:
     return f"{_repo_relative(path)}:{_find_line(path, needle)}"
+
+
+def _short_text(value: Any, *, limit: int = 400) -> str:
+    text = str(value or "").strip()
+    if len(text) <= limit:
+        return text
+    return text[: limit - 3] + "..."
+
+
+def _config_source_record(config_path: Path, field: str, value: Any) -> dict[str, Any]:
+    return {
+        "config_path": _repo_relative(config_path),
+        "field": field,
+        "value": value,
+        "source_kind": "config_field",
+    }
+
+
+def _effective_path_record(
+    *,
+    config_path: Path,
+    config_field: str,
+    config_value: str,
+    effective_value: str,
+    override_value: str | None,
+) -> dict[str, Any]:
+    return {
+        "config_path": _repo_relative(config_path),
+        "config_field": config_field,
+        "config_value": config_value,
+        "effective_value": effective_value,
+        "override_value": override_value,
+        "source_kind": "cli_override" if override_value is not None else "config_field",
+    }
+
+
+def _dtype_itemsize_bytes(dtype_name: str) -> int | None:
+    mapping = {
+        "float16": 2,
+        "float32": 4,
+        "float64": 8,
+        "int8": 1,
+        "uint8": 1,
+        "int16": 2,
+        "uint16": 2,
+        "int32": 4,
+        "uint32": 4,
+        "int64": 8,
+        "uint64": 8,
+    }
+    return mapping.get(str(dtype_name).lower())
+
+
+def _expected_byte_count_basis(histogram_shape: tuple[int, ...], dtype_name: str, buffer_bytes: int) -> dict[str, Any]:
+    itemsize = _dtype_itemsize_bytes(dtype_name)
+    element_count = int(prod(int(dim) for dim in histogram_shape))
+    computed = None if itemsize is None else element_count * itemsize
+    if itemsize is None:
+        formula = f"unable to derive byte count because dtype={dtype_name!r} is not in the supported itemsize map"
+    else:
+        shape_text = " x ".join(str(int(dim)) for dim in histogram_shape)
+        formula = f"{shape_text} x {itemsize} bytes-per-{dtype_name} = {computed} bytes"
+    return {
+        "histogram_shape": list(histogram_shape),
+        "dtype": dtype_name,
+        "dtype_itemsize_bytes": itemsize,
+        "element_count": element_count,
+        "computed_byte_count": computed,
+        "configured_buffer_bytes": buffer_bytes,
+        "matches_configured_buffer_bytes": computed == buffer_bytes if computed is not None else False,
+        "formula": formula,
+    }
 
 
 def _read_windows_bios_identity() -> dict[str, str | None]:
@@ -247,7 +320,80 @@ def _linux_driver_clues() -> dict[str, Any]:
     }
 
 
+def _probe_record(
+    probe: str,
+    *,
+    applicable_platforms: set[str],
+    command: list[str],
+) -> dict[str, Any]:
+    current_system = platform.system()
+    command_text = " ".join(command)
+    if current_system not in applicable_platforms:
+        return {
+            "probe": probe,
+            "status": "not_applicable",
+            "platform_family": next(iter(sorted(applicable_platforms))),
+            "command": command_text,
+            "returncode": None,
+            "stdout": "",
+            "stderr": "",
+            "note": f"{current_system} host does not execute this probe.",
+        }
+
+    result = _run_command(command)
+    return {
+        "probe": probe,
+        "status": "ok" if result["ok"] else "command_failed",
+        "platform_family": current_system,
+        "command": result["command"],
+        "returncode": result["returncode"],
+        "stdout": _short_text(result["stdout"]),
+        "stderr": _short_text(result["stderr"]),
+        "note": "" if result["ok"] else "probe command failed",
+    }
+
+
+def _probe_execution_records() -> list[dict[str, Any]]:
+    return [
+        _probe_record("windows_cmd_ver", applicable_platforms={"Windows"}, command=["cmd", "/c", "ver"]),
+        _probe_record(
+            "windows_get_ciminstance_win32_operatingsystem",
+            applicable_platforms={"Windows"},
+            command=[
+                "powershell",
+                "-NoProfile",
+                "-Command",
+                "Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version",
+            ],
+        ),
+        _probe_record(
+            "windows_get_ciminstance_win32_computersystem",
+            applicable_platforms={"Windows"},
+            command=[
+                "powershell",
+                "-NoProfile",
+                "-Command",
+                "Get-CimInstance Win32_ComputerSystem | Select-Object Manufacturer, Model",
+            ],
+        ),
+        _probe_record(
+            "windows_get_pnpdevice_presentonly",
+            applicable_platforms={"Windows"},
+            command=["powershell", "-NoProfile", "-Command", "Get-PnpDevice -PresentOnly"],
+        ),
+        _probe_record("windows_systeminfo", applicable_platforms={"Windows"}, command=["systeminfo"]),
+        _probe_record("linux_lspci_nn", applicable_platforms={"Linux"}, command=["lspci", "-nn"]),
+        _probe_record("linux_lsmod", applicable_platforms={"Linux"}, command=["lsmod"]),
+    ]
+
+
+def _probe_map(records: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return {record["probe"]: record for record in records}
+
+
 def _host_identity_block() -> dict[str, Any]:
+    probe_records = _probe_execution_records()
+    probe_records_by_name = _probe_map(probe_records)
     base = {
         "generated_at_utc": _now_utc(),
         "interpreter": {
@@ -265,25 +411,19 @@ def _host_identity_block() -> dict[str, Any]:
         },
         "hardware_identity": _hardware_identity(),
         "host_probe_completed": True,
+        "probe_execution_records": probe_records,
+        "probe_limitations": [record for record in probe_records if record["status"] != "ok"],
     }
     if platform.system() == "Windows":
-        ver_result = _run_command(["cmd", "/c", "ver"])
-        base["os"]["cmd_ver_output"] = str(ver_result["stdout"]).strip()
+        base["os"]["cmd_ver_output"] = probe_records_by_name["windows_cmd_ver"]["stdout"]
         matches, meta = _pnputil_matches()
         base["board_driver_clues"] = {
             "connected_device_matches": matches,
             "pnputil_probe": meta,
             "service_name_matches": _windows_service_name_matches(),
         }
-        base["probe_limitations"] = [
-            "Get-CimInstance Win32_OperatingSystem access denied under current permissions.",
-            "Get-CimInstance Win32_ComputerSystem access denied under current permissions.",
-            "Get-PnpDevice access denied under current permissions.",
-            "systeminfo access denied on this host.",
-        ]
     else:
         base["board_driver_clues"] = _linux_driver_clues()
-        base["probe_limitations"] = []
     return base
 
 
@@ -319,10 +459,16 @@ def _probe_path(path: str, *, source: str, role: str) -> dict[str, Any]:
     }
 
 
-def _device_candidates(mmio_path: str, dma_path: str) -> list[tuple[str, str, str]]:
+def _device_candidates(
+    mmio_path: str,
+    dma_path: str,
+    *,
+    mmio_path_override: str | None,
+    dma_path_override: str | None,
+) -> list[tuple[str, str, str]]:
     candidates = [
-        (mmio_path, "config_or_cli_mmio_path", "mmio"),
-        (dma_path, "config_or_cli_dma_path", "dma"),
+        (mmio_path, "cli_override_mmio_path" if mmio_path_override is not None else "config_mmio_path", "mmio"),
+        (dma_path, "cli_override_dma_path" if dma_path_override is not None else "config_dma_path", "dma"),
     ]
     if platform.system() == "Windows":
         candidates.extend(
@@ -347,14 +493,43 @@ def _find_bitstream_files() -> list[str]:
     return sorted(set(matches))
 
 
-def _collect_host_fact_manifest(config: dict[str, Any], board_cfg: BoardFPGAConfig, *, mmio_path: str, dma_path: str) -> dict[str, Any]:
+def _collect_host_fact_manifest(
+    config: dict[str, Any],
+    board_cfg: BoardFPGAConfig,
+    *,
+    config_path: Path,
+    mmio_path: str,
+    dma_path: str,
+    mmio_path_override: str | None,
+    dma_path_override: str | None,
+) -> dict[str, Any]:
     host = _host_identity_block()
     host["probe_kind"] = "host_fact_manifest"
     host["repo_board_defaults"] = {
+        "config_path": _repo_relative(config_path),
+        "config_argument_kind": "default" if config_path == DEFAULT_CONFIG_PATH else "override",
         "board": config.get("hil", {}).get("board"),
+        "board_source_record": _config_source_record(config_path, "hil.board", config.get("hil", {}).get("board")),
         "bitstream_version": config.get("hil", {}).get("bitstream_version"),
+        "bitstream_version_source_record": _config_source_record(
+            config_path, "hil.bitstream_version", config.get("hil", {}).get("bitstream_version")
+        ),
         "candidate_mmio_path": mmio_path,
+        "candidate_mmio_path_record": _effective_path_record(
+            config_path=config_path,
+            config_field="hil.board_io.axi_uio_path",
+            config_value=board_cfg.mmio.path,
+            effective_value=mmio_path,
+            override_value=mmio_path_override,
+        ),
         "candidate_dma_path": dma_path,
+        "candidate_dma_path_record": _effective_path_record(
+            config_path=config_path,
+            config_field="hil.board_io.dma_buffer_path",
+            config_value=board_cfg.dma.path,
+            effective_value=dma_path,
+            override_value=dma_path_override,
+        ),
         "dma_dtype": board_cfg.dma.dtype,
         "histogram_shape": list(board_cfg.dma.histogram_shape),
         "histogram_buffer_bytes": board_cfg.dma.size_bytes,
@@ -365,18 +540,30 @@ def _collect_host_fact_manifest(config: dict[str, Any], board_cfg: BoardFPGAConf
         "config_bitstream_version": config.get("hil", {}).get("bitstream_version"),
         "files_found": bitstream_files,
         "source_records": [
-            "cnn_fpga/config/hardware_hil.yaml: hil.board=ZCU111",
-            "cnn_fpga/config/hardware_hil.yaml: hil.bitstream_version=fpga_linear_v1",
+            _config_source_record(config_path, "hil.board", config.get("hil", {}).get("board")),
+            _config_source_record(config_path, "hil.bitstream_version", config.get("hil", {}).get("bitstream_version")),
         ],
         "status": "record_only_no_bitstream_file_in_repo" if not bitstream_files else "bitstream_files_present",
     }
     return host
 
 
-def _collect_device_path_probe(mmio_path: str, dma_path: str, host_fact_manifest: dict[str, Any]) -> dict[str, Any]:
+def _collect_device_path_probe(
+    mmio_path: str,
+    dma_path: str,
+    host_fact_manifest: dict[str, Any],
+    *,
+    mmio_path_override: str | None,
+    dma_path_override: str | None,
+) -> dict[str, Any]:
     candidate_paths = [
         _probe_path(path, source=source, role=role)
-        for path, source, role in _device_candidates(mmio_path, dma_path)
+        for path, source, role in _device_candidates(
+            mmio_path,
+            dma_path,
+            mmio_path_override=mmio_path_override,
+            dma_path_override=dma_path_override,
+        )
     ]
     driver_clues = dict(host_fact_manifest.get("board_driver_clues", {}))
     return {
@@ -470,7 +657,11 @@ def _collect_code_side_audit(config: dict[str, Any], board_cfg: BoardFPGAConfig)
             "histogram_shape": list(board_cfg.dma.histogram_shape),
             "dtype": board_cfg.dma.dtype,
             "expected_byte_count": board_cfg.dma.size_bytes,
-            "expected_byte_count_basis": "32 x 32 float32 histogram -> 4096 bytes under current config defaults",
+            "expected_byte_count_basis": _expected_byte_count_basis(
+                board_cfg.dma.histogram_shape,
+                board_cfg.dma.dtype,
+                board_cfg.dma.size_bytes,
+            ),
             "readout_fields": ["buffer_id", "byte_count", 'window.payload["histogram"]', "metadata"],
         },
         "bitstream_contract": {
@@ -521,8 +712,22 @@ def collect_real_board_gate_artifacts(
     mmio_path = mmio_path_override or board_cfg.mmio.path
     dma_path = dma_path_override or board_cfg.dma.path
 
-    host_fact_manifest = _collect_host_fact_manifest(config, board_cfg, mmio_path=mmio_path, dma_path=dma_path)
-    device_path_probe = _collect_device_path_probe(mmio_path, dma_path, host_fact_manifest)
+    host_fact_manifest = _collect_host_fact_manifest(
+        config,
+        board_cfg,
+        config_path=config_path,
+        mmio_path=mmio_path,
+        dma_path=dma_path,
+        mmio_path_override=mmio_path_override,
+        dma_path_override=dma_path_override,
+    )
+    device_path_probe = _collect_device_path_probe(
+        mmio_path,
+        dma_path,
+        host_fact_manifest,
+        mmio_path_override=mmio_path_override,
+        dma_path_override=dma_path_override,
+    )
     code_side_audit = _collect_code_side_audit(config, board_cfg)
 
     host_path = _write_json(output_dir / "host_fact_manifest.json", host_fact_manifest)

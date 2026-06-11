@@ -235,3 +235,70 @@ Reviewer 在以下任一情况应返回 `BLOCK`：
 - `T72` 是 `T71` 的 provenance 收口任务，不是 `T37` 解锁任务。
 - `T72` 的价值不在于更接近跑真板，而在于避免未来把“默认文案”误当成“当前执行事实”。
 - theory 分支继续独立存在；本任务只在 main 分支实验主线内推进。
+
+## Worker Output
+
+### 改了什么
+
+- 更新 `cnn_fpga/hwio/collect_t71_real_board_gate_artifacts.py`
+  - 新增结构化 `probe_execution_records`
+  - `probe_limitations` 改成 execution-derived 的结构化记录，不再写死固定 `access denied` 文案
+  - `repo_board_defaults` 新增 `config_path`、`config_argument_kind`、`board_source_record`、`bitstream_version_source_record`、`candidate_mmio_path_record`、`candidate_dma_path_record`
+  - `bitstream_evidence.source_records` 改为动态记录当前实际 config 路径与字段值
+  - `dma_contract.expected_byte_count_basis` 改为按 `histogram_shape`、`dtype`、`buffer_bytes` 动态推导
+- 新增 `tests/test_t72_real_board_transfer_pack_provenance_hardening.py`
+  - 覆盖 `--config` override provenance
+  - 覆盖 `--mmio-path` / `--dma-path` override provenance
+  - 覆盖 `probe_limitations` integrity
+  - 覆盖 hardening 后 verdict 稳定性
+- 写入新的 task-scoped outputs：
+  - `artifacts/t72_real_board_transfer_pack_provenance_hardening/host_fact_manifest.json`
+  - `artifacts/t72_real_board_transfer_pack_provenance_hardening/device_path_probe.json`
+  - `artifacts/t72_real_board_transfer_pack_provenance_hardening/code_side_audit.json`
+  - `artifacts/t72_real_board_transfer_pack_provenance_hardening/current_host_regenerated_gate.json`
+  - `artifacts/t72_real_board_transfer_pack_provenance_hardening/t49_checked_in_replay_gate.json`
+  - `artifacts/t72_real_board_transfer_pack_provenance_hardening/replay_vs_regeneration_comparison.json`
+- 新增/更新文档：
+  - `docs/t72_real_board_transfer_pack_provenance_hardening.md`
+  - `docs/review/T72_review.md`
+  - `docs/for_human/T72_explanation.md`
+  - `docs/worker_summary/T72_worker_summary.md`
+
+### 如何验证
+
+实际执行了：
+
+1. `python -m py_compile cnn_fpga/hwio/collect_t71_real_board_gate_artifacts.py`
+2. `python -m unittest tests.test_t71_real_board_gate_regeneration_pack`
+3. `python -m unittest tests.test_t72_real_board_transfer_pack_provenance_hardening`
+4. `python -m cnn_fpga.hwio.collect_t71_real_board_gate_artifacts --output-dir artifacts/t72_real_board_transfer_pack_provenance_hardening`
+5. 一次用 `T72` artifact 驱动 gate helper 的真实执行
+6. 一次用 `T49` checked-in artifact 驱动 gate helper 的 replay 执行
+7. `--config` / `--mmio-path` / `--dma-path` 的 focused regression 证据，通过 `tests/test_t72_real_board_transfer_pack_provenance_hardening.py` 完成
+8. 边界检查：
+   - `git diff --name-only -- runs`
+   - `git diff --name-only -- cnn_fpga/hwio/board_backend.py cnn_fpga/hwio/axi_map.py cnn_fpga/hwio/dma_client.py`
+   - `git diff --name-only -- cnn_fpga/config`
+   - `git diff --name-only -- docs/00_project_snapshot.md docs/01_legacy_audit.md docs/03_hil_p4_boundary_audit.md docs/04_task_board.md docs/05_decision_log.md docs/06_repo_noise_governance.md docs/07_handoff.md docs/08_risks_and_open_questions.md`
+
+### 关键结果
+
+- `T49` replay verdict：
+  - `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`
+- `T72` current-host regeneration verdict：
+  - `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`
+- `replay_vs_regeneration_comparison.json` 显示：
+  - `verdict_match = true`
+  - `strongest_statement_match = true`
+  - `device_path_truth_status_match = true`
+  - `bitstream_truth_status_match = true`
+  - `repo_execution_path_truth_status_match = true`
+
+### 剩余风险
+
+- `T72` 只收紧了 transfer-pack provenance，不等于当前或 future-host 已具备真板执行前提。
+- 当前仍缺：
+  - 可只读打开的真实 `mmio` / `dma` 设备路径
+  - bitstream / RTL / DMA / fixed-point contract 绑定事实
+  - 非-placeholder 的 board execution path
+- 因此 `T37` 继续 blocked 仍是正确结果。
