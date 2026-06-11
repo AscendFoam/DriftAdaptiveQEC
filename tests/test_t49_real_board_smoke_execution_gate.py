@@ -55,26 +55,31 @@ class RealBoardSmokeGateTests(unittest.TestCase):
         self,
         root: Path,
         *,
-        mmio_openable: bool,
-        dma_openable: bool,
+        candidate_paths: list[dict] | None = None,
+        mmio_openable: bool = False,
+        dma_openable: bool = False,
     ) -> Path:
-        def _entry(path: str, openable: bool) -> dict:
+        def _entry(path: str, role: str, openable: bool) -> dict:
             return {
                 "path": path,
+                "role": role,
                 "exists": openable,
                 "path_type": "device" if openable else "missing",
                 "read_only_openable": openable,
                 "status": "openable_read_only" if openable else "not_found",
             }
 
+        if candidate_paths is None:
+            candidate_paths = [
+                _entry("/dev/uio0", "mmio", mmio_openable),
+                _entry("/dev/uio1", "dma", dma_openable),
+            ]
+
         return _write_json(
             root / "device_path_probe.json",
             {
                 "probe_kind": "device_path_probe",
-                "candidate_paths": [
-                    _entry("/dev/uio0", mmio_openable),
-                    _entry("/dev/uio1", dma_openable),
-                ],
+                "candidate_paths": candidate_paths,
                 "matched_device_clues": [],
             },
         )
@@ -150,6 +155,68 @@ class RealBoardSmokeGateTests(unittest.TestCase):
 
         self.assertEqual(gate["final_gate_verdict"], "NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE")
         self.assertEqual(gate["device_path_truth"]["status"], "not_ready")
+
+    def test_two_openable_paths_with_same_role_do_not_count_as_ready(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            gate = build_real_board_smoke_gate(
+                GateInputs(
+                    host_fact_manifest_json=self._write_host_manifest(root),
+                    device_path_probe_json=self._write_device_probe(
+                        root,
+                        candidate_paths=[
+                            {
+                                "path": "/dev/uio1",
+                                "role": "dma",
+                                "exists": True,
+                                "path_type": "device",
+                                "read_only_openable": True,
+                                "status": "openable_read_only",
+                            },
+                            {
+                                "path": "\\\\.\\XDMA",
+                                "role": "dma",
+                                "exists": True,
+                                "path_type": "device",
+                                "read_only_openable": True,
+                                "status": "openable_read_only",
+                            },
+                        ],
+                    ),
+                    code_side_audit_json=self._write_code_audit(
+                        root,
+                        bitstream_alignment_confirmed=True,
+                        rtl_address_table_confirmed=True,
+                        dma_contract_confirmed=True,
+                        fixed_point_contract_confirmed=True,
+                        placeholder_execution_path=False,
+                    ),
+                )
+            )
+
+        self.assertEqual(gate["device_path_truth"]["status"], "not_ready")
+        self.assertEqual(gate["final_gate_verdict"], "NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE")
+
+    def test_one_mmio_and_one_dma_openable_counts_as_ready(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            gate = build_real_board_smoke_gate(
+                GateInputs(
+                    host_fact_manifest_json=self._write_host_manifest(root),
+                    device_path_probe_json=self._write_device_probe(root, mmio_openable=True, dma_openable=True),
+                    code_side_audit_json=self._write_code_audit(
+                        root,
+                        bitstream_alignment_confirmed=True,
+                        rtl_address_table_confirmed=True,
+                        dma_contract_confirmed=True,
+                        fixed_point_contract_confirmed=True,
+                        placeholder_execution_path=False,
+                    ),
+                )
+            )
+
+        self.assertEqual(gate["device_path_truth"]["status"], "ready")
+        self.assertEqual(gate["final_gate_verdict"], "GO_REAL_BOARD_SMOKE_EXECUTION_PRECONDITIONS_READY")
 
     def test_missing_bitstream_or_contract_yields_contract_no_go(self) -> None:
         with tempfile.TemporaryDirectory() as tmpdir:

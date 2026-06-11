@@ -63,6 +63,15 @@
 - `T25` 已完成 result-boundary gate review，并确认 T24 只能作为 `mock-backed` software HIL formal software revalidation
 - 后续 P3/P4 文档与复验结果都应沿用同一套 backend / artifact type 表述口径
 
+### 2026-06-11 Captain Update
+
+- `T71` 已被接受为 `PASS_WITH_WARNINGS`。
+- 这次 closeout 没有改变 legacy audit 的底线判断：`board_backend.py` 仍是 placeholder-only，真实板级执行证据仍然缺失，mainline 仍不得把 read-only gate pack 改写成 `real-board validated`。
+- `T71` 解决的是 gate 再生成与 future-host 入口一致性，不是 `T37` 真板执行前提本身。
+- `R30` 已关闭，因为 role-aware `mmio + dma` 判定、checked-in regeneration collector 和 replay/regeneration 一致性都已补上。
+- 新的后续风险为 `R31`：transfer-pack 的 provenance 仍有写死文案和 override 回归不足，尚不能当作长期稳定的 future-host 标准入口。
+- 当前唯一任务已切换为 `T72: Real-board transfer-pack provenance hardening`；它继续停留在 main 分支 deployment-boundary hardening 车道，不触碰 theory 分支。
+
 ### 2026-05-16 Captain Update
 
 - `T38` has been accepted as `PASS`; it produced bounded seed=20260429 trace-export evidence without changing benchmark semantics.

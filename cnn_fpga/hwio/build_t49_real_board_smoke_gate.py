@@ -130,20 +130,50 @@ def _evaluate_device_path_truth(device_probe: Mapping[str, Any]) -> dict[str, An
     candidates = _get_list(device_probe, "candidate_paths")
     openable_paths: list[str] = []
     missing_paths: list[str] = []
+    openable_mmio_paths: list[str] = []
+    openable_dma_paths: list[str] = []
+    openable_unknown_role_paths: list[str] = []
     for item in candidates:
         _require(isinstance(item, Mapping), "device path probe candidate must be a JSON object")
         path = str(item.get("path", "missing_path"))
+        role = str(item.get("role", "unknown")).lower()
         if bool(item.get("read_only_openable")):
             openable_paths.append(path)
+            if role == "mmio":
+                openable_mmio_paths.append(path)
+            elif role == "dma":
+                openable_dma_paths.append(path)
+            else:
+                openable_unknown_role_paths.append(path)
         else:
             missing_paths.append(path)
     matched_clues = _get_list(device_probe, "matched_device_clues")
-    ready = len(openable_paths) >= 2
-    summary = f"openable_paths={len(openable_paths)}, matched_device_clues={len(matched_clues)}"
+    satisfied_roles = []
+    missing_roles = []
+    if openable_mmio_paths:
+        satisfied_roles.append("mmio")
+    else:
+        missing_roles.append("mmio")
+    if openable_dma_paths:
+        satisfied_roles.append("dma")
+    else:
+        missing_roles.append("dma")
+    ready = bool(openable_mmio_paths) and bool(openable_dma_paths)
+    summary = (
+        f"openable_mmio_paths={len(openable_mmio_paths)}, "
+        f"openable_dma_paths={len(openable_dma_paths)}, "
+        f"openable_unknown_role_paths={len(openable_unknown_role_paths)}, "
+        f"matched_device_clues={len(matched_clues)}"
+    )
     return {
         "status": "ready" if ready else "not_ready",
         "openable_paths": openable_paths,
+        "openable_mmio_paths": openable_mmio_paths,
+        "openable_dma_paths": openable_dma_paths,
+        "openable_unknown_role_paths": openable_unknown_role_paths,
         "missing_paths": missing_paths,
+        "satisfied_roles": satisfied_roles,
+        "missing_roles": missing_roles,
         "matched_device_clues": matched_clues,
         "summary": summary,
     }
@@ -304,12 +334,14 @@ def build_real_board_smoke_gate(inputs: GateInputs | None = None) -> dict[str, A
     satisfied = _dedupe(
         list(host_environment.get("satisfied", []))
         + list(device_path_truth.get("openable_paths", []))
+        + list(device_path_truth.get("satisfied_roles", []))
         + list(bitstream_and_contract_truth.get("satisfied", []))
         + list(repo_execution_path_truth.get("satisfied", []))
     )
     missing = _dedupe(
         list(host_environment.get("missing", []))
         + list(device_path_truth.get("missing_paths", []))
+        + list(device_path_truth.get("missing_roles", []))
         + list(bitstream_and_contract_truth.get("missing", []))
         + list(repo_execution_path_truth.get("missing", []))
     )

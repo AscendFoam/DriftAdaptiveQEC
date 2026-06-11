@@ -1,5 +1,43 @@
 # Decision Log
 
+## D-2026-06-11-01
+
+- 日期：`2026-06-11`
+- 决策：接受 `T71` 为 `PASS_WITH_WARNINGS`，关闭 `R30`，并把主线当前唯一任务切换为 `T72: Real-board transfer-pack provenance hardening`
+
+### 背景
+
+`T49` 已经诚实证明当前 host 的 real-board gate verdict 为 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`，`T71` 的目标是把这个 current-host `NO_GO` 收敛成一个仓库内可 replay / regeneration 的 checked-in、read-only、role-aware gate 包，而不是直接推进 `T37` 真板执行。
+
+### 依据
+
+1. `build_t49_real_board_smoke_gate.py` 现已使用 role-aware `mmio + dma` 判定，而不是只按 openable path 数量计数。
+2. 仓库内已新增 `cnn_fpga/hwio/collect_t71_real_board_gate_artifacts.py`，并补齐了 `T49` replay 与 current-host regeneration 的 focused tests。
+3. fresh verification 显示：
+   - `python -m unittest tests.test_t49_real_board_smoke_execution_gate` 通过
+   - `python -m unittest tests.test_t71_real_board_gate_regeneration_pack` 通过
+   - current-host regeneration verdict 仍为 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`
+   - `T49` checked-in artifact replay verdict 仍为 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`
+4. review 中的剩余问题不影响当前主 verdict，但会削弱 future-host transfer-pack 的 provenance 严谨度：
+   - `probe_limitations` 有未实际探测却写成事实的固定文案
+   - `source_records` / `expected_byte_count_basis` 仍偏默认 config 写死
+   - 对 `--config` / `--mmio-path` / `--dma-path` 的 provenance/override 回归覆盖不足
+
+### 结论
+
+1. `T71` 应收口为 `PASS_WITH_WARNINGS`，而不是 `BLOCK`
+2. `R30` 关闭，因为 role-aware gate、checked-in collector、replay/regeneration consistency 三个缺口都已补齐
+3. 新的风险登记为 `R31`，主题是 transfer-pack provenance 仍不够 execution-derived / override-safe
+4. 当前唯一任务切换为 `T72`，只做 provenance 去硬编码与 override 回归加固
+5. theory 分支继续独立；`T72` 仅在 main 分支实验主线推进
+
+### 直接影响
+
+1. 可以把 `T71` 代码与文档收口提交到 `main`
+2. Worker 不应继续留在 `T71`，下一步只能领取 `T72`
+3. `T37` 继续 blocked；`T72` 不构成真板执行放行
+4. 后续任何 retelling 仍不得把 `T71` 改写成 `real-board validated`
+
 ## D-2026-05-05-01
 
 - 日期：`2026-05-05`

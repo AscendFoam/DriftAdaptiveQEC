@@ -236,3 +236,65 @@ Reviewer 在以下任一情况应返回 `BLOCK`：
 - `T49` 已经给出一个诚实 current-host `NO_GO`，所以主线现在不该假装进入 `T37`
 - `T71` 的价值不在于“更接近跑真板”，而在于把未来任何候选宿主上的真板前提核查，变成一个代码化、可复核、可迁移、不会轻易过度乐观的 gate 包
 - 若 `T71` 完成后仍没有目标宿主暴露真实设备节点、bitstream 绑定与非-placeholder repo path 证据，则 `T37` 继续保持 blocked 是正确结果，而不是失败
+
+## Worker Output
+
+### 本轮产物
+
+- 更新 helper：
+  - `cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`
+- 新增 collector：
+  - `cnn_fpga/hwio/collect_t71_real_board_gate_artifacts.py`
+- 更新/新增 tests：
+  - `tests/test_t49_real_board_smoke_execution_gate.py`
+  - `tests/test_t71_real_board_gate_regeneration_pack.py`
+- artifacts：
+  - `artifacts/t71_real_board_gate_regeneration_pack/host_fact_manifest.json`
+  - `artifacts/t71_real_board_gate_regeneration_pack/device_path_probe.json`
+  - `artifacts/t71_real_board_gate_regeneration_pack/code_side_audit.json`
+  - `artifacts/t71_real_board_gate_regeneration_pack/current_host_regenerated_gate.json`
+  - `artifacts/t71_real_board_gate_regeneration_pack/t49_checked_in_replay_gate.json`
+  - `artifacts/t71_real_board_gate_regeneration_pack/replay_vs_regeneration_comparison.json`
+- docs：
+  - `docs/t71_real_board_gate_regeneration_pack.md`
+  - `docs/review/T71_review.md`
+  - `docs/for_human/T71_explanation.md`
+  - `docs/worker_summary/T71_worker_summary.md`
+
+### 本轮关键结论
+
+- role-aware 加固后，当前宿主 verdict 没有变化
+- `T49` checked-in artifact replay verdict：
+  - `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`
+- `T71` current-host regeneration verdict：
+  - `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`
+- replay 与 regeneration 一致：
+  - `verdict_match = true`
+  - `strongest_statement_match = true`
+  - `device_path_truth_status_match = true`
+- future-host 推荐入口命令：
+  1. `python -m cnn_fpga.hwio.collect_t71_real_board_gate_artifacts --output-dir <future_host_pack_dir> --mmio-path <MMIO_PATH> --dma-path <DMA_PATH>`
+  2. `python -m cnn_fpga.hwio.build_t49_real_board_smoke_gate --host-fact-manifest-json <future_host_pack_dir>/host_fact_manifest.json --device-path-probe-json <future_host_pack_dir>/device_path_probe.json --code-side-audit-json <future_host_pack_dir>/code_side_audit.json --output-json <future_host_pack_dir>/real_board_gate.json`
+- `T37` 当前仍被以下层阻塞：
+  - `device_path_truth`
+  - `bitstream_and_contract_truth`
+  - `repo_execution_path_truth`
+
+### 已执行验证
+
+1. `python -m py_compile cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`
+2. `python -m py_compile cnn_fpga/hwio/collect_t71_real_board_gate_artifacts.py`
+3. `python -m unittest tests.test_t49_real_board_smoke_execution_gate`
+4. `python -m unittest tests.test_t71_real_board_gate_regeneration_pack`
+5. 一次当前宿主只读 artifact 再生成
+6. 一次用 `T71` 再生成 artifact 驱动 gate helper 的真实执行
+7. 一次用 `T49` checked-in artifact 驱动 gate helper 的 replay 执行
+8. 边界检查：
+   - `git diff --name-only -- runs`
+   - `git diff --name-only -- cnn_fpga/hwio/board_backend.py cnn_fpga/hwio/axi_map.py cnn_fpga/hwio/dma_client.py`
+   - `git diff --name-only -- docs/00_project_snapshot.md docs/01_legacy_audit.md docs/03_hil_p4_boundary_audit.md docs/04_task_board.md docs/05_decision_log.md docs/06_repo_noise_governance.md docs/07_handoff.md docs/08_risks_and_open_questions.md`
+
+### 剩余风险
+
+- `T71` 只加固了 gate 的再生成性，不等于当前或 future-host 已经具备真实板级执行前提。
+- 如果 future-host 没有真实暴露 `mmio + dma` 路径、bitstream 绑定和非-placeholder repo path，`T37` 仍应继续 blocked。

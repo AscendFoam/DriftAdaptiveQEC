@@ -122,6 +122,15 @@
 - 可以说：`Research Reality Recovery Mode is a governance freeze and audit mode, not an evidence upgrade.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`
+## 2026-06-11 Captain Update (T71/T72 boundary supersession)
+
+- `T71` 已被 Captain 接受为 `PASS_WITH_WARNINGS`。
+- 它只把 current-host 真板前提 gate 提升为 code-backed、checked-in、role-aware、可 replay / regeneration 的 read-only 包；它没有执行真板 smoke，没有验证 `board_backend.py`，也没有把证据升级为 `hardware_validated`。
+- `T71` 关闭了 `R30`，但没有关闭 `R13/R14`，也没有打开 `T37`。
+- 新的边界风险是 `R31`：future-host transfer pack 的 provenance 仍存在未实际探测却写成事实、以及对 `--config` / path override 不够动态的写死说明。
+- 因此当前唯一任务切换为 `T72: Real-board transfer-pack provenance hardening`。
+- `T72` 只允许 harden read-only collector 的 provenance 与回归覆盖；不得改写 verdict 语义，不得触碰 benchmark / `.tflite` / real-board execution / theory branch。
+
 ## 2026-05-24 Captain Update (T47/T57 boundary supersession)
 
 - `T47` 已完成并由 Captain 以 `PASS` 收口；其输出只是在 docs-only 层面冻结 paper ablation/material ledger，不改变任何 HIL / P4 / `.tflite` / real-board 边界。

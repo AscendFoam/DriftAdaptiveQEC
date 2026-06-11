@@ -16,6 +16,20 @@
 - 当前决策状态：`Go`
 - 当前唯一任务来源：`docs/04_task_board.md`
 
+## 2026-06-11 Captain Update
+
+- `T71` 已由 Captain 判定为 `PASS_WITH_WARNINGS`。
+- `T71` 完成了三个核心收口：`device_path_truth` 改为 role-aware `mmio + dma` 判定、仓库内新增 checked-in 的只读 regeneration collector、以及 `T49` replay 与 current-host regeneration 的一致性回归。
+- 这次通过不代表真板执行成功，也不代表 `T37` 解锁；当前最强结论仍然只是 current-host / regenerated verdict 继续为 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`。
+- `T71` warning 分类为：
+  - `W1` 未实际探测却写死的 `probe_limitations` = `deferred -> R31`
+  - `W2` `source_records` 与 `expected_byte_count_basis` 仍对默认 config 写死 = `deferred -> R31`
+  - `W3` `--config` / `--mmio-path` / `--dma-path` 的 provenance/override 回归不足 = `deferred -> R31`
+  - `W4` collector 继续 import `BoardFPGAConfig` = `accepted`
+- `R30` 由 `T71` 关闭；新的后续缺口不再是 role-aware gate 缺失，而是 transfer-pack provenance 仍不够 execution-derived / override-safe。
+- 当前唯一任务切换为 `T72: Real-board transfer-pack provenance hardening`。
+- `T72` 仍留在 main 分支实验主线，不与单独的 theory 分支混做，也不允许扩成 benchmark、`.tflite`、真板执行或 paper reopen。
+
 ## 2026-05-16 Captain Update
 
 - `T38` reviewer verdict accepted by Captain as `PASS`.

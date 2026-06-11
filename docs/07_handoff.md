@@ -1,17 +1,17 @@
-## 2026-06-10 Captain Final Supersession (T49 closeout)
+## 2026-06-11 Captain Final Supersession (T71 closeout)
 
-- Current unique task: `T71: Real-board gate regeneration and host-transfer pack`
-- Task package: `docs/tasks/Phase2/T71_real_board_gate_regeneration_and_host_transfer_pack.md`
-- `T49` has been judged `PASS_WITH_WARNINGS`.
-- `T49` closes one honest current-host real-board gate pack with verdict `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`; no real-board smoke was executed.
-- `T49` warning classification:
-  - `W1` device-path readiness counts openable paths without enforcing `mmio + dma` role split = `deferred -> R30`
-  - `W2` role-aware regression and checked-in-artifact replay regression are still missing = `deferred -> R30`
-  - `W3` checked-in read-only regeneration entrypoint for the full gate artifact pack is still missing = `deferred -> R30`
-- `R13/R14` remain open but narrower: the current-host truth is now explicit, and the remaining blockers are missing openable device paths, missing bound bitstream/RTL/DMA contract evidence, and a placeholder repo execution path.
-- `T37` remains blocked and must not be opened from the current host.
-- `T71` is the next bounded mainline task because the remaining deployment-boundary question is now gate reproducibility and future-host portability, not immediate board execution on this machine.
-- `T71` must stay inside read-only host / device / bitstream / AXI / DMA / repo-path gate truth only: no benchmark/HIL widening, no real-board success claim, no theory-branch mixing, and no write-side MMIO/DMA/register actions.
+- Current unique task: `T72: Real-board transfer-pack provenance hardening`
+- Task package: `docs/tasks/Phase2/T72_real_board_transfer_pack_provenance_hardening.md`
+- `T71` has been judged `PASS_WITH_WARNINGS`.
+- `T71` closes `R30` honestly: the repository now has one checked-in、read-only、role-aware、可 replay / regeneration 的 real-board gate pack，且 current-host regenerated verdict 仍为 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`。
+- `T71` warning classification:
+  - `W1` fixed `probe_limitations` text not derived from actual probe execution = `deferred -> R31`
+  - `W2` fixed default-config `source_records` / `expected_byte_count_basis` text = `deferred -> R31`
+  - `W3` missing focused regression for `--config` / `--mmio-path` / `--dma-path` provenance behavior = `deferred -> R31`
+  - `W4` collector keeps repo-internal `BoardFPGAConfig` import = `accepted`
+- `R13/R14` remain open, `T37` remains blocked, and `R31` is now the active deployment-boundary carry-forward risk.
+- `T72` is the next bounded mainline task because the remaining question is no longer whether the gate exists, but whether the transfer-pack provenance is execution-derived and override-safe enough for future-host reuse.
+- `T72` must stay inside read-only host / device / bitstream / AXI / DMA / repo-path truth only: no benchmark/HIL widening, no real-board success claim, no theory-branch mixing, and no write-side MMIO/DMA/register actions.
 
 ## 2026-06-08 Captain 并行 Sidecar 治理设置
 
@@ -57,16 +57,17 @@
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T71: Real-board gate regeneration and host-transfer pack`
-- 任务包：`docs/tasks/Phase2/T71_real_board_gate_regeneration_and_host_transfer_pack.md`
+- 当前唯一任务：`T72: Real-board transfer-pack provenance hardening`
+- 任务包：`docs/tasks/Phase2/T72_real_board_transfer_pack_provenance_hardening.md`
 
 Captain continuity note:
 
-- The authoritative current task for all new worker action is `T71: Real-board gate regeneration and host-transfer pack`.
-- Authoritative task package: `docs/tasks/Phase2/T71_real_board_gate_regeneration_and_host_transfer_pack.md`.
-- `T49` is complete and accepted as `PASS_WITH_WARNINGS`.
-- If any older line below still mentions `T49` or earlier tasks as current, treat it as historical carry-forward text only.
-- `T71` is the single bounded next step after T49 closeout. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or `T37` board execution.
+- The authoritative current task for all new worker action is `T72: Real-board transfer-pack provenance hardening`.
+- Authoritative task package: `docs/tasks/Phase2/T72_real_board_transfer_pack_provenance_hardening.md`.
+- `T71` is complete and accepted as `PASS_WITH_WARNINGS`.
+- `R30` is closed by `T71`; `R31` is the new carry-forward risk for provenance hardening.
+- If any older line below still mentions `T71` or earlier tasks as current, treat it as historical carry-forward text only.
+- `T72` is the single bounded next step after T71 closeout. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or `T37` board execution.
 
 ## 2026-06-05 Captain Update (T67 closeout)
 

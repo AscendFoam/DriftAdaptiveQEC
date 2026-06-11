@@ -11,6 +11,14 @@
 
 本文件不宣称仓库已经完成物理清理。
 
+## 2026-06-11 Captain Update
+
+- `T71` 已按 `PASS_WITH_WARNINGS` 收口。
+- 就 evidence level 而言，`T71` 仍只属于 deployment-boundary hardening / development evidence；它不是 `hardware_validated`，因为没有真实板级 smoke、没有 bitstream/RTL/DMA contract 绑定确认、也没有非-placeholder repo execution path。
+- `T71` 关闭的是 `R30`，不是 `R13/R14`；因此后续引用 `T71` 结果时，允许写“仓库已有 checked-in 的 role-aware read-only gate regeneration pack”，不允许写“真板 ready”或“真板已验证”。
+- 新的噪声/边界风险是 `R31`：如果继续把未实际探测的限制说明、默认 config 文案或未覆盖的 override 情况写成通用事实，future-host transfer-pack 会在 provenance 层过度乐观。
+- 当前唯一任务切换为 `T72: Real-board transfer-pack provenance hardening`；它只允许 harden provenance 与 focused regression，不允许顺手改 benchmark、`.tflite`、真板执行、theory branch 或治理之外范围。
+
 ## 2. Evaluation Protocol
 
 ### 2.1 Evidence Levels

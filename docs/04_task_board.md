@@ -443,8 +443,19 @@
     - `W2` role-aware regression and checked-in-artifact replay regression are still missing = `deferred -> R30`
     - `W3` checked-in read-only regeneration entrypoint for the full gate artifact pack is still missing = `deferred -> R30`
   - Result: T49 closes one honest current-host real-board gate pack with verdict `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`; no real-board smoke was executed, and `R13/R14` remain open but narrower
-- [ ] T71: Real-board gate regeneration and host-transfer pack
+- [x] T71: Real-board gate regeneration and host-transfer pack
   - Task package: `docs/tasks/Phase2/T71_real_board_gate_regeneration_and_host_transfer_pack.md`
+  - Output: `docs/t71_real_board_gate_regeneration_pack.md`
+  - Review output: `docs/review/T71_review.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - Warning handling:
+    - `W1` `probe_limitations` 将未实际执行的限制写成既成事实 = `deferred -> R31`
+    - `W2` `source_records` / `expected_byte_count_basis` 仍写死默认 config 口径 = `deferred -> R31`
+    - `W3` `--config` / `--mmio-path` / `--dma-path` 的 provenance/override 回归不足 = `deferred -> R31`
+    - `W4` collector 继续 import `BoardFPGAConfig` 作为 repo 内 config 读取入口 = `accepted`
+  - Result: T71 closes the R30 gap honestly by hardening role-aware gate logic, adding a checked-in read-only collector, and proving replay/regeneration consistency; it still does not unlock `T37` or validate any real-board execution
+- [ ] T72: Real-board transfer-pack provenance hardening
+  - Task package: `docs/tasks/Phase2/T72_real_board_transfer_pack_provenance_hardening.md`
 
 ### Milestone 2R: Reproducibility And Material Pack (proposed)
 
@@ -466,23 +477,39 @@ Long-term objective:
 
 以论文级质量为最终目标，但当前先进入 `Research Reality Recovery Mode`。后续任务顺序改为“真实性冻结 -> claim/evidence/material 台账 -> 复现/图表/结果缺口审计 -> 风险收口 -> 再决定是否恢复论文扩写”。除 `Current Unique Task` 外，其他 pending 项只代表路线图，不可直接执行。
 
+## 2026-06-11 Captain Final Supersession (T71 closeout)
+
+- Current unique task: `T72: Real-board transfer-pack provenance hardening`
+- Task package: `docs/tasks/Phase2/T72_real_board_transfer_pack_provenance_hardening.md`
+- `T71` has been judged `PASS_WITH_WARNINGS`.
+- `T71` closes `R30` honestly: the repository now has one checked-in、read-only、role-aware、可 replay / regeneration 的 real-board gate pack，且 current-host regenerated verdict 仍是 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`。
+- `T71` warning classification:
+  - `W1` fixed `probe_limitations` text not derived from actual probing = `deferred -> R31`
+  - `W2` fixed default-config `source_records` / `expected_byte_count_basis` text = `deferred -> R31`
+  - `W3` missing focused regression for `--config` / `--mmio-path` / `--dma-path` provenance behavior = `deferred -> R31`
+  - `W4` collector keeps repo-internal `BoardFPGAConfig` import = `accepted`
+- `R13/R14` remain open, `T37` remains blocked, and `R31` is now the active deployment-boundary carry-forward risk.
+- `T72` is the next bounded mainline task because the remaining question is no longer whether the gate exists, but whether the transfer-pack provenance is execution-derived and override-safe enough for future-host reuse.
+- `T72` must stay on main only, remain isolated from theory-branch work, and must not widen into benchmark, `.tflite`, real-board execution, or paper reopen.
+
 ## Current Unique Task
 
-`T71: Real-board gate regeneration and host-transfer pack`
+`T72: Real-board transfer-pack provenance hardening`
 
 Status:
 
-- `T49` has been reviewed as `PASS_WITH_WARNINGS`.
-- `T49` closes one honest current-host real-board gate pack: the checked-in verdict is `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`, and no real-board smoke was executed.
-- `T49` warning handling is deferred rather than blocking:
-  - `W1` role-insensitive device-path readiness logic = `deferred -> R30`
-  - `W2` missing role-aware regression and checked-in-artifact replay regression = `deferred -> R30`
-  - `W3` missing checked-in read-only regeneration entrypoint = `deferred -> R30`
+- `T71` has been reviewed as `PASS_WITH_WARNINGS`.
+- `T71` closes `R30` honestly: the checked-in regeneration path now exists and the current-host regenerated verdict remains `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`.
+- `T71` warning handling is deferred rather than blocking:
+  - `W1` fixed `probe_limitations` text not derived from actual probing = `deferred -> R31`
+  - `W2` fixed default-config `source_records` / `expected_byte_count_basis` text = `deferred -> R31`
+  - `W3` missing focused regression for `--config` / `--mmio-path` / `--dma-path` provenance behavior = `deferred -> R31`
+  - `W4` collector keeps repo-internal `BoardFPGAConfig` import = `accepted`
 - `R13/R14` remain open but narrower: the current-host truth is no longer unknown; it is explicitly blocked by missing openable device paths, missing bound bitstream/RTL/DMA contract evidence, and a placeholder repo execution path.
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
 - `T64/T65/T66/T67/T68/T69/T70` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T71` must remain isolated from benchmark/HIL/sidecar/paper-reopen/theory-branch outputs, and it must not rewrite gate regeneration as real-board validation or perform write-side MMIO/DMA/register actions.
+- `T72` must remain isolated from benchmark/HIL/sidecar/paper-reopen/theory-branch outputs, and it must not rewrite provenance hardening as real-board validation or perform write-side MMIO/DMA/register actions.
 
 Why this task is next:
 
@@ -493,11 +520,14 @@ Why this task is next:
 
 ## Captain Output For Current Task
 
-- Current unique task: `T71`
-- Latest reviewed task: `docs/review/T49_review.md` with verdict `PASS_WITH_WARNINGS`
-- T49 closeout: `W1/W2/W3` are all `deferred -> R30`; they do not block closing the current-host `NO_GO`, but they do block pretending the gate path is already future-host ready
-- Next worker-facing task package: `docs/tasks/Phase2/T71_real_board_gate_regeneration_and_host_transfer_pack.md`
-- `T71` may harden `cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`, add one checked-in read-only artifact collector, add focused regression tests, add bounded docs, and write isolated outputs only under `artifacts/t71_real_board_gate_regeneration_pack/`; it must not modify `board_backend.py` / `axi_map.py` / `dma_client.py`, must not modify governance docs or historical artifacts, and must not perform write-side MMIO/DMA/register actions or board benchmark execution
+- Current unique task: `T72`
+- Latest reviewed task: `docs/review/T71_review.md` with verdict `PASS_WITH_WARNINGS`
+- T71 closeout:
+  - `W1/W2/W3` = `deferred -> R31`
+  - `W4` = `accepted`
+  - `R30` = closed by T71
+- Next worker-facing task package: `docs/tasks/Phase2/T72_real_board_transfer_pack_provenance_hardening.md`
+- `T72` may harden only `cnn_fpga/hwio/collect_t71_real_board_gate_artifacts.py` plus focused tests/docs/task-scoped artifacts; it must not touch `board_backend.py` / `axi_map.py` / `dma_client.py`, must not modify governance docs, must not modify canonical configs, must not create `runs/`, and must not perform write-side MMIO/DMA/register actions or any board benchmark / board execution
 
 ## 并行 Sidecar 扩展实验治理
 
