@@ -55,7 +55,7 @@ T46 的目标是"冻结一份未来机制证据执行包"——定义未来执�
 
 | 文件 | 变化类型 | 说明 |
 | --- | --- | --- |
-| `docs/seed_mechanism_multi_seed_plan.md` | 新建 | 主计划文件，10 节 + 4 表 + 干预矩阵 + go/no-go |
+| `docs/evidence_packs/mechanism_ablation/seed_mechanism_multi_seed_plan.md` | 新建 | 主计划文件，10 节 + 4 表 + 干预矩阵 + go/no-go |
 | `docs/review/T46_review.md` | 新建→被 reviewer 覆写 | Worker 自审后被对抗审查覆写 |
 | `docs/for_human/T46_explanation.md` | 新建 | 中文人类说明 |
 | `docs/tasks/Phase2/T46_...md` | 修改 | 追加 Worker Output + Verification Record |
@@ -119,7 +119,7 @@ Worker 自审识别了 4 个非阻塞问题（3-seed 样本量、clip 降幅、�
 | N1 | seed 20260430 与 20260429 相邻 | 计划已显式说明选择理由（测试模式是否延续到相邻 seed），是有效的设计选择 |
 | N2 | 治理文件变化在工作区中与 T46 输出共存 | 变化是 Captain 治理同步，不是 Worker 越界；Captain 可在整合时分别处理 |
 | N3 | 计划未提供 Phase A 执行时间估计 | 时间估计属于执行任务责任，不属于计划 gate |
-| N4 | 计划未直接回引 `docs/paper_claim_evidence_ledger.md` | C4 标签正确，不需要显式交叉引用 |
+| N4 | 计划未直接回引 `docs/paper_materials/paper_claim_evidence_ledger.md` | C4 标签正确，不需要显式交叉引用 |
 | N5 | Worker 自审准确无遗漏 | 纯信息性说明 |
 
 ## 4. Worker 已有 review 和 explanation 的补充说明

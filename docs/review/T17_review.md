@@ -31,7 +31,7 @@ bootstrap 文档记录了 `torch = 2.8.0.dev20250405+cu128`，这是一个 night
 
 ### N2: 未产出 `requirements-train.txt`
 
-任务允许选择 `requirements-train.txt` 或 `docs/training_chain_bootstrap.md`。Worker 选择了文档路径。
+任务允许选择 `requirements-train.txt` 或 `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`。Worker 选择了文档路径。
 
 这在当前阶段是合理的：dev torch 版本不适合写入正式 requirements 文件；文档方式更诚实地反映了"当前只有本机环境探测结果"的事实。但如果后续需要训练链的可移植性，仍需补一份格式化的依赖声明。
 
@@ -44,7 +44,7 @@ bootstrap 文档记录了 `torch = 2.8.0.dev20250405+cu128`，这是一个 night
 | 文件 | Allowed? | 实际变更 |
 |------|----------|----------|
 | `docs/tasks/Phase2/T17_training_manifest_bootstrap.md` | Yes | Worker Output Summary 追加 |
-| `docs/training_chain_bootstrap.md` | Yes | 新增 147 行 |
+| `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md` | Yes | 新增 147 行 |
 | `docs/04_task_board.md` | Yes | T17 标记完成 + Current Task 更新 |
 | `docs/07_handoff.md` | Yes | T17 完成记录 + 当前状态更新 |
 | `docs/08_risks_and_open_questions.md` | Yes | R2/Q6/Q7/Q9 更新 |

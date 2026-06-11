@@ -33,7 +33,7 @@ Produce the smallest believable sanity pass by answering:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`
-- `docs/statcalib_fairness_sanity.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_fairness_sanity.md`
 - `docs/review/T61_review.md`
 - `docs/for_human/T61_explanation.md`
 - `docs/worker_summary/T61_worker_summary.md`
@@ -46,7 +46,7 @@ Worker may create only:
 
 This task should update only:
 
-1. `docs/statcalib_fairness_sanity.md`
+1. `docs/evidence_packs/statcalib_fr8/statcalib_fairness_sanity.md`
 2. `docs/review/T61_review.md`
 3. `docs/for_human/T61_explanation.md`
 4. `docs/worker_summary/T61_worker_summary.md`
@@ -73,8 +73,8 @@ Read at minimum:
 - `docs/08_risks_and_open_questions.md`
 - `docs/review/T59_review.md`
 - `docs/review/T60_review.md`
-- `docs/statcalib_comparator_lane_smoke.md`
-- `docs/statcalib_lane_isolation_and_regression_hardening.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_comparator_lane_smoke.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_lane_isolation_and_regression_hardening.md`
 - `docs/worker_summary/T59_worker_summary.md`
 - `docs/worker_summary/T60_worker_summary.md`
 - `cnn_fpga/config/p4_multiscenario_statcalib_smoke.yaml`
@@ -147,7 +147,7 @@ The final docs must say explicitly:
 
 ## Expected Output Artifacts
 
-Create `docs/statcalib_fairness_sanity.md` with:
+Create `docs/evidence_packs/statcalib_fr8/statcalib_fairness_sanity.md` with:
 
 1. exact clean-worktree preflight result
 2. exact rerun command
@@ -215,7 +215,7 @@ This task exists to repair the remaining provenance/fairness blocker before any 
 1. Executed the bounded T61 sanity matrix in the single allowed run root:
    - `runs/p4_benchmark/T61_statcalib_fairness_sanity_20260527_015239`
 2. Created:
-   - `docs/statcalib_fairness_sanity.md`
+   - `docs/evidence_packs/statcalib_fr8/statcalib_fairness_sanity.md`
    - `docs/review/T61_review.md`
    - `docs/for_human/T61_explanation.md`
    - `docs/worker_summary/T61_worker_summary.md`

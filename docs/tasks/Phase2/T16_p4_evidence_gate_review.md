@@ -24,8 +24,8 @@ Forbidden scope:
 Inputs to read:
 
 - `docs/review/T15_frozen_smoke_review.md`
-- `docs/P4_benchmark_development_protocol.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/03_hil_p4_boundary_audit.md`
 - `docs/08_risks_and_open_questions.md`
 - `docs/reference/AI_coding_workflow.md`

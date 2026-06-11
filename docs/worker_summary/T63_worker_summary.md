@@ -3,7 +3,7 @@
 ## What Changed
 
 1. Created the T63 gate-review report:
-   - `docs/fr8_statcalib_comparator_gate_review.md`
+   - `docs/evidence_packs/statcalib_fr8/fr8_statcalib_comparator_gate_review.md`
 2. Created the T63 review doc:
    - `docs/review/T63_review.md`
 3. Created the T63 human-facing explanation:
@@ -16,7 +16,7 @@
 1. Reused only existing repository evidence from:
    - `T26`, `T30`, `T59`, `T60`, `T61`, `T62`
    - the existing `statcalib` result docs
-   - `docs/P4_benchmark_formal_protocol.md`
+   - `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
    - the existing `T59`, `T61`, and `T62` `summary.json` files
 2. Made no source, test, config, `runs/`, or `artifacts/` change.
 3. The gate report states explicitly that:

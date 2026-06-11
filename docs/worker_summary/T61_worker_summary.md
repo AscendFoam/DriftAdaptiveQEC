@@ -5,7 +5,7 @@
 1. Executed the bounded T61 sanity matrix in the single allowed run root:
    - `runs/p4_benchmark/T61_statcalib_fairness_sanity_20260527_015239`
 2. Created the T61 result doc:
-   - `docs/statcalib_fairness_sanity.md`
+   - `docs/evidence_packs/statcalib_fr8/statcalib_fairness_sanity.md`
 3. Created review and human-summary docs:
    - `docs/review/T61_review.md`
    - `docs/for_human/T61_explanation.md`

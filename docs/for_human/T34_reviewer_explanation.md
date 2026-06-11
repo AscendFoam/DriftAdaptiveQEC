@@ -23,7 +23,7 @@ T34 的目标是纯文档任务：
 
 Worker 产出了 4 个文件（全部在 T34 允许范围内）：
 
-1. **`docs/paper_claim_evidence_ledger.md`** — 主台账，包含：
+1. **`docs/paper_materials/paper_claim_evidence_ledger.md`** — 主台账，包含：
    - **Scope and Non-Claims**：明确这份台账不做什么（不升级证据等级、不把 stub 写成真 runtime 等）
    - **Claim Ledger（C1-C11）**：11 条论文可能涉及的 claim，逐条标明 `supported` / `partial` / `blocked`，附带具体证据路径和措辞边界
    - **Figure Outline（F1-F3）**：3 个论文可能用的图，标明各自的证据支撑状态

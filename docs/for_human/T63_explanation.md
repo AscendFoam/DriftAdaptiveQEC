@@ -29,7 +29,7 @@
 从当前 diff 看，Worker 这次只做了文档工作：
 
 1. 写了 gate report：
-   - `docs/fr8_statcalib_comparator_gate_review.md`
+   - `docs/evidence_packs/statcalib_fr8/fr8_statcalib_comparator_gate_review.md`
 2. 写了 review：
    - `docs/review/T63_review.md`
 3. 写了给人的说明文档：
@@ -103,7 +103,7 @@
 
 - “基本可信度问题已经收口，可以考虑做正式但仍有界的 extension-lane comparator result-table task”
 
-从 `docs/P4_benchmark_formal_protocol.md` 来看，下一步最小安全范围已经相当清楚：
+从 `docs/protocols/benchmark/P4_benchmark_formal_protocol.md` 来看，下一步最小安全范围已经相当清楚：
 
 1. 保持四个 frozen scenarios：
    - `static_bias_theta`

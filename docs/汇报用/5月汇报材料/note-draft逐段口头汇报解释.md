@@ -1,6 +1,6 @@
 # `CNN_FPGA_GKP_theory_note_draft.tex` 逐段口头汇报解释
 
-本文用于口头解释 `docs/follow-up_plan/CNN_FPGA_GKP_theory_note_draft.tex`。目标听众可以假设为：了解科研问题和工程系统，但不熟悉量子纠错、GKP 码、bosonic code、FPGA 解码器或 HIL 验证。
+本文用于口头解释 `docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.tex`。目标听众可以假设为：了解科研问题和工程系统，但不熟悉量子纠错、GKP 码、bosonic code、FPGA 解码器或 HIL 验证。
 
 当前 note 的题目是：
 

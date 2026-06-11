@@ -18,7 +18,7 @@
 `T50` 之后，主线又多了两类关键前提：
 
 1. 我们现在有一份 code-backed 训练材料与 preserved reference 证据包：
-   - `docs/training_reproducibility_and_material_regeneration_pack.md`
+   - `docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md`
    - `artifacts/t50_training_repro_pack/training_reproducibility_pack.json`
 2. 这份 pack 已明确枚举出 canonical `static_theta_v2` 下真实存在的：
    - float `.npz`
@@ -54,7 +54,7 @@
 Worker 只可修改或新增以下路径：
 
 - `docs/tasks/Phase2/T48_true_tflite_runtime_smoke_gate.md`
-- `docs/t48_true_tflite_runtime_gate.md`
+- `docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md`
 - `docs/review/T48_review.md`
 - `docs/for_human/T48_explanation.md`
 - `docs/worker_summary/T48_worker_summary.md`
@@ -73,7 +73,7 @@ Worker 只可修改或新增以下路径：
 
 Worker 必须更新：
 
-- `docs/t48_true_tflite_runtime_gate.md`
+- `docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md`
 - `docs/review/T48_review.md`
 - `docs/for_human/T48_explanation.md`
 - `docs/worker_summary/T48_worker_summary.md`
@@ -109,9 +109,9 @@ Worker 不得：
 
 Worker 必须复用以下既有输入，而不是重写历史事实：
 
-- `docs/TFLite_runtime_bootstrap.md`
+- `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md`
 - `docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md`
-- `docs/training_reproducibility_and_material_regeneration_pack.md`
+- `docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md`
 - `artifacts/t50_training_repro_pack/training_reproducibility_pack.json`
 - `docs/review/T18_review.md`
 - `docs/review/T50_review.md`
@@ -245,7 +245,7 @@ Worker 必须基于 `T50` pack 和 canonical `static_theta_v2` 目录，确定�
 
 ### G. 最终文档必须回答的问题
 
-`docs/t48_true_tflite_runtime_gate.md` 至少要回答：
+`docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md` 至少要回答：
 
 1. 当前机器上是否真的有可用的 `.tflite` 解释器环境
 2. 实际使用了哪个解释器、哪个包（`tensorflow` 或 `tflite_runtime`）
@@ -269,7 +269,7 @@ Worker 必须基于 `T50` pack 和 canonical `static_theta_v2` 目录，确定�
 
 Worker 必须产出：
 
-- `docs/t48_true_tflite_runtime_gate.md`
+- `docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md`
 - `docs/review/T48_review.md`
 - `docs/for_human/T48_explanation.md`
 - `docs/worker_summary/T48_worker_summary.md`

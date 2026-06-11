@@ -40,7 +40,7 @@ worker 主要交付了 3 类东西：
    - `cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`
    - `tests/test_t49_real_board_smoke_execution_gate.py`
 3. 解释文档
-   - `docs/t49_real_board_smoke_execution_gate.md`
+   - `docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md`
    - `docs/worker_summary/T49_worker_summary.md`
    - `docs/review/T49_review.md`
    - `docs/for_human/T49_explanation.md`
@@ -89,7 +89,7 @@ worker 主要交付了 3 类东西：
 
 这次任务的意义，不是让仓库多了一段新硬件功能代码，而是让“真板仍未具备前提”这件事第一次有了结构化证据。
 
-结合 `docs/02_experiment_plan.md`、`docs/real_board_smoke_execution_plan.md`、`docs/review/T20_review.md`、`docs/review/T22_review.md` 来看，前面的工作更多是在做：
+结合 `docs/02_experiment_plan.md`、`docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`、`docs/review/T20_review.md`、`docs/review/T22_review.md` 来看，前面的工作更多是在做：
 
 - readiness checklist
 - execution plan
@@ -148,7 +148,7 @@ worker 主要交付了 3 类东西：
 
 worker 原本写的：
 
-- `docs/t49_real_board_smoke_execution_gate.md`
+- `docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md`
 - `docs/worker_summary/T49_worker_summary.md`
 - 原 `docs/review/T49_review.md` 预审草稿
 - 原 `docs/for_human/T49_explanation.md`

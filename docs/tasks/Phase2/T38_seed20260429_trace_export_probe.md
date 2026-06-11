@@ -24,7 +24,7 @@ The output must be a diagnostic trace, not a new formal benchmark result.
 Worker may modify:
 
 - `docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`
-- `docs/seed20260429_trace_export_diagnosis.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md`
 - `docs/review/T38_review.md`
 - `docs/for_human/T38_explanation.md`
 - `cnn_fpga/runtime/slow_loop_runtime.py`
@@ -41,7 +41,7 @@ Worker may create one T38-scoped run directory under `runs/` only for this probe
 
 Read at minimum:
 
-- `docs/seed20260429_failure_diagnosis.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`
 - `docs/review/T36_review.md`
 - `docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`
 - `docs/04_task_board.md`
@@ -83,7 +83,7 @@ If any field is unavailable without broad refactor, document the gap explicitly 
 
 ## Expected Output
 
-Create `docs/seed20260429_trace_export_diagnosis.md` with:
+Create `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md` with:
 
 1. Exact command and run directory.
 2. Trace schema and field availability table.
@@ -110,7 +110,7 @@ Required verification:
 ## Docs To Update
 
 - `docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`
-- `docs/seed20260429_trace_export_diagnosis.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md`
 - `docs/review/T38_review.md`
 - `docs/for_human/T38_explanation.md`
 
@@ -133,7 +133,7 @@ This task is allowed to run a bounded diagnostic rerun because T36 explicitly pr
 ## Worker Output
 
 - Read the required T38 inputs, including:
-  - `docs/seed20260429_failure_diagnosis.md`
+  - `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`
   - `docs/review/T36_review.md`
   - `docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`
   - `docs/04_task_board.md`
@@ -148,7 +148,7 @@ This task is allowed to run a bounded diagnostic rerun because T36 explicitly pr
   - The script is deterministic and read-only against benchmark artifacts.
   - It exports per-window trace rows from `hil_events.json` instead of reconstructing them from final snapshots.
   - It writes compact CSV/JSON outputs only to the T38-scoped run root.
-- Added `docs/seed20260429_trace_export_diagnosis.md`.
+- Added `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md`.
 - Added `docs/review/T38_review.md` as worker pre-review notes for the later adversarial review.
 - Added `docs/for_human/T38_explanation.md`.
 - Updated this task package with worker output and verification records.
@@ -203,7 +203,7 @@ This task is allowed to run a bounded diagnostic rerun because T36 explicitly pr
      - docs updated are only the T38 task package targets
      - pre-existing unrelated T36 dirty state was not reverted
 6. Report-boundary honesty:
-   - `docs/seed20260429_trace_export_diagnosis.md` explicitly states that:
+   - `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md` explicitly states that:
      - T38 is a single-seed diagnostic trace probe
      - it is not a new formal benchmark claim
      - it does not claim `.tflite` or real-board validation

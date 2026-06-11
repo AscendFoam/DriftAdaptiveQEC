@@ -28,9 +28,9 @@ Re-run the locked feature/teacher ablation matrix and produce a paper-grade but 
 Worker may modify only:
 
 - `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`
-- `docs/fr7_feature_teacher_ablation_reexecution.md`
-- `docs/paper_ablation_result_pack.md`
-- `docs/paper_claim_evidence_ledger.md`
+- `docs/evidence_packs/mechanism_ablation/fr7_feature_teacher_ablation_reexecution.md`
+- `docs/paper_materials/paper_ablation_result_pack.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
 - `docs/reality_recovery/04_figure_and_result_ledger.md`
 - `docs/reality_recovery/05_paper_claim_risk_table.md`
 - `docs/review/T57_review.md`
@@ -46,9 +46,9 @@ Worker may create:
 
 This task should update only:
 
-1. `docs/fr7_feature_teacher_ablation_reexecution.md`
-2. `docs/paper_ablation_result_pack.md`
-3. `docs/paper_claim_evidence_ledger.md`
+1. `docs/evidence_packs/mechanism_ablation/fr7_feature_teacher_ablation_reexecution.md`
+2. `docs/paper_materials/paper_ablation_result_pack.md`
+3. `docs/paper_materials/paper_claim_evidence_ledger.md`
 4. `docs/reality_recovery/04_figure_and_result_ledger.md`
 5. `docs/reality_recovery/05_paper_claim_risk_table.md`
 6. `docs/review/T57_review.md`
@@ -76,12 +76,12 @@ Read at minimum:
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 - `docs/reality_recovery/00_freeze_snapshot.md`
 - `docs/reality_recovery/04_figure_and_result_ledger.md`
 - `docs/reality_recovery/05_paper_claim_risk_table.md`
-- `docs/paper_ablation_result_pack.md`
-- `docs/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_ablation_result_pack.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
 - `docs/review/T24_review.md`
 - `docs/review/T25_p4_formal_evidence_gate_review.md`
 - `docs/review/T47_review.md`
@@ -139,7 +139,7 @@ Inside the T57-scoped run root, produce at minimum:
 
 ## Expected Report Output
 
-Create `docs/fr7_feature_teacher_ablation_reexecution.md` with:
+Create `docs/evidence_packs/mechanism_ablation/fr7_feature_teacher_ablation_reexecution.md` with:
 
 1. exact command list and run-root structure
 2. provenance matrix for reused artifacts versus any regenerated artifacts
@@ -150,9 +150,9 @@ Create `docs/fr7_feature_teacher_ablation_reexecution.md` with:
    - partial
    - missing
 6. explicit non-claims and residual limitations
-7. whether `docs/paper_ablation_result_pack.md` and `docs/paper_claim_evidence_ledger.md` can now be updated without overstating closure
+7. whether `docs/paper_materials/paper_ablation_result_pack.md` and `docs/paper_materials/paper_claim_evidence_ledger.md` can now be updated without overstating closure
 
-Update `docs/paper_ablation_result_pack.md` and `docs/paper_claim_evidence_ledger.md` so the paper-facing evidence pack reflects the FR7 result honestly and keeps all hedge wording intact.
+Update `docs/paper_materials/paper_ablation_result_pack.md` and `docs/paper_materials/paper_claim_evidence_ledger.md` so the paper-facing evidence pack reflects the FR7 result honestly and keeps all hedge wording intact.
 
 Update `docs/reality_recovery/04_figure_and_result_ledger.md` and `docs/reality_recovery/05_paper_claim_risk_table.md` only if the FR7 status or risk annotations actually change.
 
@@ -208,7 +208,7 @@ Summary:
 1. Re-executed the full FR7 matrix inside `runs/p4_benchmark/T57_fr7_feature_teacher_ablation_20260524_000000`.
 2. Completed both repeat chunks and regenerated the full `4 scenarios x 6 modes x 2 repeats = 48` bounded run set.
 3. Generated `summary.json`, `comparison.csv`, `delta.csv`, `report.md`, `summary_pack/*`, and `provenance_manifest.json` inside the single allowed T57 run root.
-4. Created `docs/fr7_feature_teacher_ablation_reexecution.md` and updated the allowed paper-facing ledgers so FR7 is no longer treated as missing.
+4. Created `docs/evidence_packs/mechanism_ablation/fr7_feature_teacher_ablation_reexecution.md` and updated the allowed paper-facing ledgers so FR7 is no longer treated as missing.
 5. Kept all wording bounded: FR7 is now a ready frozen-set result table, but not causal proof and not expanded benchmark evidence.
 
 Key bounded result:

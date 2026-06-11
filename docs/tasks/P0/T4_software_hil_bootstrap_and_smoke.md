@@ -11,7 +11,7 @@ Why now:
 
 Allowed files:
 - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
-- `docs/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
 - `docs/04_task_board.md`
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
@@ -52,7 +52,7 @@ Verification:
   - `Get-Content -Raw -Encoding UTF8 "<run_dir>/hil_events.json"`
 
 Docs to update:
-- `docs/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
 - `docs/04_task_board.md`
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`

@@ -125,7 +125,7 @@
 
 1. 恢复期最小 smoke 继续用轻量解释器，不切换到 DLEnv
 2. `DLEnv` 保留为 legacy 开发常用训练环境候选
-3. `docs/P0_smoke_bootstrap.md` 作为当前最小复用说明
+3. `docs/recovery_bootstrap/P0_smoke_bootstrap.md` 作为当前最小复用说明
 
 ### 直接影响
 
@@ -312,7 +312,7 @@
 ### 直接影响
 
 1. `T6` 可标记完成
-2. `docs/P3_software_hil_bootstrap.md` 应更新为包含最新 run 证据
+2. `docs/recovery_bootstrap/P3_software_hil_bootstrap.md` 应更新为包含最新 run 证据
 3. 当前唯一任务切换到 `T7`
 4. `T7` 必须继承同一条 `mock + model_artifact + artifact_npz + inproc` 口径
 
@@ -335,7 +335,7 @@
      - `slow_loop.inference_service.backend=artifact_npz`
      - `slow_loop.model_artifact.path=...static_theta_v2...npz`
 2. 新增恢复期专用 bootstrap 文档：
-   - `docs/P4_benchmark_recovery_bootstrap.md`
+   - `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 3. 实际运行命令：
    - `& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml --scenario static_bias_theta --mode static_linear --mode cnn_fpga --paired-seeds`
 4. 新运行目录：
@@ -367,7 +367,7 @@
 ### 直接影响
 
 1. `T7` 可标记完成
-2. `docs/P4_benchmark_recovery_bootstrap.md` 应更新为包含最新 run 证据
+2. `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md` 应更新为包含最新 run 证据
 3. 当前唯一任务切换到 `T8`
 4. `T8` 需要基于 `T6 + T7` 的证据，决定项目继续 `Repair` 还是进入 `Go`
 
@@ -464,7 +464,7 @@
 ### 直接影响
 
 1. `T9` 可标记完成
-2. `docs/P4_benchmark_recovery_bootstrap.md` 应更新为包含最新四模式 run 证据
+2. `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md` 应更新为包含最新四模式 run 证据
 3. 当前唯一任务切换到 `T10`
 4. `T10` 应优先回答“`T9` 是否足以支撑进入 `Go`”，而不是继续扩 benchmark 或顺手扩功能
 
@@ -550,7 +550,7 @@
 ### 直接影响
 
 1. `T11` 可标记完成
-2. `README.md` 与 `docs/P0_smoke_bootstrap.md`、`docs/P3_software_hil_bootstrap.md`、`docs/P4_benchmark_recovery_bootstrap.md` 应改为显式引用 `requirements-recovery.txt`
+2. `README.md` 与 `docs/recovery_bootstrap/P0_smoke_bootstrap.md`、`docs/recovery_bootstrap/P3_software_hil_bootstrap.md`、`docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md` 应改为显式引用 `requirements-recovery.txt`
 3. 根目录“完全没有 manifest”的风险已收口为“只有 recovery-scoped manifest，完整环境仍未统一”
 4. 当前唯一任务切换到 `T12`
 5. `T12` 应优先收口 software HIL recovery smoke 的随机源与确定性表述，而不是继续扩 benchmark 长跑或新功能
@@ -609,7 +609,7 @@
 ### 直接影响
 
 1. `T12` 可标记完成
-2. `docs/P3_software_hil_bootstrap.md` 应更新为包含新的确定性复验证据与随机源链路说明
+2. `docs/recovery_bootstrap/P3_software_hil_bootstrap.md` 应更新为包含新的确定性复验证据与随机源链路说明
 3. `docs/01_legacy_audit.md`、`docs/04_task_board.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 应同步移除“该路径仍有 run-to-run 数值漂移”的旧表述
 4. 当前唯一任务清空，等待下一张任务包
 
@@ -637,9 +637,9 @@
 3. `T12` 已完成：
    - bounded software HIL recovery smoke 已逐字一致复验
 4. `P0/P3/P4` 的 bounded recovery 入口都已有新的文档化证据：
-   - `docs/P0_smoke_bootstrap.md`
-   - `docs/P3_software_hil_bootstrap.md`
-   - `docs/P4_benchmark_recovery_bootstrap.md`
+   - `docs/recovery_bootstrap/P0_smoke_bootstrap.md`
+   - `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
+   - `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 5. `docs/review/T13_recovery_exit_review.md`
    - 已给出 verdict：`Allow`
 
@@ -805,11 +805,11 @@ Phase 2 先按以下顺序推进：
    - 处理：当前 bootstrap 已明确它只是本机环境探测结果；后续不把该版本写成跨机器保证
 2. N2: 未产出 `requirements-train.txt`
    - 分类：`accepted`
-   - 处理：任务允许选择 `requirements-train.txt` 或 `docs/training_chain_bootstrap.md`；在 dev torch 场景下先采用文档化 bootstrap 更诚实。若后续需要训练链可移植性，再单开依赖锁定任务
+   - 处理：任务允许选择 `requirements-train.txt` 或 `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`；在 dev torch 场景下先采用文档化 bootstrap 更诚实。若后续需要训练链可移植性，再单开依赖锁定任务
 
 ### 依据
 
-1. `docs/training_chain_bootstrap.md` 已独立说明训练链推荐解释器、入口、依赖边界与未覆盖项。
+1. `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md` 已独立说明训练链推荐解释器、入口、依赖边界与未覆盖项。
 2. `requirements-recovery.txt` 仍只覆盖 `P0/P3/P4 recovery smoke`，没有被混写成训练链 manifest。
 3. Worker 没有修改训练代码、没有启动训练长跑、没有改模型主线。
 4. Verification 已达到任务包要求：DLEnv import 级检查与 `python -m cnn_fpga.model.train --help`。
@@ -842,7 +842,7 @@ Phase 2 先按以下顺序推进：
 
 ### 依据
 
-1. `docs/TFLite_runtime_bootstrap.md` 已完成，真实 `.tflite` runtime 不可用被明确写成阻塞事实。
+1. `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md` 已完成，真实 `.tflite` runtime 不可用被明确写成阻塞事实。
 2. `T18` 没有修改导出/runtime 代码，也没有改 benchmark 口径。
 3. 当前更适合进入 repo hygiene 的只读 cleanup manifest 阶段。
 
@@ -868,7 +868,7 @@ Phase 2 先按以下顺序推进：
 
 ### Warning 分类
 
-1. N1: `docs/cleanup_tracked_cache_manifest.md` 第 4.1 节 preflight 命令中的 glob 模式在 PowerShell 下可能存在 shell 展开差异
+1. N1: `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md` 第 4.1 节 preflight 命令中的 glob 模式在 PowerShell 下可能存在 shell 展开差异
    - 分类：`accepted`
    - 处理：作为后续 cleanup 执行任务的命令写法注意；当前 T19 是只读 manifest，不影响结论
 2. N2: tracked `.pyc` = `116` 与工作区 `.pyc` 总数 `133` 的差异未在 manifest 中显式解释
@@ -877,7 +877,7 @@ Phase 2 先按以下顺序推进：
 
 ### 依据
 
-1. `docs/cleanup_tracked_cache_manifest.md` 已完成：
+1. `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md` 已完成：
    - tracked `.pyc` files = `116`
    - tracked `__pycache__` directories = `9`
    - tracked standalone `.pyc` outside `__pycache__` = `0`
@@ -910,7 +910,7 @@ Phase 2 先按以下顺序推进：
 
 ### Warning 分类
 
-1. N1: `docs/real_board_hil_readiness.md` 第 3.3 节寄存器名称来源不透明
+1. N1: `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md` 第 3.3 节寄存器名称来源不透明
    - 分类：`deferred`
    - 处理：写入 risks/open questions；后续真板执行任务如引用这些寄存器名，必须直接审计 `axi_map.py` / DMA 相关代码和 RTL 地址表
 2. N2: 第 4 节验收标准缺少量化阈值
@@ -922,7 +922,7 @@ Phase 2 先按以下顺序推进：
 
 ### 依据
 
-1. `docs/real_board_hil_readiness.md` 已完成：
+1. `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md` 已完成：
    - 当前 placeholder 证据
    - 真板任务前置条件
    - 设备/地址/权限/日志需求
@@ -1011,7 +1011,7 @@ Phase 2 先按以下顺序推进：
 
 ### 背景
 
-`T22` 已产出 `docs/real_board_smoke_execution_plan.md`，将 `T20` 后遗留的真板前置模糊点具体化：
+`T22` 已产出 `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`，将 `T20` 后遗留的真板前置模糊点具体化：
 
 1. host platform decision points：Linux / Windows / WSL / remote board host
 2. AXI/register map 审计清单，直接对应 `cnn_fpga/hwio/axi_map.py`
@@ -1122,7 +1122,7 @@ Project Manager 明确指出：论文发表是最终目标，但当前仍应一�
 
 ### 背景
 
-`T23` 已产出 `docs/P4_benchmark_formal_protocol.md`，锁定了下一步 P4 formal software revalidation 的证据等级、frozen matrix、baseline 集合、seed/repeat、统计报告、compute budget、evidence pack 与 go/no-go 条件。
+`T23` 已产出 `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`，锁定了下一步 P4 formal software revalidation 的证据等级、frozen matrix、baseline 集合、seed/repeat、统计报告、compute budget、evidence pack 与 go/no-go 条件。
 
 `docs/review/T23_review.md` 给出 `PASS_WITH_WARNINGS`，blocking issues 为无。
 
@@ -1143,7 +1143,7 @@ Project Manager 明确指出：论文发表是最终目标，但当前仍应一�
 
 ### 依据
 
-1. `docs/P4_benchmark_formal_protocol.md` 明确写出 `T23 did not run benchmark`。
+1. `docs/protocols/benchmark/P4_benchmark_formal_protocol.md` 明确写出 `T23 did not run benchmark`。
 2. Protocol 已把 `T24` gate 锁定为：
    - `GO_FOR_BOUNDED_FORMAL_SOFTWARE_REVALIDATION`
    - `NO_GO_FOR_SCOPE_EXPANSION_INSIDE_T24`
@@ -1404,7 +1404,7 @@ Project Manager 明确指出：论文发表是最终目标，但当前仍应一�
 
 `T26` 是 docs-only/read-only feasibility gate。`docs/review/T26_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
 
-1. `docs/statcalib_feasibility_gate.md` 已形成，并给出 `CONDITIONAL_GO`。
+1. `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` 已形成，并给出 `CONDITIONAL_GO`。
 2. statcalib 当前仍未实现、未验证，不能从 T24-T29 结果中推断为已有 evidence。
 3. statcalib 只能作为 separate comparator lane 推进，不得静默插入 T24 frozen benchmark set。
 4. 本轮未修改 source/config/run/artifact，未运行 benchmark，未新增 run dir。
@@ -1450,7 +1450,7 @@ Project Manager 明确指出：论文发表是最终目标，但当前仍应一�
 
 ### Warning 分类
 
-1. N1：`docs/statcalib_feasibility_gate.md` 的 T26 非声明仍写着 no source code changed，T30 后已过期
+1. N1：`docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` 的 T26 非声明仍写着 no source code changed，T30 后已过期
    - 分类：`accepted`
    - 处理：Captain closeout 已在 gate 文档中按 T26/T30 时点修正，明确 T30 仅新增 interface-only source/tests，不等于 benchmark validation
 2. N2：`tests/` 目录无 `__init__.py`
@@ -1485,7 +1485,7 @@ Project Manager 明确指出：论文发表是最终目标，但当前仍应一�
 
 `T36` 是只读 failure-mechanism diagnosis。`docs/review/T36_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
 
-1. `docs/seed20260429_failure_diagnosis.md` 已包含 artifact inventory、Full vs Gated v5 scenario summary、跨 seed comparison、机制矩阵和下一 bounded 建议。
+1. `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md` 已包含 artifact inventory、Full vs Gated v5 scenario summary、跨 seed comparison、机制矩阵和下一 bounded 建议。
 2. `cnn_fpga/benchmark/analyze_seed20260429_failure.py` 是标准库 CSV/JSON 读取脚本，只打印 deterministic JSON，不导入 project runtime、不运行 simulation。
 3. T36 未重跑 benchmark、未新增/改写 `runs/` 或 `artifacts/`、未改模型/config/formal protocol/baseline/scenario/seed policy。
 4. 诊断没有把 hypothesis 写成因果证明，也没有改变 `.tflite`、real-board 或 statcalib 边界。
@@ -1527,7 +1527,7 @@ Project Manager 明确指出：论文发表是最终目标，但当前仍应一�
 `T38` 是 `seed=20260429` single-seed trace-export probe。`docs/review/T38_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
 
 1. Required trace fields are present for `4798 / 4798` trace rows.
-2. Required report sections are present in `docs/seed20260429_trace_export_diagnosis.md`.
+2. Required report sections are present in `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md`.
 3. Scope stayed bounded to unchanged benchmark semantics and a T38-scoped run root.
 4. T38 did not expand baseline/scenario/seed policy and did not touch `.tflite`, real-board, or statcalib integration boundaries.
 
@@ -1566,7 +1566,7 @@ Milestone 2I is complete within its bounded scope: mechanism-evidence hardening 
 
 `T31` 是 Milestone 2J 的 training-chain portable dependency-lock planning task。`docs/review/T31_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
 
-1. `docs/training_chain_portable_dependency_lock_plan.md` 覆盖了 T31 要求的 8 类输出：本机解释器 inventory、package evidence、static-theta / residual-b / Gated-v5 dependency map、CPU-vs-GPU lock strategy、可提交内容与 local-only evidence、clean-environment bootstrap proposal、explicit non-claims、下一 bounded task 建议。
+1. `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md` 覆盖了 T31 要求的 8 类输出：本机解释器 inventory、package evidence、static-theta / residual-b / Gated-v5 dependency map、CPU-vs-GPU lock strategy、可提交内容与 local-only evidence、clean-environment bootstrap proposal、explicit non-claims、下一 bounded task 建议。
 2. 本轮只修改 T31 allowed files，未修改 source/config/protocol/baseline/scenario/seed policy。
 3. 未安装、升级或删除依赖，未运行训练、benchmark、`.tflite`、硬件或 cleanup。
 4. 未创建或修改 `runs/` / `artifacts/`，也未 repurpose `requirements-recovery.txt`。
@@ -1574,10 +1574,10 @@ Milestone 2I is complete within its bounded scope: mechanism-evidence hardening 
 
 ### Warning 分类
 
-1. N1：`docs/training_chain_portable_dependency_lock_plan.md` 的 subsection heading 应为 `### 4.1` 等，而不是 `## 4.1`
+1. N1：`docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md` 的 subsection heading 应为 `### 4.1` 等，而不是 `## 4.1`
    - 分类：`accepted`
    - 处理：cosmetic only，不影响 T31 结论；后续文档整理时可修正。
-2. N2：`docs/training_chain_bootstrap.md` 仍把 `DLEnv` 写作训练推荐解释器，而 T31 形成了更细的 two-lane view
+2. N2：`docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md` 仍把 `DLEnv` 写作训练推荐解释器，而 T31 形成了更细的 two-lane view
    - 分类：`accepted`
    - 处理：未来 alignment 可让 bootstrap doc 引用 T31 two-lane plan；不属于 T31 blocking scope。
 3. N3：Worker self-review file 被 adversarial review 覆盖
@@ -1608,7 +1608,7 @@ Milestone 2I is complete within its bounded scope: mechanism-evidence hardening 
 
 `T39` 是 Milestone 2J 的 clean-environment draft lock and dry-run bootstrap task。`docs/review/T39_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
 
-1. `requirements-train-cpu-win-py312.txt`、`docs/training_chain_cpu_cleanenv_bootstrap.md`、任务包 Worker Output、`docs/review/T39_review.md`、`docs/for_human/T39_explanation.md` 五项输出均到位。
+1. `requirements-train-cpu-win-py312.txt`、`docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_bootstrap.md`、任务包 Worker Output、`docs/review/T39_review.md`、`docs/for_human/T39_explanation.md` 五项输出均到位。
 2. clean environment 与 `DLEnv` 分离，且只安装了 `numpy==2.4.5` 与 `PyYAML==6.0.3`。
 3. 只运行了 `dataset_builder --dry-run`、`runtime_dataset_builder --dry-run`、`train --help`；未运行 training、benchmark、`.tflite`、hardware 或 cleanup。
 4. 未修改 source/config/protocol/baseline/scenario/seed policy，未改写 `runs/`、`artifacts/` 或 `requirements-recovery.txt`。
@@ -1799,8 +1799,8 @@ No `deferred` warnings remain from `T45`, so no new risk item is opened here.
 
 `T35` 是 Milestone 2K 的 docs-only paper draft skeleton and reviewer-risk audit task。`docs/review/T35_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
 
-1. `docs/paper_draft_skeleton.md` 已按 section-level scaffold 绑定 claim IDs 与 figure/table IDs。
-2. `docs/paper_reviewer_risk_audit.md` 已把 novelty、evidence-grade、overclaim、reproducibility/deployment、ablation/mechanism 风险绑定到具体 claim/risk。
+1. `docs/paper_materials/paper_draft_skeleton.md` 已按 section-level scaffold 绑定 claim IDs 与 figure/table IDs。
+2. `docs/paper_materials/paper_reviewer_risk_audit.md` 已把 novelty、evidence-grade、overclaim、reproducibility/deployment、ablation/mechanism 风险绑定到具体 claim/risk。
 3. `C6`、`C7`、`C8`、`C10`、`C11` 等 blocked claims 没有被静默升级。
 4. 本轮没有 source、config、`runs/`、`artifacts`、benchmark protocol、`.tflite`、hardware 或治理结论文档越界修改。
 
@@ -1844,7 +1844,7 @@ No `deferred` warnings remain from `T45`, so no new risk item is opened here.
 `T41` 是 Milestone 2K 的 read-only paper-assembly gate review task。`docs/review/T41_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
 
 1. `docs/review/Milestone2K_review.md` 给出 `Allow`，并明确 Milestone 2K 可关闭。
-2. minimum safe paper positioning 与 `docs/paper_reviewer_risk_audit.md` 一致，没有升级 blocked claims。
+2. minimum safe paper positioning 与 `docs/paper_materials/paper_reviewer_risk_audit.md` 一致，没有升级 blocked claims。
 3. Background / Related Work 必须在 prose expansion 前先补。
 4. 推荐下一唯一任务为 `T42`，范围仍是 docs-only。
 
@@ -2050,7 +2050,7 @@ T56 review 的非阻塞评论全部按 `accepted` 处理：
 
 `T54` 是 `T46` 所定义的 Phase A multi-seed trace-only generalization probe。`docs/review/T54_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
 
-1. `docs/multi_seed_trace_generalization_probe.md` 结构完整，包含命令、复用/重跑矩阵、字段可用性、跨 seed 汇总、结论与 non-claims。
+1. `docs/evidence_packs/mechanism_ablation/multi_seed_trace_generalization_probe.md` 结构完整，包含命令、复用/重跑矩阵、字段可用性、跨 seed 汇总、结论与 non-claims。
 2. 任务保持在既有 `T38` trace/export 路径之内，只使用锁定的 6-seed pack、冻结四场景、`Full` vs `Gated v5`，没有运行 intervention。
 3. 最终结论是 “broadly repeated with qualifications”，而不是把单 seed 结果直接升级成 causal proof 或 paper-grade benchmark evidence。
 4. Worker 没有修改 source、benchmark code、source-tree config、tests、runtime、hardware、training 文件或治理文档。
@@ -2094,7 +2094,7 @@ T54 review 的非阻塞评论全部按 `accepted` 处理：
 
 `T46` 是一张 docs-only 的机制证据规划任务。`docs/review/T46_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
 
-1. `docs/seed_mechanism_multi_seed_plan.md` 结构完整，包含 claim-boundary、seed-selection、trace-field inventory、future execution-pack 四张关键表。
+1. `docs/evidence_packs/mechanism_ablation/seed_mechanism_multi_seed_plan.md` 结构完整，包含 claim-boundary、seed-selection、trace-field inventory、future execution-pack 四张关键表。
 2. `T36/T38` 的 single-seed evidence 没有被静默升级为 multi-seed confirmation 或 causal proof。
 3. T46 保持了与 benchmark expansion、deployment validation、paper material freeze 的分离。
 4. Worker 没有越界修改 source、config、`runs/`、`artifacts` 或治理文档。
@@ -2106,7 +2106,7 @@ T46 review 的非阻塞评论全部按 `accepted` 处理：
 1. N1 相邻 seed `20260430` 与 seed-spacing wording tension：`accepted`
 2. N2 working tree 中可见 Captain-level governance sync：`accepted`
 3. N3 Phase A 未给 wall-clock estimate：`accepted`
-4. N4 未直接回引 `docs/paper_claim_evidence_ledger.md`：`accepted`
+4. N4 未直接回引 `docs/paper_materials/paper_claim_evidence_ledger.md`：`accepted`
 5. N5 worker self-review accurate：`informational`
 
 没有 `deferred` 或 `rejected` warning，因此不因 T46 review 新增 risk。
@@ -2136,7 +2136,7 @@ T46 review 的非阻塞评论全部按 `accepted` 处理：
 
 `T47` 是 `T56` 之后的 hedge-conditioned docs-only paper-material lane。`docs/review/T47_review.md` 给出 `PASS`，blocking issues 为无。Reviewer 确认：
 
-1. `docs/paper_ablation_result_pack.md` 已按边界要求冻结 ready / partial / missing 的 ablation/material ledger。
+1. `docs/paper_materials/paper_ablation_result_pack.md` 已按边界要求冻结 ready / partial / missing 的 ablation/material ledger。
 2. 当前输出没有把 `C4`、机制解释、`.tflite`、真板、formal benchmark expansion 或第二 intervention 写成已完成事实。
 3. `FR7` 被明确保留为 `missing`，没有被历史 pre-T24 证据冒充为 formal protocol evidence。
 4. 该任务没有触碰 source、config、历史 run-root、`.tflite`、硬件或 cleanup 范围。
@@ -2400,7 +2400,7 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 
 ### 依据
 
-依据 `docs/review/T62_review.md`、`docs/statcalib_provenance_isolated_fairness_rerun.md` 与 `runs/p4_benchmark/T62_statcalib_provenance_isolated_20260527_122943/summary.json`，当前仓库事实是：
+依据 `docs/review/T62_review.md`、`docs/evidence_packs/statcalib_fr8/statcalib_provenance_isolated_fairness_rerun.md` 与 `runs/p4_benchmark/T62_statcalib_provenance_isolated_20260527_122943/summary.json`，当前仓库事实是：
 
 1. `T62` verdict = `PASS`
 2. blocking issues = none
@@ -2440,7 +2440,7 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 
 `T63` 的目标不是产生新 benchmark evidence，而是回答一个更窄的问题：在 `T59` 到 `T62` 之后，仓库是否已经具备打开一个有界 `FR8` 执行任务的前提，还是还需要再做一个更小的前置 prerequisite。
 
-依据 `docs/review/T63_review.md`、`docs/fr8_statcalib_comparator_gate_review.md` 和已有 `T59/T60/T61/T62` 本地证据：
+依据 `docs/review/T63_review.md`、`docs/evidence_packs/statcalib_fr8/fr8_statcalib_comparator_gate_review.md` 和已有 `T59/T60/T61/T62` 本地证据：
 
 1. `statcalib` separate-lane integration 已由 `T59` 建立
 2. cross-mode leakage 与 regression hardening 已由 `T60` 关闭
@@ -2484,7 +2484,7 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 
 `T64` 的目标不是重写历史 frozen benchmark，而是在 locked four-scenario protocol 下，新增一份 clean-provenance 的 `statcalib` extension-lane bounded benchmark，并明确它仍然只是 mock-backed software-HIL evidence。
 
-依据 `docs/review/T64_review.md`、`docs/fr8_statcalib_extension_lane_benchmark.md`、`cnn_fpga/config/p4_multiscenario_statcalib_extension_lane.yaml` 与 `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658/*`，当前仓库事实是：
+依据 `docs/review/T64_review.md`、`docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`、`cnn_fpga/config/p4_multiscenario_statcalib_extension_lane.yaml` 与 `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658/*`，当前仓库事实是：
 
 1. blocking issues = none
 2. T64 只新增了一个 task-scoped derived config 和一个 T64-scoped run root
@@ -2497,8 +2497,8 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 
 本次 warning 分类如下：
 
-1. `N1` execution-shape wording drift in `docs/fr8_statcalib_extension_lane_benchmark.md` = `deferred`
-2. `N2` finish-timestamp provenance wording drift in `docs/fr8_statcalib_extension_lane_benchmark.md` = `deferred`
+1. `N1` execution-shape wording drift in `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md` = `deferred`
+2. `N2` finish-timestamp provenance wording drift in `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md` = `deferred`
 3. `N3` extension-lane over-interpretation boundary = `deferred`
 
 对应风险处理：
@@ -2531,7 +2531,7 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 
 ### 背景
 
-`T65` 的目标不是新增实验，而是把 `T64` 的 bounded FR8 extension-lane result pack 做成一个更强的 self-audited artifact。根据 `docs/review/T65_review.md`、`docs/fr8_statcalib_extension_lane_consistency_audit.md`、`cnn_fpga/benchmark/audit_fr8_extension_lane_consistency.py` 与 `tests/test_fr8_extension_lane_consistency.py`：
+`T65` 的目标不是新增实验，而是把 `T64` 的 bounded FR8 extension-lane result pack 做成一个更强的 self-audited artifact。根据 `docs/review/T65_review.md`、`docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_consistency_audit.md`、`cnn_fpga/benchmark/audit_fr8_extension_lane_consistency.py` 与 `tests/test_fr8_extension_lane_consistency.py`：
 
 1. T64 报告中的 execution-shape wording drift 已修正
 2. finish-timestamp provenance wording drift 已修正
@@ -2584,7 +2584,7 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 
 `T66` 的目标不是继续做 report wording hardening，而是在不改 statcalib/runtime semantics 的前提下，验证 `T64` extension-lane gain 是否能穿过一个预声明的局部 sensitivity grid。
 
-依据 `docs/review/T66_review.md`、`docs/statcalib_sensitivity_bounded_benchmark.md`、`cnn_fpga/config/p4_multiscenario_statcalib_sensitivity.yaml` 与 `runs/p4_benchmark/T66_statcalib_sensitivity_20260529_210906/*`，当前仓库事实是：
+依据 `docs/review/T66_review.md`、`docs/evidence_packs/statcalib_fr8/statcalib_sensitivity_bounded_benchmark.md`、`cnn_fpga/config/p4_multiscenario_statcalib_sensitivity.yaml` 与 `runs/p4_benchmark/T66_statcalib_sensitivity_20260529_210906/*`，当前仓库事实是：
 
 1. blocking issues = none
 2. `T66` 只有一个新 run root，且 `launch commit = finish commit = summary.json git_commit = ad981bb`
@@ -2635,7 +2635,7 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 
 `T67` 的目标不是扩写主表，也不是继续做 teacher breadth，而是回答一个更具体的问题：`T64/T66` 的 bounded statcalib gain 是否只是绑在 `teacher_mode=ukf` 上成立。
 
-依据 `docs/review/T67_review.md`、`docs/statcalib_teacher_anchor_bounded_benchmark.md` 与 `runs/p4_benchmark/T67_statcalib_teacher_anchor_20260601_225718/*`，当前仓库事实是：
+依据 `docs/review/T67_review.md`、`docs/evidence_packs/statcalib_fr8/statcalib_teacher_anchor_bounded_benchmark.md` 与 `runs/p4_benchmark/T67_statcalib_teacher_anchor_20260601_225718/*`，当前仓库事实是：
 
 1. blocking issues = none
 2. `T67` 只产生了一个新 run root，且 `launch commit = finish commit = summary.json git_commit = 84f4468`
@@ -2675,7 +2675,7 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 
 ### 事实基础
 
-依据 `docs/review/T68_review.md`、`docs/statcalib_generated_only_robustness_bounded_benchmark.md`、`docs/worker_summary/T68_worker_summary.md`、`runs/p4_benchmark/T68_statcalib_generated_only_20260605_205723/*`，以及本轮重新执行的：
+依据 `docs/review/T68_review.md`、`docs/evidence_packs/statcalib_fr8/statcalib_generated_only_robustness_bounded_benchmark.md`、`docs/worker_summary/T68_worker_summary.md`、`runs/p4_benchmark/T68_statcalib_generated_only_20260605_205723/*`，以及本轮重新执行的：
 
 1. `python -m py_compile cnn_fpga/benchmark/summarize_statcalib_generated_only.py`
 2. `python -m unittest tests.test_statcalib_generated_only_summary`
@@ -2739,7 +2739,7 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 3. `T24` 仍是 authoritative frozen ranked table。
 4. `T64/T65/T66/T67/T68` 都只是 mock-backed software-HIL extension-lane evidence。
 5. `R24` 仍打开，当前由 `T69` 聚焦 clean-winner tie-break 问题。
-6. `docs/reference/GPT-Pro有关扩展实验的建议.md` 建议可以并行开扩展路线，但必须作为 sidecar extension lane，而不是重写主线。
+6. `docs/deep_research_reports/GPT-Pro有关扩展实验的建议.md` 建议可以并行开扩展路线，但必须作为 sidecar extension lane，而不是重写主线。
 
 ### 依据
 
@@ -2762,8 +2762,8 @@ T58 review 鐨?non-blocking items 鎸夊備笅鍒嗙被锛?
 ### 直接影响
 
 1. 新增 `docs/tasks/Phase2/PSE0_parallel_sidecar_extension_governance_setup.md`
-2. 新增 `docs/parallel_sidecar_extension_governance.md`
-3. 新增 `docs/parallel_sidecar_worktree_plan.md`
+2. 新增 `docs/sidecar/parallel_sidecar_extension_governance.md`
+3. 新增 `docs/sidecar/parallel_sidecar_worktree_plan.md`
 4. `docs/04_task_board.md` 增加 PSE0 记录，但不改变 `Current Unique Task = T69`
 5. `docs/06_repo_noise_governance.md` 增加 sidecar run-root 规则
 6. `docs/07_handoff.md` 增加 sidecar governance handoff note
@@ -2803,7 +2803,7 @@ Wave A 采用短路径项目内 worktree：
 
 ### 事实基础
 
-依据 `docs/review/T69_review.md`、`docs/statcalib_clean_winner_tiebreak_bounded_benchmark.md`、`docs/worker_summary/T69_worker_summary.md`、`runs/p4_benchmark/T69_statcalib_clean_winner_tiebreak_20260608_160358/*`，以及本轮重新执行的：
+依据 `docs/review/T69_review.md`、`docs/evidence_packs/statcalib_fr8/statcalib_clean_winner_tiebreak_bounded_benchmark.md`、`docs/worker_summary/T69_worker_summary.md`、`runs/p4_benchmark/T69_statcalib_clean_winner_tiebreak_20260608_160358/*`，以及本轮重新执行的：
 1. `C:\ProgramData\anaconda3\python.exe -m py_compile cnn_fpga/benchmark/summarize_statcalib_clean_winner_tiebreak.py`
 2. `C:\ProgramData\anaconda3\python.exe -m unittest tests.test_statcalib_clean_winner_tiebreak_summary`
 3. `C:\ProgramData\anaconda3\python.exe -m cnn_fpga.benchmark.summarize_statcalib_clean_winner_tiebreak --run-dir runs/p4_benchmark/T69_statcalib_clean_winner_tiebreak_20260608_160358`
@@ -2854,7 +2854,7 @@ Wave A 采用短路径项目内 worktree：
 
 ### 事实基础
 
-依据 `docs/review/T70_review.md`、`docs/fr8_statcalib_bounded_closure_pack.md`、`docs/worker_summary/T70_worker_summary.md`、`cnn_fpga/benchmark/build_fr8_statcalib_bounded_closure_pack.py`、`tests/test_fr8_statcalib_bounded_closure_pack.py`，以及本轮重新执行的：
+依据 `docs/review/T70_review.md`、`docs/evidence_packs/statcalib_fr8/fr8_statcalib_bounded_closure_pack.md`、`docs/worker_summary/T70_worker_summary.md`、`cnn_fpga/benchmark/build_fr8_statcalib_bounded_closure_pack.py`、`tests/test_fr8_statcalib_bounded_closure_pack.py`，以及本轮重新执行的：
 
 1. `C:\ProgramData\anaconda3\python.exe -m py_compile cnn_fpga/benchmark/build_fr8_statcalib_bounded_closure_pack.py`
 2. `C:\ProgramData\anaconda3\python.exe -m unittest tests.test_fr8_statcalib_bounded_closure_pack`
@@ -2905,7 +2905,7 @@ Wave A 采用短路径项目内 worktree：
 
 ### 事实基础
 
-依据 `docs/review/T50_review.md`、`docs/training_reproducibility_and_material_regeneration_pack.md`、`docs/worker_summary/T50_worker_summary.md`、`docs/for_human/T50_explanation.md`、`cnn_fpga/model/build_training_reproducibility_pack.py`、`tests/test_training_reproducibility_pack.py`，以及本轮重新执行的：
+依据 `docs/review/T50_review.md`、`docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md`、`docs/worker_summary/T50_worker_summary.md`、`docs/for_human/T50_explanation.md`、`cnn_fpga/model/build_training_reproducibility_pack.py`、`tests/test_training_reproducibility_pack.py`，以及本轮重新执行的：
 
 1. `D:\Codes\Quantum\DriftAdaptiveQEC\.venvs\t39_train_cpu_py312\Scripts\python.exe -m py_compile cnn_fpga/model/build_training_reproducibility_pack.py`
 2. `D:\Codes\Quantum\DriftAdaptiveQEC\.venvs\t39_train_cpu_py312\Scripts\python.exe -m unittest tests.test_training_reproducibility_pack`
@@ -2956,7 +2956,7 @@ Wave A 采用短路径项目内 worktree：
 - 决策：接受 `docs/review/T48_review.md` 的 `PASS`，标记 `T48` 完成，并将当前唯一任务切换为 `T49: Real-board smoke execution gate`
 - 说明：`T48` review 中的 non-blocking notes 不上升为 `PASS_WITH_WARNINGS`；它们被接受为 advisory carry-forward，仅提醒后续不要把 helper 默认参数错当成“无参直接复跑入口”，也不影响当前 gate 结果成立
 
-依据 `docs/review/T48_review.md`、`docs/t48_true_tflite_runtime_gate.md`、`docs/worker_summary/T48_worker_summary.md`、`cnn_fpga/model/build_t48_true_tflite_runtime_gate.py`、`tests/test_t48_true_tflite_runtime_gate.py`，以及本轮重新执行的：
+依据 `docs/review/T48_review.md`、`docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md`、`docs/worker_summary/T48_worker_summary.md`、`cnn_fpga/model/build_t48_true_tflite_runtime_gate.py`、`tests/test_t48_true_tflite_runtime_gate.py`，以及本轮重新执行的：
 
 1. `.\.venvs\t39_train_cpu_py312\Scripts\python.exe -m py_compile cnn_fpga\model\build_t48_true_tflite_runtime_gate.py`
 2. `.\.venvs\t39_train_cpu_py312\Scripts\python.exe -m unittest tests.test_t48_true_tflite_runtime_gate`
@@ -2999,7 +2999,7 @@ Wave A 采用短路径项目内 worktree：
 
 - 决策：接受 `docs/review/T49_review.md` 的 `PASS_WITH_WARNINGS`，标记 `T49` 完成，并将当前唯一任务切换为 `T71: Real-board gate regeneration and host-transfer pack`
 
-依据 `docs/review/T49_review.md`、`docs/t49_real_board_smoke_execution_gate.md`、`docs/worker_summary/T49_worker_summary.md`、`cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`、`tests/test_t49_real_board_smoke_execution_gate.py`，以及本轮重新执行的：
+依据 `docs/review/T49_review.md`、`docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md`、`docs/worker_summary/T49_worker_summary.md`、`cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`、`tests/test_t49_real_board_smoke_execution_gate.py`，以及本轮重新执行的：
 
 1. `python -m py_compile cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`
 2. `python -m unittest tests.test_t49_real_board_smoke_execution_gate`

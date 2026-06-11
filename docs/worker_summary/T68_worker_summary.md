@@ -7,7 +7,7 @@
 - 新增 focused unit test：`tests/test_statcalib_generated_only_summary.py`
 - 完成了唯一允许的 T68 run root：`runs/p4_benchmark/T68_statcalib_generated_only_20260605_205723`
 - 补齐了 T68 文档：
-  - `docs/statcalib_generated_only_robustness_bounded_benchmark.md`
+  - `docs/evidence_packs/statcalib_fr8/statcalib_generated_only_robustness_bounded_benchmark.md`
   - `docs/review/T68_review.md`
   - `docs/for_human/T68_explanation.md`
 

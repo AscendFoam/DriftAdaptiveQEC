@@ -9,8 +9,8 @@ Why now: `T21` milestone gate verdict = `Conditional`，建议下一步优先收
 Allowed files:
 
 - `docs/tasks/Phase2/T22_real_board_smoke_execution_plan.md`
-- `docs/real_board_smoke_execution_plan.md`
-- `docs/real_board_hil_readiness.md`
+- `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`
+- `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
 - `docs/03_hil_p4_boundary_audit.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
@@ -30,7 +30,7 @@ Inputs to read:
 
 - `docs/review/T20_review.md`
 - `docs/review/T21_phase2_milestone_review.md`
-- `docs/real_board_hil_readiness.md`
+- `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
 - `docs/03_hil_p4_boundary_audit.md`
 - `cnn_fpga/hwio/board_backend.py`
 - `cnn_fpga/hwio/fpga_driver.py`
@@ -39,7 +39,7 @@ Inputs to read:
 
 Expected output:
 
-- `docs/real_board_smoke_execution_plan.md`
+- `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`
 - 必须包含：
   - target platform decision points: Linux / Windows / WSL / remote board host
   - AXI/register map audit checklist
@@ -57,7 +57,7 @@ Verification:
 
 Docs to update:
 
-- `docs/real_board_hil_readiness.md`
+- `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
 - `docs/03_hil_p4_boundary_audit.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
@@ -69,12 +69,12 @@ Reviewer type: `adversarial`
 
 本轮 Worker 已产出以下 plan-only 输出，供后续 reviewer / Captain 审核：
 
-- 新增 `docs/real_board_smoke_execution_plan.md`
+- 新增 `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`
   - 明确 Linux / Windows / WSL / remote board host 四种宿主决策点
   - 直接基于 `cnn_fpga/hwio/axi_map.py` 补 AXI/register map 审计清单
   - 直接基于 `cnn_fpga/hwio/dma_client.py` 补 DMA buffer 审计清单
   - 补 Layer A-D 量化阈值草案、fail-fast budget、minimum command plan（marked not executed）、future evidence pack 和 prohibited wording
-- 更新 `docs/real_board_hil_readiness.md`
+- 更新 `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
   - 补充后续真板任务必须先决定宿主模型，不得默认 `/dev/uio*` 就是目标执行模型
 - 更新 `docs/03_hil_p4_boundary_audit.md`
   - 明确 `T22` 只可产出 execution plan，不可写成 hardware validated

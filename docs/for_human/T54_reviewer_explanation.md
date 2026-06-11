@@ -67,7 +67,7 @@ Worker 的执行流程：
 
 | 文件 | 变化类型 | 说明 |
 | --- | --- | --- |
-| `docs/multi_seed_trace_generalization_probe.md` | 新建 | 主报告文件，8 节 + 4 张必需表格 |
+| `docs/evidence_packs/mechanism_ablation/multi_seed_trace_generalization_probe.md` | 新建 | 主报告文件，8 节 + 4 张必需表格 |
 | `docs/review/T54_review.md` | 新建→被 reviewer 覆写 | Worker 自审后被对抗审查覆写 |
 | `docs/for_human/T54_explanation.md` | 新建 | 中文人类说明 |
 | `docs/tasks/Phase2/T54_multi_seed_trace_only_generalization_probe.md` | 修改 | 追加 Worker Output + Verification Record |

@@ -12,8 +12,8 @@ Decision:
 ## Evidence Reviewed
 
 1. `docs/03_hil_p4_boundary_audit.md`
-2. `docs/P3_software_hil_bootstrap.md`
-3. `docs/P4_benchmark_recovery_bootstrap.md`
+2. `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
+3. `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 4. `runs/hil_suite/hardware_hil_recovery_smoke_20260507_234638_3ae9f9176104/hil_summary.json`
 5. `runs/p4_benchmark/p4multis_20260508_001316_0c12d7_39308/summary.json`
 6. `runs/p4_benchmark/p4multis_20260508_001316_0c12d7_39308/comparison.csv`

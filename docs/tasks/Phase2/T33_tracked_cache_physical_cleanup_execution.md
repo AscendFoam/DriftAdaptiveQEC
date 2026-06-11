@@ -22,7 +22,7 @@ Execute the tracked-cache cleanup physically, but only for the manifest-listed `
 Worker may modify:
 
 - `docs/tasks/Phase2/T33_tracked_cache_physical_cleanup_execution.md`
-- `docs/cleanup_tracked_cache_manifest.md`
+- `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md`
 - `docs/review/T33_review.md`
 - `docs/for_human/T33_explanation.md`
 
@@ -51,13 +51,13 @@ Read at minimum:
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
 - `docs/06_repo_noise_governance.md`
-- `docs/cleanup_tracked_cache_manifest.md`
+- `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md`
 - `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
 - `.gitignore`
 
 ## Required Execution Boundary
 
-T33 must treat `docs/cleanup_tracked_cache_manifest.md` as the only execution manifest.
+T33 must treat `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md` as the only execution manifest.
 
 That means:
 
@@ -85,7 +85,7 @@ Create or update:
 1. this task package with Worker Output and Verification Record
 2. `docs/review/T33_review.md`
 3. `docs/for_human/T33_explanation.md`
-4. if needed, a small execution note appended to `docs/cleanup_tracked_cache_manifest.md`
+4. if needed, a small execution note appended to `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md`
 
 ## Required Verification
 
@@ -154,7 +154,7 @@ This is a repo-hygiene execution task, not a code or experiment task. Do not "im
   - `docs/07_handoff.md`
   - `docs/08_risks_and_open_questions.md`
   - `docs/06_repo_noise_governance.md`
-  - `docs/cleanup_tracked_cache_manifest.md`
+  - `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md`
   - `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
   - `.gitignore`
 - Confirmed the T19 manifest still limited cleanup to these 9 tracked `__pycache__` directories:

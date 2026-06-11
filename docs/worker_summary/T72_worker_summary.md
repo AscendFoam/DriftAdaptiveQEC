@@ -7,7 +7,7 @@
 - 更新 collector：`cnn_fpga/hwio/collect_t71_real_board_gate_artifacts.py`
 - 新增 T72 focused regression：`tests/test_t72_real_board_transfer_pack_provenance_hardening.py`
 - 写入 task-scoped outputs：`artifacts/t72_real_board_transfer_pack_provenance_hardening/`
-- 新增主报告：`docs/t72_real_board_transfer_pack_provenance_hardening.md`
+- 新增主报告：`docs/evidence_packs/deployment_boundary/t72_real_board_transfer_pack_provenance_hardening.md`
 - 新增 review 草稿：`docs/review/T72_review.md`
 - 新增人类解释：`docs/for_human/T72_explanation.md`
 - 新增本文件：`docs/worker_summary/T72_worker_summary.md`

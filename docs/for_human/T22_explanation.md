@@ -42,7 +42,7 @@ T22 的任务是：**把 T20 的模糊点全部具体化，写一份可以直接
    - 提取 `DMAReadout` 结构（`buffer_id`、`byte_count`、`metadata`）
    - 推导 `32×32 float32` → `byte_count = 4096`
 
-4. **撰写 execution plan**：产出 `docs/real_board_smoke_execution_plan.md`，10 节，323 行。
+4. **撰写 execution plan**：产出 `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`，10 节，323 行。
 
 5. **更新治理文档**：同步更新 `real_board_hil_readiness.md`、`03_hil_p4_boundary_audit.md`、`04_task_board.md`、`07_handoff.md`、`08_risks_and_open_questions.md`。
 
@@ -54,13 +54,13 @@ T22 的任务是：**把 T20 的模糊点全部具体化，写一份可以直接
 
 | 文件 | 变化类型 | 内容 |
 |------|----------|------|
-| `docs/real_board_smoke_execution_plan.md` | 新增 | execution plan 全文（10 节，323 行） |
+| `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md` | 新增 | execution plan 全文（10 节，323 行） |
 
 修改的允许范围文件：
 
 | 文件 | 修改内容 |
 |------|----------|
-| `docs/real_board_hil_readiness.md` | 追加 T22 平台决策点引用 |
+| `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md` | 追加 T22 平台决策点引用 |
 | `docs/03_hil_p4_boundary_audit.md` | 追加 T22 约束和推荐表述 |
 | `docs/04_task_board.md` | 追加 Worker 只读产出 |
 | `docs/07_handoff.md` | 追加 T22 Worker 只读结果 |

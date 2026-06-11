@@ -6,7 +6,7 @@ After T56 reframed the mechanism story, the project needs a clear picture of whi
 
 ## What changed
 
-The main output (`docs/paper_ablation_result_pack.md`) contains:
+The main output (`docs/paper_materials/paper_ablation_result_pack.md`) contains:
 
 1. **A full ready/partial/missing ledger** for figures and tables, including:
    - 3 ready items (benchmark ranking table, boundary diagram, boundary/evidence-level table)
@@ -56,6 +56,6 @@ Whether the paper can proceed without FR7 (feature ablation) depends on the stre
 
 ## Key files
 
-- Main ledger: `docs/paper_ablation_result_pack.md`
+- Main ledger: `docs/paper_materials/paper_ablation_result_pack.md`
 - Adversarial review: `docs/review/T47_review.md`
 - Worker summary: `docs/worker_summary/T47_worker_summary.md`

@@ -30,7 +30,7 @@ Produce a docs-only mechanism plan that answers, in writing:
 
 Worker may modify only:
 
-- `docs/seed_mechanism_multi_seed_plan.md`
+- `docs/evidence_packs/mechanism_ablation/seed_mechanism_multi_seed_plan.md`
 - `docs/review/T46_review.md`
 - `docs/for_human/T46_explanation.md`
 - `docs/tasks/Phase2/T46_multi_seed_mechanism_intervention_plan_and_trace_pack.md`
@@ -39,7 +39,7 @@ Worker may modify only:
 
 This task should update only:
 
-1. `docs/seed_mechanism_multi_seed_plan.md`
+1. `docs/evidence_packs/mechanism_ablation/seed_mechanism_multi_seed_plan.md`
 2. `docs/review/T46_review.md`
 3. `docs/for_human/T46_explanation.md`
 4. this task package itself, only to append Worker output and verification notes after completion
@@ -68,16 +68,16 @@ Read at minimum:
 - `docs/reality_recovery/03_experiment_reproducibility_audit.md`
 - `docs/reality_recovery/04_figure_and_result_ledger.md`
 - `docs/reality_recovery/05_paper_claim_risk_table.md`
-- `docs/seed20260429_failure_diagnosis.md`
-- `docs/seed20260429_trace_export_diagnosis.md`
-- `docs/mainline_theory_analysis.md`
-- `docs/paper_benchmark_expansion_protocol.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md`
+- `docs/paper_materials/mainline_theory_analysis.md`
+- `docs/protocols/benchmark/paper_benchmark_expansion_protocol.md`
 - `docs/review/T44_review.md`
 - `docs/review/T45_review.md`
 - `docs/review/T53_review.md`
 - `docs/review/T36_review.md`
 - `docs/review/T38_review.md`
-- `docs/paper_reviewer_risk_audit.md`
+- `docs/paper_materials/paper_reviewer_risk_audit.md`
 
 ## Minimum Questions T46 Must Answer
 
@@ -113,7 +113,7 @@ The plan should follow these constraints:
 
 ## Expected Output
 
-Create `docs/seed_mechanism_multi_seed_plan.md` with:
+Create `docs/evidence_packs/mechanism_ablation/seed_mechanism_multi_seed_plan.md` with:
 
 1. status and scope
 2. current supported mechanism statement
@@ -174,8 +174,8 @@ The right outcome is not to solve the mechanism inside T46. The right outcome is
 ## Worker Output
 
 - Worker completed T46 on `2026-05-22`.
-- All required inputs read and cross-checked: docs/04_task_board.md, docs/07_handoff.md, docs/08_risks_and_open_questions.md, docs/reality_recovery/00_freeze_snapshot.md, docs/reality_recovery/01_claim_evidence_table.md, docs/reality_recovery/02_code_truth_audit.md, docs/reality_recovery/03_experiment_reproducibility_audit.md, docs/reality_recovery/04_figure_and_result_ledger.md, docs/reality_recovery/05_paper_claim_risk_table.md, docs/seed20260429_failure_diagnosis.md, docs/seed20260429_trace_export_diagnosis.md, docs/mainline_theory_analysis.md, docs/paper_benchmark_expansion_protocol.md, docs/review/T44_review.md, docs/review/T45_review.md, docs/review/T53_review.md, docs/review/T36_review.md, docs/review/T38_review.md, docs/paper_reviewer_risk_audit.md.
-- `docs/seed_mechanism_multi_seed_plan.md` produced: 10-section mechanism plan with 4 required tables (claim-boundary, seed-selection, trace-field inventory, execution-pack), intervention matrix, diagnostic-vs-causal evidence boundary, go/no-go rules, and explicit non-claims.
+- All required inputs read and cross-checked: docs/04_task_board.md, docs/07_handoff.md, docs/08_risks_and_open_questions.md, docs/reality_recovery/00_freeze_snapshot.md, docs/reality_recovery/01_claim_evidence_table.md, docs/reality_recovery/02_code_truth_audit.md, docs/reality_recovery/03_experiment_reproducibility_audit.md, docs/reality_recovery/04_figure_and_result_ledger.md, docs/reality_recovery/05_paper_claim_risk_table.md, docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md, docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md, docs/paper_materials/mainline_theory_analysis.md, docs/protocols/benchmark/paper_benchmark_expansion_protocol.md, docs/review/T44_review.md, docs/review/T45_review.md, docs/review/T53_review.md, docs/review/T36_review.md, docs/review/T38_review.md, docs/paper_materials/paper_reviewer_risk_audit.md.
+- `docs/evidence_packs/mechanism_ablation/seed_mechanism_multi_seed_plan.md` produced: 10-section mechanism plan with 4 required tables (claim-boundary, seed-selection, trace-field inventory, execution-pack), intervention matrix, diagnostic-vs-causal evidence boundary, go/no-go rules, and explicit non-claims.
 - `docs/review/T46_review.md` produced with verdict = `PASS`, no blocking issues, 4 non-blocking issues (3-seed sample size, intervention clip factor, existing seed reuse, I3 implementation feasibility).
 - `docs/for_human/T46_explanation.md` produced with Chinese human-facing explanation.
 - Single-seed evidence not upgraded to multi-seed confirmation or causal proof anywhere in the plan.
@@ -185,7 +185,7 @@ The right outcome is not to solve the mechanism inside T46. The right outcome is
 
 ## Verification Record
 
-1. Only allowed files changed: `docs/seed_mechanism_multi_seed_plan.md` (new), `docs/review/T46_review.md` (new), `docs/for_human/T46_explanation.md` (new), and this task package (modified for Worker Output / Verification Record). No other files created or modified.
+1. Only allowed files changed: `docs/evidence_packs/mechanism_ablation/seed_mechanism_multi_seed_plan.md` (new), `docs/review/T46_review.md` (new), `docs/for_human/T46_explanation.md` (new), and this task package (modified for Worker Output / Verification Record). No other files created or modified.
 2. No source code, config, test, `runs/`, or `artifacts` files were modified.
 3. No benchmark, training, `.tflite`, hardware, cleanup, or other evidence-producing command was started.
 4. The plan does not claim multi-seed confirmation or causal proof already exists. All multi-seed claims are explicitly marked as `unsupported`.

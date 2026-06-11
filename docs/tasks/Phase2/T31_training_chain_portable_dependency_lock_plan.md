@@ -24,7 +24,7 @@ This task should not install packages or claim that a clean environment has been
 Worker may modify:
 
 - `docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md`
-- `docs/training_chain_portable_dependency_lock_plan.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md`
 - `docs/review/T31_review.md`
 - `docs/for_human/T31_explanation.md`
 
@@ -47,7 +47,7 @@ Read at minimum:
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/training_chain_bootstrap.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`
 - `requirements-recovery.txt`
 - `cnn_fpga/model/train.py`
 - `cnn_fpga/config/experiment_static_theta_v2.yaml`
@@ -68,7 +68,7 @@ Do not:
 
 ## Expected Output
 
-Create `docs/training_chain_portable_dependency_lock_plan.md` with:
+Create `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md` with:
 
 1. Current local training interpreter inventory.
 2. Package evidence from `DLEnv` and any relevant fallback interpreter.
@@ -98,7 +98,7 @@ Required verification:
 ## Docs To Update
 
 - `docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md`
-- `docs/training_chain_portable_dependency_lock_plan.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md`
 - `docs/review/T31_review.md`
 - `docs/for_human/T31_explanation.md`
 
@@ -128,7 +128,7 @@ T31 is deliberately a plan/manifest-boundary task. It should make the next repro
   - `docs/04_task_board.md`
   - `docs/07_handoff.md`
   - `docs/08_risks_and_open_questions.md`
-  - `docs/training_chain_bootstrap.md`
+  - `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`
   - `requirements-recovery.txt`
   - `cnn_fpga/model/train.py`
   - `cnn_fpga/config/experiment_static_theta_v2.yaml`
@@ -138,7 +138,7 @@ T31 is deliberately a plan/manifest-boundary task. It should make the next repro
   - `C:\ProgramData\anaconda3\envs\DLEnv\python.exe`
   - `C:\ProgramData\anaconda3\python.exe`
   - `C:\Python313\python.exe`
-- Added `docs/training_chain_portable_dependency_lock_plan.md`.
+- Added `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md`.
 - Added `docs/review/T31_review.md`; independent adversarial review later overwrote this file with final verdict `PASS`.
 - Added `docs/for_human/T31_explanation.md`.
 - Updated this task package with worker output and verification records.
@@ -185,7 +185,7 @@ T31 is deliberately a plan/manifest-boundary task. It should make the next repro
 6. `requirements-recovery.txt` boundary preserved:
    - checked by inspection during T31; no edit was made and the T31 plan explicitly keeps recovery scope separate from training-chain lock scope
 7. Documentation honesty:
-   - `docs/training_chain_portable_dependency_lock_plan.md` explicitly distinguishes:
+   - `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md` explicitly distinguishes:
      - local `DLEnv` facts
      - portable CPU-lock candidates
      - non-claims / not-yet-verified areas

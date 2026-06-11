@@ -10,7 +10,7 @@
 - 更新 helper tests：`tests/test_t49_real_board_smoke_execution_gate.py`
 - 新增 regeneration/replay tests：`tests/test_t71_real_board_gate_regeneration_pack.py`
 - 写入 task-scoped outputs：`artifacts/t71_real_board_gate_regeneration_pack/`
-- 新增主报告：`docs/t71_real_board_gate_regeneration_pack.md`
+- 新增主报告：`docs/evidence_packs/deployment_boundary/t71_real_board_gate_regeneration_pack.md`
 - 新增 review 草稿：`docs/review/T71_review.md`
 - 新增人类解释：`docs/for_human/T71_explanation.md`
 - 新增本文件：`docs/worker_summary/T71_worker_summary.md`

@@ -31,7 +31,7 @@ This task must remain trace-only. It must not test interventions yet.
 Worker may modify only:
 
 - `docs/tasks/Phase2/T54_multi_seed_trace_only_generalization_probe.md`
-- `docs/multi_seed_trace_generalization_probe.md`
+- `docs/evidence_packs/mechanism_ablation/multi_seed_trace_generalization_probe.md`
 - `docs/review/T54_review.md`
 - `docs/for_human/T54_explanation.md`
 
@@ -44,7 +44,7 @@ Worker may create:
 
 This task should update only:
 
-1. `docs/multi_seed_trace_generalization_probe.md`
+1. `docs/evidence_packs/mechanism_ablation/multi_seed_trace_generalization_probe.md`
 2. `docs/review/T54_review.md`
 3. `docs/for_human/T54_explanation.md`
 4. this task package itself, only to append Worker output and verification notes after completion
@@ -68,13 +68,13 @@ Read at minimum:
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/seed_mechanism_multi_seed_plan.md`
+- `docs/evidence_packs/mechanism_ablation/seed_mechanism_multi_seed_plan.md`
 - `docs/review/T46_review.md`
-- `docs/seed20260429_failure_diagnosis.md`
-- `docs/seed20260429_trace_export_diagnosis.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md`
 - `docs/review/T36_review.md`
 - `docs/review/T38_review.md`
-- `docs/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
 - `cnn_fpga/benchmark/run_p4_teacher_representation_paired.py`
 - `cnn_fpga/benchmark/analyze_seed20260429_trace.py`
 - `cnn_fpga/config/experiment_runtime_b_residual.yaml`
@@ -131,7 +131,7 @@ Inside the T54-scoped run root, produce at minimum:
 
 ## Expected Report Output
 
-Create `docs/multi_seed_trace_generalization_probe.md` with:
+Create `docs/evidence_packs/mechanism_ablation/multi_seed_trace_generalization_probe.md` with:
 
 1. exact command list and run-root structure
 2. artifact-reuse versus rerun matrix by seed
@@ -201,7 +201,7 @@ If `T54` does not show a repeated pattern beyond `20260429`, then the project sh
 - Trace export for seed 20260510: 14,398 rows, all fields present.
 - Cross-seed analysis produced for all 6 seeds: `cross_seed_comparison.csv` (72 rows), `delta_b_amplitude_by_seed.csv` (72 rows), `mechanism_summary.csv` (72 rows). Total: 57,586 trace rows.
 - Key finding: committed-b instability pattern is **broadly repeated with qualifications** across 6 seeds. 5/6 seeds show Gated v5 instability. Seed 20260425 is quiet (no instability in either mode). Seed 20260510 shows instability in BOTH modes.
-- `docs/multi_seed_trace_generalization_probe.md` updated with complete 6-seed report (8 sections, 4 required tables).
+- `docs/evidence_packs/mechanism_ablation/multi_seed_trace_generalization_probe.md` updated with complete 6-seed report (8 sections, 4 required tables).
 - `docs/review/T54_review.md` updated with verdict `PASS`, 5 non-blocking issues.
 - `docs/for_human/T54_explanation.md` updated with Chinese human-facing explanation covering all 6 seeds.
 - Trace evidence not upgraded to causal proof or paper-grade benchmark evidence.
@@ -211,7 +211,7 @@ If `T54` does not show a repeated pattern beyond `20260429`, then the project sh
 
 ## Verification Record
 
-1. Only allowed docs changed: `docs/multi_seed_trace_generalization_probe.md` (new), `docs/review/T54_review.md` (new), `docs/for_human/T54_explanation.md` (new), and this task package (modified for Worker Output / Verification Record). New run root created at `runs/T54_multi_seed_trace_phase_a_20260522/`. New benchmark run dirs at `runs/teachrepr/p4_benchmark/trp604{25,30,510}_resume/` are new (not historical overwrites).
+1. Only allowed docs changed: `docs/evidence_packs/mechanism_ablation/multi_seed_trace_generalization_probe.md` (new), `docs/review/T54_review.md` (new), `docs/for_human/T54_explanation.md` (new), and this task package (modified for Worker Output / Verification Record). New run root created at `runs/T54_multi_seed_trace_phase_a_20260522/`. New benchmark run dirs at `runs/teachrepr/p4_benchmark/trp604{25,30,510}_resume/` are new (not historical overwrites).
 2. No source code, config, test, runtime, hardware, or training file was modified. The paired runner uses existing code paths without modification.
 3. No historical `runs/` or `artifacts/` path was overwritten. All new benchmark run dirs are new directories.
 4. All new execution stayed inside the fixed four scenarios and two modes (Full and Gated v5).

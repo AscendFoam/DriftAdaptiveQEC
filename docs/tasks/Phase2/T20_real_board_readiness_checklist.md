@@ -9,7 +9,7 @@ Why now: 真板路径是项目高风险边界。只有先固定设备、地址�
 Allowed files:
 
 - `docs/tasks/Phase2/T20_real_board_readiness_checklist.md`
-- `docs/real_board_hil_readiness.md`
+- `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
 - `docs/03_hil_p4_boundary_audit.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
@@ -32,7 +32,7 @@ Inputs to read:
 
 Expected output:
 
-- `docs/real_board_hil_readiness.md`
+- `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
 - 包含：
   - 当前 placeholder 证据
   - 真板任务前置条件
@@ -55,7 +55,7 @@ Reviewer type: `adversarial`
 
 ## Worker Output Summary
 
-- Output type: `docs/real_board_hil_readiness.md`
+- Output type: `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
 - Read-only audit confirmed:
   - `board_backend.py` remains placeholder-oriented
   - `fpga_driver.py` still frames `board/real` as future-facing integration
@@ -63,7 +63,7 @@ Reviewer type: `adversarial`
 - Hardware commands were not executed
 - Board-side code was not modified
 - Updated docs:
-  - `docs/real_board_hil_readiness.md`
+  - `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
   - `docs/03_hil_p4_boundary_audit.md`
   - `docs/04_task_board.md`
   - `docs/07_handoff.md`

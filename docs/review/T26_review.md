@@ -20,7 +20,7 @@ T26 is a read-only feasibility gate and minimal design plan. No source code, con
 
 | File | Change | Within Allowed Set |
 |------|--------|--------------------|
-| `docs/statcalib_feasibility_gate.md` | New | Yes |
+| `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` | New | Yes |
 | `docs/review/T26_statcalib_feasibility_gate.md` | New | Yes |
 | `docs/for_human/T26_explanation.md` | New | Yes |
 | `docs/tasks/Phase2/T26_statcalib_feasibility_gate.md` | Modified (Worker Output + Verification Record appended) | Yes |
@@ -31,7 +31,7 @@ T26 is a read-only feasibility gate and minimal design plan. No source code, con
 
 | Required Output | Present | Quality |
 |-----------------|---------|---------|
-| `docs/statcalib_feasibility_gate.md` | Yes | Covers all 7 required sections |
+| `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` | Yes | Covers all 7 required sections |
 | `docs/review/T26_statcalib_feasibility_gate.md` | Yes | Read-only scope confirmed, files listed, verdict given |
 | `docs/for_human/T26_explanation.md` | Yes | Concise non-technical explanation |
 | Task package Worker Output / Verification Record | Yes | Appended to task package |

@@ -55,11 +55,11 @@
 
 ### 2.3 当前推荐验证入口
 
-- P0 recovery smoke：`docs/P0_smoke_bootstrap.md`
-- P3 software HIL recovery smoke：`docs/P3_software_hil_bootstrap.md`
-- P4 recovery smoke：`docs/P4_benchmark_recovery_bootstrap.md`
-- Phase 2 P4 development protocol：`docs/P4_benchmark_development_protocol.md`（由 `T14` 产出）
-- Phase 2 P4 formal software protocol：`docs/P4_benchmark_formal_protocol.md`（由 `T23` 产出，并由 `T24` 写入 frozen-set formal software revalidation execution record）
+- P0 recovery smoke：`docs/recovery_bootstrap/P0_smoke_bootstrap.md`
+- P3 software HIL recovery smoke：`docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
+- P4 recovery smoke：`docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
+- Phase 2 P4 development protocol：`docs/protocols/benchmark/P4_benchmark_development_protocol.md`（由 `T14` 产出）
+- Phase 2 P4 formal software protocol：`docs/protocols/benchmark/P4_benchmark_formal_protocol.md`（由 `T23` 产出，并由 `T24` 写入 frozen-set formal software revalidation execution record）
 
 ### 2.4 禁止的评估写法
 
@@ -150,7 +150,7 @@
 
 `T19` 已补出：
 
-- `docs/cleanup_tracked_cache_manifest.md`
+- `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md`
 - 显式目标目录清单（9 个 `__pycache__` 目录）
 - `git rm --cached -r -- ...` 草案
 - `git restore --staged -- ...` 回滚草案
@@ -164,9 +164,9 @@
 - `T17/T18` 只能补 manifest / bootstrap，不应把环境说明写成完整验证完成。
 - `T19` 只允许先处理 tracked cache cleanup manifest；`runs/` 和 `artifacts/` 另行拆分。
 - `T19` 不执行物理删除，不执行 `git rm`，只做只读清点与 cleanup 方案。
-- 若后续进入执行任务，作用域仍应限制在 `docs/cleanup_tracked_cache_manifest.md` 列出的 9 个目录内。
+- 若后续进入执行任务，作用域仍应限制在 `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md` 列出的 9 个目录内。
 - `T19` review verdict = `PASS`；后续如要执行 physical untrack，仍必须单开任务，不得借 `T20` 或真板 readiness 任务顺手 cleanup。
-- `T21` milestone review 也不得执行 physical untrack；cleanup 执行仍必须在独立任务中按 `docs/cleanup_tracked_cache_manifest.md` 落地。
+- `T21` milestone review 也不得执行 physical untrack；cleanup 执行仍必须在独立任务中按 `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md` 落地。
 - `T22` real-board smoke execution plan 不得顺手执行 cleanup，也不得把 `runs/` / `artifacts/` 纳入物理清理。
 - `T23` P4 formal protocol lock 不得顺手执行 cleanup，也不得把历史 `runs/` / `artifacts/` 改写成新的 formal 事实来源；只能引用具体路径来定义 evidence pack 和缺口。
 - `T24` P4 formal software revalidation 可以新增一个 `runs/p4_benchmark/T24_formal_software_revalidation_*` 运行目录，但不得清理、改写或重标历史 `runs/` / `artifacts/`；所有新结论必须引用该具体 run dir。
@@ -369,8 +369,8 @@
 ## 2026-06-08 Captain Update（并行 sidecar repo-noise 规则）
 
 - `PSE0` 已创建 docs-only sidecar 治理与 worktree 规划文档：
-  - `docs/parallel_sidecar_extension_governance.md`
-  - `docs/parallel_sidecar_worktree_plan.md`
+  - `docs/sidecar/parallel_sidecar_extension_governance.md`
+  - `docs/sidecar/parallel_sidecar_worktree_plan.md`
 - `PSE0` 不创建 run root、benchmark-output 目录、分支、worktree 或 artifact 目录。
 - 后续 sidecar lane 不得写入 `runs/p4_benchmark/T69_statcalib_clean_winner_tiebreak_*`。
 - 除非后续 Captain 任务明确覆盖，否则后续 sidecar lane 必须使用 `runs/sidecar/<lane_id>/<timestamp_or_run_id>/` 下的 run root。

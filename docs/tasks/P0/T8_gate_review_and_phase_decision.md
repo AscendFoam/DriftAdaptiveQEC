@@ -17,7 +17,7 @@ Allowed files:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/review/T8_gate_review.md`
 - `docs/tasks/P0/T8_gate_review_and_phase_decision.md`
 
@@ -41,8 +41,8 @@ Inputs to read:
 - `docs/06_repo_noise_governance.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P3_software_hil_bootstrap.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `runs/hil_suite/hardware_hil_recovery_smoke_20260507_234638_3ae9f9176104/hil_summary.json`
 - `runs/p4_benchmark/p4multis_20260508_001316_0c12d7_39308/summary.json`
 - `runs/p4_benchmark/p4multis_20260508_001316_0c12d7_39308/comparison.csv`
@@ -67,7 +67,7 @@ Docs to update:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/review/T8_gate_review.md`
 
 Reviewer type:

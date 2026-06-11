@@ -14,7 +14,7 @@
 
 ### 1.1 Primary deliverable
 
-`docs/P4_benchmark_formal_protocol.md` has been created and covers all required sections:
+`docs/protocols/benchmark/P4_benchmark_formal_protocol.md` has been created and covers all required sections:
 
 - [x] Evidence levels: recovery / development / formal boundary table (Section 2)
 - [x] Frozen software boundary: runner entry, config family, inheritance, real_board_policy (Section 3)
@@ -34,7 +34,7 @@
 - [x] `docs/04_task_board.md` updated: T23 as current unique task, T21/T22 marked complete, T24-T35 roadmap laid out
 - [x] `docs/07_handoff.md` updated: items 32-36 added, section 4 items 21-25, section 6 task summary rewritten for T23, section 7 rewritten
 - [x] `docs/08_risks_and_open_questions.md` updated: R15-R18 added, open questions 19-28 added, status note updated
-- [x] `docs/P4_benchmark_development_protocol.md` updated: Section 12 added linking to formal protocol
+- [x] `docs/protocols/benchmark/P4_benchmark_development_protocol.md` updated: Section 12 added linking to formal protocol
 
 ### 1.3 Verification of protocol claims against codebase
 
@@ -84,7 +84,7 @@ The worker modified the following files that are NOT in the task package's allow
 3. `docs/03_hil_p4_boundary_audit.md`
 4. `docs/05_decision_log.md`
 5. `docs/06_repo_noise_governance.md`
-6. `docs/real_board_hil_readiness.md`
+6. `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
 7. `docs/tasks/Phase2/T21_phase2_milestone_review.md`
 
 All modifications are governance synchronization (updating task references, adding decision log entries, adding risk entries, backfilling T21 worker output summary). This is the same pattern observed in T22 and accepted by Captain as governance sync rather than Worker scope violation.

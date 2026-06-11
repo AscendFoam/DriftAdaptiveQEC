@@ -20,7 +20,7 @@ None.
 
 ### N1: Worker Output Summary 未列出所有已更新文档
 
-`T14` 任务包的 Worker Output Summary 只列出了 `docs/P4_benchmark_development_protocol.md` 作为产出，但 diff 显示同时更新了 `docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 和 `docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md` 自身。Summary 应完整列出所有修改文件，方便后续 review 追溯。影响低——实际 diff 清晰可查。
+`T14` 任务包的 Worker Output Summary 只列出了 `docs/protocols/benchmark/P4_benchmark_development_protocol.md` 作为产出，但 diff 显示同时更新了 `docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 和 `docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md` 自身。Summary 应完整列出所有修改文件，方便后续 review 追溯。影响低——实际 diff 清晰可查。
 
 ### N2: Protocol 文档引用 `p4_multiscenario_hybrid_b_long.yaml` 未解释继承链
 
@@ -60,7 +60,7 @@ Section 2.3 提到 `Base long config: cnn_fpga/config/p4_multiscenario_hybrid_b_
 | 文件 | 是否修改 | 合规 |
 |------|----------|------|
 | `docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md` | 是（追加 Worker Output Summary） | OK |
-| `docs/P4_benchmark_development_protocol.md` | 是（新增） | OK |
+| `docs/protocols/benchmark/P4_benchmark_development_protocol.md` | 是（新增） | OK |
 | `docs/07_handoff.md` | 是（追加 T14 output status + 更新下一步建议） | OK |
 | `docs/08_risks_and_open_questions.md` | 是（更新 R5/R9 和 Q10） | OK |
 | `docs/04_task_board.md` | 否（worker 有意保持，等 Captain 整合） | OK |
@@ -92,5 +92,5 @@ Section 2.3 提到 `Base long config: cnn_fpga/config/p4_multiscenario_hybrid_b_
 ## 7. Recommended Next Action
 
 1. **Captain 整合**：Captain 应审查本 review，确认 T14 完成后更新 `docs/04_task_board.md`，将 T14 标记为 `[x]`，切换 Current Unique Task 至 `T15`
-2. **T15 启动**：T15 worker 应严格按照 `docs/P4_benchmark_development_protocol.md` Section 6–7 的 bounded matrix 和命令草案执行，不超出定义范围
+2. **T15 启动**：T15 worker 应严格按照 `docs/protocols/benchmark/P4_benchmark_development_protocol.md` Section 6–7 的 bounded matrix 和命令草案执行，不超出定义范围
 3. **注意 config 切换**：T15 从 `p4_multiscenario_recovery_smoke.yaml` 切换到 `p4_multiscenario_strong_baselines.yaml`，baseline 集合完全不同（`static_linear/window_variance/ekf/cnn_fpga` → `ekf/ukf/constant_residual_mu/rls_residual_b/hybrid_residual_b`）。T15 worker 需确认 `p4_multiscenario_strong_baselines.yaml` 在 `C:\ProgramData\anaconda3\python.exe` 下能正常运行（该 config 的 `hybrid_residual_b` mode 需要 `artifacts/models/runtime_b_residual_v1/` 下的 model artifact）

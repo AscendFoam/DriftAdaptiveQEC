@@ -18,7 +18,7 @@ T18 目标：为 `.tflite` export/runtime 路径补独立 manifest 与 smoke pla
 
 | 目标项 | 状态 | 说明 |
 |--------|------|------|
-| 产出 `.tflite` export/runtime 独立 bootstrap 文档 | 完成 | `docs/TFLite_runtime_bootstrap.md` 新增，覆盖 10 节 |
+| 产出 `.tflite` export/runtime 独立 bootstrap 文档 | 完成 | `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md` 新增，覆盖 10 节 |
 | 明确真实 `.tflite` 与 `tflite_stub_v1` 的边界 | 完成 | 第 2/5/6 节显式拆分两条路径语义 |
 | 列出依赖和 smoke 命令 | 完成 | 第 4/5/7 节列出入口命令与依赖边界 |
 | 不改导出/runtime 代码 | 确认无违规 | `git diff HEAD --name-only` 无任何 `cnn_fpga/` 下的代码文件 |
@@ -32,7 +32,7 @@ T18 目标：为 `.tflite` export/runtime 路径补独立 manifest 与 smoke pla
 
 diff 涉及的文件：
 
-- `docs/TFLite_runtime_bootstrap.md`（新增） — allowed
+- `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md`（新增） — allowed
 - `docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md` — allowed（仅追加 Worker Output Summary）
 - `docs/04_task_board.md` — allowed
 - `docs/07_handoff.md` — allowed
@@ -50,7 +50,7 @@ diff 涉及的文件：
 
 ## 3. Pseudo-implementation / Mock / Stub / Hardcode Check
 
-**未发现伪实现。** 本任务是文档任务，核心产出 `docs/TFLite_runtime_bootstrap.md` 是只读审计和环境探测的结果记录。
+**未发现伪实现。** 本任务是文档任务，核心产出 `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md` 是只读审计和环境探测的结果记录。
 
 关键表述验证：
 - 第 3 节写明 `tensorflow: 未安装`、`tflite_runtime: 未安装` — 与 worker 报告一致，未伪造成可用
@@ -104,7 +104,7 @@ diff 涉及的文件：
 
 ## 9. Non-blocking Issues
 
-### N1: `docs/TFLite_runtime_bootstrap.md` 第 10 节推荐表述中的 Markdown 引号嵌套
+### N1: `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md` 第 10 节推荐表述中的 Markdown 引号嵌套
 
 第 10 节的推荐表述模板使用了中文反引号包裹长段落，但没有用代码块格式。如果后续文档直接复制该模板，排版可能不一致。建议后续引用时自行调整为合适的引用格式。不影响任务结论。
 

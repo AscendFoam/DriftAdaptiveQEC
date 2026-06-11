@@ -6,7 +6,7 @@
 
 1. Current diff stays inside the T62 allowed boundary:
    - tracked diff: `docs/tasks/Phase2/T62_statcalib_provenance_isolated_fairness_rerun.md`
-   - new task docs: `docs/statcalib_provenance_isolated_fairness_rerun.md`, `docs/worker_summary/T62_worker_summary.md`, this review, and the human explanation
+   - new task docs: `docs/evidence_packs/statcalib_fr8/statcalib_provenance_isolated_fairness_rerun.md`, `docs/worker_summary/T62_worker_summary.md`, this review, and the human explanation
    - no source, test, or `cnn_fpga/config/` semantic change is present in the current worktree
 2. Only one T62-scoped run root exists:
    - `runs/p4_benchmark/T62_statcalib_provenance_isolated_20260527_122943`

@@ -17,7 +17,7 @@
    - `git diff --name-only -- artifacts/models/static_theta_v2 artifacts/reports/static_theta_v2 artifacts/models/runtime_b_residual_v1 artifacts/reports/runtime_b_residual_v1`
    - `git diff --name-only -- requirements-recovery.txt requirements-train-cpu-win-py312.txt`
 
-主报告也保持了边界诚实，没有把 isolated `.tflite` runtime 成功扩写成默认环境恢复、HIL closure、real-board 验证或 deployment closure：[docs/t48_true_tflite_runtime_gate.md](/D:/Codes/Quantum/DriftAdaptiveQEC/docs/t48_true_tflite_runtime_gate.md#L13)
+主报告也保持了边界诚实，没有把 isolated `.tflite` runtime 成功扩写成默认环境恢复、HIL closure、real-board 验证或 deployment closure：[docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md](/D:/Codes/Quantum/DriftAdaptiveQEC/docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md#L13)
 
 ## Blocking issues
 
@@ -35,12 +35,12 @@
 
 ## Suspicious implementation details
 
-- 未发现把 `.tflite.json` stub 冒充成真实 runtime 成功的情况。helper 明确拒绝 stub，主报告也明确区分 true `.tflite` 与 stub：[cnn_fpga/model/build_t48_true_tflite_runtime_gate.py](/D:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/model/build_t48_true_tflite_runtime_gate.py:98)；[docs/t48_true_tflite_runtime_gate.md](/D:/Codes/Quantum/DriftAdaptiveQEC/docs/t48_true_tflite_runtime_gate.md:42)
+- 未发现把 `.tflite.json` stub 冒充成真实 runtime 成功的情况。helper 明确拒绝 stub，主报告也明确区分 true `.tflite` 与 stub：[cnn_fpga/model/build_t48_true_tflite_runtime_gate.py](/D:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/model/build_t48_true_tflite_runtime_gate.py:98)；[docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md](/D:/Codes/Quantum/DriftAdaptiveQEC/docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md:42)
 - `artifacts/t48_true_tflite_runtime_gate/` 下同时保留了旧的失败探针（`runtime_env_probe.json` / `preserved_tflite_load_probe.json`）和最终成功探针（`*_tf221.json`）。这不是伪实现，反而把“默认 `LPNEnv + tf2.13` 失败、isolated `tf2.21` 成功”的版本错配诊断保留下来了；只是后续转述时必须把两组 probe 区分清楚。
 - `requirements-tflite-win-py311.txt` 只有 `tensorflow==2.21.0`，其余依赖依靠 transitive install 或仓库 fallback parser。对“最小 runtime gate 环境清单”这个任务目标来说这是可接受的，没有演变成过度工程。
 
 ## Recommended next action
 
-- 接受 `T48` 在其有界范围内完成，并把 `docs/t48_true_tflite_runtime_gate.md` 与 `artifacts/t48_true_tflite_runtime_gate/t48_true_tflite_runtime_gate.json` 作为当前机器 `.tflite` runtime truth 的主引用。
+- 接受 `T48` 在其有界范围内完成，并把 `docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md` 与 `artifacts/t48_true_tflite_runtime_gate/t48_true_tflite_runtime_gate.json` 作为当前机器 `.tflite` runtime truth 的主引用。
 - 保持边界表述：当前结论仅支持“isolated `tf2.21` 环境下，preserved `static_theta_v2` float/int8 `.tflite` 可真实执行并可做有界一致性校验”，不支持默认环境恢复、HIL closure、real-board 或 deployment closure。
 - 如果后续还要长期复用这条 lane，建议单开一个极小后续任务，把 helper 默认输入对齐到最终成功 probe，并补上全成功单测；不要在 `T48` 上继续扩成 benchmark 或部署任务。

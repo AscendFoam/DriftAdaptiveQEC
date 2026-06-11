@@ -19,7 +19,7 @@ Milestone 2K may close. Both T34 and T35 passed adversarial review with no block
 
 ### T34: Paper Claim/Evidence Ledger and Figure-Table Outline
 
-- Output: `docs/paper_claim_evidence_ledger.md`
+- Output: `docs/paper_materials/paper_claim_evidence_ledger.md`
 - Review: `docs/review/T34_review.md` (adversarial), verdict = `PASS`
 - The ledger records 11 claims (C1–C11), 3 figures (F1–F3), and 5 tables (T1–T5).
 - Status distribution: 5 `supported`, 1 `partial`, 5 `blocked`.
@@ -30,7 +30,7 @@ Milestone 2K may close. Both T34 and T35 passed adversarial review with no block
 
 ### T35: Paper Draft Skeleton and Reviewer-Risk Audit
 
-- Output: `docs/paper_draft_skeleton.md`, `docs/paper_reviewer_risk_audit.md`
+- Output: `docs/paper_materials/paper_draft_skeleton.md`, `docs/paper_materials/paper_reviewer_risk_audit.md`
 - Review: `docs/review/T35_review.md` (adversarial), verdict = `PASS`
 - The skeleton provides 8 required sections: title candidates, abstract, introduction, method/system, experiment/evidence, results, limitations/boundary, conclusion.
 - The risk audit provides 5 challenge-point categories (novelty, evidence-grade, overclaim wording, reproducibility/deployment, ablation/mechanism), 6 overclaim wording traps, a section-by-section hotspot table, and a minimum safe paper positioning statement.
@@ -99,7 +99,7 @@ The recommended next unique task is:
 
 Scope:
 
-- Add a Background / Related Work section to the existing skeleton in `docs/paper_draft_skeleton.md`.
+- Add a Background / Related Work section to the existing skeleton in `docs/paper_materials/paper_draft_skeleton.md`.
 - Decide whether to adopt a method-forward title (e.g., the experiment plan's recommended title) alongside or replacing the current conservative candidates.
 - Calibrate the introduction's contribution bullets against the claim ledger: ensure C1–C5, C9 appear in contribution bullets with correct status wording, and blocked claims do not.
 - Output remains bounded: no full prose drafting, no new experiments, no code changes.

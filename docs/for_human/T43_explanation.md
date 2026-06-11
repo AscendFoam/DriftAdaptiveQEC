@@ -2,7 +2,7 @@
 
 ## 1. T43 做了什么
 
-T43 在 T42 产出的骨架基础上，为论文的 Background / Related Work 章节撰写了有界正文草稿。产出文件是 `docs/paper_background_related_work_draft.md`，包含 6 个子节的真实段落级正文（不是骨架或要点列表）：
+T43 在 T42 产出的骨架基础上，为论文的 Background / Related Work 章节撰写了有界正文草稿。产出文件是 `docs/paper_materials/paper_background_related_work_draft.md`，包含 6 个子节的真实段落级正文（不是骨架或要点列表）：
 
 1. **GKP 量子纠错与自适应解码问题**：介绍 GKP 编码的基本原理、syndrome 测量、线性解码规则 $\Delta = K s + b$，以及噪声参数漂移导致固定解码器失配的工程动机。
 
@@ -20,7 +20,7 @@ T43 在 T42 产出的骨架基础上，为论文的 Background / Related Work �
 
 T43 没有改变任何事实：
 
-- 所有 claim 状态（supported / partial / blocked）与 `docs/paper_claim_evidence_ledger.md` 完全一致。
+- 所有 claim 状态（supported / partial / blocked）与 `docs/paper_materials/paper_claim_evidence_ledger.md` 完全一致。
 - 没有修改源码、config、`runs/`、`artifacts/` 或阶段结论文档。
 - 没有运行 benchmark、训练、`.tflite`、硬件或 cleanup。
 - 没有撰写 Abstract、Introduction、Method、Results、Conclusion 或任何超出 Background/Related Work 范围的正文。

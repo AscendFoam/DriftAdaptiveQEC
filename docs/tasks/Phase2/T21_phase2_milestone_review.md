@@ -31,11 +31,11 @@ Inputs to read:
 - `docs/08_risks_and_open_questions.md`
 - `docs/review/T16_p4_evidence_gate_review.md`
 - `docs/review/T20_review.md`
-- `docs/P4_benchmark_development_protocol.md`
-- `docs/training_chain_bootstrap.md`
-- `docs/TFLite_runtime_bootstrap.md`
-- `docs/cleanup_tracked_cache_manifest.md`
-- `docs/real_board_hil_readiness.md`
+- `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`
+- `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md`
+- `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md`
+- `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
 
 Expected output:
 

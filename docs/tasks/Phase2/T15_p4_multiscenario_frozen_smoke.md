@@ -9,8 +9,8 @@ Why now: 只有在 `T14` 明确 run matrix、命令与边界后，才能把 `T9`
 Allowed files:
 
 - `docs/tasks/Phase2/T15_p4_multiscenario_frozen_smoke.md`
-- `docs/P4_benchmark_development_protocol.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
@@ -29,8 +29,8 @@ Forbidden scope:
 Inputs to read:
 
 - `docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`
-- `docs/P4_benchmark_development_protocol.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/03_hil_p4_boundary_audit.md`
 - `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
 
@@ -54,8 +54,8 @@ Verification:
 
 Docs to update:
 
-- `docs/P4_benchmark_development_protocol.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
 - `docs/04_task_board.md`（Captain 整合阶段）
@@ -91,7 +91,7 @@ Run executed:
 Execution notes:
 
 1. the first full command exceeded the single shell timeout window;
-2. the run was resumed on the same `run_dir`, which is explicitly allowed by `docs/P4_benchmark_development_protocol.md` Section 7.2;
+2. the run was resumed on the same `run_dir`, which is explicitly allowed by `docs/protocols/benchmark/P4_benchmark_development_protocol.md` Section 7.2;
 3. final `summary.json` reports:
    - `missing_runs = []`
    - full coverage for all scenario/mode pairs.
@@ -121,7 +121,7 @@ Boundary checks:
 
 Docs updated:
 
-- `docs/P4_benchmark_development_protocol.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`

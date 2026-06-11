@@ -23,7 +23,7 @@
 
 ## Non-blocking issues
 
-1. `docs/fr8_statcalib_extension_lane_benchmark.md` 把执行形态写成了 `one detached one-shot invocation only`。但任务包 `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md` 明确接受的只有两种形态：
+1. `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md` 把执行形态写成了 `one detached one-shot invocation only`。但任务包 `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md` 明确接受的只有两种形态：
    - one foreground invocation across the full matrix
    - repeat-range chunking under one fixed run root
    现有 run 产物确实表现为单次、单 run root、无 resume 的 clean 执行，所以我不把它升格为 blocker；但报告文字没有严格贴住任务包原文，后续复用时应该收紧表述。
@@ -43,7 +43,7 @@
 1. 这次任务本身没有源码改动，所以不存在“必须新增单元测试却没写”的直接 blocker。
 
 2. 但仓库里仍缺一个轻量级的一致性检查，来自动比对：
-   - `docs/fr8_statcalib_extension_lane_benchmark.md`
+   - `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
    - `summary.json`
    - `launch_plan.json`
    - `progress.jsonl`
@@ -63,7 +63,7 @@
 
 1. Captain 可以把 `T64` 按 `PASS_WITH_WARNINGS` 接受为“有界 extension-lane benchmark 已完成”。
 
-2. 在任何后续文档、图表或 gate 里复用 `T64` 前，先做一个很小的 docs-only 收口，把 `docs/fr8_statcalib_extension_lane_benchmark.md` 里的两处表述修正掉：
+2. 在任何后续文档、图表或 gate 里复用 `T64` 前，先做一个很小的 docs-only 收口，把 `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md` 里的两处表述修正掉：
    - `detached` 执行形态说法
    - `finish timestamp from summary.json` 的误归因
 

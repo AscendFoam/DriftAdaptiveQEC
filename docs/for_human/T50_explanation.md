@@ -101,7 +101,7 @@
    - `artifacts/t50_training_repro_pack/reports/static_theta_v2/eval_test_20260610_195030.json`
    - `artifacts/t50_training_repro_pack/training_reproducibility_pack.json`
 4. 主文档
-   - `docs/training_reproducibility_and_material_regeneration_pack.md`
+   - `docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md`
 
 ### 2.4 对后续开发的意义
 
@@ -143,13 +143,13 @@
 
 worker 已经写了：
 
-- `docs/training_reproducibility_and_material_regeneration_pack.md`
+- `docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md`
 - `docs/review/T50_review.md`
 - `docs/for_human/T50_explanation.md`
 
 我的结论是：
 
-1. `docs/training_reproducibility_and_material_regeneration_pack.md`
+1. `docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md`
    - 基本准确。
    - 它把 supported / unsupported claims 区分得比较清楚，边界没有漂。
    - 我没有发现把计划写成事实的明显错误。

@@ -38,7 +38,7 @@ Git diff and status show exactly 4 files touched:
 | File | Status | Allowed by T31 |
 |------|--------|---------------|
 | `docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md` | Modified | Yes |
-| `docs/training_chain_portable_dependency_lock_plan.md` | New | Yes |
+| `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md` | New | Yes |
 | `docs/review/T31_review.md` | New | Yes |
 | `docs/for_human/T31_explanation.md` | New | Yes |
 
@@ -92,13 +92,13 @@ Additionally, the plan consistently uses qualifier language: "local fact only", 
 
 ### N1: Section numbering formatting inconsistency
 
-`docs/training_chain_portable_dependency_lock_plan.md` uses `## 4.1`, `## 4.2`, `## 4.3`, `## 5.1`–`## 5.4`, `## 6.1`–`## 6.2` as sub-headings under `## 4` / `## 5` / `## 6`. These should be `### 4.1` etc. for correct Markdown nesting. The content is unaffected; this is cosmetic.
+`docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md` uses `## 4.1`, `## 4.2`, `## 4.3`, `## 5.1`–`## 5.4`, `## 6.1`–`## 6.2` as sub-headings under `## 4` / `## 5` / `## 6`. These should be `### 4.1` etc. for correct Markdown nesting. The content is unaffected; this is cosmetic.
 
 **Classification:** accepted, cosmetic only.
 
 ### N2: Cross-document consistency with `training_chain_bootstrap.md`
 
-`docs/training_chain_bootstrap.md` (from T17) currently writes the DLEnv interpreter as the single "recommended interpreter" for training. T31's plan document adds a more nuanced view: CPU-only lane is plausible without torch. The two documents are not contradictory, but the bootstrap doc could be updated later to reference the T31 plan's two-lane finding.
+`docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md` (from T17) currently writes the DLEnv interpreter as the single "recommended interpreter" for training. T31's plan document adds a more nuanced view: CPU-only lane is plausible without torch. The two documents are not contradictory, but the bootstrap doc could be updated later to reference the T31 plan's two-lane finding.
 
 **Classification:** accepted, future alignment; not a T31 scope issue.
 

@@ -24,7 +24,7 @@ This task should produce a bounded, evidence-labeled diagnosis. It is not a new 
 Worker may modify:
 
 - `docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`
-- `docs/seed20260429_failure_diagnosis.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`
 - `docs/review/T36_review.md`
 - `docs/for_human/T36_explanation.md`
 - `cnn_fpga/benchmark/analyze_seed20260429_failure.py`
@@ -36,7 +36,7 @@ If the analysis can be done entirely in docs, Worker does not need to add the Py
 Read at minimum:
 
 - `docs/02_experiment_plan.md`
-- `docs/02_experiment_plan_simplified.md`
+- `docs/legacy_context/plan_variants_2026-06-11/02_experiment_plan_simplified.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
@@ -63,7 +63,7 @@ Do not:
 
 ## Expected Output
 
-Create `docs/seed20260429_failure_diagnosis.md` with:
+Create `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md` with:
 
 1. Evidence inventory: exact artifact paths used.
 2. `seed=20260429` Full vs Gated v5 summary by scenario.
@@ -95,7 +95,7 @@ Required verification:
 ## Docs To Update
 
 - `docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`
-- `docs/seed20260429_failure_diagnosis.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`
 - `docs/review/T36_review.md`
 - `docs/for_human/T36_explanation.md`
 
@@ -119,14 +119,14 @@ If existing artifacts do not contain per-window or per-commit time series, Worke
 
 - Read the required T36 inputs, including:
   - `docs/02_experiment_plan.md`
-  - `docs/02_experiment_plan_simplified.md`
+  - `docs/legacy_context/plan_variants_2026-06-11/02_experiment_plan_simplified.md`
   - `docs/04_task_board.md`
   - `docs/07_handoff.md`
   - `docs/08_risks_and_open_questions.md`
   - `docs/CNN_FPGA_GKP_阶段结论.md`
   - `docs/legacy_context/2026-05-06_CNN_FPGA_GKP_legacy_handoff.md`
   - the required `runs/teachrepr*` summary/comparison artifacts
-- Added `docs/seed20260429_failure_diagnosis.md`.
+- Added `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`.
 - Added a small read-only script at `cnn_fpga/benchmark/analyze_seed20260429_failure.py`.
   - The script uses standard-library CSV/JSON parsing only.
   - It reads existing artifacts and prints a deterministic JSON summary to stdout.
@@ -166,9 +166,9 @@ If existing artifacts do not contain per-window or per-commit time series, Worke
        - `cnn_fpga/benchmark/analyze_seed20260429_failure.py`
        - `docs/for_human/T36_explanation.md`
        - `docs/review/T36_review.md`
-       - `docs/seed20260429_failure_diagnosis.md`
+       - `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`
 5. Documentation honesty:
-   - `docs/seed20260429_failure_diagnosis.md` explicitly states that:
+   - `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md` explicitly states that:
      - current artifacts do not expose the full per-window / per-commit committed-parameter trace
      - `sign offset` is not answerable from the current artifacts
      - `magnitude overshoot` and `teacher instability` remain hypotheses / partial-support items

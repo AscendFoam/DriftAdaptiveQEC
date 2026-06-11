@@ -8,7 +8,7 @@ T56 is a gate task that pauses before any next step to honestly reassess what cl
 
 ## What changed
 
-The main gate document (`docs/post_t55_mechanism_claim_reframing_gate.md`) contains a claim table with 10 mechanism claims, each classified as:
+The main gate document (`docs/evidence_packs/mechanism_ablation/post_t55_mechanism_claim_reframing_gate.md`) contains a claim table with 10 mechanism claims, each classified as:
 
 - **Retain (3 claims):** The core observations are still valid — seed=20260429 shows instability, the pattern generalizes to 5/6 seeds, and teacher-delta channels remain an open hypothesis.
 - **Weaken (4 claims):** Some claims need narrower wording — the instability is not the primary cause of degradation (it mostly helps), it is not exclusive to Gv5, the seed categories do not predict intervention outcomes, and committed-b is not "the cause of Gv5 degradation."
@@ -25,6 +25,6 @@ The main gate document (`docs/post_t55_mechanism_claim_reframing_gate.md`) conta
 
 ## Key files
 
-- Main gate document: `docs/post_t55_mechanism_claim_reframing_gate.md`
-- Updated claim ledger: `docs/paper_claim_evidence_ledger.md` (C4 wording updated)
+- Main gate document: `docs/evidence_packs/mechanism_ablation/post_t55_mechanism_claim_reframing_gate.md`
+- Updated claim ledger: `docs/paper_materials/paper_claim_evidence_ledger.md` (C4 wording updated)
 - Review: `docs/review/T56_review.md`

@@ -16,7 +16,7 @@ The worker wrote its own review at `docs/review/T56_review.md` (verdict: PASS). 
 
 ### N2: Claim table uses 12 rows but worker summary says "10-row"
 
-The worker summary and task package Worker Output both state "10-row claim table (3 retain, 4 weaken, 2 retire, 1 reframe, 2 still-open)." The actual table in `docs/post_t55_mechanism_claim_reframing_gate.md` has rows M1–M10, which is exactly 10 rows. The status counts (3+4+2+1+2 = 12) sum to 12, not 10, because M7 and M10 are both `still-open`. The summary text is slightly misleading — it says "10-row claim table" with counts that add to 12. This is cosmetic: the table itself is correct, the counts are correct, only the parenthetical summary double-counts the two `still-open` entries. **Accepted** as non-blocking wording inconsistency.
+The worker summary and task package Worker Output both state "10-row claim table (3 retain, 4 weaken, 2 retire, 1 reframe, 2 still-open)." The actual table in `docs/evidence_packs/mechanism_ablation/post_t55_mechanism_claim_reframing_gate.md` has rows M1–M10, which is exactly 10 rows. The status counts (3+4+2+1+2 = 12) sum to 12, not 10, because M7 and M10 are both `still-open`. The summary text is slightly misleading — it says "10-row claim table" with counts that add to 12. This is cosmetic: the table itself is correct, the counts are correct, only the parenthetical summary double-counts the two `still-open` entries. **Accepted** as non-blocking wording inconsistency.
 
 ### N3: R10 in `docs/08_risks_and_open_questions.md` not updated
 
@@ -28,7 +28,7 @@ The T56 entry in the task board still shows `[ ] T56`. Again, per CLAUDE.md, the
 
 ### N5: C4 wording in the ledger is now quite long
 
-The C4 "Boundary wording" cell in `docs/paper_claim_evidence_ledger.md` has grown to a multi-clause paragraph after T56's update. This is honest and informative, but it may be hard to maintain as further tasks update it. **Accepted** — the verbosity is justified by the complexity of the mechanism evidence, and future tasks can streamline it.
+The C4 "Boundary wording" cell in `docs/paper_materials/paper_claim_evidence_ledger.md` has grown to a multi-clause paragraph after T56's update. This is honest and informative, but it may be hard to maintain as further tasks update it. **Accepted** — the verbosity is justified by the complexity of the mechanism evidence, and future tasks can streamline it.
 
 ## Missing Tests
 
@@ -39,8 +39,8 @@ Not applicable — T56 is a docs-only gate task. No code was changed, no tests a
 None found. Specific checks performed:
 
 1. **File scope**: Only the 5 allowed files were modified/created. Confirmed via `git diff --name-only` and `git status -u`:
-   - Modified: `docs/paper_claim_evidence_ledger.md`, `docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
-   - New: `docs/post_t55_mechanism_claim_reframing_gate.md`, `docs/review/T56_review.md`, `docs/for_human/T56_explanation.md`
+   - Modified: `docs/paper_materials/paper_claim_evidence_ledger.md`, `docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
+   - New: `docs/evidence_packs/mechanism_ablation/post_t55_mechanism_claim_reframing_gate.md`, `docs/review/T56_review.md`, `docs/for_human/T56_explanation.md`
    - New (untracked, not in allowed set but not forbidden): `docs/worker_summary/T56_worker_summary.md`
    - `.claude/settings.json` was modified but this is a tool-side effect, not a worker action.
 

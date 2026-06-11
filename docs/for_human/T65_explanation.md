@@ -33,7 +33,7 @@
 
 如果只看 T65 任务本地允许范围内的内容，Worker 这次主要做了四件事。
 
-第一件，是修 `docs/fr8_statcalib_extension_lane_benchmark.md`。
+第一件，是修 `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`。
 
 这次修正把 `T64` 报告里的 provenance 和 execution-shape 表述重新写严谨了：
 
@@ -80,7 +80,7 @@
 
 第四件，是新增一份显式审计文档：
 
-- `docs/fr8_statcalib_extension_lane_consistency_audit.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_consistency_audit.md`
 
 它把“审了什么、怎么审的、结果是什么、以后哪些边界必须继续保留”写清楚了。
 

@@ -7,7 +7,7 @@
 - 新增 helper：`cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`
 - 新增 focused tests：`tests/test_t49_real_board_smoke_execution_gate.py`
 - 写入 task-scoped artifacts：`artifacts/t49_real_board_smoke_execution_gate/`
-- 新增主报告：`docs/t49_real_board_smoke_execution_gate.md`
+- 新增主报告：`docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md`
 - 新增 review 草稿：`docs/review/T49_review.md`
 - 新增人类解释：`docs/for_human/T49_explanation.md`
 - 新增本文件：`docs/worker_summary/T49_worker_summary.md`

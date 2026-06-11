@@ -157,7 +157,7 @@ run root 是：
 
 第三类警告是“文档和产物细节还需要更严谨”：
 
-- `docs/statcalib_comparator_lane_smoke.md` 对 `hil_summary.json` 里的字段名写得不够准确。
+- `docs/evidence_packs/statcalib_fr8/statcalib_comparator_lane_smoke.md` 对 `hil_summary.json` 里的字段名写得不够准确。
 - 当前 run artifact 记录了 `git_commit = a40adca`，但因为这次评审看的是未提交 diff，这个 commit hash 本身还不能单独唯一标识 T59 代码状态，产物 provenance 还不算最强。
 
 所以，`PASS_WITH_WARNINGS` 的含义是：

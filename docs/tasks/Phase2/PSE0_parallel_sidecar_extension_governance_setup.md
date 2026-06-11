@@ -29,8 +29,8 @@
 Captain 只允许修改：
 
 - `docs/tasks/Phase2/PSE0_parallel_sidecar_extension_governance_setup.md`
-- `docs/parallel_sidecar_extension_governance.md`
-- `docs/parallel_sidecar_worktree_plan.md`
+- `docs/sidecar/parallel_sidecar_extension_governance.md`
+- `docs/sidecar/parallel_sidecar_worktree_plan.md`
 - `docs/04_task_board.md`
 - `docs/05_decision_log.md`
 - `docs/06_repo_noise_governance.md`
@@ -41,8 +41,8 @@ Captain 只允许修改：
 
 Captain 必须更新：
 
-- `docs/parallel_sidecar_extension_governance.md`
-- `docs/parallel_sidecar_worktree_plan.md`
+- `docs/sidecar/parallel_sidecar_extension_governance.md`
+- `docs/sidecar/parallel_sidecar_worktree_plan.md`
 - `docs/04_task_board.md`
 - `docs/05_decision_log.md`
 - `docs/06_repo_noise_governance.md`
@@ -78,7 +78,7 @@ Captain 必须使用：
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
 - `docs/tasks/Phase2/T69_fr8_statcalib_clean_winner_tiebreak_bounded_benchmark.md`
-- `docs/reference/GPT-Pro有关扩展实验的建议.md`
+- `docs/deep_research_reports/GPT-Pro有关扩展实验的建议.md`
 
 ## Required Governance Outputs（必需治理输出）
 

@@ -61,7 +61,7 @@ None found. Specific checks performed:
 ## Overclaim Check
 
 Documentation correctly limits claims:
-- `docs/training_chain_cpu_cleanenv_train_smoke.md` Section 7/8 explicitly lists what T40 does and does not verify
+- `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_train_smoke.md` Section 7/8 explicitly lists what T40 does and does not verify
 - `docs/for_human/T40_explanation.md` states this is not "full training reproducibility" proof
 - Worker output in task package does not overclaim
 

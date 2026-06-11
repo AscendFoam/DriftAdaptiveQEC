@@ -38,8 +38,8 @@ Produce one bounded hardening package that answers:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`
-- `docs/fr8_statcalib_extension_lane_benchmark.md`
-- `docs/fr8_statcalib_extension_lane_consistency_audit.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_consistency_audit.md`
 - `docs/review/T65_review.md`
 - `docs/for_human/T65_explanation.md`
 - `docs/worker_summary/T65_worker_summary.md`
@@ -55,8 +55,8 @@ Worker may create:
 
 This task should update only:
 
-1. `docs/fr8_statcalib_extension_lane_benchmark.md`
-2. `docs/fr8_statcalib_extension_lane_consistency_audit.md`
+1. `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
+2. `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_consistency_audit.md`
 3. `docs/review/T65_review.md`
 4. `docs/for_human/T65_explanation.md`
 5. `docs/worker_summary/T65_worker_summary.md`
@@ -85,14 +85,14 @@ Read at minimum:
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
 - `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`
-- `docs/fr8_statcalib_extension_lane_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
 - `docs/review/T64_review.md`
 - `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658/summary.json`
 - `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658/launch_plan.json`
 - `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658/progress.jsonl`
 - `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658/comparison.csv`
 - `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/comparison.csv`
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 
 ## Fixed Boundary
 
@@ -109,7 +109,7 @@ This task is locked to the following boundary:
 
 ### 1. T64 report wording closeout
 
-Update `docs/fr8_statcalib_extension_lane_benchmark.md` so that it:
+Update `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md` so that it:
 
 1. uses execution-shape wording that is faithful to both:
    - the accepted `T64` task-package execution shapes
@@ -157,7 +157,7 @@ The test coverage must exercise the new audit logic on the current T64/T24 artif
 
 Create:
 
-- `docs/fr8_statcalib_extension_lane_consistency_audit.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_consistency_audit.md`
 
 This doc must summarize:
 
@@ -172,8 +172,8 @@ This doc must summarize:
 
 Create or update:
 
-1. `docs/fr8_statcalib_extension_lane_benchmark.md`
-2. `docs/fr8_statcalib_extension_lane_consistency_audit.md`
+1. `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
+2. `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_consistency_audit.md`
 3. `docs/review/T65_review.md`
 4. `docs/for_human/T65_explanation.md`
 5. `docs/worker_summary/T65_worker_summary.md`
@@ -187,7 +187,7 @@ Required verification:
 1. `python -m unittest tests/test_fr8_extension_lane_consistency.py`
 2. `python -m py_compile cnn_fpga/benchmark/audit_fr8_extension_lane_consistency.py`
 3. run the new audit helper against:
-   - `docs/fr8_statcalib_extension_lane_benchmark.md`
+   - `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
    - `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`
    - `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658`
    - `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743`
@@ -197,7 +197,7 @@ Required verification:
 Suggested command shape:
 
 ```powershell
-& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.audit_fr8_extension_lane_consistency --task-package docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md --report docs/fr8_statcalib_extension_lane_benchmark.md --run-dir runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658 --frozen-baseline-run-dir runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743
+& 'C:\ProgramData\anaconda3\python.exe' -m cnn_fpga.benchmark.audit_fr8_extension_lane_consistency --task-package docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md --report docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md --run-dir runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658 --frozen-baseline-run-dir runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743
 ```
 
 If the final command differs, document exactly why and keep it no broader than the same boundary.
@@ -229,13 +229,13 @@ Review should be treated as `BLOCK` if any of the following happen:
 
 ### What Changed
 
-1. Updated `docs/fr8_statcalib_extension_lane_benchmark.md` to:
+1. Updated `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md` to:
    - replace loose execution-shape wording with artifact-visible wording
    - remove the false `finish timestamp from summary.json` attribution
    - distinguish artifact-recorded fields, live repo observations, and auxiliary filesystem metadata
 2. Added `cnn_fpga/benchmark/audit_fr8_extension_lane_consistency.py`
 3. Added `tests/test_fr8_extension_lane_consistency.py`
-4. Added `docs/fr8_statcalib_extension_lane_consistency_audit.md`
+4. Added `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_consistency_audit.md`
 5. Added `docs/review/T65_review.md`
 6. Added `docs/for_human/T65_explanation.md`
 7. Added `docs/worker_summary/T65_worker_summary.md`
@@ -246,7 +246,7 @@ Review should be treated as `BLOCK` if any of the following happen:
    - passed (`Ran 5 tests`, `OK`)
 2. `C:\ProgramData\anaconda3\python.exe -m py_compile cnn_fpga/benchmark/audit_fr8_extension_lane_consistency.py`
    - passed
-3. `C:\ProgramData\anaconda3\python.exe -m cnn_fpga.benchmark.audit_fr8_extension_lane_consistency --task-package docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md --report docs/fr8_statcalib_extension_lane_benchmark.md --run-dir runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658 --frozen-baseline-run-dir runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743`
+3. `C:\ProgramData\anaconda3\python.exe -m cnn_fpga.benchmark.audit_fr8_extension_lane_consistency --task-package docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md --report docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md --run-dir runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658 --frozen-baseline-run-dir runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743`
    - passed (`8/8` audit checks)
 4. No new run root was created
 5. No file under `runs/` was modified

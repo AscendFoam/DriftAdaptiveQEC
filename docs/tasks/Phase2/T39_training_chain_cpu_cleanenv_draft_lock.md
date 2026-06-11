@@ -24,7 +24,7 @@ This task must not claim full clean-environment training reproducibility unless 
 Worker may modify:
 
 - `docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md`
-- `docs/training_chain_cpu_cleanenv_bootstrap.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_bootstrap.md`
 - `docs/review/T39_review.md`
 - `docs/for_human/T39_explanation.md`
 - `requirements-train-cpu-win-py312.txt`
@@ -47,8 +47,8 @@ Read at minimum:
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/training_chain_bootstrap.md`
-- `docs/training_chain_portable_dependency_lock_plan.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md`
 - `requirements-recovery.txt`
 - `cnn_fpga/model/train.py`
 - `cnn_fpga/data/dataset_builder.py`
@@ -79,7 +79,7 @@ Create or update:
    - CPU-only direct dependency draft for the current training-chain dry-run scope.
    - Must be clearly separate from `requirements-recovery.txt`.
    - Should avoid local `file:///C:/...` build references.
-2. `docs/training_chain_cpu_cleanenv_bootstrap.md`
+2. `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_bootstrap.md`
    - interpreter/environment used
    - dependency installation command
    - exact dry-run/import-level verification commands
@@ -116,7 +116,7 @@ If package install or environment creation requires network/escalation and is un
 ## Docs To Update
 
 - `docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md`
-- `docs/training_chain_cpu_cleanenv_bootstrap.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_bootstrap.md`
 - `docs/review/T39_review.md`
 - `docs/for_human/T39_explanation.md`
 
@@ -148,8 +148,8 @@ T39 is still a bounded reproducibility task, not a model-development task. If th
   - `docs/04_task_board.md`
   - `docs/07_handoff.md`
   - `docs/08_risks_and_open_questions.md`
-  - `docs/training_chain_bootstrap.md`
-  - `docs/training_chain_portable_dependency_lock_plan.md`
+  - `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`
+  - `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md`
   - `requirements-recovery.txt`
   - `cnn_fpga/model/train.py`
   - `cnn_fpga/data/dataset_builder.py`
@@ -161,7 +161,7 @@ T39 is still a bounded reproducibility task, not a model-development task. If th
   - `.venvs/t39_train_cpu_py312/`
   - interpreter: `D:\Codes\Quantum\DriftAdaptiveQEC\.venvs\t39_train_cpu_py312\Scripts\python.exe`
 - Added `requirements-train-cpu-win-py312.txt` as a CPU-only draft dependency artifact for the T39 dry-run/import-level scope.
-- Added `docs/training_chain_cpu_cleanenv_bootstrap.md`.
+- Added `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_bootstrap.md`.
 - Added `docs/review/T39_review.md` as worker pre-review notes for later adversarial review.
 - Added `docs/for_human/T39_explanation.md`.
 - Updated this task package with worker output and verification records.
@@ -237,5 +237,5 @@ T39 is still a bounded reproducibility task, not a model-development task. If th
      - both returned empty output
 7. Boundary honesty:
    - `requirements-train-cpu-win-py312.txt` is separate from `requirements-recovery.txt`
-   - `docs/training_chain_cpu_cleanenv_bootstrap.md` explicitly limits claims to clean-env creation plus dry-run/import-level verification
+   - `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_bootstrap.md` explicitly limits claims to clean-env creation plus dry-run/import-level verification
    - worker did not mark T39 as finished in task board or handoff

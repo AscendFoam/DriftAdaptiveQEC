@@ -20,10 +20,9 @@
 
 如果任务涉及研究背景或阶段结论，再补读：
 
-- `docs/CNN_FPGA_GKP_工程化实验方案.md`
-- `docs/CNN_FPGA_GKP_阶段结论.md`
-- `docs/CNN_FPGA_GKP_后续仿真与工程补强计划.md`
-- `docs/CNN_FPGA_GKP_paper_inspired分支实验设计草案.md`
+- `docs/legacy_context/reference_retired_2026-06-11/CNN_FPGA_GKP_工程化实验方案.md`
+- `docs/progress_summary/CNN_FPGA_GKP_阶段结论.md`
+- `docs/paper_notes/README.md`
 
 ## 角色约束
 

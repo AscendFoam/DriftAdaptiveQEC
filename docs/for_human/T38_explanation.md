@@ -44,7 +44,7 @@ T38 的目标就是填补这个 gap：导出 per-window trace，直接回答上�
 | 文件 | 性质 |
 |------|------|
 | `cnn_fpga/benchmark/analyze_seed20260429_trace.py` | 新增：只读 trace 导出脚本（标准库 only） |
-| `docs/seed20260429_trace_export_diagnosis.md` | 新增：trace 级诊断报告 |
+| `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md` | 新增：trace 级诊断报告 |
 | `docs/review/T38_review.md` | 新增：审查文件 |
 | `docs/for_human/T38_explanation.md` | 新增：本文件 |
 | `docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md` | 更新：Worker Output / Verification Record |

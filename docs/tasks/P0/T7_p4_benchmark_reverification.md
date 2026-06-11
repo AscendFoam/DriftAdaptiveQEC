@@ -16,7 +16,7 @@ Allowed files:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/tasks/P0/T7_p4_benchmark_reverification.md`
 
 Forbidden scope:
@@ -29,7 +29,7 @@ Forbidden scope:
 
 Inputs to read:
 - `docs/03_hil_p4_boundary_audit.md`
-- `docs/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
@@ -60,7 +60,7 @@ Docs to update:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 
 Reviewer type:
 `milestone`

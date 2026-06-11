@@ -312,7 +312,7 @@ Reviewer prompt：
 你是 Claude Code reviewer。
 
 请先阅读：
-- docs/02_experiment_plan_simplified.md
+- docs/legacy_context/plan_variants_2026-06-11/02_experiment_plan_simplified.md
 - docs/04_task_board.md
 - docs/07_handoff.md
 

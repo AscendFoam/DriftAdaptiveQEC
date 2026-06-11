@@ -43,7 +43,7 @@ Not applicable. T43 is a docs-only prose drafting task with no code, configurati
 None found. Specific checks:
 
 1. **Allowed files respected**: `git status` confirms exactly 4 T43-scoped files:
-   - `docs/paper_background_related_work_draft.md` (new)
+   - `docs/paper_materials/paper_background_related_work_draft.md` (new)
    - `docs/review/T43_review.md` (new)
    - `docs/for_human/T43_explanation.md` (new)
    - `docs/tasks/Phase2/T43_paper_background_related_work_prose_draft.md` (new, with Verification Record)

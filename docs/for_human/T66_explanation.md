@@ -62,7 +62,7 @@ These tests do not try to be a universal framework. They protect the exact logic
 
 Fourth, the task report was added:
 
-- `docs/statcalib_sensitivity_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_sensitivity_bounded_benchmark.md`
 
 That report records the boundary conditions, the execution shape, the outcome tables, and the interpretation limits.
 

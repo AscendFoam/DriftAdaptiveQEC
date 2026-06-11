@@ -62,7 +62,7 @@ Execute one bounded real-training smoke in the T39 clean CPU-only environment (`
 | File | Change Type | Description |
 |---|---|---|
 | `cnn_fpga/config/task_tmp/T40_static_theta_train_smoke.yaml` | New | Derived config inheriting from canonical, overriding output paths and smoke-scale knobs |
-| `docs/training_chain_cpu_cleanenv_train_smoke.md` | New | Smoke execution record with environment, command, results, boundary checks |
+| `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_train_smoke.md` | New | Smoke execution record with environment, command, results, boundary checks |
 | `docs/review/T40_review.md` | New (worker self-check, now overwritten by reviewer) | Worker pre-review documenting scope compliance |
 | `docs/for_human/T40_explanation.md` | New | Human-facing task explanation |
 | `docs/tasks/Phase2/T40_...md` | Modified | Worker Output and Verification Record sections filled in |

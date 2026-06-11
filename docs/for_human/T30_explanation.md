@@ -42,7 +42,7 @@ Worker 执行了以下步骤：
 |------|----------|------|
 | `cnn_fpga/decoder/statcalib.py` | **新建** | 接口合同模块：`StatCalibInput`、`StatCalibOutput`、状态/原因常量、验证函数、工厂方法、转换方法 |
 | `tests/test_statcalib_interface.py` | **新建** | 6 个 focused interface test |
-| `docs/statcalib_feasibility_gate.md` | **修改** | "Minimal Comparator Interface" 节从概念收紧为 exact field-level contract |
+| `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` | **修改** | "Minimal Comparator Interface" 节从概念收紧为 exact field-level contract |
 | `docs/review/T30_review.md` | **新建** | Worker 自审 + Reviewer 独立审查 |
 | `docs/for_human/T30_explanation.md` | **新建** | 本文件 |
 | `docs/tasks/Phase2/T30_statcalib_interface_contract.md` | **修改** | 追加 Worker Output 和 Verification Record |

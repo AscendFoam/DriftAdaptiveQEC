@@ -66,11 +66,11 @@
 - `T18` 进入 TFLite manifest / smoke plan 时，必须区分 `tflite_service` 和 `tflite_stub_service`。
 - `T20` 进入 real-board readiness 时，不得修改 placeholder 语义或写成真板已完成。
 - `T20` 的预期输出只能是 readiness checklist / 缺口清单 / 最小 smoke 验收标准；除非后续另开任务并具备真实设备证据，否则不得把 `board_backend.py` 的 placeholder 状态升级为已验收能力。
-- `T20` 已补出 `docs/real_board_hil_readiness.md`，后续真板任务应优先引用其中的 placeholder 证据、前置条件、最小 smoke 验收标准与禁止表述。
+- `T20` 已补出 `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`，后续真板任务应优先引用其中的 placeholder 证据、前置条件、最小 smoke 验收标准与禁止表述。
 - `T21` 若作为 milestone review，必须继续区分 `readiness checklist` 与 `hardware validation`；任何只读总结都不能把 `board_backend.py` 的占位状态改写成现实板级完成。
 - `T22` 若制定 real-board smoke execution plan，也只能产出计划、审计清单和量化阈值草案；除非后续真实硬件任务产出设备、寄存器、DMA 与 commit/ack 证据，否则仍不得写成 `hardware_validated`。
-- `T22` 已补出 `docs/real_board_smoke_execution_plan.md`，后续真板任务应优先引用其中的 host-platform decision points、AXI/DMA 审计清单、Layer A-D 量化阈值草案与 evidence pack 要求。
-- 即使 `docs/real_board_smoke_execution_plan.md` 已存在，也只能写成 `execution plan exists, but it has not been executed`，不得因为 plan 文档就升级为真板已验证。
+- `T22` 已补出 `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`，后续真板任务应优先引用其中的 host-platform decision points、AXI/DMA 审计清单、Layer A-D 量化阈值草案与 evidence pack 要求。
+- 即使 `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md` 已存在，也只能写成 `execution plan exists, but it has not been executed`，不得因为 plan 文档就升级为真板已验证。
 - `T23` 若锁定 P4 formal benchmark protocol，也只能产出协议、矩阵、预算、evidence pack 与 go/no-go 条件；不得把 protocol lock 写成 formal benchmark 已执行。
 - `T24` 已执行并通过 Captain 收口为 `PASS_WITH_WARNINGS`，但其结果仍只能在 `mock-backed P4 wrapper over software HIL` 边界内使用；不得把结果写成 `.tflite` runtime 或 `real_board` validation。
 - `T25` 已完成 result-boundary gate review；T24 可作为 completed frozen-set formal software revalidation，但仍不能升级为 runtime / board / paper-grade evidence。

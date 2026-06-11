@@ -102,7 +102,7 @@ T39 产出了 5 个文件：
 1. **`requirements-train-cpu-win-py312.txt`**（新建）
    - CPU-only 草案依赖规范，Windows + Python 3.12 专用
 
-2. **`docs/training_chain_cpu_cleanenv_bootstrap.md`**（新建）
+2. **`docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_bootstrap.md`**（新建）
    - 完整的 clean-env bootstrap 记录：环境创建命令、安装命令、验证命令、结果、验证范围、非声明
 
 3. **`docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md`**（修改）
@@ -127,8 +127,8 @@ T39 的核心贡献是把 T31 的"计划层面"推进到了"实际验证层面"�
 
 与项目其他文档的关系：
 
-- `docs/training_chain_bootstrap.md`（T17）：记录了 DLEnv 为推荐环境；T39 的 bootstrap 文档补充了 CPU-only clean env 证据
-- `docs/training_chain_portable_dependency_lock_plan.md`（T31）：T39 执行了 T31 Section 7 推荐的 bootstrap procedure
+- `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`（T17）：记录了 DLEnv 为推荐环境；T39 的 bootstrap 文档补充了 CPU-only clean env 证据
+- `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md`（T31）：T39 执行了 T31 Section 7 推荐的 bootstrap procedure
 - `docs/08_risks_and_open_questions.md`：R11 应随 T39 更新为"进一步缩窄"
 - Milestone 2J（Reproducibility And Deployment Boundary）：T39 是这个 milestone 的第二个交付项
 

@@ -24,7 +24,7 @@ The worker:
 
 1. **Read** the accumulated evidence from T36 (single-seed diagnosis), T38 (single-seed trace export), T46 (multi-seed plan), T54 (multi-seed trace generalization), and T55 (multi-seed I1 intervention).
 
-2. **Created `docs/post_t55_mechanism_claim_reframing_gate.md`** — the main gate document containing:
+2. **Created `docs/evidence_packs/mechanism_ablation/post_t55_mechanism_claim_reframing_gate.md`** — the main gate document containing:
    - A status recap of the entire T36→T55 evidence chain
    - A 10-row claim table (M1–M10), each with supporting tasks, contradicting tasks, current status, and exact wording boundary
    - A section analyzing what T55 specifically changed in the mechanism story
@@ -32,7 +32,7 @@ The worker:
    - A conditioned recommendation for T47: it can proceed but only with explicit mechanism-hedge wording
    - 9 explicit non-claims
 
-3. **Updated `docs/paper_claim_evidence_ledger.md`** — three targeted changes:
+3. **Updated `docs/paper_materials/paper_claim_evidence_ledger.md`** — three targeted changes:
    - C4 claim wording expanded to reflect the multi-seed evidence and I1 mixed results
    - C4 evidence paths expanded to include T54/T55 documents and reviews
    - F1 figure boundary updated to note that the instability mostly helps

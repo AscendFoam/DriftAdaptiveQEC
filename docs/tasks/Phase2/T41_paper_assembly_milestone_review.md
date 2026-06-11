@@ -53,16 +53,16 @@ Read at minimum:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/paper_claim_evidence_ledger.md`
-- `docs/paper_draft_skeleton.md`
-- `docs/paper_reviewer_risk_audit.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_draft_skeleton.md`
+- `docs/paper_materials/paper_reviewer_risk_audit.md`
 - `docs/review/T34_review.md`
 - `docs/review/T35_review.md`
 - `docs/review/Milestone2I_review.md`
-- `docs/TFLite_runtime_bootstrap.md`
-- `docs/training_chain_cpu_cleanenv_train_smoke.md`
-- `docs/real_board_hil_readiness.md`
-- `docs/real_board_smoke_execution_plan.md`
+- `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_train_smoke.md`
+- `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
+- `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`
 
 ## Required Output Shape
 
@@ -117,7 +117,7 @@ Verification is review-consistency based:
 
 1. `T34` and `T35` outputs are cross-checked against the current claim/risk ledger
 2. blocked claims remain blocked in the milestone review
-3. the paper-positioning recommendation is consistent with `docs/paper_reviewer_risk_audit.md`
+3. the paper-positioning recommendation is consistent with `docs/paper_materials/paper_reviewer_risk_audit.md`
 4. no code, config, `runs/`, or `artifacts` changes are introduced
 
 ## Docs To Update
@@ -148,7 +148,7 @@ This task exists to decide what we are actually allowed to say next, and what we
 - `docs/review/Milestone2K_review.md` produced with verdict = `Allow`.
 - `docs/for_human/T41_explanation.md` produced with Chinese human-facing explanation.
 - Blocked claims (C6, C7, C8, C10, C11) remain blocked in the milestone review.
-- Paper positioning recommendation is consistent with `docs/paper_reviewer_risk_audit.md` "Minimum Safe Paper Positioning" and "Do-Not-Publish-As-Claimed List."
+- Paper positioning recommendation is consistent with `docs/paper_materials/paper_reviewer_risk_audit.md` "Minimum Safe Paper Positioning" and "Do-Not-Publish-As-Claimed List."
 - Decision on Background / Related Work: yes, must be added before prose expansion.
 - Recommended next unique task: T42 (Background / Related Work scaffold and method-positioning calibration).
 - No code, config, `runs/`, or `artifacts` changes were introduced.

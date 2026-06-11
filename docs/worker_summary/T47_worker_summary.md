@@ -2,7 +2,7 @@
 
 ## What Changed
 
-1. **Created `docs/paper_ablation_result_pack.md`** — the main ledger with:
+1. **Created `docs/paper_materials/paper_ablation_result_pack.md`** — the main ledger with:
    - Ready/partial/missing classification for 6 figures and 5 tables
    - Ablation-specific gap analysis (FR7 identified as the single largest evidence gap)
    - Regeneration paths for each asset with concrete data sources and steps

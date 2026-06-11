@@ -16,9 +16,9 @@ Decision:
 3. `docs/04_task_board.md`
 4. `docs/07_handoff.md`
 5. `docs/08_risks_and_open_questions.md`
-6. `docs/P0_smoke_bootstrap.md`
-7. `docs/P3_software_hil_bootstrap.md`
-8. `docs/P4_benchmark_recovery_bootstrap.md`
+6. `docs/recovery_bootstrap/P0_smoke_bootstrap.md`
+7. `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
+8. `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 9. `docs/tasks/P0/T11_recovery_dependency_manifest.md`
 10. `docs/tasks/P0/T12_software_hil_determinism_recovery.md`
 11. `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104/hil_summary.json`

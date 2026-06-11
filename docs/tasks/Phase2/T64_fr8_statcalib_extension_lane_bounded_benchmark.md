@@ -42,7 +42,7 @@ Produce one bounded FR8 extension-lane result pack that answers:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`
-- `docs/fr8_statcalib_extension_lane_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
 - `docs/review/T64_review.md`
 - `docs/for_human/T64_explanation.md`
 - `docs/worker_summary/T64_worker_summary.md`
@@ -56,7 +56,7 @@ Worker may create only:
 
 This task should update only:
 
-1. `docs/fr8_statcalib_extension_lane_benchmark.md`
+1. `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
 2. `docs/review/T64_review.md`
 3. `docs/for_human/T64_explanation.md`
 4. `docs/worker_summary/T64_worker_summary.md`
@@ -86,15 +86,15 @@ Read at minimum:
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/fr8_statcalib_comparator_gate_review.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_comparator_gate_review.md`
 - `docs/review/T63_review.md`
 - `docs/review/T59_review.md`
 - `docs/review/T60_review.md`
 - `docs/review/T62_review.md`
-- `docs/statcalib_comparator_lane_smoke.md`
-- `docs/statcalib_lane_isolation_and_regression_hardening.md`
-- `docs/statcalib_provenance_isolated_fairness_rerun.md`
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_comparator_lane_smoke.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_lane_isolation_and_regression_hardening.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_provenance_isolated_fairness_rerun.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 - `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
 - `cnn_fpga/config/p4_multiscenario_statcalib_smoke.yaml`
 - `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/summary.json`
@@ -224,7 +224,7 @@ The final docs must say explicitly:
 
 ## Expected Output Artifacts
 
-Create `docs/fr8_statcalib_extension_lane_benchmark.md` with:
+Create `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md` with:
 
 1. exact preflight result (`branch`, `git status`, launch `HEAD`)
 2. exact config path used and whether a derived config was needed
@@ -324,7 +324,7 @@ This task must stay on `main`-branch experiment work and must remain isolated fr
 2. Executed the bounded extension-lane benchmark in:
    - `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658`
 3. Wrote the result pack:
-   - `docs/fr8_statcalib_extension_lane_benchmark.md`
+   - `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
    - `docs/review/T64_review.md`
    - `docs/for_human/T64_explanation.md`
    - `docs/worker_summary/T64_worker_summary.md`

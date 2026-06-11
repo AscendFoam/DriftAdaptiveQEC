@@ -22,7 +22,7 @@ Classification: `accepted` — the brief correctly presents all four options and
 
 ### N3 Recovery docs do not upgrade any evidence level
 
-All 15 claims (C1-C11, RRC12-RRC15) preserve their existing status labels from `docs/paper_claim_evidence_ledger.md`. No blocked claim was silently upgraded to partial or supported. No partial claim was upgraded to supported.
+All 15 claims (C1-C11, RRC12-RRC15) preserve their existing status labels from `docs/paper_materials/paper_claim_evidence_ledger.md`. No blocked claim was silently upgraded to partial or supported. No partial claim was upgraded to supported.
 
 Classification: `accepted` — this is the correct behavior for a recovery baseline task.
 

@@ -47,7 +47,7 @@ The recovery smoke path has a minimal manifest (`requirements-recovery.txt`) and
 Current clean-environment status:
 
 - P0/P3/P4 recovery smoke: documented and partially portable via `requirements-recovery.txt`.
-- Training chain: documented in `docs/training_chain_bootstrap.md`, but no portable lockfile.
+- Training chain: documented in `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`, but no portable lockfile.
 - TFLite runtime: not available on the current machine.
 - Real-board path: not executable without hardware host, permissions, bitstream, and DMA/register evidence.
 - T38 trace probe: reproducible only if the required artifacts and local run layout are present.
@@ -74,7 +74,7 @@ Evidence available:
   - `unittest` passed, `Ran 6 tests`, `OK`.
   - `py_compile` passed.
 - T36 diagnosis:
-  - `docs/seed20260429_failure_diagnosis.md`
+  - `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`
   - read-only script passed.
 - T38 trace probe:
   - `runs/T38_seed20260429_trace_probe_20260513`

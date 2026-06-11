@@ -16,7 +16,7 @@ Allowed files:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
 - `docs/tasks/P0/T6_software_hil_reverification.md`
 
 Forbidden scope:
@@ -27,7 +27,7 @@ Forbidden scope:
 - teacher-representation 新分支扩展
 
 Inputs to read:
-- `docs/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
 - `docs/03_hil_p4_boundary_audit.md`
 - `docs/06_repo_noise_governance.md`
 - `docs/04_task_board.md`
@@ -53,7 +53,7 @@ Docs to update:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
 
 Reviewer type:
 `milestone`

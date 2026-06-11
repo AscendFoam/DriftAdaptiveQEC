@@ -46,7 +46,7 @@ T19 的任务就是：**先不做清理，而是写一份详细的"清理计划�
    - 结果：`116` 个 `.pyc` 文件，全部位于 `9` 个 `__pycache__` 目录中
    - 额外散落在 `__pycache__` 之外的已跟踪 `.pyc`：`0` 个
 
-2. **撰写 cleanup manifest**：产出 `docs/cleanup_tracked_cache_manifest.md`，包含 8 个章节：
+2. **撰写 cleanup manifest**：产出 `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md`，包含 8 个章节：
    - Scope（范围界定）
    - Read-Only Inventory（只读清点结果）
    - Target Paths（9 个目标目录清单）
@@ -72,7 +72,7 @@ T19 的任务就是：**先不做清理，而是写一份详细的"清理计划�
 
 | 文件 | 变化类型 | 内容 |
 |------|----------|------|
-| `docs/cleanup_tracked_cache_manifest.md` | 新增 | cleanup manifest 全文（8 节） |
+| `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md` | 新增 | cleanup manifest 全文（8 节） |
 | `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md` | 追加 | Worker Output Summary 段落 |
 | `docs/06_repo_noise_governance.md` | 修改 | 第 3/7/8 节同步 T19 清点结论 |
 | `docs/04_task_board.md` | 修改 | Current Unique Task 区域追加 Worker 只读产出 |

@@ -83,7 +83,7 @@ Worker 没有去改 runtime、benchmark runner 或 `statcalib` 主语义，而�
 
 新增了 `tests/test_statcalib_teacher_anchor_summary.py`，用合成的小矩阵去测 helper 的基本行为；同时补了：
 
-1. `docs/statcalib_teacher_anchor_bounded_benchmark.md`
+1. `docs/evidence_packs/statcalib_fr8/statcalib_teacher_anchor_bounded_benchmark.md`
 2. `docs/review/T67_review.md`
 3. `docs/for_human/T67_explanation.md`
 4. `docs/worker_summary/T67_worker_summary.md`

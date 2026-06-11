@@ -49,7 +49,7 @@
 说明：
 
 - `T3` 已把 `mock` / `stub` / `placeholder` 边界固定到 `docs/03_hil_p4_boundary_audit.md`
-- `T4` 已把恢复期最小 software HIL 路径固定到 `docs/P3_software_hil_bootstrap.md`
+- `T4` 已把恢复期最小 software HIL 路径固定到 `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
 - `T5` 已把缓存/生成物噪声治理口径固定到 `docs/06_repo_noise_governance.md`
 - `T6` 已对最小 software HIL 路径完成新的复验，并再次确认 `mock + model_artifact + artifact_npz + inproc`
 - `T7` 已对最小 P4 benchmark 路径完成新的复验，并把 recovery 级 P4 配置固定到 `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
@@ -184,13 +184,13 @@
 | P0 full vs simplified 基线脚本 | 已存在最小对比脚本 | `benchmark/compare_full_vs_simplified_ler.py` | 部分验证 | 默认环境缺 `numpy`，当前无法在系统 Python 下直接运行 |
 | P1 数据与训练链 | 已有数据集构建、训练、评估、量化入口 | `cnn_fpga/data/dataset_builder.py`, `cnn_fpga/model/train.py`, `cnn_fpga/model/evaluate.py`, `cnn_fpga/model/quantize.py` | 代码存在 | 依赖矩阵未确认，当前未复跑 |
 | P2 行为级硬件仿真 | 已有硬件行为仿真与模式 benchmark | `cnn_fpga/benchmark/run_hardware_emulation.py`, `cnn_fpga/benchmark/run_p2_mode_benchmark.py` | 代码存在 | 当前环境未复验 |
-| P3 软件 HIL | 已有 HIL 主流程、mock backend、驱动抽象、推理服务 | `cnn_fpga/benchmark/run_hil_suite.py`, `cnn_fpga/hwio/mock_fpga.py`, `cnn_fpga/runtime/inference_service.py`, `docs/03_hil_p4_boundary_audit.md`, `docs/P3_software_hil_bootstrap.md`, `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104/hil_summary.json`, `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172232_3ae9f9176104/hil_summary.json` | bounded 最小路径已逐字一致复验 | 结论仅限 `mock + model_artifact + artifact_npz + inproc`，不等于真板或 `.tflite` 路径已恢复 |
+| P3 软件 HIL | 已有 HIL 主流程、mock backend、驱动抽象、推理服务 | `cnn_fpga/benchmark/run_hil_suite.py`, `cnn_fpga/hwio/mock_fpga.py`, `cnn_fpga/runtime/inference_service.py`, `docs/03_hil_p4_boundary_audit.md`, `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`, `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172221_3ae9f9176104/hil_summary.json`, `runs/hil_suite/hardware_hil_recovery_smoke_20260508_172232_3ae9f9176104/hil_summary.json` | bounded 最小路径已逐字一致复验 | 结论仅限 `mock + model_artifact + artifact_npz + inproc`，不等于真板或 `.tflite` 路径已恢复 |
 | P3 真板 HIL | 当前是 placeholder real-board backend | `cnn_fpga/hwio/board_backend.py`, `docs/CNN_FPGA_GKP_阶段结论.md`, `docs/03_hil_p4_boundary_audit.md` | 是 | 真实设备节点和地址表缺失，不能写成已完成 |
-| P4 多场景 benchmark | 已有统一 benchmark 汇总脚本；最小 recovery path、frozen baseline 单场景全模式 smoke、以及 T24 frozen-set formal software revalidation 都已复验 | `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`, `docs/P4_benchmark_recovery_bootstrap.md`, `docs/P4_benchmark_formal_protocol.md`, `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/summary.json` | `mock-backed` software HIL formal revalidation 已完成 | 当前证据仍不是 `.tflite` runtime、真板验证或 paper-grade expanded benchmark；T28 已修复 teacher diagnostics missing-vs-zero writer 语义，但 R10 机制证据仍未完全修复 |
+| P4 多场景 benchmark | 已有统一 benchmark 汇总脚本；最小 recovery path、frozen baseline 单场景全模式 smoke、以及 T24 frozen-set formal software revalidation 都已复验 | `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`, `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`, `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`, `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/summary.json` | `mock-backed` software HIL formal revalidation 已完成 | 当前证据仍不是 `.tflite` runtime、真板验证或 paper-grade expanded benchmark；T28 已修复 teacher diagnostics missing-vs-zero writer 语义，但 R10 机制证据仍未完全修复 |
 | teacher-representation 多版本分支 | 已有 v2-v9 配置与配对 benchmark 入口 | `cnn_fpga/config/experiment_runtime_b_residual_norm_gated_teacher_v*.yaml`, `cnn_fpga/benchmark/run_p4_teacher_representation_paired.py` | 代码存在 | 当前不应继续扩分支，先恢复可信度 |
 | 真板 backend 语义 | placeholder/骨架状态 | `cnn_fpga/hwio/board_backend.py` | 是 | 若表述不严谨，极易误导项目完成度判断 |
 | `.tflite` 真导出路径 | 代码支持真导出与 stub 回退双路径 | `cnn_fpga/model/export.py`, `cnn_fpga/runtime/inference_service.py`, `docs/03_hil_p4_boundary_audit.md` | 边界已审计 | 必须明确区分真实 `.tflite`、artifact 与 stub manifest |
-| recovery 期根级依赖 manifest | 已新增 recovery-scoped 最小 manifest | `requirements-recovery.txt`, `docs/P0_smoke_bootstrap.md`, `docs/P3_software_hil_bootstrap.md`, `docs/P4_benchmark_recovery_bootstrap.md` | 是 | 只覆盖 `P0/P3/P4 recovery smoke`，不等于完整训练链、`.tflite` 或真板环境 |
+| recovery 期根级依赖 manifest | 已新增 recovery-scoped 最小 manifest | `requirements-recovery.txt`, `docs/recovery_bootstrap/P0_smoke_bootstrap.md`, `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`, `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md` | 是 | 只覆盖 `P0/P3/P4 recovery smoke`，不等于完整训练链、`.tflite` 或真板环境 |
 | 根级治理文件 | 恢复前缺失 | 根目录与 `docs/` | 是 | 高，直接影响后续接力与审查 |
 
 ## 5. 关键证据
@@ -211,8 +211,8 @@
 
 - `cnn_fpga/hwio/board_backend.py`
   - 文件顶层注释直接标注为 placeholder real-board backend
-- `docs/CNN_FPGA_GKP_后续仿真与工程补强计划.md`
-  - 明确写到 board backend 仍是 placeholder 级
+- `docs/02_experiment_plan.md`
+  - 明确写到 board backend 仍是 placeholder / gate / readiness / provenance 级，不能写成真实板级完成
 
 ### 4.3 `.tflite` 路径不能默认视为真实部署
 
@@ -259,7 +259,7 @@
   - 显式固定 `hil.backend=mock`
   - 显式固定 `inference_service.mode=inproc`
   - 显式固定 `inference_service.backend=artifact_npz`
-- `docs/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
   - 固定恢复期最小 software HIL 复用命令
 - `runs/hil_suite/hardware_hil_recovery_smoke_20260507_234638_3ae9f9176104/hil_summary.json`
   - `backend = mock`
@@ -278,7 +278,7 @@
   - 显式固定 `slow_loop.inference_service.mode=inproc`
   - 显式固定 `slow_loop.inference_service.backend=artifact_npz`
   - 显式固定 `slow_loop.model_artifact.path`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
   - 固定恢复期最小 P4 benchmark 复用命令与过滤条件
 - `runs/p4_benchmark/p4multis_20260508_001316_0c12d7_39308/summary.json`
   - `protocol_id = p4_hil_recovery_smoke_v1`
@@ -372,7 +372,7 @@
     - `real_board` HIL backend
 - `README.md`
   - 已改为显式引用 `requirements-recovery.txt`
-- `docs/P0_smoke_bootstrap.md`、`docs/P3_software_hil_bootstrap.md`、`docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P0_smoke_bootstrap.md`、`docs/recovery_bootstrap/P3_software_hil_bootstrap.md`、`docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
   - 已改为显式引用同一份 root manifest
 
 ### 4.11 T12 software HIL recovery smoke 确定性收口已完成

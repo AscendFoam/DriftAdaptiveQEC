@@ -27,7 +27,7 @@ Produce one docs-only ledger that answers:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T34_paper_claim_evidence_ledger.md`
-- `docs/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
 - `docs/review/T34_review.md`
 - `docs/for_human/T34_explanation.md`
 
@@ -45,22 +45,22 @@ Read at minimum:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/CNN_FPGA_GKP_工程化实验方案.md`
+- `docs/legacy_context/reference_retired_2026-06-11/CNN_FPGA_GKP_工程化实验方案.md`
 - `docs/CNN_FPGA_GKP_阶段结论.md`
 - `docs/CNN_FPGA_GKP_后续仿真与工程补强计划.md`
 - `docs/CNN_FPGA_GKP_paper_inspired分支实验设计草案.md`
-- `docs/P4_benchmark_formal_protocol.md`
-- `docs/training_chain_portable_dependency_lock_plan.md`
-- `docs/training_chain_cpu_cleanenv_bootstrap.md`
-- `docs/training_chain_cpu_cleanenv_train_smoke.md`
-- `docs/TFLite_runtime_bootstrap.md`
-- `docs/real_board_hil_readiness.md`
-- `docs/real_board_smoke_execution_plan.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_bootstrap.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_train_smoke.md`
+- `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md`
+- `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
+- `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`
 - relevant review files for `T24`, `T25`, `T27`, `T28`, `T29`, `T30`, `T31`, `T33`, `T38`, `T39`, `T40`
 
 ## Required Output Shape
 
-`docs/paper_claim_evidence_ledger.md` must include at least these sections:
+`docs/paper_materials/paper_claim_evidence_ledger.md` must include at least these sections:
 
 1. scope and non-claims
 2. claim ledger
@@ -135,7 +135,7 @@ Verification is document-structure and evidence-traceability based:
 ## Docs To Update
 
 - `docs/tasks/Phase2/T34_paper_claim_evidence_ledger.md`
-- `docs/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
 - `docs/review/T34_review.md`
 - `docs/for_human/T34_explanation.md`
 
@@ -156,7 +156,7 @@ This task is intentionally documentation-only. Do not turn it into paper draftin
 
 ## Worker Output
 
-- Added `docs/paper_claim_evidence_ledger.md` with:
+- Added `docs/paper_materials/paper_claim_evidence_ledger.md` with:
   - scope / non-claims
   - claim ledger `C1`-`C11`
   - figure outline `F1`-`F3`

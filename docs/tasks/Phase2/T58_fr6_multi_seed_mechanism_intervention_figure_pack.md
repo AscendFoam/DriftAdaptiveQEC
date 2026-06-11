@@ -35,9 +35,9 @@ Produce a bounded FR6 figure pack that answers:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T58_fr6_multi_seed_mechanism_intervention_figure_pack.md`
-- `docs/fr6_multi_seed_mechanism_intervention_figure_pack.md`
-- `docs/paper_ablation_result_pack.md`
-- `docs/paper_claim_evidence_ledger.md`
+- `docs/evidence_packs/mechanism_ablation/fr6_multi_seed_mechanism_intervention_figure_pack.md`
+- `docs/paper_materials/paper_ablation_result_pack.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
 - `docs/reality_recovery/04_figure_and_result_ledger.md`
 - `docs/reality_recovery/05_paper_claim_risk_table.md`
 - `docs/review/T58_review.md`
@@ -53,9 +53,9 @@ Worker may create:
 
 This task should update only:
 
-1. `docs/fr6_multi_seed_mechanism_intervention_figure_pack.md`
-2. `docs/paper_ablation_result_pack.md`
-3. `docs/paper_claim_evidence_ledger.md`
+1. `docs/evidence_packs/mechanism_ablation/fr6_multi_seed_mechanism_intervention_figure_pack.md`
+2. `docs/paper_materials/paper_ablation_result_pack.md`
+3. `docs/paper_materials/paper_claim_evidence_ledger.md`
 4. `docs/reality_recovery/04_figure_and_result_ledger.md`
 5. `docs/reality_recovery/05_paper_claim_risk_table.md`
 6. `docs/review/T58_review.md`
@@ -82,11 +82,11 @@ Read at minimum:
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/multi_seed_trace_generalization_probe.md`
-- `docs/multi_seed_i1_intervention_probe.md`
-- `docs/post_t55_mechanism_claim_reframing_gate.md`
-- `docs/paper_ablation_result_pack.md`
-- `docs/paper_claim_evidence_ledger.md`
+- `docs/evidence_packs/mechanism_ablation/multi_seed_trace_generalization_probe.md`
+- `docs/evidence_packs/mechanism_ablation/multi_seed_i1_intervention_probe.md`
+- `docs/evidence_packs/mechanism_ablation/post_t55_mechanism_claim_reframing_gate.md`
+- `docs/paper_materials/paper_ablation_result_pack.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
 - `docs/reality_recovery/04_figure_and_result_ledger.md`
 - `docs/reality_recovery/05_paper_claim_risk_table.md`
 - `docs/review/T54_review.md`
@@ -148,7 +148,7 @@ The figure must not imply that the intervention proves causality.
 
 ## Expected Report Output
 
-Create `docs/fr6_multi_seed_mechanism_intervention_figure_pack.md` with:
+Create `docs/evidence_packs/mechanism_ablation/fr6_multi_seed_mechanism_intervention_figure_pack.md` with:
 
 1. exact input-source matrix for every plotted quantity
 2. figure specification and panel definition
@@ -159,9 +159,9 @@ Create `docs/fr6_multi_seed_mechanism_intervention_figure_pack.md` with:
    - partial
    - missing
 6. explicit non-claims and residual limitations
-7. whether `docs/paper_ablation_result_pack.md` and `docs/paper_claim_evidence_ledger.md` can now mark FR6 as ready
+7. whether `docs/paper_materials/paper_ablation_result_pack.md` and `docs/paper_materials/paper_claim_evidence_ledger.md` can now mark FR6 as ready
 
-Update `docs/paper_ablation_result_pack.md` and `docs/paper_claim_evidence_ledger.md` only if the FR6 status honestly changes.
+Update `docs/paper_materials/paper_ablation_result_pack.md` and `docs/paper_materials/paper_claim_evidence_ledger.md` only if the FR6 status honestly changes.
 
 Update `docs/reality_recovery/04_figure_and_result_ledger.md` and `docs/reality_recovery/05_paper_claim_risk_table.md` only if FR6 status or related paper-risk wording actually changes.
 
@@ -218,14 +218,14 @@ This task stays on the mainline experiment-evidence lane. It must not interfere 
    - `figure_data.csv`
    - `figure_manifest.json`
    - `caption.md`
-2. Added `docs/fr6_multi_seed_mechanism_intervention_figure_pack.md` to document:
+2. Added `docs/evidence_packs/mechanism_ablation/fr6_multi_seed_mechanism_intervention_figure_pack.md` to document:
    - exact input-source matrix
    - aggregation rules
    - figure-pack contents
    - FR6 classification and non-claims
 3. Updated:
-   - `docs/paper_ablation_result_pack.md`
-   - `docs/paper_claim_evidence_ledger.md`
+   - `docs/paper_materials/paper_ablation_result_pack.md`
+   - `docs/paper_materials/paper_claim_evidence_ledger.md`
    - `docs/reality_recovery/04_figure_and_result_ledger.md`
    - `docs/reality_recovery/05_paper_claim_risk_table.md`
    so that `FR6` is now tracked as `ready` in the bounded figure-pack sense

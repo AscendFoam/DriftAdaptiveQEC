@@ -18,7 +18,7 @@ T19 目标：为已跟踪的 `__pycache__/` 与 `.pyc` 文件制定有界 cleanu
 
 | Done Criteria | 状态 | 说明 |
 |---------------|------|------|
-| 产出 tracked cache cleanup manifest | 完成 | `docs/cleanup_tracked_cache_manifest.md` 新增，8 节，覆盖 scope / inventory / targets / commands / rollback / acceptance / boundaries / next step |
+| 产出 tracked cache cleanup manifest | 完成 | `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md` 新增，8 节，覆盖 scope / inventory / targets / commands / rollback / acceptance / boundaries / next step |
 | 明确目标文件类别、清点结果、命令草案、回滚方式与验收标准 | 完成 | 第 2 节清点、第 3 节目标路径、第 4 节命令草案、第 5 节回滚、第 6 节验收 |
 | 不执行删除，不执行 `git rm` | 确认无违规 | Worker 报告"未执行 `git rm`"；独立验证 `git ls-files` 仍返回 116 个缓存文件 |
 | 不触碰 `runs/` 和 `artifacts/` | 确认无违规 | diff 中无 `runs/` 或 `artifacts/` 相关变更 |
@@ -30,7 +30,7 @@ T19 目标：为已跟踪的 `__pycache__/` 与 `.pyc` 文件制定有界 cleanu
 
 diff 涉及的文件：
 
-- `docs/cleanup_tracked_cache_manifest.md`（新增） — allowed
+- `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md`（新增） — allowed
 - `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md` — allowed（仅追加 Worker Output Summary）
 - `docs/06_repo_noise_governance.md` — allowed
 - `docs/04_task_board.md` — allowed
@@ -122,7 +122,7 @@ manifest 记录 tracked `.pyc` = `116`，而 `06_repo_noise_governance.md` 提�
 
 1. T19 审查通过，可由 Captain 标记完成并提交 git。
 2. T19 标记完成后，下一任务建议按 task board 顺序进入 T20（Real-board HIL readiness checklist）。
-3. 若要真正执行缓存 untrack，应单开一个有界执行任务，严格按 `docs/cleanup_tracked_cache_manifest.md` 的 9 个目录和回滚方案落地。不应借 T20 或其他任务顺手执行。
+3. 若要真正执行缓存 untrack，应单开一个有界执行任务，严格按 `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md` 的 9 个目录和回滚方案落地。不应借 T20 或其他任务顺手执行。
 
 ---
 

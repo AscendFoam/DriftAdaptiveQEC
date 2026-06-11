@@ -9,7 +9,7 @@
 ## Non-blocking issues
 
 - `cnn_fpga/runtime/slow_loop_runtime.py` now lets `slow_loop.statcalib.teacher_mode` participate in the generic `teacher_mode` fallback chain for other modes. T59's own smoke config is safe because `hybrid_residual_b` declares its own teacher mode explicitly, but this is still a cross-mode coupling risk in future mixed configs.
-- `docs/statcalib_comparator_lane_smoke.md` says `hil_summary.json` exposes `statcalib_diagnostics.status` / `reason`. The actual keys are `statcalib_diagnostics.statcalib_status` / `statcalib_diagnostics.statcalib_reason`. This is a small documentation accuracy issue, not a code failure.
+- `docs/evidence_packs/statcalib_fr8/statcalib_comparator_lane_smoke.md` says `hil_summary.json` exposes `statcalib_diagnostics.status` / `reason`. The actual keys are `statcalib_diagnostics.statcalib_status` / `statcalib_diagnostics.statcalib_reason`. This is a small documentation accuracy issue, not a code failure.
 - The bounded smoke artifact was generated from a dirty worktree. `runs/p4_benchmark/t59statc_20260526_211532_3a3d00_23740/summary.json` records `git_commit: a40adca`, but that commit hash does not by itself identify the uncommitted T59 diff. The run is still useful review evidence, but provenance is weaker until the patch is landed.
 
 ## Missing tests

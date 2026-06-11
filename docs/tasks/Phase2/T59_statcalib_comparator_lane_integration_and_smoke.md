@@ -35,7 +35,7 @@ Produce the smallest believable end-to-end `statcalib` lane by answering:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`
-- `docs/statcalib_comparator_lane_smoke.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_comparator_lane_smoke.md`
 - `docs/review/T59_review.md`
 - `docs/for_human/T59_explanation.md`
 - `docs/worker_summary/T59_worker_summary.md`
@@ -56,7 +56,7 @@ Worker may create:
 
 This task should update only:
 
-1. `docs/statcalib_comparator_lane_smoke.md`
+1. `docs/evidence_packs/statcalib_fr8/statcalib_comparator_lane_smoke.md`
 2. `docs/review/T59_review.md`
 3. `docs/for_human/T59_explanation.md`
 4. `docs/worker_summary/T59_worker_summary.md`
@@ -81,11 +81,11 @@ Read at minimum:
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/statcalib_feasibility_gate.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md`
 - `docs/review/T25_p4_formal_evidence_gate_review.md`
 - `docs/review/T26_review.md`
 - `docs/review/T30_review.md`
-- `docs/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
 - `docs/reality_recovery/04_figure_and_result_ledger.md`
 - `docs/reality_recovery/05_paper_claim_risk_table.md`
 - `cnn_fpga/decoder/statcalib.py`
@@ -176,7 +176,7 @@ It must:
 
 ## Expected Output Artifacts
 
-Create `docs/statcalib_comparator_lane_smoke.md` with:
+Create `docs/evidence_packs/statcalib_fr8/statcalib_comparator_lane_smoke.md` with:
 
 1. exact code/config changes made
 2. exact smoke command

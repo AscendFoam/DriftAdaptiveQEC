@@ -43,7 +43,7 @@
 Worker 只可修改或新增以下路径：
 
 - `docs/tasks/Phase2/T49_real_board_smoke_execution_gate.md`
-- `docs/t49_real_board_smoke_execution_gate.md`
+- `docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md`
 - `docs/review/T49_review.md`
 - `docs/for_human/T49_explanation.md`
 - `docs/worker_summary/T49_worker_summary.md`
@@ -60,7 +60,7 @@ Worker 只可修改或新增以下路径：
 
 Worker 必须更新：
 
-- `docs/t49_real_board_smoke_execution_gate.md`
+- `docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md`
 - `docs/review/T49_review.md`
 - `docs/for_human/T49_explanation.md`
 - `docs/worker_summary/T49_worker_summary.md`
@@ -93,11 +93,11 @@ Worker 不得：
 
 Worker 必须复用以下既有输入，而不是重写历史事实：
 
-- `docs/real_board_hil_readiness.md`
-- `docs/real_board_smoke_execution_plan.md`
+- `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
+- `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`
 - `docs/review/T20_review.md`
 - `docs/review/T22_review.md`
-- `docs/t48_true_tflite_runtime_gate.md`
+- `docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md`
 - `docs/review/T48_review.md`
 - `cnn_fpga/hwio/board_backend.py`
 - `cnn_fpga/hwio/axi_map.py`
@@ -193,7 +193,7 @@ Worker 必须从代码侧提炼一个结构化审计包，至少覆盖：
 
 ### F. 最终文档必须回答的问题
 
-`docs/t49_real_board_smoke_execution_gate.md` 至少要回答：
+`docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md` 至少要回答：
 
 1. 当前宿主是否真的具备进入真板 smoke 的基本前提
 2. 当前宿主上到底缺的是 host/device、bitstream/contract，还是 repo execution path
@@ -215,7 +215,7 @@ Worker 必须从代码侧提炼一个结构化审计包，至少覆盖：
 
 Worker 必须产出：
 
-- `docs/t49_real_board_smoke_execution_gate.md`
+- `docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md`
 - `docs/review/T49_review.md`
 - `docs/for_human/T49_explanation.md`
 - `docs/worker_summary/T49_worker_summary.md`
@@ -275,7 +275,7 @@ Reviewer 在以下任一情况应返回 `BLOCK`：
   - `artifacts/t49_real_board_smoke_execution_gate/code_side_audit.json`
   - `artifacts/t49_real_board_smoke_execution_gate/t49_real_board_smoke_execution_gate.json`
 - docs：
-  - `docs/t49_real_board_smoke_execution_gate.md`
+  - `docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md`
   - `docs/review/T49_review.md`
   - `docs/for_human/T49_explanation.md`
   - `docs/worker_summary/T49_worker_summary.md`

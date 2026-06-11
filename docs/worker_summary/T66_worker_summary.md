@@ -5,7 +5,7 @@ Changed files:
 - `cnn_fpga/config/p4_multiscenario_statcalib_sensitivity.yaml`
 - `cnn_fpga/benchmark/summarize_statcalib_sensitivity.py`
 - `tests/test_statcalib_sensitivity_summary.py`
-- `docs/statcalib_sensitivity_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_sensitivity_bounded_benchmark.md`
 - `docs/review/T66_review.md`
 - `docs/for_human/T66_explanation.md`
 - `docs/worker_summary/T66_worker_summary.md`

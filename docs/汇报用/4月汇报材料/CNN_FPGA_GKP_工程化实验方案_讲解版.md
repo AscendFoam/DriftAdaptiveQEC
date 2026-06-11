@@ -4,8 +4,8 @@
 
 这是一份“讲给非本方向老师听”的版本。它不替代技术文档，而是把同样的方案换成更直观的表达。
 
-- 原技术细节文档：`docs/CNN_FPGA_GKP_工程化实验方案.md`
-- 研究框架总文档：`docs/CNN_FPGA_GKP_实验设计.md`
+- 原技术细节文档：`docs/legacy_context/reference_retired_2026-06-11/CNN_FPGA_GKP_工程化实验方案.md`
+- 研究框架总文档：`docs/legacy_context/reference_retired_2026-06-11/CNN_FPGA_GKP_实验设计.md`
 - 本文档定位：解释“为什么这样做、怎么一步步验证、工程上为什么可行”
 
 可以把它理解为：

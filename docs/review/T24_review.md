@@ -11,7 +11,7 @@
 T24 task package (`docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`) defined:
 
 - Goal: execute frozen-set formal software revalidation (4 scenarios x 5 modes x repeats=2)
-- Allowed files: `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`, `docs/P4_benchmark_formal_protocol.md`, `docs/04_task_board.md`, `docs/07_handoff.md`, `docs/08_risks_and_open_questions.md`, `runs/p4_benchmark/T24_formal_software_revalidation_*`
+- Allowed files: `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`, `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`, `docs/04_task_board.md`, `docs/07_handoff.md`, `docs/08_risks_and_open_questions.md`, `runs/p4_benchmark/T24_formal_software_revalidation_*`
 - Forbidden: source code edits, config semantic edits, benchmark semantic edits, training, .tflite runtime, hardware commands, cleanup, statcalib, soft-information, extra drift families, CI stopping
 
 **Scope check**: Worker modified only allowed files. No source code changes. No config semantic changes. No training, .tflite, hardware, cleanup, or scope expansion detected. **PASS**.
@@ -102,7 +102,7 @@ All 40 `raw_rows` report `backend = ""` (the runner does not emit a non-empty ba
 
 The Worker's output contains explicit boundary statements in:
 
-- `docs/P4_benchmark_formal_protocol.md` Section 15.7: "mock-backed software HIL formal software revalidation only"
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md` Section 15.7: "mock-backed software HIL formal software revalidation only"
 - `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md` Worker Output: "Mock-backed software HIL only"
 - `docs/08_risks_and_open_questions.md` R5: updated to reflect T24 completion but maintained "mock-backed software HIL" qualifier
 

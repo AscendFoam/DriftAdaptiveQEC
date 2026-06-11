@@ -166,9 +166,9 @@
 
 - `docs/02_experiment_plan.md`
 - `docs/03_hil_p4_boundary_audit.md`
-- `docs/P0_smoke_bootstrap.md`
-- `docs/P3_software_hil_bootstrap.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P0_smoke_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/review/T13_recovery_exit_review.md`
 
 ## 7. 失败标准

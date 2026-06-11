@@ -59,7 +59,7 @@
 
 一句话概括对你的启发：**这篇论文最值得你借的不是具体结构，而是方法论：让 CNN 学“对下游解码真正有用的有效统计量或残差”，并且把统计聚合、物理先验和部署语义一起写进模型。**
 
-参考我主要对照了这些文件：[CNN_FPGA_GKP_工程化实验方案.md](</d:/Codes/Quantum/DriftAdaptiveQEC/docs/CNN_FPGA_GKP_工程化实验方案.md>)、[CNN_FPGA_GKP_阶段结论.md](</d:/Codes/Quantum/DriftAdaptiveQEC/docs/CNN_FPGA_GKP_阶段结论.md>)、[dataset_builder.py](</d:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/data/dataset_builder.py>)、[runtime_dataset_builder.py](</d:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/data/runtime_dataset_builder.py>)、[feature_builder.py](</d:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/runtime/feature_builder.py>)、[tiny_cnn.py](</d:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/model/tiny_cnn.py>)、[param_mapper.py](</d:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/decoder/param_mapper.py>)。
+参考我主要对照了这些文件：[CNN_FPGA_GKP_工程化实验方案.md](</d:/Codes/Quantum/DriftAdaptiveQEC/docs/legacy_context/reference_retired_2026-06-11/CNN_FPGA_GKP_工程化实验方案.md>)、[CNN_FPGA_GKP_阶段结论.md](</d:/Codes/Quantum/DriftAdaptiveQEC/docs/CNN_FPGA_GKP_阶段结论.md>)、[dataset_builder.py](</d:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/data/dataset_builder.py>)、[runtime_dataset_builder.py](</d:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/data/runtime_dataset_builder.py>)、[feature_builder.py](</d:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/runtime/feature_builder.py>)、[tiny_cnn.py](</d:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/model/tiny_cnn.py>)、[param_mapper.py](</d:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/decoder/param_mapper.py>)。
 
 如果你愿意，我下一步可以继续帮你做一件更具体的事：  
 把“论文 2D CNN 噪声学习模型”改写成一个**适配你 GKP 项目的候选新分支设计草案**，包括输入张量、输出定义、loss、以及它如何接入你现有 `hybrid_residual_b` 主线。

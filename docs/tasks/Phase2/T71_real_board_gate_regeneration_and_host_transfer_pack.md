@@ -44,7 +44,7 @@
 Worker 只可修改或新增以下路径：
 
 - `docs/tasks/Phase2/T71_real_board_gate_regeneration_and_host_transfer_pack.md`
-- `docs/t71_real_board_gate_regeneration_pack.md`
+- `docs/evidence_packs/deployment_boundary/t71_real_board_gate_regeneration_pack.md`
 - `docs/review/T71_review.md`
 - `docs/for_human/T71_explanation.md`
 - `docs/worker_summary/T71_worker_summary.md`
@@ -64,7 +64,7 @@ Worker 只可修改或新增以下路径：
 
 Worker 必须更新：
 
-- `docs/t71_real_board_gate_regeneration_pack.md`
+- `docs/evidence_packs/deployment_boundary/t71_real_board_gate_regeneration_pack.md`
 - `docs/review/T71_review.md`
 - `docs/for_human/T71_explanation.md`
 - `docs/worker_summary/T71_worker_summary.md`
@@ -91,15 +91,15 @@ Worker 不得：
 
 Worker 必须复用以下既有输入，而不是重写历史事实：
 
-- `docs/t49_real_board_smoke_execution_gate.md`
+- `docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md`
 - `docs/review/T49_review.md`
 - `docs/worker_summary/T49_worker_summary.md`
 - `artifacts/t49_real_board_smoke_execution_gate/host_fact_manifest.json`
 - `artifacts/t49_real_board_smoke_execution_gate/device_path_probe.json`
 - `artifacts/t49_real_board_smoke_execution_gate/code_side_audit.json`
 - `artifacts/t49_real_board_smoke_execution_gate/t49_real_board_smoke_execution_gate.json`
-- `docs/real_board_hil_readiness.md`
-- `docs/real_board_smoke_execution_plan.md`
+- `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
+- `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`
 
 ## 固定边界
 
@@ -154,7 +154,7 @@ Worker 必须把 `device_path_truth` 的 ready 条件改成 role-aware：
 
 ### D. 最终文档必须回答的问题
 
-`docs/t71_real_board_gate_regeneration_pack.md` 至少要回答：
+`docs/evidence_packs/deployment_boundary/t71_real_board_gate_regeneration_pack.md` 至少要回答：
 
 1. `T71` 是否改变了 `T49` 当前宿主的最终 gate verdict
 2. `T49` checked-in artifact 回放结果与 `T71` 当前宿主再生成结果是否一致；若不一致，只允许出现时间戳/环境噪声级差异，不允许出现 verdict 漂移
@@ -186,7 +186,7 @@ Worker 必须把 `device_path_truth` 的 ready 条件改成 role-aware：
 
 Worker 必须产出：
 
-- `docs/t71_real_board_gate_regeneration_pack.md`
+- `docs/evidence_packs/deployment_boundary/t71_real_board_gate_regeneration_pack.md`
 - `docs/review/T71_review.md`
 - `docs/for_human/T71_explanation.md`
 - `docs/worker_summary/T71_worker_summary.md`
@@ -256,7 +256,7 @@ Reviewer 在以下任一情况应返回 `BLOCK`：
   - `artifacts/t71_real_board_gate_regeneration_pack/t49_checked_in_replay_gate.json`
   - `artifacts/t71_real_board_gate_regeneration_pack/replay_vs_regeneration_comparison.json`
 - docs：
-  - `docs/t71_real_board_gate_regeneration_pack.md`
+  - `docs/evidence_packs/deployment_boundary/t71_real_board_gate_regeneration_pack.md`
   - `docs/review/T71_review.md`
   - `docs/for_human/T71_explanation.md`
   - `docs/worker_summary/T71_worker_summary.md`

@@ -14,7 +14,7 @@
 
 随后补齐了这 4 份 T69 文档：
 
-1. `docs/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
+1. `docs/evidence_packs/statcalib_fr8/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
 2. `docs/review/T69_review.md`
 3. `docs/for_human/T69_explanation.md`
 4. `docs/worker_summary/T69_worker_summary.md`

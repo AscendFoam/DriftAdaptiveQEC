@@ -5,10 +5,10 @@
 ## 当前状态
 
 - 研究背景与阶段结论主要见：
-  - `docs/CNN_FPGA_GKP_工程化实验方案.md`
-  - `docs/CNN_FPGA_GKP_阶段结论.md`
-  - `docs/CNN_FPGA_GKP_后续仿真与工程补强计划.md`
-  - `docs/CNN_FPGA_GKP_paper_inspired分支实验设计草案.md`
+  - `docs/legacy_context/reference_retired_2026-06-11/CNN_FPGA_GKP_工程化实验方案.md`
+  - `docs/progress_summary/CNN_FPGA_GKP_阶段结论.md`
+  - `docs/02_experiment_plan.md`（Part II 为后续开发计划唯一入口）
+  - `docs/paper_notes/README.md`
 - 自 `2026-05-05` 起，项目治理以以下文件为准：
   - `docs/00_project_snapshot.md`
   - `docs/01_legacy_audit.md`
@@ -27,6 +27,13 @@
 - `cnn_fpga/`: 数据、模型、解码器、运行时、HIL、benchmark 主模块
 - `benchmark/`: P0 基础对比脚本
 - `docs/`: 方案、阶段结论、恢复治理文件
+  - `docs/codebase_overview/`: `physics/` 与 `cnn_fpga/` 代码阅读辅助文档
+  - `docs/recovery_bootstrap/`: P0/P3/P4 recovery smoke 复用入口
+  - `docs/protocols/`: benchmark / execution protocol 文档
+  - `docs/evidence_packs/`: 已完成任务的证据包、gate 输出和边界说明
+  - `docs/paper_materials/`: 论文材料、claim/evidence ledger、草稿骨架和风险审计
+  - `docs/sidecar/`: sidecar 扩展实验治理与 worktree 规划
+  - `docs/legacy_context/`: 已退役或只作历史参考的旧计划、旧分析和归档材料
 - `runs/`, `artifacts/`: 运行产物与历史证据
 
 ## 当前已确认的入口
@@ -40,7 +47,7 @@
 - P4 入口：
   - `python -m cnn_fpga.benchmark.run_p4_multiscenario_benchmark --config cnn_fpga/config/p4_multiscenario_hybrid_b_long.yaml`
 
-这些入口代表“代码中存在”；其中当前已经重新验收通过的 bounded recovery 路径，请以 `docs/P0_smoke_bootstrap.md`、`docs/P3_software_hil_bootstrap.md` 与 `docs/P4_benchmark_recovery_bootstrap.md` 为准。当前唯一任务状态见 `docs/04_task_board.md` 与 `docs/07_handoff.md`。
+这些入口代表“代码中存在”；其中当前已经重新验收通过的 bounded recovery 路径，请以 `docs/recovery_bootstrap/P0_smoke_bootstrap.md`、`docs/recovery_bootstrap/P3_software_hil_bootstrap.md` 与 `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md` 为准。当前唯一任务状态见 `docs/04_task_board.md` 与 `docs/07_handoff.md`。
 
 ## 环境说明
 
@@ -105,12 +112,12 @@ python -m pip install -r requirements-recovery.txt
 
 最小 smoke 的复用说明已整理到：
 
-- `docs/P0_smoke_bootstrap.md`
+- `docs/recovery_bootstrap/P0_smoke_bootstrap.md`
 
 如果目标是 `P3/P4 recovery smoke`，请继续参照：
 
-- `docs/P3_software_hil_bootstrap.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 
 ## 复用建议
 

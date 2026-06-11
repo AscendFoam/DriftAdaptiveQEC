@@ -9,7 +9,7 @@ Why now: `requirements-recovery.txt` 只覆盖 P0/P3/P4 recovery smoke；训练�
 Allowed files:
 
 - `docs/tasks/Phase2/T17_training_manifest_bootstrap.md`
-- `requirements-train.txt` 或 `docs/training_chain_bootstrap.md`
+- `requirements-train.txt` 或 `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
@@ -48,12 +48,12 @@ Reviewer type: `normal`
 
 ## Worker Output Summary
 
-- Output type: `docs/training_chain_bootstrap.md`
+- Output type: `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`
 - No training code changed
 - No long training run started
 - Verification used import-level and `--help` checks only
 - Updated docs:
-  - `docs/training_chain_bootstrap.md`
+  - `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`
   - `docs/04_task_board.md`
   - `docs/07_handoff.md`
   - `docs/08_risks_and_open_questions.md`

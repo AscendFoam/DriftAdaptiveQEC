@@ -38,7 +38,7 @@ Produce one bounded teacher-anchor package that answers:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T67_fr8_statcalib_teacher_anchor_dependence_bounded_benchmark.md`
-- `docs/statcalib_teacher_anchor_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_teacher_anchor_bounded_benchmark.md`
 - `docs/review/T67_review.md`
 - `docs/for_human/T67_explanation.md`
 - `docs/worker_summary/T67_worker_summary.md`
@@ -51,7 +51,7 @@ Worker may modify only:
 
 Worker must update:
 
-- `docs/statcalib_teacher_anchor_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_teacher_anchor_bounded_benchmark.md`
 - `docs/review/T67_review.md`
 - `docs/for_human/T67_explanation.md`
 - `docs/worker_summary/T67_worker_summary.md`
@@ -78,10 +78,10 @@ Worker must not:
 
 Worker must reuse:
 
-- `docs/P4_benchmark_formal_protocol.md`
-- `docs/fr8_statcalib_extension_lane_benchmark.md`
-- `docs/fr8_statcalib_extension_lane_consistency_audit.md`
-- `docs/statcalib_sensitivity_bounded_benchmark.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_consistency_audit.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_sensitivity_bounded_benchmark.md`
 - `docs/review/T64_review.md`
 - `docs/review/T65_review.md`
 - `docs/review/T66_review.md`
@@ -182,7 +182,7 @@ Worker must produce:
 - one run root:
   - `runs/p4_benchmark/T67_statcalib_teacher_anchor_*`
 - one benchmark report:
-  - `docs/statcalib_teacher_anchor_bounded_benchmark.md`
+  - `docs/evidence_packs/statcalib_fr8/statcalib_teacher_anchor_bounded_benchmark.md`
 - one review file:
   - `docs/review/T67_review.md`
 - one human explanation:
@@ -243,7 +243,7 @@ Worker must report:
   - `cnn_fpga/config/p4_multiscenario_statcalib_teacher_anchor.yaml`
   - `cnn_fpga/benchmark/summarize_statcalib_teacher_anchor.py`
   - `tests/test_statcalib_teacher_anchor_summary.py`
-  - `docs/statcalib_teacher_anchor_bounded_benchmark.md`
+  - `docs/evidence_packs/statcalib_fr8/statcalib_teacher_anchor_bounded_benchmark.md`
   - `docs/review/T67_review.md`
   - `docs/for_human/T67_explanation.md`
   - `docs/worker_summary/T67_worker_summary.md`

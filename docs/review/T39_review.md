@@ -21,7 +21,7 @@ T39 required 5 outputs. All present and verified:
 | # | Expected Output | Present | Independently Verified |
 |---|----------------|---------|----------------------|
 | 1 | `requirements-train-cpu-win-py312.txt` | Yes | Yes — contains `numpy==2.4.5` + `PyYAML==6.0.3` only, no `file:///` references, separate from `requirements-recovery.txt` |
-| 2 | `docs/training_chain_cpu_cleanenv_bootstrap.md` | Yes | Yes — records env, commands, results, verified/not-verified scope, non-claims |
+| 2 | `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_bootstrap.md` | Yes | Yes — records env, commands, results, verified/not-verified scope, non-claims |
 | 3 | Task package Worker Output + Verification Record | Yes | Yes — 103 insertions covering all steps |
 | 4 | `docs/review/T39_review.md` | Yes | Worker pre-review; overwritten by this review |
 | 5 | `docs/for_human/T39_explanation.md` | Yes | Chinese-language human explanation |
@@ -33,7 +33,7 @@ Git status shows exactly 5 files:
 | File | Status | Allowed by T39 |
 |------|--------|---------------|
 | `docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md` | Modified | Yes |
-| `docs/training_chain_cpu_cleanenv_bootstrap.md` | New | Yes |
+| `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_bootstrap.md` | New | Yes |
 | `docs/review/T39_review.md` | New | Yes |
 | `docs/for_human/T39_explanation.md` | New | Yes |
 | `requirements-train-cpu-win-py312.txt` | New | Yes |

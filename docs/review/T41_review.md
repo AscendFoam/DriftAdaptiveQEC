@@ -40,7 +40,7 @@ None found. Specific checks:
 
 2. **Governance doc changes are not from T41**: The unstaged modifications in `docs/00_project_snapshot.md`, `docs/04_task_board.md`, `docs/07_handoff.md`, etc. are from Captain integration, not from the T41 Worker.
 
-3. **Blocked claims remain blocked**: Cross-checked every blocked claim in the Milestone2K review against `docs/paper_claim_evidence_ledger.md`:
+3. **Blocked claims remain blocked**: Cross-checked every blocked claim in the Milestone2K review against `docs/paper_materials/paper_claim_evidence_ledger.md`:
    - C6 (training reproducibility) → blocked, R11 ✅
    - C7 (.tflite runtime) → blocked, R12 ✅
    - C8 (real-board) → blocked, R13/R14 ✅
@@ -49,7 +49,7 @@ None found. Specific checks:
 
 4. **No evidence boundary upgraded**: The review does not upgrade mock-backed software HIL to real-board, `.tflite` stub to true runtime, one CPU smoke to full reproducibility, frozen-set to paper-grade benchmark, statcalib interface to integrated comparator, or single-seed trace to causal proof. All six boundary rules from the T41 task package are respected.
 
-5. **Paper positioning is consistent**: The "Minimum Safe Paper Positioning" in the Milestone2K review matches `docs/paper_reviewer_risk_audit.md` Section "Minimum Safe Paper Positioning" and "Do-Not-Publish-As-Claimed List" without drift.
+5. **Paper positioning is consistent**: The "Minimum Safe Paper Positioning" in the Milestone2K review matches `docs/paper_materials/paper_reviewer_risk_audit.md` Section "Minimum Safe Paper Positioning" and "Do-Not-Publish-As-Claimed List" without drift.
 
 6. **Risk IDs verified**: R5, R9, R10, R11, R12, R13, R14, R20, R23, R24 all appear in `docs/08_risks_and_open_questions.md` and are correctly described in the review's Residual Risks section.
 

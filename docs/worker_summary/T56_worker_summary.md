@@ -2,7 +2,7 @@
 
 ## What Changed
 
-1. **Created `docs/post_t55_mechanism_claim_reframing_gate.md`** — the main gate document with:
+1. **Created `docs/evidence_packs/mechanism_ablation/post_t55_mechanism_claim_reframing_gate.md`** — the main gate document with:
    - Status recap from T36 through T55
    - 10-row mechanism claim table (3 retain, 4 weaken, 2 retire, 1 reframe, 2 still-open)
    - Analysis of what T55 changed in the mechanism story
@@ -10,7 +10,7 @@
    - T47 recommendation: proceed only under conditioned mechanism-hedge wording
    - 9 explicit non-claims
 
-2. **Updated `docs/paper_claim_evidence_ledger.md`** — three targeted changes:
+2. **Updated `docs/paper_materials/paper_claim_evidence_ledger.md`** — three targeted changes:
    - C4 claim wording updated to reflect multi-seed evidence and I1 mixed results
    - C4 evidence paths expanded to include T54/T55 probe documents and reviews
    - F1 figure boundary updated to note instability mostly helps

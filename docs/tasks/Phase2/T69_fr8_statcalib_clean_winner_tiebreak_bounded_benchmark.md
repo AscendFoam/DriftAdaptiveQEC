@@ -50,7 +50,7 @@ Produce one bounded clean-winner tie-break package that answers:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T69_fr8_statcalib_clean_winner_tiebreak_bounded_benchmark.md`
-- `docs/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
 - `docs/review/T69_review.md`
 - `docs/for_human/T69_explanation.md`
 - `docs/worker_summary/T69_worker_summary.md`
@@ -63,7 +63,7 @@ Worker may modify only:
 
 Worker must update:
 
-- `docs/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
 - `docs/review/T69_review.md`
 - `docs/for_human/T69_explanation.md`
 - `docs/worker_summary/T69_worker_summary.md`
@@ -91,12 +91,12 @@ Worker must not:
 
 Worker must reuse:
 
-- `docs/P4_benchmark_formal_protocol.md`
-- `docs/fr8_statcalib_extension_lane_benchmark.md`
-- `docs/fr8_statcalib_extension_lane_consistency_audit.md`
-- `docs/statcalib_sensitivity_bounded_benchmark.md`
-- `docs/statcalib_teacher_anchor_bounded_benchmark.md`
-- `docs/statcalib_generated_only_robustness_bounded_benchmark.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_consistency_audit.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_sensitivity_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_teacher_anchor_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_generated_only_robustness_bounded_benchmark.md`
 - `docs/review/T64_review.md`
 - `docs/review/T65_review.md`
 - `docs/review/T66_review.md`
@@ -200,7 +200,7 @@ Worker must produce:
 - one run root:
   - `runs/p4_benchmark/T69_statcalib_clean_winner_tiebreak_*`
 - one benchmark report:
-  - `docs/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
+  - `docs/evidence_packs/statcalib_fr8/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
 - one review file:
   - `docs/review/T69_review.md`
 - one human explanation:
@@ -283,7 +283,7 @@ Completed the only allowed run root:
 
 Wrote these 4 T69 documents:
 
-1. `docs/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
+1. `docs/evidence_packs/statcalib_fr8/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
 2. `docs/review/T69_review.md`
 3. `docs/for_human/T69_explanation.md`
 4. `docs/worker_summary/T69_worker_summary.md`

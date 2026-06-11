@@ -32,7 +32,7 @@ Run the smallest believable intervention probe that can answer:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md`
-- `docs/multi_seed_i1_intervention_probe.md`
+- `docs/evidence_packs/mechanism_ablation/multi_seed_i1_intervention_probe.md`
 - `docs/review/T55_review.md`
 - `docs/for_human/T55_explanation.md`
 
@@ -47,7 +47,7 @@ Worker may create:
 
 This task should update only:
 
-1. `docs/multi_seed_i1_intervention_probe.md`
+1. `docs/evidence_packs/mechanism_ablation/multi_seed_i1_intervention_probe.md`
 2. `docs/review/T55_review.md`
 3. `docs/for_human/T55_explanation.md`
 4. this task package itself, only to append Worker output and verification notes after completion
@@ -74,12 +74,12 @@ Read at minimum:
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/seed_mechanism_multi_seed_plan.md`
+- `docs/evidence_packs/mechanism_ablation/seed_mechanism_multi_seed_plan.md`
 - `docs/review/T46_review.md`
-- `docs/multi_seed_trace_generalization_probe.md`
+- `docs/evidence_packs/mechanism_ablation/multi_seed_trace_generalization_probe.md`
 - `docs/review/T54_review.md`
-- `docs/seed20260429_trace_export_diagnosis.md`
-- `docs/paper_claim_evidence_ledger.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
 - `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`
 - `cnn_fpga/config/p4_hybrid_vs_ukf_ablation_features.yaml`
 - `cnn_fpga/config/experiment_runtime_b_residual.yaml`
@@ -131,7 +131,7 @@ Inside the T55-scoped run root, produce at minimum:
 
 ## Expected Report Output
 
-Create `docs/multi_seed_i1_intervention_probe.md` with:
+Create `docs/evidence_packs/mechanism_ablation/multi_seed_i1_intervention_probe.md` with:
 
 1. exact command list and run-root structure
 2. seed/model reuse matrix
@@ -199,7 +199,7 @@ If `T55` shows no useful intervention signal, then the project should not rush i
 - I1 benchmark outputs at `benchmark_output/s{seed}/` (8/8 repeats per seed).
 - Cross-seed analysis: `analysis/intervention_comparison.csv` (24 rows), `analysis/intervention_summary.csv` (6 rows), `analysis/intervention_summary.json`.
 - Key finding: I1 lower-clip intervention is MIXED — harms 4/6 seeds (20260425, 20260427, 20260428, 20260429), helps 2/6 seeds (20260430, 20260510). Mean cross-seed gap: +0.128 (overall harmful).
-- `docs/multi_seed_i1_intervention_probe.md` updated with complete 6-seed intervention report (9 sections).
+- `docs/evidence_packs/mechanism_ablation/multi_seed_i1_intervention_probe.md` updated with complete 6-seed intervention report (9 sections).
 - `docs/review/T55_review.md` updated with verdict `PASS`.
 - `docs/for_human/T55_explanation.md` updated with Chinese human-facing explanation.
 - Intervention evidence not upgraded to causal proof.
@@ -210,7 +210,7 @@ If `T55` shows no useful intervention signal, then the project should not rush i
 
 ## Verification Record
 
-1. Only allowed docs changed: `docs/multi_seed_i1_intervention_probe.md` (new), `docs/review/T55_review.md` (new), `docs/for_human/T55_explanation.md` (new), and this task package (modified for Worker Output / Verification Record). New run root created at `runs/T55_multi_seed_i1_probe_20260523/`.
+1. Only allowed docs changed: `docs/evidence_packs/mechanism_ablation/multi_seed_i1_intervention_probe.md` (new), `docs/review/T55_review.md` (new), `docs/for_human/T55_explanation.md` (new), and this task package (modified for Worker Output / Verification Record). New run root created at `runs/T55_multi_seed_i1_probe_20260523/`.
 2. No source code, source-tree config, test, runtime, hardware, or training file was modified. The runner only generates seed-specific benchmark configs inside the T55 run root.
 3. No historical `runs/` or `artifacts/` path was overwritten. All new benchmark output directories are new.
 4. Only one intervention variant executed: pure I1 lower clip (0.06). No v6/v7/v8/v9 proxy used.

@@ -61,7 +61,7 @@
 2. helper 同时把 review docs 和 historical run summaries 当作输入。
    - 这是合理的，因为 `T70` 的目标之一就是把“实验事实”和“已接受审查链”一起固定下来，避免后续治理文档自由发挥。
 
-3. `docs/fr8_statcalib_bounded_closure_pack.md` 中的两个 gate 结论是保守的，但它们与现有证据一致：
+3. `docs/evidence_packs/statcalib_fr8/fr8_statcalib_bounded_closure_pack.md` 中的两个 gate 结论是保守的，但它们与现有证据一致：
    - `No-Promotion Gate = no_promotion_keep_extension_lane_only`
    - `Unique-Threshold Gate = future_selection_task_required`
    这不是缺陷，而是对当前证据边界的正确表达。
@@ -72,7 +72,7 @@
 
 后续建议：
 
-1. Captain 可以把 `docs/fr8_statcalib_bounded_closure_pack.md` 当作 FR8 主线 closure artifact 使用，而不必再把 `T64/T66/T67/T68/T69` 拆开自由转述。
+1. Captain 可以把 `docs/evidence_packs/statcalib_fr8/fr8_statcalib_bounded_closure_pack.md` 当作 FR8 主线 closure artifact 使用，而不必再把 `T64/T66/T67/T68/T69` 拆开自由转述。
 2. 后续所有治理或 paper-material 文档若引用 FR8，应保持三条边界不变：
    - `T24` 仍是 authoritative frozen ranked table
    - `statcalib` 仍是 separately labeled extension lane

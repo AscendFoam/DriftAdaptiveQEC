@@ -6,7 +6,7 @@
 
 1. The current diff stays inside the T63 allowed-file boundary:
    - `docs/tasks/Phase2/T63_fr8_statcalib_comparator_gate_review.md`
-   - `docs/fr8_statcalib_comparator_gate_review.md`
+   - `docs/evidence_packs/statcalib_fr8/fr8_statcalib_comparator_gate_review.md`
    - `docs/review/T63_review.md`
    - `docs/for_human/T63_explanation.md`
    - `docs/worker_summary/T63_worker_summary.md`
@@ -17,7 +17,7 @@
    - `T60` for cross-mode isolation and regression hardening
    - `T61` for the blocked provenance attempt
    - `T62` for the provenance-clean bounded rerun that closes `R27`
-   - `docs/P4_benchmark_formal_protocol.md` for the frozen four-scenario / five-mode formal boundary
+   - `docs/protocols/benchmark/P4_benchmark_formal_protocol.md` for the frozen four-scenario / five-mode formal boundary
    - `docs/08_risks_and_open_questions.md` for the still-open `R24` truth boundary
 4. The report keeps the key truth boundary explicit:
    - current evidence remains mock-backed software-HIL only

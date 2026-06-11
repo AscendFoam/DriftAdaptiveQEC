@@ -18,7 +18,7 @@ Classification: `accepted` — standard project practice is for the reviewer to 
 
 ### N2 `sinusoidal` rejection rationale could be stronger
 
-Section 4 of `docs/paper_benchmark_expansion_protocol.md` rejects `sinusoidal` as a required new family, reasoning that `periodic_drift` already exists in the frozen set. However, `periodic_drift` may differ from `sinusoidal` in amplitude envelope, frequency content, or drift-law structure. The rejection is defensible at protocol-lock level but may invite reviewer questions if the paper later uses `periodic_drift` as a proxy without explicitly comparing against a pure sinusoidal baseline.
+Section 4 of `docs/protocols/benchmark/paper_benchmark_expansion_protocol.md` rejects `sinusoidal` as a required new family, reasoning that `periodic_drift` already exists in the frozen set. However, `periodic_drift` may differ from `sinusoidal` in amplitude envelope, frequency content, or drift-law structure. The rejection is defensible at protocol-lock level but may invite reviewer questions if the paper later uses `periodic_drift` as a proxy without explicitly comparing against a pure sinusoidal baseline.
 
 Classification: `accepted` — T45 is a protocol-lock task, not an execution task; the exact scenario-coverage argument belongs in a later expansion-lane task.
 
@@ -42,7 +42,7 @@ Not applicable. T45 is a docs-only task. No code, config, benchmark, training, `
 
 None found. The following checks passed:
 
-1. **Allowed files check**: `git diff --stat HEAD` shows only `docs/tasks/Phase2/T45_...md` was modified. Three new files (`docs/paper_benchmark_expansion_protocol.md`, `docs/review/T45_review.md`, `docs/for_human/T45_explanation.md`) are untracked additions. All four are listed in the task's `Allowed Files`. No source, config, `runs/`, `artifacts/`, benchmark code, or governance files (`04_task_board.md`, `07_handoff.md`) were touched.
+1. **Allowed files check**: `git diff --stat HEAD` shows only `docs/tasks/Phase2/T45_...md` was modified. Three new files (`docs/protocols/benchmark/paper_benchmark_expansion_protocol.md`, `docs/review/T45_review.md`, `docs/for_human/T45_explanation.md`) are untracked additions. All four are listed in the task's `Allowed Files`. No source, config, `runs/`, `artifacts/`, benchmark code, or governance files (`04_task_board.md`, `07_handoff.md`) were touched.
 
 2. **No benchmark execution**: The protocol document explicitly states it does not run benchmark, training, `.tflite`, or hardware. No run directories were created. No CLI invocation evidence exists in the diff.
 
@@ -50,7 +50,7 @@ None found. The following checks passed:
 
 4. **Reference-only discipline**: Section 9 (Explicit Non-Claims) item 2 explicitly states that `docs/reference/延伸改进思路.md` is not current mainline truth. Item 3 makes the same statement about the deep-research report.
 
-5. **Cross-reference accuracy**: Verified that C2, C3, C11 exist in `docs/paper_claim_evidence_ledger.md` with statuses matching the protocol's claims (C2 supported, C3 supported, C11 blocked). Verified that E3 exists in `docs/paper_reviewer_risk_audit.md` and describes exactly what the protocol references.
+5. **Cross-reference accuracy**: Verified that C2, C3, C11 exist in `docs/paper_materials/paper_claim_evidence_ledger.md` with statuses matching the protocol's claims (C2 supported, C3 supported, C11 blocked). Verified that E3 exists in `docs/paper_materials/paper_reviewer_risk_audit.md` and describes exactly what the protocol references.
 
 6. **Adopted / deferred / rejected classification**: The candidate expansion ledger (Section 4) covers all expansion items mentioned in the required inputs — extra drift families, soft-information comparators, statcalib, CI-driven stopping, learned branches, `.tflite`/real_board mixing, latency/commit/saturation metrics, rollback/fallback metrics, training-seed separation. Classification logic is internally consistent.
 
@@ -72,4 +72,4 @@ None found. The following checks passed:
 
 1. Captain should accept T45 as `PASS` and update the task board, handoff, and risk register.
 2. The recommended next task is `T46: Multi-seed mechanism/intervention plan and trace pack`, which would address the mechanism-evidence gap identified in Section 7.1 item 5 ("mechanism evidence is still not multi-seed closed").
-3. If the project instead wants to pursue a stronger benchmark story first, a new bounded expansion task should be created that follows the locked rules in `docs/paper_benchmark_expansion_protocol.md` Section 5.
+3. If the project instead wants to pursue a stronger benchmark story first, a new bounded expansion task should be created that follows the locked rules in `docs/protocols/benchmark/paper_benchmark_expansion_protocol.md` Section 5.

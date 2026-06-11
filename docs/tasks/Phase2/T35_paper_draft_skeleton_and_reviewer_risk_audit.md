@@ -23,8 +23,8 @@ Produce:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`
-- `docs/paper_draft_skeleton.md`
-- `docs/paper_reviewer_risk_audit.md`
+- `docs/paper_materials/paper_draft_skeleton.md`
+- `docs/paper_materials/paper_reviewer_risk_audit.md`
 - `docs/review/T35_review.md`
 - `docs/for_human/T35_explanation.md`
 
@@ -42,23 +42,23 @@ Read at minimum:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/paper_claim_evidence_ledger.md`
-- `docs/CNN_FPGA_GKP_工程化实验方案.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
+- `docs/legacy_context/reference_retired_2026-06-11/CNN_FPGA_GKP_工程化实验方案.md`
 - `docs/CNN_FPGA_GKP_阶段结论.md`
 - `docs/CNN_FPGA_GKP_后续仿真与工程补强计划.md`
 - `docs/CNN_FPGA_GKP_paper_inspired分支实验设计草案.md`
-- `docs/P4_benchmark_formal_protocol.md`
-- `docs/seed20260429_failure_diagnosis.md`
-- `docs/seed20260429_trace_export_diagnosis.md`
-- `docs/training_chain_cpu_cleanenv_train_smoke.md`
-- `docs/TFLite_runtime_bootstrap.md`
-- `docs/real_board_hil_readiness.md`
-- `docs/real_board_smoke_execution_plan.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_train_smoke.md`
+- `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md`
+- `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
+- `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`
 - relevant review files for `T24`, `T25`, `T30`, `T34`, `T38`, `T39`, `T40`
 
 ## Required Output Shape
 
-### A. `docs/paper_draft_skeleton.md`
+### A. `docs/paper_materials/paper_draft_skeleton.md`
 
 Must include at least:
 
@@ -77,7 +77,7 @@ For each section, list:
 - which ledger claims or figure/table IDs it may cite
 - which claims are still blocked and must not be written as completed prose
 
-### B. `docs/paper_reviewer_risk_audit.md`
+### B. `docs/paper_materials/paper_reviewer_risk_audit.md`
 
 Must include at least:
 
@@ -92,7 +92,7 @@ Must include at least:
 
 ## Required Boundary Rules
 
-T35 must preserve all current boundaries from `docs/paper_claim_evidence_ledger.md`.
+T35 must preserve all current boundaries from `docs/paper_materials/paper_claim_evidence_ledger.md`.
 
 In particular, do not silently upgrade:
 
@@ -124,8 +124,8 @@ Verification is document-structure and boundary-consistency based:
 ## Docs To Update
 
 - `docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`
-- `docs/paper_draft_skeleton.md`
-- `docs/paper_reviewer_risk_audit.md`
+- `docs/paper_materials/paper_draft_skeleton.md`
+- `docs/paper_materials/paper_reviewer_risk_audit.md`
 - `docs/review/T35_review.md`
 - `docs/for_human/T35_explanation.md`
 
@@ -146,15 +146,15 @@ This task is still docs-only. The worker is not writing the full paper and is no
 
 ## Worker Output
 
-- Added `docs/paper_draft_skeleton.md` as a bounded manuscript scaffold.
-- Added `docs/paper_reviewer_risk_audit.md` as an adversarial reviewer-risk and wording-trap audit.
+- Added `docs/paper_materials/paper_draft_skeleton.md` as a bounded manuscript scaffold.
+- Added `docs/paper_materials/paper_reviewer_risk_audit.md` as an adversarial reviewer-risk and wording-trap audit.
 - Added `docs/review/T35_review.md` with worker-side pre-review notes and residual-risk checks.
 - Added `docs/for_human/T35_explanation.md` with a short Chinese explanation of scope and boundaries.
 - Preserved T34 ledger boundaries explicitly; no attempt was made to upgrade blocked evidence or expand experiment scope.
 
 ## Verification Record
 
-- Checked that every major section in `docs/paper_draft_skeleton.md` includes explicit claim IDs and figure/table IDs where applicable.
-- Checked that `docs/paper_reviewer_risk_audit.md` ties objections to concrete claim states, blocker categories, or open-risk IDs such as `R5`, `R9`, `R10`, `R11`, `R12`, `R13`, `R14`, `R20`, and `R24`.
+- Checked that every major section in `docs/paper_materials/paper_draft_skeleton.md` includes explicit claim IDs and figure/table IDs where applicable.
+- Checked that `docs/paper_materials/paper_reviewer_risk_audit.md` ties objections to concrete claim states, blocker categories, or open-risk IDs such as `R5`, `R9`, `R10`, `R11`, `R12`, `R13`, `R14`, `R20`, and `R24`.
 - Checked that blocked claims `C6`, `C7`, `C8`, `C10`, and `C11` remain blocked and are called out as non-completed evidence.
 - Verified separately that no code, config, `runs/`, or `artifacts` paths were modified by this task.

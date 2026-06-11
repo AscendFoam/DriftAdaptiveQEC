@@ -7,7 +7,7 @@
 2. Executed the bounded T64 benchmark in the single allowed run root:
    - `runs/p4_benchmark/T64_fr8_statcalib_extension_lane_20260527_221658`
 3. Created the T64 result doc:
-   - `docs/fr8_statcalib_extension_lane_benchmark.md`
+   - `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
 4. Created review and human-summary docs:
    - `docs/review/T64_review.md`
    - `docs/for_human/T64_explanation.md`

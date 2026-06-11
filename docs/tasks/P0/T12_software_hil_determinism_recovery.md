@@ -17,7 +17,7 @@ Allowed files:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
 - `docs/tasks/P0/T12_software_hil_determinism_recovery.md`
 
 Forbidden scope:
@@ -38,7 +38,7 @@ Inputs to read:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
 - `docs/review/T10_gate_review.md`
 - `docs/tasks/P0/T11_recovery_dependency_manifest.md`
 - `cnn_fpga/benchmark/run_hil_suite.py`
@@ -63,7 +63,7 @@ Verification:
   - `hil_summary.json`
   - `hil_events.json`
   计算哈希或逐字比对
-- `Get-Content -Raw -Encoding UTF8 "docs/P3_software_hil_bootstrap.md"`
+- `Get-Content -Raw -Encoding UTF8 "docs/recovery_bootstrap/P3_software_hil_bootstrap.md"`
 
 Docs to update:
 - `docs/01_legacy_audit.md`
@@ -71,7 +71,7 @@ Docs to update:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
 
 Reviewer type:
 `adversarial`

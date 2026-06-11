@@ -4,7 +4,7 @@
 
 - Created the task-scoped figure asset pack under `docs/figure_assets/T58_fr6_multi_seed_mechanism_intervention/`
 - Added a reproducible generator script, final SVG/PNG figure, `figure_data.csv`, `figure_manifest.json`, and `caption.md`
-- Added the main FR6 report in `docs/fr6_multi_seed_mechanism_intervention_figure_pack.md`
+- Added the main FR6 report in `docs/evidence_packs/mechanism_ablation/fr6_multi_seed_mechanism_intervention_figure_pack.md`
 - Updated the paper ledgers so `FR6` is now tracked as `ready` in the bounded figure-pack sense
 - Added T58 review and human-facing explanation docs
 

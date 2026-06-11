@@ -4,7 +4,7 @@
 
 这次补的是一份给你看的“主线理论说明书”：
 
-- 文件：`docs/mainline_theory_analysis.md`
+- 文件：`docs/paper_materials/mainline_theory_analysis.md`
 
 它不是论文草稿，也不是新实验报告，而是把当前项目真正正在跑的那条主线，从理论到实现完整串起来：
 

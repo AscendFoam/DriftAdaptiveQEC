@@ -6,7 +6,7 @@
 
 该结论文档对应：
 
-- [CNN_FPGA_GKP_工程化实验方案.md](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/docs/CNN_FPGA_GKP_工程化实验方案.md)
+- [CNN_FPGA_GKP_工程化实验方案.md](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/docs/legacy_context/reference_retired_2026-06-11/CNN_FPGA_GKP_工程化实验方案.md)
 - 当前代码版本中的 `cnn_fpga/` 与 `physics/` 运行结果
 
 ---
@@ -785,7 +785,7 @@ int8 模型 test 集：
 
 ### 10.1 当前做到哪一阶段
 
-对照 [CNN_FPGA_GKP_工程化实验方案.md](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/docs/CNN_FPGA_GKP_工程化实验方案.md) 第 5 节的阶段规划，当前状态应写成：
+对照 [CNN_FPGA_GKP_工程化实验方案.md](/Users/qinchaoyang/Desktop/PC/codes/local/quantum/DriftAdaptiveQEC/docs/legacy_context/reference_retired_2026-06-11/CNN_FPGA_GKP_工程化实验方案.md) 第 5 节的阶段规划，当前状态应写成：
 
 1. `P0`：完成
 

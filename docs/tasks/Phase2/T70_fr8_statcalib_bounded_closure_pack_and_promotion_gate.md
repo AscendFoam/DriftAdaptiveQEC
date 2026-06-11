@@ -59,7 +59,7 @@ Produce one bounded FR8 closure pack that:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T70_fr8_statcalib_bounded_closure_pack_and_promotion_gate.md`
-- `docs/fr8_statcalib_bounded_closure_pack.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_bounded_closure_pack.md`
 - `docs/review/T70_review.md`
 - `docs/for_human/T70_explanation.md`
 - `docs/worker_summary/T70_worker_summary.md`
@@ -70,7 +70,7 @@ Worker may modify only:
 
 Worker must update:
 
-- `docs/fr8_statcalib_bounded_closure_pack.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_bounded_closure_pack.md`
 - `docs/review/T70_review.md`
 - `docs/for_human/T70_explanation.md`
 - `docs/worker_summary/T70_worker_summary.md`
@@ -98,13 +98,13 @@ Worker must not:
 
 Worker must reuse:
 
-- `docs/P4_benchmark_formal_protocol.md`
-- `docs/fr8_statcalib_extension_lane_benchmark.md`
-- `docs/fr8_statcalib_extension_lane_consistency_audit.md`
-- `docs/statcalib_sensitivity_bounded_benchmark.md`
-- `docs/statcalib_teacher_anchor_bounded_benchmark.md`
-- `docs/statcalib_generated_only_robustness_bounded_benchmark.md`
-- `docs/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_consistency_audit.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_sensitivity_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_teacher_anchor_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_generated_only_robustness_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
 - `docs/review/T64_review.md`
 - `docs/review/T65_review.md`
 - `docs/review/T66_review.md`
@@ -159,7 +159,7 @@ Worker must reuse:
 Worker must produce:
 
 - one closure-pack report:
-  - `docs/fr8_statcalib_bounded_closure_pack.md`
+  - `docs/evidence_packs/statcalib_fr8/fr8_statcalib_bounded_closure_pack.md`
 - one review file:
   - `docs/review/T70_review.md`
 - one human explanation:
@@ -226,7 +226,7 @@ Worker must report:
 
 - `cnn_fpga/benchmark/build_fr8_statcalib_bounded_closure_pack.py`
 - `tests/test_fr8_statcalib_bounded_closure_pack.py`
-- `docs/fr8_statcalib_bounded_closure_pack.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_bounded_closure_pack.md`
 - `docs/review/T70_review.md`
 - `docs/for_human/T70_explanation.md`
 - `docs/worker_summary/T70_worker_summary.md`

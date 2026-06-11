@@ -17,9 +17,9 @@ Allowed files:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P0_smoke_bootstrap.md`
-- `docs/P3_software_hil_bootstrap.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P0_smoke_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/tasks/P0/T11_recovery_dependency_manifest.md`
 
 Forbidden scope:
@@ -41,9 +41,9 @@ Inputs to read:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P0_smoke_bootstrap.md`
-- `docs/P3_software_hil_bootstrap.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P0_smoke_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/review/T10_gate_review.md`
 - `benchmark/compare_full_vs_simplified_ler.py`
 - `cnn_fpga/benchmark/run_hil_suite.py`
@@ -71,9 +71,9 @@ Docs to update:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P0_smoke_bootstrap.md`
-- `docs/P3_software_hil_bootstrap.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P0_smoke_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 
 Reviewer type:
 `normal`

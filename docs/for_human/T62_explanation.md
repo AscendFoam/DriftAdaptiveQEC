@@ -44,7 +44,7 @@
    - `summary.json git_commit` 也是 `e2773d3`
    - `progress.jsonl` 没有同一 repeat key 的重复 `running`
 5. 最后把结果写入这几份 T62 文档：
-   - `docs/statcalib_provenance_isolated_fairness_rerun.md`
+   - `docs/evidence_packs/statcalib_fr8/statcalib_provenance_isolated_fairness_rerun.md`
    - `docs/worker_summary/T62_worker_summary.md`
    - `docs/review/T62_review.md`
    - `docs/for_human/T62_explanation.md`

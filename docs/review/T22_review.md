@@ -18,7 +18,7 @@ T22 目标：为后续真板 smoke 制定可执行计划，补齐平台确认、
 
 | Done Criteria | 状态 | 说明 |
 |---------------|------|------|
-| 产出 real-board smoke execution plan | 完成 | `docs/real_board_smoke_execution_plan.md` 新增，10 节，323 行 |
+| 产出 real-board smoke execution plan | 完成 | `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md` 新增，10 节，323 行 |
 | 明确目标平台待决项：Linux / Windows / WSL / remote board host | 完成 | 第 3 节列出 4 种宿主模型，每种都有进入前必须确认的检查项和排除条件 |
 | 明确 AXI/register map 审计路径 | 完成 | 第 4 节列出全部 14 个寄存器地址 + 7 个 bit mask + fixed-point contract + 4 条退出条件 |
 | 明确 DMA buffer 审计路径 | 完成 | 第 5 节列出 config 冻结项 + runtime 语义冻结项 + byte/shape 审计 + 4 条退出条件 |
@@ -33,9 +33,9 @@ T22 目标：为后续真板 smoke 制定可执行计划，补齐平台确认、
 
 T22 允许的核心 diff 文件：
 
-- `docs/real_board_smoke_execution_plan.md`（新增） — allowed
+- `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`（新增） — allowed
 - `docs/tasks/Phase2/T22_real_board_smoke_execution_plan.md` — allowed（追加 Worker Output Summary）
-- `docs/real_board_hil_readiness.md` — allowed
+- `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md` — allowed
 - `docs/03_hil_p4_boundary_audit.md` — allowed
 - `docs/04_task_board.md` — allowed
 - `docs/07_handoff.md` — allowed

@@ -29,7 +29,7 @@ T18 的任务就是：把上面两条路径的边界搞清楚，写成一份独�
 
 ### 2.1 任务目标
 
-为 `.tflite` export/runtime 路径补一份独立的 bootstrap 文档（`docs/TFLite_runtime_bootstrap.md`），使得后续任何开发者或 AI 会话拿到这份文档就能知道：
+为 `.tflite` export/runtime 路径补一份独立的 bootstrap 文档（`docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md`），使得后续任何开发者或 AI 会话拿到这份文档就能知道：
 
 - 当前仓库里有哪些 `.tflite` 相关的代码入口
 - 真实 runtime 和 stub 回退各自是什么
@@ -46,7 +46,7 @@ T18 的任务就是：把上面两条路径的边界搞清楚，写成一份独�
    - `validate_export.py --help`：确认一致性验证入口存在
    - `import tensorflow` / `import tflite_runtime`：确认两者都不可用
 
-3. **撰写 bootstrap 文档**：产出 `docs/TFLite_runtime_bootstrap.md`，包含 10 个章节，覆盖目的、边界判断、环境事实、入口命令、依赖边界、stub 边界、最小 smoke、未覆盖项、与其他 bootstrap 的关系、推荐表述。
+3. **撰写 bootstrap 文档**：产出 `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md`，包含 10 个章节，覆盖目的、边界判断、环境事实、入口命令、依赖边界、stub 边界、最小 smoke、未覆盖项、与其他 bootstrap 的关系、推荐表述。
 
 4. **更新治理文档**：同步更新了 task board、handoff 和 risks 文档。
 
@@ -58,7 +58,7 @@ T18 的任务就是：把上面两条路径的边界搞清楚，写成一份独�
 
 | 文件 | 变化类型 | 内容 |
 |------|----------|------|
-| `docs/TFLite_runtime_bootstrap.md` | 新增 | `.tflite` 路径的独立 bootstrap 文档 |
+| `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md` | 新增 | `.tflite` 路径的独立 bootstrap 文档 |
 | `docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md` | 追加 | Worker Output Summary 段落 |
 | `docs/04_task_board.md` | 修改 | T18 标记为 `[x]`，更新 Current Unique Task 状态 |
 | `docs/07_handoff.md` | 修改 | 追加 T18 完成记录，更新判断和建议 |
@@ -66,7 +66,7 @@ T18 的任务就是：把上面两条路径的边界搞清楚，写成一份独�
 
 ### 2.4 对后续开发的意义
 
-1. **环境基线固定**：后续任何 AI 会话如果需要判断 `.tflite` 路径是否可用，只需读 `docs/TFLite_runtime_bootstrap.md`，不需要重新审计代码。
+1. **环境基线固定**：后续任何 AI 会话如果需要判断 `.tflite` 路径是否可用，只需读 `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md`，不需要重新审计代码。
 
 2. **与 T17 形成互补**：T17 固定了训练链环境，T18 固定了 `.tflite` 部署链环境。两条路径现在都有独立的 bootstrap 文档。
 

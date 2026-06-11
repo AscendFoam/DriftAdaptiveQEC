@@ -6,7 +6,7 @@
 
 1. 新增 task-scoped helper：`cnn_fpga/benchmark/build_fr8_statcalib_bounded_closure_pack.py`
 2. 新增 focused tests：`tests/test_fr8_statcalib_bounded_closure_pack.py`
-3. 新增 closure pack 文档：`docs/fr8_statcalib_bounded_closure_pack.md`
+3. 新增 closure pack 文档：`docs/evidence_packs/statcalib_fr8/fr8_statcalib_bounded_closure_pack.md`
 4. 新增 review 文档：`docs/review/T70_review.md`
 5. 新增人类解释文档：`docs/for_human/T70_explanation.md`
 6. 新增本 worker summary：`docs/worker_summary/T70_worker_summary.md`
@@ -14,7 +14,7 @@
 
 helper 的职责是只读复用：
 
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 - `T64/T65/T66/T67/T68/T69` 报告与 review
 - `runs/p4_benchmark/T24/T64/T66/T67/T68/T69` 的 preserved historical artifacts
 

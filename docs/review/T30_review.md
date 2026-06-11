@@ -27,7 +27,7 @@ T30 is a bounded interface contract and minimal implementation package. Reviewer
 |------|--------|--------------------|
 | `cnn_fpga/decoder/statcalib.py` | New | Yes |
 | `tests/test_statcalib_interface.py` | New | Yes (task package allows focused test under `tests/`) |
-| `docs/statcalib_feasibility_gate.md` | Modified (Minimal Comparator Interface section tightened) | Yes (task package allows "only if clarifying the interface contract") |
+| `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` | Modified (Minimal Comparator Interface section tightened) | Yes (task package allows "only if clarifying the interface contract") |
 | `docs/review/T30_review.md` | New | Yes |
 | `docs/for_human/T30_explanation.md` | New | Yes |
 | `docs/tasks/Phase2/T30_statcalib_interface_contract.md` | Modified (Worker Output + Verification Record appended) | Yes |
@@ -113,7 +113,7 @@ No unnecessary abstractions, no class hierarchies, no strategy patterns, no conf
 
 ## Documentation Honesty Check
 
-- Gate doc (`docs/statcalib_feasibility_gate.md`): "Explicit Non-Claims" section still says "This document does not claim statcalib exists" and "does not claim statcalib has been validated." The interface contract module now exists, but it is not validated beyond interface-level tests. The intent of these non-claims remains correct.
+- Gate doc (`docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md`): "Explicit Non-Claims" section still says "This document does not claim statcalib exists" and "does not claim statcalib has been validated." The interface contract module now exists, but it is not validated beyond interface-level tests. The intent of these non-claims remains correct.
 - Task package Worker Output: honest about scope and verification.
 - For-human doc: correctly explains that this is interface contract work, not benchmark validation.
 
@@ -130,7 +130,7 @@ None.
 
 ## Non-Blocking Issues
 
-N1: `docs/statcalib_feasibility_gate.md` "Explicit Non-Claims" says "No source code, config, run, or artifact was changed." T30 has since added `statcalib.py`. This statement was accurate for T26 but is now stale. Should be annotated or updated in the next Captain closeout.
+N1: `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` "Explicit Non-Claims" says "No source code, config, run, or artifact was changed." T30 has since added `statcalib.py`. This statement was accurate for T26 but is now stale. Should be annotated or updated in the next Captain closeout.
 
 N2: `tests/` directory has no `__init__.py`. This works for `python -m unittest` but may cause issues with IDE test discovery or `pytest`. Not blocking for T30 but should be addressed if the test directory grows.
 

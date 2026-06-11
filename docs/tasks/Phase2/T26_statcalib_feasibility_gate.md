@@ -24,7 +24,7 @@ Worker may modify:
 - `docs/tasks/Phase2/T26_statcalib_feasibility_gate.md`
 - `docs/review/T26_statcalib_feasibility_gate.md`
 - `docs/for_human/T26_explanation.md`
-- `docs/statcalib_feasibility_gate.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md`
 
 If strictly necessary for documenting the design, Worker may add one small docs-only appendix under `docs/`.
 
@@ -34,7 +34,7 @@ Read at minimum:
 
 - `docs/02_experiment_plan.md`
 - `docs/reference/AI_coding_workflow.md`
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 - `docs/review/T24_review.md`
 - `docs/review/T25_p4_formal_evidence_gate_review.md`
 - `docs/review/T27_teacher_diagnostics_path_audit.md`
@@ -61,7 +61,7 @@ Do not:
 
 ## Expected Output
 
-Create `docs/statcalib_feasibility_gate.md` with:
+Create `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` with:
 
 - current evidence boundary
 - candidate statcalib/calibration objective
@@ -90,7 +90,7 @@ Required verification is documentation-only:
 
 1. Confirm no source/config/run/artifact changes were made.
 2. Confirm no benchmark/run directory was created.
-3. Confirm `docs/statcalib_feasibility_gate.md` explicitly labels future statcalib work as unimplemented and unvalidated.
+3. Confirm `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` explicitly labels future statcalib work as unimplemented and unvalidated.
 4. Confirm any future implementation recommendation includes Allowed files, Forbidden scope, Verification, and Docs to update.
 
 ## Captain Notes
@@ -104,7 +104,7 @@ Do not start `T30` paper-inspired branch work or `T36` seed failure diagnosis in
 - Read the required protocol, review, risk, and code-boundary inputs for T26.
 - Checked the statcalib/calibration references in the experiment plan and deep-research notes, then kept them as background only.
 - Produced the three allowed docs:
-  - `docs/statcalib_feasibility_gate.md`
+  - `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md`
   - `docs/review/T26_statcalib_feasibility_gate.md`
   - `docs/for_human/T26_explanation.md`
 - Kept the gate honest: statcalib is described as a future separate comparator lane, not as an implemented or validated result.
@@ -113,7 +113,7 @@ Do not start `T30` paper-inspired branch work or `T36` seed failure diagnosis in
 
 - Confirmed no source, config, run, or artifact files were modified.
 - Confirmed no benchmark run directory was created for T26.
-- Confirmed `docs/statcalib_feasibility_gate.md` explicitly says statcalib is not implemented and not validated.
+- Confirmed `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` explicitly says statcalib is not implemented and not validated.
 - Confirmed the future implementation recommendation in the gate doc includes a separate boundary, metrics/validation plan, and a no-go line for frozen-set expansion.
 
 ## Captain Closeout

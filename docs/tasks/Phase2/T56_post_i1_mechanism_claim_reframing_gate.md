@@ -31,8 +31,8 @@ Produce a bounded post-`T55` mechanism-claim gate that answers:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
-- `docs/post_t55_mechanism_claim_reframing_gate.md`
-- `docs/paper_claim_evidence_ledger.md`
+- `docs/evidence_packs/mechanism_ablation/post_t55_mechanism_claim_reframing_gate.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
 - `docs/review/T56_review.md`
 - `docs/for_human/T56_explanation.md`
 
@@ -40,8 +40,8 @@ Worker may modify only:
 
 This task should update only:
 
-1. `docs/post_t55_mechanism_claim_reframing_gate.md`
-2. `docs/paper_claim_evidence_ledger.md`
+1. `docs/evidence_packs/mechanism_ablation/post_t55_mechanism_claim_reframing_gate.md`
+2. `docs/paper_materials/paper_claim_evidence_ledger.md`
 3. `docs/review/T56_review.md`
 4. `docs/for_human/T56_explanation.md`
 5. this task package itself, only to append Worker output and verification notes after completion
@@ -64,12 +64,12 @@ Read at minimum:
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/paper_claim_evidence_ledger.md`
-- `docs/seed_mechanism_multi_seed_plan.md`
-- `docs/seed20260429_failure_diagnosis.md`
-- `docs/seed20260429_trace_export_diagnosis.md`
-- `docs/multi_seed_trace_generalization_probe.md`
-- `docs/multi_seed_i1_intervention_probe.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
+- `docs/evidence_packs/mechanism_ablation/seed_mechanism_multi_seed_plan.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md`
+- `docs/evidence_packs/mechanism_ablation/multi_seed_trace_generalization_probe.md`
+- `docs/evidence_packs/mechanism_ablation/multi_seed_i1_intervention_probe.md`
 - `docs/review/T36_review.md`
 - `docs/review/T38_review.md`
 - `docs/review/T46_review.md`
@@ -78,7 +78,7 @@ Read at minimum:
 
 ## Required Output Structure
 
-Create `docs/post_t55_mechanism_claim_reframing_gate.md` with:
+Create `docs/evidence_packs/mechanism_ablation/post_t55_mechanism_claim_reframing_gate.md` with:
 
 1. a short status recap from `T36` through `T55`
 2. a claim table with at least these columns:
@@ -95,7 +95,7 @@ Create `docs/post_t55_mechanism_claim_reframing_gate.md` with:
 5. a section that answers whether `T47` can proceed, and under what mechanism-hedge wording
 6. explicit non-claims
 
-Update `docs/paper_claim_evidence_ledger.md` only where `T55` changes the status or wording boundary of mechanism-related rows.
+Update `docs/paper_materials/paper_claim_evidence_ledger.md` only where `T55` changes the status or wording boundary of mechanism-related rows.
 
 Create `docs/review/T56_review.md` with:
 
@@ -135,14 +135,14 @@ The point is not to write prettier prose. The point is to make the repository ho
 
 ## Worker Output
 
-- Created `docs/post_t55_mechanism_claim_reframing_gate.md` with:
+- Created `docs/evidence_packs/mechanism_ablation/post_t55_mechanism_claim_reframing_gate.md` with:
   - Status recap from T36 through T55
   - 10-row claim table (3 retain, 4 weaken, 2 retire, 1 reframe, 2 still-open) with supporting/contradicting tasks and exact wording boundaries
   - Section on what T55 changed in the mechanism story
   - Second intervention lane verdict: `deferred pending better question`
   - T47 recommendation: can proceed only under conditioned mechanism-hedge wording
   - Explicit non-claims (9 items)
-- Updated `docs/paper_claim_evidence_ledger.md`:
+- Updated `docs/paper_materials/paper_claim_evidence_ledger.md`:
   - C4 claim wording updated to reflect T54/T55 multi-seed evidence and I1 mixed results
   - C4 evidence paths expanded to include T54/T55 probe documents and reviews
   - F1 figure boundary updated to note instability mostly helps

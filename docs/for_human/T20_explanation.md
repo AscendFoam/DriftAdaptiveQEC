@@ -41,7 +41,7 @@ T20 的任务就是：**不碰代码，只写一份"真板准备清单"**。具�
 
 1. **只读代码审计**：Worker 读取了 `board_backend.py`、`fpga_driver.py`、`run_hil_suite.py` 和 `docs/03_hil_p4_boundary_audit.md`，定位了所有 placeholder 证据点。
 
-2. **撰写 readiness checklist**：产出 `docs/real_board_hil_readiness.md`，包含 7 个章节：
+2. **撰写 readiness checklist**：产出 `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`，包含 7 个章节：
    - Purpose（目的与边界）
    - Current Placeholder Evidence（3 个文件的占位证据点）
    - Required Preconditions（4 类前置条件：设备拓扑、权限、驱动/寄存器、运行时日志）
@@ -66,7 +66,7 @@ T20 的任务就是：**不碰代码，只写一份"真板准备清单"**。具�
 
 | 文件 | 变化类型 | 内容 |
 |------|----------|------|
-| `docs/real_board_hil_readiness.md` | 新增 | 真板 readiness checklist 全文（7 节，164 行） |
+| `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md` | 新增 | 真板 readiness checklist 全文（7 节，164 行） |
 | `docs/tasks/Phase2/T20_real_board_readiness_checklist.md` | 追加 | Worker Output Summary 段落 |
 | `docs/03_hil_p4_boundary_audit.md` | 修改 | 新增 T20 产出引用和推荐表述 |
 | `docs/04_task_board.md` | 修改 | Current Unique Task 区域追加 Worker 只读产出 |

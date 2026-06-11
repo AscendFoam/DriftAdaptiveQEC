@@ -9,7 +9,7 @@ Why now: `docs/review/T23_review.md` verdict = `PASS_WITH_WARNINGS`，blocking i
 Allowed files:
 
 - `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
@@ -17,9 +17,9 @@ Allowed files:
 
 Inputs to read:
 
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 - `docs/review/T23_review.md`
-- `docs/P4_benchmark_development_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
 - `docs/review/T15_frozen_smoke_review.md`
 - `docs/review/T16_p4_evidence_gate_review.md`
 - `docs/08_risks_and_open_questions.md`
@@ -103,7 +103,7 @@ Expected output:
   - `report.md`
   - each repeat directory's `hil_summary.json`
   - each repeat directory's `repeat_status.json`
-- Update `docs/P4_benchmark_formal_protocol.md` with a T24 execution record:
+- Update `docs/protocols/benchmark/P4_benchmark_formal_protocol.md` with a T24 execution record:
   - exact commands or exact chunking shape
   - run dir
   - config path
@@ -155,7 +155,7 @@ Failure handling:
 
 Docs to update:
 
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 - `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
@@ -167,7 +167,7 @@ Reviewer type: `adversarial`
 
 ### Changed files
 
-- `docs/P4_benchmark_formal_protocol.md` — added T24 execution record (Section 15)
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md` — added T24 execution record (Section 15)
 - `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md` — this Worker output section
 - `docs/04_task_board.md` — T24 status update
 - `docs/07_handoff.md` — T24 completion record

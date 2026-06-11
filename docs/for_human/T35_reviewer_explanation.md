@@ -25,7 +25,7 @@ T35 的目标是纯文档任务：
 
 Worker 产出了 5 个文件（全部在 T35 允许范围内）：
 
-1. **`docs/paper_draft_skeleton.md`** — 论文骨架，包含：
+1. **`docs/paper_materials/paper_draft_skeleton.md`** — 论文骨架，包含：
    - **Title Candidates**：4 个候选标题
    - **Global Guardrails**：全局护栏（哪些 claim 可写、哪些 partial、哪些 blocked）
    - **8 个 section skeleton**：Abstract / Introduction / Method / Experiment / Results / Limitations / Conclusion / Appendix Planning
@@ -35,7 +35,7 @@ Worker 产出了 5 个文件（全部在 T35 允许范围内）：
      - 明确列出不能出现的 blocked claims
      - 起草注意事项
 
-2. **`docs/paper_reviewer_risk_audit.md`** — 审稿人风险审计，包含：
+2. **`docs/paper_materials/paper_reviewer_risk_audit.md`** — 审稿人风险审计，包含：
    - **Novelty Challenge Points (N1-N3)**：新颖性质疑
    - **Evidence-Grade Challenge Points (E1-E5)**：证据等级质疑
    - **Overclaim Wording Traps (W1-W6)**：过度宣称措辞陷阱
@@ -112,7 +112,7 @@ T35 的产出直接服务于论文撰写的下一步：
 
 我标记了 4 个非阻塞问题（N1-N4）：
 
-1. **N1 标题候选偏保守**：4 个标题都主打"恢复/复验/边界审计"，可能太窄了。`docs/02_experiment_plan_simplified.md` 推荐的标题更偏方法/系统型，更适合目标投稿会议。但标题选择是 Captain/人类的决定。
+1. **N1 标题候选偏保守**：4 个标题都主打"恢复/复验/边界审计"，可能太窄了。`docs/legacy_context/plan_variants_2026-06-11/02_experiment_plan_simplified.md` 推荐的标题更偏方法/系统型，更适合目标投稿会议。但标题选择是 Captain/人类的决定。
 2. **N2 缺少 Background/Related Work section**：骨架满足了任务最低要求的 8 个 section，但实验方案推荐了 Background section 来介绍 GKP syndrome、快慢回路时间尺度等背景。后续起草前应补上。
 3. **N3 逐节审稿热点表偏泛化**：前面的详细表格（N1-N3, E1-E5, W1-W6, R1-R3, A1-A3）都绑定了具体 claim IDs，但最后的 section-by-section 表只给了高层描述，没有交叉引用前面的 table IDs。
 4. **N4 Worker 自审被覆盖**：和 T34 一样的模式，信息已保留在任务包中。

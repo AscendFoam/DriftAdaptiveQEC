@@ -41,9 +41,9 @@ Inputs to read:
 - `docs/review/T10_gate_review.md`
 - `docs/tasks/P0/T11_recovery_dependency_manifest.md`
 - `docs/tasks/P0/T12_software_hil_determinism_recovery.md`
-- `docs/P0_smoke_bootstrap.md`
-- `docs/P3_software_hil_bootstrap.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P0_smoke_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 
 Expected output:
 1. 一份明确的 recovery exit review 结论

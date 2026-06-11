@@ -6,7 +6,7 @@
 - 新增了 task-scoped summary helper：[summarize_statcalib_teacher_anchor.py](D:/Codes/Quantum/DriftAdaptiveQEC/cnn_fpga/benchmark/summarize_statcalib_teacher_anchor.py)
 - 新增了 focused unit test：[test_statcalib_teacher_anchor_summary.py](D:/Codes/Quantum/DriftAdaptiveQEC/tests/test_statcalib_teacher_anchor_summary.py)
 - 完成了唯一允许的 T67 run root：[T67_statcalib_teacher_anchor_20260601_225718](D:/Codes/Quantum/DriftAdaptiveQEC/runs/p4_benchmark/T67_statcalib_teacher_anchor_20260601_225718)
-- 补齐了 T67 文档：[statcalib_teacher_anchor_bounded_benchmark.md](D:/Codes/Quantum/DriftAdaptiveQEC/docs/statcalib_teacher_anchor_bounded_benchmark.md)、[T67_review.md](D:/Codes/Quantum/DriftAdaptiveQEC/docs/review/T67_review.md)、[T67_explanation.md](D:/Codes/Quantum/DriftAdaptiveQEC/docs/for_human/T67_explanation.md)
+- 补齐了 T67 文档：[statcalib_teacher_anchor_bounded_benchmark.md](D:/Codes/Quantum/DriftAdaptiveQEC/docs/evidence_packs/statcalib_fr8/statcalib_teacher_anchor_bounded_benchmark.md)、[T67_review.md](D:/Codes/Quantum/DriftAdaptiveQEC/docs/review/T67_review.md)、[T67_explanation.md](D:/Codes/Quantum/DriftAdaptiveQEC/docs/for_human/T67_explanation.md)
 
 ## 如何验证
 

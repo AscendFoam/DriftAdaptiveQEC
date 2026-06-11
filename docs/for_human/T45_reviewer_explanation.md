@@ -28,7 +28,7 @@ T45 的核心目标是回答一个二选一的问题：
 ### 2.2 Worker 的工作流程
 
 1. **阅读了 10 份输入文档**，包括任务板、交接文档、风险清单、P4 正式协议、论文 claim/evidence 台账、审稿人风险审计、恢复冻结快照、恢复 claim/evidence 表、以及两份参考研究文档
-2. **创建了 1 份协议文档**：`docs/paper_benchmark_expansion_protocol.md`
+2. **创建了 1 份协议文档**：`docs/protocols/benchmark/paper_benchmark_expansion_protocol.md`
 3. **创建了 1 份 self-review**：`docs/review/T45_review.md`
 4. **创建了 1 份人类说明**：`docs/for_human/T45_explanation.md`
 5. **在任务包里补了 verification record**
@@ -37,7 +37,7 @@ T45 的核心目标是回答一个二选一的问题：
 
 只变了 4 个文件，全部是文档：
 
-- `docs/paper_benchmark_expansion_protocol.md`（新建）— 协议主体
+- `docs/protocols/benchmark/paper_benchmark_expansion_protocol.md`（新建）— 协议主体
 - `docs/review/T45_review.md`（新建）— worker self-review
 - `docs/for_human/T45_explanation.md`（新建）— 面向人类的通俗说明
 - `docs/tasks/Phase2/T45_...md`（修改）— 追加了 verification record

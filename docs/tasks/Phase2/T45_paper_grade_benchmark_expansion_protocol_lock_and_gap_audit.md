@@ -33,7 +33,7 @@ Produce a benchmark-expansion protocol note that answers, in writing:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T45_paper_grade_benchmark_expansion_protocol_lock_and_gap_audit.md`
-- `docs/paper_benchmark_expansion_protocol.md`
+- `docs/protocols/benchmark/paper_benchmark_expansion_protocol.md`
 - `docs/review/T45_review.md`
 - `docs/for_human/T45_explanation.md`
 
@@ -44,9 +44,9 @@ Read at minimum:
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P4_benchmark_formal_protocol.md`
-- `docs/paper_claim_evidence_ledger.md`
-- `docs/paper_reviewer_risk_audit.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_reviewer_risk_audit.md`
 - `docs/reality_recovery/00_freeze_snapshot.md`
 - `docs/reality_recovery/01_claim_evidence_table.md`
 - `docs/reference/延伸改进思路.md`
@@ -76,7 +76,7 @@ But it must not:
 
 ## Expected Output
 
-Create `docs/paper_benchmark_expansion_protocol.md` with:
+Create `docs/protocols/benchmark/paper_benchmark_expansion_protocol.md` with:
 
 1. current benchmark boundary
 2. candidate expansion items
@@ -116,15 +116,15 @@ T45 should answer a simple but important question:
   - `docs/04_task_board.md`
   - `docs/07_handoff.md`
   - `docs/08_risks_and_open_questions.md`
-  - `docs/P4_benchmark_formal_protocol.md`
-  - `docs/paper_claim_evidence_ledger.md`
-  - `docs/paper_reviewer_risk_audit.md`
+  - `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
+  - `docs/paper_materials/paper_claim_evidence_ledger.md`
+  - `docs/paper_materials/paper_reviewer_risk_audit.md`
   - `docs/reality_recovery/00_freeze_snapshot.md`
   - `docs/reality_recovery/01_claim_evidence_table.md`
   - `docs/reference/延伸改进思路.md`
   - `docs/deep_research_reports/进一步的深度研究结果.md`
 - Produced outputs:
-  - `docs/paper_benchmark_expansion_protocol.md`
+  - `docs/protocols/benchmark/paper_benchmark_expansion_protocol.md`
   - `docs/review/T45_review.md`
   - `docs/for_human/T45_explanation.md`
 - Protocol decisions captured:

@@ -5,7 +5,7 @@
 1. Executed the bounded T62 sanity matrix in the single allowed run root:
    - `runs/p4_benchmark/T62_statcalib_provenance_isolated_20260527_122943`
 2. Created the T62 result doc:
-   - `docs/statcalib_provenance_isolated_fairness_rerun.md`
+   - `docs/evidence_packs/statcalib_fr8/statcalib_provenance_isolated_fairness_rerun.md`
 3. Created review and human-summary docs:
    - `docs/review/T62_review.md`
    - `docs/for_human/T62_explanation.md`

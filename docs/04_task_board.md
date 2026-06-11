@@ -14,7 +14,7 @@
   - `docs/02_experiment_plan.md`
   - `docs/reference/AI_coding_workflow.md`
 - 子模式触发：
-  - `2026-05-18` 用户明确要求按 `docs/reference/科研纠偏意见.md` 进入 recovery-first 推进
+  - `2026-05-18` 用户明确要求按 `docs/legacy_context/reference_retired_2026-06-11/科研纠偏意见.md` 进入 recovery-first 推进
   - 当前优先级从“继续扩 prose”切换为“先冻结 claim/evidence/material truth，再补证据、图表、复现与边界缺口”
 - 当前任务原则：
   - 每轮只推进一个 bounded task
@@ -106,7 +106,7 @@
 
 - [x] T26: Calibration/statcalib baseline feasibility gate and minimal design plan
   - Task package: `docs/tasks/Phase2/T26_statcalib_feasibility_gate.md`
-  - Gate output: `docs/statcalib_feasibility_gate.md`
+  - Gate output: `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md`
   - Review output: `docs/review/T26_review.md`
   - Captain verdict: `PASS`
   - Gate verdict: `CONDITIONAL_GO`
@@ -140,13 +140,13 @@
   - Boundary: statcalib is not integrated into slow-loop runtime or frozen benchmark evidence
 - [x] T36: `seed=20260429` failure-mechanism diagnosis, bounded no-new-branch scope
   - Task package: `docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`
-  - Diagnosis report: `docs/seed20260429_failure_diagnosis.md`
+  - Diagnosis report: `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`
   - Review output: `docs/review/T36_review.md`
   - Captain verdict: `PASS`
   - Conclusion: existing artifacts narrow `seed=20260429` to a residual-amplitude / teacher-delta regime instability hypothesis, but do not expose per-window committed-parameter traces; no benchmark rerun or branch expansion occurred
 - [x] T38: `seed=20260429` single-seed trace-export probe, bounded unchanged-semantics rerun
   - Task package: `docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`
-  - Trace diagnosis: `docs/seed20260429_trace_export_diagnosis.md`
+  - Trace diagnosis: `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md`
   - Review output: `docs/review/T38_review.md`
   - Captain verdict: `PASS`
   - Run root: `runs/T38_seed20260429_trace_probe_20260513`
@@ -157,19 +157,19 @@
 
 - [x] T31: Training-chain portable dependency lock plan
   - Task package: `docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md`
-  - Plan output: `docs/training_chain_portable_dependency_lock_plan.md`
+  - Plan output: `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md`
   - Review output: `docs/review/T31_review.md`
   - Captain verdict: `PASS`
   - Result: training-chain local interpreter/package facts and CPU-vs-GPU lock strategy are documented; clean-environment rebuild remains unverified
 - [x] T39: Training-chain CPU-only clean-environment draft lock and dry-run bootstrap
   - Task package: `docs/tasks/Phase2/T39_training_chain_cpu_cleanenv_draft_lock.md`
-  - Bootstrap output: `docs/training_chain_cpu_cleanenv_bootstrap.md`
+  - Bootstrap output: `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_bootstrap.md`
   - Review output: `docs/review/T39_review.md`
   - Captain verdict: `PASS`
   - Result: clean CPU-only environment, draft dependency lock, and dry-run/import-level bootstrap are verified; real clean-environment training execution remains unverified
 - [x] T40: Training-chain CPU-only clean-environment minimal real-training smoke
   - Task package: `docs/tasks/Phase2/T40_training_chain_cpu_cleanenv_minimal_train_smoke.md`
-  - Smoke output: `docs/training_chain_cpu_cleanenv_train_smoke.md`
+  - Smoke output: `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_train_smoke.md`
   - Review output: `docs/review/T40_review.md`
   - Captain verdict: `PASS`
   - Result: clean CPU-only environment completed one real training smoke with isolated outputs; full training reproducibility and broader portability remain unverified
@@ -187,14 +187,14 @@
 
 - [x] T34: Paper claim/evidence ledger and figure-table outline
   - Task package: `docs/tasks/Phase2/T34_paper_claim_evidence_ledger.md`
-  - Output: `docs/paper_claim_evidence_ledger.md`
+  - Output: `docs/paper_materials/paper_claim_evidence_ledger.md`
   - Review output: `docs/review/T34_review.md`
   - Captain verdict: `PASS`
   - Result: bounded claim/evidence ledger and figure-table outline are in place; paper assembly can proceed without silently upgrading mock/stub/smoke/readiness evidence
 - [x] T35: Paper draft skeleton and reviewer-risk audit
   - Task package: `docs/tasks/Phase2/T35_paper_draft_skeleton_and_reviewer_risk_audit.md`
-  - Output: `docs/paper_draft_skeleton.md`
-  - Output: `docs/paper_reviewer_risk_audit.md`
+  - Output: `docs/paper_materials/paper_draft_skeleton.md`
+  - Output: `docs/paper_materials/paper_reviewer_risk_audit.md`
   - Review output: `docs/review/T35_review.md`
   - Captain verdict: `PASS`
   - Result: bounded manuscript skeleton and reviewer-risk audit are in place; Milestone 2K paper-assembly readiness is complete without upgrading blocked evidence
@@ -211,7 +211,7 @@
 
 - [x] T42: Paper Background / Related Work scaffold and method-positioning calibration
   - Task package: `docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`
-  - Output: `docs/paper_method_positioning_calibration.md`
+  - Output: `docs/paper_materials/paper_method_positioning_calibration.md`
   - Review output: `docs/review/T42_review.md`
   - Captain verdict: `PASS`
   - Result: Background / Related Work scaffold and method-positioning calibration are now in place; the working paper framing is method-forward title plus evidence-bounded body text, without upgrading blocked claims
@@ -220,7 +220,7 @@
 
 - [x] T43: Paper Background / Related Work bounded prose draft
   - Task package: `docs/tasks/Phase2/T43_paper_background_related_work_prose_draft.md`
-  - Output: `docs/paper_background_related_work_draft.md`
+  - Output: `docs/paper_materials/paper_background_related_work_draft.md`
   - Review output: `docs/review/T43_review.md`
   - Captain verdict: `PASS`
   - Warning classification:
@@ -242,7 +242,7 @@
 
 - [x] T53: Mainline theory analysis document for the full GKP correction loop
   - Task package: `docs/tasks/Phase2/T53_mainline_theory_analysis_document.md`
-  - Output: `docs/mainline_theory_analysis.md`
+  - Output: `docs/paper_materials/mainline_theory_analysis.md`
   - Review output: `docs/review/T53_review.md`
   - Captain verdict: `PASS`
   - Result: a bounded mainline theory walkthrough now exists for personal understanding and later paper support; it explains the full GKP correction loop from approximate-code definition to runtime `(K, b)` execution without upgrading any blocked `.tflite`, real-board, or paper-grade evidence
@@ -256,35 +256,35 @@
   - Result: benchmark-expansion protocol is now frozen at the policy level; frozen-set evidence stays separate from any future expansion lane, and `docs/reference/延伸改进思路.md` remains reference-only
 - [x] T46: Multi-seed mechanism/intervention plan and trace pack
   - Task package: `docs/tasks/Phase2/T46_multi_seed_mechanism_intervention_plan_and_trace_pack.md`
-  - Output: `docs/seed_mechanism_multi_seed_plan.md`
+  - Output: `docs/evidence_packs/mechanism_ablation/seed_mechanism_multi_seed_plan.md`
   - Review output: `docs/review/T46_review.md`
   - Captain verdict: `PASS`
   - Warning handling: all non-blocking comments `accepted`; no `deferred` or `rejected` items
   - Result: the project now has a bounded multi-seed / intervention evidence plan, but current mechanism evidence is still only single-seed diagnostic and has not been upgraded to multi-seed confirmation or causal proof
 - [x] T54: Phase A multi-seed trace-only generalization probe
   - Task package: `docs/tasks/Phase2/T54_multi_seed_trace_only_generalization_probe.md`
-  - Output: `docs/multi_seed_trace_generalization_probe.md`
+  - Output: `docs/evidence_packs/mechanism_ablation/multi_seed_trace_generalization_probe.md`
   - Review output: `docs/review/T54_review.md`
   - Captain verdict: `PASS`
   - Warning handling: all non-blocking comments `accepted`; no `deferred` or `rejected` items
   - Result: the committed-`b` instability pattern is broadly repeated with qualifications across the locked 6-seed pack, but this remains bounded diagnostic evidence and `C4` stays `partial`
 - [x] T55: Phase B multi-seed I1 residual-clip intervention probe
   - Task package: `docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md`
-  - Output: `docs/multi_seed_i1_intervention_probe.md`
+  - Output: `docs/evidence_packs/mechanism_ablation/multi_seed_i1_intervention_probe.md`
   - Review output: `docs/review/T55_review.md`
   - Captain verdict: `PASS`
   - Warning handling: all non-blocking comments `accepted`; no `deferred` or `rejected` items
   - Result: pure I1 lower-clip intervention is mixed and mostly harmful (harms 4/6, helps 2/6); the simple “high committed-b is harmful” mechanism framing is not supported as a general explanation, and `C4` remains `partial`
 - [x] T56: Post-I1 mechanism claim reframing gate
   - Task package: `docs/tasks/Phase2/T56_post_i1_mechanism_claim_reframing_gate.md`
-  - Output: `docs/post_t55_mechanism_claim_reframing_gate.md`
+  - Output: `docs/evidence_packs/mechanism_ablation/post_t55_mechanism_claim_reframing_gate.md`
   - Review output: `docs/review/T56_review.md`
   - Captain verdict: `PASS`
   - Warning handling: all non-blocking comments `accepted`; no `deferred` or `rejected` items
   - Result: mechanism claims are now explicitly retain / weaken / retire / reframe / still-open; `T47` may proceed only under conditioned mechanism-hedge wording
 - [x] T47: Paper ablation result-pack and material ledger
   - Task package: `docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
-  - Output: `docs/paper_ablation_result_pack.md`
+  - Output: `docs/paper_materials/paper_ablation_result_pack.md`
   - Review output: `docs/review/T47_review.md`
   - Captain verdict: `PASS`
   - Warning handling:
@@ -296,14 +296,14 @@
   - Result: the paper ablation/material ledger is now frozen honestly; FR7 remains missing and is now the next bounded execution gap
 - [x] T57: FR7 feature/teacher ablation re-execution under locked T24 protocol
   - Task package: `docs/tasks/Phase2/T57_fr7_feature_teacher_ablation_reexecution.md`
-  - Output: `docs/fr7_feature_teacher_ablation_reexecution.md`
+  - Output: `docs/evidence_packs/mechanism_ablation/fr7_feature_teacher_ablation_reexecution.md`
   - Review output: `docs/review/T57_review.md`
   - Captain verdict: `PASS`
   - Warning handling: no blocking issues and no new `deferred` / `rejected` warning items
   - Result: FR7 is now a ready frozen-set result table, but it does not close causal interpretation and it weakens any simple "teacher params are necessary for the win" story
 - [x] T58: FR6 multi-seed mechanism/intervention figure pack
   - Task package: `docs/tasks/Phase2/T58_fr6_multi_seed_mechanism_intervention_figure_pack.md`
-  - Output: `docs/fr6_multi_seed_mechanism_intervention_figure_pack.md`
+  - Output: `docs/evidence_packs/mechanism_ablation/fr6_multi_seed_mechanism_intervention_figure_pack.md`
   - Review output: `docs/review/T58_review.md`
   - Captain verdict: `PASS_WITH_WARNINGS`
   - Warning handling:
@@ -314,7 +314,7 @@
   - Result: FR6 is now a ready bounded descriptive figure pack; it does not close `R10` and does not upgrade `C4` beyond `partial`
 - [x] T59: Statcalib separate comparator lane integration and bounded smoke
   - Task package: `docs/tasks/Phase2/T59_statcalib_comparator_lane_integration_and_smoke.md`
-  - Output: `docs/statcalib_comparator_lane_smoke.md`
+  - Output: `docs/evidence_packs/statcalib_fr8/statcalib_comparator_lane_smoke.md`
   - Review output: `docs/review/T59_review.md`
   - Captain verdict: `PASS_WITH_WARNINGS`
   - Warning handling:
@@ -324,34 +324,34 @@
   - Result: T59 closes the first integrated statcalib lane smoke gap, but it does not open FR8 and does not constitute formal comparator evidence
 - [x] T60: Statcalib lane isolation and regression hardening
   - Task package: `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`
-  - Output: `docs/statcalib_lane_isolation_and_regression_hardening.md`
+  - Output: `docs/evidence_packs/statcalib_fr8/statcalib_lane_isolation_and_regression_hardening.md`
   - Review output: `docs/review/T60_review.md`
   - Captain verdict: `PASS`
   - Warning handling: no blocking issues and no new `accepted / deferred / rejected` warning item
   - Result: T60 closes the cross-mode semantics and regression-coverage blocker from T59; it closes `W1`/`R26`, but it does not close `R27` and does not open FR8
 - [ ] T61: Statcalib clean-provenance fairness sanity rerun
   - Task package: `docs/tasks/Phase2/T61_statcalib_clean_provenance_fairness_sanity.md`
-  - Output: `docs/statcalib_fairness_sanity.md`
+  - Output: `docs/evidence_packs/statcalib_fr8/statcalib_fairness_sanity.md`
   - Review output: `docs/review/T61_review.md`
   - Captain verdict: `BLOCK`
   - Blocking issue: launch clean `HEAD=9174065`, but final `summary.json git_commit=6058f42`; mid-run branch movement means the task did not close the clean-provenance blocker it was created to repair
   - Result: the bounded fairness signal persisted, but `R27` remains open and `T61` is not complete
 - [x] T62: Statcalib provenance-isolated fairness rerun
   - Task package: `docs/tasks/Phase2/T62_statcalib_provenance_isolated_fairness_rerun.md`
-  - Output: `docs/statcalib_provenance_isolated_fairness_rerun.md`
+  - Output: `docs/evidence_packs/statcalib_fr8/statcalib_provenance_isolated_fairness_rerun.md`
   - Review output: `docs/review/T62_review.md`
   - Captain verdict: `PASS`
   - Warning handling: no blocking issues and no new `accepted / deferred / rejected` warning item
   - Result: T62 closes the T61 provenance blocker and provides one provenance-clean bounded fairness sanity rerun, but it still does not open FR8 and does not upgrade the evidence beyond mock-backed software-HIL scope
 - [x] T63: FR8 statcalib comparator gate review
   - Task package: `docs/tasks/Phase2/T63_fr8_statcalib_comparator_gate_review.md`
-  - Output: `docs/fr8_statcalib_comparator_gate_review.md`
+  - Output: `docs/evidence_packs/statcalib_fr8/fr8_statcalib_comparator_gate_review.md`
   - Review output: `docs/review/T63_review.md`
   - Captain verdict: `PASS`
   - Result: T63 closes the pre-FR8 gate-discussion lane honestly; the repository may now open exactly one bounded FR8 extension-lane task, but T63 is not itself FR8 evidence and does not close `R24`
 - [x] T64: FR8 statcalib extension-lane bounded benchmark
   - Task package: `docs/tasks/Phase2/T64_fr8_statcalib_extension_lane_bounded_benchmark.md`
-  - Output: `docs/fr8_statcalib_extension_lane_benchmark.md`
+  - Output: `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
   - Review output: `docs/review/T64_review.md`
   - Captain verdict: `PASS_WITH_WARNINGS`
   - Warning handling:
@@ -361,7 +361,7 @@
   - Result: T64 closes one clean-provenance bounded FR8 extension-lane benchmark on the locked four-scenario protocol without rewriting `T24`, but the evidence remains mock-backed software-HIL only
 - [x] T65: FR8 extension-lane consistency guard and report closeout
   - Task package: `docs/tasks/Phase2/T65_fr8_extension_lane_consistency_guard_and_closeout.md`
-  - Output: `docs/fr8_statcalib_extension_lane_consistency_audit.md`
+  - Output: `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_consistency_audit.md`
   - Review output: `docs/review/T65_review.md`
   - Captain verdict: `PASS_WITH_WARNINGS`
   - Warning handling:
@@ -371,7 +371,7 @@
   - Result: T65 closes the T64 report/artifact consistency gap and makes the T64 result pack self-audited and safer to reuse, but it does not close `R24`
 - [x] T66: FR8 statcalib sensitivity bounded benchmark
   - Task package: `docs/tasks/Phase2/T66_fr8_statcalib_sensitivity_bounded_benchmark.md`
-  - Output: `docs/statcalib_sensitivity_bounded_benchmark.md`
+  - Output: `docs/evidence_packs/statcalib_fr8/statcalib_sensitivity_bounded_benchmark.md`
   - Review output: `docs/review/T66_review.md`
   - Captain verdict: `PASS_WITH_WARNINGS`
   - Warning handling:
@@ -381,7 +381,7 @@
   - Result: T66 closes one bounded local-grid robustness gap under clean provenance, but it does not close `R24` and does not upgrade statcalib into a mature calibration comparator
 - [x] T67: FR8 statcalib teacher-anchor dependence bounded benchmark
   - Task package: `docs/tasks/Phase2/T67_fr8_statcalib_teacher_anchor_dependence_bounded_benchmark.md`
-  - Output: `docs/statcalib_teacher_anchor_bounded_benchmark.md`
+  - Output: `docs/evidence_packs/statcalib_fr8/statcalib_teacher_anchor_bounded_benchmark.md`
   - Review output: `docs/review/T67_review.md`
   - Captain verdict: `PASS_WITH_WARNINGS`
   - Warning handling:
@@ -391,7 +391,7 @@
   - Result: T67 closes the gross teacher-anchor dependence question honestly, but it does not close `R24`; the strongest aggregate statcalib lane still is not a clean generated-only result pack
 - [x] T68: FR8 statcalib generated-only robustness bounded benchmark
   - Task package: `docs/tasks/Phase2/T68_fr8_statcalib_generated_only_robustness_bounded_benchmark.md`
-  - Output: `docs/statcalib_generated_only_robustness_bounded_benchmark.md`
+  - Output: `docs/evidence_packs/statcalib_fr8/statcalib_generated_only_robustness_bounded_benchmark.md`
   - Review output: `docs/review/T68_review.md`
   - Captain verdict: `PASS_WITH_WARNINGS`
   - Warning handling:
@@ -401,7 +401,7 @@
   - Result: T68 closes the bounded generated-only existence question honestly; full generated-only winners now exist inside the predeclared grid, but the strongest clean answer is still a tied `window_variance t001/t003/t005` set and `R24` remains open
 - [x] T69: FR8 statcalib clean-winner tie-break bounded benchmark
   - Task package: `docs/tasks/Phase2/T69_fr8_statcalib_clean_winner_tiebreak_bounded_benchmark.md`
-  - Output: `docs/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
+  - Output: `docs/evidence_packs/statcalib_fr8/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
   - Review output: `docs/review/T69_review.md`
   - Captain verdict: `PASS_WITH_WARNINGS`
   - Warning handling:
@@ -410,7 +410,7 @@
   - Result: T69 closes the bounded clean-winner tie-break question honestly; no unique clean reference point emerges, and the strongest clean answer remains the persistent `window_variance_t001 = t003 = t005` tie set. `R24` remains open as a reporting/promotion boundary only, not as an unresolved tie-break execution question
 - [x] T70: FR8 statcalib bounded closure pack and promotion gate
   - Task package: `docs/tasks/Phase2/T70_fr8_statcalib_bounded_closure_pack_and_promotion_gate.md`
-  - Output: `docs/fr8_statcalib_bounded_closure_pack.md`
+  - Output: `docs/evidence_packs/statcalib_fr8/fr8_statcalib_bounded_closure_pack.md`
   - Review output: `docs/review/T70_review.md`
   - Captain verdict: `PASS`
   - Result: T70 closes the FR8 mainline closure-pack gap honestly; the repository now has one code-backed closure artifact that preserves `T24` as the authoritative frozen ranked table, preserves `statcalib` as a separately labeled extension lane, gives an explicit `no_promotion_keep_extension_lane_only` gate, and gives an explicit `future_selection_task_required` gate for any later single-threshold choice
@@ -419,8 +419,8 @@
 
 - [x] PSE0：并行 sidecar 扩展实验治理设置
   - 任务包：`docs/tasks/Phase2/PSE0_parallel_sidecar_extension_governance_setup.md`
-  - 治理输出：`docs/parallel_sidecar_extension_governance.md`
-  - worktree 规划输出：`docs/parallel_sidecar_worktree_plan.md`
+  - 治理输出：`docs/sidecar/parallel_sidecar_extension_governance.md`
+  - worktree 规划输出：`docs/sidecar/parallel_sidecar_worktree_plan.md`
   - Captain 状态：docs-only 设置任务已完成并通过验证
   - 边界：本任务不执行 `T69`，不创建 sidecar worktree，不启动实验，也不改变任何主线 benchmark 语义
   - 结果：后续 sidecar lane 可在 frozen-anchor、artifact-schema、promotion-gate、run-dir 和红线规则下规划；主线当前唯一任务仍以 `Current Unique Task` 区块为准
@@ -429,13 +429,13 @@
 
 - [x] T48: True `.tflite` runtime smoke gate
   - Task package: `docs/tasks/Phase2/T48_true_tflite_runtime_smoke_gate.md`
-  - Output: `docs/t48_true_tflite_runtime_gate.md`
+  - Output: `docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md`
   - Review output: `docs/review/T48_review.md`
   - Captain verdict: `PASS`
   - Result: T48 closes one narrow current-host true `.tflite` runtime truth gap honestly; the repository now has one isolated `tensorflow==2.21.0` environment on this machine that can real-load and real-execute preserved `static_theta_v2` float / int8 `.tflite` artifacts and can run bounded source-vs-`.tflite` consistency checks, but this does not restore default-environment compatibility and does not upgrade the evidence to HIL, real-board, or deployment closure
 - [x] T49: Real-board smoke execution gate
   - Task package: `docs/tasks/Phase2/T49_real_board_smoke_execution_gate.md`
-  - Output: `docs/t49_real_board_smoke_execution_gate.md`
+  - Output: `docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md`
   - Review output: `docs/review/T49_review.md`
   - Captain verdict: `PASS_WITH_WARNINGS`
   - Warning handling:
@@ -445,7 +445,7 @@
   - Result: T49 closes one honest current-host real-board gate pack with verdict `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`; no real-board smoke was executed, and `R13/R14` remain open but narrower
 - [x] T71: Real-board gate regeneration and host-transfer pack
   - Task package: `docs/tasks/Phase2/T71_real_board_gate_regeneration_and_host_transfer_pack.md`
-  - Output: `docs/t71_real_board_gate_regeneration_pack.md`
+  - Output: `docs/evidence_packs/deployment_boundary/t71_real_board_gate_regeneration_pack.md`
   - Review output: `docs/review/T71_review.md`
   - Captain verdict: `PASS_WITH_WARNINGS`
   - Warning handling:
@@ -461,7 +461,7 @@
 
 - [x] T50: Training reproducibility and material-regeneration pack
   - Task package: `docs/tasks/Phase2/T50_training_reproducibility_and_material_regeneration_pack.md`
-  - Output: `docs/training_reproducibility_and_material_regeneration_pack.md`
+  - Output: `docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md`
   - Review output: `docs/review/T50_review.md`
   - Captain verdict: `PASS`
   - Result: T50 closes one missing mainline training reproducibility/material-regeneration gap honestly; the repository now has one code-backed pack that enumerates canonical training materials, audits preserved mainline model references, and adds one clean CPU-only bounded train+eval rerun without upgrading the claims to full reproducibility, `.tflite`, real-board, benchmark, or deployment closure
@@ -533,8 +533,8 @@ Why this task is next:
 
 - Captain-only 设置任务：`PSE0`
 - 任务包：`docs/tasks/Phase2/PSE0_parallel_sidecar_extension_governance_setup.md`
-- 治理规则：`docs/parallel_sidecar_extension_governance.md`
-- worktree 计划：`docs/parallel_sidecar_worktree_plan.md`
+- 治理规则：`docs/sidecar/parallel_sidecar_extension_governance.md`
+- worktree 计划：`docs/sidecar/parallel_sidecar_worktree_plan.md`
 - `PSE0` 不改变当前唯一主线任务；当前唯一任务以 `Current Unique Task` 区块为准。
 - sidecar lane 必须使用 `codex/sidecar-*` 分支、隔离 worktree 和 `runs/sidecar/<lane_id>/...` run root。
 - sidecar 输出不是主线事实，不能改写 `T24`、`T64`、`T65`、`T66`、`T67`、`T68` 或 `T69`。

@@ -7,7 +7,7 @@
 - **Task package**: `docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md`
 - **Worker files reviewed**:
   - `cnn_fpga/benchmark/analyze_seed20260429_trace.py` (new)
-  - `docs/seed20260429_trace_export_diagnosis.md` (new)
+  - `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md` (new)
   - `docs/review/T38_review.md` (worker pre-review notes, new)
   - `docs/for_human/T38_explanation.md` (new)
   - `docs/tasks/Phase2/T38_seed20260429_trace_export_probe.md` (updated Worker Output / Verification Record)
@@ -39,7 +39,7 @@ None.
 
 ### N3: Constant `max_abs_delta_b` geometric explanation not explicit in report
 
-- **Location**: `docs/seed20260429_trace_export_diagnosis.md` Section 5.2
+- **Location**: `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md` Section 5.2
 - The report notes `Gated v5 max_abs_delta_b = 0.169705627` is constant across all 8 scenario/repeat pairs but does not explicitly explain that this equals `sqrt(2) * 0.12`, i.e., the L2 norm when both delta_b components simultaneously hit the per-component clip boundary of 0.12.
 - **Impact**: A careful reader might find the constant value suspicious (fabricated?) without the geometric explanation. The explanation confirms it is expected: the clip rectangle diagonal.
 - **Verification**: `sqrt(2) * 0.12 = 0.169705627...` matches exactly.
@@ -91,7 +91,7 @@ All 6 required outputs present and substantively complete.
 2. `cnn_fpga/benchmark/analyze_seed20260429_trace.py` — allowed
 3. `docs/for_human/T38_explanation.md` — allowed
 4. `docs/review/T38_review.md` — allowed
-5. `docs/seed20260429_trace_export_diagnosis.md` — allowed
+5. `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md` — allowed
 
 Run directory: `runs/T38_seed20260429_trace_probe_20260513` — allowed (one T38-scoped run root per task package).
 

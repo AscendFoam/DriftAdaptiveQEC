@@ -6,7 +6,7 @@
 - **Date**: 2026-05-13
 - **Task package**: `docs/tasks/Phase2/T36_seed20260429_failure_mechanism_diagnosis.md`
 - **Worker files reviewed**:
-  - `docs/seed20260429_failure_diagnosis.md` (new)
+  - `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md` (new)
   - `cnn_fpga/benchmark/analyze_seed20260429_failure.py` (new)
   - `docs/review/T36_review.md` (worker pre-review input, new)
   - `docs/for_human/T36_explanation.md` (new)
@@ -67,7 +67,7 @@ All six required outputs are present and substantively complete.
 2. `cnn_fpga/benchmark/analyze_seed20260429_failure.py` — allowed
 3. `docs/for_human/T36_explanation.md` — allowed
 4. `docs/review/T36_review.md` — allowed
-5. `docs/seed20260429_failure_diagnosis.md` — allowed
+5. `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md` — allowed
 
 No files outside the allowed set were modified or created.
 

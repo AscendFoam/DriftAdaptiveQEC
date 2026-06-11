@@ -9,7 +9,7 @@ Why now: `docs/06_repo_noise_governance.md` 已固定“先治理后清理”，
 Allowed files:
 
 - `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
-- `docs/cleanup_tracked_cache_manifest.md`
+- `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md`
 - `docs/06_repo_noise_governance.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
@@ -30,7 +30,7 @@ Inputs to read:
 
 Expected output:
 
-- `docs/cleanup_tracked_cache_manifest.md`
+- `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md`
 - 明确列出：
   - 目标文件类别
   - cleanup 命令草案
@@ -53,7 +53,7 @@ Reviewer type: `normal`
 
 ## Worker Output Summary
 
-- Output type: `docs/cleanup_tracked_cache_manifest.md`
+- Output type: `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md`
 - Read-only inventory confirmed:
   - tracked `.pyc` files: `116`
   - tracked `__pycache__` directories: `9`
@@ -61,7 +61,7 @@ Reviewer type: `normal`
 - Cleanup execution was not performed
 - `runs/` and `artifacts/` were not touched
 - Updated docs:
-  - `docs/cleanup_tracked_cache_manifest.md`
+  - `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md`
   - `docs/06_repo_noise_governance.md`
   - `docs/04_task_board.md`
   - `docs/07_handoff.md`

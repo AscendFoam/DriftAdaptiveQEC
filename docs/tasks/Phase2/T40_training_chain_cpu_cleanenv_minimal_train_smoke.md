@@ -31,7 +31,7 @@ This task must not claim:
 Worker may modify:
 
 - `docs/tasks/Phase2/T40_training_chain_cpu_cleanenv_minimal_train_smoke.md`
-- `docs/training_chain_cpu_cleanenv_train_smoke.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_train_smoke.md`
 - `docs/review/T40_review.md`
 - `docs/for_human/T40_explanation.md`
 - `cnn_fpga/config/task_tmp/T40_static_theta_train_smoke.yaml`
@@ -57,8 +57,8 @@ Read at minimum:
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/training_chain_portable_dependency_lock_plan.md`
-- `docs/training_chain_cpu_cleanenv_bootstrap.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_bootstrap.md`
 - `docs/review/T39_review.md`
 - `requirements-train-cpu-win-py312.txt`
 - `cnn_fpga/model/train.py`
@@ -105,7 +105,7 @@ Create or update:
    - derived from canonical static-theta config
    - task-scoped isolated output paths
    - bounded smoke-scale training settings
-2. `docs/training_chain_cpu_cleanenv_train_smoke.md`
+2. `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_train_smoke.md`
    - interpreter/environment used
    - exact training command
    - exact derived-config path
@@ -149,7 +149,7 @@ If training fails, record the exact blocker honestly. Do not work around by swit
 ## Docs To Update
 
 - `docs/tasks/Phase2/T40_training_chain_cpu_cleanenv_minimal_train_smoke.md`
-- `docs/training_chain_cpu_cleanenv_train_smoke.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_train_smoke.md`
 - `docs/review/T40_review.md`
 - `docs/for_human/T40_explanation.md`
 
@@ -181,8 +181,8 @@ This is still a governance-bounded reproducibility task, not a model-development
   - `docs/04_task_board.md`
   - `docs/07_handoff.md`
   - `docs/08_risks_and_open_questions.md`
-  - `docs/training_chain_portable_dependency_lock_plan.md`
-  - `docs/training_chain_cpu_cleanenv_bootstrap.md`
+  - `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md`
+  - `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_bootstrap.md`
   - `docs/review/T39_review.md`
   - `requirements-train-cpu-win-py312.txt`
   - `cnn_fpga/model/train.py`
@@ -203,7 +203,7 @@ This is still a governance-bounded reproducibility task, not a model-development
   - `training.tiny_cnn.epochs = 3`
   - `training.tiny_cnn.patience = 2`
 - Added:
-  - `docs/training_chain_cpu_cleanenv_train_smoke.md`
+  - `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_train_smoke.md`
   - `docs/review/T40_review.md`
   - `docs/for_human/T40_explanation.md`
 - Updated this task package with worker output and verification record.

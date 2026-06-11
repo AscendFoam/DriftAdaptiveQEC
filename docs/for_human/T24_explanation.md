@@ -33,7 +33,7 @@ T24 就是**正式重跑**了一遍这些对比测试。具体来说：
 
 ### 2.1 任务目标
 
-T24 的正式目标是：按照 T23 锁定的正式协议（`docs/P4_benchmark_formal_protocol.md`），执行一次完整的 frozen-set formal software revalidation。
+T24 的正式目标是：按照 T23 锁定的正式协议（`docs/protocols/benchmark/P4_benchmark_formal_protocol.md`），执行一次完整的 frozen-set formal software revalidation。
 
 "Frozen-set"意味着场景集合和方案集合是提前冻结的，不允许在执行中改动——这保证了实验的可复现性和公平性。
 
@@ -61,7 +61,7 @@ T24 的执行流程：
 
 | 文件 | 变化 |
 | --- | --- |
-| `docs/P4_benchmark_formal_protocol.md` | 新增 Section 15（T24 execution record），记录执行细节 |
+| `docs/protocols/benchmark/P4_benchmark_formal_protocol.md` | 新增 Section 15（T24 execution record），记录执行细节 |
 | `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md` | 新增 Worker Output 段，记录命令、验证结果和风险 |
 | `docs/04_task_board.md` | T24 标记为 `[x]`，当前任务切换到 T25 |
 | `docs/07_handoff.md` | 新增 item 39，更新状态描述 |

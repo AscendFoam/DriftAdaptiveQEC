@@ -9,7 +9,7 @@ Why now: `T9` 已复验单场景四模式 smoke，`T13` 已允许进入受控开
 Allowed files:
 
 - `docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`
-- `docs/P4_benchmark_development_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
@@ -30,7 +30,7 @@ Inputs to read:
 - `AGENTS.md`
 - `docs/02_experiment_plan.md`
 - `docs/03_hil_p4_boundary_audit.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
@@ -40,7 +40,7 @@ Inputs to read:
 
 Expected output:
 
-- 新增或更新 `docs/P4_benchmark_development_protocol.md`
+- 新增或更新 `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
 - 文档必须包含：
   - recovery smoke 与正式/development benchmark 的区别
   - 当前 frozen baseline set 的证据来源
@@ -59,7 +59,7 @@ Verification:
 
 Docs to update:
 
-- `docs/P4_benchmark_development_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`（如新增风险或关闭开放问题）
 - `docs/04_task_board.md`（仅在 Captain 整合阶段标记完成并切换下一唯一任务）
@@ -72,7 +72,7 @@ Status: completed as a documentation-only bounded audit.
 
 Produced:
 
-- `docs/P4_benchmark_development_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
 - `docs/tasks/Phase2/T14_p4_frozen_benchmark_protocol_audit.md`

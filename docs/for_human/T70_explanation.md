@@ -52,7 +52,7 @@
    - 确认当前 preserved artifact 链会得到预期 gate 结论
    - 也确认如果 `T69` tie-set 结果被篡改，helper 会拒绝继续收口
 
-3. `docs/fr8_statcalib_bounded_closure_pack.md`
+3. `docs/evidence_packs/statcalib_fr8/fr8_statcalib_bounded_closure_pack.md`
    - 这是给人看的最终 closure 文档
    - 它把 FR8 这条证据链统一翻译成可复用的治理结论
 
@@ -71,13 +71,13 @@
 
 它的输入是固定的：
 
-1. `docs/P4_benchmark_formal_protocol.md`
-2. `docs/fr8_statcalib_extension_lane_benchmark.md`
-3. `docs/fr8_statcalib_extension_lane_consistency_audit.md`
-4. `docs/statcalib_sensitivity_bounded_benchmark.md`
-5. `docs/statcalib_teacher_anchor_bounded_benchmark.md`
-6. `docs/statcalib_generated_only_robustness_bounded_benchmark.md`
-7. `docs/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
+1. `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
+2. `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
+3. `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_consistency_audit.md`
+4. `docs/evidence_packs/statcalib_fr8/statcalib_sensitivity_bounded_benchmark.md`
+5. `docs/evidence_packs/statcalib_fr8/statcalib_teacher_anchor_bounded_benchmark.md`
+6. `docs/evidence_packs/statcalib_fr8/statcalib_generated_only_robustness_bounded_benchmark.md`
+7. `docs/evidence_packs/statcalib_fr8/statcalib_clean_winner_tiebreak_bounded_benchmark.md`
 8. `docs/review/T64_review.md` 到 `docs/review/T69_review.md`
 9. `runs/p4_benchmark/T24/...`
 10. `runs/p4_benchmark/T64/...`

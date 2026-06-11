@@ -24,7 +24,7 @@ This is not a benchmark task. It is not a paper-claim task.
 Worker may modify:
 
 - `docs/tasks/Phase2/T30_statcalib_interface_contract.md`
-- `docs/statcalib_feasibility_gate.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md`
 - `docs/review/T30_review.md`
 - `docs/for_human/T30_explanation.md`
 - `cnn_fpga/decoder/statcalib.py`
@@ -38,10 +38,10 @@ Read at minimum:
 
 - `docs/02_experiment_plan.md`
 - `docs/reference/AI_coding_workflow.md`
-- `docs/statcalib_feasibility_gate.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md`
 - `docs/review/T26_review.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 - `cnn_fpga/decoder/param_mapper.py`
 - `cnn_fpga/runtime/slow_loop_runtime.py`
 - `cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py`
@@ -96,7 +96,7 @@ Required verification is interface-level only:
 - `docs/tasks/Phase2/T30_statcalib_interface_contract.md`
 - `docs/review/T30_review.md`
 - `docs/for_human/T30_explanation.md`
-- `docs/statcalib_feasibility_gate.md` only if clarifying the interface contract, not rewriting the gate conclusion
+- `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` only if clarifying the interface contract, not rewriting the gate conclusion
 
 ## Reviewer Type
 
@@ -120,7 +120,7 @@ T30 may produce a minimal interface implementation, but only if it remains a sep
 - Read the required T30 inputs, including the T26 gate, current risks, `ParamMapper`, `SlowLoopRuntime`, `DecoderRuntimeParams`, and the current benchmark writer boundary.
 - Implemented a separate contract module at `cnn_fpga/decoder/statcalib.py`.
 - Added one focused interface test file at `tests/test_statcalib_interface.py` because the repo did not already have a `tests/` layout to extend.
-- Tightened `docs/statcalib_feasibility_gate.md` from conceptual I/O language to an exact field-level contract and explicit status/reason sets.
+- Tightened `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` from conceptual I/O language to an exact field-level contract and explicit status/reason sets.
 - Added `docs/review/T30_review.md` and `docs/for_human/T30_explanation.md`.
 
 ## Verification Record

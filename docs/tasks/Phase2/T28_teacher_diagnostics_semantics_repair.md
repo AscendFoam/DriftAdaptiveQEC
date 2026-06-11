@@ -56,7 +56,7 @@ Read at minimum:
 - `docs/review/T27_teacher_diagnostics_path_audit.md`
 - `docs/for_human/T27_explanation.md`
 - `docs/tasks/Phase2/T27_teacher_diagnostics_path_audit.md`
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 - `cnn_fpga/config/p4_multiscenario_strong_baselines.yaml`
 - `cnn_fpga/runtime/feature_builder.py`
 - `cnn_fpga/runtime/slow_loop_runtime.py`

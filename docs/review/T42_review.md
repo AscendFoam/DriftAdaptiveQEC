@@ -37,9 +37,9 @@ Not applicable. T42 is a docs-only task with no code, configuration, or executab
 None found. Specific checks:
 
 1. **Allowed files respected**: `git status` confirms exactly 5 T42-scoped files changed/created:
-   - `docs/paper_draft_skeleton.md` (modified)
+   - `docs/paper_materials/paper_draft_skeleton.md` (modified)
    - `docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md` (modified — Verification Record added)
-   - `docs/paper_method_positioning_calibration.md` (new)
+   - `docs/paper_materials/paper_method_positioning_calibration.md` (new)
    - `docs/review/T42_review.md` (new)
    - `docs/for_human/T42_explanation.md` (new)
    No source code, config, `runs/`, `artifacts/`, governance docs, or stage-conclusion documents were touched.
@@ -58,7 +58,7 @@ None found. Specific checks:
 
 5. **No blocked claim silently promoted**: The calibration note's Section 6 ("Forbidden Phrases") lists 8 phrase categories that would upgrade blocked claims. Each category maps correctly to a specific upgrade path (e.g., "hardware validated" → upgrades C1 to C8, "reproducible training pipeline" → upgrades C5 to C6).
 
-6. **Calibration note consistent with risk audit**: The "Minimum Safe Paper Positioning" and "Do-Not-Publish-As-Claimed List" from `docs/paper_reviewer_risk_audit.md` are preserved without drift. The conservative framing option quotes the exact same positioning language from the risk audit.
+6. **Calibration note consistent with risk audit**: The "Minimum Safe Paper Positioning" and "Do-Not-Publish-As-Claimed List" from `docs/paper_materials/paper_reviewer_risk_audit.md` are preserved without drift. The conservative framing option quotes the exact same positioning language from the risk audit.
 
 7. **Background section drafting notes reference correct sources**: Subsection 5 references "offline training improvement ≠ formal HIL improvement" which matches stable conclusion 9.1 item 7 from the experiment plan. Subsection drafting notes cite risk-audit N1 and N2 correctly.
 

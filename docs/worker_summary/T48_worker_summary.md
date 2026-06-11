@@ -8,7 +8,7 @@
 - 新增 task-scoped config：`cnn_fpga/config/task_tmp/T48_static_theta_tflite_gate.yaml`
 - 更新 isolated requirements：`requirements-tflite-win-py311.txt`
 - 写入 isolated outputs：`artifacts/t48_true_tflite_runtime_gate/`
-- 更新主报告：`docs/t48_true_tflite_runtime_gate.md`
+- 更新主报告：`docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md`
 - 更新 review 草案：`docs/review/T48_review.md`
 - 更新人类说明：`docs/for_human/T48_explanation.md`
 - 更新本文件：`docs/worker_summary/T48_worker_summary.md`

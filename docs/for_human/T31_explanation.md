@@ -22,7 +22,7 @@ T31 做的事情就是：**打开你的厨房门，清点一下里面有什么�
 在这之前，项目里有两个关于训练环境的文档：
 
 - `requirements-recovery.txt`：只写了 benchmark recovery 需要的 `numpy + PyYAML`，不管训练
-- `docs/training_chain_bootstrap.md`（T17 产出）：只写了"推荐用 DLEnv"，但没有分析训练链到底能不能脱离 torch 跑
+- `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`（T17 产出）：只写了"推荐用 DLEnv"，但没有分析训练链到底能不能脱离 torch 跑
 
 这导致一个关键风险：如果有人（或未来的你自己）想在一台新机器上复现训练结果，会误以为必须安装和 DLEnv 一样复杂的环境，包括那个 nightly 版的 CUDA torch。
 
@@ -90,7 +90,7 @@ Worker 在没有 torch 的 base Anaconda 下运行了：
 
 T31 产出了 4 个文件：
 
-1. **`docs/training_chain_portable_dependency_lock_plan.md`**（新建）
+1. **`docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md`**（新建）
    - 核心产出，包含完整的 10 节内容：范围、解释器清单、包证据、入口依赖映射、锁策略、可提交 vs 本机证据、bootstrap 提案、非声明、下一步建议、探针命令记录
 
 2. **`docs/review/T31_review.md`**（新建）
@@ -114,7 +114,7 @@ T31 的核心贡献是为 Milestone 2J（Reproducibility And Deployment Boundary
 与项目其他文档的关系：
 
 - `requirements-recovery.txt`：T31 确认了它的 scope 不变，只覆盖 recovery smoke
-- `docs/training_chain_bootstrap.md`（T17）：T31 补充了 config 级别的依赖分析，两份文档互补但不冲突
+- `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`（T17）：T31 补充了 config 级别的依赖分析，两份文档互补但不冲突
 - `docs/02_experiment_plan.md`：Section 6.2 的依赖矩阵现在可以引用 T31 的 CPU-lock 发现
 - Milestone 2I 的 `Conditional Allow` 最弱项（clean-environment reproducibility）现在有了更具体的执行路径
 

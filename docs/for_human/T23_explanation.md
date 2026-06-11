@@ -37,7 +37,7 @@ T23 就是"写考试规则"这一步。它**不参加考试，不改考卷，不
 ### 2.2 任务流程
 
 1. **只读审计**：Worker 对照已有的 config 文件（`p4_multiscenario_strong_baselines.yaml`）、benchmark runner（`run_p4_multiscenario_benchmark.py`）、历史 review 结论（T15/T16/T21）和深度研究报告，进行只读核对
-2. **起草 formal protocol**：在 `docs/P4_benchmark_formal_protocol.md` 中锁定上述所有要素
+2. **起草 formal protocol**：在 `docs/protocols/benchmark/P4_benchmark_formal_protocol.md` 中锁定上述所有要素
 3. **治理同步**：更新 `04_task_board.md`、`07_handoff.md`、`08_risks_and_open_questions.md` 等文档
 
 ### 2.3 代码/配置文件变化
@@ -46,8 +46,8 @@ T23 就是"写考试规则"这一步。它**不参加考试，不改考卷，不
 
 | 文件 | 变化性质 |
 | --- | --- |
-| `docs/P4_benchmark_formal_protocol.md` | **新增**：核心产出，锁定 formal benchmark 的完整协议 |
-| `docs/P4_benchmark_development_protocol.md` | **追加** Section 12：说明与 formal protocol 的关系 |
+| `docs/protocols/benchmark/P4_benchmark_formal_protocol.md` | **新增**：核心产出，锁定 formal benchmark 的完整协议 |
+| `docs/protocols/benchmark/P4_benchmark_development_protocol.md` | **追加** Section 12：说明与 formal protocol 的关系 |
 | `docs/04_task_board.md` | **重写** Current Unique Task 指向 T23，展开 T24-T35 路线图 |
 | `docs/07_handoff.md` | **追加** items 32-36，重写 section 4/6/7 |
 | `docs/08_risks_and_open_questions.md` | **追加** R15-R18、open questions 19-28 |
@@ -56,7 +56,7 @@ T23 就是"写考试规则"这一步。它**不参加考试，不改考卷，不
 | `docs/03_hil_p4_boundary_audit.md` | 追加 T22/T23 的 HIL 边界表述 |
 | `docs/05_decision_log.md` | 追加 D-2026-05-10-05 至 D-2026-05-10-08 |
 | `docs/06_repo_noise_governance.md` | 追加 T22/T23 的 cleanup 禁止规则 |
-| `docs/real_board_hil_readiness.md` | 追加宿主模型选择要求 |
+| `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md` | 追加宿主模型选择要求 |
 | `docs/tasks/Phase2/T21_phase2_milestone_review.md` | 回填 Worker Output Summary |
 
 ### 2.4 Formal Protocol 的核心内容

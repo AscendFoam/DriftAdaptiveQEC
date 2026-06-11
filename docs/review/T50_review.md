@@ -9,7 +9,7 @@
 - helper 已实现 canonical 材料链读取、主线 preserved reference 校验、bounded rerun 校验与 pack 汇总，代码边界与 `T50` 目标一致，未扩成 benchmark/HIL/runtime 主线改造：`cnn_fpga/model/build_training_reproducibility_pack.py`
 - focused tests 已存在并通过：`tests/test_training_reproducibility_pack.py`
 - bounded clean CPU-only rerun 与 eval rerun 的实际产物已存在于 `artifacts/t50_training_repro_pack/`
-- 训练复现主报告明确列出 supported / unsupported claims，没有把 bounded rerun 写成 full reproducibility、`.tflite`、真板或 deployment 事实：`docs/training_reproducibility_and_material_regeneration_pack.md`
+- 训练复现主报告明确列出 supported / unsupported claims，没有把 bounded rerun 写成 full reproducibility、`.tflite`、真板或 deployment 事实：`docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md`
 
 本次 reviewer 额外做了轻量复核：
 
@@ -46,6 +46,6 @@
 
 ## Recommended next action
 
-- 接受 `T50` 在其有界范围内完成，后续把 `artifacts/t50_training_repro_pack/training_reproducibility_pack.json` 与 `docs/training_reproducibility_and_material_regeneration_pack.md` 作为训练材料/复现边界的主引用输入。
+- 接受 `T50` 在其有界范围内完成，后续把 `artifacts/t50_training_repro_pack/training_reproducibility_pack.json` 与 `docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md` 作为训练材料/复现边界的主引用输入。
 - 保持 `R11` 继续 open。`T50` 强化的是 clean CPU-only 训练证据和材料账本，不是 full training reproducibility closure。
 - 如果要继续补强，请单开一个小任务补负例覆盖，不要把 `T50` 继续膨胀成通用训练基础设施或新的长实验任务。

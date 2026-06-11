@@ -54,7 +54,7 @@
 Worker 只可修改或新增以下路径：
 
 - `docs/tasks/Phase2/T50_training_reproducibility_and_material_regeneration_pack.md`
-- `docs/training_reproducibility_and_material_regeneration_pack.md`
+- `docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md`
 - `docs/review/T50_review.md`
 - `docs/for_human/T50_explanation.md`
 - `docs/worker_summary/T50_worker_summary.md`
@@ -72,7 +72,7 @@ Worker 只可修改或新增以下路径：
 
 Worker 必须更新：
 
-- `docs/training_reproducibility_and_material_regeneration_pack.md`
+- `docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md`
 - `docs/review/T50_review.md`
 - `docs/for_human/T50_explanation.md`
 - `docs/worker_summary/T50_worker_summary.md`
@@ -107,9 +107,9 @@ Worker 不得：
 
 Worker 必须复用以下既有输入，而不是重写历史事实：
 
-- `docs/training_chain_portable_dependency_lock_plan.md`
-- `docs/training_chain_cpu_cleanenv_bootstrap.md`
-- `docs/training_chain_cpu_cleanenv_train_smoke.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_bootstrap.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_cpu_cleanenv_train_smoke.md`
 - `docs/review/T31_review.md`
 - `docs/review/T39_review.md`
 - `docs/review/T40_review.md`
@@ -211,7 +211,7 @@ Worker 必须对 `T50` 新生成的 model artifact 再执行一次真实评估�
 
 ### E. 最终文档必须回答的问题
 
-`docs/training_reproducibility_and_material_regeneration_pack.md` 至少要回答：
+`docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md` 至少要回答：
 
 1. canonical `static_theta_v2` 材料链是否完整
 2. canonical `runtime_b_residual_v1` 材料链是否完整
@@ -231,7 +231,7 @@ Worker 必须对 `T50` 新生成的 model artifact 再执行一次真实评估�
 
 Worker 必须产出：
 
-- `docs/training_reproducibility_and_material_regeneration_pack.md`
+- `docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md`
 - `docs/review/T50_review.md`
 - `docs/for_human/T50_explanation.md`
 - `docs/worker_summary/T50_worker_summary.md`
@@ -287,7 +287,7 @@ Reviewer 在以下任一情况应返回 `BLOCK`：
 - `tests/test_training_reproducibility_pack.py`
 - `cnn_fpga/config/task_tmp/T50_static_theta_repro_pack.yaml`
 - `artifacts/t50_training_repro_pack/`
-- `docs/training_reproducibility_and_material_regeneration_pack.md`
+- `docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md`
 - `docs/review/T50_review.md`
 - `docs/for_human/T50_explanation.md`
 - `docs/worker_summary/T50_worker_summary.md`

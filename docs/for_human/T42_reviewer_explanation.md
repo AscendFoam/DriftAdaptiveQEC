@@ -18,8 +18,8 @@ T42 不写论文正文、不跑实验、不改代码、不升级任何证据等�
 
 T42 的目标是产出四个文档：
 
-1. **`docs/paper_draft_skeleton.md`**（修改）——在现有骨架中新增 Background / Related Work 章节（6 个子节），重新组织标题候选为保守组和方法向前组，校准 Introduction 贡献点。
-2. **`docs/paper_method_positioning_calibration.md`**（新增）——定位校准笔记，对比保守定位与方法向前定位的利弊，推荐安全选择，列出 8 类禁用措辞。
+1. **`docs/paper_materials/paper_draft_skeleton.md`**（修改）——在现有骨架中新增 Background / Related Work 章节（6 个子节），重新组织标题候选为保守组和方法向前组，校准 Introduction 贡献点。
+2. **`docs/paper_materials/paper_method_positioning_calibration.md`**（新增）——定位校准笔记，对比保守定位与方法向前定位的利弊，推荐安全选择，列出 8 类禁用措辞。
 3. **`docs/review/T42_review.md`**（新增）——Worker 自审报告。
 4. **`docs/for_human/T42_explanation.md`**（新增）——中文人类说明。
 
@@ -28,7 +28,7 @@ T42 的目标是产出四个文档：
 Worker 的工作流程是：
 
 1. 读取 T42 任务包要求的全部输入文档（包括 README、AGENTS.md、项目快照、legacy 审计、实验计划、HIL 边界审计、任务板、决策日志、交接文档、风险清单、claim/evidence ledger、paper skeleton、reviewer risk audit、T34/T35/T41 review、Milestone 2K review、工程方案、阶段结论、后续计划、paper-inspired 草案等）。
-2. 在 `docs/paper_draft_skeleton.md` 中插入 Background / Related Work 章节，包含 6 个子标题、允许的 claim/figure/table 映射、blocked claim 限制和起草说明。
+2. 在 `docs/paper_materials/paper_draft_skeleton.md` 中插入 Background / Related Work 章节，包含 6 个子标题、允许的 claim/figure/table 映射、blocked claim 限制和起草说明。
 3. 重新组织标题候选：将原来的 4 个标题分为"保守组"（2 个）和"方法向前组"（2 个），并标注推荐方案。
 4. 校准 Introduction 贡献点：每条贡献明确绑定 claim ID，blocked claims 被显式排除。
 5. 产出独立的定位校准笔记，详细对比两种定位的优劣势、推荐方案和禁用措辞。
@@ -39,8 +39,8 @@ T42 修改/新增了五个文档：
 
 | 文件 | 类型 | 内容 |
 |------|------|------|
-| `docs/paper_draft_skeleton.md` | 修改 | 新增 Background / Related Work 章节（6 个子节），重新组织标题候选，校准贡献点 |
-| `docs/paper_method_positioning_calibration.md` | 新增 | 定位校准笔记 |
+| `docs/paper_materials/paper_draft_skeleton.md` | 修改 | 新增 Background / Related Work 章节（6 个子节），重新组织标题候选，校准贡献点 |
+| `docs/paper_materials/paper_method_positioning_calibration.md` | 新增 | 定位校准笔记 |
 | `docs/review/T42_review.md` | 新增 | Worker 自审 |
 | `docs/for_human/T42_explanation.md` | 新增 | 中文人类说明 |
 | `docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md` | 修改 | 追加 Verification Record |
@@ -74,8 +74,8 @@ T42 的意义在于为论文正文撰写建立了一个安全的起跑线：
 
 T42 的所有 Required Output Shape 条件都已满足：
 
-- `docs/paper_draft_skeleton.md` 已更新：Background / Related Work 章节存在且包含 6 个子标题、allowed evidence map、blocked claim 限制和 drafting notes。标题候选已重新组织。贡献点已校准。
-- `docs/paper_method_positioning_calibration.md` 已产出：包含保守定位选项、方法向前定位选项、推荐安全定位、贡献点校准表和禁用措辞清单。
+- `docs/paper_materials/paper_draft_skeleton.md` 已更新：Background / Related Work 章节存在且包含 6 个子标题、allowed evidence map、blocked claim 限制和 drafting notes。标题候选已重新组织。贡献点已校准。
+- `docs/paper_materials/paper_method_positioning_calibration.md` 已产出：包含保守定位选项、方法向前定位选项、推荐安全定位、贡献点校准表和禁用措辞清单。
 - Verification Record 已追加到任务包。
 
 ### 3.2 没有伪实现、mock、stub 或 hardcode
@@ -84,7 +84,7 @@ T42 是纯文档任务，没有代码、没有可执行逻辑、没有测试。�
 
 ### 3.3 没有破坏已有功能
 
-T42 只修改了 `docs/paper_draft_skeleton.md`（在已有骨架中插入新章节和更新标题/贡献点）和任务包（追加 Verification Record）。没有修改任何源码、配置、benchmark protocol、`runs/`、`artifacts/` 或治理结论文档。项目当前的功能状态完全不受影响。
+T42 只修改了 `docs/paper_materials/paper_draft_skeleton.md`（在已有骨架中插入新章节和更新标题/贡献点）和任务包（追加 Verification Record）。没有修改任何源码、配置、benchmark protocol、`runs/`、`artifacts/` 或治理结论文档。项目当前的功能状态完全不受影响。
 
 ### 3.4 没有过度工程
 

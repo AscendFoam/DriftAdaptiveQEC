@@ -43,7 +43,7 @@ Produce a bounded gate-review answer to these questions:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T63_fr8_statcalib_comparator_gate_review.md`
-- `docs/fr8_statcalib_comparator_gate_review.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_comparator_gate_review.md`
 - `docs/review/T63_review.md`
 - `docs/for_human/T63_explanation.md`
 - `docs/worker_summary/T63_worker_summary.md`
@@ -52,7 +52,7 @@ Worker may modify only:
 
 This task should update only:
 
-1. `docs/fr8_statcalib_comparator_gate_review.md`
+1. `docs/evidence_packs/statcalib_fr8/fr8_statcalib_comparator_gate_review.md`
 2. `docs/review/T63_review.md`
 3. `docs/for_human/T63_explanation.md`
 4. `docs/worker_summary/T63_worker_summary.md`
@@ -83,17 +83,17 @@ Read at minimum:
 - `docs/review/T60_review.md`
 - `docs/review/T61_review.md`
 - `docs/review/T62_review.md`
-- `docs/statcalib_comparator_lane_smoke.md`
-- `docs/statcalib_lane_isolation_and_regression_hardening.md`
-- `docs/statcalib_fairness_sanity.md`
-- `docs/statcalib_provenance_isolated_fairness_rerun.md`
-- `docs/paper_claim_evidence_ledger.md`
-- `docs/paper_ablation_result_pack.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_comparator_lane_smoke.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_lane_isolation_and_regression_hardening.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_fairness_sanity.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_provenance_isolated_fairness_rerun.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_ablation_result_pack.md`
 - `docs/worker_summary/T59_worker_summary.md`
 - `docs/worker_summary/T60_worker_summary.md`
 - `docs/worker_summary/T61_worker_summary.md`
 - `docs/worker_summary/T62_worker_summary.md`
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 - `runs/p4_benchmark/t59statc_20260526_211532_3a3d00_23740/summary.json`
 - `runs/p4_benchmark/T61_statcalib_fairness_sanity_20260527_015239/summary.json`
 - `runs/p4_benchmark/T62_statcalib_provenance_isolated_20260527_122943/summary.json`
@@ -151,7 +151,7 @@ If the answer is `NO_GO_NEEDS_ONE_MORE_PREREQUISITE`, the report must name exact
 
 ## Expected Output Artifacts
 
-Create `docs/fr8_statcalib_comparator_gate_review.md` with:
+Create `docs/evidence_packs/statcalib_fr8/fr8_statcalib_comparator_gate_review.md` with:
 
 1. a short verdict section
 2. a table of already-closed vs still-open evidence items
@@ -178,7 +178,7 @@ Required verification:
 
 1. `git diff --name-only` stays inside the T63 allowed-file set
 2. no source, test, config, `runs/`, or `artifacts/` path is modified or created
-3. all claims in `docs/fr8_statcalib_comparator_gate_review.md` cite concrete existing local evidence
+3. all claims in `docs/evidence_packs/statcalib_fr8/fr8_statcalib_comparator_gate_review.md` cite concrete existing local evidence
 4. the report states explicitly that:
    - current evidence remains mock-backed software-HIL only
    - this task is not `FR8`
@@ -202,7 +202,7 @@ This task is not permission to start `FR8`. It is only permission to decide, in 
 
 ## Worker Output
 
-- Created `docs/fr8_statcalib_comparator_gate_review.md`.
+- Created `docs/evidence_packs/statcalib_fr8/fr8_statcalib_comparator_gate_review.md`.
 - Created `docs/review/T63_review.md`.
 - Created `docs/for_human/T63_explanation.md`.
 - Created `docs/worker_summary/T63_worker_summary.md`.

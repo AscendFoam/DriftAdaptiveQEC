@@ -11,7 +11,7 @@ T45 没有跑任何 benchmark，也没有改任何代码或配置。
 
 产出文件是：
 
-- `docs/paper_benchmark_expansion_protocol.md`
+- `docs/protocols/benchmark/paper_benchmark_expansion_protocol.md`
 
 这个文档的核心作用，是把“当前真实证据”和“未来可能扩展的 benchmark 车道”分开，防止后面把参考建议误写成已经完成的事实。
 

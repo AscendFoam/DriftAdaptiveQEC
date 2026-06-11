@@ -39,7 +39,7 @@ T36 的任务就是：只看已有的实验数据（不重跑实验），搞清�
    - 只使用 Python 标准库（csv、json、math、pathlib）
    - 不导入项目运行时代码
    - 不写入任何文件，只向 stdout 输出 JSON 摘要
-4. **基于数据和脚本输出，撰写诊断报告**（`docs/seed20260429_failure_diagnosis.md`）
+4. **基于数据和脚本输出，撰写诊断报告**（`docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`）
 5. **撰写预审输入和人话说明**
 
 ### 2.3 代码和配置变化
@@ -48,7 +48,7 @@ T36 的任务就是：只看已有的实验数据（不重跑实验），搞清�
 
 | 文件 | 性质 |
 |------|------|
-| `docs/seed20260429_failure_diagnosis.md` | 新增：诊断报告 |
+| `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md` | 新增：诊断报告 |
 | `cnn_fpga/benchmark/analyze_seed20260429_failure.py` | 新增：只读分析脚本 |
 | `docs/review/T36_review.md` | 新增：审查文件 |
 | `docs/for_human/T36_explanation.md` | 新增：本文件 |

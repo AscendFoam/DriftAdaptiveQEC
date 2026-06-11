@@ -14,7 +14,7 @@ None.
 
 ### N2 No explicit claim for float/int8 quantization gap
 
-The experiment plan (`docs/02_experiment_plan_simplified.md` Section 4.2–4.3) documents that float/int8 R² degradation is < 1%, and this is listed as stable conclusion 9.1 item 6. The ledger does not include a claim row for this. The omission is defensible because those results predate the current Phase 2 recovery cycle and were not revalidated under the T24 frozen-set protocol. However, future paper drafting will likely need this claim, and it would be useful to have it in the ledger with an explicit caveat about pre-recovery historical evidence.
+The experiment plan (`docs/legacy_context/plan_variants_2026-06-11/02_experiment_plan_simplified.md` Section 4.2–4.3) documents that float/int8 R² degradation is < 1%, and this is listed as stable conclusion 9.1 item 6. The ledger does not include a claim row for this. The omission is defensible because those results predate the current Phase 2 recovery cycle and were not revalidated under the T24 frozen-set protocol. However, future paper drafting will likely need this claim, and it would be useful to have it in the ledger with an explicit caveat about pre-recovery historical evidence.
 
 ### N3 No explicit claim for ablation conclusions
 

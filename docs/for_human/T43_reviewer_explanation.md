@@ -16,7 +16,7 @@ T43 不写论文的其他章节（Abstract、Introduction、Method、Results、C
 
 T43 的目标是产出三个文档：
 
-1. **`docs/paper_background_related_work_draft.md`**（新增）——Background / Related Work 的有界正文草稿，包含 6 个子节的段落级学术正文。
+1. **`docs/paper_materials/paper_background_related_work_draft.md`**（新增）——Background / Related Work 的有界正文草稿，包含 6 个子节的段落级学术正文。
 2. **`docs/review/T43_review.md`**（新增）——Worker 自审报告。
 3. **`docs/for_human/T43_explanation.md`**（新增）——中文人类说明。
 
@@ -44,7 +44,7 @@ T43 新增/修改了四个文档：
 
 | 文件 | 类型 | 内容 |
 |------|------|------|
-| `docs/paper_background_related_work_draft.md` | 新增 | Background / Related Work 6 子节的段落级正文 |
+| `docs/paper_materials/paper_background_related_work_draft.md` | 新增 | Background / Related Work 6 子节的段落级正文 |
 | `docs/review/T43_review.md` | 新增 | Worker 自审（后由对抗性审查覆盖） |
 | `docs/for_human/T43_explanation.md` | 新增 | 中文人类说明 |
 | `docs/tasks/Phase2/T43_paper_background_related_work_prose_draft.md` | 修改 | 追加 Verification Record |
@@ -79,7 +79,7 @@ T43 的意义在于论文从"骨架"进入了"正文撰写"阶段：
 
 T43 的所有 Required Output Shape 条件都已满足：
 
-- `docs/paper_background_related_work_draft.md` 已产出：包含 6 个子节的段落级正文，不是要点列表或骨架大纲。
+- `docs/paper_materials/paper_background_related_work_draft.md` 已产出：包含 6 个子节的段落级正文，不是要点列表或骨架大纲。
 - 正文范围严格限定在 Background / Related Work：没有越界到 Abstract、Introduction、Method、Results、Conclusion 或 Appendix。
 - subsection 6 保持简短且中立，符合任务包的裁量权条款。
 - Worker 自审已产出。
@@ -90,7 +90,7 @@ T43 是纯文档任务，没有代码、没有可执行逻辑、没有测试。�
 
 ### 3.3 没有破坏已有功能
 
-T43 只新增了 `docs/paper_background_related_work_draft.md`、`docs/review/T43_review.md`、`docs/for_human/T43_explanation.md`，并在任务包中追加了 Verification Record。没有修改任何源码、配置、benchmark protocol、`runs/`、`artifacts/` 或治理结论文档。项目当前的功能状态完全不受影响。
+T43 只新增了 `docs/paper_materials/paper_background_related_work_draft.md`、`docs/review/T43_review.md`、`docs/for_human/T43_explanation.md`，并在任务包中追加了 Verification Record。没有修改任何源码、配置、benchmark protocol、`runs/`、`artifacts/` 或治理结论文档。项目当前的功能状态完全不受影响。
 
 ### 3.4 没有过度工程
 

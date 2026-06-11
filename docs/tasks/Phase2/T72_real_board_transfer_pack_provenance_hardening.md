@@ -40,7 +40,7 @@
 Worker 只可修改或新增以下路径：
 
 - `docs/tasks/Phase2/T72_real_board_transfer_pack_provenance_hardening.md`
-- `docs/t72_real_board_transfer_pack_provenance_hardening.md`
+- `docs/evidence_packs/deployment_boundary/t72_real_board_transfer_pack_provenance_hardening.md`
 - `docs/review/T72_review.md`
 - `docs/for_human/T72_explanation.md`
 - `docs/worker_summary/T72_worker_summary.md`
@@ -59,7 +59,7 @@ Worker 只可修改或新增以下路径：
 
 Worker 必须更新：
 
-- `docs/t72_real_board_transfer_pack_provenance_hardening.md`
+- `docs/evidence_packs/deployment_boundary/t72_real_board_transfer_pack_provenance_hardening.md`
 - `docs/review/T72_review.md`
 - `docs/for_human/T72_explanation.md`
 - `docs/worker_summary/T72_worker_summary.md`
@@ -87,8 +87,8 @@ Worker 不得：
 
 Worker 必须复用以下既有输入，而不是改写历史事实：
 
-- `docs/t49_real_board_smoke_execution_gate.md`
-- `docs/t71_real_board_gate_regeneration_pack.md`
+- `docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md`
+- `docs/evidence_packs/deployment_boundary/t71_real_board_gate_regeneration_pack.md`
 - `docs/review/T49_review.md`
 - `docs/review/T71_review.md`
 - `docs/worker_summary/T71_worker_summary.md`
@@ -156,7 +156,7 @@ Worker 必须让以下说明字段跟随实际执行上下文变化，而不是�
 
 ### D. 最终文档必须回答的问题
 
-`docs/t72_real_board_transfer_pack_provenance_hardening.md` 至少要回答：
+`docs/evidence_packs/deployment_boundary/t72_real_board_transfer_pack_provenance_hardening.md` 至少要回答：
 
 1. `T72` 是否改变了 `T71` / `T49` 的 current-host final verdict
 2. 哪些 provenance 字段从“写死文案”改成了“执行导出”
@@ -185,7 +185,7 @@ Worker 必须让以下说明字段跟随实际执行上下文变化，而不是�
 
 Worker 必须产出：
 
-- `docs/t72_real_board_transfer_pack_provenance_hardening.md`
+- `docs/evidence_packs/deployment_boundary/t72_real_board_transfer_pack_provenance_hardening.md`
 - `docs/review/T72_review.md`
 - `docs/for_human/T72_explanation.md`
 - `docs/worker_summary/T72_worker_summary.md`
@@ -259,7 +259,7 @@ Reviewer 在以下任一情况应返回 `BLOCK`：
   - `artifacts/t72_real_board_transfer_pack_provenance_hardening/t49_checked_in_replay_gate.json`
   - `artifacts/t72_real_board_transfer_pack_provenance_hardening/replay_vs_regeneration_comparison.json`
 - 新增/更新文档：
-  - `docs/t72_real_board_transfer_pack_provenance_hardening.md`
+  - `docs/evidence_packs/deployment_boundary/t72_real_board_transfer_pack_provenance_hardening.md`
   - `docs/review/T72_review.md`
   - `docs/for_human/T72_explanation.md`
   - `docs/worker_summary/T72_worker_summary.md`

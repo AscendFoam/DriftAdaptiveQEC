@@ -32,7 +32,7 @@ Produce a paper-pack ledger that answers, in writing:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T47_paper_ablation_result_pack_and_material_ledger.md`
-- `docs/paper_ablation_result_pack.md`
+- `docs/paper_materials/paper_ablation_result_pack.md`
 - `docs/review/T47_review.md`
 - `docs/for_human/T47_explanation.md`
 
@@ -43,11 +43,11 @@ Read at minimum:
 - `docs/reality_recovery/00_freeze_snapshot.md`
 - `docs/reality_recovery/04_figure_and_result_ledger.md`
 - `docs/reality_recovery/05_paper_claim_risk_table.md`
-- `docs/paper_claim_evidence_ledger.md`
-- `docs/paper_draft_skeleton.md`
-- `docs/paper_background_related_work_draft.md`
-- `docs/paper_method_positioning_calibration.md`
-- `docs/paper_reviewer_risk_audit.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_draft_skeleton.md`
+- `docs/paper_materials/paper_background_related_work_draft.md`
+- `docs/paper_materials/paper_method_positioning_calibration.md`
+- `docs/paper_materials/paper_reviewer_risk_audit.md`
 - `docs/review/T34_review.md`
 - `docs/review/T35_review.md`
 
@@ -80,7 +80,7 @@ If this task is later activated, it must remain conditioned on the `T56` outcome
 
 ## Expected Output
 
-Create `docs/paper_ablation_result_pack.md` with:
+Create `docs/paper_materials/paper_ablation_result_pack.md` with:
 
 1. minimal ablation/result pack scope
 2. ready / partial / missing ledger
@@ -116,7 +116,7 @@ But the answer must stay faithful to `T56`: if the hedge wording cannot be prese
 
 ## Worker Output
 
-- Created `docs/paper_ablation_result_pack.md` with:
+- Created `docs/paper_materials/paper_ablation_result_pack.md` with:
   - Ready / partial / missing ledger with 11 figure entries and 5 table entries
   - Ablation-specific gap analysis (FR7 identified as largest missing item)
   - Regeneration paths for each asset with concrete data sources and estimated effort

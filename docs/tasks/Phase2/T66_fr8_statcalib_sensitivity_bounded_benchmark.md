@@ -37,7 +37,7 @@ Produce one bounded sensitivity package that answers:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T66_fr8_statcalib_sensitivity_bounded_benchmark.md`
-- `docs/statcalib_sensitivity_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_sensitivity_bounded_benchmark.md`
 - `docs/review/T66_review.md`
 - `docs/for_human/T66_explanation.md`
 - `docs/worker_summary/T66_worker_summary.md`
@@ -50,7 +50,7 @@ Worker may modify only:
 
 Worker must update:
 
-- `docs/statcalib_sensitivity_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_sensitivity_bounded_benchmark.md`
 - `docs/review/T66_review.md`
 - `docs/for_human/T66_explanation.md`
 - `docs/worker_summary/T66_worker_summary.md`
@@ -77,9 +77,9 @@ Worker must not:
 
 Worker must reuse:
 
-- `docs/P4_benchmark_formal_protocol.md`
-- `docs/fr8_statcalib_extension_lane_benchmark.md`
-- `docs/fr8_statcalib_extension_lane_consistency_audit.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_consistency_audit.md`
 - `docs/review/T64_review.md`
 - `docs/review/T65_review.md`
 - `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743`
@@ -166,7 +166,7 @@ Worker must produce:
 - one run root:
   - `runs/p4_benchmark/T66_statcalib_sensitivity_*`
 - one benchmark report:
-  - `docs/statcalib_sensitivity_bounded_benchmark.md`
+  - `docs/evidence_packs/statcalib_fr8/statcalib_sensitivity_bounded_benchmark.md`
 - one review file:
   - `docs/review/T66_review.md`
 - one human explanation:
@@ -225,7 +225,7 @@ Worker must report:
   - `cnn_fpga/config/p4_multiscenario_statcalib_sensitivity.yaml`
   - `cnn_fpga/benchmark/summarize_statcalib_sensitivity.py`
   - `tests/test_statcalib_sensitivity_summary.py`
-  - `docs/statcalib_sensitivity_bounded_benchmark.md`
+  - `docs/evidence_packs/statcalib_fr8/statcalib_sensitivity_bounded_benchmark.md`
   - `docs/review/T66_review.md`
   - `docs/for_human/T66_explanation.md`
   - `docs/worker_summary/T66_worker_summary.md`

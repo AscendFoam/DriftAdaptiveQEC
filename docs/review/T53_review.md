@@ -66,4 +66,4 @@ The document is especially strong on one point: it makes the project’s real cl
 
 1. Captain should accept T53 as `PASS`.
 2. If the next user goal is paper readiness, return to the already proposed mainline evidence-hardening lane (`T45-T47`).
-3. If the next user goal is explanation refinement, a later bounded task could add diagrams or figure sketches to accompany `docs/mainline_theory_analysis.md` without changing any evidence boundary.
+3. If the next user goal is explanation refinement, a later bounded task could add diagrams or figure sketches to accompany `docs/paper_materials/mainline_theory_analysis.md` without changing any evidence boundary.

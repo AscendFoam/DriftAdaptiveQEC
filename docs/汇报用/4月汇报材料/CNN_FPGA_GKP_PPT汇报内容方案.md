@@ -634,11 +634,11 @@ T15 不是：
 
 ## 数据与口径来源
 
-- `docs/02_experiment_plan_simplified.md`
+- `docs/legacy_context/plan_variants_2026-06-11/02_experiment_plan_simplified.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P4_benchmark_development_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
 - `docs/CNN_FPGA_GKP_阶段结论.md`
 - `docs/CNN_FPGA_GKP_paper_inspired分支实验设计草案.md`
 - `docs/CNN_FPGA_GKP_项目完成目标与投稿路线报告.md`

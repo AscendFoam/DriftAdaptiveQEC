@@ -35,7 +35,7 @@ The core T58 output exists and is coherent:
   - `figure_data.csv`
   - `figure_manifest.json`
   - `caption.md`
-- `docs/fr6_multi_seed_mechanism_intervention_figure_pack.md`
+- `docs/evidence_packs/mechanism_ablation/fr6_multi_seed_mechanism_intervention_figure_pack.md`
 - paper-facing ledgers updated to mark `FR6` as `ready` in the bounded figure-pack sense
 
 The figure, caption, and ledgers remain descriptive. I did not find wording that upgrades T54/T55/T56 into causal proof, mechanism closure, `.tflite` validation, real-board validation, or expanded benchmark evidence.
@@ -47,7 +47,7 @@ The figure, caption, and ledgers remain descriptive. I did not find wording that
 - `max_delta_b_norm > 0.08`
 - `max_committed_b_norm > 0.5`
 
-This matches the current T54/T55 evidence picture, including the final six-seed categories used in `docs/multi_seed_trace_generalization_probe.md`. So this is not a fake result.
+This matches the current T54/T55 evidence picture, including the final six-seed categories used in `docs/evidence_packs/mechanism_ablation/multi_seed_trace_generalization_probe.md`. So this is not a fake result.
 
 However, the provenance is weaker than it could be because the category labels are not read from a frozen T54 category table; they are reconstructed by T58 task-local logic. That makes the figure-pack slightly more fragile to future reinterpretation.
 

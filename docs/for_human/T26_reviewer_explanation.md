@@ -30,7 +30,7 @@ Worker 按照任务包的要求，执行了以下只读步骤：
 
 | 文件 | 变化类型 | 说明 |
 |------|----------|------|
-| `docs/statcalib_feasibility_gate.md` | 新建 | 主文档：可行性判断、设计分类、最小接口、验证计划、非声明 |
+| `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` | 新建 | 主文档：可行性判断、设计分类、最小接口、验证计划、非声明 |
 | `docs/review/T26_statcalib_feasibility_gate.md` | 新建 | Worker 自审：只读范围确认、检查文件清单、可行性结论 |
 | `docs/for_human/T26_explanation.md` | 新建 | 人话版说明 |
 | `docs/tasks/Phase2/T26_statcalib_feasibility_gate.md` | 追加 | Worker Output 和 Verification Record |
@@ -52,7 +52,7 @@ Worker 按照任务包的要求，执行了以下只读步骤：
 
 对照任务包的"Expected Output"逐项检查：
 
-- `docs/statcalib_feasibility_gate.md` 存在且包含全部 7 个必要章节（current boundary、objective、prerequisite、adopted/deferred/rejected、interface、metrics、non-claims）
+- `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` 存在且包含全部 7 个必要章节（current boundary、objective、prerequisite、adopted/deferred/rejected、interface、metrics、non-claims）
 - `docs/review/T26_statcalib_feasibility_gate.md` 存在且包含 scope confirmation、files inspected、verdict、warnings
 - `docs/for_human/T26_explanation.md` 存在且提供了非技术说明
 - 任务包已补充 Worker Output 和 Verification Record

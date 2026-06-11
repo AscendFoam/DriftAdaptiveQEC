@@ -44,7 +44,7 @@ Produce one bounded generated-only robustness package that answers:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T68_fr8_statcalib_generated_only_robustness_bounded_benchmark.md`
-- `docs/statcalib_generated_only_robustness_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_generated_only_robustness_bounded_benchmark.md`
 - `docs/review/T68_review.md`
 - `docs/for_human/T68_explanation.md`
 - `docs/worker_summary/T68_worker_summary.md`
@@ -57,7 +57,7 @@ Worker may modify only:
 
 Worker must update:
 
-- `docs/statcalib_generated_only_robustness_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_generated_only_robustness_bounded_benchmark.md`
 - `docs/review/T68_review.md`
 - `docs/for_human/T68_explanation.md`
 - `docs/worker_summary/T68_worker_summary.md`
@@ -85,11 +85,11 @@ Worker must not:
 
 Worker must reuse:
 
-- `docs/P4_benchmark_formal_protocol.md`
-- `docs/fr8_statcalib_extension_lane_benchmark.md`
-- `docs/fr8_statcalib_extension_lane_consistency_audit.md`
-- `docs/statcalib_sensitivity_bounded_benchmark.md`
-- `docs/statcalib_teacher_anchor_bounded_benchmark.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_consistency_audit.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_sensitivity_bounded_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_teacher_anchor_bounded_benchmark.md`
 - `docs/review/T64_review.md`
 - `docs/review/T65_review.md`
 - `docs/review/T66_review.md`
@@ -208,7 +208,7 @@ Worker must produce:
 - one run root:
   - `runs/p4_benchmark/T68_statcalib_generated_only_*`
 - one benchmark report:
-  - `docs/statcalib_generated_only_robustness_bounded_benchmark.md`
+  - `docs/evidence_packs/statcalib_fr8/statcalib_generated_only_robustness_bounded_benchmark.md`
 - one review file:
   - `docs/review/T68_review.md`
 - one human explanation:
@@ -278,7 +278,7 @@ Worker must report:
    - `cnn_fpga/config/p4_multiscenario_statcalib_generated_only.yaml`
    - `cnn_fpga/benchmark/summarize_statcalib_generated_only.py`
    - `tests/test_statcalib_generated_only_summary.py`
-   - `docs/statcalib_generated_only_robustness_bounded_benchmark.md`
+   - `docs/evidence_packs/statcalib_fr8/statcalib_generated_only_robustness_bounded_benchmark.md`
    - `docs/review/T68_review.md`
    - `docs/for_human/T68_explanation.md`
    - `docs/worker_summary/T68_worker_summary.md`

@@ -79,7 +79,7 @@
 
 第三部分是把结果整理成文档：
 
-- `docs/fr8_statcalib_extension_lane_benchmark.md`
+- `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md`
 - `docs/review/T64_review.md`
 - `docs/for_human/T64_explanation.md`
 - `docs/worker_summary/T64_worker_summary.md`
@@ -122,7 +122,7 @@
 
 第一类是文档准确性问题。
 
-`docs/fr8_statcalib_extension_lane_benchmark.md` 里有两处不够严谨：
+`docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md` 里有两处不够严谨：
 
 1. 它把执行形态写成 `one detached one-shot invocation only`。
    - 但任务包明确接受的说法是 `one foreground invocation`，或者按 repeat-range chunking。

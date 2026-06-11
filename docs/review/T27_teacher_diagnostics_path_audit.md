@@ -15,7 +15,7 @@
 - `docs/review/T25_p4_formal_evidence_gate_review.md`
 - `docs/review/T24_review.md`
 - `docs/review/T15_frozen_smoke_review.md`
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 - `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`
 - `docs/tasks/Phase2/T25_p4_formal_evidence_gate_review.md`
 - `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/comparison.csv`

@@ -20,10 +20,10 @@ The next controlled step is not full-manuscript drafting. It is to draft only th
 
 Produce a bounded prose draft for the Background / Related Work section only, consistent with:
 
-- `docs/paper_draft_skeleton.md`
-- `docs/paper_method_positioning_calibration.md`
-- `docs/paper_claim_evidence_ledger.md`
-- `docs/paper_reviewer_risk_audit.md`
+- `docs/paper_materials/paper_draft_skeleton.md`
+- `docs/paper_materials/paper_method_positioning_calibration.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_reviewer_risk_audit.md`
 - `docs/review/Milestone2K_review.md`
 - `docs/review/T42_review.md`
 
@@ -32,7 +32,7 @@ Produce a bounded prose draft for the Background / Related Work section only, co
 Worker may modify only:
 
 - `docs/tasks/Phase2/T43_paper_background_related_work_prose_draft.md`
-- `docs/paper_background_related_work_draft.md`
+- `docs/paper_materials/paper_background_related_work_draft.md`
 - `docs/review/T43_review.md`
 - `docs/for_human/T43_explanation.md`
 
@@ -50,10 +50,10 @@ Read at minimum:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/paper_claim_evidence_ledger.md`
-- `docs/paper_draft_skeleton.md`
-- `docs/paper_method_positioning_calibration.md`
-- `docs/paper_reviewer_risk_audit.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_draft_skeleton.md`
+- `docs/paper_materials/paper_method_positioning_calibration.md`
+- `docs/paper_materials/paper_reviewer_risk_audit.md`
 - `docs/review/T34_review.md`
 - `docs/review/T35_review.md`
 - `docs/review/T41_review.md`
@@ -75,7 +75,7 @@ This is a drafting lock for T43 only. It is not an evidence upgrade, and later h
 
 ## Required Output Shape
 
-### A. `docs/paper_background_related_work_draft.md`
+### A. `docs/paper_materials/paper_background_related_work_draft.md`
 
 Must contain bounded prose for Background / Related Work only.
 
@@ -107,8 +107,8 @@ Adversarial review output covering at least:
 
 T43 must preserve all current boundaries from:
 
-- `docs/paper_claim_evidence_ledger.md`
-- `docs/paper_reviewer_risk_audit.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_reviewer_risk_audit.md`
 - `docs/review/Milestone2K_review.md`
 - `docs/review/T42_review.md`
 
@@ -145,7 +145,7 @@ Verification is wording-and-boundary based:
 ## Docs To Update
 
 - `docs/tasks/Phase2/T43_paper_background_related_work_prose_draft.md`
-- `docs/paper_background_related_work_draft.md`
+- `docs/paper_materials/paper_background_related_work_draft.md`
 - `docs/review/T43_review.md`
 - `docs/for_human/T43_explanation.md`
 
@@ -167,14 +167,14 @@ This task is still docs-only. It is not full-paper drafting. It exists to conver
 ## Verification Record
 
 - Worker completed T43 on `2026-05-18`.
-- All required inputs read and cross-checked: README.md, docs/02_experiment_plan_simplified.md, docs/04_task_board.md, docs/07_handoff.md, docs/00_project_snapshot.md, docs/01_legacy_audit.md, docs/03_hil_p4_boundary_audit.md, docs/05_decision_log.md, docs/08_risks_and_open_questions.md, docs/paper_claim_evidence_ledger.md, docs/paper_draft_skeleton.md, docs/paper_method_positioning_calibration.md, docs/paper_reviewer_risk_audit.md, docs/review/T34_review.md, docs/review/T35_review.md, docs/review/T41_review.md, docs/review/T42_review.md, docs/review/Milestone2K_review.md.
-- `docs/paper_background_related_work_draft.md` produced: bounded prose for Background / Related Work with 6 subsections (GKP QEC problem framing, dual-loop time-scale separation, ML-assisted QEC decoding, classical adaptive estimators, teacher-guided residual correction positioning, evidence boundaries in quantum system validation).
+- All required inputs read and cross-checked: README.md, docs/legacy_context/plan_variants_2026-06-11/02_experiment_plan_simplified.md, docs/04_task_board.md, docs/07_handoff.md, docs/00_project_snapshot.md, docs/01_legacy_audit.md, docs/03_hil_p4_boundary_audit.md, docs/05_decision_log.md, docs/08_risks_and_open_questions.md, docs/paper_materials/paper_claim_evidence_ledger.md, docs/paper_materials/paper_draft_skeleton.md, docs/paper_materials/paper_method_positioning_calibration.md, docs/paper_materials/paper_reviewer_risk_audit.md, docs/review/T34_review.md, docs/review/T35_review.md, docs/review/T41_review.md, docs/review/T42_review.md, docs/review/Milestone2K_review.md.
+- `docs/paper_materials/paper_background_related_work_draft.md` produced: bounded prose for Background / Related Work with 6 subsections (GKP QEC problem framing, dual-loop time-scale separation, ML-assisted QEC decoding, classical adaptive estimators, teacher-guided residual correction positioning, evidence boundaries in quantum system validation).
 - `docs/review/T43_review.md` produced with verdict = `PASS`, no blocking issues, 4 non-blocking issues (subsection 6 neutrality, placeholder citations, internal cross-references, inline claim reference formatting).
 - `docs/for_human/T43_explanation.md` produced with Chinese human-facing explanation.
 - Blocked claims (C6, C7, C8, C10, C11) remain blocked in all drafted prose.
 - All supported claims cited with correct wording: C2, C3 (frozen-set formal software revalidation), C5 (one clean CPU-only smoke), C9 (statcalib interface contract, not cited in Background/Related Work as it is scoped to Method section).
 - Stable conclusion 9.1 item 7 ("offline training improvement ≠ formal HIL improvement") referenced correctly in subsection 5.
-- No forbidden phrases from `docs/paper_method_positioning_calibration.md` Section 6 appear in the draft.
+- No forbidden phrases from `docs/paper_materials/paper_method_positioning_calibration.md` Section 6 appear in the draft.
 - Subsection 6 kept short and neutral; can be folded into Limitations if needed during later review.
 - Method-forward framing lock maintained throughout: the draft positions teacher-guided residual-b as a method contribution with frozen-set evidence support, without claiming broad superiority or hardware validation.
 - No code, config, `runs/`, or `artifacts` changes were introduced.

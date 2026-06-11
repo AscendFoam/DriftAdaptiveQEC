@@ -2,7 +2,7 @@
 
 ## 1. T46 做了什么
 
-T46 产了一份 docs-only 的机制证据计划文件 `docs/seed_mechanism_multi_seed_plan.md`。它回答了以下问题：
+T46 产了一份 docs-only 的机制证据计划文件 `docs/evidence_packs/mechanism_ablation/seed_mechanism_multi_seed_plan.md`。它回答了以下问题：
 
 1. **当前能安全说什么**：`seed=20260429` 上存在 trace-supported 的 combined committed-`b` 不稳定性诊断证据（来自 T36+T38），但仅限单 seed，不是因果证明。
 
@@ -26,7 +26,7 @@ T46 没有改变任何事实：
 - 没有修改源码、config、`runs/`、`artifacts/` 或治理文件。
 - 没有把单 seed 诊断升级成多 seed 确认或因果证明。
 - 没有重新打开 T45 冻结的 benchmark 边界。
-- 所有 claim 状态（C4 仍为 partial）与 `docs/paper_claim_evidence_ledger.md` 完全一致。
+- 所有 claim 状态（C4 仍为 partial）与 `docs/paper_materials/paper_claim_evidence_ledger.md` 完全一致。
 
 ## 3. Review 结论
 

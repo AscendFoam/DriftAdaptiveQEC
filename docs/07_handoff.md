@@ -17,8 +17,8 @@
 
 - `PSE0：并行 sidecar 扩展实验治理设置` 已作为 docs-only Captain 设置任务加入。
 - 任务包：`docs/tasks/Phase2/PSE0_parallel_sidecar_extension_governance_setup.md`
-- 治理规则：`docs/parallel_sidecar_extension_governance.md`
-- worktree 计划：`docs/parallel_sidecar_worktree_plan.md`
+- 治理规则：`docs/sidecar/parallel_sidecar_extension_governance.md`
+- worktree 计划：`docs/sidecar/parallel_sidecar_worktree_plan.md`
 - `PSE0` 不替代也不执行主线当前唯一任务；当前该任务已切换为 `T71`。
 - `PSE0` 不创建 worktree、branch、run root、experiment、`.tflite` smoke、real-board smoke 或 benchmark output。
 - 后续 sidecar 工作必须使用 `codex/sidecar-*` 分支、隔离 worktree 和 `runs/sidecar/<lane_id>/...` run root。
@@ -131,8 +131,8 @@ Captain continuity note:
 - `T64` review accepted by Captain as `PASS_WITH_WARNINGS`.
 - Blocking issues: none.
 - Warning classification:
-  - `N1` execution-shape wording drift in `docs/fr8_statcalib_extension_lane_benchmark.md` = `deferred` -> `R28`
-  - `N2` finish-timestamp provenance wording drift in `docs/fr8_statcalib_extension_lane_benchmark.md` = `deferred` -> `R28`
+  - `N1` execution-shape wording drift in `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md` = `deferred` -> `R28`
+  - `N2` finish-timestamp provenance wording drift in `docs/evidence_packs/statcalib_fr8/fr8_statcalib_extension_lane_benchmark.md` = `deferred` -> `R28`
   - `N3` extension-lane over-interpretation boundary = `deferred` -> `R24`
 - `T64` is complete. It closes one bounded FR8 extension-lane benchmark with clean provenance and exact frozen-subset preservation against `T24`.
 - `T64` does not close `R24`, does not validate `.tflite`, does not validate real-board behavior, and does not authorize a rewrite of the historical `T24` frozen ranked table.
@@ -324,42 +324,42 @@ Captain closeout note after T42:
 ## 2. 本轮已完成
 
 1. 完成了 `T1`，固定恢复期解释器分工，并跑通最小 P0 smoke
-2. 完成了 `T2`，补充了 `docs/P0_smoke_bootstrap.md`
+2. 完成了 `T2`，补充了 `docs/recovery_bootstrap/P0_smoke_bootstrap.md`
 3. 完成了 `T3`，补充了：
    - `docs/tasks/P0/T3_hil_p4_boundary_audit.md`
    - `docs/03_hil_p4_boundary_audit.md`
 4. 完成了 `T4`，补充了：
    - `docs/tasks/P0/T4_software_hil_bootstrap_and_smoke.md`
    - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
-   - `docs/P3_software_hil_bootstrap.md`
+   - `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
 5. 完成了 `T5`，补充了：
    - `docs/tasks/P0/T5_repo_noise_governance.md`
    - `docs/06_repo_noise_governance.md`
 6. 完成了 `T6`，补充了：
    - `docs/tasks/P0/T6_software_hil_reverification.md`
-   - `docs/P3_software_hil_bootstrap.md` 的二次复验证据
+   - `docs/recovery_bootstrap/P3_software_hil_bootstrap.md` 的二次复验证据
 7. 完成了 `T7`，补充了：
    - `docs/tasks/P0/T7_p4_benchmark_reverification.md`
    - `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
-   - `docs/P4_benchmark_recovery_bootstrap.md`
+   - `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 8. 完成了 `T8`，补充了：
    - `docs/tasks/P0/T8_gate_review_and_phase_decision.md`
    - `docs/review/T8_gate_review.md`
 9. 完成了 `T9`，补充了：
    - `docs/tasks/P0/T9_p4_frozen_baseline_single_scenario_all_modes.md`
-   - `docs/P4_benchmark_recovery_bootstrap.md` 的四模式复验证据
+   - `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md` 的四模式复验证据
 10. 完成了 `T10`，补充了：
    - `docs/tasks/P0/T10_gate_review_after_t9.md`
    - `docs/review/T10_gate_review.md`
 11. 完成了 `T11`，补充了：
    - `docs/tasks/P0/T11_recovery_dependency_manifest.md`
    - `requirements-recovery.txt`
-   - `docs/P0_smoke_bootstrap.md`、`docs/P3_software_hil_bootstrap.md`、`docs/P4_benchmark_recovery_bootstrap.md` 中对 root manifest 的统一引用
+   - `docs/recovery_bootstrap/P0_smoke_bootstrap.md`、`docs/recovery_bootstrap/P3_software_hil_bootstrap.md`、`docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md` 中对 root manifest 的统一引用
 12. 完成了 `T12`，补充了：
    - `docs/tasks/P0/T12_software_hil_determinism_recovery.md`
    - `physics/syndrome_measurement.py`
    - `cnn_fpga/runtime/fast_loop_emulator.py`
-   - `docs/P3_software_hil_bootstrap.md` 的确定性复验证据
+   - `docs/recovery_bootstrap/P3_software_hil_bootstrap.md` 的确定性复验证据
 13. 完成了 `T13`，补充了：
    - `docs/tasks/P0/T13_recovery_exit_and_closeout.md`
    - `docs/review/T13_recovery_exit_review.md`
@@ -374,12 +374,12 @@ Captain closeout note after T42:
    - `docs/tasks/Phase2/T19_tracked_cache_cleanup_manifest.md`
    - `docs/tasks/Phase2/T20_real_board_readiness_checklist.md`
 16. 完成了 `T14`，补充了：
-   - `docs/P4_benchmark_development_protocol.md`
+   - `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
    - `docs/review/T14_protocol_audit_review.md`
 17. 完成了 `T15`，补充了：
    - `docs/tasks/Phase2/T15_p4_multiscenario_frozen_smoke.md` 的 Worker output
-   - `docs/P4_benchmark_development_protocol.md` 的 T15 execution record
-   - `docs/P4_benchmark_recovery_bootstrap.md` 的 T15 关系说明
+   - `docs/protocols/benchmark/P4_benchmark_development_protocol.md` 的 T15 execution record
+   - `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md` 的 T15 关系说明
    - `docs/review/T15_frozen_smoke_review.md`
    - 新 run dir：`runs/p4_benchmark/p4multis_20260508_221718_b82874_48280`
 18. Captain 已按 `PASS_WITH_WARNINGS` 处理 `T15` review：
@@ -395,20 +395,20 @@ Captain closeout note after T42:
    - 当前更适合优先转向 `T17 / T18` 这类独立 manifest / boundary 任务
    - `hybrid_residual_b` teacher diagnostics 全零保留为非阻塞风险
 21. 完成了 `T17`，补充了：
-   - `docs/training_chain_bootstrap.md`
+   - `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`
    - `docs/tasks/Phase2/T17_training_manifest_bootstrap.md` 的 Worker output
 22. `T17` 将训练链环境说明与 recovery smoke 依赖说明显式拆开：
    - `requirements-recovery.txt` 继续只覆盖 `P0/P3/P4 recovery smoke`
-   - `docs/training_chain_bootstrap.md` 单独记录训练链推荐解释器、训练入口、双后端边界与未覆盖项
+   - `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md` 单独记录训练链推荐解释器、训练入口、双后端边界与未覆盖项
    - 本轮没有启动训练长跑，也没有把 `DLEnv` 写成跨机器保证
 23. Captain 已按 `PASS` 处理 `T17` review：
    - N1 accepted：`torch = 2.8.0.dev20250405+cu128` 是本机 dev build 事实，不能写成跨机器保证
-   - N2 accepted：本任务允许用 `docs/training_chain_bootstrap.md` 替代 `requirements-train.txt`；训练链可移植性如需增强，后续单开任务
+   - N2 accepted：本任务允许用 `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md` 替代 `requirements-train.txt`；训练链可移植性如需增强，后续单开任务
 24. 当前唯一任务已切换为 `T18`：
    - 目标是为 `.tflite` export/runtime 路径补独立 manifest 与 boundary smoke plan
    - 必须区分真实 `.tflite` 与 `.tflite.json` / `tflite_stub_v1`
 25. 完成了 `T18`，补充了：
-   - `docs/TFLite_runtime_bootstrap.md`
+   - `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md`
    - `docs/tasks/Phase2/T18_tflite_manifest_and_smoke_plan.md` 的 Worker output
 26. `T18` 将 `.tflite` 路径的真实 runtime 依赖与 stub 边界显式拆开：
    - 当前机器未安装 `tensorflow` / `tflite_runtime`
@@ -419,18 +419,18 @@ Captain closeout note after T42:
    - N1 accepted：推荐表述中的 Markdown 引号嵌套只是排版提醒，不影响结论，也不写入 risks
 28. `T19` 已完成并通过 review：
    - `docs/review/T19_review.md` verdict = `PASS`
-   - `docs/cleanup_tracked_cache_manifest.md` 已固定 tracked cache cleanup 的 9 个目录、命令草案、回滚方案与验收标准
+   - `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md` 已固定 tracked cache cleanup 的 9 个目录、命令草案、回滚方案与验收标准
    - tracked `.pyc` 文件共 `116` 个，全部位于 `9` 个 `__pycache__` 目录中
    - 未执行任何物理 cleanup，`runs/` 与 `artifacts/` 仍保持不触碰
 29. `T20` 已完成并通过 adversarial review：
    - `docs/review/T20_review.md` verdict = `PASS`
-   - `docs/real_board_hil_readiness.md` 已形成真板 readiness checklist、前置条件与最小 smoke 验收标准
+   - `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md` 已形成真板 readiness checklist、前置条件与最小 smoke 验收标准
    - 产物仍只是 readiness / acceptance criteria，不是真板验证
 30. 当前唯一任务已切换为 `T21`：
    - 目标是做 Phase 2 milestone review 和 next-phase decision
    - 任务只做只读 review，不运行 benchmark、不执行 cleanup、不调用硬件
 31. `T20` 的只读 Worker 输出已就位：
-   - 新增 `docs/real_board_hil_readiness.md`
+   - 新增 `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
    - 固定了 `board_backend.py` / `fpga_driver.py` 的 placeholder 证据点
    - 固定了真板前置条件、最小 smoke 验收标准与禁止表述
    - 未调用硬件，未修改真板代码，`T20` 已收口
@@ -444,7 +444,7 @@ Captain closeout note after T42:
    - 目标是为后续真板 smoke 制定 execution plan
    - 任务仍不调用硬件、不实现真板 backend、不运行 `backend=board` HIL
 34. `T22` 的 Worker 计划层输出已就位，并在随后进入 reviewer / Captain 收口：
-   - 新增 `docs/real_board_smoke_execution_plan.md`
+   - 新增 `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`
    - 已补 target platform decision points：Linux / Windows / WSL / remote board host
    - 已补 AXI/register map 审计清单，直接对应 `axi_map.py`
    - 已补 DMA buffer 审计清单，直接对应 `dma_client.py`
@@ -467,7 +467,7 @@ Captain closeout note after T42:
    - N1 out-of-scope governance sync：`accepted`
    - N2 exact CLI shape：`deferred`，写入 R19，并在 T24 任务包中固定
    - N3/N4 requested metric availability：`deferred`，写入 R19，T24 必须报告实际可用字段与缺失字段
-   - `docs/P4_benchmark_formal_protocol.md` 明确写出 `T23 did not run benchmark`
+   - `docs/protocols/benchmark/P4_benchmark_formal_protocol.md` 明确写出 `T23 did not run benchmark`
 38. 当前唯一任务已切换为 `T24`：
    - 目标是执行 `4 scenarios x 5 modes x repeats=2` 的 bounded formal software revalidation
    - 任务仍固定为 `mock-backed` software HIL，不是 `.tflite` runtime，不是真板验证
@@ -480,7 +480,7 @@ Captain closeout note after T42:
    - 请求的统计字段全部存在于 `comparison.csv`
    - `correction_saturation_rate_mean` 全为 0.0，`teacher_scalar_diagnostics.csv` 仅有 header 行
    - Mock-backed software HIL only，不是 `.tflite` runtime、不是 `real_board`、不是 paper-grade expanded benchmark
-   - `docs/P4_benchmark_formal_protocol.md` 已更新 T24 execution record (Section 15)
+   - `docs/protocols/benchmark/P4_benchmark_formal_protocol.md` 已更新 T24 execution record (Section 15)
    - `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md` 已更新 Worker output
    - `docs/review/T24_review.md` verdict = `PASS_WITH_WARNINGS`，blocking issues = none
    - Captain 已接受 T24 为 `PASS_WITH_WARNINGS`
@@ -551,7 +551,7 @@ Captain closeout note after T42:
    - 任务包：`docs/tasks/Phase2/T26_statcalib_feasibility_gate.md`
 48. `T26` 已完成并由 Captain 接受为 `PASS`：
    - `docs/review/T26_review.md` verdict = `PASS`
-   - `docs/statcalib_feasibility_gate.md` gate verdict = `CONDITIONAL_GO`
+   - `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md` gate verdict = `CONDITIONAL_GO`
    - statcalib 仍未实现、未验证；只能作为 separate comparator lane 后续推进
    - 未修改 source/config/run/artifact，未运行 benchmark，未新增 run dir
    - non-blocking comments accepted as follow-up constraints：后续 implementation task 必须给出更强 audit trail、exact typed `StatCalibInput` / `StatCalibOutput` 和清晰人读解释
@@ -567,7 +567,7 @@ Captain closeout note after T42:
 51. `T36` 已完成并由 Captain 接受为 `PASS`：
    - `docs/review/T36_review.md` verdict = `PASS`
    - Blocking issues: none
-   - 诊断报告：`docs/seed20260429_failure_diagnosis.md`
+   - 诊断报告：`docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`
    - 小型只读脚本：`cnn_fpga/benchmark/analyze_seed20260429_failure.py`
    - 结论：`20260429` 的收益收缩更像 residual-amplitude / teacher-delta regime instability；response lag、overflow/correction saturation、dead teacher branch 不受当前 artifacts 支持
    - 边界：现有 artifacts 缺 per-window / per-commit trace，因此 sign offset、overshoot chronology、teacher-vs-CNN attribution 仍不能定因果
@@ -786,9 +786,9 @@ Captain closeout note after T42:
   - 去掉 `--no-plot` 后的 `matplotlib`
 - 文档同步结果：
   - `README.md`
-  - `docs/P0_smoke_bootstrap.md`
-  - `docs/P3_software_hil_bootstrap.md`
-  - `docs/P4_benchmark_recovery_bootstrap.md`
+  - `docs/recovery_bootstrap/P0_smoke_bootstrap.md`
+  - `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
+  - `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
   都已改为显式引用 `requirements-recovery.txt`
 
 ### 3.11 T15 P4 development bounded run 结果
@@ -914,11 +914,11 @@ Captain closeout note after T42:
 关键产出：
 
 - `requirements-recovery.txt`
-- `docs/P0_smoke_bootstrap.md`
+- `docs/recovery_bootstrap/P0_smoke_bootstrap.md`
 - `docs/03_hil_p4_boundary_audit.md`
-- `docs/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
 - `docs/06_repo_noise_governance.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/review/T8_gate_review.md`
 - `docs/review/T10_gate_review.md`
 - `docs/review/T14_protocol_audit_review.md`
@@ -942,21 +942,21 @@ Captain closeout note after T42:
 - `docs/review/T38_review.md`
 - `docs/review/Milestone2I_review.md`
 - `docs/review/T31_review.md`
-- `docs/seed20260429_failure_diagnosis.md`
-- `docs/seed20260429_trace_export_diagnosis.md`
-- `docs/P4_benchmark_development_protocol.md`
-- `docs/P4_benchmark_formal_protocol.md`
-- `docs/statcalib_feasibility_gate.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_failure_diagnosis.md`
+- `docs/evidence_packs/mechanism_ablation/seed20260429_trace_export_diagnosis.md`
+- `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_feasibility_gate.md`
 - `cnn_fpga/decoder/statcalib.py`
 - `tests/test_statcalib_interface.py`
 - `cnn_fpga/config/hardware_hil_recovery_smoke.yaml`
 - `cnn_fpga/config/p4_multiscenario_recovery_smoke.yaml`
-- `docs/training_chain_bootstrap.md`
-- `docs/training_chain_portable_dependency_lock_plan.md`
-- `docs/TFLite_runtime_bootstrap.md`
-- `docs/cleanup_tracked_cache_manifest.md`
-- `docs/real_board_hil_readiness.md`
-- `docs/real_board_smoke_execution_plan.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md`
+- `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md`
+- `docs/evidence_packs/deployment_boundary/TFLite_runtime_bootstrap.md`
+- `docs/evidence_packs/repo_hygiene/cleanup_tracked_cache_manifest.md`
+- `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`
+- `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md`
 
 ## 6. 当前唯一任务包摘要
 
@@ -1069,7 +1069,7 @@ This section supersedes the older T55-current-task wording in Sections 1 and 8A 
 ### Next recommended worker action
 
 1. Produce a retain / weaken / retire / reframe / still-open mechanism-claim table.
-2. Update `docs/paper_claim_evidence_ledger.md` only where `T55` changes claim status or wording boundary.
+2. Update `docs/paper_materials/paper_claim_evidence_ledger.md` only where `T55` changes claim status or wording boundary.
 3. State whether `T47` can proceed only under conditioned hedge wording.
 4. State whether any second intervention lane is `no-go`, `deferred`, or `conditionally justified`.
 
@@ -1135,7 +1135,7 @@ This section supersedes older T38-next wording in sections above.
 47. T31 是否可以交给 Worker？
    - 当前答案：
      - 可以。在当时时点，当前唯一任务是 `T31: Training-chain portable dependency lock plan`。
-     - Allowed files: `docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md`, `docs/training_chain_portable_dependency_lock_plan.md`, `docs/review/T31_review.md`, `docs/for_human/T31_explanation.md`。
+     - Allowed files: `docs/tasks/Phase2/T31_training_chain_portable_dependency_lock_plan.md`, `docs/evidence_packs/training_reproducibility/training_chain_portable_dependency_lock_plan.md`, `docs/review/T31_review.md`, `docs/for_human/T31_explanation.md`。
      - Worker 只允许做 read-only interpreter/package inventory 和 dependency-lock planning；不得安装依赖、运行训练、运行 benchmark、创建 `runs/` 或 `artifacts/`、修改 source/config/protocol/baseline/seed policy。
 
 ## 10. 2026-05-17 Captain Supersession
@@ -1146,7 +1146,7 @@ This section supersedes older T38/T31-next wording in sections above.
    - 当前答案：
      - Verdict：`PASS`；blocking issues: none。
      - N1 markdown subsection numbering：`accepted` as cosmetic。
-     - N2 `docs/training_chain_bootstrap.md` later alignment：`accepted` as future alignment。
+     - N2 `docs/evidence_packs/training_reproducibility/training_chain_bootstrap.md` later alignment：`accepted` as future alignment。
      - N3 worker self-review overwritten by adversarial review：`accepted`。
      - 没有 `deferred` warning，因此未新增 risk。
 49. T31 是否允许进入下一 reproducibility step？

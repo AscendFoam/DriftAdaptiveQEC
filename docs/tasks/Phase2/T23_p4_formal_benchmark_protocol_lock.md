@@ -9,8 +9,8 @@ Why now: `T21` milestone gate 已确认当前 `T15` 仍只是 `development_smoke
 Allowed files:
 
 - `docs/tasks/Phase2/T23_p4_formal_benchmark_protocol_lock.md`
-- `docs/P4_benchmark_formal_protocol.md`
-- `docs/P4_benchmark_development_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
@@ -20,8 +20,8 @@ Inputs to read:
 - `docs/02_experiment_plan.md`
 - `docs/reference/进一步的深度研究结果.md`
 - `docs/CNN_FPGA_GKP_paper_inspired分支实验设计草案.md`
-- `docs/P4_benchmark_development_protocol.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/protocols/benchmark/P4_benchmark_development_protocol.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/review/T15_frozen_smoke_review.md`
 - `docs/review/T16_p4_evidence_gate_review.md`
 - `docs/review/T21_phase2_milestone_review.md`
@@ -31,7 +31,7 @@ Inputs to read:
 
 Expected output:
 
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 - 必须包含：
   - formal / development / recovery 三种证据等级边界
   - proposed formal matrix: scenarios / modes / repeats / seeds

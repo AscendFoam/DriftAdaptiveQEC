@@ -94,14 +94,14 @@ Read at minimum:
 - `docs/06_repo_noise_governance.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/paper_claim_evidence_ledger.md`
-- `docs/paper_draft_skeleton.md`
-- `docs/paper_method_positioning_calibration.md`
-- `docs/paper_reviewer_risk_audit.md`
-- `docs/paper_background_related_work_draft.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_draft_skeleton.md`
+- `docs/paper_materials/paper_method_positioning_calibration.md`
+- `docs/paper_materials/paper_reviewer_risk_audit.md`
+- `docs/paper_materials/paper_background_related_work_draft.md`
 - `docs/review/T43_review.md`
 - `docs/reference/AI_coding_workflow.md`
-- `docs/reference/科研纠偏意见.md`
+- `docs/legacy_context/reference_retired_2026-06-11/科研纠偏意见.md`
 - `relative_papers/Fast and accurate AI-based pre-decoders for surface codes.md`
 
 ## Recovery Mode Rules

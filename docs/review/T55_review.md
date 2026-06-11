@@ -46,7 +46,7 @@ Section 6.1 of the intervention report presents an "Expected I1 effect" column t
 
 | File | Status | Allowed? |
 | --- | --- | --- |
-| `docs/multi_seed_i1_intervention_probe.md` | New | Yes |
+| `docs/evidence_packs/mechanism_ablation/multi_seed_i1_intervention_probe.md` | New | Yes |
 | `docs/review/T55_review.md` | New (was worker self-review, now overwritten by adversarial review) | Yes |
 | `docs/for_human/T55_explanation.md` | New | Yes |
 | `docs/tasks/Phase2/T55_multi_seed_i1_residual_clip_intervention_probe.md` | Modified (Worker Output + Verification Record appended) | Yes |

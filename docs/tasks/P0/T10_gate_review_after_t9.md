@@ -39,8 +39,8 @@ Inputs to read:
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
 - `docs/review/T8_gate_review.md`
-- `docs/P3_software_hil_bootstrap.md`
-- `docs/P4_benchmark_recovery_bootstrap.md`
+- `docs/recovery_bootstrap/P3_software_hil_bootstrap.md`
+- `docs/recovery_bootstrap/P4_benchmark_recovery_bootstrap.md`
 - `docs/tasks/P0/T9_p4_frozen_baseline_single_scenario_all_modes.md`
 - `runs/hil_suite/hardware_hil_recovery_smoke_20260507_234638_3ae9f9176104/hil_summary.json`
 - `runs/p4_benchmark/p4multis_20260508_001316_0c12d7_39308/summary.json`

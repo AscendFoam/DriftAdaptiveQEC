@@ -22,7 +22,7 @@ The next controlled step is therefore not full paper drafting. It is to extend t
 
 Produce:
 
-1. an updated `docs/paper_draft_skeleton.md` that includes a bounded Background / Related Work section,
+1. an updated `docs/paper_materials/paper_draft_skeleton.md` that includes a bounded Background / Related Work section,
 2. a method-positioning calibration note that compares conservative vs method-forward framing and recommends the safe choice,
 3. calibrated title candidates and introduction contribution bullets that remain aligned with the T34 ledger and T41 milestone review.
 
@@ -31,8 +31,8 @@ Produce:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`
-- `docs/paper_draft_skeleton.md`
-- `docs/paper_method_positioning_calibration.md`
+- `docs/paper_materials/paper_draft_skeleton.md`
+- `docs/paper_materials/paper_method_positioning_calibration.md`
 - `docs/review/T42_review.md`
 - `docs/for_human/T42_explanation.md`
 
@@ -50,21 +50,21 @@ Read at minimum:
 - `docs/05_decision_log.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/paper_claim_evidence_ledger.md`
-- `docs/paper_draft_skeleton.md`
-- `docs/paper_reviewer_risk_audit.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_draft_skeleton.md`
+- `docs/paper_materials/paper_reviewer_risk_audit.md`
 - `docs/review/T34_review.md`
 - `docs/review/T35_review.md`
 - `docs/review/T41_review.md`
 - `docs/review/Milestone2K_review.md`
-- `docs/CNN_FPGA_GKP_工程化实验方案.md`
+- `docs/legacy_context/reference_retired_2026-06-11/CNN_FPGA_GKP_工程化实验方案.md`
 - `docs/CNN_FPGA_GKP_阶段结论.md`
 - `docs/CNN_FPGA_GKP_后续仿真与工程补强计划.md`
 - `docs/CNN_FPGA_GKP_paper_inspired分支实验设计草案.md`
 
 ## Required Output Shape
 
-### A. `docs/paper_draft_skeleton.md`
+### A. `docs/paper_materials/paper_draft_skeleton.md`
 
 Must be updated to include:
 
@@ -81,7 +81,7 @@ The section should create structural space for at least:
 - residual / teacher-guided decoder positioning
 - benchmark / deployment / hardware evidence boundary context
 
-### B. `docs/paper_method_positioning_calibration.md`
+### B. `docs/paper_materials/paper_method_positioning_calibration.md`
 
 Must include at least:
 
@@ -103,8 +103,8 @@ Adversarial review output covering:
 
 T42 must preserve all current boundaries from:
 
-- `docs/paper_claim_evidence_ledger.md`
-- `docs/paper_reviewer_risk_audit.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_reviewer_risk_audit.md`
 - `docs/review/Milestone2K_review.md`
 
 In particular, do not silently upgrade:
@@ -140,8 +140,8 @@ Verification is structure-and-boundary based:
 ## Docs To Update
 
 - `docs/tasks/Phase2/T42_paper_background_related_work_and_positioning.md`
-- `docs/paper_draft_skeleton.md`
-- `docs/paper_method_positioning_calibration.md`
+- `docs/paper_materials/paper_draft_skeleton.md`
+- `docs/paper_materials/paper_method_positioning_calibration.md`
 - `docs/review/T42_review.md`
 - `docs/for_human/T42_explanation.md`
 
@@ -164,8 +164,8 @@ This task is still docs-only. It is not the full drafting task. It exists to mak
 
 - Worker completed T42 on `2026-05-17`.
 - All required inputs read and cross-checked.
-- `docs/paper_draft_skeleton.md` updated: Background / Related Work scaffold added (6 subsections) between Introduction and Method; title candidates reorganized into conservative and method-forward groups with recommended framing; introduction contribution bullets calibrated against C1–C11.
-- `docs/paper_method_positioning_calibration.md` produced: conservative vs method-forward framing comparison, recommended safe framing (method-forward title, evidence-bounded body), contribution-bullet calibration table, 8 forbidden phrase categories.
+- `docs/paper_materials/paper_draft_skeleton.md` updated: Background / Related Work scaffold added (6 subsections) between Introduction and Method; title candidates reorganized into conservative and method-forward groups with recommended framing; introduction contribution bullets calibrated against C1–C11.
+- `docs/paper_materials/paper_method_positioning_calibration.md` produced: conservative vs method-forward framing comparison, recommended safe framing (method-forward title, evidence-bounded body), contribution-bullet calibration table, 8 forbidden phrase categories.
 - `docs/review/T42_review.md` produced with verdict = `PASS`.
 - `docs/for_human/T42_explanation.md` produced with Chinese human-facing explanation.
 - Blocked claims (C6, C7, C8, C10, C11) remain blocked in all outputs.

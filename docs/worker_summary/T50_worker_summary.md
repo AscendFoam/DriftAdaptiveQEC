@@ -8,7 +8,7 @@
 2. 新增 focused tests：`tests/test_training_reproducibility_pack.py`
 3. 新增派生配置：`cnn_fpga/config/task_tmp/T50_static_theta_repro_pack.yaml`
 4. 新增 bounded rerun 输出目录内容：`artifacts/t50_training_repro_pack/`
-5. 新增主报告：`docs/training_reproducibility_and_material_regeneration_pack.md`
+5. 新增主报告：`docs/evidence_packs/training_reproducibility/training_reproducibility_and_material_regeneration_pack.md`
 6. 新增 review 草稿：`docs/review/T50_review.md`
 7. 新增人类说明：`docs/for_human/T50_explanation.md`
 8. 新增本文件：`docs/worker_summary/T50_worker_summary.md`

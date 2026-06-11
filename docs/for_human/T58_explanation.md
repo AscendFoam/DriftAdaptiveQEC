@@ -38,12 +38,12 @@ Worker 新建了一个 task-scoped 图资产目录：
 
 此外还补了主说明文档：
 
-- `docs/fr6_multi_seed_mechanism_intervention_figure_pack.md`
+- `docs/evidence_packs/mechanism_ablation/fr6_multi_seed_mechanism_intervention_figure_pack.md`
 
 并更新了论文侧 ledger：
 
-- `docs/paper_ablation_result_pack.md`
-- `docs/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_ablation_result_pack.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
 - `docs/reality_recovery/04_figure_and_result_ledger.md`
 - `docs/reality_recovery/05_paper_claim_risk_table.md`
 

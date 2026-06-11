@@ -37,7 +37,7 @@ Produce the smallest believable hardening pass by answering:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T60_statcalib_lane_isolation_and_regression_hardening.md`
-- `docs/statcalib_lane_isolation_and_regression_hardening.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_lane_isolation_and_regression_hardening.md`
 - `docs/review/T60_review.md`
 - `docs/for_human/T60_explanation.md`
 - `docs/worker_summary/T60_worker_summary.md`
@@ -57,7 +57,7 @@ Worker may create:
 
 This task should update only:
 
-1. `docs/statcalib_lane_isolation_and_regression_hardening.md`
+1. `docs/evidence_packs/statcalib_fr8/statcalib_lane_isolation_and_regression_hardening.md`
 2. `docs/review/T60_review.md`
 3. `docs/for_human/T60_explanation.md`
 4. `docs/worker_summary/T60_worker_summary.md`
@@ -83,7 +83,7 @@ Read at minimum:
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
 - `docs/review/T59_review.md`
-- `docs/statcalib_comparator_lane_smoke.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_comparator_lane_smoke.md`
 - `docs/worker_summary/T59_worker_summary.md`
 - `cnn_fpga/decoder/statcalib.py`
 - `cnn_fpga/runtime/slow_loop_runtime.py`
@@ -148,7 +148,7 @@ fully unchanged.
 
 ## Expected Output Artifacts
 
-Create `docs/statcalib_lane_isolation_and_regression_hardening.md` with:
+Create `docs/evidence_packs/statcalib_fr8/statcalib_lane_isolation_and_regression_hardening.md` with:
 
 1. exact code/test changes made
 2. exact semantics of the `teacher_mode` isolation fix
@@ -215,7 +215,7 @@ This task exists to harden semantics and regression coverage before any later fa
 - Added `tests/test_statcalib_estimator.py` covering invalid-window, zero-mass, below-threshold, clip-boundary, and diagnostic-error estimator branches.
 - Added `tests/test_statcalib_aggregation.py` covering statcalib aggregation defaults, generated/mixed semantics, benchmark status-field behavior, and report-column visibility.
 - Added task-scoped closeout docs:
-  - `docs/statcalib_lane_isolation_and_regression_hardening.md`
+  - `docs/evidence_packs/statcalib_fr8/statcalib_lane_isolation_and_regression_hardening.md`
   - `docs/review/T60_review.md`
   - `docs/for_human/T60_explanation.md`
   - `docs/worker_summary/T60_worker_summary.md`

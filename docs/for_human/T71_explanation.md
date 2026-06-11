@@ -122,7 +122,7 @@
 - `replay_vs_regeneration_comparison.json`
   - 回放和再生成是否一致
 
-而主报告 [t71_real_board_gate_regeneration_pack.md](/D:/Codes/Quantum/DriftAdaptiveQEC/docs/t71_real_board_gate_regeneration_pack.md) 则把这些结果收成一句主结论：
+而主报告 [t71_real_board_gate_regeneration_pack.md](/D:/Codes/Quantum/DriftAdaptiveQEC/docs/evidence_packs/deployment_boundary/t71_real_board_gate_regeneration_pack.md) 则把这些结果收成一句主结论：
 
 - `T71` 没有改变 `T49` 的 current-host `NO_GO`
 - 它只是把这个 `NO_GO` 变得更可再生成、可迁移、可复核

@@ -28,9 +28,9 @@ Section 6.1 estimates 80 runs for Phase A (trace export for 5 seeds) and 128 tot
 
 Classification: `accepted` — time estimation is the responsibility of the future execution task, not this planning gate. The run count ceiling (80 for Phase A) is sufficient for scope control.
 
-### N4 The plan does not directly reference `docs/paper_claim_evidence_ledger.md` for C4 status tracking
+### N4 The plan does not directly reference `docs/paper_materials/paper_claim_evidence_ledger.md` for C4 status tracking
 
-The claim-boundary table (Section 3.3) correctly labels the current evidence as `trace-supported diagnostic (C4 partial)` and the worker verification record correctly states "C4 保持 partial，无 evidence level 升级." However, the plan does not provide a back-reference to the paper claim evidence ledger. A reader who wants to trace C4's full status history must separately consult `docs/paper_claim_evidence_ledger.md` and `docs/reality_recovery/01_claim_evidence_table.md`.
+The claim-boundary table (Section 3.3) correctly labels the current evidence as `trace-supported diagnostic (C4 partial)` and the worker verification record correctly states "C4 保持 partial，无 evidence level 升级." However, the plan does not provide a back-reference to the paper claim evidence ledger. A reader who wants to trace C4's full status history must separately consult `docs/paper_materials/paper_claim_evidence_ledger.md` and `docs/reality_recovery/01_claim_evidence_table.md`.
 
 Classification: `accepted` — the plan's audience is the mechanism execution task, not the paper ledger. The C4 label is correct and does not overclaim. A cross-reference would be nice but is not required.
 
@@ -46,7 +46,7 @@ Classification: `informational` — the worker's self-assessment was honest.
 
 | File | Status | Allowed? |
 | --- | --- | --- |
-| `docs/seed_mechanism_multi_seed_plan.md` | New | Yes |
+| `docs/evidence_packs/mechanism_ablation/seed_mechanism_multi_seed_plan.md` | New | Yes |
 | `docs/review/T46_review.md` | New (worker self-review, now overwritten by adversarial review) | Yes |
 | `docs/for_human/T46_explanation.md` | New | Yes |
 | `docs/tasks/Phase2/T46_multi_seed_mechanism_intervention_plan_and_trace_pack.md` | Modified (Worker Output + Verification Record appended) | Yes |

@@ -13,7 +13,7 @@ Worker completed on `2026-05-19`.
 
 ### Output shape check
 
-1. `docs/mainline_theory_analysis.md` — exists; explains the current mainline from approximate GKP definition to fast/slow-loop closed correction with formulas and implementation anchors.
+1. `docs/paper_materials/mainline_theory_analysis.md` — exists; explains the current mainline from approximate GKP definition to fast/slow-loop closed correction with formulas and implementation anchors.
 2. `docs/review/T53_review.md` — exists; verdict `PASS`; blocking issues none.
 3. `docs/for_human/T53_explanation.md` — exists; provides a short human-facing explanation of what the theory document is and is not.
 
@@ -75,7 +75,7 @@ Write one human-facing mainline theory document that:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T53_mainline_theory_analysis_document.md`
-- `docs/mainline_theory_analysis.md`
+- `docs/paper_materials/mainline_theory_analysis.md`
 - `docs/review/T53_review.md`
 - `docs/for_human/T53_explanation.md`
 - `docs/04_task_board.md`
@@ -95,10 +95,10 @@ Read at minimum:
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
 - `docs/reference/延伸改进思路.md`
-- `docs/reference/CNN_FPGA_GKP_工程化实验方案.md`
+- `docs/legacy_context/reference_retired_2026-06-11/CNN_FPGA_GKP_工程化实验方案.md`
 - `docs/reality_recovery/00_freeze_snapshot.md`
 - `docs/reality_recovery/01_claim_evidence_table.md`
-- `docs/paper_claim_evidence_ledger.md`
+- `docs/paper_materials/paper_claim_evidence_ledger.md`
 - `physics/README.md`
 - `cnn_fpga/data/README.md`
 - `cnn_fpga/decoder/README.md`
@@ -151,7 +151,7 @@ It must not:
 
 ## Expected Output
 
-Create `docs/mainline_theory_analysis.md` with the following shape:
+Create `docs/paper_materials/mainline_theory_analysis.md` with the following shape:
 
 1. scope and non-claims
 2. approximate GKP code definition and lattice picture

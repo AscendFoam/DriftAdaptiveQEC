@@ -18,7 +18,7 @@ T20 目标：为真板 HIL 路径补 readiness checklist 与缺口清单，不�
 
 | Done Criteria | 状态 | 说明 |
 |---------------|------|------|
-| 产出 real-board HIL readiness checklist | 完成 | `docs/real_board_hil_readiness.md` 新增，7 节，164 行 |
+| 产出 real-board HIL readiness checklist | 完成 | `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md` 新增，7 节，164 行 |
 | 明确 `board_backend.py` / `fpga_driver.py` 的 placeholder 证据 | 完成 | 第 2 节逐一列出，经独立代码验证全部准确 |
 | 明确真板前置条件、设备/地址/权限/日志需求 | 完成 | 第 3 节分 4 个子节（设备拓扑、权限、驱动/寄存器、运行时日志） |
 | 明确最小 smoke 验收标准 | 完成 | 第 4 节分 4 层（A: 设备存在、B: 寄存器活性、C: DMA 读出、D: commit/ack），且明确"四层全部通过后才适合继续讨论 benchmark" |
@@ -32,7 +32,7 @@ T20 目标：为真板 HIL 路径补 readiness checklist 与缺口清单，不�
 
 diff 涉及的文件：
 
-- `docs/real_board_hil_readiness.md`（新增） — allowed
+- `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`（新增） — allowed
 - `docs/tasks/Phase2/T20_real_board_readiness_checklist.md` — allowed（仅追加 Worker Output Summary）
 - `docs/03_hil_p4_boundary_audit.md` — allowed
 - `docs/04_task_board.md` — allowed
@@ -71,7 +71,7 @@ diff 涉及的文件：
 
 ### 4.1 是否有"伪装成真板证据"的隐蔽表述？
 
-逐段扫描 `docs/real_board_hil_readiness.md`：
+逐段扫描 `docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md`：
 
 - 第 1 节："本文件不代表真板 backend 已实现" — 明确
 - 第 2.3 节："只能证明 software HIL 路径存在，不能外推为真板证据" — 明确

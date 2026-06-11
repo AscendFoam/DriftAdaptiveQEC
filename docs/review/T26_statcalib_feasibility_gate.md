@@ -12,7 +12,7 @@ This was read-only feasibility work only. No benchmark run, no training, no `.tf
 
 - `docs/02_experiment_plan.md`
 - `docs/reference/AI_coding_workflow.md`
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 - `docs/review/T24_review.md`
 - `docs/review/T25_p4_formal_evidence_gate_review.md`
 - `docs/review/T27_teacher_diagnostics_path_audit.md`

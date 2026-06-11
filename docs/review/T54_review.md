@@ -18,7 +18,7 @@ Classification: `accepted` — these are new directories, not modifications to h
 
 ### N2 Seed reuse manifest has incomplete metadata for new seeds
 
-`seed_reuse_manifest.json` records `trace_row_count: null` and `field_availability: null` for seeds 20260425, 20260430, and 20260510 (the three new rerun seeds), suggesting the manifest was created before the trace export completed. The final report in `docs/multi_seed_trace_generalization_probe.md` Section 4 correctly reports all fields present for all seeds, and Section 3 reports the exact row counts.
+`seed_reuse_manifest.json` records `trace_row_count: null` and `field_availability: null` for seeds 20260425, 20260430, and 20260510 (the three new rerun seeds), suggesting the manifest was created before the trace export completed. The final report in `docs/evidence_packs/mechanism_ablation/multi_seed_trace_generalization_probe.md` Section 4 correctly reports all fields present for all seeds, and Section 3 reports the exact row counts.
 
 Classification: `accepted` — the manifest documents the pre-rerun decision state honestly (rerun_required: true). The final report has the complete metadata. No reader could be misled.
 
@@ -46,7 +46,7 @@ Classification: `accepted` — this refinement is honest and increases the scien
 
 | File | Status | Allowed? |
 | --- | --- | --- |
-| `docs/multi_seed_trace_generalization_probe.md` | New | Yes |
+| `docs/evidence_packs/mechanism_ablation/multi_seed_trace_generalization_probe.md` | New | Yes |
 | `docs/review/T54_review.md` | New (worker self-review, now overwritten by adversarial review) | Yes |
 | `docs/for_human/T54_explanation.md` | New | Yes |
 | `docs/tasks/Phase2/T54_multi_seed_trace_only_generalization_probe.md` | Modified (Worker Output + Verification Record appended) | Yes |

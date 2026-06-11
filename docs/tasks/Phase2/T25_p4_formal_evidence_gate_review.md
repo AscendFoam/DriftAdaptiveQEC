@@ -22,7 +22,7 @@ Inputs to read:
 - `docs/04_task_board.md`
 - `docs/07_handoff.md`
 - `docs/08_risks_and_open_questions.md`
-- `docs/P4_benchmark_formal_protocol.md`
+- `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
 - `docs/review/T24_review.md`
 - `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`
 - `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/summary.json`
@@ -106,7 +106,7 @@ Reviewer type: `adversarial`
    - `docs/04_task_board.md`
    - `docs/07_handoff.md`
    - `docs/08_risks_and_open_questions.md`
-   - `docs/P4_benchmark_formal_protocol.md`
+   - `docs/protocols/benchmark/P4_benchmark_formal_protocol.md`
    - `docs/review/T24_review.md`
    - `docs/tasks/Phase2/T24_p4_formal_software_revalidation.md`
 2. Read T24 evidence files:

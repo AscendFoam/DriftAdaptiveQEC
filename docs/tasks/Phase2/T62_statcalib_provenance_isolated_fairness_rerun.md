@@ -41,7 +41,7 @@ Produce the smallest believable provenance repair by answering:
 Worker may modify only:
 
 - `docs/tasks/Phase2/T62_statcalib_provenance_isolated_fairness_rerun.md`
-- `docs/statcalib_provenance_isolated_fairness_rerun.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_provenance_isolated_fairness_rerun.md`
 - `docs/review/T62_review.md`
 - `docs/for_human/T62_explanation.md`
 - `docs/worker_summary/T62_worker_summary.md`
@@ -54,7 +54,7 @@ Worker may create only:
 
 This task should update only:
 
-1. `docs/statcalib_provenance_isolated_fairness_rerun.md`
+1. `docs/evidence_packs/statcalib_fr8/statcalib_provenance_isolated_fairness_rerun.md`
 2. `docs/review/T62_review.md`
 3. `docs/for_human/T62_explanation.md`
 4. `docs/worker_summary/T62_worker_summary.md`
@@ -85,9 +85,9 @@ Read at minimum:
 - `docs/review/T59_review.md`
 - `docs/review/T60_review.md`
 - `docs/review/T61_review.md`
-- `docs/statcalib_comparator_lane_smoke.md`
-- `docs/statcalib_lane_isolation_and_regression_hardening.md`
-- `docs/statcalib_fairness_sanity.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_comparator_lane_smoke.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_lane_isolation_and_regression_hardening.md`
+- `docs/evidence_packs/statcalib_fr8/statcalib_fairness_sanity.md`
 - `docs/worker_summary/T59_worker_summary.md`
 - `docs/worker_summary/T60_worker_summary.md`
 - `docs/worker_summary/T61_worker_summary.md`
@@ -184,7 +184,7 @@ The final docs must say explicitly:
 
 ## Expected Output Artifacts
 
-Create `docs/statcalib_provenance_isolated_fairness_rerun.md` with:
+Create `docs/evidence_packs/statcalib_fr8/statcalib_provenance_isolated_fairness_rerun.md` with:
 
 1. exact preflight result (`branch`, `git status`, launch `HEAD`)
 2. exact rerun command
@@ -260,7 +260,7 @@ This task is the single allowed automatic retry for the same provenance blocker.
 1. Executed the bounded T62 sanity matrix in the single allowed run root:
    - `runs/p4_benchmark/T62_statcalib_provenance_isolated_20260527_122943`
 2. Created:
-   - `docs/statcalib_provenance_isolated_fairness_rerun.md`
+   - `docs/evidence_packs/statcalib_fr8/statcalib_provenance_isolated_fairness_rerun.md`
    - `docs/review/T62_review.md`
    - `docs/for_human/T62_explanation.md`
    - `docs/worker_summary/T62_worker_summary.md`
