@@ -16,6 +16,18 @@
 - 当前决策状态：`Go`
 - 当前唯一任务来源：`docs/04_task_board.md`
 
+## 2026-06-12 Captain Update (T77 closeout)
+
+- `T77` 已由 Captain 判定为 `PASS_WITH_WARNINGS`。
+- `T77` 在不改动源码、测试、`runs/`、`artifacts/` 或治理文档的前提下，完成了 note-draft 结果层同步、`T76` preview-source / stable-ID traceability hardening、本地 note 编译刷新与过程性临时渲染残留清理。
+- `T77` 关闭了 `R34`，但本轮 warning 仍需继续保留为新的 note 质量风险 `R35`：
+  - `N1` 整份 `.tex` 仍含未校准的非结果层历史段落 = `deferred -> R35`
+  - `N2` `statcalib` 在 `Numerical Results` 中的视觉层级仍偏高 = `deferred -> R35`
+  - `N3` `.log` 仍有 `Underfull \hbox` 排版 warning = `deferred -> R35`
+  - `N4` section-scope audit 仍依赖 manifest / `% T77-SOURCE` 注释而非机械 guard = `deferred -> R35`
+- 当前唯一任务切换为 `T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口`。
+- `T78` 仍留在 main 分支 paper-material 主线，只处理 note-draft 的非结果层校准、`statcalib` 层级降权、section-scope 审计和 LaTeX 排版收口；不与 theory 分支大范围改写混做，也不允许扩成 benchmark、`.tflite`、真板执行、sidecar promotion 或 full-manuscript reopen。
+
 ## 2026-06-12 Captain Update (T76 closeout)
 
 - `T76` 已由 Captain 判定为 `PASS_WITH_WARNINGS`。

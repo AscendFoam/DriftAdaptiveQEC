@@ -3,6 +3,22 @@
   "task_title": "rendered figure QA and results section assembly pack",
   "generated_on": "2026-06-12",
   "scope": "paper-facing rendered preview QA and section assembly only",
+  "traceability_schema": {
+    "csv_columns": [
+      "preview_id",
+      "t75_asset_id",
+      "upstream_t74_ids",
+      "source_preview_ids",
+      "source_ref",
+      "output_file",
+      "role",
+      "boundary_note"
+    ],
+    "notes": [
+      "Direct preview rows leave source_preview_ids empty because they render a single T75 asset directly.",
+      "Aggregate preview rows keep the union of upstream T74 stable IDs in upstream_t74_ids and list direct T76 inputs separately in source_preview_ids."
+    ]
+  },
   "render_backend": {
     "runtime": "bundled_node",
     "renderer": "sharp",
@@ -70,10 +86,15 @@
       "t75_asset_id": "CONTACT-SHEET",
       "upstream_t74_ids": [
         "T74-TBL-01",
+        "T74-FIG-01",
         "T74-FIG-02",
+        "T74-TBL-03",
         "T74-FIG-03",
         "T74-TBL-05",
-        "T74-TBL-06"
+        "T74-TBL-06",
+        "T74-SUP-03",
+        "T74-SUP-04",
+        "T74-FIG-04"
       ],
       "source_preview_ids": [
         "T76-PREVIEW-M01",
@@ -94,10 +115,15 @@
       "t75_asset_id": "PDF-BUNDLE",
       "upstream_t74_ids": [
         "T74-TBL-01",
+        "T74-FIG-01",
         "T74-FIG-02",
+        "T74-TBL-03",
         "T74-FIG-03",
         "T74-TBL-05",
-        "T74-TBL-06"
+        "T74-TBL-06",
+        "T74-SUP-03",
+        "T74-SUP-04",
+        "T74-FIG-04"
       ],
       "source_preview_ids": [
         "T76-PREVIEW-M01",
@@ -115,6 +141,7 @@
   "boundary_notes": [
     "Rendered previews validate paper-facing legibility only.",
     "T75 assets remain traceable back to T74 stable IDs and their authoritative upstream sources.",
+    "Aggregate previews now separate upstream T74 stable IDs from direct T76 preview inputs in both JSON and CSV trace maps.",
     "No rendered preview upgrades T48, T49/T71/T72, FR8, or the blocked T74-FIG-04 slot."
   ]
 }

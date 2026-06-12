@@ -28,6 +28,8 @@
 
 ### `T75-FIG-M01`
 
+- 对应 `T76` 预览：`T76-PREVIEW-M01`
+- 上游 `T74` stable IDs：`T74-TBL-01`、`T74-FIG-01`
 - 主标题、四个 scenario 标签、`Hybrid Residual-B` / `UKF runner-up` 图例与四个 `Δ` 注释均可读。
 - `T74-TBL-01 remains the authoritative numeric source.` 已完整显示。
 - 底部 boundary note 已完整显示。
@@ -35,6 +37,8 @@
 
 ### `T75-FIG-M02`
 
+- 对应 `T76` 预览：`T76-PREVIEW-M02`
+- 上游 `T74` stable IDs：`T74-FIG-02`、`T74-TBL-03`
 - 两个 panel 的标题、零线、seed 顺序与数值标注均可读。
 - 颜色不是唯一编码手段；seed 标签、正负号与零线在灰度场景下仍能区分主要语义。
 - 底部 boundary note 已完整显示。
@@ -42,6 +46,8 @@
 
 ### `T75-FIG-A01`
 
+- 对应 `T76` 预览：`T76-PREVIEW-A01`
+- 上游 `T74` stable IDs：`T74-FIG-03`、`T74-TBL-05`、`T74-TBL-06`、`T74-SUP-03`、`T74-SUP-04`、`T74-FIG-04`
 - Layer 1 / 2 / 3 的长句裁切已消失。
 - blocked slot、appendix authoring role、底部 boundary note 均可读。
 - 图仍然表达的是 layered boundary，而不是 unified portability / deployment closure。
@@ -66,4 +72,13 @@
 - `T76-PREVIEW-CS01` -> `t75_preview_contact_sheet.png`
 - `T76-PREVIEW-PDF01` -> `t75_preview_bundle.pdf`
 
-追溯关系以 `docs/figure_assets/T76_rendered_figure_qa_pack/render_manifest.json` 与 `preview_source_map.csv` 为准。
+聚合预览的 trace 规则为：
+
+- `T76-PREVIEW-CS01`
+  - 直接来源：`T76-PREVIEW-M01`、`T76-PREVIEW-M02`、`T76-PREVIEW-A01`
+  - 上游 `T74` stable IDs：`T74-TBL-01`、`T74-FIG-01`、`T74-FIG-02`、`T74-TBL-03`、`T74-FIG-03`、`T74-TBL-05`、`T74-TBL-06`、`T74-SUP-03`、`T74-SUP-04`、`T74-FIG-04`
+- `T76-PREVIEW-PDF01`
+  - 直接来源：`T76-PREVIEW-M01`、`T76-PREVIEW-M02`、`T76-PREVIEW-A01`、`T76-PREVIEW-CS01`
+  - 上游 `T74` stable IDs：`T74-TBL-01`、`T74-FIG-01`、`T74-FIG-02`、`T74-TBL-03`、`T74-FIG-03`、`T74-TBL-05`、`T74-TBL-06`、`T74-SUP-03`、`T74-SUP-04`、`T74-FIG-04`
+
+追溯关系以 `docs/figure_assets/T76_rendered_figure_qa_pack/render_manifest.json` 与 `preview_source_map.csv` 为准；`T77` 之后，聚合预览行必须同时保留 `upstream_t74_ids` 与 `source_preview_ids` 两条语义。

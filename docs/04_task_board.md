@@ -509,8 +509,22 @@
 
 ### Milestone 2X: Paper Note Results Sync And Traceability Hardening (proposed)
 
-- [ ] T77: 论文 note-draft 结果层同步与 T76 traceability hardening
+- [x] T77: 论文 note-draft 结果层同步与 T76 traceability hardening
   - Task package: `docs/tasks/Phase2/T77_paper_note_results_sync_and_traceability_hardening.md`
+  - Output: `docs/paper_materials/paper_note_results_sync_manifest.md`、更新后的 `docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.tex` 与 `docs/figure_assets/T76_rendered_figure_qa_pack/*`
+  - Review output: `docs/review/T77_review.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - Warning classification:
+    - `N1` 整份 `.tex` 仍含未校准的非结果层历史段落 = `deferred -> R35`
+    - `N2` `statcalib` 在 `Numerical Results` 中的视觉层级仍偏高 = `deferred -> R35`
+    - `N3` `.log` 仍有 `Underfull \hbox` 排版 warning = `deferred -> R35`
+    - `N4` section-scope audit 仍依赖 manifest / `% T77-SOURCE` 注释而非机械 guard = `deferred -> R35`
+  - Result: T77 closes the note results-layer sync and T76 traceability hardening gap honestly, closes `R34`, but leaves one bounded note-calibration / hierarchy / layout closeout gap before any paper reopen gate
+
+### Milestone 2Y: Paper Note Calibration And Layout Closeout (proposed)
+
+- [ ] T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口
+  - Task package: `docs/tasks/Phase2/T78_paper_note_alignment_statcalib_hierarchy_and_layout_closeout.md`
 
 ### Milestone 2R: Reproducibility And Material Pack (proposed)
 
@@ -531,6 +545,21 @@
 Long-term objective:
 
 以论文级质量为最终目标，但当前先进入 `Research Reality Recovery Mode`。后续任务顺序改为“真实性冻结 -> claim/evidence/material 台账 -> 复现/图表/结果缺口审计 -> 风险收口 -> 再决定是否恢复论文扩写”。除 `Current Unique Task` 外，其他 pending 项只代表路线图，不可直接执行。
+
+## 2026-06-12 Captain Final Supersession (T77 closeout)
+
+- Current unique task: `T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口`
+- Task package: `docs/tasks/Phase2/T78_paper_note_alignment_statcalib_hierarchy_and_layout_closeout.md`
+- `T77` has been judged `PASS_WITH_WARNINGS`.
+- `T77` has honestly completed the bounded note results-layer synchronization, T76 preview-source / stable-ID traceability hardening, local note compile refresh, and exact-path cleanup of temporary render residue without touching code, tests, `runs/`, `artifacts/`, or governance docs.
+- `T77` warning classification:
+  - `N1` whole-file `.tex` still contains unsynchronized non-results legacy hunks = `deferred -> R35`
+  - `N2` `statcalib` still sits visually too close to the main results layer inside `Numerical Results` = `deferred -> R35`
+  - `N3` note `.log` still contains `Underfull \hbox` layout warnings = `deferred -> R35`
+  - `N4` section-scope proof still relies on manifest / `% T77-SOURCE` comments rather than a more mechanical audit = `deferred -> R35`
+- `R34` is closed by `T77`; `R35` is new; `R13/R14/R32/R33` remain open.
+- `T78` is next because the mainline bottleneck has shifted again: the repo no longer lacks note results-layer sync, but it still lacks one bounded note-calibration pass that de-emphasizes `statcalib`, aligns remaining non-results wording to the current evidence stack, and closes the visible LaTeX/layout loose ends before any paper reopen gate.
+- `T78` must remain docs-only, mainline-only, and must not widen into benchmark reruns, `.tflite`, real-board execution, theory-branch large-scale rewriting, sidecar promotion, or full-manuscript reopen.
 
 ## 2026-06-12 Captain Final Supersession (T76 closeout)
 
@@ -602,41 +631,42 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T77: 论文 note-draft 结果层同步与 T76 traceability hardening`
+`T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口`
 
 Status:
 
-- `T76` has been reviewed as `PASS_WITH_WARNINGS`.
-- `T76` completed the bounded rendered-QA / Results-assembly pack without code, benchmark, runtime, board, or governance drift.
-- `T76` opens one new paper-facing carry-forward risk: `R34`.
-- `R13/R14/R32/R33/R34` remain open, and `T37` remains blocked.
+- `T77` has been reviewed as `PASS_WITH_WARNINGS`.
+- `T77` completed the bounded note results-layer sync and T76 traceability hardening without code, benchmark, runtime, board, or governance drift.
+- `T77` closes `R34` and opens one new paper-facing carry-forward risk: `R35`.
+- `R13/R14/R32/R33/R35` remain open, and `T37` remains blocked.
 - 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 同时也是 `resource-blocked / lowest-priority backlog`。
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
 - `T64/T65/T66/T67/T68/T69/T70` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T77` must remain docs-only and must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
+- `T78` must remain docs-only and must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
 
 Why this task is next:
 
-1. `T76` has already produced the bounded rendered-preview and assembly pack, so the next bottleneck is no longer visual readability itself.
-2. The next bottleneck is the absence of one bounded note-sync and traceability-hardening layer that cleans the `T76` preview-source schema, writes the per-figure upstream stable IDs more explicitly, and synchronizes the now-reviewed result layer into `docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.tex`.
+1. `T77` has already produced the bounded note results-layer sync and cleaned the T76 preview-source / stable-ID traceability issue, so that is no longer the dominant gap.
+2. The next bottleneck is one bounded note-calibration pass for the rest of the paper-facing note surface: non-results wording still contains pre-existing legacy phrasing, `statcalib` is still visually too central, and the compiled note still shows avoidable layout loose ends.
 3. 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 不仅证据未满足，而且属于资源受限 backlog，不应早于 paper-material 主线任务。
-4. `T51/T52` full paper re-open tasks 仍然过早；在 repo 先完成 note-draft 的受控结果层同步与 traceability hardening 之前，不应恢复 full-manuscript 扩写。
-5. `T77` is intentionally stronger than a simple gate note because it requires actual note-draft synchronization, source-ID hardening, and compile-aware validation without silently promoting any blocked claim.
+4. `T51/T52` full paper re-open tasks 仍然过早；在 repo 先完成 note-draft 的非结果层校准、层级降权与排版收口之前，不应恢复 full-manuscript 扩写。
+5. `T78` is intentionally stronger than a cosmetic cleanup task because it requires bounded non-results calibration, explicit hierarchy control for `statcalib`, compile-aware layout closeout, and a more mechanical section-scope audit without silently promoting any blocked claim.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T77`
-- Latest reviewed task: `docs/review/T76_review.md` with verdict `PASS_WITH_WARNINGS`
-- T76 closeout:
+- Current unique task: `T78`
+- Latest reviewed task: `docs/review/T77_review.md` with verdict `PASS_WITH_WARNINGS`
+- T77 closeout:
   - blocking issues = none
-  - deferred warnings = `N1/N3 -> R34`
+  - deferred warnings = `N1/N2/N3/N4 -> R35`
   - rejected warnings = none
-  - new risk opened = `R34`
-  - carry-forward notes = `.tmp_t76_*` / `.tmp_t76_fontcache/` must stay out of the main commit; note-draft sync should now be handled by one bounded follow-up task
-- Next worker-facing task package: `docs/tasks/Phase2/T77_paper_note_results_sync_and_traceability_hardening.md`
-- `T77` may build only bounded note-draft sync outputs, preview-source / stable-ID hardening, optional local note compile artifacts, and exact-path cleanup of `.tmp_t76_*`; it must not touch governance docs, source code, tests, `runs/`, `artifacts/`, or reopen the full manuscript
-- `T77` is the only recommended next mainline task after `T76`
+  - risk closed = `R34`
+  - new risk opened = `R35`
+  - carry-forward notes = current note still needs one bounded non-results calibration / hierarchy / layout pass before any paper reopen gate
+- Next worker-facing task package: `docs/tasks/Phase2/T78_paper_note_alignment_statcalib_hierarchy_and_layout_closeout.md`
+- `T78` may build only bounded note-calibration outputs, hierarchy/layout closeout records, refreshed local note compile artifacts, and section-scope audit material; it must not touch governance docs, source code, tests, `runs/`, `artifacts/`, or reopen the full manuscript
+- `T78` is the only recommended next mainline task after `T77`
 
 ## 并行 Sidecar 扩展实验治理
 

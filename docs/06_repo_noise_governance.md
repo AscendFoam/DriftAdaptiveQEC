@@ -11,6 +11,14 @@
 
 本文件不宣称仓库已经完成物理清理。
 
+## 2026-06-12 Captain Update (T77 closeout)
+
+- `T77` 已按 `PASS_WITH_WARNINGS` 收口。
+- 就 repo-noise 与验证边界而言，`T77` 只在 `docs/paper_notes/*`、`docs/paper_materials/*`、`docs/figure_assets/T76_rendered_figure_qa_pack/*` 与 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/` 或 benchmark output。
+- `T77` 对 `.tmp_t76_render_a01.png`、`.tmp_t76_render_m02.png`、`.tmp_t76_render_probe.png` 与 `.tmp_t76_fontcache/` 的处理已经完成；这些路径只属于本地主机渲染探针/缓存残留，不是正式 deliverable，也不应再回到后续提交集合。
+- 当前唯一任务切换为 `T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口`；它允许新增或修改的正式产物仍限于 `docs/paper_notes/*`、`docs/paper_materials/*` 与 task-scoped review / explanation / summary 文件。
+- `T78` 不得借 note 校准之名顺手创建新 run、重算 benchmark、更新历史 artifact、扩写 theory 分支大范围内容或升级部署/真板证据等级。
+
 ## 2026-06-12 Captain Update (T76 closeout)
 
 - `T76` 已按 `PASS_WITH_WARNINGS` 收口。

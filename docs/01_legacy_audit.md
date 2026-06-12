@@ -78,6 +78,13 @@
 - `T25` 已完成 result-boundary gate review，并确认 T24 只能作为 `mock-backed` software HIL formal software revalidation
 - 后续 P3/P4 文档与复验结果都应沿用同一套 backend / artifact type 表述口径
 
+### 2026-06-12 Captain Update (T77 closeout)
+
+- `T77` 已被 Captain 接受为 `PASS_WITH_WARNINGS`。
+- 这次 closeout 仍然没有改变 legacy audit 的真实性判断：`T77` 只是 docs-only 的 note 结果层同步、traceability hardening 与本地编译刷新，不是新的实验、不是新的板级证据、也不是任何 `.tflite` / real-board / mature comparator 事实升级。
+- `R34` 已由 `T77` 收口；新的 carry-forward 风险变为 `R35`，它只约束 note 的非结果层校准、`statcalib` 视觉层级与排版 warning，不改变 truth matrix。
+- 当前唯一任务已切换为 `T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口`；它仍是 main 分支 docs-only 的论文 note 质量收口任务，不触碰 theory 分支的大范围改写，也不改变 legacy truth matrix。
+
 ### 2026-06-12 Captain Update (T76 closeout)
 
 - `T76` 已被 Captain 接受为 `PASS_WITH_WARNINGS`。

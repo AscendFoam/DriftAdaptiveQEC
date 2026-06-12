@@ -122,6 +122,15 @@
 - 可以说：`Research Reality Recovery Mode is a governance freeze and audit mode, not an evidence upgrade.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`
+
+## 2026-06-12 Captain Update (T77/T78 boundary supersession)
+
+- `T77` 已由 Captain 以 `PASS_WITH_WARNINGS` 收口。
+- 它只在 docs-only 主线中完成了 note-draft 结果层同步、`T76` traceability hardening、本地 note 编译刷新与精确路径的临时渲染残留清理；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 gate/smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- `R34` 已由 `T77` 收口；新的 `R35` 只约束 note 的非结果层校准、`statcalib` 视觉层级与排版 warning，不是新的运行时、板级或 benchmark 边界问题。
+- 因此当前唯一任务切换为 `T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口`。
+- `T78` 仍是 docs-only 主线任务；它只允许调整 note 的 wording / hierarchy / layout，并补一份更机械的 section-scope 审计，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实。
+
 ## 2026-06-12 Captain Update (T76/T77 boundary supersession)
 
 - `T76` 已由 Captain 以 `PASS_WITH_WARNINGS` 收口。

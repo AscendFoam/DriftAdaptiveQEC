@@ -1,3 +1,18 @@
+## 2026-06-12 Captain Final Supersession (T77 closeout)
+
+- Current unique task: `T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口`
+- Task package: `docs/tasks/Phase2/T78_paper_note_alignment_statcalib_hierarchy_and_layout_closeout.md`
+- `T77` has been judged `PASS_WITH_WARNINGS`.
+- `T77` completed the bounded note results-layer sync, T76 preview-source / stable-ID traceability hardening, local note compile refresh, and exact-path cleanup of temporary render residue honestly.
+- `T77` warning classification:
+  - `N1` whole-file `.tex` still contains unsynchronized non-results legacy hunks = `deferred -> R35`
+  - `N2` `statcalib` still sits visually too close to the main results layer inside `Numerical Results` = `deferred -> R35`
+  - `N3` note `.log` still contains `Underfull \hbox` layout warnings = `deferred -> R35`
+  - `N4` section-scope proof still relies on manifest / `% T77-SOURCE` comments rather than a more mechanical audit = `deferred -> R35`
+- `R34` is closed by `T77`; `R35` is new; `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T78` is the next bounded mainline task because the repo now needs note non-results calibration, `statcalib` hierarchy de-emphasis, and layout closeout before any paper reopen gate, not another experiment or a premature manuscript expansion.
+- `T78` must stay docs-only, mainline-only, and must not widen into benchmark/HIL reruns, `.tflite` execution, real-board execution, theory-branch large-scale rewriting, sidecar promotion, or full-manuscript reopen.
+
 ## 2026-06-12 Captain Final Supersession (T76 closeout)
 
 - Current unique task: `T77: 论文 note-draft 结果层同步与 T76 traceability hardening`
@@ -91,20 +106,20 @@
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T77: 论文 note-draft 结果层同步与 T76 traceability hardening`
-- 任务包：`docs/tasks/Phase2/T77_paper_note_results_sync_and_traceability_hardening.md`
+- 当前唯一任务：`T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口`
+- 任务包：`docs/tasks/Phase2/T78_paper_note_alignment_statcalib_hierarchy_and_layout_closeout.md`
 - 当前主线优先级：先补论文所需的仿真结果、图表、caption 与 supporting materials；real-board execution 因当前暂无 `Linux + FPGA` 硬件宿主而维持最低优先级 backlog
 
 Captain continuity note:
 
-- The authoritative current task for all new worker action is `T77: 论文 note-draft 结果层同步与 T76 traceability hardening`.
-- Authoritative task package: `docs/tasks/Phase2/T77_paper_note_results_sync_and_traceability_hardening.md`.
-- `T76` is complete and accepted as `PASS_WITH_WARNINGS`.
-- `T76` opens one new paper-facing traceability risk: `R34`; `R32` remains the existing narrowed deployment-boundary carry-forward risk.
-- `T77` is the single recommended next task after `T76`.
+- The authoritative current task for all new worker action is `T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口`.
+- Authoritative task package: `docs/tasks/Phase2/T78_paper_note_alignment_statcalib_hierarchy_and_layout_closeout.md`.
+- `T77` is complete and accepted as `PASS_WITH_WARNINGS`.
+- `R34` is closed by `T77`; `R35` is the new paper-facing note-calibration carry-forward risk; `R32` remains the existing narrowed deployment-boundary carry-forward risk.
+- `T78` is the single recommended next task after `T77`.
 - `T37` / real-board execution remains `blocked + lowest-priority backlog`; it is not the next mainline step while hardware host conditions remain unavailable.
 - If any older line below still mentions `T76` or earlier tasks as current, treat it as historical carry-forward text only.
-- `T77` is the single bounded next step after T76 closeout. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or full-manuscript reopen.
+- `T78` is the single bounded next step after T77 closeout. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or full-manuscript reopen.
 
 ## 2026-06-05 Captain Update (T67 closeout)
 

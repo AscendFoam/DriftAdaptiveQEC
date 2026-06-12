@@ -19,7 +19,7 @@
 | `t75_preview_contact_sheet.png` | 三张预览的联系页，对应 `T76-PREVIEW-CS01` |
 | `t75_preview_bundle.pdf` | 三张预览与联系页的 PDF bundle，对应 `T76-PREVIEW-PDF01` |
 | `render_manifest.json` | 预览产物总清单，锁定 preview ID、渲染后端、源图与输出文件 |
-| `preview_source_map.csv` | 把 `T76-PREVIEW-*` 追溯回 `T75-FIG-*` 与上游 `T74-*` |
+| `preview_source_map.csv` | 把 `T76-PREVIEW-*` 追溯回 `T75-FIG-*`、上游 `T74-*`，并在聚合预览行单独列出 `source_preview_ids` |
 | `visual_qa_checklist.md` | 本轮人工视觉 QA checklist |
 
 ## 3. 渲染边界
@@ -29,10 +29,21 @@
 - 联系页与 PDF：bundled Python + `Pillow` + `reportlab`
 - 若后续期刊模板需要不同尺寸或字体嵌入，本目录只能作为当前 host 的 rendered QA 证据，不代表最终出版社排版产物。
 
+## 3.5 Trace schema
+
+- 直接预览行（`T76-PREVIEW-M01`、`T76-PREVIEW-M02`、`T76-PREVIEW-A01`）：
+  - `upstream_t74_ids` 只记录真实上游 `T74-*` stable IDs；
+  - `source_preview_ids` 留空，因为这些行直接渲染单个 `T75-FIG-*` 资产。
+- 聚合预览行（`T76-PREVIEW-CS01`、`T76-PREVIEW-PDF01`）：
+  - `upstream_t74_ids` 记录其包含内容对应的 `T74-*` stable ID 并集；
+  - `source_preview_ids` 单独记录直接拼接或打包的 `T76-PREVIEW-*` 输入。
+- `render_manifest.json` 与 `preview_source_map.csv` 在这两个字段上的语义必须保持一致；`paper_rendered_figure_qa.md` 逐图 QA 结论则负责把这条 source chain 写成可直接人工检查的文字。
+
 ## 4. 与上游任务的关系
 
 - `T75` 提供 authoring 资产与 `authoring_manifest.json`
 - `T76` 只验证这些 authoring 资产在真实预览中可读，并补齐 section-assembly trace
+- `T77` 进一步把聚合预览行的 trace schema 拆干净，并把逐图 QA 中的 `T74/T75/T76` 回链写明到人工可读层
 - 如果要找 authoritative numerics、runtime boundary 或 real-board gate wording，仍需回到 `T74-*` 以及更上游 task/review/evidence path
 
 ## 5. 当前最重要的结论

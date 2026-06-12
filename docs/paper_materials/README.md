@@ -26,6 +26,7 @@
 | `paper_rendered_figure_qa.md` | `T76` 新增的真实渲染图形 QA 记录；把 `T75-FIG-*` 的 preview 问题、修正和当前可读性状态绑定到 `T76-PREVIEW-*` |
 | `paper_results_section_assembly_pack.md` | `T76` 新增的 Results section 装配包；锁定主文段落顺序、图表放置、fallback 路线与边界说明 |
 | `paper_results_callout_sheet.md` | `T76` 新增的作者 callout 清单；给出 paragraph-level 可写/不可写表述，并绑定 `T75-FIG-*` / `T74-*` 来源 |
+| `paper_note_results_sync_manifest.md` | `T77` 新增的 note 结果层同步清单；把 note 中被修改的 section/subsection、`T74/T75/T76` 来源、允许/禁止表述和未同步原因锁到一处 |
 
 ## 推荐阅读顺序
 
@@ -43,7 +44,8 @@
 12. `paper_rendered_figure_qa.md`
 13. `paper_results_section_assembly_pack.md`
 14. `paper_results_callout_sheet.md`
-15. `paper_claim_risk_table.md`
+15. `paper_note_results_sync_manifest.md`
+16. `paper_claim_risk_table.md`
 
 ## 边界
 
@@ -66,3 +68,7 @@
 `T76` 之后新增的一条 rendered-QA / assembly 规则是：
 
 - 真实渲染预览、contact sheet、PDF bundle 与 paragraph callout 优先通过 `T76-PREVIEW-*` 和 `paper_results_callout_sheet.md` 引用，再回链到 `T75-FIG-*` 与上游 `T74-*`；`T76` 只验证 paper-facing 可读性与装配顺序，不升级任何实验或部署证据。
+
+`T77` 之后新增的一条 note-sync 规则是：
+
+- note 的摘要、结果段、讨论和结论如果吸收当前 paper-facing 材料，应在源码旁保留 `T77-SOURCE` 注释，并以 `paper_note_results_sync_manifest.md` 作为 section-level trace 入口；`statcalib` 仍必须保持 extension-lane / no-promotion，deployment-facing 材料仍必须保持 layered boundary 口径。

@@ -58,6 +58,22 @@
   - `T49/T71/T72` = read-only real-board gate/provenance with current-host `NO_GO`
   - `T74-FIG-04` remains blocked
 
+### `statcalib` 补充材料边界
+
+- 主文不把 `statcalib` 写成段落 A/B/C 的并列主结果
+- 若 note 需要保留这条线，只允许作为补充材料侧的 extension-lane 说明
+- 绑定来源：
+  - `T74-TBL-07`
+  - `T74-SUP-01`
+- 必留边界：
+  - `no_promotion_keep_extension_lane_only`
+  - `future_selection_task_required`
+  - default / high-threshold persistent tie
+- 禁止写法：
+  - promoted mature comparator
+  - unique clean threshold established
+  - statcalib replaces the locked frozen benchmark
+
 ## 3. 图表插入建议
 
 | 段落 | 首选图表 | 次选 / fallback | 推荐落点 | 备注 |
@@ -84,6 +100,27 @@
    - `T74-TBL-06`
    - `T74-TBL-07`
    - `T74-SUP-01` 到 `T74-SUP-04`
+
+## 4.5 T77 note-sync 绑定
+
+`T77` 把这套 authoring/preview 材料同步进 `docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.tex` 时，采用以下绑定规则：
+
+- `Abstract`、`Summary of Contributions`、`Four-scenario affine benchmark`
+  - 先用 `T76-CALLOUT-R1`
+  - 再在需要时接 `T76-CALLOUT-R2`
+  - `T77-SOURCE` 注释优先回指 `T74-TBL-01`、`T75-FIG-M01`、`T76-PREVIEW-M01`
+- `Feature and teacher ablations`、`Mechanism probe`
+  - 先用 `T76-CALLOUT-R3`
+  - 需要 bridge 到 appendix 时再用 `T76-CALLOUT-R4`
+  - `T77-SOURCE` 注释优先回指 `T74-TBL-02`、`T74-TBL-03`、`T75-FIG-M02`、`T76-PREVIEW-M02`
+- `statcalib` 相关 note 段落
+  - 不进入段落 A/B/C 的主结果装配顺序
+  - 只允许使用 `T77-CALLOUT-R7` 的 supplement-side / no-promotion 口径
+  - `T77-SOURCE` 注释优先回指 `T74-TBL-07`、`T74-SUP-01`
+- `Discussion`、`Conclusion` 与 runtime/board boundary 段
+  - 用 `T76-CALLOUT-R5` 阻断 deployment overclaim
+  - appendix 图注或 blocked-slot 提醒可配 `T76-CALLOUT-R6`
+  - `T77-SOURCE` 注释优先回指 `T75-FIG-A01`、`T76-PREVIEW-A01`、`T74-TBL-05`、`T74-TBL-06`、`T74-SUP-03`、`T74-SUP-04`
 
 ## 5. 不能改动的 fallback 原则
 

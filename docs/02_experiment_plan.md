@@ -3,7 +3,7 @@
 **最后更新：** 2026-06-12  
 **当前阶段：** `Phase 2: Controlled Development`  
 **当前决策状态：** `Go`  
-**当前唯一任务：** 以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准；当前为 `T77`。`T74`、`T75`、`T76` 已完成并收口；在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，real-board 执行相关任务继续降为最低优先级 backlog，主线先完成 note-draft 的结果层同步、`T76` traceability hardening，以及其他论文材料质量控制。
+**当前唯一任务：** 以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准；当前为 `T78`。`T74`、`T75`、`T76`、`T77` 已完成并收口；在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，real-board 执行相关任务继续降为最低优先级 backlog，主线先完成 note-draft 的非结果层校准、`statcalib` 层级降权、排版 warning 收口，以及其他论文材料质量控制。
 
 ## 文档角色
 
@@ -48,7 +48,7 @@
 | True `.tflite` runtime | current-host isolated path 已确认 | `T48` | 默认环境恢复、HIL closure、deployment closure |
 | Real-board gate | current-host verdict 仍为 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE` | `T49`、`T71`、`T72` | 真板执行成功 |
 | `statcalib` | bounded mock-backed software-HIL extension lane，且明确 `no-promotion` | `T64`-`T70` | 成熟主线 comparator 或 `T24` 替代表 |
-| Paper materials / authoring | `T74` 的 paper-ready material pack、`T75` 的 bounded Results authoring pack 与 `T76` 的 rendered QA / assembly 已完成；当前进入 `T77` 的 note-draft results sync 与 traceability hardening | `T74`、`T75`、`T76`、`T77` | full-manuscript reopen 或 paper claim 升级 |
+| Paper materials / authoring | `T74` 的 paper-ready material pack、`T75` 的 bounded Results authoring pack、`T76` 的 rendered QA / assembly 与 `T77` 的 note-draft results sync / traceability hardening 已完成；当前进入 `T78` 的 note 非结果层校准、层级降权与排版收口 | `T74`、`T75`、`T76`、`T77`、`T78` | full-manuscript reopen 或 paper claim 升级 |
 | Sidecar 扩展 | 可并行设计，但不能自动进入主线事实 | `PSE0`、`PSE1`、`docs/sidecar/README.md` | 主线 benchmark 或论文 claim |
 
 ## 3. 高层时间线
@@ -67,7 +67,7 @@
 | 2026-06-10 | T48/T49/T50 | `.tflite` isolated runtime、real-board gate、training/material pack 三类边界补强 | 均为 bounded evidence，不升级为部署闭环 |
 | 2026-06-11 | T71/T72 | real-board gate pack 从 role-aware/regeneration 进入 provenance hardening | `T72` 完成 provenance hardening；仍无真板执行成功 |
 | 2026-06-11 | T73 / 优先级调整 | 因当前暂无 `Linux + FPGA` 硬件宿主，主线从 real-board 前移改为论文材料优先 | `T73` 完成后，real-board 路线继续降为最低优先级 backlog |
-| 2026-06-12 | T74/T75/T76/T77 | 主线从台账刷新推进到 paper-ready 材料包、bounded Results authoring、rendered QA / Results assembly，并进入 note-draft 结果层同步与 traceability hardening | `T74`、`T75`、`T76` 已完成；`T77` 为当前唯一任务；full-manuscript reopen 仍未开启 |
+| 2026-06-12 | T74/T75/T76/T77/T78 | 主线从台账刷新推进到 paper-ready 材料包、bounded Results authoring、rendered QA / Results assembly、note-draft 结果层同步与 traceability hardening，并进入 note 非结果层校准、层级降权与排版收口 | `T74`、`T75`、`T76`、`T77` 已完成；`T78` 为当前唯一任务；full-manuscript reopen 仍未开启 |
 
 ## 4. 当前仍有效的结论
 
@@ -80,8 +80,8 @@
 7. `T49/T71/T72` 只属于 real-board gate/provenance 读侧材料，不是真板执行成功。
 8. `T64`-`T70` 的 `statcalib` 仍是 extension lane；`T70` 的 `no-promotion` gate 必须随引用保留。
 9. 机制诊断已经比早期更强，但 `T55/T56` 也削弱了简单的单因果叙事；论文写作必须保留 hedge。
-10. `T74` 已完成 stable-ID 的 paper-ready simulation/material pack，`T75` 已完成 bounded Results authoring，`T76` 已完成真实 rendered preview、人工可读性 QA 与 Results-section assembly，但这些仍不等于 full-manuscript reopen。
-11. 当前还需要 `T77` 的 note-draft results-layer sync 与 `T76` traceability hardening，之后才能判断是否具备受控 prose reopen 条件。
+10. `T74` 已完成 stable-ID 的 paper-ready simulation/material pack，`T75` 已完成 bounded Results authoring，`T76` 已完成真实 rendered preview、人工可读性 QA 与 Results-section assembly，`T77` 已完成 note-draft 的结果层同步与 `T76` traceability hardening，但这些仍不等于 full-manuscript reopen。
+11. 当前还需要 `T78` 的 note 非结果层校准、`statcalib` 层级降权、section-scope 审计与排版 warning 收口，之后才能判断是否具备受控 prose reopen 条件。
 12. `runs/` 与 `artifacts/` 是历史证据材料，不应被整体改写成新的事实来源。
 
 ## 5. 已被替换或降级的旧结论
@@ -127,25 +127,25 @@
 
 本次整理时的状态说明：
 
-- `T77: 论文 note-draft 结果层同步与 T76 traceability hardening`
-- 任务包：`docs/tasks/Phase2/T77_paper_note_results_sync_and_traceability_hardening.md`
+- `T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口`
+- 任务包：`docs/tasks/Phase2/T78_paper_note_alignment_statcalib_hierarchy_and_layout_closeout.md`
 - 状态：`Current Unique Task`
 
 当前主线优先级边界：
 
 - `T74` 已完成 paper-ready simulation/material pack，冻结了 stable-ID 结果表、figure pack、caption pack、insertion map 与 traceability。
 - `T75` 已完成 bounded main-text Results authoring、最终成图资产、caption/placement lock、appendix bridge 与 do-not-write guardrail。
-- `T76` 已完成真实 rendered preview、人工可读性审查，以及 manuscript-facing Results-section assembly；但 review 仍留下一个 paper-facing traceability/schema 精细化缺口。
-- `T77` 是 main 分支上的 docs-only note-sync/traceability 任务，目标是把当前经过 `T74/T75/T76` 收口的结果层材料同步到 `docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.tex`，同时修补 `T76` 的 preview source-map / stable-ID 粒度问题。
-- `T77` 不是 benchmark、`.tflite`、真板执行、theory branch 大范围改写或 full-manuscript reopen 任务。
+- `T76` 已完成真实 rendered preview、人工可读性审查，以及 manuscript-facing Results-section assembly。
+- `T77` 已完成 main 分支上的 docs-only note results sync / traceability 任务，把当前经过 `T74/T75/T76` 收口的结果层材料同步到 `docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.tex`，并修补了 `T76` 的 preview source-map / stable-ID 粒度问题。
+- `T78` 是当前唯一任务，目标是在不恢复 full-manuscript 扩写的前提下，补 note 的非结果层校准、`statcalib` 视觉层级降权、section-scope 审计与 LaTeX 排版 warning 收口。
 - 在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，`T37` 及其他 real-board execution 任务继续 `blocked + lowest-priority backlog`，不抢占当前主线。
-- `T77` 完成后也不自动等于 full-manuscript reopen；下一步应先通过一张受控 gate 判断当前材料是否足够支持 prose 扩写，或继续补材料缺口。
+- `T78` 完成后也不自动等于 full-manuscript reopen；下一步应先通过一张受控 gate 判断当前材料是否足够支持 prose 扩写，或继续补材料缺口。
 
 ## 9. 后续路线总览
 
 后续开发按“论文材料先行、硬件路径后置”的顺序分层推进，不一次性展开全部方向：
 
-1. 主线 paper-facing result/material authoring、rendered QA、note-draft 结果层同步与 traceability hardening
+1. 主线 note-draft 非结果层校准、`statcalib` 层级降权、section-scope 审计与排版 warning 收口
 2. supporting-material gap closeout 与 paper reopen gate
 3. 主线可信度、training / `.tflite` / transfer-pack 边界补强
 4. 机制诊断与 bounded ablation
@@ -160,8 +160,8 @@
 1. `T74` 已完成 paper-ready simulation/material pack，稳定了主线结果表、caption、insertion map 与 traceability。
 2. `T75` 已完成 bounded main-text Results authoring、最终成图资产与 do-not-write guardrail。
 3. `T76` 已完成真实 rendered preview、人工可读性 QA、必要的 presentation-level 修正与 Results-section assembly。
-4. 当前先完成 `T77` 的 note-draft 结果层同步、`T76` traceability hardening，以及必要的本地 note 编译检查。
-5. 只有在 `T77` 完成且 reviewer / captain 认为材料栈足够时，才考虑一张受控的 paper draft reopen gate，而不是直接恢复 full-manuscript 扩写。
+4. 当前先完成 `T78` 的 note-draft 非结果层校准、`statcalib` 层级降权、section-scope 审计与必要的 LaTeX 排版 warning 收口。
+5. 只有在 `T78` 完成且 reviewer / captain 认为材料栈足够时，才考虑一张受控的 paper draft reopen gate，而不是直接恢复 full-manuscript 扩写。
 6. training / `.tflite` / real-board 现阶段只补 boundary table、portability table 或 supporting material，不冒进写成 deployment / board closure。
 
 当前可保留的标题方向：

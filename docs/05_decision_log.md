@@ -3270,3 +3270,43 @@ Wave A 采用短路径项目内 worktree：
 3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T71`
 4. `docs/08_risks_and_open_questions.md` 新增 `R30`，并把 `W1/W2/W3` 统一收口到该风险
 5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T49` 收口与 `T71` 边界
+
+## 2026-06-12 Captain Decision：accept T77 and open T78
+
+- 决策：接受 `docs/review/T77_review.md` 的 `PASS_WITH_WARNINGS`，标记 `T77` 完成，关闭 `R34`，新增 `R35`，并将当前唯一任务切换为 `T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口`
+
+依据 `docs/review/T77_review.md`、`docs/paper_materials/paper_note_results_sync_manifest.md`、`docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.tex`、`docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.log`、`docs/paper_notes/README.md`、`docs/paper_materials/README.md`，以及 `T77` 已产出的 note 编译刷新与 traceability 文档，可得到以下收口判断：
+
+1. `T77` 的核心目标已经成立：当前仓库已经把 `T74/T75/T76` 锁定的结果层材料同步进现有 note-draft，并把 `T76` preview-source / stable-ID traceability 粒度补干净。
+2. `T77` 没有越界成 benchmark、训练、`.tflite`、真板、治理文档或 theory 分支大范围改写任务。
+3. `R34` 的原始问题已经被解决，因此不应继续把旧 traceability/schema 缺口挂成开放风险。
+
+`T77` 之所以不是 `PASS`，而是 `PASS_WITH_WARNINGS`，是因为 review 指出的四条问题都应该继续保留：
+
+- `N1`：整份 `.tex` 仍含未校准的非结果层历史段落
+- `N2`：`statcalib` 在 `Numerical Results` 中的视觉层级仍偏高
+- `N3`：note `.log` 仍有 `Underfull \hbox` 排版 warning
+- `N4`：section-scope 证明仍主要依赖 manifest / `% T77-SOURCE` 注释而非更机械的审计
+
+这些问题都不推翻 `T77` 当前“结果层已同步、traceability 已补强”的真实性，因此不构成 blocker；但它们会直接影响 note 是否能被当作更完整、对外可复用的 paper-facing 草稿，因此统一按 `deferred -> R35` 收口。
+
+在 `T77` 之后，主线不应直接打开 full-manuscript reopen，也不应跳回 real-board：
+
+1. 当前暂无 `Linux + FPGA` 硬件宿主，`T37` 仍受 `R33` 约束。
+2. `T77` 只证明了结果层同步和 traceability hardening，不等于整份 note fully calibrated。
+3. 如果现在直接重开 prose 扩写，会把局部收口误讲成整体校准完成。
+
+因此新增 `T78`：
+
+- 任务名：`T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口`
+- 任务包：`docs/tasks/Phase2/T78_paper_note_alignment_statcalib_hierarchy_and_layout_closeout.md`
+- 任务类型：高强度 docs-only note 校准 / hierarchy / layout closeout 任务
+- 强边界：只允许在 note / paper-material 边界内调整非结果层 wording、`statcalib` 视觉层级、LaTeX 排版与 section-scope 审计；不得重开 benchmark、`.tflite`、真板、治理文档或 theory 分支大范围改写
+
+直接影响：
+
+1. `docs/04_task_board.md` 记录 `T77 -> PASS_WITH_WARNINGS`，关闭 `R34`，并切换 `Current Unique Task` 到 `T78`
+2. 新增任务包 `docs/tasks/Phase2/T78_paper_note_alignment_statcalib_hierarchy_and_layout_closeout.md`
+3. `docs/07_handoff.md` 切换当前 worker-facing task package 到 `T78`
+4. `docs/08_risks_and_open_questions.md` 关闭 `R34`、新增 `R35`，并同步当前唯一任务口径
+5. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/02_experiment_plan.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/06_repo_noise_governance.md` 同步 `T77` 收口与 `T78` 边界

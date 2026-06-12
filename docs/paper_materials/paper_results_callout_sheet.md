@@ -21,12 +21,14 @@
 | `T76-CALLOUT-R4` | 主文结果到附录的 bridge 句 | `T75-FIG-M02`, `T74-TBL-02`, `T74-TBL-03`, `T74-TBL-04` | `Appendix tables provide bounded ablation, cross-seed numeric snapshots, and material provenance that support this conservative reading.` | `appendix upgrades the main result`, `appendix adds stronger deployment validation` |
 | `T76-CALLOUT-R5` | 边界/限制段 | `T75-FIG-A01`, `T74-TBL-05`, `T74-TBL-06`, `T74-SUP-03`, `T74-SUP-04` | `Deployment-facing evidence remains layered: isolated true runtime is verified on the current host, whereas the real-board lane remains gate-only and NO_GO.` | `default environment recovered`, `real-board execution success`, `deployment closure` |
 | `T76-CALLOUT-R6` | appendix 图注辅助句 | `T75-FIG-A01`, `T74-FIG-04` | `The blocked portability/deployment closure slot remains intentionally unfilled.` | `we can now add a unified closure figure`, `the blocked slot is practically complete` |
+| `T77-CALLOUT-R7` | `statcalib` 补充材料边界句 | `T74-TBL-07`, `T74-SUP-01` | `A separately labeled statcalib extension lane shows that a simple non-neural estimator can be strong under the same affine runtime contract, but the accepted closure remains no-promotion and no unique clean threshold.` | `promoted mature comparator`, `unique threshold established`, `statcalib replaces the locked frozen benchmark` |
 
 ## 3. 推荐使用顺序
 
 1. 段落 A 先用 `T76-CALLOUT-R1`，再视版面决定是否接 `T76-CALLOUT-R2`。
 2. 段落 B 用 `T76-CALLOUT-R3`，必要时再用 `T76-CALLOUT-R4` bridge 到 appendix。
 3. 段落 C 用 `T76-CALLOUT-R5` 收口；若 appendix 直接放 `T75-FIG-A01`，其 caption 或正文引句可配 `T76-CALLOUT-R6`。
+4. 若 note 仍保留 `statcalib` 段，则单独使用 `T77-CALLOUT-R7`，并明确它属于 supplement-side extension lane，而不是主文 promoted comparator。
 
 ## 4. 本文件最重要的限制
 
