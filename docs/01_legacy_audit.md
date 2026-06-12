@@ -78,6 +78,18 @@
 - `T25` 已完成 result-boundary gate review，并确认 T24 只能作为 `mock-backed` software HIL formal software revalidation
 - 后续 P3/P4 文档与复验结果都应沿用同一套 backend / artifact type 表述口径
 
+### 2026-06-12 Captain Update (T79 closeout)
+
+- `T79` 已被 Captain 接受为 `PASS`。
+- 这次 closeout 仍然没有改变 legacy audit 的真实性判断：`T79` 只是 docs-only 的 reopen gate / readiness 评审，不是新的实验、不是新的板级证据、也不是任何 `.tflite` / real-board / mature comparator 事实升级。
+- 当前唯一任务已切换为 `T80: 主线校准段落的 bounded prose reopen`。`T80` 仍是 main 分支 docs-only 的受控 prose 任务，不触碰 theory 分支的大范围改写，也不改变 legacy truth matrix。
+
+### 2026-06-12 Captain Update (T78 closeout)
+
+- `T78` 已被 Captain 接受为 `PASS`。
+- 这次 closeout 仍然没有改变 legacy audit 的真实性判断：`T78` 只是 docs-only 的 note 非结果层校准、`statcalib` 层级降权、排版 warning 收口与 section-scope 审计，不是新的实验、不是新的板级证据、也不是任何 `.tflite` / real-board / mature comparator 事实升级。
+- `R35` 已由 `T78` 收口；当前唯一任务已切换为 `T79: 论文材料 reopen gate 与 bounded prose 扩写就绪性评审`。`T79` 仍是 main 分支 docs-only 的 gate 评审任务，不触碰 theory 分支的大范围改写，也不改变 legacy truth matrix。
+
 ### 2026-06-12 Captain Update (T77 closeout)
 
 - `T77` 已被 Captain 接受为 `PASS_WITH_WARNINGS`。

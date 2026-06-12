@@ -1,5 +1,66 @@
 # Decision Log
 
+## D-2026-06-12-07
+
+- 日期：`2026-06-12`
+- 决策：接受 `T79` 为 `PASS`，标记 `T79` 完成，并将当前唯一任务切换为 `T80: 主线校准段落的 bounded prose reopen`
+
+### 背景
+
+`T79` 的目标不是写 prose，而是在 `T74`-`T78` 已经完成材料整理、authoring、rendered QA、note 结果层同步与非结果层校准之后，给出一个唯一的 reopen/readiness 判断：当前材料栈是否已经足够支持下一轮 bounded prose reopen。
+
+### 依据
+
+1. `docs/review/T79_review.md` verdict = `PASS`，blocking issues = none。
+2. review 已确认 `paper_reopen_gate_and_prose_readiness_review.md` 只包含一个 gate verdict：`GO_FOR_BOUNDED_PROSE_REOPEN`。
+3. review 已确认 `paper_reopen_gate_and_prose_readiness_review.md` 只推荐一个后续任务：`T80: 主线校准段落的 bounded prose reopen`。
+4. review 已确认 readiness matrix 覆盖了要求的最小 area，gap matrix 把每个 gap 都绑定到现有 evidence，而没有把未来实验或硬件条件写成既成事实。
+5. review 还明确提醒：`GO_FOR_BOUNDED_PROSE_REOPEN` 不能被 retell 成 full-manuscript reopen approved、methods-ready approved、deployment boundary upgraded 或 real-board story upgraded。
+
+### 结论
+
+1. 接受 `T79` 为 `PASS` 并标记完成。
+2. 由于 verdict 为 `PASS`，本轮不进入 warning 分类流程，也不新开 risk。
+3. `T79` 只关闭了“当前是否允许下一轮 bounded prose reopen”的 gate 问题，不关闭任何 deployment/runtime/board 风险。
+4. 当前唯一任务切换为 `T80`，只允许在已经 ready 的 8 个 narrative / result-facing sections 内做受控 prose reopen。
+5. `T80` 必须继续保留 methods chapters out-of-scope、`T24` frozen anchor、`FR6/FR7` descriptive-only、`FR8` no-promotion、`.tflite` isolated current-host only 和 real-board current-host `NO_GO` 等 guardrail。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/02_experiment_plan.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T79 -> PASS` 与 `Current Unique Task -> T80`。
+2. 新增 `docs/tasks/Phase2/T80_mainline_calibrated_sections_bounded_prose_reopen.md` 作为下一张 worker-facing 任务包。
+3. main 分支在完成上述治理同步后可以继续提交，但提交前应精确暂存 `T79` 产物、Captain closeout 文档和 `T80` 任务包，不要把无关历史 diff 混入。
+
+## D-2026-06-12-06
+
+- 日期：`2026-06-12`
+- 决策：接受 `T78` 为 `PASS`，标记 `T78` 完成，关闭 `R35`，并将当前唯一任务切换为 `T79: 论文材料 reopen gate 与 bounded prose 扩写就绪性评审`
+
+### 背景
+
+`T78` 的目标不是新增实验，而是在 `T77` 已完成结果层同步与 traceability hardening 的前提下，补完当前 note-draft 的非结果层校准、`statcalib` 视觉层级降权、LaTeX 排版 warning 收口和更机械的 section-scope 审计。review 已确认这些工作在允许范围内真实完成，且没有扩成 benchmark、训练、`.tflite`、real-board 或治理越界任务。
+
+### 依据
+
+1. `docs/review/T78_review.md` verdict = `PASS`，blocking issues = none。
+2. review 已确认本轮 diff 保持在允许 section 范围内，`statcalib` 的结果层级完成结构性降权，note `.log` 中 `Underfull \hbox` 已收口到 `0`，且没有 `runs/`、`artifacts/`、源码目录或治理文档漂移。
+3. `docs/paper_materials/paper_note_alignment_and_layout_closeout.md` 已把“已校准范围”和“未校准范围”明确分开，因此 `T78` 没有把局部 note 收口误写成整份 manuscript 已 fully calibrated。
+4. review 的 non-blocking notes 都属于未来 full-manuscript reopen 前的后续 gate 提醒，而不是当前 `T78` 的未收口风险。
+
+### 结论
+
+1. 接受 `T78` 为 `PASS` 并标记完成。
+2. `T78` 不引入新的 deferred/rejected warning，因此本轮不新增风险项。
+3. `R35` 已由 `T78` 收口关闭；今后是否具备 prose reopen 条件，不再通过开放 note 校准风险表述，而改由专门的 gate 任务判断。
+4. 当前唯一任务切换为 `T79`，优先做论文材料的 reopen/readiness gate，而不是直接重开 prose 扩写。
+5. `T79` 必须保持 docs-only；它是 gate 评审任务，不是 prose drafting、benchmark rerun、`.tflite` 扩展、real-board 执行或 theory 分支大范围改写。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/02_experiment_plan.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T78 -> PASS`、`R35` 关闭与 `Current Unique Task -> T79`。
+2. 新增 `docs/tasks/Phase2/T79_paper_reopen_gate_and_prose_readiness_review.md` 作为下一张 worker-facing 任务包，要求产出 gate verdict、section-level readiness matrix、gap-to-action matrix 与唯一后续任务建议。
+3. main 分支在完成上述治理同步后可以继续提交，但提交前应精确暂存 `T78` 产物、Captain closeout 文档和 `T79` 任务包，不要把无关历史 diff 混入。
+
 ## D-2026-06-12-05
 
 - 日期：`2026-06-12`

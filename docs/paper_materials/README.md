@@ -27,6 +27,9 @@
 | `paper_results_section_assembly_pack.md` | `T76` 新增的 Results section 装配包；锁定主文段落顺序、图表放置、fallback 路线与边界说明 |
 | `paper_results_callout_sheet.md` | `T76` 新增的作者 callout 清单；给出 paragraph-level 可写/不可写表述，并绑定 `T75-FIG-*` / `T74-*` 来源 |
 | `paper_note_results_sync_manifest.md` | `T77` 新增的 note 结果层同步清单；把 note 中被修改的 section/subsection、`T74/T75/T76` 来源、允许/禁止表述和未同步原因锁到一处 |
+| `paper_note_alignment_and_layout_closeout.md` | `T78` 新增的 note 非结果层校准 / `statcalib` 层级降权 / LaTeX warning 收口记录；把 `T78-SCOPE` 覆盖范围、未校准 section 和 warning before/after 摘要集中到一处 |
+| `paper_reopen_gate_and_prose_readiness_review.md` | `T79` 新增的 reopen/readiness gate 报告；给出唯一 gate verdict、section-level readiness matrix 和唯一推荐后续任务 |
+| `paper_reopen_gap_matrix.md` | `T79` 新增的 prose reopen gap-to-action matrix；把当前材料缺口、对应证据和后续动作绑定到一起 |
 
 ## 推荐阅读顺序
 
@@ -45,7 +48,10 @@
 13. `paper_results_section_assembly_pack.md`
 14. `paper_results_callout_sheet.md`
 15. `paper_note_results_sync_manifest.md`
-16. `paper_claim_risk_table.md`
+16. `paper_note_alignment_and_layout_closeout.md`
+17. `paper_reopen_gate_and_prose_readiness_review.md`
+18. `paper_reopen_gap_matrix.md`
+19. `paper_claim_risk_table.md`
 
 ## 边界
 
@@ -72,3 +78,11 @@
 `T77` 之后新增的一条 note-sync 规则是：
 
 - note 的摘要、结果段、讨论和结论如果吸收当前 paper-facing 材料，应在源码旁保留 `T77-SOURCE` 注释，并以 `paper_note_results_sync_manifest.md` 作为 section-level trace 入口；`statcalib` 仍必须保持 extension-lane / no-promotion，deployment-facing 材料仍必须保持 layered boundary 口径。
+
+`T78` 之后新增的一条 note-alignment / hierarchy 规则是：
+
+- note 的标题、引言、`Relationship to Existing Work`、讨论、结论，以及 note 内部 `statcalib` 的版面层级如果做过进一步收口，应在源码旁保留 `T78-SCOPE` 注释，并以 `paper_note_alignment_and_layout_closeout.md` 作为非结果层与 layout closeout 的入口；这条链路只做校准与降权，不提升任何实验或部署证据。
+
+`T79` 之后新增的一条 reopen-gate 规则是：
+
+- `paper_reopen_gate_and_prose_readiness_review.md` 与 `paper_reopen_gap_matrix.md` 只回答“当前材料栈是否足够支持下一轮 bounded prose reopen”，它们不是 prose reopen 本身，也不是 full-manuscript ready 证明；即使 gate verdict 为 `GO_FOR_BOUNDED_PROSE_REOPEN`，后续也仍需一张单独的 bounded prose 任务包。

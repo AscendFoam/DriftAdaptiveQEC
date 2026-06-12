@@ -16,6 +16,22 @@
 - 当前决策状态：`Go`
 - 当前唯一任务来源：`docs/04_task_board.md`
 
+## 2026-06-12 Captain Update (T79 closeout)
+
+- `T79` 已由 Captain 判定为 `PASS`。
+- `T79` 在不改动源码、测试、`runs/`、`artifacts/` 或治理之外范围的前提下，完成了一次 docs-only reopen gate：仓库现在有唯一 gate verdict、section-level readiness matrix、gap-to-action matrix 与唯一后续任务建议。
+- `T79` 没有引入新的 deferred/rejected warning，也没有新增风险项。
+- 当前唯一任务切换为 `T80: 主线校准段落的 bounded prose reopen`。
+- `T80` 仍留在 main 分支 paper-material 主线，只允许重写已经 ready 的 8 个 narrative / result-facing sections；它不直接恢复 full-manuscript 扩写，也不允许扩成 methods 章节重写、benchmark、`.tflite`、真板执行、sidecar promotion 或 theory 分支大范围改写。
+
+## 2026-06-12 Captain Update (T78 closeout)
+
+- `T78` 已由 Captain 判定为 `PASS`。
+- `T78` 在不改动源码、测试、`runs/`、`artifacts/` 或治理文档的前提下，完成了 note-draft 的非结果层校准、`statcalib` 层级降权、LaTeX 排版 warning 收口与更机械的 section-scope 审计。
+- `T78` 没有引入新的 deferred/rejected warning，也没有新增风险项；`R35` 已由本轮收口关闭。
+- 当前唯一任务切换为 `T79: 论文材料 reopen gate 与 bounded prose 扩写就绪性评审`。
+- `T79` 仍留在 main 分支 paper-material 主线，只做受控的 reopen/readiness gate；它不直接恢复 full-manuscript 扩写，也不允许扩成 benchmark、`.tflite`、真板执行、sidecar promotion 或 theory 分支大范围改写。
+
 ## 2026-06-12 Captain Update (T77 closeout)
 
 - `T77` 已由 Captain 判定为 `PASS_WITH_WARNINGS`。
@@ -341,7 +357,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T77: 论文 note-draft 结果层同步与 T76 traceability hardening`
+- `T80: 主线校准段落的 bounded prose reopen`
 
 ## 12. 快照结论
 
@@ -364,7 +380,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 15. `T46` 已完成并通过 Captain `PASS` 收口；它把 `seed=20260429` 的单 seed 机制诊断收束成了一个明确的多 seed / intervention 计划，但没有升级任何 evidence level。
 16. `T70` 已完成并通过 Captain `PASS` 收口；FR8 当前已有一个 code-backed closure pack，可明确阻止 promotion 和唯一阈值外推，但这不升级为成熟 comparator、`.tflite` 或真板证据。
 17. `T50` 已完成并通过 Captain `PASS` 收口；仓库现在已有一份 code-backed 训练复现与材料再生证据包，可统一引用 canonical 训练材料、主线 preserved references 和一次 clean CPU-only bounded train+eval rerun。
-18. 当前唯一任务已切换为 `T75`，用于在 `T74` 已形成的 stable-ID 材料包基础上，继续冻结主文 Results 段落、最终成图资产和 caption/placement lock；它比在当前硬件条件下重开真板执行或直接恢复 full-manuscript 扩写更符合现阶段主线。
+18. `T79` 已完成并通过 Captain `PASS` 收口；它给出了 `GO_FOR_BOUNDED_PROSE_REOPEN` 的唯一 gate 结论，但这个结论只授权下一轮 section-bounded prose reopen。当前主线已推进到 `T80: 主线校准段落的 bounded prose reopen`，而不是 full-manuscript reopen。
 
 ## 13. T45 后的拟议路线图（非当前任务）
 

@@ -523,8 +523,27 @@
 
 ### Milestone 2Y: Paper Note Calibration And Layout Closeout (proposed)
 
-- [ ] T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口
+- [x] T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口
   - Task package: `docs/tasks/Phase2/T78_paper_note_alignment_statcalib_hierarchy_and_layout_closeout.md`
+  - Output: `docs/paper_materials/paper_note_alignment_and_layout_closeout.md`
+  - Review output: `docs/review/T78_review.md`
+  - Captain verdict: `PASS`
+  - Result: T78 closes the bounded note non-results calibration / hierarchy / layout gap honestly; the note is no longer blocked on `R35`, but the mainline still needs one explicit reopen gate before any bounded prose expansion
+
+### Milestone 2Z: Paper Reopen Gate And Prose Readiness Review (proposed)
+
+- [x] T79: 论文材料 reopen gate 与 bounded prose 扩写就绪性评审
+  - Task package: `docs/tasks/Phase2/T79_paper_reopen_gate_and_prose_readiness_review.md`
+  - Output: `docs/paper_materials/paper_reopen_gate_and_prose_readiness_review.md`
+  - Output: `docs/paper_materials/paper_reopen_gap_matrix.md`
+  - Review output: `docs/review/T79_review.md`
+  - Captain verdict: `PASS`
+  - Result: `T79` 以 gate 形式确认当前材料栈已达到 `GO_FOR_BOUNDED_PROSE_REOPEN`，但这个结论只授权下一轮有界 prose reopen，不授权 full-manuscript reopen、方法章扩写或任何证据等级升级
+
+### Milestone 2AA: Mainline Calibrated Section Bounded Prose Reopen (proposed)
+
+- [ ] T80: 主线校准段落的 bounded prose reopen
+  - Task package: `docs/tasks/Phase2/T80_mainline_calibrated_sections_bounded_prose_reopen.md`
 
 ### Milestone 2R: Reproducibility And Material Pack (proposed)
 
@@ -545,6 +564,28 @@
 Long-term objective:
 
 以论文级质量为最终目标，但当前先进入 `Research Reality Recovery Mode`。后续任务顺序改为“真实性冻结 -> claim/evidence/material 台账 -> 复现/图表/结果缺口审计 -> 风险收口 -> 再决定是否恢复论文扩写”。除 `Current Unique Task` 外，其他 pending 项只代表路线图，不可直接执行。
+
+## 2026-06-12 Captain Final Supersession (T79 closeout)
+
+- Current unique task: `T80: 主线校准段落的 bounded prose reopen`
+- Task package: `docs/tasks/Phase2/T80_mainline_calibrated_sections_bounded_prose_reopen.md`
+- `T79` has been judged `PASS`.
+- `T79` has honestly completed one docs-only reopen gate: the repo now has one explicit gate verdict, one section-level readiness matrix, one gap-to-action matrix, and one single recommended next task.
+- `T79` introduces no deferred/rejected warning and opens no new risk.
+- `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T80` is next because the dominant mainline bottleneck is no longer “whether prose reopen is allowed at all”, but “whether the ready sections can be rewritten cleanly without touching methods chapters or upgrading any evidence boundary”.
+- `T80` must remain docs-only, mainline-only, and section-bounded: it may rewrite only `Title`、`Abstract`、`Introduction`、`Related Work / positioning`、`Experimental Setup`、`Numerical Results`、`Discussion`、`Conclusion`; it must not widen into methods chapters, benchmark reruns, `.tflite`, real-board execution, theory-branch large-scale rewriting, sidecar promotion, or direct full-manuscript expansion.
+
+## 2026-06-12 Captain Final Supersession (T78 closeout)
+
+- Current unique task: `T79: 论文材料 reopen gate 与 bounded prose 扩写就绪性评审`
+- Task package: `docs/tasks/Phase2/T79_paper_reopen_gate_and_prose_readiness_review.md`
+- `T78` has been judged `PASS`.
+- `T78` has honestly completed the bounded note non-results alignment, `statcalib` hierarchy de-emphasis, layout warning closeout, and scope-bounded note calibration record without touching code, tests, `runs/`, `artifacts/`, or governance docs.
+- `T78` introduces no deferred/rejected warning and opens no new risk.
+- `R35` is closed by `T78`; `R13/R14/R32/R33` remain open.
+- `T79` is next because the mainline bottleneck is no longer note calibration itself, but whether the current note/results/claim-evidence/risk stack is already sufficient to support one bounded prose reopen on `main`.
+- `T79` must remain docs-only, mainline-only, and must not widen into benchmark reruns, `.tflite`, real-board execution, theory-branch large-scale rewriting, sidecar promotion, or direct full-manuscript expansion.
 
 ## 2026-06-12 Captain Final Supersession (T77 closeout)
 
@@ -631,42 +672,39 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T78: 论文 note-draft 非结果层校准、statcalib 层级降权与排版 warning 收口`
+`T80: 主线校准段落的 bounded prose reopen`
 
 Status:
 
-- `T77` has been reviewed as `PASS_WITH_WARNINGS`.
-- `T77` completed the bounded note results-layer sync and T76 traceability hardening without code, benchmark, runtime, board, or governance drift.
-- `T77` closes `R34` and opens one new paper-facing carry-forward risk: `R35`.
-- `R13/R14/R32/R33/R35` remain open, and `T37` remains blocked.
+- `T79` has been reviewed as `PASS`.
+- `T79` completed the bounded reopen/readiness gate honestly and fixed the current mainline answer to `GO_FOR_BOUNDED_PROSE_REOPEN`.
+- `R13/R14/R32/R33` remain open, and `T37` remains blocked.
 - 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 同时也是 `resource-blocked / lowest-priority backlog`。
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
 - `T64/T65/T66/T67/T68/T69/T70` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T78` must remain docs-only and must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
+- `T80` must remain docs-only and must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
 
 Why this task is next:
 
-1. `T77` has already produced the bounded note results-layer sync and cleaned the T76 preview-source / stable-ID traceability issue, so that is no longer the dominant gap.
-2. The next bottleneck is one bounded note-calibration pass for the rest of the paper-facing note surface: non-results wording still contains pre-existing legacy phrasing, `statcalib` is still visually too central, and the compiled note still shows avoidable layout loose ends.
+1. `T79` has already answered the gate question, so the dominant gap is no longer material sufficiency judgment itself.
+2. The next bottleneck is one section-bounded prose reopen that rewrites only the already-ready narrative / result-facing sections under the existing evidence guardrails.
 3. 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 不仅证据未满足，而且属于资源受限 backlog，不应早于 paper-material 主线任务。
-4. `T51/T52` full paper re-open tasks 仍然过早；在 repo 先完成 note-draft 的非结果层校准、层级降权与排版收口之前，不应恢复 full-manuscript 扩写。
-5. `T78` is intentionally stronger than a cosmetic cleanup task because it requires bounded non-results calibration, explicit hierarchy control for `statcalib`, compile-aware layout closeout, and a more mechanical section-scope audit without silently promoting any blocked claim.
+4. `T51/T52` full paper re-open tasks 仍然过早；即使 `T79` 已给出 `GO_FOR_BOUNDED_PROSE_REOPEN`，也只允许进入当前这一张 bounded prose 任务，而不是恢复 full-manuscript 扩写。
+5. `T80` is intentionally stronger than a轻量改措辞任务 because it must rewrite eight ready sections, preserve all deployment / benchmark / mechanism guardrails, leave methods chapters untouched, and produce a section-level prose reopen manifest plus compile-aware verification.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T78`
-- Latest reviewed task: `docs/review/T77_review.md` with verdict `PASS_WITH_WARNINGS`
-- T77 closeout:
+- Current unique task: `T80`
+- Latest reviewed task: `docs/review/T79_review.md` with verdict `PASS`
+- T79 closeout:
   - blocking issues = none
-  - deferred warnings = `N1/N2/N3/N4 -> R35`
-  - rejected warnings = none
-  - risk closed = `R34`
-  - new risk opened = `R35`
-  - carry-forward notes = current note still needs one bounded non-results calibration / hierarchy / layout pass before any paper reopen gate
-- Next worker-facing task package: `docs/tasks/Phase2/T78_paper_note_alignment_statcalib_hierarchy_and_layout_closeout.md`
-- `T78` may build only bounded note-calibration outputs, hierarchy/layout closeout records, refreshed local note compile artifacts, and section-scope audit material; it must not touch governance docs, source code, tests, `runs/`, `artifacts/`, or reopen the full manuscript
-- `T78` is the only recommended next mainline task after `T77`
+  - warning-derived risk changes = none
+  - new risk opened = none
+  - carry-forward notes = `GO_FOR_BOUNDED_PROSE_REOPEN` must not be retold as full-manuscript reopen approval, methods-ready approval, or any deployment / real-board / `statcalib` boundary upgrade
+- Next worker-facing task package: `docs/tasks/Phase2/T80_mainline_calibrated_sections_bounded_prose_reopen.md`
+- `T80` may rewrite only the already-ready narrative / result-facing sections of the current note, update task-scoped paper-material / README registration, and refresh note compile artifacts if local toolchain is available; it must not touch governance docs, source code, tests, `runs/`, `artifacts/`, or methods chapters
+- `T80` is the only recommended next mainline task after `T79`
 
 ## 并行 Sidecar 扩展实验治理
 

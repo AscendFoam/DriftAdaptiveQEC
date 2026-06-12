@@ -8,13 +8,15 @@
 \usepackage{hyperref}
 \emergencystretch=2em
 
-\title{Teacher-Anchored and Statistical Calibration for Drift-Adaptive Affine GKP Decoding}
+% T78-SCOPE: title-hierarchy-demotion; source=T77-manifest,T70,T72,T77
+\title{Drift-Adaptive Affine GKP Decoding with Teacher-Anchored Residual Calibration}
 \author{}
 \date{}
 
 \begin{document}
 \maketitle
 
+% T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
 \begin{abstract}
 % T77-SOURCE: T74-TBL-01; T74-TBL-02; T74-TBL-03; T74-TBL-07; review=T70,T76
 Approximate Gottesman--Kitaev--Preskill (GKP) quantum error correction
@@ -45,7 +47,7 @@ baselines in all four frozen scenarios.  Bounded multi-seed and ablation
 materials provide descriptive support for this reading and show that
 histogram-delta features materially affect the learned branch, while
 teacher-side inputs do not admit a simple necessity claim.  A separately
-labeled statistical-calibration extension lane further suggests that simple
+labeled supplement-side statistical-calibration extension lane further suggests that simple
 non-neural estimators can be strong under the same affine runtime contract, but
 its accepted closure remains supplement-side and no-promotion because no unique
 clean threshold has been established.
@@ -53,6 +55,7 @@ clean threshold has been established.
 
 \tableofcontents
 
+% T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
 \section{Introduction}
 
 Bosonic codes protect quantum information by encoding a logical qubit into the
@@ -120,8 +123,12 @@ and shaped by finite-energy state preparation.  The present architecture is
 therefore complementary to those decoders: it provides a low-dimensional
 analog calibration layer that could sit before, inside, or alongside a larger
 stabilizer or LDPC decoding stack while keeping the per-shot action as a small
-fixed-point affine displacement.
+fixed-point affine displacement.  In the current note, only the locked
+software-HIL benchmark is treated as the main result layer; deployment-facing
+material and the later statistical-calibration lane remain bounded follow-up
+evidence rather than coequal main results.
 
+% T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
 \section{Summary of Contributions}
 
 The work can be organized around five contributions.
@@ -159,7 +166,7 @@ benchmark rather than assumptions added after the algorithm is designed.
 The mainline numerical study compares filtering baselines and learned residual
 variants under four frozen drift scenarios.  Bounded ablation and multi-seed
 follow-ups then support a conservative reading of the gains.  A separately
-labeled statistical calibration extension lane asks whether a simple
+labeled supplement-side statistical calibration extension lane asks whether a simple
 non-neural rule can also be strong inside the same runtime contract, but it
 remains a supplement-side no-promotion result rather than a promoted mainline
 comparator.
@@ -186,7 +193,7 @@ still require board-level measurement.
 \centering
 \scriptsize
 \renewcommand{\arraystretch}{1.06}
-\begin{tabular}{@{}p{0.18\linewidth}p{0.24\linewidth}p{0.29\linewidth}p{0.20\linewidth}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.29\linewidth}>{\raggedright\arraybackslash}p{0.20\linewidth}@{}}
 \toprule
 Metric & Advantage & Architectural reason & Evidence boundary \\
 \midrule
@@ -516,6 +523,7 @@ This contract allows stale-parameter effects, update latency, commit success,
 rollback/fallback behavior, and fixed-point stability to be measured
 separately from logical performance.
 
+% T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
 \section{Relationship to Existing Work}
 
 \subsection{GKP and bosonic analog soft information}
@@ -576,8 +584,8 @@ execute only \(K s+b\) at the fast boundary.
 
 The proposed architecture is best viewed as a middle layer between physical
 GKP syndrome acquisition and higher-level QEC decoding.  Its advantages over
-nearby approaches are architectural rather than claims of completed board-level
-deployment.
+nearby approaches are architectural and evidence-bounded rather than claims of
+completed board-level deployment or promoted comparator closure.
 
 \paragraph{Preserving analog GKP information at the right layer.}
 Outer-code GKP methods already show that analog syndrome values improve
@@ -589,18 +597,21 @@ information is handed to a surface-code, LDPC, or other outer decoder.
 \paragraph{Drift adaptation without a neural real-time critical path.}
 End-to-end neural decoders can be expressive, but they make worst-case latency,
 fixed-point validation, and fallback behavior harder to reason about.  Here,
-learning is optional and narrow: a CNN residual branch or a statistical
-calibration branch updates a small parameter surface, while the real-time path
-remains deterministic affine logic.  This separation is expected to be useful
-when future hardware systems need both adaptation and bounded per-shot timing.
+learning is optional and narrow: a CNN residual branch or, in a separately
+bounded extension lane, a statistical calibration branch updates a small
+parameter surface, while the real-time path remains deterministic affine
+logic.  This separation is expected to be useful when future hardware systems
+need both adaptation and bounded per-shot timing.
 
 \paragraph{A replaceable calibration module rather than a single decoder
 commitment.}
 The same runtime contract can host a teacher estimator, a learned residual
-branch, or a non-neural statistical calibration rule.  The strong statistical
-calibration results therefore strengthen rather than weaken the design story:
-they indicate that the important object is the histogram-driven affine
-calibration contract, not one particular CNN architecture.
+branch, or a non-neural statistical calibration rule.  The bounded
+statistical-calibration extension lane therefore supports the design story
+without changing the accepted hierarchy: the important object is the
+histogram-driven affine calibration contract, not one particular CNN
+architecture, and this note keeps that lane supplement-side rather than as a
+promoted mainline comparator.
 
 \paragraph{Explicit deployment diagnostics.}
 The framework makes quantization, clipping, saturation, stale-parameter use,
@@ -721,7 +732,11 @@ Mode & Avg. LER & \(\Delta\) vs UKF & \(\Delta\) vs Hybrid Full \\
 \label{tab:feature-ablation}
 \end{table}
 
-\subsection{Statistical calibration as a bounded extension lane}
+The next three lower-level note items preserve the accepted
+statistical-calibration evidence as a supplement-side extension lane rather
+than as a coequal Results pillar.
+
+\subsubsection{Supplement-side statistical calibration extension lane}
 
 % T77-SOURCE: T74-TBL-07; T74-SUP-01; review=T70
 A separately labeled extension lane adds statistical calibration variants under
@@ -754,7 +769,7 @@ comparator set.}
 \label{tab:statcalib-extension}
 \end{table}
 
-\subsection{Local sensitivity inside the statistical-calibration extension lane}
+\subsubsection{Local sensitivity inside the statistical-calibration extension lane}
 
 % T77-SOURCE: T74-TBL-07; T74-SUP-01; review=T66,T70
 The local grid around the default setting shows that the extension-lane signal
@@ -786,7 +801,7 @@ promoted setting.}
 \label{tab:statcalib-sensitivity}
 \end{table}
 
-\subsection{Per-scenario best variants and the no-promotion gate}
+\subsubsection{Per-scenario best variants and the no-promotion gate}
 
 % T77-SOURCE: T74-TBL-07; T74-SUP-01; review=T69,T70
 Table~\ref{tab:statcalib-scenario-best} reports the per-scenario winners inside
@@ -956,6 +971,7 @@ parameters under drift.  Negative or inconclusive sidecar results are also
 useful, because they can show that the current histogram-conditioned affine
 contract is already near the useful complexity boundary.
 
+% T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
 \section{Discussion}
 
 The results and architecture suggest a useful reframing of the project.  The
@@ -1008,13 +1024,14 @@ critical path.
 The boundary of the current evidence remains important.  Software-HIL results
 support the adaptive-affine calibration story under controlled drift
 scenarios; isolated current-host \texttt{.tflite} execution supports a narrow
-exported-model runtime claim; and read-only real-board
-gate/regeneration/provenance checks preserve a current-host \texttt{NO\_GO}
-hardware boundary.  These layers do not yet establish board-level latency, FPGA
+exported-model runtime claim; and read-only real-board gate, regeneration, and
+provenance checks preserve a current-host \texttt{NO\_GO} hardware boundary.
+These layers do not yet establish board-level latency, FPGA
 resource use, or closed-loop feedback timing.  Those measurements are the
 natural next evidence layer if the work is to move from ``hardware-compatible''
 to hardware-demonstrated.
 
+% T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
 \section{Conclusion}
 
 This work frames drift-adaptive GKP correction as a two-timescale affine
@@ -1031,9 +1048,10 @@ four-scenario software-HIL suite, adaptive affine decoding with a
 teacher-anchored residual branch improves over filtering baselines, while
 bounded ablations show that histogram-delta features carry useful information
 and that teacher-side inputs do not admit a simple necessity story.  Second, a
-separately labeled statistical-calibration extension lane shows that simple
-non-neural estimators can also be competitive under the same runtime contract,
-but the accepted closure remains no-promotion and no unique clean threshold.
+separately labeled supplement-side statistical-calibration extension lane shows
+that simple non-neural estimators can also be strong under the same runtime
+contract, but the accepted closure remains no-promotion and no unique clean
+threshold.
 Together, these results suggest that the most robust scientific story is not
 simply that a CNN is better than classical filters, but that low-dimensional
 histogram-driven calibration of an affine GKP fast path is a promising

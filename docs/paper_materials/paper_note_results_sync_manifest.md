@@ -15,6 +15,8 @@
 
 它不把 note 升格为新的事实来源；真正的结果边界仍然回到 `T74/T75/T76` 与其上游 task/review/run/artifact。
 
+`T78` 之后，本文件继续只负责结果层 section 的同步 trace。标题、引言、`Relationship to Existing Work`、`statcalib` 层级降权和 LaTeX warning 收口改由 `paper_note_alignment_and_layout_closeout.md` 记录。
+
 ## 2. 已同步 section 清单
 
 | note section / subsection | 本轮修改重点 | 绑定 source IDs / task IDs | 允许表达 | 禁止表达 |

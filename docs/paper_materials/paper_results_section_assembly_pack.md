@@ -122,6 +122,14 @@
   - appendix 图注或 blocked-slot 提醒可配 `T76-CALLOUT-R6`
   - `T77-SOURCE` 注释优先回指 `T75-FIG-A01`、`T76-PREVIEW-A01`、`T74-TBL-05`、`T74-TBL-06`、`T74-SUP-03`、`T74-SUP-04`
 
+## 4.6 T78 note hierarchy supplement
+
+`T78` 之后，note 内部的 `statcalib` 记录还需要额外满足一条版面规则：
+
+- `statcalib` 不应继续以和主结果段落 A、机制/解释层段落 B 同等级的 note 结构出现；
+- 在 note 里，它应表现为 lower-level extension-lane record，例如更低标题层级或 bridge text 之后的补充项；
+- 这条层级降权只服务于作者阅读顺序，不改变 `T70` 已锁定的 `extension lane / no-promotion / persistent tie / no unique clean threshold` 边界。
+
 ## 5. 不能改动的 fallback 原则
 
 ### `T75-FIG-M01`

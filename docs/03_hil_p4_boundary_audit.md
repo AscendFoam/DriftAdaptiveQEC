@@ -123,6 +123,22 @@
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`
 
+## 2026-06-12 Captain Update (T79/T80 boundary supersession)
+
+- `T79` 已由 Captain 以 `PASS` 收口。
+- 它只在 docs-only 主线中完成了一次 reopen gate / readiness 评审；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 gate/smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- `T79` 的 strongest supported truth 只是：当前材料栈已足够支持下一轮**有界** prose reopen，而不是 full-manuscript reopen、methods-ready、deployment upgrade 或 real-board story upgrade。
+- 因此当前唯一任务切换为 `T80: 主线校准段落的 bounded prose reopen`。
+- `T80` 仍是 docs-only 主线任务；它只允许在已经 ready 的 8 个 sections 内做 prose 重写，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实，也不得把 methods chapters 带进当前任务。
+
+## 2026-06-12 Captain Update (T78/T79 boundary supersession)
+
+- `T78` 已由 Captain 以 `PASS` 收口。
+- 它只在 docs-only 主线中完成了 note 非结果层校准、`statcalib` hierarchy de-emphasis、LaTeX layout warning 收口与 section-scope 审计；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 gate/smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- `R35` 已由 `T78` 收口；这不是新的运行时、板级或 benchmark 边界问题。
+- 因此当前唯一任务切换为 `T79: 论文材料 reopen gate 与 bounded prose 扩写就绪性评审`。
+- `T79` 仍是 docs-only 主线 gate 任务；它只允许判断当前材料栈是否足够支持下一轮 bounded prose reopen，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实。
+
 ## 2026-06-12 Captain Update (T77/T78 boundary supersession)
 
 - `T77` 已由 Captain 以 `PASS_WITH_WARNINGS` 收口。

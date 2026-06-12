@@ -11,6 +11,22 @@
 
 本文件不宣称仓库已经完成物理清理。
 
+## 2026-06-12 Captain Update (T79 closeout)
+
+- `T79` 已按 `PASS` 收口。
+- 就 repo-noise 与验证边界而言，`T79` 只在 `docs/paper_materials/*` 与 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/`、benchmark output 或 note 正文。
+- `T79` 当前产出的 gate/readiness 文档属于主线 docs-only deliverable，不得被混写成新的 benchmark、runtime、board 或 manuscript 完成事实来源。
+- 当前唯一任务切换为 `T80: 主线校准段落的 bounded prose reopen`；它允许新增或修改的正式产物应限于 `docs/paper_notes/*`、`docs/paper_materials/*` 以及 task-scoped review / explanation / summary 文件。
+- `T80` 不得借 prose reopen 之名顺手创建新 run、重算 benchmark、更新历史 artifact、改写 theory 分支大范围内容或升级部署/真板证据等级；若本地编译 note，只允许刷新当前 note 既有编译产物。
+
+## 2026-06-12 Captain Update (T78 closeout)
+
+- `T78` 已按 `PASS` 收口。
+- 就 repo-noise 与验证边界而言，`T78` 只在 `docs/paper_notes/*`、`docs/paper_materials/*` 与 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/` 或 benchmark output。
+- `T78` 当前产出的 note/material closeout 文件属于主线 docs-only deliverable，不得被混写成新的 benchmark、runtime 或 board 事实来源。
+- 当前唯一任务切换为 `T79: 论文材料 reopen gate 与 bounded prose 扩写就绪性评审`；它允许新增或修改的正式产物应限于 `docs/paper_materials/*`、`docs/review/T79_review.md`、`docs/for_human/T79_explanation.md` 与 `docs/worker_summary/T79_worker_summary.md` 等 task-scoped gate 文档。
+- `T79` 不得借 gate 评审之名顺手修改 note 正文、创建新 run、重算 benchmark、更新历史 artifact、扩写 theory 分支大范围内容或升级部署/真板证据等级。
+
 ## 2026-06-12 Captain Update (T77 closeout)
 
 - `T77` 已按 `PASS_WITH_WARNINGS` 收口。
