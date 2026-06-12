@@ -1,3 +1,14 @@
+## 2026-06-12 Captain Final Supersession (T80 closeout)
+
+- Current unique task: `T81: Summary of Contributions 与 methods-only calibration pack`
+- Task package: `docs/tasks/Phase2/T81_summary_and_methods_calibration_pack.md`
+- `T80` has been judged `PASS`.
+- `T80` completed one docs-only section-bounded prose reopen honestly and kept `Summary of Contributions` plus the three methods chapters untouched on purpose.
+- `T80` introduces no deferred/rejected warning and opens no new risk.
+- `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T81` is the next bounded mainline task because the repo no longer needs another ready-section prose wave; it now needs one controlled calibration pass over `Summary of Contributions` and the three methods chapters only.
+- `T81` must stay docs-only, mainline-only, and must not widen into benchmark/HIL reruns, `.tflite` execution, real-board execution, theory-branch large-scale rewriting, sidecar promotion, or direct full-manuscript expansion.
+
 ## 2026-06-12 Captain Final Supersession (T79 closeout)
 
 - Current unique task: `T80: 主线校准段落的 bounded prose reopen`
@@ -128,20 +139,20 @@
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T80: 主线校准段落的 bounded prose reopen`
-- 任务包：`docs/tasks/Phase2/T80_mainline_calibrated_sections_bounded_prose_reopen.md`
+- 当前唯一任务：`T81: Summary of Contributions 与 methods-only calibration pack`
+- 任务包：`docs/tasks/Phase2/T81_summary_and_methods_calibration_pack.md`
 - 当前主线优先级：先补论文所需的仿真结果、图表、caption 与 supporting materials；real-board execution 因当前暂无 `Linux + FPGA` 硬件宿主而维持最低优先级 backlog
 
 Captain continuity note:
 
-- The authoritative current task for all new worker action is `T80: 主线校准段落的 bounded prose reopen`.
-- Authoritative task package: `docs/tasks/Phase2/T80_mainline_calibrated_sections_bounded_prose_reopen.md`.
-- `T79` is complete and accepted as `PASS`.
+- The authoritative current task for all new worker action is `T81: Summary of Contributions 与 methods-only calibration pack`.
+- Authoritative task package: `docs/tasks/Phase2/T81_summary_and_methods_calibration_pack.md`.
+- `T80` is complete and accepted as `PASS`.
 - `R13/R14/R32/R33` remain the existing carry-forward risks.
-- `T80` is the single recommended next task after `T79`.
+- `T81` is the single recommended next task after `T80`.
 - `T37` / real-board execution remains `blocked + lowest-priority backlog`; it is not the next mainline step while hardware host conditions remain unavailable.
 - If any older line below still mentions `T76` or earlier tasks as current, treat it as historical carry-forward text only.
-- `T80` is a bounded prose task only. It is not permission to widen into methods-chapter rewriting, benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or full-manuscript reopen.
+- `T81` is a bounded contribution/methods calibration task only. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or full-manuscript reopen.
 
 ## 2026-06-05 Captain Update (T67 closeout)
 

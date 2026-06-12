@@ -123,6 +123,14 @@
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`
 
+## 2026-06-12 Captain Update (T80/T81 boundary supersession)
+
+- `T80` 已由 Captain 以 `PASS` 收口。
+- 它只在 docs-only 主线中完成了 8 个 ready sections 的 section-bounded prose reopen；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 gate/smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- `T80` 的 strongest supported truth 只是：当前 note 的 ready narrative / result-facing sections 已与现有 evidence stack 对齐，而不是 full-manuscript reopen、methods-ready、deployment upgrade 或 real-board story upgrade。
+- 因此当前唯一任务切换为 `T81: Summary of Contributions 与 methods-only calibration pack`。
+- `T81` 仍是 docs-only 主线任务；它只允许校准 `Summary of Contributions` 与三章 methods，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实，也不得把当前 note 写成 full-manuscript reopen 或 deployment closure。
+
 ## 2026-06-12 Captain Update (T79/T80 boundary supersession)
 
 - `T79` 已由 Captain 以 `PASS` 收口。

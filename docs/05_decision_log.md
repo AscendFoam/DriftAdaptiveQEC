@@ -1,5 +1,41 @@
 # Decision Log
 
+## D-2026-06-12-08
+
+- 日期：`2026-06-12`
+- 决策：接受 `T80` 为 `PASS`，标记 `T80` 完成，并将当前唯一任务切换为 `T81: Summary of Contributions 与 methods-only calibration pack`
+
+### 背景
+
+`T80` 的目标不是恢复 full-manuscript reopen，而是在 `T79` 已完成 reopen gate 之后，只对当前 note 中已经 ready 的 8 个 narrative / result-facing sections 做一轮受控 prose reopen。review 已确认这层工作真实完成，同时也明确指出 `Summary of Contributions` 与三章 methods 仍刻意保持 untouched，因此它们成为下一轮主线校准的唯一集中缺口。
+
+### 依据
+
+1. `docs/review/T80_review.md` verdict = `PASS`，blocking issues = none。
+2. review 已确认本轮 diff 保持在 `T80` 允许的 section 和文件范围内，且 `% T80-REOPEN` 标记只落在 8 个允许改写的 ready sections。
+3. review 已确认 `Summary of Contributions`、`Brief Review of the GKP Code`、`Noise and Drift Model`、`Model Architecture` 仍保持 untouched，这与任务包边界一致，而不是遗漏实现。
+4. review 已确认 `paper_bounded_prose_reopen_manifest.md` 已把 changed sections、guardrails 与 compile 状态记录清楚，并继续保留：
+   - `T24` frozen anchor
+   - `FR6/FR7` descriptive-only
+   - `FR8` extension-lane / no-promotion
+   - `.tflite` isolated current-host only
+   - real-board current-host `NO_GO`
+5. review 还明确提醒：`T80` 不是 full-manuscript reopen，也不是 methods-ready、deployment upgraded 或 real-board story upgraded。
+
+### 结论
+
+1. 接受 `T80` 为 `PASS` 并标记完成。
+2. 由于 verdict 为 `PASS`，本轮不进入 warning 分类流程，也不新开 risk。
+3. `T80` 只关闭了“ready narrative / result-facing sections 是否已完成有界重写”的问题，不关闭任何 deployment/runtime/board 风险。
+4. 当前唯一任务切换为 `T81`，只允许在 `Summary of Contributions` 与三章 methods 内做受控 contribution/methods calibration。
+5. `T81` 必须继续保留 `T24` frozen anchor、`FR6/FR7` descriptive-only、`FR8` no-promotion、training/material supporting boundary、`.tflite` isolated current-host only 和 real-board current-host `NO_GO` 等 guardrail。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/02_experiment_plan.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T80 -> PASS` 与 `Current Unique Task -> T81`。
+2. 新增 `docs/tasks/Phase2/T81_summary_and_methods_calibration_pack.md` 作为下一张 worker-facing 任务包。
+3. main 分支在完成上述治理同步后可以继续提交，但提交前应精确暂存 `T80` 产物、Captain closeout 文档和 `T81` 任务包，不要把无关历史 diff 混入。
+
 ## D-2026-06-12-07
 
 - 日期：`2026-06-12`

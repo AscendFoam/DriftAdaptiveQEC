@@ -542,8 +542,17 @@
 
 ### Milestone 2AA: Mainline Calibrated Section Bounded Prose Reopen (proposed)
 
-- [ ] T80: 主线校准段落的 bounded prose reopen
+- [x] T80: 主线校准段落的 bounded prose reopen
   - Task package: `docs/tasks/Phase2/T80_mainline_calibrated_sections_bounded_prose_reopen.md`
+  - Output: `docs/paper_materials/paper_bounded_prose_reopen_manifest.md`
+  - Review output: `docs/review/T80_review.md`
+  - Captain verdict: `PASS`
+  - Result: `T80` 真实完成了一轮 section-bounded prose reopen；当前 note 的 8 个 ready narrative / result-facing sections 已与主线 evidence stack 对齐，但 `Summary of Contributions` 与三章 methods 仍刻意保持 untouched，不得被回述成 full-manuscript reopen
+
+### Milestone 2AB: Contribution And Methods Calibration Pack (proposed)
+
+- [ ] T81: Summary of Contributions 与 methods-only calibration pack
+  - Task package: `docs/tasks/Phase2/T81_summary_and_methods_calibration_pack.md`
 
 ### Milestone 2R: Reproducibility And Material Pack (proposed)
 
@@ -564,6 +573,17 @@
 Long-term objective:
 
 以论文级质量为最终目标，但当前先进入 `Research Reality Recovery Mode`。后续任务顺序改为“真实性冻结 -> claim/evidence/material 台账 -> 复现/图表/结果缺口审计 -> 风险收口 -> 再决定是否恢复论文扩写”。除 `Current Unique Task` 外，其他 pending 项只代表路线图，不可直接执行。
+
+## 2026-06-12 Captain Final Supersession (T80 closeout)
+
+- Current unique task: `T81: Summary of Contributions 与 methods-only calibration pack`
+- Task package: `docs/tasks/Phase2/T81_summary_and_methods_calibration_pack.md`
+- `T80` has been judged `PASS`.
+- `T80` has honestly completed one docs-only section-bounded prose reopen on the 8 already-ready sections while keeping `Summary of Contributions` and the three methods chapters untouched by design.
+- `T80` introduces no deferred/rejected warning and opens no new risk.
+- `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T81` is next because the dominant mainline bottleneck is no longer “whether the ready narrative/result-facing sections can be rewritten”, but “whether the still-untouched contribution and methods sections can be calibrated to the same evidence stack without silently widening to full-manuscript reopen”.
+- `T81` must remain docs-only, mainline-only, and section-bounded: it may rewrite only `Summary of Contributions`、`Brief Review of the GKP Code`、`Noise and Drift Model`、`Model Architecture`; it must not widen into benchmark reruns, `.tflite`, real-board execution, theory-branch large-scale rewriting, sidecar promotion, or direct full-manuscript expansion.
 
 ## 2026-06-12 Captain Final Supersession (T79 closeout)
 
@@ -672,39 +692,39 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T80: 主线校准段落的 bounded prose reopen`
+`T81: Summary of Contributions 与 methods-only calibration pack`
 
 Status:
 
-- `T79` has been reviewed as `PASS`.
-- `T79` completed the bounded reopen/readiness gate honestly and fixed the current mainline answer to `GO_FOR_BOUNDED_PROSE_REOPEN`.
+- `T80` has been reviewed as `PASS`.
+- `T80` completed the section-bounded prose reopen honestly and left only the contribution/methods calibration gap as the next mainline paper-material bottleneck.
 - `R13/R14/R32/R33` remain open, and `T37` remains blocked.
 - 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 同时也是 `resource-blocked / lowest-priority backlog`。
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
 - `T64/T65/T66/T67/T68/T69/T70` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T80` must remain docs-only and must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
+- `T81` must remain docs-only and must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
 
 Why this task is next:
 
-1. `T79` has already answered the gate question, so the dominant gap is no longer material sufficiency judgment itself.
-2. The next bottleneck is one section-bounded prose reopen that rewrites only the already-ready narrative / result-facing sections under the existing evidence guardrails.
+1. `T79` has already answered the gate question, and `T80` has already rewritten the ready narrative / result-facing sections.
+2. The next bottleneck is one contribution/methods calibration pass that rewrites only the still-untouched `Summary of Contributions` and three methods chapters under the same evidence guardrails.
 3. 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 不仅证据未满足，而且属于资源受限 backlog，不应早于 paper-material 主线任务。
-4. `T51/T52` full paper re-open tasks 仍然过早；即使 `T79` 已给出 `GO_FOR_BOUNDED_PROSE_REOPEN`，也只允许进入当前这一张 bounded prose 任务，而不是恢复 full-manuscript 扩写。
-5. `T80` is intentionally stronger than a轻量改措辞任务 because it must rewrite eight ready sections, preserve all deployment / benchmark / mechanism guardrails, leave methods chapters untouched, and produce a section-level prose reopen manifest plus compile-aware verification.
+4. `T51/T52` full paper re-open tasks 仍然过早；即使 `T80` 已完成，当前也只允许进入一张 bounded contribution/methods calibration 任务，而不是恢复 full-manuscript 扩写。
+5. `T81` is intentionally stronger than a轻量改措辞任务 because it must rewrite `Summary of Contributions` and all three methods chapters, preserve all deployment / benchmark / mechanism guardrails, keep already-closed `T80` sections stable, and produce a section-level calibration manifest plus compile-aware verification.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T80`
-- Latest reviewed task: `docs/review/T79_review.md` with verdict `PASS`
-- T79 closeout:
+- Current unique task: `T81`
+- Latest reviewed task: `docs/review/T80_review.md` with verdict `PASS`
+- T80 closeout:
   - blocking issues = none
   - warning-derived risk changes = none
   - new risk opened = none
-  - carry-forward notes = `GO_FOR_BOUNDED_PROSE_REOPEN` must not be retold as full-manuscript reopen approval, methods-ready approval, or any deployment / real-board / `statcalib` boundary upgrade
-- Next worker-facing task package: `docs/tasks/Phase2/T80_mainline_calibrated_sections_bounded_prose_reopen.md`
-- `T80` may rewrite only the already-ready narrative / result-facing sections of the current note, update task-scoped paper-material / README registration, and refresh note compile artifacts if local toolchain is available; it must not touch governance docs, source code, tests, `runs/`, `artifacts/`, or methods chapters
-- `T80` is the only recommended next mainline task after `T79`
+  - carry-forward notes = `T80` does not authorize full-manuscript reopen, methods-ready approval, or any deployment / real-board / `statcalib` boundary upgrade
+- Next worker-facing task package: `docs/tasks/Phase2/T81_summary_and_methods_calibration_pack.md`
+- `T81` may rewrite only `Summary of Contributions`、`Brief Review of the GKP Code`、`Noise and Drift Model`、`Model Architecture`, update task-scoped paper-material / README registration, and refresh note compile artifacts if local toolchain is available; it must not touch governance docs, source code, tests, `runs/`, `artifacts/`, or already-closed `T80` sections
+- `T81` is the only recommended next mainline task after `T80`
 
 ## 并行 Sidecar 扩展实验治理
 

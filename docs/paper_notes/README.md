@@ -9,6 +9,7 @@
 - `CNN_FPGA_GKP_theory_note_draft.*`：保留下来的 LaTeX 辅助/日志/同步文件。
 - `../paper_materials/paper_note_results_sync_manifest.md`：`T77` 结果层同步 manifest；记录 note 的结果层 section 与 `T74/T75/T76` trace。
 - `../paper_materials/paper_note_alignment_and_layout_closeout.md`：`T78` 非结果层校准、`statcalib` 层级降权与 LaTeX warning 收口记录。
+- `../paper_materials/paper_bounded_prose_reopen_manifest.md`：`T80` 的有界 prose reopen manifest；逐节记录本轮实际改写的 8 个 ready sections、对应 evidence anchors、guardrails 和 compile 状态。
 
 注意：`.log`、`.fls`、`.fdb_latexmk` 等 LaTeX 辅助文件可能仍包含迁移前的历史编译路径 `docs/follow-up_plan/...`。这些是编译器记录的历史元数据，不是当前维护入口；重新编译后会按新目录刷新。
 
@@ -19,3 +20,4 @@
 3. 重新编译后产生的辅助文件如果仍需保留，应继续放在本目录，不再放回 `docs/follow-up_plan/`。
 4. `T77` 之后，结果层同步优先通过 `paper_note_results_sync_manifest.md` 与源码内的 `% T77-SOURCE: ...` 注释回链到 `T74/T75/T76` stable ID；摘要、结果段、讨论和结论之外的章节若未被该 manifest 覆盖，不得默认视为已同步。
 5. `T78` 之后，标题、引言、`Relationship to Existing Work`、讨论、结论和 note 内部 `statcalib` 层级若做过进一步校准，应优先查看 `paper_note_alignment_and_layout_closeout.md` 与源码内的 `% T78-SCOPE: ...` 注释；这仍然只是 note 质量收口，不是证据升级。
+6. `T80` 之后，若需判断当前 note 的 mainline prose 是否已经过有界重写，应优先查看 `paper_bounded_prose_reopen_manifest.md` 与源码内的 `% T80-REOPEN: ...` 注释；该链路只覆盖 `Title`、`Abstract`、`Introduction`、`Relationship to Existing Work`、`Experimental Setup`、`Numerical Results`、`Discussion`、`Conclusion` 八个 ready sections，不包含 `Summary of Contributions` 或三章 methods。

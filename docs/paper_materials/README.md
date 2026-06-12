@@ -30,6 +30,7 @@
 | `paper_note_alignment_and_layout_closeout.md` | `T78` 新增的 note 非结果层校准 / `statcalib` 层级降权 / LaTeX warning 收口记录；把 `T78-SCOPE` 覆盖范围、未校准 section 和 warning before/after 摘要集中到一处 |
 | `paper_reopen_gate_and_prose_readiness_review.md` | `T79` 新增的 reopen/readiness gate 报告；给出唯一 gate verdict、section-level readiness matrix 和唯一推荐后续任务 |
 | `paper_reopen_gap_matrix.md` | `T79` 新增的 prose reopen gap-to-action matrix；把当前材料缺口、对应证据和后续动作绑定到一起 |
+| `paper_bounded_prose_reopen_manifest.md` | `T80` 新增的有界 prose reopen manifest；逐节登记 8 个 ready sections 的改写范围、evidence anchors、guardrails、compile 状态和保留 untouched 的 out-of-scope sections |
 
 ## 推荐阅读顺序
 
@@ -51,7 +52,8 @@
 16. `paper_note_alignment_and_layout_closeout.md`
 17. `paper_reopen_gate_and_prose_readiness_review.md`
 18. `paper_reopen_gap_matrix.md`
-19. `paper_claim_risk_table.md`
+19. `paper_bounded_prose_reopen_manifest.md`
+20. `paper_claim_risk_table.md`
 
 ## 边界
 
@@ -86,3 +88,7 @@
 `T79` 之后新增的一条 reopen-gate 规则是：
 
 - `paper_reopen_gate_and_prose_readiness_review.md` 与 `paper_reopen_gap_matrix.md` 只回答“当前材料栈是否足够支持下一轮 bounded prose reopen”，它们不是 prose reopen 本身，也不是 full-manuscript ready 证明；即使 gate verdict 为 `GO_FOR_BOUNDED_PROSE_REOPEN`，后续也仍需一张单独的 bounded prose 任务包。
+
+`T80` 之后新增的一条 prose-reopen 规则是：
+
+- `paper_bounded_prose_reopen_manifest.md` 只记录当前 note 中已经完成的有界 prose reopen，而不是新的实验、方法章校准或 full-manuscript reopen 批准。若某段文字没有被 `% T80-REOPEN` 注释和该 manifest 同时覆盖，就不应被回述成“本轮已重写完成”的 mainline prose。

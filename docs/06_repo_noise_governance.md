@@ -11,6 +11,14 @@
 
 本文件不宣称仓库已经完成物理清理。
 
+## 2026-06-12 Captain Update (T80 closeout)
+
+- `T80` 已按 `PASS` 收口。
+- 就 repo-noise 与验证边界而言，`T80` 只在 `docs/paper_notes/*`、`docs/paper_materials/*` 与 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/` 或 benchmark output。
+- `T80` 当前产出的 prose-reopen manifest、README 登记与 note 编译产物属于主线 docs-only deliverable，不得被混写成新的 benchmark、runtime、board 或 full-manuscript 完成事实来源。
+- 当前唯一任务切换为 `T81: Summary of Contributions 与 methods-only calibration pack`；它允许新增或修改的正式产物应限于 `docs/paper_notes/*`、`docs/paper_materials/*` 以及 task-scoped review / explanation / summary 文件。
+- `T81` 不得借 contribution/methods calibration 之名顺手创建新 run、重算 benchmark、更新历史 artifact、改写 theory 分支大范围内容或升级部署/真板证据等级；若本地编译 note，只允许刷新当前 note 既有编译产物。
+
 ## 2026-06-12 Captain Update (T79 closeout)
 
 - `T79` 已按 `PASS` 收口。
