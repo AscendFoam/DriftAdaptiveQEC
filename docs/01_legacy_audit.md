@@ -1,7 +1,7 @@
 # Feasibility And Legacy Audit
 
 **维护状态**：legacy 真实性审计底稿
-**最后维护说明更新**：2026-06-11
+**最后维护说明更新**：2026-06-12
 **当前事实入口**：`docs/02_experiment_plan.md`、`docs/04_task_board.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md`
 
 ## 1. 审计目的
@@ -77,6 +77,33 @@
 - `T24` 已完成 frozen-set formal software revalidation，并由 Captain 接受为 `PASS_WITH_WARNINGS`
 - `T25` 已完成 result-boundary gate review，并确认 T24 只能作为 `mock-backed` software HIL formal software revalidation
 - 后续 P3/P4 文档与复验结果都应沿用同一套 backend / artifact type 表述口径
+
+### 2026-06-12 Captain Update (T76 closeout)
+
+- `T76` 已被 Captain 接受为 `PASS_WITH_WARNINGS`。
+- 这次 closeout 仍然没有改变 legacy audit 的真实性判断：`T76` 只是 docs-only 的 rendered QA / Results assembly 收口，不是新的实验、不是新的板级证据、也不是任何 `.tflite` / real-board / mature comparator 事实升级。
+- `T76` 的 `N1/N3` 被收敛为新的 paper-facing traceability 风险 `R34`；`N2` 只是提交前的过程性噪声提醒，不改变 truth matrix。
+- 当前唯一任务已切换为 `T77: 论文 note-draft 结果层同步与 T76 traceability hardening`；它仍是 main 分支 docs-only 的论文结果层同步任务，不触碰 theory 分支的大范围内容，也不改变 legacy truth matrix。
+
+### 2026-06-12 Captain Update (T75 closeout)
+
+- `T75` 已被 Captain 接受为 `PASS`。
+- 这次 closeout 仍然没有改变 legacy audit 的真实性判断：`T75` 只是 docs-only 的主线 authoring 资产与写作边界收口，不是新的实验、不是新的板级证据、也不是任何 `.tflite` / real-board / mature comparator 事实升级。
+- 当前唯一任务已切换为 `T76: Rendered figure QA and results-section assembly pack`；它仍是 main 分支 docs-only 的论文材料质量控制与装配任务，不触碰 theory 分支，也不改变 legacy truth matrix。
+
+### 2026-06-12 Captain Update (T74 closeout)
+
+- `T74` 已被 Captain 接受为 `PASS`。
+- 这次 closeout 仍然没有改变 legacy audit 的真实性判断：`board_backend.py` 依旧是 placeholder-only，真实板级执行证据仍然缺失，mainline 仍不得把 paper-ready 结果表/图表打包改写成 `real-board validated`、`deployment closed` 或 `mature comparator promoted`。
+- `T74` 只是在 docs-only 范围内把 post-`T73` 的 paper-facing simulation/material 包整理成作者可直接复用的入口，不改变 legacy truth matrix。
+- 当前唯一任务已切换为 `T75: Main-text results prose and final figure authoring pack`；它仍是 main 分支 docs-only 实验结果 authoring 任务，不触碰 theory 分支。
+
+### 2026-06-12 Captain Update
+
+- `T73` 已被 Captain 接受为 `PASS`。
+- 这次 closeout 没有改变 legacy audit 的真实性判断：`board_backend.py` 仍是 placeholder-only，真实板级执行证据仍然缺失，mainline 仍不得把 read-only gate / transfer-pack / paper-facing 台账刷新改写成 `real-board validated`。
+- `T73` 只是在 docs-only 范围内把主线 paper-facing claim/result/risk 入口刷新到 post-`T72` 状态，不改变 legacy truth matrix。
+- 当前唯一任务已切换为 `T74: Paper-ready simulation result and figure pack`；它仍是 main 分支 docs-only paper-material 任务，不触碰 theory 分支。
 
 ### 2026-06-11 Captain Update
 

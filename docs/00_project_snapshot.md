@@ -9,12 +9,47 @@
 ## 2. 基本信息
 
 - 快照日期：`2026-05-05`
-- 最近更新：`2026-06-11`
+- 最近更新：`2026-06-12`
 - 当前分支：`main`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
 - 当前决策状态：`Go`
 - 当前唯一任务来源：`docs/04_task_board.md`
+
+## 2026-06-12 Captain Update (T76 closeout)
+
+- `T76` 已由 Captain 判定为 `PASS_WITH_WARNINGS`。
+- `T76` 在不改动源码、测试、`runs/`、`artifacts/` 或任何证据等级的前提下，完成了真实 rendered preview、人工可读性 QA、contact sheet / PDF bundle 与 Results-section assembly。
+- warning 分类为：
+  - `N1` preview-source 聚合行字段语义复用 = `deferred -> R34`
+  - `N2` `.tmp_t76_*` 探针/缓存残留 = `accepted`
+  - `N3` 逐图 QA 结论未内联完整上游 `T74-*` stable ID = `deferred -> R34`
+- 当前唯一任务切换为 `T77: 论文 note-draft 结果层同步与 T76 traceability hardening`。
+- `T77` 仍留在 main 分支 paper-material 主线，只处理 note-draft 结果层同步、preview-source schema 清理、逐图 stable-ID 显式绑定和可选编译检查；不与 theory 分支大范围改写混做，也不允许扩成 benchmark、`.tflite`、真板执行、sidecar promotion 或 full-manuscript reopen。
+
+## 2026-06-12 Captain Update (T75 closeout)
+
+- `T75` 已由 Captain 判定为 `PASS`。
+- `T75` 在不改动源码、测试、`runs/`、`artifacts/` 或任何证据等级的前提下，完成了主线 Results prose、caption/placement lock、appendix bridge、do-not-write guardrail 和三张 publication-facing `T75-FIG-*` 资产。
+- 本次 closeout 没有引入新的 deferred/rejected warning，也没有新增风险项；review 中的两条非阻塞意见仅作为后续提交与排版 QA 的操作提醒。
+- 当前唯一任务切换为 `T76: Rendered figure QA and results-section assembly pack`。
+- `T76` 仍留在 main 分支 paper-material 主线，只处理 rendered figure QA 与 Results-section assembly，不与 theory 分支混做，也不允许扩成 benchmark、`.tflite`、真板执行、sidecar promotion 或 full-manuscript reopen。
+
+## 2026-06-12 Captain Update (T74 closeout)
+
+- `T74` 已由 Captain 判定为 `PASS`。
+- `T74` 已把主线 simulation/material-first 路线整理成一套 paper-ready 结果表、caption、insertion map、traceability 资产和 gap checklist，但没有改动源码、测试、`runs/`、`artifacts/` 或任何证据等级。
+- 这次 closeout 没有引入新的 deferred/rejected warning，也没有新增风险项；review 里唯一的 non-blocking issue 只是提醒提交时要精确暂存已有 diff。
+- 当前唯一任务切换为 `T75: Main-text results prose and final figure authoring pack`。
+- `T75` 仍留在 main 分支实验主线，只处理实验结果写作与成图 authoring，不与 theory 分支混做，也不允许扩成 benchmark、`.tflite`、真板执行、sidecar promotion 或 full-manuscript reopen。
+
+## 2026-06-12 Captain Update
+
+- `T73` 已由 Captain 判定为 `PASS`。
+- `T73` 完成了 post-`T72` 主线 paper-facing claim/evidence、result/figure、risk 和 README 入口的统一回写，但没有改动源码、测试、`runs/`、`artifacts/` 或治理边界。
+- 这次 closeout 没有引入新的 deferred/rejected warning，也没有新增风险项；现有主风险仍是 `R13/R14/R32/R33` 和受其约束的 `T37`。
+- 当前唯一任务切换为 `T74: Paper-ready simulation result and figure pack`。
+- `T74` 仍留在 main 分支实验主线，不与单独的 theory 分支混做，也不允许扩成 benchmark、`.tflite`、真板执行、sidecar promotion 或 paper prose reopen。
 
 ## 2026-06-11 Captain Update
 
@@ -294,14 +329,14 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T73: Mainline claim/evidence and result/figure/risk ledger refresh`
+- `T77: 论文 note-draft 结果层同步与 T76 traceability hardening`
 
 ## 12. 快照结论
 
 当前项目的核心问题已经从“有没有可靠治理层和入口”切换为“如何在不夸大完成度的前提下继续增强证据”。Phase 2 的默认策略是：
 
 1. P4 benchmark protocol 与 bounded evidence 已完成第一轮受控增强；`T24` 已完成 frozen-set formal software revalidation，`T25` gate review 已接受该结果边界。
-2. 训练链与 `.tflite` 独立 bootstrap 已完成，但都不等于跨机器完整环境或真实 `.tflite` runtime 已恢复。
+2. 训练链独立 bootstrap 与 current-host isolated true `.tflite` runtime 已完成，但都不等于跨机器完整环境、default-env runtime 或部署闭环已恢复。
 3. `T24` 证据等级仍限定为 `mock-backed` software HIL formal benchmark；不得外推为 `.tflite` runtime、真板验证或 paper-grade expanded benchmark。
 4. `T27` 已把 teacher diagnostics 缺口缩窄为 broadcast teacher 布局与 scalar explain 机制不匹配；`R20` 已缩窄为独立 fast-loop saturation 路径。
 5. `T28` 已完成 teacher diagnostics missing-vs-zero 语义修复与最小 smoke；`R21` 对当前 writer 语义可关闭，但 `R10` 机制证据仍未完全修复。
@@ -317,7 +352,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 15. `T46` 已完成并通过 Captain `PASS` 收口；它把 `seed=20260429` 的单 seed 机制诊断收束成了一个明确的多 seed / intervention 计划，但没有升级任何 evidence level。
 16. `T70` 已完成并通过 Captain `PASS` 收口；FR8 当前已有一个 code-backed closure pack，可明确阻止 promotion 和唯一阈值外推，但这不升级为成熟 comparator、`.tflite` 或真板证据。
 17. `T50` 已完成并通过 Captain `PASS` 收口；仓库现在已有一份 code-backed 训练复现与材料再生证据包，可统一引用 canonical 训练材料、主线 preserved references 和一次 clean CPU-only bounded train+eval rerun。
-18. 当前唯一任务已切换为 `T49`，用于对当前宿主的 real-board host / device / bitstream / AXI / DMA / repo-path 前提做一次有界 gate；它比直接启动真板执行或恢复 paper re-open 更小且更诚实。
+18. 当前唯一任务已切换为 `T75`，用于在 `T74` 已形成的 stable-ID 材料包基础上，继续冻结主文 Results 段落、最终成图资产和 caption/placement lock；它比在当前硬件条件下重开真板执行或直接恢复 full-manuscript 扩写更符合现阶段主线。
 
 ## 13. T45 后的拟议路线图（非当前任务）
 

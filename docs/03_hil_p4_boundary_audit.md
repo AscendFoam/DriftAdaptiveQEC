@@ -122,6 +122,35 @@
 - 可以说：`Research Reality Recovery Mode is a governance freeze and audit mode, not an evidence upgrade.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`
+## 2026-06-12 Captain Update (T76/T77 boundary supersession)
+
+- `T76` 已由 Captain 以 `PASS_WITH_WARNINGS` 收口。
+- 它只在 docs-only 主线中完成 rendered preview、人工 QA、contact sheet / PDF bundle 和 Results-section assembly；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- `T76` 的残余 warning 只落在 paper-facing traceability/schema 精细度上：`R34` 约束的是 preview-source / stable-ID 书写粒度，而不是任何运行时或板级边界。
+- 因此当前唯一任务切换为 `T77: 论文 note-draft 结果层同步与 T76 traceability hardening`。
+- `T77` 仍是 docs-only 主线同步任务；它只允许把已有 `T74/T75/T76` 结果层材料同步到 `docs/paper_notes/*.tex`，并补强 `T76` 的 traceability 书写，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实。
+
+## 2026-06-12 Captain Update (T75/T76 boundary supersession)
+
+- `T75` 已被 Captain 接受为 `PASS`。
+- `T75` 只是在 docs-only 主线中完成 Results authoring、caption/placement lock、appendix bridge 和最终成图资产；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- 因此当前唯一任务切换为 `T76: Rendered figure QA and results-section assembly pack`。
+- `T76` 仍是 docs-only 主线质量控制与装配任务；它只允许在 `T75` 已锁定的 prose/asset 边界内做 rendered preview QA、版式可读性审查和 manuscript-facing Results-section assembly，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实。
+
+## 2026-06-12 Captain Update (T74/T75 boundary supersession)
+
+- `T74` 已被 Captain 接受为 `PASS`。
+- 它只把主线 simulation/material-first 路线整理成 paper-ready 表、图、caption、插入映射和 traceability 资产；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- 因此当前唯一任务切换为 `T75: Main-text results prose and final figure authoring pack`。
+- `T75` 仍是 docs-only 主线 authoring 任务；它只能基于 `T74` stable IDs 与既有证据做主文 Results 段落和最终成图 authoring，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实。
+
+## 2026-06-12 Captain Update (T73/T74 boundary supersession)
+
+- `T73` 已被 Captain 接受为 `PASS`。
+- 它只把主线 paper-facing claim/evidence、result/figure、risk 和 README 入口刷新到 post-`T72` 状态；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- 因此当前唯一任务切换为 `T74: Paper-ready simulation result and figure pack`。
+- `T74` 仍是 docs-only 主线 paper-material 打包任务；它只能整理已有仿真证据、图表、caption 与 traceability 资产，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实。
+
 ## 2026-06-11 Captain Update (T72/T73 boundary supersession)
 
 - `T72` 已被 Captain 接受为 `PASS_WITH_WARNINGS`。

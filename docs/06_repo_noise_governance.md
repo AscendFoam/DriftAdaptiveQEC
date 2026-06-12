@@ -11,6 +11,37 @@
 
 本文件不宣称仓库已经完成物理清理。
 
+## 2026-06-12 Captain Update (T76 closeout)
+
+- `T76` 已按 `PASS_WITH_WARNINGS` 收口。
+- 就 repo-noise 与验证边界而言，`T76` 仍然只在 `docs/paper_materials/*`、`docs/figure_assets/T76_rendered_figure_qa_pack/*`、为 honest layout fix 而做的极小范围 `T75` 资产更新，以及 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/` 或 benchmark output。
+- review 中提到的 `.tmp_t76_render_a01.png`、`.tmp_t76_render_m02.png`、`.tmp_t76_render_probe.png` 与 `.tmp_t76_fontcache/` 只属于本地主机渲染探针/缓存残留，不是 `T76` deliverable；它们应在提交时被清理或明确排除暂存，但不单独构成新的 repo 风险。
+- 当前唯一任务切换为 `T77: 论文 note-draft 结果层同步与 T76 traceability hardening`；它允许新增或修改的正式产物仍限于 `docs/paper_notes/*`、`docs/paper_materials/*`、`docs/figure_assets/T76_rendered_figure_qa_pack/*`，以及上述 `.tmp_t76_*` 精确路径的删除。
+- `T77` 不得借 note-draft 同步之名顺手创建新 run、重算 benchmark、更新历史 artifact、改写 theory 分支其余内容或升级部署/真板证据等级。
+
+## 2026-06-12 Captain Update (T75 closeout)
+
+- `T75` 已按 `PASS` 收口。
+- 就 repo-noise 与验证边界而言，`T75` 只在 `docs/paper_materials/*`、`docs/figure_assets/T75_maintext_results_authoring_pack/*` 以及 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/`、benchmark output 或治理文档。
+- 当前唯一任务切换为 `T76: Rendered figure QA and results-section assembly pack`；它允许新增的产物仍限于 `docs/paper_materials/*`、`docs/figure_assets/T76_rendered_figure_qa_pack/*` 和为修正 rendered QA 发现的问题而做的极小范围 `T75` asset/doc 更新。
+- `T76` 不得借 figure QA/assembly 之名顺手创建新 run、重算 benchmark、更新历史 artifact、扩写 theory 分支或改写部署/真板证据等级。
+- 当前工作区仍存在 coexisting captain-side governance diffs，因此后续提交 `T75/T76` 时应继续使用精确暂存；这属于提交治理要求，不是新的 repo 风险。
+
+## 2026-06-12 Captain Update (T74 closeout)
+
+- `T74` 已按 `PASS` 收口。
+- 就 repo-noise 与验证边界而言，`T74` 只在 `docs/paper_materials/*`、`docs/figure_assets/T74_paper_ready_simulation_result_pack/*` 与 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/`、benchmark output 或治理文档。
+- 当前唯一任务切换为 `T75: Main-text results prose and final figure authoring pack`；它允许新增的产物也仍限于 `docs/paper_materials/*` 与 `docs/figure_assets/T75_maintext_results_authoring_pack/*` 这类 docs-only task-scoped authoring 资产。
+- `T75` 不得借 authoring 之名顺手创建新 run、重算 benchmark、更新历史 artifact、扩写 theory 分支或改写部署/真板证据等级。
+- 当前工作区存在 coexisting captain-side governance diffs，因此后续提交 `T74/T75` 时应使用精确暂存；这属于提交治理要求，不是新的 repo 风险。
+
+## 2026-06-12 Captain Update
+
+- `T73` 已按 `PASS` 收口。
+- 就 repo-noise 与验证边界而言，`T73` 只刷新了 paper-material 入口层：`docs/paper_materials/*` 与 task-scoped review / explanation / summary 文件；它没有改动源码、测试、`runs/`、`artifacts/`、benchmark output 或治理文档。
+- 当前唯一任务切换为 `T74: Paper-ready simulation result and figure pack`；它允许新增的产物也仍限于 `docs/paper_materials/*` 与 `docs/figure_assets/T74_paper_ready_simulation_result_pack/*` 这类 docs-only task-scoped traceability 资产。
+- `T74` 不得借 paper-material 打包之名顺手创建新 run、重算 benchmark、更新历史 artifact、扩写 theory 分支或改写部署/真板证据等级。
+
 ## 2026-06-11 Captain Update
 
 - `T72` 已按 `PASS_WITH_WARNINGS` 收口。
@@ -37,7 +68,7 @@
 - P3 software HIL recovery path：`deterministic_recovery_smoke`
 - P4 frozen baseline：`recovery_smoke`
 - real-board HIL：未达到 `hardware_validated`
-- `.tflite` runtime：当前 Phase 2 尚未重新复验
+- `.tflite` runtime：已在当前机器隔离环境完成 `development_smoke` 级真 runtime 复验（`T48`），但 default-env / cross-host / deployment closure 仍未确认
 
 ### 2.2 必须记录的字段
 
@@ -379,3 +410,16 @@
 - 如果 sidecar lane 需要长跑启动，应使用专用 worktree 或短路径 clone，并记录 `host_launch_meta.json`、`workspace_status.txt`、`command.txt`、`stdout.log` 和 `stderr.log`。
 - sidecar lane 必须保持主线实验证据、theory-only materials、`.tflite` runtime work 和 real-board work 分离，除非后续任务包明确 gate 该集成。
 - 2026-06-08 Wave A worktree 使用 `.wt/<short>`，并将 `.wt/` 与 `.worktrees/` 都加入 `.gitignore`；`.wt/` 只是隔离工作面，不是实验输出目录，也不得被当作主线事实来源。
+
+## 2026-06-12 Captain Update（PSE1 sidecar main-controlled 规则）
+
+- `PSE1` 已将 sidecar 治理入口收敛到 `docs/sidecar/`：
+  - `docs/sidecar/00_sidecar_snapshot.md`
+  - `docs/sidecar/01_sidecar_lane_registry.md`
+  - `docs/sidecar/02_sidecar_execution_protocol.md`
+  - `docs/sidecar/03_sidecar_artifact_schema.md`
+  - `docs/sidecar/04_sidecar_promotion_gate.md`
+- 旧 `.wt/tcn`、`.wt/teach`、`.wt/bank`、`.wt/ctrl` 长期 worktree 不再需要同步 main；它们退役为 read-only reference。
+- 后续 sidecar 默认允许在 main 当前代码基础上做新增-only helper / standalone module / task-scoped config；如需修改已有入口，只能是 additive、default-off、explicit opt-in，并必须有旧路径回归验证。
+- 后续 sidecar 仍必须把结果写入 `runs/sidecar/<lane_id>/<run_id>/`，不得写入、resume、regenerate、rewrite 或 relabel 任何主线历史 run root。
+- 本规则不授权创建 `runs/sidecar`、不授权运行实验、不授权清理旧 `.wt/*` worktree。

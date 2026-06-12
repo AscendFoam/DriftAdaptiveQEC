@@ -1,5 +1,163 @@
 # Decision Log
 
+## D-2026-06-12-05
+
+- 日期：`2026-06-12`
+- 决策：接受 `T76` 为 `PASS_WITH_WARNINGS`，标记 `T76` 完成，打开 `R34`，并将当前唯一任务切换为 `T77: 论文 note-draft 结果层同步与 T76 traceability hardening`
+
+### 背景
+
+`T76` 的目标不是新增实验，而是在 `T75` 已锁定的主文 Results prose / figure authoring 边界内，补做真实 rendered preview、人工可读性 QA、contact sheet / PDF bundle 与 Results-section assembly。review 已确认这层工作完成，但也指出当前 preview-source schema 与逐图 stable-ID 绑定粒度仍不够干净，尚不适合直接作为后续 note-draft 或自动化复用的长期接口。
+
+### 依据
+
+1. `docs/review/T76_review.md` verdict = `PASS_WITH_WARNINGS`，blocking issues = none。
+2. review 已确认三张 preview PNG、contact sheet 和 PDF bundle 都真实落地，且人工目视检查认为本轮排版修正后的主要裁切问题已消失。
+3. review 同时指出两类 paper-facing traceability 缺口：
+   - `preview_source_map.csv` 的聚合行把 `upstream_t74_ids` 字段复用于 `T76-PREVIEW-*` 自身 ID；
+   - `paper_rendered_figure_qa.md` 的逐图 QA 结论没有把对应上游 `T74-*` stable ID 全部内联写全。
+4. review 中关于 `.tmp_t76_*` 与 `.tmp_t76_fontcache/` 的提醒属于提交治理与临时噪声问题，不影响 `T76` 完成性，但不应带入正式提交。
+5. `docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.tex` 已存在 experiment/results 章节，因此主线下一步不必停留在抽象 reopen gate，而可以先做一张更强的 docs-only note-draft 同步任务。
+
+### 结论
+
+1. 接受 `T76` 为 `PASS_WITH_WARNINGS` 并标记完成。
+2. warning 分类为：
+   - `N1` preview-source 聚合行字段语义复用 = `deferred -> R34`
+   - `N2` `.tmp_t76_*` 探针/缓存残留 = `accepted`
+   - `N3` 逐图 QA 结论未内联完整上游 `T74-*` stable ID = `deferred -> R34`
+3. `R34` 打开，主题是 paper-facing preview traceability schema 与逐图 stable-ID 绑定粒度仍然偏弱。
+4. 当前唯一任务切换为 `T77`，优先做 note-draft 结果层同步、`T76` traceability hardening 与可选的本地 note 编译检查。
+5. `T77` 必须保持 docs-only；它不是 benchmark rerun、`.tflite` 扩展、real-board 执行、theory 分支大范围改写或 full-manuscript reopen。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/02_experiment_plan.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T76 -> PASS_WITH_WARNINGS`、`R34` 和 `Current Unique Task -> T77`。
+2. 新增 `docs/tasks/Phase2/T77_paper_note_results_sync_and_traceability_hardening.md` 作为下一张 worker-facing 任务包，要求同步 `docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.tex` 的结果层、修补 `T76` traceability 粒度、并在本地工具可用时做受控编译检查。
+3. main 分支可以继续沿论文材料主线推进，但提交前必须精确排除 `.tmp_t76_*` / `.tmp_t76_fontcache/` 这类过程性噪声。
+
+## D-2026-06-12-04
+
+- 日期：`2026-06-12`
+- 决策：接受 `PSE1: sidecar main-controlled governance refresh`，将 sidecar 从长期 `.wt/*` 分支同步模式调整为 main 控制台治理模式
+
+### 背景
+
+旧 Wave A sidecar worktree 已在 `2026-06-08` 创建，但 main 分支随后完成了大量治理、paper-material 与 evidence-pack 整理。旧 `.wt/*` 分支相对 main 的文档差异持续扩大，而每条 sidecar 分支的独有资产主要只是 S0 设计文档。继续逐分支 rebase / 同步会把成本消耗在文档搬运上，而不是实验路线本身。
+
+### 依据
+
+1. `docs/sidecar/parallel_sidecar_worktree_plan.md` 已记录旧 `.wt/tcn`、`.wt/teach`、`.wt/bank`、`.wt/ctrl` 只是 Wave A 工作面，并未运行实验或创建 `runs/sidecar`。
+2. main 当前已经有 `docs/sidecar/` 目录入口，适合承接更轻量的 route registry、execution protocol、artifact schema 和 promotion gate。
+3. 用户明确希望后续 sidecar 可以基于 main 当前代码新增实验实现，但不得破坏原有逻辑，结果按 lane 写入 `runs/sidecar/<lane_id>/<run_id>/`。
+4. 继续维护长期 sidecar 分支会与当前 main 的快速文档整理节奏冲突。
+
+### 结论
+
+1. `docs/sidecar/` 成为 sidecar 精简治理入口。
+2. 旧 `.wt/*` 长期 worktree 退役为 read-only reference；不再要求 rebase 到 main。
+3. 旧 S0 路线思路收编到 `docs/sidecar/lane_plans/`。
+4. 后续 sidecar 默认允许在 main 代码基础上新增-only helper / standalone module / task-scoped config；如需修改已有入口，必须是 additive、default-off、explicit opt-in，并通过旧路径回归验证。
+5. sidecar 结果继续只允许写入 `runs/sidecar/<lane_id>/<run_id>/`，不得写入或改写主线历史 run root。
+6. 任何 sidecar 晋升仍必须通过 Captain promotion gate；本决策不授权运行实验、不创建 `runs/sidecar`，也不改变当前唯一主线任务。
+
+### 直接影响
+
+1. 新增 `docs/tasks/Phase2/PSE1_sidecar_main_controlled_governance_refresh.md`。
+2. 新增 `docs/sidecar/00_sidecar_snapshot.md` 至 `docs/sidecar/04_sidecar_promotion_gate.md`。
+3. 更新 `docs/sidecar/README.md`、`docs/sidecar/parallel_sidecar_extension_governance.md` 与 `docs/sidecar/parallel_sidecar_worktree_plan.md`。
+4. 在 `docs/02_experiment_plan.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md` 和 `docs/07_handoff.md` 中加入 PSE1 supersession，避免继续误读旧 PSE0 worktree 强制规则。
+
+## D-2026-06-12-03
+
+- 日期：`2026-06-12`
+- 决策：接受 `T75` 为 `PASS`，标记 `T75` 完成，并将当前唯一任务切换为 `T76: Rendered figure QA and results-section assembly pack`
+
+### 背景
+
+`T75` 的目标不是新增实验，而是把 `T74` 的 stable-ID 结果材料进一步压缩成主文 Results prose、caption/placement lock、appendix bridge、do-not-write guardrail 和 publication-facing 最终成图资产。当前 review 已确认这一层已完成，但也指出如果后续要真正进入稿件排版或投稿整合，仍需要一张新的 bounded 任务来完成 rendered preview QA 与 manuscript-facing assembly，而不是继续在 `T75` 内隐式扩 scope。
+
+### 依据
+
+1. `docs/review/T75_review.md` verdict = `PASS`，blocking issues = none。
+2. review 明确确认 `authoring_manifest.json`、`asset_source_map.csv`、三张 `T75-FIG-*` SVG、四份 authoring 文档、worker summary、for-human 文档都已落地，且 `T75` 资产与上游 `T74-*` stable IDs 的回链一致。
+3. `git diff --name-only -- runs`、`artifacts`、`cnn_fpga physics benchmark tests` 仍为空，说明 `T75` 保持 docs-only 范围。
+4. review 中的两条 non-blocking note 不构成 `BLOCK` 或新风险：其一是当前 worktree 仍需精确暂存；其二是下一步若进入排版整合，应补真实 rendered preview QA。
+
+### 结论
+
+1. 接受 `T75` 为 `PASS` 并标记完成。
+2. `T75` 没有新的 deferred/rejected warning，因此本轮不新增风险项。
+3. review 中的非阻塞意见按操作性 carry-forward note 处理：精确暂存属于提交纪律，rendered preview QA 被提升为下一张 bounded 任务的目标，而不是回写为 `T75` 缺陷。
+4. 当前唯一任务切换为 `T76`，继续沿着 main 分支 paper-material-first、board-lowest 的主线推进。
+5. `T76` 必须保持 docs-only；它是 rendered figure QA + Results-section assembly pack，不是 benchmark rerun、`.tflite` 扩展、real-board 执行、theory 分支写作或 full-manuscript reopen。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T75 -> PASS` 和 `Current Unique Task -> T76`。
+2. 新增 `docs/tasks/Phase2/T76_rendered_figure_qa_and_results_section_assembly_pack.md` 作为下一张 worker-facing 任务包，要求真实 rendered QA、手工可读性检查、task-scoped 预览输出和 manuscript-facing Results assembly，而不是简单补一句说明。
+3. 在当前暂无 `Linux + FPGA` 硬件宿主前，main 分支可以继续提交 `T75/T76` 这类 paper-material / authoring / QA 主线任务；不建议让 worker 切回真板 execution 准备。
+
+## D-2026-06-12-02
+
+- 日期：`2026-06-12`
+- 决策：接受 `T74` 为 `PASS`，标记 `T74` 完成，并将当前唯一任务切换为 `T75: Main-text results prose and final figure authoring pack`
+
+### 背景
+
+`T74` 的目标不是新增实验，而是把 `T24/T48/T50/T57/T58/T70/T72` 的主线 simulation/material 证据整理成可直接服务论文写作的 stable-ID 结果表、caption、insertion map、traceability 资产和 gap checklist。当前 review 已确认这一层已经完成，因此主线下一步不应回到 benchmark 或真板，而应进入一个更强但仍受控的 authoring 层：基于 `T74` 稳定入口去写 Results 段落和最终成图。
+
+### 依据
+
+1. `docs/review/T74_review.md` verdict = `PASS`，blocking issues = none。
+2. 独立只读核查表明：`figure_manifest.json`、`submission_bundle_manifest.json`、`result_source_map.csv`、`caption_source_map.csv`、`table_snapshot.csv` 之间的 stable ID 完整一致，`status_counts` 为 `ready=11 / partial=3 / blocked=1`，且所有直接/支撑证据路径都存在。
+3. `git diff --name-only -- runs`、`artifacts`、`cnn_fpga physics benchmark tests` 均为空，说明 `T74` 维持了 docs-only 范围。
+4. review 中唯一的 non-blocking issue 只是提醒当前工作区还存在 `T74` 之外的既有 captain-side diff；这影响提交策略，不影响 `T74` 任务完成性，也不构成新的风险或 scope drift。
+5. `T74` 已把 simulation/material-first 路线整理好，但 repo 仍缺一个明确的 next-step authoring package，来冻结主文 Results 段落、最终成图和 caption/placement lock。
+
+### 结论
+
+1. 接受 `T74` 为 `PASS` 并标记完成。
+2. `T74` 没有新的 deferred/rejected warning，因此本轮不新增风险项。
+3. review 中的 non-blocking staging caution 作为 `accepted` 的提交注意事项处理，不进入风险台账。
+4. 当前唯一任务切换为 `T75`，继续沿着 main 分支 simulation/material-first、board-lowest 的主线推进。
+5. `T75` 必须保持 docs-only；它是 main-text Results prose + final figure authoring pack，不是 benchmark rerun、`.tflite` 扩展、real-board 执行、theory 分支写作或 full-manuscript reopen。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T74 -> PASS` 和 `Current Unique Task -> T75`。
+2. 新增 `docs/tasks/Phase2/T75_maintext_results_prose_and_final_figure_authoring_pack.md` 作为下一张 worker-facing 任务包，要求 actual figure authoring、bounded Results prose、caption lock 和 appendix bridge，而不是简单补注释。
+3. 在当前暂无 `Linux + FPGA` 硬件宿主前，main 分支可以继续提交 `T74/T75` 这类 paper-material / authoring 主线任务；不建议让 worker 切回真板 execution 准备。
+
+## D-2026-06-12-01
+
+- 日期：`2026-06-12`
+- 决策：接受 `T73` 为 `PASS`，标记 `T73` 完成，并将当前唯一任务切换为 `T74: Paper-ready simulation result and figure pack`
+
+### 背景
+
+`T73` 的目标不是新增实验，而是把 `T48/T50/T57/T58/T70/T72` 等近期主线证据统一回写到 paper-facing claim/evidence、result/figure、risk 和 README 入口层。当前用户又明确要求真实硬件优先级继续降低，因此 `T73` 之后最合理的主线推进不是回到真板或 prose，而是继续把已有仿真证据压缩成论文可直接复用的材料包。
+
+### 依据
+
+1. `docs/review/T73_review.md` verdict = `PASS`，blocking issues = none，non-blocking issues = none。
+2. `T73` 当前 diff 只落在允许的 paper-material / review / explanation / worker-summary 路径；没有源码、测试、`runs/`、`artifacts/` 或治理文档越界。
+3. `paper_claim_evidence_ledger.md`、`paper_result_figure_ledger.md`、`paper_claim_risk_table.md`、`paper_ablation_result_pack.md` 与 `docs/paper_materials/README.md` 已形成统一的 post-`T72` 主线入口，而且没有把 `.tflite`、real-board、`statcalib` 或 FR6/FR7 边界静默升级。
+4. `T74` 任务包已存在，且可以在不新增实验的前提下被增强为更强的 paper-material 打包任务：加入 stable IDs、main-text/appendix/supplement placement、insertion map、submission bundle manifest 与更严格的 traceability 约束。
+
+### 结论
+
+1. 接受 `T73` 为 `PASS` 并标记完成。
+2. `T73` 没有新的 deferred/rejected warning，因此本轮不新增风险项。
+3. 当前唯一任务切换为 `T74`，继续沿着 main 分支 paper-first / board-lowest 主线推进。
+4. `T74` 仍然必须保持 docs-only；它不是 benchmark rerun、`.tflite` 扩展、real-board 执行、theory 分支写作或 sidecar promotion 入口。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T73 -> PASS` 和 `Current Unique Task -> T74`。
+2. `docs/tasks/Phase2/T74_paper_ready_simulation_result_and_figure_pack.md` 增强为更完整的 paper-material bundle 任务包，而不是停留在简单图表整理层。
+3. 在当前暂无 `Linux + FPGA` 硬件宿主前，main 分支可以继续提交 `T73/T74` 这类 paper-material 主线任务；不建议让 worker 切回真板 execution 准备。
+
 ## D-2026-06-11-03
 
 - 日期：`2026-06-11`

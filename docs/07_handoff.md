@@ -1,16 +1,50 @@
-## 2026-06-11 Captain Final Supersession (T72 closeout)
+## 2026-06-12 Captain Final Supersession (T76 closeout)
 
-- Current unique task: `T73: Mainline claim/evidence and result/figure/risk ledger refresh`
-- Task package: `docs/tasks/Phase2/T73_mainline_claim_evidence_and_result_figure_ledger_refresh.md`
-- `T72` has been judged `PASS_WITH_WARNINGS`.
-- `T72` closes `R31` honestly: the checked-in、read-only、role-aware real-board gate / transfer-pack now carries execution-derived probe provenance、default/override-aware source records and focused override regression coverage, while the current-host regenerated verdict remains `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`。
-- `T72` warning classification:
-  - `N1` 最小 config 场景下 path provenance 仍会把代码默认值写成 `source_kind=config_field` = `deferred -> R32`
-  - `N2` Worker 原始主报告路径曾短暂落在精确 allowed files 之外，但当前 `HEAD` 已整理回允许目录 = `accepted`
-  - `N3` 缺少覆盖 path 字段缺省回退标签的 focused regression = `deferred -> R32`
-- `R13/R14` remain open, `T37` remains blocked, `R31` is closed by `T72`, and `R32` is the new narrowed deployment-boundary carry-forward risk.
-- `T73` is the next bounded mainline task because the repo now needs one post-`T72` 的 paper-facing 主台账刷新入口，把 `T48/T50/T57/T58/T70/T72` 的现状统一回写。
-- `T73` must stay docs-only, mainline-only, and must not widen into benchmark/HIL reruns, `.tflite` execution, real-board execution, theory-branch work, or paper prose reopen.
+- Current unique task: `T77: 论文 note-draft 结果层同步与 T76 traceability hardening`
+- Task package: `docs/tasks/Phase2/T77_paper_note_results_sync_and_traceability_hardening.md`
+- `T76` has been judged `PASS_WITH_WARNINGS`.
+- `T76` completed the bounded rendered-QA / Results-assembly step honestly: the repo now has reviewed preview PNGs, contact sheet, PDF bundle, rendered-QA notes, callout sheet, and section-assembly materials under the already locked `T75` asset boundary.
+- `T76` warning classification:
+  - `N1` preview-source 聚合行字段语义复用 = `deferred -> R34`
+  - `N2` `.tmp_t76_*` 探针/缓存残留 = `accepted`
+  - `N3` 逐图 QA 结论未内联完整上游 `T74-*` stable ID = `deferred -> R34`
+- `R34` is new; `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T77` is the next bounded mainline task because the repo now needs note-draft results-layer sync plus traceability hardening, not another experiment or a premature full-manuscript reopen.
+- `T77` must stay docs-only, mainline-only, and must not widen into benchmark/HIL reruns, `.tflite` execution, real-board execution, theory-branch large-scale rewriting, sidecar promotion, or full-manuscript reopen.
+
+## 2026-06-12 Captain Final Supersession (T75 closeout)
+
+- Current unique task: `T76: Rendered figure QA and results-section assembly pack`
+- Task package: `docs/tasks/Phase2/T76_rendered_figure_qa_and_results_section_assembly_pack.md`
+- `T75` has been judged `PASS`.
+- `T75` completed the bounded authoring step honestly: the repo now has locked main-text Results prose, caption/placement notes, appendix bridge notes, do-not-write guardrails, and three publication-facing `T75-FIG-*` assets that trace back to `T74` stable IDs.
+- `T75` has no blocking issue and no deferred/rejected warning; this closeout opens no new risk item.
+- The carry-forward notes are operational rather than blocking: the current worktree still requires precise staging discipline, and rendered preview QA should now be handled by one bounded follow-up task instead of silently widening `T75`.
+- `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T76` is the next bounded mainline task because the repo now needs rendered figure QA plus manuscript-facing Results-section assembly under the already locked `T75` asset and wording boundary.
+- `T76` must stay docs-only, mainline-only, and must not widen into benchmark/HIL reruns, `.tflite` execution, real-board execution, theory-branch work, sidecar promotion, or full-manuscript reopen.
+
+## 2026-06-12 Captain Sidecar Supersession（PSE1）
+
+- 当前 sidecar 治理入口已切换为 `docs/sidecar/` 下的 PSE1 精简治理文档。
+- 任务包：`docs/tasks/Phase2/PSE1_sidecar_main_controlled_governance_refresh.md`
+- 旧 `.wt/tcn`、`.wt/teach`、`.wt/bank`、`.wt/ctrl` 不再作为必须同步的长期分支；它们退役为 read-only reference。
+- 旧 S0 思路已收编到 `docs/sidecar/lane_plans/`。
+- 后续 sidecar 默认在 main 当前代码基础上做新增-only helper / standalone module / task-scoped config；需要并行或长跑隔离时，再从当前 main 稳定点新开短生命周期 worktree 或 clean clone。
+- sidecar 结果仍必须写入 `runs/sidecar/<lane_id>/<run_id>/`，不得改写主线历史 run root，不得进入主线事实口径，除非后续 Captain promotion gate 明确批准。
+- 本 supersession 不改变当前唯一主线任务 `T76`，不授权运行 sidecar 实验，不授权创建 `runs/sidecar`。
+
+## 2026-06-12 Captain Final Supersession (T74 closeout)
+
+- Current unique task: `T75: Main-text results prose and final figure authoring pack`
+- Task package: `docs/tasks/Phase2/T75_maintext_results_prose_and_final_figure_authoring_pack.md`
+- `T74` has been judged `PASS`.
+- `T74` completed the paper-ready simulation/material packaging step honestly: stable-ID 表/图/补充说明、caption pack、insertion map、traceability assets 和 submission-material gap checklist 已全部落地，且没有源码、测试、`runs/`、`artifacts/` 或治理文档漂移。
+- `T74` has no blocking issue and no deferred/rejected warning; this closeout opens no new risk item.
+- The only non-blocking carry-forward note is commit-time staging discipline: the current worktree contains coexisting captain-side governance diffs, so future commits should use precise staging.
+- `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T75` is the next bounded mainline task because the repo now needs one stronger authoring layer that converts the `T74` stable-ID route into main-text Results prose, final figure assets, caption locks and appendix bridges.
+- `T75` must stay docs-only, mainline-only, and must not widen into benchmark/HIL reruns, `.tflite` execution, real-board execution, theory-branch work, sidecar promotion, or full-manuscript reopen.
 
 ## 2026-06-08 Captain 并行 Sidecar 治理设置
 
@@ -18,9 +52,10 @@
 - 任务包：`docs/tasks/Phase2/PSE0_parallel_sidecar_extension_governance_setup.md`
 - 治理规则：`docs/sidecar/parallel_sidecar_extension_governance.md`
 - worktree 计划：`docs/sidecar/parallel_sidecar_worktree_plan.md`
-- `PSE0` 不替代也不执行主线当前唯一任务；当前该任务已切换为 `T71`。
+- `PSE0` 不替代也不执行主线当前唯一任务；在当时时点，主线任务已切换为 `T71`。
 - `PSE0` 不创建 worktree、branch、run root、experiment、`.tflite` smoke、real-board smoke 或 benchmark output。
-- 后续 sidecar 工作必须使用 `codex/sidecar-*` 分支、隔离 worktree 和 `runs/sidecar/<lane_id>/...` run root。
+- PSE1 已 supersede 旧“必须使用 `codex/sidecar-*` 长期分支和隔离 worktree”的执行组织方式；后续默认由 main 控制台治理，必要时再开短生命周期 worktree / clean clone。
+- 后续 sidecar 工作仍必须使用 `runs/sidecar/<lane_id>/...` run root。
 - 后续 sidecar 输出在后续 Captain promotion gate 批准主线任务包之前，只能保持为 sidecar candidate。
 
 ## 2026-06-08 Captain Wave A Sidecar Worktree Setup
@@ -32,7 +67,7 @@
   - `.wt/ctrl` -> `codex/sidecar-atomic-commit-rollback`
 - 已在各自 worktree 中写入中文 `S0_design` 任务包。
 - 本轮未运行 sidecar 实验，未创建 `runs/sidecar`，未启动 benchmark、训练、`.tflite` smoke 或 real-board smoke。
-- main 分支当前唯一主线任务已切换为 `T71`；main 分支主线工作与四个 sidecar worktree 继续保持独立。
+- 在当时时点，main 分支当前唯一主线任务已切换为 `T71`；main 分支主线工作与四个 sidecar worktree 继续保持独立。
 - 路径说明：使用 `.wt/<short>` 是为了规避 `.worktrees/<long-name>` 在 Windows 完整 checkout 时触发的 `Filename too long`。
 
 ## 2026-06-05 Captain Final Supersession
@@ -52,24 +87,24 @@
 
 ## 1. 当前状态
 
-- 日期：`2026-06-11`
+- 日期：`2026-06-12`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T73: Mainline claim/evidence and result/figure/risk ledger refresh`
-- 任务包：`docs/tasks/Phase2/T73_mainline_claim_evidence_and_result_figure_ledger_refresh.md`
+- 当前唯一任务：`T77: 论文 note-draft 结果层同步与 T76 traceability hardening`
+- 任务包：`docs/tasks/Phase2/T77_paper_note_results_sync_and_traceability_hardening.md`
 - 当前主线优先级：先补论文所需的仿真结果、图表、caption 与 supporting materials；real-board execution 因当前暂无 `Linux + FPGA` 硬件宿主而维持最低优先级 backlog
 
 Captain continuity note:
 
-- The authoritative current task for all new worker action is `T73: Mainline claim/evidence and result/figure/risk ledger refresh`.
-- Authoritative task package: `docs/tasks/Phase2/T73_mainline_claim_evidence_and_result_figure_ledger_refresh.md`.
-- `T72` is complete and accepted as `PASS_WITH_WARNINGS`.
-- `R31` is closed by `T72`; `R32` is the new narrowed carry-forward risk for minimal-config provenance labeling.
-- After `T73`, the single recommended next task is `T74: Paper-ready simulation result and figure pack`.
+- The authoritative current task for all new worker action is `T77: 论文 note-draft 结果层同步与 T76 traceability hardening`.
+- Authoritative task package: `docs/tasks/Phase2/T77_paper_note_results_sync_and_traceability_hardening.md`.
+- `T76` is complete and accepted as `PASS_WITH_WARNINGS`.
+- `T76` opens one new paper-facing traceability risk: `R34`; `R32` remains the existing narrowed deployment-boundary carry-forward risk.
+- `T77` is the single recommended next task after `T76`.
 - `T37` / real-board execution remains `blocked + lowest-priority backlog`; it is not the next mainline step while hardware host conditions remain unavailable.
-- If any older line below still mentions `T72` or earlier tasks as current, treat it as historical carry-forward text only.
-- `T73` is the single bounded next step after T72 closeout. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or paper prose reopen.
+- If any older line below still mentions `T76` or earlier tasks as current, treat it as historical carry-forward text only.
+- `T77` is the single bounded next step after T76 closeout. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or full-manuscript reopen.
 
 ## 2026-06-05 Captain Update (T67 closeout)
 

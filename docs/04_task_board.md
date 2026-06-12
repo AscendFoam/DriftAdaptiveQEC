@@ -425,6 +425,12 @@
   - Captain 状态：docs-only 设置任务已完成并通过验证
   - 边界：本任务不执行 `T69`，不创建 sidecar worktree，不启动实验，也不改变任何主线 benchmark 语义
   - 结果：后续 sidecar lane 可在 frozen-anchor、artifact-schema、promotion-gate、run-dir 和红线规则下规划；主线当前唯一任务仍以 `Current Unique Task` 区块为准
+- [x] PSE1：sidecar main-controlled governance refresh
+  - 任务包：`docs/tasks/Phase2/PSE1_sidecar_main_controlled_governance_refresh.md`
+  - 治理入口：`docs/sidecar/README.md`
+  - 精简治理：`docs/sidecar/00_sidecar_snapshot.md` 至 `docs/sidecar/04_sidecar_promotion_gate.md`
+  - Captain 状态：docs-only 设置任务；不运行实验，不创建 `runs/sidecar`，不改变当前唯一主线任务
+  - 结果：旧 `.wt/*` 长期分支退役为 read-only reference，后续 sidecar 默认由 main 控制台管理，允许新增-only代码/配置/helper，但不得破坏主线逻辑；结果仍必须写入 `runs/sidecar/<lane_id>/<run_id>/`
 
 ### Milestone 2Q: Deployment Boundary Boosters (proposed)
 
@@ -468,13 +474,43 @@
 
 ### Milestone 2T: Mainline Paper-Facing Ledger Refresh (proposed)
 
-- [ ] T73: Mainline claim/evidence and result/figure/risk ledger refresh
+- [x] T73: Mainline claim/evidence and result/figure/risk ledger refresh
   - Task package: `docs/tasks/Phase2/T73_mainline_claim_evidence_and_result_figure_ledger_refresh.md`
 
 ### Milestone 2U: Paper-Ready Simulation Material Pack (proposed)
 
-- [ ] T74: Paper-ready simulation result and figure pack
+- [x] T74: Paper-ready simulation result and figure pack
   - Task package: `docs/tasks/Phase2/T74_paper_ready_simulation_result_and_figure_pack.md`
+  - Review output: `docs/review/T74_review.md`
+  - Captain verdict: `PASS`
+  - Result: T74 closes the paper-ready simulation/material packaging gap by producing stable-ID table/figure/caption/insertion/gap packs and task-scoped traceability assets without upgrading any deployment, real-board, or `statcalib` evidence level
+
+### Milestone 2V: Main-Text Result Authoring Pack (proposed)
+
+- [x] T75: Main-text results prose and final figure authoring pack
+  - Task package: `docs/tasks/Phase2/T75_maintext_results_prose_and_final_figure_authoring_pack.md`
+  - Output: `docs/paper_materials/paper_maintext_results_authoring_pack.md` plus task-scoped authoring assets under `docs/figure_assets/T75_maintext_results_authoring_pack/`
+  - Review output: `docs/review/T75_review.md`
+  - Captain verdict: `PASS`
+  - Result: T75 closes the bounded main-text Results authoring gap by producing stable-ID-linked prose, caption/placement lock, appendix bridge, do-not-write guardrails, and publication-facing SVG assets without upgrading any benchmark, `.tflite`, real-board, or `statcalib` evidence level
+
+### Milestone 2W: Rendered Figure QA And Results Assembly Pack (proposed)
+
+- [x] T76: Rendered figure QA and results-section assembly pack
+  - Task package: `docs/tasks/Phase2/T76_rendered_figure_qa_and_results_section_assembly_pack.md`
+  - Output: `docs/paper_materials/paper_rendered_figure_qa.md`、`docs/paper_materials/paper_results_section_assembly_pack.md`、`docs/paper_materials/paper_results_callout_sheet.md` 与 `docs/figure_assets/T76_rendered_figure_qa_pack/*`
+  - Review output: `docs/review/T76_review.md`
+  - Captain verdict: `PASS_WITH_WARNINGS`
+  - Warning handling:
+    - `N1` preview-source 聚合行字段语义复用 = `deferred -> R34`
+    - `N2` `.tmp_t76_*` 探针/缓存残留 = `accepted`
+    - `N3` 逐图 QA 结论未内联完整上游 `T74-*` stable ID = `deferred -> R34`
+  - Result: T76 closes the rendered-preview / legibility-QA / Results-section assembly gap honestly, but leaves one paper-facing traceability/schema hardening gap before the preview pack should be reused as a cleaner note-draft source layer
+
+### Milestone 2X: Paper Note Results Sync And Traceability Hardening (proposed)
+
+- [ ] T77: 论文 note-draft 结果层同步与 T76 traceability hardening
+  - Task package: `docs/tasks/Phase2/T77_paper_note_results_sync_and_traceability_hardening.md`
 
 ### Milestone 2R: Reproducibility And Material Pack (proposed)
 
@@ -495,6 +531,53 @@
 Long-term objective:
 
 以论文级质量为最终目标，但当前先进入 `Research Reality Recovery Mode`。后续任务顺序改为“真实性冻结 -> claim/evidence/material 台账 -> 复现/图表/结果缺口审计 -> 风险收口 -> 再决定是否恢复论文扩写”。除 `Current Unique Task` 外，其他 pending 项只代表路线图，不可直接执行。
+
+## 2026-06-12 Captain Final Supersession (T76 closeout)
+
+- Current unique task: `T77: 论文 note-draft 结果层同步与 T76 traceability hardening`
+- Task package: `docs/tasks/Phase2/T77_paper_note_results_sync_and_traceability_hardening.md`
+- `T76` has been judged `PASS_WITH_WARNINGS`.
+- `T76` has honestly completed the bounded rendered-QA / Results-assembly step: the repo now has real preview PNGs, contact sheet, PDF bundle, paper-facing QA notes, callout sheet, and Results-section assembly materials under the already locked `T75` asset boundary.
+- `T76` warning classification:
+  - `N1` preview-source 聚合行字段语义复用 = `deferred -> R34`
+  - `N2` `.tmp_t76_*` 探针/缓存残留 = `accepted`
+  - `N3` 逐图 QA 结论未内联完整上游 `T74-*` stable ID = `deferred -> R34`
+- `R34` is new; `R13/R14/R32/R33` remain open.
+- `T77` is next because the mainline bottleneck has shifted from “whether the figures are readable” to “whether the rendered-QA pack is traceability-clean enough and synchronized into the current paper note without reopening the whole manuscript”.
+- `T77` must remain docs-only, mainline-only, and must not widen into benchmark reruns, `.tflite`, real-board execution, theory-branch large-scale rewriting, sidecar promotion, or full-manuscript reopen.
+
+## 2026-06-12 Captain Final Supersession (T75 closeout)
+
+- Current unique task: `T76: Rendered figure QA and results-section assembly pack`
+- Task package: `docs/tasks/Phase2/T76_rendered_figure_qa_and_results_section_assembly_pack.md`
+- `T75` has been judged `PASS`.
+- `T75` has honestly completed the bounded authoring step: main-text Results prose, caption/placement lock, appendix bridge, do-not-write guardrails, and three publication-facing `T75-FIG-*` assets are now present and explicitly linked back to `T74` stable IDs.
+- `T75` has no blocking issue and no deferred/rejected warning; this closeout opens no new risk item.
+- The carry-forward notes are operational rather than blocking: future commits still require precise staging because the worktree contains coexisting governance diffs, and rendered preview QA should now be handled by one new bounded task rather than silently widening `T75`.
+- `T76` is next because the remaining paper-material gap is no longer authoring structure, but rendered figure QA plus manuscript-facing Results-section assembly under the already locked `T75` asset and wording boundary.
+- `T76` must remain docs-only, mainline-only, and must not widen into benchmark reruns, `.tflite`, real-board execution, theory-branch work, sidecar promotion, or full-manuscript reopen.
+
+## 2026-06-12 Captain Final Supersession (T74 closeout)
+
+- Current unique task: `T75: Main-text results prose and final figure authoring pack`
+- Task package: `docs/tasks/Phase2/T75_maintext_results_prose_and_final_figure_authoring_pack.md`
+- `T74` has been judged `PASS`.
+- `T74` has honestly completed the paper-ready simulation/material packaging step: stable IDs、result tables、caption pack、insertion map、traceability assets and submission-material gap checklist are now present without touching code、tests、`runs/`、`artifacts/` 或治理边界。
+- `T74` has no blocking issue and no deferred/rejected warning; this closeout opens no new risk item.
+- The only non-blocking carry-forward note is operational: the current worktree contains coexisting captain-side governance diffs, so future commits should use precise staging rather than blanket add-all.
+- `T75` is next because the mainline gap has shifted again: the repo now has a strong material pack, but it still lacks one bounded authoring task that converts the `T74` stable-ID route into main-text Results prose, caption lock, and actual publication-facing figure assets.
+- `T75` remains docs-only, mainline-only, and must not widen into benchmark reruns, `.tflite`, real-board execution, theory-branch work, sidecar promotion, or full-manuscript reopen.
+
+## 2026-06-12 Captain Final Supersession (T73 closeout)
+
+- Current unique task: `T74: Paper-ready simulation result and figure pack`
+- Task package: `docs/tasks/Phase2/T74_paper_ready_simulation_result_and_figure_pack.md`
+- `T73` has been judged `PASS`.
+- `T73` has honestly completed the post-`T72` mainline ledger refresh across claim/evidence、result/figure、risk and README entry layers without touching code、tests、`runs/`、`artifacts/` 或治理文档。
+- `T73` has no blocking issue, no deferred warning, and no rejected warning; this closeout opens no new risk item.
+- `T74` is next because the mainline gap has shifted from “whether recent bounded evidence is written back consistently” to “whether the repo has one paper-ready simulation material pack with result tables、figure/caption packs、traceability assets and explicit submission-material gap accounting”.
+- The strengthened `T74` package now requires a stricter paper-material bundle: stable IDs、main-text/appendix/supplement placement、insertion map、submission-bundle manifest and task-scoped traceability assets.
+- `T74` remains docs-only, mainline-only, and must not widen into benchmark reruns, `.tflite`, real-board execution, theory-branch work, sidecar promotion, or paper prose reopen.
 
 ## 2026-06-11 Captain Final Supersession (T72 closeout)
 
@@ -519,42 +602,41 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T73: Mainline claim/evidence and result/figure/risk ledger refresh`
+`T77: 论文 note-draft 结果层同步与 T76 traceability hardening`
 
 Status:
 
-- `T72` has been reviewed as `PASS_WITH_WARNINGS`.
-- `T72` closes `R31` honestly without changing the current-host final gate verdict.
-- `T72` warning handling:
-  - `N1` 最小 config 场景下 path provenance 仍会把代码默认值写成 `source_kind=config_field` = `deferred -> R32`
-  - `N2` Worker 原始主报告路径曾短暂落在精确 allowed files 之外，但当前 `HEAD` 已整理回允许目录 = `accepted`
-  - `N3` 缺少覆盖 path 字段缺省回退标签的 focused regression = `deferred -> R32`
-- `R13/R14` remain open, `R32` is now the narrowed deployment-boundary carry-forward risk, and `T37` remains blocked.
+- `T76` has been reviewed as `PASS_WITH_WARNINGS`.
+- `T76` completed the bounded rendered-QA / Results-assembly pack without code, benchmark, runtime, board, or governance drift.
+- `T76` opens one new paper-facing carry-forward risk: `R34`.
+- `R13/R14/R32/R33/R34` remain open, and `T37` remains blocked.
 - 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 同时也是 `resource-blocked / lowest-priority backlog`。
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
 - `T64/T65/T66/T67/T68/T69/T70` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T73` must remain docs-only and must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
+- `T77` must remain docs-only and must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
 
 Why this task is next:
 
-1. `T48/T50/T57/T58/T70/T72` have now created multiple paper-facing evidence updates, but the mainline claim/result/risk ledgers have not been refreshed to a unified post-`T72` state.
-2. The next bottleneck is no longer another execution lane first; it is the lack of one authoritative paper-facing ledger layer that honestly reflects bounded software/runtime/deployment evidence.
+1. `T76` has already produced the bounded rendered-preview and assembly pack, so the next bottleneck is no longer visual readability itself.
+2. The next bottleneck is the absence of one bounded note-sync and traceability-hardening layer that cleans the `T76` preview-source schema, writes the per-figure upstream stable IDs more explicitly, and synchronizes the now-reviewed result layer into `docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.tex`.
 3. 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 不仅证据未满足，而且属于资源受限 backlog，不应早于 paper-material 主线任务。
-4. `T51/T52` paper re-open tasks 仍然过早；在 repo 刷新 current claim/result/risk tables 并补齐 submission-ready simulation materials 之前，不应恢复 prose 扩写。
-5. `T73` is stronger than a simple docs tidy-up because it requires cross-checking multiple recent reviews, evidence packs, figure assets, and risk boundaries without silently promoting any blocked claim.
+4. `T51/T52` full paper re-open tasks 仍然过早；在 repo 先完成 note-draft 的受控结果层同步与 traceability hardening 之前，不应恢复 full-manuscript 扩写。
+5. `T77` is intentionally stronger than a simple gate note because it requires actual note-draft synchronization, source-ID hardening, and compile-aware validation without silently promoting any blocked claim.
 
 ## Captain Output For Current Task
 
-- Current unique task: `T73`
-- Latest reviewed task: `docs/review/T72_review.md` with verdict `PASS_WITH_WARNINGS`
-- T72 closeout:
-  - `N1/N3` = `deferred -> R32`
-  - `N2` = `accepted`
-  - `R31` = closed by T72
-- Next worker-facing task package: `docs/tasks/Phase2/T73_mainline_claim_evidence_and_result_figure_ledger_refresh.md`
-- `T73` may refresh only paper-facing ledgers / README / task-scoped explanation-review-summary docs; it must not touch governance docs, source code, tests, `runs/`, `artifacts/`, theory-branch materials, or reopen paper prose
-- 如果 `T73` 通过，唯一推荐的下一张主线任务是 `docs/tasks/Phase2/T74_paper_ready_simulation_result_and_figure_pack.md`
+- Current unique task: `T77`
+- Latest reviewed task: `docs/review/T76_review.md` with verdict `PASS_WITH_WARNINGS`
+- T76 closeout:
+  - blocking issues = none
+  - deferred warnings = `N1/N3 -> R34`
+  - rejected warnings = none
+  - new risk opened = `R34`
+  - carry-forward notes = `.tmp_t76_*` / `.tmp_t76_fontcache/` must stay out of the main commit; note-draft sync should now be handled by one bounded follow-up task
+- Next worker-facing task package: `docs/tasks/Phase2/T77_paper_note_results_sync_and_traceability_hardening.md`
+- `T77` may build only bounded note-draft sync outputs, preview-source / stable-ID hardening, optional local note compile artifacts, and exact-path cleanup of `.tmp_t76_*`; it must not touch governance docs, source code, tests, `runs/`, `artifacts/`, or reopen the full manuscript
+- `T77` is the only recommended next mainline task after `T76`
 
 ## 并行 Sidecar 扩展实验治理
 
@@ -563,12 +645,13 @@ Why this task is next:
 - 治理规则：`docs/sidecar/parallel_sidecar_extension_governance.md`
 - worktree 计划：`docs/sidecar/parallel_sidecar_worktree_plan.md`
 - `PSE0` 不改变当前唯一主线任务；当前唯一任务以 `Current Unique Task` 区块为准。
-- sidecar lane 必须使用 `codex/sidecar-*` 分支、隔离 worktree 和 `runs/sidecar/<lane_id>/...` run root。
+- `PSE1` 已将 sidecar 改为 main-controlled governance：旧 `.wt/*` 长期分支不再强制同步，后续默认在 main 当前代码基础上做新增-only sidecar helper / module / config；需要并行隔离时再新开短生命周期 worktree 或 clean clone。
+- sidecar lane 结果必须使用 `runs/sidecar/<lane_id>/...` run root。
 - sidecar 输出不是主线事实，不能改写 `T24`、`T64`、`T65`、`T66`、`T67`、`T68` 或 `T69`。
 - sidecar 晋升必须经过后续 Captain gate；`PSE0` 不晋升也不执行任何 sidecar lane。
-- Post-PSE0 Wave A setup：已创建 `.wt/tcn`、`.wt/teach`、`.wt/bank`、`.wt/ctrl` 四个隔离 worktree，并分别写入 `S0_design` 任务包；未运行实验，未创建 `runs/sidecar`，未改变主线当前唯一任务机制。
+- Post-PSE0 Wave A setup：已创建 `.wt/tcn`、`.wt/teach`、`.wt/bank`、`.wt/ctrl` 四个隔离 worktree，并分别写入 `S0_design` 任务包；PSE1 后这些旧 worktree 退役为 read-only reference，S0 思路收编到 `docs/sidecar/lane_plans/`；未运行实验，未创建 `runs/sidecar`，未改变主线当前唯一任务机制。
 
-Older numbered lines below this point are historical carry-forward text and are superseded by the current `T71` block above.
+Older numbered lines below this point are historical carry-forward text and are superseded by the current `T75/T76` block above.
 
 1. Current unique task: `T68`
 2. `T67` is complete and accepted as `PASS_WITH_WARNINGS`.
