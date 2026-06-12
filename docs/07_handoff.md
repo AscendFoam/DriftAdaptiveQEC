@@ -1,3 +1,14 @@
+## 2026-06-12 Captain Final Supersession (T81 closeout)
+
+- Current unique task: `T82: supporting-material 收口与 appendix/supplement 边界整合包`
+- Task package: `docs/tasks/Phase2/T82_supporting_material_closeout_and_boundary_integration_pack.md`
+- `T81` has been judged `PASS`.
+- `T81` completed one docs-only contribution/methods calibration honestly and brought `Summary of Contributions` plus the three methods chapters back onto the current evidence stack.
+- `T81` introduces no deferred/rejected warning and opens no new risk.
+- `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T82` is the next bounded mainline task because the repo no longer lacks calibrated methods/contribution prose; it now lacks one unified manuscript-facing supporting-material closeout route.
+- `T82` must stay docs-only, mainline-only, and must not widen into benchmark/HIL reruns, `.tflite` portability, real-board execution, theory-branch large-scale rewriting, sidecar promotion, or direct full-manuscript expansion.
+
 ## 2026-06-12 Captain Final Supersession (T80 closeout)
 
 - Current unique task: `T81: Summary of Contributions 与 methods-only calibration pack`
@@ -139,20 +150,20 @@
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T81: Summary of Contributions 与 methods-only calibration pack`
-- 任务包：`docs/tasks/Phase2/T81_summary_and_methods_calibration_pack.md`
+- 当前唯一任务：`T82: supporting-material 收口与 appendix/supplement 边界整合包`
+- 任务包：`docs/tasks/Phase2/T82_supporting_material_closeout_and_boundary_integration_pack.md`
 - 当前主线优先级：先补论文所需的仿真结果、图表、caption 与 supporting materials；real-board execution 因当前暂无 `Linux + FPGA` 硬件宿主而维持最低优先级 backlog
 
 Captain continuity note:
 
-- The authoritative current task for all new worker action is `T81: Summary of Contributions 与 methods-only calibration pack`.
-- Authoritative task package: `docs/tasks/Phase2/T81_summary_and_methods_calibration_pack.md`.
-- `T80` is complete and accepted as `PASS`.
+- The authoritative current task for all new worker action is `T82: supporting-material 收口与 appendix/supplement 边界整合包`.
+- Authoritative task package: `docs/tasks/Phase2/T82_supporting_material_closeout_and_boundary_integration_pack.md`.
+- `T81` is complete and accepted as `PASS`.
 - `R13/R14/R32/R33` remain the existing carry-forward risks.
-- `T81` is the single recommended next task after `T80`.
+- `T82` is the single recommended next task after `T81`.
 - `T37` / real-board execution remains `blocked + lowest-priority backlog`; it is not the next mainline step while hardware host conditions remain unavailable.
 - If any older line below still mentions `T76` or earlier tasks as current, treat it as historical carry-forward text only.
-- `T81` is a bounded contribution/methods calibration task only. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or full-manuscript reopen.
+- `T82` is a bounded supporting-material closeout task only. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or full-manuscript reopen.
 
 ## 2026-06-05 Captain Update (T67 closeout)
 

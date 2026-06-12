@@ -551,8 +551,17 @@
 
 ### Milestone 2AB: Contribution And Methods Calibration Pack (proposed)
 
-- [ ] T81: Summary of Contributions 与 methods-only calibration pack
+- [x] T81: Summary of Contributions 与 methods-only calibration pack
   - Task package: `docs/tasks/Phase2/T81_summary_and_methods_calibration_pack.md`
+  - Output: `docs/paper_materials/paper_methods_and_contribution_calibration_manifest.md`
+  - Review output: `docs/review/T81_review.md`
+  - Captain verdict: `PASS`
+  - Result: `T81` 真实完成了 `Summary of Contributions` 与三章 methods 的受控校准；当前 note 的主线正文与方法叙事已压回到同一 evidence stack，但这仍不等于 full-manuscript closeout
+
+### Milestone 2AC: Supporting Material Closeout And Boundary Integration (proposed)
+
+- [ ] T82: supporting-material 收口与 appendix/supplement 边界整合包
+  - Task package: `docs/tasks/Phase2/T82_supporting_material_closeout_and_boundary_integration_pack.md`
 
 ### Milestone 2R: Reproducibility And Material Pack (proposed)
 
@@ -573,6 +582,17 @@
 Long-term objective:
 
 以论文级质量为最终目标，但当前先进入 `Research Reality Recovery Mode`。后续任务顺序改为“真实性冻结 -> claim/evidence/material 台账 -> 复现/图表/结果缺口审计 -> 风险收口 -> 再决定是否恢复论文扩写”。除 `Current Unique Task` 外，其他 pending 项只代表路线图，不可直接执行。
+
+## 2026-06-12 Captain Final Supersession (T81 closeout)
+
+- Current unique task: `T82: supporting-material 收口与 appendix/supplement 边界整合包`
+- Task package: `docs/tasks/Phase2/T82_supporting_material_closeout_and_boundary_integration_pack.md`
+- `T81` has been judged `PASS`.
+- `T81` has honestly completed one docs-only contribution/methods calibration on `Summary of Contributions`、`Brief Review of the GKP Code`、`Noise and Drift Model`、`Model Architecture`.
+- `T81` introduces no deferred/rejected warning and opens no new risk.
+- `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T82` is next because the dominant mainline bottleneck is no longer “whether the note still has untouched contribution/methods sections”, but “whether the existing supporting-boundary materials have been consolidated into one manuscript-facing closeout route without overclaiming hardware or deployment closure”.
+- `T82` must remain docs-only, mainline-only, and support-boundary-bounded: it may consolidate only `FR8/statcalib` supplement-side boundary、training/material supporting boundary、isolated current-host true `.tflite` boundary、real-board read-only gate/provenance with current-host `NO_GO`, plus the note paragraphs that summarize those layers; it must not widen into benchmark reruns, `.tflite` portability, real-board execution, theory-branch large-scale rewriting, sidecar promotion, or direct full-manuscript expansion.
 
 ## 2026-06-12 Captain Final Supersession (T80 closeout)
 
@@ -692,39 +712,39 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T81: Summary of Contributions 与 methods-only calibration pack`
+`T82: supporting-material 收口与 appendix/supplement 边界整合包`
 
 Status:
 
-- `T80` has been reviewed as `PASS`.
-- `T80` completed the section-bounded prose reopen honestly and left only the contribution/methods calibration gap as the next mainline paper-material bottleneck.
+- `T81` has been reviewed as `PASS`.
+- `T81` completed the contribution/methods calibration honestly and left the supporting-material closeout / appendix-supplement boundary integration gap as the next mainline paper-material bottleneck.
 - `R13/R14/R32/R33` remain open, and `T37` remains blocked.
 - 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 同时也是 `resource-blocked / lowest-priority backlog`。
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
 - `T64/T65/T66/T67/T68/T69/T70` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T81` must remain docs-only and must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
+- `T82` must remain docs-only and must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
 
 Why this task is next:
 
-1. `T79` has already answered the gate question, and `T80` has already rewritten the ready narrative / result-facing sections.
-2. The next bottleneck is one contribution/methods calibration pass that rewrites only the still-untouched `Summary of Contributions` and three methods chapters under the same evidence guardrails.
+1. `T79` has already answered the gate question, `T80` has already rewritten the ready narrative / result-facing sections, and `T81` has already calibrated the contribution/methods chapters.
+2. The next bottleneck is one supporting-material closeout pass that consolidates the already existing `FR8/statcalib`、training/material、isolated true `.tflite`、real-board `NO_GO` layers into one manuscript-facing route under the same evidence guardrails.
 3. 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 不仅证据未满足，而且属于资源受限 backlog，不应早于 paper-material 主线任务。
-4. `T51/T52` full paper re-open tasks 仍然过早；即使 `T80` 已完成，当前也只允许进入一张 bounded contribution/methods calibration 任务，而不是恢复 full-manuscript 扩写。
-5. `T81` is intentionally stronger than a轻量改措辞任务 because it must rewrite `Summary of Contributions` and all three methods chapters, preserve all deployment / benchmark / mechanism guardrails, keep already-closed `T80` sections stable, and produce a section-level calibration manifest plus compile-aware verification.
+4. `T51/T52` full paper re-open tasks 仍然过早；即使 `T81` 已完成，当前也只允许进入一张 bounded supporting-material closeout 任务，而不是恢复 full-manuscript 扩写。
+5. `T82` is intentionally stronger than a简单 README 整理任务 because it must同时整合 note 中的 supporting-boundary 段落、paper-material closeout pack、manuscript closeout readiness matrix、README 登记与可选 compile-aware verification。
 
 ## Captain Output For Current Task
 
-- Current unique task: `T81`
-- Latest reviewed task: `docs/review/T80_review.md` with verdict `PASS`
-- T80 closeout:
+- Current unique task: `T82`
+- Latest reviewed task: `docs/review/T81_review.md` with verdict `PASS`
+- T81 closeout:
   - blocking issues = none
   - warning-derived risk changes = none
   - new risk opened = none
-  - carry-forward notes = `T80` does not authorize full-manuscript reopen, methods-ready approval, or any deployment / real-board / `statcalib` boundary upgrade
-- Next worker-facing task package: `docs/tasks/Phase2/T81_summary_and_methods_calibration_pack.md`
-- `T81` may rewrite only `Summary of Contributions`、`Brief Review of the GKP Code`、`Noise and Drift Model`、`Model Architecture`, update task-scoped paper-material / README registration, and refresh note compile artifacts if local toolchain is available; it must not touch governance docs, source code, tests, `runs/`, `artifacts/`, or already-closed `T80` sections
-- `T81` is the only recommended next mainline task after `T80`
+  - carry-forward notes = `T81` does not authorize full-manuscript closeout, deployment upgrade, or any real-board / `statcalib` boundary promotion
+- Next worker-facing task package: `docs/tasks/Phase2/T82_supporting_material_closeout_and_boundary_integration_pack.md`
+- `T82` may consolidate only `FR8/statcalib` supplement-side boundary、training/material supporting boundary、isolated true `.tflite` boundary、real-board read-only gate/provenance boundary, update task-scoped note/material / README registration, and refresh note compile artifacts if local toolchain is available; it must not touch governance docs, source code, tests, `runs/`, `artifacts/`, or already-closed `T80/T81` main text and methods scope
+- `T82` is the only recommended next mainline task after `T81`
 
 ## 并行 Sidecar 扩展实验治理
 

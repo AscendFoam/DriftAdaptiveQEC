@@ -1,5 +1,36 @@
 # Decision Log
 
+## D-2026-06-12-09
+
+- 日期：`2026-06-12`
+- 决策：接受 `T81` 为 `PASS`，标记 `T81` 完成，并将当前唯一任务切换为 `T82: supporting-material 收口与 appendix/supplement 边界整合包`
+
+### 背景
+
+`T81` 的目标不是恢复 full-manuscript reopen，而是在 `T80` 已完成 ready sections prose reopen 之后，把 `Summary of Contributions` 与三章 methods 压回到当前 strongest supported truth 上。review 已确认这 4 个 target sections 完整收口，同时没有扩大到 benchmark、deployment、real-board 或 `statcalib` promotion 叙事。
+
+### 依据
+
+1. `docs/review/T81_review.md` verdict = `PASS`，blocking issues = none。
+2. review 明确确认本轮 diff 保持在 `T81` 允许的 section 与文件范围内，且 note 中存在 4 条 `% T81-CALIBRATION` 标记。
+3. review 明确确认 `T80` 的 8 条 `% T80-REOPEN` 标记仍保留，说明 `T81` 没有把 scope 静默扩回到已关闭的 ready sections。
+4. review 明确确认 `paper_methods_and_contribution_calibration_manifest.md` 已记录 4 个 changed sections、evidence anchors、guardrails 与 compile 状态。
+5. review 也明确提醒：`T81` 完成后，当前 note 仍不等于 full-manuscript reopen；后续若继续推进 paper 主线，必须另开新任务决定 supporting-material closeout 还是更大范围的 prose gate。
+
+### 结论
+
+1. 接受 `T81` 为 `PASS` 并标记完成。
+2. 由于 verdict 为 `PASS`，本轮不进入 warning 分类流程，也不新开 risk。
+3. `T81` 只关闭了 contribution/methods calibration 缺口，不关闭任何 deployment/runtime/board 风险。
+4. 当前唯一任务切换为 `T82`，只允许在 supporting-boundary 层面整合 `FR8/statcalib`、training/material、isolated true `.tflite`、real-board `NO_GO` 等 manuscript-facing closeout 材料。
+5. `T82` 必须继续保留 `T24` frozen anchor、`FR6/FR7` descriptive-only、`FR8` no-promotion、`.tflite` isolated current-host only、real-board current-host `NO_GO` 等 guardrail。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/02_experiment_plan.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T81 -> PASS` 与 `Current Unique Task -> T82`。
+2. 新增 `docs/tasks/Phase2/T82_supporting_material_closeout_and_boundary_integration_pack.md` 作为下一张 worker-facing 任务包。
+3. main 分支在完成上述治理同步后可以继续提交，但提交前应精确暂存 `T81` 产物、Captain closeout 文档与 `T82` 任务包，不要把无关历史 diff 混入。
+
 ## D-2026-06-12-08
 
 - 日期：`2026-06-12`

@@ -3,7 +3,7 @@
 **最后更新：** 2026-06-12  
 **当前阶段：** `Phase 2: Controlled Development`  
 **当前决策状态：** `Go`  
-**当前唯一任务：** 以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准；当前为 `T81`。`T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80` 已完成并收口；`T79` 给出了 `GO_FOR_BOUNDED_PROSE_REOPEN`，`T80` 已完成 ready sections 的有界 prose reopen，因此主线当前进入 `Summary of Contributions` 与三章 methods 的受控校准阶段。在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，real-board 执行相关任务继续降为最低优先级 backlog。
+**当前唯一任务：** 以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准；当前为 `T82`。`T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81` 已完成并收口；`T79` 给出了 `GO_FOR_BOUNDED_PROSE_REOPEN`，`T80` 已完成 ready sections 的有界 prose reopen，`T81` 已完成 `Summary of Contributions` 与三章 methods 的受控校准，因此主线当前进入 supporting-material 收口与 appendix/supplement 边界整合阶段。在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，real-board 执行相关任务继续降为最低优先级 backlog。
 
 ## 文档角色
 
@@ -48,7 +48,7 @@
 | True `.tflite` runtime | current-host isolated path 已确认 | `T48` | 默认环境恢复、HIL closure、deployment closure |
 | Real-board gate | current-host verdict 仍为 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE` | `T49`、`T71`、`T72` | 真板执行成功 |
 | `statcalib` | bounded mock-backed software-HIL extension lane，且明确 `no-promotion` | `T64`-`T70` | 成熟主线 comparator 或 `T24` 替代表 |
-| Paper materials / authoring | `T74` 的 paper-ready material pack、`T75` 的 bounded Results authoring pack、`T76` 的 rendered QA / assembly、`T77` 的 note-draft results sync / traceability hardening、`T78` 的 note 非结果层校准 / hierarchy / layout closeout、`T79` 的 reopen gate 与 `T80` 的 ready-sections prose reopen 已完成；当前进入 `T81` 的 contribution/methods calibration | `T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81` | full-manuscript reopen、无证据升级的方法章扩写或 paper claim 升级 |
+| Paper materials / authoring | `T74` 的 paper-ready material pack、`T75` 的 bounded Results authoring pack、`T76` 的 rendered QA / assembly、`T77` 的 note-draft results sync / traceability hardening、`T78` 的 note 非结果层校准 / hierarchy / layout closeout、`T79` 的 reopen gate、`T80` 的 ready-sections prose reopen 与 `T81` 的 contribution/methods calibration 已完成；当前进入 `T82` 的 supporting-material closeout / appendix-supplement boundary integration | `T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81`、`T82` | full-manuscript reopen、无证据升级的方法章扩写、deployment/board 叙事放大或 paper claim 升级 |
 | Sidecar 扩展 | 可并行设计，但不能自动进入主线事实 | `PSE0`、`PSE1`、`docs/sidecar/README.md` | 主线 benchmark 或论文 claim |
 
 ## 3. 高层时间线
@@ -67,7 +67,7 @@
 | 2026-06-10 | T48/T49/T50 | `.tflite` isolated runtime、real-board gate、training/material pack 三类边界补强 | 均为 bounded evidence，不升级为部署闭环 |
 | 2026-06-11 | T71/T72 | real-board gate pack 从 role-aware/regeneration 进入 provenance hardening | `T72` 完成 provenance hardening；仍无真板执行成功 |
 | 2026-06-11 | T73 / 优先级调整 | 因当前暂无 `Linux + FPGA` 硬件宿主，主线从 real-board 前移改为论文材料优先 | `T73` 完成后，real-board 路线继续降为最低优先级 backlog |
-| 2026-06-12 | T74/T75/T76/T77/T78/T79/T80/T81 | 主线从台账刷新推进到 paper-ready 材料包、bounded Results authoring、rendered QA / Results assembly、note-draft 结果层同步、非结果层校准 / hierarchy / layout closeout、reopen gate、section-bounded prose reopen，并继续进入 contribution/methods calibration | `T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80` 已完成；`T81` 为当前唯一任务；full-manuscript reopen 仍未开启 |
+| 2026-06-12 | T74/T75/T76/T77/T78/T79/T80/T81/T82 | 主线从台账刷新推进到 paper-ready 材料包、bounded Results authoring、rendered QA / Results assembly、note-draft 结果层同步、非结果层校准 / hierarchy / layout closeout、reopen gate、section-bounded prose reopen、contribution/methods calibration，并继续进入 supporting-material closeout / appendix-supplement boundary integration | `T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81` 已完成；`T82` 为当前唯一任务；full-manuscript reopen 仍未开启 |
 
 ## 4. 当前仍有效的结论
 
@@ -81,7 +81,7 @@
 8. `T64`-`T70` 的 `statcalib` 仍是 extension lane；`T70` 的 `no-promotion` gate 必须随引用保留。
 9. 机制诊断已经比早期更强，但 `T55/T56` 也削弱了简单的单因果叙事；论文写作必须保留 hedge。
 10. `T74` 已完成 stable-ID 的 paper-ready simulation/material pack，`T75` 已完成 bounded Results authoring，`T76` 已完成真实 rendered preview、人工可读性 QA 与 Results-section assembly，`T77` 已完成 note-draft 的结果层同步与 `T76` traceability hardening，但这些仍不等于 full-manuscript reopen。
-11. `T78` 已完成 note 非结果层校准、`statcalib` 层级降权、section-scope 审计与排版 warning 收口；`T79` 已完成 reopen gate，并给出 `GO_FOR_BOUNDED_PROSE_REOPEN`；`T80` 已完成 ready narrative / result-facing sections 的有界重写；当前进入 `T81`，继续校准 `Summary of Contributions` 与三章 methods。
+11. `T78` 已完成 note 非结果层校准、`statcalib` 层级降权、section-scope 审计与排版 warning 收口；`T79` 已完成 reopen gate，并给出 `GO_FOR_BOUNDED_PROSE_REOPEN`；`T80` 已完成 ready narrative / result-facing sections 的有界重写；`T81` 已完成 `Summary of Contributions` 与三章 methods 的受控校准；当前进入 `T82`，继续收口 supporting-material 与 appendix/supplement 边界整合。
 12. `runs/` 与 `artifacts/` 是历史证据材料，不应被整体改写成新的事实来源。
 
 ## 5. 已被替换或降级的旧结论
@@ -127,8 +127,8 @@
 
 本次整理时的状态说明：
 
-- `T81: Summary of Contributions 与 methods-only calibration pack`
-- 任务包：`docs/tasks/Phase2/T81_summary_and_methods_calibration_pack.md`
+- `T82: supporting-material 收口与 appendix/supplement 边界整合包`
+- 任务包：`docs/tasks/Phase2/T82_supporting_material_closeout_and_boundary_integration_pack.md`
 - 状态：`Current Unique Task`
 
 当前主线优先级边界：
@@ -140,16 +140,17 @@
 - `T78` 已完成当前 note 的非结果层校准、`statcalib` 视觉层级降权、section-scope 审计与 LaTeX 排版 warning 收口，并关闭了对应的 note 质量收口风险。
 - `T79` 已完成当前材料栈的受控 reopen/readiness gate，并给出唯一结论 `GO_FOR_BOUNDED_PROSE_REOPEN`。
 - `T80` 已完成当前 note 的 8 个 ready narrative / result-facing sections 的 section-bounded prose reopen。
-- `T81` 是当前唯一任务，目标是在不升级任何证据等级的前提下，继续校准 `Summary of Contributions` 与三章 methods。
+- `T81` 已完成 `Summary of Contributions` 与三章 methods 的受控校准。
+- `T82` 是当前唯一任务，目标是在不升级任何证据等级的前提下，把 `FR8/statcalib`、training/material、isolated true `.tflite`、real-board `NO_GO` 等 supporting-boundary 材料压成 manuscript-facing closeout 包。
 - 在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，`T37` 及其他 real-board execution 任务继续 `blocked + lowest-priority backlog`，不抢占当前主线。
-- `T81` 只做有界 contribution/methods calibration，不直接等于 full-manuscript reopen；它不得扩到 benchmark、`.tflite`、real-board 或 theory-branch 大范围改写。
+- `T82` 只做有界 supporting-material closeout 与 appendix/supplement 边界整合，不直接等于 full-manuscript closeout；它不得扩到 benchmark、`.tflite` portability、real-board execution 或 theory-branch 大范围改写。
 
 ## 9. 后续路线总览
 
 后续开发按“论文材料先行、硬件路径后置”的顺序分层推进，不一次性展开全部方向：
 
-1. 主线 contribution/methods calibration
-2. 按 `T81` closeout 决定是进入 supporting-material gap closeout，还是继续更大范围的 prose gate
+1. 主线 supporting-material closeout 与 appendix/supplement 边界整合
+2. 待 `T82` honest closeout 后，再由 Captain 决定是否进入更大范围的 manuscript closeout gate
 3. 主线可信度、training / `.tflite` / transfer-pack 边界补强
 4. 机制诊断与 bounded ablation
 5. paper-grade benchmark expansion 的 protocol lock 与小步执行
@@ -164,7 +165,7 @@
 2. `T75` 已完成 bounded main-text Results authoring、最终成图资产与 do-not-write guardrail。
 3. `T76` 已完成真实 rendered preview、人工可读性 QA、必要的 presentation-level 修正与 Results-section assembly。
 4. `T78` 已完成 note-draft 的非结果层校准、`statcalib` 层级降权、section-scope 审计与必要的 LaTeX 排版 warning 收口。
-5. `T79` 已完成 gate，`T80` 已完成 ready sections 的 section-bounded prose reopen，当前执行 `T81` 的 contribution/methods calibration；即便如此，也仍不是 full-manuscript reopen，更不是部署故事升级。
+5. `T79` 已完成 gate，`T80` 已完成 ready sections 的 section-bounded prose reopen，`T81` 已完成 contribution/methods calibration，当前执行 `T82` 的 supporting-material closeout；即便如此，也仍不是 full-manuscript closeout，更不是部署故事升级。
 6. training / `.tflite` / real-board 现阶段只补 boundary table、portability table 或 supporting material，不冒进写成 deployment / board closure。
 
 当前可保留的标题方向：
@@ -343,8 +344,8 @@ FCCM、ACM FPGA、DATE、ICCAD 等硬件向 venue 只有在补齐以下证据后
 
 | 优先层 | 候选任务 | 主要输出 | 验证 |
 | --- | --- | --- | --- |
-| Current | `T81` Summary of Contributions 与 methods-only calibration pack | contribution/methods 重写、section-level calibration manifest、compile-aware verification | 文档一致性检查 + section-scope 审计 + reviewer |
-| Immediate-next | 按 `T81` closeout 决定的唯一后续任务 | supporting-material gap closeout 或更大范围 prose gate 中的唯一一张 | captain / reviewer gate |
+| Current | `T82` supporting-material 收口与 appendix/supplement 边界整合包 | supporting-material closeout pack、manuscript closeout readiness matrix、note 中受控 supporting-boundary 收口 | 文档一致性检查 + section-scope 审计 + reviewer |
+| Immediate-next | 按 `T82` closeout 决定的唯一后续任务 | 更大范围 manuscript closeout gate 或继续保守停留在 current note/material 边界中的唯一一张 | captain / reviewer gate |
 | P1 | training/material reproducibility follow-up | repeated-run / cross-host / CPU-vs-GPU 边界表 | bounded train/eval smoke |
 | P1 | `.tflite` runtime portability audit | default env / isolated env / cross-host 差异表 | bounded runtime smoke |
 | P1 | `.tflite` isolated-env bootstrap hardening | interpreter/package/artifact/source manifest | true-runtime smoke rejects stub/fallback |
@@ -353,7 +354,7 @@ FCCM、ACM FPGA、DATE、ICCAD 等硬件向 venue 只有在补齐以下证据后
 | P2 | GPT-Pro extension-route triage | adopted/deferred/rejected sidecar list | docs-only protocol review |
 | P2 | temporal TCN / adaptive teacher / parameter-bank sidecar design | bounded experiment spec + shared inputs | no long-run execution without new task |
 | P4-lowest | real-board smoke execution | real device smoke | only after gate conditions satisfy and hardware host becomes available |
-| P3 | broader paper draft reopen after bounded calibration waves | 在 `T81` 之后才考虑的更大范围 prose 扩写 | only after `T81` closes honestly and a new gate approves broader scope |
+| P3 | broader paper draft reopen after bounded calibration waves | 在 `T82` 之后才考虑的更大范围 prose 扩写 | only after `T82` closes honestly and a new gate approves broader scope |
 
 ## 20. 红线
 
