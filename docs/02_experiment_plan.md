@@ -1,9 +1,9 @@
 # DriftAdaptiveQEC 实验规划与后续开发计划
 
-**最后更新：** 2026-06-14
+**最后更新：** 2026-06-15
 **当前阶段：** `Phase 2: Controlled Development`  
 **当前决策状态：** `Go`  
-**当前唯一任务：** 以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准；当前为 `T87`。`T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81`、`T82`、`T83`、`T84`、`T85`、`T86` 已完成并收口；`T79` 给出了 `GO_FOR_BOUNDED_PROSE_REOPEN`，`T80` 已完成 ready sections 的有界 prose reopen，`T81` 已完成 `Summary of Contributions` 与三章 methods 的受控校准，`T82` 已完成 supporting-material 收口与 appendix/supplement 边界整合，`T83` 已完成全文一致性 sweep 并给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`，`T84` 已完成有界 final polish 与读者化装配，`T85` 已完成 submission-readiness preflight 与 residual wording-lag 清扫并关闭 `R36`，`T86` 已完成 bounded submission-pack assembly 与显式 exclusion route 收口并经 Captain 以 `PASS` 接受；因此主线当前进入 `T87` 的主线作者终检与 pre-submission QA 收口阶段。在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，real-board 执行相关任务继续降为最低优先级 backlog。
+**当前唯一任务：** 以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准；当前为 `T89`。`T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81`、`T82`、`T83`、`T84`、`T85`、`T86`、`T87`、`T88` 已完成并收口；`T79` 给出了 `GO_FOR_BOUNDED_PROSE_REOPEN`，`T80` 已完成 ready sections 的有界 prose reopen，`T81` 已完成 `Summary of Contributions` 与三章 methods 的受控校准，`T82` 已完成 supporting-material 收口与 appendix/supplement 边界整合，`T83` 已完成全文一致性 sweep 并给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`，`T84` 已完成有界 final polish 与读者化装配，`T85` 已完成 submission-readiness preflight 与 residual wording-lag 清扫并关闭 `R36`，`T86` 已完成 bounded submission-pack assembly 与显式 exclusion route 收口并经 Captain 以 `PASS` 接受，`T87` 已完成主线作者终检与 pre-submission QA 收口并经 Captain 以 `PASS` 接受，`T88` 已完成 bounded manual finish 执行与 surface freeze 收口并经 Captain 以 `PASS` 接受；因此主线当前进入 `T89` 的 frozen-mainline handoff / post-freeze change-control 阶段。在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，real-board 执行相关任务继续降为最低优先级 backlog。
 
 ## 文档角色
 
@@ -15,6 +15,20 @@
    吸收 `docs/follow-up_plan/README.md` 的功能，作为后续开发、论文准备、任务候选池和计划维护的唯一入口。
 
 本文档不是结果证明文件。任何结果 claim 必须回到对应的 task package、review、run root、artifact、summary helper 或治理文档中验证。当前任务状态仍以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为权威来源。
+
+## 2026-06-15 Captain Update (T88 closeout)
+
+- `T88` 已由 Captain 判定为 `PASS`。
+- `T88` 真实完成了 manual-finish execution log、surface freeze manifest、author edit decision register、blocked disclaimer table、frozen-mainline handoff gate 与最小 `% T88-MANUAL` note refresh；其 non-blocking notes 全部按 operational reminder 接受处理，不新增 `deferred/rejected` warning。
+- 当前唯一任务切换为 `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`。
+- `T89` 只允许做 docs-only、mainline-only、freeze-preserving 的 handoff packet、source-of-truth map、post-freeze change-control 与 blocked-surface re-entry 条件固化；它不是 submission-ready completed，也不得混入独立 theory 分支内容。
+
+## 2026-06-14 Captain Update (T87 closeout)
+
+- `T87` 已由 Captain 判定为 `PASS`。
+- `T87` 真实完成了 author-final QA checklist、pre-submission regression gate、wording red-flag register、manual-finish queue 与最小 QA note refresh；其 non-blocking notes 全部按 operational reminder 接受处理，不新增 `deferred/rejected` warning。
+- 当前唯一任务切换为 `T88: 主线 bounded manual finish 执行与 surface freeze 收口包`。
+- `T88` 只允许做 docs-only、mainline-only、manual-finish execution、surface freeze 与 blocked-disclaimer 固化；它不是 submission-ready completed，也不得混入独立 theory 分支内容。
 
 ## 2026-06-14 Captain Update (T86 closeout)
 
@@ -63,7 +77,7 @@
 | True `.tflite` runtime | current-host isolated path 已确认 | `T48` | 默认环境恢复、HIL closure、deployment closure |
 | Real-board gate | current-host verdict 仍为 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE` | `T49`、`T71`、`T72` | 真板执行成功 |
 | `statcalib` | bounded mock-backed software-HIL extension lane，且明确 `no-promotion` | `T64`-`T70` | 成熟主线 comparator 或 `T24` 替代表 |
-| Paper materials / authoring | `T74` 的 paper-ready material pack、`T75` 的 bounded Results authoring pack、`T76` 的 rendered QA / assembly、`T77` 的 note-draft results sync / traceability hardening、`T78` 的 note 非结果层校准 / hierarchy / layout closeout、`T79` 的 reopen gate、`T80` 的 ready-sections prose reopen、`T81` 的 contribution/methods calibration、`T82` 的 supporting-material closeout、`T83` 的全文一致性 sweep / closeout gate、`T84` 的 bounded reader-facing final polish / assembly、`T85` 的 submission-readiness preflight / residual wording-lag sweep、`T86` 的 bounded submission-pack assembly / exclusion route 收口均已完成；当前进入 `T87` 的主线作者终检与 pre-submission QA 收口 | `T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81`、`T82`、`T83`、`T84`、`T85`、`T86`、`T87` | submission-ready pack 完成态、无证据升级的方法章扩写、deployment/board 叙事放大或 paper claim 升级 |
+| Paper materials / authoring | `T74` 的 paper-ready material pack、`T75` 的 bounded Results authoring pack、`T76` 的 rendered QA / assembly、`T77` 的 note-draft results sync / traceability hardening、`T78` 的 note 非结果层校准 / hierarchy / layout closeout、`T79` 的 reopen gate、`T80` 的 ready-sections prose reopen、`T81` 的 contribution/methods calibration、`T82` 的 supporting-material closeout、`T83` 的全文一致性 sweep / closeout gate、`T84` 的 bounded reader-facing final polish / assembly、`T85` 的 submission-readiness preflight / residual wording-lag sweep、`T86` 的 bounded submission-pack assembly / exclusion route 收口、`T87` 的作者终检 / pre-submission QA 收口、`T88` 的 bounded manual finish / surface freeze 收口均已完成；当前进入 `T89` 的 frozen-mainline handoff / post-freeze change-control 收口 | `T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81`、`T82`、`T83`、`T84`、`T85`、`T86`、`T87`、`T88`、`T89` | submission-ready pack 完成态、无证据升级的方法章扩写、deployment/board 叙事放大或 paper claim 升级 |
 | Sidecar 扩展 | 可并行设计，但不能自动进入主线事实 | `PSE0`、`PSE1`、`docs/sidecar/README.md` | 主线 benchmark 或论文 claim |
 
 ## 3. 高层时间线
@@ -84,7 +98,8 @@
 | 2026-06-11 | T73 / 优先级调整 | 因当前暂无 `Linux + FPGA` 硬件宿主，主线从 real-board 前移改为论文材料优先 | `T73` 完成后，real-board 路线继续降为最低优先级 backlog |
 | 2026-06-12 | T74/T75/T76/T77/T78/T79/T80/T81/T82 | 主线从台账刷新推进到 paper-ready 材料包、bounded Results authoring、rendered QA / Results assembly、note-draft 结果层同步、非结果层校准 / hierarchy / layout closeout、reopen gate、section-bounded prose reopen、contribution/methods calibration，并继续进入 supporting-material closeout / appendix-supplement boundary integration | `T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81` 已完成；`T82` 为当前唯一任务；full-manuscript reopen 仍未开启 |
 | 2026-06-13 | T82/T83 | `T82` 完成 supporting-boundary 四层收口；主线从“局部段落与 supporting route 收口”推进到“全文一致性 sweep 与 closeout gate” | `T82` 已完成；`T83` 为当前唯一任务；full-manuscript closeout 仍未开启 |
-| 2026-06-14 | T83/T84/T85/T86/T87 | `T83` 完成全文一致性 sweep 并给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`；`T84` 完成有界 final polish / reader-facing assembly；`T85` 完成 submission-readiness preflight 并关闭 residual wording-lag 风险 `R36`；`T86` 完成 bounded submission-pack assembly 与显式 exclusion route 收口并经 Captain 以 `PASS` 接受；主线因此切换到 `T87` 的主线作者终检与 pre-submission QA 收口 | `T83`、`T84`、`T85`、`T86` 已完成；`T87` 为当前唯一任务；submission-ready pack 完成态与 deployment closure 仍未开启 |
+| 2026-06-14 | T83/T84/T85/T86/T87/T88 | `T83` 完成全文一致性 sweep 并给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`；`T84` 完成有界 final polish / reader-facing assembly；`T85` 完成 submission-readiness preflight 并关闭 residual wording-lag 风险 `R36`；`T86` 完成 bounded submission-pack assembly 与显式 exclusion route 收口并经 Captain 以 `PASS` 接受；`T87` 完成作者终检 / pre-submission QA 收口并给出 `GO_FOR_BOUNDED_AUTHOR_MANUAL_FINISH_ONLY`；`T88` 完成 bounded manual finish 执行与 surface freeze 收口并给出 `GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY` | `T83`、`T84`、`T85`、`T86`、`T87`、`T88` 已完成；submission-ready pack 完成态与 deployment closure 仍未开启 |
+| 2026-06-15 | T89 / 优先级调整 | 主线从“继续手工终修”切换为“冻结主线答案的 handoff / source-of-truth / change-control 固化” | `T89` 成为当前唯一任务；real-board 路线继续维持最低优先级 backlog |
 
 ## 4. 当前仍有效的结论
 
@@ -98,7 +113,7 @@
 8. `T64`-`T70` 的 `statcalib` 仍是 extension lane；`T70` 的 `no-promotion` gate 必须随引用保留。
 9. 机制诊断已经比早期更强，但 `T55/T56` 也削弱了简单的单因果叙事；论文写作必须保留 hedge。
 10. `T74` 已完成 stable-ID 的 paper-ready simulation/material pack，`T75` 已完成 bounded Results authoring，`T76` 已完成真实 rendered preview、人工可读性 QA 与 Results-section assembly，`T77` 已完成 note-draft 的结果层同步与 `T76` traceability hardening，但这些仍不等于 full-manuscript reopen。
-11. `T78` 已完成 note 非结果层校准、`statcalib` 层级降权、section-scope 审计与排版 warning 收口；`T79` 已完成 reopen gate，并给出 `GO_FOR_BOUNDED_PROSE_REOPEN`；`T80` 已完成 ready narrative / result-facing sections 的有界重写；`T81` 已完成 `Summary of Contributions` 与三章 methods 的受控校准；`T82` 已完成 supporting-material 与 appendix/supplement 边界整合；`T83` 已完成全文一致性 sweep 与 closeout gate，并给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`；`T84` 已完成有界 final polish 与读者化装配；`T85` 已完成 submission-readiness preflight 与 residual wording-lag 清扫并关闭 `R36`；`T86` 已完成 bounded submission-pack assembly 与显式 exclusion route 收口并经 Captain 以 `PASS` 接受；当前进入 `T87`，继续做主线作者终检与 pre-submission QA 收口，而不是直接宣布 submission-ready pack 完成态或 deployment closure。
+11. `T78` 已完成 note 非结果层校准、`statcalib` 层级降权、section-scope 审计与排版 warning 收口；`T79` 已完成 reopen gate，并给出 `GO_FOR_BOUNDED_PROSE_REOPEN`；`T80` 已完成 ready narrative / result-facing sections 的有界重写；`T81` 已完成 `Summary of Contributions` 与三章 methods 的受控校准；`T82` 已完成 supporting-material 与 appendix/supplement 边界整合；`T83` 已完成全文一致性 sweep 与 closeout gate，并给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`；`T84` 已完成有界 final polish 与读者化装配；`T85` 已完成 submission-readiness preflight 与 residual wording-lag 清扫并关闭 `R36`；`T86` 已完成 bounded submission-pack assembly 与显式 exclusion route 收口并经 Captain 以 `PASS` 接受；`T87` 已完成主线作者终检与 pre-submission QA 收口并给出 `GO_FOR_BOUNDED_AUTHOR_MANUAL_FINISH_ONLY`；`T88` 已完成 bounded manual finish 执行与 surface freeze 收口并给出 `GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY`；当前进入 `T89`，继续做 frozen-mainline handoff / post-freeze change-control 收口，而不是直接宣布 submission-ready pack 完成态或 deployment closure。
 12. `runs/` 与 `artifacts/` 是历史证据材料，不应被整体改写成新的事实来源。
 
 ## 5. 已被替换或降级的旧结论
@@ -144,8 +159,8 @@
 
 本次整理时的状态说明：
 
-- `T87: 主线作者终检与 pre-submission QA 收口包`
-- 任务包：`docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md`
+- `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
+- 任务包：`docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
 - 状态：`Current Unique Task`
 
 当前主线优先级边界：
@@ -163,16 +178,18 @@
 - `T84` 已完成，目标层面的 strongest supported truth 是：当前 note 已完成有界 final polish、内部术语读者化翻译、Results/appendix/supplement reader-facing 装配。
 - `T85` 已完成，目标层面的 strongest supported truth 是：当前 note 中唯一残余 wording-lag 已清扫，submission-readiness preflight 与 blocker matrix 已建立，且 `R36` 已关闭。
 - `T86` 已完成，目标层面的 strongest supported truth 是：当前 mainline note / paper-material / blocker / exclusion 信息已经被装配成一套 submission-facing 但仍显式有边界的 package；这不等于 submission-ready pack 完成态。
-- `T87` 是当前唯一任务，目标是在不升级任何证据等级的前提下，对现有 mainline note / paper-material 做作者终检、red-flag 扫描、manual-finish 队列收口与唯一 pre-submission regression gate。
-- `T87` 只做有界 QA / gate 收口，不直接等于 submission-ready completed；它不得扩到 benchmark、`.tflite` portability、real-board execution、投稿元数据实装或 theory-branch 大范围改写。
+- `T87` 已完成，目标层面的 strongest supported truth 是：当前 mainline note/material 已通过作者终检，并且只被允许进入 bounded manual finish，而不是 submission-ready completed。
+- `T88` 已完成，目标层面的 strongest supported truth 是：当前 mainline note/material 的 bounded manual finish 已真实执行，并且唯一允许的后续动作已收紧为 frozen-mainline handoff，而不是 submission-ready completed。
+- `T89` 是当前唯一任务，目标是在不升级任何证据等级、不再改写 note 正文的前提下，把当前 frozen mainline 整理成 handoff packet、source-of-truth map、post-freeze change-control 与 blocked-surface re-entry 规则。
+- `T89` 只做有界 frozen-mainline handoff / post-freeze change-control 收口，不直接等于 submission-ready completed；它不得扩到 benchmark、`.tflite` portability、real-board execution、投稿元数据实装或 theory-branch 大范围改写。
 - 在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，`T37` 及其他 real-board execution 任务继续 `blocked + lowest-priority backlog`，不抢占当前主线。
 
 ## 9. 后续路线总览
 
 后续开发按“论文材料先行、硬件路径后置”的顺序分层推进，不一次性展开全部方向：
 
-1. 主线作者终检与 pre-submission QA 收口
-2. 待 `T87` honest closeout 后，再由 Captain 决定是否只允许 bounded author manual finish，还是继续保持 `NO_GO_SUBMISSION_READY_COMPLETION`
+1. 主线 frozen-mainline handoff 与 post-freeze change-control 收口
+2. 待 `T89` honest closeout 后，再由 Captain 决定是保持 mainline freeze/handoff 状态，还是转回某条独立 evidence-hardening 路线
 3. 主线可信度、training / `.tflite` / transfer-pack 边界补强
 4. 机制诊断与 bounded ablation
 5. paper-grade benchmark expansion 的 protocol lock 与小步执行
@@ -187,7 +204,7 @@
 2. `T75` 已完成 bounded main-text Results authoring、最终成图资产与 do-not-write guardrail。
 3. `T76` 已完成真实 rendered preview、人工可读性 QA、必要的 presentation-level 修正与 Results-section assembly。
 4. `T78` 已完成 note-draft 的非结果层校准、`statcalib` 层级降权、section-scope 审计与必要的 LaTeX 排版 warning 收口。
-5. `T79` 已完成 gate，`T80` 已完成 ready sections 的 section-bounded prose reopen，`T81` 已完成 contribution/methods calibration，`T82` 已完成 supporting-material closeout，`T83` 已完成全文一致性 closeout gate，`T84` 已完成有界 final polish 与读者化装配，`T85` 已完成 submission-readiness preflight 与 residual wording-lag 清扫，`T86` 已完成 bounded submission-pack assembly 与显式 exclusion route 收口；当前执行 `T87` 的主线作者终检与 pre-submission QA 收口。即便如此，也仍不是 submission-ready pack 完成态，更不是部署故事升级。
+5. `T79` 已完成 gate，`T80` 已完成 ready sections 的 section-bounded prose reopen，`T81` 已完成 contribution/methods calibration，`T82` 已完成 supporting-material closeout，`T83` 已完成全文一致性 closeout gate，`T84` 已完成有界 final polish 与读者化装配，`T85` 已完成 submission-readiness preflight 与 residual wording-lag 清扫，`T86` 已完成 bounded submission-pack assembly 与显式 exclusion route 收口，`T87` 已完成作者终检 / pre-submission QA 收口，`T88` 已完成 bounded manual finish 执行与 surface freeze 收口；当前执行 `T89` 的 frozen-mainline handoff / post-freeze change-control 收口。即便如此，也仍不是 submission-ready pack 完成态，更不是部署故事升级。
 6. training / `.tflite` / real-board 现阶段只补 boundary table、portability table 或 supporting material，不冒进写成 deployment / board closure。
 
 当前可保留的标题方向：
@@ -366,8 +383,8 @@ FCCM、ACM FPGA、DATE、ICCAD 等硬件向 venue 只有在补齐以下证据后
 
 | 优先层 | 候选任务 | 主要输出 | 验证 |
 | --- | --- | --- | --- |
-| Current | `T87` 主线作者终检与 pre-submission QA 收口包 | author-final QA checklist、pre-submission regression gate、wording red-flag register、manual-finish queue、最小 QA 导向 note 刷新 | allowlist-scoped 文档一致性检查 + red-flag 扫描 + compile-aware verification + reviewer |
-| Immediate-next | 按 `T87` closeout 决定的唯一后续任务 | bounded author manual finish only，或继续保持 `NO_GO_SUBMISSION_READY_COMPLETION` 的唯一一张后续 task | captain / reviewer gate |
+| Current | `T89` 主线 frozen-mainline handoff 包与 post-freeze change-control 收口 | frozen-mainline handoff packet、source-of-truth map、post-freeze change-control、blocked-surface re-entry conditions、README 登记 | allowlist-scoped 文档一致性检查 + cross-reference audit + no-note-rewrite check + reviewer |
+| Immediate-next | 按 `T89` closeout 决定的唯一后续任务 | 继续维持 frozen-mainline handoff 状态，或转回某条独立 evidence-hardening 路线的唯一一张后续 task | captain / reviewer gate |
 | P1 | training/material reproducibility follow-up | repeated-run / cross-host / CPU-vs-GPU 边界表 | bounded train/eval smoke |
 | P1 | `.tflite` runtime portability audit | default env / isolated env / cross-host 差异表 | bounded runtime smoke |
 | P1 | `.tflite` isolated-env bootstrap hardening | interpreter/package/artifact/source manifest | true-runtime smoke rejects stub/fallback |
@@ -376,7 +393,7 @@ FCCM、ACM FPGA、DATE、ICCAD 等硬件向 venue 只有在补齐以下证据后
 | P2 | GPT-Pro extension-route triage | adopted/deferred/rejected sidecar list | docs-only protocol review |
 | P2 | temporal TCN / adaptive teacher / parameter-bank sidecar design | bounded experiment spec + shared inputs | no long-run execution without new task |
 | P4-lowest | real-board smoke execution | real device smoke | only after gate conditions satisfy and hardware host becomes available |
-| P3 | broader paper draft reopen after bounded calibration waves | 在 `T87` 之后才考虑的更大范围 prose 扩写 | only after `T87` closes honestly and a new gate approves broader scope |
+| P3 | broader paper draft reopen after frozen-handoff closeout | 在 `T89` 之后才考虑的更大范围 prose 扩写 | only after `T89` closes honestly and a new gate approves broader scope |
 
 ## 20. 红线
 

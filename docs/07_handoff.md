@@ -1,3 +1,25 @@
+## 2026-06-15 Captain Final Supersession (T88 closeout)
+
+- Current unique task: `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
+- Task package: `docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
+- `T88` has been judged `PASS`.
+- `T88` completed one honest docs-only manual-finish execution / surface-freeze step and opened no deferred/rejected warning-derived risk.
+- The T88 review's non-blocking notes are accepted as operational reminders only: dirty-worktree allowlist discipline, `GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY` must remain narrow, current-host-only compile scope, and CRLF / git-ignore host-noise separation.
+- `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T89` is next because the remaining mainline gap is no longer more manual finish, but one explicit frozen-mainline handoff packet plus post-freeze change-control / blocked-surface re-entry rules that keep theory-branch work isolated from main.
+- `T89` must stay docs-only, mainline-only, freeze-preserving, and theory-branch-isolated; it must not widen into note rewrite, benchmark/HIL reruns, `.tflite` portability, real-board execution, sidecar promotion, venue-template adaptation, or submission-ready completion claims.
+
+## 2026-06-14 Captain Final Supersession (T87 closeout)
+
+- Current unique task: `T88: 主线 bounded manual finish 执行与 surface freeze 收口包`
+- Task package: `docs/tasks/Phase2/T88_mainline_bounded_manual_finish_and_surface_freeze.md`
+- `T87` has been judged `PASS`.
+- `T87` completed one honest docs-only author-final QA / pre-submission gate step and opened no deferred/rejected warning-derived risk.
+- The T87 review's non-blocking notes are accepted as operational reminders only: CRLF working-copy noise, current-host git-ignore warning noise, and `GO_FOR_BOUNDED_AUTHOR_MANUAL_FINISH_ONLY` must not be retold as submission-ready completion.
+- `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T88` is next because the remaining mainline gap is no longer whether another QA gate is needed, but whether the already approved `MF01-MF05` bounded manual-finish actions can be executed and then frozen into one auditable mainline surface answer.
+- `T88` must stay docs-only, mainline-only, manual-finish-only, and theory-branch-isolated; it must not widen into benchmark/HIL reruns, `.tflite` portability, real-board execution, sidecar promotion, venue-template adaptation, or submission-ready completion claims.
+
 ## 2026-06-14 Captain Final Supersession (T86 closeout)
 
 - Current unique task: `T87: 主线作者终检与 pre-submission QA 收口包`
@@ -179,25 +201,33 @@
 
 ## 1. 当前状态
 
+Authoritative status note (`2026-06-15`, Captain closeout):
+
+- 当前唯一任务：`T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
+- 任务包：`docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
+- 当前主线优先级：优先把 `T88` 已冻结的 mainline surface 整理成单一 handoff packet、source-of-truth map、post-freeze change-control 与 blocked-surface re-entry 规则，而不是继续改 note 或把仓库写成 submission-ready completed。
+- `T88` 已完成并被 Captain 接受为 `PASS`；其 non-blocking notes 全部按 accepted operational reminder 处理，未新开 deferred/rejected 风险。
+- 如下方旧状态行仍提到 `T88` 或更早任务，以本条 authoritative note 为准。
+
 - 日期：`2026-06-14`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T87: 主线作者终检与 pre-submission QA 收口包`
-- 任务包：`docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md`
-- 当前主线优先级：优先对 `T86` 已装配完成的 mainline note / paper-material package 做作者终检、red-flag 扫描、manual-finish queue 固化与 pre-submission regression gate，而不是提前写成 submission-ready 完成态；real-board execution 因当前暂无 `Linux + FPGA` 硬件宿主而继续维持最低优先级 backlog
+- 当前唯一任务：`T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
+- 任务包：`docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
+- 当前主线优先级：优先把 `T88` 已冻结的 mainline surface、blocked disclaimer 与 frozen-handoff 结论整理成单一 handoff / change-control 答案，而不是继续改写 note、提前写成 submission-ready completed；real-board execution 因当前暂无 `Linux + FPGA` 硬件宿主而继续维持最低优先级 backlog
 
 Captain continuity note:
 
-- The authoritative current task for all new worker action is `T87: 主线作者终检与 pre-submission QA 收口包`.
-- Authoritative task package: `docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md`.
-- `T86` is complete and accepted as `PASS`.
-- `T86` review 中的四条 non-blocking notes 已全部按 accepted operational reminder 处理。
-- `R36` remains closed by `T85`; `R13/R14/R32/R33` remain the existing carry-forward risks.
-- `T87` is the single recommended next task after `T86`.
+- The authoritative current task for all new worker action is `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`.
+- Authoritative task package: `docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`.
+- `T88` is complete and accepted as `PASS`.
+- `T88` non-blocking notes are all accepted as operational reminders; no new deferred/rejected warning-derived risk is opened by this closeout.
+- `T89` is the single recommended next task after `T88`.
+- `T89` is a frozen-mainline handoff / change-control task only. It is not permission to widen into note rewrite, benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch mergeback, sidecar-promotion scope, venue-template adaptation, or submission-ready completion.
 - `T37` / real-board execution remains `blocked + lowest-priority backlog`; it is not the next mainline step while hardware host conditions remain unavailable.
-- If any older line below still mentions `T85` or earlier tasks as current, treat it as historical carry-forward text only.
-- `T87` is a bounded author-final QA task only. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, venue-template adaptation, or submission-ready completion.
+- The theory branch remains isolated from this mainline task.
+- If any older line below still mentions `T87` or earlier tasks as current, treat it as historical carry-forward text only.
 
 ## 2026-06-05 Captain Update (T67 closeout)
 

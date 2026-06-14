@@ -618,8 +618,45 @@
 
 ### Milestone 2AH: Author Final QA And Pre-Submission Gate (proposed)
 
-- [ ] T87: 主线作者终检与 pre-submission QA 收口包
+Task-board supersession note (`2026-06-14`, Captain closeout):
+
+- `T87` is complete and accepted as `PASS`.
+- Authoritative `T87` outputs:
+  - `docs/paper_materials/paper_author_final_qa_checklist.md`
+  - `docs/paper_materials/paper_presubmission_regression_gate.md`
+  - `docs/paper_materials/paper_submission_wording_redflag_register.md`
+  - `docs/paper_materials/paper_manual_finish_queue.md`
+  - `docs/review/T87_review.md`
+- `T87` closes with gate verdict `GO_FOR_BOUNDED_AUTHOR_MANUAL_FINISH_ONLY`; this is only permission for bounded manual finish, not submission-ready completion.
+- Next milestone/task:
+  - `T88: 主线 bounded manual finish 执行与 surface freeze 收口包`
+  - Task package: `docs/tasks/Phase2/T88_mainline_bounded_manual_finish_and_surface_freeze.md`
+- If any older `T87` carry-forward text remains immediately below, this supersession note is authoritative.
+
+- [x] T87: 主线作者终检与 pre-submission QA 收口包
   - Task package: `docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md`
+  - Output: `docs/paper_materials/paper_author_final_qa_checklist.md`
+  - Output: `docs/paper_materials/paper_presubmission_regression_gate.md`
+  - Output: `docs/paper_materials/paper_submission_wording_redflag_register.md`
+  - Output: `docs/paper_materials/paper_manual_finish_queue.md`
+  - Review output: `docs/review/T87_review.md`
+  - Captain verdict: `PASS`
+  - Result: `T87` 真实完成了 author-final QA checklist、pre-submission regression gate、wording red-flag register、manual-finish queue 与最小 QA 导向 note refresh；其 gate verdict `GO_FOR_BOUNDED_AUTHOR_MANUAL_FINISH_ONLY` 只授权下一张 bounded manual-finish execution / surface-freeze 任务，不等于 submission-ready completion
+
+### Milestone 2AI: Frozen Mainline Handoff And Post-Freeze Change Control (proposed)
+
+- [x] T88: 主线 bounded manual finish 执行与 surface freeze 收口包
+  - Task package: `docs/tasks/Phase2/T88_mainline_bounded_manual_finish_and_surface_freeze.md`
+  - Output: `docs/paper_materials/paper_manual_finish_execution_log.md`
+  - Output: `docs/paper_materials/paper_mainline_surface_freeze_manifest.md`
+  - Output: `docs/paper_materials/paper_author_edit_decision_register.md`
+  - Output: `docs/paper_materials/paper_blocked_surface_disclaimer_table.md`
+  - Output: `docs/paper_materials/paper_frozen_mainline_handoff_gate.md`
+  - Review output: `docs/review/T88_review.md`
+  - Captain verdict: `PASS`
+  - Result: `T88` 真实完成了 bounded manual finish 执行、mainline surface freeze、author edit decision 固化与 blocked-surface disclaimer 收口；其唯一 gate verdict `GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY` 只授权下一张 frozen-mainline handoff / post-freeze change-control 任务，不等于 submission-ready completion
+- [ ] T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口
+  - Task package: `docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
 
 ### Milestone 2R: Reproducibility And Material Pack (proposed)
 
@@ -640,6 +677,28 @@
 Long-term objective:
 
 以论文级质量为最终目标，但当前先进入 `Research Reality Recovery Mode`。后续任务顺序改为“真实性冻结 -> claim/evidence/material 台账 -> 复现/图表/结果缺口审计 -> 风险收口 -> 再决定是否恢复论文扩写”。除 `Current Unique Task` 外，其他 pending 项只代表路线图，不可直接执行。
+
+## 2026-06-15 Captain Final Supersession (T88 closeout)
+
+- Current unique task: `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
+- Task package: `docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
+- `T88` has been judged `PASS`.
+- `T88` completed one honest docs-only manual-finish execution / surface-freeze step and opened no deferred/rejected warning-derived risk.
+- The T88 review's non-blocking notes are accepted as operational reminders only: dirty-worktree allowlist discipline, `GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY` must remain narrow, current-host-only compile scope, and CRLF / git-ignore host-noise separation.
+- `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T89` is next because the mainline bottleneck is no longer note editing itself, but whether the frozen mainline can be handed off through one single-source packet, one source-of-truth map, one post-freeze change-control table, and one blocked-surface re-entry rule set without reopening note surfaces.
+- `T89` must remain docs-only, mainline-only, freeze-preserving, and theory-branch-isolated: it must not widen into note rewrite, benchmark/HIL reruns, `.tflite` portability, real-board execution, sidecar promotion, venue-template adaptation, theory-branch mergeback, or submission-ready completion claims.
+
+## 2026-06-14 Captain Final Supersession (T87 closeout)
+
+- Current unique task: `T88: 主线 bounded manual finish 执行与 surface freeze 收口包`
+- Task package: `docs/tasks/Phase2/T88_mainline_bounded_manual_finish_and_surface_freeze.md`
+- `T87` has been judged `PASS`.
+- `T87` completed one honest docs-only author-final QA / pre-submission gate step and opened no deferred/rejected warning-derived risk.
+- The T87 review's non-blocking notes are accepted as operational reminders only: CRLF working-copy noise, current-host git-ignore warning noise, and `GO_FOR_BOUNDED_AUTHOR_MANUAL_FINISH_ONLY` must not be retold as submission-ready completion.
+- `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T88` is next because the mainline bottleneck is no longer whether a further QA gate is needed, but whether the already approved `MF01-MF05` bounded manual-finish actions can be executed and then frozen into one auditable mainline surface answer without widening claims.
+- `T88` must remain docs-only, mainline-only, manual-finish-only, and theory-branch-isolated: it may execute `MF01-MF05`, add execution/freeze/disclaimer/handoff ledgers, perform bounded note refresh, README registration, and compile-aware refresh; it must not widen into benchmark/HIL reruns, `.tflite` portability, real-board execution, sidecar promotion, venue-template adaptation, or submission-ready completion claims.
 
 ## 2026-06-14 Captain Final Supersession (T86 closeout)
 
@@ -803,45 +862,53 @@ Long-term objective:
 
 ## Current Unique Task
 
-`T87: 主线作者终检与 pre-submission QA 收口包`
+Authoritative supersession note (`2026-06-15`, Captain closeout):
+
+- Current unique task: `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
+- Task package: `docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
+- `T88` has been accepted as `PASS`.
+- `T88` non-blocking notes are all handled as accepted operational reminders; no new deferred/rejected warning-derived risk is opened by this closeout.
+- `T89` is docs-only, mainline-only, freeze-preserving, and theory-branch-isolated.
+- `T89` may consolidate only frozen-mainline handoff, source-of-truth mapping, post-freeze change-control, blocked-surface re-entry conditions, and README registration.
+- `T89` must not widen into note rewrite, benchmark/HIL reruns, `.tflite` portability, real-board execution, sidecar promotion, venue-template adaptation, theory-branch mergeback, or submission-ready completion claims.
+- If stale `T88` wording remains below inside this section, treat it as historical carry-forward text only.
+
+`T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
 
 Status:
 
-- Supersession: current task has switched to `T87` after `T86 -> PASS`.
-- `T86` review 中的 4 条 non-blocking notes 已全部按 accepted operational reminder 处理；没有新增 deferred/rejected warning，也没有新增风险项。
-- `T87` 仍是 docs-only、mainline-only、QA-only 任务；如果下方旧 bullets 仍在解释 `T85 -> T86` 的 carry-forward，请以上方 `T86 closeout` supersession 与本段为准。
-
-- `T85` has been reviewed as `PASS`.
-- `T85` 已真实完成 residual wording-lag 清扫、submission-readiness preflight 与 blocker matrix，但不等于 submission-ready pack 已完成。
-- `T85` review 中的 non-blocking notes 统一按 operational reminder 接受处理。
+- Supersession: current task has switched to `T89` after `T88 -> PASS`.
+- 当前唯一 worker-facing task package 是 `docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`。
+- `T88` review 中的 non-blocking notes 已全部按 accepted operational reminder 处理；没有新增 deferred/rejected warning，也没有新增风险项。
+- `T89` 仍是 docs-only、mainline-only、freeze-preserving 任务；如果下方旧 bullets 仍在解释更早阶段的 carry-forward，请以上方 `T88 closeout` supersession 与本段为准。
 - `R36` is closed by `T85`; `R13/R14/R32/R33` remain open, and `T37` remains blocked.
 - 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 同时也是 `resource-blocked / lowest-priority backlog`。
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
 - `T64/T65/T66/T67/T68/T69/T70` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T86` must remain docs-only and must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
+- `T89` must remain docs-only and must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
 
 Why this task is next:
 
-- Supersession: the numbered rationale below explains why `T86` was next after `T85`; the current `T87` rationale is recorded in the `T86 closeout` supersession block above and in `docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md`.
+- Supersession: the numbered rationale below explains why `T89` is next after `T88`; older `T87 -> T88` rationale should be treated as historical carry-forward only.
 
-1. `T85` 已经把主线 note 从“残余状态滞后清扫 + preflight”推进到了“可以诚实讨论如何装配现有 submission-facing 材料”的阶段，当前瓶颈转为如何显式组织 inclusion / exclusion route。
-2. `paper_submission_readiness_preflight_gate.md` 已给出 `GO_FOR_BOUNDED_SUBMISSION_PACK_ASSEMBLY`，但其语义被明确限制为下一张 docs-only、mainline-only、assembly-only 的 bounded 任务，而不是 submission-ready 完成态。
-3. 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 不仅证据未满足，而且属于资源受限 backlog，不应早于 paper-material 主线任务。
-4. `T51/T52` full paper re-open tasks 仍然过早；在 `T86` 把现有 mainline note/material stack 的 assembly 与 exclusion route 收清之前，不应恢复无界 full-manuscript 扩写或把投稿完成态写成事实。
-5. `T86` 比简单 README 或措辞修补更强，因为它需要同时产出 assembly manifest、surface route map、exclusion register、author handoff，并把“哪些能进 submission-facing 包、哪些必须留在 blocked/excluded”约束成单一可审计答案。
+1. `T88` 已经把主线 note/material 从“允许执行有限 manual finish”推进到了“当前 mainline surface 已冻结且可交接”的阶段，当前瓶颈不再是写更多句子，而是如何把冻结答案组织成单一 handoff 与维护规则。
+2. `paper_frozen_mainline_handoff_gate.md` 已给出 `GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY`，但其语义被明确限制为下一张 docs-only、mainline-only、freeze-preserving 的 handoff / change-control 任务，而不是 submission-ready 完成态。
+3. 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 不仅证据未满足，而且属于资源受限 backlog，不应早于当前 frozen-mainline 的 handoff 固化任务。
+4. `T51/T52` full paper re-open tasks 仍然过早；在 `T89` 把当前 frozen mainline 的 source-of-truth、post-freeze change-control 与 blocked-surface re-entry 条件收清之前，不应恢复无界 full-manuscript 扩写或把投稿完成态写成事实。
+5. `T89` 比简单 README 或措辞修补更强，因为它需要同时产出 handoff packet、source-of-truth map、post-freeze change-control 与 blocked-surface re-entry 条件表，并把“哪些内容可交接、哪些改动需 reopen、哪些 blocked surface 将来靠什么证据重开”约束成单一可审计答案。
 
 ## Captain Output For Current Task
 
-- Current unique task: `T87`
-- Latest reviewed task: `docs/review/T86_review.md` with verdict `PASS`
-- T86 closeout:
+- Current unique task: `T89`
+- Latest reviewed task: `docs/review/T88_review.md` with verdict `PASS`
+- T88 closeout:
   - blocking issues = none
   - warning-derived risk changes = none
-  - carry-forward notes = T86 assembly outputs do not authorize submission-ready completion; compile conclusion remains current-host-only; allowlist-scoped diff discipline remains mandatory
-- Next worker-facing task package: `docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md`
-- `T87` may perform only one author-final QA checklist, one pre-submission regression gate, one wording red-flag register, one manual-finish queue, bounded note refresh, README registration, and compile-aware refresh if local toolchain is available; it must not touch governance docs, source code, tests, `runs/`, `artifacts/`, stable-ID result assets, or theory-branch large-scale content
-- `T87` is the only recommended next mainline task after `T86`
+  - carry-forward notes = `GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY` only authorizes frozen-mainline handoff; compile conclusion remains current-host-only; allowlist-scoped diff discipline remains mandatory
+- Next worker-facing task package: `docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
+- `T89` may produce only one frozen-mainline handoff packet, one source-of-truth map, one post-freeze change-control table, one blocked-surface re-entry condition table, README registration, and task-scoped review / explanation / summary; it must not touch governance docs, note正文、source code, tests, `runs/`, `artifacts/`, stable-ID result assets, or theory-branch content
+- `T89` is the only recommended next mainline task after `T88`
 
 ## Historical Current Unique Task (superseded)
 

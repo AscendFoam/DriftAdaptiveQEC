@@ -6,6 +6,22 @@
 
 本文件用于固定恢复期对 `P3 software HIL`、`P3 real-board HIL`、`P4 benchmark`、以及 `.tflite` 部署链路的统一表述口径。
 
+## 2026-06-15 Captain Update (T88/T89 boundary supersession)
+
+- `T88` 已由 Captain 以 `PASS` 收口。
+- 它只在 docs-only 主线中完成了 bounded manual finish 执行、surface freeze、author edit decision 固化、blocked disclaimer 收口与唯一 frozen-mainline handoff gate；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 gate/smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- `T88` 的 strongest supported truth 只是：当前 mainline note/material 已冻结到可交接状态，并且只被允许进入 frozen-mainline handoff / post-freeze change-control；这不是 submission-ready completed、blocked surface 解锁或任何 deployment/board story 升级。
+- 因此当前唯一任务切换为 `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`。
+- `T89` 仍是 docs-only 主线任务；它只允许做 handoff packet、source-of-truth map、post-freeze change-control 与 blocked-surface re-entry 条件固化，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实，也不得把当前主线写成 submission-ready completed 或与独立 theory 分支混写。
+
+## 2026-06-14 Captain Update (T87/T88 boundary supersession)
+
+- `T87` 已由 Captain 以 `PASS` 收口。
+- 它只在 docs-only 主线中完成了作者终检、red-flag 扫描、manual-finish queue、pre-submission regression gate 与最小 QA note refresh；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 gate/smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- `T87` 的 strongest supported truth 只是：当前 mainline note/material 已通过更严格的 author-final QA，并且只被允许进入 bounded manual finish；这不是 submission-ready completed、blocked surface 解锁或任何 deployment/board story 升级。
+- 因此当前唯一任务切换为 `T88: 主线 bounded manual finish 执行与 surface freeze 收口包`。
+- `T88` 仍是 docs-only 主线任务；它只允许做 bounded manual finish、surface freeze、blocked-disclaimer 固化与必要的 note refresh，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实，也不得把当前主线写成 submission-ready completed 或与独立 theory 分支混写。
+
 ## 2026-06-14 Captain Update (T86/T87 boundary supersession)
 
 - `T86` 已由 Captain 以 `PASS` 收口。

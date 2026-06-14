@@ -1,5 +1,65 @@
 # Decision Log
 
+## D-2026-06-15-01
+
+- 日期：`2026-06-15`
+- 决策：接受 `T88` 为 `PASS`，并将当前唯一任务切换为 `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
+
+### 背景
+
+`T88` 的目标不是继续扩大主线 note，也不是宣布投稿完成，而是在 `T87` 已完成 author-final QA / pre-submission gate 之后，真实执行已经批准的 `MF01-MF05` bounded manual-finish 动作，并把 mainline surface 选择、编辑决策、blocked disclaimer 与唯一 handoff gate 固定下来。review 已确认这轮 docs-only 交付在允许范围内真实完成，同时也明确提醒：`GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY` 只能理解为“允许进入 frozen-mainline handoff / post-freeze change-control 任务”，不能回述成 submission-ready completed。
+
+### 依据
+
+1. `docs/review/T88_review.md` verdict = `PASS`，blocking issues = none。
+2. review 明确确认本轮真实新增了 `paper_manual_finish_execution_log.md`、`paper_mainline_surface_freeze_manifest.md`、`paper_author_edit_decision_register.md`、`paper_blocked_surface_disclaimer_table.md` 与 `paper_frozen_mainline_handoff_gate.md` 五份主线收口台账，并完成了最小必要的 `% T88-MANUAL` note refresh。
+3. review 明确确认 `T88` 保持了既有 guardrail：`T24` 仍是 frozen mock-backed software-HIL anchor，`FR6/FR7` 仍是 descriptive support，`FR8/statcalib` 仍是 extension lane / no-promotion，training/material 仍是 canonical chain intact + one clean CPU-only bounded rerun，`.tflite` 仍是 isolated current-host runtime，real-board 仍是 read-only gate / regeneration / provenance with current-host `NO_GO`。
+4. review 的 non-blocking notes 仅涉及 dirty-worktree 下的 allowlist-scoped diff 纪律、`GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY` 的窄语义、compile 结论仅限当前宿主，以及 Windows Git/CRLF 宿主噪声；它们都不构成新的 risk opening。
+
+### 结论
+
+1. 接受 `T88` 为 `PASS` 并标记完成。
+2. 本轮不进入 `PASS_WITH_WARNINGS` 分类流；review 中的 non-blocking notes 统一按 operational reminder 接受处理。
+3. 本轮不新增 `deferred/rejected` warning，也不新增风险项。
+4. 当前唯一任务切换为 `T89`，只允许做 mainline-only、docs-only、freeze-preserving 的 frozen-mainline handoff、source-of-truth mapping、post-freeze change-control 与 blocked-surface re-entry 条件固化。
+5. `T89` 必须继续保留 `T24` frozen anchor、`FR6/FR7` descriptive-only、`FR8` no-promotion、training/material bounded rerun、`.tflite` isolated current-host only、real-board current-host `NO_GO`、hardware-dependent blocked surface，以及“不得混入独立 theory 分支内容”的 guardrail。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/02_experiment_plan.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T88 -> PASS` 与 `Current Unique Task -> T89`。
+2. 新增 `docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md` 作为下一张 worker-facing 任务包。
+3. main 分支在完成上述治理同步后可以继续提交，但提交前应精确暂存 `T88` 产物、Captain closeout 文档与 `T89` 任务包；不要混入理论分支相关改动、无关编译噪声或未审阅 diff，更不要使用 blanket `git add -A`。
+
+## D-2026-06-14-05
+
+- 日期：`2026-06-14`
+- 决策：接受 `T87` 为 `PASS`，并将当前唯一任务切换为 `T88: 主线 bounded manual finish 执行与 surface freeze 收口包`
+
+### 背景
+
+`T87` 的目标不是宣布投稿完成，而是在 `T86` 已完成 submission-facing assembly 之后，把当前主线 note/material 再压一层作者终检纪律：固定红旗表述、manual-finish 队列与唯一 pre-submission regression gate。review 已确认这轮 docs-only 交付在允许范围内真实完成，同时也明确提醒：`GO_FOR_BOUNDED_AUTHOR_MANUAL_FINISH_ONLY` 只能理解为“允许开启下一张 manual-finish execution / surface-freeze 任务”，不能回述成 submission-ready completed。
+
+### 依据
+
+1. `docs/review/T87_review.md` verdict = `PASS`，blocking issues = none。
+2. review 明确确认本轮真实新增了 `paper_author_final_qa_checklist.md`、`paper_presubmission_regression_gate.md`、`paper_submission_wording_redflag_register.md` 与 `paper_manual_finish_queue.md` 四份作者终检台账，并完成了主线 note 中 `Numerical Results`、`Discussion`、`Conclusion` 的最小 `% T87-QA` 刷新。
+3. review 明确确认 `T87` 保持了既有 guardrail：`T24` 仍是 frozen mock-backed software-HIL anchor，`FR6/FR7` 仍是 descriptive support，`FR8/statcalib` 仍是 extension lane / no-promotion，training/material 仍是 canonical chain intact + one clean CPU-only bounded rerun，`.tflite` 仍是 isolated current-host runtime，real-board 仍是 read-only gate / regeneration / provenance with current-host `NO_GO`。
+4. review 的 non-blocking notes 仅涉及 CRLF/git-ignore 宿主噪声与 `GO_FOR_BOUNDED_AUTHOR_MANUAL_FINISH_ONLY` 的窄语义；它们都不构成新的 risk opening。
+
+### 结论
+
+1. 接受 `T87` 为 `PASS` 并标记完成。
+2. 本轮不进入 `PASS_WITH_WARNINGS` 分类流；review 中的 non-blocking notes 统一按 operational reminder 接受处理。
+3. 本轮不新增 `deferred/rejected` warning，也不新增风险项。
+4. 当前唯一任务切换为 `T88`，只允许做 mainline-only、docs-only、bounded manual-finish execution、surface freeze 与 blocked-disclaimer 固化。
+5. `T88` 必须继续保留 `T24` frozen anchor、`FR6/FR7` descriptive-only、`FR8` no-promotion、training/material bounded rerun、`.tflite` isolated current-host only、real-board current-host `NO_GO`、hardware-dependent blocked surface，以及“不得混入独立 theory 分支内容”的 guardrail。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/02_experiment_plan.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T87 -> PASS` 与 `Current Unique Task -> T88`。
+2. 新增 `docs/tasks/Phase2/T88_mainline_bounded_manual_finish_and_surface_freeze.md` 作为下一张 worker-facing 任务包。
+3. main 分支在完成上述治理同步后可以继续提交，但提交前应精确暂存 `T87` 产物、Captain closeout 文档与 `T88` 任务包；不要混入理论分支相关改动、无关编译噪声或未审阅 diff，更不要使用 blanket `git add -A`。
+
 ## D-2026-06-14-04
 
 - 日期：`2026-06-14`

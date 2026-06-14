@@ -1,0 +1,11 @@
+# T88 Mainline Surface Freeze Manifest
+
+本表把 `T88` 执行后的 mainline writing surface 固定下来，防止后续人工修改再次漂移。
+
+| freeze_id | surface | selected_primary_representation | route_location | supporting_anchor | blocked_surface_preserved | note |
+| --- | --- | --- | --- | --- | --- | --- |
+| `FZ01` | frozen benchmark main result | `T74-TBL-01` / `Table~\\ref{tab:five-mode-benchmark}` 作为当前 note 的 primary representation；`T75-FIG-M01` 只保留为 layout-dependent substitute | `Numerical Results` main text | `paper_submission_pack_assembly_manifest.md` `PKG-MT-01`; `paper_maintext_results_authoring_pack.md`; `paper_caption_lock_and_placement_notes.md` | 不外推成 expanded benchmark、`.tflite` ranking 或 real-board ranking | 当前 note 冻结选表，不等于否定后续 paper-facing figure。 |
+| `FZ02` | conservative mechanism / ablation reading | 主文只保留 descriptive mechanism reading；appendix tables 保持 authoritative numeric companion | `Mechanism probe for residual-b behavior` main text + appendix companion | `paper_submission_surface_route_map.md`; `paper_appendix_bridge_pack.md`; `paper_maintext_results_authoring_pack.md` | 不写 causal closure、teacher necessity、intervention success | `T75-FIG-M02` 若保留，也只承担 descriptive role。 |
+| `FZ03` | appendix support bundle | `T74-TBL-02`、`T74-TBL-03`、`T74-TBL-04`、`T74-TBL-05` 作为 appendixed support surfaces | appendix bridge route | `paper_submission_pack_assembly_manifest.md` `PKG-APX-01` 到 `PKG-APX-04`; `paper_appendix_bridge_pack.md` | 保留 full reproducibility 与 default-env/deployment closure exclusion | appendix 只服务 supporting evidence，不承担主结果升级。 |
+| `FZ04` | boundary schematic presentation choice | `T75-FIG-A01` / `T74-FIG-03` 继续保持 appendix-only optional boundary schematic | appendix only | `paper_submission_pack_assembly_manifest.md` `PKG-APX-05`; `paper_caption_lock_and_placement_notes.md`; `paper_figure_caption_pack.md` | 不写成 deployment success schematic 或 portability closure figure | 当前 note 不内嵌第二套 caption，避免与 `T75` 锁定稿冲突。 |
+| `FZ05` | supplement gated bundle | `T74-TBL-06`、`T74-TBL-07` 与 `T74-SUP-01` 到 `T74-SUP-04` 维持 supplement-only | supplement only | `paper_submission_surface_route_map.md`; `paper_submission_exclusion_register.md`; `paper_submission_author_handoff.md` | 保留 real-board `NO_GO`、statcalib no-promotion/no-unique-threshold、training/runtime exclusion notes | supplement 继续是 gated/excluded surface，不是补强主文的后门。 |

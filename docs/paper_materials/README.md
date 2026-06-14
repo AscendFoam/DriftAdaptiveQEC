@@ -46,6 +46,15 @@
 | `paper_submission_surface_route_map.md` | `T86` submission-facing surface route map |
 | `paper_submission_exclusion_register.md` | `T86` explicit exclusion register |
 | `paper_submission_author_handoff.md` | `T86` author handoff and boundary summary |
+| `paper_author_final_qa_checklist.md` | `T87` author-final QA checklist |
+| `paper_presubmission_regression_gate.md` | `T87` pre-submission regression gate |
+| `paper_submission_wording_redflag_register.md` | `T87` wording red-flag register |
+| `paper_manual_finish_queue.md` | `T87` bounded manual finish queue |
+| `paper_manual_finish_execution_log.md` | `T88` manual-finish execution log |
+| `paper_mainline_surface_freeze_manifest.md` | `T88` mainline surface freeze manifest |
+| `paper_author_edit_decision_register.md` | `T88` author edit decision register |
+| `paper_blocked_surface_disclaimer_table.md` | `T88` blocked surface disclaimer table |
+| `paper_frozen_mainline_handoff_gate.md` | `T88` frozen-mainline handoff gate |
 
 ## 推荐阅读顺序
 
@@ -83,7 +92,16 @@
 32. `paper_submission_surface_route_map.md`
 33. `paper_submission_exclusion_register.md`
 34. `paper_submission_author_handoff.md`
-35. `paper_claim_risk_table.md`
+35. `paper_author_final_qa_checklist.md`
+36. `paper_presubmission_regression_gate.md`
+37. `paper_submission_wording_redflag_register.md`
+38. `paper_manual_finish_queue.md`
+39. `paper_manual_finish_execution_log.md`
+40. `paper_mainline_surface_freeze_manifest.md`
+41. `paper_author_edit_decision_register.md`
+42. `paper_blocked_surface_disclaimer_table.md`
+43. `paper_frozen_mainline_handoff_gate.md`
+44. `paper_claim_risk_table.md`
 
 ## 核心边界
 
@@ -92,7 +110,7 @@
 - `T64-T70` 只支持 `statcalib` extension lane 与 `no_promotion_keep_extension_lane_only`，不支持 mature comparator retelling。
 - 所有 paper claim 都必须回指 task/review/run/artifact 证据，不能把 draft prose、risk audit 或 theory walkthrough 写成实验完成态。
 
-## T74-T86 写作链路规则
+## T74-T88 写作链路规则
 
 - `T74`：paper-ready simulation material 优先通过 `T74-TBL-*` / `T74-FIG-*` / `T74-SUP-*` stable ID 引用。
 - `T75`：主文 Results prose 与最终成图优先通过 `T75-FIG-*` 引用；`T75` 只压缩并锁定表述，不提升证据等级。
@@ -107,3 +125,5 @@
 - `T84`：`paper_bounded_final_polish_change_map.md`、`paper_reader_facing_term_translation_table.md`、`paper_appendix_supplement_reader_assembly_map.md` 与 note 中的 `% T84-POLISH: ...` 注释，只服务 reader-facing translation / condensation / assembly；它可以让主线 note 更像读者稿，但不自动等于 submission-ready pack、claim promotion 或 blocked surface 解锁。
 - `T85`：`paper_submission_readiness_preflight_gate.md`、`paper_submission_blocker_matrix.md`、`paper_residual_state_lag_sweep.md` 与 note 中的 `% T85-PREFLIGHT: ...` 注释，只服务 submission-readiness preflight、残余状态滞后清扫与 blocker/exclusion 明确化；它最多只回答“是否允许进入下一张 bounded submission-pack assembly 任务”，不等于 submission-ready pack 已完成。
 - `T86`：`paper_submission_pack_assembly_manifest.md`、`paper_submission_surface_route_map.md`、`paper_submission_exclusion_register.md`、`paper_submission_author_handoff.md` 与 note 中的 `% T86-ASSEMBLY: ...` 注释，只服务 submission-facing package 的 inclusion / exclusion 装配纪律；它不自动等于 submission-ready pack 已完成，也不授权 claim promotion、deployment story 升级或 hardware-ready retelling。
+- `T87`：`paper_author_final_qa_checklist.md`、`paper_presubmission_regression_gate.md`、`paper_submission_wording_redflag_register.md`、`paper_manual_finish_queue.md` 与 note 中的 `% T87-QA: ...` 注释，只服务 author-final QA、危险表述排查与 bounded manual finish 边界固化；它不自动等于 submission-ready completed，也不授权任何 blocked surface 解锁。
+- `T88`：`paper_manual_finish_execution_log.md`、`paper_mainline_surface_freeze_manifest.md`、`paper_author_edit_decision_register.md`、`paper_blocked_surface_disclaimer_table.md`、`paper_frozen_mainline_handoff_gate.md` 与 note 中的 `% T88-MANUAL: ...` 注释，只服务 bounded manual finish 执行、surface freeze 与 blocked-disclaimer 固化；它不自动等于 submission-ready completed，也不授权任何 blocked surface 解锁。

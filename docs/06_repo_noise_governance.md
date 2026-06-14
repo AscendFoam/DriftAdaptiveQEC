@@ -11,6 +11,24 @@
 
 本文件不宣称仓库已经完成物理清理。
 
+## 2026-06-15 Captain Update (T88 closeout)
+
+- `T88` 已按 `PASS` 收口。
+- 就 repo-noise 与验证边界而言，`T88` 只在 `docs/paper_notes/*`、`docs/paper_materials/*` 与 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/` 或 benchmark output。
+- `T88` 当前产出的 manual-finish execution log、surface freeze manifest、author decision register、blocked-surface disclaimer table、frozen-mainline handoff gate、README 登记与 note 编译产物都属于 docs-only deliverable，不得被混写成新的 benchmark、runtime、board 或 submission-ready 完成事实来源。
+- 当前唯一任务切换为 `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`；它允许新增或修改的正式产物仍应限于 `docs/paper_materials/*`、两个 README 与 task-scoped review / explanation / summary 文件。
+- `T89` 不得借 handoff / change-control 之名顺手创建新 run、重算 benchmark、更新历史 artifact、改写独立 theory 分支内容、改写 stable-ID 结果资产、刷新 note 正文或编译产物、写入 venue-template / cover-letter / metadata 材料，或升级部署/真板证据等级。
+- `T88` review 已明确提醒当前 worktree 仍需坚持 allowlist-scoped diff 与精确暂存，因此后续提交 `T86/T87/T88/T89` 时仍不得使用 blanket `git add -A`。
+
+## 2026-06-14 Captain Update (T87 closeout)
+
+- `T87` 已按 `PASS` 收口。
+- 就 repo-noise 与验证边界而言，`T87` 只在 `docs/paper_notes/*`、`docs/paper_materials/*` 与 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/` 或 benchmark output。
+- `T87` 当前产出的 author-final QA checklist、pre-submission regression gate、red-flag register、manual-finish queue、README 登记与 note 编译产物都属于 docs-only deliverable，不得被混写成新的 benchmark、runtime、board 或 submission-ready 完成事实来源。
+- 当前唯一任务切换为 `T88: 主线 bounded manual finish 执行与 surface freeze 收口包`；它允许新增或修改的正式产物仍应限于 `docs/paper_notes/*`、`docs/paper_materials/*` 以及 task-scoped review / explanation / summary 文件。
+- `T88` 不得借 manual-finish / surface-freeze 之名顺手创建新 run、重算 benchmark、更新历史 artifact、改写独立 theory 分支内容、改写 stable-ID 结果资产、写入 venue-template / cover-letter / metadata 材料，或升级部署/真板证据等级；若本地编译 note，只允许刷新当前 note 既有编译产物。
+- `T87` review 已明确提醒当前 worktree 仍需坚持 allowlist-scoped diff 与精确暂存，因此后续提交 `T85/T86/T87/T88` 时仍不得使用 blanket `git add -A`。
+
 ## 2026-06-14 Captain Update (T86 closeout)
 
 - `T86` 已按 `PASS` 收口。

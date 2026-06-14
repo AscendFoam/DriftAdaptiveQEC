@@ -1,7 +1,7 @@
 # Feasibility And Legacy Audit
 
 **维护状态**：legacy 真实性审计底稿
-**最后维护说明更新**：2026-06-14
+**最后维护说明更新**：2026-06-15
 **当前事实入口**：`docs/02_experiment_plan.md`、`docs/04_task_board.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md`
 
 ## 1. 审计目的
@@ -29,6 +29,12 @@
 - 需要修正本文件中仍指向旧路径或旧事实入口的内容。
 
 普通 Captain closeout、当前唯一任务切换、后续计划更新，应优先同步 `docs/04_task_board.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 和必要时的 `docs/02_experiment_plan.md`，不应把本文件变成第二份任务日志。
+
+### 1A-补充. 2026-06-15 Captain 维护说明
+
+- `T88` 已按 `PASS` 收口，但它是 docs-only 的主线 paper-material closeout，不改变 legacy truth matrix。
+- `T88` 没有把任何 `mock` / `stub` / `placeholder` 提升成真实实现，也没有改变 `.tflite`、real-board、benchmark 或 training reproducibility 的 legacy 证据等级判断。
+- 当前唯一任务已切到 `T89`，但 `T89` 仍只是 frozen-mainline handoff / change-control 任务；当前任务状态仍应以 `docs/04_task_board.md` 与 `docs/07_handoff.md` 为准，而不是由本文件维护。
 
 ## 2. 总体结论
 
@@ -84,6 +90,13 @@
 - 这次 closeout 仍然没有改变 legacy audit 的真实性判断：`T86` 只是 main 分支 docs-only 的 submission-facing assembly / exclusion 收口，不是新的实验、不是新的板级证据，也不是任何 `.tflite` / real-board / mature comparator 事实升级。
 - `T86` review 中的 4 条 non-blocking notes 全部按 accepted operational reminder 处理；它们只约束后续精确暂存、retelling 与 current-host compile 口径，不改变 truth matrix。
 - 当前唯一任务已切换为 `T87: 主线作者终检与 pre-submission QA 收口包`。`T87` 仍是 main 分支 docs-only 的 QA/gate 任务，不触碰 theory 分支的大范围改写，也不改变 legacy truth matrix。
+
+### 2026-06-14 Captain Update (T87 closeout)
+
+- `T87` 已被 Captain 接受为 `PASS`。
+- 这次 closeout 仍然没有改变 legacy audit 的真实性判断：`T87` 只是 main 分支 docs-only 的作者终检、manual-finish queue 固化与 pre-submission regression gate 收口，不是新的实验、不是新的板级证据，也不是任何 `.tflite` / real-board / mature comparator 事实升级。
+- `T87` review 中的 3 条 non-blocking notes 全部按 accepted operational reminder 处理；它们只约束主机噪声隔离与 gate retelling 口径，不改变 truth matrix。
+- 当前唯一任务已切换为 `T88: 主线 bounded manual finish 执行与 surface freeze 收口包`。`T88` 仍是 main 分支 docs-only 的 manual-finish execution / freeze 任务，不触碰 theory 分支的大范围改写，也不改变 legacy truth matrix。
 
 ### 2026-06-14 Captain Update (T85 closeout)
 

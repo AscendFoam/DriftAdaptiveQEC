@@ -25,6 +25,15 @@
 - `../paper_materials/paper_submission_surface_route_map.md`：`T86` 的 main text / appendix / supplement / exclusion route map。
 - `../paper_materials/paper_submission_exclusion_register.md`：`T86` 的显式 exclusion register。
 - `../paper_materials/paper_submission_author_handoff.md`：`T86` 的作者 handoff 与禁写边界汇总。
+- `../paper_materials/paper_author_final_qa_checklist.md`：`T87` 的作者终检 QA checklist。
+- `../paper_materials/paper_presubmission_regression_gate.md`：`T87` 的 pre-submission regression gate。
+- `../paper_materials/paper_submission_wording_redflag_register.md`：`T87` 的危险表述 red-flag register。
+- `../paper_materials/paper_manual_finish_queue.md`：`T87` 的 bounded manual finish queue。
+- `../paper_materials/paper_manual_finish_execution_log.md`：`T88` 的 manual-finish 执行日志。
+- `../paper_materials/paper_mainline_surface_freeze_manifest.md`：`T88` 的主线 surface freeze manifest。
+- `../paper_materials/paper_author_edit_decision_register.md`：`T88` 的作者编辑决策台账。
+- `../paper_materials/paper_blocked_surface_disclaimer_table.md`：`T88` 的 blocked surface disclaimer table。
+- `../paper_materials/paper_frozen_mainline_handoff_gate.md`：`T88` 的 frozen-mainline handoff gate。
 
 ## 使用规则
 
@@ -40,3 +49,5 @@
 10. `T84` 之后，如需判断当前 note 哪些 section 已完成 reader-facing final polish、内部 task/provenance 术语该如何翻译、以及 appendix / supplement / blocked surface 应如何向读者装配，应优先查看 `paper_bounded_final_polish_change_map.md`、`paper_reader_facing_term_translation_table.md`、`paper_appendix_supplement_reader_assembly_map.md` 与 `% T84-POLISH: ...` 注释；该链路只做 translation / condensation / assembly，不等于 submission-ready pack。
 11. `T85` 之后，如需判断当前 note 是否已经完成 residual wording-lag 清扫、是否允许进入下一张 bounded submission-pack assembly 任务、以及哪些 surface 仍必须保留为 blocker / exclusion，应优先查看 `paper_submission_readiness_preflight_gate.md`、`paper_submission_blocker_matrix.md`、`paper_residual_state_lag_sweep.md` 与 `% T85-PREFLIGHT: ...` 注释；该链路只做 preflight / blocker 明确化，不等于 submission-ready pack 已完成。
 12. `T86` 之后，如需判断当前 mainline note/material 应如何组装成 submission-facing package、哪些 surface 进入 main text / appendix / supplement、哪些必须显式排除，应优先查看 `paper_submission_pack_assembly_manifest.md`、`paper_submission_surface_route_map.md`、`paper_submission_exclusion_register.md`、`paper_submission_author_handoff.md` 与 `% T86-ASSEMBLY: ...` 注释；该链路只做 assembly / exclusion 收口，不等于 submission-ready pack 已完成。
+13. `T87` 之后，如需判断当前 note 是否已经完成作者终检级 QA、哪些表述仍属于 red-flag、以及后续只允许做哪些 bounded manual finish，应优先查看 `paper_author_final_qa_checklist.md`、`paper_presubmission_regression_gate.md`、`paper_submission_wording_redflag_register.md`、`paper_manual_finish_queue.md` 与 `% T87-QA: ...` 注释；该链路只服务 author-final QA / pre-submission regression gate，不等于 submission-ready completed。
+14. `T88` 之后，如需判断哪些 bounded manual finish 已真实执行、当前 mainline surface 如何冻结、blocked disclaimer 该保留在哪些位置，以及后续是否只允许 frozen-mainline handoff，应优先查看 `paper_manual_finish_execution_log.md`、`paper_mainline_surface_freeze_manifest.md`、`paper_author_edit_decision_register.md`、`paper_blocked_surface_disclaimer_table.md`、`paper_frozen_mainline_handoff_gate.md` 与 `% T88-MANUAL: ...` 注释；该链路只服务 manual-finish execution / surface freeze / handoff 固化，不等于 submission-ready completed。

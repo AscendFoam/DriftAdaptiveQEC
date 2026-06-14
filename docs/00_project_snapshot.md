@@ -9,12 +9,28 @@
 ## 2. 基本信息
 
 - 快照日期：`2026-05-05`
-- 最近更新：`2026-06-14`
+- 最近更新：`2026-06-15`
 - 当前分支：`main`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
 - 当前决策状态：`Go`
 - 当前唯一任务来源：`docs/04_task_board.md`
+
+## 2026-06-15 Captain Update (T88 closeout)
+
+- `T88` 已由 Captain 判定为 `PASS`。
+- `T88` 在不改动源码、测试、`runs/`、`artifacts/` 或治理边界的前提下，真实完成了 bounded manual finish 执行、mainline surface freeze、author edit decision 固化与 blocked-surface disclaimer 收口。
+- `T88` 没有引入新的 deferred/rejected warning，也没有新增风险项；review 中的 non-blocking notes 仅作为 dirty-worktree allowlist 纪律、`GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY` 窄语义、current-host-only compile 与宿主噪声隔离的操作提醒。
+- 当前唯一任务切换为 `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`。
+- `T89` 继续停留在 main 分支 paper-material 主线，只做 frozen-mainline handoff、source-of-truth map、post-freeze change-control 与 blocked-surface re-entry 条件固化；不得把这一步写成 submission-ready completed，也不得混入独立 theory 分支内容。
+
+## 2026-06-14 Captain Update (T87 closeout)
+
+- `T87` 已由 Captain 判定为 `PASS`。
+- `T87` 在不改动源码、测试、`runs/`、`artifacts/` 或治理边界的前提下，真实完成了 author-final QA checklist、pre-submission regression gate、wording red-flag register、manual-finish queue 与最小 QA 导向 note refresh。
+- `T87` 没有引入新的 deferred/rejected warning，也没有新增风险项；review 中的 3 条 non-blocking notes 仅作为 CRLF/git-ignore 噪声隔离与 `GO_FOR_BOUNDED_AUTHOR_MANUAL_FINISH_ONLY` 窄语义的操作提醒。
+- 当前唯一任务切换为 `T88: 主线 bounded manual finish 执行与 surface freeze 收口包`。
+- `T88` 继续停留在 main 分支 paper-material 主线，只做 mainline-only、docs-only、manual-finish execution、surface freeze 与 blocked-disclaimer 固化；不得把这一步写成 submission-ready completed，也不得混入独立 theory 分支内容。
 
 ## 2026-06-14 Captain Update (T86 closeout)
 
@@ -409,7 +425,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T87: 主线作者终检与 pre-submission QA 收口包`
+- `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
 
 ## 12. 快照结论
 
@@ -432,7 +448,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 15. `T46` 已完成并通过 Captain `PASS` 收口；它把 `seed=20260429` 的单 seed 机制诊断收束成了一个明确的多 seed / intervention 计划，但没有升级任何 evidence level。
 16. `T70` 已完成并通过 Captain `PASS` 收口；FR8 当前已有一个 code-backed closure pack，可明确阻止 promotion 和唯一阈值外推，但这不升级为成熟 comparator、`.tflite` 或真板证据。
 17. `T50` 已完成并通过 Captain `PASS` 收口；仓库现在已有一份 code-backed 训练复现与材料再生证据包，可统一引用 canonical 训练材料、主线 preserved references 和一次 clean CPU-only bounded train+eval rerun。
-18. `T80`、`T81`、`T82`、`T83`、`T84`、`T85`、`T86` 均已完成并通过 Captain 收口；当前 note 的 ready sections、contribution、methods、supporting-boundary route、全文一致性 gate、reader-facing final polish、submission-preflight 与 submission-facing assembly / exclusion route 已压回现有主线 evidence stack。当前主线已推进到 `T87: 主线作者终检与 pre-submission QA 收口包`，而不是 submission-ready 完成态、deployment closure 或 real-board success。
+18. `T80`、`T81`、`T82`、`T83`、`T84`、`T85`、`T86`、`T87`、`T88` 均已完成并通过 Captain 收口；当前 note 的 ready sections、contribution、methods、supporting-boundary route、全文一致性 gate、reader-facing final polish、submission-preflight、submission-facing assembly / exclusion route、作者终检 / pre-submission QA，以及 bounded manual finish / surface freeze 都已压回现有主线 evidence stack。当前主线已推进到 `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`，而不是 submission-ready 完成态、deployment closure 或 real-board success。
 
 ## 13. T45 后的拟议路线图（非当前任务）
 
