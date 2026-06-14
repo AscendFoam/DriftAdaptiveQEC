@@ -9,20 +9,28 @@
 ## 2. 基本信息
 
 - 快照日期：`2026-05-05`
-- 最近更新：`2026-06-12`
+- 最近更新：`2026-06-14`
 - 当前分支：`main`
 - 工作流依据：`docs/reference/AI_coding_workflow.md`
 - 当前阶段：`Phase 2: Controlled Development`
 - 当前决策状态：`Go`
 - 当前唯一任务来源：`docs/04_task_board.md`
 
-## 2026-06-12 Captain Update (T81 closeout)
+## 2026-06-14 Captain Update (T83 closeout)
 
-- `T81` 已由 Captain 判定为 `PASS`。
-- `T81` 在不改动源码、测试、`runs/`、`artifacts/` 或治理文档的前提下，真实完成了 `Summary of Contributions` 与三章 methods 的受控校准，并把当前 note 的最后 4 个主线未收口核心 section 压回到了现有 evidence stack。
-- `T81` 没有引入新的 deferred/rejected warning，也没有新增风险项；它同样不意味着 full-manuscript reopen、deployment 升级、real-board success 或 `statcalib` promotion。
-- 当前唯一任务切换为 `T82: supporting-material 收口与 appendix/supplement 边界整合包`。
-- `T82` 继续停留在 main 分支 paper-material 主线，优先补齐 hardware-independent supporting materials 的 manuscript-facing closeout，而不是重开真板 execution 或过早放大为 full-manuscript closeout。
+- `T83` 已由 Captain 判定为 `PASS`。
+- `T83` 在不改动源码、测试、`runs/`、`artifacts/` 或治理文档的前提下，真实完成了全文一致性 sweep、section-to-evidence crosswalk 与唯一 closeout gate / blocker register，并给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`。
+- `T83` 没有引入新的 deferred/rejected warning，也没有新增风险项；它同样不意味着 submission-ready pack、deployment 升级、real-board success 或 `statcalib` promotion。
+- 当前唯一任务切换为 `T84: 主线 note 有界 final polish 与读者化装配包`。
+- `T84` 继续停留在 main 分支 paper-material 主线，优先做读者化术语翻译、结果层结构压缩与 appendix/supplement 装配，而不是重开真板 execution、benchmark 扩写或无界 manuscript 扩写。
+
+## 2026-06-13 Captain Update (T82 closeout)
+
+- `T82` 已由 Captain 判定为 `PASS`。
+- `T82` 在不改动源码、测试、`runs/`、`artifacts/` 或治理文档的前提下，真实完成了 supporting-boundary 的 `main text / appendix / supplement / blocked` 四层收口，并把 note 中 4 处 supporting 段落压回到了现有 evidence stack。
+- `T82` 没有引入新的 deferred/rejected warning，也没有新增风险项；它同样不意味着 full-manuscript closeout、deployment 升级、real-board success 或 `statcalib` promotion。
+- 当前唯一任务切换为 `T83: 主线 note 全文一致性收口与 manuscript closeout gate`。
+- `T83` 继续停留在 main 分支 paper-material 主线，优先做全文一致性 sweep、section-to-evidence crosswalk 与 closeout gate，而不是重开真板 execution 或过早放大为 full-manuscript closeout。
 
 ## 2026-06-12 Captain Update (T80 closeout)
 
@@ -373,7 +381,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T82: supporting-material 收口与 appendix/supplement 边界整合包`
+- `T84: 主线 note 有界 final polish 与读者化装配包`
 
 ## 12. 快照结论
 
@@ -396,7 +404,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 15. `T46` 已完成并通过 Captain `PASS` 收口；它把 `seed=20260429` 的单 seed 机制诊断收束成了一个明确的多 seed / intervention 计划，但没有升级任何 evidence level。
 16. `T70` 已完成并通过 Captain `PASS` 收口；FR8 当前已有一个 code-backed closure pack，可明确阻止 promotion 和唯一阈值外推，但这不升级为成熟 comparator、`.tflite` 或真板证据。
 17. `T50` 已完成并通过 Captain `PASS` 收口；仓库现在已有一份 code-backed 训练复现与材料再生证据包，可统一引用 canonical 训练材料、主线 preserved references 和一次 clean CPU-only bounded train+eval rerun。
-18. `T80` 已完成并通过 Captain `PASS` 收口，`T81` 也已完成并通过 Captain `PASS` 收口；当前 note 的 ready sections、contribution 与 methods 均已压回现有主线 evidence stack。当前主线已推进到 `T82: supporting-material 收口与 appendix/supplement 边界整合包`，而不是 full-manuscript closeout。
+18. `T80`、`T81`、`T82`、`T83` 均已完成并通过 Captain 收口；当前 note 的 ready sections、contribution、methods、supporting-boundary route 与全文一致性 gate 均已压回现有主线 evidence stack。当前主线已推进到 `T84: 主线 note 有界 final polish 与读者化装配包`，而不是 full-manuscript closeout 或 submission-ready pack。
 
 ## 13. T45 后的拟议路线图（非当前任务）
 

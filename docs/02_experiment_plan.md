@@ -1,9 +1,9 @@
 # DriftAdaptiveQEC 实验规划与后续开发计划
 
-**最后更新：** 2026-06-12  
+**最后更新：** 2026-06-14
 **当前阶段：** `Phase 2: Controlled Development`  
 **当前决策状态：** `Go`  
-**当前唯一任务：** 以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准；当前为 `T82`。`T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81` 已完成并收口；`T79` 给出了 `GO_FOR_BOUNDED_PROSE_REOPEN`，`T80` 已完成 ready sections 的有界 prose reopen，`T81` 已完成 `Summary of Contributions` 与三章 methods 的受控校准，因此主线当前进入 supporting-material 收口与 appendix/supplement 边界整合阶段。在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，real-board 执行相关任务继续降为最低优先级 backlog。
+**当前唯一任务：** 以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准；当前为 `T84`。`T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81`、`T82`、`T83` 已完成并收口；`T79` 给出了 `GO_FOR_BOUNDED_PROSE_REOPEN`，`T80` 已完成 ready sections 的有界 prose reopen，`T81` 已完成 `Summary of Contributions` 与三章 methods 的受控校准，`T82` 已完成 supporting-material 收口与 appendix/supplement 边界整合，`T83` 已完成全文一致性 sweep 并给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`，因此主线当前进入有界 final polish 与读者化装配阶段。在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，real-board 执行相关任务继续降为最低优先级 backlog。
 
 ## 文档角色
 
@@ -48,7 +48,7 @@
 | True `.tflite` runtime | current-host isolated path 已确认 | `T48` | 默认环境恢复、HIL closure、deployment closure |
 | Real-board gate | current-host verdict 仍为 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE` | `T49`、`T71`、`T72` | 真板执行成功 |
 | `statcalib` | bounded mock-backed software-HIL extension lane，且明确 `no-promotion` | `T64`-`T70` | 成熟主线 comparator 或 `T24` 替代表 |
-| Paper materials / authoring | `T74` 的 paper-ready material pack、`T75` 的 bounded Results authoring pack、`T76` 的 rendered QA / assembly、`T77` 的 note-draft results sync / traceability hardening、`T78` 的 note 非结果层校准 / hierarchy / layout closeout、`T79` 的 reopen gate、`T80` 的 ready-sections prose reopen 与 `T81` 的 contribution/methods calibration 已完成；当前进入 `T82` 的 supporting-material closeout / appendix-supplement boundary integration | `T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81`、`T82` | full-manuscript reopen、无证据升级的方法章扩写、deployment/board 叙事放大或 paper claim 升级 |
+| Paper materials / authoring | `T74` 的 paper-ready material pack、`T75` 的 bounded Results authoring pack、`T76` 的 rendered QA / assembly、`T77` 的 note-draft results sync / traceability hardening、`T78` 的 note 非结果层校准 / hierarchy / layout closeout、`T79` 的 reopen gate、`T80` 的 ready-sections prose reopen、`T81` 的 contribution/methods calibration、`T82` 的 supporting-material closeout、`T83` 的全文一致性 sweep / closeout gate 已完成；当前进入 `T84` 的有界 final polish 与读者化装配 | `T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81`、`T82`、`T83`、`T84` | submission-ready pack、无证据升级的方法章扩写、deployment/board 叙事放大或 paper claim 升级 |
 | Sidecar 扩展 | 可并行设计，但不能自动进入主线事实 | `PSE0`、`PSE1`、`docs/sidecar/README.md` | 主线 benchmark 或论文 claim |
 
 ## 3. 高层时间线
@@ -68,6 +68,8 @@
 | 2026-06-11 | T71/T72 | real-board gate pack 从 role-aware/regeneration 进入 provenance hardening | `T72` 完成 provenance hardening；仍无真板执行成功 |
 | 2026-06-11 | T73 / 优先级调整 | 因当前暂无 `Linux + FPGA` 硬件宿主，主线从 real-board 前移改为论文材料优先 | `T73` 完成后，real-board 路线继续降为最低优先级 backlog |
 | 2026-06-12 | T74/T75/T76/T77/T78/T79/T80/T81/T82 | 主线从台账刷新推进到 paper-ready 材料包、bounded Results authoring、rendered QA / Results assembly、note-draft 结果层同步、非结果层校准 / hierarchy / layout closeout、reopen gate、section-bounded prose reopen、contribution/methods calibration，并继续进入 supporting-material closeout / appendix-supplement boundary integration | `T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81` 已完成；`T82` 为当前唯一任务；full-manuscript reopen 仍未开启 |
+| 2026-06-13 | T82/T83 | `T82` 完成 supporting-boundary 四层收口；主线从“局部段落与 supporting route 收口”推进到“全文一致性 sweep 与 closeout gate” | `T82` 已完成；`T83` 为当前唯一任务；full-manuscript closeout 仍未开启 |
+| 2026-06-14 | T83/T84 | `T83` 完成全文一致性 sweep 并给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`；主线从“是否还需要 closeout gate”推进到“有界 final polish 与读者化装配” | `T83` 已完成；`T84` 为当前唯一任务；submission-ready pack 与 deployment closure 仍未开启 |
 
 ## 4. 当前仍有效的结论
 
@@ -81,7 +83,7 @@
 8. `T64`-`T70` 的 `statcalib` 仍是 extension lane；`T70` 的 `no-promotion` gate 必须随引用保留。
 9. 机制诊断已经比早期更强，但 `T55/T56` 也削弱了简单的单因果叙事；论文写作必须保留 hedge。
 10. `T74` 已完成 stable-ID 的 paper-ready simulation/material pack，`T75` 已完成 bounded Results authoring，`T76` 已完成真实 rendered preview、人工可读性 QA 与 Results-section assembly，`T77` 已完成 note-draft 的结果层同步与 `T76` traceability hardening，但这些仍不等于 full-manuscript reopen。
-11. `T78` 已完成 note 非结果层校准、`statcalib` 层级降权、section-scope 审计与排版 warning 收口；`T79` 已完成 reopen gate，并给出 `GO_FOR_BOUNDED_PROSE_REOPEN`；`T80` 已完成 ready narrative / result-facing sections 的有界重写；`T81` 已完成 `Summary of Contributions` 与三章 methods 的受控校准；当前进入 `T82`，继续收口 supporting-material 与 appendix/supplement 边界整合。
+11. `T78` 已完成 note 非结果层校准、`statcalib` 层级降权、section-scope 审计与排版 warning 收口；`T79` 已完成 reopen gate，并给出 `GO_FOR_BOUNDED_PROSE_REOPEN`；`T80` 已完成 ready narrative / result-facing sections 的有界重写；`T81` 已完成 `Summary of Contributions` 与三章 methods 的受控校准；`T82` 已完成 supporting-material 与 appendix/supplement 边界整合；`T83` 已完成全文一致性 sweep 与 closeout gate，并给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`；当前进入 `T84`，继续做有界 final polish 与读者化装配，而不是直接宣布 submission-ready pack 或 deployment closure。
 12. `runs/` 与 `artifacts/` 是历史证据材料，不应被整体改写成新的事实来源。
 
 ## 5. 已被替换或降级的旧结论
@@ -127,8 +129,8 @@
 
 本次整理时的状态说明：
 
-- `T82: supporting-material 收口与 appendix/supplement 边界整合包`
-- 任务包：`docs/tasks/Phase2/T82_supporting_material_closeout_and_boundary_integration_pack.md`
+- `T84: 主线 note 有界 final polish 与读者化装配包`
+- 任务包：`docs/tasks/Phase2/T84_mainline_bounded_final_polish_and_reader_facing_assembly.md`
 - 状态：`Current Unique Task`
 
 当前主线优先级边界：
@@ -141,16 +143,18 @@
 - `T79` 已完成当前材料栈的受控 reopen/readiness gate，并给出唯一结论 `GO_FOR_BOUNDED_PROSE_REOPEN`。
 - `T80` 已完成当前 note 的 8 个 ready narrative / result-facing sections 的 section-bounded prose reopen。
 - `T81` 已完成 `Summary of Contributions` 与三章 methods 的受控校准。
-- `T82` 是当前唯一任务，目标是在不升级任何证据等级的前提下，把 `FR8/statcalib`、training/material、isolated true `.tflite`、real-board `NO_GO` 等 supporting-boundary 材料压成 manuscript-facing closeout 包。
+- `T82` 已完成，已把 `FR8/statcalib`、training/material、isolated true `.tflite`、real-board `NO_GO` 等 supporting-boundary 材料压成一条 manuscript-facing closeout route。
+- `T83` 已完成，已对当前 note 做全文一致性 sweep、受控 wording 收口，并产出唯一 closeout gate / blocker register，结论为 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`。
+- `T84` 是当前唯一任务，目标是在不升级任何证据等级的前提下，对当前 note 做有界 final polish、内部术语读者化翻译、Results/appendix/supplement 装配压缩，并产出最终 reader-facing 装配台账。
 - 在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，`T37` 及其他 real-board execution 任务继续 `blocked + lowest-priority backlog`，不抢占当前主线。
-- `T82` 只做有界 supporting-material closeout 与 appendix/supplement 边界整合，不直接等于 full-manuscript closeout；它不得扩到 benchmark、`.tflite` portability、real-board execution 或 theory-branch 大范围改写。
+- `T84` 只做有界 final polish 与读者化装配，不直接等于 submission-ready pack；它不得扩到 benchmark、`.tflite` portability、real-board execution、投稿打包实装或 theory-branch 大范围改写。
 
 ## 9. 后续路线总览
 
 后续开发按“论文材料先行、硬件路径后置”的顺序分层推进，不一次性展开全部方向：
 
-1. 主线 supporting-material closeout 与 appendix/supplement 边界整合
-2. 待 `T82` honest closeout 后，再由 Captain 决定是否进入更大范围的 manuscript closeout gate
+1. 主线有界 final polish 与读者化装配
+2. 待 `T84` honest closeout 后，再由 Captain 决定是否只进入 bounded submission-readiness preflight gate，还是继续保持 `NO_GO_SUBMISSION_PACK`
 3. 主线可信度、training / `.tflite` / transfer-pack 边界补强
 4. 机制诊断与 bounded ablation
 5. paper-grade benchmark expansion 的 protocol lock 与小步执行
@@ -165,7 +169,7 @@
 2. `T75` 已完成 bounded main-text Results authoring、最终成图资产与 do-not-write guardrail。
 3. `T76` 已完成真实 rendered preview、人工可读性 QA、必要的 presentation-level 修正与 Results-section assembly。
 4. `T78` 已完成 note-draft 的非结果层校准、`statcalib` 层级降权、section-scope 审计与必要的 LaTeX 排版 warning 收口。
-5. `T79` 已完成 gate，`T80` 已完成 ready sections 的 section-bounded prose reopen，`T81` 已完成 contribution/methods calibration，当前执行 `T82` 的 supporting-material closeout；即便如此，也仍不是 full-manuscript closeout，更不是部署故事升级。
+5. `T79` 已完成 gate，`T80` 已完成 ready sections 的 section-bounded prose reopen，`T81` 已完成 contribution/methods calibration，`T82` 已完成 supporting-material closeout，`T83` 已完成全文一致性 closeout gate；当前执行 `T84` 的有界 final polish 与读者化装配。即便如此，也仍不是 submission-ready pack，更不是部署故事升级。
 6. training / `.tflite` / real-board 现阶段只补 boundary table、portability table 或 supporting material，不冒进写成 deployment / board closure。
 
 当前可保留的标题方向：
@@ -344,8 +348,8 @@ FCCM、ACM FPGA、DATE、ICCAD 等硬件向 venue 只有在补齐以下证据后
 
 | 优先层 | 候选任务 | 主要输出 | 验证 |
 | --- | --- | --- | --- |
-| Current | `T82` supporting-material 收口与 appendix/supplement 边界整合包 | supporting-material closeout pack、manuscript closeout readiness matrix、note 中受控 supporting-boundary 收口 | 文档一致性检查 + section-scope 审计 + reviewer |
-| Immediate-next | 按 `T82` closeout 决定的唯一后续任务 | 更大范围 manuscript closeout gate 或继续保守停留在 current note/material 边界中的唯一一张 | captain / reviewer gate |
+| Current | `T84` 主线 note 有界 final polish 与读者化装配包 | final-polish change map、reader-facing term translation、appendix/supplement assembly map、受控终稿级润色 | 文档一致性检查 + compile-aware verification + reviewer |
+| Immediate-next | 按 `T84` closeout 决定的唯一后续任务 | bounded submission-readiness preflight gate，或继续保持 `NO_GO_SUBMISSION_PACK` 的唯一一张后续 task | captain / reviewer gate |
 | P1 | training/material reproducibility follow-up | repeated-run / cross-host / CPU-vs-GPU 边界表 | bounded train/eval smoke |
 | P1 | `.tflite` runtime portability audit | default env / isolated env / cross-host 差异表 | bounded runtime smoke |
 | P1 | `.tflite` isolated-env bootstrap hardening | interpreter/package/artifact/source manifest | true-runtime smoke rejects stub/fallback |
@@ -354,7 +358,7 @@ FCCM、ACM FPGA、DATE、ICCAD 等硬件向 venue 只有在补齐以下证据后
 | P2 | GPT-Pro extension-route triage | adopted/deferred/rejected sidecar list | docs-only protocol review |
 | P2 | temporal TCN / adaptive teacher / parameter-bank sidecar design | bounded experiment spec + shared inputs | no long-run execution without new task |
 | P4-lowest | real-board smoke execution | real device smoke | only after gate conditions satisfy and hardware host becomes available |
-| P3 | broader paper draft reopen after bounded calibration waves | 在 `T82` 之后才考虑的更大范围 prose 扩写 | only after `T82` closes honestly and a new gate approves broader scope |
+| P3 | broader paper draft reopen after bounded calibration waves | 在 `T84` 之后才考虑的更大范围 prose 扩写 | only after `T84` closes honestly and a new gate approves broader scope |
 
 ## 20. 红线
 

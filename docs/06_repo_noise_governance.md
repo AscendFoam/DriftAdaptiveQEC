@@ -11,6 +11,23 @@
 
 本文件不宣称仓库已经完成物理清理。
 
+## 2026-06-14 Captain Update (T83 closeout)
+
+- `T83` 已按 `PASS` 收口。
+- 就 repo-noise 与验证边界而言，`T83` 只在 `docs/paper_notes/*`、`docs/paper_materials/*` 与 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/` 或 benchmark output。
+- `T83` 当前产出的全文一致性 crosswalk、closeout gate/register、README 登记与 note 编译产物属于主线 docs-only deliverable，不得被混写成新的 benchmark、runtime、board 或 submission-ready 完成事实来源。
+- 当前唯一任务切换为 `T84: 主线 note 有界 final polish 与读者化装配包`；它允许新增或修改的正式产物仍应限于 `docs/paper_notes/*`、`docs/paper_materials/*` 以及 task-scoped review / explanation / summary 文件。
+- `T84` 不得借 final polish 之名顺手创建新 run、重算 benchmark、更新历史 artifact、改写 theory 分支大范围内容、改写 stable-ID 结果资产或升级部署/真板证据等级；若本地编译 note，只允许刷新当前 note 既有编译产物。
+- `T83` review 已明确提醒当前 worktree 含有 pre-existing docs dirty state，因此后续提交 `T83/T84` 时仍应使用 allowlist-scoped diff 与精确暂存，而不是 blanket `add -A`。
+
+## 2026-06-13 Captain Update (T82 closeout)
+
+- `T82` 已按 `PASS` 收口。
+- 就 repo-noise 与验证边界而言，`T82` 只在 `docs/paper_notes/*`、`docs/paper_materials/*` 与 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/` 或 benchmark output。
+- `T82` 当前产出的 supporting-material closeout pack、readiness matrix、README 登记与 note 编译产物属于主线 docs-only deliverable，不得被混写成新的 benchmark、runtime、board 或 full-manuscript 完成事实来源。
+- 当前唯一任务切换为 `T83: 主线 note 全文一致性收口与 manuscript closeout gate`；它允许新增或修改的正式产物仍应限于 `docs/paper_notes/*`、`docs/paper_materials/*` 以及 task-scoped review / explanation / summary 文件。
+- `T83` 不得借全文一致性收口之名顺手创建新 run、重算 benchmark、更新历史 artifact、改写 theory 分支大范围内容、改写 stable-ID 结果资产或升级部署/真板证据等级；若本地编译 note，只允许刷新当前 note 既有编译产物。
+
 ## 2026-06-12 Captain Update (T81 closeout)
 
 - `T81` 已按 `PASS` 收口。

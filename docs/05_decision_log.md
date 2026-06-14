@@ -1,5 +1,67 @@
 # Decision Log
 
+## D-2026-06-14-01
+
+- 日期：`2026-06-14`
+- 决策：接受 `T83` 为 `PASS`，标记 `T83` 完成，并将当前唯一任务切换为 `T84: 主线 note 有界 final polish 与读者化装配包`
+
+### 背景
+
+`T83` 的目标不是恢复 full-manuscript reopen，而是在 `T80/T81/T82` 已完成 ready sections、contribution/methods 与 supporting-boundary 收口之后，判断当前整份 note 是否已经全文自洽，并把后续是否还能继续推进压成一份唯一 closeout gate。review 已确认这项工作已在允许范围内真实完成，同时也明确指出：`T83` 之后的剩余瓶颈已经不是“哪些 section 还互相打架”，而是“如何把当前一致性版本翻译成更读者友好的语言并完成有界装配，而不升级任何 blocked surface”。
+
+### 依据
+
+1. `docs/review/T83_review.md` verdict = `PASS`，blocking issues = none。
+2. review 明确确认本轮 diff 保持在 `T83` 允许的 note/material/README/summary 与编译产物范围内，且 `% T80-REOPEN`、`% T81-CALIBRATION`、`% T82-SUPPORT` 标记全部保留。
+3. review 明确确认 `paper_fullnote_consistency_crosswalk.md` 与 `paper_closeout_gate_and_blocker_register.md` 已真实建立全文一致性回链与唯一 gate 结论。
+4. review 明确给出的唯一 closeout gate 是 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`，并且强调这不等于 submission-ready pack、deployment closure、real-board success 或 blocked surface 解锁。
+5. review 同时提醒：当前 worktree 已有 pre-existing dirty state，因此提交与后续验证必须继续采用 allowlist-scoped / precise-staging 纪律，而不能把全仓 `git diff --name-only` 直接当成 `T83` 变更清单。
+
+### 结论
+
+1. 接受 `T83` 为 `PASS` 并标记完成。
+2. 由于 verdict 为 `PASS`，本轮不进入 warning 分类流程，也不新开 risk。
+3. `T83` 只关闭了“全文是否已经自洽”的 gate，不关闭任何 deployment/runtime/board 风险。
+4. 当前唯一任务切换为 `T84`，只允许做读者化术语翻译、结构压缩、appendix/supplement 装配、README 登记与 compile-aware refresh。
+5. `T84` 必须继续保留 `T24` frozen anchor、`FR6/FR7` descriptive-only、`FR8` no-promotion、training/material bounded rerun、`.tflite` isolated current-host only、real-board current-host `NO_GO` 与 hardware-dependent blocked surface 等 guardrail。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/02_experiment_plan.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T83 -> PASS` 与 `Current Unique Task -> T84`。
+2. 新增 `docs/tasks/Phase2/T84_mainline_bounded_final_polish_and_reader_facing_assembly.md` 作为下一张 worker-facing 任务包。
+3. main 分支在完成上述治理同步后可以继续提交，但提交前应精确暂存 `T82/T83` 产物、Captain closeout 文档与 `T84` 任务包，不要把同工作区内的无关或未审阅 diff 混入。
+
+## D-2026-06-13-01
+
+- 日期：`2026-06-13`
+- 决策：接受 `T82` 为 `PASS`，标记 `T82` 完成，并将当前唯一任务切换为 `T83: 主线 note 全文一致性收口与 manuscript closeout gate`
+
+### 背景
+
+`T82` 的目标不是恢复 full-manuscript reopen，而是在 `T80/T81` 已完成 ready sections 与 contribution/methods calibration 之后，把 `FR8/statcalib`、training/material、isolated true `.tflite`、real-board `NO_GO` 等 supporting-boundary 材料压成一条 manuscript-facing closeout route。review 已确认这条 route 已在允许范围内真实完成，同时也明确指出：`T82` 之后的剩余瓶颈已经不是“某一块 supporting 材料缺失”，而是“整份 note 是否已经 section-by-section 自洽，以及 full-manuscript closeout 仍被哪些 blocker 阻塞”。
+
+### 依据
+
+1. `docs/review/T82_review.md` verdict = `PASS`，blocking issues = none。
+2. review 明确确认本轮 diff 保持在 `T82` 允许的 note/material/README/summary 范围内，且 note 中存在 4 条 `% T82-SUPPORT` 标记。
+3. review 明确确认 `paper_supporting_material_closeout_pack.md` 与 `paper_manuscript_closeout_readiness_matrix.md` 已真实建立 `main text / appendix / supplement / blocked` 四层收口结构。
+4. review 明确确认 `T80` 的 `% T80-REOPEN` 与 `T81` 的 `% T81-CALIBRATION` 标记仍全部保留，说明 `T82` 没有把 scope 静默扩回已关闭的主文或方法章任务。
+5. review 还明确提醒：`T82` 完成后仍不能自动回述成 full-manuscript closeout；后续若继续推进，必须由 Captain 开出一张新的、全文级别的一致性 sweep / closeout gate 任务。
+
+### 结论
+
+1. 接受 `T82` 为 `PASS` 并标记完成。
+2. 由于 verdict 为 `PASS`，本轮不进入 warning 分类流程，也不新开 risk。
+3. `T82` 只关闭了 supporting-material route 分散的问题，不关闭任何 deployment/runtime/board 风险。
+4. 当前唯一任务切换为 `T83`，只允许做全文 section-by-section consistency sweep、受控 wording 收口、section-to-evidence crosswalk 与唯一 closeout gate / blocker register。
+5. `T83` 必须继续保留 `T24` frozen anchor、`FR6/FR7` descriptive-only、`FR8` no-promotion、training/material bounded rerun、`.tflite` isolated current-host only、real-board current-host `NO_GO` 与 hardware-dependent blocked surface 等 guardrail。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/02_experiment_plan.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T82 -> PASS` 与 `Current Unique Task -> T83`。
+2. 新增 `docs/tasks/Phase2/T83_mainline_note_full_consistency_sweep_and_closeout_gate.md` 作为下一张 worker-facing 任务包。
+3. main 分支在完成上述治理同步后可以继续提交，但提交前应精确暂存 `T82` 产物、Captain closeout 文档与 `T83` 任务包，不要把无关历史 diff 混入。
+
 ## D-2026-06-12-09
 
 - 日期：`2026-06-12`

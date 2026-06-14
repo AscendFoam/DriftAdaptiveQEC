@@ -1,7 +1,7 @@
 # Feasibility And Legacy Audit
 
 **维护状态**：legacy 真实性审计底稿
-**最后维护说明更新**：2026-06-12
+**最后维护说明更新**：2026-06-14
 **当前事实入口**：`docs/02_experiment_plan.md`、`docs/04_task_board.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md`
 
 ## 1. 审计目的
@@ -78,11 +78,17 @@
 - `T25` 已完成 result-boundary gate review，并确认 T24 只能作为 `mock-backed` software HIL formal software revalidation
 - 后续 P3/P4 文档与复验结果都应沿用同一套 backend / artifact type 表述口径
 
-### 2026-06-12 Captain Update (T81 closeout)
+### 2026-06-14 Captain Update (T83 closeout)
 
-- `T81` 已被 Captain 接受为 `PASS`。
-- 这次 closeout 仍然没有改变 legacy audit 的真实性判断：`T81` 只是 docs-only 的 contribution/methods calibration，不是新的实验、不是新的板级证据、也不是任何 `.tflite` / real-board / mature comparator 事实升级。
-- 当前唯一任务已切换为 `T82: supporting-material 收口与 appendix/supplement 边界整合包`。`T82` 仍是 main 分支 docs-only 的 supporting-material 整合任务，不触碰 theory 分支的大范围改写，也不改变 legacy truth matrix。
+- `T83` 已被 Captain 接受为 `PASS`。
+- 这次 closeout 仍然没有改变 legacy audit 的真实性判断：`T83` 只是 docs-only 的全文一致性 sweep / closeout gate，不是新的实验、不是新的板级证据、也不是任何 `.tflite` / real-board / mature comparator 事实升级。
+- 当前唯一任务已切换为 `T84: 主线 note 有界 final polish 与读者化装配包`。`T84` 仍是 main 分支 docs-only 的读者化润色与装配任务，不触碰 theory 分支的大范围改写，也不改变 legacy truth matrix。
+
+### 2026-06-13 Captain Update (T82 closeout)
+
+- `T82` 已被 Captain 接受为 `PASS`。
+- 这次 closeout 仍然没有改变 legacy audit 的真实性判断：`T82` 只是 docs-only 的 supporting-boundary closeout，不是新的实验、不是新的板级证据、也不是任何 `.tflite` / real-board / mature comparator 事实升级。
+- 当前唯一任务已切换为 `T83: 主线 note 全文一致性收口与 manuscript closeout gate`。`T83` 仍是 main 分支 docs-only 的全文一致性与 closeout gate 任务，不触碰 theory 分支的大范围改写，也不改变 legacy truth matrix。
 
 ### 2026-06-12 Captain Update (T80 closeout)
 

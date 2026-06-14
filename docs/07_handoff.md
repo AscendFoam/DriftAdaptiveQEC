@@ -1,13 +1,12 @@
-## 2026-06-12 Captain Final Supersession (T81 closeout)
+## 2026-06-14 Captain Final Supersession (T83 closeout)
 
-- Current unique task: `T82: supporting-material 收口与 appendix/supplement 边界整合包`
-- Task package: `docs/tasks/Phase2/T82_supporting_material_closeout_and_boundary_integration_pack.md`
-- `T81` has been judged `PASS`.
-- `T81` completed one docs-only contribution/methods calibration honestly and brought `Summary of Contributions` plus the three methods chapters back onto the current evidence stack.
-- `T81` introduces no deferred/rejected warning and opens no new risk.
+- Current unique task: `T84: 主线 note 有界 final polish 与读者化装配包`
+- Task package: `docs/tasks/Phase2/T84_mainline_bounded_final_polish_and_reader_facing_assembly.md`
+- `T83` has been judged `PASS`.
+- `T83` completed one docs-only full-note consistency sweep plus one explicit closeout gate honestly and opened no deferred/rejected warning.
 - `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
-- `T82` is the next bounded mainline task because the repo no longer lacks calibrated methods/contribution prose; it now lacks one unified manuscript-facing supporting-material closeout route.
-- `T82` must stay docs-only, mainline-only, and must not widen into benchmark/HIL reruns, `.tflite` portability, real-board execution, theory-branch large-scale rewriting, sidecar promotion, or direct full-manuscript expansion.
+- `T84` is the next bounded mainline task because the repo no longer lacks section-local calibration, supporting-boundary route integration, or a full-note closeout gate; it now needs one reader-facing final-polish and assembly pass before any later submission-readiness decision.
+- `T84` must stay docs-only, mainline-only, and must not widen into benchmark/HIL reruns, `.tflite` portability, real-board execution, theory-branch large-scale rewriting, sidecar promotion, or direct submission-pack completion.
 
 ## 2026-06-12 Captain Final Supersession (T80 closeout)
 
@@ -146,24 +145,24 @@
 
 ## 1. 当前状态
 
-- 日期：`2026-06-12`
+- 日期：`2026-06-14`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T82: supporting-material 收口与 appendix/supplement 边界整合包`
-- 任务包：`docs/tasks/Phase2/T82_supporting_material_closeout_and_boundary_integration_pack.md`
+- 当前唯一任务：`T84: 主线 note 有界 final polish 与读者化装配包`
+- 任务包：`docs/tasks/Phase2/T84_mainline_bounded_final_polish_and_reader_facing_assembly.md`
 - 当前主线优先级：先补论文所需的仿真结果、图表、caption 与 supporting materials；real-board execution 因当前暂无 `Linux + FPGA` 硬件宿主而维持最低优先级 backlog
 
 Captain continuity note:
 
-- The authoritative current task for all new worker action is `T82: supporting-material 收口与 appendix/supplement 边界整合包`.
-- Authoritative task package: `docs/tasks/Phase2/T82_supporting_material_closeout_and_boundary_integration_pack.md`.
-- `T81` is complete and accepted as `PASS`.
+- The authoritative current task for all new worker action is `T84: 主线 note 有界 final polish 与读者化装配包`.
+- Authoritative task package: `docs/tasks/Phase2/T84_mainline_bounded_final_polish_and_reader_facing_assembly.md`.
+- `T83` is complete and accepted as `PASS`.
 - `R13/R14/R32/R33` remain the existing carry-forward risks.
-- `T82` is the single recommended next task after `T81`.
+- `T84` is the single recommended next task after `T83`.
 - `T37` / real-board execution remains `blocked + lowest-priority backlog`; it is not the next mainline step while hardware host conditions remain unavailable.
-- If any older line below still mentions `T76` or earlier tasks as current, treat it as historical carry-forward text only.
-- `T82` is a bounded supporting-material closeout task only. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or full-manuscript reopen.
+- If any older line below still mentions `T83` or earlier tasks as current, treat it as historical carry-forward text only.
+- `T84` is a bounded reader-facing final-polish / assembly task only. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or submission-pack completion.
 
 ## 2026-06-05 Captain Update (T67 closeout)
 

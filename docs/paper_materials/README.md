@@ -32,6 +32,10 @@
 | `paper_reopen_gap_matrix.md` | `T79` prose reopen gap matrix |
 | `paper_bounded_prose_reopen_manifest.md` | `T80` ready-section bounded prose reopen manifest |
 | `paper_methods_and_contribution_calibration_manifest.md` | `T81` contribution/methods calibration manifest |
+| `paper_supporting_material_closeout_pack.md` | `T82` supporting-material closeout pack |
+| `paper_manuscript_closeout_readiness_matrix.md` | `T82` manuscript-facing readiness matrix |
+| `paper_fullnote_consistency_crosswalk.md` | `T83` full-note section-to-evidence consistency crosswalk |
+| `paper_closeout_gate_and_blocker_register.md` | `T83` closeout gate and blocker register |
 
 ## 推荐阅读顺序
 
@@ -55,7 +59,11 @@
 18. `paper_reopen_gap_matrix.md`
 19. `paper_bounded_prose_reopen_manifest.md`
 20. `paper_methods_and_contribution_calibration_manifest.md`
-21. `paper_claim_risk_table.md`
+21. `paper_supporting_material_closeout_pack.md`
+22. `paper_manuscript_closeout_readiness_matrix.md`
+23. `paper_fullnote_consistency_crosswalk.md`
+24. `paper_closeout_gate_and_blocker_register.md`
+25. `paper_claim_risk_table.md`
 
 ## 核心边界
 
@@ -64,7 +72,7 @@
 - `T64-T70` 只支持 `statcalib` extension lane 与 `no_promotion_keep_extension_lane_only`，不支持 mature comparator retelling。
 - 所有 paper claim 都必须回指 task/review/run/artifact 证据，不能把 draft prose、risk audit 或 theory walkthrough 写成实验完成态。
 
-## T74-T81 写作链路规则
+## T74-T82 写作链路规则
 
 - `T74`：paper-ready simulation material 优先通过 `T74-TBL-*` / `T74-FIG-*` / `T74-SUP-*` stable ID 引用。
 - `T75`：主文 Results prose 与最终成图优先通过 `T75-FIG-*` 引用；`T75` 只压缩并锁定表述，不提升证据等级。
@@ -74,3 +82,5 @@
 - `T79`：`paper_reopen_gate_and_prose_readiness_review.md` 与 `paper_reopen_gap_matrix.md` 只回答“是否允许下一轮 bounded prose reopen”，不是 prose reopen 本身，也不是 full-manuscript ready 证明。
 - `T80`：`paper_bounded_prose_reopen_manifest.md` 只记录 8 个 ready sections 的 bounded prose reopen；若某段文字没有被 `% T80-REOPEN` 与该 manifest 同时覆盖，就不应回述成“本轮已完成的 ready-section 重写”。
 - `T81`：`paper_methods_and_contribution_calibration_manifest.md` 只记录 `Summary of Contributions` 与三章 methods 的 bounded calibration；若某段文字没有被 `% T81-CALIBRATION` 与该 manifest 同时覆盖，就不应回述成“本轮已完成的 contribution/methods 校准”。
+- `T82`：`paper_supporting_material_closeout_pack.md` 与 `paper_manuscript_closeout_readiness_matrix.md` 只记录 supporting-boundary 的 `main text / appendix / supplement / blocked` 收口，以及 note 中 4 处 `% T82-SUPPORT` 局部校准；它不是 full-manuscript closeout，也不授权 deployment story、real-board 成功或 `statcalib` promotion。
+- `T83`：`paper_fullnote_consistency_crosswalk.md` 与 `paper_closeout_gate_and_blocker_register.md` 只回答“全文是否已对齐 strongest supported truth”以及“后续是否只能进入 bounded final polish”；它不自动等于 submission-ready pack，也不把 blocked surface 升级成可写事实。

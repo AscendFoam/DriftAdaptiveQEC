@@ -755,7 +755,12 @@ The reported metric is \(\texttt{final\_ler\_mean}\), where lower values
 indicate fewer logical failures under the fixed software-HIL protocol.
 
 % T80-REOPEN: Numerical Results
-\section{Numerical Results and Benchmark Plan}
+% T83-CLOSEOUT: Numerical Results
+\section{Numerical Results}
+
+This section records the accepted mainline result layer, its bounded support
+layers, and the follow-up routes that remain explicitly outside the accepted
+result layer.
 
 \subsection{Four-scenario affine benchmark}
 
@@ -954,41 +959,50 @@ imperfectly in the slow loop.
 
 \subsection{Runtime, quantization, and fixed-point degradation}
 
+% T82-SUPPORT: Runtime, quantization, and fixed-point degradation
 % T77-SOURCE: T74-TBL-05; T74-SUP-03; review=T48
-The deployment story depends on more than logical performance.  The current
-paper-facing evidence therefore keeps runtime material at the boundary layer:
-selected preserved \texttt{.tflite} artifacts have been executed in an isolated
-current-host environment, but the broader fixed-point/runtime measurements
-listed here remain future benchmark items.  Saturation and overflow rates,
-commit latency, stale-parameter penalty, fallback frequency, and per-update
-slow-loop cost are still needed to connect the mathematical affine rule to a
-fully measured real-time decoder contract.
+The deployment story depends on more than logical performance, so the current
+manuscript keeps runtime material at a supporting-boundary layer rather than
+flattening it into a single deployment claim.  The strongest accepted
+runtime-facing fact is narrow but real: selected preserved float and int8
+\texttt{.tflite} artifacts have been loaded and executed in one isolated
+current-host environment, and that fact is strong enough to justify an
+appendix-level runtime boundary table for those preserved artifacts.  What
+remains unclosed is the broader fixed-point/runtime degradation question
+itself.  Saturation and overflow rates under deployment-style quantization,
+commit latency, stale-parameter penalty, fallback frequency, host-side update
+cost, and source-vs-embedded drift under a default environment still require
+separate bounded tasks rather than prose promotion.
 
 \subsection{Embedded runtime and board-level validation}
 
+% T82-SUPPORT: Embedded runtime and board-level validation
 % T77-SOURCE: T75-FIG-A01; T76-PREVIEW-A01; T74-FIG-03; T74-TBL-05; T74-TBL-06; T74-SUP-03; T74-SUP-04; review=T72,T76
-Embedded inference and board-level validation remain separate from software-HIL
-simulation.  Current host evidence stops at two conservative facts: selected
-preserved \texttt{.tflite} artifacts run in an isolated current-host
-environment, and the read-only real-board gate/regeneration/provenance lane
-still ends in
-\texttt{NO\_GO\_REAL\_BOARD\_HOST\_OR\_DEVICE\_PATH\_UNAVAILABLE}.
-Exported-model equivalence, embedded runtime latency, host-to-device update
-cost, hardware resource use, and closed-loop timing therefore remain future
-evidence rather than completed results.
+Embedded runtime and board-level validation must remain split across two weaker
+layers.  The first is an appendix-level current-host runtime fact: selected
+preserved \texttt{.tflite} artifacts run in one isolated environment, which is
+enough to discuss true runtime existence for those artifacts but not enough to
+claim default-environment compatibility, software-HIL closure, or deployment
+closure.  The second is a supplement-only hardware gate fact: the checked-in
+read-only real-board gate/regeneration/provenance lane still ends in
+\nolinkurl{NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE}.  Because the
+repository currently lacks a usable \texttt{Linux + FPGA} host, openable device
+paths, and measured board timing/resource rows, hardware-dependent execution
+surfaces remain blocked rather than merely postponed prose.
 
-\subsection{Parallel sidecar extension waves}
+% T83-CLOSEOUT: Bounded follow-up lanes outside the accepted result layer
+\subsection{Bounded follow-up lanes outside the accepted result layer}
 
 The main benchmark and paper-material lane should remain separated from
-parallel extension experiments.  A useful way to organize the next experiments
-is to treat them as sidecar waves: each wave may run in parallel with the
-mainline, but its outputs remain sidecar evidence until a later promotion gate
-decides whether a result deserves a new mainline task.  In particular, these
-experiments must not rewrite the frozen four-scenario anchor, promote the
-statistical-calibration lane into a mature comparator, or turn software-HIL
-evidence into \texttt{.tflite} or board-level validation.
+parallel extension experiments.  This subsection is therefore a boundary
+register rather than an additional Results pillar: it records follow-up lanes
+that may be explored in parallel with the mainline, but whose outputs remain
+sidecar evidence until a later promotion gate decides otherwise.  In
+particular, these routes must not rewrite the frozen four-scenario anchor,
+promote the statistical-calibration lane into a mature comparator, or turn
+software-HIL evidence into \texttt{.tflite} or board-level validation.
 
-Wave A contains the immediately bounded sidecar lanes.  These lanes preserve
+Wave A lists the immediately bounded sidecar lanes.  These lanes preserve
 the fast-loop contract and mostly operate through cached replay, toy
 simulation, or deterministic contract tests.
 
@@ -1020,7 +1034,7 @@ writes. \\
 \end{tabular}
 \end{center}
 
-Wave B is the second-wave candidate pool.  These routes are useful for making
+Wave B lists the second-wave candidate pool.  These routes are useful for making
 the paper experimentally complete, but they should start as S0 design or toy
 probes rather than as long formal benchmarks.
 
@@ -1062,6 +1076,7 @@ contract is already near the useful complexity boundary.
 
 % T80-REOPEN: Discussion
 % T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
+% T83-CLOSEOUT: Discussion
 \section{Discussion}
 
 The results and architecture suggest a useful reframing of the project.  The
@@ -1111,20 +1126,28 @@ cadence without putting neural inference or a graph decoder on the per-shot
 critical path.
 
 % T77-SOURCE: T75-FIG-A01; T76-PREVIEW-A01; T74-TBL-05; T74-TBL-06; T74-SUP-03; T74-SUP-04; review=T72,T76
-The boundary of the current evidence remains important.  Software-HIL results
-support the adaptive-affine calibration story under controlled drift
-scenarios.  Supporting materials show that the canonical training chain is
-intact and that one clean CPU-only bounded rerun has been completed, but they
-do not establish full reproducibility portability.  Isolated current-host
-\texttt{.tflite} execution supports a narrow exported-model runtime claim, and
-read-only real-board gate, regeneration, and provenance checks preserve a
-current-host \texttt{NO\_GO} hardware boundary.  These layers do not yet
-establish board-level latency, FPGA resource use, or closed-loop feedback
-timing.  Those measurements are the natural next evidence layer if the work is
-to move from ``hardware-compatible'' to hardware-demonstrated.
+% T82-SUPPORT: Discussion deployment/support boundary
+The boundary of the current evidence remains important, and it is now clearer
+to organize it as a layered manuscript route rather than a single deployment
+story.  Main-text claims can stop at the frozen-set ranking and its
+conservative mechanism/extension-lane interpretation.  Appendix-level
+supporting materials can carry the canonical training/material provenance table
+and the isolated current-host true \texttt{.tflite} runtime table for selected
+preserved artifacts.  Supplement-only materials can carry the FR8
+\texttt{statcalib} closure pack with its no-promotion / no-unique-threshold
+gate and the read-only real-board gate/regeneration/provenance pack.  What
+remains blocked is any hardware-dependent surface that needs a future
+\texttt{Linux + FPGA} host, openable device paths, board-level latency/resource
+measurements, or deployment-grade portability.  Keeping these layers separate
+is not a weakness of the write-up; it is the mechanism that prevents supporting
+evidence from being misread as new ranking evidence or completed hardware
+validation.  At this point, the remaining manuscript-side work is mainly
+reader-facing condensation and route cleanup, not promotion of a new evidence
+layer.
 
 % T80-REOPEN: Conclusion
 % T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
+% T83-CLOSEOUT: Conclusion
 \section{Conclusion}
 
 This work frames drift-adaptive GKP correction as a dual-loop affine
@@ -1151,19 +1174,22 @@ calibration of an affine GKP fast path is a promising structure for
 drift-adaptive decoding.
 
 % T77-SOURCE: T75-FIG-A01; T76-PREVIEW-A01; T74-TBL-05; T74-TBL-06; T74-SUP-03; T74-SUP-04; review=T72,T76
-The remaining technical gap is to connect this bounded software-HIL evidence to
-broader drift families, stronger oracle and wrapped-Gaussian baselines,
-measured runtime constraints, and eventually real hardware timing.  Current
-supporting and deployment-facing materials remain layered: training/material
-evidence reaches a canonical chain plus one clean CPU-only bounded rerun,
-isolated true runtime is verified only on the current host, and the real-board
-lane remains gate-only and \texttt{NO\_GO}.  Future work must therefore test
-whether the affine calibration contract remains useful when the benchmark moves
-from a controlled drift suite toward a deployment-grade decoder evaluation.  If
-successful, the resulting contribution would be a practical bridge between
-analog GKP decoding theory and low-latency FPGA-QEC systems: a physical-layer
-calibration module that preserves analog information, tracks drift, and still
-exposes a compact deterministic fast path.
+% T82-SUPPORT: Conclusion remaining technical gap
+The remaining technical gap is therefore layered, not singular.  On the
+manuscript side, the current repository can honestly support a
+simulation/material-first route: frozen-set main results in the main text,
+bounded ablation plus training/material and isolated true runtime tables in the
+appendix, and FR8 extension-lane plus real-board gate/provenance materials in
+the supplement.  The remaining writing work is to translate these internal
+layers into a final reader-facing polish pass without upgrading any claim.  On
+the execution side, broader drift families, stronger oracle or
+wrapped-Gaussian baselines, default-environment \texttt{.tflite} portability,
+and any board-level timing claim still require separate bounded tasks.  In
+particular, because there is no current \texttt{Linux + FPGA} host, the
+hardware-dependent surface remains blocked rather than silently delayed.  The
+honest closeout route at this stage is therefore bounded final polish around an
+explicitly layered evidence stack, not deployment closure or hardware-ready
+finalization.
 
 \begin{thebibliography}{99}
 

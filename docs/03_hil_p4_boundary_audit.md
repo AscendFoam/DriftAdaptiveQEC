@@ -6,6 +6,14 @@
 
 本文件用于固定恢复期对 `P3 software HIL`、`P3 real-board HIL`、`P4 benchmark`、以及 `.tflite` 部署链路的统一表述口径。
 
+## 2026-06-14 Captain Update (T83/T84 boundary supersession)
+
+- `T83` 已由 Captain 以 `PASS` 收口。
+- 它只在 docs-only 主线中完成了全文一致性 sweep、section-to-evidence crosswalk 与 closeout gate；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 gate/smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- `T83` 的 strongest supported truth 只是：当前主线 note 已形成一份可审计的一致性版本，并且后续若继续推进，也只能进入 bounded final polish，而不是 full-manuscript closeout、deployment closure 或 real-board story upgrade。
+- 因此当前唯一任务切换为 `T84: 主线 note 有界 final polish 与读者化装配包`。
+- `T84` 仍是 docs-only 主线任务；它只允许做读者化术语翻译、结构压缩、appendix/supplement 装配与 compile-aware refresh，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实，也不得把当前 note 写成 submission-ready pack 或 deployment closure。
+
 它要回答的不是“这些代码能不能继续做”，而是：
 
 1. 哪些链路已经是可描述的软件实现
@@ -122,6 +130,14 @@
 - 可以说：`Research Reality Recovery Mode is a governance freeze and audit mode, not an evidence upgrade.`
 - 不可以说：`real-board HIL complete`
 - 不可以说：`tflite deployed`，除非已明确是 `tflite_service` 而不是 `tflite_stub_service`
+
+## 2026-06-13 Captain Update (T82/T83 boundary supersession)
+
+- `T82` 已由 Captain 以 `PASS` 收口。
+- 它只在 docs-only 主线中完成了 supporting-boundary 的四层收口；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 gate/smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- `T82` 的 strongest supported truth 只是：当前 note 和 paper-material 已能更清楚地区分 `main text / appendix / supplement / blocked`，而不是 full-manuscript closeout、deployment closure 或 real-board story upgrade。
+- 因此当前唯一任务切换为 `T83: 主线 note 全文一致性收口与 manuscript closeout gate`。
+- `T83` 仍是 docs-only 主线任务；它只允许做全文一致性审计、受控 wording 收口和 closeout gate，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实，也不得把当前 note 写成 full-manuscript closeout 或 deployment closure。
 
 ## 2026-06-12 Captain Update (T81/T82 boundary supersession)
 
