@@ -18,8 +18,8 @@
 | R12 | `.tflite` 真 runtime 已在当前机器的 isolated `tensorflow==2.21.0` 环境下对 preserved float / int8 artifact 重新确认，但默认主环境、跨环境可移植性与部署闭环仍未验证 | 中 | `docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md`、`docs/review/T48_review.md` 与 `artifacts/t48_true_tflite_runtime_gate/t48_true_tflite_runtime_gate.json` 已确认 `.venvs/t48_tf221` 可真实 load / eval / validate preserved `static_theta_v2` float / int8 `.tflite`，最终 gate verdict = `GO_TRUE_TFLITE_RUNTIME_FLOAT_AND_INT8`；但默认 `LPNEnv + tensorflow==2.13.0` 仍不兼容 preserved `.tflite`，`tflite_runtime` 仍未安装 | 保持“isolated current-host true runtime 已确认”与“default env / cross-host / deployment 未闭环”两层口径分离；不要把 `T48` 写成默认环境恢复、HIL closure、real-board validation 或 deployment closure；当前主线优先补 paper-facing simulation/material tasks，后续若继续补 `.tflite`，也应走 bounded portability / bootstrap lane，而不是混入 real-board retelling |
 | R13 | 真板 HIL 入口存在配置骨架，但距离可执行真板 smoke 仍缺设备、权限、寄存器一致性与日志证据 | 高 | `board_backend.py` 仍是 placeholder；设备缺失时会触发 `board_device_missing:...`；`schedule_commit(...)` 仍返回 `target_bank=None`、`version=None`、`ack_delay_us=None`；`step(...)` 返回空事件；`docs/evidence_packs/deployment_boundary/real_board_hil_readiness.md` 已固定前置条件与验收标准 | 后续若推进真板路径，必须单开执行任务，逐层补齐设备存在、寄存器活性、DMA 读出与 commit/ack round-trip 证据，在此之前禁止写成 real-board HIL 已完成 |
 | R14 | T22 已把寄存器来源、DMA 审计清单和量化阈值草案具体化，但真实宿主、bitstream 与 DMA contract 仍未验证 | 中高 | `docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md` 已直接映射 `axi_map.py` / `dma_client.py`，`docs/review/T22_review.md` 确认 AXI/DMA 审计清单与源码吻合；但 N2 指出 preflight 输出格式仍需改进，N3 指出 `byte_count = 4096` 依赖 `32 x 32 float32` 假设 | 后续若进入真板执行任务，必须先选择宿主模型，再用实际 bitstream / RTL / DMA contract 确认地址表、histogram shape、element dtype、timeout 与 commit/ack 阈值 |
-| R15 | Phase 2 当前虽然已补齐 FR8 closure pack、training/material pack、current-host isolated true `.tflite` runtime，以及 `T82/T83` 的 supporting-material 与全文一致性收口，但证据仍分层停留在 bounded software/runtime/readiness 层；若直接升级到 default-env runtime、physical cleanup、real-board validation 或 submission-ready pack，仍容易再次打破边界诚实 | 高 | `docs/review/T21_phase2_milestone_review.md` verdict = `Conditional`；`T19` 未执行 cleanup；`T20/T22` 仍不是真板验证；`T48` 只确认 isolated current-host true `.tflite` runtime，不等于 default env 或 deployment closure；`T50` 只是一份 bounded training/material pack；`T79` 给出了 `GO_FOR_BOUNDED_PROSE_REOPEN`；`T80` 已完成 ready sections 的有界 prose reopen；`T81` 已完成 contribution/methods calibration；`T82` 已完成 supporting-boundary 四层收口；`T83` 已给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY` | 保持 `Phase 2: Controlled Development` / `Go`，继续只开 bounded 下一任务；在当前暂无 `Linux + FPGA` 硬件宿主的前提下，主线当前进入 `T84` 这类有界 final polish / reader-facing assembly，而不是直接进入 default-env runtime、真板执行或 submission-ready pack |
-| R16 | 把“最终要发论文”误压缩成最近任务直接写论文 claim，容易跳过 formal benchmark、机制诊断和部署边界证据 | 高 | `T24` 已完成 frozen-set formal software revalidation，`T25` 已确认其 result boundary，`T27/T28` 已缩窄并修复 teacher diagnostics 输出语义，`T29` 已修复人读 report header，`T26` 已完成 statcalib feasibility gate，`T48` 已确认 isolated true `.tflite` runtime；但 `T48` 仍不是 default-env / deployment closure，`T20/T22` 仍不是 hardware validation，`R10` 仍不是完整机制证据，`T79` 只给出了 bounded prose reopen gate，`T80` 只完成了 ready sections 重写，`T81` 只完成了 contribution/methods calibration，`T82` 只完成了 supporting-boundary 收口，`T83` 只完成了全文一致性 gate | Paper claim/evidence ledger 与后续 prose/supporting-material calibration 仍应滞后于证据材料本身；当前主线虽已从 `T79` 进入 `T80`、`T81`、`T82`、`T83`，再进入 `T84`，但 `T84` 也只能做有界 final polish 与 reader-facing assembly，不能借此直接升级论文 claim、部署故事或硬件叙事 |
+| R15 | Phase 2 当前虽然已补齐 FR8 closure pack、training/material pack、current-host isolated true `.tflite` runtime，以及 `T82/T83/T84/T85/T86` 的 supporting-material、全文一致性、final polish、submission-preflight 与 submission-pack assembly 收口，但证据仍分层停留在 bounded software/runtime/readiness 层；若直接升级到 default-env runtime、physical cleanup、real-board validation 或 submission-ready 完成态，仍容易再次打破边界诚实 | 高 | `docs/review/T21_phase2_milestone_review.md` verdict = `Conditional`；`T19` 未执行 cleanup；`T20/T22` 仍不是真板验证；`T48` 只确认 isolated current-host true `.tflite` runtime，不等于 default env 或 deployment closure；`T50` 只是一份 bounded training/material pack；`T79` 给出了 `GO_FOR_BOUNDED_PROSE_REOPEN`；`T80` 已完成 ready sections 的有界 prose reopen；`T81` 已完成 contribution/methods calibration；`T82` 已完成 supporting-boundary 四层收口；`T83` 已给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`；`T84` 已完成 bounded reader-facing final polish / assembly；`T85` 已完成 submission-readiness preflight 并关闭 `R36`；`T86` 已完成 bounded submission-pack assembly / exclusion route 收口 | 保持 `Phase 2: Controlled Development` / `Go`，继续只开 bounded 下一任务；在当前暂无 `Linux + FPGA` 硬件宿主的前提下，主线当前进入 `T87` 这类有界作者终检 / pre-submission QA 收口，而不是直接进入 default-env runtime、真板执行或 submission-ready 完成态 |
+| R16 | 把“最终要发论文”误压缩成最近任务直接写论文 claim，容易跳过 formal benchmark、机制诊断和部署边界证据 | 高 | `T24` 已完成 frozen-set formal software revalidation，`T25` 已确认其 result boundary，`T27/T28` 已缩窄并修复 teacher diagnostics 输出语义，`T29` 已修复人读 report header，`T26` 已完成 statcalib feasibility gate，`T48` 已确认 isolated true `.tflite` runtime；但 `T48` 仍不是 default-env / deployment closure，`T20/T22` 仍不是 hardware validation，`R10` 仍不是完整机制证据，`T79` 只给出了 bounded prose reopen gate，`T80` 只完成了 ready sections 重写，`T81` 只完成了 contribution/methods calibration，`T82` 只完成了 supporting-boundary 收口，`T83` 只完成了全文一致性 gate，`T84` 只完成了有界 reader-facing final polish / assembly，`T85` 只完成了 submission-readiness preflight，`T86` 只完成了 bounded submission-pack assembly / exclusion route 收口 | Paper claim/evidence ledger 与后续 prose/supporting-material calibration 仍应滞后于证据材料本身；当前主线虽已从 `T79` 进入 `T80`、`T81`、`T82`、`T83`，再进入 `T84`、`T85`、`T86`、`T87`，但 `T87` 也只能做有界作者终检 / pre-submission QA 收口，不能借此直接升级论文 claim、部署故事或硬件叙事 |
 | R17 | 深度研究报告建议的 formal benchmark 范围可能显著扩大，若无分级采纳会把 benchmark expansion lane 变成不可执行的大任务 | 中高 | `docs/reference/进一步的深度研究结果.md` 建议加入强 classical / soft-information / calibration / learned baseline 类别、更多 drift families、训练/评测 seed 分离、置信区间、latency/commit/rollback 指标和 statcalib baseline；`docs/protocols/benchmark/paper_benchmark_expansion_protocol.md` 已把它们分类为 adopted / deferred / rejected | T45 已完成 protocol lock，但未来若要真正扩 benchmark，仍必须单开 bounded execution task，并保持 frozen-set anchor 不变 |
 | R18 | `T24` 已按 frozen-set scope 完成，但若后续把 `statcalib`、soft-information、额外 drift families、CI-driven stopping、`.tflite` runtime 或真板边界并入同一任务，仍会重新打破 scope | 中高 | `docs/protocols/benchmark/P4_benchmark_formal_protocol.md` 已把 `T24` gate 锁为 `GO_FOR_BOUNDED_FORMAL_SOFTWARE_REVALIDATION` + `NO_GO_FOR_SCOPE_EXPANSION_INSIDE_T24`；T24 实际完成 matrix 为 `4 scenarios x 5 modes x 2 repeats`；T25 已接受该边界；T26 gate verdict = `CONDITIONAL_GO` for separate comparator lane only；T45 已明确 future expansion lane 仍需独立任务；T54 已完成 trace-only lane；T55 已完成 one-variant intervention lane；`docs/review/T56_review.md` 已确认后续机制解释必须留在边界内 | `T47` 只允许作为 docs-only 的 hedge-conditioned paper-material lane；不得把第二个 intervention、benchmark expansion、额外 comparator、`.tflite` runtime 或真板边界混成同一任务 |
 | R19 | T24 formal execution 已固定 exact CLI 和报告了 metric availability | 已收口 | T24 已使用 repeat-chunked CLI shape，所有请求统计字段已存在于 `comparison.csv`；`correction_saturation_rate_mean` 全零、teacher diagnostics 全零已报告为缺口 | R19 已由 T24 Worker 收口；后续若 runner 更新指标路径，需重新验证 |
@@ -36,9 +36,41 @@
 | R30 | `T49` 的 current-host 真板 gate role-aware / regeneration 路径缺口 | 已收口 | `docs/review/T49_review.md`; `docs/review/T71_review.md`; `docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md`; `docs/evidence_packs/deployment_boundary/t71_real_board_gate_regeneration_pack.md`; `cnn_fpga/hwio/build_t49_real_board_smoke_gate.py`; `cnn_fpga/hwio/collect_t71_real_board_gate_artifacts.py`; `tests/test_t49_real_board_smoke_execution_gate.py`; `tests/test_t71_real_board_gate_regeneration_pack.py`。`T71` 已补上 role-aware `mmio + dma` 判定、checked-in read-only collector、以及 `T49` replay / current-host regeneration 一致性回归，且两条 fresh verification verdict 都仍为 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE` | `R30` 已由 `T71` 关闭；后续不要再把它当成未解决的 role-aware/gate-regeneration 缺口 |
 | R31 | `T71` transfer-pack provenance 缺少 execution-derived / override-safe hardening | 已收口 | `docs/review/T71_review.md`; `docs/review/T72_review.md`; `docs/evidence_packs/deployment_boundary/t71_real_board_gate_regeneration_pack.md`; `docs/evidence_packs/deployment_boundary/t72_real_board_transfer_pack_provenance_hardening.md`; `tests/test_t72_real_board_transfer_pack_provenance_hardening.py`。`T72` 已去掉未实际探测却写成事实的固定文案，已把默认/override provenance 改为更贴近执行上下文的动态导出，并补齐了 `--config` / `--mmio-path` / `--dma-path` focused regression，同时保持 current-host `NO_GO` verdict 不漂移 | `R31` 已由 `T72` 收口；后续不要再把它当作“默认 config / override provenance 仍写死”的未解决问题 |
 | R32 | `T72` 虽已收紧 transfer-pack provenance，但 future-host 的“最小 config”场景下，path provenance 仍不能区分“YAML 明确提供字段”和“`BoardFPGAConfig.from_config()` 用代码默认值补出的字段”；对应 focused regression 也尚未补上 | 中 | `docs/review/T72_review.md`; `docs/evidence_packs/deployment_boundary/t72_real_board_transfer_pack_provenance_hardening.md`; `cnn_fpga/hwio/collect_t71_real_board_gate_artifacts.py`（`candidate_mmio_path_record`, `candidate_dma_path_record`）；`tests/test_t72_real_board_transfer_pack_provenance_hardening.py`。当前问题不改变 default-config、CLI override 或 current-host `NO_GO` verdict，但会让 future-host 最小 config 迁移场景下的 provenance 标签比代码真正能证明的更强 | 保持 `T37` blocked 且 downstream retelling 不得把 `T72` 写成 fully provenance-clean future-host 标准入口；若后续要继续补 deployment-boundary 细节，应新增一个很小的 follow-up，把 path provenance 区分为 `config_field_present` / `code_default` 等标签，并补一条对应 focused regression |
-| R33 | 当前暂无 `Linux + FPGA` 硬件宿主，使得真板 execution 路线既缺资源条件，也容易打断主线 paper-material 节奏 | 高 | 2026-06-11 用户已明确当前暂无 `Linux + FPGA` 硬件；`T49/T71/T72` 的 strongest supported truth 仍只是 current-host `NO_GO`、read-only regeneration 与 provenance hardening，尚未出现任何真板 execution evidence | 保持 `T37` 为 `blocked + lowest-priority backlog`；main 分支当前优先推进 `T84` 这类有界 final polish / reader-facing assembly 与后续 paper-material 任务；仅在硬件条件变化后再重开真板 execution 准备 |
+| R33 | 当前暂无 `Linux + FPGA` 硬件宿主，使得真板 execution 路线既缺资源条件，也容易打断主线 paper-material 节奏 | 高 | 2026-06-11 用户已明确当前暂无 `Linux + FPGA` 硬件；`T49/T71/T72` 的 strongest supported truth 仍只是 current-host `NO_GO`、read-only regeneration 与 provenance hardening，尚未出现任何真板 execution evidence | 保持 `T37` 为 `blocked + lowest-priority backlog`；main 分支当前优先推进 `T87` 这类有界作者终检 / pre-submission QA 收口与后续 paper-material 任务；仅在硬件条件变化后再重开真板 execution 准备 |
 | R34 | `T76` 预览包的 preview-source schema 与逐图 stable-ID 绑定不够干净，曾影响 note-draft 结果层同步的复用可靠性 | 已收口 | `docs/review/T76_review.md`; `docs/review/T77_review.md`; `docs/figure_assets/T76_rendered_figure_qa_pack/render_manifest.json`; `docs/figure_assets/T76_rendered_figure_qa_pack/preview_source_map.csv`; `docs/paper_materials/paper_rendered_figure_qa.md`; `docs/paper_materials/paper_note_results_sync_manifest.md`。`T77` 已拆清 `source_preview_ids` / `upstream_t74_ids` 语义，逐图 QA 结论已显式列出 `T75-FIG-*`、`T76-PREVIEW-*` 与全部上游 `T74-*` stable IDs，并同步到 note 结果层 | `R34` 已由 `T77` 收口；后续复用 `T76` 预览包时应继续保持 preview/self IDs 与 upstream stable IDs 分列，不要回退到旧 schema |
 | R35 | `T77` 留下的 note 非结果层校准、`statcalib` 视觉层级、LaTeX warning 与 section-scope 机械审计缺口，已由 `T78` 收口 | 已收口 | `docs/review/T77_review.md`; `docs/review/T78_review.md`; `docs/paper_materials/paper_note_alignment_and_layout_closeout.md`; `docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.tex`; `docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.log`。`T78` 已把 strongest supported truth 从“结果层已同步、整份 note 尚未 fully calibrated”推进到“当前 note 的受控校准缺口已收口”；`T79` 随后又完成了 reopen gate，给出 `GO_FOR_BOUNDED_PROSE_REOPEN` | `R35` 已由 `T78` 收口；后续不再把它当作开放 note 校准风险复述。当前若继续推进，只能通过 `T80/T81` 这类 bounded mainline prose/calibration 任务，而不是重新打开 `R35` |
+| R36 | `T84` 留下的主线 note `Conclusion` residual wording-lag 已由 `T85` 清扫收口 | 已收口 | `docs/review/T84_review.md`; `docs/review/T85_review.md`; `docs/paper_materials/paper_residual_state_lag_sweep.md`; `docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.tex`。`T85` 已核对并清除该残余状态滞后句，同时完成 submission-readiness preflight 与 blocker matrix | `R36` 已由 `T85` 关闭；后续如需继续推进，仅能通过新的 bounded assembly / QA 任务前进，不能再把该问题当作开放风险复述 |
+
+## 2026-06-14 Captain Supersession (T86 closeout)
+
+- The current unique task for all new worker action is `T87: 主线作者终检与 pre-submission QA 收口包`.
+- The authoritative task package is `docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md`.
+- `T86` has been accepted as `PASS`.
+- `T86` non-blocking notes are accepted as operational reminders; no new deferred/rejected warning-derived risk is opened by this closeout.
+- `R36` remains closed by `T85`; `R13/R14/R32/R33` remain open, and `T37` remains blocked.
+- The theory branch remains isolated from this mainline task.
+- If older Q&A carry-forward text below still mentions `T86` or earlier tasks as current, treat it as historical text only.
+
+## 2026-06-14 Captain Supersession (T85 closeout)
+
+- The current unique task for all new worker action is `T86: 主线 bounded submission-pack assembly 与显式 exclusion route 收口`.
+- The authoritative task package is `docs/tasks/Phase2/T86_mainline_bounded_submission_pack_assembly.md`.
+- `T85` has been accepted as `PASS`.
+- `T85` non-blocking notes are accepted as operational reminders; no new deferred/rejected warning-derived risk is opened by this closeout.
+- `R36` is closed by `T85`; `R13/R14/R32/R33` remain open, and `T37` remains blocked.
+- If older Q&A carry-forward text below still mentions `T85` or earlier tasks as current, treat it as historical text only.
+
+## 2026-06-14 Captain Supersession (T84 closeout)
+
+- The current unique task for all new worker action is `T85: 主线 submission-readiness preflight gate 与残余状态滞后清扫`.
+- The authoritative task package is `docs/tasks/Phase2/T85_mainline_submission_readiness_preflight_gate.md`.
+- `T84` has been accepted as `PASS_WITH_WARNINGS`.
+- Warning classification:
+  - `N1` `Conclusion` state-lag wording = `deferred -> R36`
+  - `N2` allowlist-scoped diff / precise staging discipline = `accepted`
+  - `N3` current-host-only compile conclusion = `accepted`
+- `R13/R14/R32/R33/R36` remain open, and `T37` remains blocked.
+- If older Q&A carry-forward text below still mentions `T84` or earlier tasks as current, treat it as historical text only.
 
 ## 2026-06-14 Captain Supersession (T83 closeout)
 
@@ -118,22 +150,22 @@
 
 Authoritative supersession note:
 
-- The current unique task for all new worker action is `T84: 主线 note 有界 final polish 与读者化装配包`.
-- The authoritative task package is `docs/tasks/Phase2/T84_mainline_bounded_final_polish_and_reader_facing_assembly.md`.
-- `T83` has been accepted as `PASS`.
-- `R30` is closed by `T71`; `R31` is closed by `T72`; `R32` remains the narrowed deployment-boundary carry-forward risk; `R34` is closed by `T77`; `R35` is closed by `T78`.
+- The current unique task for all new worker action is `T87: 主线作者终检与 pre-submission QA 收口包`.
+- The authoritative task package is `docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md`.
+- `T86` has been accepted as `PASS`.
+- `R30` is closed by `T71`; `R31` is closed by `T72`; `R32` remains the narrowed deployment-boundary carry-forward risk; `R34` is closed by `T77`; `R35` is closed by `T78`; `R36` is closed by `T85`.
 - 因当前暂无 `Linux + FPGA` 硬件宿主，real-board execution 路线同时受 `R33` 约束，并维持最低优先级 backlog。
 - The authoritative real-board carry-forward artifacts are now `docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md` and `artifacts/t49_real_board_smoke_execution_gate/t49_real_board_smoke_execution_gate.json`.
 - The authoritative checked-in regeneration/provenance carry-forward artifacts now also include `docs/evidence_packs/deployment_boundary/t71_real_board_gate_regeneration_pack.md`, `artifacts/t71_real_board_gate_regeneration_pack/current_host_regenerated_gate.json`, and `docs/evidence_packs/deployment_boundary/t72_real_board_transfer_pack_provenance_hardening.md`.
-- If older Q&A carry-forward text below still mentions `T83` or earlier tasks as current, treat it as historical text only.
+- If older Q&A carry-forward text below still mentions `T86` or earlier tasks as current, treat it as historical text only.
 
 Current T24-T29 status note:
 
 Additional supersession clarification:
 
-- Current authoritative task = `T84: 主线 note 有界 final polish 与读者化装配包`.
-- Current authoritative task package = `docs/tasks/Phase2/T84_mainline_bounded_final_polish_and_reader_facing_assembly.md`.
-- `T83` has been accepted as `PASS`; any older `T83 current task` wording above this clarification should be treated as historical carry-forward text only.
+- Current authoritative task = `T87: 主线作者终检与 pre-submission QA 收口包`.
+- Current authoritative task package = `docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md`.
+- `T86` has been accepted as `PASS`; any older `T86 current task` wording above this clarification should be treated as historical carry-forward text only.
 
 - `T24` Worker 已完成 formal software revalidation execution：`missing_runs = []`，20/20 `coverage = 1.0`，40 repeat-runs。
 - Run dir: `runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743`
@@ -153,7 +185,7 @@ Additional supersession clarification:
 - `T46` Captain 已接受 review 为 `PASS`；其非阻塞评论全部按 `accepted` 处理，没有 `deferred` warning。
 - `T54` Captain 已接受 review 为 `PASS`；其非阻塞评论全部按 `accepted` 处理，没有 `deferred` warning；当前 multi-seed 结论是 broadly repeated with qualifications，`C4` 保持 `partial`。
 - `T55` Captain 已接受 review 为 `PASS`；其非阻塞评论全部按 `accepted` 处理，没有 `deferred` warning；当前 intervention 结论是 mixed 且整体偏 harmful（harms 4/6, helps 2/6），`C4` 仍保持 `partial`。
-- 当前唯一任务：`T84: 主线 note 有界 final polish 与读者化装配包`，任务包 `docs/tasks/Phase2/T84_mainline_bounded_final_polish_and_reader_facing_assembly.md`；它只允许在现有 note / paper-material / claim-evidence / risk 台账边界内做读者化术语翻译、结构压缩、appendix/supplement 装配与 compile-aware refresh，不得扩到 benchmark、HIL、真板成功宣称、submission-ready pack 宣布、theory branch 大范围改写、sidecar promotion 或 `T37` 真板执行。
+- 当前唯一任务：`T87: 主线作者终检与 pre-submission QA 收口包`，任务包 `docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md`；它只允许在现有 note / paper-material / claim-evidence / blocker / exclusion 台账边界内做 author-final QA checklist、pre-submission regression gate、wording red-flag register、manual-finish queue 与最小 QA 导向 note 刷新，不得扩到 benchmark、HIL、真板成功宣称、submission-ready 完成态、theory branch 大范围改写、sidecar promotion 或 `T37` 真板执行。
 - R13 当前仍然有效：真板路径还缺设备存在、权限、寄存器活性、DMA 读出和 commit/ack round-trip 的真实证据。
 - R14 当前仍然有效但已收窄：AXI/DMA 代码侧审计已具体化，真实宿主、bitstream 与 DMA contract 仍未验证。
 - R19 已收口：T24 已固定 CLI shape 并报告 metric availability。
@@ -194,7 +226,7 @@ Additional supersession clarification:
      - `T31` 已完成并由 Captain 接受为 `PASS`。
      - `T74` 已完成并由 Captain 接受为 `PASS`；它已把主线 simulation/material-first 路线整理成 stable-ID 结果表、caption、traceability 资产与 insertion map。
      - `T81` 已完成并由 Captain 接受为 `PASS`；它已把当前 note 中最后 4 个未收口的 contribution/methods sections 压回为一份可审计的 section-level manifest。
-     - 当前唯一任务已切换为 `T84: 主线 note 有界 final polish 与读者化装配包`，任务包已存在：`docs/tasks/Phase2/T84_mainline_bounded_final_polish_and_reader_facing_assembly.md`；它只允许做读者化术语翻译、结构压缩、appendix/supplement 装配与 compile-aware refresh，不直接恢复无界 full-manuscript 扩写，也不触碰 benchmark、`.tflite` portability、real-board execution 或 theory 分支大范围改写。
+     - 当前唯一任务已切换为 `T87: 主线作者终检与 pre-submission QA 收口包`，任务包已存在：`docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md`；它只允许做 author-final QA checklist、pre-submission regression gate、wording red-flag register、manual-finish queue 与最小 QA 导向 note 刷新，不直接恢复无界 full-manuscript 扩写，也不触碰 benchmark、`.tflite` portability、real-board execution 或 theory 分支大范围改写。
      - 在当前暂无 `Linux + FPGA` 硬件宿主前，`T37` 及其他 real-board execution 任务维持最低优先级 backlog。
 10. `T15` 是否应直接运行多场景 P4 smoke？
    - 当前答案：已执行完成。

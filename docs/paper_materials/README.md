@@ -36,6 +36,16 @@
 | `paper_manuscript_closeout_readiness_matrix.md` | `T82` manuscript-facing readiness matrix |
 | `paper_fullnote_consistency_crosswalk.md` | `T83` full-note section-to-evidence consistency crosswalk |
 | `paper_closeout_gate_and_blocker_register.md` | `T83` closeout gate and blocker register |
+| `paper_bounded_final_polish_change_map.md` | `T84` reader-facing final polish change map |
+| `paper_reader_facing_term_translation_table.md` | `T84` internal-term to reader-facing phrasing table |
+| `paper_appendix_supplement_reader_assembly_map.md` | `T84` appendix/supplement/blocked reader assembly map |
+| `paper_submission_readiness_preflight_gate.md` | `T85` submission-readiness preflight gate |
+| `paper_submission_blocker_matrix.md` | `T85` submission-facing blocker matrix |
+| `paper_residual_state_lag_sweep.md` | `T85` residual wording-lag sweep |
+| `paper_submission_pack_assembly_manifest.md` | `T86` submission-facing assembly manifest |
+| `paper_submission_surface_route_map.md` | `T86` submission-facing surface route map |
+| `paper_submission_exclusion_register.md` | `T86` explicit exclusion register |
+| `paper_submission_author_handoff.md` | `T86` author handoff and boundary summary |
 
 ## 推荐阅读顺序
 
@@ -63,7 +73,17 @@
 22. `paper_manuscript_closeout_readiness_matrix.md`
 23. `paper_fullnote_consistency_crosswalk.md`
 24. `paper_closeout_gate_and_blocker_register.md`
-25. `paper_claim_risk_table.md`
+25. `paper_bounded_final_polish_change_map.md`
+26. `paper_reader_facing_term_translation_table.md`
+27. `paper_appendix_supplement_reader_assembly_map.md`
+28. `paper_submission_readiness_preflight_gate.md`
+29. `paper_submission_blocker_matrix.md`
+30. `paper_residual_state_lag_sweep.md`
+31. `paper_submission_pack_assembly_manifest.md`
+32. `paper_submission_surface_route_map.md`
+33. `paper_submission_exclusion_register.md`
+34. `paper_submission_author_handoff.md`
+35. `paper_claim_risk_table.md`
 
 ## 核心边界
 
@@ -72,7 +92,7 @@
 - `T64-T70` 只支持 `statcalib` extension lane 与 `no_promotion_keep_extension_lane_only`，不支持 mature comparator retelling。
 - 所有 paper claim 都必须回指 task/review/run/artifact 证据，不能把 draft prose、risk audit 或 theory walkthrough 写成实验完成态。
 
-## T74-T82 写作链路规则
+## T74-T86 写作链路规则
 
 - `T74`：paper-ready simulation material 优先通过 `T74-TBL-*` / `T74-FIG-*` / `T74-SUP-*` stable ID 引用。
 - `T75`：主文 Results prose 与最终成图优先通过 `T75-FIG-*` 引用；`T75` 只压缩并锁定表述，不提升证据等级。
@@ -84,3 +104,6 @@
 - `T81`：`paper_methods_and_contribution_calibration_manifest.md` 只记录 `Summary of Contributions` 与三章 methods 的 bounded calibration；若某段文字没有被 `% T81-CALIBRATION` 与该 manifest 同时覆盖，就不应回述成“本轮已完成的 contribution/methods 校准”。
 - `T82`：`paper_supporting_material_closeout_pack.md` 与 `paper_manuscript_closeout_readiness_matrix.md` 只记录 supporting-boundary 的 `main text / appendix / supplement / blocked` 收口，以及 note 中 4 处 `% T82-SUPPORT` 局部校准；它不是 full-manuscript closeout，也不授权 deployment story、real-board 成功或 `statcalib` promotion。
 - `T83`：`paper_fullnote_consistency_crosswalk.md` 与 `paper_closeout_gate_and_blocker_register.md` 只回答“全文是否已对齐 strongest supported truth”以及“后续是否只能进入 bounded final polish”；它不自动等于 submission-ready pack，也不把 blocked surface 升级成可写事实。
+- `T84`：`paper_bounded_final_polish_change_map.md`、`paper_reader_facing_term_translation_table.md`、`paper_appendix_supplement_reader_assembly_map.md` 与 note 中的 `% T84-POLISH: ...` 注释，只服务 reader-facing translation / condensation / assembly；它可以让主线 note 更像读者稿，但不自动等于 submission-ready pack、claim promotion 或 blocked surface 解锁。
+- `T85`：`paper_submission_readiness_preflight_gate.md`、`paper_submission_blocker_matrix.md`、`paper_residual_state_lag_sweep.md` 与 note 中的 `% T85-PREFLIGHT: ...` 注释，只服务 submission-readiness preflight、残余状态滞后清扫与 blocker/exclusion 明确化；它最多只回答“是否允许进入下一张 bounded submission-pack assembly 任务”，不等于 submission-ready pack 已完成。
+- `T86`：`paper_submission_pack_assembly_manifest.md`、`paper_submission_surface_route_map.md`、`paper_submission_exclusion_register.md`、`paper_submission_author_handoff.md` 与 note 中的 `% T86-ASSEMBLY: ...` 注释，只服务 submission-facing package 的 inclusion / exclusion 装配纪律；它不自动等于 submission-ready pack 已完成，也不授权 claim promotion、deployment story 升级或 hardware-ready retelling。

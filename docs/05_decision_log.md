@@ -1,5 +1,99 @@
 # Decision Log
 
+## D-2026-06-14-04
+
+- 日期：`2026-06-14`
+- 决策：接受 `T86` 为 `PASS`，并将当前唯一任务切换为 `T87: 主线作者终检与 pre-submission QA 收口包`
+
+### 背景
+
+`T86` 的目标不是宣布 submission-ready pack 已完成，而是在 `T85` 已完成 submission-readiness preflight 之后，把当前主线 note / paper-material / blocker / exclusion 信息装配成一套 submission-facing 但仍显式有边界的 package。review 已确认这轮 docs-only 交付在允许范围内真实完成，同时也明确提醒：`T86` 的 assembly 台账只能证明“当前主线作者已经拿到一份可审计的装配/排除答案”，不能回述成 blocked surface 已解除、投稿闭环已完成或 theory 分支已并回主线。
+
+### 依据
+
+1. `docs/review/T86_review.md` verdict = `PASS`，blocking issues = none。
+2. review 明确确认本轮真实新增了 `paper_submission_pack_assembly_manifest.md`、`paper_submission_surface_route_map.md`、`paper_submission_exclusion_register.md` 与 `paper_submission_author_handoff.md` 四份 submission-facing 台账，并完成了 mainline note 的最小 `% T86-ASSEMBLY` 装配刷新。
+3. review 明确确认 `T86` 保持了既有 guardrail：`T24` 仍是 frozen mock-backed software-HIL anchor，`FR6/FR7` 仍是 descriptive support，`FR8/statcalib` 仍是 extension lane / no-promotion，training/material 仍是 canonical chain intact + one clean CPU-only bounded rerun，`.tflite` 仍是 isolated current-host runtime，real-board 仍是 read-only gate / regeneration / provenance with current-host `NO_GO`。
+4. review 的 non-blocking notes 仅涉及 dirty-worktree 下的 allowlist-scoped diff 纪律、assembly 台账不等于 submission-ready 完成态、compile 结论仅限当前宿主，以及 Windows Git 噪声；它们都不构成新的 risk opening。
+
+### 结论
+
+1. 接受 `T86` 为 `PASS` 并标记完成。
+2. 本轮不进入 `PASS_WITH_WARNINGS` 分类流；review 中的 non-blocking notes 统一按 operational reminder 接受处理。
+3. 本轮不新增 `deferred/rejected` warning，也不新增风险项。
+4. 当前唯一任务切换为 `T87`，只允许做 mainline-only、docs-only、QA-only 的作者终检 / 投稿前回归 gate。
+5. `T87` 必须继续保留 `T24` frozen anchor、`FR6/FR7` descriptive-only、`FR8` no-promotion、training/material bounded rerun、`.tflite` isolated current-host only、real-board current-host `NO_GO`、hardware-dependent blocked surface，以及“不得混入独立 theory 分支内容”的 guardrail。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/02_experiment_plan.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T86 -> PASS` 与 `Current Unique Task -> T87`。
+2. 新增 `docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md` 作为下一张 worker-facing 任务包。
+3. main 分支在完成上述治理同步后可以继续提交，但提交前应精确暂存 `T86` 产物、Captain closeout 文档与 `T87` 任务包；不要混入理论分支相关改动、无关编译噪声或未审阅 diff，更不要使用 blanket `git add -A`。
+
+## D-2026-06-14-03
+
+- 日期：`2026-06-14`
+- 决策：接受 `T85` 为 `PASS`，关闭 `R36`，并将当前唯一任务切换为 `T86: 主线 bounded submission-pack assembly 与显式 exclusion route 收口`
+
+### 背景
+
+`T85` 的目标不是直接宣布 submission-ready pack，而是在 `T84` 已完成 bounded reader-facing final polish / assembly 之后，收掉唯一残余状态滞后句，并给出一份 honest 的 submission-readiness preflight / blocker matrix。review 已确认这轮 docs-only 交付在允许范围内真实完成，同时也明确提醒：`GO_FOR_BOUNDED_SUBMISSION_PACK_ASSEMBLY` 只能理解为“允许开启下一张 docs-only、mainline-only、assembly-only 的 bounded task”，不能回述成 submission-ready pack 已完成。
+
+### 依据
+
+1. `docs/review/T85_review.md` verdict = `PASS`，blocking issues = none。
+2. review 明确确认本轮真实新增了 `paper_submission_readiness_preflight_gate.md`、`paper_submission_blocker_matrix.md` 与 `paper_residual_state_lag_sweep.md` 三份台账，并完成了 note 中 residual wording-lag 清扫。
+3. review 明确确认 `T85` 保持了既有 guardrail：`T24` 仍是 frozen mock-backed software-HIL anchor，`FR6/FR7` 仍是 descriptive support，`FR8/statcalib` 仍是 extension lane / no-promotion，`.tflite` 仍是 isolated current-host runtime，real-board 仍是 read-only gate / provenance。
+4. review 的 non-blocking notes 仅涉及 dirty-worktree 下的 allowlist-scoped diff 纪律、`GO_FOR_BOUNDED_SUBMISSION_PACK_ASSEMBLY` 的窄语义，以及 compile 结论仅限当前宿主；它们都不构成新的 risk opening。
+
+### 结论
+
+1. 接受 `T85` 为 `PASS` 并标记完成。
+2. 本轮不进入 `PASS_WITH_WARNINGS` 分类流；review 中的 non-blocking notes 统一按 operational reminder 接受处理。
+3. `R36` 已由 `T85` 收口关闭。
+4. 当前唯一任务切换为 `T86`，只允许做 mainline-only、docs-only、assembly-only 的 submission-pack 装配与显式 exclusion route 收口。
+5. `T86` 必须继续保留 `T24` frozen anchor、`FR6/FR7` descriptive-only、`FR8` no-promotion、training/material bounded rerun、`.tflite` isolated current-host only、real-board current-host `NO_GO`、hardware-dependent blocked surface，以及“不得混入独立 theory 分支内容”的 guardrail。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/02_experiment_plan.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T85 -> PASS`、`R36` 关闭与 `Current Unique Task -> T86`。
+2. 新增 `docs/tasks/Phase2/T86_mainline_bounded_submission_pack_assembly.md` 作为下一张 worker-facing 任务包。
+3. main 分支在完成上述治理同步后可以继续提交，但提交前应精确暂存 `T84/T85` 产物、Captain closeout 文档与 `T86` 任务包，不要把同工作区内的无关或未审阅 diff 混入，更不要使用 blanket `git add -A`。
+
+## D-2026-06-14-02
+
+- 日期：`2026-06-14`
+- 决策：接受 `T84` 为 `PASS_WITH_WARNINGS`，打开 `R36`，并将当前唯一任务切换为 `T85: 主线 submission-readiness preflight gate 与残余状态滞后清扫`
+
+### 背景
+
+`T84` 的目标不是恢复 full-manuscript reopen，也不是直接宣布 submission-ready pack，而是在 `T83` 已完成全文一致性 closeout gate 之后，对当前主线 note 做一轮有界的 reader-facing final polish、术语翻译与 appendix/supplement 装配。review 已确认这轮 docs-only 交付在允许范围内真实完成，但也明确指出 `Conclusion` 仍残留一处状态滞后句，会把本轮已经完成的 reader-facing polish 写成“后续仍待执行”的工作，因此 closeout 结论应为 `PASS_WITH_WARNINGS` 而不是 `PASS`。
+
+### 依据
+
+1. `docs/review/T84_review.md` verdict = `PASS_WITH_WARNINGS`，blocking issues = none。
+2. review 明确确认本轮 diff 保持在 `T84` 允许的 note/material/README/summary 与编译产物范围内，且 `% T80-REOPEN`、`% T81-CALIBRATION`、`% T82-SUPPORT`、`% T83-CLOSEOUT`、`% T84-POLISH` 标记保留。
+3. review 明确确认 `paper_bounded_final_polish_change_map.md`、`paper_reader_facing_term_translation_table.md` 与 `paper_appendix_supplement_reader_assembly_map.md` 已真实建立本轮 reader-facing final polish / assembly 台账。
+4. review 明确指出 `docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.tex` 的 `Conclusion` 仍保留句子 `The remaining writing work is to translate these internal layers into a final reader-facing polish pass...`，与 `T84` 已完成的 strongest supported truth 存在轻微状态滞后。
+5. review 同时提醒：当前 worktree 仍含 pre-existing docs dirty state，且 compile 结论只证明当前宿主上的 `TeX Live 2024 + latexmk` 路径可刷新 note；因此提交与后续 retelling 仍必须坚持 allowlist-scoped / precise-staging 纪律，不得把 compile 结果写成通用环境闭环。
+
+### 结论
+
+1. 接受 `T84` 为 `PASS_WITH_WARNINGS` 并标记完成。
+2. warning 分类如下：
+   - `N1` `Conclusion` 残留状态滞后句 = `deferred -> R36`
+   - `N2` allowlist-scoped diff / precise staging discipline = `accepted`
+   - `N3` compile 结论仅限当前宿主 `TeX Live 2024 + latexmk` = `accepted`
+3. `T84` 只关闭了“当前 note 是否已经完成有界 reader-facing final polish / assembly”这一层问题，不关闭任何 submission-ready、deployment、`.tflite`、real-board 或 `statcalib` promotion 风险。
+4. 当前唯一任务切换为 `T85`，只允许做 submission-readiness preflight gate、blocker matrix、残余 wording-lag sweep、README 登记与 compile-aware refresh。
+5. `T85` 必须继续保留 `T24` frozen anchor、`FR6/FR7` descriptive-only、`FR8` no-promotion、training/material bounded rerun、`.tflite` isolated current-host only、real-board current-host `NO_GO` 与 hardware-dependent blocked surface 等 guardrail。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/02_experiment_plan.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T84 -> PASS_WITH_WARNINGS`、`R36` 与 `Current Unique Task -> T85`。
+2. 新增 `docs/tasks/Phase2/T85_mainline_submission_readiness_preflight_gate.md` 作为下一张 worker-facing 任务包。
+3. main 分支在完成上述治理同步后可以继续提交，但提交前应精确暂存 `T84` 产物、Captain closeout 文档与 `T85` 任务包，不要把同工作区内的无关或未审阅 diff 混入，更不要使用 blanket `git add -A`。
+
 ## D-2026-06-14-01
 
 - 日期：`2026-06-14`

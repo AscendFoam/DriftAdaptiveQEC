@@ -1,3 +1,37 @@
+## 2026-06-14 Captain Final Supersession (T86 closeout)
+
+- Current unique task: `T87: 主线作者终检与 pre-submission QA 收口包`
+- Task package: `docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md`
+- `T86` has been judged `PASS`.
+- `T86` completed one honest docs-only submission-facing assembly / exclusion closeout and opened no deferred/rejected warning-derived risk.
+- The four T86 non-blocking notes are accepted as operational reminders only: allowlist-scoped diff discipline, no overclaim from assembly docs, current-host-only compile scope, and host-noise separation for CRLF / git-ignore warnings.
+- `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T87` is next because the remaining mainline gap is no longer assembly itself, but one stricter author-final QA / pre-submission regression gate over the assembled note/material package.
+- `T87` must stay docs-only, mainline-only, QA-only, and theory-branch-isolated; it must not widen into benchmark/HIL reruns, `.tflite` portability, real-board execution, sidecar promotion, venue-template adaptation, or submission-ready completion claims.
+
+## 2026-06-14 Captain Final Supersession (T85 closeout)
+
+- Current unique task: `T86: 主线 bounded submission-pack assembly 与显式 exclusion route 收口`
+- Task package: `docs/tasks/Phase2/T86_mainline_bounded_submission_pack_assembly.md`
+- `T85` has been judged `PASS`.
+- `T85` completed one honest docs-only submission-readiness preflight / blocker-gate step and closed `R36`; its non-blocking notes are accepted as operational reminders rather than new risks.
+- `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T86` is next because preflight already completed; the remaining mainline gap is one bounded assembly of existing mainline note/material surfaces with explicit inclusion/exclusion routing.
+- `T86` must stay docs-only, mainline-only, assembly-only, and theory-branch-isolated; it must not widen into benchmark/HIL reruns, `.tflite` portability, real-board execution, sidecar promotion, or submission-ready completion claims.
+
+## 2026-06-14 Captain Final Supersession (T84 closeout)
+
+- Current unique task: `T85: 主线 submission-readiness preflight gate 与残余状态滞后清扫`
+- Task package: `docs/tasks/Phase2/T85_mainline_submission_readiness_preflight_gate.md`
+- `T84` has been judged `PASS_WITH_WARNINGS`.
+- Warning classification:
+  - `N1` `Conclusion` 残留一处把本轮已完成 reader-facing polish 写成未来工作的状态滞后句 = `deferred -> R36`
+  - `N2` allowlist-scoped diff / precise staging discipline = `accepted`
+  - `N3` compile 结论仅限当前宿主 `TeX Live 2024 + latexmk` = `accepted`
+- `R13/R14/R32/R33/R36` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T85` is the next bounded mainline task because the repo no longer缺 reader-facing assembly，而是缺一个不扩范围的 submission-readiness preflight gate 与残余状态滞后清扫。
+- `T85` must stay docs-only, mainline-only, and must not widen into benchmark/HIL reruns, `.tflite` portability, real-board execution, theory-branch large-scale rewriting, sidecar promotion, or direct submission-pack completion.
+
 ## 2026-06-14 Captain Final Supersession (T83 closeout)
 
 - Current unique task: `T84: 主线 note 有界 final polish 与读者化装配包`
@@ -149,20 +183,21 @@
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T84: 主线 note 有界 final polish 与读者化装配包`
-- 任务包：`docs/tasks/Phase2/T84_mainline_bounded_final_polish_and_reader_facing_assembly.md`
-- 当前主线优先级：先补论文所需的仿真结果、图表、caption 与 supporting materials；real-board execution 因当前暂无 `Linux + FPGA` 硬件宿主而维持最低优先级 backlog
+- 当前唯一任务：`T87: 主线作者终检与 pre-submission QA 收口包`
+- 任务包：`docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md`
+- 当前主线优先级：优先对 `T86` 已装配完成的 mainline note / paper-material package 做作者终检、red-flag 扫描、manual-finish queue 固化与 pre-submission regression gate，而不是提前写成 submission-ready 完成态；real-board execution 因当前暂无 `Linux + FPGA` 硬件宿主而继续维持最低优先级 backlog
 
 Captain continuity note:
 
-- The authoritative current task for all new worker action is `T84: 主线 note 有界 final polish 与读者化装配包`.
-- Authoritative task package: `docs/tasks/Phase2/T84_mainline_bounded_final_polish_and_reader_facing_assembly.md`.
-- `T83` is complete and accepted as `PASS`.
-- `R13/R14/R32/R33` remain the existing carry-forward risks.
-- `T84` is the single recommended next task after `T83`.
+- The authoritative current task for all new worker action is `T87: 主线作者终检与 pre-submission QA 收口包`.
+- Authoritative task package: `docs/tasks/Phase2/T87_mainline_author_final_qa_and_presubmission_gate.md`.
+- `T86` is complete and accepted as `PASS`.
+- `T86` review 中的四条 non-blocking notes 已全部按 accepted operational reminder 处理。
+- `R36` remains closed by `T85`; `R13/R14/R32/R33` remain the existing carry-forward risks.
+- `T87` is the single recommended next task after `T86`.
 - `T37` / real-board execution remains `blocked + lowest-priority backlog`; it is not the next mainline step while hardware host conditions remain unavailable.
-- If any older line below still mentions `T83` or earlier tasks as current, treat it as historical carry-forward text only.
-- `T84` is a bounded reader-facing final-polish / assembly task only. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, or submission-pack completion.
+- If any older line below still mentions `T85` or earlier tasks as current, treat it as historical carry-forward text only.
+- `T87` is a bounded author-final QA task only. It is not permission to widen into benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch execution, sidecar-promotion scope, venue-template adaptation, or submission-ready completion.
 
 ## 2026-06-05 Captain Update (T67 closeout)
 

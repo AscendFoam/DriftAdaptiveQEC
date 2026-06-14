@@ -11,6 +11,33 @@
 
 本文件不宣称仓库已经完成物理清理。
 
+## 2026-06-14 Captain Update (T86 closeout)
+
+- `T86` 已按 `PASS` 收口。
+- 就 repo-noise 与验证边界而言，`T86` 只在 `docs/paper_notes/*`、`docs/paper_materials/*` 与 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/` 或 benchmark output。
+- `T86` 当前产出的 assembly manifest、surface route map、exclusion register、author handoff、README 登记与 note 编译产物都属于 docs-only deliverable，不得被混写成新的 benchmark、runtime、board 或 submission-ready 完成事实来源。
+- 当前唯一任务切换为 `T87: 主线作者终检与 pre-submission QA 收口包`；它允许新增或修改的正式产物仍应限于 `docs/paper_notes/*`、`docs/paper_materials/*` 以及 task-scoped review / explanation / summary 文件。
+- `T87` 不得借 author-final QA 之名顺手创建新 run、重算 benchmark、更新历史 artifact、改写独立 theory 分支内容、改写 stable-ID 结果资产、写入 venue-template / cover-letter / metadata 材料，或升级部署/真板证据等级；若本地编译 note，只允许刷新当前 note 既有编译产物。
+- `T86` review 已明确提醒当前 worktree 仍需坚持 allowlist-scoped diff 与精确暂存，因此后续提交 `T84/T85/T86/T87` 时仍不得使用 blanket `git add -A`。
+
+## 2026-06-14 Captain Update (T85 closeout)
+
+- `T85` 已按 `PASS` 收口。
+- 就 repo-noise 与验证边界而言，`T85` 只在 `docs/paper_notes/*`、`docs/paper_materials/*` 与 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/` 或 benchmark output。
+- `T85` 当前产出的 preflight gate、blocker matrix、residual sweep、README 登记与 note 编译产物都属于 docs-only deliverable，不得被混写成新的 benchmark、runtime、board 或 submission-ready 完成事实来源。
+- 当前唯一任务切换为 `T86: 主线 bounded submission-pack assembly 与显式 exclusion route 收口`；它允许新增或修改的正式产物仍应限于 `docs/paper_notes/*`、`docs/paper_materials/*` 以及 task-scoped review / explanation / summary 文件。
+- `T86` 不得借 assembly 之名顺手创建新 run、重算 benchmark、更新历史 artifact、改写独立 theory 分支内容、改写 stable-ID 结果资产或升级部署/真板证据等级；若本地编译 note，只允许刷新当前 note 既有编译产物。
+- `T85` review 已明确提醒当前 worktree 仍需坚持 allowlist-scoped diff 与精确暂存，因此后续提交 `T84/T85/T86` 时仍不得使用 blanket `git add -A`。
+
+## 2026-06-14 Captain Update (T84 closeout)
+
+- `T84` 已按 `PASS_WITH_WARNINGS` 收口。
+- 就 repo-noise 与验证边界而言，`T84` 只在 `docs/paper_notes/*`、`docs/paper_materials/*` 与 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/` 或 benchmark output。
+- `T84` 产出的 change map、reader-facing translation table、appendix/supplement assembly map、README 登记与 note 编译产物都属于 docs-only deliverable，不得被混写成新的 benchmark、runtime、board 或 submission-ready 完成事实来源。
+- 当前唯一任务切换为 `T85: 主线 submission-readiness preflight gate 与残余状态滞后清扫`；它允许新增或修改的正式产物仍应限于 `docs/paper_notes/*`、`docs/paper_materials/*` 以及 task-scoped review / explanation / summary 文件。
+- `T85` 不得借 preflight 之名顺手创建新 run、重算 benchmark、更新历史 artifact、改写 theory 分支大范围内容、改写 stable-ID 结果资产或升级部署/真板证据等级；若本地编译 note，只允许刷新当前 note 既有编译产物。
+- `T84` review 已明确提醒当前 worktree 含有 pre-existing docs dirty state，因此后续提交 `T84/T85` 时仍应使用 allowlist-scoped diff 与精确暂存，而不是 blanket `add -A`。
+
 ## 2026-06-14 Captain Update (T83 closeout)
 
 - `T83` 已按 `PASS` 收口。

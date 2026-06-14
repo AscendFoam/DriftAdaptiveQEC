@@ -140,6 +140,7 @@ performance results.
 
 % T81-CALIBRATION: Summary of Contributions
 % T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
+% T84-POLISH: Summary of Contributions
 \section{Summary of Contributions}
 
 The work can be organized around six bounded contributions.
@@ -172,11 +173,12 @@ per-shot critical path.
 \paragraph{3. A locked mainline evidence layer.}
 % T77-SOURCE: T74-TBL-01; T74-TBL-02; T74-TBL-03; T74-TBL-07; review=T70,T76
 The strongest accepted performance evidence remains the locked
-four-scenario mock-backed software-HIL protocol anchored by `T24'.  Inside
-that frozen set, the teacher-anchored hybrid residual branch is the winner in
-all four scenarios and UKF is the runner-up throughout.  This is the mainline
-ranking result; it is not an expanded benchmark claim, not a
-deployment-closure result, and not a real-board result.
+four-scenario mock-backed software-HIL benchmark that serves as the frozen
+reference comparison for the paper.  Within that fixed set, the
+teacher-anchored hybrid residual branch is the winner in all four scenarios
+and UKF is the runner-up throughout.  This is the mainline ranking result; it
+is not an expanded benchmark claim, not a deployment-closure result, and not
+a real-board result.
 
 \paragraph{4. Conservative supporting interpretation layers.}
 Feature/teacher ablations and six-seed mechanism materials refine how the
@@ -188,21 +190,21 @@ descriptive mechanism support while rejecting any simple causal-closure or
 teacher-necessity retelling.
 
 \paragraph{5. A separately labeled statistical-calibration extension lane.}
-The same affine runtime contract can host a simple non-neural
-histogram-driven calibration rule.  Under the bounded FR8 lane, that
-supplement-side `statcalib' path can be strong relative to the frozen anchors,
-which supports the calibration-contract story at the project level.  However,
-the accepted closure remains extension-lane only, explicitly no-promotion, and
-without a unique clean threshold.
+The same affine runtime contract can also host a simple non-neural
+histogram-driven calibration rule.  In a separately labeled supplement-side
+calibration-extension lane, that statistical-calibration path can be strong
+relative to the frozen anchors, which supports the calibration-contract story
+at the project level.  However, the accepted closure remains extension-lane
+only, explicitly no-promotion, and without a unique clean threshold.
 
 \paragraph{6. A layered runtime and deployment-boundary evidence chain.}
 The repository now has one code-backed training/material regeneration pack,
 one clean CPU-only bounded rerun, one isolated current-host true
 \texttt{.tflite} runtime confirmation for selected preserved artifacts, and one
-read-only real-board gate/regeneration/provenance pack with current-host
-`NO\_GO'.  These are useful supporting boundaries for the manuscript, but they
-remain layered evidence rather than coequal benchmark results or completed
-deployment claims.
+read-only real-board gate/regeneration/provenance pack on a host that still
+cannot enter board execution.  These are useful supporting boundaries for the
+manuscript, but they remain layered evidence rather than coequal benchmark
+results or completed deployment claims.
 
 \subsection{Metric-level advantages}
 
@@ -711,6 +713,7 @@ expected role is to keep the GKP layer calibrated under drift so that
 downstream decoders receive better-conditioned residual information.
 
 % T80-REOPEN: Experimental Setup
+% T84-POLISH: Experimental Setup
 \section{Experimental Setup}
 
 \subsection{Software-HIL protocol}
@@ -719,14 +722,14 @@ downstream decoders receive better-conditioned residual information.
 The mainline numerical experiments use a locked mock-backed software-HIL
 protocol that preserves the fast loop, slow loop, parameter-bank, and
 stage-and-commit interfaces while executing the underlying experiment in
-software.  The authoritative frozen benchmark is the `T24` protocol: four
-drift scenarios, five mainline modes, paired seeds, and two repeats under one
-fixed comparison contract.  This protocol is sufficient for comparing adaptive
+software.  The authoritative frozen reference benchmark contains four drift
+scenarios, five mainline modes, paired seeds, and two repeats under one fixed
+comparison contract.  This protocol is sufficient for comparing adaptive
 calibration laws under matched drift trajectories and shared random structure,
 but it does not measure board-level latency, hardware resource use, or
-deployment closure.  Later ablation, multi-seed, and extension-lane materials
-are therefore interpreted relative to this anchor rather than as a rewritten
-benchmark.
+deployment closure.  Later ablation, multi-seed, and calibration-extension
+materials are therefore interpreted relative to this anchor rather than as a
+rewritten benchmark.
 
 \subsection{Scenarios and modes}
 
@@ -756,20 +759,24 @@ indicate fewer logical failures under the fixed software-HIL protocol.
 
 % T80-REOPEN: Numerical Results
 % T83-CLOSEOUT: Numerical Results
+% T84-POLISH: Numerical Results
+% T86-ASSEMBLY: Numerical Results
 \section{Numerical Results}
 
-This section records the accepted mainline result layer, its bounded support
-layers, and the follow-up routes that remain explicitly outside the accepted
-result layer.
+This section separates the locked benchmark result from supporting
+interpretation layers and from follow-up routes that remain explicitly outside
+the accepted result layer.  In a submission-facing assembly, only the locked
+benchmark layer and its conservative interpretation belong to the main text;
+appendix, supplement, and excluded surfaces remain routed separately.
 
 \subsection{Four-scenario affine benchmark}
 
 % T77-SOURCE: T74-TBL-01; T75-FIG-M01; T76-PREVIEW-M01; review=T76
 Table~\ref{tab:five-mode-benchmark} records the locked frozen benchmark that
 also underlies the paper-facing main-text visual summary.  Under the locked
-`T24` protocol, the hybrid residual branch is the winner in all four frozen
-scenarios, with UKF as the runner-up throughout.  This remains the
-authoritative mainline result layer of the current note.  It supports a
+frozen reference protocol, the hybrid residual branch is the winner in all
+four frozen scenarios, with UKF as the runner-up throughout.  This remains
+the authoritative mainline result layer of the current note.  It supports a
 bounded mock-backed software-HIL ranking only, and it should not be retold as
 an expanded benchmark, a \texttt{.tflite} ranking, or a board-level ranking.
 
@@ -833,13 +840,13 @@ than as a coequal Results pillar.
 % T77-SOURCE: T74-TBL-07; T74-SUP-01; review=T70
 A separately labeled extension lane adds statistical calibration variants under
 the same affine runtime contract.  Table~\ref{tab:statcalib-extension} records
-the bounded comparison snapshot that motivated this lane: within that task-local
-matrix, statistical calibration variants outperform UKF and the learned hybrid
-branch.  However, the accepted closure deliberately does not promote this lane
-into the mainline comparator set.  The locked five-mode frozen benchmark
-remains the authoritative mainline result, and the statistical-calibration lane
-is retained as supplement-side evidence for the broader adaptive-affine
-contract.
+the bounded comparison snapshot that motivated this lane: within that bounded
+comparison matrix, statistical calibration variants outperform UKF and the
+learned hybrid branch.  However, the accepted closure deliberately does not
+promote this lane into the mainline comparator set.  The locked five-mode
+frozen benchmark remains the authoritative mainline result, and the
+statistical-calibration lane is retained as supplement-side evidence for the
+broader adaptive-affine contract.
 
 \begin{table}[ht]
 \centering
@@ -991,16 +998,18 @@ paths, and measured board timing/resource rows, hardware-dependent execution
 surfaces remain blocked rather than merely postponed prose.
 
 % T83-CLOSEOUT: Bounded follow-up lanes outside the accepted result layer
-\subsection{Bounded follow-up lanes outside the accepted result layer}
+% T84-POLISH: Follow-up routes that remain outside the accepted result layer
+\subsection{Follow-up routes that remain outside the accepted result layer}
 
 The main benchmark and paper-material lane should remain separated from
-parallel extension experiments.  This subsection is therefore a boundary
-register rather than an additional Results pillar: it records follow-up lanes
-that may be explored in parallel with the mainline, but whose outputs remain
-sidecar evidence until a later promotion gate decides otherwise.  In
-particular, these routes must not rewrite the frozen four-scenario anchor,
-promote the statistical-calibration lane into a mature comparator, or turn
-software-HIL evidence into \texttt{.tflite} or board-level validation.
+parallel extension experiments.  This subsection is therefore a reader-facing
+boundary register rather than an additional Results pillar: it records
+follow-up routes that may be explored in parallel with the mainline, but whose
+outputs remain sidecar evidence until a later promotion gate decides
+otherwise.  In particular, these routes must not rewrite the frozen
+four-scenario anchor, promote the statistical-calibration lane into a mature
+comparator, or turn software-HIL evidence into \texttt{.tflite} or board-level
+validation.
 
 Wave A lists the immediately bounded sidecar lanes.  These lanes preserve
 the fast-loop contract and mostly operate through cached replay, toy
@@ -1077,6 +1086,9 @@ contract is already near the useful complexity boundary.
 % T80-REOPEN: Discussion
 % T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
 % T83-CLOSEOUT: Discussion
+% T84-POLISH: Discussion
+% T85-PREFLIGHT: Discussion
+% T86-ASSEMBLY: Discussion
 \section{Discussion}
 
 The results and architecture suggest a useful reframing of the project.  The
@@ -1105,13 +1117,13 @@ level, the strongest accepted result is still the locked four-scenario
 software-HIL ranking: the teacher-anchored hybrid branch beats the filtering
 baselines across all frozen scenarios.  At the model-comparison level, the
 current evidence does not require claiming that the CNN is always the best
-estimator.  A bounded statistical-calibration extension lane is instead useful
-because it shows that the same runtime contract can host a strong non-neural
-alternative; however, the accepted closure still keeps that lane supplement-side
-and no-promotion because the default and high-threshold settings remain
-persistently tied.  The learned branch therefore remains valuable as a
-replaceable slow-loop module rather than as a uniquely validated final
-comparator.
+estimator.  A separately labeled calibration-extension supplement is instead
+useful because it shows that the same runtime contract can host a strong
+non-neural alternative; however, the accepted closure still keeps that lane
+supplement-side and no-promotion because the default and high-threshold
+settings remain persistently tied.  The learned branch therefore remains
+valuable as a replaceable slow-loop module rather than as a uniquely validated
+final comparator.
 
 The expected long-term advantage is therefore modularity under real-time
 constraints.  If a future device requires a stronger statistical estimator, a
@@ -1133,21 +1145,27 @@ story.  Main-text claims can stop at the frozen-set ranking and its
 conservative mechanism/extension-lane interpretation.  Appendix-level
 supporting materials can carry the canonical training/material provenance table
 and the isolated current-host true \texttt{.tflite} runtime table for selected
-preserved artifacts.  Supplement-only materials can carry the FR8
-\texttt{statcalib} closure pack with its no-promotion / no-unique-threshold
+preserved artifacts.  Supplement-only materials can carry the
+calibration-extension supplement with its no-promotion / no-unique-threshold
 gate and the read-only real-board gate/regeneration/provenance pack.  What
 remains blocked is any hardware-dependent surface that needs a future
 \texttt{Linux + FPGA} host, openable device paths, board-level latency/resource
 measurements, or deployment-grade portability.  Keeping these layers separate
-is not a weakness of the write-up; it is the mechanism that prevents supporting
-evidence from being misread as new ranking evidence or completed hardware
-validation.  At this point, the remaining manuscript-side work is mainly
-reader-facing condensation and route cleanup, not promotion of a new evidence
-layer.
+is not a weakness of the write-up; it is the mechanism that prevents
+supporting evidence from being misread as new ranking evidence or completed
+hardware validation.  At this point, the remaining manuscript-side work is
+bounded submission-facing assembly under these existing layers, not promotion
+of a new evidence layer.  Any such assembly should therefore keep the frozen
+ranking and conservative mechanism reading in the main text, move supporting
+tables to appendix or supplement by explicit route, and leave blocked hardware
+or portability surfaces outside the package claims.
 
 % T80-REOPEN: Conclusion
 % T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
 % T83-CLOSEOUT: Conclusion
+% T84-POLISH: Conclusion
+% T85-PREFLIGHT: Conclusion
+% T86-ASSEMBLY: Conclusion
 \section{Conclusion}
 
 This work frames drift-adaptive GKP correction as a dual-loop affine
@@ -1165,13 +1183,13 @@ teacher-anchored residual branch improves over filtering baselines, while
 bounded ablations and multi-seed mechanism materials show that histogram-delta
 features carry useful information and that teacher-side inputs do not admit a
 simple necessity story.  Second, a separately labeled supplement-side
-statistical-calibration extension lane shows that simple non-neural estimators
-can also be strong under the same runtime contract, but the accepted closure
-remains no-promotion and no unique clean threshold.  Together, these results
-suggest that the strongest scientific story is not that one CNN architecture
-has closed the comparison, but that low-dimensional histogram-driven
-calibration of an affine GKP fast path is a promising structure for
-drift-adaptive decoding.
+calibration-extension lane shows that simple non-neural estimators can also be
+strong under the same runtime contract, but the accepted closure remains
+no-promotion and no unique clean threshold.  Together, these results suggest
+that the strongest scientific story is not that one CNN architecture has
+closed the comparison, but that low-dimensional histogram-driven calibration
+of an affine GKP fast path is a promising structure for drift-adaptive
+decoding.
 
 % T77-SOURCE: T75-FIG-A01; T76-PREVIEW-A01; T74-TBL-05; T74-TBL-06; T74-SUP-03; T74-SUP-04; review=T72,T76
 % T82-SUPPORT: Conclusion remaining technical gap
@@ -1179,17 +1197,21 @@ The remaining technical gap is therefore layered, not singular.  On the
 manuscript side, the current repository can honestly support a
 simulation/material-first route: frozen-set main results in the main text,
 bounded ablation plus training/material and isolated true runtime tables in the
-appendix, and FR8 extension-lane plus real-board gate/provenance materials in
-the supplement.  The remaining writing work is to translate these internal
-layers into a final reader-facing polish pass without upgrading any claim.  On
-the execution side, broader drift families, stronger oracle or
+appendix, and a calibration-extension supplement plus real-board
+gate/provenance materials in the supplement.  The remaining manuscript work is
+to assemble these already translated layers into a bounded submission-facing
+package without upgrading any claim.  On the execution side, broader drift
+families, stronger oracle or
 wrapped-Gaussian baselines, default-environment \texttt{.tflite} portability,
 and any board-level timing claim still require separate bounded tasks.  In
 particular, because there is no current \texttt{Linux + FPGA} host, the
 hardware-dependent surface remains blocked rather than silently delayed.  The
-honest closeout route at this stage is therefore bounded final polish around an
-explicitly layered evidence stack, not deployment closure or hardware-ready
-finalization.
+honest next route at this stage is therefore bounded submission-facing
+assembly around an explicitly layered evidence stack, not deployment closure,
+submission-ready completion, or hardware-ready finalization.  The assembly may
+package main-text results, appendix support, and supplement-only gated
+surfaces together, but it must continue to exclude blocked hardware,
+portability, and promoted-comparator claims.
 
 \begin{thebibliography}{99}
 

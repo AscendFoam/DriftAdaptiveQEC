@@ -16,6 +16,34 @@
 - 当前决策状态：`Go`
 - 当前唯一任务来源：`docs/04_task_board.md`
 
+## 2026-06-14 Captain Update (T86 closeout)
+
+- `T86` 已由 Captain 判定为 `PASS`。
+- `T86` 在不改动源码、测试、`runs/`、`artifacts/` 或治理边界的前提下，真实完成了 submission-facing assembly manifest、surface route map、explicit exclusion register 与 author handoff，并对主线 note 做了最小 route/exclusion refresh。
+- `T86` 没有引入新的 deferred/rejected warning，也没有新增风险项；review 中的 4 条 non-blocking notes 仅作为后续提交与 retelling 的操作提醒。
+- 当前唯一任务切换为 `T87: 主线作者终检与 pre-submission QA 收口包`。
+- `T87` 继续停留在 main 分支 paper-material 主线，只做 mainline-only、docs-only、QA-only 的作者终检、red-flag 扫描、manual-finish queue 与 pre-submission regression gate；不得把这一步写成 submission-ready pack 已完成，也不得混入独立 theory 分支内容。
+
+## 2026-06-14 Captain Update (T85 closeout)
+
+- `T85` 已由 Captain 判定为 `PASS`。
+- `T85` 在不改动源码、测试、`runs/`、`artifacts/` 或治理边界的前提下，真实完成了主线 note 的 residual wording-lag 清扫、submission-readiness preflight、blocker matrix 与残余状态核对。
+- `T85` review 中的非阻塞提示全部按 operational reminder 接受处理，不新增 `deferred/rejected` warning，也不新增风险项。
+- `R36` 已由 `T85` 收口关闭。
+- 当前唯一任务切换为 `T86: 主线 bounded submission-pack assembly 与显式 exclusion route 收口`。
+- `T86` 继续停留在 main 分支 paper-material 主线，只做 mainline-only、docs-only、assembly-only 的装配与排除项收口；不得把这一步写成 submission-ready pack 已完成，也不得混入独立 theory 分支内容。
+
+## 2026-06-14 Captain Update (T84 closeout)
+
+- `T84` 已由 Captain 判定为 `PASS_WITH_WARNINGS`。
+- `T84` 在不改动源码、测试、`runs/`、`artifacts/` 或治理边界的前提下，真实完成了主线 note 的有界 final polish、读者化术语翻译与 appendix/supplement 装配台账刷新。
+- warning 分类：
+  - `N1` `Conclusion` 残留一处把本轮已完成 reader-facing polish 写成“后续仍待执行”的状态滞后句 = `deferred -> R36`
+  - `N2` dirty-worktree 下仍需坚持 allowlist-scoped diff / precise staging = `accepted`
+  - `N3` 当前 note compile 只证明本机 `TeX Live 2024 + latexmk` 路径可刷新 = `accepted`
+- 当前唯一任务切换为 `T85: 主线 submission-readiness preflight gate 与残余状态滞后清扫`。
+- `T85` 继续停留在 main 分支 paper-material 主线，只做 submission-readiness 预检、blocker matrix 与残余状态滞后 wording 清扫，不重开 benchmark、`.tflite`、real-board 或 theory 分支大改。
+
 ## 2026-06-14 Captain Update (T83 closeout)
 
 - `T83` 已由 Captain 判定为 `PASS`。
@@ -381,7 +409,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 
 当前唯一任务由 `docs/04_task_board.md` 定义：
 
-- `T84: 主线 note 有界 final polish 与读者化装配包`
+- `T87: 主线作者终检与 pre-submission QA 收口包`
 
 ## 12. 快照结论
 
@@ -404,7 +432,7 @@ Phase 2 当前解释：默认 Python 仍不作为推荐入口；recovery smoke �
 15. `T46` 已完成并通过 Captain `PASS` 收口；它把 `seed=20260429` 的单 seed 机制诊断收束成了一个明确的多 seed / intervention 计划，但没有升级任何 evidence level。
 16. `T70` 已完成并通过 Captain `PASS` 收口；FR8 当前已有一个 code-backed closure pack，可明确阻止 promotion 和唯一阈值外推，但这不升级为成熟 comparator、`.tflite` 或真板证据。
 17. `T50` 已完成并通过 Captain `PASS` 收口；仓库现在已有一份 code-backed 训练复现与材料再生证据包，可统一引用 canonical 训练材料、主线 preserved references 和一次 clean CPU-only bounded train+eval rerun。
-18. `T80`、`T81`、`T82`、`T83` 均已完成并通过 Captain 收口；当前 note 的 ready sections、contribution、methods、supporting-boundary route 与全文一致性 gate 均已压回现有主线 evidence stack。当前主线已推进到 `T84: 主线 note 有界 final polish 与读者化装配包`，而不是 full-manuscript closeout 或 submission-ready pack。
+18. `T80`、`T81`、`T82`、`T83`、`T84`、`T85`、`T86` 均已完成并通过 Captain 收口；当前 note 的 ready sections、contribution、methods、supporting-boundary route、全文一致性 gate、reader-facing final polish、submission-preflight 与 submission-facing assembly / exclusion route 已压回现有主线 evidence stack。当前主线已推进到 `T87: 主线作者终检与 pre-submission QA 收口包`，而不是 submission-ready 完成态、deployment closure 或 real-board success。
 
 ## 13. T45 后的拟议路线图（非当前任务）
 

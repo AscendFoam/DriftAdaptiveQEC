@@ -78,6 +78,27 @@
 - `T25` 已完成 result-boundary gate review，并确认 T24 只能作为 `mock-backed` software HIL formal software revalidation
 - 后续 P3/P4 文档与复验结果都应沿用同一套 backend / artifact type 表述口径
 
+### 2026-06-14 Captain Update (T86 closeout)
+
+- `T86` 已被 Captain 接受为 `PASS`。
+- 这次 closeout 仍然没有改变 legacy audit 的真实性判断：`T86` 只是 main 分支 docs-only 的 submission-facing assembly / exclusion 收口，不是新的实验、不是新的板级证据，也不是任何 `.tflite` / real-board / mature comparator 事实升级。
+- `T86` review 中的 4 条 non-blocking notes 全部按 accepted operational reminder 处理；它们只约束后续精确暂存、retelling 与 current-host compile 口径，不改变 truth matrix。
+- 当前唯一任务已切换为 `T87: 主线作者终检与 pre-submission QA 收口包`。`T87` 仍是 main 分支 docs-only 的 QA/gate 任务，不触碰 theory 分支的大范围改写，也不改变 legacy truth matrix。
+
+### 2026-06-14 Captain Update (T85 closeout)
+
+- `T85` 已被 Captain 接受为 `PASS`。
+- 这次 closeout 仍然没有改变 legacy audit 的真实性判断：`T85` 只是 main 分支 docs-only 的 residual wording-lag 清扫、submission-readiness preflight 与 blocker matrix 收口，不是新的实验、不是新的板级证据，也不是任何 `.tflite` / real-board / mature comparator 事实升级。
+- `R36` 已由 `T85` 收口关闭；这只是 paper-note 文字状态问题的解决，不改变 truth matrix。
+- 当前唯一任务已切换为 `T86: 主线 bounded submission-pack assembly 与显式 exclusion route 收口`。`T86` 仍是 main 分支 docs-only 的装配/排除项收口任务，不触碰 theory 分支的大范围改写，也不改变 legacy truth matrix。
+
+### 2026-06-14 Captain Update (T84 closeout)
+
+- `T84` 已被 Captain 接受为 `PASS_WITH_WARNINGS`。
+- 这次 closeout 仍然没有改变 legacy audit 的真实性判断：`T84` 只是 main 分支 docs-only 的有界 final polish / reader-facing assembly，不是新的实验、不是新的板级证据，也不是任何 `.tflite` / real-board / mature comparator 事实升级。
+- 新的 carry-forward 风险变为 `R36`，它只约束主线 note `Conclusion` 中残留的一处状态滞后句，不改变 truth matrix。
+- 当前唯一任务已切换为 `T85: 主线 submission-readiness preflight gate 与残余状态滞后清扫`。`T85` 仍是 main 分支 docs-only 的预检与残余措辞清扫任务，不触碰 theory 分支的大范围改写，也不改变 legacy truth matrix。
+
 ### 2026-06-14 Captain Update (T83 closeout)
 
 - `T83` 已被 Captain 接受为 `PASS`。

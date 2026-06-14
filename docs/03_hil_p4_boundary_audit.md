@@ -6,6 +6,30 @@
 
 本文件用于固定恢复期对 `P3 software HIL`、`P3 real-board HIL`、`P4 benchmark`、以及 `.tflite` 部署链路的统一表述口径。
 
+## 2026-06-14 Captain Update (T86/T87 boundary supersession)
+
+- `T86` 已由 Captain 以 `PASS` 收口。
+- 它只在 docs-only 主线中完成了 submission-facing assembly manifest、surface route、explicit exclusion register、author handoff 与最小 note refresh；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 gate/smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- `T86` 的 strongest supported truth 只是：当前 mainline note/material 已有一套可审计的 submission-facing assembly / exclusion 答案，而不是 submission-ready pack 已完成、blocked surface 已解锁或任何 deployment/board story 升级。
+- 因此当前唯一任务切换为 `T87: 主线作者终检与 pre-submission QA 收口包`。
+- `T87` 仍是 docs-only 主线任务；它只允许做作者终检、red-flag 扫描、manual-finish queue、pre-submission regression gate 与必要的 bounded note refresh，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实，也不得把当前主线写成 submission-ready completed 或与独立 theory 分支混写。
+
+## 2026-06-14 Captain Update (T85/T86 boundary supersession)
+
+- `T85` 已由 Captain 以 `PASS` 收口。
+- 它只在 docs-only 主线中完成了 residual wording-lag 清扫、submission-readiness preflight、blocker matrix 与 compile-aware note refresh；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 gate/smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- `T85` 关闭了 `R36`，但这只是 paper-note 的状态滞后问题，不是新的运行时、板级或 benchmark 边界变化。
+- 因此当前唯一任务切换为 `T86: 主线 bounded submission-pack assembly 与显式 exclusion route 收口`。
+- `T86` 仍是 docs-only 主线任务；它只允许做现有 mainline note/material 的 assembly manifest、surface route、exclusion register、author handoff 与必要的 bounded note refresh，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实，也不得把当前主线写成 submission-ready pack 已完成或与独立 theory 分支混写。
+
+## 2026-06-14 Captain Update (T84/T85 boundary supersession)
+
+- `T84` 已由 Captain 以 `PASS_WITH_WARNINGS` 收口。
+- 它只在 docs-only 主线中完成了有界 final polish、reader-facing terminology translation 与 appendix/supplement assembly；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 gate/smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- `R36` 只是一条 note wording / state-lag 风险，不是新的运行时、板级或 benchmark 边界问题。
+- 因此当前唯一任务切换为 `T85: 主线 submission-readiness preflight gate 与残余状态滞后清扫`。
+- `T85` 仍是 docs-only 主线任务；它只允许做 submission-readiness 预检、blocker matrix、残余 wording-lag 清扫与 compile-aware refresh，不得改写 HIL / `.tflite` / real-board / benchmark 边界事实，也不得把当前 note 写成 submission-ready pack、deployment closure 或 real-board-ready story。
+
 ## 2026-06-14 Captain Update (T83/T84 boundary supersession)
 
 - `T83` 已由 Captain 以 `PASS` 收口。
