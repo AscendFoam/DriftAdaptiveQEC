@@ -1,14 +1,12 @@
-"""
-Logical Error Tracking Module
+"""逻辑错误追踪模块（Logical Error Tracking）。
 
-Tracks logical errors over multiple QEC rounds.
-GKP logical errors occur when:
-- Accumulated q displacement exceeds ±√(2π)/2 → Logical X error
-- Accumulated p displacement exceeds ±√(2π)/2 → Logical Z error
+本模块用于把"每轮残差"转成"逻辑错误率"统计结果，并支持两种误差累积仿真：
+- 简化模型（legacy）：每轮独立、不继承残差；
+- 完整闭环模型（full_qec）：残差跨轮继承，配合真实测量与线性解码。
 
-中文说明：
-- 本模块用于把“每轮残差”转成“逻辑错误率”统计结果。
-- 支持两种误差累积仿真：简化模型（legacy）与完整闭环模型（full_qec）。
+GKP 逻辑错误判定规则：
+- 累积 q 方向位移越过 ±√(2π)/2 → 逻辑 X 错误；
+- 累积 p 方向位移越过 ±√(2π)/2 → 逻辑 Z 错误。
 """
 
 import numpy as np
@@ -20,7 +18,14 @@ from .constants import LATTICE_CONST
 
 @dataclass
 class LogicalErrorEvent:
-    """Record of a logical error event"""
+    """单次逻辑错误事件记录（数据类）。
+
+    字段:
+        timestep: 错误发生的轮次序号。
+        error_type: 错误类型 'X' / 'Z' / 'Y'。
+        accumulated_q: 错误发生时刻的 q 方向累积位移。
+        accumulated_p: 错误发生时刻的 p 方向累积位移。
+    """
     timestep: int
     error_type: str  # 'X', 'Z', or 'Y'
     accumulated_q: float
@@ -28,23 +33,36 @@ class LogicalErrorEvent:
 
 
 class LogicalErrorTracker:
-    """
-    Tracks logical errors in GKP error correction
+    """GKP 纠错中的逻辑错误追踪器。
 
-    GKP codes have logical Pauli operators:
-    - X_L: Displacement by √(2π) in q
-    - Z_L: Displacement by √(2π) in p
+    GKP 码的逻辑 Pauli 算符：
+    - X_L：q 方向位移 √(2π)；
+    - Z_L：p 方向位移 √(2π)。
 
-    A logical error occurs when the accumulated uncorrected
-    displacement crosses the decision boundary at ±√(2π)/2.
+    当累积的未校正位移越过判定边界 ±√(2π)/2 时，即记为一次逻辑错误。
     """
 
     def __init__(self):
+        """初始化追踪器。
+
+        输入:
+            无。
+
+        输出:
+            无返回值；记录 lattice 并调用 reset 初始化统计状态。
+        """
         self.lattice = LATTICE_CONST
         self.reset()
 
     def reset(self):
-        """Reset tracking state"""
+        """重置追踪状态。
+
+        输入:
+            无。
+
+        输出:
+            无返回值；把累积位移、错误计数、轮次计数、错误历史全部清零/清空。
+        """
         self.accumulated_q = 0.0
         self.accumulated_p = 0.0
         self.logical_x_errors = 0
@@ -57,31 +75,30 @@ class LogicalErrorTracker:
                error_p: float,
                correction_q: float,
                correction_p: float) -> Tuple[bool, bool]:
+        """更新累积位移并判定本轮是否发生逻辑错误。
+
+        功能:
+            每个 QEC 轮次：
+              1. 测量综合征（误差模晶格的含噪估计）；
+              2. 依据综合征施加校正；
+              3. 残差 = 真实误差 - 校正，逐轮累积。
+            若决策错误（误差实际更靠近另一个晶格点），会额外累积 ±λ/2 位移，
+            当累积位移越过 ±λ/2 边界即判定对应方向（q→X、p→Z）的逻辑错误，
+            并把累积值 wrap 回 [-λ/2, λ/2] 以避免数值无限增长。
+
+        输入:
+            error_q: q 方向真实误差（校正前）。
+            error_p: p 方向真实误差（校正前）。
+            correction_q: 施加的 q 方向校正量。
+            correction_p: 施加的 p 方向校正量。
+
+        输出:
+            (x_error, z_error)：本轮是否分别发生 X / Z 逻辑错误。
         """
-        Update accumulated displacement and check for logical errors
-
-        In each QEC round:
-        1. We measure syndrome (noisy estimate of error mod lattice)
-        2. We apply correction based on syndrome
-        3. Residual = true_error - correction accumulates over rounds
-
-        If we make a wrong decision (error was actually closer to a
-        different lattice point), we accumulate ±λ/2 extra displacement.
-
-        Args:
-            error_q: True q error (before correction)
-            error_p: True p error (before correction)
-            correction_q: Applied q correction
-            correction_p: Applied p correction
-
-        Returns:
-            (x_error, z_error): Whether each type of logical error occurred
-        """
-        # 中文注释：每次 update 都对应一次“真实误差 + 校正后”的逻辑状态推进。
+        # 中文注释：每次 update 都对应一次"真实误差 + 校正后"的逻辑状态推进。
         self.total_rounds += 1
 
-        # The residual is the true error minus the correction
-        # This accumulates if corrections are imperfect
+        # 残差 = 真实误差 - 校正量；校正不完美时残差会逐轮累积
         residual_q = error_q - correction_q
         residual_p = error_p - correction_p
 
@@ -91,7 +108,7 @@ class LogicalErrorTracker:
         x_error = False
         z_error = False
 
-        # Check for logical X error (accumulated q displacement too large)
+        # 检查逻辑 X 错误（q 方向累积位移过大）
         if abs(self.accumulated_q) > self.lattice / 2:
             self.logical_x_errors += 1
             x_error = True
@@ -101,11 +118,11 @@ class LogicalErrorTracker:
                 accumulated_q=self.accumulated_q,
                 accumulated_p=self.accumulated_p
             ))
-            # Wrap accumulated value
+            # wrap 累积值
             self.accumulated_q = np.mod(self.accumulated_q + self.lattice / 2,
                                          self.lattice) - self.lattice / 2
 
-        # Check for logical Z error (accumulated p displacement too large)
+        # 检查逻辑 Z 错误（p 方向累积位移过大）
         if abs(self.accumulated_p) > self.lattice / 2:
             self.logical_z_errors += 1
             z_error = True
@@ -115,50 +132,90 @@ class LogicalErrorTracker:
                 accumulated_q=self.accumulated_q,
                 accumulated_p=self.accumulated_p
             ))
-            # Wrap accumulated value
+            # wrap 累积值
             self.accumulated_p = np.mod(self.accumulated_p + self.lattice / 2,
                                          self.lattice) - self.lattice / 2
 
         return x_error, z_error
 
     def update_from_qec_result(self, qec_result: Dict) -> Tuple[bool, bool]:
-        """
-        Update from QEC round result dictionary
+        """从 QEC 单轮结果字典更新追踪状态。
 
-        Args:
-            qec_result: Output from GKPErrorCorrector.run_qec_round()
+        功能:
+            从 ``GKPErrorCorrector.run_qec_round()`` 的返回字典中取出 error 与
+            correction，拆分为标量后调用 ``update``。
 
-        Returns:
-            (x_error, z_error)
+        输入:
+            qec_result: ``run_qec_round()`` 的返回字典，需含 'error' 与 'correction'。
+
+        输出:
+            (x_error, z_error)。
         """
         error = qec_result['error']
         correction = qec_result['correction']
         return self.update(error[0], error[1], correction[0], correction[1])
 
     def get_total_logical_errors(self) -> int:
-        """Get total number of logical errors"""
+        """返回累计逻辑错误总数（X + Z）。
+
+        输入:
+            无。
+
+        输出:
+            logical_x_errors + logical_z_errors。
+        """
         return self.logical_x_errors + self.logical_z_errors
 
     def get_logical_error_rate(self) -> float:
-        """Get logical error rate per round"""
+        """返回每轮平均逻辑错误率。
+
+        输入:
+            无。
+
+        输出:
+            总逻辑错误数 / 总轮数；总轮数为 0 时返回 0.0。
+        """
         if self.total_rounds == 0:
             return 0.0
         return self.get_total_logical_errors() / self.total_rounds
 
     def get_x_error_rate(self) -> float:
-        """Get X logical error rate"""
+        """返回每轮平均 X 逻辑错误率。
+
+        输入:
+            无。
+
+        输出:
+            logical_x_errors / total_rounds；总轮数为 0 时返回 0.0。
+        """
         if self.total_rounds == 0:
             return 0.0
         return self.logical_x_errors / self.total_rounds
 
     def get_z_error_rate(self) -> float:
-        """Get Z logical error rate"""
+        """返回每轮平均 Z 逻辑错误率。
+
+        输入:
+            无。
+
+        输出:
+            logical_z_errors / total_rounds；总轮数为 0 时返回 0.0。
+        """
         if self.total_rounds == 0:
             return 0.0
         return self.logical_z_errors / self.total_rounds
 
     def get_statistics(self) -> Dict:
-        """Get comprehensive statistics"""
+        """返回综合统计字典。
+
+        输入:
+            无。
+
+        输出:
+            字典，含 total_rounds / logical_x_errors / logical_z_errors /
+            total_logical_errors / x_error_rate / z_error_rate /
+            total_error_rate / accumulated_q / accumulated_p。
+        """
         return {
             'total_rounds': self.total_rounds,
             'logical_x_errors': self.logical_x_errors,
@@ -172,28 +229,46 @@ class LogicalErrorTracker:
         }
 
     def get_error_times(self) -> List[int]:
-        """Get list of timesteps when logical errors occurred"""
+        """返回所有发生逻辑错误的轮次序号列表。
+
+        输入:
+            无。
+
+        输出:
+            错误历史中每个事件的 timestep 组成的列表。
+        """
         return [event.timestep for event in self.error_history]
 
 
 class WindowedErrorTracker:
-    """
-    Tracks logical error rate over sliding windows
+    """滑动窗口逻辑错误率追踪器。
 
-    Useful for detecting when performance degrades due to drift.
+    在 ``LogicalErrorTracker`` 基础上维护一个最近 N 轮的滑动窗口，用于检测
+    因漂移导致的性能退化（错误率突增）。
     """
 
     def __init__(self, window_size: int = 100):
-        """
-        Args:
-            window_size: Size of sliding window for rate calculation
+        """初始化滑动窗口追踪器。
+
+        输入:
+            window_size: 滑动窗口大小（轮数）。
+
+        输出:
+            无返回值；记录 window_size，并内嵌一个 ``LogicalErrorTracker``。
         """
         self.window_size = window_size
         self.tracker = LogicalErrorTracker()
-        self.window_errors: List[int] = []  # Errors in each round (0 or 1)
+        self.window_errors: List[int] = []  # 每轮是否发生错误（0 或 1）
 
     def reset(self):
-        """Reset all tracking"""
+        """重置全部追踪状态。
+
+        输入:
+            无。
+
+        输出:
+            无返回值；重置内嵌 tracker 与窗口错误列表。
+        """
         self.tracker.reset()
         self.window_errors = []
 
@@ -202,59 +277,90 @@ class WindowedErrorTracker:
                syndrome_p: float,
                correction_q: float,
                correction_p: float) -> float:
-        """
-        Update and return windowed error rate
+        """更新一轮并返回当前窗口错误率。
 
-        Returns:
-            Current windowed error rate
+        功能:
+            先调用内嵌 tracker 的 ``update`` 判定本轮是否发生逻辑错误，
+            把"本轮是否出错"（0/1）追加到窗口；窗口超过 window_size 时丢弃最旧一项；
+            最后返回当前窗口错误率。
+
+        输入:
+            syndrome_q / syndrome_p: 本轮 q/p 误差（作为 tracker 的"误差"输入）。
+            correction_q / correction_p: 本轮 q/p 校正量。
+
+        输出:
+            当前滑动窗口内的逻辑错误率。
         """
         x_err, z_err = self.tracker.update(
             syndrome_q, syndrome_p, correction_q, correction_p
         )
 
-        # Record if error occurred this round
+        # 记录本轮是否出错
         error_occurred = 1 if (x_err or z_err) else 0
         self.window_errors.append(error_occurred)
 
-        # Keep only last window_size rounds
+        # 只保留最近 window_size 轮
         if len(self.window_errors) > self.window_size:
             self.window_errors.pop(0)
 
         return self.get_windowed_error_rate()
 
     def get_windowed_error_rate(self) -> float:
-        """Get error rate over current window"""
+        """返回当前窗口内的错误率。
+
+        输入:
+            无。
+
+        输出:
+            窗口内出错轮数 / 窗口长度；窗口为空时返回 0.0。
+        """
         if len(self.window_errors) == 0:
             return 0.0
         return sum(self.window_errors) / len(self.window_errors)
 
     def is_performance_degraded(self, threshold: float = 0.1) -> bool:
-        """
-        Check if error rate exceeds threshold
+        """判断当前错误率是否超过阈值（即性能退化）。
 
-        Args:
-            threshold: Error rate threshold
+        输入:
+            threshold: 错误率阈值（默认 0.1）。
 
-        Returns:
-            True if current windowed error rate exceeds threshold
+        输出:
+            若当前窗口错误率 > threshold 返回 True，否则 False。
         """
         return self.get_windowed_error_rate() > threshold
 
 
 class ExperimentErrorTracker:
-    """
-    Tracks errors across an entire experiment with multiple configurations
+    """跨多配置实验的错误追踪器。
 
-    Records error rates for different decoder configurations and
-    noise conditions.
+    记录不同解码器配置 / 噪声条件下的错误率，便于横向对比。
     """
 
     def __init__(self):
+        """初始化实验追踪器。
+
+        输入:
+            无。
+
+        输出:
+            无返回值；初始化结果列表与"当前配置"追踪器（初始为 None）。
+        """
         self.results: List[Dict] = []
         self.current_tracker: Optional[LogicalErrorTracker] = None
 
     def start_configuration(self, config_name: str, params: Dict):
-        """Start tracking a new configuration"""
+        """开始追踪一个新的配置。
+
+        功能:
+            创建一个新的 ``LogicalErrorTracker``，并记录配置名与参数。
+
+        输入:
+            config_name: 配置名称。
+            params: 该配置的参数字典。
+
+        输出:
+            无返回值；设置 current_tracker 与 current_config。
+        """
         self.current_tracker = LogicalErrorTracker()
         self.current_config = {
             'name': config_name,
@@ -262,7 +368,15 @@ class ExperimentErrorTracker:
         }
 
     def update(self, error: np.ndarray, correction: np.ndarray) -> Tuple[bool, bool]:
-        """Update current configuration's tracker"""
+        """更新当前配置的追踪器。
+
+        输入:
+            error: 本轮位移误差 [eq, ep]。
+            correction: 本轮校正位移 [cq, cp]。
+
+        输出:
+            (x_error, z_error)。若尚未 start_configuration 则抛出 RuntimeError。
+        """
         if self.current_tracker is None:
             raise RuntimeError("No configuration started")
         return self.current_tracker.update(
@@ -270,7 +384,18 @@ class ExperimentErrorTracker:
         )
 
     def end_configuration(self):
-        """End current configuration and save results"""
+        """结束当前配置并保存其结果。
+
+        功能:
+            若存在当前配置，则把配置信息与其统计结果一同存入 results，
+            随后清空 current_tracker。
+
+        输入:
+            无。
+
+        输出:
+            无返回值；把结果追加到 self.results。
+        """
         if self.current_tracker is not None:
             result = {
                 **self.current_config,
@@ -280,11 +405,29 @@ class ExperimentErrorTracker:
             self.current_tracker = None
 
     def get_all_results(self) -> List[Dict]:
-        """Get results from all configurations"""
+        """返回所有配置的结果列表。
+
+        输入:
+            无。
+
+        输出:
+            各配置结果组成的列表（每项含 name/params/statistics）。
+        """
         return self.results
 
     def get_summary(self) -> Dict:
-        """Get summary statistics across all configurations"""
+        """返回跨所有配置的汇总统计。
+
+        功能:
+            汇总各配置的 total_error_rate，给出平均/标准差/最小/最大错误率，
+            以及最优/最差配置名。结果为空时返回空字典。
+
+        输入:
+            无。
+
+        输出:
+            汇总字典；无结果时为 {}。
+        """
         if not self.results:
             return {}
 
@@ -316,34 +459,37 @@ def simulate_error_accumulation(n_rounds: int,
                                  use_full_qec_model: bool = True,
                                  return_history: bool = False,
                                  seed: Optional[int] = None) -> Dict:
-    """
-    Simulate error accumulation over many rounds.
+    """仿真多轮误差累积，输出逻辑错误统计。
 
-    By default this runs a more realistic closed-loop model:
-    1. Residual error from previous round is carried over.
-    2. New displacement noise is added.
-    3. Syndrome is measured with realistic measurement effects.
-    4. Decoder correction is applied.
-    5. Logical errors are tracked from accumulated residual displacement.
+    功能:
+        该函数是误差累积分析入口，默认运行更真实的闭环模型：
+          1. 上一轮残差跨轮继承；
+          2. 注入新的位移噪声（可各向异性、可通过旋转矩阵 θ 引入相关性）；
+          3. 用真实测量模型得到含噪综合征（可选再叠加额外读出噪声）；
+          4. 线性解码器计算校正，更新残差与逻辑错误统计。
+        当 ``use_full_qec_model=False`` 时，回退到原始简化模型（每轮独立、
+        标量增益、简单加噪），用于与历史实验结果做可比对照。
 
-    Args:
-        n_rounds: Number of QEC rounds
-        sigma_error: Standard deviation of errors per round
-        sigma_measurement: Extra Gaussian readout noise std added to syndrome
-        gain: Decoder gain factor
-        delta: Finite-energy parameter used by measurement model
-        measurement_efficiency: Detector efficiency for measurement model
-        ancilla_error_rate: Ancilla error probability
-        add_shot_noise: Whether to include measurement shot noise
-        sigma_error_p: p-axis displacement noise std (defaults to sigma_error)
-        theta: Rotation angle (rad) for anisotropic noise and linear decoder
-        error_bias: Mean displacement bias [mu_q, mu_p]
-        use_full_qec_model: If False, runs the original simplified model
-        return_history: Whether to return per-round history
-        seed: Optional random seed for reproducibility
+    输入:
+        n_rounds: QEC 轮数（必须为正整数）。
+        sigma_error: 每轮位移噪声标准差（q 方向，非负）。
+        sigma_measurement: 额外叠加到综合征的高斯读出噪声标准差（非负）。
+        gain: 解码增益。
+        delta: 测量模型使用的有限能量参数。
+        measurement_efficiency: 测量模型探测器效率（full_qec 模式需在 (0,1]）。
+        ancilla_error_rate: 辅助比特错误率（full_qec 模式需在 [0,1]）。
+        add_shot_noise: 是否包含测量散粒噪声。
+        sigma_error_p: p 方向位移噪声标准差（默认等于 sigma_error，非负）。
+        theta: 各向异性噪声与线性解码的旋转角（弧度）。
+        error_bias: 平均位移偏置 [mu_q, mu_p]（形状必须为 (2,)）。
+        use_full_qec_model: False 时运行原始简化模型。
+        return_history: 是否返回逐轮历史。
+        seed: 可选随机种子，用于可复现性。
 
-    Returns:
-        Simulation statistics
+    输出:
+        仿真统计字典。简化模型附 'model'='simplified'；完整模型附
+        'model'='full_qec'、'measurement_sigma_model'、'measurement_sigma_extra'；
+        return_history=True 时额外含逐轮 'history'。
     """
     # 中文注释：该函数是分析入口，可通过 use_full_qec_model 切换严格程度。
     if n_rounds <= 0:
@@ -373,7 +519,7 @@ def simulate_error_accumulation(n_rounds: int,
     tracker = LogicalErrorTracker()
     history = []
 
-    # Legacy branch kept for backward compatibility.
+    # 保留 legacy 分支用于向后兼容。
     if not use_full_qec_model:
         # 中文注释：legacy 分支保留历史行为，便于与旧实验结果做可比对照。
         for _ in range(n_rounds):
@@ -425,14 +571,14 @@ def simulate_error_accumulation(n_rounds: int,
     cumulative_residual = np.zeros(2)
 
     for _ in range(n_rounds):
-        # New round noise can be anisotropic and correlated via rotation.
+        # 本轮新噪声可通过旋转矩阵实现各向异性与相关性
         base_noise = np.array([
             np.random.normal(0, sigma_error),
             np.random.normal(0, sigma_error_p),
         ])
         new_error = error_bias_vec + rotation @ base_noise
 
-        # Closed-loop QEC: total error = carried residual + new injected noise.
+        # 闭环 QEC：总误差 = 继承残差 + 本轮新注入噪声
         total_error = cumulative_residual + new_error
 
         syndrome = measurement.measure(total_error, add_noise=True)
@@ -443,7 +589,7 @@ def simulate_error_accumulation(n_rounds: int,
         residual = total_error - correction
         x_err, z_err = tracker.update(total_error[0], total_error[1], correction[0], correction[1])
 
-        # Keep next round consistent with wrapped logical frame in tracker.
+        # 下一轮与 tracker 中 wrap 后的逻辑坐标系保持一致
         cumulative_residual = np.array([tracker.accumulated_q, tracker.accumulated_p])
 
         if return_history:

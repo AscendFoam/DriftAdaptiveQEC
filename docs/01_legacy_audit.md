@@ -28,6 +28,12 @@
 - `.tflite`、HIL、real-board、benchmark 的证据等级发生会反向影响 legacy 审计判断的变化；
 - 需要修正本文件中仍指向旧路径或旧事实入口的内容。
 
+## 1B. 2026-06-15 Captain Maintenance Note (T89 closeout)
+
+- `T89 -> PASS` 不改变 legacy truth matrix。
+- `T89` 只新增 frozen-mainline handoff / change-control 文档，不改变 `.tflite`、HIL、real-board、benchmark 或训练链在 legacy 审计中的真实性等级。
+- 当前任务状态应以 `docs/04_task_board.md` 与 `docs/07_handoff.md` 为准；截至本次维护，当前唯一任务已切换为 `T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`。
+
 普通 Captain closeout、当前唯一任务切换、后续计划更新，应优先同步 `docs/04_task_board.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 和必要时的 `docs/02_experiment_plan.md`，不应把本文件变成第二份任务日志。
 
 ### 1A-补充. 2026-06-15 Captain 维护说明

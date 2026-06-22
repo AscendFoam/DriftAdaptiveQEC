@@ -1,14 +1,8 @@
-"""
-Error Correction Module
+"""纠错模块（Error Correction）。
 
-Implements GKP error correction protocols:
-- Linear decoder (parameterized)
-- Full QEC cycle simulation
-- Multiple correction strategies
-
-中文说明：
-- 该模块实现 GKP 纠错的核心流程：综合征测量、线性解码、残差统计与多轮仿真。
-- 上层实验通常通过 GKPErrorCorrector / QECSimulator 访问这里的能力。
+本模块实现 GKP 纠错的核心流程：综合征测量、线性解码、残差统计与多轮仿真。
+上层实验通常通过 ``GKPErrorCorrector``（单轮纠错）与 ``QECSimulator``（多轮仿真，
+支持漂移场景与周期重标定）访问本模块能力。
 """
 
 import numpy as np
@@ -22,78 +16,134 @@ from .noise_channels import CombinedNoiseModel
 
 @dataclass
 class DecoderParameters:
-    """Parameters for linear decoder"""
+    """线性解码器参数容器（数据类）。
+
+    字段:
+        K: 2×2 增益矩阵（控制纠错强度与各向异性旋转）。
+        b: 2 维偏置向量（补偿系统位移偏置）。
+    """
     K: np.ndarray = field(default_factory=lambda: np.eye(2))  # Gain matrix
     b: np.ndarray = field(default_factory=lambda: np.zeros(2))  # Bias vector
 
     def to_flat(self) -> np.ndarray:
-        """Convert to flat array [K_11, K_12, K_21, K_22, b_1, b_2]"""
+        """把参数展平为一维数组。
+
+        功能:
+            按 [K_11, K_12, K_21, K_22, b_1, b_2] 顺序拼接成 6 维向量，
+            便于作为优化器 / 网络的输入输出。
+
+        输入:
+            无。
+
+        输出:
+            长度 6 的一维 ndarray。
+        """
         return np.concatenate([self.K.flatten(), self.b])
 
     @classmethod
     def from_flat(cls, params: np.ndarray) -> 'DecoderParameters':
-        """Create from flat array"""
+        """由一维数组还原解码器参数。
+
+        输入:
+            params: 长度 6 的一维数组，前 4 个为 K 的元素（按行优先），后 2 个为 b。
+
+        输出:
+            重建的 ``DecoderParameters``。
+        """
         K = params[:4].reshape(2, 2)
         b = params[4:]
         return cls(K=K, b=b)
 
 
 class LinearDecoder:
-    """
-    Parameterized linear decoder for GKP error correction
+    """参数化线性解码器。
 
-    Given syndrome s = [sq, sp], computes correction:
-    Δ = K @ s + b
+    给定综合征 s = [sq, sp]，计算校正位移：
 
-    where K is a 2x2 gain matrix and b is a bias vector.
+        Δ = K @ s + b
 
-    For optimal decoding under Gaussian noise with variance σ²:
-    - K should be close to identity (gain ≈ 1)
-    - For noisy measurements, K < I compensates for measurement noise
-    - b corrects systematic biases (control drift)
+    其中 K 为 2×2 增益矩阵、b 为偏置向量。
+    - 高斯噪声下方差最优时 K 接近单位阵（增益≈1）；
+    - 测量有噪声时 K < I 以补偿测量噪声；
+    - b 用于校正系统偏置（如控制漂移）。
     """
 
     def __init__(self,
                  K: Optional[np.ndarray] = None,
                  b: Optional[np.ndarray] = None):
-        """
-        Args:
-            K: 2x2 gain matrix (default: identity)
-            b: 2D bias vector (default: zero)
+        """初始化线性解码器。
+
+        输入:
+            K: 2×2 增益矩阵（默认单位阵）。
+            b: 2 维偏置向量（默认零向量）。
+
+        输出:
+            无返回值；记录 K、b 与 lattice。
         """
         self.K = K if K is not None else np.eye(2)
         self.b = b if b is not None else np.zeros(2)
         self.lattice = LATTICE_CONST
 
     def decode(self, syndrome: np.ndarray) -> np.ndarray:
-        """
-        Compute correction displacement from syndrome
+        """由综合征计算校正位移。
 
-        Args:
-            syndrome: [sq, sp] measured syndrome
+        功能:
+            线性解码核心公式 Δ = K @ s + b。
 
-        Returns:
-            correction: [dq, dp] correction to apply
+        输入:
+            syndrome: 测得的综合征 [sq, sp]。
+
+        输出:
+            校正位移 [dq, dp]。
         """
         # 中文注释：线性解码核心公式 Δ = K @ s + b。
         return self.K @ syndrome + self.b
 
     def update(self, K: np.ndarray, b: np.ndarray):
-        """Update decoder parameters"""
+        """更新解码器参数。
+
+        输入:
+            K: 新的 2×2 增益矩阵。
+            b: 新的 2 维偏置向量。
+
+        输出:
+            无返回值；就地更新 self.K、self.b。
+        """
         self.K = K
         self.b = b
 
     def update_from_flat(self, params: np.ndarray):
-        """Update from flat parameter array"""
+        """由一维数组更新解码器参数。
+
+        输入:
+            params: 长度 6 的一维数组（前 4 个为 K 行优先，后 2 个为 b）。
+
+        输出:
+            无返回值；就地更新 self.K、self.b。
+        """
         self.K = params[:4].reshape(2, 2)
         self.b = params[4:]
 
     def get_params(self) -> DecoderParameters:
-        """Get parameters as dataclass"""
+        """以数据类形式返回当前参数（拷贝）。
+
+        输入:
+            无。
+
+        输出:
+            ``DecoderParameters``，包含当前 K、b 的拷贝。
+        """
         return DecoderParameters(K=self.K.copy(), b=self.b.copy())
 
     def get_flat_params(self) -> np.ndarray:
-        """Get parameters as flat array"""
+        """以一维数组形式返回当前参数。
+
+        输入:
+            无。
+
+        输出:
+            长度 6 的一维 ndarray（K 行优先 + b）。
+        """
         return np.concatenate([self.K.flatten(), self.b])
 
 
@@ -101,77 +151,89 @@ def compute_optimal_decoder_params(sigma: float,
                                     delta: float,
                                     theta: float = 0.0,
                                     meas_efficiency: float = 0.95) -> DecoderParameters:
-    """
-    Compute optimal linear decoder parameters for given noise
+    """针对给定噪声计算近似最优的线性解码器参数。
 
-    Args:
-        sigma: Displacement noise standard deviation
-        delta: GKP finite energy parameter
-        theta: Phase space rotation angle
-        meas_efficiency: Measurement efficiency
+    功能:
+        采用近似 Wiener 滤波思路估计最优增益，并叠加相位漂移旋转矩阵：
+          - 信号方差 var_signal = (λ/2)²/3（晶格区间内均匀分布）；
+          - 噪声方差 var_noise = σ²(位移) + Δ²(GKP 有限能量) + (1-η)/(2η)(测量)；
+          - 最优增益 gain = var_signal / (var_signal + var_noise)；
+          - 旋转矩阵 R(θ) 表征相位漂移；最终 K = gain·R，偏置 b 默认为零。
 
-    Returns:
-        Optimal decoder parameters
+    输入:
+        sigma: 位移噪声标准差。
+        delta: GKP 有限能量参数。
+        theta: 相空间旋转角（弧度），表征各向异性/相位漂移。
+        meas_efficiency: 测量效率 η。
+
+    输出:
+        ``DecoderParameters``（K=gain·R，b=0）。
     """
     # 中文注释：使用近似 Wiener 思路估计最优线性增益与旋转矩阵。
-    # Total effective noise variance
-    # Includes: GKP finite energy, displacement noise, measurement noise
-    var_signal = (LATTICE_CONST / 2) ** 2 / 3  # Uniform signal variance
+    # 总等效噪声方差，含：GKP 有限能量、位移噪声、测量噪声
+    var_signal = (LATTICE_CONST / 2) ** 2 / 3  # 均匀信号方差
 
-    # Noise contributions
+    # 各噪声贡献
     var_displacement = sigma ** 2
     var_gkp = delta ** 2
     var_meas = (1 - meas_efficiency) / (2 * meas_efficiency)
 
     var_noise = var_displacement + var_gkp + var_meas
 
-    # Optimal Wiener filter gain
+    # 最优 Wiener 滤波增益
     gain = var_signal / (var_signal + var_noise)
 
-    # Rotation matrix for phase drift
+    # 相位漂移的旋转矩阵
     cos_t, sin_t = np.cos(theta), np.sin(theta)
     R = np.array([[cos_t, -sin_t], [sin_t, cos_t]])
 
-    # Combined gain matrix
+    # 合成增益矩阵
     K = gain * R
 
-    # Bias (usually zero unless there's systematic drift)
+    # 偏置（无系统漂移时通常为零）
     b = np.zeros(2)
 
     return DecoderParameters(K=K, b=b)
 
 
 class GKPErrorCorrector:
-    """
-    Complete GKP error correction system
+    """完整的单轮 GKP 纠错系统。
 
-    Combines:
-    - Syndrome measurement (with noise)
-    - Decoder (linear, parameterized)
-    - Correction application
+    组合三件事：
+    - 综合征测量（带噪声）；
+    - 线性（参数化）解码；
+    - 校正施加与残差判定。
     """
 
     def __init__(self,
                  delta: float = 0.3,
                  decoder: Optional[LinearDecoder] = None,
                  measurement_config: Optional[MeasurementConfig] = None):
-        """
-        Args:
-            delta: GKP finite energy parameter
-            decoder: Linear decoder (created automatically if None)
-            measurement_config: Measurement configuration
+        """初始化单轮纠错器。
+
+        功能:
+            构造真实测量器；若未提供解码器，则用当前噪声水平
+            （默认 sigma=0.3）计算近似最优解码器参数并构造线性解码器。
+
+        输入:
+            delta: GKP 有限能量参数。
+            decoder: 可选的线性解码器（None 时自动创建）。
+            measurement_config: 测量配置（None 时按 delta 构造默认配置）。
+
+        输出:
+            无返回值；记录 delta / lattice，并组装 measurement 与 decoder。
         """
         self.delta = delta
         self.lattice = LATTICE_CONST
 
-        # Setup measurement
+        # 搭建测量器
         if measurement_config is None:
             measurement_config = MeasurementConfig(delta=delta)
         self.measurement = RealisticSyndromeMeasurement(measurement_config)
 
-        # Setup decoder
+        # 搭建解码器
         if decoder is None:
-            # Create optimal decoder for current noise level
+            # 为当前噪声水平创建近似最优解码器
             params = compute_optimal_decoder_params(sigma=0.3, delta=delta)
             decoder = LinearDecoder(K=params.K, b=params.b)
         self.decoder = decoder
@@ -179,19 +241,20 @@ class GKPErrorCorrector:
     def run_qec_round(self,
                       error: np.ndarray,
                       add_measurement_noise: bool = True) -> Dict[str, Any]:
-        """
-        Run one round of quantum error correction
+        """执行一轮量子纠错。
 
-        Args:
-            error: [eq, ep] displacement error to correct
-            add_measurement_noise: Whether to add measurement noise
+        功能:
+            1. 测量综合征（可选加噪）；
+            2. 解码得到校正位移；
+            3. 应用校正并跟踪残差（残差 = 误差 - 校正）；
+            4. 判定纠错是否成功：残差是否落在基本晶胞 [-λ/2, λ/2] 范围内。
 
-        Returns:
-            Dictionary with:
-            - syndrome: Measured syndrome
-            - correction: Applied correction
-            - residual: Remaining error after correction
-            - success: Whether error was successfully corrected
+        输入:
+            error: 待纠正的位移误差 [eq, ep]。
+            add_measurement_noise: 测量是否加噪。
+
+        输出:
+            字典，含 syndrome / correction / residual / success / error。
         """
         # 1. 测量综合征（可选加噪）
         syndrome = self.measurement.measure(error, add_noise=add_measurement_noise)
@@ -217,24 +280,28 @@ class GKPErrorCorrector:
     def evaluate_performance(self,
                              n_samples: int = 10000,
                              error_sigma: float = 0.3) -> Dict[str, float]:
-        """
-        Evaluate decoder performance
+        """评估解码器性能。
 
-        Args:
-            n_samples: Number of error samples
-            error_sigma: Standard deviation of errors to test
+        功能:
+            采样 n_samples 个高斯位移误差，逐个执行单轮纠错，统计成功率、
+            逻辑错误率以及残差的均值/标准差。
 
-        Returns:
-            Performance metrics
+        输入:
+            n_samples: 误差样本数。
+            error_sigma: 测试误差的标准差。
+
+        输出:
+            字典，含 logical_error_rate / success_rate / mean_residual_q /
+            mean_residual_p / std_residual_q / std_residual_p / n_samples。
         """
         successes = 0
         residuals = []
 
         for _ in range(n_samples):
-            # Random error
+            # 随机误差
             error = np.random.normal(0, error_sigma, size=2)
 
-            # Run QEC
+            # 执行纠错
             result = self.run_qec_round(error)
 
             if result['success']:
@@ -254,34 +321,57 @@ class GKPErrorCorrector:
         }
 
     def update_decoder(self, K: np.ndarray, b: np.ndarray):
-        """Update decoder parameters"""
+        """更新解码器参数。
+
+        输入:
+            K: 新的 2×2 增益矩阵。
+            b: 新的 2 维偏置向量。
+
+        输出:
+            无返回值；委托给内部解码器的 update。
+        """
         self.decoder.update(K, b)
 
     def update_decoder_from_fno(self, fno_output: np.ndarray):
-        """Update decoder from FNO network output"""
+        """由 FNO 网络输出更新解码器。
+
+        功能:
+            把 FNO 网络输出的扁平数组解析为解码器参数（前 4 个为 K 行优先，
+            后 2 个为 b）并更新。
+
+        输入:
+            fno_output: FNO 网络输出的一维数组（长度 6）。
+
+        输出:
+            无返回值；委托给内部解码器的 update_from_flat。
+        """
         self.decoder.update_from_flat(fno_output)
 
 
 class QECSimulator:
-    """
-    Full QEC simulation over multiple rounds
+    """多轮 QEC 仿真器。
 
-    Simulates:
-    1. State preparation
-    2. Noise application
-    3. Error correction
-    4. Repeat for multiple rounds
+    仿真流程：态制备 -> 噪声施加 -> 纠错 -> 重复多轮。
+    支持噪声参数随时间漂移的场景，以及周期性重标定解码器。
     """
 
     def __init__(self,
                  delta: float = 0.3,
                  noise_model: Optional[CombinedNoiseModel] = None,
                  corrector: Optional[GKPErrorCorrector] = None):
-        """
-        Args:
-            delta: GKP finite energy parameter
-            noise_model: Noise model for errors
-            corrector: Error corrector
+        """初始化多轮仿真器。
+
+        功能:
+            若未提供噪声模型与纠错器，则使用默认实现（gamma=0.05、n_bar=0.01、
+            sigma_disp=0.1 的组合噪声模型；按 delta 构造的纠错器）。
+
+        输入:
+            delta: GKP 有限能量参数。
+            noise_model: 噪声模型（None 时用默认）。
+            corrector: 纠错器（None 时用默认）。
+
+        输出:
+            无返回值；记录 delta / lattice / noise_model / corrector。
         """
         self.delta = delta
         self.lattice = LATTICE_CONST
@@ -297,34 +387,37 @@ class QECSimulator:
     def simulate_multiple_rounds(self,
                                   n_rounds: int = 100,
                                   error_sigma: float = 0.3) -> Dict[str, Any]:
-        """
-        Simulate multiple QEC rounds
+        """仿真多轮 QEC。
 
-        Args:
-            n_rounds: Number of QEC rounds
-            error_sigma: Error standard deviation per round
+        功能:
+            每轮：注入新噪声 -> 累加到上一轮残差得到总误差 -> 执行单轮纠错 ->
+            用本轮残差更新累计误差。统计多轮总成功率与逻辑错误率。
 
-        Returns:
-            Simulation results
+        输入:
+            n_rounds: QEC 轮数。
+            error_sigma: 每轮新注入误差的标准差。
+
+        输出:
+            字典，含 n_rounds / successes / logical_error_rate / round_results。
         """
         results = []
         cumulative_error = np.zeros(2)
 
         for round_idx in range(n_rounds):
-            # New error this round
+            # 本轮新误差
             new_error = np.random.normal(0, error_sigma, size=2)
 
-            # Total error = accumulated + new
+            # 总误差 = 累计残差 + 新误差
             total_error = cumulative_error + new_error
 
-            # Run QEC
+            # 执行纠错
             round_result = self.corrector.run_qec_round(total_error)
             results.append(round_result)
 
-            # Update cumulative error with residual
+            # 用残差更新累计误差
             cumulative_error = round_result['residual']
 
-        # Analyze results
+        # 分析结果
         successes = sum(1 for r in results if r['success'])
 
         return {
@@ -338,33 +431,38 @@ class QECSimulator:
                        n_timesteps: int,
                        drift_model,
                        recalibrate_every: int = 50) -> Dict[str, Any]:
-        """
-        Run QEC with drifting noise parameters
+        """在噪声参数漂移场景下运行 QEC。
 
-        Args:
-            n_timesteps: Number of time steps
-            drift_model: Function t -> (sigma, delta, theta)
-            recalibrate_every: Recalibration interval
+        功能:
+            每个时间步：由 ``drift_model(t)`` 取当前 (sigma, delta, theta)，
+            评估当前噪声下的逻辑错误率；每隔 ``recalibrate_every`` 步用
+            ``compute_optimal_decoder_params`` 重标定解码器（真实系统中此处可用 FNO）。
 
-        Returns:
-            Results including error rates over time
+        输入:
+            n_timesteps: 时间步数。
+            drift_model: 可调用对象，t -> (sigma, delta, theta)。
+            recalibrate_every: 重标定间隔（步）。
+
+        输出:
+            字典，含 n_timesteps / error_rates（每步逻辑错误率数组）/
+            mean_error_rate（平均错误率）。
         """
         error_rates = []
 
         for t in range(n_timesteps):
-            # Get current noise parameters
+            # 当前噪声参数
             sigma_t, delta_t, theta_t = drift_model(t)
 
-            # Evaluate at current noise level
+            # 在当前噪声水平下评估
             metrics = self.corrector.evaluate_performance(
                 n_samples=1000,
                 error_sigma=sigma_t
             )
             error_rates.append(metrics['logical_error_rate'])
 
-            # Periodic recalibration (in real system, would use FNO here)
+            # 周期性重标定（真实系统中此处会用 FNO）
             if t % recalibrate_every == 0 and t > 0:
-                # Update decoder for current noise
+                # 按当前噪声更新解码器
                 opt_params = compute_optimal_decoder_params(
                     sigma=sigma_t,
                     delta=delta_t,
@@ -377,7 +475,7 @@ class QECSimulator:
             'error_rates': np.array(error_rates),
             'mean_error_rate': np.mean(error_rates),
         }
-        
+
 """
 ### 代码核心功能解析
 这段代码是**GKP量子纠错（QEC）** 的核心实现模块，专门用于纠正GKP（Gottesman-Kitaev-Preskill）量子比特在演化过程中产生的位移误差，以下分模块解析核心逻辑：

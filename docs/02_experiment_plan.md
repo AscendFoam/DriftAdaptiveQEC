@@ -3,7 +3,7 @@
 **最后更新：** 2026-06-15
 **当前阶段：** `Phase 2: Controlled Development`  
 **当前决策状态：** `Go`  
-**当前唯一任务：** 以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准；当前为 `T89`。`T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81`、`T82`、`T83`、`T84`、`T85`、`T86`、`T87`、`T88` 已完成并收口；`T79` 给出了 `GO_FOR_BOUNDED_PROSE_REOPEN`，`T80` 已完成 ready sections 的有界 prose reopen，`T81` 已完成 `Summary of Contributions` 与三章 methods 的受控校准，`T82` 已完成 supporting-material 收口与 appendix/supplement 边界整合，`T83` 已完成全文一致性 sweep 并给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`，`T84` 已完成有界 final polish 与读者化装配，`T85` 已完成 submission-readiness preflight 与 residual wording-lag 清扫并关闭 `R36`，`T86` 已完成 bounded submission-pack assembly 与显式 exclusion route 收口并经 Captain 以 `PASS` 接受，`T87` 已完成主线作者终检与 pre-submission QA 收口并经 Captain 以 `PASS` 接受，`T88` 已完成 bounded manual finish 执行与 surface freeze 收口并经 Captain 以 `PASS` 接受；因此主线当前进入 `T89` 的 frozen-mainline handoff / post-freeze change-control 阶段。在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，real-board 执行相关任务继续降为最低优先级 backlog。
+**当前唯一任务：** 以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准；当前为 `T90`。`T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81`、`T82`、`T83`、`T84`、`T85`、`T86`、`T87`、`T88`、`T89` 已完成并收口；`T79` 给出了 `GO_FOR_BOUNDED_PROSE_REOPEN`，`T80` 已完成 ready sections 的有界 prose reopen，`T81` 已完成 `Summary of Contributions` 与三章 methods 的受控校准，`T82` 已完成 supporting-material 收口与 appendix/supplement 边界整合，`T83` 已完成全文一致性 sweep 并给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`，`T84` 已完成有界 final polish 与读者化装配，`T85` 已完成 submission-readiness preflight 与 residual wording-lag 清扫并关闭 `R36`，`T86` 已完成 bounded submission-pack assembly 与显式 exclusion route 收口并经 Captain 以 `PASS` 接受，`T87` 已完成主线作者终检与 pre-submission QA 收口并经 Captain 以 `PASS` 接受，`T88` 已完成 bounded manual finish 执行与 surface freeze 收口并经 Captain 以 `PASS` 接受，`T89` 已完成 frozen-mainline handoff / source-of-truth / change-control 收口并经 Captain 以 `PASS` 接受；因此主线当前转入 `T90` 的训练链 clean-CPU 同机 repeated-run consistency 强化阶段。在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，real-board 执行相关任务继续降为最低优先级 backlog。
 
 ## 文档角色
 
@@ -15,6 +15,14 @@
    吸收 `docs/follow-up_plan/README.md` 的功能，作为后续开发、论文准备、任务候选池和计划维护的唯一入口。
 
 本文档不是结果证明文件。任何结果 claim 必须回到对应的 task package、review、run root、artifact、summary helper 或治理文档中验证。当前任务状态仍以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为权威来源。
+
+## 2026-06-15 Captain Update (T89 closeout)
+
+- `T89` 已由 Captain 判定为 `PASS`。
+- `T89` 真实完成了 `paper_frozen_mainline_handoff_packet.md`、`paper_frozen_mainline_source_of_truth_map.md`、`paper_postfreeze_change_control.md` 与 `paper_blocked_surface_reentry_conditions.md`，并同步登记到 `docs/paper_materials/README.md` 与 `docs/paper_notes/README.md`。
+- `T89` 的 non-blocking notes 全部按 operational reminder 接受处理，不新增 `deferred/rejected` warning，也不新增风险项。
+- 当前唯一任务切换为 `T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`。
+- `T90` 只允许在已冻结 mainline 与已隔离 theory 分支的前提下，沿 `R11` 补一个 code-backed、same-host、clean CPU-only 的 repeated-run consistency pack；它不是主线 prose reopen，也不是 `.tflite` portability、real-board execution、expanded benchmark 或 submission-ready completed。
 
 ## 2026-06-15 Captain Update (T88 closeout)
 
@@ -99,7 +107,7 @@
 | 2026-06-12 | T74/T75/T76/T77/T78/T79/T80/T81/T82 | 主线从台账刷新推进到 paper-ready 材料包、bounded Results authoring、rendered QA / Results assembly、note-draft 结果层同步、非结果层校准 / hierarchy / layout closeout、reopen gate、section-bounded prose reopen、contribution/methods calibration，并继续进入 supporting-material closeout / appendix-supplement boundary integration | `T74`、`T75`、`T76`、`T77`、`T78`、`T79`、`T80`、`T81` 已完成；`T82` 为当前唯一任务；full-manuscript reopen 仍未开启 |
 | 2026-06-13 | T82/T83 | `T82` 完成 supporting-boundary 四层收口；主线从“局部段落与 supporting route 收口”推进到“全文一致性 sweep 与 closeout gate” | `T82` 已完成；`T83` 为当前唯一任务；full-manuscript closeout 仍未开启 |
 | 2026-06-14 | T83/T84/T85/T86/T87/T88 | `T83` 完成全文一致性 sweep 并给出 `GO_FOR_BOUNDED_FINAL_POLISH_ONLY`；`T84` 完成有界 final polish / reader-facing assembly；`T85` 完成 submission-readiness preflight 并关闭 residual wording-lag 风险 `R36`；`T86` 完成 bounded submission-pack assembly 与显式 exclusion route 收口并经 Captain 以 `PASS` 接受；`T87` 完成作者终检 / pre-submission QA 收口并给出 `GO_FOR_BOUNDED_AUTHOR_MANUAL_FINISH_ONLY`；`T88` 完成 bounded manual finish 执行与 surface freeze 收口并给出 `GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY` | `T83`、`T84`、`T85`、`T86`、`T87`、`T88` 已完成；submission-ready pack 完成态与 deployment closure 仍未开启 |
-| 2026-06-15 | T89 / 优先级调整 | 主线从“继续手工终修”切换为“冻结主线答案的 handoff / source-of-truth / change-control 固化” | `T89` 成为当前唯一任务；real-board 路线继续维持最低优先级 backlog |
+| 2026-06-15 | T89 / T90 / 优先级调整 | 主线先从“继续手工终修”切换为“冻结主线答案的 handoff / source-of-truth / change-control 固化”，随后在 `T89 -> PASS` 后转入 non-hardware evidence-hardening 的训练 repeated-run consistency lane | `T89` 已完成并由 Captain 接受为 `PASS`；当前唯一任务切换为 `T90`；real-board 路线继续维持最低优先级 backlog |
 
 ## 4. 当前仍有效的结论
 
@@ -159,8 +167,8 @@
 
 本次整理时的状态说明：
 
-- `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
-- 任务包：`docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
+- `T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`
+- 任务包：`docs/tasks/Phase2/T90_training_same_host_repeated_run_consistency_pack.md`
 - 状态：`Current Unique Task`
 
 当前主线优先级边界：
@@ -180,16 +188,16 @@
 - `T86` 已完成，目标层面的 strongest supported truth 是：当前 mainline note / paper-material / blocker / exclusion 信息已经被装配成一套 submission-facing 但仍显式有边界的 package；这不等于 submission-ready pack 完成态。
 - `T87` 已完成，目标层面的 strongest supported truth 是：当前 mainline note/material 已通过作者终检，并且只被允许进入 bounded manual finish，而不是 submission-ready completed。
 - `T88` 已完成，目标层面的 strongest supported truth 是：当前 mainline note/material 的 bounded manual finish 已真实执行，并且唯一允许的后续动作已收紧为 frozen-mainline handoff，而不是 submission-ready completed。
-- `T89` 是当前唯一任务，目标是在不升级任何证据等级、不再改写 note 正文的前提下，把当前 frozen mainline 整理成 handoff packet、source-of-truth map、post-freeze change-control 与 blocked-surface re-entry 规则。
-- `T89` 只做有界 frozen-mainline handoff / post-freeze change-control 收口，不直接等于 submission-ready completed；它不得扩到 benchmark、`.tflite` portability、real-board execution、投稿元数据实装或 theory-branch 大范围改写。
+- `T89` 已完成，目标层面的 strongest supported truth 是：当前 frozen mainline 已有单一 handoff packet、source-of-truth map、post-freeze change-control 与 blocked-surface re-entry 规则；这仍不是 submission-ready completed。
+- `T90` 是当前唯一任务，目标是在不改写 mainline note、不碰 theory 分支、不升级部署/板级语义的前提下，把 `T50` 的“单次 bounded train+eval rerun”推进到“same-host clean CPU-only repeated-run consistency pack”。
 - 在暂时缺少 `Linux + FPGA` 硬件宿主的前提下，`T37` 及其他 real-board execution 任务继续 `blocked + lowest-priority backlog`，不抢占当前主线。
 
 ## 9. 后续路线总览
 
 后续开发按“论文材料先行、硬件路径后置”的顺序分层推进，不一次性展开全部方向：
 
-1. 主线 frozen-mainline handoff 与 post-freeze change-control 收口
-2. 待 `T89` honest closeout 后，再由 Captain 决定是保持 mainline freeze/handoff 状态，还是转回某条独立 evidence-hardening 路线
+1. 训练链 clean-CPU 同机 repeated-run consistency 证据强化
+2. 待 `T90` honest closeout 后，再由 Captain 决定是否继续向 cross-host reproducibility / `.tflite` portability 等独立 evidence lane 推进
 3. 主线可信度、training / `.tflite` / transfer-pack 边界补强
 4. 机制诊断与 bounded ablation
 5. paper-grade benchmark expansion 的 protocol lock 与小步执行
@@ -383,9 +391,9 @@ FCCM、ACM FPGA、DATE、ICCAD 等硬件向 venue 只有在补齐以下证据后
 
 | 优先层 | 候选任务 | 主要输出 | 验证 |
 | --- | --- | --- | --- |
-| Current | `T89` 主线 frozen-mainline handoff 包与 post-freeze change-control 收口 | frozen-mainline handoff packet、source-of-truth map、post-freeze change-control、blocked-surface re-entry conditions、README 登记 | allowlist-scoped 文档一致性检查 + cross-reference audit + no-note-rewrite check + reviewer |
-| Immediate-next | 按 `T89` closeout 决定的唯一后续任务 | 继续维持 frozen-mainline handoff 状态，或转回某条独立 evidence-hardening 路线的唯一一张后续 task | captain / reviewer gate |
-| P1 | training/material reproducibility follow-up | repeated-run / cross-host / CPU-vs-GPU 边界表 | bounded train/eval smoke |
+| Current | `T90` 训练链 clean-CPU 同机 repeated-run 一致性证据包 | code-backed repeat-consistency pack、3 次同配置 train+eval rerun、pairwise metric/model consistency table、README 登记 | clean CPU-only repeated reruns + helper/tests + evidence-pack review |
+| Immediate-next | 按 `T90` closeout 决定的唯一后续任务 | 继续推进 cross-host reproducibility / `.tflite` portability 等独立 evidence lane，或保持 frozen-mainline + evidence-only 状态 | captain / reviewer gate |
+| P1 | training/material reproducibility follow-up（跨主机/更强 portability） | repeated-run / cross-host / CPU-vs-GPU 边界表 | bounded train/eval smoke |
 | P1 | `.tflite` runtime portability audit | default env / isolated env / cross-host 差异表 | bounded runtime smoke |
 | P1 | `.tflite` isolated-env bootstrap hardening | interpreter/package/artifact/source manifest | true-runtime smoke rejects stub/fallback |
 | P2 | mechanism diagnosis pack | histogram/residual-b/update cadence 诊断 | focused trace / small sample |

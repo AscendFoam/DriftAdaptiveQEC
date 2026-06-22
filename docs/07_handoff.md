@@ -1,13 +1,13 @@
-## 2026-06-15 Captain Final Supersession (T88 closeout)
+## 2026-06-15 Captain Final Supersession (T89 closeout)
 
-- Current unique task: `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
-- Task package: `docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
-- `T88` has been judged `PASS`.
-- `T88` completed one honest docs-only manual-finish execution / surface-freeze step and opened no deferred/rejected warning-derived risk.
-- The T88 review's non-blocking notes are accepted as operational reminders only: dirty-worktree allowlist discipline, `GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY` must remain narrow, current-host-only compile scope, and CRLF / git-ignore host-noise separation.
-- `R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
-- `T89` is next because the remaining mainline gap is no longer more manual finish, but one explicit frozen-mainline handoff packet plus post-freeze change-control / blocked-surface re-entry rules that keep theory-branch work isolated from main.
-- `T89` must stay docs-only, mainline-only, freeze-preserving, and theory-branch-isolated; it must not widen into note rewrite, benchmark/HIL reruns, `.tflite` portability, real-board execution, sidecar promotion, venue-template adaptation, or submission-ready completion claims.
+- Current unique task: `T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`
+- Task package: `docs/tasks/Phase2/T90_training_same_host_repeated_run_consistency_pack.md`
+- `T89` has been judged `PASS`.
+- `T89` completed one honest frozen-mainline handoff / source-of-truth / change-control closeout and opened no deferred/rejected warning-derived risk.
+- The T89 review's non-blocking notes are accepted as operational reminders only: allowlist-scoped review discipline inside a dirty worktree, host-side git/CRLF noise separation, and the requirement to keep frozen-mainline handoff narrower than submission-ready completion or blocked-surface unlock.
+- `R11/R13/R14/R32/R33` remain open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T90` is next because the mainline note is now intentionally frozen, `T51/T52` broader prose reopen is still premature, real-board remains hardware-blocked, and the highest-value feasible non-hardware evidence gap is to strengthen `R11` from one bounded rerun (`T50`) into one same-host repeated-run consistency pack.
+- `T90` must stay mainline-only, clean-CPU-only, reproducibility-bounded, and theory-branch-isolated; it must not widen into note rewrite, benchmark/HIL reruns, `.tflite` portability, real-board execution, sidecar promotion, venue-template adaptation, theory-branch mergeback, or submission-ready completion claims.
 
 ## 2026-06-14 Captain Final Supersession (T87 closeout)
 
@@ -203,28 +203,28 @@
 
 Authoritative status note (`2026-06-15`, Captain closeout):
 
-- 当前唯一任务：`T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
-- 任务包：`docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
-- 当前主线优先级：优先把 `T88` 已冻结的 mainline surface 整理成单一 handoff packet、source-of-truth map、post-freeze change-control 与 blocked-surface re-entry 规则，而不是继续改 note 或把仓库写成 submission-ready completed。
-- `T88` 已完成并被 Captain 接受为 `PASS`；其 non-blocking notes 全部按 accepted operational reminder 处理，未新开 deferred/rejected 风险。
-- 如下方旧状态行仍提到 `T88` 或更早任务，以本条 authoritative note 为准。
+- 当前唯一任务：`T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`
+- 任务包：`docs/tasks/Phase2/T90_training_same_host_repeated_run_consistency_pack.md`
+- 当前主线优先级：优先在不改写 frozen mainline、不碰 theory 分支、也不碰 hardware 的前提下，把 `T50` 的单次 bounded train+eval rerun 强化为一份 same-host repeated-run consistency pack，而不是恢复 prose 扩写或把仓库写成 submission-ready completed。
+- `T89` 已完成并被 Captain 接受为 `PASS`；其 non-blocking notes 全部按 accepted operational reminder 处理，未新开 deferred/rejected 风险。
+- 如下方旧状态行仍提到 `T89` 或更早任务，以本条 authoritative note 为准。
 
 - 日期：`2026-06-14`
 - 阶段：`Phase 2: Controlled Development`
 - 决策：`Go`
 - 当前子模式：`Research Reality Recovery Mode`
-- 当前唯一任务：`T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
-- 任务包：`docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
-- 当前主线优先级：优先把 `T88` 已冻结的 mainline surface、blocked disclaimer 与 frozen-handoff 结论整理成单一 handoff / change-control 答案，而不是继续改写 note、提前写成 submission-ready completed；real-board execution 因当前暂无 `Linux + FPGA` 硬件宿主而继续维持最低优先级 backlog
+- 当前唯一任务：`T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`
+- 任务包：`docs/tasks/Phase2/T90_training_same_host_repeated_run_consistency_pack.md`
+- 当前主线优先级：优先在 clean CPU-only lane 上补 same-host repeated-run consistency，而不是继续改写 note、提前写成 submission-ready completed；real-board execution 因当前暂无 `Linux + FPGA` 硬件宿主而继续维持最低优先级 backlog
 
 Captain continuity note:
 
-- The authoritative current task for all new worker action is `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`.
-- Authoritative task package: `docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`.
-- `T88` is complete and accepted as `PASS`.
-- `T88` non-blocking notes are all accepted as operational reminders; no new deferred/rejected warning-derived risk is opened by this closeout.
-- `T89` is the single recommended next task after `T88`.
-- `T89` is a frozen-mainline handoff / change-control task only. It is not permission to widen into note rewrite, benchmark reruns, HIL/runtime semantics changes, real-board success claims, theory-branch mergeback, sidecar-promotion scope, venue-template adaptation, or submission-ready completion.
+- The authoritative current task for all new worker action is `T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`.
+- Authoritative task package: `docs/tasks/Phase2/T90_training_same_host_repeated_run_consistency_pack.md`.
+- `T89` is complete and accepted as `PASS`.
+- `T89` non-blocking notes are all accepted as operational reminders; no new deferred/rejected warning-derived risk is opened by this closeout.
+- `T90` is the single recommended next task after `T89`.
+- `T90` is a same-host training reproducibility hardening task only. It is not permission to widen into note rewrite, benchmark/HIL/runtime semantics changes, `.tflite` portability, real-board success claims, theory-branch mergeback, sidecar-promotion scope, venue-template adaptation, or submission-ready completion.
 - `T37` / real-board execution remains `blocked + lowest-priority backlog`; it is not the next mainline step while hardware host conditions remain unavailable.
 - The theory branch remains isolated from this mainline task.
 - If any older line below still mentions `T87` or earlier tasks as current, treat it as historical carry-forward text only.

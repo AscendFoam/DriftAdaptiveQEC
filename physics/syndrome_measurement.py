@@ -1,14 +1,12 @@
-"""
-Syndrome Measurement Module
+"""综合征测量模块（Syndrome Measurement）。
 
-Implements GKP syndrome measurement with realistic effects:
-- Finite squeezing noise
-- Measurement inefficiency
-- Ancilla errors
+本模块模拟 GKP 码的综合征测量过程，从理想的取模测量到带真实物理噪声的测量。
+核心思想：位移误差对晶格常数取模即得到综合征，再据此施加反向位移完成纠错。
 
-中文说明：
-- 本模块模拟 GKP 综合征测量过程，从理想取模测量到带噪声的真实测量。
-- 其中 RealisticSyndromeMeasurement 是后续纠错主流程的默认测量后端。
+- ``SyndromeMeasurement``：理想（无噪声）取模测量；
+- ``RealisticSyndromeMeasurement``：在理想测量基础上叠加有限压缩噪声、探测效率
+  损失、散粒噪声（shot noise）与辅助比特（ancilla）错误，是纠错主流程的默认测量后端；
+- ``AdaptiveSyndromeMeasurement``：基于噪声水平自适应调整纠错增益。
 """
 
 import numpy as np
@@ -20,7 +18,14 @@ from .constants import LATTICE_CONST
 
 @dataclass
 class MeasurementConfig:
-    """Configuration for syndrome measurement"""
+    """综合征测量参数容器（数据类）。
+
+    字段:
+        delta: GKP 态有限能量参数，决定有限压缩导致的测量噪声（方差 ∝ Δ²）。
+        measurement_efficiency: 探测器效率 η，越低则测量噪声越大。
+        ancilla_error_rate: 辅助比特错误率（测量中发生半晶格偏移的概率）。
+        add_shot_noise: 是否加入探测器散粒噪声（默认均值 0、std 0.1）。
+    """
     delta: float = 0.3  # GKP state finite energy parameter
     measurement_efficiency: float = 0.95  # Detector efficiency
     ancilla_error_rate: float = 0.01  # Probability of ancilla error
@@ -28,53 +33,67 @@ class MeasurementConfig:
 
 
 class SyndromeMeasurement:
-    """
-    Basic syndrome measurement for GKP codes
+    """GKP 码的基础（理想）综合征测量。
 
-    The syndrome is the displacement error modulo the lattice constant.
-    For an error displacement (e_q, e_p), the syndrome is:
-    s_q = e_q mod √(2π) mapped to [-√(2π)/2, √(2π)/2]
-    s_p = e_p mod √(2π) mapped to [-√(2π)/2, √(2π)/2]
+    综合征即位移误差对晶格常数取模的结果。对位移误差 (e_q, e_p)：
+
+        s_q = e_q mod √(2π)，映射到 [-√(2π)/2, √(2π)/2]
+        s_p = e_p mod √(2π)，映射到 [-√(2π)/2, √(2π)/2]
     """
 
     def __init__(self, lattice: float = LATTICE_CONST):
+        """初始化理想测量器。
+
+        输入:
+            lattice: 晶格常数（默认 √(2π)）。
+
+        输出:
+            无返回值；记录 lattice。
+        """
         self.lattice = lattice
 
     def measure(self, displacement: np.ndarray) -> np.ndarray:
-        """
-        Ideal syndrome measurement
+        """理想综合征测量（无噪声）。
 
-        Args:
-            displacement: [dq, dp] displacement error
+        功能:
+            把位移误差对晶格常数取模并映射到 [-lattice/2, lattice/2] 区间。
 
-        Returns:
-            syndrome: [sq, sp] measured syndrome
+        输入:
+            displacement: 位移误差 [dq, dp]。
+
+        输出:
+            综合征 [sq, sp]，落在 [-lattice/2, lattice/2]。
         """
-        # Map to [-lattice/2, lattice/2]
+        # 映射到 [-lattice/2, lattice/2]
         syndrome = np.mod(displacement + self.lattice / 2, self.lattice) - self.lattice / 2
         return syndrome
 
     def get_correction(self, syndrome: np.ndarray) -> np.ndarray:
-        """
-        Get correction displacement from syndrome
+        """由综合征得到校正位移。
 
-        For ideal measurement, correction = -syndrome
+        功能:
+            理想测量下校正量等于 -syndrome（直接抵消误差）。
+
+        输入:
+            syndrome: 测得的综合征 [sq, sp]。
+
+        输出:
+            校正位移 [dq, dp] = -syndrome。
         """
         return -syndrome
 
 
 class RealisticSyndromeMeasurement:
-    """
-    Realistic syndrome measurement including noise sources
+    """带真实物理噪声的综合征测量。
 
-    In real GKP error correction:
-    1. An ancilla GKP state is prepared
-    2. A SUM gate couples the data and ancilla
-    3. Homodyne detection measures the ancilla
-    4. The measurement has noise from finite squeezing
+    真实 GKP 纠错的测量流程：
+      1. 制备一个辅助 GKP 态；
+      2. 用 SUM 门耦合数据态与辅助态；
+      3. 对辅助态做 homodyne 探测；
+      4. 测量带有有限压缩导致的噪声。
 
-    The measurement noise scales with the GKP delta parameter:
-    σ_meas ∝ Δ
+    测量噪声随 GKP delta 参数变化：σ_meas ∝ Δ。
+    本类还可接收可选的确定性 RNG（``rng``），供需要可复现的 recovery / runtime 路径使用。
     """
 
     def __init__(
@@ -83,74 +102,130 @@ class RealisticSyndromeMeasurement:
         *,
         rng: Optional[np.random.Generator] = None,
     ):
-        """
-        Args:
-            config: Measurement configuration
-            rng: Optional deterministic RNG used by recovery/runtime paths
+        """初始化真实测量器。
+
+        功能:
+            记录测量配置与晶格常数，保存可选的确定性随机数发生器（RNG），
+            并据此计算测量噪声标准差 sigma_meas。
+
+        输入:
+            config: ``MeasurementConfig`` 测量配置（为 None 时用默认配置）。
+            rng: 可选的确定性 ``np.random.Generator``，供需要可复现结果的路径使用；
+                 为 None 时退化为全局 ``np.random``。
+
+        输出:
+            无返回值；设置 config / lattice / sigma_meas / _rng。
         """
         self.config = config or MeasurementConfig()
         self.lattice = LATTICE_CONST
         self._rng = rng
 
-        # Compute measurement noise variance
+        # 计算测量噪声方差
         self._compute_noise_variance()
 
     def _normal(self, mean: float, std: float, size: Optional[int | tuple[int, ...]] = None):
+        """从高斯分布采样。
+
+        功能:
+            若提供了确定性 RNG 则用之，否则用全局 ``np.random.normal``。
+
+        输入:
+            mean: 均值。
+            std: 标准差。
+            size: 采样形状（None 表示标量）。
+
+        输出:
+            高斯采样结果（标量或 ndarray）。
+        """
         if self._rng is None:
             return np.random.normal(mean, std, size=size)
         return self._rng.normal(mean, std, size=size)
 
     def _random(self) -> float:
+        """从 [0,1) 均匀分布采样一个标量。
+
+        输入:
+            无。
+
+        输出:
+            [0,1) 区间的随机浮点数。优先用确定性 RNG，否则用全局 ``np.random.random``。
+        """
         if self._rng is None:
             return float(np.random.random())
         return float(self._rng.random())
 
     def _random_sign(self) -> float:
+        """随机返回 +1 或 -1。
+
+        功能:
+            采样一个标准正态值，按其正负号返回 +1 / -1（>=0 取 +1，<0 取 -1）。
+
+        输入:
+            无。
+
+        输出:
+            +1.0 或 -1.0。
+        """
         sample = float(self._normal(0.0, 1.0))
         return 1.0 if sample >= 0.0 else -1.0
 
     def _compute_noise_variance(self):
-        """Compute measurement noise from configuration"""
+        """由配置计算测量噪声标准差 sigma_meas。
+
+        功能:
+            把有限压缩与探测效率损失统一折算为测量噪声：
+              - 有限压缩贡献方差 var_squeezing = Δ²；
+              - 探测效率损失贡献真空噪声 var_inefficiency = (1-η)/(2η)（η>0 时）；
+              - 合成 sigma_meas = √(var_squeezing + var_inefficiency)。
+
+        输入:
+            无（参数取自 self.config）。
+
+        输出:
+            无返回值；写入 self.sigma_meas。
+        """
         # 中文注释：将有限能量与探测效率损失统一折算为测量方差。
         delta = self.config.delta
         eta = self.config.measurement_efficiency
 
-        # Finite squeezing contributes measurement noise
-        # Variance scales as Δ² for GKP states
+        # 有限压缩贡献测量噪声，方差正比于 Δ²
         var_squeezing = delta ** 2
 
-        # Measurement inefficiency adds vacuum noise
-        # (1-η)/η times the shot noise variance (=1/2)
+        # 探测效率损失贡献真空噪声：(1-η)/η × 散粒噪声方差(=1/2)
         var_inefficiency = (1 - eta) / (2 * eta) if eta > 0 else 1.0
 
-        # Total measurement variance
+        # 总测量方差
         self.sigma_meas = np.sqrt(var_squeezing + var_inefficiency)
 
     def measure(self,
                 true_displacement: np.ndarray,
                 add_noise: bool = True) -> np.ndarray:
-        """
-        Simulate realistic syndrome measurement
+        """模拟真实（带噪声）的综合征测量。
 
-        Args:
-            true_displacement: [dq, dp] actual displacement error
-            add_noise: Whether to add measurement noise
+        功能:
+            先计算理想综合征，再依次叠加测量噪声（sigma_meas）、散粒噪声
+            （可选，默认均值 0、std 0.1），以及以 ``ancilla_error_rate`` 概率
+            发生的辅助比特错误（在 q 或 p 方向随机偏移半个晶格）。
 
-        Returns:
-            syndrome: [sq, sp] measured syndrome (with noise)
+        输入:
+            true_displacement: 真实位移误差 [dq, dp]。
+            add_noise: 是否叠加噪声；为 False 时直接返回理想综合征。
+
+        输出:
+            测得（带噪声）的综合征 [sq, sp]。
         """
         # 中文注释：先得到理想综合征，再叠加测量噪声、shot noise 和 ancilla 扰动。
-        # Ideal syndrome
+        # 理想综合征
         syndrome_ideal = np.mod(true_displacement + self.lattice / 2,
                                 self.lattice) - self.lattice / 2
 
         if not add_noise:
             return syndrome_ideal
 
-        # Add measurement noise
+        # 测量噪声
         measurement_noise = self._normal(0, self.sigma_meas, size=2)
 
-        # Shot noise (detector noise)
+        # 散粒噪声（探测器噪声）
         if self.config.add_shot_noise:
             shot_noise = self._normal(0, 0.1, size=2)
         else:
@@ -158,9 +233,9 @@ class RealisticSyndromeMeasurement:
 
         syndrome_noisy = syndrome_ideal + measurement_noise + shot_noise
 
-        # Ancilla errors (rare bit flips in measurement)
+        # 辅助比特错误（测量中偶发的比特翻转）
         if self._random() < self.config.ancilla_error_rate:
-            # Random offset by half lattice
+            # 随机偏移半个晶格
             if self._random() > 0.5:
                 syndrome_noisy[0] += self.lattice / 2 * self._random_sign()
             else:
@@ -171,86 +246,137 @@ class RealisticSyndromeMeasurement:
     def get_correction(self,
                        syndrome: np.ndarray,
                        gain: float = 1.0) -> np.ndarray:
-        """
-        Get correction displacement from syndrome
+        """由综合征得到校正位移（带增益）。
 
-        Args:
-            syndrome: Measured syndrome [sq, sp]
-            gain: Correction gain (< 1 for noisy measurements)
+        输入:
+            syndrome: 测得的综合征 [sq, sp]。
+            gain: 校正增益（噪声测量下 <1 以避免过补偿）。
 
-        Returns:
-            correction: Correction displacement [dq, dp]
+        输出:
+            校正位移 [dq, dp] = -gain * syndrome。
         """
         return -gain * syndrome
 
     def get_optimal_gain(self) -> float:
-        """
-        Compute optimal correction gain
+        """计算最优校正增益（Wiener 滤波思路）。
 
-        For noisy measurements, the optimal gain is:
-        g* = σ_signal² / (σ_signal² + σ_noise²)
+        功能:
+            对带噪声测量，最优增益为
+                g* = σ_signal² / (σ_signal² + σ_noise²)
+            其中 σ_signal² 为真实综合征的方差（晶格区间内均匀分布，方差 = (λ/2)²/3），
+            σ_noise² 为测量噪声方差。
 
-        where σ_signal² is the variance of the true syndrome
-        and σ_noise² is the measurement noise variance.
+        输入:
+            无。
+
+        输出:
+            最优增益 g*（float）。
         """
-        # Signal variance: uniform distribution in [-λ/2, λ/2]
+        # 信号方差：[-λ/2, λ/2] 区间均匀分布
         var_signal = (self.lattice / 2) ** 2 / 3
 
-        # Noise variance
+        # 噪声方差
         var_noise = self.sigma_meas ** 2
 
         return var_signal / (var_signal + var_noise)
 
     def get_measurement_covariance(self) -> np.ndarray:
-        """Get measurement noise covariance matrix"""
+        """返回测量噪声的协方差矩阵。
+
+        功能:
+            以 sigma_meas² 为对角元；若开启散粒噪声，则额外加上散粒噪声方差 0.01。
+            假设 q、p 方向噪声独立，故为对角阵。
+
+        输入:
+            无。
+
+        输出:
+            shape=(2,2) 的对角协方差矩阵。
+        """
         var = self.sigma_meas ** 2
         if self.config.add_shot_noise:
-            var += 0.01  # Shot noise variance
+            var += 0.01  # 散粒噪声方差
         return np.diag([var, var])
 
     def update_delta(self, delta: float):
-        """Update GKP delta parameter"""
+        """更新 GKP 的 delta 参数并重算测量噪声。
+
+        输入:
+            delta: 新的有限能量参数。
+
+        输出:
+            无返回值；更新 self.config.delta 并重算 self.sigma_meas。
+        """
         self.config.delta = delta
         self._compute_noise_variance()
 
 
 class AdaptiveSyndromeMeasurement(RealisticSyndromeMeasurement):
-    """
-    Syndrome measurement with adaptive gain
+    """带自适应增益的综合征测量。
 
-    The gain is adjusted based on estimated noise level.
+    在 ``RealisticSyndromeMeasurement`` 基础上，依据估计噪声水平动态调整纠错增益。
     """
 
     def __init__(self, config: Optional[MeasurementConfig] = None):
+        """初始化自适应测量器。
+
+        功能:
+            复用父类初始化，并用当前配置计算最优增益作为初始增益。
+
+        输入:
+            config: 测量配置（为 None 时用默认配置）。
+
+        输出:
+            无返回值；额外设置 self.gain 为初始最优增益。
+        """
         super().__init__(config)
         self.gain = self.get_optimal_gain()
 
     def measure_and_correct(self,
                             true_displacement: np.ndarray,
                             add_noise: bool = True) -> Tuple[np.ndarray, np.ndarray]:
-        """
-        Measure syndrome and compute correction in one step
+        """一次性完成"测量综合征 + 计算校正"。
 
-        Returns:
-            syndrome: Measured syndrome
-            correction: Computed correction with optimal gain
+        输入:
+            true_displacement: 真实位移误差 [dq, dp]。
+            add_noise: 测量是否加噪。
+
+        输出:
+            (syndrome, correction)：测得的综合征、以及用当前自适应增益算出的校正位移。
         """
         syndrome = self.measure(true_displacement, add_noise)
         correction = self.get_correction(syndrome, self.gain)
         return syndrome, correction
 
     def update_gain(self, new_gain: float):
-        """Update the correction gain"""
-        self.gain = np.clip(new_gain, 0.1, 1.5)  # Safety bounds
+        """更新纠错增益（带安全边界）。
+
+        功能:
+            把增益裁剪到 [0.1, 1.5] 区间，避免极端增益导致发散。
+
+        输入:
+            new_gain: 期望的新增益值。
+
+        输出:
+            无返回值；写入裁剪后的 self.gain。
+        """
+        self.gain = np.clip(new_gain, 0.1, 1.5)  # 安全边界
 
     def adapt_to_noise(self, estimated_sigma: float):
-        """
-        Adapt gain based on estimated noise level
+        """根据估计的总噪声水平自适应调整增益。
 
-        Args:
-            estimated_sigma: Estimated total noise standard deviation
+        功能:
+            用估计的噪声标准差更新等效测量噪声
+                sigma_meas = √(Δ² + estimated_sigma²)，
+            然后重算最优增益。
+
+        输入:
+            estimated_sigma: 估计的总噪声标准差。
+
+        输出:
+            无返回值；更新 self.sigma_meas 与 self.gain。
         """
-        # Update effective measurement noise
+        # 更新等效测量噪声
         self.sigma_meas = np.sqrt(self.config.delta**2 + estimated_sigma**2)
         self.gain = self.get_optimal_gain()
 
@@ -258,18 +384,27 @@ class AdaptiveSyndromeMeasurement(RealisticSyndromeMeasurement):
 def simulate_measurement_statistics(n_samples: int = 10000,
                                     true_sigma: float = 0.3,
                                     delta: float = 0.3) -> dict:
-    """
-    Simulate measurement statistics for analysis
+    """仿真并统计大量测量样本，用于分析测量噪声影响。
 
-    Returns statistics on syndrome measurements including
-    mean, variance, and correlation.
+    功能:
+        用给定 true_sigma 生成随机位移误差，经真实测量得到带噪声综合征，
+        统计其 q/p 均值、标准差、相关性，并附带该配置下的测量噪声 sigma 与最优增益。
+
+    输入:
+        n_samples: 采样次数。
+        true_sigma: 真实位移误差的标准差。
+        delta: GKP 有限能量参数（用于构造测量配置）。
+
+    输出:
+        字典，包含 mean_q / mean_p / std_q / std_p / correlation /
+        measurement_sigma / optimal_gain 等统计量。
     """
     config = MeasurementConfig(delta=delta)
     measurement = RealisticSyndromeMeasurement(config)
 
     syndromes = []
     for _ in range(n_samples):
-        # Random displacement error
+        # 随机位移误差
         error = np.random.normal(0, true_sigma, size=2)
         syndrome = measurement.measure(error, add_noise=True)
         syndromes.append(syndrome)

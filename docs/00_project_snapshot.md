@@ -16,6 +16,14 @@
 - 当前决策状态：`Go`
 - 当前唯一任务来源：`docs/04_task_board.md`
 
+## 2026-06-15 Captain Update (T89 closeout)
+
+- `T89` 已由 Captain 判定为 `PASS`。
+- `T89` 在不改动源码、测试、`runs/`、`artifacts/`、主线 note 正文或治理边界的前提下，真实完成了 frozen-mainline handoff packet、source-of-truth map、post-freeze change-control 与 blocked-surface re-entry 条件固化。
+- `T89` 没有引入新的 deferred/rejected warning，也没有新增风险项；review 中的 non-blocking notes 仅作为 allowlist-scoped diff、dirty-worktree 噪声隔离与“当前仍不是 submission-ready / blocked-surface unlocked”的操作提醒。
+- 当前唯一任务切换为 `T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`。
+- `T90` 从 frozen-mainline 主线回到一条可执行的非硬件证据强化 lane，只补 clean CPU-only 同机 repeated-run consistency，不改主线 note，不碰 theory 分支，不扩到 `.tflite` portability、real-board execution、benchmark 扩写或 submission-ready retelling。
+
 ## 2026-06-15 Captain Update (T88 closeout)
 
 - `T88` 已由 Captain 判定为 `PASS`。

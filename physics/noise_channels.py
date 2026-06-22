@@ -1,17 +1,14 @@
-"""
-Quantum Noise Channels Module
+"""量子噪声通道模块（Quantum Noise Channels）。
 
-Implements physically accurate noise channels for bosonic systems:
-- Photon loss (amplitude damping)
-- Thermal noise
-- Displacement noise
-- Dephasing / phase diffusion
+本文件提供用于玻色子系统（如超导腔）的多种噪声通道建模，并把不同噪声源
+统一折算到可仿真的 Wigner 函数演化上。包含：
+- 光子损失（amplitude damping，超导腔主导噪声）；
+- 热噪声；
+- 位移噪声（控制不完美）；
+- 相位噪声 / 退相位（dephasing）。
 
-These are proper quantum channels, not classical approximations.
-
-中文说明：
-- 本文件提供多种噪声通道及其组合模型，用于近似真实硬件中的退相干和控制误差。
-- 重点是把不同噪声源统一折算到可仿真的 Wigner 函数演化上。
+这些通道作用于 Wigner 函数表示，组合模型可输出等效位移噪声 σ，供上层快速
+估计与参数调度使用（不替代完整仿真）。
 """
 
 import numpy as np
@@ -21,7 +18,7 @@ from dataclasses import dataclass
 
 from .gkp_state import ApproximateGKPState, LATTICE_CONST
 
-# Try to import Strawberry Fields
+# 尝试导入 Strawberry Fields（部分精确噪声通道依赖）
 try:
     import strawberryfields as sf
     from strawberryfields.ops import LossChannel, ThermalLossChannel, Dgate, Rgate
@@ -32,7 +29,14 @@ except ImportError:
 
 @dataclass
 class NoiseParameters:
-    """Parameters for noise channels"""
+    """噪声通道参数容器（数据类）。
+
+    字段:
+        gamma: 光子损失率（无量纲，γ=κt）。
+        n_bar: 热平均光子数。
+        sigma_displacement: 位移噪声标准差（控制不完美）。
+        sigma_phase: 相位噪声标准差。
+    """
     gamma: float = 0.05  # Photon loss rate
     n_bar: float = 0.01  # Thermal photon number
     sigma_displacement: float = 0.1  # Displacement noise std
@@ -40,17 +44,27 @@ class NoiseParameters:
 
 
 class QuantumNoiseChannel:
-    """
-    Combined quantum noise channel for GKP states
+    """组合量子噪声通道（作用于 GKP 态的 Wigner 函数）。
 
-    Applies multiple noise sources in sequence:
-    1. Photon loss (dominant in superconducting cavities)
-    2. Thermal noise
-    3. Displacement noise (control imperfections)
-    4. Phase noise / dephasing
+    依次施加多种噪声源：
+      1. 光子损失（超导腔主导噪声）；
+      2. 热噪声；
+      3. 位移噪声（控制不完美）；
+      4. 相位噪声 / 退相位。
+
+    为提升效率，各噪声在 Wigner 函数上采用解析近似实现（缩放、高斯卷积、旋转平均）。
     """
 
     def __init__(self, cutoff: int = 50, use_sf: bool = True):
+        """初始化组合噪声通道。
+
+        输入:
+            cutoff: Fock 截断维度（仅影响可能的 SF 路径，本类默认走解析近似）。
+            use_sf: 是否优先使用 SF（实际启用还取决于 SF 是否可用）。
+
+        输出:
+            无返回值；记录 cutoff 与 use_sf（已与 SF 可用性取交集）。
+        """
         self.cutoff = cutoff
         self.use_sf = use_sf and HAS_STRAWBERRYFIELDS
 
@@ -58,24 +72,33 @@ class QuantumNoiseChannel:
                   wigner: np.ndarray,
                   params: NoiseParameters,
                   grid_range: Tuple[float, float] = (-6, 6)) -> np.ndarray:
-        """
-        Apply all noise channels to a Wigner function
+        """依次施加全部噪声通道到 Wigner 函数上。
 
-        For efficiency, this uses analytical approximations when possible.
+        功能:
+            按"光子损失 -> 热噪声 -> 位移噪声 -> 相位噪声"的顺序叠加噪声影响。
+            当某噪声参数可忽略时其内部会跳过计算。
+
+        输入:
+            wigner: 输入 Wigner 函数（二维 ndarray）。
+            params: ``NoiseParameters``，包含各类噪声参数。
+            grid_range: 网格坐标范围 (min, max)，用于把物理尺度换算成像素尺度。
+
+        输出:
+            施加全部噪声后的 Wigner 函数（与输入同形）。
         """
-        # 中文注释：按“损失 -> 热噪声 -> 位移 -> 相位”顺序依次叠加噪声影响。
+        # 中文注释：按"损失 -> 热噪声 -> 位移 -> 相位"顺序依次叠加噪声影响。
         W = wigner.copy()
 
-        # 1. Photon loss: contraction + diffusion
+        # 1. 光子损失：向原点收缩 + 高斯扩散
         W = self._apply_photon_loss_wigner(W, params.gamma, grid_range)
 
-        # 2. Thermal noise: Gaussian convolution
+        # 2. 热噪声：高斯卷积
         W = self._apply_thermal_noise_wigner(W, params.n_bar, grid_range)
 
-        # 3. Displacement noise: additional broadening
+        # 3. 位移噪声：额外展宽
         W = self._apply_displacement_noise_wigner(W, params.sigma_displacement, grid_range)
 
-        # 4. Phase noise: angular smearing
+        # 4. 相位噪声：角度涂抹
         if params.sigma_phase > 0.01:
             W = self._apply_phase_noise_wigner(W, params.sigma_phase)
 
@@ -85,51 +108,58 @@ class QuantumNoiseChannel:
                                    W: np.ndarray,
                                    gamma: float,
                                    grid_range: Tuple[float, float]) -> np.ndarray:
+        """对 Wigner 函数施加光子损失通道。
+
+        功能:
+            光子损失对 Wigner 函数的变换为
+                W(q,p) → (1/η) W(q/√η, p/√η) * G_{σ_η}
+            其中 η = exp(-γ) 为透射率，σ_η = √((1-η)/2)。
+            具体实现为两步：
+              1. 向原点收缩（按 √η 缩放并补零还原尺寸）；
+              2. 宽度为 σ_η 的高斯扩散（高斯卷积）。
+            最后按最大值重新归一化以稳定幅值。
+
+        输入:
+            W: 输入 Wigner 函数。
+            gamma: 光子损失率 γ（η = exp(-γ)）。
+            grid_range: 网格坐标范围，用于把 σ_η 换算成像素单位。
+
+        输出:
+            施加光子损失后的 Wigner 函数（与输入同形）。γ 可忽略时原样返回。
         """
-        Apply photon loss channel to Wigner function
-
-        Photon loss transforms the Wigner function as:
-        W(q,p) → (1/η) W(q/√η, p/√η) * G_{σ_η}
-
-        where η = exp(-γ) is the transmissivity and σ_η = √((1-η)/2)
-
-        The effect is:
-        1. Contraction toward origin (scaling by √η)
-        2. Gaussian diffusion with width σ_η
-        """
-        eta = np.exp(-gamma)  # Transmissivity
-        if eta > 0.999:  # Negligible loss
+        eta = np.exp(-gamma)  # 透射率
+        if eta > 0.999:  # 损失可忽略
             return W
 
         grid_size = W.shape[0]
         scale_factor = np.sqrt(eta)
 
-        # 1. Contraction toward origin via interpolation
+        # 1. 通过插值实现向原点收缩
         from scipy.ndimage import zoom, shift
-        # Scale the coordinates (zoom with center preservation)
+        # 缩放坐标（保持中心对齐）
         center = grid_size // 2
 
-        # Create contracted version
+        # 构造收缩后的版本
         if scale_factor < 0.99:
-            # Zoom and pad
+            # 缩放后补零还原到原尺寸
             zoomed_size = int(grid_size * scale_factor)
             if zoomed_size < 3:
                 zoomed_size = 3
             W_zoomed = zoom(W, scale_factor, order=1)
-            # Pad to original size
+            # 补零还原
             pad_size = (grid_size - W_zoomed.shape[0]) // 2
             W_contracted = np.pad(W_zoomed,
                                   ((pad_size, grid_size - W_zoomed.shape[0] - pad_size),
                                    (pad_size, grid_size - W_zoomed.shape[1] - pad_size)),
                                   mode='constant', constant_values=0)
-            # Ensure same shape
+            # 保证形状一致
             W_contracted = W_contracted[:grid_size, :grid_size]
         else:
             W_contracted = W
 
-        # 2. Gaussian diffusion
+        # 2. 高斯扩散
         sigma_eta = np.sqrt((1 - eta) / 2)
-        # Convert to pixel units
+        # 换算为像素单位
         dx = (grid_range[1] - grid_range[0]) / grid_size
         sigma_pixels = sigma_eta / dx
 
@@ -138,7 +168,7 @@ class QuantumNoiseChannel:
         else:
             W_final = W_contracted
 
-        # Renormalize
+        # 重新归一化
         if np.max(np.abs(W_final)) > 1e-10:
             W_final = W_final / np.max(np.abs(W_final)) * np.max(np.abs(W))
 
@@ -148,10 +178,18 @@ class QuantumNoiseChannel:
                                      W: np.ndarray,
                                      n_bar: float,
                                      grid_range: Tuple[float, float]) -> np.ndarray:
-        """
-        Apply thermal noise channel to Wigner function
+        """对 Wigner 函数施加热噪声通道。
 
-        Thermal noise is a Gaussian convolution with width √(n_bar)
+        功能:
+            热噪声用宽度 √(n_bar) 的高斯卷积近似。
+
+        输入:
+            W: 输入 Wigner 函数。
+            n_bar: 热平均光子数。
+            grid_range: 网格坐标范围，用于把 √(n_bar) 换算成像素单位。
+
+        输出:
+            施加热噪声后的 Wigner 函数（与输入同形）。n_bar 过小时原样返回。
         """
         if n_bar < 1e-6:
             return W
@@ -167,11 +205,19 @@ class QuantumNoiseChannel:
                                           W: np.ndarray,
                                           sigma_disp: float,
                                           grid_range: Tuple[float, float]) -> np.ndarray:
-        """
-        Apply random displacement noise
+        """对 Wigner 函数施加随机位移噪声（建模为高斯卷积）。
 
-        This models control imperfections (AWG drift, cable phase drift, etc.)
-        Effect is Gaussian convolution.
+        功能:
+            建模控制不完美（AWG 漂移、电缆相位漂移、脉冲校准误差等），
+            效果等价为对 Wigner 函数做宽度 sigma_disp 的高斯卷积。
+
+        输入:
+            W: 输入 Wigner 函数。
+            sigma_disp: 位移噪声标准差。
+            grid_range: 网格坐标范围，用于换算像素单位。
+
+        输出:
+            施加位移噪声后的 Wigner 函数（与输入同形）。sigma_disp 过小时原样返回。
         """
         if sigma_disp < 1e-6:
             return W
@@ -185,11 +231,18 @@ class QuantumNoiseChannel:
     def _apply_phase_noise_wigner(self,
                                    W: np.ndarray,
                                    sigma_phase: float) -> np.ndarray:
-        """
-        Apply phase noise / dephasing
+        """对 Wigner 函数施加相位噪声 / 退相位。
 
-        This causes angular smearing in phase space.
-        We approximate this by averaging over small rotations.
+        功能:
+            相位噪声在相空间表现为角度涂抹，这里通过对若干小角度旋转取平均来近似。
+            采样若干个相位偏移（高斯），分别把 Wigner 旋转后求平均。
+
+        输入:
+            W: 输入 Wigner 函数。
+            sigma_phase: 相位噪声标准差（弧度）。
+
+        输出:
+            角度涂抹后的 Wigner 函数（与输入同形）。
         """
         from scipy.ndimage import rotate
 
@@ -205,78 +258,114 @@ class QuantumNoiseChannel:
 
 
 class PhotonLossChannel:
-    """
-    Photon loss (amplitude damping) channel
+    """光子损失（amplitude damping）通道。
 
-    This is the dominant noise source in superconducting cavities.
-    Characterized by the cavity decay rate κ and evolution time t:
-    γ = κt gives the total loss.
+    这是超导腔中的主导噪声源，由腔衰减率 κ 和演化时间 t 决定，总损失 γ = κt。
     """
 
     def __init__(self, gamma: float):
-        """
-        Args:
-            gamma: Total photon loss (dimensionless), γ = κt
+        """初始化光子损失通道。
+
+        输入:
+            gamma: 总光子损失（无量纲），γ = κt；透射率 η = exp(-γ)。
+
+        输出:
+            无返回值；记录 gamma 与 eta。
         """
         self.gamma = gamma
-        self.eta = np.exp(-gamma)  # Transmissivity
+        self.eta = np.exp(-gamma)  # 透射率
 
     def apply_to_wigner(self,
                         W: np.ndarray,
                         grid_range: Tuple[float, float] = (-6, 6)) -> np.ndarray:
-        """Apply to Wigner function representation"""
+        """把光子损失作用到 Wigner 函数表示上。
+
+        功能:
+            委托给 ``QuantumNoiseChannel._apply_photon_loss_wigner``，
+            仅施加光子损失（其它噪声参数置零）。
+
+        输入:
+            W: 输入 Wigner 函数。
+            grid_range: 网格坐标范围。
+
+        输出:
+            仅施加光子损失后的 Wigner 函数。
+        """
         channel = QuantumNoiseChannel()
         params = NoiseParameters(gamma=self.gamma, n_bar=0, sigma_displacement=0, sigma_phase=0)
         return channel._apply_photon_loss_wigner(W, self.gamma, grid_range)
 
     @classmethod
     def from_t1_and_time(cls, T1: float, t: float) -> 'PhotonLossChannel':
-        """
-        Create from T1 time and evolution time
+        """由 T1 时间与演化时间构造光子损失通道。
 
-        Args:
-            T1: Energy relaxation time (e.g., in microseconds)
-            t: Evolution time (same units as T1)
+        输入:
+            T1: 能量弛豫时间（如微秒）。
+            t: 演化时间（与 T1 同量纲）。
+
+        输出:
+            新的 ``PhotonLossChannel``，其 gamma = t / T1。
         """
         gamma = t / T1
         return cls(gamma)
 
 
 class ThermalNoiseChannel:
-    """
-    Thermal noise channel
+    """热噪声通道。
 
-    Models the effect of a thermal bath with mean photon number n_bar.
+    建模温度为 T 的热浴，用平均热光子数 n_bar 表征。
     """
 
     def __init__(self, n_bar: float):
-        """
-        Args:
-            n_bar: Mean thermal photon number
+        """初始化热噪声通道。
+
+        输入:
+            n_bar: 平均热光子数。
+
+        输出:
+            无返回值；记录 n_bar。
         """
         self.n_bar = n_bar
 
     def apply_to_wigner(self,
                         W: np.ndarray,
                         grid_range: Tuple[float, float] = (-6, 6)) -> np.ndarray:
-        """Apply to Wigner function representation"""
+        """把热噪声作用到 Wigner 函数表示上。
+
+        功能:
+            委托给 ``QuantumNoiseChannel._apply_thermal_noise_wigner``，
+            以宽度 √(n_bar) 的高斯卷积近似热噪声。
+
+        输入:
+            W: 输入 Wigner 函数。
+            grid_range: 网格坐标范围。
+
+        输出:
+            施加热噪声后的 Wigner 函数。
+        """
         channel = QuantumNoiseChannel()
         return channel._apply_thermal_noise_wigner(W, self.n_bar, grid_range)
 
     @classmethod
     def from_temperature(cls, T_kelvin: float, omega_hz: float) -> 'ThermalNoiseChannel':
-        """
-        Create from physical temperature
+        """由物理温度构造热噪声通道。
 
-        Args:
-            T_kelvin: Temperature in Kelvin
-            omega_hz: Cavity frequency in Hz
+        功能:
+            利用 Planck 分布 n_bar = 1/(exp(ℏω/kT) - 1) 由温度与腔频率
+            计算平均热光子数；当 kT 极小（近乎零温）时取 n_bar = 0。
+
+        输入:
+            T_kelvin: 温度（开尔文）。
+            omega_hz: 腔频率（Hz）。
+
+        输出:
+            新的 ``ThermalNoiseChannel``，其 n_bar 由上式给出。
         """
         import scipy.constants as const
         hbar_omega = const.hbar * omega_hz
         kT = const.k * T_kelvin
 
-        if kT < 1e-30:  # Essentially zero temperature
+        if kT < 1e-30:  # 近乎零温
             n_bar = 0.0
         else:
             n_bar = 1 / (np.exp(hbar_omega / kT) - 1)
@@ -285,26 +374,36 @@ class ThermalNoiseChannel:
 
 
 class DisplacementNoiseChannel:
-    """
-    Random displacement noise channel
+    """随机位移噪声通道。
 
-    Models control imperfections:
-    - AWG amplitude/phase drift
-    - Cable thermal drift
-    - Pulse calibration errors
+    建模控制不完美：
+    - AWG 幅度/相位漂移；
+    - 电缆热漂移；
+    - 脉冲校准误差。
     """
 
     def __init__(self, sigma_q: float, sigma_p: Optional[float] = None):
-        """
-        Args:
-            sigma_q: Displacement noise std in q direction
-            sigma_p: Displacement noise std in p direction (default: same as q)
+        """初始化位移噪声通道。
+
+        输入:
+            sigma_q: q 方向位移噪声标准差。
+            sigma_p: p 方向位移噪声标准差（默认与 q 相同）。
+
+        输出:
+            无返回值；记录 sigma_q 与 sigma_p。
         """
         self.sigma_q = sigma_q
         self.sigma_p = sigma_p if sigma_p is not None else sigma_q
 
     def sample_displacement(self) -> Tuple[float, float]:
-        """Sample a random displacement error"""
+        """采样一次随机位移误差。
+
+        输入:
+            无。
+
+        输出:
+            (dq, dp)：q 与 p 方向各自独立的高斯位移误差。
+        """
         dq = np.random.normal(0, self.sigma_q)
         dp = np.random.normal(0, self.sigma_p)
         return dq, dp
@@ -312,28 +411,44 @@ class DisplacementNoiseChannel:
     def apply_to_wigner(self,
                         W: np.ndarray,
                         grid_range: Tuple[float, float] = (-6, 6)) -> np.ndarray:
-        """Apply to Wigner function (as convolution)"""
+        """把位移噪声作用到 Wigner 函数（建模为高斯卷积）。
+
+        功能:
+            用 q、p 两个方向噪声标准差的平均值作为卷积宽度，
+            委托给 ``QuantumNoiseChannel._apply_displacement_noise_wigner``。
+
+        输入:
+            W: 输入 Wigner 函数。
+            grid_range: 网格坐标范围。
+
+        输出:
+            施加位移噪声后的 Wigner 函数。
+        """
         sigma_avg = (self.sigma_q + self.sigma_p) / 2
         channel = QuantumNoiseChannel()
         return channel._apply_displacement_noise_wigner(W, sigma_avg, grid_range)
 
 
 class CombinedNoiseModel:
-    """
-    Combined noise model with time-varying parameters
+    """带时变参数的组合噪声模型。
 
-    Convenient class for generating noisy GKP states with realistic noise.
+    提供便捷接口，用一组真实噪声参数对 GKP 态的 Wigner 函数一次性施加
+    光子损失、热噪声、位移噪声等组合噪声，并支持参数更新与等效 σ 估计。
     """
 
     def __init__(self,
                  gamma: float = 0.05,
                  n_bar: float = 0.01,
                  sigma_disp: float = 0.1):
-        """
-        Args:
-            gamma: Photon loss rate
-            n_bar: Thermal photon number
-            sigma_disp: Displacement noise std
+        """初始化组合噪声模型。
+
+        输入:
+            gamma: 光子损失率。
+            n_bar: 热平均光子数。
+            sigma_disp: 位移噪声标准差（相位噪声默认置 0）。
+
+        输出:
+            无返回值；内部组装 ``NoiseParameters`` 与 ``QuantumNoiseChannel``。
         """
         self.params = NoiseParameters(
             gamma=gamma,
@@ -346,29 +461,58 @@ class CombinedNoiseModel:
     def apply(self,
               wigner: np.ndarray,
               grid_range: Tuple[float, float] = (-6, 6)) -> np.ndarray:
-        """Apply noise to Wigner function"""
+        """对 Wigner 函数施加组合噪声。
+
+        输入:
+            wigner: 输入 Wigner 函数。
+            grid_range: 网格坐标范围。
+
+        输出:
+            施加全部噪声后的 Wigner 函数。
+        """
         return self.channel.apply_all(wigner, self.params, grid_range)
 
     def update_params(self, **kwargs):
-        """Update noise parameters"""
+        """更新噪声参数（关键字参数形式）。
+
+        功能:
+            仅更新 ``NoiseParameters`` 中已存在的字段，未知字段会被忽略。
+
+        输入:
+            **kwargs: 要更新的参数，如 gamma=0.1、n_bar=0.05。
+
+        输出:
+            无返回值；就地修改 self.params。
+        """
         for key, value in kwargs.items():
             if hasattr(self.params, key):
                 setattr(self.params, key, value)
 
     def get_effective_sigma(self) -> float:
-        """
-        Get effective total noise standard deviation
+        """计算等效总噪声标准差。
 
-        Combines all noise sources into equivalent displacement noise.
+        功能:
+            把光子损失、热噪声、位移噪声折算成单一等效位移噪声标准差：
+
+                σ_total = √(σ_loss² + σ_thermal² + σ_disp²)
+
+            其中 σ_loss = √(γ/2)、σ_thermal = √(n_bar)、σ_disp = sigma_displacement。
+            该等效 σ 常用于上层快速估计与参数调度，不替代完整仿真。
+
+        输入:
+            无。
+
+        输出:
+            等效总噪声标准差（float）。
         """
         # 中文注释：该等效 sigma 常用于上层快速估计与参数调度，不替代完整仿真。
-        # Photon loss contribution
+        # 光子损失贡献
         sigma_loss = np.sqrt(self.params.gamma / 2) if self.params.gamma > 0 else 0
 
-        # Thermal contribution
+        # 热噪声贡献
         sigma_thermal = np.sqrt(self.params.n_bar) if self.params.n_bar > 0 else 0
 
-        # Total
+        # 总噪声
         sigma_total = np.sqrt(sigma_loss**2 +
                               sigma_thermal**2 +
                               self.params.sigma_displacement**2)

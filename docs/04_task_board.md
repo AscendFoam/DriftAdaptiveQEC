@@ -21,6 +21,17 @@
   - 每个任务包必须有 Allowed files / Forbidden scope / Verification / Docs to update
   - 不把 `mock`、`stub`、`placeholder`、计划项或未来能力写成完成事实
 
+## 2026-06-15 Captain Final Supersession (T89 closeout)
+
+- Current unique task: `T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`
+- Task package: `docs/tasks/Phase2/T90_training_same_host_repeated_run_consistency_pack.md`
+- `T89` has been judged `PASS`.
+- `T89` completed one honest frozen-mainline handoff / source-of-truth / change-control closeout and opened no deferred/rejected warning-derived risk.
+- The T89 review's non-blocking notes are accepted as operational reminders only: allowlist-scoped review discipline inside a dirty worktree, host-side git/CRLF noise separation, and the requirement to keep `frozen-mainline handoff` narrower than submission-ready or blocked-surface unlock.
+- `R13/R14/R32/R33` remain open, `R11` remains open, and `T37` remains `blocked + lowest-priority backlog`.
+- `T90` is next because the mainline note is now intentionally frozen, `T51/T52` broader prose reopen is still premature, real-board remains hardware-blocked, and the highest-value feasible non-hardware evidence gap is to strengthen `R11` from one bounded rerun (`T50`) into one same-host repeated-run consistency pack.
+- `T90` must stay mainline-only, clean-CPU-only, reproducibility-bounded, and theory-branch-isolated; it must not widen into note rewrite, `.tflite` portability, real-board execution, expanded benchmark, sidecar promotion, or submission-ready completion claims.
+
 ## Phase 0: Stabilization
 
 - [x] T0: 冻结 legacy 状态并完成只读审计
@@ -655,8 +666,15 @@ Task-board supersession note (`2026-06-14`, Captain closeout):
   - Review output: `docs/review/T88_review.md`
   - Captain verdict: `PASS`
   - Result: `T88` 真实完成了 bounded manual finish 执行、mainline surface freeze、author edit decision 固化与 blocked-surface disclaimer 收口；其唯一 gate verdict `GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY` 只授权下一张 frozen-mainline handoff / post-freeze change-control 任务，不等于 submission-ready completion
-- [ ] T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口
+- [x] T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口
   - Task package: `docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
+  - Output: `docs/paper_materials/paper_frozen_mainline_handoff_packet.md`
+  - Output: `docs/paper_materials/paper_frozen_mainline_source_of_truth_map.md`
+  - Output: `docs/paper_materials/paper_postfreeze_change_control.md`
+  - Output: `docs/paper_materials/paper_blocked_surface_reentry_conditions.md`
+  - Review output: `docs/review/T89_review.md`
+  - Captain verdict: `PASS`
+  - Result: `T89` 真实完成了 frozen-mainline handoff 单一入口、source-of-truth 回链、post-freeze 变更分级与 blocked-surface re-entry 条件固化；它把主线变成“可交接但仍冻结”的状态，而不是 submission-ready completion 或任何 blocked surface 解锁
 
 ### Milestone 2R: Reproducibility And Material Pack (proposed)
 
@@ -666,6 +684,8 @@ Task-board supersession note (`2026-06-14`, Captain closeout):
   - Review output: `docs/review/T50_review.md`
   - Captain verdict: `PASS`
   - Result: T50 closes one missing mainline training reproducibility/material-regeneration gap honestly; the repository now has one code-backed pack that enumerates canonical training materials, audits preserved mainline model references, and adds one clean CPU-only bounded train+eval rerun without upgrading the claims to full reproducibility, `.tflite`, real-board, benchmark, or deployment closure
+- [ ] T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包
+  - Task package: `docs/tasks/Phase2/T90_training_same_host_repeated_run_consistency_pack.md`
 
 ### Milestone 2S: Paper Re-open Gate (proposed)
 
@@ -864,51 +884,51 @@ Long-term objective:
 
 Authoritative supersession note (`2026-06-15`, Captain closeout):
 
-- Current unique task: `T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
-- Task package: `docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
-- `T88` has been accepted as `PASS`.
-- `T88` non-blocking notes are all handled as accepted operational reminders; no new deferred/rejected warning-derived risk is opened by this closeout.
-- `T89` is docs-only, mainline-only, freeze-preserving, and theory-branch-isolated.
-- `T89` may consolidate only frozen-mainline handoff, source-of-truth mapping, post-freeze change-control, blocked-surface re-entry conditions, and README registration.
-- `T89` must not widen into note rewrite, benchmark/HIL reruns, `.tflite` portability, real-board execution, sidecar promotion, venue-template adaptation, theory-branch mergeback, or submission-ready completion claims.
-- If stale `T88` wording remains below inside this section, treat it as historical carry-forward text only.
+- Current unique task: `T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`
+- Task package: `docs/tasks/Phase2/T90_training_same_host_repeated_run_consistency_pack.md`
+- `T89` has been accepted as `PASS`.
+- `T89` non-blocking notes are all handled as accepted operational reminders; no new deferred/rejected warning-derived risk is opened by this closeout.
+- `T90` is mainline-only, clean-CPU-only, reproducibility-bounded, and theory-branch-isolated.
+- `T90` may strengthen only same-host training repeated-run consistency, repeat-comparison helper/test coverage, and training reproducibility evidence-pack traceability.
+- `T90` must not widen into note rewrite, benchmark/HIL reruns, `.tflite` portability, real-board execution, sidecar promotion, theory-branch mergeback, or submission-ready completion claims.
+- If stale `T89` wording remains below inside this section, treat it as historical carry-forward text only.
 
-`T89: 主线 frozen-mainline handoff 包与 post-freeze change-control 收口`
+`T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`
 
 Status:
 
-- Supersession: current task has switched to `T89` after `T88 -> PASS`.
-- 当前唯一 worker-facing task package 是 `docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`。
-- `T88` review 中的 non-blocking notes 已全部按 accepted operational reminder 处理；没有新增 deferred/rejected warning，也没有新增风险项。
-- `T89` 仍是 docs-only、mainline-only、freeze-preserving 任务；如果下方旧 bullets 仍在解释更早阶段的 carry-forward，请以上方 `T88 closeout` supersession 与本段为准。
-- `R36` is closed by `T85`; `R13/R14/R32/R33` remain open, and `T37` remains blocked.
+- Supersession: current task has switched to `T90` after `T89 -> PASS`.
+- 当前唯一 worker-facing task package 是 `docs/tasks/Phase2/T90_training_same_host_repeated_run_consistency_pack.md`。
+- `T89` review 中的 non-blocking notes 已全部按 accepted operational reminder 处理；没有新增 deferred/rejected warning，也没有新增风险项。
+- `T90` 仍是 mainline-only、clean-CPU-only、reproducibility-bounded 任务；如果下方旧 bullets 仍在解释更早阶段的 carry-forward，请以上方 `T89 closeout` supersession 与本段为准。
+- `R36` is closed by `T85`; `R11/R13/R14/R32/R33` remain open, and `T37` remains blocked.
 - 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 同时也是 `resource-blocked / lowest-priority backlog`。
 - `T24` remains the authoritative historical frozen ranked table and must continue to be preserved as the anchor.
 - `T64/T65/T66/T67/T68/T69/T70` remain bounded mock-backed software-HIL extension-lane evidence only; they are still not `.tflite`, real-board, or mature calibration-comparator validation.
 - The current project state remains `Phase 2: Controlled Development / Go` under `Research Reality Recovery Mode`.
-- `T89` must remain docs-only and must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
+- `T90` must not rewrite any deployment-boundary, training, FR7/FR8, or mechanism evidence into stronger completed claims.
 
 Why this task is next:
 
-- Supersession: the numbered rationale below explains why `T89` is next after `T88`; older `T87 -> T88` rationale should be treated as historical carry-forward only.
+- Supersession: the numbered rationale below explains why `T90` is next after `T89`; older `T88 -> T89` rationale should be treated as historical carry-forward only.
 
-1. `T88` 已经把主线 note/material 从“允许执行有限 manual finish”推进到了“当前 mainline surface 已冻结且可交接”的阶段，当前瓶颈不再是写更多句子，而是如何把冻结答案组织成单一 handoff 与维护规则。
-2. `paper_frozen_mainline_handoff_gate.md` 已给出 `GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY`，但其语义被明确限制为下一张 docs-only、mainline-only、freeze-preserving 的 handoff / change-control 任务，而不是 submission-ready 完成态。
-3. 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 不仅证据未满足，而且属于资源受限 backlog，不应早于当前 frozen-mainline 的 handoff 固化任务。
-4. `T51/T52` full paper re-open tasks 仍然过早；在 `T89` 把当前 frozen mainline 的 source-of-truth、post-freeze change-control 与 blocked-surface re-entry 条件收清之前，不应恢复无界 full-manuscript 扩写或把投稿完成态写成事实。
-5. `T89` 比简单 README 或措辞修补更强，因为它需要同时产出 handoff packet、source-of-truth map、post-freeze change-control 与 blocked-surface re-entry 条件表，并把“哪些内容可交接、哪些改动需 reopen、哪些 blocked surface 将来靠什么证据重开”约束成单一可审计答案。
+1. `T89` 已经把当前 frozen mainline 整理成单一 handoff / source-of-truth / change-control 答案，当前瓶颈不再是“如何继续改 prose”，而是“在不碰 hardware 的前提下，下一条最值得补强的证据是什么”。
+2. `T51/T52` 这类更大范围 paper reopen 仍然过早；在 training reproducibility、`.tflite` portability、real-board 等 evidence lane 仍未增强时，不应恢复无界 full-manuscript 扩写或把投稿完成态写成事实。
+3. 当前暂无 `Linux + FPGA` 硬件宿主，因此 `T37` 不仅证据未满足，而且属于资源受限 backlog，不应早于可在本机完成的 same-host reproducibility hardening。
+4. `T50` 只给出了一次 bounded real train+eval rerun；`R11` 当前最自然的下一个收口层级，是在同一 clean CPU-only lane 上补 repeated-run consistency，而不是直接跳到 cross-host / GPU / Linux portability。
+5. `T90` 比简单 README 或措辞修补更强，因为它要求 helper、tests、3 次真实训练复跑、3 次真实评估复跑、pairwise consistency 比较和一份 code-backed evidence pack 一起收口。
 
 ## Captain Output For Current Task
 
-- Current unique task: `T89`
-- Latest reviewed task: `docs/review/T88_review.md` with verdict `PASS`
-- T88 closeout:
+- Current unique task: `T90`
+- Latest reviewed task: `docs/review/T89_review.md` with verdict `PASS`
+- T89 closeout:
   - blocking issues = none
   - warning-derived risk changes = none
-  - carry-forward notes = `GO_FOR_FROZEN_MAINLINE_HANDOFF_ONLY` only authorizes frozen-mainline handoff; compile conclusion remains current-host-only; allowlist-scoped diff discipline remains mandatory
-- Next worker-facing task package: `docs/tasks/Phase2/T89_mainline_frozen_handoff_packet_and_postfreeze_change_control.md`
-- `T89` may produce only one frozen-mainline handoff packet, one source-of-truth map, one post-freeze change-control table, one blocked-surface re-entry condition table, README registration, and task-scoped review / explanation / summary; it must not touch governance docs, note正文、source code, tests, `runs/`, `artifacts/`, stable-ID result assets, or theory-branch content
-- `T89` is the only recommended next mainline task after `T88`
+  - carry-forward notes = `frozen-mainline handoff` 仍不得被 retell 成 submission-ready completion；dirty-worktree 下继续坚持 allowlist-scoped diff；host-noise 不应机械归因到任务本身
+- Next worker-facing task package: `docs/tasks/Phase2/T90_training_same_host_repeated_run_consistency_pack.md`
+- `T90` may produce only one same-host repeat-consistency helper、focused tests、one bounded repeat-consistency config、3 次 clean CPU-only train reruns、3 次 eval reruns、一个 evidence pack、README registration、以及 task-scoped review / explanation / summary；它 must not touch governance docs、mainline note 正文、benchmark/HIL/runtime 主线语义、canonical historical artifacts 或 theory-branch content
+- `T90` is the only recommended next mainline task after `T89`
 
 ## Historical Current Unique Task (superseded)
 

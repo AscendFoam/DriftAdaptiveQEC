@@ -11,6 +11,15 @@
 
 本文件不宣称仓库已经完成物理清理。
 
+## 2026-06-15 Captain Update (T89 closeout)
+
+- `T89` 已按 `PASS` 收口。
+- 就 repo-noise 与验证边界而言，`T89` 只在 `docs/paper_materials/*`、`docs/paper_notes/README.md` 与 task-scoped review / explanation / summary 文件下工作；它没有改动源码、测试、`runs/`、`artifacts/`、主线 note 正文或编译产物。
+- `T89` 当前产出的 handoff packet、source-of-truth map、post-freeze change-control、blocked-surface re-entry 条件与 README 登记都属于 docs-only deliverable，不得被混写成新的 benchmark、runtime、board、training-repeat 或 submission-ready 完成事实来源。
+- 当前唯一任务切换为 `T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`；它允许新增或修改的正式产物应限于 task-scoped helper/test/config、训练 reproducibility evidence pack、对应 README 与 `artifacts/t90_training_repeat_consistency/`。
+- `T90` 不得借 repeated-run consistency 之名顺手创建 benchmark run root、改写 canonical historical artifact、更新 `.tflite` / real-board 结论、触碰 theory 分支或改写 mainline note。
+- `T89` review 已明确提醒当前 worktree 仍需坚持 allowlist-scoped diff 与精确暂存，因此后续提交 `T89/T90` 时仍不得使用 blanket `git add -A`。
+
 ## 2026-06-15 Captain Update (T88 closeout)
 
 - `T88` 已按 `PASS` 收口。

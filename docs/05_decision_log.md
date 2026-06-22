@@ -1,5 +1,36 @@
 # Decision Log
 
+## D-2026-06-15-02
+
+- 日期：`2026-06-15`
+- 决策：接受 `T89` 为 `PASS`，并将当前唯一任务切换为 `T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`
+
+### 背景
+
+`T89` 的目标不是继续改主线 note，也不是把仓库写成投稿完成态，而是在 `T88` 已完成 mainline surface freeze 之后，把 frozen mainline 的唯一 handoff 入口、source-of-truth、post-freeze change-control 与 blocked-surface re-entry 条件整理成一套可交接、可维护、不可误写的答案。review 已确认这轮 docs-only 交付在 allowlist 范围内真实完成，同时也明确提醒：`T89` 只是 frozen-mainline handoff consolidation，不是 submission-ready completion，也不是任何 blocked surface 的解锁。
+
+### 依据
+
+1. `docs/review/T89_review.md` verdict = `PASS`，blocking issues = none。
+2. review 明确确认本轮真实新增了 `paper_frozen_mainline_handoff_packet.md`、`paper_frozen_mainline_source_of_truth_map.md`、`paper_postfreeze_change_control.md` 与 `paper_blocked_surface_reentry_conditions.md` 四份主线 handoff / change-control 文档，并完成了两个 README 的正式登记。
+3. review 明确确认 `T89` 保持了既有 guardrail：`T24` 仍是 frozen mock-backed software-HIL anchor，`FR6/FR7` 仍是 descriptive support，`FR8/statcalib` 仍是 extension lane / no-promotion，training/material 仍是 bounded rerun + no full closure，`.tflite` 仍是 isolated current-host runtime，real-board 仍是 read-only gate / regeneration / provenance with current-host `NO_GO`。
+4. review 的 non-blocking notes 仅涉及 allowlist-scoped diff 纪律、dirty-worktree 噪声隔离以及“当前仍不是 submission-ready / blocked-surface unlocked”的 retelling 提醒；它们都不构成新的 risk opening。
+5. 在 `T89` 完成后，`T51/T52` 这类更大范围 paper reopen 仍然过早，`T37` 仍受当前暂无 `Linux + FPGA` 硬件宿主的现实条件阻塞；当前最可执行的高价值非硬件 evidence-hardening lane 是 `R11` 的 same-host repeated-run consistency follow-up。
+
+### 结论
+
+1. 接受 `T89` 为 `PASS` 并标记完成。
+2. 本轮不进入 `PASS_WITH_WARNINGS` 分类流；review 中的 non-blocking notes 统一按 operational reminder 接受处理。
+3. 本轮不新增 `deferred/rejected` warning，也不新增风险项。
+4. 当前唯一任务切换为 `T90`，只允许做 mainline-only、clean-CPU-only、same-host repeated-run consistency 的训练复现强化，不得改写 mainline note、理论分支或部署/板级边界。
+5. `T90` 的 strongest intended truth 不是 full training reproducibility，而只是把 `T50` 的“一次 bounded rerun”推进成“一组可审计的同机 repeated-run consistency pack”。
+
+### 直接影响
+
+1. `docs/00_project_snapshot.md`、`docs/01_legacy_audit.md`、`docs/02_experiment_plan.md`、`docs/03_hil_p4_boundary_audit.md`、`docs/04_task_board.md`、`docs/06_repo_noise_governance.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 同步 `T89 -> PASS` 与 `Current Unique Task -> T90`。
+2. 新增 `docs/tasks/Phase2/T90_training_same_host_repeated_run_consistency_pack.md` 作为下一张 worker-facing 任务包。
+3. main 分支在完成上述治理同步后可以继续提交，但提交前应精确暂存 `T89` 产物、Captain closeout 文档、治理同步与 `T90` 任务包；不要混入 theory 分支相关改动、无关编译噪声或未审阅 diff，更不要使用 blanket `git add -A`。
+
 ## D-2026-06-15-01
 
 - 日期：`2026-06-15`

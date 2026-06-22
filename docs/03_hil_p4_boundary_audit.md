@@ -6,6 +6,14 @@
 
 本文件用于固定恢复期对 `P3 software HIL`、`P3 real-board HIL`、`P4 benchmark`、以及 `.tflite` 部署链路的统一表述口径。
 
+## 2026-06-15 Captain Update (T89/T90 boundary supersession)
+
+- `T89` 已由 Captain 以 `PASS` 收口。
+- 它只在 docs-only 主线中完成了 frozen-mainline handoff、source-of-truth mapping、post-freeze change-control 与 blocked-surface re-entry 条件固化；它没有执行 benchmark、没有重跑 `.tflite`、没有执行真板 gate/smoke，也没有改变任何 HIL / `.tflite` / real-board / benchmark 证据等级。
+- `T89` 的 strongest supported truth 只是：当前 mainline note/material 已有可交接、可维护、不可误写的 frozen-mainline 答案；这不是 submission-ready completed、blocked surface 解锁或任何 deployment/board story 升级。
+- 因此当前唯一任务切换为 `T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`。
+- `T90` 虽然重新进入代码/证据 lane，但边界仍与 HIL / `.tflite` / real-board / benchmark 主线隔离：它只允许补 same-host clean CPU-only training repeated-run consistency，不得改写 `.tflite` portability、software-HIL、real-board、expanded benchmark 或 theory-branch 合流事实。
+
 ## 2026-06-15 Captain Update (T88/T89 boundary supersession)
 
 - `T88` 已由 Captain 以 `PASS` 收口。

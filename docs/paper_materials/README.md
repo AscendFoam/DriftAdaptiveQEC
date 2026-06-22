@@ -55,6 +55,10 @@
 | `paper_author_edit_decision_register.md` | `T88` author edit decision register |
 | `paper_blocked_surface_disclaimer_table.md` | `T88` blocked surface disclaimer table |
 | `paper_frozen_mainline_handoff_gate.md` | `T88` frozen-mainline handoff gate |
+| `paper_frozen_mainline_handoff_packet.md` | `T89` frozen-mainline handoff 单一入口包 |
+| `paper_frozen_mainline_source_of_truth_map.md` | `T89` frozen/mainline/blocked surface source-of-truth map |
+| `paper_postfreeze_change_control.md` | `T89` post-freeze 变更分级与控制规则 |
+| `paper_blocked_surface_reentry_conditions.md` | `T89` blocked surface 重开条件表 |
 
 ## 推荐阅读顺序
 
@@ -101,7 +105,11 @@
 41. `paper_author_edit_decision_register.md`
 42. `paper_blocked_surface_disclaimer_table.md`
 43. `paper_frozen_mainline_handoff_gate.md`
-44. `paper_claim_risk_table.md`
+44. `paper_frozen_mainline_handoff_packet.md`
+45. `paper_frozen_mainline_source_of_truth_map.md`
+46. `paper_postfreeze_change_control.md`
+47. `paper_blocked_surface_reentry_conditions.md`
+48. `paper_claim_risk_table.md`
 
 ## 核心边界
 
@@ -127,3 +135,4 @@
 - `T86`：`paper_submission_pack_assembly_manifest.md`、`paper_submission_surface_route_map.md`、`paper_submission_exclusion_register.md`、`paper_submission_author_handoff.md` 与 note 中的 `% T86-ASSEMBLY: ...` 注释，只服务 submission-facing package 的 inclusion / exclusion 装配纪律；它不自动等于 submission-ready pack 已完成，也不授权 claim promotion、deployment story 升级或 hardware-ready retelling。
 - `T87`：`paper_author_final_qa_checklist.md`、`paper_presubmission_regression_gate.md`、`paper_submission_wording_redflag_register.md`、`paper_manual_finish_queue.md` 与 note 中的 `% T87-QA: ...` 注释，只服务 author-final QA、危险表述排查与 bounded manual finish 边界固化；它不自动等于 submission-ready completed，也不授权任何 blocked surface 解锁。
 - `T88`：`paper_manual_finish_execution_log.md`、`paper_mainline_surface_freeze_manifest.md`、`paper_author_edit_decision_register.md`、`paper_blocked_surface_disclaimer_table.md`、`paper_frozen_mainline_handoff_gate.md` 与 note 中的 `% T88-MANUAL: ...` 注释，只服务 bounded manual finish 执行、surface freeze 与 blocked-disclaimer 固化；它不自动等于 submission-ready completed，也不授权任何 blocked surface 解锁。
+- `T89`：`paper_frozen_mainline_handoff_packet.md`、`paper_frozen_mainline_source_of_truth_map.md`、`paper_postfreeze_change_control.md`、`paper_blocked_surface_reentry_conditions.md` 只服务 frozen-mainline handoff、source-of-truth 回链、post-freeze 变更控制与 blocked surface 重开条件固化；它不升级任何证据等级，不改写主线 note，不解锁任何 blocked surface，也不等于 submission-ready completed。

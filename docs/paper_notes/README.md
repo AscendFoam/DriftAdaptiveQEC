@@ -34,6 +34,10 @@
 - `../paper_materials/paper_author_edit_decision_register.md`：`T88` 的作者编辑决策台账。
 - `../paper_materials/paper_blocked_surface_disclaimer_table.md`：`T88` 的 blocked surface disclaimer table。
 - `../paper_materials/paper_frozen_mainline_handoff_gate.md`：`T88` 的 frozen-mainline handoff gate。
+- `../paper_materials/paper_frozen_mainline_handoff_packet.md`：`T89` 的 frozen-mainline handoff 单一入口包。
+- `../paper_materials/paper_frozen_mainline_source_of_truth_map.md`：`T89` 的 frozen/mainline/blocked source-of-truth map。
+- `../paper_materials/paper_postfreeze_change_control.md`：`T89` 的 post-freeze 变更分级与控制规则。
+- `../paper_materials/paper_blocked_surface_reentry_conditions.md`：`T89` 的 blocked surface 重开条件表。
 
 ## 使用规则
 
@@ -51,3 +55,4 @@
 12. `T86` 之后，如需判断当前 mainline note/material 应如何组装成 submission-facing package、哪些 surface 进入 main text / appendix / supplement、哪些必须显式排除，应优先查看 `paper_submission_pack_assembly_manifest.md`、`paper_submission_surface_route_map.md`、`paper_submission_exclusion_register.md`、`paper_submission_author_handoff.md` 与 `% T86-ASSEMBLY: ...` 注释；该链路只做 assembly / exclusion 收口，不等于 submission-ready pack 已完成。
 13. `T87` 之后，如需判断当前 note 是否已经完成作者终检级 QA、哪些表述仍属于 red-flag、以及后续只允许做哪些 bounded manual finish，应优先查看 `paper_author_final_qa_checklist.md`、`paper_presubmission_regression_gate.md`、`paper_submission_wording_redflag_register.md`、`paper_manual_finish_queue.md` 与 `% T87-QA: ...` 注释；该链路只服务 author-final QA / pre-submission regression gate，不等于 submission-ready completed。
 14. `T88` 之后，如需判断哪些 bounded manual finish 已真实执行、当前 mainline surface 如何冻结、blocked disclaimer 该保留在哪些位置，以及后续是否只允许 frozen-mainline handoff，应优先查看 `paper_manual_finish_execution_log.md`、`paper_mainline_surface_freeze_manifest.md`、`paper_author_edit_decision_register.md`、`paper_blocked_surface_disclaimer_table.md`、`paper_frozen_mainline_handoff_gate.md` 与 `% T88-MANUAL: ...` 注释；该链路只服务 manual-finish execution / surface freeze / handoff 固化，不等于 submission-ready completed。
+15. `T89` 之后，如需判断当前 frozen-mainline handoff 的唯一入口、哪些 surface 是当前允许引用的 authoritative source、post-freeze 手工改动是否需要 reopen 或 evidence task、以及 blocked surface 将来必须满足什么新证据才能重开，应优先查看 `paper_frozen_mainline_handoff_packet.md`、`paper_frozen_mainline_source_of_truth_map.md`、`paper_postfreeze_change_control.md`、`paper_blocked_surface_reentry_conditions.md`；该链路只服务 handoff 与 change-control，不升级证据等级，也不授权直接改写 note 或编译产物。
