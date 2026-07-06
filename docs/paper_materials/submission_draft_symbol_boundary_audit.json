@@ -1,0 +1,116 @@
+{
+  "status": "PASS_WITH_LIMITATIONS",
+  "scope": "submission_draft_symbol_boundary_audit_v1",
+  "date": "2026-07-06",
+  "target_manuscript": "docs/paper_notes/CNN_FPGA_GKP_submission_draft.tex",
+  "boundary": "Read-only symbol/code/source-data boundary check for the submission draft. It does not run experiments, validate a complete physical model, prove statistical significance, validate hardware, or change any governance task state.",
+  "counts": {
+    "pass": 9,
+    "warn": 1,
+    "fail": 0
+  },
+  "checks": [
+    {
+      "check_id": "SB-A01",
+      "status": "PASS",
+      "topic": "TeX symbol and metric boundary",
+      "paths": [
+        "docs/paper_notes/CNN_FPGA_GKP_submission_draft.tex"
+      ],
+      "detail": "Submission draft declares lambda=sqrt(2pi), includes the physics-metric boundary table, and names final_ler as a logical-error proxy.",
+      "boundary": "This anchors wording in the draft only; it does not prove physical correctness."
+    },
+    {
+      "check_id": "SB-A09",
+      "status": "PASS",
+      "topic": "Metric definition box",
+      "paths": [
+        "docs/paper_notes/CNN_FPGA_GKP_submission_draft.tex"
+      ],
+      "detail": "Submission draft defines final_ler as (N_X+N_Z)/T, maps final_ler_mean/final_ler_sd to repeat-level source data, and states the non-hardware/non-inferential boundary.",
+      "boundary": "This is a manuscript definition check only; it does not validate the metric statistically or physically."
+    },
+    {
+      "check_id": "SB-A02",
+      "status": "PASS",
+      "topic": "Shared GKP lattice constant",
+      "paths": [
+        "physics/constants.py"
+      ],
+      "detail": "physics/constants.py defines LATTICE_CONST as sqrt(2.0 * pi).",
+      "boundary": "This checks the shared constant value, not every downstream physical assumption."
+    },
+    {
+      "check_id": "SB-A03",
+      "status": "PASS",
+      "topic": "Syndrome wrap interval",
+      "paths": [
+        "physics/syndrome_measurement.py"
+      ],
+      "detail": "Ideal and realistic syndrome measurement paths wrap displacements into the shared half-lattice interval.",
+      "boundary": "This is a code-symbol consistency check; it is not a wrapped-posterior decoder analysis."
+    },
+    {
+      "check_id": "SB-A04",
+      "status": "PASS",
+      "topic": "Logical-error proxy rule",
+      "paths": [
+        "physics/logical_tracking.py"
+      ],
+      "detail": "LogicalErrorTracker uses half-lattice q/p thresholds, wraps accumulated residuals, and exposes get_logical_error_rate.",
+      "boundary": "This supports a software protocol metric only, not hardware logical-channel tomography."
+    },
+    {
+      "check_id": "SB-A05",
+      "status": "PASS",
+      "topic": "Fast-loop metric and histogram boundary",
+      "paths": [
+        "cnn_fpga/runtime/fast_loop_emulator.py"
+      ],
+      "detail": "Fast-loop config uses half-lattice syndrome/histogram limits, realistic syndrome measurement, LogicalErrorTracker, and final_logical_error_rate output.",
+      "boundary": "This checks source anchors only; it does not run the emulator or validate fallback-free execution."
+    },
+    {
+      "check_id": "SB-A06",
+      "status": "PASS",
+      "topic": "Noise-state to affine-parameter mapping",
+      "paths": [
+        "cnn_fpga/decoder/param_mapper.py"
+      ],
+      "detail": "ParamMapper maps NoisePrediction(sigma, mu_q, mu_p, theta_deg) into K,b and records covariance/gain metadata.",
+      "boundary": "This supports the affine-map implementation story, not optimality or universal calibration claims."
+    },
+    {
+      "check_id": "SB-A07",
+      "status": "PASS",
+      "topic": "Mock drift-state fields",
+      "paths": [
+        "cnn_fpga/benchmark/run_hil_suite.py"
+      ],
+      "detail": "The mock noise provider emits sigma, mu_q, mu_p, theta_deg and metadata.signal_type for synthetic/effective drift probes.",
+      "boundary": "This is not board-generated drift evidence and does not validate real-device distributions."
+    },
+    {
+      "check_id": "SB-A08",
+      "status": "PASS",
+      "topic": "Source-data statistical boundary",
+      "paths": [
+        "docs/figure_assets/submission_draft_python_figures/source_data_fig02_main_results.csv"
+      ],
+      "detail": "Fig. 2 source data carries final_ler_mean, final_ler_sd and n_repeats=2 for every checked row.",
+      "boundary": "The SD column remains descriptive; this does not provide CI, p-value or stronger statistical evidence."
+    },
+    {
+      "check_id": "SB-W01",
+      "status": "WARN",
+      "topic": "Known limitation",
+      "paths": [
+        "physics/syndrome_measurement.py",
+        "physics/logical_tracking.py",
+        "cnn_fpga/runtime/fast_loop_emulator.py"
+      ],
+      "detail": "The checked anchors do not constitute a complete finite-energy GKP physical model, wrapped-posterior decoder, holdout drift protocol, or real-board validation.",
+      "boundary": "Keep manuscript language at approximate-model and fixed software-HIL protocol level."
+    }
+  ]
+}

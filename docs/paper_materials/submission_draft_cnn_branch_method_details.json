@@ -1,0 +1,49 @@
+{
+  "status": "generated",
+  "analysis_id": "submission_draft_cnn_branch_method_details_v1",
+  "boundary": "Manuscript method-detail source for the preserved runtime-consistent residual-b branch. It does not rerun training, prove full reproducibility, establish causal mechanism closure, or create holdout-drift evidence.",
+  "rows": [
+    {
+      "item": "Runtime input",
+      "current_manuscript_value": "five 32x32 histogram windows, four histogram-delta planes, teacher prediction, teacher runtime bias and teacher temporal deltas, encoded as 21 spatial channels",
+      "source": "artifacts/datasets/runtime_b_residual_v1/manifest.json; cnn_fpga/runtime/feature_builder.py",
+      "scope": "Describes the preserved runtime-consistent residual branch only"
+    },
+    {
+      "item": "Target labels",
+      "current_manuscript_value": "two residual-b labels: b_q and b_p, defined as target runtime bias minus teacher runtime bias",
+      "source": "artifacts/datasets/runtime_b_residual_v1/manifest.json; cnn_fpga/data/runtime_dataset_builder.py",
+      "scope": "Supports residual calibration wording but not causal mechanism closure"
+    },
+    {
+      "item": "Dataset split",
+      "current_manuscript_value": "2048 windows total across four drift scenarios; train/val/test = 1638/204/206 using an 0.8/0.1/0.1 split",
+      "source": "artifacts/datasets/runtime_b_residual_v1/manifest.json",
+      "scope": "Describes preserved dataset provenance but not cross-host reproducibility"
+    },
+    {
+      "item": "Tiny-CNN architecture",
+      "current_manuscript_value": "one 3x3 convolution with 16 channels, ReLU, 2x2 average pooling, one hidden layer with 96 units and two outputs",
+      "source": "cnn_fpga/model/tiny_cnn.py; artifacts/reports/runtime_b_residual_v1/tiny_cnn_20260401_083648_2fc740424c0d_train_report.json",
+      "scope": "Describes the preserved float model architecture"
+    },
+    {
+      "item": "Training objective",
+      "current_manuscript_value": "weighted MSE on normalized residual-b outputs with label weights b_q=2 and b_p=2 plus weight decay",
+      "source": "cnn_fpga/model/tiny_cnn.py; cnn_fpga/config/experiment_runtime_b_residual.yaml",
+      "scope": "Describes training objective only; not a statistical significance claim"
+    },
+    {
+      "item": "Optimization and selection",
+      "current_manuscript_value": "Adam-style optimization, learning rate 0.002, weight decay 0.0001, batch size 64, 36 epoch cap, patience 8, best validation loss selection",
+      "source": "cnn_fpga/model/tiny_cnn.py; artifacts/reports/runtime_b_residual_v1/tiny_cnn_20260401_083648_2fc740424c0d_train_report.json",
+      "scope": "Describes historical preserved training run; not full reproducibility proof"
+    },
+    {
+      "item": "Leakage control",
+      "current_manuscript_value": "labels are computed from target runtime bias and teacher runtime bias on captured windows; test split is held out from fitting but scenarios are shared across splits",
+      "source": "artifacts/datasets/runtime_b_residual_v1/manifest.json; cnn_fpga/data/runtime_dataset_builder.py",
+      "scope": "Supports split discipline while requiring holdout drift for stronger generalization"
+    }
+  ]
+}

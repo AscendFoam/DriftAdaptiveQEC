@@ -1,0 +1,108 @@
+{
+  "status": "generated",
+  "analysis_id": "submission_draft_fixed_point_parity_v1",
+  "seed": 20260703,
+  "n_samples_per_scenario": 80000,
+  "boundary": "Software fixed-point emulation parity check for the affine fast path. This checks Q4.20 numerical degradation against floating-point runtime under controlled local-Gaussian samples. It is not FPGA synthesis, timing closure, resource use, power, board execution or logical-channel fidelity.",
+  "config": {
+    "hardware_defaults": {
+      "fixed_point": "Q4.20"
+    },
+    "fast_loop": {
+      "fixed_point": "Q4.20",
+      "syndrome_limit": 1.2533141373155001,
+      "correction_limit": 2.5066282746310002
+    },
+    "measurement": {
+      "delta": 0.3,
+      "measurement_efficiency": 0.95
+    },
+    "model": {
+      "sigma_ratio_p": 0.55
+    },
+    "param_mapping": {
+      "alpha_bias": 1.0,
+      "beta_smoothing": 0.2,
+      "gain_clip": [
+        0.2,
+        1.2
+      ],
+      "gain_scale": 1.0,
+      "theta_clip_deg": [
+        -20.0,
+        20.0
+      ],
+      "sigma_ratio_p": 0.55
+    }
+  },
+  "rows": [
+    {
+      "scenario": "static_bias_theta",
+      "n_samples": 80000,
+      "fixed_point_spec": "Q4.20",
+      "max_abs_correction_diff": 1.0108945361353427e-06,
+      "p99_abs_correction_diff": 7.779551574438326e-07,
+      "mean_abs_correction_diff": 2.784376982425517e-07,
+      "float_residual_mse": 0.04801653677296326,
+      "fixed_residual_mse": 0.048016536915794585,
+      "residual_mse_delta_fixed_minus_float": 1.4283132315773273e-10,
+      "float_boundary_crossing_rate": 0.0,
+      "fixed_boundary_crossing_rate": 0.0,
+      "boundary_crossing_delta_fixed_minus_float": 0.0,
+      "float_clip_saturation_rate": 0.0,
+      "fixed_clip_saturation_rate": 0.0,
+      "fixed_point_quant_saturation_rate": 0.0
+    },
+    {
+      "scenario": "linear_ramp_midpoint",
+      "n_samples": 80000,
+      "fixed_point_spec": "Q4.20",
+      "max_abs_correction_diff": 9.932609029150719e-07,
+      "p99_abs_correction_diff": 7.971550809637851e-07,
+      "mean_abs_correction_diff": 2.790946152149796e-07,
+      "float_residual_mse": 0.06028173658437754,
+      "fixed_residual_mse": 0.06028173437262854,
+      "residual_mse_delta_fixed_minus_float": -2.2117489992257156e-09,
+      "float_boundary_crossing_rate": 0.0,
+      "fixed_boundary_crossing_rate": 0.0,
+      "boundary_crossing_delta_fixed_minus_float": 0.0,
+      "float_clip_saturation_rate": 0.0,
+      "fixed_clip_saturation_rate": 0.0,
+      "fixed_point_quant_saturation_rate": 0.0
+    },
+    {
+      "scenario": "step_after_jump",
+      "n_samples": 80000,
+      "fixed_point_spec": "Q4.20",
+      "max_abs_correction_diff": 1.6052163179791634e-06,
+      "p99_abs_correction_diff": 1.129706630790122e-06,
+      "mean_abs_correction_diff": 3.545321076072025e-07,
+      "float_residual_mse": 0.09159399003550385,
+      "fixed_residual_mse": 0.09159399119190066,
+      "residual_mse_delta_fixed_minus_float": 1.1563968116412582e-09,
+      "float_boundary_crossing_rate": 0.0004,
+      "fixed_boundary_crossing_rate": 0.0004,
+      "boundary_crossing_delta_fixed_minus_float": 0.0,
+      "float_clip_saturation_rate": 0.0,
+      "fixed_clip_saturation_rate": 0.0,
+      "fixed_point_quant_saturation_rate": 0.0
+    },
+    {
+      "scenario": "periodic_high_phase",
+      "n_samples": 80000,
+      "fixed_point_spec": "Q4.20",
+      "max_abs_correction_diff": 1.334826228077679e-06,
+      "p99_abs_correction_diff": 9.507980322753789e-07,
+      "mean_abs_correction_diff": 3.002693240991911e-07,
+      "float_residual_mse": 0.07636577891750895,
+      "fixed_residual_mse": 0.0763657798815191,
+      "residual_mse_delta_fixed_minus_float": 9.64010149484551e-10,
+      "float_boundary_crossing_rate": 6.25e-05,
+      "fixed_boundary_crossing_rate": 6.25e-05,
+      "boundary_crossing_delta_fixed_minus_float": 0.0,
+      "float_clip_saturation_rate": 0.0,
+      "fixed_clip_saturation_rate": 0.0,
+      "fixed_point_quant_saturation_rate": 0.0
+    }
+  ]
+}

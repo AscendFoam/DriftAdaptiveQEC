@@ -42,16 +42,22 @@ small fixed-point controller.
 
 Under the locked four-scenario mock-backed software-HIL protocol, the
 teacher-anchored hybrid residual branch is the winner in all four frozen
-scenarios, with UKF as the runner-up throughout.  Bounded ablation and
-multi-seed materials support only a descriptive reading of this result:
-histogram-delta features matter, the instability pattern repeats across seeds,
-and the tested lower-clip intervention is mixed and mostly harmful, so the
-current mechanism story remains non-causal.  A separately labeled
+scenarios, with UKF as the runner-up throughout.  The newer Phase A
+formal-repeat source data strengthen two scenario rows: for
+\texttt{static\_bias\_theta} and \texttt{linear\_ramp}, 12 paired repeats give
+positive UKF-minus-hybrid intervals, while the all-scenario, pooled, holdout,
+and hardware gates remain open.  Bounded ablation and multi-seed materials
+support only a descriptive reading of this result: histogram-delta features
+matter, the instability pattern repeats across seeds, and the tested
+lower-clip intervention is mixed and mostly harmful, so the current mechanism
+story remains non-causal.  A separately labeled
 supplement-side statistical-calibration extension lane further shows that a
 simple non-neural estimator can be strong under the same affine runtime
 contract, but its accepted closure remains no-promotion and without a unique
-clean threshold.  The strongest current claim is therefore not that one CNN
-architecture closes the decoding problem, but that drift-adaptive affine
+clean threshold.  Controlled oracle-affine, wrapped-Gaussian, holdout-stress,
+operation-count, and fixed-point checks add theory-facing diagnostics, not a
+new benchmark closure.  The strongest current claim is therefore not that one
+CNN architecture closes the decoding problem, but that drift-adaptive affine
 calibration is a credible and hardware-bounded organizing principle for GKP
 fast-path decoding.
 \end{abstract}
@@ -178,7 +184,10 @@ reference comparison for the paper.  Within that fixed set, the
 teacher-anchored hybrid residual branch is the winner in all four scenarios
 and UKF is the runner-up throughout.  This is the mainline ranking result; it
 is not an expanded benchmark claim, not a deployment-closure result, and not
-a real-board result.
+a real-board result.  The later Phase A formal-repeat source data add
+scenario-level support for the direction of the UKF-vs-hybrid gap in
+\texttt{static\_bias\_theta} and \texttt{linear\_ramp}, but they still do not
+complete the all-scenario repeat-expanded gate.
 
 \paragraph{4. Conservative supporting interpretation layers.}
 Feature/teacher ablations and six-seed mechanism materials refine how the
@@ -312,6 +321,10 @@ convention used here, the lattice constant is
 \begin{equation}
     \lambda=\sqrt{2\pi}.
 \end{equation}
+This \(\lambda\) is the normalized software residual coordinate used for
+syndrome wrapping, clipping, and half-lattice boundary tests in the benchmark.
+It should not be read as a new physical GKP convention or as a calibrated
+finite-energy device parameter.
 An ideal logical state may be represented heuristically as an infinite comb,
 for example
 \begin{equation}
@@ -323,6 +336,24 @@ peaks and an envelope.  Finite-energy structure is central to practical GKP
 QEC rather than a minor implementation detail \cite{grimsmo2021}: it
 determines the intrinsic syndrome uncertainty and contributes an effective
 displacement-like noise.
+One useful one-quadrature picture is
+\begin{equation}
+    |\tilde 0\rangle_q
+    \propto
+    \sum_{n\in\mathbb{Z}}
+    \exp\!\left[-\frac{(n\lambda)^2}{2\kappa^2}\right]
+    \int dx\,
+    \exp\!\left[-\frac{(x-n\lambda)^2}{2\Delta^2}\right]
+    |x\rangle_q ,
+\end{equation}
+with an analogous comb for the conjugate quadrature.  The peak width
+\(\Delta\) represents finite squeezing, while the broad envelope scale
+\(\kappa\) keeps the state normalizable.  The ideal code is recovered only in
+the singular limit of narrow peaks and a broad envelope.  In any physical
+state, however, nearby lattice peaks overlap in the tails.  A syndrome value
+therefore does not identify a displacement branch with certainty; it gives a
+posterior over possible lattice shifts, and that posterior becomes most
+ambiguous near the half-lattice boundaries.
 
 \subsection{Syndrome measurement as modular displacement information}
 
@@ -345,33 +376,51 @@ Here \(\eta_t^{\rm meas}\) represents measurement and auxiliary-state
 contributions, while \(\eta_t^{\rm GKP}\) summarizes finite-squeezing
 uncertainty.  The decoder therefore observes a noisy modular representative,
 not the absolute displacement.
+The information in \(\tilde{s}_t\) has two roles.  Its signed value gives the
+small correction suggested inside the current fundamental cell.  Its distance
+to the cell boundary,
+\begin{equation}
+    d_{\rm bdry}(\tilde{s}_{j,t})
+    =
+    \lambda/2-|\tilde{s}_{j,t}|,\qquad j\in\{q,p\},
+\end{equation}
+indicates how fragile the branch decision is.  A syndrome close to zero is
+locally well separated from a logical boundary, whereas a syndrome close to
+\(\pm\lambda/2\) can flip the inferred lattice branch under small measurement,
+finite-squeezing, or calibration errors.  This is the reason that analog GKP
+syndromes carry more information than binary accept/reject flags: the same
+measurement reports both a displacement estimate and a confidence-like
+proximity to a logical decision boundary.
 
 \subsection{Local affine decoding and its limits}
 
 The modulo structure makes exact GKP decoding nonlinear and branch dependent.
 Near a single lattice branch, however, a Gaussian approximation gives a useful
-local model.  If \(e\) and \(s\) are jointly Gaussian,
+local model.  Fix a branch \(m\in\mathbb{Z}^2\), write the local unwrapped
+residual as \(r=e-\lambda m\), and condition on an effective noise state
+\(\theta^{\rm noise}\).  If \(r\) and \(s\) are jointly Gaussian within that
+conditioned branch,
 \begin{equation}
-\begin{bmatrix}e\\s\end{bmatrix}
+\begin{bmatrix}r\\s\end{bmatrix}
 \sim
 \mathcal{N}
 \left(
-\begin{bmatrix}\mu_e\\\mu_s\end{bmatrix},
+\begin{bmatrix}\mu_r\\\mu_s\end{bmatrix},
 \begin{bmatrix}
-\Sigma_{ee} & \Sigma_{es}\\
-\Sigma_{se} & \Sigma_{ss}
+\Sigma_{rr} & \Sigma_{rs}\\
+\Sigma_{sr} & \Sigma_{ss}
 \end{bmatrix}
 \right),
 \end{equation}
 then the linear-MMSE estimate is
 \begin{equation}
-    \hat e=\mu_e+\Sigma_{es}\Sigma_{ss}^{-1}(s-\mu_s)=Ks+b,
+    \hat r=\mu_r+\Sigma_{rs}\Sigma_{ss}^{-1}(s-\mu_s)=Ks+b,
 \end{equation}
 where
 \begin{equation}
-    K=\Sigma_{es}\Sigma_{ss}^{-1},
+    K=\Sigma_{rs}\Sigma_{ss}^{-1},
     \qquad
-    b=\mu_e-K\mu_s.
+    b=\mu_r-K\mu_s.
 \end{equation}
 This derivation explains why an affine fast path is a plausible low-latency
 approximation.  It also marks the boundary of the approximation.  Near lattice
@@ -381,6 +430,16 @@ global affine rule \cite{fukui2018,roy2025}.  The present framework keeps this
 affine approximation on the fast path and adapts it slowly through calibration
 of \(K\) and \(b\), rather than claiming to solve the full wrapped posterior
 per shot.
+Equivalently, the affine rule should be read as a moment-matched correction for
+the branch that the runtime has already committed to after wrapping.  Changes
+in bias, variance, or covariance alter the local conditional moments
+\((\mu_r,\mu_s,\Sigma_{rs},\Sigma_{ss})\), so the best local \(K\) and \(b\)
+also change.  The dual-loop design uses this observation as a control
+principle: the fast loop still applies one matrix-vector correction, but the
+slow loop updates the moments implicitly through teacher estimates, histogram
+features, or other calibration summaries.  This keeps the implementation
+bounded while acknowledging that approximate GKP decoding is fundamentally a
+wrapped, noisy, branch-dependent inference problem.
 
 \subsection{Logical failure criterion}
 
@@ -481,6 +540,14 @@ histogram-input saturation, correction saturation, overflow, aggressive
 parameter events, commit counts, and fallback-related signals.
 The current hardware-bounded claim attaches to this fast boundary and its
 runtime contract, not to completed board-level timing or resource closure.
+In the newer submission-draft checks, this boundary is backed only by
+software-facing feasibility diagnostics: the affine fast path has an
+analytical per-shot count of four multiplications and four additions, and Q4.20
+emulation on controlled samples changed corrections by at most
+\(1.6\times10^{-6}\) without changing residual-boundary crossings or producing
+quantization saturation.  These checks support the fixed-point motivation, not
+FPGA synthesis, timing closure, power/resource measurement, or source-vs-board
+agreement.
 
 \subsection{Parameter mapping}
 
@@ -803,6 +870,71 @@ Scenario & EKF & UKF & Const.-\(\mu\) & RLS-\(b\) & Hybrid-\(b\) \\
 \label{tab:five-mode-benchmark}
 \end{table}
 
+\subsection{Descriptive UKF-versus-hybrid margins}
+
+The submission draft also reports the UKF-minus-hybrid margins behind the
+winner labels.  These rows make the main ranking auditable as a magnitude
+statement rather than only as a scenario-wise ordering.  The hybrid branch has
+positive paired deltas in all available paired rows, with relative reductions
+from \(1.75\%\) to \(2.89\%\) against UKF in the four frozen scenarios
+(Table~\ref{tab:paired-margin-note}).  The average relative reduction across
+the tested set is \(2.32\%\).  Because the frozen anchor has only two repeats
+per scenario, these margins remain descriptive source-data readouts.  They are
+not confidence intervals, \(p\)-values, standard errors, or a distributional
+robustness claim.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Scenario & UKF & Hybrid-\(b\) & Mean \(\Delta\) & Rel. red. \\
+\midrule
+\texttt{static\_bias\_theta} & 0.825370 & 0.810902 & 0.014469 & 1.75\% \\
+\texttt{linear\_ramp} & 0.811201 & 0.787755 & 0.023446 & 2.89\% \\
+\texttt{step\_sigma\_theta} & 0.811548 & 0.788800 & 0.022748 & 2.80\% \\
+\texttt{periodic\_drift} & 0.821558 & 0.806392 & 0.015166 & 1.85\% \\
+\bottomrule
+\end{tabular}
+\caption{Descriptive UKF-minus-hybrid margins in the frozen benchmark.
+\(\Delta\) is UKF \(\texttt{final\_ler}\) minus Hybrid-\(b\)
+\(\texttt{final\_ler}\).  Positive values indicate lower hybrid error.  The
+rows summarize the available paired source data only; they are not inferential
+statistics or expanded-benchmark evidence.}
+\label{tab:paired-margin-note}
+\end{table}
+
+\subsection{Formal Phase A paired-interval check}
+
+The submission draft adds a repeat-expanded Phase A source-data layer for the
+two completed formal scenario rows.  In both
+\texttt{static\_bias\_theta} and \texttt{linear\_ramp}, all 12 paired repeats
+have positive UKF-minus-hybrid \(\texttt{final\_ler}\) deltas, and both the
+paired-\(t\) and bootstrap 95\% intervals have positive lower bounds
+(Table~\ref{tab:phase-a-interval-note}).  This supports a scenario-level
+positive-interval statement for these two rows only.  It does not establish an
+all-scenario repeat-expanded advantage, pooled \(p\)-value, holdout robustness,
+or any hardware-facing claim.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lrrr}
+\toprule
+Scenario & Paired repeats & Mean delta & 95\% intervals \\
+\midrule
+\texttt{static\_bias\_theta} & 12 & 0.015563 &
+\([0.014778,0.016348]\); boot. \([0.014933,0.016256]\) \\
+\texttt{linear\_ramp} & 12 & 0.022417 &
+\([0.021215,0.023619]\); boot. \([0.021405,0.023440]\) \\
+\bottomrule
+\end{tabular}
+\caption{Formal Phase A scenario-level UKF-minus-hybrid interval checks.  The
+rows summarize the completed formal-length paired repeats for two scenarios
+only; they do not complete the all-scenario gate.}
+\label{tab:phase-a-interval-note}
+\end{table}
+
 \subsection{Feature and teacher ablations}
 
 % T77-SOURCE: T74-TBL-02; T74-TBL-03; T75-FIG-M02; T76-PREVIEW-M02; review=T57,T58,T76
@@ -959,6 +1091,40 @@ bias-variance drift, and faster-than-window drift.  That expansion remains a
 future benchmark lane rather than a completed claim in the present note; it is
 precisely the kind of follow-up needed to distinguish genuine drift adaptation
 from overfitting to a small set of hand-designed trajectories.
+The submission draft now includes a controlled non-hardware stress diagnostic
+for random-walk, burst/reset, and faster-than-window drift.  In that diagnostic
+the known-state oracle affine row has the lowest residual MSE in all three
+stress families, while a lagged-affine reference is mixed: it approaches oracle
+behavior under random-walk drift but degrades under abrupt or too-fast drift.
+This adds a useful falsification layer for the affine contract, but it is not a
+trained-branch holdout benchmark, confidence-interval result, or hardware
+robustness result.
+The corresponding residual-MSE rows are summarized in
+Table~\ref{tab:holdout-stress-note}.  Oracle affine has the lowest residual
+MSE in all three stress families.  Lagged affine remains below the fixed rule
+under random-walk drift, but becomes worse than fixed affine under burst/reset
+and faster-than-window oscillation.  This pattern is useful because it turns
+stale-parameter behavior into a measurable slow-loop design variable instead
+of an assumed latency footnote.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Holdout stress family & Fixed & Lagged & Oracle & Wrapped mean \\
+\midrule
+\texttt{random\_walk\_drift} & 0.078869 & 0.073867 & \textbf{0.072685} & 0.078740 \\
+\texttt{burst\_reset\_drift} & 0.066865 & 0.068622 & \textbf{0.062144} & 0.065936 \\
+\texttt{faster\_than\_window} & 0.068354 & 0.068890 & \textbf{0.063745} & 0.067485 \\
+\bottomrule
+\end{tabular}
+\caption{Controlled known-state holdout drift stress diagnostic.  Entries are
+residual MSE across 384 sequences of 512 steps; lower is better.  The lagged
+row is a known-state slow-commit reference, not the trained residual branch.
+The table is a non-hardware stress test, not holdout robustness proof.}
+\label{tab:holdout-stress-note}
+\end{table}
 
 \subsection{Oracle and wrapped-Gaussian baselines}
 
@@ -969,6 +1135,44 @@ maximum-likelihood decoding in small settings.  Those baselines would separate
 two kinds of loss that remain entangled here: the loss from constraining the
 fast path to be affine, and the loss from estimating the noise state
 imperfectly in the slow loop.
+The newer controlled local-Gaussian checks begin this separation without
+closing it.  In one-step and short-sequence diagnostics, oracle affine improves
+residual MSE relative to a fixed nominal affine rule, while the direct
+nearest-syndrome row exposes hard-correction noise and the naive wrapped-mean
+or wrapped-MAP references become mixed or weaker in several drift states.  The
+safe conclusion is not that affine decoding is globally optimal; it is that
+branch-aware posterior or nearest-lattice references must be implemented as
+tuned sequence-level baselines before they can serve as stronger comparators.
+
+Table~\ref{tab:controlled-baselines-note} gives the compact one-step version of
+that diagnostic.  The known-state oracle affine row improves on fixed affine
+in all four controlled states, with the largest headroom after the step
+change.  The wrapped posterior mean is slightly better only in the static
+state, and the MAP branch rule is weaker in the ramp, step and periodic
+states.  The result strengthens the engineering rationale for calibrated
+affine updates, but it does not replace a formal known-noise nearest-lattice or
+sequence-level wrapped-decoder benchmark.
+
+\begin{table}[ht]
+\centering
+\scriptsize
+\begin{tabular}{lrrrr}
+\toprule
+Controlled state & Fixed & Oracle & Wrapped mean & Wrapped MAP \\
+\midrule
+\texttt{static\_bias\_theta} & 0.049199 & 0.048095 & \textbf{0.047955} & 0.048203 \\
+\texttt{linear\_ramp\_midpoint} & 0.061417 & \textbf{0.060251} & 0.062341 & 0.063105 \\
+\texttt{step\_after\_jump} & 0.108216 & \textbf{0.092541} & 0.105815 & 0.110339 \\
+\texttt{periodic\_high\_phase} & 0.081757 & \textbf{0.076028} & 0.082349 & 0.084002 \\
+\bottomrule
+\end{tabular}
+\caption{Controlled one-step local-Gaussian residual-MSE diagnostic.  Lower is
+better.  The omitted direct nearest-syndrome row is substantially weaker in
+the same source table because it applies the noisy wrapped syndrome as a hard
+correction.  This is a sanity check for estimator and decoder limits, not a
+formal software-HIL or hardware benchmark.}
+\label{tab:controlled-baselines-note}
+\end{table}
 
 \subsection{Runtime, quantization, and fixed-point degradation}
 
@@ -986,6 +1190,38 @@ itself.  Saturation and overflow rates under deployment-style quantization,
 commit latency, stale-parameter penalty, fallback frequency, host-side update
 cost, and source-vs-embedded drift under a default environment still require
 separate bounded tasks rather than prose promotion.
+The submission draft adds two compact software diagnostics for this boundary
+(Table~\ref{tab:cost-fixedpoint-note}).  First, the affine fast path requires
+one two-quadrature \(2\times2\) matrix-vector product and one bias addition,
+which gives four multiplications, four additions, no nonlinear operations, and
+six stored state scalars.  By contrast, the one-step \(3\times3\)
+wrapped-branch references have much larger arithmetic and state footprints.
+Second, Q4.20 software fixed-point emulation on controlled local-Gaussian
+samples produces only \(10^{-6}\)-scale correction differences, no crossing
+delta, and no observed quantization saturation in the tested rows.  These
+facts support a fixed-point feasibility argument for the affine datapath.  They
+still do not establish FPGA synthesis, timing closure, resource use, power, or
+source-vs-board agreement.
+
+\begin{table}[ht]
+\centering
+\scriptsize
+\begin{tabular}{lrrrr}
+\toprule
+Diagnostic row & Mult. & Add. & Nonlinear ops & Key numerical check \\
+\midrule
+Affine fast path & 4 & 4 & 0 & six stored state scalars \\
+Wrapped MAP, \(3\times3\) branches & 49 & 40 & 0 & larger branch search \\
+Wrapped posterior mean, \(3\times3\) & 99 & 98 & 18 & softmax-like posterior \\
+Q4.20 fixed-point parity & -- & -- & -- & max diff \(1.6\times10^{-6}\), no crossing delta \\
+\bottomrule
+\end{tabular}
+\caption{Compressed cost and fixed-point diagnostics for the affine fast path.
+The arithmetic rows are analytical per-shot counts.  The fixed-point row is
+software emulation only.  The table supports the bounded datapath rationale,
+not measured FPGA timing, resources, power, or source-vs-board agreement.}
+\label{tab:cost-fixedpoint-note}
+\end{table}
 
 \subsection{Embedded runtime and board-level validation}
 
@@ -1161,13 +1397,14 @@ remains blocked is any hardware-dependent surface that needs a future
 measurements, or deployment-grade portability.  Keeping these layers separate
 is not a weakness of the write-up; it is the mechanism that prevents
 supporting evidence from being misread as new ranking evidence or completed
-hardware validation.  At this point, the mainline note is best kept frozen at
-a bounded manual-finish state rather than reopened for a new evidence layer.
-The frozen route keeps the ranking and conservative mechanism reading in the
-main text, places bounded ablation plus training/material provenance and
-runtime-boundary tables in the appendix, retains the calibration-extension and
-real-board gate materials in the supplement, and leaves blocked hardware or
-portability surfaces outside the package claims.
+hardware validation.  The submission-draft synchronization adds theory-facing
+diagnostics and two completed Phase A scenario-interval rows, but it does not
+change that layered route.  The compact note should still keep the ranking and
+conservative mechanism reading in the main text, place controlled diagnostics,
+training/material provenance and runtime-boundary tables in supporting
+material, retain the calibration-extension and real-board gate materials as
+bounded side surfaces, and leave blocked hardware or portability claims outside
+the package.
 
 % T80-REOPEN: Conclusion
 % T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
@@ -1205,23 +1442,19 @@ decoding.
 % T77-SOURCE: T75-FIG-A01; T76-PREVIEW-A01; T74-TBL-05; T74-TBL-06; T74-SUP-03; T74-SUP-04; review=T72,T76
 % T82-SUPPORT: Conclusion remaining technical gap
 The remaining technical gap is therefore layered, not singular.  On the
-manuscript side, this note is now frozen around a simulation/material-first
-route: frozen-set main results in the main text, bounded ablation plus
-training/material provenance and isolated true runtime tables in the appendix,
-and a calibration-extension supplement plus real-board gate/provenance
-materials in the supplement.  That frozen route records the bounded manual
-finish already executed here rather than reopening another round of assembly or
-claim upgrade.  On the execution side, broader drift families, stronger oracle or
-wrapped-Gaussian baselines, default-environment \texttt{.tflite} portability,
-and any board-level timing claim still require separate bounded tasks.  In
+manuscript side, this note now carries a compact synchronization of the
+submission draft's theory and Phase A evidence: two completed formal scenario
+rows support positive UKF-minus-hybrid interval statements, and controlled
+oracle, holdout, operation-count, fixed-point and runtime-discipline checks
+make the affine contract more auditable.  Those additions remain supporting
+evidence.  On the execution side, completion of all formal scenarios, stronger
+sequence-level baselines, default-environment \texttt{.tflite} portability, and
+any board-level timing claim still require separate bounded tasks.  In
 particular, because there is no current \texttt{Linux + FPGA} host, the
 hardware-dependent surface remains blocked rather than silently delayed.  The
-honest handoff at this stage is therefore a frozen mainline note with explicit
+honest handoff is therefore an evidence-synchronized note with explicit
 blocked-surface disclaimers, not deployment closure, submission-ready
-completion, or hardware-ready finalization.  That handoff may package
-main-text results, appendix support, and supplement-only gated surfaces
-together, but it must continue to exclude blocked hardware, portability, and
-promoted-comparator claims.
+completion, or hardware-ready finalization.
 
 \begin{thebibliography}{99}
 

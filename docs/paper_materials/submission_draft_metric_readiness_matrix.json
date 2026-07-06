@@ -1,0 +1,47 @@
+{
+  "status": "generated",
+  "analysis_id": "submission_draft_metric_readiness_matrix_v1",
+  "boundary": "Manuscript metric-readiness matrix for submission positioning. It adds no formal benchmark, reports only a residual-boundary Pauli-event surrogate plus a method-level lattice sanity aggregation and simplified finite-squeezing toy-channel sanity check for channel language and a non-inferential paired-bootstrap envelope for source-data transparency, does not estimate finite-energy logical-channel fidelity, does not provide inferential confidence intervals, and does not validate hardware.",
+  "rows": [
+    {
+      "metric_axis": "Logical-error proxy",
+      "manuscript_metric": "final_ler_mean plus paired descriptive deltas and non-inferential paired-bootstrap envelope",
+      "current_status": "supported under the current software-HIL protocol",
+      "source_data_or_literature": "source_data_fig02_main_results.csv; source_data_fig02_paired_deltas.csv; submission_draft_paired_uncertainty_analysis.csv; predeclared software-HIL comparison CSV and JSON",
+      "allowed_claim": "Hybrid residual calibration has the lowest mean protocol-defined final_ler in the tested drift scenarios",
+      "missing_for_stronger_claim": "paired inferential confidence intervals; more repeats; holdout drift families; logical-channel reconstruction"
+    },
+    {
+      "metric_axis": "Logical-channel fidelity or infidelity",
+      "manuscript_metric": "residual-boundary Pauli-event surrogate plus method-level lattice sanity summary and finite-squeezing toy-channel sanity check",
+      "current_status": "supported only as surrogate event decomposition, aggregation and toy measurement-channel sanity",
+      "source_data_or_literature": "submission_draft_logical_channel_surrogate_analysis.csv; submission_draft_lattice_logical_channel_sanity.csv; submission_draft_finite_energy_channel_sanity.csv; jafarzadeh2025; hastrup2023; zheng2024; external channel-level GKP analyses",
+      "allowed_claim": "The manuscript can link q/p half-lattice crossing events to channel language and report mean/worst-state surrogate fidelity readouts plus a simplified finite-squeezing sanity check while stating that finite-energy logical-channel fidelity and process infidelity are not estimated",
+      "missing_for_stronger_claim": "channel-specific calibrated finite-energy GKP simulation; logical-channel tomography or process-fidelity estimation; source data for true channel probabilities"
+    },
+    {
+      "metric_axis": "Drift adaptation robustness",
+      "manuscript_metric": "scenario-wise final_ler ranking plus controlled local-Gaussian checks, holdout drift stress tests and commit-lag sweep",
+      "current_status": "partially supported",
+      "source_data_or_literature": "source_data_fig02_main_results.csv; submission_draft_controlled_oracle_affine_analysis.csv; submission_draft_sequence_controlled_baseline_analysis.csv; submission_draft_holdout_drift_stress_analysis.csv; submission_draft_commit_lag_sweep_analysis.csv; submission_draft_paired_uncertainty_analysis.csv",
+      "allowed_claim": "Controlled stress diagnostics expose where stale commits help or fail under random-walk, burst/reset and faster-than-window settings without establishing trained-branch holdout robustness",
+      "missing_for_stronger_claim": "formal predeclared expanded benchmark; repeat-expanded uncertainty estimates; trained-branch holdout validation; board-measured stale-parameter latency distributions"
+    },
+    {
+      "metric_axis": "Fast-path cost and latency",
+      "manuscript_metric": "analytical per-shot operation count plus Q4.20 software parity",
+      "current_status": "supported as analytical and software-emulation motivation only",
+      "source_data_or_literature": "submission_draft_fast_path_cost_model.csv; submission_draft_fixed_point_parity_analysis.csv; external low-latency decoder literature",
+      "allowed_claim": "The affine correction has a smaller analytical per-shot arithmetic/state footprint and Q4.20 software emulation introduces no residual-boundary crossing change under the controlled sample set",
+      "missing_for_stronger_claim": "FPGA synthesis; timing closure; power and resource measurements; source-vs-board agreement; board-level latency distribution"
+    },
+    {
+      "metric_axis": "Hardware-facing validation",
+      "manuscript_metric": "planned measurement requirements only",
+      "current_status": "not yet supported by device measurements",
+      "source_data_or_literature": "planned hardware-measurement table; real-time FPGA decoder literature",
+      "allowed_claim": "The manuscript may define the measurement surface required for future hardware validation",
+      "missing_for_stronger_claim": "board logs; bitstream or RTL hash; DMA or MMIO evidence; latency and resource reports; commit reliability; source-vs-board vectors"
+    }
+  ]
+}

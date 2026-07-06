@@ -1,0 +1,323 @@
+{
+  "status": "generated",
+  "analysis_id": "controlled_residual_boundary_pauli_surrogate_v1",
+  "seed": 20260703,
+  "n_samples_per_scenario": 120000,
+  "source_analysis": "submission_draft_controlled_oracle_affine_analysis",
+  "source_csv_expected": "D:\\Codes\\Quantum\\DriftAdaptiveQEC\\docs\\paper_materials\\submission_draft_controlled_oracle_affine_analysis.csv",
+  "boundary": "Controlled residual-boundary Pauli-channel-style surrogate derived from q/p half-lattice crossing rates. It is a manuscript bridge between final_ler-style residual-boundary metrics and channel language, not finite-energy GKP logical-channel tomography, not process fidelity, not a hardware measurement and not a formal benchmark upgrade.",
+  "formula": {
+    "p_identity_surrogate": "1 - p_any_crossing",
+    "p_q_only_surrogate": "p_q_cross - p_both_cross",
+    "p_p_only_surrogate": "p_p_cross - p_both_cross",
+    "p_both_surrogate": "p_q_cross + p_p_cross - p_any_crossing",
+    "average_fidelity_surrogate": "(1 + 2 * p_identity_surrogate) / 3"
+  },
+  "config": {
+    "hardware_defaults": {
+      "fixed_point": "Q4.20"
+    },
+    "fast_loop": {
+      "enable_fixed_point": false,
+      "syndrome_limit": 1.2533141373155001,
+      "correction_limit": 2.5066282746310002
+    },
+    "measurement": {
+      "delta": 0.3,
+      "measurement_efficiency": 0.95
+    },
+    "model": {
+      "sigma_ratio_p": 0.55
+    },
+    "param_mapping": {
+      "alpha_bias": 1.0,
+      "beta_smoothing": 0.2,
+      "gain_clip": [
+        0.2,
+        1.2
+      ],
+      "gain_scale": 1.0,
+      "theta_clip_deg": [
+        -20.0,
+        20.0
+      ],
+      "sigma_ratio_p": 0.55
+    }
+  },
+  "scenarios": [
+    {
+      "scenario": "static_bias_theta",
+      "label": "Static Bias+Theta",
+      "sigma": 0.22,
+      "mu_q": 0.035,
+      "mu_p": -0.025,
+      "theta_deg": 4.0
+    },
+    {
+      "scenario": "linear_ramp_midpoint",
+      "label": "Linear Ramp Midpoint",
+      "sigma": 0.26,
+      "mu_q": 0.01,
+      "mu_p": -0.01,
+      "theta_deg": 2.0
+    },
+    {
+      "scenario": "step_after_jump",
+      "label": "Step After Jump",
+      "sigma": 0.36,
+      "mu_q": 0.04,
+      "mu_p": -0.04,
+      "theta_deg": 8.0
+    },
+    {
+      "scenario": "periodic_high_phase",
+      "label": "Periodic High Phase",
+      "sigma": 0.31,
+      "mu_q": 0.015,
+      "mu_p": -0.015,
+      "theta_deg": 7.0
+    }
+  ],
+  "rows": [
+    {
+      "scenario": "static_bias_theta",
+      "scenario_label": "Static Bias+Theta",
+      "method": "fixed_affine",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 1.0,
+      "pauli_surrogate_q_only": 0.0,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 0.0,
+      "pauli_surrogate_average_fidelity": 1.0,
+      "source_q_boundary_crossing_rate": 0.0,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.04919868756975277
+    },
+    {
+      "scenario": "static_bias_theta",
+      "scenario_label": "Static Bias+Theta",
+      "method": "oracle_affine",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 1.0,
+      "pauli_surrogate_q_only": 0.0,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 0.0,
+      "pauli_surrogate_average_fidelity": 1.0,
+      "source_q_boundary_crossing_rate": 0.0,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.048095385644368875
+    },
+    {
+      "scenario": "static_bias_theta",
+      "scenario_label": "Static Bias+Theta",
+      "method": "wrapped_gaussian_posterior_mean",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 1.0,
+      "pauli_surrogate_q_only": 0.0,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 0.0,
+      "pauli_surrogate_average_fidelity": 1.0,
+      "source_q_boundary_crossing_rate": 0.0,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.04795536858580511
+    },
+    {
+      "scenario": "static_bias_theta",
+      "scenario_label": "Static Bias+Theta",
+      "method": "wrapped_gaussian_map",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 0.9999833333333333,
+      "pauli_surrogate_q_only": 1.6666666666666667e-05,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 1.6666666666666667e-05,
+      "pauli_surrogate_average_fidelity": 0.9999888888888888,
+      "source_q_boundary_crossing_rate": 1.6666666666666667e-05,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.04820336017662869
+    },
+    {
+      "scenario": "linear_ramp_midpoint",
+      "scenario_label": "Linear Ramp Midpoint",
+      "method": "fixed_affine",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 1.0,
+      "pauli_surrogate_q_only": 0.0,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 0.0,
+      "pauli_surrogate_average_fidelity": 1.0,
+      "source_q_boundary_crossing_rate": 0.0,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.0614172972899017
+    },
+    {
+      "scenario": "linear_ramp_midpoint",
+      "scenario_label": "Linear Ramp Midpoint",
+      "method": "oracle_affine",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 1.0,
+      "pauli_surrogate_q_only": 0.0,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 0.0,
+      "pauli_surrogate_average_fidelity": 1.0,
+      "source_q_boundary_crossing_rate": 0.0,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.06025097651883671
+    },
+    {
+      "scenario": "linear_ramp_midpoint",
+      "scenario_label": "Linear Ramp Midpoint",
+      "method": "wrapped_gaussian_posterior_mean",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 0.9999583333333333,
+      "pauli_surrogate_q_only": 4.1666666666666665e-05,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 4.1666666666666665e-05,
+      "pauli_surrogate_average_fidelity": 0.9999722222222222,
+      "source_q_boundary_crossing_rate": 4.1666666666666665e-05,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.06234063724042273
+    },
+    {
+      "scenario": "linear_ramp_midpoint",
+      "scenario_label": "Linear Ramp Midpoint",
+      "method": "wrapped_gaussian_map",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 0.9998166666666667,
+      "pauli_surrogate_q_only": 0.00018333333333333334,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 0.00018333333333333334,
+      "pauli_surrogate_average_fidelity": 0.9998777777777779,
+      "source_q_boundary_crossing_rate": 0.00018333333333333334,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.06310501736990241
+    },
+    {
+      "scenario": "step_after_jump",
+      "scenario_label": "Step After Jump",
+      "method": "fixed_affine",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 0.9995333333333334,
+      "pauli_surrogate_q_only": 0.00046666666666666666,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 0.00046666666666666666,
+      "pauli_surrogate_average_fidelity": 0.999688888888889,
+      "source_q_boundary_crossing_rate": 0.00046666666666666666,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.10821590719521379
+    },
+    {
+      "scenario": "step_after_jump",
+      "scenario_label": "Step After Jump",
+      "method": "oracle_affine",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 0.9995333333333334,
+      "pauli_surrogate_q_only": 0.00046666666666666666,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 0.00046666666666666666,
+      "pauli_surrogate_average_fidelity": 0.999688888888889,
+      "source_q_boundary_crossing_rate": 0.00046666666666666666,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.09254061028251409
+    },
+    {
+      "scenario": "step_after_jump",
+      "scenario_label": "Step After Jump",
+      "method": "wrapped_gaussian_posterior_mean",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 0.9975833333333334,
+      "pauli_surrogate_q_only": 0.002416666666666667,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 0.002416666666666667,
+      "pauli_surrogate_average_fidelity": 0.998388888888889,
+      "source_q_boundary_crossing_rate": 0.002416666666666667,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.10581454400484852
+    },
+    {
+      "scenario": "step_after_jump",
+      "scenario_label": "Step After Jump",
+      "method": "wrapped_gaussian_map",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 0.99355,
+      "pauli_surrogate_q_only": 0.00645,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 0.00645,
+      "pauli_surrogate_average_fidelity": 0.9956999999999999,
+      "source_q_boundary_crossing_rate": 0.00645,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.11033912683773058
+    },
+    {
+      "scenario": "periodic_high_phase",
+      "scenario_label": "Periodic High Phase",
+      "method": "fixed_affine",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 0.9999583333333333,
+      "pauli_surrogate_q_only": 4.1666666666666665e-05,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 4.1666666666666665e-05,
+      "pauli_surrogate_average_fidelity": 0.9999722222222222,
+      "source_q_boundary_crossing_rate": 4.1666666666666665e-05,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.08175722344154629
+    },
+    {
+      "scenario": "periodic_high_phase",
+      "scenario_label": "Periodic High Phase",
+      "method": "oracle_affine",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 0.9999583333333333,
+      "pauli_surrogate_q_only": 4.1666666666666665e-05,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 4.1666666666666665e-05,
+      "pauli_surrogate_average_fidelity": 0.9999722222222222,
+      "source_q_boundary_crossing_rate": 4.1666666666666665e-05,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.07602768460936517
+    },
+    {
+      "scenario": "periodic_high_phase",
+      "scenario_label": "Periodic High Phase",
+      "method": "wrapped_gaussian_posterior_mean",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 0.9993833333333333,
+      "pauli_surrogate_q_only": 0.0006166666666666666,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 0.0006166666666666666,
+      "pauli_surrogate_average_fidelity": 0.9995888888888889,
+      "source_q_boundary_crossing_rate": 0.0006166666666666666,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.0823490262752879
+    },
+    {
+      "scenario": "periodic_high_phase",
+      "scenario_label": "Periodic High Phase",
+      "method": "wrapped_gaussian_map",
+      "n_samples": 120000,
+      "pauli_surrogate_identity": 0.9981333333333333,
+      "pauli_surrogate_q_only": 0.0018666666666666666,
+      "pauli_surrogate_p_only": 0.0,
+      "pauli_surrogate_both": 0.0,
+      "pauli_surrogate_any_crossing": 0.0018666666666666666,
+      "pauli_surrogate_average_fidelity": 0.9987555555555555,
+      "source_q_boundary_crossing_rate": 0.0018666666666666666,
+      "source_p_boundary_crossing_rate": 0.0,
+      "source_residual_mse": 0.0840020025940109
+    }
+  ]
+}

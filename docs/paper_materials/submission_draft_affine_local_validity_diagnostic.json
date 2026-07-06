@@ -1,0 +1,101 @@
+{
+  "status": "generated",
+  "analysis_id": "submission_draft_affine_local_validity_diagnostic_v1",
+  "source_files": [
+    "docs\\paper_materials\\submission_draft_sequence_controlled_baseline_analysis.csv",
+    "docs\\paper_materials\\submission_draft_holdout_drift_stress_analysis.csv"
+  ],
+  "scope": "Derived diagnostic table that reads existing controlled sequence and holdout-stress CSVs through local-affine validity criteria.",
+  "formulas": {
+    "oracle_mse_gain_percent": "(fixed_residual_mse - oracle_residual_mse) / fixed_residual_mse * 100",
+    "branch_risk_delta_sequence": "wrapped_mean sequence_ler_proxy_mean - oracle sequence_ler_proxy_mean",
+    "branch_risk_delta_holdout": "wrapped_mean residual_mse - oracle residual_mse",
+    "lag_risk_delta": "lagged_affine residual_mse - oracle_affine residual_mse"
+  },
+  "non_claims": [
+    "not a new formal benchmark",
+    "not a confidence interval or p-value analysis",
+    "not a tuned nearest-lattice or wrapped-decoder comparison",
+    "not trained-branch holdout generalization",
+    "not hardware evidence"
+  ],
+  "rows": [
+    {
+      "surface": "static_bias_theta",
+      "evidence_layer": "short_sequence_controlled",
+      "fixed_residual_mse": "0.0491537241687",
+      "oracle_residual_mse": "0.0481445074003",
+      "oracle_mse_gain_percent": "2.053185",
+      "branch_risk_delta": "0.000000",
+      "lag_risk_delta": "",
+      "validity_readout": "local_affine_not_dominated",
+      "non_claim_boundary": "not a formal nearest-lattice, known-noise or wrapped-decoder benchmark; not a confidence interval; not hardware evidence"
+    },
+    {
+      "surface": "linear_ramp",
+      "evidence_layer": "short_sequence_controlled",
+      "fixed_residual_mse": "0.0628112736739",
+      "oracle_residual_mse": "0.0606727453817",
+      "oracle_mse_gain_percent": "3.404689",
+      "branch_risk_delta": "0.000142",
+      "lag_risk_delta": "",
+      "validity_readout": "local_affine_headroom_visible",
+      "non_claim_boundary": "not a formal nearest-lattice, known-noise or wrapped-decoder benchmark; not a confidence interval; not hardware evidence"
+    },
+    {
+      "surface": "step_sigma_theta",
+      "evidence_layer": "short_sequence_controlled",
+      "fixed_residual_mse": "0.0781303240625",
+      "oracle_residual_mse": "0.0703200604689",
+      "oracle_mse_gain_percent": "9.996456",
+      "branch_risk_delta": "0.000910",
+      "lag_risk_delta": "",
+      "validity_readout": "local_affine_headroom_visible",
+      "non_claim_boundary": "not a formal nearest-lattice, known-noise or wrapped-decoder benchmark; not a confidence interval; not hardware evidence"
+    },
+    {
+      "surface": "periodic_drift",
+      "evidence_layer": "short_sequence_controlled",
+      "fixed_residual_mse": "0.0629017298079",
+      "oracle_residual_mse": "0.0607464282436",
+      "oracle_mse_gain_percent": "3.426458",
+      "branch_risk_delta": "0.000122",
+      "lag_risk_delta": "",
+      "validity_readout": "local_affine_headroom_visible",
+      "non_claim_boundary": "not a formal nearest-lattice, known-noise or wrapped-decoder benchmark; not a confidence interval; not hardware evidence"
+    },
+    {
+      "surface": "random_walk_drift",
+      "evidence_layer": "holdout_stress_controlled",
+      "fixed_residual_mse": "0.0788693216826",
+      "oracle_residual_mse": "0.0726852605578",
+      "oracle_mse_gain_percent": "7.840896",
+      "branch_risk_delta": "0.006055",
+      "lag_risk_delta": "0.001182",
+      "validity_readout": "local_affine_headroom_visible",
+      "non_claim_boundary": "not trained-branch holdout generalization; not an expanded benchmark; not a confidence interval; not hardware evidence"
+    },
+    {
+      "surface": "burst_reset_drift",
+      "evidence_layer": "holdout_stress_controlled",
+      "fixed_residual_mse": "0.0668646667848",
+      "oracle_residual_mse": "0.0621438937209",
+      "oracle_mse_gain_percent": "7.060191",
+      "branch_risk_delta": "0.003792",
+      "lag_risk_delta": "0.006478",
+      "validity_readout": "stale_commit_can_erase_gain",
+      "non_claim_boundary": "not trained-branch holdout generalization; not an expanded benchmark; not a confidence interval; not hardware evidence"
+    },
+    {
+      "surface": "faster_than_window_oscillation",
+      "evidence_layer": "holdout_stress_controlled",
+      "fixed_residual_mse": "0.068354052721",
+      "oracle_residual_mse": "0.0637453147753",
+      "oracle_mse_gain_percent": "6.742450",
+      "branch_risk_delta": "0.003740",
+      "lag_risk_delta": "0.005144",
+      "validity_readout": "stale_commit_can_erase_gain",
+      "non_claim_boundary": "not trained-branch holdout generalization; not an expanded benchmark; not a confidence interval; not hardware evidence"
+    }
+  ]
+}

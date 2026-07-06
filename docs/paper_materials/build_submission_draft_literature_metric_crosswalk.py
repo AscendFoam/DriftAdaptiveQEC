@@ -1,0 +1,352 @@
+"""Build a literature-metric crosswalk for the submission draft.
+
+The crosswalk records which local literature-card metrics are used to position
+the manuscript. It is not a normalized leaderboard and it is not a source of
+new experimental evidence.
+"""
+
+from __future__ import annotations
+
+import csv
+import json
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[2]
+OUT_CSV = ROOT / "docs/paper_materials/submission_draft_literature_metric_crosswalk.csv"
+OUT_JSON = ROOT / "docs/paper_materials/submission_draft_literature_metric_crosswalk.json"
+
+
+ROWS = [
+    {
+        "row_id": "analog_fukui2018_squeezing",
+        "axis": "analog_gkp_information",
+        "citation_key": "fukui2018",
+        "reported_metric": "analog GKP decoding lowers required squeezing from about 16.0 dB to 9.8 dB in the cited surface-GKP setting",
+        "local_card_status": "public PDF or HTML checked",
+        "source_anchor": "zotero_literature_review_cards.md: Fukui card; Fig. 1 analog likelihood, Fig. 2/3 surface-code logical-error curves, Eq. (7)-(9), threshold discussion.",
+        "manuscript_use": "Shows that analog GKP syndrome information is established prior work.",
+        "manuscript_boundary": "Not evidence that this manuscript introduces analog GKP information or reproduces a surface-GKP threshold.",
+    },
+    {
+        "row_id": "analog_noh2020_thresholds",
+        "axis": "analog_gkp_information",
+        "citation_key": "noh2020",
+        "reported_metric": "surface-GKP threshold examples include approximately 11.2 dB, 18.6 dB, 0.69 percent and 0.81 percent under different noise assumptions",
+        "local_card_status": "PDF figure or table checked",
+        "source_anchor": "zotero_literature_review_cards.md: Noh 2020 card; Fig. 6 and Table 1 threshold entries.",
+        "manuscript_use": "Positions the current affine front end relative to outer-code analog-weight decoding.",
+        "manuscript_boundary": "Not evidence for this manuscript's outer-code threshold, overhead, or circuit-level fault tolerance.",
+    },
+    {
+        "row_id": "analog_noh2022_overhead",
+        "axis": "logical_error_and_overhead_targets",
+        "citation_key": "noh2022",
+        "reported_metric": "12 dB CNOT failure 0.87 percent to 0.36 percent; threshold about 9.9 dB; 291 modes and 97 qubits versus 1457 bare qubits for a matched target",
+        "local_card_status": "PDF figure or table checked",
+        "source_anchor": "zotero_literature_review_cards.md: Noh 2022 card; Fig. 6b threshold, Fig. 7 logical-Z failure, Table III overhead at 12 dB.",
+        "manuscript_use": "Gives a surface-GKP end-to-end overhead and failure-rate target for reader calibration.",
+        "manuscript_boundary": "Not evidence that this manuscript reduces surface-GKP overhead or reaches an end-to-end logical-failure target.",
+    },
+    {
+        "row_id": "analog_raveendran2022_llr",
+        "axis": "analog_gkp_information",
+        "citation_key": "raveendran2022",
+        "reported_metric": "LP-QLDPC-GKP analog LLR and min-sum decoder construction are reported; exact threshold numbers remain card-level follow-up",
+        "local_card_status": "public PDF or HTML checked",
+        "source_anchor": "zotero_literature_review_cards.md: Raveendran card; Fig. 3/4 and LLR/min-sum decoder equations; exact threshold values still require final PDF pinning.",
+        "manuscript_use": "Shows that analog information is also used beyond surface-code matching.",
+        "manuscript_boundary": "Not evidence for this manuscript's QLDPC-GKP circuit-level performance.",
+    },
+    {
+        "row_id": "analog_berent2024_bosonic_qldpc",
+        "axis": "analog_gkp_information",
+        "citation_key": "berent2024",
+        "reported_metric": "analog-valued syndrome and outcome-dependent probabilities in bosonic QLDPC decoding",
+        "local_card_status": "PDF figure or table checked",
+        "source_anchor": "zotero_literature_review_cards.md: Berent card; Fig. 1 analog-valued syndrome/Tanner-graph decoding and 30-page figure set.",
+        "manuscript_use": "Supports the broad prior-art statement that analog decoding is a mature route.",
+        "manuscript_boundary": "Not evidence that this manuscript covers bosonic QLDPC decoding.",
+    },
+    {
+        "row_id": "analog_borah2025_soft_info",
+        "axis": "analog_gkp_information",
+        "citation_key": "borah2025",
+        "reported_metric": "compares no soft information, precomputed probabilities, and real-time soft information in QLDPC-GKP decoding",
+        "local_card_status": "PDF figure or table checked",
+        "source_anchor": "zotero_literature_review_cards.md: Borah card; five-figure comparison of no-soft, precomputed-probability and real-time soft-information settings.",
+        "manuscript_use": "Helps separate circuit-level soft information from the current physical-layer affine calibration.",
+        "manuscript_boundary": "Not evidence that this manuscript performs circuit-level QLDPC-GKP decoding.",
+    },
+    {
+        "row_id": "calibration_dgr2023_drift",
+        "axis": "calibration_aware_qec",
+        "citation_key": "dgr2023",
+        "reported_metric": "hardware drift can exceed 15x to 1000x on different time scales; mismatch reduction examples include 3.6x average and up to 7360x worst-case reductions",
+        "local_card_status": "local literature card checked",
+        "source_anchor": "zotero_literature_review_cards.md: DGR card-level drift and mismatch-reduction summary; final manuscript should return to the paper for page/table pinning before strong numeric comparison.",
+        "manuscript_use": "Motivates drift-aware calibration as a QEC problem.",
+        "manuscript_boundary": "Not evidence that this manuscript matches graph-level DGR performance or hardware data.",
+    },
+    {
+        "row_id": "calibration_chen2022_hyperedge",
+        "axis": "calibration_aware_qec",
+        "citation_key": "chen2022",
+        "reported_metric": "size-4 correlated events and logical errors per round such as 2.2e-2 without post-selection and 5.1e-4 with full post-selection",
+        "local_card_status": "public PDF or HTML checked",
+        "source_anchor": "zotero_literature_review_cards.md: Chen card; Fig. 2/3 calibrated hyperedge probabilities and 0-10 stabilizer-round logical-error examples.",
+        "manuscript_use": "Shows calibrated decoders are required in experimental QEC settings.",
+        "manuscript_boundary": "Not evidence that this manuscript has experimental correlated-event calibration.",
+    },
+    {
+        "row_id": "calibration_sivak2024_prior",
+        "axis": "calibration_aware_qec",
+        "citation_key": "sivak2024",
+        "reported_metric": "prior calibration gains include 48 percent average LER reduction and a further 16 percent RL-prior improvement in reported examples; surface-code table reports about 3.3 percent",
+        "local_card_status": "PDF figure or table checked",
+        "source_anchor": "zotero_literature_review_cards.md: Sivak 2024 card; Fig. 3/4 and Table I prior-calibration and RL-prior gains across 53 surface-code experiments.",
+        "manuscript_use": "Frames the slow-loop update as a calibration-surface problem rather than generic model accuracy.",
+        "manuscript_boundary": "Not evidence for this manuscript's experimental prior optimization or online RL control.",
+    },
+    {
+        "row_id": "fidelity_jafarzadeh2025_logical_channel",
+        "axis": "logical_channel_fidelity_and_infidelity",
+        "citation_key": "jafarzadeh2025",
+        "reported_metric": "approximate-GKP logical-channel probabilities such as p_I=0.9900, p_X=p_Z=0.0050, p_Y=0 in a cited GRN example",
+        "local_card_status": "PDF figure or table checked",
+        "source_anchor": "zotero_literature_review_cards.md: Jafarzadeh card; Fig. 1/2/3/4 teleportation logical maps, Wigner functions and GRN logical-channel probabilities.",
+        "manuscript_use": "Defines a stronger channel-level evaluation target.",
+        "manuscript_boundary": "Not evidence that this manuscript estimates finite-energy logical-channel probabilities.",
+    },
+    {
+        "row_id": "fidelity_hastrup2023_loss_infidelity",
+        "axis": "logical_channel_fidelity_and_infidelity",
+        "citation_key": "hastrup2023",
+        "reported_metric": "loss-correction analysis reports logical channel infidelity versus finite-energy and loss parameters",
+        "local_card_status": "PDF figure or table checked",
+        "source_anchor": "zotero_literature_review_cards.md: Hastrup card; Fig. 2/3 loss, pre-amplification and logical-channel infidelity evidence.",
+        "manuscript_use": "Provides a fidelity-class metric that is stronger than the current residual-boundary surrogate.",
+        "manuscript_boundary": "Not evidence that this manuscript evaluates pure-loss channel infidelity.",
+    },
+    {
+        "row_id": "fidelity_zheng2024_loss_amplification",
+        "axis": "logical_channel_fidelity_and_infidelity",
+        "citation_key": "zheng2024",
+        "reported_metric": "near-optimal recovery under loss and amplification channels, with capacity-condition discussion",
+        "local_card_status": "public PDF or HTML checked",
+        "source_anchor": "zotero_literature_review_cards.md: Zheng card; Fig. 2 performance comparison; theorem/lemma or page-level capacity-condition pinning still required for strong claims.",
+        "manuscript_use": "Separates channel-capacity or recovery metrics from the current protocol-defined final_ler proxy.",
+        "manuscript_boundary": "Not evidence that this manuscript performs channel-capacity or process-fidelity analysis.",
+    },
+    {
+        "row_id": "learned_bausch2024_alphaqubit",
+        "axis": "learned_qec_modules",
+        "citation_key": "bausch2024",
+        "reported_metric": "Sycamore d=3/d=5 finetuned LER about 2.901e-2 and 2.748e-2, with 325000 experimental samples and large synthetic training sets",
+        "local_card_status": "PDF figure or table checked",
+        "source_anchor": "zotero_literature_review_cards.md: Bausch card; Fig. 3/4 Sycamore d=3/d=5 LER, Pauli+ d=11 scaling and 325k experimental samples.",
+        "manuscript_use": "Sets a high bar for learned-decoder evidence and train/test reporting.",
+        "manuscript_boundary": "Not evidence that this manuscript uses real quantum-processor experimental data.",
+    },
+    {
+        "row_id": "learned_chamberland2026_predecoder",
+        "axis": "learned_qec_modules",
+        "citation_key": "chamberland2026",
+        "reported_metric": "example sub-step runtime reduction from 270.83 us to 38.78 us and total pipeline speedup 3.54x",
+        "local_card_status": "local literature card checked",
+        "source_anchor": "zotero_literature_review_cards.md: Chamberland card-level runtime summary; Table IX/X page/table pinning required before strong numeric comparison.",
+        "manuscript_use": "Frames accuracy-runtime tradeoffs for learned modules.",
+        "manuscript_boundary": "Not evidence for this manuscript's GPU, FPGA, or closed-loop runtime.",
+    },
+    {
+        "row_id": "learned_stein2026_film",
+        "axis": "learned_qec_modules",
+        "citation_key": "stein2026",
+        "reported_metric": "2,760,704 shots, 400 calibration snapshots, up to 11.11x LER reduction, folded FiLM latency about 85-95 us",
+        "local_card_status": "PDF figure or table checked",
+        "source_anchor": "zotero_literature_review_cards.md: Stein card; Fig. 6/7 and Table I/V/VI shots, calibration snapshots, LER reduction and folded FiLM latency.",
+        "manuscript_use": "Closest calibration-conditioned learned-decoder comparison for positioning.",
+        "manuscript_boundary": "Not evidence that this manuscript runs a per-shot FiLM-style neural decoder.",
+    },
+    {
+        "row_id": "hardware_lilliput2022_lut",
+        "axis": "real_time_fpga_decoders",
+        "citation_key": "lilliput2022",
+        "reported_metric": "online FPGA logic below 7 percent, latency about 28-42 ns, and CLUT compression from 148 MB to 1.38 MB",
+        "local_card_status": "public PDF or HTML checked",
+        "source_anchor": "zotero_literature_review_cards.md: LILLIPUT card; Fig. 1/3/13/16/17 and Tables 1-6 for layouts, logic, latency and CLUT compression.",
+        "manuscript_use": "Defines a compact low-latency hardware-decoder standard.",
+        "manuscript_boundary": "Not evidence for this manuscript's FPGA timing, logic utilization, or memory footprint.",
+    },
+    {
+        "row_id": "hardware_helios2023_union_find",
+        "axis": "real_time_fpga_decoders",
+        "citation_key": "helios2023",
+        "reported_metric": "VCU129 FPGA implementation to distance 21; average 11.5 ns per measurement round at 0.1 percent phenomenological noise",
+        "local_card_status": "public PDF or HTML checked",
+        "source_anchor": "zotero_literature_review_cards.md: Helios card; public PDF/HTML entry for VCU129 d=21 and 11.5 ns/round; table/figure/page pinning still required for strong hardware-table use.",
+        "manuscript_use": "Gives a real FPGA decoder latency reference.",
+        "manuscript_boundary": "Not evidence that this manuscript has synthesized or measured the affine fast path.",
+    },
+    {
+        "row_id": "hardware_collision2025_clustering",
+        "axis": "real_time_fpga_decoders",
+        "citation_key": "collision2025",
+        "reported_metric": "FPGA covers 881-qubit surface code in 810 ns with 10 KB memory; ASIC covers 1057 qubits in 240 ns, 0.06 mm2, 8 mW",
+        "local_card_status": "public PDF or HTML checked",
+        "source_anchor": "zotero_literature_review_cards.md: Collision decoder card; public HTML/abstract metrics for FPGA/ASIC scale, latency, memory, area and power.",
+        "manuscript_use": "Shows hardware claims require scale, latency, memory, area, and power.",
+        "manuscript_boundary": "Not evidence for this manuscript's ASIC, FPGA, area, power, or memory measurements.",
+    },
+    {
+        "row_id": "hardware_qldpcfpga2025_cycles",
+        "axis": "real_time_fpga_decoders",
+        "citation_key": "qldpcfpga2025",
+        "reported_metric": "logical error rate versus FPGA cycle budget; Relay about one to two orders faster in the cited gross-code settings",
+        "local_card_status": "public PDF or HTML checked",
+        "source_anchor": "zotero_literature_review_cards.md: Maurya/qLDPC-FPGA card; Fig. 2 logical-error rate versus FPGA cycle budget and Relay speed comparison.",
+        "manuscript_use": "Shows algorithm-hardware co-design should report both error and cycle budget.",
+        "manuscript_boundary": "Not evidence for this manuscript's qLDPC decoder performance or FPGA cycle budget.",
+    },
+    {
+        "row_id": "hardware_caune2024_closed_loop",
+        "axis": "real_time_fpga_decoders",
+        "citation_key": "caune2024",
+        "reported_metric": "mean decoding time below 1 us per round; fast-feedback response 9.6 us with 6.5 us decoding and 3.1 us communication/control latency",
+        "local_card_status": "public PDF or HTML checked",
+        "source_anchor": "zotero_literature_review_cards.md: Caune card; Fig. 3/4, 8-qubit stability, 25 rounds, 0.44-0.79 us/round and 9.6 us response breakdown.",
+        "manuscript_use": "Defines closed-loop experimental timing evidence expected for hardware language.",
+        "manuscript_boundary": "Not evidence for this manuscript's closed-loop QEC or board response latency.",
+    },
+    {
+        "row_id": "hardware_yang2026_nn_fpga",
+        "axis": "real_time_fpga_decoders",
+        "citation_key": "yang2026",
+        "reported_metric": "550 ns closed-loop latency, 124 ns NN decoding, 1.25 us QEC cycle, 6-bit quantized weights, real-time logical error rates near offline MWPM",
+        "local_card_status": "PDF figure or table checked",
+        "source_anchor": "zotero_literature_review_cards.md: Yang card; Fig. 1/2/3 architecture, FPGA NN decoder, 550 ns closed-loop, 124 ns NN decoding and real-time LER values.",
+        "manuscript_use": "Closest neural-FPGA real-time QEC reference for separating slow-loop calibration from per-shot neural decoding.",
+        "manuscript_boundary": "Not evidence that this manuscript reports real-time FPGA neural decoding or QPU feedback.",
+    },
+    {
+        "row_id": "hardware_ziad2024_local_clustering",
+        "axis": "real_time_fpga_decoders",
+        "citation_key": "ziad2024",
+        "reported_metric": "under 1 us per round; VU19P d=17 about 6 percent LUT and 3 percent FF; leakage-aware adaptivity can use about 4x fewer physical qubits",
+        "local_card_status": "local literature card checked",
+        "source_anchor": "zotero_literature_review_cards.md: Ziad card-level hardware summary; Fig. 3 and resource/page pinning should be rechecked before strong per-value use.",
+        "manuscript_use": "Supports the idea that fast local hardware paths and adaptive updates must be distinguished.",
+        "manuscript_boundary": "Not evidence for this manuscript's surface-code leakage-aware performance or FPGA resource use.",
+    },
+    {
+        "row_id": "hardware_maurer2025_gross_code",
+        "axis": "real_time_fpga_decoders",
+        "citation_key": "maurer2025",
+        "reported_metric": "BP iteration 24 ns, 12-cycle window below 240 ns on average, under 1 us per cycle in a reported regime, and LUT breakdown dominated by VNU/CNU blocks",
+        "local_card_status": "public PDF or HTML checked",
+        "source_anchor": "zotero_literature_review_cards.md: Maurer card; Table 1 resource breakdown, 24 ns BP iteration, sub-240 ns window and LUT block shares.",
+        "manuscript_use": "Shows resource breakdown and timing closure are first-class evidence for FPGA decoder papers.",
+        "manuscript_boundary": "Not evidence for this manuscript's timing closure, resource report, or power measurement.",
+    },
+]
+
+ANCHOR_POLICIES = {
+    "PDF figure or table checked": {
+        "anchor_strength": "figure_or_table_checked",
+        "manuscript_number_policy": "exact_or_approximate_values_allowed_with_citation",
+        "follow_up_needed": "optional page/table pin before journal submission",
+    },
+    "public PDF or HTML checked": {
+        "anchor_strength": "public_full_text_checked",
+        "manuscript_number_policy": "representative values allowed only with conservative wording",
+        "follow_up_needed": "pin page/table/figure before using as a strong per-value comparison",
+    },
+    "local literature card checked": {
+        "anchor_strength": "local_card_level_anchor",
+        "manuscript_number_policy": "categorical positioning preferred; avoid strong per-value claims",
+        "follow_up_needed": "return to PDF/HTML and pin page/table/figure before journal submission",
+    },
+}
+
+EXPECTED_AXES = {
+    "analog_gkp_information",
+    "calibration_aware_qec",
+    "logical_error_and_overhead_targets",
+    "logical_channel_fidelity_and_infidelity",
+    "learned_qec_modules",
+    "real_time_fpga_decoders",
+}
+
+
+def validate_rows() -> None:
+    row_ids = [row["row_id"] for row in ROWS]
+    if len(row_ids) != len(set(row_ids)):
+        raise ValueError("row_id values must be unique")
+    axes = {row["axis"] for row in ROWS}
+    if axes != EXPECTED_AXES:
+        raise ValueError(f"unexpected axes: {sorted(axes)}")
+    for row in ROWS:
+        if (
+            not row["citation_key"]
+            or not row["reported_metric"]
+            or not row["source_anchor"]
+            or not row["manuscript_boundary"]
+        ):
+            raise ValueError(f"incomplete row: {row['row_id']}")
+        if row["local_card_status"] not in ANCHOR_POLICIES:
+            raise ValueError(f"unknown local_card_status for anchor policy: {row['row_id']}")
+
+
+def main() -> None:
+    validate_rows()
+    enriched_rows = []
+    for row in ROWS:
+        enriched = dict(row)
+        enriched.update(ANCHOR_POLICIES[row["local_card_status"]])
+        enriched_rows.append(enriched)
+    fieldnames = [
+        "row_id",
+        "axis",
+        "citation_key",
+        "reported_metric",
+        "local_card_status",
+        "source_anchor",
+        "anchor_strength",
+        "manuscript_number_policy",
+        "follow_up_needed",
+        "manuscript_use",
+        "manuscript_boundary",
+    ]
+    with OUT_CSV.open("w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(enriched_rows)
+    OUT_JSON.write_text(
+        json.dumps(
+            {
+                "scope": (
+                    "Literature-card metric crosswalk for manuscript positioning; "
+                    "not a normalized baseline table."
+                ),
+                "source_note": "Values are taken from docs/paper_materials/zotero_literature_review_cards.md.",
+                "non_claims": [
+                    "not a leaderboard",
+                    "not normalized across code families",
+                    "not source data for this manuscript's experiments",
+                    "not hardware evidence for this manuscript",
+                    "not a substitute for final page/table/figure pinning by the authors",
+                ],
+                "anchor_policies": ANCHOR_POLICIES,
+                "rows": enriched_rows,
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    print(json.dumps({"status": "ok", "rows": len(enriched_rows), "csv": str(OUT_CSV), "json": str(OUT_JSON)}))
+
+
+if __name__ == "__main__":
+    main()
