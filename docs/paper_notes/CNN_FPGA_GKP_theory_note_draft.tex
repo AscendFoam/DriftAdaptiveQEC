@@ -1,15 +1,17 @@
 \documentclass[11pt]{article}
 
-\usepackage[margin=1in]{geometry}
+\usepackage[margin=0.68in]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{array}
 \usepackage{booktabs}
 \usepackage{caption}
 \usepackage{hyperref}
 \emergencystretch=2em
+\captionsetup{font=small,skip=3pt}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
 
-% T80-REOPEN: Title
-% T78-SCOPE: title-hierarchy-demotion; source=T77-manifest,T70,T72,T77
 \title{A Dual-Loop Teacher-Anchored Residual Calibration Framework for Drift-Adaptive GKP Decoding}
 \author{}
 \date{}
@@ -17,10 +19,7 @@
 \begin{document}
 \maketitle
 
-% T80-REOPEN: Abstract
-% T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
 \begin{abstract}
-% T77-SOURCE: T74-TBL-01; T74-TBL-02; T74-TBL-03; T74-TBL-07; review=T70,T76
 Approximate Gottesman--Kitaev--Preskill (GKP) quantum error correction uses
 continuous modular syndromes to infer displacement errors, but finite-energy
 states and drifting operating conditions make a fixed correction law brittle.
@@ -40,22 +39,25 @@ remains a deterministic affine rule.  The intended systems advantage is to
 reduce logical failures under drift while keeping the fast boundary close to a
 small fixed-point controller.
 
-Under the locked four-scenario mock-backed software-HIL protocol, the
-teacher-anchored hybrid residual branch is the winner in all four frozen
-scenarios, with UKF as the runner-up throughout.  The newer Phase A
-formal-repeat source data strengthen two scenario rows: for
+Under the controlled four-scenario simulation protocol, the
+teacher-anchored hybrid residual branch is the winner in all four
+scenarios, with UKF as the runner-up throughout; the UKF-relative mean
+reductions are \(1.75\%\), \(2.89\%\), \(2.80\%\) and \(1.85\%\) across
+the four reference rows, giving a \(2.32\%\) average reduction.  The newer
+paired-interval source data strengthen two scenario rows: for
 \texttt{static\_bias\_theta} and \texttt{linear\_ramp}, 12 paired repeats give
 positive UKF-minus-hybrid intervals, while the all-scenario, pooled, holdout,
-and hardware gates remain open.  Bounded ablation and multi-seed materials
+and hardware validations remain incomplete.  Bounded ablation and multi-seed materials
 support only a descriptive reading of this result: histogram-delta features
 matter, the instability pattern repeats across seeds, and the tested
 lower-clip intervention is mixed and mostly harmful, so the current mechanism
-story remains non-causal.  A separately labeled
-supplement-side statistical-calibration extension lane further shows that a
+story remains non-causal.  A supplementary statistical-calibration analysis
+further shows that a
 simple non-neural estimator can be strong under the same affine runtime
-contract, but its accepted closure remains no-promotion and without a unique
-clean threshold.  Controlled oracle-affine, wrapped-Gaussian, holdout-stress,
-operation-count, and fixed-point checks add theory-facing diagnostics, not a
+contract, but the reported evidence does not select a unique promoted
+threshold.  Controlled oracle-affine, wrapped-Gaussian, residual-channel
+surrogate, finite-squeezing toy-channel, holdout-stress, operation-count,
+fixed-point and runtime-counter checks add theory-facing diagnostics, not a
 new benchmark closure.  The strongest current claim is therefore not that one
 CNN architecture closes the decoding problem, but that drift-adaptive affine
 calibration is a credible and hardware-bounded organizing principle for GKP
@@ -64,8 +66,6 @@ fast-path decoding.
 
 \tableofcontents
 
-% T80-REOPEN: Introduction
-% T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
 \section{Introduction}
 
 Bosonic codes protect quantum information by encoding a logical qubit into the
@@ -135,18 +135,14 @@ could sit before, inside, or alongside a larger stabilizer or LDPC decoding
 stack while keeping the fast boundary as a small fixed-point affine
 displacement.
 
-The current note keeps the evidence hierarchy explicit.  The locked frozen
+The current note keeps the evidence hierarchy explicit.  The controlled
 software-HIL benchmark is the main result layer.  Feature and teacher
 ablations, six-seed mechanism materials, and the separately labeled
 statistical-calibration extension lane are supporting layers that help explain
 or contextualize the benchmark but do not replace it.  Training/material
-regeneration, isolated true \texttt{.tflite} execution, and real-board gate or
-provenance artifacts remain layered boundary evidence rather than coequal
-performance results.
+regeneration, isolated true \texttt{.tflite} execution, and hardware-readiness
+artifacts remain boundary evidence rather than coequal performance results.
 
-% T81-CALIBRATION: Summary of Contributions
-% T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
-% T84-POLISH: Summary of Contributions
 \section{Summary of Contributions}
 
 The work can be organized around six bounded contributions.
@@ -160,7 +156,7 @@ updates only the runtime parameters consumed by the fast path.  This ties the
 continuous-syndrome GKP picture to a contract that remains compatible with
 quantized matrix-vector execution.
 
-\paragraph{2. A teacher-anchored residual mainline architecture.}
+\paragraph{2. A teacher-anchored residual architecture.}
 A classical teacher estimator produces a stable baseline
 \((K_t^{\rm teacher},b_t^{\rm teacher})\), and the learned branch predicts only
 a bounded residual correction,
@@ -176,18 +172,18 @@ Learning is therefore used to recalibrate a low-dimensional control surface,
 not to replace GKP decoding end-to-end or to move a neural network onto the
 per-shot critical path.
 
-\paragraph{3. A locked mainline evidence layer.}
-% T77-SOURCE: T74-TBL-01; T74-TBL-02; T74-TBL-03; T74-TBL-07; review=T70,T76
-The strongest accepted performance evidence remains the locked
-four-scenario mock-backed software-HIL benchmark that serves as the frozen
-reference comparison for the paper.  Within that fixed set, the
+\paragraph{3. A controlled reference evidence layer.}
+The strongest performance evidence remains the controlled
+four-scenario software-HIL benchmark that serves as the reference comparison
+for the paper.  Within that fixed set, the
 teacher-anchored hybrid residual branch is the winner in all four scenarios
-and UKF is the runner-up throughout.  This is the mainline ranking result; it
-is not an expanded benchmark claim, not a deployment-closure result, and not
-a real-board result.  The later Phase A formal-repeat source data add
+and UKF is the runner-up throughout; the scenario-wise UKF-relative reductions
+are \(1.75\%\), \(2.89\%\), \(2.80\%\) and \(1.85\%\).  This is the primary
+ranking result; it is not an expanded benchmark claim, not a deployment-closure
+result, and not a real-board result.  The later paired-interval source data add
 scenario-level support for the direction of the UKF-vs-hybrid gap in
 \texttt{static\_bias\_theta} and \texttt{linear\_ramp}, but they still do not
-complete the all-scenario repeat-expanded gate.
+complete the all-scenario repeat-expanded validation set.
 
 \paragraph{4. Conservative supporting interpretation layers.}
 Feature/teacher ablations and six-seed mechanism materials refine how the
@@ -201,17 +197,17 @@ teacher-necessity retelling.
 \paragraph{5. A separately labeled statistical-calibration extension lane.}
 The same affine runtime contract can also host a simple non-neural
 histogram-driven calibration rule.  In a separately labeled supplement-side
-calibration-extension lane, that statistical-calibration path can be strong
-relative to the frozen anchors, which supports the calibration-contract story
-at the project level.  However, the accepted closure remains extension-lane
-only, explicitly no-promotion, and without a unique clean threshold.
+calibration-extension analysis, that statistical-calibration path can be strong
+relative to the reference anchors, which supports the calibration-contract story
+at the systems level.  However, the reported evidence remains supplementary
+and does not select a unique promoted threshold.
 
 \paragraph{6. A layered runtime and deployment-boundary evidence chain.}
 The repository now has one code-backed training/material regeneration pack,
-one clean CPU-only bounded rerun, one isolated current-host true
+one clean CPU-only bounded rerun, one isolated local true
 \texttt{.tflite} runtime confirmation for selected preserved artifacts, and one
-read-only real-board gate/regeneration/provenance pack on a host that still
-cannot enter board execution.  These are useful supporting boundaries for the
+read-only hardware-readiness pack on a host that still cannot enter board
+execution.  These are useful supporting boundaries for the
 manuscript, but they remain layered evidence rather than coequal benchmark
 results or completed deployment claims.
 
@@ -220,7 +216,7 @@ results or completed deployment claims.
 For reviewer-facing comparison, the advantages should be stated by metric and
 evidence layer rather than by architecture alone.
 Table~\ref{tab:metric-advantages} separates what is already supported by the
-locked software-HIL stack from what remains architecture-level reasoning or
+controlled software-HIL stack from what remains architecture-level reasoning or
 future hardware measurement.
 
 \begin{table}[ht]
@@ -229,17 +225,17 @@ future hardware measurement.
 \renewcommand{\arraystretch}{1.06}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.29\linewidth}>{\raggedright\arraybackslash}p{0.20\linewidth}@{}}
 \toprule
-Metric & Advantage & Architectural reason & Evidence boundary \\
+Metric & Advantage & Architectural reason & Supported scope \\
 \midrule
 Logical-error proxy &
-Lower error on the locked frozen software-HIL benchmark than the five mainline
+Lower error on the controlled software-HIL benchmark than the five reference
 baselines; the separately labeled statistical-calibration extension lane can
-also outperform the frozen anchors under its bounded protocol. &
+also outperform the reference anchors under its bounded protocol. &
 Both learned and statistical branches update the same physical-layer affine
 surface, so adaptation acts directly on the displacement rule used by the GKP
 fast loop. &
-Supported for the `T24' mainline ranking and the FR8 extension-lane
-supplement; not a paper-grade expanded benchmark and not a promoted
+Supported for the controlled reference ranking and the supplementary
+statistical-calibration analysis; not a paper-grade expanded benchmark and not a promoted
 comparator. \\
 \addlinespace
 Per-shot latency &
@@ -263,8 +259,8 @@ The control boundary is simple to integrate, test, and fail safely. &
 Quantized \((K,b)\), clipping limits, stale-parameter handling, saturation
 counters, and double-buffered stage-and-commit updates form explicit runtime
 contracts. &
-Software-HIL validates the interface shape; the real-board lane remains a
-read-only gate/provenance boundary with current-host `NO\_GO'. \\
+Software-HIL validates the interface shape; board execution, source-vs-board
+agreement and hardware timing remain unavailable in the present evidence. \\
 \addlinespace
 Drift robustness &
 Adaptation can track mean, variance, and orientation changes in the effective
@@ -281,17 +277,17 @@ gain-scheduled parameter banks all map to the same committed \((K,b)\)
 interface. &
 Current evidence supports this mainly through the teacher-anchored hybrid path
 and the supplement-side statistical-calibration extension lane; other
-slow-loop variants remain future-work candidates. \\
+slow-loop variants remain candidates for later validation. \\
 \addlinespace
 Compatibility with larger QEC stacks &
 The method can serve as a GKP physical-layer calibration module before an
 outer stabilizer, surface-GKP, or LDPC-GKP decoder. &
 It improves the physical displacement correction and residual analog
 statistics instead of replacing the outer-code decoder decision rule. &
-System-level concatenated-code gains remain future-work evidence. \\
+System-level concatenated-code gains remain unmeasured. \\
 \bottomrule
 \end{tabular}
-\caption{Metric-level advantage summary.  The strongest current evidence is
+\caption{Metric-level advantage summary.  The strongest reported evidence is
 logical-error reduction in software-HIL, with `statcalib' retained only as a
 separately labeled extension-lane supplement.  Latency, resource, and cost
 advantages are architecture-level consequences of the affine fast path and
@@ -305,7 +301,6 @@ into one success claim, but to show which advantages are already ranking-level
 software-HIL facts, which are extension-lane or supporting facts, and which
 remain hardware-facing targets.
 
-% T81-CALIBRATION: Brief Review of the GKP Code
 \section{Brief Review of the GKP Code}
 
 This section fixes the physical-layer notation used later in the manuscript.
@@ -451,12 +446,11 @@ decision boundary, for example
 \end{equation}
 and similarly for the \(p\)-quadrature.  Closed-loop logical error probability
 is therefore the central metric; parameter-regression error is useful only when
-it correlates with the downstream correction outcome.  The mainline benchmark
-therefore evaluates logical performance under the locked software-HIL protocol,
+it correlates with the downstream correction outcome.  The primary benchmark
+therefore evaluates logical performance under the controlled software-HIL protocol,
 while runtime timing and hardware resource questions remain separate boundary
 issues.
 
-% T81-CALIBRATION: Noise and Drift Model
 \section{Noise and Drift Model}
 
 The model below is an effective calibration model.  Its role is to summarize
@@ -506,16 +500,15 @@ The benchmark suite uses four drift scenarios:
 \end{enumerate}
 These scenarios separate different adaptation demands: steady calibration,
 tracking, shock response, and periodic following.  They are sufficient for the
-current frozen benchmark and extension-lane follow-ups, but they are not
+current reference benchmark and extension-lane follow-ups, but they are not
 claimed as exhaustive drift coverage.
 
-% T81-CALIBRATION: Model Architecture
 \section{Model Architecture}
 
-The architecture is organized around one mainline teacher-anchored residual
+The architecture is organized around one teacher-anchored residual
 path and several supporting or boundary layers that reuse the same affine
 runtime contract.  Only the teacher-anchored hybrid path participates in the
-mainline frozen benchmark ranking; the statistical-calibration branch is kept
+primary reference benchmark ranking; the statistical-calibration branch is kept
 as a separately labeled extension lane, and deployment-facing paths remain
 boundary evidence rather than completed hardware execution.
 
@@ -602,7 +595,7 @@ and
     {\rm ParamMapper}(\hat{\theta}_t^{\rm teacher}).
 \end{equation}
 The teacher keeps the learned branch near an interpretable calibration surface
-and creates meaningful ablation baselines.  In the locked mainline comparison,
+and creates meaningful ablation baselines.  In the controlled reference comparison,
 these teacher-driven baselines define the classical reference rows against
 which the hybrid residual branch is judged.
 
@@ -637,7 +630,7 @@ The committed parameter is
     \qquad
     b_t={\rm EMA}(b_t^{\rm teacher}+\delta b_t).
 \end{equation}
-This matches the strongest current mainline evidence: the accepted learned
+This matches the strongest current reference evidence: the learned
 winner is a teacher-anchored residual-b style branch under a bounded affine
 runtime contract, not an unconstrained neural decoder that replaces the fast
 path.
@@ -650,9 +643,9 @@ from recent syndrome statistics and emits runtime parameters through the same
 clipping, smoothing, and stage-and-commit path.  Its role is both practical and
 scientific: it tests whether the benefit comes from a general histogram-driven
 calibration principle rather than from the CNN architecture alone.  However,
-its accepted status in the current manuscript remains narrow: it is a
-separately labeled FR8 extension lane, not part of the frozen `T24' mainline
-ranking, not a promoted comparator, and not a unique-threshold closure.
+its status in the current manuscript remains narrow: it is a supplementary
+analysis, not part of the controlled reference ranking, not a promoted
+comparator, and not a unique-threshold result.
 
 \subsection{Stage-and-commit runtime contract}
 
@@ -669,11 +662,9 @@ boundary:
 This contract allows stale-parameter effects, update latency, commit success,
 rollback/fallback behavior, and fixed-point stability to be measured
 separately from logical performance.  Software-HIL validates that this runtime
-contract can be exercised and audited, while current real-board materials stop
-at a read-only gate/regeneration/provenance pack with present-host `NO\_GO'.
+contract can be exercised and audited, while current hardware-readiness
+materials stop before board execution, timing and source-vs-board agreement.
 
-% T80-REOPEN: Related Work / positioning
-% T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
 \section{Relationship to Existing Work}
 
 \subsection{GKP and bosonic analog soft information}
@@ -724,7 +715,7 @@ worst-case latency, resource use, and hardware integration.
 The contribution here is intentionally narrower and complementary.  It does
 not aim to replace surface-code, repetition-code, or qLDPC hardware decoders.
 Instead, it targets the GKP physical-layer correction problem that precedes
-many concatenated-code decoding tasks: how should a device update the analog
+many concatenated-code decoding settings: how should a device update the analog
 displacement rule when the finite-energy GKP syndrome distribution drifts?  In
 that setting, a fixed binary graph decoder is not the natural first
 abstraction, and an unconstrained neural network on the per-shot path is not a
@@ -760,10 +751,10 @@ commitment.}
 The same runtime contract can host a teacher estimator, a learned residual
 branch, or a non-neural statistical calibration rule.  The bounded
 statistical-calibration extension lane therefore supports the design story
-without changing the accepted hierarchy: the important object is the
+without changing the evidence hierarchy: the important object is the
 histogram-driven affine calibration contract, not one particular CNN
 architecture, and this note keeps that lane supplement-side rather than as a
-promoted mainline comparator.
+promoted comparator.
 
 \paragraph{Explicit deployment diagnostics.}
 The framework makes quantization, clipping, saturation, stale-parameter use,
@@ -779,22 +770,19 @@ surface-GKP, bosonic-QLDPC, or conventional stabilizer-code decoders.  Its
 expected role is to keep the GKP layer calibrated under drift so that
 downstream decoders receive better-conditioned residual information.
 
-% T80-REOPEN: Experimental Setup
-% T84-POLISH: Experimental Setup
 \section{Experimental Setup}
 
 \subsection{Software-HIL protocol}
 
-% T77-SOURCE: T74-TBL-01; review=T24,T25
-The mainline numerical experiments use a locked mock-backed software-HIL
+The primary numerical experiments use a controlled software-HIL
 protocol that preserves the fast loop, slow loop, parameter-bank, and
 stage-and-commit interfaces while executing the underlying experiment in
-software.  The authoritative frozen reference benchmark contains four drift
-scenarios, five mainline modes, paired seeds, and two repeats under one fixed
+software.  The authoritative reference benchmark contains four drift
+scenarios, five comparison modes, paired seeds, and two repeats under one fixed
 comparison contract.  This protocol is sufficient for comparing adaptive
 calibration laws under matched drift trajectories and shared random structure,
 but it does not measure board-level latency, hardware resource use, or
-deployment closure.  Later ablation, multi-seed, and calibration-extension
+deployment readiness.  Later ablation, multi-seed, and calibration-extension
 materials are therefore interpreted relative to this anchor rather than as a
 rewritten benchmark.
 
@@ -815,8 +803,7 @@ Scenario key & Interpretation \\
 \end{tabular}
 \end{center}
 
-% T77-SOURCE: T74-TBL-01; T74-TBL-02; T74-TBL-03; T74-TBL-07; review=T70,T76
-The mainline comparison includes five modes: EKF, UKF, a constant-mean affine
+The primary comparison includes five modes: EKF, UKF, a constant-mean affine
 baseline, an RLS residual-\(b\) baseline, and the learned hybrid residual
 branch.  Additional bounded materials then cover feature and teacher
 ablations, six-seed descriptive mechanism snapshots, and a separately labeled
@@ -824,32 +811,32 @@ statistical-calibration extension lane under the same affine runtime contract.
 The reported metric is \(\texttt{final\_ler\_mean}\), where lower values
 indicate fewer logical failures under the fixed software-HIL protocol.
 
-% T80-REOPEN: Numerical Results
-% T83-CLOSEOUT: Numerical Results
-% T84-POLISH: Numerical Results
-% T86-ASSEMBLY: Numerical Results
-% T87-QA: Numerical Results
-% T88-MANUAL: Numerical Results
 \section{Numerical Results}
 
-This section separates the locked benchmark result from supporting
-interpretation layers and from follow-up routes that remain explicitly outside
-the accepted result layer.  In the current frozen-mainline handoff,
-Table~\ref{tab:five-mode-benchmark} remains the primary in-text representation
-of the locked benchmark layer, while appendix, supplement, and excluded
-surfaces remain routed separately.
+The synchronized results are organized as an evidence ladder.  The first rung
+is the predeclared software-HIL ranking in
+Table~\ref{tab:five-mode-benchmark}.  The second rung adds descriptive margins
+and the two completed formal paired-interval scenario rows.  The third rung
+adds controlled oracle, wrapped-Gaussian, residual-boundary, finite-squeezing,
+holdout and commit-lag diagnostics that explain where the affine contract
+works and where it fails.  The final rung adds operation-count, Q4.20
+fixed-point, runtime-counter and hardware-measurement rows.  This ordering is
+deliberate: the main table supports the performance statement; the diagnostic
+rows explain estimator and metric limits; and the implementation rows test
+whether the online rule is small and observable enough for later board
+validation.  None of these supporting rows turns the note into a hardware
+result, a finite-energy logical-channel fidelity estimate or an all-scenario
+repeat-expanded benchmark.
 
 \subsection{Four-scenario affine benchmark}
 
-% T77-SOURCE: T74-TBL-01; T75-FIG-M01; T76-PREVIEW-M01; review=T76
-Table~\ref{tab:five-mode-benchmark} records the locked frozen benchmark that
+Table~\ref{tab:five-mode-benchmark} records the controlled reference benchmark that
 also underlies any later paper-facing visual summary.  In this note, the table
 is kept as the primary representation because it is the authoritative numeric
-surface and the least ambiguous freeze point.  Under the locked frozen
-reference protocol, the hybrid residual branch is the winner in all four
-frozen scenarios, with UKF as the runner-up throughout.  This remains the
-authoritative mainline result layer of the current note.  It supports a
-bounded mock-backed software-HIL ranking only, and it should not be retold as
+surface.  Under the controlled reference protocol, the hybrid residual branch
+is the winner in all four scenarios, with UKF as the runner-up throughout.
+This remains the authoritative primary result layer of the current note.  It supports a
+controlled-simulation ranking only, and it should not be retold as
 an expanded benchmark, a \texttt{.tflite} ranking, or a board-level ranking.
 
 \begin{table}[ht]
@@ -876,70 +863,232 @@ The submission draft also reports the UKF-minus-hybrid margins behind the
 winner labels.  These rows make the main ranking auditable as a magnitude
 statement rather than only as a scenario-wise ordering.  The hybrid branch has
 positive paired deltas in all available paired rows, with relative reductions
-from \(1.75\%\) to \(2.89\%\) against UKF in the four frozen scenarios
+from \(1.75\%\) to \(2.89\%\) against UKF in the four reference scenarios
 (Table~\ref{tab:paired-margin-note}).  The average relative reduction across
-the tested set is \(2.32\%\).  Because the frozen anchor has only two repeats
-per scenario, these margins remain descriptive source-data readouts.  They are
-not confidence intervals, \(p\)-values, standard errors, or a distributional
-robustness claim.
+the tested set is \(2.32\%\).  To synchronize more of the submission result
+layer, the table also records the smallest observed paired delta, the
+non-inferential two-repeat resampling envelope, and the margin divided by the
+larger descriptive standard deviation of the compared rows.  The latter ratio
+ranges from \(8.05\) to \(27.00\), but it remains an auditability diagnostic
+rather than a significance statistic.  Because the reference anchor has only two
+repeats per scenario, these margins remain descriptive data readouts.
+They are not confidence intervals, \(p\)-values, standard errors, or a
+distributional robustness claim.
 
 \begin{table}[ht]
 \centering
-\small
-\begin{tabular}{lrrrr}
+\scriptsize
+\begin{tabular}{lrrrrrr}
 \toprule
-Scenario & UKF & Hybrid-\(b\) & Mean \(\Delta\) & Rel. red. \\
+Scenario & Mean \(\Delta\) & Rel. red. & Min \(\Delta\) & Envelope low & Envelope high & \(\Delta/\max\) SD \\
 \midrule
-\texttt{static\_bias\_theta} & 0.825370 & 0.810902 & 0.014469 & 1.75\% \\
-\texttt{linear\_ramp} & 0.811201 & 0.787755 & 0.023446 & 2.89\% \\
-\texttt{step\_sigma\_theta} & 0.811548 & 0.788800 & 0.022748 & 2.80\% \\
-\texttt{periodic\_drift} & 0.821558 & 0.806392 & 0.015166 & 1.85\% \\
+\texttt{static\_bias\_theta} & 0.014469 & 1.75\% & 0.013953 & 0.013953 & 0.014984 & 12.17 \\
+\texttt{linear\_ramp} & 0.023446 & 2.89\% & 0.023017 & 0.023017 & 0.023875 & 27.00 \\
+\texttt{step\_sigma\_theta} & 0.022748 & 2.80\% & 0.022440 & 0.022440 & 0.023056 & 21.28 \\
+\texttt{periodic\_drift} & 0.015166 & 1.85\% & 0.013571 & 0.013571 & 0.016762 & 8.05 \\
+\texttt{all\_scenarios} & 0.018957 & -- & -- & 0.016044 & 0.021892 & -- \\
 \bottomrule
 \end{tabular}
-\caption{Descriptive UKF-minus-hybrid margins in the frozen benchmark.
-\(\Delta\) is UKF \(\texttt{final\_ler}\) minus Hybrid-\(b\)
-\(\texttt{final\_ler}\).  Positive values indicate lower hybrid error.  The
-rows summarize the available paired source data only; they are not inferential
-statistics or expanded-benchmark evidence.}
+\caption{Descriptive UKF-minus-hybrid margins and two-repeat resampling
+envelope in the reference benchmark.  \(\Delta\) is UKF \(\texttt{final\_ler}\)
+minus Hybrid-\(b\) \(\texttt{final\_ler}\).  Positive values indicate lower
+hybrid error; all four scenario rows have \(2/2\) positive paired deltas.  The
+envelope and final scale column are descriptive data readouts, not
+confidence intervals, \(p\)-values, standard errors, robustness proof or
+expanded-benchmark evidence.}
 \label{tab:paired-margin-note}
 \end{table}
 
-\subsection{Formal Phase A paired-interval check}
+\subsection{Completed paired-interval scenario checks}
 
-The submission draft adds a repeat-expanded Phase A source-data layer for the
+The submission draft adds a repeat-expanded paired-interval layer for the
 two completed formal scenario rows.  In both
 \texttt{static\_bias\_theta} and \texttt{linear\_ramp}, all 12 paired repeats
 have positive UKF-minus-hybrid \(\texttt{final\_ler}\) deltas, and both the
 paired-\(t\) and bootstrap 95\% intervals have positive lower bounds
-(Table~\ref{tab:phase-a-interval-note}).  This supports a scenario-level
+(Table~\ref{tab:paired-interval-note}).  This supports a scenario-level
 positive-interval statement for these two rows only.  It does not establish an
 all-scenario repeat-expanded advantage, pooled \(p\)-value, holdout robustness,
 or any hardware-facing claim.
 
 \begin{table}[ht]
 \centering
-\small
-\begin{tabular}{lrrr}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrr}
 \toprule
-Scenario & Paired repeats & Mean delta & 95\% intervals \\
+Scenario & \(n\) & Mean \(\Delta\) & SD & Min--max \(\Delta\) & 95\% intervals \\
 \midrule
-\texttt{static\_bias\_theta} & 12 & 0.015563 &
+\texttt{static\_bias\_theta} & 12 & 0.015563 & 0.001236 & [0.013953,0.018355] &
 \([0.014778,0.016348]\); boot. \([0.014933,0.016256]\) \\
-\texttt{linear\_ramp} & 12 & 0.022417 &
+\texttt{linear\_ramp} & 12 & 0.022417 & 0.001892 & [0.019951,0.024946] &
 \([0.021215,0.023619]\); boot. \([0.021405,0.023440]\) \\
 \bottomrule
 \end{tabular}
-\caption{Formal Phase A scenario-level UKF-minus-hybrid interval checks.  The
+\caption{Completed scenario-level UKF-minus-hybrid interval checks.  The
 rows summarize the completed formal-length paired repeats for two scenarios
-only; they do not complete the all-scenario gate.}
-\label{tab:phase-a-interval-note}
+only; all \(12/12\) paired deltas are positive in both rows, but the table
+does not complete the all-scenario validation set.}
+\label{tab:paired-interval-note}
+\end{table}
+
+\subsection{Repeat-expansion protocol checks}
+
+The submission draft also adds execution checks for the planned repeat-expanded
+route.  A short-run runner matrix used the same four predeclared scenarios and
+the UKF-versus-hybrid comparison, but with shortened timing
+(\(120\) slow-loop updates and \(4.8\times10^5\) fast cycles) and two paired
+repeats.  All four rows completed and preserved positive UKF-minus-hybrid
+deltas (Table~\ref{tab:runner-smoke-note}).  This table is useful because it
+checks command shape, row accounting and field availability before a larger
+repeat budget.  It is not part of the main performance evidence, and it does
+not convert the note into an expanded benchmark.
+The corresponding validation threshold is summarized in
+Table~\ref{tab:upgrade-threshold-note}: only the reference ranking and the two formal
+scenario rows currently support manuscript claims, while all-scenario
+repeat expansion, trained-branch holdout robustness and hardware measurements
+remain required upgrades.  The extra column in the table is synchronized from
+the submission draft's validation-threshold discussion so that the note records
+not only what was observed, but also what additional experimental row would be
+needed before stronger wording could be used.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Scenario & UKF & Hybrid-\(b\) & \(\Delta\) & Rel. red. \\
+\midrule
+\texttt{static\_bias\_theta} & 0.817940 & 0.801012 & 0.016927 & 2.07\% \\
+\texttt{linear\_ramp} & 0.840509 & 0.813909 & 0.026600 & 3.16\% \\
+\texttt{step\_sigma\_theta} & 0.828792 & 0.816023 & 0.012769 & 1.54\% \\
+\texttt{periodic\_drift} & 0.810660 & 0.781844 & 0.028817 & 3.55\% \\
+\bottomrule
+\end{tabular}
+\caption{Short-run protocol check for the planned repeat-expanded anchor
+comparison.  Entries are not formal benchmark rows; they verify runner
+coverage and missing-row accounting for the expansion route only.}
+\label{tab:runner-smoke-note}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.17\linewidth}
+                >{\raggedright\arraybackslash}p{0.31\linewidth}
+                >{\raggedright\arraybackslash}p{0.22\linewidth}
+                >{\raggedright\arraybackslash}p{0.20\linewidth}}
+\toprule
+Layer & Synchronized result readout & Supported wording in this note & Upgrade needed for stronger wording \\
+\midrule
+Reference ranking & Four scenarios, five modes, paired seeds and two repeats;
+Hybrid-\(b\) has the lowest mean \(\texttt{final\_ler}\) in all four rows,
+with UKF as runner-up. & Descriptive software-HIL ranking only. &
+More repeats, formal intervals, stronger tuned decoder baselines and holdout
+drift rows. \\
+\addlinespace
+Paired-repeat evidence & Short-run all-scenario UKF/Hybrid rows preserve
+positive deltas; two completed formal rows have \(12/12\) positive pairs and
+positive paired-\(t\)/bootstrap lower bounds. & Scenario-level positive
+interval statements for \texttt{static\_bias\_theta} and \texttt{linear\_ramp}
+only. & Complete the other two scenarios with at least 12 paired repeats,
+preferably 16, plus pooled all-scenario analysis. \\
+\addlinespace
+Mechanism and estimator checks & Histogram-delta removal is harmful, teacher
+feature removal is non-monotone, the lower-clip intervention is harmful in
+four of six seeds, and the statistical-calibration extension gives
+\(\texttt{final\_ler}\approx0.4317\)--\(0.4671\) under a non-matched protocol. &
+Feature sensitivity and affine-interface evidence, not causal closure or a
+promoted comparator. & Matched ablation repeats and a predeclared
+intervention test that improves rather than degrades the residual branch. \\
+\addlinespace
+Controlled decoder/stress diagnostics & Oracle affine improves residual MSE in
+all controlled local states and holdout families; lagged affine fails under
+burst/reset and faster-than-window stress, and wrapped-Gaussian references are
+mixed. & Local-validity and stale-commit diagnostics, not trained-branch
+holdout robustness or a tuned nearest-lattice benchmark. & Train/evaluate on
+predeclared unseen drift families and add tuned nearest-lattice or
+sequence-level wrapped-posterior baselines. \\
+\addlinespace
+Datapath and runtime checks & The affine path uses four multiplications and
+four additions; Q4.20 emulation changes corrections at the \(10^{-6}\) scale
+with no crossing changes, and runtime counters record \(\sim900\) commits per
+mode with zero slow violations. & Fixed-point/software observability evidence,
+not FPGA timing, resource, power, source-vs-board or board-execution evidence.
+& Board logs, bitstream/RTL hash, latency/resource/power measurements and
+source-vs-board vectors. \\
+\bottomrule
+\end{tabular}
+\caption{Compressed result-layer map for the synchronized experimental material.
+The table brings more of the submission-draft result hierarchy into the note
+while preserving the validation boundary for all-scenario, holdout and board
+claims.}
+\label{tab:upgrade-threshold-note}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.18\linewidth}
+                >{\raggedright\arraybackslash}p{0.33\linewidth}
+                >{\raggedright\arraybackslash}p{0.24\linewidth}
+                >{\raggedright\arraybackslash}p{0.17\linewidth}}
+\toprule
+Submission result layer & Additional numerical content synchronized here & Compact readout & Boundary retained \\
+\midrule
+Main software-HIL results & Four-scenario ranking, UKF-minus-hybrid margins,
+two completed paired-interval rows and a short-run expansion check. &
+Hybrid wins \(4/4\) scenarios; relative reduction \(1.75\%\)--\(2.89\%\);
+two formal rows have \(12/12\) positive pairs. &
+Descriptive ranking; only two completed 12-pair interval rows. \\
+\addlinespace
+Ablation and mechanism panel & Feature/teacher ablations and six-seed
+lower-clip intervention readout. &
+No-hist-delta row degrades to 0.826723; lower-clip intervention is harmful in
+four of six seeds. &
+Feature sensitivity; no teacher-necessity or mitigation claim. \\
+\addlinespace
+Statistical-calibration panel & Separate non-neural calibration lane under the
+same affine runtime contract. &
+Best extension rows span 0.431708--0.467083; default and high-threshold
+aggregates remain tied at about 0.44925. &
+Supplement-side extension only; no promoted unique threshold and no matched
+main-table comparator claim. \\
+\addlinespace
+Controlled decoder and stress diagnostics & Oracle/wrapped-Gaussian checks,
+holdout drift stress and stale-commit sweeps from the submission draft. &
+Oracle improves controlled residual MSE in all local states; holdout oracle
+gains are \(6.74\%\)--\(7.84\%\), while 32-step lag risk reaches 0.006478. &
+Diagnostic only; no trained-branch holdout proof. \\
+\addlinespace
+Channel and finite-squeezing bridge & Residual-boundary channel summary plus
+finite-squeezing toy-channel rows. &
+Fixed/oracle mean \(p_{\mathrm{any}}=1.27{\times}10^{-4}\);
+wrapped-MAP mean \(2.129{\times}10^{-3}\); at \(\Delta=0.34\), hard nearest
+is \(1.002{\times}10^{-3}\) vs fixed affine \(1.63{\times}10^{-4}\). &
+Surrogate channel language only; no fidelity claim. \\
+\addlinespace
+Datapath and runtime panel & Analytical operation counts, Q4.20 emulation,
+software runtime counters and hardware-measurement requirements. &
+Affine path uses \(4\) multiplications, \(4\) additions and \(6\) scalars;
+Q4.20 max diff \(\le2{\times}10^{-6}\); runtime counters show \(\sim900\)
+commits and zero slow violations. &
+Software observability; no FPGA timing, resource, power or board result. \\
+\bottomrule
+\end{tabular}
+\caption{Numerically expanded synchronization map for the submission-draft
+result layer.  The note does not reproduce the larger rendered figures, but it
+now imports the main quantitative anchors behind the performance, ablation,
+calibration, stress, surrogate-channel and runtime panels in compact form.}
+\label{tab:figure-result-sync-note}
 \end{table}
 
 \subsection{Feature and teacher ablations}
 
-% T77-SOURCE: T74-TBL-02; T74-TBL-03; T75-FIG-M02; T76-PREVIEW-M02; review=T57,T58,T76
 Table~\ref{tab:feature-ablation} is best read as appendix-side support for the
-frozen benchmark rather than as a replacement ranking table.  Removing
+reference benchmark rather than as a replacement ranking table.  Removing
 histogram deltas degrades performance relative to the full hybrid model,
 indicating that temporal changes in the syndrome histogram matter inside this
 fixed benchmark set.  Removing teacher-side channels also changes performance
@@ -968,119 +1117,92 @@ Mode & Avg. LER & \(\Delta\) vs UKF & \(\Delta\) vs Hybrid Full \\
 \label{tab:feature-ablation}
 \end{table}
 
-The next three lower-level note items preserve the accepted
-statistical-calibration evidence as a supplement-side extension lane rather
-than as a coequal Results pillar.
+The next compact note item preserves the accepted statistical-calibration
+evidence as a supplement-side extension lane rather than as a coequal Results
+pillar.
 
 \subsubsection{Supplement-side statistical calibration extension lane}
 
-% T77-SOURCE: T74-TBL-07; T74-SUP-01; review=T70
 A separately labeled extension lane adds statistical calibration variants under
 the same affine runtime contract.  Table~\ref{tab:statcalib-extension} records
-the bounded comparison snapshot that motivated this lane: within that bounded
-comparison matrix, statistical calibration variants outperform UKF and the
-learned hybrid branch.  However, the accepted closure deliberately does not
-promote this lane into the mainline comparator set.  The locked five-mode
-frozen benchmark remains the authoritative mainline result, and the
+the bounded comparison snapshot that motivated this lane and compresses the
+local sensitivity findings from the submission draft.  In this extension
+matrix, statistical calibration variants outperform UKF and the learned hybrid
+branch, and the signal is not tied to a single threshold point.  However, the
+the reported evidence deliberately does not promote this lane into the main
+comparator set: the default and high-threshold variants remain persistently
+tied across aggregate and scenario-wise summaries, and the candidate-generation
+protocol is not matched to the main ranking.  The five-mode controlled
+benchmark therefore remains the authoritative reference result, while the
 statistical-calibration lane is retained as supplement-side evidence for the
 broader adaptive-affine contract.
 
 \begin{table}[ht]
 \centering
-\small
-\begin{tabular}{lrrr}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{lrrrr}
 \toprule
-Scenario & UKF & Hybrid-\(b\) & StatCalib \\
+Row & UKF & Hybrid-\(b\) & StatCalib value & Extension readout \\
 \midrule
-\texttt{static\_bias\_theta} & 0.825370 & 0.810902 & \textbf{0.431708} \\
-\texttt{linear\_ramp} & 0.811201 & 0.787755 & \textbf{0.467083} \\
-\texttt{step\_sigma\_theta} & 0.811548 & 0.788800 & \textbf{0.460016} \\
-\texttt{periodic\_drift} & 0.821558 & 0.806392 & \textbf{0.438751} \\
+\texttt{static\_bias\_theta} & 0.825370 & 0.810902 & \textbf{0.431708} & best variant: high-threshold; gap 0.379889 \\
+\texttt{linear\_ramp} & 0.811201 & 0.787755 & \textbf{0.467083} & best variant: default; gap 0.321178 \\
+\texttt{step\_sigma\_theta} & 0.811548 & 0.788800 & \textbf{0.460016} & best variant: default; gap 0.328883 \\
+\texttt{periodic\_drift} & 0.821558 & 0.806392 & \textbf{0.438751} & best variant: default; gap 0.367232 \\
+\texttt{default variant} & -- & -- & 0.449254 & mean rank 1.25; 3 scenario wins \\
+\texttt{high-threshold variant} & -- & -- & 0.449241 & mean rank 1.75; 1 scenario win \\
 \bottomrule
 \end{tabular}
-\caption{Bounded statistical-calibration extension-lane comparison under the
-same drift suite.  Entries are \(\texttt{final\_ler\_mean}\); lower is better.
-This table does not by itself promote statistical calibration into the mainline
-comparator set.}
+\caption{Compressed statistical-calibration extension-lane summary.  Scenario
+rows report \(\texttt{final\_ler\_mean}\); lower is better.  Gap is the
+hybrid residual LER minus the best statistical-calibration LER in the bounded
+extension lane.  The final two rows summarize the local sensitivity tie between
+default and high-threshold settings.  Because this protocol is not matched to
+the main ranking and does not identify a unique promoted setting, the table
+supports supplement-side affine-calibration evidence only.}
 \label{tab:statcalib-extension}
-\end{table}
-
-\subsubsection{Local sensitivity inside the statistical-calibration extension lane}
-
-% T77-SOURCE: T74-TBL-07; T74-SUP-01; review=T66,T70
-The local grid around the default setting shows that the extension-lane signal
-is not tied to a single pathological point, but it also does not identify a
-unique clean threshold choice.  The high-threshold variant has the best
-aggregate mean LER by a negligible margin, whereas the default variant wins
-three of four scenarios and has the best mean within-lane rank.  This
-persistent tie is why the accepted closure remains no-promotion rather than
-collapsing to one promoted statistical-calibration setting.
-
-\begin{table}[ht]
-\centering
-\small
-\begin{tabular}{lrrr}
-\toprule
-Variant & Mean LER & Mean Rank & Scenario Wins \\
-\midrule
-\texttt{statcalib\_high\_threshold} & \textbf{0.449241} & 1.75 & 1 \\
-\texttt{statcalib\_default} & 0.449254 & \textbf{1.25} & \textbf{3} \\
-\texttt{statcalib\_high\_scale} & 0.456477 & 3.00 & 0 \\
-\texttt{statcalib\_low\_clip} & 0.481484 & 4.50 & 0 \\
-\texttt{statcalib\_low\_scale} & 0.485129 & 4.50 & 0 \\
-\bottomrule
-\end{tabular}
-\caption{Local sensitivity within the bounded statistical-calibration
-extension lane.  Mean rank is computed within the five variants for each
-scenario; the near-tie between default and high-threshold prevents a unique
-promoted setting.}
-\label{tab:statcalib-sensitivity}
-\end{table}
-
-\subsubsection{Per-scenario best variants and the no-promotion gate}
-
-% T77-SOURCE: T74-TBL-07; T74-SUP-01; review=T69,T70
-Table~\ref{tab:statcalib-scenario-best} reports the per-scenario winners inside
-the extension lane.  These rows show why the lane remains scientifically
-interesting, but they are not sufficient to override the no-promotion gate: the
-default and high-threshold settings remain persistently tied across aggregate
-and scenario-wise summaries, and the \texttt{static\_bias\_theta} winner also
-carries a mixed-status caveat.  The safest use of these numbers is therefore
-supplement-side documentation of the lane, not a claim that a mature promoted
-comparator has been established.
-
-\begin{table}[ht]
-\centering
-\small
-\begin{tabular}{lrrr}
-\toprule
-Scenario & Best variant & Best LER & Gap vs Hybrid-\(b\) \\
-\midrule
-\texttt{static\_bias\_theta} & \texttt{high\_threshold} & 0.431684 & 0.379889 \\
-\texttt{linear\_ramp} & \texttt{default} & 0.467094 & 0.321178 \\
-\texttt{step\_sigma\_theta} & \texttt{default} & 0.458834 & 0.328883 \\
-\texttt{periodic\_drift} & \texttt{default} & 0.439352 & 0.367232 \\
-\bottomrule
-\end{tabular}
-\caption{Best statistical-calibration variant per scenario within the bounded
-extension lane.  Gap is the hybrid residual LER minus the best statistical
-calibration LER; this table does not remove the accepted no-promotion gate.}
-\label{tab:statcalib-scenario-best}
 \end{table}
 
 \subsection{Mechanism probe for residual-b behavior}
 
-% T77-SOURCE: T74-TBL-02; T74-TBL-03; T75-FIG-M02; T76-PREVIEW-M02; review=T58,T76
-% T88-MANUAL: Mechanism probe for residual-b behavior
 A paper-facing mechanism figure may summarize the learned residual branch, but
 appendix tables remain the authoritative numeric companion.  The six-seed
 evidence is descriptive rather than causal: the instability pattern repeats
 broadly, while the tested lower-clip intervention is mixed and mostly harmful.
 This supports a cautious interpretation: residual amplitude participates in
 some failure modes, but it is not a monotonic causal explanation by itself,
-and the current evidence does not prove teacher necessity.  Appendix tables
-carry the bounded ablation, cross-seed snapshots, and provenance that support
+and the reported evidence does not prove teacher necessity.  Appendix tables
+carry the bounded ablation, cross-seed snapshots, and supporting records for
 this conservative reading without reopening the main-text route.
+
+The submission draft makes this caution concrete with the six-seed
+intervention summary in Table~\ref{tab:mechanism-intervention-note}.  The
+Gated-v5-minus-full column is often negative, indicating that the gated
+residual branch can improve over the full branch in several seeds.  The
+lower-clip intervention, however, is harmful in four of six seeds and helpful
+in only two.  The table therefore supports a mechanism-risk statement, not a
+successful mitigation claim.
+
+\begin{table}[ht]
+\centering
+\scriptsize
+\begin{tabular}{lrrl}
+\toprule
+Seed & Gated v5 -- Full & I1 -- Gated v5 & Verdict \\
+\midrule
+20260425 & 0.000907 & 0.163289 & harmful \\
+20260427 & -0.145352 & 0.287166 & harmful \\
+20260428 & -0.078998 & 0.057395 & harmful \\
+20260429 & -0.127948 & 0.322245 & harmful \\
+20260430 & -0.170777 & -0.024372 & mixed/no clear effect \\
+20260510 & -0.003953 & -0.035533 & helpful \\
+\bottomrule
+\end{tabular}
+\caption{Descriptive six-seed mechanism and intervention summary synchronized
+from the submission draft.  The lower-clip intervention does not identify a
+causal mechanism and should not be described as a mitigation.}
+\label{tab:mechanism-intervention-note}
+\end{table}
 
 \subsection{Unseen drift generalization}
 
@@ -1105,25 +1227,66 @@ MSE in all three stress families.  Lagged affine remains below the fixed rule
 under random-walk drift, but becomes worse than fixed affine under burst/reset
 and faster-than-window oscillation.  This pattern is useful because it turns
 stale-parameter behavior into a measurable slow-loop design variable instead
-of an assumed latency footnote.
+of an assumed latency footnote.  The oracle residual-boundary channel
+surrogate remains close to unity in these rows because boundary crossings are
+rare; it is reported only as a consistency bridge, not as a calibrated
+finite-energy fidelity.
 
 \begin{table}[ht]
 \centering
-\small
-\begin{tabular}{lrrrr}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{lrrrrrr}
 \toprule
-Holdout stress family & Fixed & Lagged & Oracle & Wrapped mean \\
+Holdout family & Fixed & Lagged & Oracle & Wrapped mean & Wrapped MAP & Oracle \(F_{\mathrm{avg}}^{\mathrm{surr}}\) \\
 \midrule
-\texttt{random\_walk\_drift} & 0.078869 & 0.073867 & \textbf{0.072685} & 0.078740 \\
-\texttt{burst\_reset\_drift} & 0.066865 & 0.068622 & \textbf{0.062144} & 0.065936 \\
-\texttt{faster\_than\_window} & 0.068354 & 0.068890 & \textbf{0.063745} & 0.067485 \\
+\texttt{random\_walk} & 0.078869 & 0.073867 & \textbf{0.072685} & 0.078740 & 0.080857 & 0.999915 \\
+\texttt{burst\_reset} & 0.066865 & 0.068622 & \textbf{0.062144} & 0.065936 & 0.067789 & 0.999780 \\
+\texttt{faster\_window} & 0.068354 & 0.068890 & \textbf{0.063745} & 0.067485 & 0.068764 & 0.999969 \\
 \bottomrule
 \end{tabular}
 \caption{Controlled known-state holdout drift stress diagnostic.  Entries are
-residual MSE across 384 sequences of 512 steps; lower is better.  The lagged
-row is a known-state slow-commit reference, not the trained residual branch.
-The table is a non-hardware stress test, not holdout robustness proof.}
+residual MSE across 384 sequences of 512 steps except for the final surrogate
+column; lower residual MSE is better.  The lagged row is a known-state
+slow-commit reference, not the trained residual branch.  The surrogate column
+is induced by the oracle-affine residual-boundary identity rate and is not a
+finite-energy logical-channel fidelity.  The table is a non-hardware stress
+test, not holdout robustness proof.}
 \label{tab:holdout-stress-note}
+\end{table}
+
+The submission draft also sweeps stale-commit lag on the same holdout
+families.  Random-walk drift degrades smoothly as lag increases, while
+burst/reset and faster-than-window drift are non-monotone because a stale
+state can occasionally align with a later reset or oscillation phase.
+Table~\ref{tab:lag-validity-note} compresses the local-validity and lag-sweep
+readout: each holdout family has oracle-affine MSE headroom over the fixed
+rule, but stale commits can erase part of that headroom under abrupt or rapid
+drift.  The corresponding branch-risk deltas against oracle affine are
+0.006055, 0.003792 and 0.003740 for random-walk, burst/reset and
+faster-than-window stress; the 32-step lag-risk deltas are 0.001182, 0.006478
+and 0.005144, respectively.
+
+\begin{table}[ht]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{lrrrrrrrl}
+\toprule
+Holdout family & Oracle gain & Lag 0 & Lag 8 & Lag 16 & Lag 32 & Lag 64 & Lag 128 & Readout \\
+\midrule
+\texttt{random\_walk} & 7.84\% & 0.073831 & 0.073976 & 0.074130 & 0.074410 & 0.075173 & 0.076093 & lag hurts smoothly \\
+\texttt{burst\_reset} & 7.06\% & 0.067454 & 0.068193 & 0.068657 & 0.068694 & 0.068583 & 0.066913 & reset timing matters \\
+\texttt{faster\_window} & 6.74\% & 0.069251 & 0.069406 & 0.068989 & 0.069039 & 0.068842 & 0.068249 & phase alignment matters \\
+\bottomrule
+\end{tabular}
+\caption{Compressed affine local-validity and commit-lag diagnostic.  Oracle
+gain is the residual-MSE reduction of oracle affine relative to fixed affine.
+Lag columns sweep additional simulation-step lag for lagged-affine residual
+MSE while the commit interval is fixed at 64 simulation steps.  This is a
+known-state slow-loop diagnostic, not
+trained-branch holdout proof or board-latency evidence.}
+\label{tab:lag-validity-note}
 \end{table}
 
 \subsection{Oracle and wrapped-Gaussian baselines}
@@ -1145,51 +1308,171 @@ branch-aware posterior or nearest-lattice references must be implemented as
 tuned sequence-level baselines before they can serve as stronger comparators.
 
 Table~\ref{tab:controlled-baselines-note} gives the compact one-step version of
-that diagnostic.  The known-state oracle affine row improves on fixed affine
-in all four controlled states, with the largest headroom after the step
-change.  The wrapped posterior mean is slightly better only in the static
-state, and the MAP branch rule is weaker in the ramp, step and periodic
-states.  The result strengthens the engineering rationale for calibrated
-affine updates, but it does not replace a formal known-noise nearest-lattice or
-sequence-level wrapped-decoder benchmark.
+that diagnostic.  The direct nearest-syndrome row is much weaker in residual
+MSE because it applies the noisy wrapped syndrome as a hard correction.  The
+known-state oracle affine row improves on fixed affine in all four controlled
+states, with the largest headroom after the step change.  The wrapped posterior
+mean is slightly better only in the static state, and the MAP branch rule is
+weaker in the ramp, step and periodic states.  The result strengthens the
+engineering rationale for calibrated affine updates, but it does not replace a
+formal known-noise nearest-lattice or sequence-level wrapped-decoder benchmark.
 
 \begin{table}[ht]
 \centering
 \scriptsize
-\begin{tabular}{lrrrr}
+\begin{tabular}{lrrrrr}
 \toprule
-Controlled state & Fixed & Oracle & Wrapped mean & Wrapped MAP \\
+Controlled state & Nearest & Fixed & Oracle & Wrapped mean & Wrapped MAP \\
 \midrule
-\texttt{static\_bias\_theta} & 0.049199 & 0.048095 & \textbf{0.047955} & 0.048203 \\
-\texttt{linear\_ramp\_midpoint} & 0.061417 & \textbf{0.060251} & 0.062341 & 0.063105 \\
-\texttt{step\_after\_jump} & 0.108216 & \textbf{0.092541} & 0.105815 & 0.110339 \\
-\texttt{periodic\_high\_phase} & 0.081757 & \textbf{0.076028} & 0.082349 & 0.084002 \\
+\texttt{static\_bias\_theta} & 0.232823 & 0.049199 & 0.048095 & \textbf{0.047955} & 0.048203 \\
+\texttt{linear\_ramp\_midpoint} & 0.230689 & 0.061417 & \textbf{0.060251} & 0.062341 & 0.063105 \\
+\texttt{step\_after\_jump} & 0.233626 & 0.108216 & \textbf{0.092541} & 0.105815 & 0.110339 \\
+\texttt{periodic\_high\_phase} & 0.231307 & 0.081757 & \textbf{0.076028} & 0.082349 & 0.084002 \\
 \bottomrule
 \end{tabular}
 \caption{Controlled one-step local-Gaussian residual-MSE diagnostic.  Lower is
-better.  The omitted direct nearest-syndrome row is substantially weaker in
-the same source table because it applies the noisy wrapped syndrome as a hard
-correction.  This is a sanity check for estimator and decoder limits, not a
-formal software-HIL or hardware benchmark.}
+better.  The nearest row is a direct hard-correction reference, not a tuned
+finite-energy nearest-lattice decoder.  This is a sanity check for estimator
+and decoder limits, not a formal software-HIL or hardware benchmark.}
 \label{tab:controlled-baselines-note}
+\end{table}
+
+The same comparison was also run over short controlled drift sequences.  This
+sequence-level diagnostic preserves the one-step message that oracle affine is
+not dominated locally, while exposing a practical risk for naive posterior
+branching: wrapped-mean and wrapped-MAP references give higher crossing
+proxies in the ramp, step, and periodic sequence states
+(Table~\ref{tab:sequence-baselines-note}).  The result does not prove affine
+global optimality; it says that nearest-lattice or wrapped-posterior
+comparators must be implemented as tuned sequence-level decoders before they
+can be used as stronger baselines.
+
+\begin{table}[ht]
+\centering
+\scriptsize
+\begin{tabular}{lrrrrr}
+\toprule
+Scenario & Nearest & Fixed & Oracle & Wrapped mean & Wrapped MAP \\
+\midrule
+\texttt{static\_bias} & 0.000214 & 0.000000 & 0.000000 & 0.000000 & 0.000000 \\
+\texttt{linear\_ramp} & 0.000264 & 0.000015 & 0.000015 & 0.000158 & 0.000575 \\
+\texttt{step\_sigma} & 0.000580 & 0.000310 & 0.000310 & 0.001221 & 0.003220 \\
+\texttt{periodic} & 0.000229 & 0.000005 & 0.000005 & 0.000127 & 0.000519 \\
+\bottomrule
+\end{tabular}
+\caption{Sequence-level controlled baseline diagnostic.  Entries are mean
+half-lattice residual-boundary crossing proxies across 384 sequences of 512
+steps; lower is better.  The nearest row is a direct hard-correction stress
+reference, not a tuned nearest-lattice decoder.}
+\label{tab:sequence-baselines-note}
+\end{table}
+
+The submission draft further translates the same half-lattice event surface
+into a compact residual-boundary channel surrogate
+(Table~\ref{tab:channel-bridge-note}).  This bridge is useful because it
+prevents \(\texttt{final\_ler}\), Pauli-event language and fidelity language
+from being conflated.  Across the four controlled local-Gaussian states, the
+fixed and oracle affine rows have the lowest mean \(p_{\mathrm{any}}\), while
+the wrapped MAP rule has the largest worst-state crossing probability.  A
+separate finite-squeezing toy-channel check sweeps
+\(\Delta\in\{0.18,0.26,0.34\}\).  At the strongest toy-channel stress, the
+fixed/oracle affine rows remain near \(1.6\times10^{-4}\) mean
+\(p_{\mathrm{any}}\), whereas direct hard nearest-syndrome correction rises to
+\(1.0\times10^{-3}\).  These rows are channel-language diagnostics only; they
+are not finite-energy logical-channel fidelity, process tomography, hardware
+fidelity or outer-code logical-error estimates.
+
+\begin{table}[ht]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llrrr}
+\toprule
+Diagnostic & Method & Mean \(p_{\mathrm{any}}\) & Worst \(p_{\mathrm{any}}\) & Mean \(F_{\mathrm{avg}}^{\mathrm{surr}}\) \\
+\midrule
+Boundary surrogate & Fixed affine & 0.000127 & 0.000467 & 0.999915 \\
+Boundary surrogate & Oracle affine & 0.000127 & 0.000467 & 0.999915 \\
+Boundary surrogate & Wrapped mean & 0.000769 & 0.002417 & 0.999488 \\
+Boundary surrogate & Wrapped MAP & 0.002129 & 0.006450 & 0.998581 \\
+Toy channel, \(\Delta=0.18\) & Hard nearest & 0.000148 & 0.000517 & 0.999901 \\
+Toy channel, \(\Delta=0.18\) & Fixed affine & 0.000148 & 0.000517 & 0.999901 \\
+Toy channel, \(\Delta=0.18\) & Oracle affine & 0.000148 & 0.000517 & 0.999901 \\
+Toy channel, \(\Delta=0.26\) & Hard nearest & 0.000160 & 0.000475 & 0.999893 \\
+Toy channel, \(\Delta=0.26\) & Fixed affine & 0.000129 & 0.000458 & 0.999914 \\
+Toy channel, \(\Delta=0.26\) & Oracle affine & 0.000129 & 0.000458 & 0.999914 \\
+Toy channel, \(\Delta=0.34\) & Hard nearest & 0.001002 & 0.001500 & 0.999332 \\
+Toy channel, \(\Delta=0.34\) & Fixed affine & 0.000163 & 0.000617 & 0.999892 \\
+Toy channel, \(\Delta=0.34\) & Oracle affine & 0.000165 & 0.000625 & 0.999890 \\
+\bottomrule
+\end{tabular}
+\caption{Compressed residual-boundary channel bridge synchronized from the
+submission draft.  \(p_{\mathrm{any}}\) is the probability of at least one
+q/p half-lattice residual crossing.  \(F_{\mathrm{avg}}^{\mathrm{surr}}\) is
+the Pauli-style surrogate induced by the no-crossing probability.  The rows
+make the metric hierarchy auditable, but they are not calibrated finite-energy
+GKP logical-channel fidelity, process fidelity or hardware evidence.}
+\label{tab:channel-bridge-note}
+\end{table}
+
+To make the synchronization less summary-like, Table~\ref{tab:per-state-extra-note}
+adds the per-state rows that are most useful for checking the channel and
+fixed-point claims directly.  The first block reports the controlled
+local-Gaussian \(p_{\mathrm{any}}\) values before aggregation: the affine rows
+have no observed crossings in the static and ramp states and remain below the
+wrapped-posterior rows in the step and periodic states.  The second block
+reports the exact Q4.20 parity rows behind the compact datapath summary: max
+and p99 correction differences stay at \(10^{-6}\)-scale, with zero crossing
+change and zero quantization saturation in all four tested states.  These rows
+are still diagnostic software checks, but they expose more of the submission
+draft's numerical surface inside the 25-page note.
+
+\begin{table}[ht]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{llrrrr}
+\toprule
+Block & State & Col. 1 & Col. 2 & Col. 3 & Col. 4 \\
+\midrule
+\multicolumn{6}{l}{\emph{Residual-boundary channel block:
+Col. 1--4 are Fixed affine, Oracle affine, Wrapped mean and Wrapped MAP
+\(p_{\mathrm{any}}\).}}\\
+Channel & \texttt{static\_bias} & 0.000000 & 0.000000 & 0.000000 & 0.000017 \\
+Channel & \texttt{linear\_ramp} & 0.000000 & 0.000000 & 0.000042 & 0.000183 \\
+Channel & \texttt{step\_after\_jump} & 0.000467 & 0.000467 & 0.002417 & 0.006450 \\
+Channel & \texttt{periodic\_high} & 0.000042 & 0.000042 & 0.000617 & 0.001867 \\
+\addlinespace
+\multicolumn{6}{l}{\emph{Fixed-point block:
+Col. 1--4 are max diff, p99 diff, MSE delta and crossing delta; quantization
+saturation is zero in all rows.}}\\
+Q4.20 & \texttt{static\_bias} & \(1.0{\times}10^{-6}\) & \(1.0{\times}10^{-6}\) & 0.000000 & 0.000000 \\
+Q4.20 & \texttt{linear\_ramp} & \(1.0{\times}10^{-6}\) & \(1.0{\times}10^{-6}\) & 0.000000 & 0.000000 \\
+Q4.20 & \texttt{step\_after\_jump} & \(2.0{\times}10^{-6}\) & \(1.0{\times}10^{-6}\) & 0.000000 & 0.000000 \\
+Q4.20 & \texttt{periodic\_high} & \(1.0{\times}10^{-6}\) & \(1.0{\times}10^{-6}\) & 0.000000 & 0.000000 \\
+\bottomrule
+\end{tabular}
+\caption{Per-state residual-boundary and fixed-point rows synchronized from
+the submission draft.  The channel block is a controlled local-Gaussian
+diagnostic, not finite-energy logical-channel tomography.  The Q4.20 block is
+software fixed-point emulation only, not source-vs-board agreement, synthesis,
+timing, resource or power evidence.}
+\label{tab:per-state-extra-note}
 \end{table}
 
 \subsection{Runtime, quantization, and fixed-point degradation}
 
-% T82-SUPPORT: Runtime, quantization, and fixed-point degradation
-% T77-SOURCE: T74-TBL-05; T74-SUP-03; review=T48
 The deployment story depends on more than logical performance, so the current
 manuscript keeps runtime material at a supporting-boundary layer rather than
 flattening it into a single deployment claim.  The strongest accepted
 runtime-facing fact is narrow but real: selected preserved float and int8
 \texttt{.tflite} artifacts have been loaded and executed in one isolated
-current-host environment, and that fact is strong enough to justify an
+local runtime environment, and that fact is strong enough to justify an
 appendix-level runtime boundary table for those preserved artifacts.  What
 remains unclosed is the broader fixed-point/runtime degradation question
 itself.  Saturation and overflow rates under deployment-style quantization,
 commit latency, stale-parameter penalty, fallback frequency, host-side update
 cost, and source-vs-embedded drift under a default environment still require
-separate bounded tasks rather than prose promotion.
+separate validation steps rather than narrative promotion.
 The submission draft adds two compact software diagnostics for this boundary
 (Table~\ref{tab:cost-fixedpoint-note}).  First, the affine fast path requires
 one two-quadrature \(2\times2\) matrix-vector product and one bias addition,
@@ -1210,251 +1493,314 @@ source-vs-board agreement.
 \toprule
 Diagnostic row & Mult. & Add. & Nonlinear ops & Key numerical check \\
 \midrule
-Affine fast path & 4 & 4 & 0 & six stored state scalars \\
-Wrapped MAP, \(3\times3\) branches & 49 & 40 & 0 & larger branch search \\
-Wrapped posterior mean, \(3\times3\) & 99 & 98 & 18 & softmax-like posterior \\
-Q4.20 fixed-point parity & -- & -- & -- & max diff \(1.6\times10^{-6}\), no crossing delta \\
+Affine fast path & 4 & 4 & 0 & six state scalars \\
+Wrapped MAP & 49 & 40 & 0 & \(3\times3\) branch search \\
+Wrapped mean & 99 & 98 & 18 & posterior-weighted mean \\
+Q4.20 static & -- & -- & -- & max diff \(1.0\times10^{-6}\); no crossing change \\
+Q4.20 ramp & -- & -- & -- & max diff \(1.0\times10^{-6}\); no crossing change \\
+Q4.20 step & -- & -- & -- & max diff \(2.0\times10^{-6}\); no crossing change \\
+Q4.20 periodic & -- & -- & -- & max diff \(1.0\times10^{-6}\); no crossing change \\
+Runtime counters & -- & -- & -- & commits/mode \(\sim900\); slow violation \(0\); overflow \(\sim0.0025\) \\
 \bottomrule
 \end{tabular}
 \caption{Compressed cost and fixed-point diagnostics for the affine fast path.
 The arithmetic rows are analytical per-shot counts.  The fixed-point row is
-software emulation only.  The table supports the bounded datapath rationale,
-not measured FPGA timing, resources, power, or source-vs-board agreement.}
+software emulation only, and the runtime row is a software protocol counter
+summary.  The table supports the bounded datapath rationale, not measured FPGA
+timing, resources, power, or source-vs-board agreement.}
 \label{tab:cost-fixedpoint-note}
+\end{table}
+
+The same software run records comparator-level runtime counters
+(Table~\ref{tab:runtime-counter-note}).  All five modes apply about \(900\)
+commits, report zero slow-update violations and zero correction saturation,
+and keep overflow near \(2.5\times10^{-3}\).  These counters make the
+stage-and-commit contract observable in software; they do not measure board
+latency, rollback reliability or source-vs-board agreement.
+
+\begin{table}[ht]
+\centering
+\scriptsize
+\begin{tabular}{lrrrrr}
+\toprule
+Mode & Commits & Slow viol. & Fast viol. & Overflow & Corr. sat. \\
+\midrule
+Const.-\(\mu\) & 899.8 & 0 & 0.0000158 & 0.002582 & 0 \\
+EKF & 899.8 & 0 & 0.0000158 & 0.002559 & 0 \\
+Hybrid-\(b\) & 899.9 & 0 & 0.0000158 & 0.002536 & 0 \\
+RLS-\(b\) & 899.8 & 0 & 0.0000158 & 0.002538 & 0 \\
+UKF & 899.8 & 0 & 0.0000158 & 0.002571 & 0 \\
+\bottomrule
+\end{tabular}
+\caption{Software runtime-discipline counters averaged across scenario-level
+comparison rows.  The table supports software observability of the runtime
+contract only; it is not board commit latency, source-vs-board agreement,
+hardware reliability or FPGA timing evidence.}
+\label{tab:runtime-counter-note}
 \end{table}
 
 \subsection{Embedded runtime and board-level validation}
 
-% T82-SUPPORT: Embedded runtime and board-level validation
-% T77-SOURCE: T75-FIG-A01; T76-PREVIEW-A01; T74-FIG-03; T74-TBL-05; T74-TBL-06; T74-SUP-03; T74-SUP-04; review=T72,T76
-Embedded runtime and board-level validation must remain split across two weaker
-layers.  The first is an appendix-level current-host runtime fact: selected
-preserved \texttt{.tflite} artifacts run in one isolated environment, which is
-enough to discuss true runtime existence for those artifacts but not enough to
-claim default-environment compatibility, software-HIL closure, or deployment
-closure.  The second is a supplement-only hardware gate fact: the checked-in
-read-only real-board gate/regeneration/provenance lane still ends in
-\nolinkurl{NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE}.  Because the
-repository currently lacks a usable \texttt{Linux + FPGA} host, openable device
-paths, and measured board timing/resource rows, hardware-dependent execution
-surfaces remain blocked rather than merely postponed prose.
+Embedded runtime and board-level validation remain split from the simulation
+results.  The local-runtime layer only states that selected preserved
+\texttt{.tflite} artifacts execute in one isolated software environment.  The
+hardware layer remains a measurement target because no board timing, resource,
+power or source-vs-board row is reported.  Table
+\ref{tab:validation-status-note} therefore synchronizes the submission draft's
+statistical-treatment, runner-coverage, source-data and hardware-validation
+status without turning requirements into results.
 
-% T83-CLOSEOUT: Bounded follow-up lanes outside the accepted result layer
-% T84-POLISH: Follow-up routes that remain outside the accepted result layer
-\subsection{Follow-up routes that remain outside the accepted result layer}
-
-The main benchmark and paper-material lane should remain separated from
-parallel extension experiments.  This subsection is therefore a reader-facing
-boundary register rather than an additional Results pillar: it records
-follow-up routes that may be explored in parallel with the mainline, but whose
-outputs remain sidecar evidence until a later promotion gate decides
-otherwise.  In particular, these routes must not rewrite the frozen
-four-scenario anchor, promote the statistical-calibration lane into a mature
-comparator, or turn software-HIL evidence into \texttt{.tflite} or board-level
-validation.
-
-Wave A lists the immediately bounded sidecar lanes.  These lanes preserve
-the fast-loop contract and mostly operate through cached replay, toy
-simulation, or deterministic contract tests.
-
-\begin{center}
-\small
-\begin{tabular}{>{\raggedright\arraybackslash}p{0.24\linewidth}
->{\raggedright\arraybackslash}p{0.39\linewidth}
->{\raggedright\arraybackslash}p{0.27\linewidth}}
+\begin{table}[ht]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.22\linewidth}
+                >{\raggedright\arraybackslash}p{0.40\linewidth}
+                >{\raggedright\arraybackslash}p{0.28\linewidth}}
 \toprule
-Wave A lane & Experimental question & First safe execution \\
+Layer & Synchronized experimental or reporting status & Missing for a stronger claim \\
 \midrule
-Temporal histogram TCN & Does a short causal sequence of histogram windows,
-deltas, and compact statistics improve residual-\(b\) or drift-regime
-prediction beyond the current short-window features? & Cached replay or tiny
-TCN residual-head probe under a bounded sidecar run root. \\
-Adaptive teacher confidence & Can a syndrome-only or teacher-output replay
-estimate confidence, freeze unsafe updates, or fall back to a conservative
-anchor before a bad parameter commit? & Offline teacher-policy replay with
-explicit confidence and fallback fields. \\
-Gain-scheduled parameter bank & Can a finite piecewise-affine bank reduce
-parameter jitter or improve drift tracking while keeping the fast path as
-\(\Delta=K_i s+b_i\)? & Bank-selection toy replay with range, thrashing, and
-switch-frequency diagnostics. \\
-Atomic commit and rollback & Which stage, commit, acknowledgement, freeze,
-rollback, and timeout states are needed before stronger runtime integration is
-credible? & Deterministic mock contract tests only; no MMIO, DMA, or board
-writes. \\
+Main ranking and descriptive uncertainty & Four scenarios, five modes, paired
+seeds and two repeats; Hybrid-\(b\) has the lowest mean
+\(\texttt{final\_ler}\) in all four rows.  The UKF-minus-hybrid margins are
+positive in all paired rows, with relative reductions of
+\(1.75\%\)--\(2.89\%\) and a two-repeat resampling envelope reported only as a
+descriptive readout. & More repeats, formal confidence intervals,
+predeclared tests and stronger tuned decoder baselines. \\
+\addlinespace
+Completed interval rows & \texttt{static\_bias\_theta} and
+\texttt{linear\_ramp} have \(12/12\) positive UKF-minus-hybrid paired deltas
+with positive paired-\(t\) and bootstrap lower bounds
+(\([0.014778,0.016348]\), \([0.014933,0.016256]\);
+\([0.021215,0.023619]\), \([0.021405,0.023440]\)). & The other two reference
+scenarios and pooled all-scenario inference remain incomplete. \\
+\addlinespace
+Runner and row-accounting check & A shortened four-scenario UKF-versus-hybrid
+run with two paired repeats completed all requested rows and preserved positive
+deltas while exposing the required fields for the expansion route. & It is an
+execution-coverage check, not manuscript performance evidence, an interval or a
+holdout result. \\
+\addlinespace
+Diagnostic experiment layers & Controlled oracle/wrapped-Gaussian rows,
+sequence-level checks, holdout stress tests, commit-lag sweeps and
+residual-boundary and finite-squeezing channel surrogates make estimator,
+branch and stale-commit limits auditable. & These diagnostics are not
+trained-branch holdout proof, calibrated finite-energy logical-channel
+fidelity, process tomography or hardware robustness evidence. \\
+\addlinespace
+Implementation feasibility & The affine row uses \(4\) multiplications,
+\(4\) additions and \(6\) state scalars; Q4.20 emulation on controlled samples
+shows \(10^{-6}\)-scale correction differences with no crossing change or
+quantization saturation; runtime counters show \(\sim900\) commits per mode
+with zero slow violations. & FPGA synthesis, timing, resource, power,
+source-vs-board agreement and board commit latency. \\
+\addlinespace
+Runtime and supporting records & Selected preserved \texttt{.tflite} artifacts
+execute in one isolated runtime; source tables, figure-generation records,
+row-level scenario/mode/seed metadata and file-level checksums support the
+manuscript tables. & Default-runtime portability, full independent
+reproduction, containerized reruns and deployment readiness. \\
+\addlinespace
+Hardware-validation surface & A hardware-stage run would need host identity,
+device access, bitstream/RTL hash, AXI/DMA contract, latency distribution,
+commit/rollback counters, resource, power and source-vs-board vectors. & No
+real-board execution, timing, resource, power or source-vs-board measurement is
+reported here. \\
 \bottomrule
 \end{tabular}
-\end{center}
+\caption{Synchronized validation-status and reproducibility matrix for the
+expanded result layer.  The table imports the submission draft's statistical
+treatment, runner coverage, diagnostic-experiment, runtime-record and
+hardware-validation status into the note.  It is a compact reporting aid, not
+an additional experiment, independent reproduction package or hardware claim.}
+\label{tab:validation-status-note}
+\end{table}
 
-Wave B lists the second-wave candidate pool.  These routes are useful for making
-the paper experimentally complete, but they should start as S0 design or toy
-probes rather than as long formal benchmarks.
+\subsection{Analysis-file coverage and statistical treatment}
 
-\begin{center}
-\small
-\begin{tabular}{>{\raggedright\arraybackslash}p{0.25\linewidth}
->{\raggedright\arraybackslash}p{0.40\linewidth}
->{\raggedright\arraybackslash}p{0.25\linewidth}}
+The expanded result layer is only useful if the reader can tell which numbers
+come from checked analysis files and which rows are protocol or requirement
+statements.  Table~\ref{tab:coverage-treatment-note} synchronizes this
+traceability layer from the submission draft.  The main benchmark remains a
+descriptive paired-seed comparison with two repeats per scenario; the completed
+12-pair rows are scenario-level interval checks; and the diagnostic tables are
+used to test mechanism, local validity, fixed-point feasibility and stale-commit
+risk rather than to establish a new leaderboard.
+
+\begin{table}[ht]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.22\linewidth}
+                >{\raggedright\arraybackslash}p{0.40\linewidth}
+                >{\raggedright\arraybackslash}p{0.28\linewidth}}
 \toprule
-Wave B lane & Experimental question & Boundary \\
+Coverage group & Synchronized checked material & Interpretation limit \\
 \midrule
-Moments and EWMA feature probes & Do low-cost summaries such as marginals,
-mean/variance drift, EWMA, entropy, anisotropy, or edge-mass features explain
-the same gains as the full histogram image? & Feature ablation only; not a new
-formal benchmark by itself. \\
-Teacher-conditioned residual head & Does conditioning the residual head on
-teacher state, teacher deltas, or confidence improve stability without making
-the learned module the per-shot decoder? & Small retrain or replay; still a
-bounded slow-loop calibration module. \\
-State-space or lightweight sequence model & Are modern compressed temporal
-models such as tiny state-space, Mamba-like, or recurrent/transformer toy
-heads useful after the TCN baseline is known? & Research-first toy route; no
-full decoder replacement and no fast-loop change. \\
-Outer-code soft-information positioning & How would the physical GKP
-calibration layer interface with surface-GKP, GKP-surface, or QLDPC-GKP
-soft-information decoders? & Positioning memo or tiny interface toy; not a
-current mainline code-family benchmark. \\
+Main performance tables & Main result, paired-delta, two-repeat resampling
+envelope and advantage-margin rows are checked against the underlying
+comparison data. & Descriptive software comparison only; not a confidence
+interval, standard error, \(p\)-value or expanded benchmark. \\
+\addlinespace
+Completed interval rows & The \texttt{static\_bias\_theta} and
+\texttt{linear\_ramp} formal paired rows are generated from the repeat summary
+and checked against the interval table. & Two completed scenarios only; not
+pooled or all-scenario inference. \\
+\addlinespace
+Controlled diagnostics & Oracle-affine, wrapped-Gaussian, sequence-baseline,
+holdout-stress, commit-lag, residual-boundary and finite-squeezing toy-channel
+rows are checked against generated CSV tables. & Diagnostic support only; not
+trained-branch holdout proof or calibrated logical-channel fidelity. \\
+\addlinespace
+Implementation feasibility & Fast-path arithmetic, Q4.20 fixed-point parity,
+runtime-discipline counters and validation-contract rows are tied to generated
+analysis tables or figure data. & Analytical and software-emulation evidence
+only; not FPGA synthesis, timing, resource, power or source-vs-board agreement. \\
+\addlinespace
+Analysis and reporting maps & Figure manifests, row metadata, file-level
+analysis manifests, metric-readiness and literature crosswalks support table
+and citation consistency. & Traceability aid only; not a full independent
+reproduction package or normalized external leaderboard. \\
+\addlinespace
+Validation protocols & Runner-smoke, benchmark-expansion, availability,
+runtime-record and hardware-plan rows are classified separately from measured
+results. & Protocol or requirement material only; not performance evidence or
+hardware validation. \\
 \bottomrule
 \end{tabular}
-\end{center}
+\caption{Compressed analysis-file coverage and statistical-treatment matrix
+for the synchronized results.  It identifies the submission-draft result
+families imported into this note and preserves the boundary between checked
+analysis rows, descriptive statistics, diagnostic rows and hardware
+requirements.}
+\label{tab:coverage-treatment-note}
+\end{table}
 
-The purpose of this wave structure is not to multiply unrelated experiments.
-It keeps the scientific question fixed: the fast path remains a deterministic
-affine correction, while sidecar lanes ask which slow-loop estimator, feature
-summary, teacher policy, or commit policy most safely updates the affine
-parameters under drift.  Negative or inconclusive sidecar results are also
-useful, because they can show that the current histogram-conditioned affine
-contract is already near the useful complexity boundary.
+\subsection{Hardware measurement requirements synchronized from the submission draft}
 
-% T80-REOPEN: Discussion
-% T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
-% T83-CLOSEOUT: Discussion
-% T84-POLISH: Discussion
-% T85-PREFLIGHT: Discussion
-% T86-ASSEMBLY: Discussion
-% T87-QA: Discussion
-% T88-MANUAL: Discussion
+The present note does not contain real-board execution results.  The available
+deployment-adjacent material supports only one narrow runtime statement:
+selected preserved \texttt{.tflite} artifacts execute in an isolated software
+runtime.  Board execution, timing, resource, power and source-vs-board
+measurements remain outside the synchronized result set.  The hardware-facing
+requirements in Table~\ref{tab:hardware-plan-note} are therefore included as a
+validation surface rather than as a result table.
+
+\begin{table}[ht]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.28\linewidth}
+                >{\raggedright\arraybackslash}p{0.28\linewidth}
+                >{\raggedright\arraybackslash}p{0.34\linewidth}}
+\toprule
+Hardware-facing item & Current treatment & Evidence needed for hardware claims \\
+\midrule
+Board platform and host & Not measured in this study & Linux + FPGA host,
+device path, permissions, board model and driver version. \\
+\addlinespace
+Bitstream / RTL / DMA interface & Not measured in this study & Bitstream
+hash, AXI map, DMA histogram shape, element width and timeout policy. \\
+\addlinespace
+Fast-path latency & Not measured in this study & p50/p95/p99 and worst-case
+cycles for \(Ks+b\), clipping and bank selection. \\
+\addlinespace
+Commit latency and reliability & Not measured in this study & Stage, commit,
+acknowledgement, rollback and stale-parameter counters. \\
+\addlinespace
+Resource and power & Not measured in this study & LUT/FF/DSP/BRAM, clock
+frequency, timing closure and power. \\
+\addlinespace
+Source-vs-board agreement & Not measured in this study & Fixed-point
+agreement between the software reference and board output on shared test
+vectors. \\
+\bottomrule
+\end{tabular}
+\caption{Hardware-measurement requirements synchronized from the submission
+draft.  The entries define the implementation-stage evidence required before
+hardware claims can be made; they are not results of the present note.}
+\label{tab:hardware-plan-note}
+\end{table}
+
 \section{Discussion}
 
-The results and architecture suggest a useful reframing of the project.  The
-central claim should not be that a CNN alone is a universally superior GKP
-decoder.  A more defensible claim is that drift-adaptive GKP correction can be
-organized as a low-dimensional affine calibration problem with a deterministic
-fast path and replaceable slow calibration modules.  Under this framing, the
-teacher-anchored CNN branch, the statistical calibration branch, and the
-filtering baselines are all instances of the same runtime question: how should
-recent syndrome statistics update \((K,b)\) without disturbing the per-shot
-latency contract?
+The results and architecture support a narrower claim than ``a CNN is a
+universal GKP decoder''.  The defensible claim is that drift-adaptive GKP
+correction can be organized as low-dimensional affine calibration: recent
+syndrome statistics update \((K,b)\), while the per-shot correction remains a
+deterministic fixed-point rule.  This makes the teacher-anchored CNN branch,
+the statistical-calibration branch and the filtering baselines different
+answers to the same runtime question, not unrelated decoder families.  It also
+separates the work from binary FPGA surface-code decoders, outer-code GKP
+soft-information decoders and end-to-end neural QEC models: the learned or
+statistical module updates a physical displacement surface, but it is not
+placed on the latency-critical correction path.
 
-This framing clarifies why the method is different from several neighboring
-approaches.  It is not a conventional FPGA surface-code decoder, because it
-does not operate on a binary detection-event graph.  It is not an outer-code
-GKP soft-information decoder, because it updates the physical displacement
-rule before outer-code message passing or matching.  It is not an end-to-end
-neural QEC decoder, because the neural component is not placed on the
-per-shot critical path.  It is also not simply a calibration pre-processing
-routine, because the estimated state is committed through the same quantized,
-clipped, double-buffered runtime interface that the fast loop consumes.
-
-% T77-SOURCE: T74-TBL-01; T74-TBL-07; T74-SUP-01; T75-FIG-M01; T75-FIG-M02; review=T70,T76
-The advantage should be interpreted at two levels.  At the mainline project
-level, the strongest accepted result is still the locked four-scenario
+The advantage should be interpreted at two levels.  At the primary benchmark
+level, the strongest result is still the controlled four-scenario
 software-HIL ranking: the teacher-anchored hybrid branch beats the filtering
-baselines across all frozen scenarios.  At the model-comparison level, the
-current evidence does not require claiming that the CNN is always the best
+baselines across all reference scenarios.  At the model-comparison level, the
+reported evidence does not require claiming that the CNN is always the best
 estimator.  A separately labeled calibration-extension supplement is instead
 useful because it shows that the same runtime contract can host a strong
-non-neural alternative; however, the accepted closure still keeps that lane
-supplement-side and no-promotion because the default and high-threshold
-settings remain persistently tied.  The learned branch therefore remains
+non-neural alternative; however, the evidence keeps that analysis
+supplement-side because the default and high-threshold settings remain
+persistently tied.  The learned branch therefore remains
 valuable as a replaceable slow-loop module rather than as a uniquely validated
 final comparator.
 
-The expected long-term advantage is therefore modularity under real-time
-constraints.  If a future device requires a stronger statistical estimator, a
-learned temporal model, or a more conservative fallback policy, the slow
-calibration module can be replaced without changing the affine hardware
-boundary.  Conversely, if future GKP experiments require tighter latency, the
-fast path can remain a fixed-point matrix-vector operation while the slow
-estimator is improved offline or on a host processor.  This is the main
-systems-level reason to prefer the proposed contract over a monolithic decoder
-design: the architecture can trade estimator sophistication against update
-cadence without putting neural inference or a graph decoder on the per-shot
-critical path.
+The systems-level advantage is modularity under real-time constraints.  A
+future device could replace the slow estimator, teacher policy or fallback
+logic while preserving the affine fast path, or tighten the fast-path timing
+without retraining the estimator.  The architecture therefore trades estimator
+sophistication against update cadence without putting neural inference or a
+graph decoder on the per-shot critical path.
 
-% T77-SOURCE: T75-FIG-A01; T76-PREVIEW-A01; T74-TBL-05; T74-TBL-06; T74-SUP-03; T74-SUP-04; review=T72,T76
-% T82-SUPPORT: Discussion deployment/support boundary
-The boundary of the current evidence remains important, and it is now clearer
-to organize it as a layered manuscript route rather than a single deployment
-story.  Main-text claims can stop at the frozen-set ranking and its
-conservative mechanism/extension-lane interpretation.  Appendix-level
-supporting materials can carry the canonical training/material provenance table
-and the isolated current-host true \texttt{.tflite} runtime table for selected
-preserved artifacts.  Supplement-only materials can carry the
-calibration-extension supplement with its no-promotion / no-unique-threshold
-gate and the read-only real-board gate/regeneration/provenance pack.  What
-remains blocked is any hardware-dependent surface that needs a future
-\texttt{Linux + FPGA} host, openable device paths, board-level latency/resource
-measurements, or deployment-grade portability.  Keeping these layers separate
-is not a weakness of the write-up; it is the mechanism that prevents
-supporting evidence from being misread as new ranking evidence or completed
-hardware validation.  The submission-draft synchronization adds theory-facing
-diagnostics and two completed Phase A scenario-interval rows, but it does not
-change that layered route.  The compact note should still keep the ranking and
-conservative mechanism reading in the main text, place controlled diagnostics,
-training/material provenance and runtime-boundary tables in supporting
-material, retain the calibration-extension and real-board gate materials as
-bounded side surfaces, and leave blocked hardware or portability claims outside
-the package.
+The synchronized result layer should still be read in tiers.  The reference
+ranking and two completed paired-interval scenarios are the strongest
+performance evidence.  The ablation, statistical-calibration, controlled
+oracle/wrapped, channel-surrogate, holdout, fixed-point and runtime-counter
+rows explain where the affine contract works, where it fails and what remains
+measurable.  They do not convert the study into a hardware result.  Any claim
+about board latency, resources, power, deployment portability or
+source-vs-board agreement still requires a future \texttt{Linux + FPGA}
+measurement path.
 
-% T80-REOPEN: Conclusion
-% T78-SCOPE: evidence-alignment; source=T77-manifest,T70,T72,T77
-% T83-CLOSEOUT: Conclusion
-% T84-POLISH: Conclusion
-% T85-PREFLIGHT: Conclusion
-% T86-ASSEMBLY: Conclusion
-% T87-QA: Conclusion
-% T88-MANUAL: Conclusion
 \section{Conclusion}
 
 This work frames drift-adaptive GKP correction as a dual-loop affine
 calibration problem.  The fast loop remains a bounded fixed-point rule,
 \(\Delta_t=K_t s_t+b_t\), while a slower loop updates the affine parameters
-from recent syndrome statistics.  This formulation creates a practical middle
-ground between fixed decoders, which cannot track hardware drift, and full
-neural decoders, which can be difficult to place on a deterministic per-shot
-path.
+from recent syndrome statistics.  The formulation creates a practical middle
+ground between fixed decoders and full neural decoders on a deterministic
+per-shot path.
 
-% T77-SOURCE: T74-TBL-01; T74-TBL-02; T74-TBL-07; T74-SUP-01; review=T70,T76
-The numerical results support two main conclusions.  First, under the locked
+The numerical results support two main conclusions.  First, under the controlled
 four-scenario software-HIL suite, adaptive affine decoding with a
-teacher-anchored residual branch improves over filtering baselines, while
+teacher-anchored residual branch improves over filtering baselines, with
+UKF-relative mean reductions of \(1.75\%\)--\(2.89\%\) in the four reference
+rows and two completed \(12/12\)-positive interval checks, while
 bounded ablations and multi-seed mechanism materials show that histogram-delta
 features carry useful information and that teacher-side inputs do not admit a
-simple necessity story.  Second, a separately labeled supplement-side
-calibration-extension lane shows that simple non-neural estimators can also be
-strong under the same runtime contract, but the accepted closure remains
-no-promotion and no unique clean threshold.  Together, these results suggest
+simple necessity story.  Second, a supplementary statistical-calibration
+analysis shows that simple non-neural estimators can also be strong under the
+same runtime contract, but the reported evidence does not select a unique
+promoted threshold.  Together, these results suggest
 that the strongest scientific story is not that one CNN architecture has
 closed the comparison, but that low-dimensional histogram-driven calibration
 of an affine GKP fast path is a promising structure for drift-adaptive
 decoding.
 
-% T77-SOURCE: T75-FIG-A01; T76-PREVIEW-A01; T74-TBL-05; T74-TBL-06; T74-SUP-03; T74-SUP-04; review=T72,T76
-% T82-SUPPORT: Conclusion remaining technical gap
-The remaining technical gap is therefore layered, not singular.  On the
-manuscript side, this note now carries a compact synchronization of the
-submission draft's theory and Phase A evidence: two completed formal scenario
-rows support positive UKF-minus-hybrid interval statements, and controlled
-oracle, holdout, operation-count, fixed-point and runtime-discipline checks
-make the affine contract more auditable.  Those additions remain supporting
-evidence.  On the execution side, completion of all formal scenarios, stronger
-sequence-level baselines, default-environment \texttt{.tflite} portability, and
-any board-level timing claim still require separate bounded tasks.  In
-particular, because there is no current \texttt{Linux + FPGA} host, the
-hardware-dependent surface remains blocked rather than silently delayed.  The
-honest handoff is therefore an evidence-synchronized note with explicit
-blocked-surface disclaimers, not deployment closure, submission-ready
-completion, or hardware-ready finalization.
+The note now synchronizes the submission draft's main experimental hierarchy:
+four-scenario ranking, two completed paired-interval rows, controlled oracle
+and wrapped-Gaussian diagnostics, residual-boundary channel surrogates,
+holdout and lag stress tests, operation counts, fixed-point emulation and
+runtime counters.  The remaining gaps are equally explicit: all-scenario
+repeat-expanded intervals, stronger sequence-level baselines,
+default-environment \texttt{.tflite} portability and board-level timing or
+resource claims still require separate validation.  The conclusion is
+therefore an evidence-synchronized theory note with clear hardware and
+portability limits, not deployment validation.
 
 \begin{thebibliography}{99}
 

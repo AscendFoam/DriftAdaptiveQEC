@@ -38,11 +38,15 @@
   theory and result material: the normalized \(\lambda=\sqrt{2\pi}\) residual
   coordinate caveat, branch-conditioned local-affine interpretation,
   software-only fast-path operation-count / Q4.20 parity diagnostics, the two
-  completed Phase A scenario-level paired-interval rows, and controlled
-  oracle/holdout diagnostic wording.  The synchronized note compiles to 22
-  pages in a temporary verification build, below the 25-page hard limit.  This
-  update does not add all-scenario interval evidence, holdout robustness,
-  inferential \(p\)-values, FPGA synthesis/timing/resource measurements,
+  completed Phase A scenario-level paired-interval rows, descriptive
+  UKF-minus-Hybrid advantage-margin and two-repeat envelope readouts, short-run
+  repeat-expansion protocol checks, controlled oracle/holdout/commit-lag
+  diagnostic wording, residual-boundary channel-surrogate and finite-squeezing
+  toy-channel summaries, and mode-level runtime-discipline counters.  The
+  synchronized note compiles to 25 pages locally, meeting the 25-page hard
+  limit.  This update does not add all-scenario interval evidence, trained-branch
+  holdout robustness, inferential \(p\)-values, calibrated finite-energy
+  logical-channel fidelity, FPGA synthesis/timing/resource measurements,
   source-vs-board agreement or real-board validation.
 - Verification expected for this update: LaTeX compile of the submission
   draft, source-data audit, and project-progress wording scan.

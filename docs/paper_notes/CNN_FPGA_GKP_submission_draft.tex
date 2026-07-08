@@ -14,7 +14,7 @@
 
 \emergencystretch=2em
 
-\newcommand{\plannedmeasurement}[1]{\textit{measurement pending: #1}}
+\newcommand{\hardwareclaimrequired}{\textit{Required for hardware claim}}
 \newcommand{\softwarehil}{controlled simulation}
 \newcommand{\finalLER}{\texttt{final\_ler\_mean}}
 \newcommand{\methodname}{runtime-consistent affine calibration}
@@ -28,62 +28,54 @@
 \maketitle
 
 \begin{abstract}
-Approximate Gottesman--Kitaev--Preskill (GKP) error correction converts
-continuous modular syndrome measurements into displacement corrections.  This
-conversion becomes difficult when finite-energy states, noisy measurement
-chains and drifting operating conditions move the syndrome distribution over
-time.  Fully learned per-shot decoders can be hard to bound in a real-time
-control stack, whereas fixed affine correction laws are fast but brittle.  We
-therefore formulate drift-adaptive GKP decoding as affine runtime calibration:
-the latency-critical path is restricted to applying
-\(\Delta_t = K_t s_t + b_t\), and a slower loop updates \((K_t,b_t)\) from
-recent analog syndrome statistics.
-
-This formulation targets a gap between two mature lines of work.  GKP and
-bosonic-code decoders increasingly exploit analog reliability information, but
-the updated object is often an outer-code weight, a message-passing likelihood
-or a full decoder state.  Real-time hardware decoders, in contrast, succeed by
-making the online datapath small, clockable and reproducible.  Our contribution
-is to connect these requirements at the physical correction layer: recent
-analog statistics are used to recalibrate a low-dimensional affine displacement
-surface, while each shot still sees a deterministic matrix-vector rule.
-
-In a predeclared four-scenario, two-repeat \softwarehil{} benchmark, the
-main-table hybrid residual branch has the lowest descriptive mean
-\finalLER{} in every tested drift scenario.  The scenario-wise mean reduction
-relative to the unscented Kalman filter is 1.8--2.9\%, with a 2.3\% average
-across the tested scenarios.  Formal 12-paired-repeat checks in the
-\texttt{static\_bias\_theta} and \texttt{linear\_ramp} scenarios give
-positive UKF-minus-hybrid \finalLER{} intervals.  The paired-\(t\) lower
-bounds are 0.014778 and 0.021215, and the bootstrap 95\% lower bounds are
-0.014933 and 0.021405; all-scenario interval evidence remains open.
-Ablations and a six-seed mechanism analysis indicate that histogram dynamics and
-teacher-side features affect the result, but they do not prove a unique causal
-mechanism or teacher necessity.  A supplementary statistical-calibration
-analysis further shows that a non-neural estimator can populate the same affine
-interface, supporting the contract rather than a specific neural module.
-Controlled nearest-syndrome, oracle-affine and wrapped-Gaussian checks
-separate hard-correction risk, estimator error and local affine-model limits,
-and an analytical operation-count model shows why the affine rule is a
-low-complexity fast-path candidate.  Board timing, resource use, power and
-source-vs-board measurements are reserved for the hardware implementation
-stage.  The results therefore support a systems-method claim:
-low-dimensional affine calibration is a plausible organizing principle for
-drift-adaptive GKP fast-path decoding, while deployment-level and
-broad-benchmark claims require direct device and repeat-expanded validation.
+Fault-tolerant quantum processors require classical correction layers that can
+adapt to analog drift without placing unbounded computation on the feedback
+path.  Approximate Gottesman--Kitaev--Preskill (GKP) error correction is a
+natural setting for this problem because continuous modular syndromes must be
+converted into displacement corrections, while finite-energy peaks, noisy
+auxiliary measurements and calibration drift make a fixed correction surface
+brittle.  We study runtime-consistent affine calibration, in which the
+per-shot fast path is constrained to
+\(\Delta_t = K_t s_t + b_t\) and a slower loop updates \((K_t,b_t)\) from recent
+analog syndrome statistics.  This separates drift adaptation from the
+latency-critical correction: neural, teacher-anchored or statistical estimators
+may propose the next affine surface, but every shot is corrected by the same
+deterministic matrix-vector rule.  In a predeclared four-scenario controlled
+simulation, the teacher-anchored hybrid residual branch has the lowest mean
+protocol-defined \finalLER{} in all tested drift scenarios, reducing
+\finalLER{} relative to an unscented Kalman filter by \(1.8\)--\(2.9\%\)
+(\(2.3\%\) on average).  Two 12-pair scenario checks, for
+\texttt{static\_bias\_theta} and \texttt{linear\_ramp}, give positive
+UKF-minus-hybrid lower bounds under both paired-\(t\) and bootstrap summaries.
+Controlled nearest-syndrome, oracle-affine, wrapped-Gaussian, holdout-stress
+and residual-boundary channel diagnostics show where the affine contract is
+useful and where it remains narrower than finite-energy logical-channel
+fidelity.  The fast path requires four multiplications, four additions and six
+stored state scalars per shot, and Q4.20 software emulation changes no
+residual-boundary crossing rates in the controlled sample set.  The evidence
+supports an interface-level claim: within the tested controlled-simulation
+setting, drift-adaptive GKP correction can be exposed through a small, logged
+affine surface while preserving a deterministic correction path suitable for
+fixed-point replay.  Board latency, resource use, power and source-vs-board
+agreement are reserved for device validation.
 \end{abstract}
 
 \section{Introduction}
 
-Bosonic quantum error correction encodes information in oscillator degrees of
-freedom and can exploit continuous measurement records that are unavailable in
-binary stabilizer readout.  The GKP code is a prominent example: shift errors
-are inferred from modular quadrature syndromes and corrected by displacement
-operations \cite{gkp2001,grimsmo2021}.  In an idealized setting, the decoder
-can treat each measured syndrome as a local displacement estimate.  In a
-physical setting, however, approximate finite-energy GKP states, noisy
-auxiliary measurements and hardware calibration drift alter the distribution
-seen by the decoder over time.
+Quantum error correction is increasingly a real-time control problem as well
+as a coding problem.  A useful decoder must interpret noisy measurements,
+adapt to calibration drift and still return a correction within the timing
+budget of the physical experiment.  Bosonic quantum error correction adds a
+distinct opportunity and challenge: oscillator measurements are continuous, so
+they carry analog reliability information, but the classical control stack must
+decide which part of that information can be used immediately and which part
+should update a slower calibration state.  The GKP code is a prominent example:
+shift errors are inferred from modular quadrature syndromes and corrected by
+displacement operations \cite{gkp2001,grimsmo2021}.  In an idealized setting,
+the decoder can treat each measured syndrome as a local displacement estimate.
+In a physical setting, approximate finite-energy GKP states, noisy auxiliary
+measurements and hardware calibration drift alter the distribution seen by the
+decoder over time.
 
 The resulting bottleneck is not only statistical accuracy, but the interface
 between estimation and real-time control.  A drift-aware decoder should exploit
@@ -113,7 +105,8 @@ We test whether a slow calibration module can improve a deterministic affine
 GKP fast path under controlled drift while preserving a small, verifiable
 runtime interface.  Under a predeclared \softwarehil{} protocol, the
 main-table hybrid residual branch lowers the protocol-defined \finalLER{} in
-every tested drift scenario relative to the strongest classical runner-up.
+every tested drift scenario relative to the strongest baseline in this
+protocol, UKF.
 The present validation is simulation-based and leaves board-level timing,
 resource use and source-vs-board agreement as explicit hardware-stage
 measurements.
@@ -126,18 +119,27 @@ finite-energy logical-channel reconstruction.  The latency and resource
 discussion is a datapath argument based on operation count, fixed-point
 software parity and explicit hardware measurement requirements.  Maintaining
 this separation lets the reader
-distinguish the current simulation result from the channel-level and
+distinguish the present simulation result from the channel-level and
 device-level standards used in adjacent work.
 
 This tiering also defines the specific advantage being tested.  The paper does
 not argue that an affine rule is a universal GKP decoder, nor that a small CNN
 should replace established soft-information or learned decoders.  It argues
 that a slow calibration loop can absorb nonstationary syndrome statistics and
-commit a compact \((K,b)\) surface whose online correction is cheaper to bound,
-quantize, log and eventually reproduce on hardware than a per-shot neural or
-multi-branch posterior calculation.  The main evidence therefore concerns
-adaptation under drift and contract simplicity, not end-to-end fault-tolerance
-thresholds.
+commit a compact \((K,b)\) surface whose online correction is designed to be
+easier to bound, quantize and log than a per-shot neural or multi-branch
+posterior calculation; hardware reproduction requires direct device
+measurement.  The main evidence therefore concerns adaptation under drift and
+contract simplicity, not end-to-end fault-tolerance thresholds.
+
+The broader relevance is the control interface rather than the particular CNN
+instance.  Quantum error-correction experiments increasingly combine analog
+measurements, adaptive calibration and tight classical feedback budgets.  A
+useful decoder layer must therefore say which information is learned slowly,
+which correction is applied immediately and which state must be exposed for
+independent validation.  The affine runtime contract studied here is one answer
+to that interface problem for approximate-GKP correction: it keeps adaptation
+available without making the per-shot displacement rule opaque.
 
 The new element is the interface between GKP analog statistics and a bounded
 runtime surface.  First, the updated object is the physical-layer affine
@@ -156,8 +158,8 @@ the resulting fast path is a plausible hardware verification target.
 calibration loop updates low-dimensional \((K,b)\) parameters from recent
 syndrome statistics, while the latency-critical fast path remains the
 deterministic affine operation in Eq.~\eqref{eq:fastpath}.  The dashed
-hardware-facing surface marks future timing, fixed-point and resource
-measurements, not current hardware results.}
+hardware-facing surface marks device timing, fixed-point and resource
+measurements that are outside the present study.}
 \label{fig:architecture}
 \end{figure}
 
@@ -171,10 +173,10 @@ The main contributions are:
     leaving the fast path deterministic.
     \item A predeclared four-scenario \softwarehil{} evaluation showing that
     the hybrid residual branch ranks lowest by mean \finalLER{} in all tested
-    scenarios under the current two-repeat protocol, plus a single-scenario
-    12-paired-repeat interval check that strengthens the
-    \texttt{static\_bias\_theta} row without yet establishing an all-scenario
-    interval result.
+    scenarios under the two-repeat protocol, plus two scenario-level
+    12-paired-repeat interval checks that strengthen the
+    \texttt{static\_bias\_theta} and \texttt{linear\_ramp} rows without yet
+    establishing an all-scenario interval result.
     \item A metric ladder separating protocol-defined
     \finalLER{}, residual-boundary channel language, analytical fast-path cost,
     fixed-point software parity and the hardware measurements needed before
@@ -196,6 +198,9 @@ berent2024,borah2025}.  The present work does not claim novelty in using
 analog information.  Its distinction is the layer at which the information is
 used: recent analog syndrome statistics update a physical-layer affine
 displacement rule, rather than only an outer-code matching weight or message.
+In other words, analog information is the established input class; the new
+design question is where that information is committed in a hardware-facing
+decoder stack.
 The histogram window used here is also not a Bayesian multi-round approximate
 GKP memory decoder and does not model noisy auxiliary-state correlations
 \cite{wan2020,roy2025}.  It is an effective-noise calibration signal for a
@@ -208,7 +213,9 @@ decoders address this mismatch by updating priors or graph weights from
 observed data \cite{spitz2018,wagner2021,dgr2023,chen2022,sivak2024}.  Our
 formulation follows the same motivation, but constrains the updated object to
 the GKP affine fast-path parameters and commits those parameters through a
-stage-and-commit runtime contract.
+stage-and-commit runtime contract.  The calibrated quantity is therefore not a
+decoder score or graph edge alone, but the \((K,b)\) surface consumed by the
+physical correction rule.
 
 \paragraph{Learned low-latency QEC modules.}
 Machine-learning-assisted decoders and pre-decoders can reduce latency or
@@ -222,6 +229,11 @@ predicts a bounded calibration term for a low-dimensional affine surface and is
 kept outside the per-shot critical path.  The novelty claim is therefore not
 ``neural GKP decoding'', but the restriction of adaptation to a committed
 affine fast-path surface.
+The closest learned-decoder contrasts are calibration-conditioned or real-time
+neural modules, such as folded FiLM-style calibration and FPGA neural decoding
+\cite{stein2026,yang2026}.  Those systems place learned computation closer to
+the decoder or feedback path; here, learning is confined to slow-loop
+calibration and the fast path remains an affine displacement rule.
 
 \paragraph{Real-time and FPGA QEC decoders.}
 Hardware QEC decoders for stabilizer-code settings include lookup-table,
@@ -229,17 +241,34 @@ union-find, matching-accelerator, clustering, greedy and FPGA-tailored
 message-passing systems \cite{lilliput2022,helios2023,collision2025,
 qldpcfpga2025,caune2024,yang2026,ziad2024,maurer2025}.  These
 works define the standard for deployment claims: closed-loop latency,
-resource use, timing closure and hardware integration.  Our present evidence
-does not meet that standard.  Instead, this paper treats the GKP affine
-fast-path contract as the object to be tested in software first, with
-hardware-facing metrics reserved for future board-level measurements.
+resource use, timing closure and hardware integration.  This paper addresses a
+different measurement layer: it treats the GKP affine fast-path contract as the
+object to be isolated in controlled simulation and fixed-point software checks,
+with hardware-facing metrics reserved for board-level implementation.
 This distinction also fixes the comparison unit.  The prior FPGA systems
 evaluate complete stabilizer-code decoding workloads and report device-level
 timing, memory or integration evidence.  The present study evaluates a
 physical-layer correction surface that would sit upstream of such a broader
-decoder stack.  Its current hardware relevance is therefore restricted to
-whether the online rule is small, fixed-point checkable and observable enough
-to become a source-vs-board test target.
+decoder stack.  Its hardware relevance is therefore the compactness and
+observability of the online rule: the affine update is small enough to be
+fixed-point checked, logged and compared against a later source-vs-board test
+target.
+Hardware systems such as lookup-table, union-find, clustering and neural-FPGA
+decoders report latency, resource, memory or closed-loop evidence as device
+measurements \cite{lilliput2022,helios2023,collision2025,caune2024,yang2026};
+this manuscript instead defines the affine target that such a measurement would
+need to validate.
+
+The closest prior-work cluster is therefore not a single decoder family, but
+the intersection of three constraints: analog GKP reliability information,
+adaptive noise or prior calibration, and real-time decoder implementation.
+Existing GKP soft-information work establishes the value of continuous syndrome
+data; adaptive-prior and calibration-conditioned decoders establish that
+decoder parameters should track drift; and FPGA/QEC runtime work establishes
+that deployment claims require bounded datapaths and measured latency.  The
+present work is positioned at their intersection: it updates a physical-layer
+affine correction surface while keeping the per-shot correction path
+deterministic.
 
 \begin{table}[t]
 \centering
@@ -262,7 +291,7 @@ rather than on the per-shot correction path. \\
 \addlinespace
 FPGA/real-time decoders & Reports deployed low-latency or hardware-integrated
 decoders in stabilizer-code settings. & Provides a software-tested GKP
-physical-layer calibration contract; hardware results require future
+physical-layer calibration contract; hardware results require direct
 board-level measurements. \\
 \bottomrule
 \end{tabular}
@@ -272,159 +301,66 @@ a dismissal of prior analog, learned or hardware-decoder work.}
 \label{tab:related}
 \end{table}
 
-The comparisons below are metric-oriented rather than leaderboard-style.  Prior
-work reports different code families, validation layers and endpoint metrics,
-so the tables identify the measurement standard each line establishes and the
-narrower metric reported here.  We use three rules when reading these external
-numbers.  First, endpoint metrics are not exchanged across layers:
-surface-GKP thresholds, logical-channel infidelities, real-processor LER and
-FPGA latency are standards for comparison, not measurements produced by this
-study.  Second, the adaptive object must be named: prior work often updates an
-outer-code graph, a decoder prior, a neural decoder state or a message-passing
-likelihood, whereas this manuscript updates the physical-layer affine surface
-\((K,b)\).  Third, the runtime surface must be separated from the estimator:
-the present fast path remains a deterministic clipped affine rule even when
-the slow-loop estimator is learned.
-
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.19\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.35\linewidth}@{}}
-\toprule
-Comparison axis & Representative prior-work metrics & Relevance to this paper \\
-\midrule
-Analog GKP information &
-Analog syndrome decoding has been reported to lower required squeezing from
-about \(16.0\) dB to \(9.8\) dB in surface-GKP settings
-\cite{fukui2018,noh2020}. &
-The present work does not claim novelty in analog information.  It uses recent
-analog histograms to update a low-dimensional affine correction surface. \\
-\addlinespace
-Calibration-aware QEC &
-Prior calibration and drift-aware graph updates report gains ranging from
-percentage-level prior improvements to multi-fold mismatch reductions
-\cite{dgr2023,chen2022,sivak2024}. &
-The calibrated object here is the physical-layer \((K,b)\) surface consumed by
-the fast GKP correction path, not only an outer-code graph weight or decoder
-prior. \\
-\addlinespace
-Logical-error and overhead targets &
-Surface-GKP studies report logical-failure and overhead targets such as
-\(0.87\%\) to \(0.36\%\) CNOT-failure reduction, \(9.9\) dB threshold behavior,
-and \(291\) modes plus \(97\) qubits versus \(1457\) bare qubits for a matched
-low-failure target \cite{noh2022}. &
-The present metric is narrower: it is a protocol-defined q/p boundary-crossing
-proxy, not the same endpoint as prior-work LER or logical-failure rates.  The
-result should therefore be read as a front-end calibration result, not as an
-end-to-end surface-GKP overhead claim. \\
-\addlinespace
-Logical-channel fidelity and infidelity &
-Approximate-GKP analyses report logical-channel probabilities, loss-channel
-infidelity and near-optimal loss/amplification performance as channel-level
-figures of merit \cite{jafarzadeh2025,hastrup2023,zheng2024}. &
-The current manuscript reports a residual-boundary Pauli-channel-style
-surrogate derived from q/p half-lattice crossings, but not finite-energy
-logical-channel fidelity or process infidelity.  Fidelity-level claims would
-require channel-specific simulation, logical-channel probability estimates or
-process-infidelity reconstruction under a specified physical channel. \\
-\bottomrule
-\end{tabular}
-\caption{External GKP and calibration comparison axes.  The cited values are
-representative reported metrics from adjacent work, not normalized baselines
-for this study.  They position the contribution and the missing validation
-without treating incompatible metrics as results of this manuscript.  The
-companion literature metric crosswalk records the local literature-card
-figure, table, equation or card-level anchor used for each representative
-metric.}
-\label{tab:external-comparison}
-\end{table}
-
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.19\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.35\linewidth}@{}}
-\toprule
-Comparison axis & Representative prior-work metrics & Relevance to this paper \\
-\midrule
-Real-device learned decoding &
-Learned decoders have reported real-processor LER reductions using large
-experimental and synthetic data sets \cite{bausch2024,stein2026}. &
-The present manuscript does not report real-processor learned-decoder LER.  It
-uses software drift scenarios to test whether a learned slow loop can populate
-a deterministic affine surface. \\
-\addlinespace
-Structured neural and soft decoders &
-Bosonic/GKP-like neural decoders, neural matching-weight predictors and
-hardware soft-information decoders provide related routes to improved LER or
-thresholds \cite{wang2022,peled2026,hanisch2026}. &
-The present work does not claim novelty in neural decoding or soft information.
-Its distinction is that the neural component is confined to slow calibration
-of the affine physical correction surface. \\
-\addlinespace
-Runtime pre-decoders and calibration-conditioned latency &
-AI pre-decoders and calibration-conditioned decoders report runtime anchors
-such as \(38.78\,\mu\mathrm{s}\) sub-step decoding or \(85\)--\(95\,\mu\mathrm{s}\)
-folded FiLM latency \cite{chamberland2026,stein2026}. &
-The current latency argument is only analytical and software-emulated.  A
-future device study must measure the affine fast path rather than borrow these
-per-shot neural latency values. \\
-\addlinespace
-Real-time FPGA decoders &
-Hardware decoders report deployment metrics such as \(28\)--\(42\) ns lookup
-latency and compressed lookup memory \cite{lilliput2022}, \(11.5\) ns per
-measurement round \cite{helios2023}, sub-\(\mu\)s round or feedback timing
-\cite{caune2024,ziad2024,maurer2025}, 550 ns closed-loop latency and
-QPU-feedback integration \cite{yang2026}, and scale, memory, area and power
-figures \cite{collision2025}. &
-These works define the standard for hardware claims.  This manuscript only
-specifies the required hardware measurement surface until the same classes of
-timing, resource and source-vs-board data are available. \\
-\bottomrule
-\end{tabular}
-\caption{External learned-decoder and hardware-runtime comparison axes.  The
-cited values are representative reported metrics from adjacent work, not
-normalized baselines for this study.  They position the slow-loop calibration
-role and the missing hardware validation, not as results of this manuscript.
-The companion literature metric crosswalk records the local literature-card
-figure, table or card-level anchor used for each representative metric.}
-\label{tab:external-runtime-comparison}
-\end{table}
+The comparison is metric-oriented rather than leaderboard-style.  Prior work
+reports different code families, validation layers and endpoint metrics, so
+Table~\ref{tab:closest-work-positioning} identifies the measurement standard
+each line establishes and the narrower metric reported here; the expanded
+literature crosswalk is provided in
+Tables~\ref{tab:external-comparison} and~\ref{tab:external-runtime-comparison}
+in the appendix.  We use three rules when reading these external numbers.
+First, endpoint metrics are not exchanged across layers: surface-GKP
+thresholds, logical-channel infidelities, real-processor LER and FPGA latency
+are standards for comparison, not measurements produced by this study.  Second,
+the adaptive object must be named: prior work often updates an outer-code
+graph, a decoder prior, a neural decoder state or a message-passing likelihood,
+whereas this manuscript updates the physical-layer affine surface \((K,b)\).
+Third, the runtime surface must be separated from the estimator: the present
+fast path remains a deterministic clipped affine rule even when the slow-loop
+estimator is learned.
 
 \begin{table}[t]
 \centering
 \scriptsize
-\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.18\linewidth}@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.18\linewidth}@{}}
 \toprule
-Closest prior direction & Metric standard set by prior work & Distinction tested here & Current boundary \\
+Prior work class & Reported LER, fidelity, latency or resource metric & This work reports & Further validation needed \\
 \midrule
-Analog and surface-GKP decoding & Squeezing thresholds, logical failure rates and overhead targets \cite{fukui2018,noh2020,noh2022,berent2024,borah2025}. & Recent analog histograms update the physical-layer affine surface rather than an outer-code matching graph or message-passing likelihood. & Not an end-to-end surface-GKP threshold or overhead result. \\
+Analog and surface-GKP decoding & Squeezing, failure and overhead anchors include about \(16.0\!\to\!9.8\) dB required squeezing, \(11.2/18.6\) dB and \(0.69/0.81\%\) threshold-type values, \(0.87\%\!\to\!0.36\%\) CNOT-failure reduction, and \(291\) modes plus \(97\) qubits versus \(1457\) qubits for a matched target \cite{fukui2018,noh2020,noh2022,berent2024,borah2025}. & A physical-layer affine calibration rule driven by recent GKP syndrome histograms and evaluated by a protocol-defined residual-boundary LER proxy. & End-to-end surface-GKP threshold, overhead or logical-channel failure rate. \\
 \addlinespace
-Calibration-aware and learned QEC decoders & Real-device LER reductions, calibration snapshots, trained decoders and latency measurements \cite{dgr2023,chen2022,sivak2024,bausch2024,stein2026}. & The learned branch is a slow-loop estimator for a low-dimensional affine surface; the per-shot correction remains deterministic. & Not a real-processor learned-decoder experiment. \\
+Calibration-aware and learned QEC decoders & Drift-aware graph and prior calibration report \(3.6\times\) average mismatch-LER reduction, worst-case reductions up to \(7360\times\), and prior-calibration gains of \(48\%\), \(16\%\) and \(3.3\%\); calibration-conditioned learned decoders report large-shot real-device studies and up to \(11.11\times\) LER reductions \cite{dgr2023,chen2022,sivak2024,bausch2024,stein2026}. & A learned slow-loop estimator for a low-dimensional affine surface; the per-shot GKP correction remains deterministic. & Real-processor learned-decoder LER, calibration-shot scaling or device-dataset generalization. \\
 \addlinespace
-Finite-energy logical-channel analyses & Logical-channel probabilities, channel infidelity and loss/amplification recovery curves \cite{jafarzadeh2025,hastrup2023,zheng2024}. & The manuscript reports residual-boundary event decompositions and a finite-squeezing toy-channel sanity check as channel-language bridges. & Not calibrated finite-energy logical-channel fidelity or process tomography. \\
+Finite-energy logical-channel analyses & Logical-channel probabilities, channel infidelity and loss/amplification recovery curves include anchors such as GRN Pauli probabilities \(p_I=0.9900\), logical-channel infidelity curves and near-optimal loss/amplification comparisons \cite{jafarzadeh2025,hastrup2023,zheng2024}. & Residual-boundary event decompositions and a finite-squeezing toy-channel sanity check that connect the LER proxy to channel language. & Calibrated finite-energy logical-channel fidelity, channel infidelity or process tomography. \\
 \addlinespace
-Runtime pre-decoders and calibration-conditioned neural modules & Accuracy-runtime trade-offs for per-shot or near-per-shot learned decoder modules \cite{chamberland2026,stein2026,yang2026}. & The fast path is a clipped affine matrix-vector update; estimation is moved out of the latency-critical correction path. & Not measured neural-decoder or FPGA runtime. \\
+Runtime pre-decoders and calibration-conditioned neural modules & Runtime anchors include \(270.83\!\to\!38.78\,\mu\mathrm{s}\) sub-step pre-decoding, \(85\)--\(95\,\mu\mathrm{s}\) folded FiLM latency, and real-time neural feedback examples with \(124\) ns neural decoding inside a 550 ns closed loop \cite{chamberland2026,stein2026,yang2026}. & An analytical fast path with four multiplications, four additions, no nonlinear operation and Q4.20 software parity in controlled samples. & Per-shot neural-decoder latency, closed-loop feedback latency or on-device FPGA timing. \\
 \addlinespace
-Real-time FPGA and hardware-tailored decoders & Closed-loop latency, cycle budget, resource use, memory, area, power and source-to-device evidence \cite{lilliput2022,helios2023,qldpcfpga2025,caune2024,ziad2024,maurer2025,yang2026}. & The present evidence only defines a compact, fixed-point-checkable affine target for a future source-vs-board validation. & Not FPGA synthesis, resource use, power, real-board latency or source-vs-board agreement. \\
+Real-time FPGA and hardware-tailored decoders & Hardware papers report \(28\)--\(42\) ns lookup latency, \(11.5\) ns/round FPGA decoding, \(810/240\) ns FPGA/ASIC collision decoding, sub-\(\mu\)s feedback paths, memory compression, area, power and source-to-device evidence \cite{lilliput2022,helios2023,qldpcfpga2025,caune2024,ziad2024,maurer2025,yang2026}. & A compact, fixed-point-checkable affine target with software runtime counters and explicit board-measurement requirements. & FPGA synthesis, LUT/FF/DSP/BRAM use, power, real-board latency and source-vs-board agreement. \\
 \bottomrule
 \end{tabular}
-\caption{Closest-work positioning.  The table summarizes the most adjacent
-literature families, the evidence standard each family sets and the narrower
-distinction supported by this manuscript.  It is a positioning table, not a
-normalized leaderboard and not evidence that this manuscript reproduces the
-external metrics.}
+\caption{Closest-work metric comparison.  The table separates what adjacent
+work reports, what this manuscript reports and which validation class is not
+reported in this study.  The comparison is intentionally not a normalized leaderboard,
+because the code families, physical endpoints and hardware-validation levels
+differ.}
 \label{tab:closest-work-positioning}
 \end{table}
 
-Taken together, the comparison defines a narrow advantage claim.  The paper
-does not compete with surface-GKP or QLDPC-GKP decoders on end-to-end overhead,
-and it does not compete with real-time FPGA decoders on measured device
-latency.  Its current advantage is architectural: the adaptive part of the
-decoder changes only a low-dimensional affine surface, leaving the per-shot
-path as a clipped matrix-vector rule.  This gives the manuscript a testable
-route to three later hardware-facing metrics: lower analytical per-shot
-arithmetic count than the branch-aware posterior references evaluated in the
-controlled cost model, simpler verification than per-shot neural decoding and
+Taken together, the comparison defines a narrow but concrete advantage claim.
+The manuscript does not compete with surface-GKP or QLDPC-GKP decoders on
+end-to-end overhead, and it does not compete with real-time FPGA decoders on
+measured device latency.  Instead, it tests whether drift adaptation can be
+expressed as a small physical-layer affine update whose online arithmetic is
+much simpler than posterior branch search while still improving the
+protocol-defined LER proxy under controlled drift.  The closest adjacent
+neural-FPGA demonstration is therefore a standard to validate against, not a
+baseline that this study has already matched.  The design trade-off tested
+here is architectural and decomposes into three parts:
+the correction surface adapts under controlled drift, the latency-critical
+operation remains a clipped affine matrix-vector rule, and the implementation
+target is small enough to be checked against source-level vectors.  This gives
+the manuscript a route to three later hardware-facing metrics: lower
+analytical per-shot arithmetic count than the branch-aware posterior references
+evaluated in the controlled cost model, a smaller source-level verification
+target than a per-shot neural decoder and
 a clear source-vs-board agreement target for an FPGA implementation.
 
 This protocol also explains which comparisons are most probative for the
@@ -433,19 +369,19 @@ continuous syndrome information and drifting calibration states matter.  They
 do not by themselves establish a hardware-friendly physical correction
 interface.  Learned-decoder and real-time-FPGA work establish the evidence bar
 for LER and latency claims.  They do not remove the need for a small,
-auditable fast path when the goal is a GKP correction module that can later be
+verifiable fast path when the goal is a GKP correction module that can later be
 implemented with fixed-point arithmetic.  The contribution is therefore not a
 new universal decoder, but a way to expose drift adaptation through a
-low-dimensional surface whose online arithmetic, state and future board check
-are explicitly bounded.
+low-dimensional surface whose online arithmetic, state and board-validation
+interface are explicitly bounded.
 
 For clarity, the manuscript uses a metric ladder rather than a single
 all-purpose performance number.  The primary result is the protocol-defined
 \finalLER{} ranking and paired descriptive delta.  The residual-boundary
 surrogate is only a bridge from half-lattice crossing events to channel
 language, not a finite-energy logical-channel fidelity.  The fast-path latency
-argument is currently an analytical and software-emulation argument, not an
-FPGA timing result.  Table~\ref{tab:metric-readiness} separates the metrics
+argument is an analytical and software-emulation argument, not an FPGA timing
+result.  Table~\ref{tab:metric-readiness} separates the metrics
 reported in this study from the metrics that define the standard for later
 validation.
 
@@ -454,7 +390,7 @@ validation.
 \scriptsize
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.23\linewidth}>{\raggedright\arraybackslash}p{0.21\linewidth}@{}}
 \toprule
-Metric axis & Current manuscript metric & Supported statement & Missing for stronger claim \\
+Metric axis & Manuscript metric & Supported statement & Missing for stronger claim \\
 \midrule
 Logical-error proxy & \finalLER{} means, paired descriptive deltas and a non-inferential paired-bootstrap envelope & Hybrid residual calibration has the lowest mean protocol-defined \finalLER{} in the tested drift scenarios. & More repeats, inferential confidence intervals, holdout drift and logical-channel reconstruction. \\
 \addlinespace
@@ -468,8 +404,8 @@ Hardware-facing validation & Measurement requirements only & The manuscript defi
 \bottomrule
 \end{tabular}
 \caption{Metric-readiness matrix for the manuscript.  The table separates
-reported metrics from external standards and future validation requirements;
-it does not convert the current \finalLER{} proxy into channel fidelity,
+reported metrics from external standards and implementation-stage validation requirements;
+it does not convert the \finalLER{} proxy into channel fidelity,
 statistical significance or hardware latency.}
 \label{tab:metric-readiness}
 \end{table}
@@ -482,7 +418,7 @@ The residual-boundary surrogate then asks whether the same q/p events can be
 reported in channel language without pretending to reconstruct a finite-energy
 logical channel.  The operation-count and fixed-point rows ask whether the
 resulting correction rule has the size and numerical stability expected of a
-future real-time datapath.  A positive result on only one axis would be weak:
+real-time datapath candidate.  A positive result on only one axis would be weak:
 lower \finalLER{} without a channel-language bridge would be hard to compare
 with GKP fidelity work, a surrogate fidelity without the \finalLER{} protocol
 would be detached from the reported benchmark, and a low arithmetic count
@@ -498,15 +434,150 @@ occupy alternating lattice points separated by \(\sqrt{\pi}\), while
 stabilizer periods are \(2\sqrt{\pi}\).  Approximate GKP states replace the
 Dirac comb by finitely squeezed peaks with a finite-energy envelope, so both
 state preparation and readout add continuous noise to the modular syndrome.
+Equivalently, in a common oscillator normalization with
+\([\hat q,\hat p]=i\), the ideal code is stabilized by \(2\sqrt{\pi}\)
+translations in phase space, generated for example by
+\(S_q=\exp(i2\sqrt{\pi}\hat q)\) and
+\(S_p=\exp(-i2\sqrt{\pi}\hat p)\), while logical Pauli operations correspond
+to half-period displacements such as
+\(Z_L=\exp(i\sqrt{\pi}\hat q)\) and
+\(X_L=\exp(-i\sqrt{\pi}\hat p)\).  Error correction therefore reduces
+small displacement errors modulo the stabilizer lattice: residual shifts inside
+one half cell are returned to the intended branch, whereas residual shifts
+crossing a half-cell boundary are assigned to an adjacent logical branch.  The
+simulation metric below is a software-level version of this modular decision,
+not a reconstruction of the oscillator state.
 For example, one may view an approximate position-basis codeword schematically
-as a comb of Gaussian peaks with width \(\Delta\), multiplied by a broad
-envelope that limits the oscillator energy.  The exact envelope and circuit
-depend on the physical preparation route, but the decoder-facing consequence is
-common: finite squeezing turns a sharp lattice-cell decision into a tail
-probability near the half-lattice boundary.  A small change in residual scale
-or bias can therefore produce a disproportionately large change in boundary
-crossing probability when the residual distribution sits near that decision
-surface.
+as
+\begin{equation}
+    |\widetilde{0}_L\rangle_q
+    \propto
+    \sum_{n\in\mathbb{Z}}
+    \exp\!\left[-\frac{(2n)^2\pi}{2\Delta_{\mathrm{env}}^2}\right]
+    \int \mathrm{d}q\,
+    \exp\!\left[-\frac{(q-2n\sqrt{\pi})^2}{2\Delta_{\mathrm{pk}}^2}\right]
+    |q\rangle ,
+    \label{eq:approx-gkp-comb}
+\end{equation}
+with the odd lattice sites representing \(|\widetilde{1}_L\rangle_q\).  The
+peak width \(\Delta_{\mathrm{pk}}\) represents finite squeezing and the broad
+envelope \(\Delta_{\mathrm{env}}\) limits oscillator energy.  The same
+description applies in the conjugate quadrature after the corresponding Fourier
+rotation.  The exact envelope, normalization and circuit depend on the physical
+preparation route, but the decoder-facing consequence is common: finite
+squeezing turns a sharp lattice-cell decision into a tail probability near the
+half-lattice boundary.  A small change in residual scale or bias can therefore
+produce a disproportionately large change in boundary-crossing probability when
+the residual distribution sits near that decision surface.
+
+This is also why calibration is a physical-layer question rather than only a
+machine-learning question.  The correction surface depends on the local
+posterior induced by the approximate state, the readout chain and the drifted
+effective displacement process.  Changes in peak width alter the probability
+mass near the half-cell boundary; changes in mean bias shift the local branch
+centre; and changes in covariance orientation alter which linear combination of
+q/p syndromes is most predictive of the residual.  Thus a decoder that keeps a
+fixed affine rule is fast but implicitly assumes that these effective moments
+are stationary.  Runtime calibration instead treats the affine surface itself
+as the slowly changing object to be estimated from recent analog syndrome
+statistics.
+
+This tail sensitivity is the link between approximate-state physics and the
+software metric used below.  In the usual Gaussian peak approximation, modular
+squeezing can be summarized by a width parameter such as
+\(S=-10\log_{10}\Delta_{\mathrm{pk}}^2\), while the finite-energy envelope
+controls how much probability leaks into distant lattice peaks.  After a
+syndrome measurement and correction, a residual \(r_j^+\) that remains well
+inside the local cell is still compatible with the intended logical branch; a
+residual that crosses \(\pm\lambda/2\) changes the nearest branch assignment.
+For a zero-mean Gaussian residual with variance \(\sigma_r^2\), the corresponding
+one-quadrature crossing probability is approximately
+\(2Q(\lambda/(2\sigma_r))\), where \(Q\) is the Gaussian upper-tail function,
+so modest changes in residual scale become
+exponentially visible near the boundary.  This is why a drift-adaptive affine
+surface can matter even when its correction rule is simple: it shifts the
+post-correction residual distribution away from the cell edge rather than
+attempting to reconstruct the full finite-energy wavefunction.
+
+This finite-energy picture also fixes the level of abstraction used in the
+paper.  The ideal code treats displacements separated by a stabilizer period as
+equivalent, whereas an approximate code supplies only a noisy, periodic
+measurement of the displacement.  The decoder therefore does not observe the
+absolute shift \(e_t\).  It observes a modular residual together with
+preparation, ancilla and readout noise, then chooses a correction that is safe
+only within the selected lattice cell.  In this manuscript, a q or p event is
+counted when the post-correction residual crosses the half-period boundary of
+that normalized cell.  This is the operational origin of the reported
+\finalLER{} proxy and of the later Pauli-style surrogate tables.
+
+Two consequences of the approximate-code model are important for interpreting
+the affine decoder.  First, finite squeezing makes branch assignment
+probabilistic even when the correction rule is deterministic: a residual that is
+small in Euclidean norm can still have non-negligible tail mass across the
+nearest half-cell boundary.  Second, the wrapped syndrome aliases different
+lattice branches, so a fast decoder that commits to one local branch must be
+judged by the residual it leaves after correction, not by whether it has
+reconstructed the global displacement.  The affine surface in this paper is
+therefore a branch-local correction rule for an effective approximate-GKP
+residual process.  It is not a statement that finite-energy GKP decoding is
+globally affine, and it is not a replacement for a channel-level simulation of
+prepared approximate codewords.
+
+The syndrome readout is therefore modular rather than absolute.  If a
+pre-correction displacement \(e_j\) occurs in quadrature \(j\in\{q,p\}\), the
+readout exposes \(e_j\) only modulo the lattice period and with additive
+preparation and measurement uncertainty.  The correction is successful within
+the modeled cell when the post-correction residual
+\(r_{j,t}^{+}\) remains inside the interval
+\([-\lambda/2,\lambda/2)\).  The manuscript's per-round event indicator can be
+written as
+\begin{equation}
+    \ell_t
+    =
+    \mathbb{1}\{|r_{q,t}^{+}|\ge \lambda/2\ \mathrm{or}\
+    |r_{p,t}^{+}|\ge \lambda/2\},
+    \label{eq:boundary-indicator}
+\end{equation}
+and \finalLER{} is the empirical mean of this indicator under the stated
+software protocol.  This definition is intentionally narrower than a
+code-distance logical failure probability: it measures whether the physical
+fast-path correction leaves the residual in the wrong normalized cell, not
+whether an outer code or a full finite-energy logical channel has failed.
+
+To avoid mixing oscillator and software coordinates, the remainder of the paper
+uses one normalized residual convention.  The conventional square-lattice GKP
+description above explains the physical code.  The runtime equations below use
+the software residual coordinate in which the wrap period is
+\(\lambda=\sqrt{2\pi}\).  All q/p crossings, clipping thresholds and source
+tables are expressed in that normalized coordinate.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.33\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}@{}}
+\toprule
+Quantity & Meaning in the manuscript & Not claimed here \\
+\midrule
+Conventional GKP spacing & Used to introduce the ideal square-lattice code and
+finite-energy comb picture. & A calibrated device-specific quadrature scale. \\
+\addlinespace
+\(\lambda=\sqrt{2\pi}\) & Software residual wrap period used by the emulator,
+tables and supporting-data checks. & A new physical code definition. \\
+\addlinespace
+\(\lambda/2\) boundary & Normalized q/p half-cell boundary for the event
+indicator in Eq.~\eqref{eq:boundary-indicator}. & Outer-code logical failure
+probability. \\
+\addlinespace
+\finalLER{} & Empirical mean of residual half-cell crossings under the stated
+runtime-calibration protocol. & Finite-energy logical-channel fidelity,
+process fidelity or tomography. \\
+\bottomrule
+\end{tabular}
+\caption{Coordinate and metric convention.  The table separates the physical
+GKP motivation from the normalized software residual coordinate used in the
+reported runtime-calibration benchmark.}
+\label{tab:gkp-coordinate-convention}
+\end{table}
 
 Let the accumulated two-quadrature displacement before correction be
 \(e_t=(e_{q,t},e_{p,t})^\top\).  The implementation uses the lattice period
@@ -525,11 +596,15 @@ GKP presentations often describe logical separation and stabilizer periods in
 the oscillator quadrature normalization natural to the preparation circuit.
 Here all measured syndromes, accumulated residuals and logical-boundary tests
 are expressed in a normalized two-quadrature residual coordinate with period
-\(\sqrt{2\pi}\).  This convention makes the runtime rule and the source data
+\(\sqrt{2\pi}\).  This convention makes the runtime rule and the supporting data
 unambiguous: every wrap, clipping threshold and boundary-crossing event in the
 manuscript is evaluated against the same \(\lambda\), while squeezing in dB,
 photon number and channel-specific finite-energy parameters remain outside the
 present calibrated model.
+Equivalently, the manuscript works after a fixed coordinate rescaling from the
+usual oscillator-quadrature convention into the software residual coordinate;
+all reported q/p crossings are crossings of this normalized cell, not separate
+claims about a device-specific physical quadrature calibration.
 The wrap operation is the essential ambiguity: the same reported syndrome can
 correspond to different lattice branches.  If the posterior mass is
 concentrated near one branch, a local affine estimator is a reasonable
@@ -561,6 +636,17 @@ surface that remains after the slow loop has compressed recent syndrome
 statistics into a small committed parameter bank.  The scientific question in
 this paper is whether such a surface can remain useful under controlled drift
 while preserving a deterministic low-latency datapath.
+With the sign convention used in the emulator, the affine output is the
+correction displacement applied to the pre-correction shift.  The post-correction
+local residual is
+\begin{equation}
+    r_t^{+}=e_t-\Delta_t-\lambda m_t,\qquad
+    \Delta_t=K_t s_t+b_t ,
+    \label{eq:post-correction-residual}
+\end{equation}
+where \(m_t\) is the selected lattice branch.  Boundary events in the metric
+section are defined on \(r_t^{+}\), so the affine surface is judged by the
+residual it leaves after correction rather than by parameter error alone.
 
 \begin{proposition}[Local affine fast path]
 Fix an effective noise state \(\theta\) and a lattice branch \(m\).  Let
@@ -614,9 +700,9 @@ manuscript asks a narrower systems question: if the physical correction layer is
 restricted to a committed affine rule, can recent syndrome statistics keep that
 rule aligned with a drifting effective residual distribution?  The answer is
 reported with a half-lattice boundary proxy and diagnostic channel-language
-surrogates.  It is not reported as logical-channel fidelity because the source
-data do not reconstruct the finite-energy output state or a complete logical
-process map.
+surrogates.  It should not be interpreted as logical-channel fidelity because
+the supporting data do not reconstruct the finite-energy output state or a
+complete logical process map.
 
 The validity regime can be stated in operational terms.  Let \(B_t\) be the
 event that the wrapped syndrome is assigned to the wrong lattice branch after
@@ -631,7 +717,7 @@ boundaries, or when drift changes faster than the histogram window and commit
 cadence can track.  These three failure modes motivate the paper's bounded
 evidence ladder: residual-MSE checks for local affine fit, boundary-crossing
 \finalLER{} for branch-cell errors, holdout drift stress tests for slow-loop
-lag and a hardware-facing datapath contract for future device validation.  The
+lag and a hardware-facing datapath contract for device validation.  The
 controlled oracle and wrapped-Gaussian analyses in the Results section test
 this local validity regime rather than replacing a full wrapped decoder
 benchmark.
@@ -646,28 +732,29 @@ circuit-level model:
 \end{equation}
 Here \(\sigma_t\) summarizes displacement scale, \(\mu_{q,t}\) and
 \(\mu_{p,t}\) represent mean bias, and \(\vartheta_t\) captures covariance
-orientation.  The current benchmark uses four hand-designed drift families:
+orientation.  The benchmark uses four hand-designed drift families:
 static bias with rotation, linear ramp, step change in variance/orientation
 and periodic drift.  These scenarios test distinct adaptation demands but do
 not exhaust possible nonstationary GKP noise.
 
 \subsection{Evaluation target}
 
-The primary metric is \finalLER{}, a logical-error proxy measured at the end
-of a fixed \softwarehil{} run.  Lower values are better.  Because the main
-benchmark data do not include confidence intervals or a formal predeclared
-holdout set, the main result is interpreted as a predeclared-protocol ranking,
-not as a broad distributional generalization claim.  Controlled holdout stress
-tests are reported separately in the Results section, and repeat-expanded
-inferential confidence intervals or predeclared bootstrap intervals for the
-main rows remain required before
+The primary metric is \finalLER{}, the reported table field for a q/p
+boundary-crossing count per fast-loop round.  Lower values are better.  Because
+the main comparison table does not include confidence intervals or a formal
+predeclared holdout set, the main result is interpreted as a predeclared-protocol
+ranking, not as a broad distributional generalization claim.  Controlled holdout
+stress tests are reported separately in the Results section, and
+repeat-expanded inferential confidence intervals or predeclared bootstrap
+intervals for the main rows remain required before
 stronger statistical language is appropriate.
 
 \begin{center}
 \fbox{\begin{minipage}{0.92\linewidth}
 \textbf{Metric definition.}
 For one \softwarehil{} run, \texttt{final\_ler} is the final value of the
-cumulative logical-error proxy reported by the fast-loop emulator,
+cumulative q/p residual-boundary crossing proxy reported by the fast-loop
+emulator,
 \[
     \texttt{final\_ler}=\frac{N_X+N_Z}{T},
 \]
@@ -676,9 +763,11 @@ boundary crossings counted by \texttt{LogicalErrorTracker}, and \(T\) is the
 number of fast-loop rounds in the run.  The table field \finalLER{} is the
 mean of this value across the available repeats for each scenario and mode;
 the associated \texttt{final\_ler\_sd} field is a descriptive standard
-deviation.  This definition is a \softwarehil{} protocol metric.  It is not a
-hardware logical-error measurement, a logical-channel estimate, a confidence
-interval or a significance test.
+deviation.  Because q and p crossings are counted separately, simultaneous
+crossings contribute two events; the field is therefore an event-count proxy,
+not a probability bounded by one.  This definition is a \softwarehil{} protocol
+metric.  It is not a hardware logical-error measurement, a logical-channel
+estimate, a confidence interval or a significance test.
 \end{minipage}}
 \end{center}
 
@@ -698,8 +787,9 @@ made explicit.  For round \(t\), define
     X_t=\mathbb{1}\{|r_{q,t}|>\lambda/2\},\qquad
     Z_t=\mathbb{1}\{|r_{p,t}|>\lambda/2\},
 \]
-where \(r_{q,t}\) and \(r_{p,t}\) are the residual displacements after the
-committed affine correction.  The reported run-level proxy is
+where \(r_{q,t}\) and \(r_{p,t}\) are the components of
+\(r_t^{+}\) in Eq.~\eqref{eq:post-correction-residual}.  The reported
+run-level proxy is
 \[
     \texttt{final\_ler}=\frac{1}{T}\sum_{t=1}^T (X_t+Z_t).
 \]
@@ -763,18 +853,19 @@ fidelity or process-infidelity estimate.}
 
 \subsection{Metric interpretation}
 
-The notation above is tied to a concrete software implementation, but only at
-the level needed for a scoped protocol claim.  The codebase uses the same
-GKP lattice constant \(\lambda=\sqrt{2\pi}\) for syndrome wrapping, half-lattice
-logical boundaries and fast-loop histogram limits.  The measurement model
+The notation above is tied to a concrete implementation, but only at
+the level needed for a scoped protocol claim.  The implementation underlying the
+reported tables uses the same GKP lattice constant \(\lambda=\sqrt{2\pi}\) for
+syndrome wrapping, half-lattice logical boundaries and fast-loop histogram
+limits.  The measurement model
 includes finite-energy and readout terms through a compact configuration, and
 the fast-loop emulator records residual accumulation with the same half-lattice
 logical-error rule.  These anchors support the statement that \finalLER{} is a
-protocol-defined logical-error proxy for the current \softwarehil{} setting.
-They do not turn the benchmark into a complete finite-energy GKP physical
+protocol-defined logical-error proxy for the present \softwarehil{} setting.
+They do not turn the benchmark into a full finite-energy GKP physical
 model, a wrapped-posterior decoder comparison, a holdout drift distribution or
-a hardware measurement.  The current source-data checks are consistency
-checks between manuscript tables, code paths and generated figures; they are
+a hardware measurement.  The present supporting-data checks are consistency
+checks between manuscript tables, implementation outputs and generated figures; they are
 not physical validation.
 
 \begin{table}[htbp]
@@ -809,12 +900,12 @@ Predeclared-protocol logical-error proxy. &
 Logical-channel validation and stronger baselines. \\
 \addlinespace
 Hardware path &
-Board-facing rows specify future measurement requirements. &
-Future validation target. &
+Board-facing rows specify required device-measurement classes. &
+Board-validation target. &
 Measured device logs and resource/timing data. \\
 \bottomrule
 \end{tabular}
-\caption{Physics-model and metric scope.  The current implementation
+\caption{Physics-model and metric scope.  The implementation
 anchors the notation used in the paper, but the evidence supports only a
 \softwarehil{} protocol claim.}
 \label{tab:physics-metric-boundary}
@@ -855,8 +946,8 @@ committed \((K,b)\) surface and lower residual-boundary events relative to a
 static or slowly mismatched affine reference.  Second, if the estimator is kept
 outside the per-shot path, the online cost should scale with the affine
 datapath rather than with posterior branch count or neural-network depth.
-Third, if the same committed state is logged in software and hardware, the
-future board implementation should be checkable by source-vs-board vectors
+Third, if the same committed state is logged in software and hardware, a board
+implementation should be checkable by source-vs-board vectors
 rather than by only aggregate logical-error rates.  Fourth, if the local
 single-branch assumption fails, the method should fail in identifiable ways:
 posterior mass should split across lattice branches, half-lattice crossings
@@ -866,13 +957,54 @@ These predictions determine how the experiments are organized.  The main
 \softwarehil{} benchmark tests the first prediction under four controlled
 drift families.  The analytical cost model and Q4.20 parity check test the
 second prediction at the software and arithmetic-contract level.  The runtime
-counters and validation-contract figure make the third prediction auditable,
+counters and validation-contract figure make the third prediction observable,
 although board measurements are still absent.  The oracle-affine,
 wrapped-Gaussian, holdout-stress and commit-lag diagnostics address the fourth
 prediction by showing when local affine tracking is plausible and where it
 should be distrusted.  This rationale is the reason the manuscript reports
 multiple bounded metrics instead of converting them into a single headline
 score.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.23\linewidth}>{\raggedright\arraybackslash}p{0.31\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}@{}}
+\toprule
+Design prediction & Supporting observation in this study & Observation that would weaken the claim \\
+\midrule
+Slow calibration can track drift without changing the fast-path rule. &
+The hybrid residual branch has the lowest mean protocol-defined \finalLER{} in
+the four controlled drift scenarios, and two scenario-level 12-pair checks
+support positive UKF-minus-hybrid intervals. &
+The same advantage disappearing under repeat expansion, trained-branch holdout
+drift, or matched known-noise baselines. \\
+\addlinespace
+The latency-critical rule remains small enough to be a hardware target. &
+The online rule is a clipped \(2\times2\) affine map with four multiplications,
+four additions and six stored state scalars, plus Q4.20 software parity in the
+controlled sample set. &
+FPGA synthesis showing poor timing closure, excessive routing/resource cost, or
+source-vs-board mismatch under the same committed \((K,b)\) traces. \\
+\addlinespace
+The contract is estimator-agnostic rather than CNN-specific. &
+Feature ablations constrain the neural mechanism story, and a supplementary
+statistical-calibration analysis can populate the same affine interface. &
+A matched protocol showing that only one neural feature set works, or that
+non-neural calibration fails once candidate generation and selection are fixed. \\
+\addlinespace
+The affine model has identifiable validity limits. &
+Oracle-affine, wrapped-Gaussian, holdout-stress and commit-lag diagnostics expose
+branch-local headroom, posterior-branch brittleness and stale-parameter regimes. &
+A full nearest-lattice or sequence-level wrapped decoder dominating the affine
+path across the same drift settings without increasing fast-path cost. \\
+\bottomrule
+\end{tabular}
+\caption{Falsification-oriented design logic for the affine runtime contract.
+Each claimed advantage is paired with both the present supporting observation
+and a concrete observation that would weaken or overturn the claim.  The table
+is a roadmap for interpreting the Results rather than an additional experiment.}
+\label{tab:falsification-design}
+\end{table}
 
 \subsection{Algorithmic protocol}
 
@@ -888,12 +1020,12 @@ shot uses the same active surface through Eq.~\eqref{eq:fastpath}.
 
 This organization makes the estimator interchangeable but keeps the fast-loop
 contract fixed.  A teacher-anchored residual branch, a statistical calibration
-rule or a future estimator may differ in how it proposes
+rule or another estimator may differ in how it proposes
 \((K_t^{\mathrm{cand}},b_t^{\mathrm{cand}})\), but the logged runtime state is
 the same: active \(K,b\), staged \(K,b\), clipping and saturation status,
 commit acknowledgement, stale-parameter counters and the resulting residual
 boundary events.  These fields are the minimum information needed to reproduce
-the software protocol and to compare a future board implementation against the
+the software protocol and to compare a board implementation against the
 same source trajectory.  The present manuscript evaluates this protocol in
 software; it does not report board commit latency or source-vs-board agreement.
 
@@ -929,7 +1061,7 @@ half-lattice boundary indicators. \\
 Different slow-loop estimators may populate the candidate surface, but all
 paths must expose the same committed \(K,b\) state and the same fast-loop log
 fields.  These fields are sufficient for the software comparisons reported
-here and define the future source-vs-board trace needed for hardware
+here and define the source-vs-board trace needed for hardware
 validation.}
 \label{tab:algorithmic-contract}
 \end{table}
@@ -958,6 +1090,60 @@ for deterministic execution and independent validation.  Its advantage is not
 that affine decoding is globally optimal, but that all more complex estimation
 can be moved outside the fast timing boundary.
 
+The latency budget has two different meanings in this contract.  The
+correction latency is the shot-local delay for wrapping, clipping, matrix-vector
+evaluation and output registration.  The update or commit latency is the delay
+with which a newly estimated \((K,b)\) bank becomes active.  Only the first
+latency lies directly on the per-shot correction path; the second appears as a
+stale-parameter effect and is therefore probed separately by the commit-lag and
+runtime-counter diagnostics.  Separating these two clocks is essential for a
+hardware implementation: a slower CNN, teacher or statistical estimator can be
+acceptable only if its output is staged and committed without perturbing the
+deterministic correction cycle.
+
+The latency expression is meant as a design decomposition rather than a board
+measurement.  A fully parallel implementation can assign four fixed-point
+multipliers to the \(2\times2\) product and reduce the matrix-vector stage to a
+short adder tree plus output registers.  A resource-minimal implementation can
+reuse fewer multipliers across several cycles, increasing
+\(L_{\mathrm{matvec}}\) while reducing DSP use.  Both realizations execute the
+same committed map and can be checked by the same tuple stream.  This is the
+main hardware-facing benefit of the formulation: latency and area can be traded
+by changing the arithmetic schedule without changing the estimator, the
+scientific metric or the source trace.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}@{}}
+\toprule
+Datapath assumption & Parallel schedule & Serialized schedule \\
+\midrule
+Numeric format & Q4.20 fixed-point words, matching the software parity check. &
+Same Q4.20 source-vector format. \\
+\addlinespace
+Multiplier allocation & Four fixed-point multipliers for the \(2\times2\)
+product. & One or two multipliers reused across the four products. \\
+\addlinespace
+Cycle model & Product stage followed by add, bias, clip and register stages;
+clock period not claimed. & More arithmetic cycles, with the same input and
+output tuple stream; clock period not claimed. \\
+\addlinespace
+Active state & Six affine words (\(K,b\)) plus clip thresholds, bank selector
+and status flags. & Same state; lower multiplier footprint changes schedule,
+not protocol state. \\
+\addlinespace
+Validation target & Match source corrections and flags within declared
+fixed-point tolerance. & Same source-vs-board target. \\
+\bottomrule
+\end{tabular}
+\caption{Pre-synthesis datapath assumptions for the affine fast path.  The
+table states the implementation model that motivates the operation-count and
+fixed-point checks.  It is not synthesis, timing closure, resource measurement
+or a board result.}
+\label{tab:presynthesis-datapath-assumptions}
+\end{table}
+
 \subsection{FPGA-facing datapath contract}
 
 The hardware-facing object in this study is a datapath contract, not a
@@ -979,29 +1165,62 @@ performs a bounded sequence of operations: read the active bank, clip the
 wrapped syndrome, compute the two-row affine product, add the bias, quantize
 the displacement and emit status bits.  No histogram update, CNN inference,
 posterior branch search or parameter fitting is required on the correction
-cycle.  This is the practical meaning of the latency advantage claimed here:
+cycle.  This is the practical meaning of the arithmetic-footprint comparison:
 the adaptive computation may be expensive, but it is moved behind a staged
 commit interface rather than placed in the per-shot correction path.
-The contract is deliberately phrased in the same evidence language used by
+
+The contract can also be read as two transactions.  A correction transaction is
+shot-local and consumes only \((s_t,K_t,b_t,\mathrm{bank}_t)\); it returns
+\((\Delta_t,\mathrm{flags}_t)\).  An update transaction is slow-loop-local and
+writes a candidate bank only after clipping, fixed-point range checks and commit
+gating.  This separation is the reason latency, numerical agreement and update
+reliability can be measured independently in a device implementation: the
+fast-path arithmetic can be replayed from source vectors, while the slow path is
+audited through bank transitions and commit acknowledgements.
+
+The same decomposition defines how the design would be tested on an FPGA.  A
+source-level test vector is the tuple
+\[
+    (s_t^{\mathrm{clip}},K_t,b_t,\Delta_t,\mathrm{flags}_t,\mathrm{bank}_t),
+\]
+recorded at the shot boundary before and after a commit.  A board run would be
+asked to replay this tuple stream with the same fixed-point format and to match
+the source correction and status bits within the declared quantization
+tolerance.  This requirement is narrower than an end-to-end decoder benchmark
+but stronger than a schematic hardware claim: it specifies exactly which
+registers, bank selectors, status flags and arithmetic outputs must agree before
+the software contract can support a device-level claim.
+
+This source-vs-board criterion is also the reason the manuscript keeps the
+fast-path object affine.  A neural or wrapped-posterior per-shot datapath would
+require validating many hidden activations, branch scores or nonlinear
+approximations in addition to the final correction.  The affine contract
+reduces the required device check to six active parameters, two clipped inputs,
+two correction outputs and a small set of flags.  The reduction does not make
+the present study a hardware experiment, but it makes the required device
+experiment precisely specified.
+
+The contract is deliberately phrased in the same measurement language used by
 real-time decoder studies.  A hardware claim would require measured latency,
 resource and power numbers, bit-accurate fixed-point agreement and a logged
 source-vs-board trace.  Before those measurements exist, the available support
-is lower level: the affine operation count is \(4\) multiplications and \(4\)
-additions with \(6\) stored state scalars; Q4.20 software emulation shows no
+is software-side and analytical: the affine operation count is \(4\)
+multiplications and \(4\) additions with \(6\) stored state scalars; Q4.20
+software emulation shows no
 residual-boundary crossing-rate change in the controlled sample set; and
 software runtime counters expose commits, fast-cycle violations, overflow and
-saturation.  These checks make the fast path a concrete candidate for a future
-FPGA experiment, but they do not substitute for synthesis or board data.
+saturation.  These checks make the fast path a concrete candidate for an FPGA
+experiment, but they do not substitute for synthesis or board data.
 
 \begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.22\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}@{}}
 \toprule
-Datapath element & Manuscript contract & Current support \\
+Datapath element & Manuscript contract & Supporting analysis \\
 \midrule
 Input state & Wrapped syndrome \(s_t\), clip limits and active-bank selector. &
-Defined by the software fast-loop interface and metric audit. \\
+Defined by the software fast-loop interface and metric definition. \\
 \addlinespace
 Parameter bank & Active and inactive \(K,b\) banks with staged commit and
 rollback events. & Exercised by \softwarehil{} runtime counters only. \\
@@ -1014,13 +1233,13 @@ Output check & Corrected displacement and residual-boundary crossing
 indicator. & Compared in software against the floating-point reference. \\
 \addlinespace
 Device evidence & Timing, resource, power and source-vs-board agreement. &
-Not measured in the present study; required for a hardware claim. \\
+Outside the present study; required for a hardware claim. \\
 \bottomrule
 \end{tabular}
 \caption{FPGA-facing datapath contract for the affine fast path.  The table
-defines what a future board implementation would need to reproduce.  The
-current manuscript supports the interface with software and analytical checks
-only; it does not report synthesis, timing closure or board measurements.}
+defines what a board implementation would need to reproduce.  The
+interface is supported here by software and analytical checks only; the study
+does not report synthesis, timing closure or board measurements.}
 \label{tab:fpga-datapath-contract}
 \end{table}
 
@@ -1102,7 +1321,7 @@ The contract exposes observable quantities: update cadence, stale-parameter
 counters, commit acknowledgements, rollback events, overflow and saturation.
 In this study, these quantities are evaluated only in \softwarehil{} and
 supporting software-runtime checks.  Board-level commit latency,
-source-vs-board agreement and resource use remain unmeasured.
+source-vs-board agreement and resource use are reserved for device validation.
 
 \subsection{Supplementary statistical calibration}
 
@@ -1118,26 +1337,23 @@ manuscript and remains separate from the main \softwarehil{} comparison.
 
 \subsection{Claim-to-test map}
 
-The experiments are organized around four claims, each with a different
-validation burden.  The first claim is empirical: a slow-loop residual branch
-can lower the protocol-defined \finalLER{} of a deterministic affine GKP fast
-path under controlled drift.  This is tested by the predeclared five-mode
-\softwarehil{} benchmark.  The second claim is mechanistic: the advantage is
-consistent with adaptive calibration of a low-dimensional affine surface rather
-than with a single irreplaceable neural architecture.  This is tested by
-feature ablations, six-seed mechanism summaries and the supplementary
-statistical-calibration branch.  The third claim is theoretical and diagnostic:
-the affine rule is a locally meaningful approximation when a branch and
-effective state are fixed, but it is not a global wrapped-posterior decoder.
-This is tested by oracle-affine and wrapped-Gaussian checks.  The fourth claim
-is hardware-facing but not yet hardware-validated: the committed affine path is
-a small datapath that can be subjected to fixed-point, source-vs-board and
-latency measurements.  This is supported only by operation counts,
-software fixed-point parity and a future measurement protocol.
+We evaluate four questions.  First, can a slow-loop residual branch lower the
+protocol-defined \finalLER{} of a deterministic affine GKP fast path under
+controlled drift?  The predeclared five-mode \softwarehil{} benchmark addresses
+this question.  Second, is the effect better understood as adaptive calibration
+of a low-dimensional affine surface than as an irreplaceable neural architecture?
+Feature ablations, six-seed mechanism summaries and the supplementary
+statistical-calibration branch address this question.  Third, when is the
+affine rule a meaningful local approximation, and when should a wrapped
+posterior be distrusted?  Oracle-affine and wrapped-Gaussian checks address this
+question.  Fourth, is the committed affine path small enough to be a concrete
+fixed-point and source-vs-board target?  Operation counts, software fixed-point
+parity and the hardware-measurement plan address this question, while board
+measurements remain outside the present study.
 
-This map is also the claim hierarchy used throughout the study.  A successful
-result on one metric is not treated as support for several stronger endpoints.
-The main benchmark can support a controlled drift ranking, but not
+The evaluation keeps these questions separate.  A successful result on one
+metric is not treated as support for several stronger endpoints.  The main
+benchmark can support a controlled drift ranking, but not
 logical-channel fidelity, statistical significance, real-time FPGA latency or
 end-to-end surface-GKP overhead.  Those stronger claims require the separate
 evidence classes listed in Tables~\ref{tab:metric-readiness}
@@ -1152,7 +1368,36 @@ and the teacher-anchored hybrid residual-\(b\) branch.  All reported main
 rows use the same predeclared scenario matrix and paired-seed/repeat setting.
 This benchmark tests adaptive calibration laws under matched synthetic drift
 trajectories.  It does not test a real FPGA board, a default embedded runtime,
-or unseen drift families.
+or unseen drift families.  It also does not compare against a tuned
+finite-energy nearest-lattice or sequence-level wrapped-posterior GKP decoder;
+the nearest-syndrome, oracle-affine and wrapped-Gaussian rows are diagnostic
+checks for the affine runtime-calibration protocol.
+
+\subsection{Validity controls and threats to inference}
+
+The experimental design uses paired comparisons to reduce avoidable ambiguity
+without overstating the statistical strength of the data.  The main benchmark
+keeps the scenario definitions, random seeds, repeat structure, fast-path
+contract and \finalLER{} definition fixed across all compared modes.  A row is
+therefore interpreted only relative to the same scenario and protocol, rather
+than as an absolute logical error rate for a physical GKP device.  This common
+protocol is important because the method changes the committed affine surface,
+not the physical noise model or the scoring rule.
+
+Three controls are used to make the reported advantage auditable.  First, the
+EKF, UKF, constant-affine, RLS and hybrid branches are compared under the same
+drift trajectories and residual-boundary metric.  Second, the controlled
+nearest-syndrome, oracle-affine and wrapped-Gaussian diagnostics separate three
+failure explanations: a hard nearest-syndrome correction can be locally poor, a
+perfectly informed affine surface has finite headroom, and a simple
+branch-aware posterior rule can itself be brittle under drift.  Third, feature
+ablations and the supplementary statistical-calibration branch test whether the
+observed gain is tied only to a particular CNN estimator or to the broader
+affine commit contract.  These controls strengthen the systems interpretation
+of the result, but they do not remove the main threats to inference: the
+primary table has two repeats per scenario, the drift families are synthetic,
+and the benchmark is still a residual-boundary simulation rather than a
+finite-energy logical-channel or board-level experiment.
 
 \subsection{Comparator ladder and stress-test roles}
 
@@ -1204,7 +1449,7 @@ generalization. \\
 \addlinespace
 Supplementary statistical calibration & Whether the same affine interface can
 be populated by a non-neural estimator. & It supports estimator
-interchangeability, not promotion of statistical calibration as a mature main
+interchangeability, not qualification of statistical calibration as a validated main
 comparator. \\
 \bottomrule
 \end{tabular}
@@ -1225,29 +1470,42 @@ a causal mechanism.
 
 \subsection{Hardware-validation protocol}
 
-Hardware-facing validation is specified as a future-measurement protocol rather
-than as an available result.  A board-level validation study would report the board
-platform, bitstream or firmware hash, AXI/DMA interface, fixed-point format,
-fast-path latency distribution, slow-loop update time, commit acknowledgement
-latency, resource use, power and source-vs-board numerical agreement.  Until
-those measurements exist, hardware is treated as a validation target rather
-than as a completed result.
+Hardware-facing validation is specified as a required measurement protocol
+rather than as an available result.  A board-level validation study would report
+the board platform, bitstream or firmware hash, AXI/DMA interface, fixed-point
+format, fast-path latency distribution, slow-loop update time, commit
+acknowledgement latency, resource use, power and source-vs-board numerical
+agreement.  Until those measurements exist, hardware is treated as a validation
+target rather than as a completed result.
+
+If a later FPGA implementation satisfies this protocol, the supported hardware
+claim would be correspondingly specific.  It would show that the same
+drift-adaptive affine surface can be replayed as a deterministic fixed-point
+datapath, with measured timing, resource, power and commit behaviour.  It would
+not by itself turn the controlled-simulation \finalLER{} ranking into a
+device-level logical-fidelity result, nor would it establish end-to-end
+fault-tolerance for an outer code.  This conditional interpretation keeps the
+hardware advantage tied to the fast-path interface that the manuscript actually
+defines.
 
 \section{Results}
 
-The Results are reported in decreasing order of claim strength.  The first
-layer is the predeclared \softwarehil{} ranking, which is the only layer used
-for the main performance statement.  The second layer is the completed
-single-scenario paired-interval check, which strengthens the
-\texttt{static\_bias\_theta} row but does not generalize to all scenarios.  The
-third layer contains controlled oracle-affine, wrapped-Gaussian, holdout-drift
-and commit-lag diagnostics, which explain estimator limits and drift sensitivity
-without replacing the main benchmark.  The fourth layer contains analytical
-cost, fixed-point software parity and runtime-discipline checks, which support a
-hardware-facing validation target but are not board measurements.  Read in this
-order, the numerical results support an affine-calibration systems method under
-software evidence, while leaving finite-energy channel fidelity, expanded
-statistical robustness and hardware execution as required validation upgrades.
+The Results first report the predeclared \softwarehil{} ranking used for the
+main performance statement.  They then add paired uncertainty summaries and
+two scenario-level paired-repeat comparisons, followed by controlled
+diagnostics that separate estimator limits, drift sensitivity and
+implementation feasibility.
+The final result layers report analytical cost, fixed-point software parity
+and runtime-discipline counters.  Read together, these data support an
+affine-calibration systems method under controlled simulation while leaving
+finite-energy channel fidelity, expanded statistical robustness and hardware
+execution as open validation requirements.
+The experimental logic is cumulative rather than a single-table claim: the
+main ranking establishes the controlled drift signal; paired interval rows test
+two formal-length scenarios; oracle, wrapped-Gaussian, holdout and lag
+diagnostics identify where the affine contract helps or breaks; and the
+fixed-point plus runtime-counter rows test whether the same contract is small
+and observable enough to justify later device validation.
 
 \subsection{Hybrid residual calibration ranks lowest in the predeclared simulation set}
 
@@ -1257,20 +1515,26 @@ runner-up in each case (Table~\ref{tab:main-results}).  Relative to UKF, the
 hybrid branch reduces mean \finalLER{} by 1.75\% in static-bias drift, 2.89\%
 in linear ramp drift, 2.80\% in the step-change scenario and 1.85\% in periodic
 drift, for an average reduction of 2.32\% across the tested set.  This is the
-first rung in the comparator ladder in Table~\ref{tab:comparator-ladder}: it
-compares deployable calibration modes under matched software conditions before
-the later diagnostic baselines test oracle access, posterior branches, holdout
-stress and estimator interchangeability.  The paired
+direct UKF-versus-hybrid comparison under the shared protocol; the later
+diagnostic baselines test oracle access, posterior branches, holdout stress
+and estimator interchangeability.  The paired
 raw rows are directionally consistent across the two available repeats in each
 scenario (Tables~\ref{tab:paired-deltas}, \ref{tab:paired-uncertainty}
 and~\ref{tab:ler-advantage-margin}).
-The result supports the method
-claim that slow-loop residual calibration can improve a deterministic affine
-GKP fast path under the current \softwarehil{} protocol.  The current run
+The result is consistent with a protocol-level improvement from slow-loop
+residual calibration in the tested scenarios.  The main comparison table
 contains two repeats per scenario and mode.  The corresponding standard
 deviations, paired deltas and paired-bootstrap envelope are therefore reported
 only as descriptive uncertainty markers; they should not be interpreted as
 confidence intervals, standard errors or hypothesis-test evidence.
+
+Two scenarios also have completed formal-length paired-interval checks with
+12 paired repeats.  For \texttt{static\_bias\_theta} and
+\texttt{linear\_ramp}, the UKF-minus-hybrid \finalLER{} intervals remain
+positive under both paired-\(t\) and bootstrap summaries
+(Table~\ref{tab:paired-interval-scenarios}).  These rows strengthen the
+scenario-level evidence for the two completed drift families, but they do not
+yet support pooled, all-scenario or holdout claims.
 
 \begin{table}[t]
 \centering
@@ -1288,7 +1552,7 @@ Scenario & EKF & UKF & Const.-\(\mu\) & RLS-\(b\) & Hybrid-\(b\) \\
 \caption{Predeclared four-scenario \softwarehil{} benchmark.  Entries are
 \finalLER{}; lower is better.  The table supports a predeclared-protocol
 \softwarehil{} ranking.  Confidence intervals, formal hypothesis tests and a
-predeclared expanded holdout benchmark remain future evidence requirements.}
+predeclared expanded holdout benchmark remain open validation requirements.}
 \label{tab:main-results}
 \end{table}
 
@@ -1308,7 +1572,7 @@ Scenario & Mean \(\Delta\finalLER{}\) vs UKF & Relative reduction & Minimum pair
 \caption{Paired descriptive UKF-vs-hybrid deltas from the two available repeats
 per scenario.  \(\Delta\finalLER{}\) is UKF minus Hybrid-\(b\), so positive
 values indicate lower \finalLER{} for the hybrid branch.  The table documents
-repeat-level directional consistency in the existing source data; it is not a
+repeat-level directional consistency in the existing supporting data; it is not a
 confidence interval, \(p\)-value or distribution-level robustness test.}
 \label{tab:paired-deltas}
 \end{table}
@@ -1332,18 +1596,18 @@ comparison.  \(\Delta\) is UKF \finalLER{} minus Hybrid-\(b\) \finalLER{} for
 paired repeats, so positive values indicate lower hybrid \finalLER{}.  The
 envelope is a non-inferential paired-bootstrap percentile summary over the
 available repeat-level deltas.  With \(n=2\) per scenario it is reported only
-for source-data transparency and must not be read as a confidence interval,
+as a descriptive summary and must not be read as a confidence interval,
 \(p\)-value, standard error or robustness claim.}
 \label{tab:paired-uncertainty}
 \end{table}
 
-To make the ranking auditable as a magnitude statement rather than only a
+To make the ranking interpretable as a magnitude statement rather than only a
 winner label, we also report the absolute UKF-minus-Hybrid margin and its scale
 relative to the larger of the two reported descriptive standard deviations
-(Table~\ref{tab:ler-advantage-margin}).  This ratio is a source-data readout
-over the current paired rows, not a significance statistic.  It shows that the
-hybrid advantage is larger than the run-to-run descriptive SD reported for the
-two methods in each predeclared scenario, while preserving the same \(n=2\)
+(Table~\ref{tab:ler-advantage-margin}).  This ratio is a supporting-data readout
+over the reported paired rows, not a significance statistic.  It reports that
+the source-row margin exceeds the larger descriptive SD in these rows, without
+implying statistical separation and while preserving the same \(n=2\)
 statistical boundary as the main table.
 
 \begin{table}[t]
@@ -1361,38 +1625,29 @@ Scenario & UKF mean & Hybrid mean & Mean \(\Delta\) & Relative reduction & Posit
 \bottomrule
 \end{tabular}
 }
-\caption{Source-data-backed descriptive UKF-minus-Hybrid advantage margins.
+\caption{Supporting-data-backed descriptive UKF-minus-Hybrid advantage margins.
 \(\Delta\) is UKF \finalLER{} minus Hybrid-\(b\) \finalLER{}; positive values
 therefore indicate lower hybrid \finalLER{}.  The last column divides the mean
 paired margin by the larger reported descriptive SD of the UKF and Hybrid-\(b\)
 rows in the same scenario.  This is an effect-size-style scale readout for
-auditability only and is not a confidence interval, standard error, \(p\)-value,
+diagnostic readability only and is not a confidence interval, standard error, \(p\)-value,
 significance test, expanded benchmark or hardware measurement.}
 \label{tab:ler-advantage-margin}
 \end{table}
 
-A machine-readable benchmark-expansion protocol accompanies these descriptive
-paired rows.  It specifies a Phase A repeat-expanded UKF-versus-Hybrid anchor
-comparison with at least 12 and a target of 16 paired repeats per scenario,
-while retaining the current five-mode table as the anchor result; a Phase B
-holdout lane for random-walk, burst/reset and faster-than-window drift families;
-and a Phase C software-provenance/runtime-reporting layer.  This protocol
-defines future validation requirements; it is not an additional result.  The
-present manuscript still does not report
-inferential intervals, formal hypothesis tests or an executed holdout benchmark.
+A repeat-expanded evaluation protocol is specified for stronger
+statistical claims, but it is not counted as performance evidence in the
+present Results.  The protocol keeps the five-mode table as the anchor,
+requires additional UKF-versus-Hybrid paired rows before all-scenario
+inferential wording, and reserves random-walk, burst/reset and
+faster-than-window families for holdout validation.  The present manuscript
+still does not report formal hypothesis tests or an executed holdout benchmark.
 
-As an execution-coverage rehearsal for this planned expansion, we executed a
-short-run UKF-versus-Hybrid pilot over all four predeclared scenarios with
-paired seeds and two repeats.  The pilot completed all requested rows and
-preserved the same direction as the main benchmark, but it used the shortened
-timing rather than the main benchmark timing.  It is therefore reported only as
-an execution-coverage and missing-row check for the expansion route
-(Table~\ref{tab:runner-smoke-matrix}), not as additional performance evidence.
-The accompanying reproducibility package also includes a command-level
-repeat-expansion plan and a single-scenario, short-run rehearsal with 12 paired
-repeats.  That rehearsal is used only to check command shape, row accounting and
-collector logic under a larger repeat count; it is not used as a manuscript
-performance row or as an inferential uncertainty estimate.
+We also ran a shortened UKF-versus-Hybrid feasibility check over all four
+predeclared scenarios with paired seeds and two repeats.  The check completed
+all requested rows and preserved the same direction as the main benchmark, but
+the shortened timing configuration makes it a field-availability check rather
+than additional performance evidence (Table~\ref{tab:runner-smoke-matrix}).
 
 \begin{table}[t]
 \centering
@@ -1409,10 +1664,10 @@ Scenario & UKF \(\finalLER{}\) & Hybrid \(\finalLER{}\) & \(\Delta\) & Relative 
 \bottomrule
 \end{tabular}
 }
-\caption{Short-run execution-coverage rehearsal for the planned repeat-expanded
+\caption{Short-run protocol check for the specified repeat-expanded
 anchor comparison.  \(\Delta\) is UKF \(\finalLER{}\) minus Hybrid-\(b\)
 \(\finalLER{}\), so positive values indicate lower hybrid \(\finalLER{}\).
-The source run used a shortened configuration
+ The runner check used a shortened configuration
 (\(120\) slow-loop updates and \(4.8\times10^5\) fast cycles), two paired
 repeats and the formal runner over all four predeclared scenarios.  This table
 checks execution coverage and field availability for the expansion route only;
@@ -1430,10 +1685,10 @@ bars show descriptive standard deviations across the two available repeats
 per scenario and mode.  The plot supports a predeclared four-scenario
 \softwarehil{} ranking only.  Paired repeat deltas are provided in
 Table~\ref{tab:paired-deltas}, the descriptive resampling envelope is provided
-in Table~\ref{tab:paired-uncertainty}, and source-data-backed advantage
+in Table~\ref{tab:paired-uncertainty}, and data-backed advantage
 margins are provided in Table~\ref{tab:ler-advantage-margin}; all are bounded
-by the accompanying source data.  Inferential confidence intervals, formal
-hypothesis tests and unseen drift families remain future evidence requirements.}
+by the accompanying supporting data.  Inferential confidence intervals, formal
+hypothesis tests and unseen drift families remain open validation requirements.}
 \label{fig:main-results}
 \end{figure}
 
@@ -1516,8 +1771,11 @@ least one half-lattice boundary.  If this decomposition is treated only as a
 qubit Pauli-channel surrogate, it induces
 \(F_{\mathrm{avg}}^{\mathrm{surr}}=(1+2p_I^{\mathrm{surr}})/3\).  The
 manuscript does not use this quantity as a finite-energy GKP logical-channel
-fidelity; it is included in the source data only to make the relationship
+fidelity; it is included in the supporting data only to make the relationship
 between residual-boundary scoring and fidelity language explicit.
+The point of the table is therefore preventive as much as comparative: it
+shows exactly where the protocol-defined LER proxy stops and where a genuine
+finite-energy channel analysis would have to begin.
 
 Table~\ref{tab:logical-channel-surrogate} reports the safer quantity,
 \(p_{\mathrm{any}}\).  This union rate is related to, but not identical with,
@@ -1570,19 +1828,19 @@ Controlled state & Fixed affine & Oracle affine & Wrapped mean & Wrapped MAP \\
 \texttt{periodic\_high\_phase} & 0.999972 & 0.999972 & 0.999589 & 0.998756 \\
 \bottomrule
 \end{tabular}
-\caption{Surrogate average-fidelity readout derived from the same
+\caption{Pauli-style identity-surrogate readout derived from the same
 residual-boundary event decomposition as Table~\ref{tab:logical-channel-surrogate}.
 Entries are \(F_{\mathrm{avg}}^{\mathrm{surr}}=(1+2p_I^{\mathrm{surr}})/3\),
 with \(p_I^{\mathrm{surr}}=1-p_{\mathrm{any}}\).  The table is included only
-to make the manuscript's fidelity language auditable against source data; it is
-not a finite-energy GKP logical-channel fidelity, process fidelity, hardware
-fidelity or outer-code logical-error estimate.}
+to make the manuscript's channel-language bridge traceable to supporting data;
+it is not a finite-energy GKP logical-channel fidelity, process fidelity,
+hardware fidelity or outer-code logical-error estimate.}
 \label{tab:logical-channel-fidelity-surrogate}
 \end{table}
 
-The same source data can also be read at the method level
+The same supporting data can also be read at the method level
 (Table~\ref{tab:lattice-logical-channel-sanity}).  This aggregation is useful
-for review because it separates the question ``which method has the larger
+because it separates the question ``which method has the larger
 residual-boundary channel surrogate?'' from the per-state event decomposition.
 Across the four controlled local-Gaussian states, the fixed and oracle affine
 rows have the lowest mean \(p_{\mathrm{any}}\), while the wrapped posterior MAP
@@ -1607,7 +1865,7 @@ Wrapped MAP & 0.002129 & \texttt{step\_after\_jump} & 0.006450 & 0.998581 & 0.99
 surrogate.  Values aggregate the same controlled local-Gaussian states and
 source rows as Tables~\ref{tab:logical-channel-surrogate}
 and~\ref{tab:logical-channel-fidelity-surrogate}.  The table is included to
-make the channel-language readout easier to audit; it is not finite-energy GKP
+make the channel-language diagnostic easier to check; it is not finite-energy GKP
 logical-channel fidelity, process tomography, hardware fidelity or an
 outer-code logical-error estimate.}
 \label{tab:lattice-logical-channel-sanity}
@@ -1715,8 +1973,8 @@ one-step wrapped-Gaussian posterior references.
 The holdout stress test is informative because the half-lattice crossing proxy
 is rare in these controlled samples.  The affine rows have the same observed
 crossing rate within each holdout scenario, so residual MSE is the more
-sensitive stress-test statistic.  The same source data also report a
-residual-boundary Pauli-style average-fidelity surrogate; the oracle-affine
+sensitive stress-test statistic.  The same supporting data also report a
+residual-boundary Pauli-style identity surrogate; the oracle-affine
 values remain near unity because crossings are rare, but this is still not a
 finite-energy logical-channel fidelity.  Oracle affine gives the lowest
 residual MSE in all three holdout families
@@ -1763,7 +2021,7 @@ estimate.}
 \label{tab:holdout-drift-stress}
 \end{table}
 
-The same diagnostics can be read as a local-validity audit for the affine
+The same diagnostics can be read as a local-validity check for the affine
 approximation (Table~\ref{tab:affine-local-validity}).  The short-sequence
 rows ask whether an oracle affine surface has residual-MSE headroom over a
 fixed nominal surface, and whether a naive wrapped-Gaussian posterior mean
@@ -1773,7 +2031,7 @@ term, measured as lagged-affine residual MSE minus oracle-affine residual MSE.
 This view is intentionally diagnostic: it supports the claim that affine
 calibration has a local validity regime and identifiable failure modes, while
 leaving a formal nearest-lattice, known-noise or wrapped-decoder benchmark as a
-future requirement.
+required validation step.
 
 \begin{table}[t]
 \centering
@@ -1852,7 +2110,7 @@ logical-channel fidelity.}
 \subsection{Analytical operation counts quantify the fast-path cost argument}
 
 The cost advantage of the affine fast path is an analytical datapath argument,
-not yet a measured FPGA-timing result.  The count assumes a two-quadrature
+not a measured FPGA-timing result.  The count assumes a two-quadrature
 syndrome input, a \(2\times 2\) affine matrix, one bias vector, a single active
 parameter bank and one correction per fast-loop shot.  It counts arithmetic and
 small-state storage on the latency-critical path, while excluding the slow-loop
@@ -1864,10 +2122,12 @@ reference increases the multiplication count by 12.25-fold and the stored
 state by 5.5-fold, while a posterior-mean reference requires softmax-like
 nonlinear operations in addition to a larger arithmetic footprint.  This
 comparison supports the design choice to keep posterior or learned estimation
-outside the latency-critical correction path.  It does not claim timing
-closure, resource use, power or source-vs-board agreement.  Together with
+outside the latency-critical correction path.  The cost model is a
+candidate-selection argument for the hardware path, not a hardware
+measurement.  It does not claim timing closure, resource use, power or
+source-vs-board agreement.  Together with
 the fixed-point and runtime-counter checks below, it provides the software
-evidence currently available for the datapath contract in
+evidence available for the datapath contract in
 Table~\ref{tab:fpga-datapath-contract}.
 
 \begin{table}[t]
@@ -1930,7 +2190,7 @@ closure, source-vs-board agreement or hardware validation.}
 The same \softwarehil{} comparison records runtime counters for commit activity,
 cycle violations, overflow and saturation.  These counters do not measure board
 latency or hardware reliability, but they make the stage-and-commit contract
-auditable in the software protocol.  Across the scenario-level comparison rows,
+observable in the software protocol.  Across the scenario-level comparison rows,
 each mode applied about \(900\) commits on average, slow-update violations were
 zero, correction saturation was zero, and the observed overflow rate was
 approximately \(2.5\times10^{-3}\), dominated by histogram-input saturation
@@ -1953,8 +2213,8 @@ RLS Residual-B & 899.8 & 0 & 0.0000158 & 0.002538 & 0 \\
 UKF & 899.8 & 0 & 0.0000158 & 0.002571 & 0 \\
 \bottomrule
 \end{tabular}
-\caption{Software runtime-discipline counters averaged across scenario-level
-comparison rows.  The table reports software-in-the-loop commit counts,
+\caption{Controlled-simulation runtime-discipline counters averaged across scenario-level
+comparison rows.  The table reports controlled-simulation commit counts,
 slow-update violation rate, fast-cycle violation rate, overflow rate and
 correction-saturation rate.  It supports software observability of the
 stage-and-commit contract only; it is not board commit latency, hardware
@@ -1970,8 +2230,8 @@ analytical multiplication and addition counts compare the affine rule with
 one-step wrapped-Gaussian references.  Middle: Q4.20 software fixed-point
 emulation shows small p99 correction differences and no observed
 residual-boundary crossing-rate change in the controlled sample set.  Right:
-software-in-the-loop runtime counters make overflow and fast-cycle violations
-visible under the current protocol.  The figure summarizes source-data-backed
+controlled-simulation runtime counters make overflow and fast-cycle violations
+visible under the reported protocol.  The figure summarizes data-backed
 software checks; it is not FPGA synthesis, timing closure, power/resource
 measurement, source-vs-board agreement or board commit latency evidence.}
 \label{fig:validation-contract}
@@ -1987,7 +2247,7 @@ no-teacher-parameters row has the best four-scenario average.  The result
 therefore does not support a simple claim that teacher parameters are
 necessary or always beneficial.  It supports a weaker but more credible
 interpretation: the residual calibration design is sensitive to feature
-composition, and the current mechanism remains descriptive.
+composition, and the mechanism evidence remains descriptive.
 
 \begin{table}[t]
 \centering
@@ -2028,7 +2288,7 @@ The six-seed mechanism pack indicates that an instability pattern appears
 across multiple seeds, but the tested lower-clip intervention is mixed and
 mostly harmful (Table~\ref{tab:mechanism}).  This result is valuable because
 it prevents an over-simple mechanism story.  Residual amplitude and committed
-bias dynamics may participate in failures, but the current intervention does
+bias dynamics may participate in failures, but the reported intervention does
 not show that lowering the residual clip is a general fix.
 
 \begin{table}[t]
@@ -2060,7 +2320,9 @@ protocol rather than under the predeclared main ranking protocol
 answer a different question: whether a non-neural estimator can populate the
 committed \((K,b)\) surface at all.  They should therefore be read as
 contract evidence, not as evidence that the neural branch was beaten in a fair
-main-table comparison.  A mature comparator claim would require a single
+main-table comparison.  The absolute values in this extension are not
+comparable to the main ranking because candidate generation and protocol
+generation differ.  A fully matched comparator claim would require a single
 predeclared protocol that fixes candidate generation, selection, repeats,
 uncertainty handling and reporting before seeing the outcomes.
 
@@ -2080,9 +2342,10 @@ Scenario & UKF & Hybrid-\(b\) & StatCalib extension (not matched) \\
 \caption{Supplementary statistical-calibration analysis.  The table documents
 a separate estimator-protocol observation.  Because candidate generation and
 selection are not matched to the main ranking protocol, these rows support the
-affine contract but do not establish a mature comparator or unique clean
-threshold.  They are not a fair main-table ranking because candidate generation
-and selection were not matched to the main protocol.}
+generality of the affine interface but do not establish a fully matched
+comparator, a unique clean threshold or a fair main-table ranking.  The
+absolute values are not comparable to the main ranking because candidate
+selection and protocol generation differ.}
 \label{tab:statcalib}
 \end{table}
 
@@ -2093,72 +2356,76 @@ and selection were not matched to the main protocol.}
 UKF, hybrid-\(b\) and the statistical-calibration values already listed in
 Table~\ref{tab:statcalib}.  The result supports the broader affine calibration
 contract, but it must remain separate from the main comparison because it was
-not generated under the same predeclared ranking protocol.}
+not generated under the same predeclared ranking protocol; the absolute values
+should not be interpreted as a matched win over the main hybrid branch.}
 \label{fig:statcalib}
 \end{figure}
 
 \subsection{Required hardware and deployment measurements}
 
-The current manuscript does not contain real-board execution results.  The
-available deployment-adjacent material supports only two narrower statements:
-selected preserved \texttt{.tflite} artifacts have executed in one isolated
-local software runtime, and no board path or device measurement is
-available.  Table \ref{tab:hardware-plan} defines the hardware
-measurements that a later experiment must fill.
+The present manuscript does not contain real-board execution results.  The
+available deployment-adjacent material supports only one narrow runtime
+statement: selected preserved \texttt{.tflite} files executed in an
+isolated software runtime.  Board execution, timing, resource, power and
+source-vs-board measurements are absent from this study.
+Table~\ref{tab:hardware-plan} defines the hardware measurements required for an
+implementation-stage evaluation.
 
 \begin{table}[t]
 \centering
 \small
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}p{0.34\linewidth}@{}}
 \toprule
-Hardware-facing item & Current manuscript status & Required future evidence \\
+Hardware-facing item & Manuscript treatment & Evidence needed for hardware claims \\
 \midrule
-Board platform and host & \plannedmeasurement{board not connected} & Linux + FPGA host,
+Board platform and host & \hardwareclaimrequired{} & Linux + FPGA host,
 device path, permissions, board model and driver version. \\
 \addlinespace
-Bitstream / RTL / DMA interface & \plannedmeasurement{measurement not yet run} & Bitstream hash,
+Bitstream / RTL / DMA interface & \hardwareclaimrequired{} & Bitstream hash,
 AXI map, DMA histogram shape, element width and timeout policy. \\
 \addlinespace
-Fast-path latency & \plannedmeasurement{measurement not yet run} & p50/p95/p99 and worst-case
+Fast-path latency & \hardwareclaimrequired{} & p50/p95/p99 and worst-case
 cycles for \(Ks+b\), clipping and bank selection. \\
 \addlinespace
-Commit latency and reliability & \plannedmeasurement{measurement not yet run} & stage, commit,
+Commit latency and reliability & \hardwareclaimrequired{} & stage, commit,
 acknowledgement, rollback and stale-parameter counters. \\
 \addlinespace
-Resource and power & \plannedmeasurement{not measured} & LUT/FF/DSP/BRAM, clock
+Resource and power & \hardwareclaimrequired{} & LUT/FF/DSP/BRAM, clock
 frequency, timing closure and power. \\
 \addlinespace
-Source-vs-board agreement & \plannedmeasurement{not measured} & fixed-point
+Source-vs-board agreement & \hardwareclaimrequired{} & fixed-point
 agreement between software reference and board output on shared test vectors. \\
 \bottomrule
 \end{tabular}
-\caption{Hardware-measurement requirements.  These entries are requirements
-for future validation, not current results.}
+\caption{Hardware-measurement requirements.  These entries define the
+implementation-stage evidence required before hardware claims can be made;
+they are not results of the present study.}
 \label{tab:hardware-plan}
 \end{table}
 
 \section{Discussion}
 
-The present results support affine calibration as a systems structure for
-drift-adaptive GKP decoding.  The strongest main-table evidence is not an
-unrestricted decoder comparison; it is the predeclared ranking of a hybrid
-residual branch under a controlled \softwarehil{} protocol.  Because scoped
-ablations show that teacher-parameter removal can be competitive and
-statistical calibration can populate the same interface, the result should be
-read as evidence for the affine calibration contract rather than for
-teacher-parameter necessity.  This positions the contribution between two
-established lines of work: soft-information GKP decoding, which exploits
-analog syndrome structure, and real-time hardware decoders, which require
-bounded latency and verifiable datapaths.  The distinctive design choice here
-is to let the slow loop absorb nonstationary syndrome statistics while the
-per-shot path remains a small affine matrix-vector update.
+The present results support a specific systems claim for drift-adaptive GKP
+decoding: nonstationary syndrome statistics can be converted into updates of a
+physical-layer affine correction surface while the per-shot correction remains
+deterministic.  The main evidence is the predeclared ranking of the hybrid
+residual branch under a controlled \softwarehil{} protocol.  Scoped ablations
+and the supplementary statistical-calibration analysis sharpen the
+interpretation.  Teacher features, histogram dynamics and estimator choice
+affect the result, but the object that persists across these variants is the
+committed affine surface consumed by the fast path.  This places the work
+between soft-information GKP decoding, which exploits analog syndrome
+structure, and real-time hardware decoding, which requires bounded latency and
+verifiable datapaths.  The distinctive design choice is the separation of
+roles: the slow loop absorbs nonstationary statistics, while the correction
+cycle evaluates only a small affine matrix-vector update.
 
-The supplementary statistical-calibration analysis sharpens this
-interpretation.  If a simple non-neural estimator can be strong under the same
-runtime contract, the scientific object is the contract itself: recent
-syndrome statistics update a low-dimensional affine surface that the fast path
-can consume safely.  The CNN branch is one useful slow-loop estimator, not the
-only possible estimator and not yet a final comparator.
+The supplementary statistical-calibration analysis reinforces this reading from
+the opposite direction.  If a simple non-neural estimator can be strong under
+the same runtime contract, the scientific object is the contract itself:
+recent syndrome statistics update a low-dimensional affine surface that the
+fast path can consume safely.  The CNN branch is one useful slow-loop
+estimator, not the only possible estimator and not a final comparator.
 
 Several alternative explanations are therefore constrained, but not eliminated.
 The paired rows and advantage-margin readout show that the UKF-versus-hybrid
@@ -2174,14 +2441,16 @@ interpretation too strong: feature design, histogram dynamics and the affine
 commit contract remain part of the effect.  The residual-boundary channel
 surrogate also rules out a purely notational fidelity claim, because it states
 exactly which q/p half-lattice crossing events are being counted and which
-finite-energy channel quantities are not measured.  Finally, the oracle and
+finite-energy channel quantities remain outside the analysis.  Finally, the oracle and
 wrapped-Gaussian checks indicate that a local posterior-style rule is not an
 automatic replacement for the affine contract under drift, while also showing
 that stronger known-noise and sequence-level baselines remain necessary before
 making a broad decoder-comparison claim.
 
-The claimed advantage is therefore an interface-level advantage, supported by
-three linked but non-substitutable tests.  First, the software benchmark tests
+The supported claim is therefore an interface-level design trade-off, grounded
+in the falsification-oriented design logic of
+Table~\ref{tab:falsification-design} and in three linked but
+non-substitutable tests.  First, the software benchmark tests
 whether recent syndrome statistics can improve the protocol-defined
 \finalLER{} of a deterministic correction surface under drift.  Second, the
 residual-boundary channel surrogate tests whether that same improvement can be
@@ -2197,19 +2466,67 @@ are not hardware results: board timing, resource use, power, commit
 reliability and source-vs-board vectors remain to be measured.
 
 The numerical scale of adjacent work clarifies the comparison rather than
-changing this evidence level.  Calibration-conditioned and learned decoders
-report real-processor LER reductions, large calibration data sets and
-microsecond-scale neural latency anchors; real-time hardware decoders report
-nanosecond-to-sub-microsecond decoding or feedback paths, lookup-memory
-compression, device scale, area, power and cycle budgets.  Those numbers are
-not baselines for the present software study.  They set two requirements for a
-future stronger version of this work.  First, the affine fast path must be
-measured on a device against the same timing, resource, power and
-source-vs-board standards used in hardware-decoder papers.  Second, the
-scientific value of keeping learning in the slow loop must be judged by whether
-it preserves drift adaptation while avoiding a per-shot neural datapath.  The
-present manuscript supports that architecture-level hypothesis, not the
-hardware claim itself.
+changing the supported claim.  Drift-aware graph reweighting and decoder-prior
+optimization have already shown that calibration can produce large gains:
+DGR reports a \(3.6\times\) average mismatch-LER reduction and much larger
+worst-case improvements under drifted correlated noise, while experimental
+prior optimization reports \(48\%\), \(16\%\) and \(3.3\%\) LER improvements in
+different calibrated-decoder settings \cite{dgr2023,sivak2024}.  These numbers
+make calibration a serious comparator rather than a rhetorical motivation.
+The distinction here is the calibrated object: instead of updating an
+outer-code graph, prior table or full neural decoder state, the slow loop
+commits a two-quadrature physical correction surface \((K,b)\).  Calibration-conditioned learned decoders report
+large experimental data sets, up to 11.11-fold LER reduction on recalibrated
+chains and folded-FiLM latencies of about \(85\)--\(95\,\mu\mathrm{s}\)
+\cite{stein2026}; AI pre-decoders report sub-step runtimes such as
+\(38.78\,\mu\mathrm{s}\) \cite{chamberland2026}.  Real-time hardware decoders
+set a different standard: lookup-table decoders report \(28\)--\(42\) ns
+online latency with compressed memory \cite{lilliput2022}, distributed FPGA
+surface-code decoding has been reported at \(11.5\) ns per measurement round
+\cite{helios2023}, and integrated neural FPGA decoding has reported a
+\(550\) ns closed-loop path with \(124\) ns neural decoding in a 17-qubit
+surface-code experiment \cite{yang2026}.  These values are not normalized
+baselines for the present software study.  They define the external measurement
+standard for the proposed affine fast path: a stronger hardware version of this
+work must report board latency, resource and power, source-vs-board agreement
+and commit reliability while preserving the scientific separation between
+slow-loop adaptation and the per-shot affine correction.
+
+This distinction is the main comparative trade-off of the present formulation.
+Relative to analog GKP and surface-GKP decoders, the method does not attempt to
+replace the outer-code likelihood engine.  It supplies a physical-layer
+calibration surface whose state can be logged, clipped and committed.  Relative
+to calibration-conditioned neural decoders, it does not place the learned model
+on the per-shot path; the online computation remains a deterministic affine
+correction even when the committed parameters were produced by a CNN, a teacher
+anchor or a statistical estimator.  Relative to hardware-tailored FPGA decoders,
+it does not report measured device latency, but it does provide a smaller
+and more directly replayable target for source-vs-board validation.  The
+present data therefore support an interface-level design trade-off rather than a
+single universal advantage: controlled-drift adaptation is paired with a
+bounded arithmetic footprint, fixed-point-checkable numerical behaviour and a
+traceable parameter-bank contract, while measured hardware advantage remains
+untested.  The same affine contract also separates the latency-area
+trade-off from the estimator design: parallel multipliers and serialized
+multipliers implement the same committed map and can be validated against the
+same source trace.
+The verification target is smaller for the same reason the online datapath is
+smaller.  A board implementation would need to reproduce six affine parameters,
+two clipped syndrome inputs, two correction outputs and a bounded set of status
+flags at each shot boundary.  A per-shot neural or wrapped-posterior datapath
+would also require validating hidden activations, branch scores or nonlinear
+approximations.  The expected advantage is therefore not only fewer arithmetic
+operations, but a narrower object for bit-accurate replay and failure analysis.
+This reading also explains why the manuscript keeps four metrics side by side
+instead of collapsing them into one score.  The \finalLER{} rows test whether
+the affine surface reduces the protocol-defined error proxy under drift; the
+residual-boundary surrogate prevents that proxy from being overstated as
+finite-energy channel fidelity; the operation-count and fixed-point rows test
+whether the online rule is small enough for a real-time datapath; and the
+calibration rows test whether more than one estimator can populate the same
+committed interface.  The joint claim is an interface-level one: adaptation,
+cost and traceability improve together only because the fast path remains a
+low-dimensional affine correction.
 
 \begin{table}[t]
 \centering
@@ -2234,9 +2551,18 @@ Addresses a physical-layer GKP correction surface rather than only
 outer-code graph weights, decoder priors or message-passing reliabilities. &
 Repeat-expanded holdout benchmark. \\
 \addlinespace
+Calibration object &
+The committed runtime state is the low-dimensional \((K,b)\) affine surface,
+not a full per-shot neural decision rule or an outer-code edge-weight table. &
+Keeps the adaptation target closer to the analog GKP displacement operation
+than graph reweighting, prior optimization or calibration-conditioned neural
+decoding. &
+Matched device-derived calibration traces. \\
+\addlinespace
 Cost and verifiability &
 The affine count is \(4\) multiplications, \(4\) additions and \(6\) stored
-state scalars per shot, with Q4.20 software parity under controlled samples. &
+state scalars per shot, with Q4.20 software parity under controlled samples;
+parallel or serialized multiplier schedules preserve the same source trace. &
 Gives a smaller source-vs-board verification target than a branch-aware
 posterior rule or a per-shot neural decoder. &
 Synthesis, resource and power reports. \\
@@ -2257,7 +2583,7 @@ for this implementation. &
 Device logs, bitstream/RTL hash and board vectors. \\
 \bottomrule
 \end{tabular}
-\caption{Supported comparative advantage and the evidence needed to strengthen
+\caption{Supported design trade-off and the evidence needed to strengthen
 each claim.  The table summarizes what is established by the present software
 and analytical evidence, how that differs from adjacent GKP, learned-decoder and
 real-time-decoder work, and what would be required before making stronger
@@ -2265,63 +2591,46 @@ hardware or channel-level claims.}
 \label{tab:supported-advantage}
 \end{table}
 
-A successful FPGA experiment would therefore strengthen a specific physical
-interface claim, rather than simply add a hardware label to the present
-software result.  The decisive measurements would be whether the same committed
-\((K,b)\) banks reproduce the source-level affine corrections bit-accurately,
-whether the fast path meets the control-cycle latency budget with timing
-headroom, and whether the resource and power cost remain small compared with a
-per-shot neural or posterior-branch decoder.  If those conditions are met, the
-main advantage over adjacent learned-decoder and real-time-decoder work would
-be a separation of roles: adaptation occurs in the slow calibration layer,
-where richer statistics or learned estimators can be used, whereas the
-latency-critical correction remains a deterministic physical displacement
+A successful FPGA experiment would therefore strengthen three specific physical
+interface claims, rather than simply add a hardware label to the present
+software result.  First, bit-accurate source-vs-board replay would show that
+the committed \((K,b)\) banks define a reproducible physical displacement
+surface.  Second, measured fast-path and commit latency would test whether
+slow-loop adaptation can be kept outside the control-cycle boundary.  Third,
+resource, power and fault-log measurements would test whether the small affine
+state is cheaper to audit than a per-shot neural or posterior-branch datapath.
+If those conditions are met, the main advantage over adjacent learned-decoder
+and real-time-decoder work would be a measured separation of roles: richer
+statistics or learned estimators may operate in the calibration layer, whereas
+the latency-critical correction remains a deterministic physical displacement
 rule.  Such a result would still not by itself prove a surface-code threshold,
 finite-energy logical-channel fidelity or broad holdout robustness, but it
-would turn the current affine-contract argument into a measured real-time
-calibration interface.
+would convert the affine-contract argument into a tested real-time calibration
+interface.
 
-Several limitations are material for review.  First, the drift evidence is
-still not a formal expanded benchmark.  The random-walk, burst/reset and
-faster-than-window stress tests reduce the unseen-drift gap, but they use a
-controlled known-state stress protocol rather than the trained residual branch
-under a predeclared holdout benchmark.  Second, the one-step and short-sequence
-nearest-syndrome/oracle/wrapped-Gaussian checks separate part of the estimator
-error, direct hard-correction risk and local affine model from posterior-branch
-effects.  They show that neither a direct wrapped-syndrome correction nor a
-naive wrapped-posterior rule is automatically stronger across drift states.
-They remain controlled local-Gaussian analyses, not formal benchmark
-baselines; fully tuned known-noise affine, nearest-lattice and sequence-level
-wrapped-Gaussian benchmark protocols are still missing.  Third,
-the current metric is not a logical-channel fidelity or process-infidelity
-estimate, so it cannot be compared directly with channel-level GKP analyses.
-The next validation step for that class of claim would be to report
-finite-energy logical-channel probabilities or channel infidelity under a
-specified physical channel, rather than reusing the residual-boundary
-surrogate.
-Fourth,
-the current main-result figure reports means with descriptive standard
-deviations and a descriptive paired-bootstrap envelope from only two repeats,
-not confidence intervals or paired significance tests.  Fifth, the
-hardware-facing path remains unvalidated:
-latency, resource,
-commit reliability and source-vs-board agreement are not yet measured.  Finally,
-training reproducibility and default-environment runtime portability are not
-closed by the current evidence.
+The scope of inference follows directly from this decomposition.  The drift
+claim is strongest inside the predeclared four-scenario \softwarehil{} table
+and the two completed 12-pair scenario checks.  The random-walk, burst/reset
+and faster-than-window stress tests broaden the diagnostic picture, but they
+use controlled known-state drift families rather than a trained-branch holdout
+benchmark.  The nearest-syndrome, oracle-affine and wrapped-Gaussian checks
+separate estimator error, hard-correction risk and local affine validity, but
+they do not constitute a full nearest-lattice or sequence-level known-noise benchmark.
+The residual-boundary surrogate gives channel-language bookkeeping for q/p
+half-lattice crossings, not finite-energy logical-channel fidelity.
 
-These limitations define the scope of inference.  A stronger evidence package would
-upgrade the descriptive paired envelope into repeat-expanded or inferential
-uncertainty estimates, add one or more theoretical baselines, provide
-trained-branch holdout validation under a predeclared expanded protocol,
-repeat-expanded source data and row-level historical-run provenance audit,
-and either bit-accurate fixed-point measurements or real-board
-timing/resource results.  If the FPGA path later
-succeeds, the physical advantage to test is concrete: an
-operation-count-light affine fast path, pending synthesis and resource
-measurement, with source-vs-board agreement, bounded update latency and
-measured timing headroom relative to a full per-shot learned decoder.  Until
-then, the appropriate manuscript positioning is a simulation-first
-quantum-engineering systems method.
+These limitations define the validation required for stronger claims.
+Statistically, the descriptive paired envelope should be replaced by
+repeat-expanded or inferential uncertainty estimates across all drift
+scenarios.  Algorithmically, known-noise affine, nearest-lattice and
+sequence-level wrapped-Gaussian baselines should be run under the same
+predeclared protocol.  Physically, finite-energy logical-channel probabilities
+or channel infidelity should be estimated under specified noise channels before
+making fidelity-level claims.  For hardware, the decisive evidence would be
+bit-accurate source-vs-board agreement, measured fast-path and commit latency,
+synthesis/resource reports and power measurements.  Until those layers are
+added, the manuscript supports a controlled-simulation quantum-engineering
+systems method rather than a deployment result.
 
 \section{Conclusion}
 
@@ -2331,7 +2640,7 @@ small affine rule \(\Delta_t=K_t s_t+b_t\) while updating the affine
 parameters from recent syndrome statistics in a slower loop.  Under a
 predeclared four-scenario \softwarehil{} protocol, the main-table hybrid
 residual branch has the lowest mean \finalLER{} in all tested scenarios.
-The current formal repeat-expanded evidence is narrower: 12-paired-repeat
+The formal repeat-expanded evidence is narrower: 12-paired-repeat
 \texttt{static\_bias\_theta} and \texttt{linear\_ramp} checks support positive
 scenario-level UKF-minus-hybrid intervals, while the remaining scenarios still
 require the same treatment before broad interval wording is justified.
@@ -2345,50 +2654,161 @@ wrapped posterior does not dominate in either one-step or short-sequence
 settings.  A supplementary statistical-calibration analysis further supports
 the affine-contract view, while remaining separate from the main comparison.
 
-These results establish a simulation-first systems method, not a completed
-hardware demonstration.  The contribution is the combination of a GKP
+Together, these results define a controlled-simulation systems method for
+drift-adaptive GKP correction.  The contribution is the combination of a
 physical-layer calibration target, a deterministic low-cost fast path and a
-validation ladder that separates LER proxy, channel-language surrogate,
-software arithmetic and future board measurements.  Hardware measurements,
-default runtime portability, expanded drift coverage, stronger baselines and
-statistical confidence intervals remain required before deployment-level or
-broad benchmark claims can be made.
+metric hierarchy that separates LER proxy, channel-language surrogate, software
+arithmetic and hardware-stage measurements.  The distinctive advantage,
+relative to adjacent soft-information, learned-decoder and FPGA-decoder work,
+is the separation of adaptation from the latency-critical correction: the slow
+loop may use richer statistics or learned estimators, whereas the fast loop
+remains a small affine displacement rule that can be quantized, replayed and
+verified.  The present manuscript therefore establishes an interface-level
+claim: adaptive GKP calibration can improve a controlled drift benchmark while
+preserving a fast-path object suitable for fixed-point replay and later board
+measurement.  Deployment-level and broad benchmark claims remain outside that
+claim until measured device timing and resource use, independent runtime
+portability, expanded drift coverage, stronger baselines and repeat-expanded
+uncertainty estimates are available.
 
 \section{Outlook}
 
-Future validation should proceed along three axes.  First, statistical
-benchmark expansion should add repeat-expanded uncertainty estimates,
-trained-branch holdout drift families and formal known-noise affine,
+The validation programme implied by these data has three axes.  First,
+statistical benchmark expansion should add repeat-expanded uncertainty
+estimates, trained-branch holdout drift families and formal known-noise affine,
 nearest-lattice or sequence-level wrapped-Gaussian baselines under a
 predeclared protocol.  Second, physics and channel validation should test the
 lattice constant, syndrome wrap interval, logical boundary and \finalLER{}
 definition before using finite-energy logical-channel simulations to support
-channel-level fidelity claims.  Third, hardware validation should replace
-requirements with board data only after a future experiment records device
-paths, bitstream or RTL hashes, DMA or MMIO evidence, latency distributions,
-resource use, power and source-vs-board numerical agreement.  Together, these
-studies would test whether the affine calibration contract remains
-advantageous beyond the present \softwarehil{} setting.
+channel-level fidelity claims.  Third, hardware validation should replace the
+present interface specification with board data: device paths, bitstream or RTL
+hashes, DMA or MMIO evidence, latency distributions, resource use, power,
+commit reliability and source-vs-board numerical agreement.  These studies
+would determine whether the affine calibration contract remains advantageous
+beyond the present \softwarehil{} setting.
 
 \appendix
 
-\section*{Appendix overview}
+\section*{Supplementary reporting overview}
 
-The main text ends with the Outlook.  The appendices collect source-data
-routing, validation-scope tables, reproducibility limits and terminology
-controls that make the evidence auditable.  They do not introduce stronger
-empirical claims than the Results and Discussion; instead, they identify the
-evidence class, source artifact and remaining validation requirement for each
-claim surface.
+The supplementary sections collect reporting details that make the manuscript
+traceable without expanding the empirical claims made in the Results and
+Discussion.  They specify the data classes, protocol definitions, terminology,
+figure inputs and additional measurements needed before stronger statistical,
+channel-level or hardware conclusions could be drawn.
+
+\section{Supplementary Literature Metric Crosswalk}
+
+The following tables record the representative external metrics used to orient
+the related-work comparison in the main text.  They are comparison anchors, not
+normalized baselines or results generated by this study.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.19\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.35\linewidth}@{}}
+\toprule
+Comparison axis & Representative prior-work metrics & Relevance to this paper \\
+\midrule
+Analog GKP information &
+Analog syndrome decoding has been reported to lower required squeezing from
+about \(16.0\) dB to \(9.8\) dB in surface-GKP settings
+\cite{fukui2018,noh2020}. &
+The present work does not claim novelty in analog information.  It uses recent
+analog histograms to update a low-dimensional affine correction surface. \\
+\addlinespace
+Calibration-aware QEC &
+Prior calibration and drift-aware graph updates report gains ranging from
+percentage-level prior improvements to multi-fold mismatch reductions
+\cite{dgr2023,chen2022,sivak2024}. &
+The calibrated object here is the physical-layer \((K,b)\) surface consumed by
+the fast GKP correction path, not only an outer-code graph weight or decoder
+prior. \\
+\addlinespace
+Logical-error and overhead targets &
+Surface-GKP studies report logical-failure and overhead targets such as
+\(0.87\%\) to \(0.36\%\) CNOT-failure reduction, \(9.9\) dB threshold behavior,
+and \(291\) modes plus \(97\) qubits versus \(1457\) bare qubits for a matched
+low-failure target \cite{noh2022}. &
+The present metric is narrower: it is a protocol-defined q/p boundary-crossing
+proxy, not the same endpoint as prior-work LER or logical-failure rates.  The
+result should therefore be read as a front-end calibration result, not as an
+end-to-end surface-GKP overhead claim. \\
+\addlinespace
+Logical-channel fidelity and infidelity &
+Approximate-GKP analyses report logical-channel probabilities, loss-channel
+infidelity and near-optimal loss/amplification performance as channel-level
+figures of merit \cite{jafarzadeh2025,hastrup2023,zheng2024}. &
+This manuscript reports a residual-boundary Pauli-channel-style
+surrogate derived from q/p half-lattice crossings, but not finite-energy
+logical-channel fidelity or process infidelity.  Fidelity-level claims would
+require channel-specific simulation, logical-channel probability estimates or
+process-infidelity reconstruction under a specified physical channel. \\
+\bottomrule
+\end{tabular}
+\caption{External GKP and calibration comparison axes.  The cited values are
+representative reported metrics from adjacent work, not normalized baselines
+for this study.  They position the contribution and the validation required
+without treating incompatible metrics as results of this manuscript.}
+\label{tab:external-comparison}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.19\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.35\linewidth}@{}}
+\toprule
+Comparison axis & Representative prior-work metrics & Relevance to this paper \\
+\midrule
+Real-device learned decoding &
+Learned decoders have reported real-processor LER reductions using large
+experimental and synthetic data sets \cite{bausch2024,stein2026}. &
+The present manuscript does not report real-processor learned-decoder LER.  It
+uses software drift scenarios to test whether a learned slow loop can populate
+a deterministic affine surface. \\
+\addlinespace
+Structured neural and soft decoders &
+Bosonic/GKP-like neural decoders, neural matching-weight predictors and
+hardware soft-information decoders provide related routes to improved LER or
+thresholds \cite{wang2022,peled2026,hanisch2026}. &
+The present work does not claim novelty in neural decoding or soft information.
+Its distinction is that the neural component is confined to slow calibration
+of the affine physical correction surface. \\
+\addlinespace
+Runtime pre-decoders and calibration-conditioned latency &
+AI pre-decoders and calibration-conditioned decoders report runtime anchors
+such as \(38.78\,\mu\mathrm{s}\) sub-step decoding or \(85\)--\(95\,\mu\mathrm{s}\)
+folded FiLM latency \cite{chamberland2026,stein2026}. &
+The latency argument in this manuscript is analytical and software-emulated.  A
+device study must measure the affine fast path directly rather than borrow these
+per-shot neural latency values. \\
+\addlinespace
+Real-time FPGA decoders &
+Hardware decoders report deployment metrics such as \(28\)--\(42\) ns lookup
+latency and compressed lookup memory \cite{lilliput2022}, \(11.5\) ns per
+measurement round \cite{helios2023}, sub-\(\mu\)s round or feedback timing
+\cite{caune2024,ziad2024,maurer2025}, 550 ns closed-loop latency and
+QPU-feedback integration \cite{yang2026}, and scale, memory, area and power
+figures \cite{collision2025}. &
+These works define the standard for hardware claims.  This manuscript only
+specifies the required hardware measurement surface until the same classes of
+timing, resource and source-vs-board data are available. \\
+\bottomrule
+\end{tabular}
+\caption{External learned-decoder and hardware-runtime comparison axes.  The
+cited values are representative reported metrics from adjacent work, not
+normalized baselines for this study.  They position the slow-loop calibration
+role and the required hardware validation, not as results of this manuscript.}
+\label{tab:external-runtime-comparison}
+\end{table}
 
 \section{Data, Code, and Reproducibility Availability}
 
-This appendix separates materials that support the present claims from
-materials that remain required for a stronger version of the study.  Available
-software artifacts are sufficient for a \softwarehil{} methods paper only if
-the manuscript preserves the validation scope in Table~\ref{tab:availability}.
-They are not sufficient for a hardware-demonstration paper, a deployment paper
-or a broad decoder-comparison paper.
+This appendix separates materials used by the present study from materials
+required for broader statistical, deployment or hardware claims.  Available
+analysis records support the controlled-simulation methods reported here, but
+they do not by themselves establish a hardware demonstration, a deployment
+study or a normalized broad-decoder leaderboard.
 
 \begin{table}[htbp]
 \centering
@@ -2396,7 +2816,7 @@ or a broad decoder-comparison paper.
 \setlength{\tabcolsep}{4pt}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}@{}}
 \toprule
-Material class & Available for this manuscript & Interpretation limit \\
+Material class & Material used in this manuscript & Interpretation limit \\
 \midrule
 Predeclared simulation results & Four-scenario, five-mode ranking used in
 Table~\ref{tab:main-results}. & Supports relative ranking only inside the
@@ -2408,7 +2828,7 @@ mechanism evidence; not a causal proof. \\
 \addlinespace
 Statistical-calibration extension & Supplement-side comparison in
 Table~\ref{tab:statcalib}. & Supports the affine-calibration contract; does
-not promote statistical calibration as a mature main comparator. \\
+not promote statistical calibration as a validated main comparator. \\
 \addlinespace
 Controlled nearest-syndrome, oracle and wrapped-Gaussian checks & One-step and
 short-sequence local-Gaussian comparisons in
@@ -2439,41 +2859,41 @@ feasibility under controlled samples only; does not establish source-vs-board
 agreement, synthesis, timing closure, resource use or power. \\
 \addlinespace
 Literature metric crosswalk & Cited metric anchors for the external comparison
-table, including local literature-card figure/table/equation anchors or
-explicit card-level limitations. & Supports related-work positioning only; not
-a normalized leaderboard and not source data for the present experiments. \\
+table, including paper-level figure, table and equation anchors where
+available. & Supports related-work positioning only; not a normalized
+leaderboard and not experimental data generated by this study. \\
 \addlinespace
 Training and runtime support & A clean CPU-only rerun and selected isolated
 \texttt{.tflite} runtime checks. & Does not establish full
 reproducibility, default-environment portability or validated deployed
 operation. \\
 \addlinespace
-Hardware validation requirements & Validation requirements without current board
+Hardware validation requirements & Hardware measurement checklist without board
 measurements. & Does not establish board execution, timing, resource or
 source-vs-board agreement. \\
 \bottomrule
 \end{tabular}
-\caption{Availability of supporting materials.  Each row states what the
-available materials can support without upgrading the claim level.}
+\caption{Availability of supporting materials.  Each row states how a material
+class is used in the manuscript and what stronger conclusion it cannot support.}
 \label{tab:availability}
 \end{table}
 
-For a stronger empirical version of the study, the supporting package should
+For a stronger empirical version of the study, the supporting material should
 include machine-readable result tables with seeds and uncertainty estimates,
 reproducible plotting scripts and figure manifests, exact configuration files
-for each drift family, runtime-artifact validation for the runner, a file-level
-source-data manifest for manuscript-facing tables and figures, a
-literature-metric crosswalk for related-work anchors, verified reference
-metadata and, when hardware language is used, board logs, bitstream hashes,
-fixed-point test vectors, latency measurements and resource reports.
-The present manuscript provides file-level hashes for its source CSV/JSON files
-and generator scripts, together with a row-level provenance manifest for the
-main \softwarehil{} benchmark rows.  This remains narrower than a recursive
-hash audit over historical run directories or a hardware provenance record.
+for each drift family, runtime-analysis records for the runner, a file-level
+manifest for manuscript-facing tables and figures, a literature-metric
+crosswalk for related-work anchors, verified reference metadata and, when
+hardware language is used, board logs, bitstream hashes, fixed-point test
+vectors, latency measurements and resource reports.  The present manuscript
+provides file-level hashes for the analysis CSV/JSON files and generator
+scripts, together with row metadata for the main \softwarehil{} benchmark rows.
+This remains narrower than a full independent reproduction package or a
+hardware traceability record.
 Until those stronger materials exist, hardware rows and broad reproducibility
-statements must remain future validation targets.
+statements should be treated as implementation-stage validation targets.
 
-\section{Scope of Validation}
+\section{Scope of Reported Claims}
 
 \begin{table}[htbp]
 \centering
@@ -2491,71 +2911,71 @@ mechanism material. & Causal mechanism proof or intervention success. \\
 Training/material & Canonical material chain and one clean CPU-only rerun. &
 Full reproducibility, cross-host portability or GPU/Linux reproducibility. \\
 \addlinespace
-Isolated runtime & Selected preserved \texttt{.tflite} artifacts execute in
-one local software environment. & Default-environment compatibility,
-closed-loop hardware-in-the-loop validation or validated deployed operation. \\
+Isolated runtime & Selected preserved \texttt{.tflite} files execute in an
+isolated software runtime. & Default-environment compatibility,
+closed-loop board validation or validated deployed operation. \\
 \addlinespace
 Hardware validation & No board-level measurement is reported in this study. &
 Real-board execution success or hardware validation. \\
 \bottomrule
 \end{tabular}
-\caption{Validation-scope table for manuscript claims.}
+\caption{Scope of reported manuscript claims.}
 \label{tab:validation-scope}
 \end{table}
 
-\section{Benchmark Protocol and Source Data}
+\section{Benchmark Protocol and Supporting Tables}
 
 A formal numerical comparison must make clear whether results come from a
 fixed protocol or from post-hoc selection of convenient runs.
-Table~\ref{tab:benchmark-source-data} therefore separates the protocol, the
-source artifact and the allowed manuscript use for each result class.  The
-table is intentionally conservative: it supports a \softwarehil{} manuscript,
-not a hardware or deployment claim.
+Table~\ref{tab:benchmark-support-map} therefore separates the protocol, the
+supporting table and the manuscript use for each result class.  This
+reporting table supports the controlled-simulation comparison; it does not turn
+the study into a hardware or deployment claim.
 
 \begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.18\linewidth}@{}}
 \toprule
-Result class & Source data & Protocol anchor & Permitted interpretation \\
+Result class & Supporting table & Protocol anchor & Manuscript interpretation \\
 \midrule
 Main simulation benchmark &
 Machine-readable comparison table and run summary. &
 Predeclared four-scenario, five-mode, paired-seed,
 \(\mathrm{repeats}=2\) protocol. &
-Use for the predeclared ranking only; do not upgrade to expanded benchmark,
-\texttt{.tflite}, real-board or paper-grade SOTA evidence. \\
+Supports the predeclared ranking only, not an expanded benchmark,
+\texttt{.tflite}, real-board or normalized best-in-class comparison. \\
 \addlinespace
 Feature and teacher ablation &
-Ablation summary table and source-data file. &
+Ablation summary table and underlying data file. &
 Same simulation setting, with controlled feature or teacher inputs removed. &
-Use for feature-sensitivity wording; do not claim teacher-parameter necessity
-or a proven causal mechanism. \\
+Supports feature-sensitivity wording, not teacher-parameter necessity or a
+proven causal mechanism. \\
 \addlinespace
 Multi-seed mechanism summary &
-Six-seed intervention summary and figure source data. &
+Six-seed intervention summary and underlying figure data file. &
 Matched descriptive intervention comparison across the listed seeds. &
-Use as descriptive mechanism evidence; do not claim intervention success or a
-closed causal mechanism. \\
+Supports descriptive mechanism evidence, not intervention success or a closed
+causal mechanism. \\
 \addlinespace
 Supplementary statistical calibration &
-Statistical-calibration comparison rows and source-data file. &
+Statistical-calibration comparison rows and underlying data file. &
 Separate supplementary estimator protocol. &
-Use as supplement-side evidence that the affine contract admits a non-neural
-estimator; do not fold it into the main ranked table. \\
+Supports the supplement-side statement that the affine contract admits a
+non-neural estimator; it is not part of the main ranked table. \\
 \addlinespace
 Hardware validation requirements &
 No board timing/resource rows are reported; selected
 \texttt{.tflite} checks are used only as software-runtime support. &
-Future board validation must provide device logs, bitstream or firmware hashes,
+Board validation would require device logs, bitstream or firmware hashes,
 DMA evidence and source-vs-board vectors. &
-Use only to define future measurement requirements; do not report board
-execution, validated deployed operation or source-vs-board agreement. \\
+Defines required device-measurement classes; it does not report board execution,
+validated deployed operation or source-vs-board agreement. \\
 \bottomrule
 \end{tabular}
-\caption{Benchmark protocol and source-data map.  The table records the
-source-data route used by the present figures and supplementary files.}
-\label{tab:benchmark-source-data}
+\caption{Benchmark protocol and supporting-table map.  The table records how the
+present figures and supplementary files are supported.}
+\label{tab:benchmark-support-map}
 \end{table}
 
 \section{Theory-to-Configuration Bridge}
@@ -2563,7 +2983,7 @@ source-data route used by the present figures and supplementary files.}
 The theory sections use deliberately compact notation: a syndrome stream
 \(s_t\), an affine fast-path update \(\Delta_t=K_t s_t+b_t\), and a slow
 calibration loop that updates \((K_t,b_t)\) from recent syndrome statistics.
-The current evidence instantiates this notation through four controlled
+The present data instantiate this notation through four controlled
 synthetic drift scenarios in the predeclared simulation benchmark.  These
 scenarios are protocol probes of an effective calibration surface; they are
 not a complete physical noise model, a holdout drift distribution or a
@@ -2574,7 +2994,7 @@ hardware environment.
 \small
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}@{}}
 \toprule
-Theoretical object & Current implementation bridge & Current manuscript use & Missing before stronger claim \\
+Theoretical object & Implementation bridge & Manuscript role & Missing before stronger claim \\
 \midrule
 Syndrome stream \(s_t\) &
 Simulation sessions generate recent syndrome statistics from configured
@@ -2601,14 +3021,14 @@ Predeclared simulation ranking. &
 Confidence intervals, larger repeat count and stronger logical-error validation. \\
 \addlinespace
 Hardware target &
-Board-facing entries specify future measurement requirements. &
-Future board-validation protocol only. &
+Board-facing entries specify required device-measurement classes. &
+Board-validation protocol only. &
 Device logs, bitstream or RTL hashes, DMA evidence and timing/resource data. \\
 \bottomrule
 \end{tabular}
 \caption{Theory-to-configuration bridge for the manuscript.
 The bridge records how the notation in the method sections is instantiated by
-the predeclared simulation protocol, while making clear that the current data
+the predeclared simulation protocol, while making clear that the present data
 are not a physical-noise or hardware-validation result.}
 \label{tab:theory-config-bridge}
 \end{table}
@@ -2624,74 +3044,73 @@ predeclared simulation protocol; it does not support language about physical
 device drift, broad distributional generalization, confidence-level
 significance or real-board validation.
 
-\section{Runtime Artifacts and Reproducibility Limits}
+\section{Runtime Records and Reproducibility Scope}
 
-The present study uses several artifact and runtime classes that must
-not be conflated.  Table~\ref{tab:runtime-artifacts-scope} records the
+The present study uses several analysis-record and runtime classes with
+different interpretations.  Table~\ref{tab:runtime-records-scope} records the
 manuscript-facing taxonomy.  This classification does not replace a full
-reproducibility package, but it states which artifacts support the reported
-simulation results and which artifacts remain outside the reported hardware
-evidence.
+reproducibility package, but it states which records support the reported
+simulation results and which records remain outside the hardware evidence.
 
 \begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}@{}}
 \toprule
-Layer & Artifact or runtime class & Current manuscript use & Not established by the present study \\
+Layer & Analysis record or runtime class & Manuscript use & Not established by the present study \\
 \midrule
 Main comparison & \softwarehil{} rows from
 \texttt{comparison.csv} and \texttt{summary.json}. & Predeclared four-scenario,
 five-mode ranking. & True \texttt{.tflite}, real-board or expanded benchmark
 ranking. \\
 \addlinespace
-Hybrid residual branch & Preserved \texttt{.npz} model artifact recorded in
-the hybrid rows. & Slow-loop model-artifact evidence for the current hybrid
+Hybrid residual branch & Preserved \texttt{.npz} model file recorded in
+the hybrid rows. & Slow-loop model-file record for the reported hybrid
 \softwarehil{} branch. & Portable deployment or board execution. \\
 \addlinespace
-Baseline modes & \softwarehil{} modes with no model artifact path in the
+Baseline modes & \softwarehil{} modes with no model-file path in the
 rows. & Classical and residual baselines under the same protocol. & Learned
-artifact parity or \texttt{.tflite} baseline evidence. \\
+model-file parity or \texttt{.tflite} baseline evidence. \\
 \addlinespace
 Software runtime check & Selected preserved \texttt{.tflite} files executed in
-one local software environment; JSON metadata artifacts are not treated as
+an isolated software runtime; JSON metadata records are not treated as
 executables. & Supporting runtime evidence only. & Default-environment
-compatibility, closed-loop hardware-in-the-loop validation or validated
+compatibility, closed-loop board validation or validated
 deployed operation. \\
 \addlinespace
-Non-executable metadata artifacts & JSON-sidecar or metadata-only artifacts in
-the runtime abstraction. & Artifact taxonomy only. & True TFLite execution. \\
+Non-executable metadata records & JSON-sidecar or metadata-only records in
+the runtime abstraction. & Runtime-record taxonomy only. & True TFLite execution. \\
 \addlinespace
-Hardware validation requirements & Validation requirements without a current board measurement. &
-Future hardware measurement requirements. &
+Hardware validation requirements & Validation requirements without a direct board measurement. &
+Required hardware measurement classes. &
 Real-board execution success or hardware validation. \\
 \addlinespace
-Statistical calibration & Supplementary statistical-calibration source data. &
+Statistical calibration & Supplementary statistical-calibration supporting table. &
 Evidence that the affine contract can host a non-neural
-estimator. & Mature main-comparator status or replacement of the main table. \\
+estimator. & A validated main-comparator role or replacement of the main table. \\
 \bottomrule
 \end{tabular}
-\caption{Runtime-artifact validation scope.  The table separates simulation
-results, model artifacts, true \texttt{.tflite} support, non-executable metadata artifacts,
+\caption{Runtime-record validation scope.  The table separates simulation
+results, model files, true \texttt{.tflite} support, non-executable metadata records,
 hardware-validation requirements and supplementary statistical-calibration evidence so that
-the manuscript does not upgrade one artifact class into another.}
-\label{tab:runtime-artifacts-scope}
+the manuscript does not upgrade one record class into another.}
+\label{tab:runtime-records-scope}
 \end{table}
 
-Three validation gaps remain.  First, the present source-data checks cover the
+Three validation gaps remain.  First, the present analysis-file checks cover the
 main result table, paired-delta tables, ablation and mechanism tables,
 statistical-calibration rows, controlled oracle/wrapped-Gaussian checks,
 sequence-controlled baselines, holdout stress diagnostics, fast-path cost,
 fixed-point parity, runtime-discipline counters, residual-boundary surrogate
 rows and the metric-readiness matrix.  They still do not cover every narrative
 scope, availability or requirements table in the manuscript.  Second, the
-source-data manifest records file-level SHA-256 hashes for manuscript-facing
-source CSV/JSON files and generator or audit scripts, and a row-level
-provenance manifest traces the main \softwarehil{} benchmark rows to scenario,
-mode, repeat, seed, source run path, config, runner and selected repeat-summary
-hashes.  These manifests are still not a recursive hash audit over
-historical run directories and do not hash every large event log.  Third, the
-hardware surface remains a readiness check until a future board experiment
+analysis-file manifest records file-level SHA-256 hashes for manuscript-facing
+CSV/JSON files and generator scripts, and row metadata trace the
+main \softwarehil{} benchmark rows to scenario,
+mode, repeat, seed, analysis identifier, configuration, runner and selected repeat-summary
+hashes.  These records are still not a full independent reproduction package
+and do not hash every large event log.  Third, the
+hardware surface remains a readiness check until a board experiment
 produces device logs, bitstream or RTL hashes, DMA evidence, latency/resource
 measurements and source-vs-board vectors.
 
@@ -2701,78 +3120,86 @@ measurements and source-vs-board vectors.
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.33\linewidth}>{\raggedright\arraybackslash}p{0.31\linewidth}@{}}
 \toprule
-Coverage group & Mechanically checked surface & Interpretation limit \\
+Coverage group & Checked manuscript material & Interpretation limit \\
 \midrule
-Main performance tables & Main results, paired deltas, paired-uncertainty and LER advantage-margin source rows are checked against source CSV files. & Descriptive two-repeat software comparison only; not confidence intervals, standard errors, p-values, significance tests or an expanded benchmark. \\
+Main performance tables & Main results, paired deltas, paired-uncertainty and LER advantage-margin underlying rows are checked against underlying data tables. & Descriptive two-repeat software comparison only; not confidence intervals, standard errors, p-values, significance tests or an expanded benchmark. \\
 \addlinespace
 Controlled diagnostics & Oracle-affine, logical-surrogate, surrogate-fidelity, lattice-channel sanity, finite-energy toy-channel, boundary-sensitivity, sequence-baseline, holdout-stress, affine local-validity and commit-lag tables are checked against generated CSV files. & Diagnostic layers only; not trained-branch holdout proof, calibrated finite-energy logical-channel fidelity or hardware latency. \\
 \addlinespace
-Implementation feasibility & Fast-path cost, fixed-point parity, runtime discipline and validation-contract source rows are checked against generated or figure-source CSV files. & Analytical/software feasibility only; not FPGA synthesis, timing, resource, power or source-vs-board evidence. \\
+Implementation feasibility & Fast-path cost, fixed-point parity, runtime discipline and validation-contract rows are checked against generated analysis tables or figure data tables. & Analytical/software feasibility only; not FPGA synthesis, timing, resource, power or source-vs-board evidence. \\
 \addlinespace
-Source and literature maps & Metric-readiness, literature crosswalk, closest-work positioning, row provenance, figure manifest and file-level source manifest are checked for row, citation or hash consistency. & Not a leaderboard, not recursive historical-run hash audit and not full reproducibility proof. \\
+Analysis and literature maps & Metric-readiness, literature crosswalk, closest-work positioning, row metadata, figure manifest and file-level analysis manifest are checked for row, citation or hash consistency. & Not a leaderboard, not a full independent reproduction package. \\
 \addlinespace
-Formal Phase A interval & The completed \texttt{static\_bias\_theta} and \texttt{linear\_ramp} formal paired-interval rows are generated from the Phase A repeat summary and checked against the manuscript interval table. & Two completed scenarios only; not all-scenario repeat-expanded evidence, \(p\)-value evidence, holdout robustness or hardware validation. \\
+Completed paired-interval scenarios & The completed \texttt{static\_bias\_theta} and \texttt{linear\_ramp} formal paired-interval rows are generated from the repeat summary and checked against the manuscript interval table. & Two completed scenarios only; not all-scenario repeat-expanded evidence, \(p\)-value evidence, holdout robustness or hardware validation. \\
 \addlinespace
-Planning and boundary surfaces & Benchmark-expansion, runner-smoke, availability, validation-scope, runtime-artifact and hardware-plan surfaces are classified separately. & Planning or requirements surfaces only; not current result evidence, hardware validation or submission-completeness proof. \\
+Validation-protocol material & Benchmark-expansion, runner-smoke, availability,
+validation-scope, runtime-record and hardware-plan material are classified
+separately. & Protocol or requirements material only; not result evidence or
+hardware validation. \\
 \bottomrule
 \end{tabular}
-\caption{Source-data coverage matrix.  The matrix identifies which manuscript
-table families are mechanically checked and which remain planning or boundary
-surfaces.  It is a traceability aid, not an evidence upgrade.}
-\label{tab:source-data-coverage-matrix}
+\caption{Supporting-table coverage matrix.  The matrix identifies which
+manuscript table families are backed by checked analysis files and which are
+protocol or requirements material.  It is a traceability aid, not an additional
+result.}
+\label{tab:supporting-coverage-matrix}
 \end{table}
 
 \section{Statistical Treatment and Reproducibility}
 
-The current main result is a predeclared-protocol ranking with descriptive
+The main result is a predeclared-protocol ranking with descriptive
 uncertainty, not a distribution-level statistical claim.  The main benchmark
 uses paired seeds and two repeats per scenario and mode.  The manuscript
 therefore reports means, descriptive standard deviations, paired deltas and a
 descriptive paired-bootstrap envelope only.  It does not report inferential
 confidence intervals, \(p\)-values, standard errors or hypothesis-test evidence.
+The two completed 12-paired-repeat rows are reported as scenario-level
+interval checks because they directly test UKF-minus-hybrid deltas under fixed
+scenario definitions and paired seeds.  They do not license pooled inference,
+post-hoc scenario selection or all-scenario advantage wording.
 
 \begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.12\linewidth}@{}}
 \toprule
-Layer & Current evidence & Manuscript use & Missing for stronger claim \\
+Layer & Evidence available & Manuscript use & Required for stronger claim \\
 \midrule
 Main comparison & Predeclared four-scenario, five-mode \softwarehil{} benchmark
 with paired seeds, \(\mathrm{repeats}=2\), paired-delta and resampling-envelope
 tables. & Predeclared-set ranking; hybrid residual branch has the lowest mean
-\finalLER{} in all four scenarios; paired tables provide source-data
+\finalLER{} in all four scenarios; paired tables provide data
 transparency only. &
-Paired CI, more repeats and a formal expanded holdout benchmark. \\
-Error bars & Figure source data contain mean plus descriptive SD for Fig.~2.
-& Visual uncertainty marker only. & Do not treat as CI, standard error or
+Paired intervals, more repeats and a formal expanded holdout benchmark. \\
+Error bars & Figure supporting data contain mean plus descriptive SD for Fig.~2.
+& Visual uncertainty marker only. & Do not treat as a confidence interval, standard error or
 statistical significance. \\
 \addlinespace
-Source data & \texttt{comparison.csv}, \texttt{summary.json}, figure
-source CSVs, figure manifest, source-data consistency report and file-level
-source-data manifest plus row-level provenance manifest for the main
-\softwarehil{} rows. & Table and figure source-data support for the
-manuscript. & Whole-manuscript source-data check, recursive historical run
-hash audit and independent reproduction. \\
+Analysis support records & \texttt{comparison.csv}, \texttt{summary.json}, figure
+underlying data tables, figure manifest, consistency report and file-level
+analysis manifest plus row metadata for the main
+\softwarehil{} rows. & Table and figure support for the
+manuscript. & Whole-manuscript analysis-file check and independent
+reproduction. \\
 \addlinespace
 Reproducibility & Recorded run metadata, host checks and scoped
-training/material support. & Available repository-artifact reproducibility. &
+training/material support. & Available analysis-record reproducibility. &
 Repeated runs, cross-host checks or containerized reproduction. \\
 \addlinespace
-Hardware path & No current board measurement is available. & Future measurement
-surface only. & Device logs, bitstream/RTL hash, DMA evidence, latency and
+Hardware path & Board measurements are outside the present study. & Required measurement
+layer only. & Device logs, bitstream/RTL hash, DMA evidence, latency and
 resource data, and source-to-board vectors. \\
 \bottomrule
 \end{tabular}
-\caption{Statistical treatment and reproducibility.  The current data
+\caption{Statistical treatment and reproducibility.  The reported data
 support a scoped \softwarehil{} ranking with descriptive uncertainty; stronger
-statistical, reproducibility or hardware claims require the missing evidence
+statistical, reproducibility or hardware claims require the evidence
 listed in the rightmost column.}
 \label{tab:stat-repro-boundary}
 \end{table}
 
 The repeat-expansion route is therefore treated as a validation-threshold table
-rather than as a hidden result reserve.  Table~\ref{tab:phase-a-upgrade-gate} states
+rather than as additional evidence.  Table~\ref{tab:validation-thresholds} states
 which evidence class would be needed before the wording could move from
 descriptive ranking to repeat-expanded, holdout or hardware claims.
 
@@ -2782,44 +3209,40 @@ descriptive ranking to repeat-expanded, holdout or hardware claims.
 \resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.29\linewidth}@{}}
 \toprule
-Evidence class & Current status & Permitted statement & Validation requirement or unsupported inference \\
+Evidence class & Present evidence & Supported interpretation & Evidence needed for stronger claims \\
 \midrule
-Current descriptive benchmark &
-Satisfied for descriptive ranking. &
+Descriptive benchmark &
+Four-scenario, five-mode paired-seed comparison. &
 Hybrid-\(b\) has the lowest descriptive mean \finalLER{} in the predeclared
 \softwarehil{} rows. &
-This is the current claim ceiling; do not state statistical significance, broad
-robustness, hardware latency or deployment readiness. \\
+The data support a descriptive ranking only; statistical significance, broad
+robustness, hardware latency and deployment readiness require additional
+evidence. \\
 \addlinespace
-Short-run repeat rehearsal &
-No short-run scenario row is currently complete in the Phase A collector output;
-the rehearsal layer only checks command shape, row accounting and collector
-logic. &
-The repeat-expansion command path, row accounting and collector logic were
-rehearsed. &
-No stronger statement is permitted from short-run rows; do not use them as
-manuscript performance evidence or inferential uncertainty. \\
+Runner and row-accounting check &
+Shortened UKF-versus-Hybrid rows complete for the four predeclared scenarios. &
+The repeat-expansion command path and row accounting were exercised. &
+The shortened rows are an execution-path check, not manuscript performance
+evidence or inferential uncertainty. \\
 \addlinespace
-Formal Phase A repeat expansion &
+Completed paired-interval rows &
 Two formal-length scenario rows have completed with 12 unique paired rows and
-positive paired-interval lower bounds; the all-scenario gate remains
-incomplete. &
-Completed formal scenarios may be described as scenario-level positive
-paired-interval checks;
-all-scenario and pooled wording remain planned. &
+positive paired-interval lower bounds. &
+The completed scenarios support scenario-level positive paired-interval
+statements; all-scenario and pooled wording require additional formal rows. &
 Complete all four scenarios with at least 12 and preferably 16 paired repeats,
-no missing paired rows and positive predeclared paired-interval lower bounds
+complete paired rows and positive predeclared paired-interval lower bounds
 per scenario plus pooled analysis. \\
 \addlinespace
-Formal holdout drift expansion &
-Planned only. &
-Holdout drift families are specified as future validation families. &
+Holdout drift validation &
+Defined but not executed in the present manuscript. &
+Holdout drift families are defined as validation families. &
 Run the predeclared random-walk, burst/reset and faster-than-window families
-with missing-run accounting; do not treat controlled stress diagnostics as
+with explicit row-accounting; do not treat controlled stress diagnostics as
 holdout generalization proof. \\
 \addlinespace
 Hardware-facing measurements &
-Not measured. &
+Outside the present scope. &
 Hardware latency, resource, power and source-vs-board agreement remain
 measurement targets. &
 Provide board logs, bitstream or RTL hash, source vectors, measured
@@ -2828,19 +3251,17 @@ timing closure or board-level correction success. \\
 \bottomrule
 \end{tabular}
 }
-\caption{Validation thresholds for the repeat-expansion and hardware
-routes.  The table prevents command plans and short-run rehearsal rows from
-being read as performance evidence.  It also states what must be added before
-the current descriptive \softwarehil{} ranking can be rewritten as a
-repeat-expanded, holdout-robust or hardware-backed result.}
-\label{tab:phase-a-upgrade-gate}
+\caption{Validation thresholds for stronger statistical and hardware claims.
+The shortened runner check and incomplete holdout route are not performance
+evidence.  Stronger wording requires the evidence listed in the final column.}
+\label{tab:validation-thresholds}
 \end{table}
 
 For the completed formal rows, the interval checks remain deliberately narrow.
-Table~\ref{tab:phase-a-paired-interval} reports the paired delta analysis for
+Table~\ref{tab:paired-interval-scenarios} reports the paired delta analysis for
 the completed \texttt{static\_bias\_theta} and \texttt{linear\_ramp} rows.  The
 lower bounds are positive for both scenarios, but the results do not replace
-the planned all-scenario paired-interval gate, pooled analysis, holdout drift
+the specified all-scenario paired-interval validation set, pooled analysis, holdout drift
 families or hardware-facing measurements.
 
 \begin{table}[htbp]
@@ -2854,13 +3275,12 @@ Scenario & Paired repeats & Mean delta & Paired-\(t\) 95\% interval & Bootstrap 
 \texttt{linear\_ramp} & 12 & 0.022417 & [0.021215, 0.023619] & [0.021405, 0.023440] \\
 \bottomrule
 \end{tabular}
-\caption{Formal Phase A scenario-level paired-interval checks for
-UKF-minus-Hybrid \finalLER{} deltas.  The rows use the completed formal-length
-\texttt{static\_bias\_theta} and \texttt{linear\_ramp} paired repeats.  They
-support positive interval statements for these scenarios, not all-scenario
-repeat-expanded advantage, holdout robustness, \(p\)-value evidence or
-hardware validation.}
-\label{tab:phase-a-paired-interval}
+\caption{Completed scenario-level paired-interval checks.  The rows use the completed
+formal-length \texttt{static\_bias\_theta} and \texttt{linear\_ramp}
+UKF-minus-Hybrid \finalLER{} deltas.  They support positive interval
+statements for these scenarios, not all-scenario repeat-expanded advantage,
+holdout robustness, \(p\)-value evidence or hardware validation.}
+\label{tab:paired-interval-scenarios}
 \end{table}
 
 These limits also determine the claim language in the abstract and conclusion.
@@ -2871,49 +3291,50 @@ present evidence does not establish statistical significance, robustness across
 unseen drift families, full reproducibility, cross-host portability, hardware
 validation or deployment readiness.
 
-\section{Claim Scope and Source Data}
+\section{Claim-to-Evidence Summary}
 
-The manuscript is organized around a small number of scoped claims.  Each
-claim must remain tied to a specific result or source-data layer.
-Tables~\ref{tab:claim-source-data} and
-\ref{tab:claim-source-data-diagnostics} record that relationship for manuscript
-assembly; they are not new experiments and do not strengthen any result by
-themselves.
+The manuscript is organized around a small number of claims.  Each claim is tied
+to a specific result or supporting-material layer so that readers can separate
+method definitions, simulation results, diagnostic checks and hardware
+requirements.
+Tables~\ref{tab:claim-support-primary} and
+\ref{tab:claim-support-diagnostics} give the corresponding reporting route.
+They are supplementary summaries rather than additional experiments.
 
 \begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}p{0.29\linewidth}@{}}
 \toprule
-Manuscript claim & Current evidence & Required source-data treatment \\
+Manuscript claim & Supporting material & Reporting treatment \\
 \midrule
 Drift adaptation can be expressed as a runtime affine calibration problem. &
 Problem formulation, architecture contract and predeclared \softwarehil{} protocol. &
-Keep as method claim; source data are definitions, protocol metadata and
+Treated as a method claim; supporting material consists of definitions, protocol metadata and
 parameter-flow schematic, not performance measurements. \\
 \addlinespace
 The main-table hybrid residual branch has the lowest mean \finalLER{} in
 the predeclared four-scenario set.
 & Table~\ref{tab:main-results} from the predeclared \softwarehil{} benchmark. &
-Archive machine-readable per-scenario rows; add seed-level uncertainty before
-claiming statistical robustness. \\
+Machine-readable per-scenario rows are retained; seed-level uncertainty would
+be needed before claiming statistical robustness. \\
 \addlinespace
 Feature choices affect residual calibration behavior. &
 Table~\ref{tab:ablation}; scoped feature and teacher ablations. & Treat as an
-appendix/source-data table; do not convert it into a teacher-necessity claim.
+appendix supporting table, not as a teacher-necessity claim.
 \\
 \addlinespace
 The mechanism story remains descriptive. & Table~\ref{tab:mechanism}; six-seed
 intervention summary with mixed or harmful intervention outcomes. & Link the
-figure source data and trace summaries; state that a causal mechanism is not
-identified.
+figure data files and trace summaries; the result is not a causal mechanism
+identification.
 \\
 \bottomrule
 \end{tabular}
-\caption{Primary claim scope and source-data map for the manuscript.  The table
-records the source-data treatment required for method, main-result and
-mechanism claims.}
-\label{tab:claim-source-data}
+\caption{Support map for the primary manuscript claims.  The table records
+how method, main-result and mechanism statements are tied to supporting
+materials.}
+\label{tab:claim-support-primary}
 \end{table}
 
 \begin{table}[htbp]
@@ -2921,58 +3342,59 @@ mechanism claims.}
 \small
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}p{0.29\linewidth}@{}}
 \toprule
-Manuscript claim & Current evidence & Required source-data treatment \\
+Manuscript claim & Supporting material & Reporting treatment \\
 \midrule
 The metric set is intentionally layered. & Table~\ref{tab:metric-readiness};
 \finalLER{}, controlled checks, the residual-boundary Pauli-event surrogate,
-cost counts and fixed-point software parity are current metrics, while
-finite-energy channel fidelity and hardware timing remain external standards. & Keep the source CSV
-with the manuscript; do not relabel \finalLER{} or the surrogate average-fidelity
-field as channel fidelity or measured latency. \\
+cost counts and fixed-point software parity are reported metrics, while
+finite-energy channel fidelity and hardware timing remain external standards. &
+The supporting CSV is retained with the manuscript; \finalLER{} and the surrogate
+average-fidelity field are not relabelled as channel fidelity or measured
+latency. \\
 \addlinespace
 Controlled nearest-syndrome, oracle-affine and wrapped-Gaussian checks are diagnostic baselines. &
 Tables~\ref{tab:controlled-oracle-affine} and
 \ref{tab:sequence-controlled-baselines}, plus the derived local-validity
 diagnostic in Table~\ref{tab:affine-local-validity}; controlled local-Gaussian
-source CSVs.
-& Keep the one-step and short-sequence protocols separate from the predeclared
-\softwarehil{} ranking; do not write them as a full nearest-lattice,
-known-noise or wrapped-decoder benchmark. \\
+underlying data tables.
+& The one-step and short-sequence protocols remain separate from the predeclared
+\softwarehil{} ranking; they are not a full nearest-lattice, known-noise or
+wrapped-decoder benchmark. \\
 \addlinespace
 Holdout drift stress tests probe adaptation space, not trained-branch
 generalization. & Table~\ref{tab:holdout-drift-stress}; controlled
-random-walk, burst/reset and faster-than-window diagnostic source CSV. & Keep as
-non-hardware stress diagnostics; do not relabel the rows as expanded benchmark
-evidence, confidence intervals or robustness proof. \\
+random-walk, burst/reset and faster-than-window diagnostic data table. & These
+rows are non-hardware stress diagnostics, not expanded benchmark evidence,
+confidence intervals or robustness proof. \\
 \addlinespace
 Runtime counters and the validation-contract figure support software
 observability. & Table~\ref{tab:runtime-discipline} and
 Fig.~\ref{fig:validation-contract}; runtime-discipline and
-validation-contract source CSVs. & Keep as software protocol observability and
-source-data summary; do not write these rows as board latency, hardware
-reliability, synthesis, timing closure or source-vs-board agreement. \\
+validation-contract data tables. & These rows support software protocol
+observability, not board latency, hardware reliability, synthesis, timing
+closure or source-vs-board agreement. \\
 \addlinespace
 The fixed-point claim is numerical, not hardware-complete. &
-Table~\ref{tab:fixed-point-parity}; software-emulation source CSV; Q4.20
+Table~\ref{tab:fixed-point-parity}; software-emulation data table; Q4.20
 emulation introduces no residual-boundary crossing change in the controlled
-sample set. & Do not write this as source-vs-board agreement, timing closure,
-resource measurement, power measurement or real-board latency. \\
+sample set. & This is a numerical-emulation result, not source-vs-board
+agreement, timing closure, resource measurement, power measurement or real-board
+latency. \\
 \addlinespace
 The affine contract can host non-neural calibration. &
 Table~\ref{tab:statcalib}; supplementary statistical-calibration analysis. &
-Keep in supplement-side source data with no-main-comparator and no-unique
-threshold notes. \\
+The supporting rows are supplement-side and do not replace the main comparator
+table or identify a unique threshold. \\
 \addlinespace
-Hardware validation is a future surface. & Table~\ref{tab:hardware-plan}
-and the absence of board measurements in this study. & Retain these requirements until board
-logs, bitstream hashes, latency/resource data and source-vs-board vectors
-exist. \\
+Hardware validation requires direct device data. & Table~\ref{tab:hardware-plan}
+and the absence of board measurements in this study. & Hardware claims require
+board logs, bitstream hashes, latency/resource data and source-vs-board vectors. \\
 \bottomrule
 \end{tabular}
-\caption{Diagnostic, runtime and validation claim scope for the manuscript.
-The table continues the source-data map for controlled diagnostics, numerical
-checks, supplementary calibration and hardware-facing requirements.}
-\label{tab:claim-source-data-diagnostics}
+\caption{Support map for diagnostic, runtime and validation statements.
+The table continues the reporting route for controlled diagnostics, numerical
+checks, supplementary calibration and hardware-measurement requirements.}
+\label{tab:claim-support-diagnostics}
 \end{table}
 
 \section{Limitations and Required Validation}
@@ -3007,20 +3429,20 @@ Mechanism-specific perturbations, trace-level causal isolation or a predictive
 failure-mode test. \\
 \addlinespace
 Hardware claims require direct measurements. & Board-level validation is stated
-as a future measurement surface because no board measurements are reported here. & Device
+as a required device-measurement layer because no board measurements are reported here. & Device
 logs, bitstream hashes, fixed-point agreement, latency/resource measurements
 and source-vs-board tests. \\
 \addlinespace
 The neural branch is not the only plausible estimator. & Statistical
 calibration is kept as a supplementary analysis that supports the affine
-contract rather than a main comparator. & A future predeclared comparator
+contract rather than a main comparator. & A separate predeclared comparator
 selection protocol if the statistical estimator is to be used in the
 main ranking. \\
 \addlinespace
 The work may not be reproducible outside the present software environment. & Reproducibility
-statements are restricted to available repository artifacts and single-host
+statements are restricted to available analysis records and single-host
 checks. & Repeated-run, cross-host or containerized reproduction with explicit
-dependency locks and artifact manifests. \\
+dependency locks and file manifests. \\
 \bottomrule
 \end{tabular}
 \caption{Limitations and required validation for stronger claims.  Each row
@@ -3029,21 +3451,21 @@ required before stronger wording is justified.}
 \label{tab:validation-risk-response}
 \end{table}
 
-\section{Terminology}
+\section{Terminology and Claim Boundaries}
 
 \begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.26\linewidth}@{}}
 \toprule
-Term & Meaning in this manuscript & Do not imply \\
+Term & Meaning in this manuscript & Boundary \\
 \midrule
 Runtime-consistent affine calibration & A slow loop updates
 \((K_t,b_t)\), while the fast path applies \(\Delta_t=K_t s_t+b_t\). &
 Full posterior decoding or hardware validation. \\
 \addlinespace
 Fast path & The per-shot deterministic affine correction surface. & A measured
-FPGA implementation, unless future board evidence is added. \\
+FPGA implementation, unless direct board evidence is added. \\
 \addlinespace
 Slow calibration loop & A teacher, neural residual branch or statistical
 estimator that updates affine parameters from recent syndrome statistics. & A
@@ -3051,32 +3473,31 @@ requirement that the slow loop must be neural. \\
 \addlinespace
 Teacher-anchored hybrid residual branch & The predeclared main-table hybrid
 mode; ablation rows do not establish teacher-parameter necessity. & A
-universal SOTA decoder or causal mechanism proof. \\
+universal best-in-class decoder or causal mechanism proof. \\
 \addlinespace
 Supplementary statistical calibration & A supplement-side check that non-neural
-estimators can also satisfy the affine contract. & Main-comparator
-status. \\
+estimators can also satisfy the affine contract. & A main-comparator role. \\
 \addlinespace
-\softwarehil{} & A source-controlled software protocol for testing the runtime
-calibration interface under synthetic drift. & Real-board HIL or deployment
+\softwarehil{} & A controlled software protocol for testing the runtime
+calibration interface under synthetic drift. & Closed-loop board execution or deployment
 success. \\
 \addlinespace
-Hardware validation check & A record that no current board measurement is
-available and that future measurements must provide timing, resource and
+Hardware validation check & A statement that no board measurement is
+reported and that device validation must provide timing, resource and
 source-vs-board data. & Successful board execution. \\
 \bottomrule
 \end{tabular}
-\caption{Reader-facing terminology.  This table prevents support-layer
-terms from being misread as stronger experimental claims.}
+\caption{Reader-facing terminology and claim boundaries.  The table defines
+how recurrent terms are used in the manuscript.}
 \label{tab:terminology}
 \end{table}
 
-\section{Figure Source Data and Status}
+\section{Figure Data and Reporting Basis}
 
-The figure set is tied to source-data tables and validation scope.  The present
-manuscript uses Python/Matplotlib figures, and hardware validation is
+The figure set is tied to underlying data tables and the stated claim scope.  The present
+manuscript uses figure-generation scripts, and hardware validation is
 represented as a measurement-requirements table rather than as device data.  The
-table below defines the intended claim, source data and status for each figure
+table below defines the intended claim and source-file basis for each figure
 in the present manuscript numbering.
 
 \begin{table}[htbp]
@@ -3084,20 +3505,20 @@ in the present manuscript numbering.
 \small
 \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.18\linewidth}>{\raggedright\arraybackslash}p{0.29\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}p{0.15\linewidth}@{}}
 \toprule
-Figure & Main conclusion & Required source data & Current status \\
+Figure & Main conclusion & Required supporting files & Reporting basis \\
 \midrule
 Fig.~1 architecture & GKP drift adaptation is expressed as a dual-loop affine
 runtime contract. & Method schematic, parameter-flow definition and validation
-scope notes. & Python manuscript figure with schematic source map. \\
+scope notes. & Python manuscript figure with schematic support map. \\
 \addlinespace
-Fig.~2 main \softwarehil{} results & Hybrid residual calibration is best in the
-predeclared \softwarehil{} table. & Main comparison source table, \finalLER{} mean,
+Fig.~2 main \softwarehil{} results & Hybrid residual calibration has the lowest mean in the
+predeclared \softwarehil{} table. & Main comparison data table, \finalLER{} mean,
 descriptive SD and later paired comparison. & Python manuscript figure with
-mean + descriptive SD source data; CI still missing. \\
+mean + descriptive SD supporting data; inferential intervals are not established. \\
 \addlinespace
 Fig.~3 ablation and mechanism & Feature and histogram dynamics constrain the
 mechanism story. & Ablation rows, cross-seed intervention rows and trace
-summaries. & Python manuscript figure with descriptive-only source data. \\
+summaries. & Python manuscript figure with descriptive-only supporting data. \\
 \addlinespace
 Fig.~4 statistical calibration & Non-neural calibration can occupy the same
 affine contract without becoming the main comparator. & Supplementary
@@ -3106,15 +3527,15 @@ supplementary analysis only. \\
 \addlinespace
 Fig.~5 validation contract & The present validation package supports a software
 fast-path contract across analytical arithmetic, Q4.20 parity and runtime
-counter observability. & Validation-contract source table plus fast-path cost,
-fixed-point parity and runtime-discipline source tables. & Python manuscript
-figure with source-data-backed software summary only; no FPGA timing, resource,
+counter observability. & Validation-contract data table plus fast-path cost,
+fixed-point parity and runtime-discipline data tables. & Manuscript
+figure with data-backed software summary only; no FPGA timing, resource,
 source-vs-board or board-latency measurement. \\
 \addlinespace
 \bottomrule
 \end{tabular}
-\caption{Figure source-data status.  Each figure is tied to the source data or
-validation record needed to support its intended conclusion.}
+\caption{Figure data and reporting basis.  Each figure is tied to the source
+files or validation record needed to support its intended conclusion.}
 \label{tab:figure-contract}
 \end{table}
 
