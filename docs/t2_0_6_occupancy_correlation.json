@@ -1,0 +1,308 @@
+{
+  "config": {
+    "shots": 600,
+    "cycles": 1200,
+    "burn_in_cycles": 200,
+    "seed": 2026071407,
+    "bootstrap_seed": 2026071408,
+    "bootstrap_replicates": 400,
+    "confidence_level": 0.95,
+    "physical_error_probability": 0.13,
+    "target_no_leakage_occupancy": 0.82,
+    "single_cycle_leakage_rate": 0.000548,
+    "higher_leakage_rate": 0.000128,
+    "higher_leakage_mean_duration_cycles": 17.2,
+    "readout_fidelity_g": 0.9997,
+    "readout_fidelity_e": 0.9914,
+    "max_recovery_depth": 64,
+    "all_gg_string_lengths": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "tail_lags": [
+      40,
+      60,
+      80,
+      100,
+      120,
+      140,
+      160,
+      180,
+      200
+    ],
+    "reference_occupancy": 0.82,
+    "maximum_reference_occupancy_error": 0.02,
+    "maximum_truth_syndrome_difference": 0.02,
+    "maximum_physical_error_estimate_error": 0.02,
+    "minimum_all_gg_fit_r_squared": 0.999,
+    "minimum_retained_fraction": 0.75,
+    "maximum_retained_fraction": 0.95,
+    "minimum_pre_removal_tail_correlation": 0.001,
+    "minimum_tail_difference_ci_low": 0.0003,
+    "minimum_tail_shrink_ratio": 2.0,
+    "maximum_post_removal_tail_correlation": 0.0015,
+    "model_scope": "protocol_aligned_occupancy_correlation_effective_model_not_device_calibrated"
+  },
+  "hidden_occupancy": {
+    "mean": 0.8135652777777779,
+    "ci_low": 0.8116628819444444,
+    "ci_high": 0.8154555902777777,
+    "confidence_level": 0.95,
+    "method": "shot_cluster_bootstrap",
+    "replicates": 400
+  },
+  "syndrome_occupancy": {
+    "string_lengths": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "all_gg_probabilities": [
+      0.7060091743119266,
+      0.6129493600445186,
+      0.5320286828181565,
+      0.4617948717948718,
+      0.400792189679219,
+      0.34787688442211057,
+      0.30197820620285,
+      0.26215743847874723,
+      0.22756926952141057,
+      0.19748879551820728,
+      0.17134426689094479
+    ],
+    "fitted_a": 0.937251437183086,
+    "fitted_lambda": 0.8679893904003879,
+    "physical_error_probability": 0.13201060959961208,
+    "occupancy": 0.8135243036124343,
+    "occupancy_statistical_ci": [
+      0.8112876337255739,
+      0.8159919046023892
+    ],
+    "first_order_model_error_bound": 0.017426801046861194,
+    "occupancy_combined_ci": [
+      0.7938608326787127,
+      0.8334187056492505
+    ],
+    "r_squared_log_probability": 0.9999998712602604,
+    "estimator_inputs": [
+      "observed_all_gg_boolean_matrix"
+    ]
+  },
+  "tail_correlation": {
+    "lags": [
+      40,
+      60,
+      80,
+      100,
+      120,
+      140,
+      160,
+      180,
+      200
+    ],
+    "before_removal": [
+      0.010882762376894355,
+      0.006424263444388124,
+      0.004224534945133686,
+      0.00425605448479345,
+      -0.0004492842490666228,
+      0.00203930745739637,
+      0.0004553710677064558,
+      0.0014009486852645764,
+      -0.002450013005997324
+    ],
+    "after_removal": [
+      0.0013363362724157675,
+      0.0008714069687965843,
+      -0.0004619778131530928,
+      0.0019052877481331228,
+      -0.0019078544193203636,
+      -0.0005816371890158662,
+      8.9773123322385e-05,
+      -0.00023042741238654,
+      -0.0027462198902688116
+    ],
+    "mean_before": {
+      "mean": 0.0029759939118347858,
+      "ci_low": 0.001069399989905849,
+      "ci_high": 0.004923635256223991,
+      "confidence_level": 0.95,
+      "method": "shot_cluster_bootstrap",
+      "replicates": 400
+    },
+    "mean_after": {
+      "mean": -0.00019170140127520158,
+      "ci_low": -0.0011664347571567406,
+      "ci_high": 0.0007150304206157951,
+      "confidence_level": 0.95,
+      "method": "postselected_shot_cluster_bootstrap",
+      "replicates": 400
+    },
+    "paired_difference": {
+      "mean": 0.0031676953131099875,
+      "ci_low": 0.0016835473982551917,
+      "ci_high": 0.00505808543664739,
+      "confidence_level": 0.95,
+      "method": "paired_shot_cluster_bootstrap",
+      "replicates": 400
+    },
+    "shrink_ratio": 15.524111415140496,
+    "retained_shots": 507,
+    "retained_fraction": 0.845,
+    "removal_rule": "drop full trajectories with observed leakage run >=2 cycles"
+  },
+  "gate": {
+    "passed": true,
+    "checks": [
+      {
+        "check_id": "hidden_occupancy_near_reference",
+        "passed": true,
+        "observed": 0.006434722222222078,
+        "criterion": "abs(hidden-reference) <= limit",
+        "limit": 0.02,
+        "detail": "reference=0.82"
+      },
+      {
+        "check_id": "syndrome_estimate_matches_hidden_truth",
+        "passed": true,
+        "observed": 4.097416534354359e-05,
+        "criterion": "abs(syndrome-hidden) <= limit",
+        "limit": 0.02,
+        "detail": "same shared trajectories; estimator observed-only"
+      },
+      {
+        "check_id": "hidden_truth_inside_first_order_syndrome_interval",
+        "passed": true,
+        "observed": 0.8135652777777779,
+        "criterion": "combined syndrome CI contains hidden mean",
+        "limit": 0.8334187056492505,
+        "detail": "combined_ci=(0.7938608326787127, 0.8334187056492505)"
+      },
+      {
+        "check_id": "physical_error_estimate_matches_generator",
+        "passed": true,
+        "observed": 0.0020106095996120787,
+        "criterion": "abs(estimated-configured) <= limit",
+        "limit": 0.02,
+        "detail": "estimated=0.13201060959961208"
+      },
+      {
+        "check_id": "single_exponential_all_gg_fit",
+        "passed": true,
+        "observed": 0.9999998712602604,
+        "criterion": "log-probability R^2 >= limit",
+        "limit": 0.999,
+        "detail": "registered sliding-window lengths"
+      },
+      {
+        "check_id": "all_gg_probability_strictly_decreases",
+        "passed": true,
+        "observed": 0.026144528627262492,
+        "criterion": "minimum adjacent decrease > 0",
+        "limit": 0.0,
+        "detail": "rejects malformed/nondecaying strings"
+      },
+      {
+        "check_id": "leakage_removal_retains_expected_fraction",
+        "passed": true,
+        "observed": 0.845,
+        "criterion": "minimum <= retained fraction <= maximum",
+        "limit": 0.75,
+        "detail": "maximum=0.95"
+      },
+      {
+        "check_id": "long_lag_tail_detected_before_removal",
+        "passed": true,
+        "observed": 0.0029759939118347858,
+        "criterion": "mean registered-lag correlation >= limit",
+        "limit": 0.001,
+        "detail": "lags=(40, 60, 80, 100, 120, 140, 160, 180, 200)"
+      },
+      {
+        "check_id": "tail_shrink_paired_ci_positive",
+        "passed": true,
+        "observed": 0.0016835473982551917,
+        "criterion": "paired difference CI-low >= limit",
+        "limit": 0.0003,
+        "detail": "before minus leakage-removed"
+      },
+      {
+        "check_id": "tail_shrink_ratio",
+        "passed": true,
+        "observed": 15.524111415140496,
+        "criterion": "before/after mean correlation >= limit",
+        "limit": 2.0,
+        "detail": "point-estimate effect size"
+      },
+      {
+        "check_id": "post_removal_tail_small",
+        "passed": true,
+        "observed": 0.00019170140127520158,
+        "criterion": "abs(post-removal mean tail) <= limit",
+        "limit": 0.0015,
+        "detail": "remaining short-memory/noise floor"
+      }
+    ]
+  },
+  "source_path": "relative_papers/Real-time_quantum_error_correction_beyond_break-even/Real-time_quantum_error_correction_beyond_break-even.md",
+  "source_anchors": [
+    {
+      "line": 181,
+      "fragment": "expectation value of the code projector $ \\langle \\Pi_{0}\\rangle=0.825\\pm 0.003 $",
+      "role": "independent_hidden_state_reference"
+    },
+    {
+      "line": 965,
+      "fragment": "P([gg]^{n})=a\\lambda^{n}",
+      "role": "syndrome_string_fit"
+    },
+    {
+      "line": 967,
+      "fragment": "p_{\\mathrm{err}} \\approx 1-\\lambda",
+      "role": "occupancy_estimator_identity"
+    },
+    {
+      "line": 1015,
+      "fragment": "decay constant of 17.2 cycles",
+      "role": "higher_leakage_duration"
+    },
+    {
+      "line": 1027,
+      "fragment": "p_{l,\\geq2}=(1.280\\pm0.002)\\times10^{-4}",
+      "role": "long_leakage_rate"
+    },
+    {
+      "line": 1039,
+      "fragment": "length-two or longer leakage events",
+      "role": "correlation_postselection"
+    }
+  ],
+  "protocol_id": "PROTO-SBS-MAIN",
+  "evidence_scope": "protocol_aligned_occupancy_correlation_effective_model_not_device_calibrated",
+  "device_calibrated": false,
+  "experimental_data_reproduced": false,
+  "limitations": [
+    "hidden state is a coarse-grained recovery-depth process, not a Fock-space state",
+    "leakage start/duration use source-inspired effective assumptions",
+    "syndrome estimator is first-order and reports the explicit p_err squared model bound",
+    "correlation removal is post-selection, not an online leakage-removal controller",
+    "no target-device calibration or experimental raw-data fit"
+  ]
+}

@@ -1,0 +1,539 @@
+{
+  "schema_version": "t3.2.2-continuous-adaptive-map-v1",
+  "task_id": "T3.2.2",
+  "status": "PASS",
+  "implementation_sha256": "ef3ac84c3e9413b395d10dece6909cee1f4c641b813d3e49911dfd61a890d485",
+  "descriptor": {
+    "task_id": "T3.2.2",
+    "comparison_id": "t3_2_2_continuous_adaptive_map_comparison",
+    "label": "Causal full-covariance EWMA/Kalman adaptive periodic MAP",
+    "deployable_algorithm_family": true,
+    "consumed_observation_fields": [
+      "residual_q",
+      "residual_p"
+    ],
+    "hidden_truth_inputs": [],
+    "update_timing": "one_window_delay_update_after_current_evaluation",
+    "state_rule": "periodic circular moments estimate mean/full covariance; EWMA filters four complex moments and Kalman filters five transformed parameters plus velocity",
+    "evidence_scope": "continuous_synthetic_wrapped_gaussian_syndrome_level",
+    "excluded_claims": [
+      "finite_energy_protocol_fidelity",
+      "loss_outlier_or_leakage_identification",
+      "device_calibration",
+      "FPGA_synthesis_or_measured_latency"
+    ]
+  },
+  "observation_budget": {
+    "fields": [
+      "residual_q",
+      "residual_p"
+    ],
+    "samples_per_window": 384,
+    "updates_per_window": 1,
+    "causal_delay_windows": 1,
+    "evaluation_buffer_separate_from_observation_buffer": true,
+    "hidden_truth_inputs": []
+  },
+  "validation_config": {
+    "training_seeds": [
+      20260811,
+      20260812,
+      20260813
+    ],
+    "evaluation_seeds": [
+      20260831,
+      20260832,
+      20260833,
+      20260834,
+      20260835,
+      20260836,
+      20260837,
+      20260838
+    ],
+    "windows": 48,
+    "calibration_windows": 4,
+    "observation_samples_per_window": 384,
+    "training_score_samples_per_window": 384,
+    "evaluation_samples_per_window": 1024,
+    "ewma_alpha_candidates": [
+      0.15,
+      0.25,
+      0.35,
+      0.5,
+      0.7,
+      0.85,
+      1.0
+    ],
+    "kalman_process_scale_candidates": [
+      0.5,
+      1.0,
+      1.5,
+      2.0,
+      3.0
+    ],
+    "kalman_measurement_scale_candidates": [
+      0.5,
+      0.75,
+      1.0,
+      1.5
+    ],
+    "confidence_level": 0.95
+  },
+  "frozen_hyperparameters": {
+    "ewma_alpha": 0.85,
+    "kalman_process_scale": 2.0,
+    "kalman_measurement_scale": 0.75,
+    "ewma_candidate_scores": [
+      [
+        0.15,
+        0.9181685457464661
+      ],
+      [
+        0.25,
+        0.4969605172554099
+      ],
+      [
+        0.35,
+        0.3197183255868279
+      ],
+      [
+        0.5,
+        0.21105959390743464
+      ],
+      [
+        0.7,
+        0.16436469347781507
+      ],
+      [
+        0.85,
+        0.15678440623163892
+      ],
+      [
+        1.0,
+        0.16170714969979827
+      ]
+    ],
+    "kalman_candidate_scores": [
+      [
+        0.5,
+        0.5,
+        0.18024959620767522
+      ],
+      [
+        0.5,
+        0.75,
+        0.23502038412800796
+      ],
+      [
+        0.5,
+        1.0,
+        0.29643089518322335
+      ],
+      [
+        0.5,
+        1.5,
+        0.4163475442931095
+      ],
+      [
+        1.0,
+        0.5,
+        0.14575852445335047
+      ],
+      [
+        1.0,
+        0.75,
+        0.15875516430354353
+      ],
+      [
+        1.0,
+        1.0,
+        0.1808259201485273
+      ],
+      [
+        1.0,
+        1.5,
+        0.2383853155203204
+      ],
+      [
+        1.5,
+        0.5,
+        0.14517674539854197
+      ],
+      [
+        1.5,
+        0.75,
+        0.14556061619375266
+      ],
+      [
+        1.5,
+        1.0,
+        0.15354753583738423
+      ],
+      [
+        1.5,
+        1.5,
+        0.18265287426177393
+      ],
+      [
+        2.0,
+        0.5,
+        0.14865629485003778
+      ],
+      [
+        2.0,
+        0.75,
+        0.14424390156603709
+      ],
+      [
+        2.0,
+        1.0,
+        0.14576591368373756
+      ],
+      [
+        2.0,
+        1.5,
+        0.16043286709581978
+      ],
+      [
+        3.0,
+        0.5,
+        0.15491489997980468
+      ],
+      [
+        3.0,
+        0.75,
+        0.14844503360537686
+      ],
+      [
+        3.0,
+        1.0,
+        0.1449883388518441
+      ],
+      [
+        3.0,
+        1.5,
+        0.14631421706198275
+      ]
+    ],
+    "training_trace_sha256": "ef133f778914936a016c268c01a68953a276a53855c2aa5489b690187052db62",
+    "selection_objective": "observation_only_independent_window_periodic_moment_forecast_score"
+  },
+  "static_training_parameters": {
+    "mean": [
+      0.0801375926112148,
+      -0.024123041799225527
+    ],
+    "covariance": [
+      [
+        0.2312542386879573,
+        -0.02585159451245441
+      ],
+      [
+        -0.02585159451245441,
+        0.1726363620969346
+      ]
+    ],
+    "training_windows": 192,
+    "effective_training_weight": 192.0,
+    "training_state_sha256": "02bdc6722a9b81aaf55c98708e9a31c3a243621c0decbc791636004bcab78b93",
+    "training_protocol_id": "t3.2.2-continuous-scenario-average-v1:windows=48:training_seeds=(20260811, 20260812, 20260813)",
+    "fit_rule": "moment_matched_marginal_law_of_total_covariance",
+    "loss_handling": "reject_nonzero_loss_gamma",
+    "outlier_handling": "moment_match_same_mean_gaussian_mixture_covariance"
+  },
+  "scenarios": [
+    {
+      "scenario_id": "linear_mean",
+      "seeds": 8,
+      "windows": 48,
+      "evaluation_samples": 393216,
+      "unique_trace_hashes": 8,
+      "static_minus_ewma_seed_cluster_ci": {
+        "estimate": 0.006106058756510417,
+        "standard_error": 0.00010796013685420019,
+        "ci_low": 0.005850773598699699,
+        "ci_high": 0.006361343914321135,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "static_minus_kalman_seed_cluster_ci": {
+        "estimate": 0.006108601888020834,
+        "standard_error": 9.702066948707749e-05,
+        "ci_low": 0.005879184460045922,
+        "ci_high": 0.0063380193159957455,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "window_minus_best_recursive_seed_cluster_ci": {
+        "estimate": 1.780192057291667e-05,
+        "standard_error": 1.0485599837284498e-05,
+        "ci_low": -6.992583094823609e-06,
+        "ci_high": 4.259642424065695e-05,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "standard_error_rate": 0.006169637044270834,
+      "static_error_rate": 0.007052103678385417,
+      "window_error_rate": 0.0009435017903645833,
+      "ewma_error_rate": 0.000946044921875,
+      "kalman_error_rate": 0.0009435017903645834,
+      "oracle_error_rate": 0.0009002685546875,
+      "static_nll": 0.01980008792846387,
+      "static_brier": 0.010787777210667971,
+      "window_nll": 0.002779067741285394,
+      "window_brier": 0.0014563746129670676,
+      "ewma_nll": 0.002772438496398887,
+      "ewma_brier": 0.0014560426142428214,
+      "kalman_nll": 0.0027176539768446794,
+      "kalman_brier": 0.001424894290816547,
+      "oracle_nll": 0.0026269131820342985,
+      "oracle_brier": 0.0013836530491506214,
+      "window_mean_tracking_rmse_lattice": 0.012999263846874009,
+      "window_covariance_tracking_rmse_lattice2": 0.0023938614291894172,
+      "ewma_mean_tracking_rmse_lattice": 0.013049061459728884,
+      "ewma_covariance_tracking_rmse_lattice2": 0.0020648089755001472,
+      "kalman_mean_tracking_rmse_lattice": 0.00966807517777618,
+      "kalman_covariance_tracking_rmse_lattice2": 0.0021142504714946045
+    },
+    {
+      "scenario_id": "variance_correlation_ramp",
+      "seeds": 8,
+      "windows": 48,
+      "evaluation_samples": 393216,
+      "unique_trace_hashes": 8,
+      "static_minus_ewma_seed_cluster_ci": {
+        "estimate": 0.007748921712239584,
+        "standard_error": 0.0002268606080611768,
+        "ci_low": 0.00721248161668704,
+        "ci_high": 0.008285361807792128,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "static_minus_kalman_seed_cluster_ci": {
+        "estimate": 0.007764180501302084,
+        "standard_error": 0.00024100017084902403,
+        "ci_low": 0.007194305652674478,
+        "ci_high": 0.008334055349929691,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "window_minus_best_recursive_seed_cluster_ci": {
+        "estimate": 8.138020833333326e-05,
+        "standard_error": 1.8033961190346745e-05,
+        "ci_low": 3.873666635035627e-05,
+        "ci_high": 0.00012402375031631024,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "standard_error_rate": 0.01360321044921875,
+      "static_error_rate": 0.011830647786458334,
+      "window_error_rate": 0.004124959309895834,
+      "ewma_error_rate": 0.00408172607421875,
+      "kalman_error_rate": 0.00406646728515625,
+      "oracle_error_rate": 0.00394439697265625,
+      "static_nll": 0.03465693809704505,
+      "static_brier": 0.018092338814190197,
+      "window_nll": 0.011918342639591082,
+      "window_brier": 0.006426119507415824,
+      "ewma_nll": 0.011805922965173224,
+      "ewma_brier": 0.00637798548644607,
+      "kalman_nll": 0.011779757414569908,
+      "kalman_brier": 0.006360130065972127,
+      "oracle_nll": 0.011336806531221048,
+      "oracle_brier": 0.0061486547667168705,
+      "window_mean_tracking_rmse_lattice": 0.013641037711456513,
+      "window_covariance_tracking_rmse_lattice2": 0.0040726019594851184,
+      "ewma_mean_tracking_rmse_lattice": 0.011780117638573683,
+      "ewma_covariance_tracking_rmse_lattice2": 0.003702310856114232,
+      "kalman_mean_tracking_rmse_lattice": 0.011972977176206975,
+      "kalman_covariance_tracking_rmse_lattice2": 0.003455325225780144
+    },
+    {
+      "scenario_id": "sinusoidal_joint",
+      "seeds": 8,
+      "windows": 48,
+      "evaluation_samples": 393216,
+      "unique_trace_hashes": 8,
+      "static_minus_ewma_seed_cluster_ci": {
+        "estimate": 0.015078226725260416,
+        "standard_error": 0.0002624781366960021,
+        "ci_low": 0.014457564557716164,
+        "ci_high": 0.015698888892804668,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "static_minus_kalman_seed_cluster_ci": {
+        "estimate": 0.01517486572265625,
+        "standard_error": 0.0002666687213470502,
+        "ci_low": 0.014544294397017777,
+        "ci_high": 0.015805437048294724,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "window_minus_best_recursive_seed_cluster_ci": {
+        "estimate": 2.0345052083333153e-05,
+        "standard_error": 3.727723719534929e-05,
+        "ci_low": -6.780160702116636e-05,
+        "ci_high": 0.00010849171118783267,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "standard_error_rate": 0.02365875244140625,
+      "static_error_rate": 0.019475301106770836,
+      "window_error_rate": 0.004315694173177083,
+      "ewma_error_rate": 0.004397074381510416,
+      "kalman_error_rate": 0.004300435384114583,
+      "oracle_error_rate": 0.0036977132161458335,
+      "static_nll": 0.056654509564019725,
+      "static_brier": 0.029775797641120715,
+      "window_nll": 0.012322487719444133,
+      "window_brier": 0.006590295741936371,
+      "ewma_nll": 0.0126079514588141,
+      "ewma_brier": 0.006761908516699293,
+      "kalman_nll": 0.012154045636992185,
+      "kalman_brier": 0.006499234620360377,
+      "oracle_nll": 0.010650927038341617,
+      "oracle_brier": 0.005702664622475193,
+      "window_mean_tracking_rmse_lattice": 0.0340521359467123,
+      "window_covariance_tracking_rmse_lattice2": 0.005297149979423134,
+      "ewma_mean_tracking_rmse_lattice": 0.038304164997032555,
+      "ewma_covariance_tracking_rmse_lattice2": 0.005188317110027184,
+      "kalman_mean_tracking_rmse_lattice": 0.03310010317159179,
+      "kalman_covariance_tracking_rmse_lattice2": 0.004817604029743022
+    },
+    {
+      "scenario_id": "smooth_mixed",
+      "seeds": 8,
+      "windows": 48,
+      "evaluation_samples": 393216,
+      "unique_trace_hashes": 8,
+      "static_minus_ewma_seed_cluster_ci": {
+        "estimate": 0.010668436686197918,
+        "standard_error": 0.00016545997456474955,
+        "ci_low": 0.010277186017674186,
+        "ci_high": 0.01105968735472165,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "static_minus_kalman_seed_cluster_ci": {
+        "estimate": 0.010683695475260416,
+        "standard_error": 0.00014165754521781255,
+        "ci_low": 0.010348728608417275,
+        "ci_high": 0.011018662342103558,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "window_minus_best_recursive_seed_cluster_ci": {
+        "estimate": 0.00011444091796875011,
+        "standard_error": 3.238304846008207e-05,
+        "ci_low": 3.786717623953567e-05,
+        "ci_high": 0.00019101465969796453,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "standard_error_rate": 0.019116719563802086,
+      "static_error_rate": 0.0171661376953125,
+      "window_error_rate": 0.006543477376302084,
+      "ewma_error_rate": 0.006497701009114583,
+      "kalman_error_rate": 0.006482442220052084,
+      "oracle_error_rate": 0.006139119466145834,
+      "static_nll": 0.05191268856169148,
+      "static_brier": 0.026639895510298266,
+      "window_nll": 0.018674679636449688,
+      "window_brier": 0.010025699464082402,
+      "ewma_nll": 0.018577018593753963,
+      "ewma_brier": 0.009977371819675635,
+      "kalman_nll": 0.018427412693119524,
+      "kalman_brier": 0.009899744199289495,
+      "oracle_nll": 0.017579278239792103,
+      "oracle_brier": 0.009420239145429714,
+      "window_mean_tracking_rmse_lattice": 0.019332545405347956,
+      "window_covariance_tracking_rmse_lattice2": 0.004410444923407934,
+      "ewma_mean_tracking_rmse_lattice": 0.019919662750778576,
+      "ewma_covariance_tracking_rmse_lattice2": 0.003890952727316809,
+      "kalman_mean_tracking_rmse_lattice": 0.017184690406926627,
+      "kalman_covariance_tracking_rmse_lattice2": 0.003840292976022912
+    }
+  ],
+  "aggregate": {
+    "scenarios": 4,
+    "evaluation_seeds_per_scenario": 8,
+    "windows": 1536,
+    "evaluation_samples": 1572864,
+    "source_data_rows": 32,
+    "static_minus_ewma_seed_cluster_ci": {
+      "estimate": 0.009900410970052084,
+      "standard_error": 0.00011764953120506823,
+      "ci_low": 0.009622214035376057,
+      "ci_high": 0.010178607904728111,
+      "cluster_unit": "evaluation_seed",
+      "interval_method": "two_sided_student_t_cluster_mean",
+      "degrees_freedom": 7
+    },
+    "static_minus_kalman_seed_cluster_ci": {
+      "estimate": 0.009932835896809896,
+      "standard_error": 0.00011626882866304319,
+      "ci_low": 0.009657903804848978,
+      "ci_high": 0.010207767988770815,
+      "cluster_unit": "evaluation_seed",
+      "interval_method": "two_sided_student_t_cluster_mean",
+      "degrees_freedom": 7
+    }
+  },
+  "cost_profile": {
+    "observation_samples_per_window": 384,
+    "updates_per_window": 1,
+    "causal_delay_windows": 1,
+    "complex_exponentials_per_observation": 2,
+    "complex_products_per_observation": 2,
+    "ewma_complex_state_values": 4,
+    "ewma_complex_blends_per_update": 4,
+    "kalman_state_values": 10,
+    "kalman_covariance_values": 100,
+    "kalman_innovation_dimension": 5,
+    "target_lut": null,
+    "target_ff": null,
+    "target_bram": null,
+    "target_dsp": null,
+    "target_fmax_hz": null,
+    "target_measured": false,
+    "scope": "deterministic_operation_storage_proxy_not_synthesis"
+  },
+  "gate_summary": {
+    "passed": 15,
+    "failed": 0,
+    "gates": {
+      "training_and_evaluation_are_disjoint": true,
+      "hyperparameters_selected_before_evaluation": true,
+      "selected_hyperparameters_are_not_grid_boundaries": true,
+      "comparison_roles_are_registered": true,
+      "all_evaluation_traces_are_unique": true,
+      "observation_and_update_budget_is_identical": true,
+      "ewma_improves_static_in_every_scenario": true,
+      "kalman_improves_static_in_every_scenario": true,
+      "best_recursive_point_not_worse_than_latest_window": true,
+      "recursive_tracking_improves_mean_and_covariance": true,
+      "adaptive_proper_scores_improve_static_in_every_scenario": true,
+      "aggregate_ewma_gain_resolved": true,
+      "aggregate_kalman_gain_resolved": true,
+      "oracle_remains_strict_reference": true,
+      "cost_profile_remains_not_synthesis": true
+    }
+  },
+  "claim_boundary": {
+    "allowed": "on the registered continuous wrapped-Gaussian syndrome scenarios, full-covariance EWMA and constant-velocity Kalman predictors are causal strong traditional adaptive MAP baselines",
+    "forbidden": "universal adaptive superiority, loss/outlier/leakage identification, finite-energy protocol fidelity, device calibration, CNN superiority, or FPGA synthesis/measurement"
+  }
+}

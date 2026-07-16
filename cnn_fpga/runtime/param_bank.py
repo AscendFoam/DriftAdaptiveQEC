@@ -88,6 +88,10 @@ class CommitResult:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 
+class ParameterUpdateConflictError(RuntimeError):
+    """Raised when a second writer tries to replace an uncommitted update."""
+
+
 class ParamBank:
     """Two-bank parameter storage with explicit stage and commit phases."""
 
@@ -150,6 +154,12 @@ class ParamBank:
         staged_epoch: Optional[int] = None,
         metadata: Optional[Dict[str, Any]] = None,
     ) -> PendingCommit:
+        if self._pending_commit is not None:
+            raise ParameterUpdateConflictError(
+                "parameter update conflict: pending version "
+                f"{self._pending_commit.version} for epoch {self._pending_commit.commit_epoch} "
+                "must commit or be explicitly discarded before another update is staged"
+            )
         if commit_epoch < self._epoch_id:
             raise ValueError(
                 f"commit_epoch must be >= current epoch ({self._epoch_id}), got {commit_epoch}"

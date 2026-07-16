@@ -1,0 +1,3861 @@
+{
+  "schema_version": "t3.2.6-causal-regime-hmm-v1",
+  "task_id": "T3.2.6",
+  "status": "PASS",
+  "implementation_sha256": "9ec949d0ed0a589e20a9c1c79bf4f185012dcb777abb514d4158b9d4291ac55e",
+  "descriptor": {
+    "task_id": "T3.2.6",
+    "role": "host_regime_estimator_baseline",
+    "online_input": [
+      "residual_q",
+      "residual_p",
+      "x_is_e",
+      "z_is_e",
+      "any_leakage",
+      "quadrature_phase_bit",
+      "valid",
+      "deadline_ok"
+    ],
+    "online_hidden_truth_input": [],
+    "training_only_labels": [
+      "normal",
+      "burst",
+      "leakage",
+      "calibration_shift"
+    ],
+    "output": "normalized_normal_burst_leakage_calibration_shift_posterior",
+    "filtering": "strictly_causal_forward_recursion_no_viterbi_smoothing",
+    "future_cnn_fairness": "same_raw_window_shape_update_period_and_reserved_MAC_state_budget",
+    "logical_decoder": false,
+    "controller": false,
+    "hardware_measured": false,
+    "evidence_scope": "protocol_aligned_synthetic_window_level_regime_estimation"
+  },
+  "validation_config": {
+    "training_seeds": [
+      20261201,
+      20261202,
+      20261203
+    ],
+    "validation_seeds": [
+      20261211,
+      20261212,
+      20261213
+    ],
+    "evaluation_seeds": [
+      20261231,
+      20261232,
+      20261233,
+      20261234,
+      20261235,
+      20261236,
+      20261237,
+      20261238
+    ],
+    "windows_per_trajectory": 128,
+    "budget": {
+      "window_cycles": 32,
+      "update_period_cycles": 32,
+      "raw_feature_count": 8,
+      "summary_feature_count": 14,
+      "max_macs_per_update": 4096,
+      "max_float32_state_bytes": 4096,
+      "future_comparator_contract": "same_raw_window_shape_update_period_and_budget_for_T4.1_CNN_TCN_GRU"
+    },
+    "covariance_regularization_grid": [
+      0.01,
+      0.03,
+      0.1,
+      0.3,
+      1.0,
+      3.0
+    ],
+    "transition_smoothing_grid": [
+      0.05,
+      0.1,
+      0.25,
+      0.5,
+      1.0,
+      2.0,
+      5.0,
+      10.0,
+      30.0
+    ],
+    "temperature_grid": [
+      0.6,
+      0.8,
+      1.0,
+      1.25,
+      1.6,
+      2.0,
+      3.0,
+      4.0
+    ],
+    "confidence_level": 0.95
+  },
+  "shared_input_budget": {
+    "window_cycles": 32,
+    "update_period_cycles": 32,
+    "raw_feature_count": 8,
+    "summary_feature_count": 14,
+    "max_macs_per_update": 4096,
+    "max_float32_state_bytes": 4096,
+    "future_comparator_contract": "same_raw_window_shape_update_period_and_budget_for_T4.1_CNN_TCN_GRU"
+  },
+  "training_selection": {
+    "evaluation_truth_used": false,
+    "training_trajectories": 3,
+    "validation_trajectories": 3,
+    "grid": [
+      {
+        "covariance_regularization": 0.01,
+        "transition_smoothing": 0.05,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.8207817886698557,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.957437683017579
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.519777017760294
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.2704882830711273
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 1.086294514100165
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.9466182346163824
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8691667808249406
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.8207817886698557
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8377893580866594
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.01,
+        "transition_smoothing": 0.1,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.8227276186336057,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.958438707975537
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.5209404402519315
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.2718181389138743
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 1.0878116961966737
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.9483361605918773
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.871026943158317
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.8227276186336057
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8396480444720464
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.01,
+        "transition_smoothing": 0.25,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.8281562385443134,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.9617527639160717
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.5245817130101276
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.2758365046377225
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 1.0922719853582865
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.9532763575892323
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8763014612256078
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.8281562385443134
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8447981382243729
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.01,
+        "transition_smoothing": 0.5,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.8362691052675245,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.9679185940124775
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.5309125942753627
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.2825196666124832
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 1.0994317648689036
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.9609776691225044
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8843671601313229
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.8362691052675245
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8524182145825078
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.01,
+        "transition_smoothing": 1.0,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.850127073296428,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.981148563004875
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.543687505740457
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.2954300022269785
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 1.1127565636744328
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.9748434147538863
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8985553256970703
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.850127073296428
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8652616959667624
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.01,
+        "transition_smoothing": 2.0,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.8718328235161604,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 2.0071929057375155
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.5675775097833504
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.3186328063855368
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 1.1358299099176516
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.997999734758494
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.9216102966785985
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.8718328235161604
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8850315422442433
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.01,
+        "transition_smoothing": 5.0,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.9133657525792426,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 2.0703388137598306
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.6229550250630425
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.370484690398886
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 1.1855081253612942
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 1.0459182243454472
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.9678036653275081
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.9133657525792426
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.9220137649277752
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.01,
+        "transition_smoothing": 10.0,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.951353864560612,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 2.1385358662802068
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.6814003469099983
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.4240294256917772
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 1.2355406929539008
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 1.0927662812399694
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 1.0117928389342374
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.951353864560612
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.9551421435525279
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.01,
+        "transition_smoothing": 30.0,
+        "selected_hmm_temperature": 4.0,
+        "validation_hmm_nll": 1.0062302840004034,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 2.262425623387965
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.786651311022825
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.5189867249051978
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 1.322371862335074
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 1.1718094694850916
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 1.0840989529864917
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 1.0112567703317217
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 1.0062302840004034
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.03,
+        "transition_smoothing": 0.05,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.7792816162588713,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.657315741537781
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.295310604165601
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.0924707849191304
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.9465701923186662
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.8418492603741714
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.790636458246849
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7792816162588713
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.815333823066946
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.03,
+        "transition_smoothing": 0.1,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.7811490784963023,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.6571870613703517
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.2956697369609937
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.0932009652857648
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.9476552498274543
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.8432808574087615
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.7923087877636624
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7811490784963023
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8171520115449448
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.03,
+        "transition_smoothing": 0.25,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.7863968956218002,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.6574609895227888
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.2971690018794604
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.0956378049397755
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.9509897444937856
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.847488698556564
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.7971142908349078
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7863968956218002
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.822218306791837
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.03,
+        "transition_smoothing": 0.5,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.7943418680378892,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.6594718722734665
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.3006291727488346
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.1002414720934202
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.9567056651196607
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.8542875523478242
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8046339584242038
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7943418680378892
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8297895712504765
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.03,
+        "transition_smoothing": 1.0,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.8081466478957022,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.6666260874990968
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.3093408014437469
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.1103043907454013
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.9681435772070675
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.8670690193476238
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8182526441189752
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.8081466478957022
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8427204985505766
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.03,
+        "transition_smoothing": 2.0,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.8301968223677231,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.6852436536884519
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.3285569676861724
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.130437651602961
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.9893849315051092
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.8893989501378788
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8410984086508662
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.8301968223677231
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8629342888807697
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.03,
+        "transition_smoothing": 5.0,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.873408697711635,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.7400940838901995
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.379546053420392
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.1800618067873747
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 1.0384440635109093
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.9379297363330741
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8885754615938178
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.873408697711635
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.9014840913152856
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.03,
+        "transition_smoothing": 10.0,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.9137101633069741,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.8072558509262218
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.4384927511655727
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.2350092592711772
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 1.0905257612802635
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.9872332756067784
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.9351286713563113
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.9137101633069741
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.9365696327106164
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.03,
+        "transition_smoothing": 30.0,
+        "selected_hmm_temperature": 3.0,
+        "validation_hmm_nll": 0.977902299527316,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.9395806361636503
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.5511794533299044
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.3369829093349301
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 1.183991207572923
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 1.0723836691800124
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 1.0129492965885154
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.977902299527316
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.9910922593523832
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.1,
+        "transition_smoothing": 0.05,
+        "selected_hmm_temperature": 2.0,
+        "validation_hmm_nll": 0.6751205408024582,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.1842844912823967
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.943316449863547
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.8148800709171841
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.7307502944642407
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.6830682335491233
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6751205408024582
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7250247024165924
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.7922585284704325
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.1,
+        "transition_smoothing": 0.1,
+        "selected_hmm_temperature": 2.0,
+        "validation_hmm_nll": 0.6764513229282244,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.1822643399485429
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.9423165909904703
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.8145832871444824
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.7310836423254651
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.6839916926118322
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6764513229282244
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7267367440763618
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.7939861260894377
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.1,
+        "transition_smoothing": 0.25,
+        "selected_hmm_temperature": 2.0,
+        "validation_hmm_nll": 0.6803292016648141,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.1772888758913016
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.9400478388612964
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.8141794825999517
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.7323474670271769
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.6868088778111993
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6803292016648141
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7315715684775926
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.7988177268788919
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.1,
+        "transition_smoothing": 0.5,
+        "selected_hmm_temperature": 2.0,
+        "validation_hmm_nll": 0.6865885476029678,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.1717662478988278
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.938114647608899
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.8147406850160125
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.7351455156719503
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.6916794536373226
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6865885476029678
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7389876382215229
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8061070621246545
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.1,
+        "transition_smoothing": 1.0,
+        "selected_hmm_temperature": 2.0,
+        "validation_hmm_nll": 0.6985122350433676,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.1672795077338012
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.9385580732121719
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.818694583480963
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.7422754805289019
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.7017242417032801
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6985122350433676
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7521984271627812
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8187897094635463
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.1,
+        "transition_smoothing": 2.0,
+        "selected_hmm_temperature": 2.0,
+        "validation_hmm_nll": 0.7199874820953119,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.1710132972358336
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.9474794846311733
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.8315223080333425
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.7586908494538237
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.7213404474455704
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.7199874820953119
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7741765252181754
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8392544455861631
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.1,
+        "transition_smoothing": 5.0,
+        "selected_hmm_temperature": 2.0,
+        "validation_hmm_nll": 0.7689621754314396,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.2080285579411862
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.9875420556988163
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.8746784875752462
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.804844008220444
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.769785938443507
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.7689621754314396
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.8199539218509607
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8802747376332851
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.1,
+        "transition_smoothing": 10.0,
+        "selected_hmm_temperature": 2.0,
+        "validation_hmm_nll": 0.8207417731392604,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.270908082025544
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.0461749855307032
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.9316987100097766
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.8607149200662733
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.8239749266218898
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8207417731392604
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.8650045726081549
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.9193426475960859
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.1,
+        "transition_smoothing": 30.0,
+        "selected_hmm_temperature": 2.0,
+        "validation_hmm_nll": 0.9105075870592003,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 1.4152978803425078
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 1.1721702114037758
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 1.047474512062588
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.9679222434080774
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.9221646310076629
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.9105075870592003
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.9385519036753213
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.9813105604662411
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.3,
+        "transition_smoothing": 0.05,
+        "selected_hmm_temperature": 1.25,
+        "validation_hmm_nll": 0.5788480667071977,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.8260030483346275
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.6796029097684025
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.611260156007396
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.5788480667071977
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.5806546868987833
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6111634702761498
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7156096434857563
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8093934860419006
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.3,
+        "transition_smoothing": 0.1,
+        "selected_hmm_temperature": 1.25,
+        "validation_hmm_nll": 0.5786428746734033,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.8224066860935548
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.6774747906751211
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.6101482554666221
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.5786428746734033
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.5812865078927226
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.61236089678087
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7173306852866982
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8111563782197434
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.3,
+        "transition_smoothing": 0.25,
+        "selected_hmm_temperature": 1.25,
+        "validation_hmm_nll": 0.5783736818603692,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.8128425460196168
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.6719521131827491
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.6074095941504701
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.5783736818603692
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.5832785926129901
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6158638586901604
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7221938851960502
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8160907355295525
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.3,
+        "transition_smoothing": 0.5,
+        "selected_hmm_temperature": 1.25,
+        "validation_hmm_nll": 0.5788664274785583,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.8001162508338666
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.6649940896628351
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.6044116259355774
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.5788664274785583
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.5869304251166044
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6215848653272515
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7296719211373724
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8235486738616945
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.3,
+        "transition_smoothing": 1.0,
+        "selected_hmm_temperature": 1.25,
+        "validation_hmm_nll": 0.5821547844678983,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.7827966232466474
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.6566917310300789
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.6022934815867306
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.5821547844678983
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.5950170295437104
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6327020813982941
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7430622892746674
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8365700780257267
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.3,
+        "transition_smoothing": 2.0,
+        "selected_hmm_temperature": 1.25,
+        "validation_hmm_nll": 0.5931053963327367,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.7663529766425498
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.6522649372298263
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.6061267285034285
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.5931053963327367
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.6120514827324389
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6532991299370704
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7655450420570021
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8577152112138697
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.3,
+        "transition_smoothing": 5.0,
+        "selected_hmm_temperature": 1.25,
+        "validation_hmm_nll": 0.6322306165261259,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.7696892347569714
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.6713011028343693
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.6361270363376955
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.6322306165261259
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.6582043795116269
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.7025890454059397
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.8134348677569895
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.9008249046731044
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.3,
+        "transition_smoothing": 10.0,
+        "selected_hmm_temperature": 1.25,
+        "validation_hmm_nll": 0.6874445036455875,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.811450960918421
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.7190093777131272
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.6881952442796093
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.6874445036455875
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.714686451567208
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.7579883312820271
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.8623994259863258
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.9431966113205514
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 0.3,
+        "transition_smoothing": 30.0,
+        "selected_hmm_temperature": 1.25,
+        "validation_hmm_nll": 0.8049983808414454,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.9466896904574135
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.8465463728203783
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.8110490974905028
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.8049983808414454
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.824635021957841
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8593420421049895
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.9453479758742424
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 1.0125417009529276
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 1.0,
+        "transition_smoothing": 0.05,
+        "selected_hmm_temperature": 1.0,
+        "validation_hmm_nll": 0.525640198288349,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.608535794519424
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.5413438696139977
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.525640198288349
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.5398706760433889
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.5863555291794633
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6499657823136169
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7935971878952476
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.8987791611996405
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 1.0,
+        "transition_smoothing": 0.1,
+        "selected_hmm_temperature": 1.0,
+        "validation_hmm_nll": 0.5236560986032205,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.603061206090557
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.5379463580288133
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.5236560986032205
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.5391175861391134
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.5866964610900481
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6510098365183882
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7952424216715203
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.9004563040856869
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 1.0,
+        "transition_smoothing": 0.25,
+        "selected_hmm_temperature": 1.0,
+        "validation_hmm_nll": 0.5185739492099258,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.5883946443174267
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.5289877684410135
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.5185739492099258
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.5373955507362124
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.587936357710598
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6541298973322268
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.7999188316052294
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.9051671656112026
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 1.0,
+        "transition_smoothing": 0.5,
+        "selected_hmm_temperature": 1.0,
+        "validation_hmm_nll": 0.5124191393747425,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.5685702002357569
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.5173020400504359
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.5124191393747425
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.5360075086056615
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.5906937032431124
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6594566717658824
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.807224916471451
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.912367895932821
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 1.0,
+        "transition_smoothing": 1.0,
+        "selected_hmm_temperature": 0.8,
+        "validation_hmm_nll": 0.5021381525345376,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.5406250116776953
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.5021381525345376
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.5059685395536684
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.536991608701391
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.5979828517144218
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.6704764266419375
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.8206836219757334
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.9252184492999908
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 1.0,
+        "transition_smoothing": 2.0,
+        "selected_hmm_temperature": 0.8,
+        "validation_hmm_nll": 0.48991102102570244,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.510886972362675
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.48991102102570244
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.5056893191094584
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.5466696518066718
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.6156690522354595
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.692433456677842
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.8442428266531908
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.9468215994349981
+          }
+        ],
+        "memoryless_temperature_scan_same_emissions": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.9614432285596739
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.9426844767866616
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.9551381456844461
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.983328541537929
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 1.0254256326869753
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 1.0679321355264433
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 1.1445053702934012
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 1.1928529921031832
+          }
+        ],
+        "selected_memoryless_temperature": 0.8
+      },
+      {
+        "covariance_regularization": 1.0,
+        "transition_smoothing": 5.0,
+        "selected_hmm_temperature": 0.6,
+        "validation_hmm_nll": 0.4984786429134795,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.4984786429134795
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.503525186145654
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.5366610761941101
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.5910761826959261
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.6692775365182486
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.749225621694594
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.8973122596365334
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 0.9931305191860833
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 1.0,
+        "transition_smoothing": 10.0,
+        "selected_hmm_temperature": 0.6,
+        "validation_hmm_nll": 0.5367305501945823,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.5367305501945823
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.5567460191408816
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.5988651865888235
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.6586811705067458
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.7382330270310066
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8156955139667345
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.9534944952817027
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 1.040216126995107
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 1.0,
+        "transition_smoothing": 30.0,
+        "selected_hmm_temperature": 0.6,
+        "validation_hmm_nll": 0.6797489503657456,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.6797489503657456
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.7031357565322583
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.7443117948104295
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.799042478399941
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.868439289332748
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.933718723122408
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 1.0463241695098848
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 1.1156548697289619
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 3.0,
+        "transition_smoothing": 0.05,
+        "selected_hmm_temperature": 0.8,
+        "validation_hmm_nll": 0.6750284586809941,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.7240956616037595
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.6750284586809941
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.6772660339768227
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.7088228654468991
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.7686920472562111
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8360262971225879
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.9655693824880719
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 1.0497456486017904
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 3.0,
+        "transition_smoothing": 0.1,
+        "selected_hmm_temperature": 0.8,
+        "validation_hmm_nll": 0.6701849057645378,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.7160471534506812
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.6701849057645378
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.6744685981516124
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.7076520803859445
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.7688036912180181
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8368598249102656
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.9669194781159995
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 1.0510907442958215
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 3.0,
+        "transition_smoothing": 0.25,
+        "selected_hmm_temperature": 0.8,
+        "validation_hmm_nll": 0.6572890496404767,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.6943082588292033
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.6572890496404767
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.6671853882405442
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.7047930814014295
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.7693907973264458
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8393542639290538
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.970720741225075
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 1.0548283513150738
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 3.0,
+        "transition_smoothing": 0.5,
+        "selected_hmm_temperature": 0.8,
+        "validation_hmm_nll": 0.6401620854375156,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.6644811967949241
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.6401620854375156
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.6580622205117341
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.7018959897654362
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.771241046033078
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8437453229715809
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.9766788663420044
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 1.0605393652955557
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 3.0,
+        "transition_smoothing": 1.0,
+        "selected_hmm_temperature": 0.8,
+        "validation_hmm_nll": 0.6172421975046967,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.621411137009511
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.6172421975046967
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.6476979890321838
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.7010703324183756
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.7774008938387947
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.853390432175034
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 0.9879271866969025
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 1.070922776562169
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 3.0,
+        "transition_smoothing": 2.0,
+        "selected_hmm_temperature": 0.6,
+        "validation_hmm_nll": 0.5735239993891066,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.5735239993891066
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.5972773803677525
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.6446363223294188
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.7102081366980789
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.7947027851964322
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.8740682799802707
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 1.008513353606825
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 1.089060652322429
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 3.0,
+        "transition_smoothing": 5.0,
+        "selected_hmm_temperature": 0.6,
+        "validation_hmm_nll": 0.5471596577499666,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.5471596577499666
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.6119271700767391
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.681712310750366
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.7610594501646543
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.8519494662475312
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.9311522204855686
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 1.0574125773675969
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 1.1299424397292404
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 3.0,
+        "transition_smoothing": 10.0,
+        "selected_hmm_temperature": 0.6,
+        "validation_hmm_nll": 0.595475465976777,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.595475465976777
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.6806744614642081
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.7582346277376774
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.8389830380177209
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 0.9258709120698724
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 0.9983712566891118
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 1.1097724428265217
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 1.1720958806019928
+          }
+        ]
+      },
+      {
+        "covariance_regularization": 3.0,
+        "transition_smoothing": 30.0,
+        "selected_hmm_temperature": 0.6,
+        "validation_hmm_nll": 0.7601971327146263,
+        "temperature_scan": [
+          {
+            "temperature": 0.6,
+            "validation_nll": 0.7601971327146263
+          },
+          {
+            "temperature": 0.8,
+            "validation_nll": 0.8445358894578016
+          },
+          {
+            "temperature": 1.0,
+            "validation_nll": 0.913747507191487
+          },
+          {
+            "temperature": 1.25,
+            "validation_nll": 0.981318717539399
+          },
+          {
+            "temperature": 1.6,
+            "validation_nll": 1.050526969376488
+          },
+          {
+            "temperature": 2.0,
+            "validation_nll": 1.1062368331411228
+          },
+          {
+            "temperature": 3.0,
+            "validation_nll": 1.189180461086022
+          },
+          {
+            "temperature": 4.0,
+            "validation_nll": 1.2345051640909446
+          }
+        ]
+      }
+    ],
+    "selected_covariance_regularization": 1.0,
+    "selected_transition_smoothing": 2.0,
+    "selected_hmm_temperature": 0.8,
+    "selected_memoryless_temperature": 0.8
+  },
+  "model": {
+    "regime_classes": [
+      "normal",
+      "burst",
+      "leakage",
+      "calibration_shift"
+    ],
+    "raw_feature_names": [
+      "residual_q",
+      "residual_p",
+      "x_is_e",
+      "z_is_e",
+      "any_leakage",
+      "quadrature_phase_bit",
+      "valid",
+      "deadline_ok"
+    ],
+    "summary_feature_names": [
+      "mean_q",
+      "mean_p",
+      "variance_q",
+      "variance_p",
+      "covariance_qp",
+      "mean_abs_q",
+      "mean_abs_p",
+      "tail_fraction",
+      "x_e_fraction",
+      "z_e_fraction",
+      "leakage_fraction",
+      "valid_fraction",
+      "deadline_ok_fraction",
+      "phase_selected_mean"
+    ],
+    "transition_matrix": [
+      [
+        0.8829787234042553,
+        0.0425531914893617,
+        0.0425531914893617,
+        0.031914893617021274
+      ],
+      [
+        0.04201680672268908,
+        0.8991596638655462,
+        0.025210084033613446,
+        0.03361344537815126
+      ],
+      [
+        0.036585365853658534,
+        0.036585365853658534,
+        0.8658536585365854,
+        0.06097560975609756
+      ],
+      [
+        0.0423728813559322,
+        0.03389830508474576,
+        0.025423728813559324,
+        0.8983050847457628
+      ]
+    ],
+    "initial_probabilities": [
+      0.18181818181818182,
+      0.2727272727272727,
+      0.2727272727272727,
+      0.2727272727272727
+    ],
+    "class_prior_probabilities": [
+      0.22959183673469388,
+      0.288265306122449,
+      0.19387755102040816,
+      0.288265306122449
+    ],
+    "emission_means_standardized": [
+      [
+        -0.2552190366373699,
+        0.39432198120223205,
+        -0.7148112486607158,
+        -0.40062180137851566,
+        -0.004394184651599965,
+        -0.7539976208780893,
+        -0.3658260865582811,
+        -0.7392229410618842,
+        -0.4680642614467493,
+        -0.15230407768702026,
+        -0.4363310906419537,
+        0.10113984987050126,
+        -0.012458541790656509,
+        0.12302197192063681
+      ],
+      [
+        -0.34388717168960087,
+        0.03242050629801213,
+        0.5232855246641086,
+        0.28387023128783295,
+        0.16594423905779226,
+        0.3348937894466414,
+        0.23235999382458,
+        0.39162843789156987,
+        0.2522701794777677,
+        0.17004674869075972,
+        -0.17895781106665928,
+        -0.08984997057902937,
+        0.008262525636638577,
+        -0.23467197941578755
+      ],
+      [
+        -0.26681097349364125,
+        0.2979520312331285,
+        0.4048847930490238,
+        0.36697378047189305,
+        -0.09157838466944256,
+        0.14207209772229107,
+        0.1261573582451965,
+        0.29443895276105664,
+        -0.022175050998505082,
+        0.27127293350515996,
+        1.3259766959360133,
+        0.14927549567485449,
+        -0.11937924971550008,
+        -0.0034165046189488565
+      ],
+      [
+        0.7240969668483223,
+        -0.5436708185236688,
+        -0.22651151388469243,
+        -0.21090934150054724,
+        -0.101408304689508,
+        0.16815535835355552,
+        -0.026440614482362238,
+        -0.0018704531246534059,
+        0.13359116089343334,
+        -0.23014979592430965,
+        -0.3591065089583243,
+        -0.08984997057902938,
+        0.08120068298071774,
+        0.1394187164679153
+      ]
+    ],
+    "emission_covariances_standardized": [
+      [
+        [
+          2.0296616403580976,
+          -0.005418399825868745,
+          -0.1363801261303673,
+          0.021139640805321474,
+          -0.15176648467968715,
+          -0.04935712244533339,
+          0.027092228843692424,
+          -0.008399335801216915,
+          -0.026364575103585038,
+          -0.021447923646983252,
+          0.003899835140040412,
+          0.03619955586774796,
+          -0.06807651290273431,
+          0.8018273863977085
+        ],
+        [
+          -0.005418399825868745,
+          2.0871648193365036,
+          0.026423637773039015,
+          0.12307893695988098,
+          0.03221926933419782,
+          -0.00818469185330257,
+          0.11564632838198545,
+          0.1439214882309832,
+          -0.07809502164695471,
+          -0.0018312499478995532,
+          0.03084537546416004,
+          0.07072720563288529,
+          -0.10983887750041174,
+          0.7723248463839085
+        ],
+        [
+          -0.1363801261303673,
+          0.026423637773039015,
+          1.794723860436909,
+          0.014600931258212496,
+          0.09214383674715247,
+          0.6711965904423517,
+          0.04684395915505525,
+          0.4438447976818084,
+          0.35057686469296995,
+          -0.0823339511948788,
+          0.00813791619369727,
+          0.18032026121146713,
+          0.08274392031608209,
+          -0.11288108982212819
+        ],
+        [
+          0.021139640805321474,
+          0.12307893695988098,
+          0.014600931258212496,
+          1.8117790826292008,
+          -0.12251077545885744,
+          0.01173961883474557,
+          0.7411471381544992,
+          0.3848006408196855,
+          -0.007190625138122271,
+          0.26500628570270474,
+          -0.052127281646918974,
+          0.22457620119360994,
+          0.1451713879588537,
+          0.06087185069928193
+        ],
+        [
+          -0.15176648467968715,
+          0.03221926933419782,
+          0.09214383674715247,
+          -0.12251077545885744,
+          1.9987884925023751,
+          0.11319919774044662,
+          -0.05192185177022855,
+          -0.026862060393178618,
+          0.1754333195510824,
+          -0.08602785399280767,
+          0.009148235297368594,
+          -0.059423575927594834,
+          -0.006568586347510485,
+          -0.08924961677776165
+        ],
+        [
+          -0.04935712244533339,
+          -0.00818469185330257,
+          0.6711965904423517,
+          0.01173961883474557,
+          0.11319919774044662,
+          1.867836120330885,
+          0.041154804593642645,
+          0.5255764864200487,
+          0.4802688456870762,
+          -0.08324791755297681,
+          -0.006388653954572343,
+          0.24095285769937821,
+          0.11178524044321145,
+          -0.06492466866136787
+        ],
+        [
+          0.027092228843692424,
+          0.11564632838198545,
+          0.04684395915505525,
+          0.7411471381544992,
+          -0.05192185177022855,
+          0.041154804593642645,
+          1.989898562226605,
+          0.48871277610917185,
+          0.00940248071636557,
+          0.33692841093792936,
+          -0.051053089802806643,
+          0.2392994321766118,
+          -0.015788482763478356,
+          0.053470597984859765
+        ],
+        [
+          -0.008399335801216915,
+          0.1439214882309832,
+          0.4438447976818084,
+          0.3848006408196855,
+          -0.026862060393178618,
+          0.5255764864200487,
+          0.48871277610917185,
+          1.8154569400474185,
+          0.2899264064667037,
+          0.19468078224097043,
+          -0.02262616769599457,
+          0.2059037870041112,
+          0.050919641185260364,
+          0.05713032628701
+        ],
+        [
+          -0.026364575103585038,
+          -0.07809502164695471,
+          0.35057686469296995,
+          -0.007190625138122271,
+          0.1754333195510824,
+          0.4802688456870762,
+          0.00940248071636557,
+          0.2899264064667037,
+          1.7149121172298047,
+          -0.1895508889781305,
+          -0.021261874091639016,
+          0.18812244805910264,
+          0.012189357637918218,
+          -0.06387896926514881
+        ],
+        [
+          -0.021447923646983252,
+          -0.0018312499478995532,
+          -0.0823339511948788,
+          0.26500628570270474,
+          -0.08602785399280767,
+          -0.08324791755297681,
+          0.33692841093792936,
+          0.19468078224097043,
+          -0.1895508889781305,
+          1.6071372633154974,
+          -0.024779824127192165,
+          0.020361838086000766,
+          0.029290656019422046,
+          -0.05236806230660434
+        ],
+        [
+          0.003899835140040412,
+          0.03084537546416004,
+          0.00813791619369727,
+          -0.052127281646918974,
+          0.009148235297368594,
+          -0.006388653954572343,
+          -0.051053089802806643,
+          -0.02262616769599457,
+          -0.021261874091639016,
+          -0.024779824127192165,
+          1.0765438886754057,
+          0.012189322859277507,
+          0.01171167714610558,
+          0.029768582239773196
+        ],
+        [
+          0.03619955586774796,
+          0.07072720563288529,
+          0.18032026121146713,
+          0.22457620119360994,
+          -0.059423575927594834,
+          0.24095285769937821,
+          0.2392994321766118,
+          0.2059037870041112,
+          0.18812244805910264,
+          0.020361838086000766,
+          0.012189322859277507,
+          1.7979487277276616,
+          0.03742513595342054,
+          0.06511374100325282
+        ],
+        [
+          -0.06807651290273431,
+          -0.10983887750041174,
+          0.08274392031608209,
+          0.1451713879588537,
+          -0.006568586347510485,
+          0.11178524044321145,
+          -0.015788482763478356,
+          0.050919641185260364,
+          0.012189357637918218,
+          0.029290656019422046,
+          0.01171167714610558,
+          0.03742513595342054,
+          2.0530735847573873,
+          -0.13870957959878635
+        ],
+        [
+          0.8018273863977085,
+          0.7723248463839085,
+          -0.11288108982212819,
+          0.06087185069928193,
+          -0.08924961677776165,
+          -0.06492466866136787,
+          0.053470597984859765,
+          0.05713032628701,
+          -0.06387896926514881,
+          -0.05236806230660434,
+          0.029768582239773196,
+          0.06511374100325282,
+          -0.13870957959878635,
+          2.2399164715366915
+        ]
+      ],
+      [
+        [
+          1.5928081714582172,
+          -0.027606390025192353,
+          0.012102498832333736,
+          0.10230466713476305,
+          -0.019103193719565443,
+          -0.001076006140894106,
+          0.13304714062285364,
+          0.11918551778633817,
+          -0.07336305794981694,
+          0.11030095217783772,
+          -0.0018624937359543057,
+          -0.17524023037511988,
+          -0.06030281907320931,
+          0.39107816707703974
+        ],
+        [
+          -0.027606390025192353,
+          1.8747518971292205,
+          0.14333671095861053,
+          0.13488825342065236,
+          0.004794093510895788,
+          0.10254428845393423,
+          -0.012898294299742673,
+          0.13668496048819734,
+          0.07283433688333549,
+          0.10756909861162664,
+          0.03401226108606471,
+          0.06725454058760538,
+          -0.10195533076797764,
+          0.5970458826756412
+        ],
+        [
+          0.012102498832333736,
+          0.14333671095861053,
+          1.6615105229626994,
+          0.02202242401786027,
+          0.031217891915381386,
+          0.5766022682217204,
+          -0.058745323848823555,
+          0.34246536753627865,
+          0.39684519769361415,
+          -0.17875476205127824,
+          -0.03142803554109255,
+          -0.04905963705363869,
+          -0.011064701889056611,
+          0.1318437951561525
+        ],
+        [
+          0.10230466713476305,
+          0.13488825342065236,
+          0.02202242401786027,
+          1.7818469555103116,
+          0.15017152059002575,
+          -0.007781889819411328,
+          0.6983891202206438,
+          0.44400170246059373,
+          -0.10881540003658875,
+          0.3026256847578028,
+          -0.0356431798745171,
+          0.079988119164594,
+          0.06622135080035181,
+          0.17556635407329976
+        ],
+        [
+          -0.019103193719565443,
+          0.004794093510895788,
+          0.031217891915381386,
+          0.15017152059002575,
+          2.090288984088398,
+          -0.015434296481972358,
+          0.15215098918016237,
+          0.15806981497986958,
+          -0.01658799630051531,
+          -0.07210941797346779,
+          -0.06538506961805983,
+          0.01048748613556164,
+          0.15349058715505737,
+          -0.00012378778729778232
+        ],
+        [
+          -0.001076006140894106,
+          0.10254428845393423,
+          0.5766022682217204,
+          -0.007781889819411328,
+          -0.015434296481972358,
+          1.6368448898220005,
+          -0.10063731779018978,
+          0.32437600605217715,
+          0.4197644887458583,
+          -0.19550007541170714,
+          -0.05490097238865431,
+          -0.11584349798387769,
+          0.008032079192313867,
+          0.10204203487351246
+        ],
+        [
+          0.13304714062285364,
+          -0.012898294299742673,
+          -0.058745323848823555,
+          0.6983891202206438,
+          0.15215098918016237,
+          -0.10063731779018978,
+          1.9007764201226807,
+          0.481011303286379,
+          -0.19594458955376484,
+          0.3342352334646138,
+          -0.0810676277591613,
+          0.1057649446595328,
+          0.036747575217361855,
+          0.11256078777151853
+        ],
+        [
+          0.11918551778633817,
+          0.13668496048819734,
+          0.34246536753627865,
+          0.44400170246059373,
+          0.15806981497986958,
+          0.32437600605217715,
+          0.481011303286379,
+          1.7093238558162096,
+          0.12787163081336525,
+          0.18113992832758435,
+          -0.0699284030195824,
+          -0.06161193577327264,
+          0.009072434666356252,
+          0.21392056249218752
+        ],
+        [
+          -0.07336305794981694,
+          0.07283433688333549,
+          0.39684519769361415,
+          -0.10881540003658875,
+          -0.01658799630051531,
+          0.4197644887458583,
+          -0.19594458955376484,
+          0.12787163081336525,
+          2.1591165695148877,
+          -0.6746036169751024,
+          -0.2246209579655856,
+          -0.05386514963329536,
+          0.1059109282948701,
+          0.0009473996868665834
+        ],
+        [
+          0.11030095217783772,
+          0.10756909861162664,
+          -0.17875476205127824,
+          0.3026256847578028,
+          -0.07210941797346779,
+          -0.19550007541170714,
+          0.3342352334646138,
+          0.18113992832758435,
+          -0.6746036169751024,
+          1.9606649450686562,
+          0.14499364118956867,
+          0.047066346762235395,
+          -0.10950313993349667,
+          0.1832273164862941
+        ],
+        [
+          -0.0018624937359543057,
+          0.03401226108606471,
+          -0.03142803554109255,
+          -0.0356431798745171,
+          -0.06538506961805983,
+          -0.05490097238865431,
+          -0.0810676277591613,
+          -0.0699284030195824,
+          -0.2246209579655856,
+          0.14499364118956867,
+          1.4602319578383156,
+          -0.060571051375858546,
+          -0.08139088063518808,
+          0.006345555456311728
+        ],
+        [
+          -0.17524023037511988,
+          0.06725454058760538,
+          -0.04905963705363869,
+          0.079988119164594,
+          0.01048748613556164,
+          -0.11584349798387769,
+          0.1057649446595328,
+          -0.06161193577327264,
+          -0.05386514963329536,
+          0.047066346762235395,
+          -0.060571051375858546,
+          2.2215301952951365,
+          -0.1231995015980163,
+          -0.07074866430812553
+        ],
+        [
+          -0.06030281907320931,
+          -0.10195533076797764,
+          -0.011064701889056611,
+          0.06622135080035181,
+          0.15349058715505737,
+          0.008032079192313867,
+          0.036747575217361855,
+          0.009072434666356252,
+          0.1059109282948701,
+          -0.10950313993349667,
+          -0.08139088063518808,
+          -0.1231995015980163,
+          1.9770375531266937,
+          -0.08887930201259792
+        ],
+        [
+          0.39107816707703974,
+          0.5970458826756412,
+          0.1318437951561525,
+          0.17556635407329976,
+          -0.00012378778729778232,
+          0.10204203487351246,
+          0.11256078777151853,
+          0.21392056249218752,
+          0.0009473996868665834,
+          0.1832273164862941,
+          0.006345555456311728,
+          -0.07074866430812553,
+          -0.08887930201259792,
+          1.8359879939505561
+        ]
+      ],
+      [
+        [
+          1.4045803137755832,
+          0.0474392392150693,
+          0.061342669308093074,
+          -0.0002764516433783619,
+          -0.11948664519743069,
+          0.04011986602190324,
+          0.06337349787785974,
+          0.1053369178180657,
+          0.08831792301569279,
+          -0.07366081702946999,
+          -0.09527646608723792,
+          -0.1138916708257906,
+          -7.353319091157054e-05,
+          0.3439254413421635
+        ],
+        [
+          0.0474392392150693,
+          1.521346807886053,
+          -0.004395622124805198,
+          -0.006767286068966843,
+          0.03556783424049532,
+          0.000874586146411964,
+          -0.003083125046242095,
+          -0.03191484786034876,
+          0.08753714376466075,
+          -0.019427388753065062,
+          -0.2574209893065355,
+          0.2234016965674111,
+          0.17881042617910878,
+          0.3590590674096331
+        ],
+        [
+          0.061342669308093074,
+          -0.004395622124805198,
+          1.66577624313746,
+          -0.002399260940894912,
+          0.06435472578225762,
+          0.6056262780302519,
+          -0.002059339943175278,
+          0.4253492338178356,
+          0.3783042500933201,
+          -0.31976114166433006,
+          -0.014735459867966438,
+          -0.017605519424282824,
+          -0.0003680064469235761,
+          0.03789174277828124
+        ],
+        [
+          -0.0002764516433783619,
+          -0.006767286068966843,
+          -0.002399260940894912,
+          1.7447463925852622,
+          0.1651884030151969,
+          -0.0011104103177784995,
+          0.680130474474287,
+          0.4284550151281171,
+          -0.20349127759466923,
+          0.5218052711680423,
+          0.07178562839731921,
+          0.05923619124054646,
+          -0.027751631632636414,
+          -0.03337557222040185
+        ],
+        [
+          -0.11948664519743069,
+          0.03556783424049532,
+          0.06435472578225762,
+          0.1651884030151969,
+          1.9512617930225709,
+          0.06082338626691842,
+          0.10427188729601328,
+          0.11594669436712325,
+          -0.0956151103800286,
+          0.19941794083078349,
+          -0.14161805583380094,
+          0.031655735211375116,
+          -0.051474386849750864,
+          -0.09403349387494768
+        ],
+        [
+          0.04011986602190324,
+          0.000874586146411964,
+          0.6056262780302519,
+          -0.0011104103177784995,
+          0.06082338626691842,
+          1.6144060414566477,
+          0.006439508915232906,
+          0.40749999961499384,
+          0.36545105910233594,
+          -0.31412859922562725,
+          -0.019187082105445574,
+          -0.029828825651936255,
+          0.03817768177610318,
+          0.008897724454297427
+        ],
+        [
+          0.06337349787785974,
+          -0.003083125046242095,
+          -0.002059339943175278,
+          0.680130474474287,
+          0.10427188729601328,
+          0.006439508915232906,
+          1.720570076127709,
+          0.39225909845016366,
+          -0.17500177474813897,
+          0.5006156848424056,
+          -0.007680072092984942,
+          0.006785037462465558,
+          -0.0743786040292366,
+          0.03950843655693791
+        ],
+        [
+          0.1053369178180657,
+          -0.03191484786034876,
+          0.4253492338178356,
+          0.4284550151281171,
+          0.11594669436712325,
+          0.40749999961499384,
+          0.39225909845016366,
+          1.7240176901243336,
+          0.13546915169316998,
+          0.1321393724994302,
+          0.09005732548709997,
+          -0.05146827525989382,
+          0.034308429830227485,
+          0.007593794563969945
+        ],
+        [
+          0.08831792301569279,
+          0.08753714376466075,
+          0.3783042500933201,
+          -0.20349127759466923,
+          -0.0956151103800286,
+          0.36545105910233594,
+          -0.17500177474813897,
+          0.13546915169316998,
+          2.236634173720647,
+          -0.9135883370274459,
+          -0.15285537405519997,
+          -0.05239873234659043,
+          0.20524822956169317,
+          0.06776909988724265
+        ],
+        [
+          -0.07366081702946999,
+          -0.019427388753065062,
+          -0.31976114166433006,
+          0.5218052711680423,
+          0.19941794083078349,
+          -0.31412859922562725,
+          0.5006156848424056,
+          0.1321393724994302,
+          -0.9135883370274459,
+          2.6624370623436158,
+          -0.16199510497325098,
+          -0.051357232414153915,
+          -0.16918206637895866,
+          -0.07956273305909459
+        ],
+        [
+          -0.09527646608723792,
+          -0.2574209893065355,
+          -0.014735459867966438,
+          0.07178562839731921,
+          -0.14161805583380094,
+          -0.019187082105445574,
+          -0.007680072092984942,
+          0.09005732548709997,
+          -0.15285537405519997,
+          -0.16199510497325098,
+          3.0129446286091133,
+          0.17102599269256236,
+          0.10327898335827736,
+          -0.27413580171105073
+        ],
+        [
+          -0.1138916708257906,
+          0.2234016965674111,
+          -0.017605519424282824,
+          0.05923619124054646,
+          0.031655735211375116,
+          -0.029828825651936255,
+          0.006785037462465558,
+          -0.05146827525989382,
+          -0.05239873234659043,
+          -0.051357232414153915,
+          0.17102599269256236,
+          1.7298768739187322,
+          -0.0928215422998755,
+          0.04743274135502858
+        ],
+        [
+          -7.353319091157054e-05,
+          0.17881042617910878,
+          -0.0003680064469235761,
+          -0.027751631632636414,
+          -0.051474386849750864,
+          0.03817768177610318,
+          -0.0743786040292366,
+          0.034308429830227485,
+          0.20524822956169317,
+          -0.16918206637895866,
+          0.10327898335827736,
+          -0.0928215422998755,
+          2.4227015476574856,
+          0.04573750430451974
+        ],
+        [
+          0.3439254413421635,
+          0.3590590674096331,
+          0.03789174277828124,
+          -0.03337557222040185,
+          -0.09403349387494768,
+          0.008897724454297427,
+          0.03950843655693791,
+          0.007593794563969945,
+          0.06776909988724265,
+          -0.07956273305909459,
+          -0.27413580171105073,
+          0.04743274135502858,
+          0.04573750430451974,
+          1.6660912014088334
+        ]
+      ],
+      [
+        [
+          2.0577310781087226,
+          0.03690059732376233,
+          -0.27943198444721523,
+          0.08211027656456499,
+          0.017273137085851684,
+          0.41539310016797554,
+          0.018082317702277723,
+          0.24339878709247253,
+          0.34467829082191104,
+          -0.2650354808597285,
+          0.004546537648313746,
+          0.22066682314325717,
+          0.010821731015633896,
+          0.81749957098421
+        ],
+        [
+          0.03690059732376233,
+          1.917793868823465,
+          0.02762027611861795,
+          0.4098123744077784,
+          0.10635437345741082,
+          0.14305018602993924,
+          -0.15712770001705095,
+          0.06633912599853171,
+          0.09111539721417915,
+          -0.25736970112789387,
+          0.033587762839951955,
+          -0.061212373621204165,
+          0.06330136386394218,
+          0.659898693551785
+        ],
+        [
+          -0.27943198444721523,
+          0.02762027611861795,
+          1.902783607542231,
+          0.07419639327224917,
+          -0.006588299352618692,
+          0.6261228903113287,
+          0.07255066603349285,
+          0.43360339178795243,
+          0.20866677506920384,
+          0.05458235136929216,
+          -0.0597438583044432,
+          -0.11412341955160721,
+          0.10596797146626892,
+          -0.22171442951709378
+        ],
+        [
+          0.08211027656456499,
+          0.4098123744077784,
+          0.07419639327224917,
+          2.2184906890543488,
+          0.013419391292150728,
+          0.0767677897144317,
+          0.8637892436583536,
+          0.6330944428496003,
+          0.13882832732363937,
+          0.3021419382604736,
+          0.1038139228265576,
+          0.141888957029524,
+          0.0026027333223891318,
+          0.3645687534702425
+        ],
+        [
+          0.017273137085851684,
+          0.10635437345741082,
+          -0.006588299352618692,
+          0.013419391292150728,
+          1.9264640766976573,
+          0.013342887798543984,
+          -0.0014148976024377943,
+          -0.043903764498378385,
+          0.024664839654444843,
+          0.007885755861553228,
+          -0.025827331325805395,
+          0.04254817744614916,
+          0.007778725994787002,
+          0.0949227330872561
+        ],
+        [
+          0.41539310016797554,
+          0.14305018602993924,
+          0.6261228903113287,
+          0.0767677897144317,
+          0.013342887798543984,
+          2.140756331408974,
+          0.06688930553009262,
+          0.676419260610875,
+          0.5131830724148416,
+          -0.23653792424392814,
+          -0.07322528360261439,
+          -0.0007884179572031319,
+          0.15810290349660827,
+          0.3681156229520727
+        ],
+        [
+          0.018082317702277723,
+          -0.15712770001705095,
+          0.07255066603349285,
+          0.8637892436583536,
+          -0.0014148976024377943,
+          0.06688930553009262,
+          2.146968135724284,
+          0.6182748192363652,
+          0.05431803336935164,
+          0.4635690731716569,
+          0.07156667063353819,
+          0.19121655178593266,
+          0.00268786638749616,
+          -0.07882035716728986
+        ],
+        [
+          0.24339878709247253,
+          0.06633912599853171,
+          0.43360339178795243,
+          0.6330944428496003,
+          -0.043903764498378385,
+          0.676419260610875,
+          0.6182748192363652,
+          1.9968048263498939,
+          0.3812018853926947,
+          0.15134599147166392,
+          0.019643331261568343,
+          0.06896614561358365,
+          0.04335576951133698,
+          0.23928561075013421
+        ],
+        [
+          0.34467829082191104,
+          0.09111539721417915,
+          0.20866677506920384,
+          0.13882832732363937,
+          0.024664839654444843,
+          0.5131830724148416,
+          0.05431803336935164,
+          0.3812018853926947,
+          1.6787699577971538,
+          -0.2669975606755401,
+          0.025246001647960637,
+          0.0023864306799561415,
+          0.027842563623909154,
+          0.30507864638941556
+        ],
+        [
+          -0.2650354808597285,
+          -0.25736970112789387,
+          0.05458235136929216,
+          0.3021419382604736,
+          0.007885755861553228,
+          -0.23653792424392814,
+          0.4635690731716569,
+          0.15134599147166392,
+          -0.2669975606755401,
+          1.787017380196418,
+          -0.020916532627673765,
+          0.11815276014795646,
+          -0.02546987590225319,
+          -0.3626704975412342
+        ],
+        [
+          0.004546537648313746,
+          0.033587762839951955,
+          -0.0597438583044432,
+          0.1038139228265576,
+          -0.025827331325805395,
+          -0.07322528360261439,
+          0.07156667063353819,
+          0.019643331261568343,
+          0.025246001647960637,
+          -0.020916532627673765,
+          1.1276303458933863,
+          0.05044403016790737,
+          0.021928620722513024,
+          0.03252055830062288
+        ],
+        [
+          0.22066682314325717,
+          -0.061212373621204165,
+          -0.11412341955160721,
+          0.141888957029524,
+          0.04254817744614916,
+          -0.0007884179572031319,
+          0.19121655178593266,
+          0.06896614561358365,
+          0.0023864306799561415,
+          0.11815276014795646,
+          0.05044403016790737,
+          2.1053435186218206,
+          0.005028551085633377,
+          0.11339269481092543
+        ],
+        [
+          0.010821731015633896,
+          0.06330136386394218,
+          0.10596797146626892,
+          0.0026027333223891318,
+          0.007778725994787002,
+          0.15810290349660827,
+          0.00268786638749616,
+          0.04335576951133698,
+          0.027842563623909154,
+          -0.02546987590225319,
+          0.021928620722513024,
+          0.005028551085633377,
+          1.71130481202905,
+          0.07769409568454023
+        ],
+        [
+          0.81749957098421,
+          0.659898693551785,
+          -0.22171442951709378,
+          0.3645687534702425,
+          0.0949227330872561,
+          0.3681156229520727,
+          -0.07882035716728986,
+          0.23928561075013421,
+          0.30507864638941556,
+          -0.3626704975412342,
+          0.03252055830062288,
+          0.11339269481092543,
+          0.07769409568454023,
+          2.135825392362551
+        ]
+      ]
+    ],
+    "profile": {
+      "host_profile_repeats": 20,
+      "host_median_us_per_update": 61.457421878685636,
+      "parameter_count_float_values": 896,
+      "float32_state_bytes_proxy": 3584,
+      "macs_per_update_proxy": 800
+    }
+  },
+  "evaluation": {
+    "trajectories": 8,
+    "windows": 1024,
+    "cycles": 32768,
+    "class_counts": {
+      "normal": 281,
+      "burst": 229,
+      "leakage": 198,
+      "calibration_shift": 316
+    },
+    "per_seed": [
+      {
+        "evaluation_seed": 20261231,
+        "static_prior": {
+          "accuracy": 0.3046875,
+          "macro_f1": 0.11676646706586827,
+          "negative_log_likelihood": 1.3640165017173413,
+          "brier_score": 0.7388368453248648,
+          "expected_calibration_error": 0.01642219387755095,
+          "mean_transition_detection_delay_windows": 10.125,
+          "false_switch_rate": 0.0,
+          "class_recall": {
+            "normal": 0.0,
+            "burst": 1.0,
+            "leakage": 0.0,
+            "calibration_shift": 0.0
+          }
+        },
+        "memoryless_emission": {
+          "accuracy": 0.625,
+          "macro_f1": 0.593681917211329,
+          "negative_log_likelihood": 1.0248036670705245,
+          "brier_score": 0.524025927772255,
+          "expected_calibration_error": 0.07090505579820211,
+          "mean_transition_detection_delay_windows": 0.125,
+          "false_switch_rate": 0.5210084033613446,
+          "class_recall": {
+            "normal": 0.7083333333333334,
+            "burst": 0.6410256410256411,
+            "leakage": 0.28,
+            "calibration_shift": 0.775
+          }
+        },
+        "causal_hmm": {
+          "accuracy": 0.8359375,
+          "macro_f1": 0.8351821789321789,
+          "negative_log_likelihood": 0.613272384130314,
+          "brier_score": 0.2997952351391514,
+          "expected_calibration_error": 0.12276495743723914,
+          "mean_transition_detection_delay_windows": 0.875,
+          "false_switch_rate": 0.1092436974789916,
+          "class_recall": {
+            "normal": 0.9583333333333334,
+            "burst": 0.6666666666666666,
+            "leakage": 0.84,
+            "calibration_shift": 0.925
+          }
+        }
+      },
+      {
+        "evaluation_seed": 20261232,
+        "static_prior": {
+          "accuracy": 0.2265625,
+          "macro_f1": 0.09235668789808917,
+          "negative_log_likelihood": 1.3615253666769003,
+          "brier_score": 0.7392753019575177,
+          "expected_calibration_error": 0.06170280612244905,
+          "mean_transition_detection_delay_windows": 11.0,
+          "false_switch_rate": 0.0,
+          "class_recall": {
+            "normal": 0.0,
+            "burst": 1.0,
+            "leakage": 0.0,
+            "calibration_shift": 0.0
+          }
+        },
+        "memoryless_emission": {
+          "accuracy": 0.65625,
+          "macro_f1": 0.6079728975804557,
+          "negative_log_likelihood": 0.8519467530852943,
+          "brier_score": 0.471129873518142,
+          "expected_calibration_error": 0.0684101671484883,
+          "mean_transition_detection_delay_windows": 0.4444444444444444,
+          "false_switch_rate": 0.5338983050847458,
+          "class_recall": {
+            "normal": 0.6382978723404256,
+            "burst": 0.6206896551724138,
+            "leakage": 0.36363636363636365,
+            "calibration_shift": 0.7804878048780488
+          }
+        },
+        "causal_hmm": {
+          "accuracy": 0.8203125,
+          "macro_f1": 0.8062487396652551,
+          "negative_log_likelihood": 0.41740708330690857,
+          "brier_score": 0.24766799231303938,
+          "expected_calibration_error": 0.061509994952747525,
+          "mean_transition_detection_delay_windows": 1.5555555555555556,
+          "false_switch_rate": 0.1271186440677966,
+          "class_recall": {
+            "normal": 0.8085106382978723,
+            "burst": 0.7586206896551724,
+            "leakage": 1.0,
+            "calibration_shift": 0.8292682926829268
+          }
+        }
+      },
+      {
+        "evaluation_seed": 20261233,
+        "static_prior": {
+          "accuracy": 0.171875,
+          "macro_f1": 0.07333333333333333,
+          "negative_log_likelihood": 1.4146630850486215,
+          "brier_score": 0.7647057866513952,
+          "expected_calibration_error": 0.11639030612244905,
+          "mean_transition_detection_delay_windows": 11.75,
+          "false_switch_rate": 0.0,
+          "class_recall": {
+            "normal": 0.0,
+            "burst": 1.0,
+            "leakage": 0.0,
+            "calibration_shift": 0.0
+          }
+        },
+        "memoryless_emission": {
+          "accuracy": 0.609375,
+          "macro_f1": 0.6011157613225896,
+          "negative_log_likelihood": 0.8374653462136545,
+          "brier_score": 0.45656990616464566,
+          "expected_calibration_error": 0.10752308549293166,
+          "mean_transition_detection_delay_windows": 0.375,
+          "false_switch_rate": 0.5546218487394958,
+          "class_recall": {
+            "normal": 0.673469387755102,
+            "burst": 0.7272727272727273,
+            "leakage": 0.48148148148148145,
+            "calibration_shift": 0.5333333333333333
+          }
+        },
+        "causal_hmm": {
+          "accuracy": 0.859375,
+          "macro_f1": 0.8565497744743029,
+          "negative_log_likelihood": 0.4023421886491121,
+          "brier_score": 0.2092866574231363,
+          "expected_calibration_error": 0.032310538567268156,
+          "mean_transition_detection_delay_windows": 1.5,
+          "false_switch_rate": 0.1092436974789916,
+          "class_recall": {
+            "normal": 0.8775510204081632,
+            "burst": 0.9090909090909091,
+            "leakage": 0.8888888888888888,
+            "calibration_shift": 0.7666666666666667
+          }
+        }
+      },
+      {
+        "evaluation_seed": 20261234,
+        "static_prior": {
+          "accuracy": 0.3671875,
+          "macro_f1": 0.13428571428571429,
+          "negative_log_likelihood": 1.3635594562615743,
+          "brier_score": 0.7384781080799667,
+          "expected_calibration_error": 0.07892219387755095,
+          "mean_transition_detection_delay_windows": 11.571428571428571,
+          "false_switch_rate": 0.0,
+          "class_recall": {
+            "normal": 0.0,
+            "burst": 1.0,
+            "leakage": 0.0,
+            "calibration_shift": 0.0
+          }
+        },
+        "memoryless_emission": {
+          "accuracy": 0.6171875,
+          "macro_f1": 0.6049880525686977,
+          "negative_log_likelihood": 0.914016716169286,
+          "brier_score": 0.4957800708335056,
+          "expected_calibration_error": 0.07107780364270788,
+          "mean_transition_detection_delay_windows": 1.1428571428571428,
+          "false_switch_rate": 0.5166666666666667,
+          "class_recall": {
+            "normal": 0.7727272727272727,
+            "burst": 0.6170212765957447,
+            "leakage": 0.38461538461538464,
+            "calibration_shift": 0.696969696969697
+          }
+        },
+        "causal_hmm": {
+          "accuracy": 0.84375,
+          "macro_f1": 0.8377397160005855,
+          "negative_log_likelihood": 0.49434817858215857,
+          "brier_score": 0.24653689569567935,
+          "expected_calibration_error": 0.03691951446866532,
+          "mean_transition_detection_delay_windows": 1.7142857142857142,
+          "false_switch_rate": 0.08333333333333333,
+          "class_recall": {
+            "normal": 1.0,
+            "burst": 0.8085106382978723,
+            "leakage": 0.6923076923076923,
+            "calibration_shift": 0.9090909090909091
+          }
+        }
+      },
+      {
+        "evaluation_seed": 20261235,
+        "static_prior": {
+          "accuracy": 0.2890625,
+          "macro_f1": 0.11212121212121212,
+          "negative_log_likelihood": 1.4172546751667259,
+          "brier_score": 0.7653036820595586,
+          "expected_calibration_error": 0.0007971938775509502,
+          "mean_transition_detection_delay_windows": 10.428571428571429,
+          "false_switch_rate": 0.0,
+          "class_recall": {
+            "normal": 0.0,
+            "burst": 1.0,
+            "leakage": 0.0,
+            "calibration_shift": 0.0
+          }
+        },
+        "memoryless_emission": {
+          "accuracy": 0.6328125,
+          "macro_f1": 0.624503398080835,
+          "negative_log_likelihood": 0.8487797765495818,
+          "brier_score": 0.4661870012420738,
+          "expected_calibration_error": 0.07398857174036103,
+          "mean_transition_detection_delay_windows": 1.2857142857142858,
+          "false_switch_rate": 0.525,
+          "class_recall": {
+            "normal": 0.7,
+            "burst": 0.7027027027027027,
+            "leakage": 0.3939393939393939,
+            "calibration_shift": 0.7777777777777778
+          }
+        },
+        "causal_hmm": {
+          "accuracy": 0.8984375,
+          "macro_f1": 0.9036029984305847,
+          "negative_log_likelihood": 0.338405216122155,
+          "brier_score": 0.1635231504482778,
+          "expected_calibration_error": 0.04748238385875693,
+          "mean_transition_detection_delay_windows": 1.7142857142857142,
+          "false_switch_rate": 0.08333333333333333,
+          "class_recall": {
+            "normal": 0.95,
+            "burst": 0.9459459459459459,
+            "leakage": 0.7272727272727273,
+            "calibration_shift": 1.0
+          }
+        }
+      },
+      {
+        "evaluation_seed": 20261236,
+        "static_prior": {
+          "accuracy": 0.140625,
+          "macro_f1": 0.06164383561643835,
+          "negative_log_likelihood": 1.3978980881954692,
+          "brier_score": 0.7572918835901706,
+          "expected_calibration_error": 0.14764030612244905,
+          "mean_transition_detection_delay_windows": 13.142857142857142,
+          "false_switch_rate": 0.0,
+          "class_recall": {
+            "normal": 0.0,
+            "burst": 1.0,
+            "leakage": 0.0,
+            "calibration_shift": 0.0
+          }
+        },
+        "memoryless_emission": {
+          "accuracy": 0.6328125,
+          "macro_f1": 0.6143557927221294,
+          "negative_log_likelihood": 0.8874077429144118,
+          "brier_score": 0.48350850008925256,
+          "expected_calibration_error": 0.048303109008361475,
+          "mean_transition_detection_delay_windows": 0.8571428571428571,
+          "false_switch_rate": 0.55,
+          "class_recall": {
+            "normal": 0.5964912280701754,
+            "burst": 0.6111111111111112,
+            "leakage": 0.5294117647058824,
+            "calibration_shift": 0.75
+          }
+        },
+        "causal_hmm": {
+          "accuracy": 0.8515625,
+          "macro_f1": 0.8258337671351726,
+          "negative_log_likelihood": 0.502882495782129,
+          "brier_score": 0.25803899355084553,
+          "expected_calibration_error": 0.08514827494696556,
+          "mean_transition_detection_delay_windows": 2.2857142857142856,
+          "false_switch_rate": 0.11666666666666667,
+          "class_recall": {
+            "normal": 0.8596491228070176,
+            "burst": 0.6666666666666666,
+            "leakage": 0.8235294117647058,
+            "calibration_shift": 0.9444444444444444
+          }
+        }
+      },
+      {
+        "evaluation_seed": 20261237,
+        "static_prior": {
+          "accuracy": 0.1796875,
+          "macro_f1": 0.076158940397351,
+          "negative_log_likelihood": 1.3511137762719296,
+          "brier_score": 0.7320606973656811,
+          "expected_calibration_error": 0.10857780612244905,
+          "mean_transition_detection_delay_windows": 12.125,
+          "false_switch_rate": 0.0,
+          "class_recall": {
+            "normal": 0.0,
+            "burst": 1.0,
+            "leakage": 0.0,
+            "calibration_shift": 0.0
+          }
+        },
+        "memoryless_emission": {
+          "accuracy": 0.578125,
+          "macro_f1": 0.5243368619161974,
+          "negative_log_likelihood": 0.9397407068922161,
+          "brier_score": 0.5103650752100979,
+          "expected_calibration_error": 0.1198118107519289,
+          "mean_transition_detection_delay_windows": 1.25,
+          "false_switch_rate": 0.48739495798319327,
+          "class_recall": {
+            "normal": 0.4,
+            "burst": 0.6086956521739131,
+            "leakage": 0.46153846153846156,
+            "calibration_shift": 0.65625
+          }
+        },
+        "causal_hmm": {
+          "accuracy": 0.7421875,
+          "macro_f1": 0.7123614756488772,
+          "negative_log_likelihood": 0.6534392058195433,
+          "brier_score": 0.3500595886526637,
+          "expected_calibration_error": 0.0703361775341784,
+          "mean_transition_detection_delay_windows": 2.125,
+          "false_switch_rate": 0.21008403361344538,
+          "class_recall": {
+            "normal": 0.6,
+            "burst": 0.7391304347826086,
+            "leakage": 0.6923076923076923,
+            "calibration_shift": 0.796875
+          }
+        }
+      },
+      {
+        "evaluation_seed": 20261238,
+        "static_prior": {
+          "accuracy": 0.109375,
+          "macro_f1": 0.04929577464788732,
+          "negative_log_likelihood": 1.3941412694716715,
+          "brier_score": 0.753385633590171,
+          "expected_calibration_error": 0.17889030612244905,
+          "mean_transition_detection_delay_windows": 12.25,
+          "false_switch_rate": 0.0,
+          "class_recall": {
+            "normal": 0.0,
+            "burst": 1.0,
+            "leakage": 0.0,
+            "calibration_shift": 0.0
+          }
+        },
+        "memoryless_emission": {
+          "accuracy": 0.640625,
+          "macro_f1": 0.6139728532922604,
+          "negative_log_likelihood": 0.9152101254096805,
+          "brier_score": 0.48517798138806845,
+          "expected_calibration_error": 0.09930757030862271,
+          "mean_transition_detection_delay_windows": 0.375,
+          "false_switch_rate": 0.5126050420168067,
+          "class_recall": {
+            "normal": 0.5555555555555556,
+            "burst": 0.8571428571428571,
+            "leakage": 0.48484848484848486,
+            "calibration_shift": 0.7222222222222222
+          }
+        },
+        "causal_hmm": {
+          "accuracy": 0.8515625,
+          "macro_f1": 0.7944655075545013,
+          "negative_log_likelihood": 0.5145842470580622,
+          "brier_score": 0.253262543165519,
+          "expected_calibration_error": 0.07388350244617146,
+          "mean_transition_detection_delay_windows": 1.625,
+          "false_switch_rate": 0.08403361344537816,
+          "class_recall": {
+            "normal": 0.5925925925925926,
+            "burst": 0.5714285714285714,
+            "leakage": 1.0,
+            "calibration_shift": 0.9629629629629629
+          }
+        }
+      }
+    ],
+    "aggregate": {
+      "static_prior": {
+        "accuracy": 0.2236328125,
+        "macro_f1": 0.08949524567073673,
+        "negative_log_likelihood": 1.3830215273512794,
+        "brier_score": 0.7486672423274157,
+        "expected_calibration_error": 0.08866788903061226,
+        "mean_transition_detection_delay_windows": 11.549107142857142,
+        "false_switch_rate": 0.0,
+        "class_recall": {
+          "normal": 0.0,
+          "burst": 1.0,
+          "leakage": 0.0,
+          "calibration_shift": 0.0
+        }
+      },
+      "memoryless_emission": {
+        "accuracy": 0.6240234375,
+        "macro_f1": 0.5981159418368118,
+        "negative_log_likelihood": 0.9024213542880812,
+        "brier_score": 0.4865930420272551,
+        "expected_calibration_error": 0.0824158967364505,
+        "mean_transition_detection_delay_windows": 0.7318948412698412,
+        "false_switch_rate": 0.5251494029815317,
+        "class_recall": {
+          "normal": 0.630609331222733,
+          "burst": 0.6732077028996388,
+          "leakage": 0.42243391684568155,
+          "calibration_shift": 0.7115051043976349
+        }
+      },
+      "causal_hmm": {
+        "accuracy": 0.837890625,
+        "macro_f1": 0.8214980197301822,
+        "negative_log_likelihood": 0.49208512493129786,
+        "brier_score": 0.253521382048539,
+        "expected_calibration_error": 0.06629441802649906,
+        "mean_transition_detection_delay_windows": 1.6743551587301586,
+        "false_switch_rate": 0.11538212742724208,
+        "class_recall": {
+          "normal": 0.8308295884298724,
+          "burst": 0.7582575653168016,
+          "leakage": 0.8330383015677133,
+          "calibration_shift": 0.8917885344809888
+        }
+      }
+    },
+    "paired_seed_cluster_comparisons": {
+      "memoryless_minus_hmm_nll": {
+        "estimate": 0.4103362293567834,
+        "standard_error": 0.022136547709670835,
+        "ci_low": 0.357991611795955,
+        "ci_high": 0.46268084691761174,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "memoryless_minus_hmm_brier": {
+        "estimate": 0.23307165997871607,
+        "standard_error": 0.013907292737397872,
+        "ci_low": 0.20018613829786486,
+        "ci_high": 0.2659571816595673,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "hmm_minus_memoryless_accuracy": {
+        "estimate": 0.2138671875,
+        "standard_error": 0.012780875810428048,
+        "ci_low": 0.18364521860206626,
+        "ci_high": 0.24408915639793374,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      }
+    },
+    "source_data_rows": 1024
+  },
+  "gate_summary": {
+    "passed": 15,
+    "failed": 0,
+    "gates": {
+      "train_validation_evaluation_seeds_disjoint": true,
+      "online_window_schema_has_no_truth_or_regime": true,
+      "selection_grid_complete_and_evaluation_blind": true,
+      "selected_hyperparameters_are_not_search_boundary": true,
+      "all_four_regimes_have_evaluation_support": true,
+      "all_posteriors_normalized": true,
+      "source_rows_and_trace_hashes_complete": true,
+      "hmm_nll_improvement_over_same_emission_memoryless_resolved": true,
+      "hmm_brier_improvement_over_same_emission_memoryless_resolved": true,
+      "hmm_accuracy_not_worse_than_memoryless": true,
+      "every_hmm_class_recall_exceeds_half": true,
+      "causal_prefix_invariance": true,
+      "shared_future_cnn_budget_respected": true,
+      "host_profile_is_finite_but_not_hardware_claim": true,
+      "role_is_estimator_not_decoder_or_controller": true
+    }
+  },
+  "claim_boundary": {
+    "allowed": "causal observed-window four-regime posterior estimation under the registered synthetic process, with same-emission memoryless ablation and a reserved future CNN input/operation budget",
+    "forbidden": "device-calibrated regime identification, logical-decoding or control gain, future-CNN measured latency parity, bit-accurate implementation, synthesis, FPGA latency, or quantum experiment"
+  }
+}

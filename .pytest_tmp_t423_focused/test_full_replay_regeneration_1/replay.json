@@ -1,0 +1,171 @@
+{
+  "schema_version": "t4.2.2-experimental-event-fsm-validation-v1",
+  "task_id": "T4.2.2",
+  "status": "PASS",
+  "implementation_sha256": "83505aafb92ccece60abac74a1676cf7b013f42a36f578bb08a1ac73a50b17ea",
+  "config": {
+    "counter_bits": 3,
+    "e_enter_run": 2,
+    "reset_request_run": 2,
+    "leakage_clear_run": 2,
+    "fallback_clear_run": 2,
+    "phase_frame_bits": 8,
+    "map_pipeline_latency_cycles": 5,
+    "event_action_latency_cycles": 1,
+    "start_event_cycle": 5,
+    "model_scope": "observed_event_integer_frame_contract_not_rtl_or_device"
+  },
+  "scenarios": [
+    "nominal_frame",
+    "x_recovery_saturation",
+    "z_recovery_saturation",
+    "dual_e_phase_tie",
+    "leakage_reset_handshake",
+    "health_fault_recovery",
+    "counter_saturation",
+    "bank_version_switch"
+  ],
+  "rows": 1024,
+  "mode_counts": {
+    "normal": 588,
+    "x_recovery": 120,
+    "z_recovery": 132,
+    "hold": 23,
+    "reset_request": 117,
+    "fallback": 44
+  },
+  "reason_counts": {
+    "both_e_runs_phase_x_priority": 48,
+    "both_e_runs_phase_z_priority": 60,
+    "fallback_clear_hysteresis": 22,
+    "health_fault:crc": 6,
+    "health_fault:deadline": 5,
+    "health_fault:fresh": 5,
+    "health_fault:valid": 6,
+    "leakage_observed_hold": 12,
+    "no_event_threshold": 588,
+    "persistent_leakage_reset_threshold": 12,
+    "reset_acknowledged_post_reset_hold": 11,
+    "reset_request_sticky_until_ack": 105,
+    "x_e_run_threshold": 72,
+    "z_e_run_threshold": 72
+  },
+  "diagnostics": {
+    "transition_pairs": [
+      "fallback->fallback",
+      "fallback->normal",
+      "hold->normal",
+      "hold->reset_request",
+      "normal->fallback",
+      "normal->hold",
+      "normal->normal",
+      "normal->x_recovery",
+      "normal->z_recovery",
+      "reset_request->hold",
+      "reset_request->reset_request",
+      "x_recovery->normal",
+      "x_recovery->x_recovery",
+      "x_recovery->z_recovery",
+      "z_recovery->hold",
+      "z_recovery->normal",
+      "z_recovery->x_recovery",
+      "z_recovery->z_recovery"
+    ],
+    "modulo_phase_wrap_count": 141,
+    "image_sha256s": [
+      "83245313ad0f359823ff550ec64c29c96f675fadf10a2ba8d98e9d2d321d963c",
+      "68d1f882b41d03f3566e427655b1b1bf19c6db74329b0fa4542df42f9a62385f",
+      "0c9b1260caf176079bbc158b6ffdb55aea60cffd0ab329866420f7ae02cf2653",
+      "0c260799d3e7aab58a59925c7f5f5e1a4e3ad9b702a46110bf065d973204b1d9",
+      "b8a3b5becebe9b5dfe1697775170b2fea9ca581ababcca2c3f8d0bf91e064be9",
+      "4c4194ea049a9f52c94316ca24c149b9f460c6996910e7efe347f2c98e4f70d3",
+      "72272abbf21969f9b750eddb4dcb0654f3ce32e34cfd5b139b8519dc2b563a6d",
+      "49648d1a8c028a82f3d6b357bf518f97e7897ef1ded678e60a7621f5efaf01b7"
+    ],
+    "cycles_per_scenario": 128
+  },
+  "negative_audit": {
+    "cycle_gap_rejected": true,
+    "phase_mismatch_rejected": true,
+    "version_mismatch_rejected": true,
+    "logical_action_mismatch_rejected": true,
+    "llr_sign_mismatch_rejected": true
+  },
+  "resource_contract": {
+    "identity": "exact_state_and_action_word_proxy_not_synthesis",
+    "mode_encoding_bits": 3,
+    "saturating_counter_count": 6,
+    "counter_bits_each": 3,
+    "pauli_frame_bits": 2,
+    "phase_frame_bits_each": 8,
+    "bank_version_bits_assumed": 16,
+    "minimum_live_state_bits": 55,
+    "event_action_register_cycles": 1,
+    "map_plus_event_worst_case_latency_cycles": 6,
+    "initiation_interval_cycles": 1,
+    "target_lut_count": null,
+    "target_ff_count": null,
+    "target_bram_count": null,
+    "target_dsp_count": null,
+    "fmax_mhz": null,
+    "rtl_measured": false,
+    "board_measured": false
+  },
+  "source_data": {
+    "path": ".pytest_tmp_t423_focused/test_full_replay_regeneration_1/replay.csv",
+    "rows": 1024,
+    "sha256": "6e437fa3d9d3e9925d6c99224258dc0aee98958f451e6be9b8fea2e97579eb68",
+    "canonical_rows_sha256": "5c4e571906c57f01bd1302121fdd081ba7679399c96816621e59f6e9530b13c9"
+  },
+  "online_contract": {
+    "input_fields": [
+      "cycle_index",
+      "syndrome_x",
+      "syndrome_z",
+      "quadrature_phase_bit",
+      "map_decision",
+      "active_bank_version",
+      "reset_ack",
+      "valid",
+      "crc_ok",
+      "parameter_fresh",
+      "deadline_ok"
+    ],
+    "step_signature": [
+      "self",
+      "event"
+    ],
+    "model_scope": "observed_event_integer_frame_contract_not_rtl_or_device",
+    "hidden_truth_inputs": []
+  },
+  "gate_summary": {
+    "passed": 20,
+    "failed": 0,
+    "gates": {
+      "all_eight_registered_scenarios_are_complete": true,
+      "all_six_modes_are_exercised": true,
+      "all_required_mode_transitions_are_exercised": true,
+      "g_e_and_leakage_observations_are_exercised": true,
+      "all_six_counters_reach_three_bit_saturation": true,
+      "both_phase_tie_break_directions_are_exercised": true,
+      "reset_request_is_sticky_and_acknowledged": true,
+      "all_health_fault_reasons_and_clear_hysteresis_are_exercised": true,
+      "safe_modes_disable_correction": true,
+      "safe_modes_inhibit_every_pending_map_flip": true,
+      "safe_modes_never_mutate_frames": true,
+      "pauli_and_phase_frames_update_on_both_axes": true,
+      "map_plus_event_latency_is_exactly_six_cycles": true,
+      "event_action_pipeline_has_initiation_interval_one": true,
+      "active_bank_versions_advance_monotonically_without_mix": true,
+      "map_image_hash_matches_selected_version": true,
+      "negative_alignment_and_action_paths_are_transactional": true,
+      "replay_is_bit_deterministic": true,
+      "source_data_contains_no_truth_or_hidden_fields": true,
+      "resource_and_timing_fields_remain_non_measured": true
+    }
+  },
+  "claim_boundary": {
+    "allowed": "observed-only six-mode integer event/frame software contract connected to version-bound MAP decisions",
+    "forbidden": "device-calibrated recovery efficacy, complete conservative fallback policy, bit-accurate RTL, synthesis/post-route timing, FPGA, or board measurement"
+  }
+}

@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "task_id": "T4.4.5",
+  "status": "PASS",
+  "scope": "read-only hash-bound T4.4.1--T4.4.4 branch freeze; no new evaluation, no universal MF ranking, leakage, OOD, long-horizon, quantized RTL, FPGA, board or device evidence",
+  "protocol_id": "T445-FAIL-CLOSED-TEACHER-STUDENT-BRANCH-FREEZE-V1",
+  "active_branch": {
+    "branch_id": "qualified_student_retention",
+    "strong_branch_activated": true,
+    "fallback_branch_activated": false,
+    "failed_evidence_predicates": []
+  },
+  "evidence_predicates": {
+    "all_parent_machine_gates_pass": true,
+    "all_parent_implementations_are_current": true,
+    "all_declared_parent_files_match_hashes": true,
+    "teacher_is_fresh_reproducible_and_validation_selected": true,
+    "teacher_analysis_is_frozen_post_hoc_and_leakage_ood": true,
+    "student_is_strict_split_four_state_and_fail_closed": true,
+    "all_six_preregistered_stochastic_retention_metrics_pass": true,
+    "cutoff_dependent_mf_teacher_reversal_is_preserved": true
+  },
+  "parent_machine_gate_status": {
+    "T4.4.1": true,
+    "T4.4.2": true,
+    "T4.4.3": true,
+    "T4.4.4": true
+  },
+  "parent_implementation_current": {
+    "T4.4.1": true,
+    "T4.4.2": true,
+    "T4.4.3": true,
+    "T4.4.4": true
+  },
+  "parent_declared_file_integrity": {
+    "T4.4.1": true,
+    "T4.4.2": true,
+    "T4.4.3": true,
+    "T4.4.4": true
+  },
+  "retention_metrics": [
+    {
+      "lane": "primary",
+      "metric": "selection_score",
+      "point": 0.9984809901028885,
+      "ci_lower": 0.9907869759758513,
+      "passed": true
+    },
+    {
+      "lane": "primary",
+      "metric": "fidelity_effective_lifetime_cycles",
+      "point": 0.9973676534513298,
+      "ci_lower": 0.9875105988407641,
+      "passed": true
+    },
+    {
+      "lane": "primary",
+      "metric": "logical_z_effective_lifetime_cycles",
+      "point": 0.996557189139068,
+      "ci_lower": 0.9824421365114248,
+      "passed": true
+    },
+    {
+      "lane": "confirmation",
+      "metric": "selection_score",
+      "point": 0.9878115850009149,
+      "ci_lower": 0.9670510828847563,
+      "passed": true
+    },
+    {
+      "lane": "confirmation",
+      "metric": "fidelity_effective_lifetime_cycles",
+      "point": 0.9898064655176845,
+      "ci_lower": 0.9738109021181811,
+      "passed": true
+    },
+    {
+      "lane": "confirmation",
+      "metric": "logical_z_effective_lifetime_cycles",
+      "point": 0.9814573586937879,
+      "ci_lower": 0.9445014278749587,
+      "passed": true
+    }
+  ],
+  "counterevidence": {
+    "primary_cutoff12_mf_mean_selection_score": 0.5571151692503317,
+    "primary_cutoff12_teacher_selection_score": 0.5529524763696185,
+    "confirmation_cutoff16_mf_mean_selection_score": 0.5796836334661457,
+    "confirmation_cutoff16_teacher_selection_score": 0.5939298653333981,
+    "ordering_reverses_across_cutoffs": true,
+    "interpretation": "student retention is qualified evidence; universal NMF-over-MF superiority remains falsified"
+  },
+  "claim_registry": {
+    "active_allowed": [
+      {
+        "claim_id": "CL-T445-01",
+        "statement": "A fresh bounded-residual GRU teacher is reproducible in the matched two-level finite-cutoff ten-cycle simulator under the registered strict split."
+      },
+      {
+        "claim_id": "CL-T445-02",
+        "statement": "The frozen four-state student retains at least ninety percent of the teacher-versus-standard gain for all preregistered metrics at cutoff twelve and sixteen on new paired seeds, including the paired-bootstrap lower bound."
+      },
+      {
+        "claim_id": "CL-T445-03",
+        "statement": "The float student uses 95 stored scalars and 87 analytic MACs per healthy half-cycle versus 72853 scalars and 72266 analytic MACs for the float teacher."
+      }
+    ],
+    "prohibited": [
+      "universal NMF superiority over every exact-budget MF baseline",
+      "a unique belief-state or universal single-exponential teacher mechanism",
+      "global optimizer optimality or convergence of teacher or student training",
+      "a globally optimal or ten-cycle control oracle",
+      "native multilevel leakage or SPAM robustness",
+      "long-horizon or out-of-distribution gain retention",
+      "quantized RTL synthesis FPGA timing board or device performance"
+    ],
+    "fallback_allowed": [
+      {
+        "claim_id": "CL-T445-F01",
+        "statement": "Teacher and distillation claims are removed; the deployable algorithmic direction falls back to observed-only drift/regime-aware MAP-LUT plus the registered conservative health and event paths."
+      }
+    ]
+  },
+  "fallback_contract": {
+    "branch_id": "drift_regime_aware_map_lut",
+    "activation_rule": "activate if any evidence predicate is false or any later revocation trigger fires",
+    "algorithmic_scope": "observed-only drift/regime-aware MAP-LUT with conservative health event FSM and atomic parameter-bank path",
+    "teacher_or_distillation_claims_retained": false
+  },
+  "revocation_triggers": [
+    {
+      "trigger_id": "RV-T445-01",
+      "task": "T5.2",
+      "condition": "multilevel leakage SPAM or reset evidence invalidates the matched-model gain"
+    },
+    {
+      "trigger_id": "RV-T445-02",
+      "task": "T5.4",
+      "condition": "OOD model mismatch or long-horizon retention fails its preregistered gate"
+    },
+    {
+      "trigger_id": "RV-T445-03",
+      "task": "T5.5",
+      "condition": "fixed-point or resource/deadline evidence rejects the 4-state student path"
+    },
+    {
+      "trigger_id": "RV-T445-04",
+      "task": "T6",
+      "condition": "RTL transport FPGA or board negative-path evidence fails"
+    },
+    {
+      "trigger_id": "RV-T445-05",
+      "task": "all",
+      "condition": "any T4.4.1--T4.4.4 artifact source checkpoint hash or gate becomes stale or false"
+    }
+  ],
+  "decision_contract_hash": "c0d7e9ffd305fea0666140bbf47635a34493b4ab4632ca3e809092307193a91c",
+  "gates": {
+    "exactly_one_branch_is_active": true,
+    "strong_branch_requires_every_evidence_predicate": true,
+    "fallback_is_automatic_when_any_predicate_fails": true,
+    "fallback_removes_teacher_and_distillation_claims": true,
+    "qualified_claims_are_finite_model_and_metric_specific": true,
+    "universal_nmf_over_mf_claim_is_prohibited": true,
+    "optimizer_and_oracle_optimality_claims_are_prohibited": true,
+    "leakage_ood_long_horizon_and_hardware_claims_are_prohibited": true,
+    "mf_counterevidence_is_retained_not_overwritten": true,
+    "later_revocation_triggers_cover_t5_2_t5_4_t5_5_and_t6": true,
+    "decision_is_deterministic_and_evaluation_free": true
+  },
+  "gate_summary": {
+    "passed": 11,
+    "total": 11,
+    "failed": []
+  },
+  "created_utc": "2026-07-15T23:24:25.542571+00:00",
+  "implementation_sha256": "05f88e021675f04f8fb9a526bd4d945e01eaf8d3f080d9be8273b33a972ee423",
+  "parent_provenance": {
+    "T4.4.1": {
+      "path": "docs/t4_4_1_bounded_residual_rnn_teacher_validation.json",
+      "artifact_sha256": "c71094493a63f7a3b1287d28c0a1b71d3ce7a03e16a281a27967a87a65669d53",
+      "declared_implementation_sha256": "3b6ce6ef95c91f36d07825dd1666dab7468385871ec3f934e9933367a2fae84b",
+      "current_implementation_sha256": "3b6ce6ef95c91f36d07825dd1666dab7468385871ec3f934e9933367a2fae84b",
+      "machine_gate_count": 21,
+      "declared_file_bindings": [
+        {
+          "role": "source_data",
+          "path": "docs/t4_4_1_bounded_residual_rnn_teacher_source_data.csv",
+          "sha256": "b59bc1c963a3e42cab4ca4f41244160ff1c7221be06be1bfdc070009765dbf88",
+          "actual_sha256": "b59bc1c963a3e42cab4ca4f41244160ff1c7221be06be1bfdc070009765dbf88",
+          "passed": true
+        },
+        {
+          "role": "checkpoint",
+          "path": "docs/t4_4_1_bounded_residual_rnn_teacher_checkpoints.pt",
+          "sha256": "7c4e004cfb4e04e2ac4848242fbfe63217ef6b89f8780bbce723422be098711e",
+          "actual_sha256": "7c4e004cfb4e04e2ac4848242fbfe63217ef6b89f8780bbce723422be098711e",
+          "passed": true
+        }
+      ]
+    },
+    "T4.4.2": {
+      "path": "docs/t4_4_2_teacher_hidden_control_analysis.json",
+      "artifact_sha256": "9cf3ca1f8245b29a537638bea02edaa961862219aacd64e3f7f714d1a2987e2a",
+      "declared_implementation_sha256": "28cc10d4b9753d6509b64799ffaf4d8acd28b5b773eeb224dbd375aa7eb824f8",
+      "current_implementation_sha256": "28cc10d4b9753d6509b64799ffaf4d8acd28b5b773eeb224dbd375aa7eb824f8",
+      "machine_gate_count": 17,
+      "declared_file_bindings": [
+        {
+          "role": "source_data",
+          "path": "docs/t4_4_2_teacher_hidden_control_source_data.csv",
+          "sha256": "71c141be72560a48e30ddc4650c4059408a2da50999354e9dfce3f135e1a4531",
+          "actual_sha256": "71c141be72560a48e30ddc4650c4059408a2da50999354e9dfce3f135e1a4531",
+          "passed": true
+        }
+      ]
+    },
+    "T4.4.3": {
+      "path": "docs/t4_4_3_low_dimensional_student_validation.json",
+      "artifact_sha256": "1bb56e2d4c8839c4f25e91ece8f404427a1917114bc5e9c69249e92cd7ada26a",
+      "declared_implementation_sha256": "09721da415b7557d226eb02a2435b9ba766dfe1ad5b9c299082ab26ed3e8a839",
+      "current_implementation_sha256": "09721da415b7557d226eb02a2435b9ba766dfe1ad5b9c299082ab26ed3e8a839",
+      "machine_gate_count": 16,
+      "declared_file_bindings": [
+        {
+          "role": "source_data",
+          "path": "docs/t4_4_3_low_dimensional_student_source_data.csv",
+          "sha256": "74a7ebfc224b79c0b2b874632783684d55971eff486ed1e5dc22f5554bed73ff",
+          "actual_sha256": "74a7ebfc224b79c0b2b874632783684d55971eff486ed1e5dc22f5554bed73ff",
+          "passed": true
+        },
+        {
+          "role": "checkpoint",
+          "path": "docs/t4_4_3_low_dimensional_student_candidates.pt",
+          "sha256": "dd8ab3aa3cfbde8b186214e209c0abd037230e5958eca86ff2c1e2fb2e504a7c",
+          "actual_sha256": "dd8ab3aa3cfbde8b186214e209c0abd037230e5958eca86ff2c1e2fb2e504a7c",
+          "passed": true
+        },
+        {
+          "role": "student_artifact",
+          "path": "docs/t4_4_3_low_dimensional_student.json",
+          "sha256": "8d3b575c416795b3af522f0322f8c8b0eed937c41616067d163ce47e5fe9bbae",
+          "actual_sha256": "8d3b575c416795b3af522f0322f8c8b0eed937c41616067d163ce47e5fe9bbae",
+          "passed": true
+        }
+      ]
+    },
+    "T4.4.4": {
+      "path": "docs/t4_4_4_teacher_student_gain_retention.json",
+      "artifact_sha256": "5cd1478de22ecd998aaf678bc6f14873134e57bc8ae2fc4408df215544b86dfc",
+      "declared_implementation_sha256": "01556d7696013aa8863271d3af600239f915568fbdc126e5476586e0bdf9e165",
+      "current_implementation_sha256": "01556d7696013aa8863271d3af600239f915568fbdc126e5476586e0bdf9e165",
+      "machine_gate_count": 18,
+      "declared_file_bindings": [
+        {
+          "role": "source_data",
+          "path": "docs/t4_4_4_teacher_student_gain_retention_source_data.csv",
+          "sha256": "b24501ffaa644e427148f13b5a329d9494ca587c6a276bae94bac23455a834a4",
+          "actual_sha256": "b24501ffaa644e427148f13b5a329d9494ca587c6a276bae94bac23455a834a4",
+          "passed": true
+        }
+      ]
+    }
+  },
+  "source_data": {
+    "path": "docs/t4_4_5_teacher_student_branch_freeze_source_data.csv",
+    "sha256": "675f05c5d31b73bab6137effb56b40a78354df749ec76b04a4bcb50ba5da70e5",
+    "row_count": 112,
+    "row_types": [
+      "allowed_claim",
+      "branch_predicate",
+      "file_binding",
+      "parent_artifact",
+      "parent_gate",
+      "prohibited_claim",
+      "retention_gate",
+      "revocation_trigger"
+    ]
+  }
+}

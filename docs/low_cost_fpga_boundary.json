@@ -1,0 +1,193 @@
+{
+  "schema_version": "low-cost-fpga-boundary-v1",
+  "task_id": "T1.4.2",
+  "snapshot_date": "2026-07-14",
+  "selection": {
+    "role": "first-paper reference digital-control-plane target",
+    "board_model": "Sipeed Tang Nano 20K",
+    "fpga_device": "GW2AR-LV18QN88C8/I7",
+    "selection_status": "reference_target_frozen",
+    "physical_unit_status": "not_procured_or_physically_verified",
+    "evidence_level": "vendor_specification_only_not_project_measurement",
+    "budget_policy": {
+      "preferred_board_only_cny": 300,
+      "maximum_landed_cny": 350,
+      "current_quote_cny": null,
+      "quote_status": "fresh_quote_required_before_procurement",
+      "price_claim_allowed": false
+    }
+  },
+  "vendor_specifications": {
+    "logic": {
+      "lut4": 20736,
+      "flip_flops": 15552,
+      "ssram_bits": 41472,
+      "bsram_vendor_kbits": 828,
+      "bsram_blocks": 46,
+      "multiplier_18x18": 48,
+      "pll": 2,
+      "io_banks": 8,
+      "free_io": 34
+    },
+    "memory": {
+      "sdr_sdram_mbits": 64,
+      "sdr_sdram_data_width_bits": 32,
+      "qspi_flash_mbits": 64,
+      "nominal_sdram_mib_if_binary_prefix": 8,
+      "nominal_flash_mib_if_binary_prefix": 8
+    },
+    "clocking": {
+      "onboard_crystal_mhz": 27,
+      "clock_generator": "MS5351",
+      "documented_extra_clock_outputs": 3,
+      "project_bringup_clock_mhz": 27,
+      "higher_project_clock_status": "requires_synthesis_timing_and_board_measurement"
+    },
+    "power": {
+      "input_interface": "USB-C",
+      "nominal_voltage_v": 5,
+      "voltage_tolerance_percent": 10,
+      "datasheet_current_a": 0.5
+    },
+    "onboard_bridge": {
+      "device": "BL616",
+      "advertised_usb_link_mbps": 480,
+      "functions": [
+        "FPGA JTAG programming",
+        "USB-to-UART",
+        "USB-to-SPI",
+        "USB-to-I2C",
+        "MS5351 control"
+      ],
+      "measured_application_throughput_mbps": null
+    }
+  },
+  "project_interface_freeze": [
+    {
+      "id": "IF01",
+      "interface": "USB-C and onboard BL616",
+      "allowed_role": "power, bitstream programming, host bridge",
+      "forbidden_inference": "480 Mbps bridge capability equals sustained replay throughput"
+    },
+    {
+      "id": "IF02",
+      "interface": "JTAG",
+      "allowed_role": "programming, identification, bounded debug",
+      "forbidden_inference": "runtime histogram or per-cycle action data plane"
+    },
+    {
+      "id": "IF03",
+      "interface": "UART",
+      "allowed_role": "bring-up, control, low-rate telemetry and conservative fallback transport",
+      "forbidden_inference": "115200 baud can carry every 20 ms raw 32x32 histogram"
+    },
+    {
+      "id": "IF04",
+      "interface": "USB-to-SPI",
+      "allowed_role": "preferred candidate for framed syndrome replay and parameter-bank transport",
+      "forbidden_inference": "usable sustained rate, flow control or deadline closure before measurement"
+    },
+    {
+      "id": "IF05",
+      "interface": "free GPIO",
+      "allowed_role": "logic-analyzer strobe, trigger, bounded external digital I/O",
+      "forbidden_inference": "analog ADC, DAC, microwave source or quantum readout"
+    }
+  ],
+  "capacity_arithmetic_not_synthesis": {
+    "raw_histogram_shape": [
+      32,
+      32
+    ],
+    "raw_histogram_dtype": "uint16",
+    "single_histogram_bytes": 2048,
+    "double_histogram_bytes": 4096,
+    "double_histogram_bits": 32768,
+    "double_histogram_share_of_vendor_bsram_percent_if_kibits": 3.8647,
+    "affine_bank_parameter_count": 6,
+    "affine_parameter_bits_each": 25,
+    "dual_affine_bank_payload_bits": 300,
+    "uart_reference_baud": 115200,
+    "uart_8n1_histogram_only_lower_bound_ms": 177.7778,
+    "window_reference_period_ms": 20,
+    "minimum_uart_line_rate_for_histogram_only_bps_8n1": 1024000,
+    "interpretation": "capacity and serialization arithmetic only, not synthesis; excludes headers, flow control, FPGA routing, timing and measured transport"
+  },
+  "measurement_boundary": {
+    "allowed_after_required_gates": [
+      "tool-and-device-specific LUT/FF/BSRAM/multiplier utilization",
+      "post-synthesis and post-route timing estimate",
+      "on-chip cycle-counted core latency",
+      "measured UART or USB-SPI transport latency and throughput",
+      "measured end-to-end digital trace replay latency and jitter",
+      "source-vs-board bit-for-bit agreement",
+      "CRC, version, timeout, overflow and fallback behavior",
+      "board power only with an identified measurement method"
+    ],
+    "forbidden_without_external_quantum_instrumentation": [
+      "microwave pulse generation or fidelity",
+      "high-speed quantum ADC sampling, IQ demodulation or readout SNR",
+      "cavity or transmon control",
+      "physical GKP squeezing",
+      "logical lifetime or beyond-break-even quantum performance",
+      "closed-loop quantum error correction"
+    ],
+    "canonical_claim": "low-cost FPGA digital control-plane reference target",
+    "never_claim": "integrated quantum controller or quantum experiment"
+  },
+  "current_repo_compatibility": {
+    "observed_hil_config_board": "ZCU111",
+    "observed_hil_backend": "mock",
+    "observed_dma_payload": "32x32 float32, 4096 bytes",
+    "target_wire_payload": "32x32 uint16 raw counts plus versioned header and n_valid",
+    "existing_board_backend": "Linux mmap UIO plus AXI register map and DMA buffer scaffolding",
+    "compatibility_with_tang_nano_20k": "not_directly_compatible",
+    "required_future_adapter": "framed BL616 UART/USB-SPI transport with sequence, schema, length, CRC, flow control and timeout",
+    "current_real_board_gate": "NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE",
+    "board_measurement_status": "not_started"
+  },
+  "promotion_gates": [
+    "T6.1.1 records a physically present board, invoice or dated quote, photo or serial identity, toolchain and power provenance",
+    "T5.5.2 saves target-device synthesis and timing reports for a source hash and explicit constraints",
+    "T6.1.2 implements and negative-tests the framed serial replay adapter",
+    "T6.1.3 separates core, transport and end-to-end timestamps",
+    "T6.2 and T6.4 provide bit-for-bit, latency, resource and failure evidence"
+  ],
+  "source_register": [
+    {
+      "id": "SRC01",
+      "kind": "vendor_board_page",
+      "url": "https://en.wiki.sipeed.com/hardware/en/tang/tang-nano-20k/nano-20k.html",
+      "supports": [
+        "board and FPGA model",
+        "logic and memory resources",
+        "27 MHz clock and MS5351",
+        "BL616 JTAG/UART/SPI roles"
+      ],
+      "accessed": "2026-07-14"
+    },
+    {
+      "id": "SRC02",
+      "kind": "vendor_datasheet_v1.3",
+      "url": "https://dl.sipeed.com/fileList/TANG/Nano_20K/1_Datasheet/Sipeed%20Tang%20nano%2020K%20Datasheet%20V1.3-en_US.pdf",
+      "supports": [
+        "resource table",
+        "64 Mbit SDRAM and QSPI flash",
+        "34 free I/O",
+        "USB-C 5 V power",
+        "480 Mbps bridge capability"
+      ],
+      "accessed": "2026-07-14"
+    },
+    {
+      "id": "SRC03",
+      "kind": "vendor_unbox_guide",
+      "url": "https://wiki.sipeed.com/hardware/en/tang/tang-nano-20k/example/unbox.html",
+      "supports": [
+        "Windows USB serial enumeration",
+        "115200 baud example terminal"
+      ],
+      "accessed": "2026-07-14"
+    }
+  ]
+}

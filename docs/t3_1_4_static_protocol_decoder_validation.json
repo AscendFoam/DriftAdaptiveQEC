@@ -1,0 +1,1097 @@
+{
+  "schema_version": "t3.1.4-static-sbs-protocol-bayes-v1",
+  "task_id": "T3.1.4",
+  "status": "PASS",
+  "implementation_sha256": "7b91b52775417ad21ee39d15ad91aa8fb714a6c95fdf9d0dc3b1bb63e80f347f",
+  "descriptor": {
+    "baseline_id": "static_sbs_observation_reset_bayes",
+    "label": "Static sBs observation/reset-aware Bayes policy",
+    "task_owner": "T3.1.4",
+    "comparison_role": "deployable_static_protocol_branch_decoder_baseline",
+    "deployable": true,
+    "online_inputs": [
+      "current_observed_sbs_class_x",
+      "current_observed_sbs_class_z"
+    ],
+    "offline_calibration_inputs": [
+      "ideal_branch_prior",
+      "preparation_kernel",
+      "readout_confusion",
+      "conditional_reset_kernel",
+      "observed_leakage_fallback_cost"
+    ],
+    "hidden_truth_online_inputs": [],
+    "update_during_evaluation": false,
+    "action_space": [
+      "K_gg",
+      "K_ge",
+      "K_eg",
+      "K_ee",
+      "FALLBACK"
+    ],
+    "loss_rule": "0 for correct ideal-branch action, 1 for wrong branch, explicit fallback cost; fallback is admissible only when x or z is observed as leakage",
+    "evidence_scope": "assumption_driven_sbs_branch_selection_not_full_quantum_recovery"
+  },
+  "config": {
+    "evaluation_seeds": [
+      20260741,
+      20260742,
+      20260743,
+      20260744,
+      20260745,
+      20260746,
+      20260747,
+      20260748
+    ],
+    "cycles_per_seed": 20000,
+    "confidence_level": 0.95
+  },
+  "comparison_registry_gates": [
+    "registry:t1_3_4_adaptive_drift_alignment",
+    "registry:phase5_main_decoder_benchmark",
+    "registry:t2_4_3_fixed_point_precision_sensitivity",
+    "registry:t3_1_4_static_sbs_branch_comparison",
+    "registry:t3_1_5_topk_periodic_map_sensitivity",
+    "registry:t3_2_1_memory_bayesian_episode_comparison",
+    "registry:t3_2_2_continuous_adaptive_map_comparison",
+    "registry:t3_2_3_sliding_window_syndrome_comparison",
+    "registry:t2_4_2_timing_fault_sensitivity",
+    "registry:legacy_p4_frozen_software_hil",
+    "registry:t3_1_4_target_separation"
+  ],
+  "comparison_contract": {
+    "standard": "direct_observed_sbs_branch",
+    "static_map": "static_sbs_branch_map",
+    "protocol_aware": "static_sbs_observation_reset_bayes",
+    "nondeployable_truth_reference": "ideal_sbs_branch_truth_reference",
+    "target": "ideal_sbs_kraus_branch",
+    "not_target": "logical_Pauli_class_or_full_quantum_recovery"
+  },
+  "scenarios": [
+    {
+      "scenario": {
+        "scenario_id": "balanced_low_fault_control",
+        "readout_confusion": [
+          [
+            0.94,
+            0.04,
+            0.02
+          ],
+          [
+            0.03,
+            0.94,
+            0.03
+          ],
+          [
+            0.04,
+            0.04,
+            0.92
+          ],
+          [
+            0.05,
+            0.05,
+            0.9
+          ]
+        ],
+        "injection_probabilities": [
+          0.025,
+          0.04,
+          0.01,
+          0.015
+        ],
+        "reset_success": [
+          0.9,
+          0.72,
+          0.5
+        ],
+        "ideal_branch_prior": [
+          0.25,
+          0.25,
+          0.25,
+          0.25
+        ],
+        "fallback_cost": 0.25,
+        "parameter_scope": "synthetic_assumption_not_device_calibrated"
+      },
+      "parameters": {
+        "ideal_branch_prior": [
+          0.25,
+          0.25,
+          0.25,
+          0.25
+        ],
+        "stationary_carry_prior": [
+          0.8945724650016004,
+          0.07694274871848882,
+          0.014817706953498773,
+          0.013667079326412066
+        ],
+        "observation_likelihood": [
+          [
+            0.7374838998899952,
+            0.03482562274194648,
+            0.04408336377452756,
+            0.09085142503752401,
+            0.010909609425285025,
+            0.0077135674235951695,
+            0.04827230686950738,
+            0.00514971933952522,
+            0.020710485498093907
+          ],
+          [
+            0.0009787574899697915,
+            0.02615792226832832,
+            0.0039110396232662345,
+            0.7117096582181037,
+            0.11293344045535947,
+            0.045710113320052065,
+            0.043489725307837526,
+            0.028972889542363732,
+            0.026136453774719
+          ],
+          [
+            0.025097298881703988,
+            0.7250186099701069,
+            0.06627697755465828,
+            0.003391460511795402,
+            0.09564485583986351,
+            0.010438285534745274,
+            0.002559720732489207,
+            0.049438180598029374,
+            0.02213461037660791
+          ],
+          [
+            0.0009787574899697915,
+            0.02615792226832832,
+            0.0039110396232662345,
+            0.026704116458135786,
+            0.7765983949421355,
+            0.06705070059324389,
+            0.0033640846890345385,
+            0.06784846036856589,
+            0.027386523567319826
+          ]
+        ],
+        "observation_probability": [
+          0.19113467843790968,
+          0.20304001931217752,
+          0.029545605143929576,
+          0.2081641650563897,
+          0.24902157516566087,
+          0.032728166717909096,
+          0.024421459399717165,
+          0.03785231246212105,
+          0.024092018304185163
+        ],
+        "posterior_by_observation": [
+          [
+            0.9646128922250596,
+            0.0012801934975496113,
+            0.03282672077984121,
+            0.0012801934975496113
+          ],
+          [
+            0.04288024456942338,
+            0.03220784054904721,
+            0.8927040743324821,
+            0.03220784054904721
+          ],
+          [
+            0.37301117678736145,
+            0.03309324351467713,
+            0.5608023361832843,
+            0.03309324351467713
+          ],
+          [
+            0.10911030845884691,
+            0.8547456499360833,
+            0.004073059970332415,
+            0.03207098163473753
+          ],
+          [
+            0.01095247411597513,
+            0.11337716458928392,
+            0.09602065180119038,
+            0.7796497094935506
+          ],
+          [
+            0.0589214749643634,
+            0.349164938828052,
+            0.07973472532631477,
+            0.51217886088127
+          ],
+          [
+            0.494158703616075,
+            0.44519990181607655,
+            0.026203601211879788,
+            0.03443779335596851
+          ],
+          [
+            0.0340119203065768,
+            0.19135481862143172,
+            0.326520213576795,
+            0.4481130474951966
+          ],
+          [
+            0.21491023745503474,
+            0.2712148629965416,
+            0.22968821143518287,
+            0.28418668811324077
+          ]
+        ],
+        "fallback_cost": 0.25,
+        "model_sha256": "55fc1a63422ff74ee93def88f501636dba14d8c4a18ba56523ac295b36dc82cd",
+        "parameter_sha256": "b0390eb0e6311cd8e1cf5101d7de443442a4e73718d7ee7c682b3fc9ea4ca585",
+        "calibration_protocol_id": "T3.1.4/balanced_low_fault_control/stationary-v1",
+        "evidence_scope": "exact_stationary_hidden_carry_marginalization"
+      },
+      "observation_pairs_x_then_z": [
+        [
+          "g",
+          "g"
+        ],
+        [
+          "g",
+          "e"
+        ],
+        [
+          "g",
+          "leakage"
+        ],
+        [
+          "e",
+          "g"
+        ],
+        [
+          "e",
+          "e"
+        ],
+        [
+          "e",
+          "leakage"
+        ],
+        [
+          "leakage",
+          "g"
+        ],
+        [
+          "leakage",
+          "e"
+        ],
+        [
+          "leakage",
+          "leakage"
+        ]
+      ],
+      "exact_policy_costs": {
+        "direct_observed_expected_cost": 0.15081768772401796,
+        "forced_static_map_expected_cost": 0.19308861700659066,
+        "protocol_aware_expected_cost": 0.15081768772401796,
+        "protocol_aware_fallback_probability": 0.14863956202786205
+      },
+      "empirical_costs": {
+        "direct_observed_cost": 0.151434375,
+        "forced_static_map_cost": 0.19379375,
+        "protocol_aware_cost": 0.151434375,
+        "ideal_branch_reference_cost": 0.0
+      },
+      "direct_minus_protocol_aware_seed_cluster_ci": {
+        "estimate": 0.0,
+        "standard_error": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "cluster_unit": "evaluation_seed"
+      },
+      "empirical_likelihood_max_abs_error": 0.0026121935225692505,
+      "empirical_stationary_carry_distribution": [
+        0.8939625,
+        0.0767375,
+        0.0151,
+        0.0142
+      ],
+      "protocol_aware_fallback_rate": 0.1492125,
+      "observed_leakage_rate": 0.1492125,
+      "direct_nonleak_branch_error_rate": 0.13414777485564844,
+      "protocol_aware_nonleak_branch_error_rate": 0.13414777485564844,
+      "nonleak_policy_override_count": 0
+    },
+    {
+      "scenario": {
+        "scenario_id": "biased_branch_prior",
+        "readout_confusion": [
+          [
+            0.82,
+            0.15,
+            0.03
+          ],
+          [
+            0.2,
+            0.74,
+            0.06
+          ],
+          [
+            0.16,
+            0.14,
+            0.7
+          ],
+          [
+            0.2,
+            0.15,
+            0.65
+          ]
+        ],
+        "injection_probabilities": [
+          0.035,
+          0.07,
+          0.02,
+          0.035
+        ],
+        "reset_success": [
+          0.78,
+          0.55,
+          0.3
+        ],
+        "ideal_branch_prior": [
+          0.68,
+          0.12,
+          0.12,
+          0.08
+        ],
+        "fallback_cost": 0.3,
+        "parameter_scope": "synthetic_assumption_not_device_calibrated"
+      },
+      "parameters": {
+        "ideal_branch_prior": [
+          0.68,
+          0.12,
+          0.12,
+          0.08
+        ],
+        "stationary_carry_prior": [
+          0.7791353336963901,
+          0.09587442808569595,
+          0.05166267340633503,
+          0.07332756481157893
+        ],
+        "observation_likelihood": [
+          [
+            0.4830554782098477,
+            0.10897629180983949,
+            0.06130632558959935,
+            0.13761238038461773,
+            0.03990689005911792,
+            0.028257318025967836,
+            0.06798936334013968,
+            0.024253679811978596,
+            0.048642272768891576
+          ],
+          [
+            0.03847068908658281,
+            0.12279052879037326,
+            0.03449069625244064,
+            0.39039529581411053,
+            0.16841851962437013,
+            0.0581124886228077,
+            0.07149097283522134,
+            0.0558218535357202,
+            0.06000895543837315
+          ],
+          [
+            0.12847194618108104,
+            0.4275762064217587,
+            0.09728994300644676,
+            0.040249108967821655,
+            0.12738960473073938,
+            0.038137874771142444,
+            0.026987032908029743,
+            0.06109503817912385,
+            0.05280324483385625
+          ],
+          [
+            0.03847068908658281,
+            0.12279052879037326,
+            0.03449069625244064,
+            0.12150858978666669,
+            0.4100182382872036,
+            0.08539947598741804,
+            0.035956797271796084,
+            0.08774997280154602,
+            0.06361501173597259
+          ]
+        ],
+        "observation_probability": [
+          0.3515884965417428,
+          0.14997112895937656,
+          0.0602612338121893,
+          0.15497443441830527,
+          0.09543511922578962,
+          0.037596977943925594,
+          0.0609266715422288,
+          0.037542527102050416,
+          0.05170341045439161
+        ],
+        "posterior_by_observation": [
+          [
+            0.9342675554337926,
+            0.013130357607823039,
+            0.0438485152198356,
+            0.008753571738548694
+          ],
+          [
+            0.49412096144694456,
+            0.09825133382063223,
+            0.3421268155186683,
+            0.06550088921375481
+          ],
+          [
+            0.6917930278502709,
+            0.06868235660743618,
+            0.19373637780400207,
+            0.04578823773829079
+          ],
+          [
+            0.6038184234243413,
+            0.30229137904929004,
+            0.03116574094474063,
+            0.06272445658162794
+          ],
+          [
+            0.284346951733749,
+            0.2117692367220616,
+            0.16017953025784826,
+            0.343704281286341
+          ],
+          [
+            0.5110776798687519,
+            0.1854802969839124,
+            0.12172640522764434,
+            0.18171561791969126
+          ],
+          [
+            0.7588264039543118,
+            0.14080724456251378,
+            0.05315314076724142,
+            0.047213210715933
+          ],
+          [
+            0.4393018676477081,
+            0.17842758443185816,
+            0.19528266068946787,
+            0.18698788723096582
+          ],
+          [
+            0.6397401098332535,
+            0.13927658909380763,
+            0.12255263868235883,
+            0.09843066239058004
+          ]
+        ],
+        "fallback_cost": 0.3,
+        "model_sha256": "5290155f515be0d68e76869f5b5725bdb46902be309a50f4d020bc1eb72b41c0",
+        "parameter_sha256": "75a0d99c936753fc7fb5f297366940be884862ccf3f83c1f30fbb8b0f225a78e",
+        "calibration_protocol_id": "T3.1.4/biased_branch_prior/stationary-v1",
+        "evidence_scope": "exact_stationary_hidden_carry_marginalization"
+      },
+      "observation_pairs_x_then_z": [
+        [
+          "g",
+          "g"
+        ],
+        [
+          "g",
+          "e"
+        ],
+        [
+          "g",
+          "leakage"
+        ],
+        [
+          "e",
+          "g"
+        ],
+        [
+          "e",
+          "e"
+        ],
+        [
+          "e",
+          "leakage"
+        ],
+        [
+          "leakage",
+          "g"
+        ],
+        [
+          "leakage",
+          "e"
+        ],
+        [
+          "leakage",
+          "leakage"
+        ]
+      ],
+      "exact_policy_costs": {
+        "direct_observed_expected_cost": 0.36694266088767286,
+        "forced_static_map_expected_cost": 0.3143352261772239,
+        "protocol_aware_expected_cost": 0.2938348470720114,
+        "protocol_aware_fallback_probability": 0.18710414931255692
+      },
+      "empirical_costs": {
+        "direct_observed_cost": 0.36784500000003034,
+        "forced_static_map_cost": 0.31455625,
+        "protocol_aware_cost": 0.29353125000002,
+        "ideal_branch_reference_cost": 0.0
+      },
+      "direct_minus_protocol_aware_seed_cluster_ci": {
+        "estimate": 0.07431375000001034,
+        "standard_error": 0.0009782800824115318,
+        "ci_low": 0.07239635627169086,
+        "ci_high": 0.07623114372832981,
+        "cluster_unit": "evaluation_seed"
+      },
+      "empirical_likelihood_max_abs_error": 0.004826303001287127,
+      "empirical_stationary_carry_distribution": [
+        0.77950625,
+        0.0958,
+        0.0516,
+        0.07309375
+      ],
+      "protocol_aware_fallback_rate": 0.185625,
+      "observed_leakage_rate": 0.24665,
+      "direct_nonleak_branch_error_rate": 0.3900577420853521,
+      "protocol_aware_nonleak_branch_error_rate": 0.29624344594146146,
+      "nonleak_policy_override_count": 49156
+    },
+    {
+      "scenario": {
+        "scenario_id": "asymmetric_readout",
+        "readout_confusion": [
+          [
+            0.78,
+            0.18,
+            0.04
+          ],
+          [
+            0.28,
+            0.65,
+            0.07
+          ],
+          [
+            0.22,
+            0.13,
+            0.65
+          ],
+          [
+            0.25,
+            0.15,
+            0.6
+          ]
+        ],
+        "injection_probabilities": [
+          0.04,
+          0.09,
+          0.02,
+          0.04
+        ],
+        "reset_success": [
+          0.72,
+          0.5,
+          0.25
+        ],
+        "ideal_branch_prior": [
+          0.12,
+          0.18,
+          0.25,
+          0.45
+        ],
+        "fallback_cost": 0.32,
+        "parameter_scope": "synthetic_assumption_not_device_calibrated"
+      },
+      "parameters": {
+        "ideal_branch_prior": [
+          0.12,
+          0.18,
+          0.25,
+          0.45
+        ],
+        "stationary_carry_prior": [
+          0.49370845981776945,
+          0.33495304722579466,
+          0.07665648761189724,
+          0.09468200534453851
+        ],
+        "observation_likelihood": [
+          [
+            0.30786539431550747,
+            0.13185599054590008,
+            0.0634006164564408,
+            0.2032464844902622,
+            0.08623476743046306,
+            0.03998975373894105,
+            0.07420768366397515,
+            0.038004623293822426,
+            0.05519468606468775
+          ],
+          [
+            0.07294785006471285,
+            0.14688957113405832,
+            0.04946425354938159,
+            0.31397113246876035,
+            0.15852854854725887,
+            0.05731821763769798,
+            0.07873476807169719,
+            0.05765037400566768,
+            0.06449528452076525
+          ],
+          [
+            0.13642833087460665,
+            0.27875033248913816,
+            0.08794333795410354,
+            0.08944348407291786,
+            0.18374586871711493,
+            0.056281652869633506,
+            0.043149737926940226,
+            0.06461635129232068,
+            0.059640903803224427
+          ],
+          [
+            0.07294785006471285,
+            0.14688957113405832,
+            0.04946425354938159,
+            0.14452824714089124,
+            0.30371419649077513,
+            0.08157545502205087,
+            0.05196742532721617,
+            0.0805857365177251,
+            0.06832726475318884
+          ]
+        ],
+        "observation_probability": [
+          0.11700807557728166,
+          0.17805073180224928,
+          0.060756388199409185,
+          0.16830296421483884,
+          0.2214911664302897,
+          0.06589541760078983,
+          0.05724995617156485,
+          0.06735529137233534,
+          0.06389000863124136
+        ],
+        "posterior_by_observation": [
+          [
+            0.3157375859366234,
+            0.11221971600563406,
+            0.29149340804365736,
+            0.2805492900140852
+          ],
+          [
+            0.08886635120984165,
+            0.1484976924076674,
+            0.3913917253633225,
+            0.37124423101916854
+          ],
+          [
+            0.1252226177402507,
+            0.14654534120208393,
+            0.3618686880524554,
+            0.3663633530052099
+          ],
+          [
+            0.144914727156547,
+            0.3357920884401993,
+            0.1328608270362119,
+            0.38643235736704185
+          ],
+          [
+            0.04672047313865433,
+            0.1288319493657437,
+            0.2073963847842049,
+            0.617051192711397
+          ],
+          [
+            0.07282403880866228,
+            0.15657051052153848,
+            0.21352642914641345,
+            0.5570790215233857
+          ],
+          [
+            0.15554460885508856,
+            0.24755055201150758,
+            0.18842694742695726,
+            0.40847789170644655
+          ],
+          [
+            0.06770893128571388,
+            0.15406461926883336,
+            0.23983398325428515,
+            0.5383924661911675
+          ],
+          [
+            0.10366820211265074,
+            0.18170526914064344,
+            0.23337335946946805,
+            0.4812531692772377
+          ]
+        ],
+        "fallback_cost": 0.32,
+        "model_sha256": "0b1c1703a4ad2b0a1c57d727bf551dd5f4cd72919d21c87aab0cb239a428b576",
+        "parameter_sha256": "55caafd6726256a3d85b3165bbf86a6c9a610640ebd0b7ce3a4f8da81dc074ce",
+        "calibration_protocol_id": "T3.1.4/asymmetric_readout/stationary-v1",
+        "evidence_scope": "exact_stationary_hidden_carry_marginalization"
+      },
+      "observation_pairs_x_then_z": [
+        [
+          "g",
+          "g"
+        ],
+        [
+          "g",
+          "e"
+        ],
+        [
+          "g",
+          "leakage"
+        ],
+        [
+          "e",
+          "g"
+        ],
+        [
+          "e",
+          "e"
+        ],
+        [
+          "e",
+          "leakage"
+        ],
+        [
+          "leakage",
+          "g"
+        ],
+        [
+          "leakage",
+          "e"
+        ],
+        [
+          "leakage",
+          "leakage"
+        ]
+      ],
+      "exact_policy_costs": {
+        "direct_observed_expected_cost": 0.48588237515139737,
+        "forced_static_map_expected_cost": 0.5422954090993016,
+        "protocol_aware_expected_cost": 0.47735946778237315,
+        "protocol_aware_fallback_probability": 0.3151470619753406
+      },
+      "empirical_costs": {
+        "direct_observed_cost": 0.48566899999995694,
+        "forced_static_map_cost": 0.5417875,
+        "protocol_aware_cost": 0.47785024999995757,
+        "ideal_branch_reference_cost": 0.0
+      },
+      "direct_minus_protocol_aware_seed_cluster_ci": {
+        "estimate": 0.007818749999999382,
+        "standard_error": 0.00047687014367484693,
+        "ci_low": 0.006884101693094241,
+        "ci_high": 0.008753398306904522,
+        "cluster_unit": "evaluation_seed"
+      },
+      "empirical_likelihood_max_abs_error": 0.009811866334972164,
+      "empirical_stationary_carry_distribution": [
+        0.4932625,
+        0.33615625,
+        0.07499375,
+        0.0955875
+      ],
+      "protocol_aware_fallback_rate": 0.31466875,
+      "observed_leakage_rate": 0.31466875,
+      "direct_nonleak_branch_error_rate": 0.5617356570271675,
+      "protocol_aware_nonleak_branch_error_rate": 0.550326940439386,
+      "nonleak_policy_override_count": 27051
+    },
+    {
+      "scenario": {
+        "scenario_id": "persistent_leakage_stress",
+        "readout_confusion": [
+          [
+            0.86,
+            0.08,
+            0.06
+          ],
+          [
+            0.12,
+            0.76,
+            0.12
+          ],
+          [
+            0.2,
+            0.12,
+            0.68
+          ],
+          [
+            0.24,
+            0.14,
+            0.62
+          ]
+        ],
+        "injection_probabilities": [
+          0.08,
+          0.12,
+          0.05,
+          0.08
+        ],
+        "reset_success": [
+          0.65,
+          0.35,
+          0.15
+        ],
+        "ideal_branch_prior": [
+          0.4,
+          0.1,
+          0.1,
+          0.4
+        ],
+        "fallback_cost": 0.35,
+        "parameter_scope": "synthetic_assumption_not_device_calibrated"
+      },
+      "parameters": {
+        "ideal_branch_prior": [
+          0.4,
+          0.1,
+          0.1,
+          0.4
+        ],
+        "stationary_carry_prior": [
+          0.4367426130145898,
+          0.1593267582898247,
+          0.1355395139395889,
+          0.26839111475599664
+        ],
+        "observation_likelihood": [
+          [
+            0.2794701220312751,
+            0.05654140850079404,
+            0.11362906701399136,
+            0.10361594492443489,
+            0.049757693081302914,
+            0.0592014092749768,
+            0.12421260694078046,
+            0.052775148052696105,
+            0.16079660017974837
+          ],
+          [
+            0.03231536349207177,
+            0.06109801406119334,
+            0.07802217550250172,
+            0.22600638879464685,
+            0.13315750343202432,
+            0.09248406141822993,
+            0.11892268520205809,
+            0.08503142098944111,
+            0.17296238710783296
+          ],
+          [
+            0.07131710774363738,
+            0.23541575704247836,
+            0.14290773275994484,
+            0.034116248182785,
+            0.10948160830324821,
+            0.0689771907946814,
+            0.06665126453482674,
+            0.10223994998836182,
+            0.16889314065003636
+          ],
+          [
+            0.03231536349207177,
+            0.06109801406119334,
+            0.07802217550250172,
+            0.0659231295669573,
+            0.27072355696614875,
+            0.11500126711179504,
+            0.0724589420208222,
+            0.12495960469023942,
+            0.1794979465882705
+          ]
+        ],
+        "observation_probability": [
+          0.13507744133290966,
+          0.07670714613516212,
+          0.0987534878328419,
+          0.09382789349430007,
+          0.1524564111925079,
+          0.08582719577599987,
+          0.09722601455832956,
+          0.08982103819495452,
+          0.17030337148299446
+        ],
+        "posterior_by_observation": [
+          [
+            0.8275848854509986,
+            0.02392358277828779,
+            0.052797200657562354,
+            0.09569433111315116
+          ],
+          [
+            0.29484297799928594,
+            0.07965100663963609,
+            0.3069019888025336,
+            0.31860402655854436
+          ],
+          [
+            0.4602533824681882,
+            0.07900700746344103,
+            0.14471158021460667,
+            0.3160280298537641
+          ],
+          [
+            0.4417276827417188,
+            0.24087334840185504,
+            0.03636045413814765,
+            0.2810385147182785
+          ],
+          [
+            0.1305492965290216,
+            0.08734136032094138,
+            0.07181174438443584,
+            0.7102975987656013
+          ],
+          [
+            0.2759097917144415,
+            0.1077561262278728,
+            0.08036752240479202,
+            0.5359665596528936
+          ],
+          [
+            0.5110262207292705,
+            0.12231570505310786,
+            0.06855291234306445,
+            0.29810516187455716
+          ],
+          [
+            0.2350235495526064,
+            0.09466759981651776,
+            0.11382628395638485,
+            0.5564825666744909
+          ],
+          [
+            0.3776709733448926,
+            0.10156134056635749,
+            0.09917193017338538,
+            0.42159575591536463
+          ]
+        ],
+        "fallback_cost": 0.35,
+        "model_sha256": "bc9586284f9e1e3126e64c00a06573ccfbcb2853b73bcb98a07827028a99f87c",
+        "parameter_sha256": "53618f71d461692bfa8408700febfcd38b4a534deca30622ab7e603119e8e67b",
+        "calibration_protocol_id": "T3.1.4/persistent_leakage_stress/stationary-v1",
+        "evidence_scope": "exact_stationary_hidden_carry_marginalization"
+      },
+      "observation_pairs_x_then_z": [
+        [
+          "g",
+          "g"
+        ],
+        [
+          "g",
+          "e"
+        ],
+        [
+          "g",
+          "leakage"
+        ],
+        [
+          "e",
+          "g"
+        ],
+        [
+          "e",
+          "e"
+        ],
+        [
+          "e",
+          "leakage"
+        ],
+        [
+          "leakage",
+          "g"
+        ],
+        [
+          "leakage",
+          "e"
+        ],
+        [
+          "leakage",
+          "leakage"
+        ]
+      ],
+      "exact_policy_costs": {
+        "direct_observed_expected_cost": 0.3815250937179898,
+        "forced_static_map_expected_cost": 0.45111674786874845,
+        "protocol_aware_expected_cost": 0.36178172470745107,
+        "protocol_aware_fallback_probability": 0.5419311078451203
+      },
+      "empirical_costs": {
+        "direct_observed_cost": 0.382403125000073,
+        "forced_static_map_cost": 0.4528875,
+        "protocol_aware_cost": 0.3620468750000657,
+        "ideal_branch_reference_cost": 0.0
+      },
+      "direct_minus_protocol_aware_seed_cluster_ci": {
+        "estimate": 0.020356250000007313,
+        "standard_error": 0.0006085284871255389,
+        "ci_low": 0.01916355608167461,
+        "ci_high": 0.021548943918340016,
+        "cluster_unit": "evaluation_seed"
+      },
+      "empirical_likelihood_max_abs_error": 0.0035654065267764212,
+      "empirical_stationary_carry_distribution": [
+        0.43708125,
+        0.15681875,
+        0.13503125,
+        0.27106875
+      ],
+      "protocol_aware_fallback_rate": 0.5421875,
+      "observed_leakage_rate": 0.5421875,
+      "direct_nonleak_branch_error_rate": 0.42077815699658705,
+      "protocol_aware_nonleak_branch_error_rate": 0.37631399317406145,
+      "nonleak_policy_override_count": 27285
+    }
+  ],
+  "aggregate": {
+    "scenarios": 4,
+    "evaluation_seeds_per_scenario": 8,
+    "cycles": 640000,
+    "direct_minus_protocol_aware_seed_cluster_ci": {
+      "estimate": 0.025622187500004258,
+      "standard_error": 0.00038202320233281267,
+      "ci_low": 0.024873435782173287,
+      "ci_high": 0.02637093921783523,
+      "cluster_unit": "evaluation_seed"
+    },
+    "maximum_empirical_likelihood_abs_error": 0.009811866334972164,
+    "maximum_empirical_vs_exact_cost_abs_error": 0.0017707521312515517,
+    "resolved_positive_scenarios": 3,
+    "nonleak_override_scenarios": 3
+  },
+  "gate_summary": {
+    "passed": 11,
+    "failed": 0,
+    "gates": {
+      "descriptor_uses_no_online_hidden_truth": true,
+      "decoder_is_static_during_evaluation": true,
+      "all_exact_likelihoods_match_independent_markov_mc": true,
+      "all_exact_policy_costs_match_independent_markov_mc": true,
+      "fallback_never_used_without_observed_leakage": true,
+      "nontrivial_nonleak_policy_in_at_least_three_scenarios": true,
+      "three_noncontrol_scenarios_have_resolved_cost_gain": true,
+      "aggregate_protocol_policy_gain_resolved": true,
+      "ideal_branch_reference_remains_strict_lower_reference": true,
+      "scenario_parameter_hashes_are_unique": true,
+      "comparison_is_registered_as_separate_branch_target": true
+    }
+  },
+  "claim_boundary": {
+    "allowed": "a frozen observed-only sBs branch decoder exactly marginalizes the assumed preparation/readout/reset model and lowers explicit branch-action cost versus direct classified outcomes in the registered synthetic conditions",
+    "forbidden": "full finite-energy recovery optimum, logical-error-rate improvement, free post-selection, device calibration, experimental leakage detection, or an alias of the T3.1.3 full-state decoder oracle"
+  }
+}

@@ -1,0 +1,377 @@
+{
+  "schema_version": "two-domains-three-timescales-v1",
+  "task_id": "T1.4.3",
+  "snapshot_date": "2026-07-14",
+  "scope": "online decoder-controller computation and update interface",
+  "evidence_level": "software_contract_with_current_code_audit_not_board_measurement",
+  "compute_domains": [
+    {
+      "id": "CD1",
+      "name": "FPGA deterministic and safety domain",
+      "owns": [
+        "per-subcycle bounded arithmetic and action",
+        "local event FSM and health counters",
+        "active parameter bank and atomic commit",
+        "safe-static and last-known-good fallback"
+      ],
+      "must_not": [
+        "block on host inference or transport",
+        "run online training or unconstrained optimization",
+        "consume hidden physical truth",
+        "apply a late action to a later cycle"
+      ]
+    },
+    {
+      "id": "CD2",
+      "name": "host estimation and optimization domain",
+      "owns": [
+        "window validation and observed-feature construction",
+        "deployable estimator, teacher replay or bounded optimization",
+        "complete inactive-bank proposal and provenance",
+        "cross-window and cross-run recalibration"
+      ],
+      "must_not": [
+        "enter the per-subcycle critical path",
+        "directly mutate the active bank",
+        "treat sent parameters as committed without readback",
+        "consume target_params in a deployable mode"
+      ]
+    }
+  ],
+  "reference_timing": {
+    "identity": "configuration_reference_not_board_measurement",
+    "fast_subcycle_us": 5.0,
+    "fast_action_budget_us": 1.5,
+    "window_size_valid_samples": 2048,
+    "window_stride_cycles": 4000,
+    "window_content_duration_ms": 10.24,
+    "window_emission_interval_ms": 20.0,
+    "slow_start_period_ms": 20.0,
+    "slow_job_budget_ms": 5.0,
+    "max_pending_windows": 2,
+    "commit_delay_cycles": 1,
+    "guard_cycles_after_commit": 0,
+    "max_bank_age": null
+  },
+  "timescales": [
+    {
+      "id": "TS1",
+      "name": "per-subcycle FPGA fast path",
+      "primary_owner": "CD1",
+      "trigger": "one valid syndrome or protocol event observation",
+      "inputs": [
+        "epoch_id and observation-valid flag",
+        "wrapped syndrome_q and syndrome_p or classified event",
+        "latched active_bank and active_version",
+        "local frame, run-length and health state"
+      ],
+      "outputs": [
+        "bounded correction or frame update",
+        "normal, recovery, hold, reset-request or fallback action kind",
+        "cycle flags and saturating counters",
+        "trace record with actual active version"
+      ],
+      "deadline": "action must be ready for the same protocol boundary; reference budget 1.5 us within a 5 us configured subcycle",
+      "deadline_identity": "configuration_reference_not_board_measurement",
+      "failure_action": "suppress late or invalid action, use frame-only hold or safe action, increment reason counter; never shift a late correction to the next cycle",
+      "current_status": "partial_software_emulation",
+      "current_gap": "budget violation is recorded but does not suppress the callback; event-validity and action-kind FSM are incomplete"
+    },
+    {
+      "id": "TS2",
+      "name": "window event and health aggregation",
+      "primary_owner": "CD1",
+      "secondary_observer": "CD2",
+      "trigger": "window emission and any urgent local event",
+      "inputs": [
+        "raw syndrome counts and n_valid",
+        "g, e and leakage event counts and run lengths when available",
+        "saturation, overflow, deadline, fallback and lost-trace counters",
+        "active-version distribution and sequence metadata"
+      ],
+      "outputs": [
+        "versioned window header and CRC",
+        "raw-count histogram and observed statistics",
+        "health state and reason-coded local transition",
+        "ordered host notification without blocking TS1"
+      ],
+      "deadline": "urgent safety transitions execute locally by the next safe cycle boundary; window serialization may lag but must preserve sequence and loss accounting",
+      "deadline_identity": "logical_contract_not_board_measurement",
+      "failure_action": "reject an invalid whole window, keep TS1 running, drop oldest queued window when bounded queue is full, and retain local safety authority",
+      "current_status": "partial_software_emulation",
+      "current_gap": "current payload is normalized float32 with no header CRC/n_valid wire block; g/e/leakage FSM and automatic local fallback are absent"
+    },
+    {
+      "id": "TS3",
+      "name": "host slow estimation and optimization",
+      "primary_owner": "CD2",
+      "trigger": "eligible validated window or slower cross-window/cross-run schedule",
+      "inputs": [
+        "observed and validated TS2 payload only",
+        "prior active version and last-known-good parameters",
+        "bounded estimator state and uncertainty",
+        "offline training provenance when a learned model is used"
+      ],
+      "outputs": [
+        "complete signed inactive-bank payload",
+        "schema, version, source-window, timestamps, apply_epoch and CRC",
+        "K and b plus optional versioned FSM parameters",
+        "commit request followed by ack and active-version readback"
+      ],
+      "deadline": "not a per-cycle deadline; reference start period is 20 ms and software job budget is 5 ms, but stale or late results must be rejected before commit",
+      "deadline_identity": "software_latency_model_not_host_or_board_measurement",
+      "failure_action": "do not stage a failed or stale result; continue last-known-good until max age, then switch locally to safe-static",
+      "current_status": "partial_software_runtime",
+      "current_gap": "exceptions cause no stage, but slow budget violations are record-only and max-age, schema, CRC, CAS and commit readback are missing"
+    }
+  ],
+  "cross_domain_interfaces": [
+    {
+      "id": "XIF01",
+      "name": "observed window transfer",
+      "direction": "CD1_to_CD2",
+      "required_fields": [
+        "schema",
+        "sequence",
+        "window_id",
+        "epoch_start",
+        "epoch_end",
+        "active_version",
+        "n_valid",
+        "flags",
+        "payload_length",
+        "CRC"
+      ],
+      "atomicity": "all-or-nothing window acceptance"
+    },
+    {
+      "id": "XIF02",
+      "name": "inactive parameter-bank staging",
+      "direction": "CD2_to_CD1",
+      "required_fields": [
+        "schema",
+        "new_version",
+        "expected_active_version",
+        "source_window_id",
+        "created_epoch",
+        "apply_epoch",
+        "payload_length",
+        "CRC",
+        "K",
+        "b"
+      ],
+      "atomicity": "payload first, validated header last, never write active bank"
+    },
+    {
+      "id": "XIF03",
+      "name": "commit command",
+      "direction": "CD2_to_CD1",
+      "required_fields": [
+        "target_bank",
+        "expected_active_version",
+        "new_version",
+        "apply_epoch"
+      ],
+      "atomicity": "compare-and-swap at a cycle boundary"
+    },
+    {
+      "id": "XIF04",
+      "name": "commit acknowledgement and readback",
+      "direction": "CD1_to_CD2",
+      "required_fields": [
+        "accepted",
+        "reason",
+        "active_bank",
+        "active_version",
+        "commit_epoch"
+      ],
+      "atomicity": "host success requires active-version readback, not send completion"
+    }
+  ],
+  "atomic_update_protocol": [
+    {
+      "id": "AP01",
+      "rule": "cycle starts by latching one active bank and version",
+      "current_status": "implemented_software"
+    },
+    {
+      "id": "AP02",
+      "rule": "host writes a complete inactive-bank payload",
+      "current_status": "implemented_software_K_b_only"
+    },
+    {
+      "id": "AP03",
+      "rule": "FPGA validates shape, finite/range, schema, length and CRC before staged-valid",
+      "current_status": "partial_shape_and_finite_only"
+    },
+    {
+      "id": "AP04",
+      "rule": "commit checks monotonic new version and expected-active-version CAS",
+      "current_status": "partial_auto_version_no_CAS"
+    },
+    {
+      "id": "AP05",
+      "rule": "bank switch occurs once at a cycle boundary before that cycle fast action",
+      "current_status": "implemented_software"
+    },
+    {
+      "id": "AP06",
+      "rule": "ack reports reason and active version; host verifies readback",
+      "current_status": "missing_real_ack_and_readback"
+    },
+    {
+      "id": "AP07",
+      "rule": "old bank remains last-known-good through a post-commit guard and can roll back",
+      "current_status": "partial_old_payload_retained_no_rollback_FSM"
+    },
+    {
+      "id": "AP08",
+      "rule": "bank age and source-window freshness are checked before and after commit",
+      "current_status": "missing"
+    },
+    {
+      "id": "AP09",
+      "rule": "at most one in-flight slow job and one pending commit; replacement is explicit",
+      "current_status": "scheduler_enforced_but_direct_stage_API_can_replace_pending"
+    }
+  ],
+  "failure_matrix": [
+    {
+      "id": "FB01",
+      "event": "invalid or non-finite observation",
+      "required_action": "frame-only hold or protocol reset request; no zero substitution",
+      "current_status": "missing_validity_gate"
+    },
+    {
+      "id": "FB02",
+      "event": "fast deadline miss",
+      "required_action": "suppress late action and increment counter",
+      "current_status": "record_only"
+    },
+    {
+      "id": "FB03",
+      "event": "input or correction saturation",
+      "required_action": "bounded clip plus flag; persistent violation degrades health and selects safe-static",
+      "current_status": "clip_and_count_only"
+    },
+    {
+      "id": "FB04",
+      "event": "g/e/leakage or recovery-run event",
+      "required_action": "local event FSM acts without waiting for a window or host",
+      "current_status": "missing_protocol_event_FSM"
+    },
+    {
+      "id": "FB05",
+      "event": "bad window schema, length, CRC or n_valid",
+      "required_action": "reject whole window and produce no update",
+      "current_status": "missing_wire_validation"
+    },
+    {
+      "id": "FB06",
+      "event": "window queue full",
+      "required_action": "drop oldest unprocessed window, retain newest and count loss",
+      "current_status": "implemented_software"
+    },
+    {
+      "id": "FB07",
+      "event": "slow estimator, DMA or inference failure",
+      "required_action": "do not stage; keep active last-known-good",
+      "current_status": "implemented_software_exception_path"
+    },
+    {
+      "id": "FB08",
+      "event": "slow budget miss or stale result",
+      "required_action": "reject if freshness or future apply_epoch fails; never retroactively apply",
+      "current_status": "budget_record_only_no_stale_gate"
+    },
+    {
+      "id": "FB09",
+      "event": "bad bank schema, CRC, range, version or CAS",
+      "required_action": "reject inactive bank and leave active bank unchanged",
+      "current_status": "partial_finite_shape_validation"
+    },
+    {
+      "id": "FB10",
+      "event": "commit ack timeout or readback mismatch",
+      "required_action": "do not assume success; read back or roll back",
+      "current_status": "missing"
+    },
+    {
+      "id": "FB11",
+      "event": "host timeout or bank exceeds max age",
+      "required_action": "last-known-good until age limit, then local safe-static",
+      "current_status": "missing_max_age_FSM"
+    },
+    {
+      "id": "FB12",
+      "event": "transport sequence gap, duplicate or corruption",
+      "required_action": "reject or explicitly retry, account loss, preserve TS1 operation",
+      "current_status": "missing_serial_adapter"
+    },
+    {
+      "id": "FB13",
+      "event": "boot, reset or no validated bank",
+      "required_action": "activate prevalidated safe-static version zero",
+      "current_status": "identity_default_not_validated_safe_static"
+    },
+    {
+      "id": "FB14",
+      "event": "hidden target_params consumed by deployable estimator",
+      "required_action": "invalidate deployable result; allow only explicitly labelled oracle or test lane",
+      "current_status": "mode_separated_in_slow_runtime_but_payload_channel_not_physically_separated"
+    }
+  ],
+  "invariants": [
+    "CD1 never waits for CD2 to produce the current-cycle action",
+    "one cycle consumes exactly one latched active version",
+    "late actions are not shifted to a later observation",
+    "urgent event safety action is local and is not delayed to window emission",
+    "invalid windows produce no host update",
+    "host writes only the inactive bank",
+    "partial or unverifiable bank payloads never activate",
+    "send completion is not commit success",
+    "deployable estimators consume observed channels only",
+    "all configured timing numbers remain non-measured until CL3 evidence exists"
+  ],
+  "current_code_audit": {
+    "scheduler_cycle_order": [
+      "increment epoch",
+      "sample and record fast budget",
+      "commit pending bank if ready",
+      "finish slow job and possibly stage",
+      "execute fast callback",
+      "emit window",
+      "start next slow job"
+    ],
+    "fast_deadline_enforcement": "record_only_callback_still_executes",
+    "slow_failure_enforcement": "exception_records_slow_update_failed_and_does_not_stage",
+    "queue_policy": "drop_oldest_when_full",
+    "bank_features_present": [
+      "A/B storage",
+      "automatic version",
+      "staged commit_epoch",
+      "cycle-boundary switch",
+      "finite K/b shape"
+    ],
+    "bank_features_missing": [
+      "schema",
+      "CRC",
+      "expected-active-version CAS",
+      "timestamp and max age",
+      "ack/readback",
+      "rollback FSM"
+    ],
+    "window_current_representation": "normalized 32x32 float32 plus diagnostics and mock target_params",
+    "window_target_representation": "versioned raw 32x32 uint16 counts plus n_valid, observed health and CRC",
+    "hidden_truth_rule": "target_params is benchmark truth; only mock/oracle_delayed may consume it"
+  },
+  "source_paths": [
+    "docs/tasks/T0.1.3_dual_loop_interface.md",
+    "docs/low_cost_fpga_boundary.md",
+    "cnn_fpga/config/hardware_hil.yaml",
+    "cnn_fpga/runtime/scheduler.py",
+    "cnn_fpga/runtime/param_bank.py",
+    "cnn_fpga/runtime/fast_loop_emulator.py",
+    "cnn_fpga/runtime/slow_loop_runtime.py"
+  ]
+}

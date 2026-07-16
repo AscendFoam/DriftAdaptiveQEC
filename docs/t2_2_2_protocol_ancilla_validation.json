@@ -1,0 +1,75 @@
+{
+  "samples": 80000,
+  "seed": 2026071422,
+  "sbs": {
+    "expected_big_cd_bit_rate": 0.02,
+    "observed_big_cd_bit_rate": 0.020175,
+    "expected_logical_backaction_rate": 0.01,
+    "observed_logical_backaction_rate": 0.009875,
+    "phase_outcome_toggle_rate": 0.0
+  },
+  "sharpen_trim": {
+    "expected_feedback_mismatch_rate": 0.07164799999999999,
+    "observed_feedback_mismatch_rate": 0.0737875,
+    "bit_middle_window_rate": 0.010325,
+    "bit_logical_backaction_rate": 0.0052125
+  },
+  "checks": {
+    "sbs_big_cd_bit_rate_within_5se": true,
+    "sbs_logical_backaction_within_5se": true,
+    "sbs_phase_does_not_toggle_z_basis": true,
+    "sharpen_feedback_mismatch_within_5se": true,
+    "sharpen_bit_middle_window_is_half": true,
+    "secondary_protocols_remain_non_executable": true
+  },
+  "secondary_protocols": [
+    {
+      "protocol_id": "PROTO-STEANE-THEORY-ONLY",
+      "role": "theoretical_comparator",
+      "executable": false,
+      "allowed_scan_parameters": [
+        "data_variance",
+        "ancilla_variance"
+      ],
+      "forbidden_claims": [
+        "SBS main ranking",
+        "hardware implementation",
+        "device timing"
+      ]
+    },
+    {
+      "protocol_id": "PROTO-KNILL-QUNAUGHT-SECONDARY",
+      "role": "secondary_noise_shaping_comparator",
+      "executable": false,
+      "allowed_scan_parameters": [
+        "resource_squeezing",
+        "homodyne_variance"
+      ],
+      "forbidden_claims": [
+        "SBS main ranking",
+        "FPGA physical control",
+        "verified 1e-8"
+      ]
+    },
+    {
+      "protocol_id": "PROTO-ME-PSTEANE-SECONDARY",
+      "role": "secondary_tunable_preprocessing_comparator",
+      "executable": false,
+      "allowed_scan_parameters": [
+        "a",
+        "b",
+        "data_to_ancilla_noise_ratio"
+      ],
+      "forbidden_claims": [
+        "FPGA implements squeezing",
+        "project-verified optimum",
+        "device timing"
+      ]
+    }
+  ],
+  "evidence_scope": "protocol_native_ancilla_error_effective_validation_not_device_calibrated",
+  "claim_boundary": {
+    "allowed": "protocol-native effective ancilla/readout/reset fault flow",
+    "forbidden": "device-calibrated fault rates, master-equation fidelity, or secondary-protocol hardware execution"
+  }
+}

@@ -27,6 +27,8 @@ runtime:
   max_pending_windows: 2
   commit_delay_cycles: 1
   guard_cycles_after_commit: 0
+  # 允许一次 20 ms slow update 缺口；超过约 40.96 ms 后由 T4.2.3 fail closed。
+  max_parameter_age_cycles: 8192
 
 # 快回路行为配置：P3 mock backend 需要真正生成周期级 syndrome / histogram。
 fast_loop:

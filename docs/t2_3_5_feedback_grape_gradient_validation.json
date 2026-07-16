@@ -1,0 +1,359 @@
+{
+  "task_id": "T2.3.5",
+  "status": "PASS",
+  "source_contract": {
+    "paper_equation": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md:467-495",
+    "identity": "d E[R]/d theta = E[dR/dtheta] + E[R d log P_theta(trajectory)/dtheta]"
+  },
+  "config": {
+    "cutoff": 6,
+    "full_cycles": 1,
+    "finite_difference_step": 1e-05,
+    "finite_difference_relative_tolerance": 5e-05,
+    "finite_difference_absolute_tolerance": 2e-06,
+    "decomposition_tolerance": 2e-10,
+    "monte_carlo_batch_size": 384,
+    "monte_carlo_repeats": 32,
+    "monte_carlo_max_z": 3.5,
+    "seed": 271828,
+    "device": "cpu",
+    "protocol_id": "PROTO-SBS-MAIN",
+    "scope": "exact-enumeration plus finite-difference and sampled-estimator validation of Feedback-GRAPE reward and trajectory-score gradients on the finite-cutoff two-level differentiable SBS model; not teacher training, feasibility envelope, protocol ranking, device calibration, or hardware evidence"
+  },
+  "policy_parameters": [
+    "static_control_residual",
+    "latest_outcome_response",
+    "history_mean_response"
+  ],
+  "exact_decomposition": {
+    "expected_return": 0.3446975012668099,
+    "expected_reward": 0.3446975012668099,
+    "trajectory_probability_sum": 1.0,
+    "exact_gradient": [
+      0.18949776995877698,
+      -0.07522290948208285,
+      0.00863952205584842
+    ],
+    "reward_path_gradient": [
+      0.11396005626857797,
+      -0.04754099674415799,
+      0.02017385043439796
+    ],
+    "score_path_gradient": [
+      0.07553771369019907,
+      -0.02768191273792483,
+      -0.011534328378549515
+    ],
+    "decomposed_gradient": [
+      0.18949776995877704,
+      -0.07522290948208282,
+      0.008639522055848444
+    ],
+    "baseline_score_gradient": [
+      0.07553771369019896,
+      -0.027681912737924814,
+      -0.01153432837854951
+    ],
+    "probability_normalization_score": [
+      1.5057560375286606e-16,
+      -4.163336342344337e-17,
+      -1.1102230246251565e-16
+    ],
+    "decomposition_absolute_error": 5.551115123125783e-17,
+    "baseline_invariance_error": 1.1102230246251565e-16,
+    "score_normalization_error": 1.5057560375286606e-16
+  },
+  "finite_difference": {
+    "step": 1e-05,
+    "autograd_gradient": [
+      0.18949776995877698,
+      -0.07522290948208285,
+      0.00863952205584842
+    ],
+    "finite_difference_gradient": [
+      0.18949776992849274,
+      -0.07522290949579791,
+      0.008639522047770853
+    ],
+    "reward_path_autograd_gradient": [
+      0.11396005626857797,
+      -0.04754099674415799,
+      0.02017385043439796
+    ],
+    "reward_path_finite_difference_gradient": [
+      0.11396005629455498,
+      -0.04754099675924047,
+      0.0201738504288994
+    ],
+    "score_path_autograd_gradient": [
+      0.07553771369019907,
+      -0.02768191273792483,
+      -0.011534328378549515
+    ],
+    "score_path_finite_difference_gradient": [
+      0.07553771366439804,
+      -0.027681912741403938,
+      -0.011534328381355098
+    ],
+    "absolute_error_by_parameter": [
+      3.0284247332090786e-11,
+      1.3715056867980024e-11,
+      8.077566393538405e-12
+    ],
+    "relative_error_by_parameter": [
+      1.5981321227958824e-10,
+      1.8232553034586057e-10,
+      9.349552381340999e-10
+    ],
+    "maximum_absolute_error": 3.0284247332090786e-11,
+    "relative_l2_error": 1.6765420615741014e-10,
+    "reward_path_relative_l2_error": 2.4407101960665087e-10,
+    "score_path_relative_l2_error": 3.221897023227264e-10
+  },
+  "finite_difference_step_sweep": [
+    {
+      "step": 0.0003,
+      "autograd_gradient": [
+        0.18949776995877698,
+        -0.07522290948208285,
+        0.00863952205584842
+      ],
+      "finite_difference_gradient": [
+        0.18949774794145097,
+        -0.07522290828843037,
+        0.008639523094711166
+      ],
+      "reward_path_autograd_gradient": [
+        0.11396005626857797,
+        -0.04754099674415799,
+        0.02017385043439796
+      ],
+      "reward_path_finite_difference_gradient": [
+        0.1139600835666415,
+        -0.04754099878073816,
+        0.020173851621882715
+      ],
+      "score_path_autograd_gradient": [
+        0.07553771369019907,
+        -0.02768191273792483,
+        -0.011534328378549515
+      ],
+      "score_path_finite_difference_gradient": [
+        0.07553769302594335,
+        -0.027681911536227906,
+        -0.011534328606303913
+      ],
+      "absolute_error_by_parameter": [
+        2.201732601792017e-08,
+        1.1936524824118777e-09,
+        1.0388627458279842e-09
+      ],
+      "relative_error_by_parameter": [
+        1.1618779778175966e-07,
+        1.586820437512208e-08,
+        1.2024538095904184e-07
+      ],
+      "maximum_absolute_error": 2.201732601792017e-08,
+      "relative_l2_error": 1.0817199498685476e-07,
+      "reward_path_relative_l2_error": 2.189940269629434e-07,
+      "score_path_relative_l2_error": 2.547028562422608e-07
+    },
+    {
+      "step": 0.0001,
+      "autograd_gradient": [
+        0.18949776995877698,
+        -0.07522290948208285,
+        0.00863952205584842
+      ],
+      "finite_difference_gradient": [
+        0.18949776751292502,
+        -0.07522290935230158,
+        0.008639522170728053
+      ],
+      "reward_path_autograd_gradient": [
+        0.11396005626857797,
+        -0.04754099674415799,
+        0.02017385043439796
+      ],
+      "reward_path_finite_difference_gradient": [
+        0.11396005930193792,
+        -0.04754099697233498,
+        0.020173850565657556
+      ],
+      "score_path_autograd_gradient": [
+        0.07553771369019907,
+        -0.02768191273792483,
+        -0.011534328378549515
+      ],
+      "score_path_finite_difference_gradient": [
+        0.07553771139435975,
+        -0.02768191260498323,
+        -0.011534328404006053
+      ],
+      "absolute_error_by_parameter": [
+        2.4458519654046995e-09,
+        1.2978126906482146e-10,
+        1.1487963358369768e-10
+      ],
+      "relative_error_by_parameter": [
+        1.2907022586626916e-08,
+        1.7252891463822459e-09,
+        1.3296989267870212e-08
+      ],
+      "maximum_absolute_error": 2.4458519654046995e-09,
+      "relative_l2_error": 1.2015706658454459e-08,
+      "reward_path_relative_l2_error": 2.4335490986907207e-08,
+      "score_path_relative_l2_error": 2.8297595576851225e-08
+    },
+    {
+      "step": 3e-05,
+      "autograd_gradient": [
+        0.18949776995877698,
+        -0.07522290948208285,
+        0.00863952205584842
+      ],
+      "finite_difference_gradient": [
+        0.18949776973790447,
+        -0.07522290947544381,
+        0.008639522069975314
+      ],
+      "reward_path_autograd_gradient": [
+        0.11396005626857797,
+        -0.04754099674415799,
+        0.02017385043439796
+      ],
+      "reward_path_finite_difference_gradient": [
+        0.1139600565403651,
+        -0.04754099676719373,
+        0.020173850449007786
+      ],
+      "score_path_autograd_gradient": [
+        0.07553771369019907,
+        -0.02768191273792483,
+        -0.011534328378549515
+      ],
+      "score_path_finite_difference_gradient": [
+        0.07553771348498639,
+        -0.027681912727924314,
+        -0.01153432837953762
+      ],
+      "absolute_error_by_parameter": [
+        2.2087251472235891e-10,
+        6.6390365427437814e-12,
+        1.4126894098964726e-11
+      ],
+      "relative_error_by_parameter": [
+        1.1655678851938418e-09,
+        8.825817279656094e-11,
+        1.6351476371661253e-09
+      ],
+      "maximum_absolute_error": 2.2087251472235891e-10,
+      "relative_l2_error": 1.0850628963473802e-09,
+      "reward_path_relative_l2_error": 2.1831939237405797e-09,
+      "score_path_relative_l2_error": 2.528010294470813e-09
+    },
+    {
+      "step": 1e-05,
+      "autograd_gradient": [
+        0.18949776995877698,
+        -0.07522290948208285,
+        0.00863952205584842
+      ],
+      "finite_difference_gradient": [
+        0.18949776992849274,
+        -0.07522290949579791,
+        0.008639522047770853
+      ],
+      "reward_path_autograd_gradient": [
+        0.11396005626857797,
+        -0.04754099674415799,
+        0.02017385043439796
+      ],
+      "reward_path_finite_difference_gradient": [
+        0.11396005629455498,
+        -0.04754099675924047,
+        0.0201738504288994
+      ],
+      "score_path_autograd_gradient": [
+        0.07553771369019907,
+        -0.02768191273792483,
+        -0.011534328378549515
+      ],
+      "score_path_finite_difference_gradient": [
+        0.07553771366439804,
+        -0.027681912741403938,
+        -0.011534328381355098
+      ],
+      "absolute_error_by_parameter": [
+        3.0284247332090786e-11,
+        1.3715056867980024e-11,
+        8.077566393538405e-12
+      ],
+      "relative_error_by_parameter": [
+        1.5981321227958824e-10,
+        1.8232553034586057e-10,
+        9.349552381340999e-10
+      ],
+      "maximum_absolute_error": 3.0284247332090786e-11,
+      "relative_l2_error": 1.6765420615741014e-10,
+      "reward_path_relative_l2_error": 2.4407101960665087e-10,
+      "score_path_relative_l2_error": 3.221897023227264e-10
+    }
+  ],
+  "monte_carlo": {
+    "batch_size": 384,
+    "repeats": 32,
+    "total_trajectories": 12288,
+    "exact_gradient": [
+      0.18949776995877698,
+      -0.07522290948208285,
+      0.00863952205584842
+    ],
+    "sampled_gradient_mean": [
+      0.19036077136046553,
+      -0.07595743148093241,
+      0.00940568785714752
+    ],
+    "sampled_gradient_standard_error": [
+      0.0007702883170536196,
+      0.0007225573271400148,
+      0.0012155118859960511
+    ],
+    "sampled_gradient_z_score": [
+      1.1203615355216043,
+      -1.0165587853864877,
+      0.6303235781781488
+    ],
+    "maximum_absolute_z_score": 1.1203615355216043,
+    "plain_score_trace_variance": 0.000261745167421423,
+    "baseline_score_trace_variance": 1.1630021830912405e-05,
+    "baseline_variance_ratio": 0.04443261339067048,
+    "mean_reward": 0.34566155314363456,
+    "mean_ground_outcome_fraction": 0.62109375
+  },
+  "checks": {
+    "all_exact_trajectory_probabilities_normalize": true,
+    "reward_path_is_nonzero": true,
+    "score_path_is_nonzero": true,
+    "exact_gradient_equals_reward_plus_score": true,
+    "constant_baseline_preserves_exact_score_gradient": true,
+    "expected_probability_score_is_zero": true,
+    "autograd_matches_central_finite_difference_relative": true,
+    "autograd_matches_central_finite_difference_absolute": true,
+    "reward_path_matches_independent_finite_difference": true,
+    "score_path_matches_independent_finite_difference": true,
+    "finite_difference_step_sweep_is_stable": true,
+    "sampled_two_term_gradient_matches_exact_within_error": true,
+    "constant_baseline_reduces_score_variance": true,
+    "monte_carlo_uses_real_random_trajectories": true,
+    "upstream_simulator_scope_is_preserved": true
+  },
+  "scope": "exact-enumeration plus finite-difference and sampled-estimator validation of Feedback-GRAPE reward and trajectory-score gradients on the finite-cutoff two-level differentiable SBS model; not teacher training, feasibility envelope, protocol ranking, device calibration, or hardware evidence",
+  "forbidden_claims": [
+    "not an optimized or trained RNN teacher",
+    "not the T2.3.6 cutoff batch horizon feasibility envelope",
+    "not the T2.3.7 standard MF NMF ranking",
+    "not pulse-level multilevel-transmon or device-calibrated dynamics",
+    "not target-board or hardware timing evidence"
+  ]
+}

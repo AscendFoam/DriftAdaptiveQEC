@@ -1,0 +1,232 @@
+{
+  "schema_version": "t3.1.1-standard-binning-v1",
+  "task_id": "T3.1.1",
+  "status": "PASS",
+  "evidence_scope": "paired_synthetic_ideal_square_gkp_decoder_integration",
+  "implementation_sha256": "3baf1c68b9d379515957a0097cb4f49ccfb4d8a4b2c3db529946bad19a36264a",
+  "baseline_descriptor": {
+    "baseline_id": "standard_binning",
+    "label": "Standard binning (fixed half-cell recovery)",
+    "task_owner": "T3.1.1",
+    "comparison_role": "deployable_static_decoder_baseline",
+    "deployable": true,
+    "observation_inputs": [
+      "centered_modular_syndrome_q",
+      "centered_modular_syndrome_p"
+    ],
+    "hidden_truth_inputs": [],
+    "decision_rule": "apply minus-centered-syndrome recovery and select the central even-even logical coset; half-open cells are inherited from standard_binning_1d",
+    "tunable_parameters": [],
+    "evidence_scope": "ideal_square_gkp_syndrome_level_fixed_recovery"
+  },
+  "major_comparison_registry": [
+    {
+      "comparison_id": "t1_3_4_adaptive_drift_alignment",
+      "code_path": "cnn_fpga/benchmark/adaptive_drift_alignment.py",
+      "comparison_kind": "decoder_algorithm_comparison",
+      "lifecycle": "active",
+      "method_ids": [
+        "standard_binning",
+        "static_training_average_map",
+        "window_variance_map",
+        "ekf_map",
+        "full_state_model_oracle_map"
+      ],
+      "standard_binning_policy": "required",
+      "rationale": "current paired logical-decoder comparison",
+      "static_anchor_method_id": "static_training_average_map",
+      "reference_anchor_method_id": "full_state_model_oracle_map"
+    },
+    {
+      "comparison_id": "phase5_main_decoder_benchmark",
+      "code_path": "future:T5.1",
+      "comparison_kind": "decoder_algorithm_comparison",
+      "lifecycle": "future_contract",
+      "method_ids": [
+        "standard_binning",
+        "static_training_average_map",
+        "full_state_model_oracle_map"
+      ],
+      "standard_binning_policy": "required",
+      "rationale": "schema guard: every future main decoder table must retain this anchor",
+      "static_anchor_method_id": "static_training_average_map",
+      "reference_anchor_method_id": "full_state_model_oracle_map"
+    },
+    {
+      "comparison_id": "t2_4_3_fixed_point_precision_sensitivity",
+      "code_path": "cnn_fpga/runtime/fixed_point_chain.py",
+      "comparison_kind": "implementation_sensitivity",
+      "lifecycle": "active",
+      "method_ids": [
+        "float_periodic_map",
+        "quantized_periodic_map"
+      ],
+      "standard_binning_policy": "not_applicable",
+      "rationale": "same-decoder precision sweep, not an algorithm-ranking table",
+      "static_anchor_method_id": null,
+      "reference_anchor_method_id": null
+    },
+    {
+      "comparison_id": "t3_1_4_static_sbs_branch_comparison",
+      "code_path": "cnn_fpga/benchmark/static_protocol_decoder.py",
+      "comparison_kind": "decoder_algorithm_comparison",
+      "lifecycle": "active",
+      "method_ids": [
+        "direct_observed_sbs_branch",
+        "static_sbs_branch_map",
+        "static_sbs_observation_reset_bayes",
+        "ideal_sbs_branch_truth_reference"
+      ],
+      "standard_binning_policy": "not_applicable",
+      "rationale": "separate ideal-sBs-Kraus-branch target with g/e/leakage observations; it must not be mixed with the logical-coset standard-binning schema",
+      "static_anchor_method_id": "static_sbs_observation_reset_bayes",
+      "reference_anchor_method_id": "ideal_sbs_branch_truth_reference"
+    },
+    {
+      "comparison_id": "t3_1_5_topk_periodic_map_sensitivity",
+      "code_path": "cnn_fpga/benchmark/topk_lattice_coset_map.py",
+      "comparison_kind": "implementation_sensitivity",
+      "lifecycle": "active",
+      "method_ids": [
+        "full_periodic_gaussian_map",
+        "topk_lattice_coset_map"
+      ],
+      "standard_binning_policy": "not_applicable",
+      "rationale": "same single-mode periodic-Gaussian decoder and candidate rectangle with only the per-coset likelihood truncation K changed; this is not an algorithm ranking",
+      "static_anchor_method_id": null,
+      "reference_anchor_method_id": null
+    },
+    {
+      "comparison_id": "t3_2_1_memory_bayesian_episode_comparison",
+      "code_path": "cnn_fpga/benchmark/memory_assisted_bayesian_decoder.py",
+      "comparison_kind": "decoder_algorithm_comparison",
+      "lifecycle": "active",
+      "method_ids": [
+        "standard_binning",
+        "final_outcome_static_periodic_bayes",
+        "periodic_memory_assisted_bayes",
+        "full_episode_logical_truth_reference"
+      ],
+      "standard_binning_policy": "required",
+      "rationale": "bounded no-intermediate-correction modular-syndrome episodes with a known start; all deployable methods use the same traces and the memory method is limited to the registered causal observation/history budget",
+      "static_anchor_method_id": "final_outcome_static_periodic_bayes",
+      "reference_anchor_method_id": "full_episode_logical_truth_reference"
+    },
+    {
+      "comparison_id": "t3_2_2_continuous_adaptive_map_comparison",
+      "code_path": "cnn_fpga/benchmark/continuous_adaptive_map.py",
+      "comparison_kind": "decoder_algorithm_comparison",
+      "lifecycle": "active",
+      "method_ids": [
+        "standard_binning",
+        "static_training_average_map",
+        "latest_window_periodic_moment_map",
+        "ewma_periodic_moment_map",
+        "kalman_constant_velocity_periodic_map",
+        "full_state_model_oracle_map"
+      ],
+      "standard_binning_policy": "required",
+      "rationale": "continuous wrapped-Gaussian drift comparison with one-window causal delay, shared residual observations, frozen training-only hyperparameters and the formal static/full-state reference anchors",
+      "static_anchor_method_id": "static_training_average_map",
+      "reference_anchor_method_id": "full_state_model_oracle_map"
+    },
+    {
+      "comparison_id": "t3_2_3_sliding_window_syndrome_comparison",
+      "code_path": "cnn_fpga/benchmark/sliding_window_syndrome_estimator.py",
+      "comparison_kind": "decoder_algorithm_comparison",
+      "lifecycle": "active",
+      "method_ids": [
+        "standard_binning",
+        "static_training_average_map",
+        "latest_window_periodic_moment_map",
+        "training_selected_sliding_window_periodic_map",
+        "full_state_model_oracle_map"
+      ],
+      "standard_binning_policy": "required",
+      "rationale": "uniform overlapping-window syndrome estimator with training-only history-length selection, one-window delay and identical observation/update budget",
+      "static_anchor_method_id": "static_training_average_map",
+      "reference_anchor_method_id": "full_state_model_oracle_map"
+    },
+    {
+      "comparison_id": "t2_4_2_timing_fault_sensitivity",
+      "code_path": "cnn_fpga/runtime/timing_fault_model.py",
+      "comparison_kind": "timing_sensitivity",
+      "lifecycle": "active",
+      "method_ids": [
+        "nominal_runtime",
+        "timing_fault_runtime"
+      ],
+      "standard_binning_policy": "not_applicable",
+      "rationale": "runtime fault sensitivity, not a decoder-method comparison",
+      "static_anchor_method_id": null,
+      "reference_anchor_method_id": null
+    },
+    {
+      "comparison_id": "legacy_p4_frozen_software_hil",
+      "code_path": "cnn_fpga/benchmark/run_p4_multiscenario_benchmark.py",
+      "comparison_kind": "legacy_parameter_estimator_comparison",
+      "lifecycle": "frozen_legacy",
+      "method_ids": [
+        "static_linear",
+        "window_variance",
+        "ekf",
+        "cnn_fpga"
+      ],
+      "standard_binning_policy": "not_applicable",
+      "rationale": "frozen historical slow-loop parameter-estimator benchmark; static_linear is not renamed or reinterpreted as a GKP standard decoder",
+      "static_anchor_method_id": null,
+      "reference_anchor_method_id": null
+    }
+  ],
+  "adaptive_alignment": {
+    "method_ids": [
+      "standard_binning",
+      "static_training_average_map",
+      "window_variance_map",
+      "ekf_map",
+      "full_state_model_oracle_map"
+    ],
+    "paired_samples": 72000,
+    "trace_sha256": "975a606105be9ba2b28f81466367d38142e941515276f0556f7dde1aae770439",
+    "standard_binning_error_rate": 0.06041666666666667,
+    "static_calibration_map_error_rate": 0.024791666666666667,
+    "window_variance_map_error_rate": 0.02263888888888889,
+    "ekf_map_error_rate": 0.025319444444444443,
+    "full_state_model_oracle_map_error_rate": 0.01138888888888889,
+    "standard_minus_static": {
+      "estimate": 0.035625,
+      "standard_error": 0.0008367605782190031,
+      "ci_low": 0.03398497940300784,
+      "ci_high": 0.03726502059699215
+    },
+    "standard_only_failure_count": 3143,
+    "static_only_failure_count": 578,
+    "mcnemar_z": 42.049180327868854,
+    "counterevidence": "the current static row is better than standard binning on this registered trace; no cross-scenario dominance assumption is imposed"
+  },
+  "gate_summary": {
+    "passed": 15,
+    "failed": 0,
+    "gates": [
+      "registry:t1_3_4_adaptive_drift_alignment",
+      "registry:phase5_main_decoder_benchmark",
+      "registry:t2_4_3_fixed_point_precision_sensitivity",
+      "registry:t3_1_4_static_sbs_branch_comparison",
+      "registry:t3_1_5_topk_periodic_map_sensitivity",
+      "registry:t3_2_1_memory_bayesian_episode_comparison",
+      "registry:t3_2_2_continuous_adaptive_map_comparison",
+      "registry:t3_2_3_sliding_window_syndrome_comparison",
+      "registry:t2_4_2_timing_fault_sensitivity",
+      "registry:legacy_p4_frozen_software_hil",
+      "descriptor:no_hidden_truth_inputs",
+      "adaptive:method_schema_bound",
+      "adaptive:paired_failure_accounting",
+      "adaptive:standard_vs_static_paired_difference_resolved",
+      "legacy_p4:semantic_non_alias"
+    ]
+  },
+  "claim_boundary": {
+    "allowed": "standard binning is an explicit, paired, no-tuning row in the current synthetic ideal square-GKP decoder comparison; any observed ranking against the current static row remains scenario-specific",
+    "forbidden": "legacy static_linear is standard binning, or the integration is a finite-energy/protocol/FPGA/quantum-hardware performance result"
+  }
+}

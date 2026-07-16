@@ -20,6 +20,18 @@ class FixedPointFormat:
     integer_bits: int = 4
     fractional_bits: int = 20
 
+    def __post_init__(self) -> None:
+        for name, value in (
+            ("integer_bits", self.integer_bits),
+            ("fractional_bits", self.fractional_bits),
+        ):
+            if isinstance(value, bool) or not isinstance(value, int):
+                raise TypeError(f"{name} must be an integer")
+            if value < 0:
+                raise ValueError(f"{name} must be non-negative")
+        if self.word_bits > 63:
+            raise ValueError("fixed-point word width above 63 bits is unsupported")
+
     @classmethod
     def from_spec(cls, spec: str) -> "FixedPointFormat":
         match = re.fullmatch(r"Q(\d+)\.(\d+)", spec.strip(), flags=re.IGNORECASE)
@@ -32,6 +44,20 @@ class FixedPointFormat:
         return 2.0 ** (-self.fractional_bits)
 
     @property
+    def word_bits(self) -> int:
+        """One sign bit plus the configured integer and fractional fields."""
+
+        return 1 + self.integer_bits + self.fractional_bits
+
+    @property
+    def min_code(self) -> int:
+        return -(1 << (self.word_bits - 1))
+
+    @property
+    def max_code(self) -> int:
+        return (1 << (self.word_bits - 1)) - 1
+
+    @property
     def min_value(self) -> float:
         # 中文注释：这里按“1 个符号位 + integer_bits 个整数位 + fractional_bits 个小数位”解释。
         return -(2.0 ** self.integer_bits)
@@ -40,12 +66,34 @@ class FixedPointFormat:
     def max_value(self) -> float:
         return (2.0 ** self.integer_bits) - self.step
 
-    def quantize(self, value: np.ndarray | list[float] | float) -> tuple[np.ndarray, np.ndarray]:
+    def encode(
+        self,
+        value: np.ndarray | list[float] | float,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """Encode to signed integer words using explicit ties-to-even rounding."""
+
         array = np.asarray(value, dtype=float)
-        clipped = np.clip(array, self.min_value, self.max_value)
-        quantized = np.round(clipped / self.step) * self.step
-        saturated = np.logical_or(array < self.min_value, array > self.max_value)
-        return quantized.astype(float), saturated
+        if not np.all(np.isfinite(array)):
+            raise ValueError("fixed-point input must contain only finite values")
+        scaled = np.rint(array / self.step)
+        saturated = np.logical_or(scaled < self.min_code, scaled > self.max_code)
+        codes = np.clip(scaled, self.min_code, self.max_code).astype(np.int64)
+        return codes, saturated
+
+    def decode(self, codes: np.ndarray | list[int] | int) -> np.ndarray:
+        """Decode signed integer words and reject out-of-format codes."""
+
+        array = np.asarray(codes)
+        if not np.issubdtype(array.dtype, np.integer):
+            raise TypeError("fixed-point codes must be integers")
+        signed = array.astype(np.int64, copy=False)
+        if np.any(signed < self.min_code) or np.any(signed > self.max_code):
+            raise ValueError("fixed-point code lies outside the configured word width")
+        return signed.astype(float) * self.step
+
+    def quantize(self, value: np.ndarray | list[float] | float) -> tuple[np.ndarray, np.ndarray]:
+        codes, saturated = self.encode(value)
+        return self.decode(codes), saturated
 
 
 @dataclass(frozen=True)

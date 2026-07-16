@@ -226,6 +226,7 @@ class ParamMapper:
             "prediction": prediction.to_dict(),
             "error_cov": error_cov.tolist(),
             "measurement_cov": measurement_cov.tolist(),
+            "alpha_bias": self.config.alpha_bias,
             "gain_eigvals_raw": eigvals_raw.tolist(),
             "gain_eigvals_clipped": eigvals_clipped.tolist(),
             "gain_eigvals_scaled": eigvals_scaled.tolist(),

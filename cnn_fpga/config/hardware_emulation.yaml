@@ -27,6 +27,8 @@ runtime:
   max_pending_windows: 2
   commit_delay_cycles: 1
   guard_cycles_after_commit: 0
+  # 与 hardware_hil 保持一致：允许一次 slow update 缺口，随后 fail closed。
+  max_parameter_age_cycles: 8192
 
 # 快回路行为参数：这里的直方图和固定点配置会真正进入 fast_loop_emulator
 fast_loop:

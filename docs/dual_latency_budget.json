@@ -1,0 +1,497 @@
+{
+  "schema_version": "dual-latency-budget-v1",
+  "task_id": "T2.4.1",
+  "generated_on": "2026-07-15",
+  "status": "contract_frozen_no_target_board_measurement",
+  "terminology_ledger": [
+    {
+      "canonical_term": "measurement chain",
+      "definition": "从物理 readout pulse 到 outcome bits 可被控制卡消费的外部实验链；只用于具名文献装置",
+      "forbidden_alias": "本项目 measurement latency"
+    },
+    {
+      "canonical_term": "ADC acquisition",
+      "definition": "ADC 或等价采集窗口；采样率、采集时长与传输延迟必须分开",
+      "forbidden_alias": "FPGA inference latency"
+    },
+    {
+      "canonical_term": "FPGA DSP",
+      "definition": "具名实验 FPGA 上的 demodulation/integration/thresholding 或项目中的数字 core",
+      "forbidden_alias": "整条量子反馈 latency"
+    },
+    {
+      "canonical_term": "waveform generation / DAC output",
+      "definition": "波形产生和 DAC 输出；Sivak 来源明确写 DAC，不擅自改名为独立 AWG",
+      "forbidden_alias": "低价目标板已集成 AWG"
+    },
+    {
+      "canonical_term": "transport latency",
+      "definition": "host/bridge/serial 到板或板到 host 的数据传输时间",
+      "forbidden_alias": "on-chip core latency"
+    },
+    {
+      "canonical_term": "on-chip core latency",
+      "definition": "固定输入已在目标 FPGA 内部时的 cycle-counted 数字 kernel 时间",
+      "forbidden_alias": "transport 或 end-to-end latency"
+    },
+    {
+      "canonical_term": "end-to-end digital replay latency",
+      "definition": "具名 replay frame 从 host 发起到已确认 board action/response 的完整数字路径",
+      "forbidden_alias": "quantum feedback latency"
+    },
+    {
+      "canonical_term": "physical action latency",
+      "definition": "DAC/AWG/微波链将数字命令转成物理控制并作用于量子系统的时间",
+      "forbidden_alias": "软件 writeback 或 parameter commit"
+    }
+  ],
+  "lanes": {
+    "literature_system": {
+      "lane_id": "LANE-LITERATURE-EXTERNAL",
+      "identity": "external_literature_reference_never_target_budget",
+      "composable_with_other_lane": false,
+      "systems": [
+        {
+          "system_id": "LIT-SIVAK-2023",
+          "title": "Real-time quantum error correction beyond break-even",
+          "apparatus_scope": "external superconducting cavity/transmon experiment with VPXI-ePC and X6-1000M/Virtex-6 controller",
+          "evidence_class": "external_device_measurement",
+          "measured_on_target_board": false,
+          "control_wiring": {
+            "controller": "two X6-1000M control cards",
+            "fpga": "Xilinx Virtex-6",
+            "integrated_interfaces": [
+              "DAC",
+              "ADC",
+              "DIO"
+            ],
+            "dac_sample_rate_msps": 500,
+            "dac_resolution_bits": 16
+          },
+          "source_anchors": [
+            {
+              "source_anchor_id": "SRC-SIVAK-CONTROL-WIRING",
+              "source_path": "relative_papers/Real-time_quantum_error_correction_beyond_break-even/Real-time_quantum_error_correction_beyond_break-even.md",
+              "line_start": 385,
+              "line_end": 385,
+              "expected_fragment": "Xilinx VIRTEX-6"
+            },
+            {
+              "source_anchor_id": "SRC-SIVAK-MEASUREMENT-BREAKDOWN",
+              "source_path": "relative_papers/Real-time_quantum_error_correction_beyond_break-even/Real-time_quantum_error_correction_beyond_break-even.md",
+              "line_start": 483,
+              "line_end": 483,
+              "expected_fragment": "all of which takes 332 ns"
+            },
+            {
+              "source_anchor_id": "SRC-SIVAK-SBS-PROSE",
+              "source_path": "relative_papers/Real-time_quantum_error_correction_beyond_break-even/Real-time_quantum_error_correction_beyond_break-even.md",
+              "line_start": 891,
+              "line_end": 891,
+              "expected_fragment": "t_{\\mathrm{SBS}}=1546"
+            },
+            {
+              "source_anchor_id": "SRC-SIVAK-RESET-PROSE",
+              "source_path": "relative_papers/Real-time_quantum_error_correction_beyond_break-even/Real-time_quantum_error_correction_beyond_break-even.md",
+              "line_start": 893,
+              "line_end": 893,
+              "expected_fragment": "t_{\\mathrm{reset}}=2332"
+            },
+            {
+              "source_anchor_id": "SRC-SIVAK-TABLE-S3",
+              "source_path": "relative_papers/Real-time_quantum_error_correction_beyond_break-even/Real-time_quantum_error_correction_beyond_break-even.md",
+              "line_start": 903,
+              "line_end": 907,
+              "expected_fragment": "TABLE S3. Timing of the cycle components."
+            }
+          ],
+          "budgets": [
+            {
+              "budget_id": "LIT-SIVAK-MEASUREMENT",
+              "evidence_class": "external_device_measurement",
+              "measured_on_target_board": false,
+              "aggregate_duration_ns": null,
+              "aggregation_status": "not_defined_due_to_overlap_semantics",
+              "aggregation_note": "来源给出 pulse、travel 和 acquisition，但没有声明这些区间可直接串行相加；只保留分项。",
+              "stages": [
+                {
+                  "stage_id": "LIT-SIVAK-MEAS-READOUT",
+                  "duration_ns": 700,
+                  "semantic": "readout pulse duration; includes 40 ns ramp-up/down statement"
+                },
+                {
+                  "stage_id": "LIT-SIVAK-MEAS-TRAVEL",
+                  "duration_ns": 300,
+                  "semantic": "delay before reflected signal acquisition"
+                },
+                {
+                  "stage_id": "LIT-SIVAK-MEAS-ACQUISITION",
+                  "duration_ns": 1400,
+                  "semantic": "ADC/readout acquisition duration"
+                },
+                {
+                  "stage_id": "LIT-SIVAK-MEAS-FPGA-DSP",
+                  "duration_ns": 332,
+                  "semantic": "Virtex-6 demodulation, integration and thresholding"
+                },
+                {
+                  "stage_id": "LIT-SIVAK-MEAS-DISTRIBUTION",
+                  "duration_ns": 100,
+                  "semantic": "s0/s1 distribution to all control cards"
+                }
+              ]
+            },
+            {
+              "budget_id": "LIT-SIVAK-SBS",
+              "evidence_class": "external_device_measurement",
+              "measured_on_target_board": false,
+              "prose_sbs_ns": 1546,
+              "table_layer_durations_ns": [
+                502,
+                708,
+                262,
+                76
+              ],
+              "table_layer_sum_ns": 1548,
+              "table_sbs_block_ns": 1596,
+              "source_discrepancy_ns": 2,
+              "scope_note": "prose SBS=1546 ns; Table S3 layer sum=1548 ns; table block adds 24 ns enter and 24 ns exit."
+            },
+            {
+              "budget_id": "LIT-SIVAK-RESET",
+              "evidence_class": "external_device_measurement",
+              "measured_on_target_board": false,
+              "prose_subroutine_ns": 2332,
+              "table_block_durations_ns": [
+                24,
+                300,
+                1400,
+                332,
+                100,
+                200,
+                24
+              ],
+              "table_block_ns": 2380,
+              "scope_note": "prose reset subroutine excludes the table's 24 ns enter and 24 ns exit overhead."
+            },
+            {
+              "budget_id": "LIT-SIVAK-CONSTITUENT",
+              "evidence_class": "external_device_measurement",
+              "measured_on_target_board": false,
+              "stages": [
+                {
+                  "stage_id": "LIT-SIVAK-CYCLE-ENTER",
+                  "duration_ns": 24
+                },
+                {
+                  "stage_id": "LIT-SIVAK-CYCLE-SBS-BLOCK",
+                  "duration_ns": 1596
+                },
+                {
+                  "stage_id": "LIT-SIVAK-CYCLE-RESET-BLOCK",
+                  "duration_ns": 2380
+                },
+                {
+                  "stage_id": "LIT-SIVAK-CYCLE-VIRTUAL-ROTATION",
+                  "duration_ns": 448
+                },
+                {
+                  "stage_id": "LIT-SIVAK-CYCLE-IDLE",
+                  "duration_ns": 452
+                },
+                {
+                  "stage_id": "LIT-SIVAK-CYCLE-EXIT",
+                  "duration_ns": 24
+                }
+              ],
+              "constituent_ns": 4924,
+              "full_xz_cycle_ns": 9848,
+              "scope_note": "one constituent is one X or Z rank-2 dissipator; one chronological full cycle is X then Z."
+            }
+          ]
+        },
+        {
+          "system_id": "LIT-PUVIANI-2025-MODEL",
+          "title": "Non-Markovian feedback for optimized quantum error correction",
+          "apparatus_scope": "external numerical model borrowing a realistic timing profile; reset is numerical and Hamiltonian feedback is omitted",
+          "evidence_class": "external_model_assumption",
+          "measured_on_target_board": false,
+          "source_anchors": [
+            {
+              "source_anchor_id": "SRC-PUVIANI-MODEL-CYCLE",
+              "source_path": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md",
+              "line_start": 451,
+              "line_end": 455,
+              "expected_fragment": "\\tau_{\\mathrm{cycle}}=10\\mu\\mathrm{s}"
+            }
+          ],
+          "budgets": [
+            {
+              "budget_id": "LIT-PUVIANI-MODEL-CYCLE",
+              "evidence_class": "external_model_assumption",
+              "measured_on_target_board": false,
+              "half_cycle_stages": [
+                {
+                  "stage_id": "LIT-PUVIANI-ENTER",
+                  "duration_us": 0.1
+                },
+                {
+                  "stage_id": "LIT-PUVIANI-LAYER1",
+                  "duration_us": 0.5
+                },
+                {
+                  "stage_id": "LIT-PUVIANI-LAYER2",
+                  "duration_us": 0.7
+                },
+                {
+                  "stage_id": "LIT-PUVIANI-LAYER3",
+                  "duration_us": 0.3
+                },
+                {
+                  "stage_id": "LIT-PUVIANI-LAYER4",
+                  "duration_us": 0.1
+                },
+                {
+                  "stage_id": "LIT-PUVIANI-MEASUREMENT-RESET",
+                  "duration_us": 2.3
+                },
+                {
+                  "stage_id": "LIT-PUVIANI-VIRTUAL-IDLE",
+                  "duration_us": 1.0
+                }
+              ],
+              "half_cycle_us": 5.0,
+              "full_cycle_us": 10.0,
+              "scope_note": "simulation timing assumption only; measurement is ideal projective and reset is numerical, not pulse-level hardware."
+            }
+          ]
+        }
+      ]
+    },
+    "project_control_plane": {
+      "lane_id": "LANE-PROJECT-CONTROL-PLANE",
+      "identity": "project_configuration_capacity_and_null_measurement_contract",
+      "composable_with_other_lane": false,
+      "target_board": "Sipeed Tang Nano 20K / GW2AR-LV18QN88C8-I7",
+      "real_board_gate": "NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE",
+      "board_measurement_status": "not_started",
+      "configuration_binding": {
+        "binding_id": "PROJECT-HIL-CONFIG-BINDING",
+        "source_path": "cnn_fpga/config/hardware_hil.yaml",
+        "line_start": 14,
+        "line_end": 167,
+        "expected_fragment": "fast_cycle_budget_us: 1.5"
+      },
+      "source_anchors": [
+        {
+          "source_anchor_id": "SRC-PROJECT-CADENCE",
+          "source_path": "cnn_fpga/config/hardware_hil.yaml",
+          "line_start": 14,
+          "line_end": 28,
+          "expected_fragment": "window_stride: 4000"
+        },
+        {
+          "source_anchor_id": "SRC-PROJECT-LATENCY-MODEL",
+          "source_path": "cnn_fpga/config/hardware_hil.yaml",
+          "line_start": 145,
+          "line_end": 167,
+          "expected_fragment": "inference_mean_us: 900.0"
+        },
+        {
+          "source_anchor_id": "SRC-PROJECT-UART-BOUND",
+          "source_path": "docs/low_cost_fpga_boundary.md",
+          "line_start": 69,
+          "line_end": 78,
+          "expected_fragment": "177.78"
+        },
+        {
+          "source_anchor_id": "SRC-PROJECT-SEPARATE-LATENCY",
+          "source_path": "docs/low_cost_fpga_boundary.md",
+          "line_start": 89,
+          "line_end": 111,
+          "expected_fragment": "core、transport、end-to-end 三种 latency 分别计时"
+        }
+      ],
+      "cadence": {
+        "cadence_id": "PROJECT-CADENCE-BUDGET",
+        "evidence_class": "project_configuration_assumption",
+        "measured_on_target_board": false,
+        "fast_cycle_period_us": 5.0,
+        "fast_action_budget_us": 1.5,
+        "window_size_samples": 2048,
+        "window_stride_cycles": 4000,
+        "window_content_duration_ms": 10.24,
+        "window_emission_interval_ms": 20.0,
+        "slow_update_period_ms": 20.0,
+        "slow_job_budget_us": 5000.0,
+        "scope_note": "scheduler configuration reference only; none of these values is a target-board measurement."
+      },
+      "software_latency_model": {
+        "model_id": "PROJECT-SOFTWARE-LATENCY-MODEL",
+        "evidence_class": "project_configuration_assumption",
+        "measured_on_target_board": false,
+        "fast_path": {
+          "stage_id": "PROJECT-MODEL-FAST-PATH",
+          "mean_us": 1.0,
+          "std_us": 0.12,
+          "semantic": "sampled software-emulator fast-path latency; not FPGA core measurement or physical action"
+        },
+        "slow_path_stages": [
+          {
+            "stage_id": "PROJECT-MODEL-DMA",
+            "config_prefix": "dma",
+            "mean_us": 10.0,
+            "std_us": 2.0
+          },
+          {
+            "stage_id": "PROJECT-MODEL-PREPROCESS",
+            "config_prefix": "preprocess",
+            "mean_us": 60.0,
+            "std_us": 12.0
+          },
+          {
+            "stage_id": "PROJECT-MODEL-INFERENCE",
+            "config_prefix": "inference",
+            "mean_us": 900.0,
+            "std_us": 150.0
+          },
+          {
+            "stage_id": "PROJECT-MODEL-WRITEBACK",
+            "config_prefix": "writeback",
+            "mean_us": 20.0,
+            "std_us": 5.0
+          },
+          {
+            "stage_id": "PROJECT-MODEL-COMMIT-ACK",
+            "config_prefix": "commit_ack",
+            "mean_us": 5.0,
+            "std_us": 1.0
+          }
+        ],
+        "slow_path_mean_total_us": 995.0,
+        "scope_note": "sum of configured stage means only; distributions, correlation, queueing, jitter and deadline misses are T2.4.2."
+      },
+      "transport": [
+        {
+          "transport_id": "PROJECT-UART-8N1",
+          "evidence_class": "project_capacity_lower_bound",
+          "measured_on_target_board": false,
+          "baud": 115200,
+          "framing_bits_per_byte": 10,
+          "raw_uint16_histogram": {
+            "payload_bytes": 2048,
+            "serialization_lower_bound_ms": 177.7778
+          },
+          "software_float32_payload": {
+            "payload_bytes": 4096,
+            "serialization_lower_bound_ms": 355.5556
+          },
+          "minimum_raw_line_rate_bps": 1024000,
+          "raw_payload_meets_window_deadline": false,
+          "scope_note": "capacity arithmetic excludes header, CRC, flow control, acknowledgement, retry, bridge buffering and FPGA routing."
+        },
+        {
+          "transport_id": "PROJECT-USB-SPI",
+          "evidence_class": "target_board_unmeasured",
+          "measured_on_target_board": false,
+          "value_us": null,
+          "status": "candidate_interface_no_sustained_rate_or_latency_measurement"
+        }
+      ],
+      "target_board_latency": [
+        {
+          "field_id": "PROJECT-TARGET-CORE-LATENCY",
+          "name": "on_chip_core_latency",
+          "value_us": null,
+          "evidence_class": "target_board_unmeasured",
+          "measured_on_target_board": false
+        },
+        {
+          "field_id": "PROJECT-TARGET-TRANSPORT-LATENCY",
+          "name": "measured_transport_latency",
+          "value_us": null,
+          "evidence_class": "target_board_unmeasured",
+          "measured_on_target_board": false
+        },
+        {
+          "field_id": "PROJECT-TARGET-END-TO-END-LATENCY",
+          "name": "end_to_end_digital_replay_latency",
+          "value_us": null,
+          "evidence_class": "target_board_unmeasured",
+          "measured_on_target_board": false
+        }
+      ],
+      "physical_frontend": [
+        {
+          "field_id": "PROJECT-QUANTUM-MEASUREMENT-LATENCY",
+          "name": "quantum_measurement_latency",
+          "value_us": null,
+          "evidence_class": "not_integrated_not_measured",
+          "measured_on_target_board": false
+        },
+        {
+          "field_id": "PROJECT-QUANTUM-ADC-LATENCY",
+          "name": "high_speed_quantum_adc_acquisition_latency",
+          "value_us": null,
+          "evidence_class": "not_integrated_not_measured",
+          "measured_on_target_board": false
+        },
+        {
+          "field_id": "PROJECT-AWG-DAC-LATENCY",
+          "name": "awg_or_dac_waveform_output_latency",
+          "value_us": null,
+          "evidence_class": "not_integrated_not_measured",
+          "measured_on_target_board": false
+        },
+        {
+          "field_id": "PROJECT-PHYSICAL-ACTION-LATENCY",
+          "name": "physical_action_latency",
+          "value_us": null,
+          "evidence_class": "not_integrated_not_measured",
+          "measured_on_target_board": false
+        }
+      ]
+    }
+  },
+  "cross_lane_comparison": {
+    "status": "forbidden_noncomparable_lanes",
+    "aggregate_latency_us": null,
+    "difference_us": null,
+    "ratio": null,
+    "reason": "external apparatus/model timing and project configuration/capacity/null fields do not share hardware, interfaces, measurement scope or evidence class"
+  },
+  "nonmixing_rules": [
+    "不得把 Sivak Virtex-6 的 332 ns FPGA DSP 写成 Tang Nano 20K core latency。",
+    "不得把 Sivak 4.924/9.848 us、Puviani 5/10 us 与项目 t_fast_us=5 相加、相减、求比或拼成一条实测链。",
+    "不得把配置中的 1.0 us fast-path、995 us slow-path mean 或 1.5/5000 us budget 写成实测 latency。",
+    "不得把 115200-baud UART 容量下界写成已实现 transport；USB-SPI、core 和 end-to-end 在实测前保持 null。",
+    "不得把 software writeback/commit 称为 AWG/DAC physical action；项目无量子 ADC、IQ、微波或 AWG 集成证据。"
+  ],
+  "audit_contract": {
+    "required_gates": [
+      "schema_and_task_identity",
+      "two_lane_identity",
+      "terminology_ledger_complete",
+      "record_ids_unique",
+      "evidence_classes_closed",
+      "source_anchors_resolve",
+      "external_facts_not_target_measurements",
+      "sivak_control_wiring_scope",
+      "sivak_measurement_breakdown",
+      "sivak_measurement_aggregate_fail_closed",
+      "sivak_sbs_scope_discrepancy",
+      "sivak_reset_scope_discrepancy",
+      "sivak_constituent_and_full_cycle_arithmetic",
+      "puviani_model_half_and_full_cycle_arithmetic",
+      "project_config_bindings",
+      "project_slow_model_mean_arithmetic",
+      "project_window_cadence_arithmetic",
+      "uart_8n1_capacity_arithmetic",
+      "uart_fails_twenty_ms_window",
+      "target_board_frontend_fields_null",
+      "target_board_latency_fields_null",
+      "real_board_gate_fail_closed",
+      "no_cross_lane_aggregate"
+    ]
+  }
+}

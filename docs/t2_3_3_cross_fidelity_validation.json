@@ -1,0 +1,930 @@
+{
+  "attributions": [
+    {
+      "attribution_id": "XA-LOW-CLIPPING",
+      "observation": "noise-transfer versus direct-syndrome q-LER gap is 0.015408; clipping ratio is 0.357665",
+      "primary_cause": "localized Gaussian peak assumption loses state/envelope structure under clipping",
+      "region": "3 dB",
+      "reporting_consequence": "3/5 dB remain falsification cases, never calibration points for the surrogate"
+    },
+    {
+      "attribution_id": "XA-HIGH-CUTOFF",
+      "observation": "cutoff-24 to cutoff-48 q-LER changes from 0.0110094 to 0.00232313 while minimum capture rises from 0.930910 to 0.997664",
+      "primary_cause": "narrow high-squeezing peaks require larger photon-number cutoff for tail-sensitive alias rates",
+      "region": "12 dB",
+      "reporting_consequence": "12 dB Fock agreement uses an absolute gate and retains the full cutoff sweep"
+    },
+    {
+      "attribution_id": "XA-P-COORDINATE",
+      "observation": "maximum high-squeezing canonical |p-q| LER gap is 1.50991e-07; the frozen legacy ambiguous audit still has minimum p-q gap 0.418195",
+      "primary_cause": "the former audit identified decoder logical-cell spacing sqrt(2*pi) with a canonical Fock domain and omitted the width/envelope/Jacobian dilation",
+      "region": "all, strongest at 10/12 dB",
+      "reporting_consequence": "axis-resolved canonical q/p responses are allowed; the independent-axis Pauli projection is not promoted to a coherent joint-axis correlation claim"
+    },
+    {
+      "attribution_id": "XA-OCCUPANCY-SEMANTICS",
+      "observation": "Fock code survival, Gaussian central-domain mass and Pauli correct-coset occupancy have different denominators",
+      "primary_cause": "protocol leakage, alias-domain localization and logical-coset correctness are distinct events",
+      "region": "all",
+      "reporting_consequence": "only directional native-occupancy trends are compared; absolute occupancy values are never ranked"
+    }
+  ],
+  "checks": {
+    "all_common_lanes_have_consistent_LER_occupancy_Favg_directions": true,
+    "canonical_fock_qp_fourier_alignment_is_restored": true,
+    "effective_central_domain_occupancy_improves": true,
+    "error_attribution_table_is_complete": true,
+    "fock_protocol_code_weighted_fidelity_improves_with_squeezing": true,
+    "fock_protocol_survival_improves_with_squeezing": true,
+    "fock_reconstructed_probability_mass_is_complete": true,
+    "high_squeezing_effective_MC_matches_noise_transfer": true,
+    "high_squeezing_fock_q_matches_direct_syndrome_absolutely": true,
+    "high_squeezing_noise_transfer_is_localized": true,
+    "high_squeezing_noise_transfer_matches_direct_syndrome": true,
+    "legacy_ambiguous_fourier_mismatch_is_retained_as_negative_provenance": true,
+    "low_squeezing_clipping_mismatch_is_exposed": true,
+    "noise_transfer_central_domain_occupancy_improves": true,
+    "twelve_db_fock_q_alias_converges_with_cutoff": true
+  },
+  "config": {
+    "channel_sigma": 0.18,
+    "effective_samples": 200000,
+    "fock_cutoff": 48,
+    "fock_points_per_cell": 512,
+    "fock_protocol_cutoff": 42,
+    "measurement_sigma": 0.06,
+    "projection_grid_points": 4097,
+    "scope": "four-lane directional cross-fidelity validation with canonical axis-resolved q/p Fock metrics, model-native occupancy separation and explicit legacy/cutoff failure attribution",
+    "seed": 2026071433,
+    "squeezing_db": [
+      3.0,
+      5.0,
+      8.0,
+      10.0,
+      12.0
+    ],
+    "syndrome_points": 1024
+  },
+  "low_squeezing_noise_syndrome_q_ler_gap": 0.015408247622507365,
+  "maximum_high_squeezing_canonical_fock_qp_ler_gap": 1.5099059651191293e-07,
+  "maximum_high_squeezing_effective_noise_z_score": 1.7076321414996707,
+  "maximum_high_squeezing_fock_syndrome_q_ler_gap": 0.00046140433977359067,
+  "maximum_high_squeezing_noise_syndrome_q_ler_gap": 3.926171650157906e-05,
+  "minimum_high_squeezing_legacy_p_minus_q_ler_gap": 0.41819479489576533,
+  "passed": true,
+  "points": [
+    {
+      "effective": {
+        "central_domain_occupancy": 0.640725,
+        "envelope_variance_trace": 0.018009376294122213,
+        "maximum_axis_standard_error": 0.0008938228862587934,
+        "observed_covariance_trace": 2.094758310803212,
+        "pauli": {
+          "average_fidelity": 0.7607389126666666,
+          "construction": "empirical independent-axis Pauli aggregation of effective residual parities",
+          "correct_coset_occupancy": 0.641108369,
+          "logical_error_rate": 0.358891631,
+          "p_axis_ler": 0.198975,
+          "q_axis_ler": 0.19964
+        },
+        "samples": 200000,
+        "scope": "decomposed_stochastic_finite_squeezing_effective_lane"
+      },
+      "external_displacement_sigma": 0.7329305789959049,
+      "fock": {
+        "canonical_p_responses": [
+          {
+            "alias_radius": 14,
+            "captured_probability": 1.0,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.5182601825469868,
+            "displacement_sigma_input": 0.7329305789959049,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "+",
+            "map_error_probability": 0.19870040449791476,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0,
+            "source_coordinate_scale": 1.4142135623730951
+          },
+          {
+            "alias_radius": 14,
+            "captured_probability": 1.0,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.5182601825469868,
+            "displacement_sigma_input": 0.7329305789959049,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "-",
+            "map_error_probability": 0.20871367926850554,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0000000000000002,
+            "source_coordinate_scale": 1.4142135623730951
+          }
+        ],
+        "common_metric_scope": "canonical q/p Fock responses converted axis-by-axis from decoder-standardized inputs; legacy non-symplectic Fourier audit retained separately as negative provenance",
+        "legacy_operational_p_fourier_audit": [
+          {
+            "alias_radius": 14,
+            "captured_probability": 0.9999999999977616,
+            "coordinate_contract": "legacy_ambiguous_operational_fourier",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.7329305789959049,
+            "displacement_sigma_input": 0.7329305789959049,
+            "domain_spacing": 2.5066282746310002,
+            "logical_label": "+",
+            "map_error_probability": 0.11923792252926152,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0,
+            "source_coordinate_scale": 1.0
+          },
+          {
+            "alias_radius": 14,
+            "captured_probability": 0.999999999999673,
+            "coordinate_contract": "legacy_ambiguous_operational_fourier",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.7329305789959049,
+            "displacement_sigma_input": 0.7329305789959049,
+            "domain_spacing": 2.5066282746310002,
+            "logical_label": "-",
+            "map_error_probability": 0.4487646785823502,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0000000000000004,
+            "source_coordinate_scale": 1.0
+          }
+        ],
+        "legacy_p_minus_q_ler_gap": 0.05009716317161089,
+        "maximum_reconstructed_mass_error": 2.220446049250313e-16,
+        "minimum_captured_probability": 0.9999999999999997,
+        "p_minus_q_ler_gap": -0.030197095500984816,
+        "protocol": {
+          "average_code_survival": 0.5888632321910806,
+          "average_code_weighted_fidelity": 0.5805064238077896,
+          "average_conditional_fidelity": 0.9860292101605154,
+          "cutoff": 42,
+          "scope": "finite_cutoff_completed_analytic_sbs_native_metrics"
+        },
+        "q_responses": [
+          {
+            "alias_radius": 14,
+            "captured_probability": 1.0,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.5182601825469868,
+            "displacement_sigma_input": 0.7329305789959049,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "0",
+            "map_error_probability": 0.21968316016470665,
+            "quadrature": "q",
+            "reconstructed_mass": 0.9999999999999999,
+            "source_coordinate_scale": 1.4142135623730951
+          },
+          {
+            "alias_radius": 13,
+            "captured_probability": 0.9999999999999997,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.5182601825469868,
+            "displacement_sigma_input": 0.7329305789959049,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "1",
+            "map_error_probability": 0.2481251146036833,
+            "quadrature": "q",
+            "reconstructed_mass": 1.0,
+            "source_coordinate_scale": 1.4142135623730951
+          }
+        ],
+        "two_axis_pauli_metrics": {
+          "average_fidelity": 0.7400244937622489,
+          "construction": "independent canonical q/p folded responses after explicit decoder-to-canonical axis conversion; no coherent joint-axis correlation claim",
+          "correct_coset_occupancy": 0.6100367406433732,
+          "logical_error_rate": 0.3899632593566268,
+          "p_axis_ler": 0.20370704188321015,
+          "q_axis_ler": 0.23390413738419497
+        }
+      },
+      "noise_transfer": {
+        "central_domain_occupancy": 0.6103974674004659,
+        "decision_variance": 1.0383744672545447,
+        "minimum_clipping_ratio": 0.3576649469348167,
+        "pauli": {
+          "average_fidelity": 0.7404987908499238,
+          "construction": "exact product law for diagonal Gaussian decision covariance",
+          "correct_coset_occupancy": 0.6107481862748856,
+          "logical_error_rate": 0.3892518137251144,
+          "p_axis_ler": 0.2184962020086623,
+          "q_axis_ler": 0.2184962020086623
+        },
+        "scope": "localized_Gaussian_noise_transfer_lane",
+        "validity": "clipping_dominated"
+      },
+      "peak_variance": 0.5011872336272724,
+      "projector_delta": 0.742219898501455,
+      "region": "low_squeezing_clipping",
+      "squeezing_db": 3.0,
+      "syndrome": {
+        "logical_one_axis_ler": 0.24812541057666737,
+        "logical_zero_axis_ler": 0.21968348868567195,
+        "minimum_captured_mass": 0.9999999999999998,
+        "scope": "direct_finite_energy_syndrome_density_MAP_lane",
+        "square_symmetry_projection": {
+          "average_fidelity": 0.7246015948632808,
+          "construction": "direct state-density MAP response copied by square-code q/p role symmetry",
+          "correct_coset_occupancy": 0.5869023922949211,
+          "logical_error_rate": 0.41309760770507886,
+          "p_axis_ler": 0.23390444963116966,
+          "q_axis_ler": 0.23390444963116966
+        }
+      }
+    },
+    {
+      "effective": {
+        "central_domain_occupancy": 0.775005,
+        "envelope_variance_trace": 0.00719143452845087,
+        "maximum_axis_standard_error": 0.0007260211593851794,
+        "observed_covariance_trace": 1.3441024985958028,
+        "pauli": {
+          "average_fidelity": 0.8501046312500001,
+          "construction": "empirical independent-axis Pauli aggregation of effective residual parities",
+          "correct_coset_occupancy": 0.775156946875,
+          "logical_error_rate": 0.22484305312499997,
+          "p_axis_ler": 0.119765,
+          "q_axis_ler": 0.119375
+        },
+        "samples": 200000,
+        "scope": "decomposed_stochastic_finite_squeezing_effective_lane"
+      },
+      "external_displacement_sigma": 0.5934877976983503,
+      "fock": {
+        "canonical_p_responses": [
+          {
+            "alias_radius": 15,
+            "captured_probability": 0.9999999999999901,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.4196592463039733,
+            "displacement_sigma_input": 0.5934877976983503,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "+",
+            "map_error_probability": 0.12107610142566068,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0000000000000004,
+            "source_coordinate_scale": 1.4142135623730951
+          },
+          {
+            "alias_radius": 15,
+            "captured_probability": 0.9999999999999721,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.4196592463039733,
+            "displacement_sigma_input": 0.5934877976983503,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "-",
+            "map_error_probability": 0.12428884199077775,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0000000000000002,
+            "source_coordinate_scale": 1.4142135623730951
+          }
+        ],
+        "common_metric_scope": "canonical q/p Fock responses converted axis-by-axis from decoder-standardized inputs; legacy non-symplectic Fourier audit retained separately as negative provenance",
+        "legacy_operational_p_fourier_audit": [
+          {
+            "alias_radius": 15,
+            "captured_probability": 0.9999999610755871,
+            "coordinate_contract": "legacy_ambiguous_operational_fourier",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.5934877976983503,
+            "displacement_sigma_input": 0.5934877976983503,
+            "domain_spacing": 2.5066282746310002,
+            "logical_label": "+",
+            "map_error_probability": 0.08660478532699158,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0000000000000002,
+            "source_coordinate_scale": 1.0
+          },
+          {
+            "alias_radius": 15,
+            "captured_probability": 0.9999999466287424,
+            "coordinate_contract": "legacy_ambiguous_operational_fourier",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.5934877976983503,
+            "displacement_sigma_input": 0.5934877976983503,
+            "domain_spacing": 2.5066282746310002,
+            "logical_label": "-",
+            "map_error_probability": 0.4649778882617015,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0000000000000004,
+            "source_coordinate_scale": 1.0
+          }
+        ],
+        "legacy_p_minus_q_ler_gap": 0.14775076630727832,
+        "maximum_reconstructed_mass_error": 4.440892098500626e-16,
+        "minimum_captured_probability": 0.9999999999999721,
+        "p_minus_q_ler_gap": -0.005358098778848991,
+        "protocol": {
+          "average_code_survival": 0.8195658506776279,
+          "average_code_weighted_fidelity": 0.8172662224603551,
+          "average_conditional_fidelity": 0.9972050671124069,
+          "cutoff": 42,
+          "scope": "finite_cutoff_completed_analytic_sbs_native_metrics"
+        },
+        "q_responses": [
+          {
+            "alias_radius": 15,
+            "captured_probability": 0.9999999999999912,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.4196592463039733,
+            "displacement_sigma_input": 0.5934877976983503,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "0",
+            "map_error_probability": 0.1260124328489256,
+            "quadrature": "q",
+            "reconstructed_mass": 1.0000000000000002,
+            "source_coordinate_scale": 1.4142135623730951
+          },
+          {
+            "alias_radius": 14,
+            "captured_probability": 0.9999999999999742,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.4196592463039733,
+            "displacement_sigma_input": 0.5934877976983503,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "1",
+            "map_error_probability": 0.13006870812521082,
+            "quadrature": "q",
+            "reconstructed_mass": 1.0,
+            "source_coordinate_scale": 1.4142135623730951
+          }
+        ],
+        "two_axis_pauli_metrics": {
+          "average_fidelity": 0.843323527647331,
+          "construction": "independent canonical q/p folded responses after explicit decoder-to-canonical axis conversion; no coherent joint-axis correlation claim",
+          "correct_coset_occupancy": 0.7649852914709966,
+          "logical_error_rate": 0.2350147085290034,
+          "p_axis_ler": 0.12268247170821922,
+          "q_axis_ler": 0.1280405704870682
+        }
+      },
+      "noise_transfer": {
+        "central_domain_occupancy": 0.7651142155816606,
+        "decision_variance": 0.668455532033676,
+        "minimum_clipping_ratio": 0.5153326650830873,
+        "pauli": {
+          "average_fidelity": 0.8434144328431689,
+          "construction": "exact product law for diagonal Gaussian decision covariance",
+          "correct_coset_occupancy": 0.7651216492647533,
+          "logical_error_rate": 0.23487835073524665,
+          "p_axis_ler": 0.12528767628165124,
+          "q_axis_ler": 0.12528767628165124
+        },
+        "scope": "localized_Gaussian_noise_transfer_lane",
+        "validity": "clipping_dominated"
+      },
+      "peak_variance": 0.316227766016838,
+      "projector_delta": 0.5722326015155537,
+      "region": "low_squeezing_clipping",
+      "squeezing_db": 5.0,
+      "syndrome": {
+        "logical_one_axis_ler": 0.13006912770410406,
+        "logical_zero_axis_ler": 0.12601285543903865,
+        "minimum_captured_mass": 0.9999999999999998,
+        "scope": "direct_finite_energy_syndrome_density_MAP_lane",
+        "square_symmetry_projection": {
+          "average_fidelity": 0.8402083415863256,
+          "construction": "direct state-density MAP response copied by square-code q/p role symmetry",
+          "correct_coset_occupancy": 0.7603125123794885,
+          "logical_error_rate": 0.2396874876205115,
+          "p_axis_ler": 0.12804099157157134,
+          "q_axis_ler": 0.12804099157157134
+        }
+      }
+    },
+    {
+      "effective": {
+        "central_domain_occupancy": 0.9326,
+        "envelope_variance_trace": 0.0010059849388793821,
+        "maximum_axis_standard_error": 0.00040781857179387994,
+        "observed_covariance_trace": 0.7069632619233248,
+        "pauli": {
+          "average_fidelity": 0.9551282223333333,
+          "construction": "empirical independent-axis Pauli aggregation of effective residual parities",
+          "correct_coset_occupancy": 0.9326923335,
+          "logical_error_rate": 0.06730766649999997,
+          "p_axis_ler": 0.03403,
+          "q_axis_ler": 0.03445
+        },
+        "samples": 200000,
+        "scope": "decomposed_stochastic_finite_squeezing_effective_lane"
+      },
+      "external_displacement_sigma": 0.44100943215095906,
+      "fock": {
+        "canonical_p_responses": [
+          {
+            "alias_radius": 17,
+            "captured_probability": 0.999999866381482,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.3118407600411718,
+            "displacement_sigma_input": 0.44100943215095906,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "+",
+            "map_error_probability": 0.03507628845036181,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0,
+            "source_coordinate_scale": 1.4142135623730951
+          },
+          {
+            "alias_radius": 17,
+            "captured_probability": 0.9999997532737676,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.3118407600411718,
+            "displacement_sigma_input": 0.44100943215095906,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "-",
+            "map_error_probability": 0.03514812599423231,
+            "quadrature": "p",
+            "reconstructed_mass": 0.9999999999999997,
+            "source_coordinate_scale": 1.4142135623730951
+          }
+        ],
+        "common_metric_scope": "canonical q/p Fock responses converted axis-by-axis from decoder-standardized inputs; legacy non-symplectic Fourier audit retained separately as negative provenance",
+        "legacy_operational_p_fourier_audit": [
+          {
+            "alias_radius": 17,
+            "captured_probability": 0.9998012672035905,
+            "coordinate_contract": "legacy_ambiguous_operational_fourier",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.44100943215095906,
+            "displacement_sigma_input": 0.44100943215095906,
+            "domain_spacing": 2.5066282746310002,
+            "logical_label": "+",
+            "map_error_probability": 0.21971213872063045,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0000000000000002,
+            "source_coordinate_scale": 1.0
+          },
+          {
+            "alias_radius": 17,
+            "captured_probability": 0.9997961158948108,
+            "coordinate_contract": "legacy_ambiguous_operational_fourier",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.44100943215095906,
+            "displacement_sigma_input": 0.44100943215095906,
+            "domain_spacing": 2.5066282746310002,
+            "logical_label": "-",
+            "map_error_probability": 0.48795980923773,
+            "quadrature": "p",
+            "reconstructed_mass": 0.9999999999999998,
+            "source_coordinate_scale": 1.0
+          }
+        ],
+        "legacy_p_minus_q_ler_gap": 0.31867762322209575,
+        "maximum_reconstructed_mass_error": 3.3306690738754696e-16,
+        "minimum_captured_probability": 0.9999997532737676,
+        "p_minus_q_ler_gap": -4.6143534787386475e-05,
+        "protocol": {
+          "average_code_survival": 0.9546870931906503,
+          "average_code_weighted_fidelity": 0.9546713892783614,
+          "average_conditional_fidelity": 0.9999835505115954,
+          "cutoff": 42,
+          "scope": "finite_cutoff_completed_analytic_sbs_native_metrics"
+        },
+        "q_responses": [
+          {
+            "alias_radius": 16,
+            "captured_probability": 0.9999998671614934,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.3118407600411718,
+            "displacement_sigma_input": 0.44100943215095906,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "0",
+            "map_error_probability": 0.035122250221381636,
+            "quadrature": "q",
+            "reconstructed_mass": 0.9999999999999999,
+            "source_coordinate_scale": 1.4142135623730951
+          },
+          {
+            "alias_radius": 17,
+            "captured_probability": 0.9999997540874573,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.3118407600411718,
+            "displacement_sigma_input": 0.44100943215095906,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "1",
+            "map_error_probability": 0.03519445129278726,
+            "quadrature": "q",
+            "reconstructed_mass": 1.0000000000000002,
+            "source_coordinate_scale": 1.4142135623730951
+          }
+        ],
+        "two_axis_pauli_metrics": {
+          "average_fidelity": 0.9539759528786638,
+          "construction": "independent canonical q/p folded responses after explicit decoder-to-canonical axis conversion; no coherent joint-axis correlation claim",
+          "correct_coset_occupancy": 0.9309639293179955,
+          "logical_error_rate": 0.06903607068200446,
+          "p_axis_ler": 0.03511220722229706,
+          "q_axis_ler": 0.03515835075708445
+        }
+      },
+      "noise_transfer": {
+        "central_domain_occupancy": 0.9314202285157723,
+        "decision_variance": 0.3529786384922227,
+        "minimum_clipping_ratio": 0.7869862474822462,
+        "pauli": {
+          "average_fidelity": 0.954280152662217,
+          "construction": "exact product law for diagonal Gaussian decision covariance",
+          "correct_coset_occupancy": 0.9314202289933255,
+          "logical_error_rate": 0.06857977100667445,
+          "p_axis_ler": 0.034898850382341765,
+          "q_axis_ler": 0.034898850382341765
+        },
+        "scope": "localized_Gaussian_noise_transfer_lane",
+        "validity": "clipping_dominated"
+      },
+      "peak_variance": 0.15848931924611137,
+      "projector_delta": 0.39979583432887844,
+      "region": "transition",
+      "squeezing_db": 8.0,
+      "syndrome": {
+        "logical_one_axis_ler": 0.03519541974875778,
+        "logical_zero_axis_ler": 0.03512297844999005,
+        "minimum_captured_mass": 1.0,
+        "scope": "direct_finite_energy_syndrome_density_MAP_lane",
+        "square_symmetry_projection": {
+          "average_fidelity": 0.9539451807217078,
+          "construction": "direct state-density MAP response copied by square-code q/p role symmetry",
+          "correct_coset_occupancy": 0.9309177710825616,
+          "logical_error_rate": 0.06908222891743843,
+          "p_axis_ler": 0.035159199099373914,
+          "q_axis_ler": 0.035159199099373914
+        }
+      }
+    },
+    {
+      "effective": {
+        "central_domain_occupancy": 0.9809,
+        "envelope_variance_trace": 0.00025125548847383753,
+        "maximum_axis_standard_error": 0.0002191564509659709,
+        "observed_covariance_trace": 0.4722512554884739,
+        "pauli": {
+          "average_fidelity": 0.9872581323333334,
+          "construction": "empirical independent-axis Pauli aggregation of effective residual parities",
+          "correct_coset_occupancy": 0.9808871985,
+          "logical_error_rate": 0.019112801500000054,
+          "p_axis_ler": 0.0097,
+          "q_axis_ler": 0.009505
+        },
+        "samples": 200000,
+        "scope": "decomposed_stochastic_finite_squeezing_effective_lane"
+      },
+      "external_displacement_sigma": 0.36878177829171555,
+      "fock": {
+        "canonical_p_responses": [
+          {
+            "alias_radius": 20,
+            "captured_probability": 0.9999472532546632,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.260768096208106,
+            "displacement_sigma_input": 0.36878177829171555,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "+",
+            "map_error_probability": 0.009923409364093054,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0000000000000004,
+            "source_coordinate_scale": 1.4142135623730951
+          },
+          {
+            "alias_radius": 20,
+            "captured_probability": 0.9999300106889135,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.260768096208106,
+            "displacement_sigma_input": 0.36878177829171555,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "-",
+            "map_error_probability": 0.00993172816987203,
+            "quadrature": "p",
+            "reconstructed_mass": 0.9999999999999999,
+            "source_coordinate_scale": 1.4142135623730951
+          }
+        ],
+        "common_metric_scope": "canonical q/p Fock responses converted axis-by-axis from decoder-standardized inputs; legacy non-symplectic Fourier audit retained separately as negative provenance",
+        "legacy_operational_p_fourier_audit": [
+          {
+            "alias_radius": 20,
+            "captured_probability": 0.996343996316492,
+            "coordinate_contract": "legacy_ambiguous_operational_fourier",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.36878177829171555,
+            "displacement_sigma_input": 0.36878177829171555,
+            "domain_spacing": 2.5066282746310002,
+            "logical_label": "+",
+            "map_error_probability": 0.35976325328524783,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0000000000000004,
+            "source_coordinate_scale": 1.0
+          },
+          {
+            "alias_radius": 20,
+            "captured_probability": 0.9961496245750104,
+            "coordinate_contract": "legacy_ambiguous_operational_fourier",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.36878177829171555,
+            "displacement_sigma_input": 0.36878177829171555,
+            "domain_spacing": 2.5066282746310002,
+            "logical_label": "-",
+            "map_error_probability": 0.49648177602144095,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0000000000000004,
+            "source_coordinate_scale": 1.0
+          }
+        ],
+        "legacy_p_minus_q_ler_gap": 0.41819479489576533,
+        "maximum_reconstructed_mass_error": 4.440892098500626e-16,
+        "minimum_captured_probability": 0.9999300106889135,
+        "p_minus_q_ler_gap": -1.5099059651191293e-07,
+        "protocol": {
+          "average_code_survival": 0.9850441605710537,
+          "average_code_weighted_fidelity": 0.9850426711990007,
+          "average_conditional_fidelity": 0.9999984876496151,
+          "cutoff": 42,
+          "scope": "finite_cutoff_completed_analytic_sbs_native_metrics"
+        },
+        "q_responses": [
+          {
+            "alias_radius": 20,
+            "captured_probability": 0.9999472599404887,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.260768096208106,
+            "displacement_sigma_input": 0.36878177829171555,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "0",
+            "map_error_probability": 0.009923559724588343,
+            "quadrature": "q",
+            "reconstructed_mass": 1.0000000000000002,
+            "source_coordinate_scale": 1.4142135623730951
+          },
+          {
+            "alias_radius": 19,
+            "captured_probability": 0.9999300173903298,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.260768096208106,
+            "displacement_sigma_input": 0.36878177829171555,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "1",
+            "map_error_probability": 0.009931879790569762,
+            "quadrature": "q",
+            "reconstructed_mass": 0.9999999999999999,
+            "source_coordinate_scale": 1.4142135623730951
+          }
+        ],
+        "two_axis_pauli_metrics": {
+          "average_fidelity": 0.986828846397354,
+          "construction": "independent canonical q/p folded responses after explicit decoder-to-canonical axis conversion; no coherent joint-axis correlation claim",
+          "correct_coset_occupancy": 0.9802432695960311,
+          "logical_error_rate": 0.01975673040396886,
+          "p_axis_ler": 0.009927568766982541,
+          "q_axis_ler": 0.009927719757579053
+        }
+      },
+      "noise_transfer": {
+        "central_domain_occupancy": 0.9803322441165101,
+        "decision_variance": 0.23600000000000004,
+        "minimum_clipping_ratio": 0.9171340491804783,
+        "pauli": {
+          "average_fidelity": 0.9868881627443532,
+          "construction": "exact product law for diagonal Gaussian decision covariance",
+          "correct_coset_occupancy": 0.9803322441165299,
+          "logical_error_rate": 0.01966775588347014,
+          "p_axis_ler": 0.009882711939373432,
+          "q_axis_ler": 0.009882711939373432
+        },
+        "scope": "localized_Gaussian_noise_transfer_lane",
+        "validity": "localized"
+      },
+      "peak_variance": 0.10000000000000003,
+      "projector_delta": 0.3167575535501491,
+      "region": "high_squeezing",
+      "squeezing_db": 10.0,
+      "syndrome": {
+        "logical_one_axis_ler": 0.009922451454676831,
+        "logical_zero_axis_ler": 0.00992149585707319,
+        "minimum_captured_mass": 0.9999999999999998,
+        "scope": "direct_finite_energy_syndrome_density_MAP_lane",
+        "square_symmetry_projection": {
+          "average_fidelity": 0.9868363321663186,
+          "construction": "direct state-density MAP response copied by square-code q/p role symmetry",
+          "correct_coset_occupancy": 0.9802544982494779,
+          "logical_error_rate": 0.019745501750522143,
+          "p_axis_ler": 0.009921973655875011,
+          "q_axis_ler": 0.009921973655875011
+        }
+      }
+    },
+    {
+      "effective": {
+        "central_domain_occupancy": 0.99619,
+        "envelope_variance_trace": 6.292247258168921e-05,
+        "maximum_axis_standard_error": 9.801261079575423e-05,
+        "observed_covariance_trace": 0.32444586026465916,
+        "pauli": {
+          "average_fidelity": 0.9974557652500001,
+          "construction": "empirical independent-axis Pauli aggregation of effective residual parities",
+          "correct_coset_occupancy": 0.996183647875,
+          "logical_error_rate": 0.0038163521249999777,
+          "p_axis_ler": 0.001925,
+          "q_axis_ler": 0.001895
+        },
+        "samples": 200000,
+        "scope": "decomposed_stochastic_finite_squeezing_effective_lane"
+      },
+      "external_displacement_sigma": 0.314794749714825,
+      "fock": {
+        "canonical_p_responses": [
+          {
+            "alias_radius": 23,
+            "captured_probability": 0.9978019668622627,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.22259350220527474,
+            "displacement_sigma_input": 0.314794749714825,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "+",
+            "map_error_probability": 0.0022529198559006177,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0000000000000004,
+            "source_coordinate_scale": 1.4142135623730951
+          },
+          {
+            "alias_radius": 23,
+            "captured_probability": 0.9976642329044725,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.22259350220527474,
+            "displacement_sigma_input": 0.314794749714825,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "-",
+            "map_error_probability": 0.002393348830320717,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0000000000000002,
+            "source_coordinate_scale": 1.4142135623730951
+          }
+        ],
+        "common_metric_scope": "canonical q/p Fock responses converted axis-by-axis from decoder-standardized inputs; legacy non-symplectic Fourier audit retained separately as negative provenance",
+        "legacy_operational_p_fourier_audit": [
+          {
+            "alias_radius": 23,
+            "captured_probability": 0.9775919289786164,
+            "coordinate_contract": "legacy_ambiguous_operational_fourier",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.314794749714825,
+            "displacement_sigma_input": 0.314794749714825,
+            "domain_spacing": 2.5066282746310002,
+            "logical_label": "+",
+            "map_error_probability": 0.4537692839866473,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0000000000000004,
+            "source_coordinate_scale": 1.0
+          },
+          {
+            "alias_radius": 23,
+            "captured_probability": 0.976039658278124,
+            "coordinate_contract": "legacy_ambiguous_operational_fourier",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.314794749714825,
+            "displacement_sigma_input": 0.314794749714825,
+            "domain_spacing": 2.5066282746310002,
+            "logical_label": "-",
+            "map_error_probability": 0.4971057508703156,
+            "quadrature": "p",
+            "reconstructed_mass": 1.0000000000000002,
+            "source_coordinate_scale": 1.0
+          }
+        ],
+        "legacy_p_minus_q_ler_gap": 0.4731143828002409,
+        "maximum_reconstructed_mass_error": 4.440892098500626e-16,
+        "minimum_captured_probability": 0.9976642329044725,
+        "p_minus_q_ler_gap": -2.8512993268531295e-10,
+        "protocol": {
+          "average_code_survival": 0.986323637003704,
+          "average_code_weighted_fidelity": 0.9862937956841109,
+          "average_conditional_fidelity": 0.9999697291593052,
+          "cutoff": 42,
+          "scope": "finite_cutoff_completed_analytic_sbs_native_metrics"
+        },
+        "q_responses": [
+          {
+            "alias_radius": 22,
+            "captured_probability": 0.9978019674030905,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.22259350220527474,
+            "displacement_sigma_input": 0.314794749714825,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "0",
+            "map_error_probability": 0.002252920000732951,
+            "quadrature": "q",
+            "reconstructed_mass": 1.0000000000000002,
+            "source_coordinate_scale": 1.4142135623730951
+          },
+          {
+            "alias_radius": 23,
+            "captured_probability": 0.9976642334453126,
+            "coordinate_contract": "canonical_from_decoder",
+            "cutoff": 48,
+            "displacement_sigma_canonical": 0.22259350220527474,
+            "displacement_sigma_input": 0.314794749714825,
+            "domain_spacing": 1.7724538509055159,
+            "logical_label": "1",
+            "map_error_probability": 0.0023933492557482497,
+            "quadrature": "q",
+            "reconstructed_mass": 0.9999999999999997,
+            "source_coordinate_scale": 1.4142135623730951
+          }
+        ],
+        "two_axis_pauli_metrics": {
+          "average_fidelity": 0.9969060853216581,
+          "construction": "independent canonical q/p folded responses after explicit decoder-to-canonical axis conversion; no coherent joint-axis correlation claim",
+          "correct_coset_occupancy": 0.9953591279824872,
+          "logical_error_rate": 0.004640872017512843,
+          "p_axis_ler": 0.0023231343431106676,
+          "q_axis_ler": 0.0023231346282406003
+        }
+      },
+      "noise_transfer": {
+        "central_domain_occupancy": 0.9962875345247135,
+        "decision_variance": 0.1621914688960387,
+        "minimum_clipping_ratio": 0.9786804954980591,
+        "pauli": {
+          "average_fidelity": 0.9975250230164757,
+          "construction": "exact product law for diagonal Gaussian decision covariance",
+          "correct_coset_occupancy": 0.9962875345247135,
+          "logical_error_rate": 0.003712465475286475,
+          "p_axis_ler": 0.0018579587429885134,
+          "q_axis_ler": 0.0018579587429885134
+        },
+        "scope": "localized_Gaussian_noise_transfer_lane",
+        "validity": "localized"
+      },
+      "peak_variance": 0.06309573444801934,
+      "projector_delta": 0.25135565353941736,
+      "region": "high_squeezing",
+      "squeezing_db": 12.0,
+      "syndrome": {
+        "logical_one_axis_ler": 0.0018617310282293504,
+        "logical_zero_axis_ler": 0.0018617295487046688,
+        "minimum_captured_mass": 0.9999999999999998,
+        "scope": "direct_finite_energy_syndrome_density_MAP_lane",
+        "square_symmetry_projection": {
+          "average_fidelity": 0.997520003641822,
+          "construction": "direct state-density MAP response copied by square-code q/p role symmetry",
+          "correct_coset_occupancy": 0.9962800054627329,
+          "logical_error_rate": 0.003719994537267124,
+          "p_axis_ler": 0.0018617302884670096,
+          "q_axis_ler": 0.0018617302884670096
+        }
+      }
+    }
+  ],
+  "scope": "four-lane directional cross-fidelity validation with canonical axis-resolved q/p Fock metrics, model-native occupancy separation and explicit legacy/cutoff failure attribution",
+  "twelve_db_fock_cutoff_sweep": [
+    {
+      "cutoff": 24,
+      "maximum_reconstructed_mass_error": 6.661338147750939e-16,
+      "minimum_captured_probability": 0.9309095423137719,
+      "q_axis_ler": 0.011009374302078347
+    },
+    {
+      "cutoff": 30,
+      "maximum_reconstructed_mass_error": 2.220446049250313e-16,
+      "minimum_captured_probability": 0.9764085908829028,
+      "q_axis_ler": 0.006005915626808373
+    },
+    {
+      "cutoff": 36,
+      "maximum_reconstructed_mass_error": 1.1102230246251565e-16,
+      "minimum_captured_probability": 0.989168039835324,
+      "q_axis_ler": 0.003938257543931182
+    },
+    {
+      "cutoff": 42,
+      "maximum_reconstructed_mass_error": 2.220446049250313e-16,
+      "minimum_captured_probability": 0.991136023078603,
+      "q_axis_ler": 0.003192316770415634
+    },
+    {
+      "cutoff": 48,
+      "maximum_reconstructed_mass_error": 3.3306690738754696e-16,
+      "minimum_captured_probability": 0.9976642334453126,
+      "q_axis_ler": 0.0023231346282406003
+    }
+  ]
+}

@@ -3,9 +3,12 @@
 本文件负责 GKP（Gottesman-Kitaev-Preskill）量子态的创建与表示，
 覆盖"近似（有限能量）GKP 态"的构造、Wigner 函数计算与位移操作。
 
-关键设计：
-- 优先使用 Strawberry Fields（SF）做精确量子态仿真；当 SF 不可用或运行失败时，
-  自动退化为解析近似实现，保证模块在任何环境下都可用（解析近似更快、精度稍低）。
+关键设计与边界：
+- 优先使用 Strawberry Fields（SF）做 Fock-backend 量子态仿真；当 SF 不可用或运行
+  失败时，旧接口自动退化为启发式 signed-grid visualization。该 fallback 只做 legacy
+  smoke/可视化，不是归一化 Wigner，也不能支撑 finite-energy logical-channel claim；
+  可归一化 wavefunction、damped-projector、syndrome distribution 与 sampled Wigner
+  reference 位于 ``physics.finite_energy_gkp``。
 - ``LATTICE_CONST = √(2π)`` 是本模块本地定义的晶格常数，也是后续噪声、测量、
   解码模块共享的基础常量（部分子模块从 ``constants`` 中导入同一常量）。
 """
@@ -14,8 +17,7 @@ import numpy as np
 from typing import Optional, Tuple, Union, Literal
 from dataclasses import dataclass
 
-# GKP 晶格常数 √(2π) ≈ 2.507
-LATTICE_CONST = np.sqrt(2 * np.pi)  # ≈ 2.507
+from .constants import LATTICE_CONST
 
 # 尝试导入 Strawberry Fields（精确仿真后端）；失败则置标志位并降级为解析近似。
 try:
@@ -52,7 +54,7 @@ class ApproximateGKPState:
         |GKP_Δ⟩ ∝ Σ_n exp(-Δ² n²) |n√(2π)⟩_q
 
     其中 Δ 为有限能量参数（越小越理想，但能量越高）。本类支持：
-    - 用 SF 精确制备或退化为解析近似；
+    - 用 SF Fock backend 制备，或退化为 legacy heuristic visualization；
     - 计算 Wigner 函数（相空间分布）；
     - 施加位移操作并估计平均光子数。
     """
@@ -150,8 +152,10 @@ class ApproximateGKPState:
 
         功能:
             在指定的 (q, p) 网格上计算态的 Wigner 函数（相空间概率分布表示）。
-            优先使用 SF 的精确 Wigner 计算；若处于解析模式或 SF 计算失败，
-            则退化为解析近似（``_compute_wigner_analytical``）。
+            优先使用 SF 的 Wigner 计算；若处于解析模式或 SF 计算失败，则退化为
+            ``_compute_wigner_analytical`` 的 legacy heuristic signed grid。后者按最大
+            绝对值归一化，不是概率归一化 Wigner；论文级 finite-energy 输出应使用
+            ``physics.finite_energy_gkp``。
 
         输入:
             q_points: q 方向网格点数。
@@ -179,7 +183,7 @@ class ApproximateGKPState:
     def _compute_wigner_analytical(self,
                                    q_vec: np.ndarray,
                                    p_vec: np.ndarray) -> np.ndarray:
-        """用解析近似计算 GKP 态的 Wigner 函数（无 SF 依赖的核心实现）。
+        """计算 legacy heuristic signed grid（历史名称保留，不是 normalized Wigner）。
 
         功能:
             对晶格点求和近似 GKP |0⟩_L 态的 Wigner 函数：

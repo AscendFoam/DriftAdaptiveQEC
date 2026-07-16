@@ -1,0 +1,245 @@
+{
+  "schema_version": "claim-ladder-v1",
+  "task_id": "T1.4.1",
+  "snapshot_date": "2026-07-14",
+  "scope": "first-paper claim promotion contract",
+  "current_strongest_project_level": "CL1",
+  "level_order": [
+    "CL1",
+    "CL2",
+    "CL3",
+    "CL4",
+    "CL5"
+  ],
+  "levels": [
+    {
+      "id": "CL1",
+      "canonical_name": "simulation",
+      "display_name": "软件仿真与 mock-backed software-HIL",
+      "current_status": "supported_bounded",
+      "allowed_wording": [
+        "simulation-derived",
+        "hardware-aware simulation",
+        "mock-backed software-HIL",
+        "pre-registered causal synthetic benchmark"
+      ],
+      "forbidden_wording": [
+        "FPGA measured",
+        "hardware validated",
+        "real-board HIL",
+        "quantum experiment"
+      ],
+      "promotion_gate": [
+        "冻结模型、场景、baseline、seed 与 metric contract",
+        "保存逐样本或逐窗口 provenance，并证明因果无泄漏",
+        "报告 paired uncertainty、失败分支和模型 fidelity 边界"
+      ],
+      "evidence_paths": [
+        "runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/summary.json",
+        "runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/comparison.csv",
+        "docs/tasks/T1.3.4_adaptive_baseline_alignment.md"
+      ]
+    },
+    {
+      "id": "CL2",
+      "canonical_name": "synthesis_estimate",
+      "display_name": "综合/实现估计",
+      "current_status": "blocked_missing_synthesis_report",
+      "allowed_wording": [
+        "post-synthesis estimate",
+        "post-implementation estimate",
+        "tool-and-device-specific resource/timing estimate"
+      ],
+      "forbidden_wording": [
+        "measured board latency",
+        "measured board power",
+        "timing closed on hardware",
+        "FPGA validated"
+      ],
+      "promotion_gate": [
+        "固定 RTL/HLS source hash、工具版本、目标器件、clock 与 constraints",
+        "保存综合和实现 report，至少含 LUT/FF/BRAM/DSP、WNS/TNS 与 achieved clock",
+        "将 power 标为 estimate，并与 analytical operation count 分离"
+      ],
+      "evidence_paths": [
+        "docs/paper_materials/submission_draft_fast_path_cost_model.json",
+        "docs/paper_materials/submission_draft_fixed_point_parity_analysis.json"
+      ]
+    },
+    {
+      "id": "CL3",
+      "canonical_name": "board_measurement",
+      "display_name": "真实板卡数字控制平面测量",
+      "current_status": "blocked_missing_board_host_execution",
+      "allowed_wording": [
+        "measured on the named FPGA board",
+        "measured kernel latency",
+        "measured transport latency",
+        "measured digital control-plane resource/power"
+      ],
+      "forbidden_wording": [
+        "quantum control validated",
+        "microwave generation measured",
+        "quantum readout integrated",
+        "real-time QEC demonstrated"
+      ],
+      "promotion_gate": [
+        "记录板卡/器件/bitstream/source/toolchain/clock/供电/接口 provenance",
+        "分别测 core、transport、end-to-end latency，并给出重复、分位数与失败计数",
+        "保存资源、时序、功耗和 host/device path 原始报告"
+      ],
+      "evidence_paths": [
+        "artifacts/t72_real_board_transfer_pack_provenance_hardening/current_host_regenerated_gate.json"
+      ]
+    },
+    {
+      "id": "CL4",
+      "canonical_name": "board_hil_replay",
+      "display_name": "真实板卡 HIL / trace replay",
+      "current_status": "blocked_no_board_hil",
+      "allowed_wording": [
+        "real-board HIL",
+        "board trace replay",
+        "source-vs-board bit-for-bit agreement",
+        "measured end-to-end deadline/fallback behavior"
+      ],
+      "forbidden_wording": [
+        "closed-loop quantum experiment",
+        "logical lifetime gain measured",
+        "beyond break-even demonstrated",
+        "deployment closure"
+      ],
+      "promotion_gate": [
+        "CL3 的 device/bitstream/latency contract 已通过",
+        "真实 board backend、DMA/MMIO、bank commit 与 fallback 路径非 placeholder",
+        "保存输入 trace、truth/reference、board output、event log、deadline 与 mismatch 统计"
+      ],
+      "evidence_paths": [
+        "docs/evidence_packs/deployment_boundary/t49_real_board_smoke_execution_gate.md",
+        "docs/evidence_packs/deployment_boundary/t72_real_board_transfer_pack_provenance_hardening.md"
+      ]
+    },
+    {
+      "id": "CL5",
+      "canonical_name": "quantum_experiment",
+      "display_name": "真实量子实验",
+      "current_status": "blocked_no_quantum_experiment",
+      "allowed_wording": [
+        "measured on the identified cavity/transmon or authorized quantum platform",
+        "measured logical lifetime/error/fidelity with uncertainty",
+        "experimentally demonstrated control or decoding gain"
+      ],
+      "forbidden_wording": [
+        "quantum experiment reproduced from simulation",
+        "beyond break-even inferred from software LER",
+        "physical squeezing inferred from residual variance",
+        "quantum advantage"
+      ],
+      "promotion_gate": [
+        "量子平台、校准、协议、readout/reset/leakage 与时间基准可追溯",
+        "预注册 quantum metric、baseline、uncertainty、失败/排除规则",
+        "原始数据或经授权 trace、分析代码和实验 provenance 可审计"
+      ],
+      "evidence_paths": [
+        "docs/tasks/T0.1.2_platform_abstraction.md",
+        "docs/literature_matrix.md"
+      ]
+    }
+  ],
+  "orthogonal_supporting_lanes": [
+    {
+      "id": "OL1",
+      "canonical_name": "isolated_host_tflite_runtime",
+      "current_status": "supported_bounded",
+      "does_not_promote_to": [
+        "CL2",
+        "CL3",
+        "CL4"
+      ],
+      "evidence_paths": [
+        "artifacts/t48_true_tflite_runtime_gate/t48_true_tflite_runtime_gate.json",
+        "docs/evidence_packs/deployment_boundary/t48_true_tflite_runtime_gate.md"
+      ]
+    },
+    {
+      "id": "OL2",
+      "canonical_name": "real_board_gate_provenance",
+      "current_status": "gate_only_current_host_no_go",
+      "does_not_promote_to": [
+        "CL3",
+        "CL4"
+      ],
+      "evidence_paths": [
+        "artifacts/t49_real_board_smoke_execution_gate/t49_real_board_smoke_execution_gate.json",
+        "artifacts/t72_real_board_transfer_pack_provenance_hardening/current_host_regenerated_gate.json"
+      ]
+    }
+  ],
+  "claim_registry": [
+    {
+      "id": "PC01",
+      "claim": "T24 frozen-set 内 hybrid_residual_b 的 software-HIL 排名",
+      "current_level": "CL1",
+      "paper_status": "frozen_supported",
+      "allowed_wording": "在 T24 四场景、五模式、repeats=2 的 mock-backed software-HIL frozen set 内，hybrid_residual_b 为四场景 winner。",
+      "forbidden_wording": "CNN 已在真实 FPGA、expanded benchmark 或量子实验中全面优于传统 baseline。"
+    },
+    {
+      "id": "PC02",
+      "claim": "T1.3.4 Gaussian step drift 的 static-to-model-oracle gap closure",
+      "current_level": "CL1",
+      "paper_status": "task_evidence_not_yet_promoted_to_frozen_mainline",
+      "allowed_wording": "在预注册、同 trace、一窗因果延迟的 Gaussian synthetic step drift 中，existing EKF 显著缩小 static-to-model-oracle logical-error gap。",
+      "forbidden_wording": "该 estimator 已覆盖一般 loss/outlier/leakage drift，或 CNN 已超过 oracle。"
+    },
+    {
+      "id": "PC03",
+      "claim": "Q4.20 affine fast path 与 float 的软件数值一致性",
+      "current_level": "CL1",
+      "paper_status": "supporting_only",
+      "allowed_wording": "Q4.20 software emulation 在受控样本上与 float affine fast path 保持所报告的数值一致性。",
+      "forbidden_wording": "Q4.20 RTL 已完成综合、时序收敛或板级验证。"
+    },
+    {
+      "id": "PC04",
+      "claim": "真实综合后的 LUT/FF/BRAM/DSP、时序和功耗",
+      "current_level": null,
+      "paper_status": "blocked",
+      "allowed_wording": "[Evidence needed: tool/device/constraint-specific synthesis and implementation reports]",
+      "forbidden_wording": "现有 operation-count 或 software fixed-point parity 等价于 synthesis/resource/timing result。"
+    },
+    {
+      "id": "PC05",
+      "claim": "约 300 元真实 FPGA 的 core/transport/end-to-end 测量",
+      "current_level": null,
+      "paper_status": "blocked",
+      "allowed_wording": "[Evidence needed: named-board measured rows with bitstream and host provenance]",
+      "forbidden_wording": "ZCU111 config 字段、placeholder backend 或 read-only gate 等价于真实板测。"
+    },
+    {
+      "id": "PC06",
+      "claim": "真实板卡 HIL/replay 与 deadline/fallback 闭环",
+      "current_level": null,
+      "paper_status": "blocked",
+      "allowed_wording": "[Evidence needed: board replay outputs, event logs, source-vs-board comparison and latency distributions]",
+      "forbidden_wording": "mock-backed software-HIL 或 isolated host TFLite runtime 等价于 real-board HIL。"
+    },
+    {
+      "id": "PC07",
+      "claim": "真实 GKP 量子实验 logical lifetime/error/fidelity gain",
+      "current_level": null,
+      "paper_status": "blocked",
+      "allowed_wording": "[Evidence needed: identified quantum platform, authorized raw data, protocol and uncertainty]",
+      "forbidden_wording": "software LER、surrogate fidelity 或外部论文数据等价于本项目量子实验。"
+    },
+    {
+      "id": "PC08",
+      "claim": "选定 preserved float/int8 artifact 的 isolated host true TFLite runtime",
+      "current_level": null,
+      "supporting_lane": "OL1",
+      "paper_status": "supported_bounded",
+      "allowed_wording": "选定 preserved float/int8 artifact 已在记录的 isolated current-host interpreter 环境真实执行并做一致性校验。",
+      "forbidden_wording": "默认环境、跨主机 portability、software-HIL integration 或 deployment closure 已完成。"
+    }
+  ]
+}

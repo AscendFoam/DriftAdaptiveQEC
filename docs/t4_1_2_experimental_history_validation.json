@@ -1,0 +1,582 @@
+{
+  "schema_version": "t4.1.2-experimental-history-validation-v1",
+  "task_id": "T4.1.2",
+  "status": "PASS",
+  "implementation_sha256": "6a6fd279b1a72a7fcda748882b10811e6580368285edfab00f9000c4bd722728",
+  "source_rows_sha256": "bb7cfbced0f3c9caf9ca6896da65e307fbb6d6ec5de939c81996947976238001",
+  "validation_config": {
+    "seeds": [
+      20261241,
+      20261242,
+      20261243,
+      20261244,
+      20261245,
+      20261246,
+      20261247,
+      20261248
+    ],
+    "cycles_per_seed": 2048,
+    "history_cycles": 256,
+    "llr_clip": 8.0,
+    "run_length_clip": 7,
+    "bank_version_clip": 31,
+    "pending_window_clip": 2
+  },
+  "history_schema": {
+    "schema_version": "t4.1.2-experimental-history-v1",
+    "feature_count": 53,
+    "feature_names": [
+      "analog_q",
+      "analog_p",
+      "residual_q",
+      "residual_p",
+      "syndrome_x_g",
+      "syndrome_x_e",
+      "syndrome_x_leakage",
+      "syndrome_z_g",
+      "syndrome_z_e",
+      "syndrome_z_leakage",
+      "phase_x_sin",
+      "phase_x_cos",
+      "phase_z_sin",
+      "phase_z_cos",
+      "action_q",
+      "action_p",
+      "action_mode_normal",
+      "action_mode_x_recovery",
+      "action_mode_z_recovery",
+      "action_mode_leakage_hold",
+      "action_mode_fallback",
+      "action_bank_switched",
+      "action_local_safe",
+      "action_bank_conflict",
+      "llr_q",
+      "llr_p",
+      "llr_q_saturated",
+      "llr_p_saturated",
+      "x_e_run",
+      "z_e_run",
+      "leakage_run",
+      "x_e_run_saturated",
+      "z_e_run_saturated",
+      "leakage_run_saturated",
+      "fast_deadline_ok",
+      "slow_deadline_ok",
+      "communication_available",
+      "window_age_us",
+      "window_age_valid",
+      "update_status_none",
+      "update_status_staged",
+      "update_status_committed",
+      "update_status_conflict",
+      "update_status_failed",
+      "update_status_stale",
+      "update_applied",
+      "pending_update",
+      "active_bank_version",
+      "active_bank_version_saturated",
+      "pending_window_count",
+      "pending_window_count_saturated",
+      "valid",
+      "crc_ok"
+    ],
+    "groups": {
+      "analog_syndrome": [
+        "analog_q",
+        "analog_p"
+      ],
+      "residual_syndrome": [
+        "residual_q",
+        "residual_p"
+      ],
+      "observed_outcome": [
+        "syndrome_x_g",
+        "syndrome_x_e",
+        "syndrome_x_leakage",
+        "syndrome_z_g",
+        "syndrome_z_e",
+        "syndrome_z_leakage"
+      ],
+      "quadrature_phase": [
+        "phase_x_sin",
+        "phase_x_cos",
+        "phase_z_sin",
+        "phase_z_cos"
+      ],
+      "recent_action": [
+        "action_q",
+        "action_p",
+        "action_mode_normal",
+        "action_mode_x_recovery",
+        "action_mode_z_recovery",
+        "action_mode_leakage_hold",
+        "action_mode_fallback",
+        "action_bank_switched",
+        "action_local_safe",
+        "action_bank_conflict"
+      ],
+      "soft_information": [
+        "llr_q",
+        "llr_p",
+        "llr_q_saturated",
+        "llr_p_saturated"
+      ],
+      "run_length": [
+        "x_e_run",
+        "z_e_run",
+        "leakage_run",
+        "x_e_run_saturated",
+        "z_e_run_saturated",
+        "leakage_run_saturated"
+      ],
+      "deadline_health": [
+        "fast_deadline_ok",
+        "slow_deadline_ok",
+        "communication_available",
+        "window_age_us",
+        "window_age_valid"
+      ],
+      "parameter_update": [
+        "update_status_none",
+        "update_status_staged",
+        "update_status_committed",
+        "update_status_conflict",
+        "update_status_failed",
+        "update_status_stale",
+        "update_applied",
+        "pending_update",
+        "active_bank_version",
+        "active_bank_version_saturated",
+        "pending_window_count",
+        "pending_window_count_saturated"
+      ],
+      "record_health": [
+        "valid",
+        "crc_ok"
+      ]
+    },
+    "mask_contract": "left padding is all-zero and mask=0; physical rows have mask=1",
+    "cycle_alignment": "post-cycle observed syndrome plus same-cycle applied action and scheduler status; predicts only future slow state",
+    "producers": {
+      "syndrome": "physics.syndrome_stream.ObservedSyndromeStep",
+      "action": "cnn_fpga.runtime.run_length_fsm.RunLengthFSMDecision",
+      "llr": "physics.ideal_gkp_decoder.llr_1d with DeployableLLRContext",
+      "runtime_status": "cnn_fpga.runtime.scheduler.SchedulerEvent plus DualLoopScheduler.snapshot"
+    },
+    "forbidden_tokens": [
+      "truth",
+      "hidden",
+      "targetregime",
+      "targetlabel",
+      "predictiontarget",
+      "supervisiontarget",
+      "oracle",
+      "teacher",
+      "label",
+      "regime",
+      "driftstate",
+      "logical",
+      "recoverydepth",
+      "leakagekind",
+      "leakagehazard",
+      "outliercomponent",
+      "channeldisplacement",
+      "premeasurementshift",
+      "physicalresidual"
+    ],
+    "forbidden_object_types": [
+      "SyndromeTruthStep",
+      "DriftState"
+    ],
+    "hardware_measured": false
+  },
+  "causal_contract": {
+    "alignment": "post-cycle observed syndrome, applied fast action and scheduler status at cycle t; no future sample is visible",
+    "padding": "left zero padding is excluded by an explicit binary mask",
+    "llr_provenance": "fixed registered observed calibration, never simulator state",
+    "scheduler_provenance": "DualLoopScheduler events and snapshot, including failures, stale windows, conflicts and commits",
+    "truth_use": "truth exists only inside the synthetic producer and the negative rejection probe"
+  },
+  "aggregate": {
+    "seeds": 8,
+    "cycles": 16384,
+    "source_data_rows": 16384,
+    "feature_count": 53,
+    "trace_sha256": {
+      "20261241": "a3e7220aa481790ee03854cccf8486120bb3aa26d67547633751f9440f8cbfc1",
+      "20261242": "ba11aeb6a984b33cc8f8420edb8bf8669d82ea29d946a6b9af00b43632a58501",
+      "20261243": "87dc142d22aa1e3ed33b0a0e6c40ea59496a7a9558999cd9284a2d52c7169e04",
+      "20261244": "85e5c4934ab67b9419374073116ebbfbaefe6ec46e9f1f3dfa0063a9c307d868",
+      "20261245": "9c5794aa0cb3a29b3215b585c7c9b696fce368b8297f77f6d59ceaa70aefb599",
+      "20261246": "c8a059c512bf751f0d37bd4477803038fe3a7c0805b3039a1b31b1297caa0ecd",
+      "20261247": "28c660ce0cce7cb426eca9a89b5ae916f4bda6905e6c0ff3cef231b0d0dccba9",
+      "20261248": "8e50fb4b1c8f88570906a8799fd29d09557bea7ff650ff1462d9a56bb241a114"
+    },
+    "update_status_counts": {
+      "none": 15458,
+      "staged": 48,
+      "committed": 413,
+      "conflict": 63,
+      "failed": 31,
+      "stale": 371
+    },
+    "action_mode_counts": {
+      "normal": 1600,
+      "x_recovery": 721,
+      "z_recovery": 772,
+      "leakage_hold": 422,
+      "fallback": 12869
+    },
+    "observed_outcome_counts": {
+      "g": 19633,
+      "e": 11437,
+      "leakage": 1698
+    },
+    "scheduler_event_counts": {
+      "commit_applied": 418,
+      "communication_pause_ended": 32,
+      "communication_pause_started": 32,
+      "external_params_staged": 48,
+      "fast_budget_violation": 8282,
+      "fifo_overflow": 52,
+      "parameter_update_conflict": 64,
+      "params_staged": 371,
+      "slow_budget_violation": 422,
+      "slow_update_failed": 32,
+      "slow_update_finished": 387,
+      "slow_update_started": 426,
+      "window_deadline_miss": 387,
+      "window_dropped": 52,
+      "window_ready": 496
+    },
+    "feature_ranges": {
+      "analog_q": {
+        "min": -1.2968548607275865,
+        "max": 1.3035844015344045
+      },
+      "analog_p": {
+        "min": -1.3042945756882665,
+        "max": 1.343321243817253
+      },
+      "residual_q": {
+        "min": -1.2532458767730448,
+        "max": 1.2530958900705904
+      },
+      "residual_p": {
+        "min": -1.2527437518268412,
+        "max": 1.252675191928258
+      },
+      "syndrome_x_g": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "syndrome_x_e": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "syndrome_x_leakage": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "syndrome_z_g": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "syndrome_z_e": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "syndrome_z_leakage": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "phase_x_sin": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "phase_x_cos": {
+        "min": 1.0,
+        "max": 1.0
+      },
+      "phase_z_sin": {
+        "min": 1.0,
+        "max": 1.0
+      },
+      "phase_z_cos": {
+        "min": 6.123233995736766e-17,
+        "max": 6.123233995736766e-17
+      },
+      "action_q": {
+        "min": -1.0,
+        "max": 1.0
+      },
+      "action_p": {
+        "min": -1.0,
+        "max": 1.0
+      },
+      "action_mode_normal": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "action_mode_x_recovery": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "action_mode_z_recovery": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "action_mode_leakage_hold": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "action_mode_fallback": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "action_bank_switched": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "action_local_safe": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "action_bank_conflict": {
+        "min": 0.0,
+        "max": 0.0
+      },
+      "llr_q": {
+        "min": 0.0014801367280288247,
+        "max": 8.0
+      },
+      "llr_p": {
+        "min": 0.011031978343453375,
+        "max": 8.0
+      },
+      "llr_q_saturated": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "llr_p_saturated": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "x_e_run": {
+        "min": 0.0,
+        "max": 7.0
+      },
+      "z_e_run": {
+        "min": 0.0,
+        "max": 7.0
+      },
+      "leakage_run": {
+        "min": 0.0,
+        "max": 7.0
+      },
+      "x_e_run_saturated": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "z_e_run_saturated": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "leakage_run_saturated": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "fast_deadline_ok": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "slow_deadline_ok": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "communication_available": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "window_age_us": {
+        "min": 0.0,
+        "max": 815.0
+      },
+      "window_age_valid": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "update_status_none": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "update_status_staged": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "update_status_committed": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "update_status_conflict": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "update_status_failed": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "update_status_stale": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "update_applied": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "pending_update": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "active_bank_version": {
+        "min": 0.0,
+        "max": 31.0
+      },
+      "active_bank_version_saturated": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "pending_window_count": {
+        "min": 0.0,
+        "max": 2.0
+      },
+      "pending_window_count_saturated": {
+        "min": 0.0,
+        "max": 1.0
+      },
+      "valid": {
+        "min": 1.0,
+        "max": 1.0
+      },
+      "crc_ok": {
+        "min": 0.0,
+        "max": 1.0
+      }
+    }
+  },
+  "information_leakage_audit": {
+    "registered_forbidden_tokens": [
+      "truth",
+      "hidden",
+      "targetregime",
+      "targetlabel",
+      "predictiontarget",
+      "supervisiontarget",
+      "oracle",
+      "teacher",
+      "label",
+      "regime",
+      "driftstate",
+      "logical",
+      "recoverydepth",
+      "leakagekind",
+      "leakagehazard",
+      "outliercomponent",
+      "channeldisplacement",
+      "premeasurementshift",
+      "physicalresidual"
+    ],
+    "input_forbidden_hits": [],
+    "source_fields": [
+      "seed",
+      "cycle",
+      "history_valid_cycles",
+      "history_start_cycle",
+      "history_end_cycle",
+      "update_status",
+      "action_mode",
+      "scheduler_event_kinds",
+      "analog_q",
+      "analog_p",
+      "residual_q",
+      "residual_p",
+      "syndrome_x_g",
+      "syndrome_x_e",
+      "syndrome_x_leakage",
+      "syndrome_z_g",
+      "syndrome_z_e",
+      "syndrome_z_leakage",
+      "phase_x_sin",
+      "phase_x_cos",
+      "phase_z_sin",
+      "phase_z_cos",
+      "action_q",
+      "action_p",
+      "action_mode_normal",
+      "action_mode_x_recovery",
+      "action_mode_z_recovery",
+      "action_mode_leakage_hold",
+      "action_mode_fallback",
+      "action_bank_switched",
+      "action_local_safe",
+      "action_bank_conflict",
+      "llr_q",
+      "llr_p",
+      "llr_q_saturated",
+      "llr_p_saturated",
+      "x_e_run",
+      "z_e_run",
+      "leakage_run",
+      "x_e_run_saturated",
+      "z_e_run_saturated",
+      "leakage_run_saturated",
+      "fast_deadline_ok",
+      "slow_deadline_ok",
+      "communication_available",
+      "window_age_us",
+      "window_age_valid",
+      "update_status_none",
+      "update_status_staged",
+      "update_status_committed",
+      "update_status_conflict",
+      "update_status_failed",
+      "update_status_stale",
+      "update_applied",
+      "pending_update",
+      "active_bank_version",
+      "active_bank_version_saturated",
+      "pending_window_count",
+      "pending_window_count_saturated",
+      "valid",
+      "crc_ok"
+    ],
+    "truth_object_negative_probe_rejected": true
+  },
+  "gate_summary": {
+    "passed": 17,
+    "failed": 0,
+    "gates": {
+      "source_grid_is_complete": true,
+      "all_seed_traces_are_unique": true,
+      "schema_has_required_groups_and_53_unique_features": true,
+      "input_schema_has_no_registered_forbidden_token": true,
+      "truth_object_negative_probe_is_rejected": true,
+      "source_data_has_no_truth_or_hidden_field": true,
+      "all_source_features_are_finite": true,
+      "all_categorical_groups_are_exactly_one_hot": true,
+      "left_padding_and_full_history_are_exercised": true,
+      "captured_prefix_is_immutable_after_future_appends": true,
+      "all_observed_outcomes_are_exercised": true,
+      "all_real_fsm_modes_are_exercised": true,
+      "all_update_statuses_are_exercised": true,
+      "deadline_pause_crc_and_failure_paths_are_exercised": true,
+      "all_saturation_paths_are_exercised": true,
+      "scheduler_status_is_derived_not_hand_labeled": true,
+      "scope_is_synthetic_software_not_device_measurement": true
+    }
+  },
+  "claim_boundary": {
+    "allowed": "causal observed-only 256-cycle software history schema with real repository producers and explicit leakage rejection",
+    "forbidden": "device-calibrated IQ/ADC semantics, target-board timing, learned-model gain, logical-error-rate gain, or hidden-state availability"
+  }
+}

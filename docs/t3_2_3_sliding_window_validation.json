@@ -1,0 +1,515 @@
+{
+  "schema_version": "t3.2.3-sliding-window-syndrome-v1",
+  "task_id": "T3.2.3",
+  "status": "PASS",
+  "implementation_sha256": "4b388765b277e38996bc3b09541c59fb9eec2ff4532dc70155eab4cf923dfd20",
+  "descriptor": {
+    "task_id": "T3.2.3",
+    "comparison_id": "t3_2_3_sliding_window_syndrome_comparison",
+    "label": "Training-selected uniform sliding-window periodic syndrome estimator",
+    "consumed_observation_fields": [
+      "residual_q",
+      "residual_p"
+    ],
+    "hidden_truth_inputs": [],
+    "update_timing": "one_window_delay_update_after_current_evaluation",
+    "budget_rule": "384_new_observations_and_one_update_per_window_for_every_candidate",
+    "state_rule": "incremental_add_remove_of_four_joint_circular_feature_sums",
+    "evidence_scope": "continuous_synthetic_wrapped_gaussian_syndrome_level",
+    "excluded_claims": [
+      "universal_optimal_window",
+      "loss_outlier_or_leakage_identification",
+      "finite_energy_protocol_fidelity",
+      "device_calibration",
+      "FPGA_synthesis_or_measured_latency"
+    ]
+  },
+  "validation_config": {
+    "training_seeds": [
+      20260911,
+      20260912,
+      20260913
+    ],
+    "evaluation_seeds": [
+      20260931,
+      20260932,
+      20260933,
+      20260934,
+      20260935,
+      20260936,
+      20260937,
+      20260938
+    ],
+    "windows": 48,
+    "observation_samples_per_window": 384,
+    "training_score_samples_per_window": 384,
+    "evaluation_samples_per_window": 1024,
+    "feature_chunk_samples": 96,
+    "window_sample_candidates": [
+      384,
+      480,
+      576,
+      768,
+      1152,
+      1536
+    ],
+    "confidence_level": 0.95
+  },
+  "frozen_window_selection": {
+    "selected_window_samples": 384,
+    "candidate_scores": [
+      [
+        384,
+        0.16292374885638675
+      ],
+      [
+        480,
+        0.16943596213553194
+      ],
+      [
+        576,
+        0.16974991372535775
+      ],
+      [
+        768,
+        0.17373619627976178
+      ],
+      [
+        1152,
+        0.223001849377127
+      ],
+      [
+        1536,
+        0.2885155998269894
+      ]
+    ],
+    "training_trace_sha256": "eaf2fe12c2b83faac201c91003d6a2c1f980d69005e8f482a7dce6b71520d6c2",
+    "selection_objective": "observation_only_independent_next_window_periodic_moment_score"
+  },
+  "static_training_parameters": {
+    "mean": [
+      0.0801375926112148,
+      -0.024123041799225527
+    ],
+    "covariance": [
+      [
+        0.2312542386879573,
+        -0.02585159451245441
+      ],
+      [
+        -0.02585159451245441,
+        0.1726363620969346
+      ]
+    ],
+    "training_windows": 192,
+    "effective_training_weight": 192.0,
+    "training_state_sha256": "7b51992ad351535613247d428267a466ddb4504332be63c634ca7ff87e32d54b",
+    "training_protocol_id": "t3.2.3-continuous-scenario-average-v1:windows=48:training_seeds=(20260911, 20260912, 20260913)",
+    "fit_rule": "moment_matched_marginal_law_of_total_covariance",
+    "loss_handling": "reject_nonzero_loss_gamma",
+    "outlier_handling": "moment_match_same_mean_gaussian_mixture_covariance"
+  },
+  "scenarios": [
+    {
+      "scenario_id": "linear_mean",
+      "seeds": 8,
+      "windows": 48,
+      "evaluation_samples": 393216,
+      "unique_trace_hashes": 8,
+      "standard_error_rate": 0.005788167317708334,
+      "static_error_rate": 0.006635030110677083,
+      "latest_window_error_rate": 0.00092315673828125,
+      "selected_window_samples": 384,
+      "selected_error_rate": 0.00092315673828125,
+      "oracle_error_rate": 0.0008519490559895834,
+      "static_minus_selected_seed_cluster_ci": {
+        "estimate": 0.005711873372395834,
+        "standard_error": 0.00010293513563648852,
+        "ci_low": 0.005468470454328801,
+        "ci_high": 0.005955276290462867,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "latest_minus_selected_seed_cluster_ci": {
+        "estimate": 0.0,
+        "standard_error": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "candidate_error_rates": {
+        "384": 0.00092315673828125,
+        "480": 0.00090789794921875,
+        "576": 0.0009129842122395833,
+        "768": 0.0009256998697916666,
+        "1152": 0.0009663899739583334,
+        "1536": 0.001007080078125
+      },
+      "candidate_mean_tracking_rmse_lattice": {
+        "384": 0.013151672631487508,
+        "480": 0.013733548615080365,
+        "576": 0.014434446955293743,
+        "768": 0.015350827434936175,
+        "1152": 0.01898338636544777,
+        "1536": 0.023038690303594768
+      },
+      "candidate_covariance_tracking_rmse_lattice2": {
+        "384": 0.002408643553627569,
+        "480": 0.0021614722866765,
+        "576": 0.0019403892388432662,
+        "768": 0.0017126994207551185,
+        "1152": 0.0014273357791925799,
+        "1536": 0.0012494775355972423
+      },
+      "static_nll": 0.01882792223165748,
+      "static_brier": 0.010201943562171994,
+      "selected_nll": 0.0025876274300571404,
+      "selected_brier": 0.0013839219521532202
+    },
+    {
+      "scenario_id": "variance_correlation_ramp",
+      "seeds": 8,
+      "windows": 48,
+      "evaluation_samples": 393216,
+      "unique_trace_hashes": 8,
+      "standard_error_rate": 0.013888041178385418,
+      "static_error_rate": 0.012120564778645834,
+      "latest_window_error_rate": 0.004422505696614584,
+      "selected_window_samples": 384,
+      "selected_error_rate": 0.004422505696614584,
+      "oracle_error_rate": 0.0041656494140625,
+      "static_minus_selected_seed_cluster_ci": {
+        "estimate": 0.00769805908203125,
+        "standard_error": 0.00017267362669087457,
+        "ci_low": 0.007289750836747529,
+        "ci_high": 0.008106367327314972,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "latest_minus_selected_seed_cluster_ci": {
+        "estimate": 0.0,
+        "standard_error": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "candidate_error_rates": {
+        "384": 0.004422505696614584,
+        "480": 0.004468282063802084,
+        "576": 0.004399617513020834,
+        "768": 0.004308064778645833,
+        "1152": 0.004300435384114584,
+        "1536": 0.004381815592447916
+      },
+      "candidate_mean_tracking_rmse_lattice": {
+        "384": 0.012658580627379642,
+        "480": 0.011263626104986853,
+        "576": 0.01036658559114194,
+        "768": 0.009212461428282007,
+        "1152": 0.0074281251537338805,
+        "1536": 0.006391704393896917
+      },
+      "candidate_covariance_tracking_rmse_lattice2": {
+        "384": 0.004034166082541779,
+        "480": 0.003925136158022651,
+        "576": 0.0036932773855004714,
+        "768": 0.0033555954630566823,
+        "1152": 0.003475222329197318,
+        "1536": 0.003847324810434224
+      },
+      "static_nll": 0.03574208524854638,
+      "static_brier": 0.018665560429676167,
+      "selected_nll": 0.012670975356184985,
+      "selected_brier": 0.0067826997848384205
+    },
+    {
+      "scenario_id": "sinusoidal_joint",
+      "seeds": 8,
+      "windows": 48,
+      "evaluation_samples": 393216,
+      "unique_trace_hashes": 8,
+      "standard_error_rate": 0.0238037109375,
+      "static_error_rate": 0.01944732666015625,
+      "latest_window_error_rate": 0.004336039225260417,
+      "selected_window_samples": 384,
+      "selected_error_rate": 0.004336039225260417,
+      "oracle_error_rate": 0.00370025634765625,
+      "static_minus_selected_seed_cluster_ci": {
+        "estimate": 0.015111287434895832,
+        "standard_error": 0.00018617787223085098,
+        "ci_low": 0.01467104672310882,
+        "ci_high": 0.015551528146682845,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "latest_minus_selected_seed_cluster_ci": {
+        "estimate": 0.0,
+        "standard_error": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "candidate_error_rates": {
+        "384": 0.004336039225260417,
+        "480": 0.00441741943359375,
+        "576": 0.004511515299479167,
+        "768": 0.00464630126953125,
+        "1152": 0.005304972330729167,
+        "1536": 0.00615692138671875
+      },
+      "candidate_mean_tracking_rmse_lattice": {
+        "384": 0.03355398744018277,
+        "480": 0.03861268012480213,
+        "576": 0.042207881244905446,
+        "768": 0.046898493235750266,
+        "1152": 0.06113005594623246,
+        "1536": 0.07504651821150715
+      },
+      "candidate_covariance_tracking_rmse_lattice2": {
+        "384": 0.005419190113580488,
+        "480": 0.005387190158231118,
+        "576": 0.005411321396308897,
+        "768": 0.005531769501176905,
+        "1152": 0.006502153595067231,
+        "1536": 0.007756105605405325
+      },
+      "static_nll": 0.05622081758860897,
+      "static_brier": 0.029706279090075557,
+      "selected_nll": 0.012756199935075523,
+      "selected_brier": 0.006745761867617913
+    },
+    {
+      "scenario_id": "smooth_mixed",
+      "seeds": 8,
+      "windows": 48,
+      "evaluation_samples": 393216,
+      "unique_trace_hashes": 8,
+      "standard_error_rate": 0.01917266845703125,
+      "static_error_rate": 0.01725006103515625,
+      "latest_window_error_rate": 0.006810506184895834,
+      "selected_window_samples": 384,
+      "selected_error_rate": 0.006810506184895834,
+      "oracle_error_rate": 0.006378173828125,
+      "static_minus_selected_seed_cluster_ci": {
+        "estimate": 0.010439554850260418,
+        "standard_error": 0.00016214333220718495,
+        "ci_low": 0.010056146794689243,
+        "ci_high": 0.010822962905831592,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "latest_minus_selected_seed_cluster_ci": {
+        "estimate": 0.0,
+        "standard_error": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "candidate_error_rates": {
+        "384": 0.006810506184895834,
+        "480": 0.006805419921875,
+        "576": 0.006762186686197916,
+        "768": 0.006785074869791666,
+        "1152": 0.006937662760416666,
+        "1536": 0.0071258544921875
+      },
+      "candidate_mean_tracking_rmse_lattice": {
+        "384": 0.01939282513233865,
+        "480": 0.020313567403759208,
+        "576": 0.021355270087070513,
+        "768": 0.02274075563750292,
+        "1152": 0.028372401644999302,
+        "1536": 0.034485366279457655
+      },
+      "candidate_covariance_tracking_rmse_lattice2": {
+        "384": 0.004484678402598856,
+        "480": 0.003952761664299642,
+        "576": 0.0037701929474956283,
+        "768": 0.003383690487830984,
+        "1152": 0.0031873812790720784,
+        "1536": 0.0032683220975672483
+      },
+      "static_nll": 0.05178182657856977,
+      "static_brier": 0.026636938438043982,
+      "selected_nll": 0.019331922500235115,
+      "selected_brier": 0.010434742340423388
+    }
+  ],
+  "aggregate": {
+    "scenarios": 4,
+    "evaluation_seeds_per_scenario": 8,
+    "windows": 1536,
+    "evaluation_samples": 1572864,
+    "source_data_rows": 32,
+    "candidate_error_rates": {
+      "384": 0.004123051961263021,
+      "480": 0.0041497548421223955,
+      "576": 0.004146575927734375,
+      "768": 0.004166285196940104,
+      "1152": 0.0043773651123046875,
+      "1536": 0.004667917887369791
+    },
+    "evaluation_best_window_samples_diagnostic_only": 384,
+    "static_minus_selected_seed_cluster_ci": {
+      "estimate": 0.009740193684895832,
+      "standard_error": 8.929977348876653e-05,
+      "ci_low": 0.009529033274842552,
+      "ci_high": 0.009951354094949112,
+      "cluster_unit": "evaluation_seed",
+      "interval_method": "two_sided_student_t_cluster_mean",
+      "degrees_freedom": 7
+    },
+    "latest_minus_selected_seed_cluster_ci": {
+      "estimate": 0.0,
+      "standard_error": 0.0,
+      "ci_low": 0.0,
+      "ci_high": 0.0,
+      "cluster_unit": "evaluation_seed",
+      "interval_method": "two_sided_student_t_cluster_mean",
+      "degrees_freedom": 7
+    }
+  },
+  "cost_profiles": [
+    {
+      "window_samples": 384,
+      "update_stride_samples": 384,
+      "retained_feature_chunks": 4,
+      "complex_values_per_chunk": 4,
+      "complex_accumulator_values": 4,
+      "complex_exponentials_per_observation": 2,
+      "complex_products_per_observation": 2,
+      "target_lut": null,
+      "target_ff": null,
+      "target_bram": null,
+      "target_dsp": null,
+      "target_fmax_hz": null,
+      "target_measured": false,
+      "scope": "incremental_sufficient_statistic_proxy_not_synthesis",
+      "stored_complex_values": 20
+    },
+    {
+      "window_samples": 480,
+      "update_stride_samples": 384,
+      "retained_feature_chunks": 5,
+      "complex_values_per_chunk": 4,
+      "complex_accumulator_values": 4,
+      "complex_exponentials_per_observation": 2,
+      "complex_products_per_observation": 2,
+      "target_lut": null,
+      "target_ff": null,
+      "target_bram": null,
+      "target_dsp": null,
+      "target_fmax_hz": null,
+      "target_measured": false,
+      "scope": "incremental_sufficient_statistic_proxy_not_synthesis",
+      "stored_complex_values": 24
+    },
+    {
+      "window_samples": 576,
+      "update_stride_samples": 384,
+      "retained_feature_chunks": 6,
+      "complex_values_per_chunk": 4,
+      "complex_accumulator_values": 4,
+      "complex_exponentials_per_observation": 2,
+      "complex_products_per_observation": 2,
+      "target_lut": null,
+      "target_ff": null,
+      "target_bram": null,
+      "target_dsp": null,
+      "target_fmax_hz": null,
+      "target_measured": false,
+      "scope": "incremental_sufficient_statistic_proxy_not_synthesis",
+      "stored_complex_values": 28
+    },
+    {
+      "window_samples": 768,
+      "update_stride_samples": 384,
+      "retained_feature_chunks": 8,
+      "complex_values_per_chunk": 4,
+      "complex_accumulator_values": 4,
+      "complex_exponentials_per_observation": 2,
+      "complex_products_per_observation": 2,
+      "target_lut": null,
+      "target_ff": null,
+      "target_bram": null,
+      "target_dsp": null,
+      "target_fmax_hz": null,
+      "target_measured": false,
+      "scope": "incremental_sufficient_statistic_proxy_not_synthesis",
+      "stored_complex_values": 36
+    },
+    {
+      "window_samples": 1152,
+      "update_stride_samples": 384,
+      "retained_feature_chunks": 12,
+      "complex_values_per_chunk": 4,
+      "complex_accumulator_values": 4,
+      "complex_exponentials_per_observation": 2,
+      "complex_products_per_observation": 2,
+      "target_lut": null,
+      "target_ff": null,
+      "target_bram": null,
+      "target_dsp": null,
+      "target_fmax_hz": null,
+      "target_measured": false,
+      "scope": "incremental_sufficient_statistic_proxy_not_synthesis",
+      "stored_complex_values": 52
+    },
+    {
+      "window_samples": 1536,
+      "update_stride_samples": 384,
+      "retained_feature_chunks": 16,
+      "complex_values_per_chunk": 4,
+      "complex_accumulator_values": 4,
+      "complex_exponentials_per_observation": 2,
+      "complex_products_per_observation": 2,
+      "target_lut": null,
+      "target_ff": null,
+      "target_bram": null,
+      "target_dsp": null,
+      "target_fmax_hz": null,
+      "target_measured": false,
+      "scope": "incremental_sufficient_statistic_proxy_not_synthesis",
+      "stored_complex_values": 68
+    }
+  ],
+  "gate_summary": {
+    "passed": 14,
+    "failed": 0,
+    "gates": {
+      "training_and_evaluation_are_disjoint": true,
+      "window_selected_before_evaluation": true,
+      "comparison_roles_are_registered": true,
+      "all_evaluation_traces_are_unique": true,
+      "candidate_matrix_has_latest_and_overlapping_windows": true,
+      "observation_and_update_budget_is_identical": true,
+      "selected_alias_matches_candidate_column": true,
+      "selected_improves_static_in_every_scenario": true,
+      "selected_proper_scores_improve_static": true,
+      "aggregate_static_gain_resolved": true,
+      "oracle_remains_strict_reference": true,
+      "storage_proxy_is_monotone": true,
+      "hardware_fields_remain_unmeasured": true,
+      "latest_comparison_is_complete_without_forced_win": true
+    }
+  },
+  "claim_boundary": {
+    "selection_result": "latest_window_selected",
+    "evaluation_best_is_diagnostic_not_a_selector": true,
+    "latest_comparison_resolved": false,
+    "allowed": "training-selected uniform sliding-window baseline on the registered continuous wrapped-Gaussian scenarios with the frozen observation/update budget",
+    "forbidden": "universal optimal window, evaluation-tuned window, CNN superiority, loss/outlier/leakage identification, device calibration, or FPGA synthesis/measurement"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "schema_version": "t3.1.2-static-map-v2",
+  "task_id": "T3.1.2",
+  "status": "PASS",
+  "evidence_scope": "multi_seed_synthetic_static_periodic_gaussian_map",
+  "implementation_sha256": "240fb477b04c2a3bc39077250d6f0cbe044141ffe813e803a4ce4ab1ce7a8984",
+  "descriptor": {
+    "baseline_id": "static_training_average_map",
+    "label": "Static MAP (training-average moment-matched Gaussian)",
+    "task_owner": "T3.1.2",
+    "comparison_role": "deployable_static_decoder_baseline",
+    "deployable": true,
+    "training_inputs": [
+      "training_state_mean",
+      "training_state_mixture_covariance",
+      "training_state_weight"
+    ],
+    "evaluation_inputs": [
+      "centered_modular_syndrome_q",
+      "centered_modular_syndrome_p"
+    ],
+    "evaluation_hidden_truth_inputs": [],
+    "update_during_evaluation": false,
+    "fit_rule": "weighted marginal first moment plus law-of-total-covariance",
+    "evidence_scope": "static_periodic_gaussian_map_model_baseline"
+  },
+  "config": {
+    "evaluation_seeds": [
+      20260721,
+      20260722,
+      20260723,
+      20260724,
+      20260725,
+      20260726,
+      20260727,
+      20260728
+    ],
+    "training_seed": 20260312,
+    "confidence_level": 0.95
+  },
+  "static_registry_gates": [
+    "static_registry:t1_3_4_adaptive_drift_alignment",
+    "static_registry:phase5_main_decoder_benchmark",
+    "static_registry:t3_2_2_continuous_adaptive_map_comparison",
+    "static_registry:t3_2_3_sliding_window_syndrome_comparison"
+  ],
+  "frozen_static_parameters": {
+    "mean": [
+      0.3342171032841333,
+      -0.2506628274631
+    ],
+    "covariance": [
+      [
+        0.31697375176851056,
+        -0.006535559917017942
+      ],
+      [
+        -0.006535559917017942,
+        0.12274380184724008
+      ]
+    ],
+    "training_windows": 24,
+    "effective_training_weight": 24.0,
+    "training_state_sha256": "239b57432a85586fd09babc18f942e14bdd4c6528c52d2fff0a871d423188031",
+    "training_protocol_id": "t3.1.2-step-training-average-v1:seed=20260312:windows=24:change=8",
+    "fit_rule": "moment_matched_marginal_law_of_total_covariance",
+    "loss_handling": "reject_nonzero_loss_gamma",
+    "outlier_handling": "moment_match_same_mean_gaussian_mixture_covariance"
+  },
+  "aggregate": {
+    "evaluation_seeds": 8,
+    "paired_samples": 576000,
+    "training_state_sha256": "239b57432a85586fd09babc18f942e14bdd4c6528c52d2fff0a871d423188031",
+    "standard_binning_error_rate": 0.058869791666666664,
+    "static_training_average_map_error_rate": 0.02449826388888889,
+    "full_state_model_oracle_map_error_rate": 0.011340277777777777,
+    "standard_minus_static": {
+      "estimate": 0.03437152777777778,
+      "standard_error": 0.00029287099397126286,
+      "ci_low": 0.03379751117747765,
+      "ci_high": 0.034945544378077904
+    },
+    "standard_only_failure_count": 24468,
+    "static_only_failure_count": 4670
+  },
+  "gate_summary": {
+    "passed": 9,
+    "failed": 0,
+    "gates": {
+      "training_evaluation_seed_disjoint": true,
+      "single_frozen_training_parameter_hash": true,
+      "unique_materialized_evaluation_traces": true,
+      "formal_static_map_present_in_declared_schemas": true,
+      "static_better_than_standard_each_seed": true,
+      "aggregate_static_improvement_resolved": true,
+      "static_remains_above_model_oracle": true,
+      "descriptor_has_no_evaluation_truth": true,
+      "no_evaluation_updates": true
+    }
+  },
+  "claim_boundary": {
+    "allowed": "evaluation-independent training-average moment-matched static Gaussian MAP outperforms standard binning on the registered multi-seed synthetic step scenario",
+    "forbidden": "static MAP is universally optimal, consumes evaluation truth, handles physical loss/protocol leakage, or is an FPGA/quantum-hardware measurement"
+  }
+}

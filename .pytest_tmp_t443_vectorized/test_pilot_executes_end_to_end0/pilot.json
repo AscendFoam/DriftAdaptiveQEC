@@ -1,0 +1,788 @@
+{
+  "schema_version": 1,
+  "task_id": "T4.4.3",
+  "status": "FAIL",
+  "scope": "fresh 1/2/4-dimensional outcome-specific exponential recurrence candidates fit to one frozen T4.4.1 finite-model teacher with training/validation/evaluation separation; deterministic NumPy artifact with exact leakage/health zero-residual fallback; imitation evidence only, not physical gain retention or hardware",
+  "training_protocol_id": "T443-LOWDIM-EXPONENTIAL-STRICT-SPLIT-V1",
+  "implementation_sha256": "09721da415b7557d226eb02a2435b9ba766dfe1ad5b9c299082ab26ed3e8a839",
+  "config_contract_hash": "f871e9317021adeb96d81d32fe1652e782d46b6e28a60ce62ca6b5fe9ee34de3",
+  "checkpoint_contract_hash": "7056dd0c47749aa19476098e4fb3714dc8fb561a23b6f2c835320a039ba53ec0",
+  "created_utc": "2026-07-15T22:25:02.906394+00:00",
+  "config": {
+    "half_cycles": 8,
+    "trajectories_per_split": 8,
+    "training_seed": 443101,
+    "validation_seed": 443201,
+    "evaluation_seed": 443301,
+    "candidate_dimensions": [
+      1
+    ],
+    "restart_seeds": [
+      44311
+    ],
+    "training_epochs": 5,
+    "validation_interval": 1,
+    "learning_rate": 0.015,
+    "gradient_clip_norm": 5.0,
+    "state_l2_weight": 1e-07,
+    "dimension_relative_tolerance": 0.05,
+    "dimension_absolute_tolerance": 1e-07,
+    "minimum_zero_mse_reduction_fraction": 0.1,
+    "device": "cpu"
+  },
+  "parent_provenance": {
+    "teacher_artifact_path": "docs/t4_4_1_bounded_residual_rnn_teacher_validation.json",
+    "teacher_artifact_sha256": "c71094493a63f7a3b1287d28c0a1b71d3ce7a03e16a281a27967a87a65669d53",
+    "teacher_checkpoint_path": "docs/t4_4_1_bounded_residual_rnn_teacher_checkpoints.pt",
+    "teacher_checkpoint_sha256": "7c4e004cfb4e04e2ac4848242fbfe63217ef6b89f8780bbce723422be098711e",
+    "teacher_state_sha256": "aee37f0ca66257cda39ae5143305a583504e6068b837b04cdaca8c94a67ea076",
+    "teacher_analysis_path": "docs/t4_4_2_teacher_hidden_control_analysis.json",
+    "teacher_analysis_sha256": "9cf3ca1f8245b29a537638bea02edaa961862219aacd64e3f7f714d1a2987e2a",
+    "legacy_student_path": "docs/t4_1_5_distilled_student_checkpoint.json",
+    "legacy_student_sha256": "8c990c3e1f5b81f845a9c0d25d504713831f20384accd1f9217180ae77d6faac"
+  },
+  "dataset": {
+    "split_seeds": {
+      "training": 443101,
+      "validation": 443201,
+      "evaluation": 443301
+    },
+    "trajectories_per_split": 8,
+    "half_cycles": 8,
+    "hashes": {
+      "training": "2d4ab46be77bad60c253c08ba034f9d722318e73899d02f21d339a1938b08eb3",
+      "validation": "2d4ab46be77bad60c253c08ba034f9d722318e73899d02f21d339a1938b08eb3",
+      "evaluation": "1a92ae42afaf737271780934fbdcf602f478382d55a25040d56646838e95b0e8"
+    },
+    "target": "frozen selected teacher physical control residual"
+  },
+  "training_records": [
+    {
+      "dimension": 1,
+      "restart_index": 0,
+      "restart_seed": 44311,
+      "parameter_count": 35,
+      "resource_profile": {
+        "state_dimension": 1,
+        "stored_trainable_scalars": 35,
+        "persistent_state_scalars": 1,
+        "multiply_adds_per_healthy_step": 33,
+        "nonlinearities_per_healthy_step": 15,
+        "stored_scalar_bytes_float32": 140,
+        "target_latency_cycles": null,
+        "rtl_measured": false,
+        "board_measured": false
+      },
+      "initial_state_sha256": "5265814c56f9a0f2a863236feb2ce00c2459eb286b743b23db0355f702897357",
+      "checkpoint_sha256": "fa24c0ecd040956a33f88943a3754dc706675d599a950cb285ff72123ced5862",
+      "best_epoch": 5,
+      "best_validation_mse": 0.003852254761516294,
+      "best_epoch_reached_training_cap": true,
+      "optimizer_global_convergence_claimed": false,
+      "gradient_coverage": [
+        {
+          "name": "initial_state",
+          "finite": true,
+          "nonzero_elements": 1,
+          "total_elements": 1
+        },
+        {
+          "name": "decay_logits",
+          "finite": true,
+          "nonzero_elements": 2,
+          "total_elements": 2
+        },
+        {
+          "name": "saturations",
+          "finite": true,
+          "nonzero_elements": 2,
+          "total_elements": 2
+        },
+        {
+          "name": "output_weights",
+          "finite": true,
+          "nonzero_elements": 15,
+          "total_elements": 15
+        },
+        {
+          "name": "output_bias",
+          "finite": true,
+          "nonzero_elements": 15,
+          "total_elements": 15
+        }
+      ],
+      "all_parameter_tensors_receive_finite_nonzero_gradient": true,
+      "training_curve": [
+        {
+          "epoch": 1,
+          "training_mse": 0.006914800490600727,
+          "state_l2": 0.04143086274341526,
+          "gradient_norm_before_clip": 0.026295800754610608
+        },
+        {
+          "epoch": 2,
+          "training_mse": 0.006179329200258862,
+          "state_l2": 0.037554150641639694,
+          "gradient_norm_before_clip": 0.025505094674218805
+        },
+        {
+          "epoch": 3,
+          "training_mse": 0.005310244142792957,
+          "state_l2": 0.03447762909271286,
+          "gradient_norm_before_clip": 0.019774622289290323
+        },
+        {
+          "epoch": 4,
+          "training_mse": 0.004739211369787239,
+          "state_l2": 0.03195688766356117,
+          "gradient_norm_before_clip": 0.018135172031378245
+        },
+        {
+          "epoch": 5,
+          "training_mse": 0.00430893695768693,
+          "state_l2": 0.029888206470893693,
+          "gradient_norm_before_clip": 0.01813109174664341
+        }
+      ],
+      "validation_history": [
+        {
+          "epoch": 1,
+          "validation_mse": 0.006179329200258862
+        },
+        {
+          "epoch": 2,
+          "validation_mse": 0.005310244142792957
+        },
+        {
+          "epoch": 3,
+          "validation_mse": 0.004739211369787239
+        },
+        {
+          "epoch": 4,
+          "validation_mse": 0.00430893695768693
+        },
+        {
+          "epoch": 5,
+          "validation_mse": 0.003852254761516294
+        }
+      ],
+      "wall_time_seconds": 0.012331599995377474
+    }
+  ],
+  "best_per_dimension": {
+    "1": {
+      "dimension": 1,
+      "restart_index": 0,
+      "restart_seed": 44311,
+      "parameter_count": 35,
+      "resource_profile": {
+        "state_dimension": 1,
+        "stored_trainable_scalars": 35,
+        "persistent_state_scalars": 1,
+        "multiply_adds_per_healthy_step": 33,
+        "nonlinearities_per_healthy_step": 15,
+        "stored_scalar_bytes_float32": 140,
+        "target_latency_cycles": null,
+        "rtl_measured": false,
+        "board_measured": false
+      },
+      "initial_state_sha256": "5265814c56f9a0f2a863236feb2ce00c2459eb286b743b23db0355f702897357",
+      "checkpoint_sha256": "fa24c0ecd040956a33f88943a3754dc706675d599a950cb285ff72123ced5862",
+      "best_epoch": 5,
+      "best_validation_mse": 0.003852254761516294,
+      "best_epoch_reached_training_cap": true,
+      "optimizer_global_convergence_claimed": false,
+      "gradient_coverage": [
+        {
+          "name": "initial_state",
+          "finite": true,
+          "nonzero_elements": 1,
+          "total_elements": 1
+        },
+        {
+          "name": "decay_logits",
+          "finite": true,
+          "nonzero_elements": 2,
+          "total_elements": 2
+        },
+        {
+          "name": "saturations",
+          "finite": true,
+          "nonzero_elements": 2,
+          "total_elements": 2
+        },
+        {
+          "name": "output_weights",
+          "finite": true,
+          "nonzero_elements": 15,
+          "total_elements": 15
+        },
+        {
+          "name": "output_bias",
+          "finite": true,
+          "nonzero_elements": 15,
+          "total_elements": 15
+        }
+      ],
+      "all_parameter_tensors_receive_finite_nonzero_gradient": true,
+      "training_curve": [
+        {
+          "epoch": 1,
+          "training_mse": 0.006914800490600727,
+          "state_l2": 0.04143086274341526,
+          "gradient_norm_before_clip": 0.026295800754610608
+        },
+        {
+          "epoch": 2,
+          "training_mse": 0.006179329200258862,
+          "state_l2": 0.037554150641639694,
+          "gradient_norm_before_clip": 0.025505094674218805
+        },
+        {
+          "epoch": 3,
+          "training_mse": 0.005310244142792957,
+          "state_l2": 0.03447762909271286,
+          "gradient_norm_before_clip": 0.019774622289290323
+        },
+        {
+          "epoch": 4,
+          "training_mse": 0.004739211369787239,
+          "state_l2": 0.03195688766356117,
+          "gradient_norm_before_clip": 0.018135172031378245
+        },
+        {
+          "epoch": 5,
+          "training_mse": 0.00430893695768693,
+          "state_l2": 0.029888206470893693,
+          "gradient_norm_before_clip": 0.01813109174664341
+        }
+      ],
+      "validation_history": [
+        {
+          "epoch": 1,
+          "validation_mse": 0.006179329200258862
+        },
+        {
+          "epoch": 2,
+          "validation_mse": 0.005310244142792957
+        },
+        {
+          "epoch": 3,
+          "validation_mse": 0.004739211369787239
+        },
+        {
+          "epoch": 4,
+          "validation_mse": 0.00430893695768693
+        },
+        {
+          "epoch": 5,
+          "validation_mse": 0.003852254761516294
+        }
+      ],
+      "wall_time_seconds": 0.012331599995377474
+    }
+  },
+  "selection": {
+    "global_best_validation_mse": 0.003852254761516294,
+    "dimension_eligibility_threshold": 0.004044967499592109,
+    "eligible_dimensions": [
+      1
+    ],
+    "selected_dimension": 1,
+    "selected_restart": 0,
+    "rule": "smallest dimension within frozen relative-plus-absolute validation tolerance",
+    "evaluation_blind": true
+  },
+  "candidate_metrics": {
+    "1": {
+      "restart_index": 0,
+      "validation": {
+        "mse": 0.0038522547615162947,
+        "mae": 0.04155137856631083,
+        "maximum_absolute_error": 0.26946977977469816,
+        "per_parameter_mse": {
+          "layer1_phi": 0.02715879073795706,
+          "layer1_theta": 0.00032606405597902815,
+          "layer1_beta_real": 0.003403184141935693,
+          "layer1_beta_imag": 0.00399365330236977,
+          "layer2_phi": 0.0009371653296057551,
+          "layer2_theta": 0.006364123066516353,
+          "layer2_beta_real": 0.000284236334267964,
+          "layer2_beta_imag": 0.0035534779242512565,
+          "layer3_phi": 0.0004259747200516485,
+          "layer3_theta": 0.0032349798543634023,
+          "layer3_beta_real": 0.0004395654542268231,
+          "layer3_beta_imag": 0.0011019942444364479,
+          "layer4_phi": 0.006146930223282079,
+          "layer4_theta": 0.0003630307354898648,
+          "virtual_rotation": 5.065129801126636e-05
+        },
+        "prediction_residual_rms": 0.11696824806574095,
+        "target_residual_rms": 0.1315854328181246
+      },
+      "evaluation": {
+        "mse": 0.0036393166403940838,
+        "mae": 0.040295447563014536,
+        "maximum_absolute_error": 0.26946977977469816,
+        "per_parameter_mse": {
+          "layer1_phi": 0.023958659481014846,
+          "layer1_theta": 0.0003214780870050887,
+          "layer1_beta_real": 0.0033818387785671017,
+          "layer1_beta_imag": 0.003986587167981189,
+          "layer2_phi": 0.0008262968171931526,
+          "layer2_theta": 0.006244301982903205,
+          "layer2_beta_real": 0.00027120747547691216,
+          "layer2_beta_imag": 0.003642087699547247,
+          "layer3_phi": 0.00042498819234298,
+          "layer3_theta": 0.0034624485771954597,
+          "layer3_beta_real": 0.0005192007218324533,
+          "layer3_beta_imag": 0.0009824081599126783,
+          "layer4_phi": 0.0061323274960007656,
+          "layer4_theta": 0.00037634587065291526,
+          "virtual_rotation": 5.957309828524921e-05
+        },
+        "prediction_residual_rms": 0.11457071964762534,
+        "target_residual_rms": 0.11840757885613752
+      },
+      "resource_profile": {
+        "state_dimension": 1,
+        "stored_trainable_scalars": 35,
+        "persistent_state_scalars": 1,
+        "multiply_adds_per_healthy_step": 33,
+        "nonlinearities_per_healthy_step": 15,
+        "stored_scalar_bytes_float32": 140,
+        "target_latency_cycles": null,
+        "rtl_measured": false,
+        "board_measured": false
+      }
+    }
+  },
+  "comparisons": {
+    "training": {
+      "selected_student": {
+        "mse": 0.0038522547615162947,
+        "mae": 0.04155137856631083,
+        "maximum_absolute_error": 0.26946977977469816,
+        "per_parameter_mse": {
+          "layer1_phi": 0.027158790737957062,
+          "layer1_theta": 0.00032606405597902815,
+          "layer1_beta_real": 0.003403184141935693,
+          "layer1_beta_imag": 0.00399365330236977,
+          "layer2_phi": 0.0009371653296057553,
+          "layer2_theta": 0.006364123066516353,
+          "layer2_beta_real": 0.000284236334267964,
+          "layer2_beta_imag": 0.003553477924251255,
+          "layer3_phi": 0.0004259747200516485,
+          "layer3_theta": 0.0032349798543634023,
+          "layer3_beta_real": 0.000439565454226823,
+          "layer3_beta_imag": 0.0011019942444364479,
+          "layer4_phi": 0.006146930223282079,
+          "layer4_theta": 0.00036303073548986484,
+          "virtual_rotation": 5.0651298011266374e-05
+        },
+        "prediction_residual_rms": 0.11696824806574095,
+        "target_residual_rms": 0.1315854328181246
+      },
+      "latest_only": {
+        "mse": 0.0009413502025840594,
+        "mae": 0.02051506572422772,
+        "maximum_absolute_error": 0.15899918930169765,
+        "per_parameter_mse": {
+          "layer1_phi": 0.006987943453420585,
+          "layer1_theta": 4.764051484053468e-05,
+          "layer1_beta_real": 0.00017926047422913032,
+          "layer1_beta_imag": 0.0016868707020284953,
+          "layer2_phi": 0.0011553452534327757,
+          "layer2_theta": 0.00039914307691795684,
+          "layer2_beta_real": 5.976827907502026e-05,
+          "layer2_beta_imag": 7.39183723016932e-05,
+          "layer3_phi": 0.0004903451858795755,
+          "layer3_theta": 0.0003003972907879595,
+          "layer3_beta_real": 9.215651285054326e-05,
+          "layer3_beta_imag": 0.0012684741231443564,
+          "layer4_phi": 0.001336317132968697,
+          "layer4_theta": 4.242465024304235e-05,
+          "virtual_rotation": 2.480166405277118e-07
+        },
+        "prediction_residual_rms": 0.12795849298639428,
+        "target_residual_rms": 0.1315854328181246
+      },
+      "legacy_t4_1_5_student": {
+        "mse": 0.0005892332244381007,
+        "mae": 0.017758935118573207,
+        "maximum_absolute_error": 0.07549145615586181,
+        "per_parameter_mse": {
+          "layer1_phi": 0.0012246537958751468,
+          "layer1_theta": 8.234725819537166e-05,
+          "layer1_beta_real": 0.00014113704677612936,
+          "layer1_beta_imag": 0.0005329824299455928,
+          "layer2_phi": 0.0009187347980894866,
+          "layer2_theta": 0.00018558565562096544,
+          "layer2_beta_real": 0.00011508100630813588,
+          "layer2_beta_imag": 0.0004325240847696349,
+          "layer3_phi": 0.0002917715544960984,
+          "layer3_theta": 0.00017087418951084173,
+          "layer3_beta_real": 6.7050342963584636e-06,
+          "layer3_beta_imag": 0.001289387712446611,
+          "layer4_phi": 0.0003441244020197844,
+          "layer4_theta": 0.0030925670223971215,
+          "virtual_rotation": 1.0022375824232534e-05
+        },
+        "prediction_residual_rms": 0.1278781614704828,
+        "target_residual_rms": 0.1315854328181246
+      },
+      "zero_residual": {
+        "mse": 0.017314726129933185,
+        "mae": 0.08731141392506572,
+        "maximum_absolute_error": 0.5202223083772791,
+        "per_parameter_mse": {
+          "layer1_phi": 0.12310872163488308,
+          "layer1_theta": 0.0009187840949657687,
+          "layer1_beta_real": 0.004651522033928061,
+          "layer1_beta_imag": 0.03591386265270777,
+          "layer2_phi": 0.020808411238731915,
+          "layer2_theta": 0.007427067864652134,
+          "layer2_beta_real": 0.00044611321525984846,
+          "layer2_beta_imag": 0.0026403132170595214,
+          "layer3_phi": 0.008626450988913632,
+          "layer3_theta": 0.0037282056570542336,
+          "layer3_beta_real": 0.0013284440657811397,
+          "layer3_beta_imag": 0.026366955237452628,
+          "layer4_phi": 0.02263963263602009,
+          "layer4_theta": 0.0010361999238538509,
+          "virtual_rotation": 8.020748773406857e-05
+        },
+        "prediction_residual_rms": 0.0,
+        "target_residual_rms": 0.1315854328181246
+      }
+    },
+    "validation": {
+      "selected_student": {
+        "mse": 0.0038522547615162947,
+        "mae": 0.04155137856631083,
+        "maximum_absolute_error": 0.26946977977469816,
+        "per_parameter_mse": {
+          "layer1_phi": 0.027158790737957062,
+          "layer1_theta": 0.00032606405597902815,
+          "layer1_beta_real": 0.003403184141935693,
+          "layer1_beta_imag": 0.00399365330236977,
+          "layer2_phi": 0.0009371653296057553,
+          "layer2_theta": 0.006364123066516353,
+          "layer2_beta_real": 0.000284236334267964,
+          "layer2_beta_imag": 0.003553477924251255,
+          "layer3_phi": 0.0004259747200516485,
+          "layer3_theta": 0.0032349798543634023,
+          "layer3_beta_real": 0.000439565454226823,
+          "layer3_beta_imag": 0.0011019942444364479,
+          "layer4_phi": 0.006146930223282079,
+          "layer4_theta": 0.00036303073548986484,
+          "virtual_rotation": 5.0651298011266374e-05
+        },
+        "prediction_residual_rms": 0.11696824806574095,
+        "target_residual_rms": 0.1315854328181246
+      },
+      "latest_only": {
+        "mse": 0.0009413502025840594,
+        "mae": 0.02051506572422772,
+        "maximum_absolute_error": 0.15899918930169765,
+        "per_parameter_mse": {
+          "layer1_phi": 0.006987943453420585,
+          "layer1_theta": 4.764051484053468e-05,
+          "layer1_beta_real": 0.00017926047422913032,
+          "layer1_beta_imag": 0.0016868707020284953,
+          "layer2_phi": 0.0011553452534327757,
+          "layer2_theta": 0.00039914307691795684,
+          "layer2_beta_real": 5.976827907502026e-05,
+          "layer2_beta_imag": 7.39183723016932e-05,
+          "layer3_phi": 0.0004903451858795755,
+          "layer3_theta": 0.0003003972907879595,
+          "layer3_beta_real": 9.215651285054326e-05,
+          "layer3_beta_imag": 0.0012684741231443564,
+          "layer4_phi": 0.001336317132968697,
+          "layer4_theta": 4.242465024304235e-05,
+          "virtual_rotation": 2.480166405277118e-07
+        },
+        "prediction_residual_rms": 0.12795849298639428,
+        "target_residual_rms": 0.1315854328181246
+      },
+      "legacy_t4_1_5_student": {
+        "mse": 0.0005892332244381007,
+        "mae": 0.017758935118573207,
+        "maximum_absolute_error": 0.07549145615586181,
+        "per_parameter_mse": {
+          "layer1_phi": 0.0012246537958751468,
+          "layer1_theta": 8.234725819537166e-05,
+          "layer1_beta_real": 0.00014113704677612936,
+          "layer1_beta_imag": 0.0005329824299455928,
+          "layer2_phi": 0.0009187347980894866,
+          "layer2_theta": 0.00018558565562096544,
+          "layer2_beta_real": 0.00011508100630813588,
+          "layer2_beta_imag": 0.0004325240847696349,
+          "layer3_phi": 0.0002917715544960984,
+          "layer3_theta": 0.00017087418951084173,
+          "layer3_beta_real": 6.7050342963584636e-06,
+          "layer3_beta_imag": 0.001289387712446611,
+          "layer4_phi": 0.0003441244020197844,
+          "layer4_theta": 0.0030925670223971215,
+          "virtual_rotation": 1.0022375824232534e-05
+        },
+        "prediction_residual_rms": 0.1278781614704828,
+        "target_residual_rms": 0.1315854328181246
+      },
+      "zero_residual": {
+        "mse": 0.017314726129933185,
+        "mae": 0.08731141392506572,
+        "maximum_absolute_error": 0.5202223083772791,
+        "per_parameter_mse": {
+          "layer1_phi": 0.12310872163488308,
+          "layer1_theta": 0.0009187840949657687,
+          "layer1_beta_real": 0.004651522033928061,
+          "layer1_beta_imag": 0.03591386265270777,
+          "layer2_phi": 0.020808411238731915,
+          "layer2_theta": 0.007427067864652134,
+          "layer2_beta_real": 0.00044611321525984846,
+          "layer2_beta_imag": 0.0026403132170595214,
+          "layer3_phi": 0.008626450988913632,
+          "layer3_theta": 0.0037282056570542336,
+          "layer3_beta_real": 0.0013284440657811397,
+          "layer3_beta_imag": 0.026366955237452628,
+          "layer4_phi": 0.02263963263602009,
+          "layer4_theta": 0.0010361999238538509,
+          "virtual_rotation": 8.020748773406857e-05
+        },
+        "prediction_residual_rms": 0.0,
+        "target_residual_rms": 0.1315854328181246
+      }
+    },
+    "evaluation": {
+      "selected_student": {
+        "mse": 0.0036393166403940838,
+        "mae": 0.040295447563014536,
+        "maximum_absolute_error": 0.26946977977469816,
+        "per_parameter_mse": {
+          "layer1_phi": 0.02395865948101485,
+          "layer1_theta": 0.00032147808700508867,
+          "layer1_beta_real": 0.0033818387785671017,
+          "layer1_beta_imag": 0.003986587167981189,
+          "layer2_phi": 0.0008262968171931527,
+          "layer2_theta": 0.006244301982903205,
+          "layer2_beta_real": 0.00027120747547691216,
+          "layer2_beta_imag": 0.0036420876995472465,
+          "layer3_phi": 0.00042498819234298,
+          "layer3_theta": 0.00346244857719546,
+          "layer3_beta_real": 0.0005192007218324532,
+          "layer3_beta_imag": 0.0009824081599126783,
+          "layer4_phi": 0.006132327496000766,
+          "layer4_theta": 0.00037634587065291537,
+          "virtual_rotation": 5.957309828524922e-05
+        },
+        "prediction_residual_rms": 0.11457071964762534,
+        "target_residual_rms": 0.11840757885613752
+      },
+      "latest_only": {
+        "mse": 0.0011869099639442073,
+        "mae": 0.0222645865812926,
+        "maximum_absolute_error": 0.2851055186987195,
+        "per_parameter_mse": {
+          "layer1_phi": 0.008835950169185655,
+          "layer1_theta": 5.939361881639015e-05,
+          "layer1_beta_real": 0.00022751229332455936,
+          "layer1_beta_imag": 0.0021260365697066052,
+          "layer2_phi": 0.0014495652998917795,
+          "layer2_theta": 0.0005011098783017166,
+          "layer2_beta_real": 7.386432096659337e-05,
+          "layer2_beta_imag": 9.436831208409374e-05,
+          "layer3_phi": 0.0006148142063044039,
+          "layer3_theta": 0.0003734588379300032,
+          "layer3_beta_real": 0.00011458959831824924,
+          "layer3_beta_imag": 0.0016011187640763102,
+          "layer4_phi": 0.001677888965576979,
+          "layer4_theta": 5.366127600668433e-05,
+          "virtual_rotation": 3.173486730868905e-07
+        },
+        "prediction_residual_rms": 0.11664022791231138,
+        "target_residual_rms": 0.11840757885613752
+      },
+      "legacy_t4_1_5_student": {
+        "mse": 0.000560990810528512,
+        "mae": 0.017217510948565603,
+        "maximum_absolute_error": 0.07549145615586181,
+        "per_parameter_mse": {
+          "layer1_phi": 0.0010869514878541883,
+          "layer1_theta": 6.949226569616978e-05,
+          "layer1_beta_real": 0.0001657965452914642,
+          "layer1_beta_imag": 0.00061476237535964,
+          "layer2_phi": 0.0010180599697927576,
+          "layer2_theta": 0.0001965506468722269,
+          "layer2_beta_real": 0.00012429816531986875,
+          "layer2_beta_imag": 0.00044469726664940603,
+          "layer3_phi": 0.000231193314860995,
+          "layer3_theta": 0.00012336377139634706,
+          "layer3_beta_real": 8.416265313369267e-06,
+          "layer3_beta_imag": 0.001322728561259215,
+          "layer4_phi": 0.000289711564029168,
+          "layer4_theta": 0.0027112451688534834,
+          "virtual_rotation": 7.594789379380673e-06
+        },
+        "prediction_residual_rms": 0.11733422034096393,
+        "target_residual_rms": 0.11840757885613752
+      },
+      "zero_residual": {
+        "mse": 0.014020354730572426,
+        "mae": 0.07766070301321538,
+        "maximum_absolute_error": 0.5202223083772791,
+        "per_parameter_mse": {
+          "layer1_phi": 0.09889985646753428,
+          "layer1_theta": 0.0007369424599371229,
+          "layer1_beta_real": 0.003969537187470017,
+          "layer1_beta_imag": 0.0294153072504037,
+          "layer2_phi": 0.0166021101914328,
+          "layer2_theta": 0.005962661529597005,
+          "layer2_beta_real": 0.00038750699882732903,
+          "layer2_beta_imag": 0.002434021599988123,
+          "layer3_phi": 0.006961203188970653,
+          "layer3_theta": 0.0028311120939507307,
+          "layer3_beta_real": 0.0010253100641392707,
+          "layer3_beta_imag": 0.022036091972361345,
+          "layer4_phi": 0.018074045356230646,
+          "layer4_theta": 0.0008775314362380537,
+          "virtual_rotation": 9.208316150531633e-05
+        },
+        "prediction_residual_rms": 0.0,
+        "target_residual_rms": 0.11840757885613752
+      }
+    }
+  },
+  "student_artifact": {
+    "path": "D:/Codes/Quantum/DriftAdaptiveQEC/.pytest_tmp_t443_vectorized/test_pilot_executes_end_to_end0/student.json",
+    "file_sha256": "e10d6bf4b77f546d2e625565f3b5d8e894c643b52e3421bb3785cf1a3a3b2079",
+    "artifact_sha256": "3e6225ac5397600bad5e90fe863e5758551b7f58b0b31079ae387c65d6fcf7de",
+    "state_dimension": 1,
+    "resource_profile": {
+      "state_dimension": 1,
+      "stored_trainable_scalars": 35,
+      "persistent_state_scalars": 1,
+      "multiply_adds_per_healthy_step": 33,
+      "nonlinearities_per_healthy_step": 15,
+      "stored_scalar_bytes_float32": 140,
+      "target_latency_cycles": null,
+      "rtl_measured": false,
+      "board_measured": false
+    },
+    "torch_export_maximum_error": 5.551115123125783e-17,
+    "runtime_replay": {
+      "maximum_batch_runtime_error": 0.0,
+      "leakage_exact_zero": true,
+      "health_exact_zero": true,
+      "leakage_resets_initial_state": true,
+      "online_contract": {
+        "schema_version": "t4.4.3-low-dimensional-exponential-student-v1",
+        "online_scope": "observed_ge_health_only_low_dimensional_exponential_candidate",
+        "input_fields": [
+          "cycle_index",
+          "observed_outcome",
+          "valid",
+          "crc_ok",
+          "parameter_fresh",
+          "deadline_ok"
+        ],
+        "control_parameter_names": [
+          "layer1_phi",
+          "layer1_theta",
+          "layer1_beta_real",
+          "layer1_beta_imag",
+          "layer2_phi",
+          "layer2_theta",
+          "layer2_beta_real",
+          "layer2_beta_imag",
+          "layer3_phi",
+          "layer3_theta",
+          "layer3_beta_real",
+          "layer3_beta_imag",
+          "layer4_phi",
+          "layer4_theta",
+          "virtual_rotation"
+        ],
+        "residual_bounds": [
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0
+        ],
+        "torch_runtime_dependency": false,
+        "physics_runtime_dependency": false,
+        "teacher_runtime_dependency": false,
+        "safe_baseline": "reset state and exact zero physical residual",
+        "target_latency_cycles": null,
+        "rtl_measured": false,
+        "board_measured": false
+      }
+    }
+  },
+  "checkpoint": {
+    "path": "D:/Codes/Quantum/DriftAdaptiveQEC/.pytest_tmp_t443_vectorized/test_pilot_executes_end_to_end0/pilot.pt",
+    "sha256": "dfb61032ce20f0583aa632341d5baf95a363a5f0edce15e30cce4bd4a0274934",
+    "candidate_count": 1,
+    "resumed_candidates_this_invocation": 0
+  },
+  "source_data": {
+    "path": "D:/Codes/Quantum/DriftAdaptiveQEC/.pytest_tmp_t443_vectorized/test_pilot_executes_end_to_end0/pilot.csv",
+    "sha256": "cf3fb99674c5fceef3893365358a117af7f9e58eb4bf21b4e38caab390d59260",
+    "row_count": 227,
+    "row_types": [
+      "candidate_summary",
+      "selected_student_prediction",
+      "training_epoch",
+      "validation_checkpoint"
+    ]
+  },
+  "gates": {
+    "teacher_and_hidden_analysis_parents_are_current_passes": true,
+    "training_validation_evaluation_splits_are_disjoint_and_complete": false,
+    "one_two_four_dimensions_and_three_restarts_are_fully_retained": false,
+    "all_candidates_match_exact_parameter_and_resource_counts": true,
+    "all_candidate_parameter_tensors_receive_finite_nonzero_gradient": true,
+    "every_candidate_changes_from_its_fresh_initializer": true,
+    "restart_and_dimension_selection_are_validation_only": true,
+    "selected_student_reduces_evaluation_zero_mse_by_required_fraction": true,
+    "selected_student_beats_latest_only_and_legacy_students_on_evaluation": false,
+    "all_selected_actions_obey_fifteen_hard_bounds": true,
+    "json_artifact_roundtrip_matches_torch_candidate": true,
+    "pure_numpy_runtime_replay_is_exact_and_fail_closed": true,
+    "online_module_has_no_torch_physics_or_teacher_dependency": true,
+    "source_data_contains_every_epoch_checkpoint_split_and_candidate": true,
+    "cap_hits_and_nonconvergence_claims_are_explicit": true,
+    "claim_boundary_keeps_imitation_separate_from_physical_gain": true
+  },
+  "gate_summary": {
+    "passed": 13,
+    "total": 16,
+    "failed": [
+      "training_validation_evaluation_splits_are_disjoint_and_complete",
+      "one_two_four_dimensions_and_three_restarts_are_fully_retained",
+      "selected_student_beats_latest_only_and_legacy_students_on_evaluation"
+    ]
+  },
+  "execution": {
+    "device": "cpu",
+    "torch_version": "2.8.0.dev20250405+cu128",
+    "wall_time_seconds": 1.3231596000114223
+  },
+  "claim_boundary": {
+    "allowed": "strict-split low-dimensional recurrence imitation of one frozen finite-model teacher",
+    "forbidden": "teacher physical gain retention, calibrated leakage response, long-horizon/OOD robustness, global optimization, fixed-point/RTL/FPGA or device evidence",
+    "next_gate": "T4.4.4 must compare physical trajectories and lifetime/fidelity/burden; imitation MSE alone cannot advance the NMF claim",
+    "failure_branch": "if status FAIL, do not use this student; retain teacher only as offline reference and drift/regime-aware MAP-LUT as deployable fallback"
+  }
+}

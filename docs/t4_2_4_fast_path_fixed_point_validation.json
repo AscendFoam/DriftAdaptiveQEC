@@ -1,0 +1,286 @@
+{
+  "schema_version": "t4.2.4-fast-path-fixed-point-validation-v1",
+  "task_id": "T4.2.4",
+  "status": "PASS",
+  "implementation_sha256": "949199b67b606493643140dff01f6408db1a08e99d8927ecb6621ee7d2bf44d8",
+  "selected_contract": {
+    "adc_bits": 10,
+    "address_bits": 8,
+    "interpolation_fraction_bits": 2,
+    "llr_integer_bits": 9,
+    "llr_fractional_bits": 12,
+    "event_counter_bits": 3,
+    "event_mode_bits": 3,
+    "pauli_frame_bits": 2,
+    "phase_frame_bits_each": 8,
+    "ood_score_bits": 8,
+    "parameter_age_bits": 16,
+    "active_version_bits": 16,
+    "fault_mask_bits": 14,
+    "health_counter_bits_each": 8,
+    "image_crc_bits": 32,
+    "image_sha_bits": 256,
+    "map_pipeline_cycles": 5,
+    "health_event_register_cycles": 1,
+    "initiation_interval_cycles": 1,
+    "model_scope": "bit_accurate_integer_fast_path_software_reference_not_rtl_or_board"
+  },
+  "arithmetic_rules": {
+    "adc_replay": "floor to one of 2^B half-open-cell bins; out-of-cell/nonfinite is clipped only for a code and separately invalidates observation",
+    "lut_compile": "float LLR multiplied by 2^F, round-to-nearest ties-to-even, then signed-word saturation",
+    "lut_interpolation": "integer half-bin numerator with signed right shift round-to-nearest ties-to-even, then signed-word saturation",
+    "logical_action": "strict signed LLR code < 0; zero maps to identity",
+    "ood_replay": "unit interval multiplied by 2^B-1, round-to-nearest ties-to-even, unsigned saturation",
+    "parameter_age": "unsigned B-bit saturation; saturated maximum remains stale",
+    "event_health_counters": "unsigned saturating increment, no wrap",
+    "pauli_phase_frames": "GF(2) XOR and unsigned modulo-2^B half-turn addition",
+    "crc_sha_version": "exact digital equality and monotonic version comparison; no numeric rounding"
+  },
+  "profile_configs": {
+    "low_p6_a4_q5_6": {
+      "adc_bits": 6,
+      "address_bits": 4,
+      "fraction_bits": 2,
+      "llr_integer_bits": 5,
+      "llr_fractional_bits": 6,
+      "llr_word_bits": 12,
+      "lattice": 2.5066282746310002,
+      "pipeline_latency_cycles": 5,
+      "initiation_interval_cycles": 1
+    },
+    "medium_p8_a6_q7_10": {
+      "adc_bits": 8,
+      "address_bits": 6,
+      "fraction_bits": 2,
+      "llr_integer_bits": 7,
+      "llr_fractional_bits": 10,
+      "llr_word_bits": 18,
+      "lattice": 2.5066282746310002,
+      "pipeline_latency_cycles": 5,
+      "initiation_interval_cycles": 1
+    },
+    "selected_p10_a8_q9_12": {
+      "adc_bits": 10,
+      "address_bits": 8,
+      "fraction_bits": 2,
+      "llr_integer_bits": 9,
+      "llr_fractional_bits": 12,
+      "llr_word_bits": 22,
+      "lattice": 2.5066282746310002,
+      "pipeline_latency_cycles": 5,
+      "initiation_interval_cycles": 1
+    },
+    "dense_p12_a10_q10_14": {
+      "adc_bits": 12,
+      "address_bits": 10,
+      "fraction_bits": 2,
+      "llr_integer_bits": 10,
+      "llr_fractional_bits": 14,
+      "llr_word_bits": 25,
+      "lattice": 2.5066282746310002,
+      "pipeline_latency_cycles": 5,
+      "initiation_interval_cycles": 1
+    }
+  },
+  "representation_proxy": {
+    "low_p6_a4_q5_6": {
+      "rom_entries_per_phase": 17,
+      "rom_bits_per_bank": 408,
+      "double_bank_rom_bits": 816,
+      "registered_eight_bank_artifact_bits": 3264,
+      "live_event_state_bits": 55,
+      "live_health_state_and_input_bits": 182,
+      "integrity_metadata_bits_per_image": 288
+    },
+    "medium_p8_a6_q7_10": {
+      "rom_entries_per_phase": 65,
+      "rom_bits_per_bank": 2340,
+      "double_bank_rom_bits": 4680,
+      "registered_eight_bank_artifact_bits": 18720,
+      "live_event_state_bits": 55,
+      "live_health_state_and_input_bits": 182,
+      "integrity_metadata_bits_per_image": 288
+    },
+    "selected_p10_a8_q9_12": {
+      "rom_entries_per_phase": 257,
+      "rom_bits_per_bank": 11308,
+      "double_bank_rom_bits": 22616,
+      "registered_eight_bank_artifact_bits": 90464,
+      "live_event_state_bits": 55,
+      "live_health_state_and_input_bits": 182,
+      "integrity_metadata_bits_per_image": 288
+    },
+    "dense_p12_a10_q10_14": {
+      "rom_entries_per_phase": 1025,
+      "rom_bits_per_bank": 51250,
+      "double_bank_rom_bits": 102500,
+      "registered_eight_bank_artifact_bits": 410000,
+      "live_event_state_bits": 55,
+      "live_health_state_and_input_bits": 182,
+      "integrity_metadata_bits_per_image": 288
+    }
+  },
+  "exhaustive_code_summary": {
+    "low_p6_a4_q5_6": {
+      "rows": 1024,
+      "mean_abs_llr_value_error": 0.0178985595703125,
+      "max_abs_llr_value_error": 0.53125,
+      "hard_action_mismatch_count": 0,
+      "hard_action_mismatch_rate": 0.0
+    },
+    "medium_p8_a6_q7_10": {
+      "rows": 4096,
+      "mean_abs_llr_value_error": 0.0011107921600341797,
+      "max_abs_llr_value_error": 0.0732421875,
+      "hard_action_mismatch_count": 0,
+      "hard_action_mismatch_rate": 0.0
+    },
+    "selected_p10_a8_q9_12": {
+      "rows": 16384,
+      "mean_abs_llr_value_error": 9.466707706451416e-05,
+      "max_abs_llr_value_error": 0.0048828125,
+      "hard_action_mismatch_count": 0,
+      "hard_action_mismatch_rate": 0.0
+    },
+    "dense_p12_a10_q10_14": {
+      "rows": 65536,
+      "mean_abs_llr_value_error": 1.3499520719051361e-05,
+      "max_abs_llr_value_error": 0.00030517578125,
+      "hard_action_mismatch_count": 0,
+      "hard_action_mismatch_rate": 0.0
+    }
+  },
+  "ler_summary": {
+    "low_p6_a4_q5_6": {
+      "quantized_ler_mean": 0.039764404296875,
+      "float_ler_mean": 0.0395965576171875,
+      "action_disagreement_mean": 0.0011138916015625,
+      "paired_quantized_minus_float": {
+        "mean": 0.0001678466796875,
+        "ci_low": -7.62939453125e-05,
+        "ci_high": 0.00042724609375,
+        "clusters": 32
+      },
+      "fallback_count": 0,
+      "map_accepted_count": 65536
+    },
+    "medium_p8_a6_q7_10": {
+      "quantized_ler_mean": 0.0395660400390625,
+      "float_ler_mean": 0.0395965576171875,
+      "action_disagreement_mean": 0.000213623046875,
+      "paired_quantized_minus_float": {
+        "mean": -3.0517578125e-05,
+        "ci_low": -0.0001373291015625,
+        "ci_high": 6.103515625e-05,
+        "clusters": 32
+      },
+      "fallback_count": 0,
+      "map_accepted_count": 65536
+    },
+    "selected_p10_a8_q9_12": {
+      "quantized_ler_mean": 0.0396270751953125,
+      "float_ler_mean": 0.0395965576171875,
+      "action_disagreement_mean": 9.1552734375e-05,
+      "paired_quantized_minus_float": {
+        "mean": 3.0517578125e-05,
+        "ci_low": -4.57763671875e-05,
+        "ci_high": 0.0001220703125,
+        "clusters": 32
+      },
+      "fallback_count": 0,
+      "map_accepted_count": 65536
+    },
+    "dense_p12_a10_q10_14": {
+      "quantized_ler_mean": 0.0395965576171875,
+      "float_ler_mean": 0.0395965576171875,
+      "action_disagreement_mean": 0.0,
+      "paired_quantized_minus_float": {
+        "mean": 0.0,
+        "ci_low": 0.0,
+        "ci_high": 0.0,
+        "clusters": 32
+      },
+      "fallback_count": 0,
+      "map_accepted_count": 65536
+    }
+  },
+  "timing_diagnostics": {
+    "latency_exact": true,
+    "initiation_interval_exact": true,
+    "both_axes_frame_updated": [
+      0,
+      1
+    ],
+    "samples_per_run": 2048,
+    "seeds": [
+      42401,
+      42403,
+      42407,
+      42409
+    ]
+  },
+  "negative_audit": {
+    "nonfinite_syndrome_becomes_frame_hold": true,
+    "ood_boundary_codes_are_exact": true,
+    "age_overflow_saturates_to_stale_code": true
+  },
+  "online_integer_audit": {
+    "float_division_ast_nodes": 0,
+    "forbidden_float_math_tokens": [],
+    "integer_only": true
+  },
+  "source_data": {
+    "ler": {
+      "path": "docs/t4_2_4_fast_path_fixed_point_ler.csv",
+      "rows": 128,
+      "sha256": "9824fd06ecd4a79935ddb5994878617254b3b725f5b6f91edabad59175959794",
+      "canonical_rows_sha256": "344d879a65ce7d27ac74400d8a8018f4255778370392000a77ff8d314abbe9e7"
+    },
+    "exhaustive_codes": {
+      "path": "docs/t4_2_4_fast_path_fixed_point_exhaustive_codes.csv",
+      "rows": 87040,
+      "sha256": "9025291e1a44cd79bd571b086346efd82a341447486f78ae542b6d74a08c3416",
+      "canonical_rows_sha256": "bdfdaa75a98571641051e10dcdea85908ce49c0b2de3c953bfd2c046cf771321"
+    }
+  },
+  "gate_summary": {
+    "passed": 21,
+    "failed": 0,
+    "gates": {
+      "selected_contract_freezes_complete_word_and_timing_table": true,
+      "four_precision_profiles_compile_all_eight_registered_banks": true,
+      "exhaustive_code_audit_covers_every_profile_bank_phase_and_adc_code": true,
+      "selected_and_dense_profiles_have_zero_hard_action_mismatch": true,
+      "selected_interpolated_llr_value_error_is_below_one_code": true,
+      "dense_profile_reduces_llr_value_error_below_selected": true,
+      "low_precision_retains_measured_nonzero_quantization_effect": true,
+      "paired_ler_matrix_covers_four_profiles_eight_banks_four_seeds": true,
+      "selected_ler_impact_is_bounded_to_two_per_mille": true,
+      "dense_action_disagreement_does_not_exceed_selected": true,
+      "low_action_disagreement_is_not_better_than_selected": true,
+      "healthy_ler_replay_has_no_fallback_and_accepts_every_map": true,
+      "healthy_ler_replay_updates_both_frame_axes": true,
+      "source_to_action_latency_is_exactly_six_cycles": true,
+      "integer_fast_path_has_initiation_interval_one": true,
+      "replay_boundary_saturation_and_fallback_are_explicit": true,
+      "online_step_contains_no_float_division_or_math": true,
+      "online_code_input_contains_no_truth_or_hidden_fields": true,
+      "rounding_saturation_and_comparison_rules_are_explicit": true,
+      "source_rows_are_bit_deterministic": true,
+      "resource_fields_remain_representation_only_not_hardware": true
+    }
+  },
+  "hardware_fields": {
+    "target_lut_count": null,
+    "target_ff_count": null,
+    "target_bram_count": null,
+    "target_dsp_count": null,
+    "fmax_mhz": null,
+    "rtl_measured": false,
+    "board_measured": false
+  },
+  "claim_boundary": {
+    "allowed": "paired model-matched bit-accurate software MAP-health-event-frame quantization and LER sensitivity",
+    "forbidden": "device-calibrated ADC/OOD/LER, correlated 2D optimum, synthesis/post-route resource or timing, FPGA, or board measurement"
+  }
+}

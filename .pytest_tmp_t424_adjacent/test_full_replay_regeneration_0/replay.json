@@ -1,0 +1,234 @@
+{
+  "schema_version": "t4.2.3-conservative-fallback-validation-v1",
+  "task_id": "T4.2.3",
+  "status": "PASS",
+  "implementation_sha256": "b62a678fd59df1eaf0acff85513295ee4e44225d82f44d4d15234284833c11a7",
+  "config": {
+    "ood_score_bits": 8,
+    "ood_threshold_code": 192,
+    "max_parameter_age_cycles": 64,
+    "health_counter_bits": 8,
+    "initial_active_bank_version": 0,
+    "safe_profile_id": "frame_hold_no_map",
+    "model_scope": "observed_health_and_integrity_fallback_contract_not_rtl_or_device"
+  },
+  "fault_registry": [
+    {
+      "name": "observation_invalid",
+      "bit": 1
+    },
+    {
+      "name": "ood_score_exceeded",
+      "bit": 2
+    },
+    {
+      "name": "input_crc_mismatch",
+      "bit": 4
+    },
+    {
+      "name": "image_crc_mismatch",
+      "bit": 8
+    },
+    {
+      "name": "image_sha256_mismatch",
+      "bit": 16
+    },
+    {
+      "name": "unknown_bank_version",
+      "bit": 32
+    },
+    {
+      "name": "bank_version_mismatch",
+      "bit": 64
+    },
+    {
+      "name": "bank_version_rollback",
+      "bit": 128
+    },
+    {
+      "name": "parameter_stale",
+      "bit": 256
+    },
+    {
+      "name": "deadline_miss",
+      "bit": 512
+    },
+    {
+      "name": "map_decision_missing",
+      "bit": 1024
+    },
+    {
+      "name": "map_alignment_or_action_invalid",
+      "bit": 2048
+    },
+    {
+      "name": "unexpected_reset_ack",
+      "bit": 4096
+    },
+    {
+      "name": "leakage_observed",
+      "bit": 8192
+    }
+  ],
+  "scenarios": [
+    "nominal_map",
+    "ood_boundary",
+    "leakage_reset",
+    "parameter_age_boundary",
+    "input_crc_fault",
+    "image_crc_fault",
+    "image_sha_fault",
+    "valid_version_switch",
+    "version_faults",
+    "deadline_fault",
+    "map_missing",
+    "map_alignment_fault",
+    "unexpected_reset_ack",
+    "simultaneous_faults",
+    "fallback_recovery",
+    "fault_counter_saturation"
+  ],
+  "rows": 4096,
+  "diagnostics": {
+    "cycles_per_scenario": 256,
+    "trusted_images": [
+      {
+        "active_bank_version": 0,
+        "image_crc32": "24c4706d",
+        "image_sha256": "83245313ad0f359823ff550ec64c29c96f675fadf10a2ba8d98e9d2d321d963c"
+      },
+      {
+        "active_bank_version": 1,
+        "image_crc32": "48b5f203",
+        "image_sha256": "68d1f882b41d03f3566e427655b1b1bf19c6db74329b0fa4542df42f9a62385f"
+      },
+      {
+        "active_bank_version": 2,
+        "image_crc32": "bb6a29b4",
+        "image_sha256": "0c9b1260caf176079bbc158b6ffdb55aea60cffd0ab329866420f7ae02cf2653"
+      },
+      {
+        "active_bank_version": 3,
+        "image_crc32": "a8c1f528",
+        "image_sha256": "0c260799d3e7aab58a59925c7f5f5e1a4e3ad9b702a46110bf065d973204b1d9"
+      },
+      {
+        "active_bank_version": 4,
+        "image_crc32": "e7b06f54",
+        "image_sha256": "b8a3b5becebe9b5dfe1697775170b2fea9ca581ababcca2c3f8d0bf91e064be9"
+      },
+      {
+        "active_bank_version": 5,
+        "image_crc32": "a8899d7f",
+        "image_sha256": "4c4194ea049a9f52c94316ca24c149b9f460c6996910e7efe347f2c98e4f70d3"
+      },
+      {
+        "active_bank_version": 6,
+        "image_crc32": "befaa24a",
+        "image_sha256": "72272abbf21969f9b750eddb4dcb0654f3ce32e34cfd5b139b8519dc2b563a6d"
+      },
+      {
+        "active_bank_version": 7,
+        "image_crc32": "b66063d5",
+        "image_sha256": "49648d1a8c028a82f3d6b357bf518f97e7897ef1ded678e60a7621f5efaf01b7"
+      }
+    ],
+    "fault_flag_counts": {
+      "observation_invalid": 256,
+      "ood_score_exceeded": 384,
+      "input_crc_mismatch": 320,
+      "image_crc_mismatch": 64,
+      "image_sha256_mismatch": 80,
+      "unknown_bank_version": 272,
+      "bank_version_mismatch": 32,
+      "bank_version_rollback": 16,
+      "parameter_stale": 384,
+      "deadline_miss": 352,
+      "map_decision_missing": 576,
+      "map_alignment_or_action_invalid": 64,
+      "unexpected_reset_ack": 64,
+      "leakage_observed": 320
+    },
+    "status_counts": {
+      "degraded": 64,
+      "fallback": 1296,
+      "healthy": 2050,
+      "recovering": 622,
+      "reset_required": 64
+    }
+  },
+  "resource_contract": {
+    "identity": "exact_health_state_and_reason_word_proxy_not_synthesis",
+    "fault_flag_bits": 14,
+    "health_counter_bits_each": 8,
+    "health_counter_count": 18,
+    "map_plus_health_event_latency_cycles": 6,
+    "initiation_interval_cycles": 1,
+    "target_lut_count": null,
+    "target_ff_count": null,
+    "target_bram_count": null,
+    "target_dsp_count": null,
+    "fmax_mhz": null,
+    "rtl_measured": false,
+    "board_measured": false
+  },
+  "source_data": {
+    "path": ".pytest_tmp_t424_adjacent/test_full_replay_regeneration_0/replay.csv",
+    "rows": 4096,
+    "sha256": "c6cd7455de7d763ad10659b06d07f4b10dd9bb959aa10b462dcfe19a693a9086",
+    "canonical_rows_sha256": "60e51dfa3fbcaf05f92573aa46a10e170c718085c8131d58d6e2a6febf00278a"
+  },
+  "online_contract": {
+    "input_fields": [
+      "cycle_index",
+      "syndrome_x",
+      "syndrome_z",
+      "quadrature_phase_bit",
+      "map_decision",
+      "expected_active_bank_version",
+      "reported_image_crc32",
+      "reported_image_sha256",
+      "parameter_age_cycles",
+      "ood_score_code",
+      "reset_ack",
+      "observation_valid",
+      "input_crc_ok",
+      "deadline_ok"
+    ],
+    "step_signature": [
+      "self",
+      "event"
+    ],
+    "hidden_truth_inputs": []
+  },
+  "gate_summary": {
+    "passed": 20,
+    "failed": 0,
+    "gates": {
+      "all_sixteen_registered_scenarios_are_complete": true,
+      "all_fourteen_health_and_integrity_flags_are_exercised": true,
+      "every_blocking_fault_enters_frame_hold_fallback": true,
+      "blocking_faults_never_accept_map_or_update_frames": true,
+      "leakage_uses_hold_reset_and_ack_without_map_mutation": true,
+      "ood_threshold_is_inclusive_at_192_and_fails_at_193": true,
+      "parameter_age_64_is_current_and_65_is_stale": true,
+      "input_crc_image_crc_and_sha_faults_are_distinct": true,
+      "all_eight_registered_versions_commit_monotonically": true,
+      "rollback_unknown_and_mismatched_versions_preserve_trusted_bank": true,
+      "deadline_missing_map_alignment_and_ack_faults_are_traced": true,
+      "simultaneous_fault_mask_and_reason_trace_preserve_every_flag": true,
+      "fallback_clear_requires_one_recovering_then_second_good_cycle": true,
+      "fault_and_per_reason_counters_reach_uint8_saturation": true,
+      "healthy_path_accepts_map_and_updates_both_axes": true,
+      "map_plus_health_event_latency_is_exactly_six_cycles": true,
+      "health_pipeline_has_initiation_interval_one": true,
+      "replay_is_bit_deterministic": true,
+      "online_contract_contains_no_truth_or_hidden_fields": true,
+      "resource_and_hardware_fields_remain_non_measured": true
+    }
+  },
+  "claim_boundary": {
+    "allowed": "traceable observed-health and integrity frame-hold/reset software fallback contract",
+    "forbidden": "device-calibrated recovery efficacy, automatic bank rollback, complete transport watchdog, bit-accurate RTL, synthesis/post-route timing, FPGA, or board measurement"
+  }
+}

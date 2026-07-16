@@ -1,0 +1,163 @@
+{
+  "task_id": "T2.3.4",
+  "status": "PASS",
+  "source_contract": {
+    "primary_source": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md:451-459",
+    "gate_definitions": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md:411-434",
+    "feedback_grape_probability_gradient": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md:467-495",
+    "parameter_contract": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md:511-527"
+  },
+  "config": {
+    "cutoff": 6,
+    "full_cycles": 1,
+    "batch_size": 4,
+    "projector_delta": 0.34,
+    "grid_points": 4097,
+    "fixed_layer4_displacement": 1.2533141373155001,
+    "cavity_lifetime_us": 245.0,
+    "ancilla_t1_us": 50.0,
+    "ancilla_t2_us": 60.0,
+    "device": "cpu",
+    "real_dtype": "float64",
+    "probability_floor": 1e-14,
+    "timing": {
+      "profile_id": "PUVIANI-2024-TABLE-S1-FEEDBACK-GRAPE",
+      "phases": [
+        {
+          "phase_id": "entering_cycle",
+          "duration_ns": 100,
+          "gate_before_idle": "none"
+        },
+        {
+          "phase_id": "layer_1",
+          "duration_ns": 500,
+          "gate_before_idle": "R1_then_ECD1"
+        },
+        {
+          "phase_id": "layer_2",
+          "duration_ns": 700,
+          "gate_before_idle": "R2_then_ECD2"
+        },
+        {
+          "phase_id": "layer_3",
+          "duration_ns": 300,
+          "gate_before_idle": "R3_then_ECD3"
+        },
+        {
+          "phase_id": "layer_4",
+          "duration_ns": 100,
+          "gate_before_idle": "R4_then_fixed_D_alpha"
+        },
+        {
+          "phase_id": "measurement_and_reset",
+          "duration_ns": 2300,
+          "gate_before_idle": "measure_g_or_e_then_reset"
+        },
+        {
+          "phase_id": "virtual_rotation_and_idle",
+          "duration_ns": 1000,
+          "gate_before_idle": "VR"
+        }
+      ],
+      "source": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md:451-459",
+      "evidence_scope": "literature_simulation_timing_not_target_hardware_measurement"
+    },
+    "protocol_id": "PROTO-SBS-MAIN",
+    "scope": "finite-cutoff joint cavity-two-level-ancilla differentiable trajectory model; instantaneous paper-defined gates plus analytic idle CPTP channels; no pulse Hamiltonian, transmon leakage, SPAM, device calibration, or hardware timing claim"
+  },
+  "metrics": {
+    "branch_probability_sum": 1.0000000000000002,
+    "gradient_norm": 0.8450826962611868,
+    "policy_gradient_norm": 0.6390178970622994,
+    "history_control_separation": 1.0662354322931737,
+    "maximum_gate_unitarity_residual": 4.684973548801604e-15,
+    "maximum_idle_completeness_residual": 7.691850745534255e-16,
+    "maximum_trace_error": 2.220446049250313e-16,
+    "maximum_hermiticity_error": 0.0,
+    "minimum_final_eigenvalue": -3.514014089081754e-17,
+    "reward_minimum": 0.18804155521469235,
+    "reward_maximum": 0.3902648297739787,
+    "trajectory_probability_minimum": 0.16016163173430106,
+    "trajectory_probability_maximum": 0.38061874573843113
+  },
+  "resource_profile": {
+    "device": "cpu",
+    "real_dtype": "float64",
+    "complex_dtype": "complex128",
+    "cutoff": 6,
+    "joint_dimension": 12,
+    "batch_size": 4,
+    "full_cycles": 1,
+    "half_cycles": 2,
+    "control_source": "open_loop_raw_corrections",
+    "trainable_controls": 120,
+    "matrix_exponentials": 32,
+    "unitary_applications": 72,
+    "idle_windows": 56,
+    "cptp_channel_applications": 168,
+    "state_tensor_bytes": 9216,
+    "autograd_state_lower_bound_bytes": 138240,
+    "wall_time_seconds": 0.0317298000009032,
+    "cuda_peak_allocated_bytes": null,
+    "timing_profile_id": "PUVIANI-2024-TABLE-S1-FEEDBACK-GRAPE",
+    "simulated_physical_time_ns": 10000,
+    "target_hardware_measured": false
+  },
+  "gate_unitarity_residuals": {
+    "R1": 9.285615632466556e-17,
+    "ECD1": 1.370574725633583e-15,
+    "fixed_D": 4.684973548801604e-15,
+    "VR": 1.5700924586837752e-16
+  },
+  "idle_completeness_residuals": {
+    "entering_cycle:0": 2.220446049250313e-16,
+    "entering_cycle:1": 0.0,
+    "entering_cycle:2": 3.8459253727671276e-16,
+    "layer_1:0": 0.0,
+    "layer_1:1": 0.0,
+    "layer_1:2": 0.0,
+    "layer_2:0": 2.7194799110210365e-16,
+    "layer_2:1": 0.0,
+    "layer_2:2": 0.0,
+    "layer_3:0": 1.5700924586837752e-16,
+    "layer_3:1": 0.0,
+    "layer_3:2": 7.691850745534255e-16,
+    "layer_4:0": 2.220446049250313e-16,
+    "layer_4:1": 0.0,
+    "layer_4:2": 3.8459253727671276e-16,
+    "measurement_and_reset:0": 2.7194799110210365e-16,
+    "measurement_and_reset:1": 2.7194799110210365e-16,
+    "measurement_and_reset:2": 7.691850745534255e-16,
+    "virtual_rotation_and_idle:0": 1.5700924586837752e-16,
+    "virtual_rotation_and_idle:1": 2.7194799110210365e-16,
+    "virtual_rotation_and_idle:2": 0.0
+  },
+  "checks": {
+    "fixed_half_cycle_is_5000_ns": true,
+    "fixed_full_cycle_is_10000_ns": true,
+    "all_four_two_measurement_branches_normalize": true,
+    "trajectory_probability_matches_log_probability": true,
+    "forced_replay_is_exact": true,
+    "reward_is_physical": true,
+    "autograd_graph_is_connected": true,
+    "history_conditioned_policy_changes_future_controls": true,
+    "history_conditioned_policy_gradient_is_connected": true,
+    "history_conditioned_branch_tree_normalizes": true,
+    "gate_families_are_unitary": true,
+    "idle_channels_are_trace_preserving": true,
+    "trajectory_trace_is_preserved": true,
+    "trajectory_is_hermitian": true,
+    "final_density_is_positive": true,
+    "resource_profile_counts_fifteen_controls_per_half_cycle": true,
+    "resource_profile_is_not_hardware_measurement": true
+  },
+  "scope": "finite-cutoff joint cavity-two-level-ancilla differentiable trajectory model; instantaneous paper-defined gates plus analytic idle CPTP channels; no pulse Hamiltonian, transmon leakage, SPAM, device calibration, or hardware timing claim",
+  "forbidden_claims": [
+    "not a pulse-level cavity-transmon Hamiltonian simulation",
+    "not a leakage/SPAM/device-calibrated model",
+    "not a Feedback-GRAPE gradient validation (reserved for T2.3.5)",
+    "not a cutoff/batch/horizon feasibility envelope (reserved for T2.3.6)",
+    "not a standard/MF/NMF ranking (reserved for T2.3.7)",
+    "not target-board latency or hardware evidence"
+  ]
+}

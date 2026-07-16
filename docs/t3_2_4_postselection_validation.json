@@ -1,0 +1,1507 @@
+{
+  "schema_version": "t3.2.4-postselection-diagnostic-v1",
+  "task_id": "T3.2.4",
+  "status": "PASS",
+  "implementation_sha256": "8a5e7cc902944075fa17847ab701e4ad8dd65c0e56f568f7e374e022b7b66006",
+  "descriptor": {
+    "task_id": "T3.2.4",
+    "label": "Offline observed-confidence post-selection diagnostic and truth upper bound",
+    "online_decoder": false,
+    "observed_score_inputs": [
+      "static_map_logical_posterior"
+    ],
+    "hidden_truth_score_inputs": [],
+    "truth_only_evaluator_fields": [
+      "logical_failure"
+    ],
+    "threshold_rule": "training_only_target_survival_quantile",
+    "reported_cost_rule": "accepted_failures_per_input_plus_penalty_times_rejection_fraction",
+    "primary_metric_eligible": false,
+    "evidence_scope": "continuous_synthetic_wrapped_gaussian_diagnostic_only",
+    "forbidden_claims": [
+      "online_error_correction_gain",
+      "postselected_break_even",
+      "free_rejection",
+      "device_calibrated_anomaly_detector",
+      "FPGA_synthesis_or_measured_latency"
+    ]
+  },
+  "validation_config": {
+    "training_seeds": [
+      20261011,
+      20261012,
+      20261013
+    ],
+    "evaluation_seeds": [
+      20261031,
+      20261032,
+      20261033,
+      20261034,
+      20261035,
+      20261036,
+      20261037,
+      20261038
+    ],
+    "windows": 48,
+    "training_samples_per_window": 512,
+    "evaluation_samples_per_window": 1024,
+    "target_survivals": [
+      0.995,
+      0.99,
+      0.98,
+      0.95,
+      0.9,
+      0.8,
+      0.7,
+      0.5
+    ],
+    "rejection_penalties": [
+      0.0,
+      0.25,
+      0.5,
+      1.0
+    ],
+    "primary_diagnostic_survival": 0.9,
+    "confidence_level": 0.95
+  },
+  "static_training_parameters": {
+    "mean": [
+      0.0801375926112148,
+      -0.024123041799225527
+    ],
+    "covariance": [
+      [
+        0.2312542386879573,
+        -0.02585159451245441
+      ],
+      [
+        -0.02585159451245441,
+        0.1726363620969346
+      ]
+    ],
+    "training_windows": 192,
+    "effective_training_weight": 192.0,
+    "training_state_sha256": "622ecc7917ae3f743b3ee8a00b235e909c39b6ec9e47302bfbe926833b15aa61",
+    "training_protocol_id": "t3.2.4-postselection-static-v1:windows=48:training_seeds=(20261011, 20261012, 20261013)",
+    "fit_rule": "moment_matched_marginal_law_of_total_covariance",
+    "loss_handling": "reject_nonzero_loss_gamma",
+    "outlier_handling": "moment_match_same_mean_gaussian_mixture_covariance"
+  },
+  "training_calibration": {
+    "training_trace_sha256": "581fe77d75586b312ef0d327597f6b2a9e5078a1e90c61471c548de97140107b",
+    "training_samples": 294912,
+    "thresholds": [
+      {
+        "target_survival": 0.995,
+        "score_threshold": 0.4116404297684926
+      },
+      {
+        "target_survival": 0.99,
+        "score_threshold": 0.3281971312781853
+      },
+      {
+        "target_survival": 0.98,
+        "score_threshold": 0.19926100551297787
+      },
+      {
+        "target_survival": 0.95,
+        "score_threshold": 0.04931779639968714
+      },
+      {
+        "target_survival": 0.9,
+        "score_threshold": 0.010223105775464814
+      },
+      {
+        "target_survival": 0.8,
+        "score_threshold": 0.001548739715154679
+      },
+      {
+        "target_survival": 0.7,
+        "score_threshold": 0.0004416617253509836
+      },
+      {
+        "target_survival": 0.5,
+        "score_threshold": 6.879024060191252e-05
+      }
+    ],
+    "evaluation_truth_used": false
+  },
+  "scenario_survival_summaries": [
+    {
+      "scenario_id": "linear_mean",
+      "target_survival": 0.995,
+      "training_threshold": 0.4116404297684926,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9970448811848959,
+      "raw_error_rate": 0.006581624348958334,
+      "conditional_error_rate": 0.005292650717259461,
+      "accepted_failures_per_input": 0.005276997884114583,
+      "truth_upper_conditional_error_rate": 0.003637239388879377,
+      "random_rejection_expected_conditional_error_rate": 0.006581624348958334,
+      "rejected_failure_capture_fraction": 0.19830628712987386,
+      "break_even_rejection_penalty": 0.4419392071395577,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9845630436866148,
+        "standard_error": 0.0005645103694604662,
+        "ci_low": 0.983228188776713,
+        "ci_high": 0.9858978985965167,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.0012889736316988724,
+        "standard_error": 4.1874274754444334e-05,
+        "ci_low": 0.0011899567060966538,
+        "ci_high": 0.0013879905573010909,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.005276997884114583,
+        "0.25": 0.006015777587890625,
+        "0.50": 0.006754557291666667,
+        "1.00": 0.00823211669921875
+      }
+    },
+    {
+      "scenario_id": "linear_mean",
+      "target_survival": 0.99,
+      "training_threshold": 0.3281971312781853,
+      "seeds": 8,
+      "realized_survival_fraction": 0.993944803873698,
+      "raw_error_rate": 0.006581624348958334,
+      "conditional_error_rate": 0.0042038308667763655,
+      "accepted_failures_per_input": 0.004178365071614583,
+      "truth_upper_conditional_error_rate": 0.0005295669726945836,
+      "random_rejection_expected_conditional_error_rate": 0.006581624348958334,
+      "rejected_failure_capture_fraction": 0.3652290927300512,
+      "break_even_rejection_penalty": 0.39721133969263406,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9845630436866148,
+        "standard_error": 0.0005645103694604662,
+        "ci_low": 0.983228188776713,
+        "ci_high": 0.9858978985965167,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.0023777934821819684,
+        "standard_error": 5.696331777163072e-05,
+        "ci_low": 0.0022430966395279844,
+        "ci_high": 0.0025124903248359524,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.004178365071614583,
+        "0.25": 0.0056921641031901045,
+        "0.50": 0.007205963134765625,
+        "1.00": 0.010233561197916668
+      }
+    },
+    {
+      "scenario_id": "linear_mean",
+      "target_survival": 0.98,
+      "training_threshold": 0.19926100551297787,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9872360229492188,
+      "raw_error_rate": 0.006581624348958334,
+      "conditional_error_rate": 0.0026867956372246234,
+      "accepted_failures_per_input": 0.002652486165364583,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.006581624348958334,
+      "rejected_failure_capture_fraction": 0.5972870519167435,
+      "break_even_rejection_penalty": 0.30796930435301495,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9845630436866148,
+        "standard_error": 0.0005645103694604662,
+        "ci_low": 0.983228188776713,
+        "ci_high": 0.9858978985965167,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.00389482871173371,
+        "standard_error": 5.510973519061888e-05,
+        "ci_low": 0.0037645148954031163,
+        "ci_high": 0.004025142528064304,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.002652486165364583,
+        "0.25": 0.0058434804280598955,
+        "0.50": 0.009034474690755209,
+        "1.00": 0.015416463216145834
+      }
+    },
+    {
+      "scenario_id": "linear_mean",
+      "target_survival": 0.95,
+      "training_threshold": 0.04931779639968714,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9653472900390625,
+      "raw_error_rate": 0.006581624348958334,
+      "conditional_error_rate": 0.0008983582394458837,
+      "accepted_failures_per_input": 0.0008672078450520833,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.006581624348958334,
+      "rejected_failure_capture_fraction": 0.8684311573302148,
+      "break_even_rejection_penalty": 0.16492994505957956,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9845630436866148,
+        "standard_error": 0.0005645103694604662,
+        "ci_low": 0.983228188776713,
+        "ci_high": 0.9858978985965167,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.0056832661095124505,
+        "standard_error": 4.994701566514208e-05,
+        "ci_low": 0.005565160184975971,
+        "ci_high": 0.00580137203404893,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.0008672078450520833,
+        "0.25": 0.009530385335286459,
+        "0.50": 0.018193562825520836,
+        "1.00": 0.035519917805989586
+      }
+    },
+    {
+      "scenario_id": "linear_mean",
+      "target_survival": 0.9,
+      "training_threshold": 0.010223105775464814,
+      "seeds": 8,
+      "realized_survival_fraction": 0.923810323079427,
+      "raw_error_rate": 0.006581624348958334,
+      "conditional_error_rate": 0.00027802928942942206,
+      "accepted_failures_per_input": 0.0002568562825520833,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.006581624348958334,
+      "rejected_failure_capture_fraction": 0.9609656513099006,
+      "break_even_rejection_penalty": 0.08301684192419562,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9845630436866148,
+        "standard_error": 0.0005645103694604662,
+        "ci_low": 0.983228188776713,
+        "ci_high": 0.9858978985965167,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.006303595059528912,
+        "standard_error": 7.34319278508698e-05,
+        "ci_low": 0.006129956142091534,
+        "ci_high": 0.00647723397696629,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.0002568562825520833,
+        "0.25": 0.019304275512695312,
+        "0.50": 0.03835169474283854,
+        "1.00": 0.076446533203125
+      }
+    },
+    {
+      "scenario_id": "linear_mean",
+      "target_survival": 0.8,
+      "training_threshold": 0.001548739715154679,
+      "seeds": 8,
+      "realized_survival_fraction": 0.8326365152994791,
+      "raw_error_rate": 0.006581624348958334,
+      "conditional_error_rate": 6.108869975078716e-05,
+      "accepted_failures_per_input": 5.086263020833333e-05,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.006581624348958334,
+      "rejected_failure_capture_fraction": 0.9922748259837209,
+      "break_even_rejection_penalty": 0.03901972779077172,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9845630436866148,
+        "standard_error": 0.0005645103694604662,
+        "ci_low": 0.983228188776713,
+        "ci_high": 0.9858978985965167,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.006520535649207546,
+        "standard_error": 7.012462177837886e-05,
+        "ci_low": 0.0063547172679166205,
+        "ci_high": 0.006686354030498472,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 5.086263020833333e-05,
+        "0.25": 0.041891733805338546,
+        "0.50": 0.08373260498046875,
+        "1.00": 0.16741434733072919
+      }
+    },
+    {
+      "scenario_id": "linear_mean",
+      "target_survival": 0.7,
+      "training_threshold": 0.0004416617253509836,
+      "seeds": 8,
+      "realized_survival_fraction": 0.7365468343098959,
+      "raw_error_rate": 0.006581624348958334,
+      "conditional_error_rate": 1.7274985744072798e-05,
+      "accepted_failures_per_input": 1.2715657552083332e-05,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.006581624348958334,
+      "rejected_failure_capture_fraction": 0.998075166256119,
+      "break_even_rejection_penalty": 0.024932900932378533,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9845630436866148,
+        "standard_error": 0.0005645103694604662,
+        "ci_low": 0.983228188776713,
+        "ci_high": 0.9858978985965167,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.0065643493632142605,
+        "standard_error": 6.998416395844858e-05,
+        "ci_low": 0.006398863111890667,
+        "ci_high": 0.006729835614537854,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 1.2715657552083332e-05,
+        "0.25": 0.06587600708007812,
+        "0.50": 0.13173929850260419,
+        "1.00": 0.26346588134765625
+      }
+    },
+    {
+      "scenario_id": "linear_mean",
+      "target_survival": 0.5,
+      "training_threshold": 6.879024060191252e-05,
+      "seeds": 8,
+      "realized_survival_fraction": 0.5368448893229167,
+      "raw_error_rate": 0.006581624348958334,
+      "conditional_error_rate": 0.0,
+      "accepted_failures_per_input": 0.0,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.006581624348958334,
+      "rejected_failure_capture_fraction": 1.0,
+      "break_even_rejection_penalty": 0.014210200851516258,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9845630436866148,
+        "standard_error": 0.0005645103694604662,
+        "ci_low": 0.983228188776713,
+        "ci_high": 0.9858978985965167,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.006581624348958334,
+        "standard_error": 7.06867705253401e-05,
+        "ci_low": 0.00641447669710734,
+        "ci_high": 0.0067487720008093275,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.0,
+        "0.25": 0.11578877766927084,
+        "0.50": 0.23157755533854169,
+        "1.00": 0.46315511067708337
+      }
+    },
+    {
+      "scenario_id": "variance_correlation_ramp",
+      "target_survival": 0.995,
+      "training_threshold": 0.4116404297684926,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9959793090820312,
+      "raw_error_rate": 0.011555989583333332,
+      "conditional_error_rate": 0.009669700437196286,
+      "accepted_failures_per_input": 0.009630839029947916,
+      "truth_upper_conditional_error_rate": 0.00756568504418198,
+      "random_rejection_expected_conditional_error_rate": 0.011555989583333332,
+      "rejected_failure_capture_fraction": 0.16664819815164347,
+      "break_even_rejection_penalty": 0.47731414312734277,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9717044758323261,
+        "standard_error": 0.0006506122334997195,
+        "ci_low": 0.9701660223666098,
+        "ci_high": 0.9732429292980425,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.0018862891461370486,
+        "standard_error": 9.70859369470253e-05,
+        "ci_low": 0.0016567173851435046,
+        "ci_high": 0.0021158609071305927,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.009630839029947916,
+        "0.25": 0.010636011759440105,
+        "0.50": 0.011641184488932293,
+        "1.00": 0.013651529947916666
+      }
+    },
+    {
+      "scenario_id": "variance_correlation_ramp",
+      "target_survival": 0.99,
+      "training_threshold": 0.3281971312781853,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9920578002929688,
+      "raw_error_rate": 0.011555989583333332,
+      "conditional_error_rate": 0.008175020840701578,
+      "accepted_failures_per_input": 0.00811004638671875,
+      "truth_upper_conditional_error_rate": 0.0036427608653927528,
+      "random_rejection_expected_conditional_error_rate": 0.011555989583333332,
+      "rejected_failure_capture_fraction": 0.2985454607485378,
+      "break_even_rejection_penalty": 0.43369420326872077,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9717044758323261,
+        "standard_error": 0.0006506122334997195,
+        "ci_low": 0.9701660223666098,
+        "ci_high": 0.9732429292980425,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.0033809687426317554,
+        "standard_error": 7.751625492662931e-05,
+        "ci_low": 0.0031976719263395992,
+        "ci_high": 0.0035642655589239115,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.00811004638671875,
+        "0.25": 0.010095596313476562,
+        "0.50": 0.012081146240234375,
+        "1.00": 0.01605224609375
+      }
+    },
+    {
+      "scenario_id": "variance_correlation_ramp",
+      "target_survival": 0.98,
+      "training_threshold": 0.19926100551297787,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9843648274739584,
+      "raw_error_rate": 0.011555989583333332,
+      "conditional_error_rate": 0.006032620986607638,
+      "accepted_failures_per_input": 0.005938212076822916,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.011555989583333332,
+      "rejected_failure_capture_fraction": 0.4866776188824934,
+      "break_even_rejection_penalty": 0.35936171982828774,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9717044758323261,
+        "standard_error": 0.0006506122334997195,
+        "ci_low": 0.9701660223666098,
+        "ci_high": 0.9732429292980425,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.005523368596725696,
+        "standard_error": 0.00010022562859062048,
+        "ci_low": 0.005286372644729183,
+        "ci_high": 0.005760364548722208,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.005938212076822916,
+        "0.25": 0.009847005208333334,
+        "0.50": 0.01375579833984375,
+        "1.00": 0.021573384602864582
+      }
+    },
+    {
+      "scenario_id": "variance_correlation_ramp",
+      "target_survival": 0.95,
+      "training_threshold": 0.04931779639968714,
+      "seeds": 8,
+      "realized_survival_fraction": 0.960784912109375,
+      "raw_error_rate": 0.011555989583333332,
+      "conditional_error_rate": 0.0028216946247807085,
+      "accepted_failures_per_input": 0.002710978190104167,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.011555989583333332,
+      "rejected_failure_capture_fraction": 0.7657626205926713,
+      "break_even_rejection_penalty": 0.22554141130925828,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9717044758323261,
+        "standard_error": 0.0006506122334997195,
+        "ci_low": 0.9701660223666098,
+        "ci_high": 0.9732429292980425,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.008734294958552626,
+        "standard_error": 0.00015639153798110698,
+        "ci_low": 0.008364487735098607,
+        "ci_high": 0.009104102182006645,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.002710978190104167,
+        "0.25": 0.012514750162760416,
+        "0.50": 0.022318522135416668,
+        "1.00": 0.041926066080729164
+      }
+    },
+    {
+      "scenario_id": "variance_correlation_ramp",
+      "target_survival": 0.9,
+      "training_threshold": 0.010223105775464814,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9207916259765625,
+      "raw_error_rate": 0.011555989583333332,
+      "conditional_error_rate": 0.0012621644201456551,
+      "accepted_failures_per_input": 0.0011622111002604165,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.011555989583333332,
+      "rejected_failure_capture_fraction": 0.8995253082714217,
+      "break_even_rejection_penalty": 0.1312929292125456,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9717044758323261,
+        "standard_error": 0.0006506122334997195,
+        "ci_low": 0.9701660223666098,
+        "ci_high": 0.9732429292980425,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.010293825163187678,
+        "standard_error": 0.0001920588985273251,
+        "ci_low": 0.009839678033995767,
+        "ci_high": 0.010747972292379589,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.0011622111002604165,
+        "0.25": 0.02096430460611979,
+        "0.50": 0.04076639811197917,
+        "1.00": 0.08037058512369791
+      }
+    },
+    {
+      "scenario_id": "variance_correlation_ramp",
+      "target_survival": 0.8,
+      "training_threshold": 0.001548739715154679,
+      "seeds": 8,
+      "realized_survival_fraction": 0.8379872639973958,
+      "raw_error_rate": 0.011555989583333332,
+      "conditional_error_rate": 0.00042179675983900335,
+      "accepted_failures_per_input": 0.0003534952799479167,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.011555989583333332,
+      "rejected_failure_capture_fraction": 0.9694580497351755,
+      "break_even_rejection_penalty": 0.06918508697286326,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9717044758323261,
+        "standard_error": 0.0006506122334997195,
+        "ci_low": 0.9701660223666098,
+        "ci_high": 0.9732429292980425,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.01113419282349433,
+        "standard_error": 0.00020543753040432557,
+        "ci_low": 0.01064841025691293,
+        "ci_high": 0.011619975390075728,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.0003534952799479167,
+        "0.25": 0.04085667928059896,
+        "0.50": 0.08135986328125,
+        "1.00": 0.1623662312825521
+      }
+    },
+    {
+      "scenario_id": "variance_correlation_ramp",
+      "target_survival": 0.7,
+      "training_threshold": 0.0004416617253509836,
+      "seeds": 8,
+      "realized_survival_fraction": 0.7501729329427083,
+      "raw_error_rate": 0.011555989583333332,
+      "conditional_error_rate": 0.00019658960337424943,
+      "accepted_failures_per_input": 0.00014750162760416668,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.011555989583333332,
+      "rejected_failure_capture_fraction": 0.9873260840416722,
+      "break_even_rejection_penalty": 0.04568083256843901,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9717044758323261,
+        "standard_error": 0.0006506122334997195,
+        "ci_low": 0.9701660223666098,
+        "ci_high": 0.9732429292980425,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.011359399979959085,
+        "standard_error": 0.00020445386792052668,
+        "ci_low": 0.01087594340554226,
+        "ci_high": 0.01184285655437591,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.00014750162760416668,
+        "0.25": 0.06260426839192708,
+        "0.50": 0.12506103515625,
+        "1.00": 0.24997456868489581
+      }
+    },
+    {
+      "scenario_id": "variance_correlation_ramp",
+      "target_survival": 0.5,
+      "training_threshold": 6.879024060191252e-05,
+      "seeds": 8,
+      "realized_survival_fraction": 0.5573679606119791,
+      "raw_error_rate": 0.011555989583333332,
+      "conditional_error_rate": 6.395598018783835e-05,
+      "accepted_failures_per_input": 3.560384114583333e-05,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.011555989583333332,
+      "rejected_failure_capture_fraction": 0.9969031515272044,
+      "break_even_rejection_penalty": 0.026030647496424072,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9717044758323261,
+        "standard_error": 0.0006506122334997195,
+        "ci_low": 0.9701660223666098,
+        "ci_high": 0.9732429292980425,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.011492033603145494,
+        "standard_error": 0.00021885183575738604,
+        "ci_low": 0.010974531244807979,
+        "ci_high": 0.01200953596148301,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 3.560384114583333e-05,
+        "0.25": 0.11069361368815103,
+        "0.50": 0.22135162353515625,
+        "1.00": 0.44266764322916663
+      }
+    },
+    {
+      "scenario_id": "sinusoidal_joint",
+      "target_survival": 0.995,
+      "training_threshold": 0.4116404297684926,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9924850463867188,
+      "raw_error_rate": 0.019632975260416668,
+      "conditional_error_rate": 0.016189233757067684,
+      "accepted_failures_per_input": 0.0160675048828125,
+      "truth_upper_conditional_error_rate": 0.012209771755533873,
+      "random_rejection_expected_conditional_error_rate": 0.019632975260416668,
+      "rejected_failure_capture_fraction": 0.18138836684331844,
+      "break_even_rejection_penalty": 0.47401055608823595,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9606330021969914,
+        "standard_error": 0.00038336607914959595,
+        "ci_low": 0.9597264854689963,
+        "ci_high": 0.9615395189249866,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.0034437415033489824,
+        "standard_error": 0.0001173681298339812,
+        "ci_low": 0.00316620997717946,
+        "ci_high": 0.003721273029518505,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.0160675048828125,
+        "0.25": 0.017946243286132812,
+        "0.50": 0.019824981689453125,
+        "1.00": 0.02358245849609375
+      }
+    },
+    {
+      "scenario_id": "sinusoidal_joint",
+      "target_survival": 0.99,
+      "training_threshold": 0.3281971312781853,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9854710896809895,
+      "raw_error_rate": 0.019632975260416668,
+      "conditional_error_rate": 0.013550857102512848,
+      "accepted_failures_per_input": 0.013353983561197916,
+      "truth_upper_conditional_error_rate": 0.00517914167006596,
+      "random_rejection_expected_conditional_error_rate": 0.019632975260416668,
+      "rejected_failure_capture_fraction": 0.3195111975423884,
+      "break_even_rejection_penalty": 0.4316391776158458,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9606330021969914,
+        "standard_error": 0.00038336607914959595,
+        "ci_low": 0.9597264854689963,
+        "ci_high": 0.9615395189249866,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.006082118157903818,
+        "standard_error": 0.00017858781837509937,
+        "ci_low": 0.00565982507153501,
+        "ci_high": 0.0065044112442726254,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.013353983561197916,
+        "0.25": 0.016986211140950523,
+        "0.50": 0.020618438720703125,
+        "1.00": 0.027882893880208332
+      }
+    },
+    {
+      "scenario_id": "sinusoidal_joint",
+      "target_survival": 0.98,
+      "training_threshold": 0.19926100551297787,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9714864095052083,
+      "raw_error_rate": 0.019632975260416668,
+      "conditional_error_rate": 0.009669960574310297,
+      "accepted_failures_per_input": 0.009394327799479168,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.019632975260416668,
+      "rejected_failure_capture_fraction": 0.5210217423914213,
+      "break_even_rejection_penalty": 0.3588166712554136,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9606330021969914,
+        "standard_error": 0.00038336607914959595,
+        "ci_low": 0.9597264854689963,
+        "ci_high": 0.9615395189249866,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.009963014686106369,
+        "standard_error": 0.0002552508113648577,
+        "ci_low": 0.00935944242731429,
+        "ci_high": 0.010566586944898447,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.009394327799479168,
+        "0.25": 0.016522725423177082,
+        "0.50": 0.023651123046875,
+        "1.00": 0.03790791829427083
+      }
+    },
+    {
+      "scenario_id": "sinusoidal_joint",
+      "target_survival": 0.95,
+      "training_threshold": 0.04931779639968714,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9299545288085938,
+      "raw_error_rate": 0.019632975260416668,
+      "conditional_error_rate": 0.00412664186899743,
+      "accepted_failures_per_input": 0.00383758544921875,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.019632975260416668,
+      "rejected_failure_capture_fraction": 0.8044079537217824,
+      "break_even_rejection_penalty": 0.22549008642751378,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9606330021969914,
+        "standard_error": 0.00038336607914959595,
+        "ci_low": 0.9597264854689963,
+        "ci_high": 0.9615395189249866,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.015506333391419234,
+        "standard_error": 0.00024189427086523886,
+        "ci_low": 0.014934344332209937,
+        "ci_high": 0.016078322450628534,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.00383758544921875,
+        "0.25": 0.021348953247070312,
+        "0.50": 0.038860321044921875,
+        "1.00": 0.073883056640625
+      }
+    },
+    {
+      "scenario_id": "sinusoidal_joint",
+      "target_survival": 0.9,
+      "training_threshold": 0.010223105775464814,
+      "seeds": 8,
+      "realized_survival_fraction": 0.8635915120442709,
+      "raw_error_rate": 0.019632975260416668,
+      "conditional_error_rate": 0.0017462100453315664,
+      "accepted_failures_per_input": 0.0015080769856770835,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.019632975260416668,
+      "rejected_failure_capture_fraction": 0.9231477267933995,
+      "break_even_rejection_penalty": 0.13287362956844398,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9606330021969914,
+        "standard_error": 0.00038336607914959595,
+        "ci_low": 0.9597264854689963,
+        "ci_high": 0.9615395189249866,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.0178867652150851,
+        "standard_error": 0.00022672818993827308,
+        "ci_low": 0.017350638238637327,
+        "ci_high": 0.018422892191532876,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.0015080769856770835,
+        "0.25": 0.035610198974609375,
+        "0.50": 0.06971232096354167,
+        "1.00": 0.13791656494140625
+      }
+    },
+    {
+      "scenario_id": "sinusoidal_joint",
+      "target_survival": 0.8,
+      "training_threshold": 0.001548739715154679,
+      "seeds": 8,
+      "realized_survival_fraction": 0.7412439982096355,
+      "raw_error_rate": 0.019632975260416668,
+      "conditional_error_rate": 0.0005489388516022618,
+      "accepted_failures_per_input": 0.00040690104166666663,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.019632975260416668,
+      "rejected_failure_capture_fraction": 0.9792742359439115,
+      "break_even_rejection_penalty": 0.07429542641169387,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9606330021969914,
+        "standard_error": 0.00038336607914959595,
+        "ci_low": 0.9597264854689963,
+        "ci_high": 0.9615395189249866,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.019084036408814405,
+        "standard_error": 0.0002291910356347401,
+        "ci_low": 0.018542085727704834,
+        "ci_high": 0.019625987089923976,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.00040690104166666663,
+        "0.25": 0.06509590148925781,
+        "0.50": 0.12978490193684897,
+        "1.00": 0.25916290283203125
+      }
+    },
+    {
+      "scenario_id": "sinusoidal_joint",
+      "target_survival": 0.7,
+      "training_threshold": 0.0004416617253509836,
+      "seeds": 8,
+      "realized_survival_fraction": 0.6304092407226562,
+      "raw_error_rate": 0.019632975260416668,
+      "conditional_error_rate": 0.00024199655728858807,
+      "accepted_failures_per_input": 0.000152587890625,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.019632975260416668,
+      "rejected_failure_capture_fraction": 0.9922227204623495,
+      "break_even_rejection_penalty": 0.05270284690440008,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9606330021969914,
+        "standard_error": 0.00038336607914959595,
+        "ci_low": 0.9597264854689963,
+        "ci_high": 0.9615395189249866,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.01939097870312808,
+        "standard_error": 0.00023454896687665668,
+        "ci_low": 0.018836358527865506,
+        "ci_high": 0.019945598878390654,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.000152587890625,
+        "0.25": 0.09255027770996094,
+        "0.50": 0.18494796752929688,
+        "1.00": 0.36974334716796875
+      }
+    },
+    {
+      "scenario_id": "sinusoidal_joint",
+      "target_survival": 0.5,
+      "training_threshold": 6.879024060191252e-05,
+      "seeds": 8,
+      "realized_survival_fraction": 0.4273630777994792,
+      "raw_error_rate": 0.019632975260416668,
+      "conditional_error_rate": 0.00010709641234396308,
+      "accepted_failures_per_input": 4.57763671875e-05,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.019632975260416668,
+      "rejected_failure_capture_fraction": 0.9976693465248826,
+      "break_even_rejection_penalty": 0.03420443248813697,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.9606330021969914,
+        "standard_error": 0.00038336607914959595,
+        "ci_low": 0.9597264854689963,
+        "ci_high": 0.9615395189249866,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.019525878848072706,
+        "standard_error": 0.0002330771784505856,
+        "ci_low": 0.01897473889941563,
+        "ci_high": 0.02007701879672978,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 4.57763671875e-05,
+        "0.25": 0.14320500691731772,
+        "0.50": 0.28636423746744794,
+        "1.00": 0.5726826985677084
+      }
+    },
+    {
+      "scenario_id": "smooth_mixed",
+      "target_survival": 0.995,
+      "training_threshold": 0.4116404297684926,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9938710530598958,
+      "raw_error_rate": 0.017369588216145836,
+      "conditional_error_rate": 0.014600508256346388,
+      "accepted_failures_per_input": 0.0145111083984375,
+      "truth_upper_conditional_error_rate": 0.011309803999563717,
+      "random_rejection_expected_conditional_error_rate": 0.017369588216145836,
+      "rejected_failure_capture_fraction": 0.1645698255917936,
+      "break_even_rejection_penalty": 0.46692752101408674,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.964044526653271,
+        "standard_error": 0.0005533276482476995,
+        "ci_low": 0.9627361146771477,
+        "ci_high": 0.9653529386293943,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.0027690799597994455,
+        "standard_error": 6.115468188261533e-05,
+        "ci_low": 0.0026244721159213715,
+        "ci_high": 0.0029136878036775194,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.0145111083984375,
+        "0.25": 0.01604334513346354,
+        "0.50": 0.017575581868489586,
+        "1.00": 0.020640055338541668
+      }
+    },
+    {
+      "scenario_id": "smooth_mixed",
+      "target_survival": 0.99,
+      "training_threshold": 0.3281971312781853,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9878565470377604,
+      "raw_error_rate": 0.017369588216145836,
+      "conditional_error_rate": 0.012248948263232428,
+      "accepted_failures_per_input": 0.0121002197265625,
+      "truth_upper_conditional_error_rate": 0.005290303995862716,
+      "random_rejection_expected_conditional_error_rate": 0.017369588216145836,
+      "rejected_failure_capture_fraction": 0.3031825393952384,
+      "break_even_rejection_penalty": 0.43362453375555166,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.964044526653271,
+        "standard_error": 0.0005533276482476995,
+        "ci_low": 0.9627361146771477,
+        "ci_high": 0.9653529386293943,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.005120639952913406,
+        "standard_error": 0.0001417144410905053,
+        "ci_low": 0.00478553854870988,
+        "ci_high": 0.005455741357116932,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.0121002197265625,
+        "0.25": 0.015136082967122395,
+        "0.50": 0.01817194620768229,
+        "1.00": 0.024243672688802082
+      }
+    },
+    {
+      "scenario_id": "smooth_mixed",
+      "target_survival": 0.98,
+      "training_threshold": 0.19926100551297787,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9765167236328125,
+      "raw_error_rate": 0.017369588216145836,
+      "conditional_error_rate": 0.0088728727333378,
+      "accepted_failures_per_input": 0.008664449055989584,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.017369588216145836,
+      "rejected_failure_capture_fraction": 0.5009672801661664,
+      "break_even_rejection_penalty": 0.37056423428861773,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.964044526653271,
+        "standard_error": 0.0005533276482476995,
+        "ci_low": 0.9627361146771477,
+        "ci_high": 0.9653529386293943,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.008496715482808033,
+        "standard_error": 0.00017763715815193411,
+        "ci_low": 0.008076670350657946,
+        "ci_high": 0.00891676061495812,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.008664449055989584,
+        "0.25": 0.014535268147786457,
+        "0.50": 0.020406087239583332,
+        "1.00": 0.03214772542317708
+      }
+    },
+    {
+      "scenario_id": "smooth_mixed",
+      "target_survival": 0.95,
+      "training_threshold": 0.04931779639968714,
+      "seeds": 8,
+      "realized_survival_fraction": 0.9422683715820312,
+      "raw_error_rate": 0.017369588216145836,
+      "conditional_error_rate": 0.004016184276635897,
+      "accepted_failures_per_input": 0.0037841796875,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.017369588216145836,
+      "rejected_failure_capture_fraction": 0.782107881970272,
+      "break_even_rejection_penalty": 0.2352977650890397,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.964044526653271,
+        "standard_error": 0.0005533276482476995,
+        "ci_low": 0.9627361146771477,
+        "ci_high": 0.9653529386293943,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.013353403939509937,
+        "standard_error": 0.00020032042870134697,
+        "ci_low": 0.012879721395713268,
+        "ci_high": 0.013827086483306605,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.0037841796875,
+        "0.25": 0.018217086791992188,
+        "0.50": 0.032649993896484375,
+        "1.00": 0.06151580810546876
+      }
+    },
+    {
+      "scenario_id": "smooth_mixed",
+      "target_survival": 0.9,
+      "training_threshold": 0.010223105775464814,
+      "seeds": 8,
+      "realized_survival_fraction": 0.8882395426432291,
+      "raw_error_rate": 0.017369588216145836,
+      "conditional_error_rate": 0.0016835063666333998,
+      "accepted_failures_per_input": 0.001495361328125,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.017369588216145836,
+      "rejected_failure_capture_fraction": 0.9138782729344783,
+      "break_even_rejection_penalty": 0.14202404717936956,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.964044526653271,
+        "standard_error": 0.0005533276482476995,
+        "ci_low": 0.9627361146771477,
+        "ci_high": 0.9653529386293943,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.015686081849512434,
+        "standard_error": 0.0002201641571758225,
+        "ci_low": 0.015165476344122998,
+        "ci_high": 0.01620668735490187,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.001495361328125,
+        "0.25": 0.02943547566731771,
+        "0.50": 0.05737559000651042,
+        "1.00": 0.11325581868489584
+      }
+    },
+    {
+      "scenario_id": "smooth_mixed",
+      "target_survival": 0.8,
+      "training_threshold": 0.001548739715154679,
+      "seeds": 8,
+      "realized_survival_fraction": 0.7823359171549479,
+      "raw_error_rate": 0.017369588216145836,
+      "conditional_error_rate": 0.0005915192699388024,
+      "accepted_failures_per_input": 0.00046284993489583337,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.017369588216145836,
+      "rejected_failure_capture_fraction": 0.9733688882214353,
+      "break_even_rejection_penalty": 0.07767520538911493,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.964044526653271,
+        "standard_error": 0.0005533276482476995,
+        "ci_low": 0.9627361146771477,
+        "ci_high": 0.9653529386293943,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.016778068946207033,
+        "standard_error": 0.0002284299501316474,
+        "ci_low": 0.016237917946335608,
+        "ci_high": 0.017318219946078458,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.00046284993489583337,
+        "0.25": 0.05487887064615886,
+        "0.50": 0.10929489135742188,
+        "1.00": 0.21812693277994794
+      }
+    },
+    {
+      "scenario_id": "smooth_mixed",
+      "target_survival": 0.7,
+      "training_threshold": 0.0004416617253509836,
+      "seeds": 8,
+      "realized_survival_fraction": 0.6790110270182291,
+      "raw_error_rate": 0.017369588216145836,
+      "conditional_error_rate": 0.00026584453756633823,
+      "accepted_failures_per_input": 0.00018056233723958332,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.017369588216145836,
+      "rejected_failure_capture_fraction": 0.9896365235224343,
+      "break_even_rejection_penalty": 0.053550934766121765,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.964044526653271,
+        "standard_error": 0.0005533276482476995,
+        "ci_low": 0.9627361146771477,
+        "ci_high": 0.9653529386293943,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.017103743678579496,
+        "standard_error": 0.0002262860788956553,
+        "ci_low": 0.01656866212862499,
+        "ci_high": 0.017638825228534,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 0.00018056233723958332,
+        "0.25": 0.08042780558268228,
+        "0.50": 0.160675048828125,
+        "1.00": 0.3211695353190104
+      }
+    },
+    {
+      "scenario_id": "smooth_mixed",
+      "target_survival": 0.5,
+      "training_threshold": 6.879024060191252e-05,
+      "seeds": 8,
+      "realized_survival_fraction": 0.4765599568684896,
+      "raw_error_rate": 0.017369588216145836,
+      "conditional_error_rate": 6.939042504151546e-05,
+      "accepted_failures_per_input": 3.3060709635416664e-05,
+      "truth_upper_conditional_error_rate": 0.0,
+      "random_rejection_expected_conditional_error_rate": 0.017369588216145836,
+      "rejected_failure_capture_fraction": 0.998131527675697,
+      "break_even_rejection_penalty": 0.033119874284694636,
+      "score_auc_seed_cluster_ci": {
+        "estimate": 0.964044526653271,
+        "standard_error": 0.0005533276482476995,
+        "ci_low": 0.9627361146771477,
+        "ci_high": 0.9653529386293943,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.017300197791104317,
+        "standard_error": 0.00022263792135909915,
+        "ci_low": 0.016773742762934384,
+        "ci_high": 0.01782665281927425,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "mean_total_cost_by_rejection_penalty": {
+        "0.00": 3.3060709635416664e-05,
+        "0.25": 0.130893071492513,
+        "0.50": 0.2617530822753906,
+        "1.00": 0.5234731038411458
+      }
+    }
+  ],
+  "aggregate_by_target_survival": [
+    {
+      "target_survival": 0.995,
+      "training_threshold": 0.4116404297684926,
+      "realized_survival_fraction": 0.9948450724283854,
+      "raw_error_rate": 0.013785044352213543,
+      "conditional_error_rate": 0.011438023291967454,
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.002347021060246087,
+        "standard_error": 4.752532658586588e-05,
+        "ci_low": 0.002234641520436281,
+        "ci_high": 0.002459400600055893,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      }
+    },
+    {
+      "target_survival": 0.99,
+      "training_threshold": 0.3281971312781853,
+      "realized_survival_fraction": 0.9898325602213542,
+      "raw_error_rate": 0.013785044352213543,
+      "conditional_error_rate": 0.009544664268305804,
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.004240380083907737,
+        "standard_error": 6.616173772033335e-05,
+        "ci_low": 0.0040839324343667155,
+        "ci_high": 0.004396827733448758,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      }
+    },
+    {
+      "target_survival": 0.98,
+      "training_threshold": 0.19926100551297787,
+      "realized_survival_fraction": 0.9799009958902994,
+      "raw_error_rate": 0.013785044352213543,
+      "conditional_error_rate": 0.00681556248287009,
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.006969481869343453,
+        "standard_error": 7.30392024664439e-05,
+        "ci_low": 0.006796771599874304,
+        "ci_high": 0.0071421921388126015,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      }
+    },
+    {
+      "target_survival": 0.95,
+      "training_threshold": 0.04931779639968714,
+      "realized_survival_fraction": 0.9495887756347656,
+      "raw_error_rate": 0.013785044352213543,
+      "conditional_error_rate": 0.00296571975246498,
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.010819324599748562,
+        "standard_error": 6.427749052061273e-05,
+        "ci_low": 0.010667332486831995,
+        "ci_high": 0.010971316712665128,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      }
+    },
+    {
+      "target_survival": 0.9,
+      "training_threshold": 0.010223105775464814,
+      "realized_survival_fraction": 0.8991082509358723,
+      "raw_error_rate": 0.013785044352213543,
+      "conditional_error_rate": 0.0012424775303850107,
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.01254256682182853,
+        "standard_error": 7.789076180130222e-05,
+        "ci_low": 0.012358384437498135,
+        "ci_high": 0.012726749206158926,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      }
+    },
+    {
+      "target_survival": 0.8,
+      "training_threshold": 0.001548739715154679,
+      "realized_survival_fraction": 0.7985509236653645,
+      "raw_error_rate": 0.013785044352213543,
+      "conditional_error_rate": 0.0004058358952827137,
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.013379208456930828,
+        "standard_error": 6.900365973913064e-05,
+        "ci_low": 0.013216040729663023,
+        "ci_high": 0.013542376184198634,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      }
+    },
+    {
+      "target_survival": 0.7,
+      "training_threshold": 0.0004416617253509836,
+      "realized_survival_fraction": 0.6990350087483724,
+      "raw_error_rate": 0.013785044352213543,
+      "conditional_error_rate": 0.00018042642099331215,
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.01360461793122023,
+        "standard_error": 7.176452573483628e-05,
+        "ci_low": 0.013434921793263582,
+        "ci_high": 0.013774314069176879,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      }
+    },
+    {
+      "target_survival": 0.5,
+      "training_threshold": 6.879024060191252e-05,
+      "realized_survival_fraction": 0.4995339711507162,
+      "raw_error_rate": 0.013785044352213543,
+      "conditional_error_rate": 6.011070439332922e-05,
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.013724933647820212,
+        "standard_error": 7.305483584168701e-05,
+        "ci_low": 0.013552186411292829,
+        "ci_high": 0.013897680884347596,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      }
+    }
+  ],
+  "aggregate": {
+    "scenarios": 4,
+    "evaluation_seeds_per_scenario": 8,
+    "evaluation_samples": 1572864,
+    "source_data_rows": 256
+  },
+  "gate_summary": {
+    "passed": 14,
+    "failed": 0,
+    "gates": {
+      "training_and_evaluation_are_disjoint": true,
+      "thresholds_are_training_only_and_monotone": true,
+      "score_contract_has_no_hidden_truth_input": true,
+      "all_evaluation_traces_are_unique": true,
+      "source_grid_is_complete": true,
+      "realized_survival_tracks_training_targets": true,
+      "observed_score_is_informative_in_every_scenario": true,
+      "primary_conditional_improvement_resolved_every_scenario": true,
+      "truth_upper_bound_never_worse_than_observed": true,
+      "truth_upper_frontier_has_nonzero_and_zero_regions": true,
+      "random_rejection_does_not_fake_conditional_gain": true,
+      "unit_rejection_cost_prevents_free_postselection_gain": true,
+      "rejection_cost_and_survival_are_complete": true,
+      "diagnostic_is_excluded_from_primary_metric": true
+    }
+  },
+  "claim_boundary": {
+    "allowed": "offline evidence that static-MAP posterior confidence contains failure information, with survival, rejection and penalty costs reported",
+    "forbidden": "online correction gain, postselected break-even, free rejection, truth-score deployment, device calibration, or FPGA synthesis/measurement"
+  }
+}

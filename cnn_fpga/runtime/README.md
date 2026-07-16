@@ -7,6 +7,9 @@
 | 文件 | 职责 |
 |------|------|
 | [param_bank.py](param_bank.py) | 双缓冲参数银行，支持 stage-then-commit 无毛刺更新 |
+| [atomic_parameter_bank.py](atomic_parameter_bank.py) | 完整 MAP-LUT image 的 version/CRC/SHA/timestamp/CAS 双 bank 事务、hysteresis、atomic commit 与 readback |
+| [three_timescale_cadence.py](three_timescale_cadence.py) | fast/event/window/slow/commit/recalibration exact cadence 与 adaptation-lag 定义 |
+| [closed_loop_fault_recovery.py](closed_loop_fault_recovery.py) | atomic bank、ack/readback、post-commit guard、host timeout、monotonic LKG republish 与 bit-accurate fallback 闭环 |
 | [latency_injector.py](latency_injector.py) | 随机延迟采样（DMA / 推理 / 写回等阶段） |
 | [scheduler.py](scheduler.py) | 双环路周期调度器，协调窗口发射与慢环任务 |
 | [fast_loop_emulator.py](fast_loop_emulator.py) | 快环仿真器：采样噪声→综合征→解码→校正→直方图聚合 |
@@ -20,7 +23,10 @@
 ### 模块依赖关系
 
 ```
-param_bank.py          (叶节点)
+param_bank.py          (legacy 兼容叶节点)
+atomic_parameter_bank.py → parametric_map_lut
+three_timescale_cadence.py (叶节点)
+closed_loop_fault_recovery.py → atomic_parameter_bank, fast_path_fixed_point
 latency_injector.py    (叶节点)
 noise_bridge.py        (叶节点)
     ↓
@@ -61,6 +67,21 @@ slow_loop_runtime.py   → feature_builder, inference_service, param_bank, sched
   - `stage_update(params, commit_epoch)` — 暂存参数到 staging bank
   - `commit_if_ready(epoch_id)` — epoch 到达后交换 active/staging bank
   - `read_active()` — 读取当前生效的参数
+
+### 完整 image 原子参数库 — `atomic_parameter_bank.py`
+
+T4.3.2 production candidate 以完整 parametric MAP-LUT image 为事务单位：
+
+- `observe_selection(...)`：连续两窗同 selection key 的 hysteresis；
+- `begin_stage(...)` / `write_chunk(...)` / `finalize_stage(...)`：transfer buffer 与 A/B valid slots 隔离，完整 CRC/SHA/canonical image 验证后才发布 inactive image；
+- `commit_if_ready(epoch, safe_boundary=...)`：在 apply epoch、安全 cycle boundary、CAS、freshness 和 minimum residency 通过后交换 active pointer；
+- `readback()` / `verify_commit_ack_readback(...)`：以 bank/version/epoch/image CRC/SHA 关闭 host 确认链。
+
+它尚未替换 legacy scheduler 的 `ParamBank`，也不包含自动回滚、真实 transport、CDC/RTL 或板测。
+
+### 闭环故障恢复 — `closed_loop_fault_recovery.py`
+
+T4.3.3 supervisor 将完整 image transaction 与逐周期 fast fallback 组合：commit ack 丢失时保持 host uncertain 并阻止新 writer；post-commit guard 失败时把 prior LKG contents 作为新单调版本重发；host timeout/stale、bad integrity、OOD/deadline 和 leakage 均落到有 reason trace 的 frame hold/reset。它是 software control-safety primitive，不是自动物理 rollback、wire/CDC/RTL 或板测。
 
 ### 延迟注入 — `latency_injector.py`
 

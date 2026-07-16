@@ -1,0 +1,678 @@
+{
+  "schema_version": "t3.2.5-run-length-fsm-baseline-v1",
+  "task_id": "T3.2.5",
+  "status": "FAIL",
+  "implementation_sha256": "329084a124c609e1e20399f99772fa97691ba7eb7db572b502d43dfe5fb811c8",
+  "descriptor": {
+    "task_id": "T3.2.5",
+    "family": "deterministic_event_controller_baseline",
+    "online_inputs": [
+      "residual_qp",
+      "observed_x_z_g_e_leakage",
+      "quadrature_phase_bit",
+      "valid_crc_fresh_deadline_flags"
+    ],
+    "hidden_truth_inputs": [],
+    "evaluator_truth_fields": [
+      "leakage_kind",
+      "recovery_depth_before_action",
+      "recovery_quadrature"
+    ],
+    "action_contract": "normal_x-recovery_z-recovery_leakage-hold_fallback_parameter-bank_mode",
+    "primary_metric": "event_control_cost_plus_atomic_parameter_write_cost",
+    "logical_error_metric": false,
+    "fixed_point_or_rtl": false,
+    "target_hardware_measured": false,
+    "evidence_scope": "protocol_aligned_synthetic_syndrome_stream_software_validation"
+  },
+  "validation_config": {
+    "training_seeds": [
+      20261101,
+      20261102,
+      20261103
+    ],
+    "evaluation_seeds": [
+      20261121,
+      20261122,
+      20261123,
+      20261124,
+      20261125,
+      20261126,
+      20261127,
+      20261128
+    ],
+    "training_cycles": 512,
+    "evaluation_cycles": 1024,
+    "e_enter_grid": [
+      2,
+      3,
+      4
+    ],
+    "leakage_enter_grid": [
+      1,
+      2
+    ],
+    "leakage_clear_grid": [
+      1,
+      2
+    ],
+    "fallback_clear_grid": [
+      1,
+      2
+    ],
+    "confidence_level": 0.95
+  },
+  "scenario_contracts": [
+    {
+      "scenario_id": "persistent_recovery",
+      "sigma_q": 0.46,
+      "sigma_p": 0.41,
+      "rho": 0.25,
+      "loss_gamma": 0.015,
+      "p_outlier": 0.015,
+      "outlier_scale": 2.5,
+      "depth_probability_scale": 0.55,
+      "recovery_probability": 0.62,
+      "readout_fidelity_g": 0.997,
+      "readout_fidelity_e": 0.985,
+      "base_leakage_probability": 0.0005,
+      "higher_leakage_fraction": 0.4,
+      "higher_leakage_mean_duration": 4.0,
+      "burst_period": 0,
+      "burst_width": 0,
+      "health_fault_period": 0
+    },
+    {
+      "scenario_id": "readout_false_positive",
+      "sigma_q": 0.25,
+      "sigma_p": 0.23,
+      "rho": -0.15,
+      "loss_gamma": 0.005,
+      "p_outlier": 0.002,
+      "outlier_scale": 2.0,
+      "depth_probability_scale": 0.09,
+      "recovery_probability": 0.78,
+      "readout_fidelity_g": 0.94,
+      "readout_fidelity_e": 0.98,
+      "base_leakage_probability": 0.0002,
+      "higher_leakage_fraction": 0.3,
+      "higher_leakage_mean_duration": 3.0,
+      "burst_period": 0,
+      "burst_width": 0,
+      "health_fault_period": 0
+    },
+    {
+      "scenario_id": "leakage_bursts",
+      "sigma_q": 0.34,
+      "sigma_p": 0.31,
+      "rho": 0.1,
+      "loss_gamma": 0.04,
+      "p_outlier": 0.01,
+      "outlier_scale": 3.0,
+      "depth_probability_scale": 0.28,
+      "recovery_probability": 0.7,
+      "readout_fidelity_g": 0.992,
+      "readout_fidelity_e": 0.98,
+      "base_leakage_probability": 0.014,
+      "higher_leakage_fraction": 0.8,
+      "higher_leakage_mean_duration": 6.0,
+      "burst_period": 0,
+      "burst_width": 0,
+      "health_fault_period": 0
+    },
+    {
+      "scenario_id": "mixed_burst_health",
+      "sigma_q": 0.32,
+      "sigma_p": 0.38,
+      "rho": -0.35,
+      "loss_gamma": 0.055,
+      "p_outlier": 0.025,
+      "outlier_scale": 4.0,
+      "depth_probability_scale": 0.36,
+      "recovery_probability": 0.67,
+      "readout_fidelity_g": 0.975,
+      "readout_fidelity_e": 0.975,
+      "base_leakage_probability": 0.004,
+      "higher_leakage_fraction": 0.65,
+      "higher_leakage_mean_duration": 5.0,
+      "burst_period": 257,
+      "burst_width": 19,
+      "health_fault_period": 503
+    }
+  ],
+  "training_selection": {
+    "evaluation_truth_used": false,
+    "training_traces": 12,
+    "training_cycles": 6144,
+    "grid": [
+      {
+        "e_enter_run": 2,
+        "leakage_enter_run": 1,
+        "leakage_clear_run": 1,
+        "fallback_clear_run": 1,
+        "training_mean_event_plus_write_cost": 0.203623046875,
+        "training_mean_bank_writes": 134.58333333333334,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 2,
+        "leakage_enter_run": 1,
+        "leakage_clear_run": 1,
+        "fallback_clear_run": 2,
+        "training_mean_event_plus_write_cost": 0.2032532552083333,
+        "training_mean_bank_writes": 134.08333333333334,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 2,
+        "leakage_enter_run": 1,
+        "leakage_clear_run": 2,
+        "fallback_clear_run": 1,
+        "training_mean_event_plus_write_cost": 0.20307552083333333,
+        "training_mean_bank_writes": 131.91666666666666,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 2,
+        "leakage_enter_run": 1,
+        "leakage_clear_run": 2,
+        "fallback_clear_run": 2,
+        "training_mean_event_plus_write_cost": 0.20270572916666665,
+        "training_mean_bank_writes": 131.41666666666666,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 2,
+        "leakage_enter_run": 2,
+        "leakage_clear_run": 1,
+        "fallback_clear_run": 1,
+        "training_mean_event_plus_write_cost": 0.21006868489583333,
+        "training_mean_bank_writes": 134.66666666666666,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 2,
+        "leakage_enter_run": 2,
+        "leakage_clear_run": 1,
+        "fallback_clear_run": 2,
+        "training_mean_event_plus_write_cost": 0.20969889322916666,
+        "training_mean_bank_writes": 134.16666666666666,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 2,
+        "leakage_enter_run": 2,
+        "leakage_clear_run": 2,
+        "fallback_clear_run": 1,
+        "training_mean_event_plus_write_cost": 0.20965397135416672,
+        "training_mean_bank_writes": 132.66666666666666,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 2,
+        "leakage_enter_run": 2,
+        "leakage_clear_run": 2,
+        "fallback_clear_run": 2,
+        "training_mean_event_plus_write_cost": 0.20928417968750002,
+        "training_mean_bank_writes": 132.16666666666666,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 3,
+        "leakage_enter_run": 1,
+        "leakage_clear_run": 1,
+        "fallback_clear_run": 1,
+        "training_mean_event_plus_write_cost": 0.32561946614583337,
+        "training_mean_bank_writes": 85.66666666666667,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 3,
+        "leakage_enter_run": 1,
+        "leakage_clear_run": 1,
+        "fallback_clear_run": 2,
+        "training_mean_event_plus_write_cost": 0.3252516276041667,
+        "training_mean_bank_writes": 85.66666666666667,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 3,
+        "leakage_enter_run": 1,
+        "leakage_clear_run": 2,
+        "fallback_clear_run": 1,
+        "training_mean_event_plus_write_cost": 0.32508203125000007,
+        "training_mean_bank_writes": 85.58333333333333,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 3,
+        "leakage_enter_run": 1,
+        "leakage_clear_run": 2,
+        "fallback_clear_run": 2,
+        "training_mean_event_plus_write_cost": 0.32471419270833335,
+        "training_mean_bank_writes": 85.58333333333333,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 3,
+        "leakage_enter_run": 2,
+        "leakage_clear_run": 1,
+        "fallback_clear_run": 1,
+        "training_mean_event_plus_write_cost": 0.3320628255208333,
+        "training_mean_bank_writes": 85.16666666666667,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 3,
+        "leakage_enter_run": 2,
+        "leakage_clear_run": 1,
+        "fallback_clear_run": 2,
+        "training_mean_event_plus_write_cost": 0.33169498697916666,
+        "training_mean_bank_writes": 85.16666666666667,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 3,
+        "leakage_enter_run": 2,
+        "leakage_clear_run": 2,
+        "fallback_clear_run": 1,
+        "training_mean_event_plus_write_cost": 0.33165559895833335,
+        "training_mean_bank_writes": 85.08333333333333,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 3,
+        "leakage_enter_run": 2,
+        "leakage_clear_run": 2,
+        "fallback_clear_run": 2,
+        "training_mean_event_plus_write_cost": 0.3312877604166667,
+        "training_mean_bank_writes": 85.08333333333333,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 4,
+        "leakage_enter_run": 1,
+        "leakage_clear_run": 1,
+        "fallback_clear_run": 1,
+        "training_mean_event_plus_write_cost": 0.40088574218750006,
+        "training_mean_bank_writes": 59.666666666666664,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 4,
+        "leakage_enter_run": 1,
+        "leakage_clear_run": 1,
+        "fallback_clear_run": 2,
+        "training_mean_event_plus_write_cost": 0.40051790364583345,
+        "training_mean_bank_writes": 59.666666666666664,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 4,
+        "leakage_enter_run": 1,
+        "leakage_clear_run": 2,
+        "fallback_clear_run": 1,
+        "training_mean_event_plus_write_cost": 0.4003483072916667,
+        "training_mean_bank_writes": 59.583333333333336,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 4,
+        "leakage_enter_run": 1,
+        "leakage_clear_run": 2,
+        "fallback_clear_run": 2,
+        "training_mean_event_plus_write_cost": 0.39998046875,
+        "training_mean_bank_writes": 59.583333333333336,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 4,
+        "leakage_enter_run": 2,
+        "leakage_clear_run": 1,
+        "fallback_clear_run": 1,
+        "training_mean_event_plus_write_cost": 0.40732682291666666,
+        "training_mean_bank_writes": 58.583333333333336,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 4,
+        "leakage_enter_run": 2,
+        "leakage_clear_run": 1,
+        "fallback_clear_run": 2,
+        "training_mean_event_plus_write_cost": 0.40695898437500005,
+        "training_mean_bank_writes": 58.583333333333336,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 4,
+        "leakage_enter_run": 2,
+        "leakage_clear_run": 2,
+        "fallback_clear_run": 1,
+        "training_mean_event_plus_write_cost": 0.4069195963541667,
+        "training_mean_bank_writes": 58.5,
+        "training_traces": 12
+      },
+      {
+        "e_enter_run": 4,
+        "leakage_enter_run": 2,
+        "leakage_clear_run": 2,
+        "fallback_clear_run": 2,
+        "training_mean_event_plus_write_cost": 0.4065517578125,
+        "training_mean_bank_writes": 58.5,
+        "training_traces": 12
+      }
+    ],
+    "selected_config": {
+      "counter_bits": 3,
+      "e_enter_run": 2,
+      "leakage_enter_run": 1,
+      "leakage_clear_run": 2,
+      "fallback_clear_run": 2,
+      "correction_limit": 1.0
+    }
+  },
+  "scenario_summaries": [
+    {
+      "scenario_id": "persistent_recovery",
+      "seeds": 8,
+      "cycles": 8192,
+      "static_safe_normal": {
+        "event_cost": 0.868994140625,
+        "event_plus_write_cost": 0.868994140625,
+        "action_accuracy": 0.1314697265625,
+        "unsafe_miss_rate": 0.625,
+        "false_intervention_rate": 0.0,
+        "mean_event_detection_delay_cycles": 4.351813945927832,
+        "bank_writes": 0.0
+      },
+      "memoryless_event": {
+        "event_cost": 0.014644775390625,
+        "event_plus_write_cost": 0.0152236328125,
+        "action_accuracy": 0.9852294921875,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.003637841204695875,
+        "mean_event_detection_delay_cycles": 0.020864984189708516,
+        "bank_writes": 296.375
+      },
+      "run_length_fsm": {
+        "event_cost": 0.21859130859375,
+        "event_plus_write_cost": 0.219240966796875,
+        "action_accuracy": 0.7813720703125,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.0,
+        "mean_event_detection_delay_cycles": 1.0252897035717325,
+        "bank_writes": 332.625
+      },
+      "truth_oracle": {
+        "event_cost": 0.0,
+        "event_plus_write_cost": 0.00053955078125,
+        "action_accuracy": 1.0,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.0,
+        "mean_event_detection_delay_cycles": 0.0,
+        "bank_writes": 276.25
+      }
+    },
+    {
+      "scenario_id": "readout_false_positive",
+      "seeds": 8,
+      "cycles": 8192,
+      "static_safe_normal": {
+        "event_cost": 0.207470703125,
+        "event_plus_write_cost": 0.207470703125,
+        "action_accuracy": 0.7926025390625,
+        "unsafe_miss_rate": 0.25,
+        "false_intervention_rate": 0.0,
+        "mean_event_detection_delay_cycles": 1.538618519757545,
+        "bank_writes": 0.0
+      },
+      "memoryless_event": {
+        "event_cost": 0.026105957031249995,
+        "event_plus_write_cost": 0.026862304687499998,
+        "action_accuracy": 0.9051513671875,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.10804050412184175,
+        "mean_event_detection_delay_cycles": 0.04930313818745233,
+        "bank_writes": 387.25
+      },
+      "run_length_fsm": {
+        "event_cost": 0.13250244140624998,
+        "event_plus_write_cost": 0.1327373046875,
+        "action_accuracy": 0.859375,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.01338999111792499,
+        "mean_event_detection_delay_cycles": 0.9593272377627375,
+        "bank_writes": 120.25
+      },
+      "truth_oracle": {
+        "event_cost": 0.0,
+        "event_plus_write_cost": 0.000515869140625,
+        "action_accuracy": 1.0,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.0,
+        "mean_event_detection_delay_cycles": 0.0,
+        "bank_writes": 264.125
+      }
+    },
+    {
+      "scenario_id": "leakage_bursts",
+      "seeds": 8,
+      "cycles": 8192,
+      "static_safe_normal": {
+        "event_cost": 0.632861328125,
+        "event_plus_write_cost": 0.632861328125,
+        "action_accuracy": 0.3807373046875,
+        "unsafe_miss_rate": 1.0,
+        "false_intervention_rate": 0.0,
+        "mean_event_detection_delay_cycles": 2.845487377931189,
+        "bank_writes": 0.0
+      },
+      "memoryless_event": {
+        "event_cost": 0.0145654296875,
+        "event_plus_write_cost": 0.015321289062499998,
+        "action_accuracy": 0.981201171875,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.015420349294054917,
+        "mean_event_detection_delay_cycles": 0.016732116166239056,
+        "bank_writes": 387.0
+      },
+      "run_length_fsm": {
+        "event_cost": 0.21928222656250002,
+        "event_plus_write_cost": 0.219813720703125,
+        "action_accuracy": 0.779052734375,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.0021453947697718336,
+        "mean_event_detection_delay_cycles": 0.9673722784309895,
+        "bank_writes": 272.125
+      },
+      "truth_oracle": {
+        "event_cost": 0.0,
+        "event_plus_write_cost": 0.0007158203125000001,
+        "action_accuracy": 1.0,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.0,
+        "mean_event_detection_delay_cycles": 0.0,
+        "bank_writes": 366.5
+      }
+    },
+    {
+      "scenario_id": "mixed_burst_health",
+      "seeds": 8,
+      "cycles": 8192,
+      "static_safe_normal": {
+        "event_cost": 0.6974365234375,
+        "event_plus_write_cost": 0.6974677734375,
+        "action_accuracy": 0.307373046875,
+        "unsafe_miss_rate": 0.6364819230948264,
+        "false_intervention_rate": 0.0,
+        "mean_event_detection_delay_cycles": 3.0627658027838907,
+        "bank_writes": 16.0
+      },
+      "memoryless_event": {
+        "event_cost": 0.029228515624999996,
+        "event_plus_write_cost": 0.030030761718749997,
+        "action_accuracy": 0.9595947265625,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.0549253480154714,
+        "mean_event_detection_delay_cycles": 0.032927421472964534,
+        "bank_writes": 410.75
+      },
+      "run_length_fsm": {
+        "event_cost": 0.232833251953125,
+        "event_plus_write_cost": 0.23347607421875,
+        "action_accuracy": 0.7601318359375,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.017276475008782495,
+        "mean_event_detection_delay_cycles": 0.995735348293024,
+        "bank_writes": 329.125
+      },
+      "truth_oracle": {
+        "event_cost": 0.0,
+        "event_plus_write_cost": 0.000729736328125,
+        "action_accuracy": 1.0,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.0,
+        "mean_event_detection_delay_cycles": 0.0,
+        "bank_writes": 373.625
+      }
+    }
+  ],
+  "aggregate": {
+    "evaluation_traces": 32,
+    "evaluation_cycles": 32768,
+    "source_data_rows": 32,
+    "controllers": {
+      "static_safe_normal": {
+        "event_cost": 0.6016906738281251,
+        "event_plus_write_cost": 0.601698486328125,
+        "action_accuracy": 0.403045654296875,
+        "unsafe_miss_rate": 0.6278704807737066,
+        "false_intervention_rate": 0.0,
+        "mean_event_detection_delay_cycles": 2.9496714116001144,
+        "bank_writes": 4.0
+      },
+      "memoryless_event": {
+        "event_cost": 0.021136169433593748,
+        "event_plus_write_cost": 0.021859497070312497,
+        "action_accuracy": 0.957794189453125,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.04550601065901598,
+        "mean_event_detection_delay_cycles": 0.02995691500409111,
+        "bank_writes": 370.34375
+      },
+      "run_length_fsm": {
+        "event_cost": 0.20080230712890623,
+        "event_plus_write_cost": 0.2013170166015625,
+        "action_accuracy": 0.79498291015625,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.00820296522411983,
+        "mean_event_detection_delay_cycles": 0.9869311420146208,
+        "bank_writes": 263.53125
+      },
+      "truth_oracle": {
+        "event_cost": 0.0,
+        "event_plus_write_cost": 0.000625244140625,
+        "action_accuracy": 1.0,
+        "unsafe_miss_rate": 0.0,
+        "false_intervention_rate": 0.0,
+        "mean_event_detection_delay_cycles": 0.0,
+        "bank_writes": 320.125
+      }
+    },
+    "paired_seed_cluster_comparisons": {
+      "static_minus_run_length": {
+        "estimate": 0.4003814697265625,
+        "standard_error": 0.006699248783722662,
+        "ci_low": 0.38454026358511845,
+        "ci_high": 0.4162226758680066,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "memoryless_minus_run_length": {
+        "estimate": -0.17945751953125,
+        "standard_error": 0.00239224138475949,
+        "ci_low": -0.1851142715253162,
+        "ci_high": -0.1738007675371838,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "run_length_minus_truth_oracle": {
+        "estimate": 0.2006917724609375,
+        "standard_error": 0.0024217680731694487,
+        "ci_low": 0.1949652009433879,
+        "ci_high": 0.2064183439784871,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      }
+    }
+  },
+  "parameter_bank_conflict_probe": {
+    "pending_version": 1,
+    "modes": [
+      "fallback",
+      "fallback",
+      "fallback",
+      "x_recovery"
+    ],
+    "conflicts": [
+      true,
+      true,
+      true,
+      false
+    ],
+    "local_safe_rom": [
+      true,
+      true,
+      true,
+      false
+    ],
+    "corrections": [
+      [
+        0.2,
+        -0.1
+      ],
+      [
+        0.2,
+        -0.1
+      ],
+      [
+        0.2,
+        -0.1
+      ],
+      [
+        0.26,
+        -0.2
+      ]
+    ],
+    "final_version": 2,
+    "final_active_mode": "x_recovery"
+  },
+  "gate_summary": {
+    "passed": 14,
+    "failed": 1,
+    "gates": {
+      "training_and_evaluation_seeds_are_disjoint": true,
+      "threshold_grid_is_complete_and_training_only": true,
+      "online_fsm_schema_has_no_truth_or_regime": true,
+      "evaluation_source_grid_is_complete": true,
+      "evaluation_traces_are_unique": true,
+      "same_trace_contains_all_four_controllers": true,
+      "all_scenarios_exercise_recovery_and_leakage": true,
+      "health_scenario_exercises_fallback": true,
+      "real_parameter_bank_versions_equal_successful_writes": true,
+      "normal_evaluation_has_no_bank_conflict_or_nonfinite_action": true,
+      "parameter_writes_are_event_driven_not_per_cycle": false,
+      "truth_oracle_is_cost_lower_bound_on_every_trace": true,
+      "run_length_improves_static_aggregate": true,
+      "conflict_probe_stays_local_safe_until_atomic_resync": true,
+      "scope_is_software_event_cost_not_ler_or_hardware_measurement": true
+    }
+  },
+  "claim_boundary": {
+    "allowed": "observed-only deterministic run-length event controller with saturating counters, atomic parameter-bank switching, explicit safety fallback, and paired software event-cost evidence",
+    "forbidden": "logical-error-rate gain, optimal physical recovery, bit-accurate RTL, synthesis/resource/Fmax, device-calibrated event cost, or target-board measurement"
+  }
+}

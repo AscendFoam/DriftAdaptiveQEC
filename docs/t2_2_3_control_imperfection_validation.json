@@ -1,0 +1,75 @@
+{
+  "samples": 100000,
+  "seed": 2026071423,
+  "mean": {
+    "empirical": [
+      0.08731038728576299,
+      0.07889177889081206
+    ],
+    "analytic": [
+      0.08719756419456724,
+      0.079016463511029
+    ],
+    "maximum_z_score": 1.5357543305907528
+  },
+  "covariance": {
+    "empirical": [
+      [
+        0.0008911917807902198,
+        0.00012147360541895642
+      ],
+      [
+        0.00012147360541895642,
+        0.000657276750998293
+      ]
+    ],
+    "analytic": [
+      [
+        0.0008908821465935775,
+        0.0001213588334730625
+      ],
+      [
+        0.0001213588334730625,
+        0.0006591469946811276
+      ]
+    ],
+    "relative_frobenius_error": 0.0016966197815077464
+  },
+  "quantization_sweep": {
+    "bits": [
+      6,
+      8,
+      10,
+      12
+    ],
+    "rms_displacement_error": [
+      0.04117914155596737,
+      0.010172326931850533,
+      0.0024603492733122827,
+      0.0006274619130121781
+    ]
+  },
+  "pulse_systematic_displacement_error_norm": 0.006944015270216939,
+  "virtual_rotation_systematic_error_rad": 0.0027984379900806156,
+  "latency_covariance_trace": [
+    1.734723475976807e-18,
+    0.00036000000000000355,
+    0.0009000000000000058,
+    0.0018000000000000065
+  ],
+  "ideal_endpoint_max_abs_residual": 0.0,
+  "checks": {
+    "mean_within_5_standard_errors": true,
+    "covariance_relative_error_below_2_percent": true,
+    "quantization_rms_error_strictly_decreases_with_bits": true,
+    "latency_covariance_trace_strictly_increases": true,
+    "ideal_endpoint_is_exact": true,
+    "quantization_produces_integer_codes": true,
+    "production_command_is_not_saturated": true
+  },
+  "evidence_scope": "causal_control_imperfection_effective_model_not_device_calibrated",
+  "claim_boundary": {
+    "allowed": "causal command-encoding and physical-control imperfection sensitivity",
+    "forbidden": "device-calibrated DAC/AWG precision, pulse fidelity, hard-real-time latency or microwave-chain measurement"
+  }
+}

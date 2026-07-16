@@ -1,0 +1,681 @@
+{
+  "schema_version": 1,
+  "task_id": "T4.4.1",
+  "status": "FAIL",
+  "scope": "fresh multi-start GRU10-DENSE256-DENSE256-OUT15 offline teacher trained with Feedback-GRAPE in the finite-cutoff two-level differentiable sBs model; nominal-plus-bounded-residual actions; not global optimality, multilevel leakage/SPAM/pulse calibration, online FPGA, or device evidence",
+  "training_protocol_id": "T441-FRESH-BOUNDED-RESIDUAL-GRU-STRICT-SPLIT-V1",
+  "implementation_sha256": "3b6ce6ef95c91f36d07825dd1666dab7468385871ec3f934e9933367a2fae84b",
+  "config_contract_hash": "9e8e976522a37742787a75a62d1102e2c021f01b94993b48579940bc08557e51",
+  "checkpoint_contract_hash": "a657d2788451a985ba724d42a7f5e120dd3314554b935eb1bf0b5f8244f10fe2",
+  "created_utc": "2026-07-15T21:39:44.296579+00:00",
+  "config": {
+    "cutoff": 4,
+    "confirmation_cutoff": 4,
+    "full_cycles": 2,
+    "training_epochs": 1,
+    "training_batch_size": 1,
+    "validation_batch_size": 1,
+    "evaluation_batch_size": 1,
+    "confirmation_batch_size": 1,
+    "validation_interval": 1,
+    "learning_rate": 0.0001,
+    "score_baseline_decay": 0.95,
+    "gradient_clip_norm": 10.0,
+    "residual_l2_weight": 1e-05,
+    "slew_l2_weight": 1e-05,
+    "restart_seeds": [
+      4401
+    ],
+    "validation_seeds": [
+      4411
+    ],
+    "evaluation_seeds": [
+      4421
+    ],
+    "confirmation_seeds": [
+      4431
+    ],
+    "bootstrap_seed": 441001,
+    "bootstrap_repetitions": 100,
+    "minimum_validation_gain": 0.0,
+    "minimum_successful_restart_fraction": 0.6666666666666666,
+    "minimum_primary_score_gain": 0.0,
+    "minimum_confirmation_score_gain": 0.0,
+    "device": "cpu",
+    "real_dtype": "float64",
+    "projector_delta": 0.34,
+    "cavity_lifetime_us": 245.0,
+    "ancilla_t1_us": 50.0,
+    "ancilla_t2_us": 60.0,
+    "action_contract_id": "SBS-NOMINAL-PLUS-BOUNDED-RESIDUAL-15",
+    "policy_initialization_id": "T237-NOMINAL-RESIDUAL-GRU-ORTHOGONAL-V2"
+  },
+  "execution": {
+    "device": "cpu",
+    "torch_version": "2.8.0.dev20250405+cu128",
+    "cuda_available": true,
+    "cuda_device": "NVIDIA GeForce RTX 4070 Laptop GPU",
+    "resumed_restarts_this_invocation": 0,
+    "fresh_restart_count_in_checkpoint": 1,
+    "wall_time_seconds": 1.4629331000032835
+  },
+  "parent_provenance": {
+    "t2_3_7": {
+      "role": "architecture_training_and_directional_ranking_parent_only",
+      "manifest_path": "docs/t2_3_7_nmf_directional_ranking.json",
+      "manifest_sha256": "c690afed5143135dc4099b54b60f7a60128ce9594922312ef23fd33f8f7466b5",
+      "checkpoint_path": "docs/t2_3_7_nmf_directional_ranking_checkpoints.pt",
+      "checkpoint_sha256": "6f97ea59d91f955ea62494b701bbb54bf1abb69a6d104fb85d0fccb9cf4ca48a",
+      "status": "PASS",
+      "training_seeds": [
+        101,
+        211,
+        307,
+        401,
+        503
+      ],
+      "nmf_model_sha256s": [
+        "36e473d6144f35b3449852d62c6a68da802f1af7b03f37f88695a012475c9e59",
+        "f6da8f7e9996a2d7e06f639e21fe5be62647e70b8d4befbeaca1a9029db293e1",
+        "d3a04604ea5d5c16c42a6a5bbbb8d63df1497b7fc9b5c7fba0cc78b4fc28cb9a",
+        "c4be1ecd38f14e1f5ca4918f36b62f0dd07bbddb6ff28079292462035b9b95f1",
+        "27cd562086c12d0306cb59d1f81842e298380c34adc005547a15d02e9fa10b0f"
+      ]
+    },
+    "t3_2_9": {
+      "role": "bounded_action_contract_and_finite_horizon_control_reference_only",
+      "manifest_path": "docs/t3_2_9_trajectory_lookup_control_oracle.json",
+      "manifest_sha256": "604df4fb818a4ffd4c7c91d913742cee979f1021467f999af6a16c2a60734d7a",
+      "checkpoint_path": "docs/t3_2_9_trajectory_lookup_control_oracle.pt",
+      "checkpoint_sha256": "36637569bdc48c4fb704c53dc793a91e53cb75c629067b9b44bee3096571d66f",
+      "status": "PASS",
+      "same_bounded_fifteen_action_contract_gate": true
+    },
+    "t4_1_5": {
+      "role": "old_teacher_distillation_provenance_only_not_new_teacher_weights",
+      "manifest_path": "docs/t4_1_5_teacher_student_validation.json",
+      "manifest_sha256": "586c72dc636db2488d9f659e4c20b26b4b84584e86712798ab401858da49a085",
+      "status": "PASS",
+      "declared_t2_3_7_checkpoint_sha256": "6f97ea59d91f955ea62494b701bbb54bf1abb69a6d104fb85d0fccb9cf4ca48a"
+    }
+  },
+  "action_contract": {
+    "parameter_names": [
+      "layer1_phi",
+      "layer1_theta",
+      "layer1_beta_real",
+      "layer1_beta_imag",
+      "layer2_phi",
+      "layer2_theta",
+      "layer2_beta_real",
+      "layer2_beta_imag",
+      "layer3_phi",
+      "layer3_theta",
+      "layer3_beta_real",
+      "layer3_beta_imag",
+      "layer4_phi",
+      "layer4_theta",
+      "virtual_rotation"
+    ],
+    "output_count": 15,
+    "nominal_parameters": [
+      1.5707963267948966,
+      1.5707963267948966,
+      0.0,
+      0.2,
+      0.0,
+      -1.5707963267948966,
+      2.5066282746310002,
+      0.0,
+      0.0,
+      1.5707963267948966,
+      0.0,
+      0.2,
+      1.5707963267948966,
+      -1.5707963267948966,
+      1.5707963267948966
+    ],
+    "residual_bounds": [
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      2.0,
+      1.0
+    ],
+    "probe_raw_values": [
+      -1000000.0,
+      -100.0,
+      -20.0,
+      -5.0,
+      0.0,
+      5.0,
+      20.0,
+      100.0,
+      1000000.0
+    ],
+    "maximum_bound_violation": 0.0,
+    "zero_residual_matches_nominal_max_error": 0.0,
+    "absolute_zero_physical_vector_is_inside_safe_residual_box": false,
+    "absolute_zero_exclusion_reason": "layer2_beta_real nominal magnitude exceeds its residual bound"
+  },
+  "training_restarts": [
+    {
+      "strategy": "nmf",
+      "training_seed": 4401,
+      "parameter_count": 72853,
+      "architecture": "GRU10-DENSE256-DENSE256-OUT15",
+      "epochs_executed": 1,
+      "training_trajectories": 1,
+      "baseline_warmup_trajectories": 1,
+      "baseline_initialization": "train-only no-gradient warm-up reward mean",
+      "baseline_warmup_seed": 4401013203,
+      "training_trajectory_seeds": [
+        4401013204
+      ],
+      "validation_seeds_used_for_checkpoint_selection_only": [
+        4411
+      ],
+      "best_validation_epoch": 1,
+      "best_validation_score": 0.3143418207354227,
+      "initial_validation_score": 0.31399872111632243,
+      "validation_history": [
+        {
+          "epoch": 0,
+          "selection_score": 0.31399872111632243,
+          "metric_means": {
+            "fidelity_effective_lifetime_cycles": 0.8794398587357928,
+            "fidelity_normalized_auc": 0.394480765899009,
+            "logical_z_effective_lifetime_cycles": 0.4740050117236343,
+            "logical_z_normalized_auc": 0.23351667633363582
+          }
+        },
+        {
+          "epoch": 1,
+          "selection_score": 0.3143418207354227,
+          "metric_means": {
+            "fidelity_effective_lifetime_cycles": 0.8796732634447644,
+            "fidelity_normalized_auc": 0.3945581484879369,
+            "logical_z_effective_lifetime_cycles": 0.47532441191731356,
+            "logical_z_normalized_auc": 0.23412549298290847
+          }
+        }
+      ],
+      "training_curve": [
+        {
+          "epoch": 1,
+          "mean_reward": 0.15644998961409046,
+          "score_path": 1.3327062602186397,
+          "loss": -1.4891562498006794,
+          "gradient_norm_before_clip": 4.6602003562264125,
+          "baseline": 0.6949539312502815,
+          "ground_outcome_fraction": 0.75,
+          "control_residual_rms": 0.0011159325721405735,
+          "control_slew_rms": 0.0013999140036464242
+        }
+      ],
+      "checkpoint_sha256": "9b7baac2d469fb222227b0f11d7c437fbcfc6b5a976d4782d440ec996366a246",
+      "wall_time_seconds": 0.11849190000793897,
+      "initial_state_sha256": "fc6352793ed803a53c826fa50b8d9c511f10cb86e442869f31492f9daafe9a3e",
+      "initial_maximum_normalized_residual": 0.0008639362542221979,
+      "initial_residual_rms": 0.0008628973024038584,
+      "initializer_loads_parent_weights": false,
+      "initializer_semantics": "fresh random network weights with zero output bias; raw residual near zero maps to nominal sBs physical controls",
+      "validation_gain": 0.0003430996191002844,
+      "restart_success": true,
+      "best_epoch_reached_training_cap": true,
+      "optimizer_global_convergence_claimed": false,
+      "parent_checkpoint_loaded": false
+    }
+  ],
+  "failed_restart_indices": [],
+  "training_cap_hit_indices": [
+    0
+  ],
+  "selected_restart_index": 0,
+  "selection_rule": "maximum best validation selection score; evaluation and confirmation remain blind",
+  "evaluation": {
+    "standard_primary": {
+      "strategy": "standard",
+      "cutoff": 4,
+      "batch_size_per_seed": 1,
+      "seed_count": 1,
+      "total_trajectories": 1,
+      "simulated_physical_time_us": 20.0,
+      "per_seed": [
+        {
+          "seed": 4421,
+          "trajectory_count": 1,
+          "fidelity_curve": [
+            1.0,
+            0.12505849776659195,
+            0.08699995410402402
+          ],
+          "code_survival_curve": [
+            0.9999999999999999,
+            0.4182230563682667,
+            0.2932644712734776
+          ],
+          "logical_z_curve": [
+            1.0,
+            -0.12990132593579237,
+            -0.1176211654896131
+          ],
+          "fidelity": {
+            "effective_lifetime_cycles": 0.7113094382362877,
+            "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+            "normalized_auc": 0.334279237409302,
+            "log_linear_lifetime_cycles_diagnostic": 0.7181154192254414,
+            "log_linear_fit_r_squared_diagnostic": 0.9702668097525144,
+            "exponential_fit_is_diagnostic_only": true,
+            "initial_value": 1.0,
+            "final_value": 0.08699995410402402
+          },
+          "logical_z": {
+            "effective_lifetime_cycles": 0.31179875925515566,
+            "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+            "normalized_auc": 0.15564404565970053,
+            "log_linear_lifetime_cycles_diagnostic": 0.09047801706317746,
+            "log_linear_fit_r_squared_diagnostic": 0.9635221287780181,
+            "exponential_fit_is_diagnostic_only": true,
+            "initial_value": 1.0,
+            "final_value": -0.1176211654896131
+          },
+          "mean_ground_outcome_probability": 0.75,
+          "mean_control_residual_rms": 0.0,
+          "mean_control_slew_rms": 0.0,
+          "maximum_trace_error": 0.0,
+          "maximum_hermiticity_error": 0.0,
+          "minimum_final_eigenvalue": -4.805755818066222e-18
+        }
+      ],
+      "metric_means": {
+        "fidelity_effective_lifetime_cycles": 0.7113094382362877,
+        "fidelity_normalized_auc": 0.334279237409302,
+        "logical_z_effective_lifetime_cycles": 0.31179875925515566,
+        "logical_z_normalized_auc": 0.15564404565970053
+      },
+      "auxiliary_means": {
+        "mean_ground_outcome_probability": 0.75,
+        "mean_control_residual_rms": 0.0,
+        "mean_control_slew_rms": 0.0,
+        "fidelity_log_linear_fit_r_squared_diagnostic": 0.9702668097525144,
+        "logical_z_log_linear_fit_r_squared_diagnostic": 0.9635221287780181
+      },
+      "selection_score_mean": 0.24496164153450126
+    },
+    "standard_confirmation": {
+      "strategy": "standard",
+      "cutoff": 4,
+      "batch_size_per_seed": 1,
+      "seed_count": 1,
+      "total_trajectories": 1,
+      "simulated_physical_time_us": 20.0,
+      "per_seed": [
+        {
+          "seed": 4431,
+          "trajectory_count": 1,
+          "fidelity_curve": [
+            1.0,
+            0.26664163526810014,
+            0.5524611172857954
+          ],
+          "code_survival_curve": [
+            0.9999999999999999,
+            0.4085826635238483,
+            0.7271191597465365
+          ],
+          "logical_z_curve": [
+            1.0,
+            0.07922797958423058,
+            0.29448337623504606
+          ],
+          "fidelity": {
+            "effective_lifetime_cycles": 1.3493765602786154,
+            "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+            "normalized_auc": 0.521436096955499,
+            "log_linear_lifetime_cycles_diagnostic": 1.9931482259591222,
+            "log_linear_fit_r_squared_diagnostic": 0.45344262452319184,
+            "exponential_fit_is_diagnostic_only": true,
+            "initial_value": 1.0,
+            "final_value": 0.5524611172857954
+          },
+          "logical_z": {
+            "effective_lifetime_cycles": 0.7890226181842941,
+            "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+            "normalized_auc": 0.3632348338508768,
+            "log_linear_lifetime_cycles_diagnostic": 1.0039170403845672,
+            "log_linear_fit_r_squared_diagnostic": 0.7647610875851711,
+            "exponential_fit_is_diagnostic_only": true,
+            "initial_value": 1.0,
+            "final_value": 0.29448337623504606
+          },
+          "mean_ground_outcome_probability": 1.0,
+          "mean_control_residual_rms": 0.0,
+          "mean_control_slew_rms": 0.0,
+          "maximum_trace_error": 0.0,
+          "maximum_hermiticity_error": 0.0,
+          "minimum_final_eigenvalue": -7.703719777548943e-34
+        }
+      ],
+      "metric_means": {
+        "fidelity_effective_lifetime_cycles": 1.3493765602786154,
+        "fidelity_normalized_auc": 0.521436096955499,
+        "logical_z_effective_lifetime_cycles": 0.7890226181842941,
+        "logical_z_normalized_auc": 0.3632348338508768
+      },
+      "auxiliary_means": {
+        "mean_ground_outcome_probability": 1.0,
+        "mean_control_residual_rms": 0.0,
+        "mean_control_slew_rms": 0.0,
+        "fidelity_log_linear_fit_r_squared_diagnostic": 0.45344262452319184,
+        "logical_z_log_linear_fit_r_squared_diagnostic": 0.7647610875851711
+      },
+      "selection_score_mean": 0.4423354654031879
+    },
+    "teacher_primary_all_restarts": [
+      {
+        "strategy": "nmf",
+        "cutoff": 4,
+        "batch_size_per_seed": 1,
+        "seed_count": 1,
+        "total_trajectories": 1,
+        "simulated_physical_time_us": 20.0,
+        "per_seed": [
+          {
+            "seed": 4421,
+            "trajectory_count": 1,
+            "fidelity_curve": [
+              1.0,
+              0.12435371391257338,
+              0.0865311777118343
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.4166330424165869,
+              0.295023581181497
+            ],
+            "logical_z_curve": [
+              1.0,
+              -0.1301214476705841,
+              -0.12041143277032665
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 0.7100918150179445,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.3338096513842453,
+              "log_linear_lifetime_cycles_diagnostic": 0.7164220612721195,
+              "log_linear_fit_r_squared_diagnostic": 0.9703628167684404,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.0865311777118343
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 0.3101639387078552,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.1548364179721263,
+              "log_linear_lifetime_cycles_diagnostic": 0.09047801706317746,
+              "log_linear_fit_r_squared_diagnostic": 0.9627638634581446,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": -0.12041143277032665
+            },
+            "mean_ground_outcome_probability": 0.75,
+            "mean_control_residual_rms": 0.0016112640569795988,
+            "mean_control_slew_rms": 0.0014460692457339973,
+            "maximum_trace_error": 0.0,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -9.777019432770154e-17
+          }
+        ],
+        "metric_means": {
+          "fidelity_effective_lifetime_cycles": 0.7100918150179445,
+          "fidelity_normalized_auc": 0.3338096513842453,
+          "logical_z_effective_lifetime_cycles": 0.3101639387078552,
+          "logical_z_normalized_auc": 0.1548364179721263
+        },
+        "auxiliary_means": {
+          "mean_ground_outcome_probability": 0.75,
+          "mean_control_residual_rms": 0.0016112640569795988,
+          "mean_control_slew_rms": 0.0014460692457339973,
+          "fidelity_log_linear_fit_r_squared_diagnostic": 0.9703628167684404,
+          "logical_z_log_linear_fit_r_squared_diagnostic": 0.9627638634581446
+        },
+        "selection_score_mean": 0.24432303467818578
+      }
+    ],
+    "teacher_confirmation_all_restarts": [
+      {
+        "strategy": "nmf",
+        "cutoff": 4,
+        "batch_size_per_seed": 1,
+        "seed_count": 1,
+        "total_trajectories": 1,
+        "simulated_physical_time_us": 20.0,
+        "per_seed": [
+          {
+            "seed": 4431,
+            "trajectory_count": 1,
+            "fidelity_curve": [
+              1.0,
+              0.2679984244137525,
+              0.5517846581105564
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.4089889503323966,
+              0.7272650221420813
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.08164577377379365,
+              0.29277745662550425
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.3517140131963732,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.5219453767345154,
+              "log_linear_lifetime_cycles_diagnostic": 1.9952361586518177,
+              "log_linear_fit_r_squared_diagnostic": 0.4557683028701339,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.5517846581105564
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 0.7911988290274501,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.36401725104327287,
+              "log_linear_lifetime_cycles_diagnostic": 1.0076480069191256,
+              "log_linear_fit_r_squared_diagnostic": 0.7672759116971756,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.29277745662550425
+            },
+            "mean_ground_outcome_probability": 1.0,
+            "mean_control_residual_rms": 0.002122217016050042,
+            "mean_control_slew_rms": 0.000810466585496466,
+            "maximum_trace_error": 0.0,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -1.4297910715599137e-17
+          }
+        ],
+        "metric_means": {
+          "fidelity_effective_lifetime_cycles": 1.3517140131963732,
+          "fidelity_normalized_auc": 0.5219453767345154,
+          "logical_z_effective_lifetime_cycles": 0.7911988290274501,
+          "logical_z_normalized_auc": 0.36401725104327287
+        },
+        "auxiliary_means": {
+          "mean_ground_outcome_probability": 1.0,
+          "mean_control_residual_rms": 0.002122217016050042,
+          "mean_control_slew_rms": 0.000810466585496466,
+          "fidelity_log_linear_fit_r_squared_diagnostic": 0.4557683028701339,
+          "logical_z_log_linear_fit_r_squared_diagnostic": 0.7672759116971756
+        },
+        "selection_score_mean": 0.4429813138888941
+      }
+    ],
+    "selected_primary_score_gain": -0.0006386068563154768,
+    "selected_confirmation_score_gain": 0.0006458484857062019,
+    "selected_primary_logical_z_lifetime_paired_bootstrap": {
+      "mean_difference": -0.001634820547300464,
+      "ci95_low": -0.001634820547300464,
+      "ci95_high": -0.001634820547300464,
+      "probability_positive": 0.0
+    }
+  },
+  "gradient_coverage": {
+    "history_count": 256,
+    "history_length": 8,
+    "parameter_tensors": [
+      {
+        "name": "gru.weight_ih",
+        "finite": true,
+        "nonzero_elements": 30,
+        "total_elements": 30,
+        "nonzero_fraction": 1.0
+      },
+      {
+        "name": "gru.weight_hh",
+        "finite": true,
+        "nonzero_elements": 300,
+        "total_elements": 300,
+        "nonzero_fraction": 1.0
+      },
+      {
+        "name": "gru.bias_ih",
+        "finite": true,
+        "nonzero_elements": 30,
+        "total_elements": 30,
+        "nonzero_fraction": 1.0
+      },
+      {
+        "name": "gru.bias_hh",
+        "finite": true,
+        "nonzero_elements": 30,
+        "total_elements": 30,
+        "nonzero_fraction": 1.0
+      },
+      {
+        "name": "dense1.weight",
+        "finite": true,
+        "nonzero_elements": 2560,
+        "total_elements": 2560,
+        "nonzero_fraction": 1.0
+      },
+      {
+        "name": "dense1.bias",
+        "finite": true,
+        "nonzero_elements": 256,
+        "total_elements": 256,
+        "nonzero_fraction": 1.0
+      },
+      {
+        "name": "dense2.weight",
+        "finite": true,
+        "nonzero_elements": 65536,
+        "total_elements": 65536,
+        "nonzero_fraction": 1.0
+      },
+      {
+        "name": "dense2.bias",
+        "finite": true,
+        "nonzero_elements": 256,
+        "total_elements": 256,
+        "nonzero_fraction": 1.0
+      },
+      {
+        "name": "output.weight",
+        "finite": true,
+        "nonzero_elements": 3840,
+        "total_elements": 3840,
+        "nonzero_fraction": 1.0
+      },
+      {
+        "name": "output.bias",
+        "finite": true,
+        "nonzero_elements": 15,
+        "total_elements": 15,
+        "nonzero_fraction": 1.0
+      }
+    ],
+    "all_parameter_tensors_have_finite_nonzero_gradient": true,
+    "minimum_tensor_nonzero_fraction": 1.0
+  },
+  "causality": {
+    "full_replay_vs_cached_maximum_error": 0.0,
+    "shared_prefix_different_suffix_maximum_error": 0.0,
+    "deterministic_replay_maximum_error": 0.0,
+    "future_outcomes_are_not_an_api_input": true
+  },
+  "checkpoint": {
+    "path": "D:/Codes/Quantum/DriftAdaptiveQEC/.pytest_tmp_t441_governance2/test_pilot_training_path_fails0/pilot.pt",
+    "sha256": "2017fa68b89f531edf6beb94761f70c6d4744c1d1065306e262acaf860d37ab6",
+    "schema_version": 1,
+    "selected_state_sha256": "9b7baac2d469fb222227b0f11d7c437fbcfc6b5a976d4782d440ec996366a246",
+    "reload_probe": {
+      "selected_state_sha256": "9b7baac2d469fb222227b0f11d7c437fbcfc6b5a976d4782d440ec996366a246",
+      "saved_state_sha256": "9b7baac2d469fb222227b0f11d7c437fbcfc6b5a976d4782d440ec996366a246",
+      "probe_output_sha256": "2465d9335853d8df1121257bc558dec5ac6ab9bdc878eb53cff05a9675cf6be0",
+      "all_values_finite": true
+    }
+  },
+  "source_data": {
+    "path": "D:/Codes/Quantum/DriftAdaptiveQEC/.pytest_tmp_t441_governance2/test_pilot_training_path_fails0/pilot.csv",
+    "sha256": "b9a9273eccd2b9c4205e97941a4f952831a6241f7c8b9253f1faec55e433c491",
+    "row_count": 22,
+    "row_types": [
+      "action_bound",
+      "held_out_metric",
+      "training_epoch",
+      "validation_checkpoint"
+    ]
+  },
+  "gates": {
+    "all_required_parent_evidence_is_current_and_passed": true,
+    "canonical_action_contract_has_exactly_fifteen_outputs": true,
+    "zero_residual_is_nominal_and_absolute_zero_is_not_substituted": true,
+    "all_probed_actions_obey_hard_residual_bounds": true,
+    "fresh_restarts_and_all_data_splits_are_disjoint": true,
+    "three_or_more_fresh_72853_parameter_gru_restarts_are_retained": false,
+    "no_parent_checkpoint_was_loaded_or_renamed": true,
+    "every_optimizer_changes_its_fresh_initial_state": true,
+    "initial_actions_are_close_to_nominal_not_absolute_zero": true,
+    "required_fraction_of_restarts_reaches_validation_gain_gate": true,
+    "restart_selection_is_validation_only": true,
+    "selected_teacher_beats_nominal_on_primary_held_out_score": false,
+    "selected_teacher_beats_nominal_on_confirmation_cutoff": true,
+    "selected_teacher_has_positive_paired_logical_z_lifetime_gain": false,
+    "all_held_out_density_diagnostics_are_finite_and_physical": true,
+    "all_selected_teacher_parameter_tensors_receive_gradient": true,
+    "causal_cached_and_replayed_outputs_are_exact": true,
+    "checkpoint_reload_matches_selected_state_and_is_finite": true,
+    "source_data_contains_full_training_validation_and_held_out_records": true,
+    "failed_restarts_and_training_cap_hits_are_explicit": true,
+    "claim_boundary_excludes_online_hardware_and_global_optimality": true
+  },
+  "gate_summary": {
+    "passed": 18,
+    "total": 21,
+    "failed": [
+      "three_or_more_fresh_72853_parameter_gru_restarts_are_retained",
+      "selected_teacher_beats_nominal_on_primary_held_out_score",
+      "selected_teacher_has_positive_paired_logical_z_lifetime_gain"
+    ]
+  },
+  "claim_boundary": {
+    "allowed": "fresh strict-split bounded-residual GRU teacher within the finite-cutoff two-level differentiable sBs model",
+    "forbidden": "global optimizer convergence, paper-exact 1000-cycle channel lifetime, multilevel leakage/SPAM/pulse robustness, online/FPGA deployment, or experimental device gain",
+    "failure_branch": "if status is FAIL, do not start teacher hidden-state/distillation claims; retain drift/regime-aware MAP-LUT as the deployable fallback",
+    "optimizer_note": "all budget-cap hits and failed restarts are listed; no global convergence claim is made even when the production gate passes"
+  }
+}

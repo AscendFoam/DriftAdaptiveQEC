@@ -4,12 +4,17 @@ from __future__ import annotations
 
 from collections import deque
 from dataclasses import dataclass, field
-from typing import Any, Callable, Deque, Dict, List, Optional
+from typing import Any, Callable, Deque, Dict, List, Optional, Sequence
 
 import numpy as np
 
 from .latency_injector import LatencyContext, LatencyInjector, LatencySample
-from .param_bank import DecoderRuntimeParams, ParamBank
+from .param_bank import (
+    DecoderRuntimeParams,
+    ParamBank,
+    ParameterUpdateConflictError,
+    PendingCommit,
+)
 
 
 SlowPathFn = Callable[["WindowFrame", DecoderRuntimeParams], DecoderRuntimeParams]
@@ -51,6 +56,7 @@ class SchedulerConfig:
     fast_path_budget_us: float = 1.5
     slow_path_budget_us: float = 5_000.0
     guard_cycles_after_commit: int = 0
+    window_deadline_us: Optional[float] = None
 
     def __post_init__(self) -> None:
         if self.t_fast_us <= 0:
@@ -65,6 +71,8 @@ class SchedulerConfig:
             raise ValueError("commit_delay_cycles must be positive")
         if self.window_stride is not None and self.window_stride <= 0:
             raise ValueError("window_stride must be positive when provided")
+        if self.window_deadline_us is not None and self.window_deadline_us <= 0:
+            raise ValueError("window_deadline_us must be positive when provided")
 
     @classmethod
     def from_config(cls, config: Dict[str, Any]) -> "SchedulerConfig":
@@ -92,6 +100,9 @@ class SchedulerConfig:
                 runtime_cfg.get("slow_update_budget_us", timing.get("slow_update_budget_us", 5000.0))
             ),
             guard_cycles_after_commit=int(runtime_cfg.get("guard_cycles_after_commit", 0)),
+            window_deadline_us=float(
+                runtime_cfg.get("window_deadline_us", t_slow_update_ms * 1000.0)
+            ),
         )
 
     @property
@@ -105,6 +116,14 @@ class SchedulerConfig:
         if self.slow_update_period_us >= self.window_duration_us:
             return self.window_size
         return max(1, self.window_size // 4)
+
+    @property
+    def resolved_window_deadline_us(self) -> float:
+        return (
+            self.slow_update_period_us
+            if self.window_deadline_us is None
+            else self.window_deadline_us
+        )
 
 
 @dataclass
@@ -202,10 +221,20 @@ class DualLoopScheduler:
         self._slow_job: Optional[SlowUpdateJob] = None
         self._next_slow_start_time_us = 0.0
         self._guard_until_epoch = 0
+        self._communication_available = True
+        self._communication_pause_started_epoch: Optional[int] = None
+        self._communication_pause_started_time_us: Optional[float] = None
 
         self.fast_cycle_budget_violations = 0
         self.slow_update_budget_violations = 0
+        self.window_deadline_misses = 0
         self.dropped_windows = 0
+        self.fifo_overflows = 0
+        self.input_bursts = 0
+        self.communication_pauses = 0
+        self.communication_paused_cycles = 0
+        self.parameter_update_conflicts = 0
+        self.last_fast_cycle_latency_us: Optional[float] = None
         self.event_log: List[SchedulerEvent] = []
 
     @classmethod
@@ -238,6 +267,67 @@ class DualLoopScheduler:
         self.event_log.append(event)
         events.append(event)
 
+    def _enqueue_frame(
+        self,
+        frame: WindowFrame,
+        events: List[SchedulerEvent],
+        *,
+        source: str,
+    ) -> None:
+        queue_depth_before = len(self._window_queue)
+        dropped: Optional[WindowFrame] = None
+        if queue_depth_before >= self.config.max_pending_windows:
+            dropped = self._window_queue.popleft()
+            self.dropped_windows += 1
+            self.fifo_overflows += 1
+            self._record(
+                SchedulerEvent(
+                    kind="fifo_overflow",
+                    epoch_id=self.epoch_id,
+                    time_us=self.time_us,
+                    details={
+                        "capacity": self.config.max_pending_windows,
+                        "queue_depth_before": queue_depth_before,
+                        "dropped_window_id": dropped.window_id,
+                        "accepted_window_id": frame.window_id,
+                        "source": source,
+                    },
+                ),
+                events,
+            )
+            self._record(
+                SchedulerEvent(
+                    kind="window_dropped",
+                    epoch_id=self.epoch_id,
+                    time_us=self.time_us,
+                    details={
+                        "dropped_window_id": dropped.window_id,
+                        "reason": "fifo_overflow_drop_oldest",
+                        "source": source,
+                    },
+                ),
+                events,
+            )
+
+        self._window_queue.append(frame)
+        details = frame.to_dict()
+        details.update(
+            {
+                "source": source,
+                "queue_depth_after": len(self._window_queue),
+                "fifo_overflowed": dropped is not None,
+            }
+        )
+        self._record(
+            SchedulerEvent(
+                kind="window_ready",
+                epoch_id=self.epoch_id,
+                time_us=self.time_us,
+                details=details,
+            ),
+            events,
+        )
+
     def _emit_window(self, window_payload: Optional[Dict[str, Any]], events: List[SchedulerEvent]) -> None:
         self._window_counter += 1
         frame = WindowFrame(
@@ -247,34 +337,94 @@ class DualLoopScheduler:
             ready_time_us=self.time_us,
             payload=dict(window_payload or {}),
         )
+        self._enqueue_frame(frame, events, source="regular_cadence")
+        self._next_window_emit_epoch += self.window_stride
 
-        if len(self._window_queue) >= self.config.max_pending_windows:
-            dropped = self._window_queue.popleft()
-            self.dropped_windows += 1
-            self._record(
-                SchedulerEvent(
-                    kind="window_dropped",
-                    epoch_id=self.epoch_id,
-                    time_us=self.time_us,
-                    details={"dropped_window_id": dropped.window_id},
-                ),
-                events,
-            )
+    def inject_window_burst(
+        self,
+        payloads: Sequence[Dict[str, Any]],
+    ) -> List[SchedulerEvent]:
+        """Inject several externally arrived windows at the current cycle."""
 
-        self._window_queue.append(frame)
+        burst = [dict(payload) for payload in payloads]
+        if len(burst) < 2:
+            raise ValueError("input burst must contain at least two windows")
+        events: List[SchedulerEvent] = []
+        self.input_bursts += 1
         self._record(
             SchedulerEvent(
-                kind="window_ready",
+                kind="input_burst",
                 epoch_id=self.epoch_id,
                 time_us=self.time_us,
-                details=frame.to_dict(),
+                details={
+                    "window_count": len(burst),
+                    "queue_depth_before": len(self._window_queue),
+                    "capacity": self.config.max_pending_windows,
+                },
             ),
             events,
         )
-        self._next_window_emit_epoch += self.window_stride
+        for payload in burst:
+            self._window_counter += 1
+            frame = WindowFrame(
+                window_id=self._window_counter,
+                start_epoch=max(1, self.epoch_id - self.config.window_size + 1),
+                end_epoch=self.epoch_id,
+                ready_time_us=self.time_us,
+                payload=payload,
+            )
+            self._enqueue_frame(frame, events, source="injected_burst")
+        return events
+
+    def _update_communication_state(
+        self,
+        available: bool,
+        events: List[SchedulerEvent],
+    ) -> None:
+        state = bool(available)
+        if not state:
+            self.communication_paused_cycles += 1
+        if state == self._communication_available:
+            return
+        self._communication_available = state
+        if not state:
+            self.communication_pauses += 1
+            self._communication_pause_started_epoch = self.epoch_id
+            self._communication_pause_started_time_us = self.time_us
+            self._record(
+                SchedulerEvent(
+                    kind="communication_pause_started",
+                    epoch_id=self.epoch_id,
+                    time_us=self.time_us,
+                    details={"pending_windows": len(self._window_queue)},
+                ),
+                events,
+            )
+            return
+
+        start_epoch = self._communication_pause_started_epoch
+        start_time = self._communication_pause_started_time_us
+        self._record(
+            SchedulerEvent(
+                kind="communication_pause_ended",
+                epoch_id=self.epoch_id,
+                time_us=self.time_us,
+                details={
+                    "start_epoch": start_epoch,
+                    "duration_cycles": None if start_epoch is None else self.epoch_id - start_epoch,
+                    "duration_us": None if start_time is None else self.time_us - start_time,
+                    "pending_windows": len(self._window_queue),
+                },
+            ),
+            events,
+        )
+        self._communication_pause_started_epoch = None
+        self._communication_pause_started_time_us = None
 
     def _maybe_finish_slow_job(self, events: List[SchedulerEvent]) -> None:
         if self._slow_job is None:
+            return
+        if not self._communication_available:
             return
         if self._slow_job.ready_time_us > self.time_us:
             return
@@ -301,25 +451,73 @@ class DualLoopScheduler:
             return
 
         finished_job.proposed_params = proposed_params
+        window_age_us = self.time_us - finished_job.window.ready_time_us
+        deadline_us = self.config.resolved_window_deadline_us
+        deadline_missed = window_age_us > deadline_us
+        if deadline_missed:
+            self.window_deadline_misses += 1
+            self._record(
+                SchedulerEvent(
+                    kind="window_deadline_miss",
+                    epoch_id=self.epoch_id,
+                    time_us=self.time_us,
+                    details={
+                        "job_id": finished_job.job_id,
+                        "window_id": finished_job.window.window_id,
+                        "window_age_us": window_age_us,
+                        "deadline_us": deadline_us,
+                        "queue_wait_us": finished_job.started_time_us
+                        - finished_job.window.ready_time_us,
+                        "service_latency_us": finished_job.latency.total_us,
+                    },
+                ),
+                events,
+            )
+        finished_details = finished_job.to_dict()
+        finished_details.update(
+            {
+                "window_age_us": window_age_us,
+                "window_deadline_us": deadline_us,
+                "window_deadline_missed": deadline_missed,
+            }
+        )
         self._record(
             SchedulerEvent(
                 kind="slow_update_finished",
                 epoch_id=self.epoch_id,
                 time_us=self.time_us,
-                details=finished_job.to_dict(),
+                details=finished_details,
             ),
             events,
         )
 
-        pending = self.param_bank.stage_update(
-            finished_job.proposed_params,
-            commit_epoch=self.epoch_id + self.config.commit_delay_cycles,
-            staged_epoch=self.epoch_id,
-            metadata={
-                "job_id": finished_job.job_id,
-                "window_id": finished_job.window.window_id,
-            },
-        )
+        try:
+            pending = self.param_bank.stage_update(
+                finished_job.proposed_params,
+                commit_epoch=self.epoch_id + self.config.commit_delay_cycles,
+                staged_epoch=self.epoch_id,
+                metadata={
+                    "job_id": finished_job.job_id,
+                    "window_id": finished_job.window.window_id,
+                },
+            )
+        except ParameterUpdateConflictError as exc:
+            self.parameter_update_conflicts += 1
+            self._record(
+                SchedulerEvent(
+                    kind="parameter_update_conflict",
+                    epoch_id=self.epoch_id,
+                    time_us=self.time_us,
+                    details={
+                        "job_id": finished_job.job_id,
+                        "window_id": finished_job.window.window_id,
+                        "reason": str(exc),
+                        "active_version": self.param_bank.active_version,
+                    },
+                ),
+                events,
+            )
+            return
         self._record(
             SchedulerEvent(
                 kind="params_staged",
@@ -336,6 +534,8 @@ class DualLoopScheduler:
         )
 
     def _maybe_start_slow_job(self, events: List[SchedulerEvent]) -> None:
+        if not self._communication_available:
+            return
         if self._slow_job is not None:
             return
         if self.param_bank.has_pending_commit:
@@ -395,22 +595,34 @@ class DualLoopScheduler:
             events,
         )
 
-    def tick(self, *, window_payload: Optional[Dict[str, Any]] = None) -> List[SchedulerEvent]:
+    def tick(
+        self,
+        *,
+        window_payload: Optional[Dict[str, Any]] = None,
+        communication_available: bool = True,
+    ) -> List[SchedulerEvent]:
         """Advance one fast-path cycle and emit scheduler events."""
-        return self.tick_with_fast_path(window_payload=window_payload, fast_path_fn=None)
+        return self.tick_with_fast_path(
+            window_payload=window_payload,
+            fast_path_fn=None,
+            communication_available=communication_available,
+        )
 
     def tick_with_fast_path(
         self,
         *,
         window_payload: Optional[Dict[str, Any]] = None,
         fast_path_fn: Optional[FastPathFn] = None,
+        communication_available: bool = True,
     ) -> List[SchedulerEvent]:
         """Advance one fast-path cycle and optionally execute the fast-loop callback."""
         events: List[SchedulerEvent] = []
         self.epoch_id += 1
         self.time_us = self.epoch_id * self.config.t_fast_us
+        self._update_communication_state(communication_available, events)
 
         fast_cycle_latency_us = self.latency_injector.sample_fast_cycle()
+        self.last_fast_cycle_latency_us = fast_cycle_latency_us
         if fast_cycle_latency_us > self.config.fast_path_budget_us:
             self.fast_cycle_budget_violations += 1
             self._record(
@@ -465,6 +677,7 @@ class DualLoopScheduler:
         *,
         window_payload_factory: Optional[Callable[[int, int], Dict[str, Any]]] = None,
         fast_path_fn: Optional[FastPathFn] = None,
+        communication_available_fn: Optional[Callable[[int, float], bool]] = None,
     ) -> List[SchedulerEvent]:
         if n_cycles <= 0:
             raise ValueError("n_cycles must be positive")
@@ -475,8 +688,69 @@ class DualLoopScheduler:
             will_emit_window = self.epoch_id + 1 >= self._next_window_emit_epoch
             if will_emit_window and window_payload_factory is not None:
                 payload = window_payload_factory(self._window_counter + 1, self.epoch_id + 1)
-            collected.extend(self.tick_with_fast_path(window_payload=payload, fast_path_fn=fast_path_fn))
+            next_epoch = self.epoch_id + 1
+            next_time_us = next_epoch * self.config.t_fast_us
+            communication_available = (
+                True
+                if communication_available_fn is None
+                else bool(communication_available_fn(next_epoch, next_time_us))
+            )
+            collected.extend(
+                self.tick_with_fast_path(
+                    window_payload=payload,
+                    fast_path_fn=fast_path_fn,
+                    communication_available=communication_available,
+                )
+            )
         return collected
+
+    def stage_external_update(
+        self,
+        params: DecoderRuntimeParams,
+        *,
+        commit_epoch: int,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> tuple[Optional[PendingCommit], List[SchedulerEvent]]:
+        """Stage an external update or emit an explicit conflict event."""
+
+        events: List[SchedulerEvent] = []
+        try:
+            pending = self.param_bank.stage_update(
+                params,
+                commit_epoch=commit_epoch,
+                staged_epoch=self.epoch_id,
+                metadata=dict(metadata or {}),
+            )
+        except ParameterUpdateConflictError as exc:
+            self.parameter_update_conflicts += 1
+            self._record(
+                SchedulerEvent(
+                    kind="parameter_update_conflict",
+                    epoch_id=self.epoch_id,
+                    time_us=self.time_us,
+                    details={
+                        "commit_epoch": commit_epoch,
+                        "reason": str(exc),
+                        "active_version": self.param_bank.active_version,
+                    },
+                ),
+                events,
+            )
+            return None, events
+        self._record(
+            SchedulerEvent(
+                kind="external_params_staged",
+                epoch_id=self.epoch_id,
+                time_us=self.time_us,
+                details={
+                    "target_bank": pending.target_bank,
+                    "commit_epoch": pending.commit_epoch,
+                    "version": pending.version,
+                },
+            ),
+            events,
+        )
+        return pending, events
 
     def snapshot(self) -> Dict[str, Any]:
         return {
@@ -489,6 +763,14 @@ class DualLoopScheduler:
             "next_slow_start_time_us": self._next_slow_start_time_us,
             "fast_cycle_budget_violations": self.fast_cycle_budget_violations,
             "slow_update_budget_violations": self.slow_update_budget_violations,
+            "window_deadline_misses": self.window_deadline_misses,
             "dropped_windows": self.dropped_windows,
+            "fifo_overflows": self.fifo_overflows,
+            "input_bursts": self.input_bursts,
+            "communication_available": self._communication_available,
+            "communication_pauses": self.communication_pauses,
+            "communication_paused_cycles": self.communication_paused_cycles,
+            "parameter_update_conflicts": self.parameter_update_conflicts,
+            "last_fast_cycle_latency_us": self.last_fast_cycle_latency_us,
             "param_bank": self.param_bank.snapshot(),
         }

@@ -1,0 +1,4288 @@
+{
+  "schema_version": 1,
+  "task_id": "T4.4.4",
+  "status": "FAIL",
+  "scope": "paired unseen-seed ten-cycle physical gain retention for standard all five exact-budget MF agents frozen teacher handcrafted recurrence extrapolation and distilled student plus a separate exact two-cycle lane containing the finite-horizon control oracle; not multilevel leakage long-horizon OOD pulse device quantized RTL FPGA or board evidence",
+  "protocol_id": "T444-PHYSICAL-GAIN-RETENTION-DUAL-HORIZON-V1",
+  "created_utc": "2026-07-15T23:31:50.444356+00:00",
+  "implementation_sha256": "01556d7696013aa8863271d3af600239f915568fbdc126e5476586e0bdf9e165",
+  "config": {
+    "full_cycles": 2,
+    "exact_control_oracle_cycles": 2,
+    "cutoff": 4,
+    "confirmation_cutoff": 4,
+    "primary_batch_size": 2,
+    "confirmation_batch_size": 2,
+    "primary_seeds": [
+      94401,
+      94403
+    ],
+    "confirmation_seeds": [
+      94411,
+      94417
+    ],
+    "minimum_gain_retention_fraction": 0.9,
+    "minimum_gain_retention_ci_lower": 0.9,
+    "maximum_teacher_student_pg_difference": 0.02,
+    "bootstrap_seed": 444991,
+    "bootstrap_repetitions": 100,
+    "device": "cpu",
+    "real_dtype": "float64"
+  },
+  "config_contract_hash": "f1c00b3a558796c811f31c7fbc5fe4526ec26939f1fb4810c4964927528afc73",
+  "parent_provenance": {
+    "teacher_artifact_sha256": "c71094493a63f7a3b1287d28c0a1b71d3ce7a03e16a281a27967a87a65669d53",
+    "teacher_checkpoint_sha256": "7c4e004cfb4e04e2ac4848242fbfe63217ef6b89f8780bbce723422be098711e",
+    "teacher_state_sha256": "aee37f0ca66257cda39ae5143305a583504e6068b837b04cdaca8c94a67ea076",
+    "mf_artifact_sha256": "3213b988cef743551a229cfeecfb4e588a959f12d32e4a8cf70d2361b152278d",
+    "mf_checkpoint_sha256": "11cc59ba48da4c27e18284acc46f80de805be57ce1dcab20184e44b3fd5ac877",
+    "handcrafted_artifact_sha256": "120171277b57267cd68f492e5a804b5ce5b5c54aa3ee7bc8517ed2f3a52fb8d7",
+    "handcrafted_checkpoint_sha256": "a3246b42875570e94d870317d9dbe0ec631b0bc416a003f459e4e534b4f00830",
+    "student_report_sha256": "1bb56e2d4c8839c4f25e91ece8f404427a1917114bc5e9c69249e92cd7ada26a",
+    "student_artifact_sha256": "8d3b575c416795b3af522f0322f8c8b0eed937c41616067d163ce47e5fe9bbae",
+    "control_oracle_artifact_sha256": "604df4fb818a4ffd4c7c91d913742cee979f1021467f999af6a16c2a60734d7a",
+    "control_oracle_checkpoint_sha256": "36637569bdc48c4fb704c53dc793a91e53cb75c629067b9b44bee3096571d66f"
+  },
+  "retention_threshold": {
+    "point_fraction": 0.9,
+    "paired_bootstrap_ci_lower": 0.9,
+    "applies_to": [
+      "selection_score",
+      "fidelity_effective_lifetime_cycles",
+      "logical_z_effective_lifetime_cycles"
+    ],
+    "frozen_before_physical_evaluation": true
+  },
+  "stochastic_ten_cycle": {
+    "primary": {
+      "cutoff": 4,
+      "full_cycles": 2,
+      "batch_size_per_seed": 2,
+      "seeds": [
+        94401,
+        94403
+      ],
+      "standard": {
+        "strategy": "standard",
+        "cutoff": 4,
+        "batch_size_per_seed": 2,
+        "seed_count": 2,
+        "total_trajectories": 4,
+        "simulated_physical_time_us": 20.0,
+        "per_seed": [
+          {
+            "seed": 94401,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.19585006651734604,
+              0.32928035141702605
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.4134028599460575,
+              0.3964589462923782
+            ],
+            "logical_z_curve": [
+              1.0,
+              -0.025336673175780894,
+              0.2854834552112
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 0.9929946107544174,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.4302451211129295,
+              "log_linear_lifetime_cycles_diagnostic": 1.2979941793023864,
+              "log_linear_fit_r_squared_diagnostic": 0.772466324820231,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.32928035141702605
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 0.64676638402392,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.30870252721490954,
+              "log_linear_lifetime_cycles_diagnostic": 0.23891639205629328,
+              "log_linear_fit_r_squared_diagnostic": 0.849836993787146,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.2854834552112
+            },
+            "mean_ground_outcome_probability": 0.5,
+            "mean_control_residual_rms": 0.0,
+            "mean_control_slew_rms": 0.0,
+            "maximum_trace_error": 2.220446049250313e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -2.5488556278981804e-17
+          },
+          {
+            "seed": 94403,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.26664163526810014,
+              0.06979637039009853
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.4085826635238483,
+              0.08299626370297519
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.07922797958423058,
+              0.0514116711890058
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 0.898573550610811,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.4007699102315747,
+              "log_linear_lifetime_cycles_diagnostic": 0.7523100145185492,
+              "log_linear_fit_r_squared_diagnostic": 0.9999918427285254,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.06979637039009853
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 0.6315450227433903,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.30246690758936673,
+              "log_linear_lifetime_cycles_diagnostic": 0.5902347387589537,
+              "log_linear_fit_r_squared_diagnostic": 0.9807241565021825,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.0514116711890058
+            },
+            "mean_ground_outcome_probability": 0.75,
+            "mean_control_residual_rms": 0.0,
+            "mean_control_slew_rms": 0.0,
+            "maximum_trace_error": 0.0,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -5.70388517849021e-17
+          }
+        ],
+        "metric_means": {
+          "fidelity_effective_lifetime_cycles": 0.9457840806826142,
+          "fidelity_normalized_auc": 0.4155075156722521,
+          "logical_z_effective_lifetime_cycles": 0.6391557033836551,
+          "logical_z_normalized_auc": 0.3055847174021381
+        },
+        "auxiliary_means": {
+          "mean_ground_outcome_probability": 0.625,
+          "mean_control_residual_rms": 0.0,
+          "mean_control_slew_rms": 0.0,
+          "fidelity_log_linear_fit_r_squared_diagnostic": 0.8862290837743783,
+          "logical_z_log_linear_fit_r_squared_diagnostic": 0.9152805751446642
+        },
+        "selection_score_mean": 0.3605461165371951
+      },
+      "mf_all_agents": {
+        "agent_count": 5,
+        "training_seeds": [
+          101,
+          211,
+          307,
+          401,
+          503
+        ],
+        "metric_mean_across_agents": {
+          "fidelity_effective_lifetime_cycles": 1.3456546637258513,
+          "fidelity_normalized_auc": 0.5188745920004132,
+          "logical_z_effective_lifetime_cycles": 1.1121498972387882,
+          "logical_z_normalized_auc": 0.459820324714009
+        },
+        "metric_median_across_agents": {
+          "fidelity_effective_lifetime_cycles": 1.3387118280313988,
+          "fidelity_normalized_auc": 0.5185194890335627,
+          "logical_z_effective_lifetime_cycles": 1.0768153866988999,
+          "logical_z_normalized_auc": 0.4514342629623476
+        },
+        "auxiliary_mean_across_agents": {
+          "mean_ground_outcome_probability": 0.625,
+          "mean_control_residual_rms": 0.15109460464918506,
+          "mean_control_slew_rms": 0.07454465146357477,
+          "fidelity_log_linear_fit_r_squared_diagnostic": 0.9186342870861892,
+          "logical_z_log_linear_fit_r_squared_diagnostic": 0.8891363245486774
+        },
+        "agents": [
+          {
+            "strategy": "mf_agent_101",
+            "cutoff": 4,
+            "batch_size_per_seed": 2,
+            "seed_count": 2,
+            "total_trajectories": 4,
+            "simulated_physical_time_us": 20.0,
+            "per_seed": [
+              {
+                "seed": 94401,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.4469195166065279,
+                  0.11087547297819147
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.6240857000735659,
+                  0.16401681374199695
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.29444098294969706,
+                  0.04656117276339288
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.25999534411143,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5011786265478118,
+                  "log_linear_lifetime_cycles_diagnostic": 0.9607861109716271,
+                  "log_linear_fit_r_squared_diagnostic": 0.9777203804018371,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.11087547297819147
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 0.923691114413856,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.40886078466569675,
+                  "log_linear_lifetime_cycles_diagnostic": 0.6796568789292619,
+                  "log_linear_fit_r_squared_diagnostic": 0.9913373713447065,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.04656117276339288
+                },
+                "mean_ground_outcome_probability": 0.5,
+                "mean_control_residual_rms": 0.1657818869985809,
+                "mean_control_slew_rms": 0.09713120619819939,
+                "maximum_trace_error": 1.1102230246251565e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -9.78594727653859e-17
+              },
+              {
+                "seed": 94403,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.539360358002601,
+                  0.06472069007205296
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.5828895258256005,
+                  0.07668371665021609
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.4640247264066345,
+                  0.04798151222272489
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.4174283119513675,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5358603515193137,
+                  "log_linear_lifetime_cycles_diagnostic": 0.8206515247309902,
+                  "log_linear_fit_r_squared_diagnostic": 0.8630455768748797,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.06472069007205296
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 1.2299396589839438,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.4940077412589985,
+                  "log_linear_lifetime_cycles_diagnostic": 0.7308128968689411,
+                  "log_linear_fit_r_squared_diagnostic": 0.9030423529997654,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.04798151222272489
+                },
+                "mean_ground_outcome_probability": 0.75,
+                "mean_control_residual_rms": 0.1468423413212635,
+                "mean_control_slew_rms": 0.061475873627974735,
+                "maximum_trace_error": 0.0,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -2.1386015979732074e-16
+              }
+            ],
+            "metric_means": {
+              "fidelity_effective_lifetime_cycles": 1.3387118280313988,
+              "fidelity_normalized_auc": 0.5185194890335627,
+              "logical_z_effective_lifetime_cycles": 1.0768153866988999,
+              "logical_z_normalized_auc": 0.4514342629623476
+            },
+            "auxiliary_means": {
+              "mean_ground_outcome_probability": 0.625,
+              "mean_control_residual_rms": 0.1563121141599222,
+              "mean_control_slew_rms": 0.07930353991308706,
+              "fidelity_log_linear_fit_r_squared_diagnostic": 0.9203829786383584,
+              "logical_z_log_linear_fit_r_squared_diagnostic": 0.9471898621722359
+            },
+            "selection_score_mean": 0.48497687599795514
+          },
+          {
+            "strategy": "mf_agent_211",
+            "cutoff": 4,
+            "batch_size_per_seed": 2,
+            "seed_count": 2,
+            "total_trajectories": 4,
+            "simulated_physical_time_us": 20.0,
+            "per_seed": [
+              {
+                "seed": 94401,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.500364687930889,
+                  0.11573635025361663
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.6417573703842656,
+                  0.16771818079793688
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.3860280758491214,
+                  0.053157026010072904
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.3851268560008108,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5291164315288486,
+                  "log_linear_lifetime_cycles_diagnostic": 0.9989413009811233,
+                  "log_linear_fit_r_squared_diagnostic": 0.9541447245150906,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.11573635025361663
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 1.0838235611631486,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.45630329442707895,
+                  "log_linear_lifetime_cycles_diagnostic": 0.7330459134284167,
+                  "log_linear_fit_r_squared_diagnostic": 0.9628074918481405,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.053157026010072904
+                },
+                "mean_ground_outcome_probability": 0.5,
+                "mean_control_residual_rms": 0.17310675894444114,
+                "mean_control_slew_rms": 0.07146711964281485,
+                "maximum_trace_error": 1.1102230246251565e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -1.1228264867781832e-17
+              },
+              {
+                "seed": 94403,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.6229874919021688,
+                  0.0660682233868915
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.6468841325803518,
+                  0.07803954374435526
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.5800470953339818,
+                  0.05027567072853889
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.6412645653907956,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5780108017978074,
+                  "log_linear_lifetime_cycles_diagnostic": 0.8464012603994081,
+                  "log_linear_fit_r_squared_diagnostic": 0.7718144195515676,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.0660682233868915
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 1.501509309230463,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5525924653491256,
+                  "log_linear_lifetime_cycles_diagnostic": 0.7662701390371021,
+                  "log_linear_fit_r_squared_diagnostic": 0.7881931126849181,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.05027567072853889
+                },
+                "mean_ground_outcome_probability": 0.75,
+                "mean_control_residual_rms": 0.15847886444102963,
+                "mean_control_slew_rms": 0.03751204186883362,
+                "maximum_trace_error": 1.1102230246251565e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -3.8074729026977286e-19
+              }
+            ],
+            "metric_means": {
+              "fidelity_effective_lifetime_cycles": 1.5131957106958032,
+              "fidelity_normalized_auc": 0.553563616663328,
+              "logical_z_effective_lifetime_cycles": 1.2926664351968058,
+              "logical_z_normalized_auc": 0.5044478798881022
+            },
+            "auxiliary_means": {
+              "mean_ground_outcome_probability": 0.625,
+              "mean_control_residual_rms": 0.16579281169273538,
+              "mean_control_slew_rms": 0.05448958075582423,
+              "fidelity_log_linear_fit_r_squared_diagnostic": 0.8629795720333291,
+              "logical_z_log_linear_fit_r_squared_diagnostic": 0.8755003022665293
+            },
+            "selection_score_mean": 0.5290057482757151
+          },
+          {
+            "strategy": "mf_agent_307",
+            "cutoff": 4,
+            "batch_size_per_seed": 2,
+            "seed_count": 2,
+            "total_trajectories": 4,
+            "simulated_physical_time_us": 20.0,
+            "per_seed": [
+              {
+                "seed": 94401,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.4700234216011041,
+                  0.10172071820498571
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.5242057163399814,
+                  0.15295070013727474
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.4227280592934271,
+                  0.04356598316213392
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.3000182537824854,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5104418903517984,
+                  "log_linear_lifetime_cycles_diagnostic": 0.9387870815449924,
+                  "log_linear_fit_r_squared_diagnostic": 0.9607464867961457,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.10172071820498571
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 1.1433412351801997,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.472255525437247,
+                  "log_linear_lifetime_cycles_diagnostic": 0.7014606620668742,
+                  "log_linear_fit_r_squared_diagnostic": 0.9278800557242881,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.04356598316213392
+                },
+                "mean_ground_outcome_probability": 0.5,
+                "mean_control_residual_rms": 0.12668541410688336,
+                "mean_control_slew_rms": 0.06142784118373097,
+                "maximum_trace_error": 0.0,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -8.458919827271491e-17
+              },
+              {
+                "seed": 94403,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.506125877676064,
+                  0.12342949634382488
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.5373889101988837,
+                  0.19803955077753738
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.4556349138038531,
+                  0.0384172368053647
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.4080464831876873,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5339203129239882,
+                  "log_linear_lifetime_cycles_diagnostic": 1.0277196118526093,
+                  "log_linear_fit_r_squared_diagnostic": 0.9564812275644318,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.12342949634382488
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 1.2030145968186359,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.4874217661032677,
+                  "log_linear_lifetime_cycles_diagnostic": 0.6845037850301964,
+                  "log_linear_fit_r_squared_diagnostic": 0.8919619310353387,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.0384172368053647
+                },
+                "mean_ground_outcome_probability": 0.75,
+                "mean_control_residual_rms": 0.13296150728294343,
+                "mean_control_slew_rms": 0.05829049122930554,
+                "maximum_trace_error": 1.1102230246251565e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -7.342257785317857e-17
+              }
+            ],
+            "metric_means": {
+              "fidelity_effective_lifetime_cycles": 1.3540323684850863,
+              "fidelity_normalized_auc": 0.5221811016378933,
+              "logical_z_effective_lifetime_cycles": 1.1731779159994178,
+              "logical_z_normalized_auc": 0.47983864577025737
+            },
+            "auxiliary_means": {
+              "mean_ground_outcome_probability": 0.625,
+              "mean_control_residual_rms": 0.1298234606949134,
+              "mean_control_slew_rms": 0.05985916620651825,
+              "fidelity_log_linear_fit_r_squared_diagnostic": 0.9586138571802887,
+              "logical_z_log_linear_fit_r_squared_diagnostic": 0.9099209933798134
+            },
+            "selection_score_mean": 0.5010098737040753
+          },
+          {
+            "strategy": "mf_agent_401",
+            "cutoff": 4,
+            "batch_size_per_seed": 2,
+            "seed_count": 2,
+            "total_trajectories": 4,
+            "simulated_physical_time_us": 20.0,
+            "per_seed": [
+              {
+                "seed": 94401,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.4379412534879984,
+                  0.07760235332873322
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.5966864060930768,
+                  0.1604845754202981
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.302862001365484,
+                  -0.011209809618384636
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.2068571203352554,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.48837121507618253,
+                  "log_linear_lifetime_cycles_diagnostic": 0.8420364035465023,
+                  "log_linear_fit_r_squared_diagnostic": 0.958530297940768,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.07760235332873322
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 0.8920212055521004,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.3986285482781458,
+                  "log_linear_lifetime_cycles_diagnostic": 0.1314549662875247,
+                  "log_linear_fit_r_squared_diagnostic": 0.8291108193580261,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": -0.011209809618384636
+                },
+                "mean_ground_outcome_probability": 0.5,
+                "mean_control_residual_rms": 0.1579816047138178,
+                "mean_control_slew_rms": 0.09627450097113675,
+                "maximum_trace_error": 2.220446049250313e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -8.269321730186504e-18
+              },
+              {
+                "seed": 94403,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.53464389812481,
+                  0.040952410305392706
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.5761201466332674,
+                  0.06063097502297403
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.46451202777994144,
+                  0.016771687451032934
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.3777947054202393,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5275600516387532,
+                  "log_linear_lifetime_cycles_diagnostic": 0.7125711067462333,
+                  "log_linear_fit_r_squared_diagnostic": 0.8177736329792347,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.040952410305392706
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 1.1990908815050574,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.48644893575272896,
+                  "log_linear_lifetime_cycles_diagnostic": 0.5591031272035487,
+                  "log_linear_fit_r_squared_diagnostic": 0.8173516649412743,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.016771687451032934
+                },
+                "mean_ground_outcome_probability": 0.75,
+                "mean_control_residual_rms": 0.14690191613944917,
+                "mean_control_slew_rms": 0.07014980316784412,
+                "maximum_trace_error": 2.220446049250313e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -1.953349725443342e-18
+              }
+            ],
+            "metric_means": {
+              "fidelity_effective_lifetime_cycles": 1.2923259128777473,
+              "fidelity_normalized_auc": 0.5079656333574678,
+              "logical_z_effective_lifetime_cycles": 1.045556043528579,
+              "logical_z_normalized_auc": 0.4425387420154374
+            },
+            "auxiliary_means": {
+              "mean_ground_outcome_probability": 0.625,
+              "mean_control_residual_rms": 0.1524417604266335,
+              "mean_control_slew_rms": 0.08321215206949044,
+              "fidelity_log_linear_fit_r_squared_diagnostic": 0.8881519654600014,
+              "logical_z_log_linear_fit_r_squared_diagnostic": 0.8232312421496502
+            },
+            "selection_score_mean": 0.4752521876864526
+          },
+          {
+            "strategy": "mf_agent_503",
+            "cutoff": 4,
+            "batch_size_per_seed": 2,
+            "seed_count": 2,
+            "total_trajectories": 4,
+            "simulated_physical_time_us": 20.0,
+            "per_seed": [
+              {
+                "seed": 94401,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.38905586172811707,
+                  0.06121592472357614
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.525911564330281,
+                  0.16059803550867555
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.26838178021307346,
+                  -0.03972913033932619
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.0967175941148315,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.45983191204495255,
+                  "log_linear_lifetime_cycles_diagnostic": 0.7656114092468124,
+                  "log_linear_fit_r_squared_diagnostic": 0.9689054678021317,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.06121592472357614
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 0.8200841166083286,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.3742586075217052,
+                  "log_linear_lifetime_cycles_diagnostic": 0.13103856416815013,
+                  "log_linear_fit_r_squared_diagnostic": 0.8714136826606889,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": -0.03972913033932619
+                },
+                "mean_ground_outcome_probability": 0.5,
+                "mean_control_residual_rms": 0.15164123575168834,
+                "mean_control_slew_rms": 0.1006376773433423,
+                "maximum_trace_error": 2.220446049250313e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -9.995069926400688e-17
+              },
+              {
+                "seed": 94403,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.4921927648764886,
+                  0.11343177654572931
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.5362248844669826,
+                  0.18220273779999702
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.41911004352441195,
+                  0.031482226335559346
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.363297402963609,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5244543265746766,
+                  "log_linear_lifetime_cycles_diagnostic": 0.987753386716716,
+                  "log_linear_fit_r_squared_diagnostic": 0.957180656435805,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.11343177654572931
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 1.1249832929321486,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.4674255783460958,
+                  "log_linear_lifetime_cycles_diagnostic": 0.6421546781006349,
+                  "log_linear_fit_r_squared_diagnostic": 0.9082647628896284,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.031482226335559346
+                },
+                "mean_ground_outcome_probability": 0.75,
+                "mean_control_residual_rms": 0.1505645167917533,
+                "mean_control_slew_rms": 0.09107995940256522,
+                "maximum_trace_error": 1.1102230246251565e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -2.930075623955626e-18
+              }
+            ],
+            "metric_means": {
+              "fidelity_effective_lifetime_cycles": 1.2300074985392202,
+              "fidelity_normalized_auc": 0.4921431193098146,
+              "logical_z_effective_lifetime_cycles": 0.9725337047702386,
+              "logical_z_normalized_auc": 0.4208420929339005
+            },
+            "auxiliary_means": {
+              "mean_ground_outcome_probability": 0.625,
+              "mean_control_residual_rms": 0.1511028762717208,
+              "mean_control_slew_rms": 0.09585881837295376,
+              "fidelity_log_linear_fit_r_squared_diagnostic": 0.9630430621189683,
+              "logical_z_log_linear_fit_r_squared_diagnostic": 0.8898392227751586
+            },
+            "selection_score_mean": 0.45649260612185755
+          }
+        ]
+      },
+      "teacher": {
+        "strategy": "teacher",
+        "cutoff": 4,
+        "batch_size_per_seed": 2,
+        "seed_count": 2,
+        "total_trajectories": 4,
+        "simulated_physical_time_us": 20.0,
+        "per_seed": [
+          {
+            "seed": 94401,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.39590732504285875,
+              0.08316732976818217
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.49282711395178125,
+              0.1368662170787996
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.3111588753288934,
+              0.019550023712807497
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.1299702766047544,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.4687454949634749,
+              "log_linear_lifetime_cycles_diagnostic": 0.847403553947725,
+              "log_linear_fit_r_squared_diagnostic": 0.9816189629634083,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.08316732976818217
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 0.9287466745488726,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.41046694359264857,
+              "log_linear_lifetime_cycles_diagnostic": 0.5532803926053167,
+              "log_linear_fit_r_squared_diagnostic": 0.9572206224019747,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.019550023712807497
+            },
+            "mean_ground_outcome_probability": 0.5,
+            "mean_control_residual_rms": 0.11308202615096989,
+            "mean_control_slew_rms": 0.038241864473944426,
+            "maximum_trace_error": 1.1102230246251565e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -2.5032685928955725e-17
+          },
+          {
+            "seed": 94403,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.4742700184063712,
+              0.03428432916665787
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.5122158640488019,
+              0.05463194760800992
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.41166516756738436,
+              0.009461917335767815
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.2369871748784345,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.4957060914948501,
+              "log_linear_lifetime_cycles_diagnostic": 0.6673685363739881,
+              "log_linear_fit_r_squared_diagnostic": 0.8649502248883221,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.03428432916665787
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 1.0907286761497605,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.4581980631176341,
+              "log_linear_lifetime_cycles_diagnostic": 0.48978766098837523,
+              "log_linear_fit_r_squared_diagnostic": 0.8398366291346455,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.009461917335767815
+            },
+            "mean_ground_outcome_probability": 0.75,
+            "mean_control_residual_rms": 0.13642409668342653,
+            "mean_control_slew_rms": 0.03127178904341272,
+            "maximum_trace_error": 0.0,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -2.0542455009674736e-50
+          }
+        ],
+        "metric_means": {
+          "fidelity_effective_lifetime_cycles": 1.1834787257415944,
+          "fidelity_normalized_auc": 0.4822257932291625,
+          "logical_z_effective_lifetime_cycles": 1.0097376753493166,
+          "logical_z_normalized_auc": 0.43433250335514134
+        },
+        "auxiliary_means": {
+          "mean_ground_outcome_probability": 0.625,
+          "mean_control_residual_rms": 0.12475306141719822,
+          "mean_control_slew_rms": 0.03475682675867857,
+          "fidelity_log_linear_fit_r_squared_diagnostic": 0.9232845939258651,
+          "logical_z_log_linear_fit_r_squared_diagnostic": 0.89852862576831
+        },
+        "selection_score_mean": 0.4582791482921519
+      },
+      "handcrafted_recurrence": {
+        "strategy": "handcrafted_recurrence",
+        "cutoff": 4,
+        "batch_size_per_seed": 2,
+        "seed_count": 2,
+        "total_trajectories": 4,
+        "simulated_physical_time_us": 20.0,
+        "per_seed": [
+          {
+            "seed": 94401,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.8358617914383824,
+              0.9613758809010522
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.8526594149209995,
+              0.9694218175404634
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.8406411513802268,
+              0.9630770704792568
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 10.224747604009892,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.9082748659444542,
+              "log_linear_lifetime_cycles_diagnostic": 19.37446641145936,
+              "log_linear_fit_r_squared_diagnostic": -0.11976002504311478,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.9613758809010522
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 10.570265194650226,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.9110898433099276,
+              "log_linear_lifetime_cycles_diagnostic": 20.093710611323022,
+              "log_linear_fit_r_squared_diagnostic": -0.12254528217594474,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.9630770704792568
+            },
+            "mean_ground_outcome_probability": 1.0,
+            "mean_control_residual_rms": 0.7181409057742898,
+            "mean_control_slew_rms": 0.056233112556735236,
+            "maximum_trace_error": 2.220446049250313e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -4.475949704153562e-50
+          },
+          {
+            "seed": 94403,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.8358617914383824,
+              0.9613758809010522
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.8526594149209995,
+              0.9694218175404634
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.8406411513802268,
+              0.9630770704792568
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 10.224747604009892,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.9082748659444542,
+              "log_linear_lifetime_cycles_diagnostic": 19.37446641145936,
+              "log_linear_fit_r_squared_diagnostic": -0.11976002504311478,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.9613758809010522
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 10.570265194650226,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.9110898433099276,
+              "log_linear_lifetime_cycles_diagnostic": 20.093710611323022,
+              "log_linear_fit_r_squared_diagnostic": -0.12254528217594474,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.9630770704792568
+            },
+            "mean_ground_outcome_probability": 1.0,
+            "mean_control_residual_rms": 0.7181409057742898,
+            "mean_control_slew_rms": 0.056233112556735236,
+            "maximum_trace_error": 2.220446049250313e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -4.475949704153562e-50
+          }
+        ],
+        "metric_means": {
+          "fidelity_effective_lifetime_cycles": 10.224747604009892,
+          "fidelity_normalized_auc": 0.9082748659444542,
+          "logical_z_effective_lifetime_cycles": 10.570265194650226,
+          "logical_z_normalized_auc": 0.9110898433099276
+        },
+        "auxiliary_means": {
+          "mean_ground_outcome_probability": 1.0,
+          "mean_control_residual_rms": 0.7181409057742898,
+          "mean_control_slew_rms": 0.056233112556735236,
+          "fidelity_log_linear_fit_r_squared_diagnostic": -0.11976002504311478,
+          "logical_z_log_linear_fit_r_squared_diagnostic": -0.12254528217594474
+        },
+        "selection_score_mean": 0.9096823546271908
+      },
+      "distilled_student": {
+        "strategy": "distilled_student",
+        "cutoff": 4,
+        "batch_size_per_seed": 2,
+        "seed_count": 2,
+        "total_trajectories": 4,
+        "simulated_physical_time_us": 20.0,
+        "per_seed": [
+          {
+            "seed": 94401,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.39486812212550804,
+              0.08589369744884859
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.49078027657658435,
+              0.13810190711619902
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.3110177588080735,
+              0.023876567711022628
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.13058385344873,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.4689074854249662,
+              "log_linear_lifetime_cycles_diagnostic": 0.8563853596061411,
+              "log_linear_fit_r_squared_diagnostic": 0.9834916153970678,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.08589369744884859
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 0.9319411791317764,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.41147802133179234,
+              "log_linear_lifetime_cycles_diagnostic": 0.5788631102015238,
+              "log_linear_fit_r_squared_diagnostic": 0.9645818821323682,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.023876567711022628
+            },
+            "mean_ground_outcome_probability": 0.5,
+            "mean_control_residual_rms": 0.11277057379830331,
+            "mean_control_slew_rms": 0.039904480427583315,
+            "maximum_trace_error": 0.0,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -1.21055258027909e-16
+          },
+          {
+            "seed": 94403,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.47395858067523206,
+              0.03431529013994333
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.511294859759331,
+              0.05475620251095993
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.41240712883794234,
+              0.009403397697111265
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.2363713904094547,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.4955581128726019,
+              "log_linear_lifetime_cycles_diagnostic": 0.6674708499127795,
+              "log_linear_fit_r_squared_diagnostic": 0.865336463783661,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.03431529013994333
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 1.092032139257804,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.45855441384324896,
+              "log_linear_lifetime_cycles_diagnostic": 0.48927927285306183,
+              "log_linear_fit_r_squared_diagnostic": 0.8386677246908404,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.009403397697111265
+            },
+            "mean_ground_outcome_probability": 0.75,
+            "mean_control_residual_rms": 0.1372876233077788,
+            "mean_control_slew_rms": 0.03190240435944601,
+            "maximum_trace_error": 1.1102230246251565e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -8.609438589235019e-50
+          }
+        ],
+        "metric_means": {
+          "fidelity_effective_lifetime_cycles": 1.1834776219290923,
+          "fidelity_normalized_auc": 0.48223279914878403,
+          "logical_z_effective_lifetime_cycles": 1.0119866591947901,
+          "logical_z_normalized_auc": 0.4350162175875206
+        },
+        "auxiliary_means": {
+          "mean_ground_outcome_probability": 0.625,
+          "mean_control_residual_rms": 0.12502909855304106,
+          "mean_control_slew_rms": 0.03590344239351466,
+          "fidelity_log_linear_fit_r_squared_diagnostic": 0.9244140395903644,
+          "logical_z_log_linear_fit_r_squared_diagnostic": 0.9016248034116043
+        },
+        "selection_score_mean": 0.45862450836815233
+      }
+    },
+    "confirmation": {
+      "cutoff": 4,
+      "full_cycles": 2,
+      "batch_size_per_seed": 2,
+      "seeds": [
+        94411,
+        94417
+      ],
+      "standard": {
+        "strategy": "standard",
+        "cutoff": 4,
+        "batch_size_per_seed": 2,
+        "seed_count": 2,
+        "total_trajectories": 4,
+        "simulated_physical_time_us": 20.0,
+        "per_seed": [
+          {
+            "seed": 94411,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.26664163526810014,
+              0.2973076440793688
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.4085826635238483,
+              0.5226236541229519
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.07922797958423058,
+              0.030435520088281154
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.0887186588771298,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.4576477286538923,
+              "log_linear_lifetime_cycles_diagnostic": 1.334106977554304,
+              "log_linear_fit_r_squared_diagnostic": 0.8608830878373818,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.2973076440793688
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 0.618888241105138,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.29722286981418555,
+              "log_linear_lifetime_cycles_diagnostic": 0.5252257733688378,
+              "log_linear_fit_r_squared_diagnostic": 0.9917331679649916,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.030435520088281154
+            },
+            "mean_ground_outcome_probability": 0.875,
+            "mean_control_residual_rms": 0.0,
+            "mean_control_slew_rms": 0.0,
+            "maximum_trace_error": 0.0,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -7.703719777548943e-34
+          },
+          {
+            "seed": 94417,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.4892615677681688,
+              0.2628040842214022
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.5230737056323612,
+              0.33639369214085435
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.4784566900625538,
+              0.17989927258822486
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.5424385187146101,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.560331804939435,
+              "log_linear_lifetime_cycles_diagnostic": 1.4759925683059072,
+              "log_linear_fit_r_squared_diagnostic": 0.9987016625562647,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.2628040842214022
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 1.4094097610763074,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.534203163178333,
+              "log_linear_lifetime_cycles_diagnostic": 1.1996431933923482,
+              "log_linear_fit_r_squared_diagnostic": 0.9941610414075801,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.17989927258822486
+            },
+            "mean_ground_outcome_probability": 0.5,
+            "mean_control_residual_rms": 0.0,
+            "mean_control_slew_rms": 0.0,
+            "maximum_trace_error": 2.220446049250313e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -4.504852304425935e-18
+          }
+        ],
+        "metric_means": {
+          "fidelity_effective_lifetime_cycles": 1.31557858879587,
+          "fidelity_normalized_auc": 0.5089897667966636,
+          "logical_z_effective_lifetime_cycles": 1.0141490010907228,
+          "logical_z_normalized_auc": 0.4157130164962593
+        },
+        "auxiliary_means": {
+          "mean_ground_outcome_probability": 0.6875,
+          "mean_control_residual_rms": 0.0,
+          "mean_control_slew_rms": 0.0,
+          "fidelity_log_linear_fit_r_squared_diagnostic": 0.9297923751968232,
+          "logical_z_log_linear_fit_r_squared_diagnostic": 0.9929471046862859
+        },
+        "selection_score_mean": 0.46235139164646144
+      },
+      "mf_all_agents": {
+        "agent_count": 5,
+        "training_seeds": [
+          101,
+          211,
+          307,
+          401,
+          503
+        ],
+        "metric_mean_across_agents": {
+          "fidelity_effective_lifetime_cycles": 1.567343638569465,
+          "fidelity_normalized_auc": 0.5496368055712958,
+          "logical_z_effective_lifetime_cycles": 1.2182302591634948,
+          "logical_z_normalized_auc": 0.4691842309081517
+        },
+        "metric_median_across_agents": {
+          "fidelity_effective_lifetime_cycles": 1.4836278824297662,
+          "fidelity_normalized_auc": 0.5315250543948629,
+          "logical_z_effective_lifetime_cycles": 1.1027117602749024,
+          "logical_z_normalized_auc": 0.4435087882985423
+        },
+        "auxiliary_mean_across_agents": {
+          "mean_ground_outcome_probability": 0.7375,
+          "mean_control_residual_rms": 0.15404940139062795,
+          "mean_control_slew_rms": 0.07739805359351187,
+          "fidelity_log_linear_fit_r_squared_diagnostic": 0.9385986582388728,
+          "logical_z_log_linear_fit_r_squared_diagnostic": 0.9676207505595773
+        },
+        "agents": [
+          {
+            "strategy": "mf_agent_101",
+            "cutoff": 4,
+            "batch_size_per_seed": 2,
+            "seed_count": 2,
+            "total_trajectories": 4,
+            "simulated_physical_time_us": 20.0,
+            "per_seed": [
+              {
+                "seed": 94411,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.539360358002601,
+                  0.4111504705635963
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.5828895258256005,
+                  0.5247492834473891
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.4640247264066345,
+                  0.2737270139598847
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.9287495916841295,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.6224677966421995,
+                  "log_linear_lifetime_cycles_diagnostic": 2.087714567751074,
+                  "log_linear_fit_r_squared_diagnostic": 0.9626523249992899,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.4111504705635963
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 1.490384049611559,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5504441166932885,
+                  "log_linear_lifetime_cycles_diagnostic": 1.4885092847618955,
+                  "log_linear_fit_r_squared_diagnostic": 0.991712384598712,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.2737270139598847
+                },
+                "mean_ground_outcome_probability": 0.875,
+                "mean_control_residual_rms": 0.15659870251940258,
+                "mean_control_slew_rms": 0.07105318166238514,
+                "maximum_trace_error": 0.0,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -6.33862530881348e-17
+              },
+              {
+                "seed": 94417,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.17417852756574437,
+                  0.23482097590183026
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.3103545905103981,
+                  0.3374731179521667
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.010741835794143912,
+                  0.10093549170424748
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 0.8834091813758849,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.39579450775832975,
+                  "log_linear_lifetime_cycles_diagnostic": 1.0763015563376113,
+                  "log_linear_fit_r_squared_diagnostic": 0.8703360233139061,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.23482097590183026
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 0.5795968480644402,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.28060479082313383,
+                  "log_linear_lifetime_cycles_diagnostic": 0.5482362003423366,
+                  "log_linear_fit_r_squared_diagnostic": 0.9527056225999315,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.10093549170424748
+                },
+                "mean_ground_outcome_probability": 0.5,
+                "mean_control_residual_rms": 0.1744824188359966,
+                "mean_control_slew_rms": 0.10345889426986117,
+                "maximum_trace_error": 1.1102230246251565e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -1.2129165756886015e-16
+              }
+            ],
+            "metric_means": {
+              "fidelity_effective_lifetime_cycles": 1.4060793865300072,
+              "fidelity_normalized_auc": 0.5091311522002646,
+              "logical_z_effective_lifetime_cycles": 1.0349904488379997,
+              "logical_z_normalized_auc": 0.4155244537582112
+            },
+            "auxiliary_means": {
+              "mean_ground_outcome_probability": 0.6875,
+              "mean_control_residual_rms": 0.1655405606776996,
+              "mean_control_slew_rms": 0.08725603796612316,
+              "fidelity_log_linear_fit_r_squared_diagnostic": 0.916494174156598,
+              "logical_z_log_linear_fit_r_squared_diagnostic": 0.9722090035993218
+            },
+            "selection_score_mean": 0.4623278029792379
+          },
+          {
+            "strategy": "mf_agent_211",
+            "cutoff": 4,
+            "batch_size_per_seed": 2,
+            "seed_count": 2,
+            "total_trajectories": 4,
+            "simulated_physical_time_us": 20.0,
+            "per_seed": [
+              {
+                "seed": 94411,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.6229874919021688,
+                  0.4221464965131494
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.6468841325803518,
+                  0.4494947350934689
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.5800470953339818,
+                  0.38357052635314287
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 2.291099069177714,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.6670303700793718,
+                  "log_linear_lifetime_cycles_diagnostic": 2.27475946869479,
+                  "log_linear_fit_r_squared_diagnostic": 0.9970760155486524,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.4221464965131494
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 2.029018743148412,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.6359161792552765,
+                  "log_linear_lifetime_cycles_diagnostic": 2.0316040169673277,
+                  "log_linear_fit_r_squared_diagnostic": 0.9945887402186763,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.38357052635314287
+                },
+                "mean_ground_outcome_probability": 0.875,
+                "mean_control_residual_rms": 0.15847886444102963,
+                "mean_control_slew_rms": 0.03751204186883362,
+                "maximum_trace_error": 1.1102230246251565e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -3.394318051962563e-18
+              },
+              {
+                "seed": 94417,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.43159047406641365,
+                  0.2251365829043164
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.5213126416311673,
+                  0.3064325262658429
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.3156678530383473,
+                  0.12293593917515679
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.3523298338491379,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5220793827592859,
+                  "log_linear_lifetime_cycles_diagnostic": 1.3080875339100186,
+                  "log_linear_fit_r_squared_diagnostic": 0.9961952460926168,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.2251365829043164
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 1.021198662201161,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.4385679113129629,
+                  "log_linear_lifetime_cycles_diagnostic": 0.9354102104270524,
+                  "log_linear_fit_r_squared_diagnostic": 0.9981383187318333,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.12293593917515679
+                },
+                "mean_ground_outcome_probability": 0.75,
+                "mean_control_residual_rms": 0.1659540606113136,
+                "mean_control_slew_rms": 0.05606448757887598,
+                "maximum_trace_error": 2.220446049250313e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -4.816412336016268e-18
+              }
+            ],
+            "metric_means": {
+              "fidelity_effective_lifetime_cycles": 1.821714451513426,
+              "fidelity_normalized_auc": 0.5945548764193289,
+              "logical_z_effective_lifetime_cycles": 1.5251087026747865,
+              "logical_z_normalized_auc": 0.5372420452841198
+            },
+            "auxiliary_means": {
+              "mean_ground_outcome_probability": 0.8125,
+              "mean_control_residual_rms": 0.1622164625261716,
+              "mean_control_slew_rms": 0.0467882647238548,
+              "fidelity_log_linear_fit_r_squared_diagnostic": 0.9966356308206346,
+              "logical_z_log_linear_fit_r_squared_diagnostic": 0.9963635294752549
+            },
+            "selection_score_mean": 0.5658984608517243
+          },
+          {
+            "strategy": "mf_agent_307",
+            "cutoff": 4,
+            "batch_size_per_seed": 2,
+            "seed_count": 2,
+            "total_trajectories": 4,
+            "simulated_physical_time_us": 20.0,
+            "per_seed": [
+              {
+                "seed": 94411,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.506125877676064,
+                  0.41210569960953064
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.5373889101988837,
+                  0.49754133356516067
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.4556349138038531,
+                  0.3161568753173273
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.8155829284416791,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.6060893637404147,
+                  "log_linear_lifetime_cycles_diagnostic": 2.0375556630499254,
+                  "log_linear_fit_r_squared_diagnostic": 0.9366391058396911,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.41210569960953064
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 1.5238932057171968,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5568566757312584,
+                  "log_linear_lifetime_cycles_diagnostic": 1.6185960300178828,
+                  "log_linear_fit_r_squared_diagnostic": 0.9708198021850993,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.3161568753173273
+                },
+                "mean_ground_outcome_probability": 0.875,
+                "mean_control_residual_rms": 0.13296150728294343,
+                "mean_control_slew_rms": 0.05829049122930554,
+                "maximum_trace_error": 0.0,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -1.8480550304405985e-17
+              },
+              {
+                "seed": 94417,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.4885741243938602,
+                  0.26735594609361724
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.5600591008037479,
+                  0.35534639265901846
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.37807310127157223,
+                  0.13999966032035435
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.5467160934362676,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5611260487203344,
+                  "log_linear_lifetime_cycles_diagnostic": 1.490484967162666,
+                  "log_linear_fit_r_squared_diagnostic": 0.9980542889354741,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.26735594609361724
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 1.150186960997873,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.47403646571587466,
+                  "log_linear_lifetime_cycles_diagnostic": 1.0193891324230957,
+                  "log_linear_fit_r_squared_diagnostic": 0.9999743032692457,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.13999966032035435
+                },
+                "mean_ground_outcome_probability": 0.75,
+                "mean_control_residual_rms": 0.13296150728294345,
+                "mean_control_slew_rms": 0.06887507099005717,
+                "maximum_trace_error": 1.1102230246251565e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -7.342257785317857e-17
+              }
+            ],
+            "metric_means": {
+              "fidelity_effective_lifetime_cycles": 1.6811495109389734,
+              "fidelity_normalized_auc": 0.5836077062303746,
+              "logical_z_effective_lifetime_cycles": 1.3370400833575349,
+              "logical_z_normalized_auc": 0.5154465707235665
+            },
+            "auxiliary_means": {
+              "mean_ground_outcome_probability": 0.8125,
+              "mean_control_residual_rms": 0.13296150728294343,
+              "mean_control_slew_rms": 0.06358278110968135,
+              "fidelity_log_linear_fit_r_squared_diagnostic": 0.9673466973875826,
+              "logical_z_log_linear_fit_r_squared_diagnostic": 0.9853970527271725
+            },
+            "selection_score_mean": 0.5495271384769705
+          },
+          {
+            "strategy": "mf_agent_401",
+            "cutoff": 4,
+            "batch_size_per_seed": 2,
+            "seed_count": 2,
+            "total_trajectories": 4,
+            "simulated_physical_time_us": 20.0,
+            "per_seed": [
+              {
+                "seed": 94411,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.53464389812481,
+                  0.44613504262993336
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.5761201466332674,
+                  0.5347486950963038
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.46451202777994144,
+                  0.33595194685983726
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.9754995103840551,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.6288557097198884,
+                  "log_linear_lifetime_cycles_diagnostic": 2.231722876847657,
+                  "log_linear_fit_r_squared_diagnostic": 0.9305095334895509,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.44613504262993336
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 1.5746359224461077,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5662440006049301,
+                  "log_linear_lifetime_cycles_diagnostic": 1.695868322969944,
+                  "log_linear_fit_r_squared_diagnostic": 0.9640825447126427,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.33595194685983726
+                },
+                "mean_ground_outcome_probability": 0.875,
+                "mean_control_residual_rms": 0.1525423881965186,
+                "mean_control_slew_rms": 0.0775777301194643,
+                "maximum_trace_error": 2.220446049250313e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -1.1663629576223123e-17
+              },
+              {
+                "seed": 94417,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.2292238692873525,
+                  0.261051331438929
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.37837792865499886,
+                  0.3511088312854239
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.036859210521917256,
+                  0.1348999483469951
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 0.9917562544754772,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.4298747675034085,
+                  "log_linear_lifetime_cycles_diagnostic": 1.2021737430210884,
+                  "log_linear_fit_r_squared_diagnostic": 0.8749276422589025,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.261051331438929
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 0.6307875981036968,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.30215459234770736,
+                  "log_linear_lifetime_cycles_diagnostic": 0.6842665925728332,
+                  "log_linear_fit_r_squared_diagnostic": 0.9205814662202618,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.1348999483469951
+                },
+                "mean_ground_outcome_probability": 0.5,
+                "mean_control_residual_rms": 0.16323968469464956,
+                "mean_control_slew_rms": 0.1018139914905735,
+                "maximum_trace_error": 1.1102230246251565e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -8.982518786666795e-17
+              }
+            ],
+            "metric_means": {
+              "fidelity_effective_lifetime_cycles": 1.4836278824297662,
+              "fidelity_normalized_auc": 0.5293652386116484,
+              "logical_z_effective_lifetime_cycles": 1.1027117602749024,
+              "logical_z_normalized_auc": 0.4341992964763187
+            },
+            "auxiliary_means": {
+              "mean_ground_outcome_probability": 0.6875,
+              "mean_control_residual_rms": 0.15789103644558408,
+              "mean_control_slew_rms": 0.0896958608050189,
+              "fidelity_log_linear_fit_r_squared_diagnostic": 0.9027185878742268,
+              "logical_z_log_linear_fit_r_squared_diagnostic": 0.9423320054664522
+            },
+            "selection_score_mean": 0.48178226754398357
+          },
+          {
+            "strategy": "mf_agent_503",
+            "cutoff": 4,
+            "batch_size_per_seed": 2,
+            "seed_count": 2,
+            "total_trajectories": 4,
+            "simulated_physical_time_us": 20.0,
+            "per_seed": [
+              {
+                "seed": 94411,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.4921927648764886,
+                  0.42127273881066735
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.5362248844669826,
+                  0.5008365335886633
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.41911004352441195,
+                  0.3218910893427901
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.7849273884950976,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.6014145671409111,
+                  "log_linear_lifetime_cycles_diagnostic": 2.051000608146088,
+                  "log_linear_fit_r_squared_diagnostic": 0.9156264361872308,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.42127273881066735
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 1.437832325104245,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.5400277940979035,
+                  "log_linear_lifetime_cycles_diagnostic": 1.5940289944561685,
+                  "log_linear_fit_r_squared_diagnostic": 0.9458893604779921,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.3218910893427901
+                },
+                "mean_ground_outcome_probability": 0.875,
+                "mean_control_residual_rms": 0.1505645167917533,
+                "mean_control_slew_rms": 0.09107995940256522,
+                "maximum_trace_error": 1.1102230246251565e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -9.084644965153222e-18
+              },
+              {
+                "seed": 94417,
+                "trajectory_count": 2,
+                "fidelity_curve": [
+                  1.0,
+                  0.28834091741322954,
+                  0.26986033176879864
+                ],
+                "code_survival_curve": [
+                  0.9999999999999999,
+                  0.4126911231295323,
+                  0.36558126052086454
+                ],
+                "logical_z_curve": [
+                  1.0,
+                  0.1263142049629825,
+                  0.1353307200707596
+                ],
+                "fidelity": {
+                  "effective_lifetime_cycles": 1.1033665343752088,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.4616355416488145,
+                  "log_linear_lifetime_cycles_diagnostic": 1.294225884071047,
+                  "log_linear_fit_r_squared_diagnostic": 0.9039699657234137,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.26986033176879864
+                },
+                "logical_z": {
+                  "effective_lifetime_cycles": 0.7447682762402541,
+                  "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+                  "normalized_auc": 0.3469897824991811,
+                  "log_linear_lifetime_cycles_diagnostic": 0.8238521378247305,
+                  "log_linear_fit_r_squared_diagnostic": 0.9377149625813778,
+                  "exponential_fit_is_diagnostic_only": true,
+                  "initial_value": 1.0,
+                  "final_value": 0.1353307200707596
+                },
+                "mean_ground_outcome_probability": 0.5,
+                "mean_control_residual_rms": 0.15271036324972864,
+                "mean_control_slew_rms": 0.10825468732319708,
+                "maximum_trace_error": 2.220446049250313e-16,
+                "maximum_hermiticity_error": 0.0,
+                "minimum_final_eigenvalue": -1.5600789644062485e-18
+              }
+            ],
+            "metric_means": {
+              "fidelity_effective_lifetime_cycles": 1.4441469614351532,
+              "fidelity_normalized_auc": 0.5315250543948629,
+              "logical_z_effective_lifetime_cycles": 1.0913003006722497,
+              "logical_z_normalized_auc": 0.4435087882985423
+            },
+            "auxiliary_means": {
+              "mean_ground_outcome_probability": 0.6875,
+              "mean_control_residual_rms": 0.15163744002074098,
+              "mean_control_slew_rms": 0.09966732336288114,
+              "fidelity_log_linear_fit_r_squared_diagnostic": 0.9097982009553223,
+              "logical_z_log_linear_fit_r_squared_diagnostic": 0.941802161529685
+            },
+            "selection_score_mean": 0.48751692134670255
+          }
+        ]
+      },
+      "teacher": {
+        "strategy": "teacher",
+        "cutoff": 4,
+        "batch_size_per_seed": 2,
+        "seed_count": 2,
+        "total_trajectories": 4,
+        "simulated_physical_time_us": 20.0,
+        "per_seed": [
+          {
+            "seed": 94411,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.4742700184063712,
+              0.42868746021453574
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.5122158640488019,
+              0.5235940110407661
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.41166516756738436,
+              0.308035029462254
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.7396190618114562,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.5943068742568196,
+              "log_linear_lifetime_cycles_diagnostic": 2.049152804172043,
+              "log_linear_fit_r_squared_diagnostic": 0.8900248366540288,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.42868746021453574
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 1.4028602594054504,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.5328413411492556,
+              "log_linear_lifetime_cycles_diagnostic": 1.5419589380631302,
+              "log_linear_fit_r_squared_diagnostic": 0.9513272341202546,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.308035029462254
+            },
+            "mean_ground_outcome_probability": 0.875,
+            "mean_control_residual_rms": 0.1290978356863637,
+            "mean_control_slew_rms": 0.03457886610743612,
+            "maximum_trace_error": 0.0,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -1.5855587312594336e-17
+          },
+          {
+            "seed": 94417,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.49474403009480644,
+              0.22912823757692277
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.5561153098586704,
+              0.30176099334541523
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.394542408371206,
+              0.12410866901194798
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.5122806338173214,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.554654074441634,
+              "log_linear_lifetime_cycles_diagnostic": 1.3696147394808715,
+              "log_linear_fit_r_squared_diagnostic": 0.9994272417602591,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.22912823757692277
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 1.1667405645150541,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.47829837143859,
+              "log_linear_lifetime_cycles_diagnostic": 0.9797727649321611,
+              "log_linear_fit_r_squared_diagnostic": 0.9970137750168144,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.12410866901194798
+            },
+            "mean_ground_outcome_probability": 0.75,
+            "mean_control_residual_rms": 0.12417856518095428,
+            "mean_control_slew_rms": 0.03568634226506762,
+            "maximum_trace_error": 0.0,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -1.3879422972775488e-49
+          }
+        ],
+        "metric_means": {
+          "fidelity_effective_lifetime_cycles": 1.6259498478143888,
+          "fidelity_normalized_auc": 0.5744804743492268,
+          "logical_z_effective_lifetime_cycles": 1.2848004119602523,
+          "logical_z_normalized_auc": 0.5055698562939228
+        },
+        "auxiliary_means": {
+          "mean_ground_outcome_probability": 0.8125,
+          "mean_control_residual_rms": 0.126638200433659,
+          "mean_control_slew_rms": 0.03513260418625187,
+          "fidelity_log_linear_fit_r_squared_diagnostic": 0.9447260392071439,
+          "logical_z_log_linear_fit_r_squared_diagnostic": 0.9741705045685345
+        },
+        "selection_score_mean": 0.5400251653215749
+      },
+      "handcrafted_recurrence": {
+        "strategy": "handcrafted_recurrence",
+        "cutoff": 4,
+        "batch_size_per_seed": 2,
+        "seed_count": 2,
+        "total_trajectories": 4,
+        "simulated_physical_time_us": 20.0,
+        "per_seed": [
+          {
+            "seed": 94411,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.8358617914383824,
+              0.9613758809010522
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.8526594149209995,
+              0.9694218175404634
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.8406411513802268,
+              0.9630770704792568
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 10.224747604009892,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.9082748659444542,
+              "log_linear_lifetime_cycles_diagnostic": 19.37446641145936,
+              "log_linear_fit_r_squared_diagnostic": -0.11976002504311478,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.9613758809010522
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 10.570265194650226,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.9110898433099276,
+              "log_linear_lifetime_cycles_diagnostic": 20.093710611323022,
+              "log_linear_fit_r_squared_diagnostic": -0.12254528217594474,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.9630770704792568
+            },
+            "mean_ground_outcome_probability": 1.0,
+            "mean_control_residual_rms": 0.7181409057742898,
+            "mean_control_slew_rms": 0.056233112556735236,
+            "maximum_trace_error": 2.220446049250313e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -4.475949704153562e-50
+          },
+          {
+            "seed": 94417,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.8358617914383824,
+              0.9612204275512197
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.8526594149209995,
+              0.9692690143709191
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.8406411513802268,
+              0.9629371166321632
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 10.220125612934016,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.9082360026069961,
+              "log_linear_lifetime_cycles_diagnostic": 19.350216087840575,
+              "log_linear_fit_r_squared_diagnostic": -0.11918080930840191,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.9612204275512197
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 10.56583653451441,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.9110548548481542,
+              "log_linear_lifetime_cycles_diagnostic": 20.070266777439585,
+              "log_linear_fit_r_squared_diagnostic": -0.12201860205795745,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.9629371166321632
+            },
+            "mean_ground_outcome_probability": 0.875,
+            "mean_control_residual_rms": 0.7181409057742898,
+            "mean_control_slew_rms": 0.056233112556735236,
+            "maximum_trace_error": 2.220446049250313e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -1.975844801339405e-17
+          }
+        ],
+        "metric_means": {
+          "fidelity_effective_lifetime_cycles": 10.222436608471954,
+          "fidelity_normalized_auc": 0.9082554342757252,
+          "logical_z_effective_lifetime_cycles": 10.568050864582318,
+          "logical_z_normalized_auc": 0.9110723490790409
+        },
+        "auxiliary_means": {
+          "mean_ground_outcome_probability": 0.9375,
+          "mean_control_residual_rms": 0.7181409057742898,
+          "mean_control_slew_rms": 0.056233112556735236,
+          "fidelity_log_linear_fit_r_squared_diagnostic": -0.11947041717575835,
+          "logical_z_log_linear_fit_r_squared_diagnostic": -0.12228194211695109
+        },
+        "selection_score_mean": 0.909663891677383
+      },
+      "distilled_student": {
+        "strategy": "distilled_student",
+        "cutoff": 4,
+        "batch_size_per_seed": 2,
+        "seed_count": 2,
+        "total_trajectories": 4,
+        "simulated_physical_time_us": 20.0,
+        "per_seed": [
+          {
+            "seed": 94411,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.47395858067523206,
+              0.4268766901807639
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.511294859759331,
+              0.5225355807276445
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.41240712883794234,
+              0.3061048511698429
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.735811399330136,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.593698462882807,
+              "log_linear_lifetime_cycles_diagnostic": 2.0415200075452833,
+              "log_linear_fit_r_squared_diagnostic": 0.8918183271788983,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.4268766901807639
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 1.4023252907512709,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.5327297772114319,
+              "log_linear_lifetime_cycles_diagnostic": 1.5368540314930068,
+              "log_linear_fit_r_squared_diagnostic": 0.9531232626463616,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.3061048511698429
+            },
+            "mean_ground_outcome_probability": 0.875,
+            "mean_control_residual_rms": 0.12938014079194352,
+            "mean_control_slew_rms": 0.03626631554690268,
+            "maximum_trace_error": 2.220446049250313e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -1.256619007440165e-17
+          },
+          {
+            "seed": 94417,
+            "trajectory_count": 2,
+            "fidelity_curve": [
+              1.0,
+              0.49119068185546444,
+              0.2258652700078749
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.553768353356167,
+              0.30121816869310963
+            ],
+            "logical_z_curve": [
+              1.0,
+              0.3897161999432951,
+              0.11763426239301905
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.4987511502623105,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.552061658429701,
+              "log_linear_lifetime_cycles_diagnostic": 1.356279378446558,
+              "log_linear_fit_r_squared_diagnostic": 0.999442241491858,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.2258652700078749
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 1.151074877156359,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.4742666655699023,
+              "log_linear_lifetime_cycles_diagnostic": 0.9573617178312478,
+              "log_linear_fit_r_squared_diagnostic": 0.9963963635539127,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.11763426239301905
+            },
+            "mean_ground_outcome_probability": 0.75,
+            "mean_control_residual_rms": 0.12418334845985378,
+            "mean_control_slew_rms": 0.036961399281742816,
+            "maximum_trace_error": 1.1102230246251565e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -8.609438589235019e-50
+          }
+        ],
+        "metric_means": {
+          "fidelity_effective_lifetime_cycles": 1.6172812747962233,
+          "fidelity_normalized_auc": 0.5728800606562541,
+          "logical_z_effective_lifetime_cycles": 1.276700083953815,
+          "logical_z_normalized_auc": 0.5034982213906671
+        },
+        "auxiliary_means": {
+          "mean_ground_outcome_probability": 0.8125,
+          "mean_control_residual_rms": 0.12678174462589864,
+          "mean_control_slew_rms": 0.03661385741432275,
+          "fidelity_log_linear_fit_r_squared_diagnostic": 0.9456302843353781,
+          "logical_z_log_linear_fit_r_squared_diagnostic": 0.9747598131001372
+        },
+        "selection_score_mean": 0.5381891410234606
+      }
+    }
+  },
+  "stochastic_retention": {
+    "primary": {
+      "selection_score": {
+        "metric": "selection_score",
+        "defined": true,
+        "point_retention_fraction": 1.003533708816752,
+        "ci_95": [
+          1.000831269466671,
+          1.0083632406873158
+        ],
+        "teacher_gain": 0.09773303175495685,
+        "student_gain": 0.09807839183095723,
+        "paired_seed_count": 2,
+        "bootstrap_repetitions": 100,
+        "positive_teacher_gain_bootstrap_fraction": 1.0
+      },
+      "fidelity_effective_lifetime_cycles": {
+        "metric": "fidelity_effective_lifetime_cycles",
+        "defined": true,
+        "point_retention_fraction": 0.9999953561742975,
+        "ci_95": [
+          0.9981803792021895,
+          1.0044794587430301
+        ],
+        "teacher_gain": 0.2376946450589802,
+        "student_gain": 0.23769354124647812,
+        "paired_seed_count": 2,
+        "bootstrap_repetitions": 100,
+        "positive_teacher_gain_bootstrap_fraction": 1.0
+      },
+      "logical_z_effective_lifetime_cycles": {
+        "metric": "logical_z_effective_lifetime_cycles",
+        "defined": true,
+        "point_retention_fraction": 1.0060687891360294,
+        "ci_95": [
+          1.002838653114879,
+          1.0113288222271022
+        ],
+        "teacher_gain": 0.37058197196566145,
+        "student_gain": 0.372830955811135,
+        "paired_seed_count": 2,
+        "bootstrap_repetitions": 100,
+        "positive_teacher_gain_bootstrap_fraction": 1.0
+      }
+    },
+    "confirmation": {
+      "selection_score": {
+        "metric": "selection_score",
+        "defined": true,
+        "point_retention_fraction": 0.9763623651685328,
+        "ci_95": [
+          0.9763623651685328,
+          0.9980660257853853
+        ],
+        "teacher_gain": 0.07767377367511336,
+        "student_gain": 0.075837749376999,
+        "paired_seed_count": 2,
+        "bootstrap_repetitions": 100,
+        "positive_teacher_gain_bootstrap_fraction": 0.71
+      },
+      "fidelity_effective_lifetime_cycles": {
+        "metric": "fidelity_effective_lifetime_cycles",
+        "defined": true,
+        "point_retention_fraction": 0.9720703101003039,
+        "ci_95": [
+          0.9720703101003039,
+          0.9941501611242599
+        ],
+        "teacher_gain": 0.3103712590185188,
+        "student_gain": 0.3017026860003533,
+        "paired_seed_count": 2,
+        "bootstrap_repetitions": 100,
+        "positive_teacher_gain_bootstrap_fraction": 0.88
+      },
+      "logical_z_effective_lifetime_cycles": {
+        "metric": "logical_z_effective_lifetime_cycles",
+        "defined": true,
+        "point_retention_fraction": 0.9700709928671231,
+        "ci_95": [
+          0.9700709928671231,
+          0.9993176176678609
+        ],
+        "teacher_gain": 0.2706514108695295,
+        "student_gain": 0.26255108286309214,
+        "paired_seed_count": 2,
+        "bootstrap_repetitions": 100,
+        "positive_teacher_gain_bootstrap_fraction": 0.69
+      }
+    }
+  },
+  "exact_two_cycle": {
+    "4": {
+      "cutoff": 4,
+      "full_cycles": 2,
+      "control_oracle_is_horizon_bound": true,
+      "standard": {
+        "strategy": "standard",
+        "cutoff": 4,
+        "full_cycles": 2,
+        "branch_count": 16,
+        "trajectory_probability_sum": 1.0000000000000002,
+        "fidelity_curve": [
+          1.0000000000000002,
+          0.3160414393265136,
+          0.26895980325093727
+        ],
+        "logical_z_curve": [
+          0.9894706091171697,
+          0.16619255829242804,
+          0.09943526611006578
+        ],
+        "code_survival_curve": [
+          0.9999999999999999,
+          0.44837770844555763,
+          0.42071447530221806
+        ],
+        "fidelity": {
+          "effective_lifetime_cycles": 1.15491698509733,
+          "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+          "normalized_auc": 0.4752606704759911,
+          "log_linear_lifetime_cycles_diagnostic": 1.3233574699886284,
+          "log_linear_fit_r_squared_diagnostic": 0.9224979113335643,
+          "exponential_fit_is_diagnostic_only": true,
+          "initial_value": 1.0000000000000002,
+          "final_value": 0.26895980325093727
+        },
+        "logical_z": {
+          "effective_lifetime_cycles": 0.7776026675220216,
+          "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+          "normalized_auc": 0.3591038932122003,
+          "log_linear_lifetime_cycles_diagnostic": 0.7837789855387984,
+          "log_linear_fit_r_squared_diagnostic": 0.9743421935518254,
+          "exponential_fit_is_diagnostic_only": true,
+          "initial_value": 0.9894706091171697,
+          "final_value": 0.09943526611006578
+        },
+        "selection_score": 0.41718228184409567,
+        "terminal_fidelity": 0.26895980325093727,
+        "terminal_logical_z": 0.09943526611006578,
+        "terminal_code_survival": 0.42071447530221806,
+        "mean_ground_outcome_probability": 0.7151035629359368,
+        "ground_probability_by_half_cycle": [
+          0.7940138200567172,
+          0.7234363468098259,
+          0.7420868043374218,
+          0.6008772805397824
+        ],
+        "expected_e_events": 1.1395857482562528,
+        "mean_control_residual_rms": 0.0,
+        "mean_control_slew_rms": 0.0,
+        "maximum_action_bound_violation": 0.0,
+        "maximum_trace_error": 2.220446049250313e-16,
+        "maximum_hermiticity_error": 0.0,
+        "minimum_final_eigenvalue": -1.126437418066355e-16,
+        "branch_rows": [
+          {
+            "trajectory": "gggg",
+            "probability": 0.2226467636687969,
+            "terminal_fidelity": 0.5524611172857954,
+            "terminal_logical_z": 0.29138264565817157,
+            "terminal_code_survival": 0.7271191597465365
+          },
+          {
+            "trajectory": "ggge",
+            "probability": 0.2138771282469364,
+            "terminal_fidelity": 0.06979637039009855,
+            "terminal_logical_z": 0.05087033760711712,
+            "terminal_code_survival": 0.0829962637029753
+          },
+          {
+            "trajectory": "ggeg",
+            "probability": 0.12178007542016078,
+            "terminal_fidelity": 0.042154170872942376,
+            "terminal_logical_z": -0.23115254045707256,
+            "terminal_code_survival": 0.318128148499367
+          },
+          {
+            "trajectory": "ggee",
+            "probability": 0.0265854801057673,
+            "terminal_fidelity": 0.31502093469768555,
+            "terminal_logical_z": 0.25530532386141847,
+            "terminal_code_survival": 0.41172904378424463
+          },
+          {
+            "trajectory": "gegg",
+            "probability": 0.09640450951392689,
+            "terminal_fidelity": 0.15656793959578913,
+            "terminal_logical_z": -0.006537294961265984,
+            "terminal_code_survival": 0.2915585281324042
+          },
+          {
+            "trajectory": "gege",
+            "probability": 0.07188513376928764,
+            "terminal_fidelity": 0.7245341790821312,
+            "terminal_logical_z": 0.7016007024001094,
+            "terminal_code_survival": 0.7390280772602775
+          },
+          {
+            "trajectory": "geeg",
+            "probability": 0.030982496448977652,
+            "terminal_fidelity": 0.054078148389731115,
+            "terminal_logical_z": -0.49817945769951605,
+            "terminal_code_survival": 0.6490467256169106
+          },
+          {
+            "trajectory": "geee",
+            "probability": 0.009852232882863571,
+            "terminal_fidelity": 0.3508601308333291,
+            "terminal_logical_z": 0.31542722793638356,
+            "terminal_code_survival": 0.39229416324603206
+          },
+          {
+            "trajectory": "eggg",
+            "probability": 0.05297587283752604,
+            "terminal_fidelity": 0.086999954104024,
+            "terminal_logical_z": -0.11638268626207895,
+            "terminal_code_survival": 0.29326447127347766
+          },
+          {
+            "trajectory": "egge",
+            "probability": 0.0285429721012514,
+            "terminal_fidelity": 0.3435397681363668,
+            "terminal_logical_z": 0.3096496527799825,
+            "terminal_code_survival": 0.3811888488005121
+          },
+          {
+            "trajectory": "egeg",
+            "probability": 0.044778359032461065,
+            "terminal_fidelity": 0.06894556964922974,
+            "terminal_logical_z": -0.394865205028317,
+            "terminal_code_survival": 0.5776616057151359
+          },
+          {
+            "trajectory": "egee",
+            "probability": 0.01224969539692605,
+            "terminal_fidelity": 0.4796621935428012,
+            "terminal_logical_z": 0.4304816772589952,
+            "terminal_code_survival": 0.569899091209987
+          },
+          {
+            "trajectory": "eegg",
+            "probability": 0.02319697333128275,
+            "terminal_fidelity": 0.28692435226894564,
+            "terminal_logical_z": 0.17725439517376562,
+            "terminal_code_survival": 0.3921438104743551
+          },
+          {
+            "trajectory": "eege",
+            "probability": 0.03255745086841375,
+            "terminal_fidelity": 0.3690402288470152,
+            "terminal_logical_z": 0.36254738061647884,
+            "terminal_code_survival": 0.38122885614930446
+          },
+          {
+            "trajectory": "eeeg",
+            "probability": 0.00811223028665036,
+            "terminal_fidelity": 0.16842288040199874,
+            "terminal_logical_z": -0.04066881928572016,
+            "terminal_code_survival": 0.4195871100925101
+          },
+          {
+            "trajectory": "eeee",
+            "probability": 0.0035726260887715615,
+            "terminal_fidelity": 0.5026641597394861,
+            "terminal_logical_z": 0.4799819378763749,
+            "terminal_code_survival": 0.5604003217500748
+          }
+        ]
+      },
+      "mf_all_agents": {
+        "agent_count": 5,
+        "terminal_fidelity_mean": 0.3037752070220651,
+        "selection_score_mean": 0.5200702827686141,
+        "mean_ground_outcome_probability": 0.7319527125579689,
+        "agents": [
+          {
+            "strategy": "mf_agent_101",
+            "cutoff": 4,
+            "full_cycles": 2,
+            "branch_count": 16,
+            "trajectory_probability_sum": 1.0,
+            "fidelity_curve": [
+              1.0,
+              0.4506384311329956,
+              0.29235605173477985
+            ],
+            "logical_z_curve": [
+              0.9894706091171697,
+              0.3321827858337113,
+              0.1820738064468513
+            ],
+            "code_survival_curve": [
+              0.9999999999999998,
+              0.5463337313181919,
+              0.3855670662225241
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.4799333256525937,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.5484082285001928,
+              "log_linear_lifetime_cycles_diagnostic": 1.5353173529102935,
+              "log_linear_fit_r_squared_diagnostic": 0.9803437881025567,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.29235605173477985
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 1.1116281609877339,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.46386167772822684,
+              "log_linear_lifetime_cycles_diagnostic": 1.1168191642385676,
+              "log_linear_fit_r_squared_diagnostic": 0.9851756395414888,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 0.9894706091171697,
+              "final_value": 0.1820738064468513
+            },
+            "selection_score": 0.5061349531142099,
+            "terminal_fidelity": 0.29235605173477985,
+            "terminal_logical_z": 0.1820738064468513,
+            "terminal_code_survival": 0.3855670662225241,
+            "mean_ground_outcome_probability": 0.7446061919162259,
+            "ground_probability_by_half_cycle": [
+              0.8210001746976205,
+              0.8070784873623933,
+              0.8132233102584483,
+              0.5371227953464415
+            ],
+            "expected_e_events": 1.0215752323350964,
+            "mean_control_residual_rms": 0.15770447791600023,
+            "mean_control_slew_rms": 0.07937932909805076,
+            "maximum_action_bound_violation": 0.0,
+            "maximum_trace_error": 2.220446049250313e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -9.783208784184438e-17,
+            "branch_rows": [
+              {
+                "trajectory": "gggg",
+                "probability": 0.2785945986539132,
+                "terminal_fidelity": 0.7078823082239368,
+                "terminal_logical_z": 0.5961112933177082,
+                "terminal_code_survival": 0.7756550988476905
+              },
+              {
+                "trajectory": "ggge",
+                "probability": 0.2808787868287313,
+                "terminal_fidelity": 0.064720690072053,
+                "terminal_logical_z": 0.047476296125382594,
+                "terminal_code_survival": 0.07668371665021609
+              },
+              {
+                "trajectory": "ggeg",
+                "probability": 0.08316048979083883,
+                "terminal_fidelity": 0.1144186329032551,
+                "terminal_logical_z": -0.05442162284828657,
+                "terminal_code_survival": 0.2738434680470873
+              },
+              {
+                "trajectory": "ggee",
+                "probability": 0.05261652192274191,
+                "terminal_fidelity": 0.12474738668045081,
+                "terminal_logical_z": 0.04488183663691234,
+                "terminal_code_survival": 0.1851370593764688
+              },
+              {
+                "trajectory": "gegg",
+                "probability": 0.05431475309644321,
+                "terminal_fidelity": 0.36218514924721523,
+                "terminal_logical_z": 0.1492202200719158,
+                "terminal_code_survival": 0.5283683555008664
+              },
+              {
+                "trajectory": "gege",
+                "probability": 0.05058915376982633,
+                "terminal_fidelity": 0.12410491440447823,
+                "terminal_logical_z": -0.022488509412574686,
+                "terminal_code_survival": 0.24048863484297853
+              },
+              {
+                "trajectory": "geeg",
+                "probability": 0.010897572290009601,
+                "terminal_fidelity": 0.15737560722268745,
+                "terminal_logical_z": -0.0630471810284852,
+                "terminal_code_survival": 0.34636307215593587
+              },
+              {
+                "trajectory": "geee",
+                "probability": 0.009948298345116189,
+                "terminal_fidelity": 0.09983158601397647,
+                "terminal_logical_z": -0.12293714098703756,
+                "terminal_code_survival": 0.28966888502426463
+              },
+              {
+                "trajectory": "eggg",
+                "probability": 0.06972644933000122,
+                "terminal_fidelity": 0.25828336982985495,
+                "terminal_logical_z": 0.03998519106752665,
+                "terminal_code_survival": 0.5326154014156737
+              },
+              {
+                "trajectory": "egge",
+                "probability": 0.022802216824340884,
+                "terminal_fidelity": 0.09700355927593225,
+                "terminal_logical_z": 0.04725998731389567,
+                "terminal_code_survival": 0.1428965681075256
+              },
+              {
+                "trajectory": "egeg",
+                "probability": 0.016334391832621694,
+                "terminal_fidelity": 0.037753063634647685,
+                "terminal_logical_z": -0.5045110996170805,
+                "terminal_code_survival": 0.6001045841333021
+              },
+              {
+                "trajectory": "egee",
+                "probability": 0.002965032179204288,
+                "terminal_fidelity": 0.08104140008161653,
+                "terminal_logical_z": -0.08176935847132437,
+                "terminal_code_survival": 0.23273332229812482
+              },
+              {
+                "trajectory": "eegg",
+                "probability": 0.014704908255003916,
+                "terminal_fidelity": 0.4256816813267729,
+                "terminal_logical_z": 0.2378992649877803,
+                "terminal_code_survival": 0.6037908684697413
+              },
+              {
+                "trajectory": "eege",
+                "probability": 0.04161244350018831,
+                "terminal_fidelity": 0.10745680255644499,
+                "terminal_logical_z": 0.05052518484436902,
+                "terminal_code_survival": 0.14657788040346706
+              },
+              {
+                "trajectory": "eeeg",
+                "probability": 0.00938963209760984,
+                "terminal_fidelity": 0.02795326884603043,
+                "terminal_logical_z": -0.12443445911330098,
+                "terminal_code_survival": 0.18206743668026681
+              },
+              {
+                "trajectory": "eeee",
+                "probability": 0.0014647512834093802,
+                "terminal_fidelity": 0.10658656563004534,
+                "terminal_logical_z": -0.02885583662615661,
+                "terminal_code_survival": 0.22140592072809254
+              }
+            ]
+          },
+          {
+            "strategy": "mf_agent_211",
+            "cutoff": 4,
+            "full_cycles": 2,
+            "branch_count": 16,
+            "trajectory_probability_sum": 1.0000000000000002,
+            "fidelity_curve": [
+              1.0000000000000002,
+              0.519734173703161,
+              0.33744960046086536
+            ],
+            "logical_z_curve": [
+              0.9894706091171697,
+              0.4359798423077634,
+              0.24871826314681075
+            ],
+            "code_survival_curve": [
+              1.0,
+              0.5878524860812758,
+              0.41451973804377906
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.7391341360246182,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.5942294869667968,
+              "log_linear_lifetime_cycles_diagnostic": 1.768586769634465,
+              "log_linear_fit_r_squared_diagnostic": 0.9890862071013957,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0000000000000002,
+              "final_value": 0.33744960046086536
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 1.404345869293651,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.5331508933757603,
+              "log_linear_lifetime_cycles_diagnostic": 1.3961517434169988,
+              "log_linear_fit_r_squared_diagnostic": 0.9918818521462697,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 0.9894706091171697,
+              "final_value": 0.24871826314681075
+            },
+            "selection_score": 0.5636901901712785,
+            "terminal_fidelity": 0.33744960046086536,
+            "terminal_logical_z": 0.24871826314681075,
+            "terminal_code_survival": 0.41451973804377906,
+            "mean_ground_outcome_probability": 0.7601203357748216,
+            "ground_probability_by_half_cycle": [
+              0.839027462929989,
+              0.8154615004049481,
+              0.8470349232459609,
+              0.5389574565183881
+            ],
+            "expected_e_events": 0.9595186569007139,
+            "mean_control_residual_rms": 0.1659317895240285,
+            "mean_control_slew_rms": 0.0543001698471153,
+            "maximum_action_bound_violation": 0.0,
+            "maximum_trace_error": 2.220446049250313e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -2.0803802460085375e-16,
+            "branch_rows": [
+              {
+                "trajectory": "gggg",
+                "probability": 0.30808980422387716,
+                "terminal_fidelity": 0.7782247696394072,
+                "terminal_logical_z": 0.7093172261605336,
+                "terminal_code_survival": 0.8209499264425824
+              },
+              {
+                "trajectory": "ggge",
+                "probability": 0.2876682238044854,
+                "terminal_fidelity": 0.06606822338689163,
+                "terminal_logical_z": 0.04974629853954166,
+                "terminal_code_survival": 0.07803954374435546
+              },
+              {
+                "trajectory": "ggeg",
+                "probability": 0.07163332953315962,
+                "terminal_fidelity": 0.14633397027896633,
+                "terminal_logical_z": -0.011347901291729164,
+                "terminal_code_survival": 0.30074797354115496
+              },
+              {
+                "trajectory": "ggee",
+                "probability": 0.04678348941872787,
+                "terminal_fidelity": 0.12019401648716876,
+                "terminal_logical_z": 0.04569066768462186,
+                "terminal_code_survival": 0.18003078842013134
+              },
+              {
+                "trajectory": "gegg",
+                "probability": 0.06087415845006741,
+                "terminal_fidelity": 0.38420494242174097,
+                "terminal_logical_z": 0.1935366986965252,
+                "terminal_code_survival": 0.5348255087873304
+              },
+              {
+                "trajectory": "gege",
+                "probability": 0.05163674904211519,
+                "terminal_fidelity": 0.11446007554486068,
+                "terminal_logical_z": -0.04030815253007873,
+                "terminal_code_survival": 0.2389831713577808
+              },
+              {
+                "trajectory": "geeg",
+                "probability": 0.006288077688603139,
+                "terminal_fidelity": 0.14489294851420997,
+                "terminal_logical_z": -0.02007199699064581,
+                "terminal_code_survival": 0.2977828367798586
+              },
+              {
+                "trajectory": "geee",
+                "probability": 0.006053630768953237,
+                "terminal_fidelity": 0.10087202019901283,
+                "terminal_logical_z": -0.05085709632959992,
+                "terminal_code_survival": 0.2261119166001202
+              },
+              {
+                "trajectory": "eggg",
+                "probability": 0.060200647786030966,
+                "terminal_fidelity": 0.2995661306263893,
+                "terminal_logical_z": 0.08652892632234829,
+                "terminal_code_survival": 0.5684394783533161
+              },
+              {
+                "trajectory": "egge",
+                "probability": 0.026575541850946852,
+                "terminal_fidelity": 0.11127868402006448,
+                "terminal_logical_z": 0.0595039621254662,
+                "terminal_code_survival": 0.15540557317574244
+              },
+              {
+                "trajectory": "egeg",
+                "probability": 0.011792206474861875,
+                "terminal_fidelity": 0.05630592183116675,
+                "terminal_logical_z": -0.47416731768758524,
+                "terminal_code_survival": 0.6157659003995746
+              },
+              {
+                "trajectory": "egee",
+                "probability": 0.0027182573128584054,
+                "terminal_fidelity": 0.07618652884131921,
+                "terminal_logical_z": -0.05397600896033719,
+                "terminal_code_survival": 0.19648386454301628
+              },
+              {
+                "trajectory": "eegg",
+                "probability": 0.014257953427395017,
+                "terminal_fidelity": 0.3687640324805854,
+                "terminal_logical_z": 0.17135487060511914,
+                "terminal_code_survival": 0.5612429192608075
+              },
+              {
+                "trajectory": "eege",
+                "probability": 0.03773184466104289,
+                "terminal_fidelity": 0.10718026640564182,
+                "terminal_logical_z": 0.052812308465493424,
+                "terminal_code_survival": 0.14442660586314088
+              },
+              {
+                "trajectory": "eeeg",
+                "probability": 0.005821278934392977,
+                "terminal_fidelity": 0.06802878659583578,
+                "terminal_logical_z": -0.04586961583319578,
+                "terminal_code_survival": 0.19646223083605846
+              },
+              {
+                "trajectory": "eeee",
+                "probability": 0.0018748066224822022,
+                "terminal_fidelity": 0.10382673006791082,
+                "terminal_logical_z": 0.033457631895948955,
+                "terminal_code_survival": 0.15904667039993042
+              }
+            ]
+          },
+          {
+            "strategy": "mf_agent_307",
+            "cutoff": 4,
+            "full_cycles": 2,
+            "branch_count": 16,
+            "trajectory_probability_sum": 1.0000000000000002,
+            "fidelity_curve": [
+              1.0000000000000002,
+              0.47974305781826987,
+              0.3108558668536102
+            ],
+            "logical_z_curve": [
+              0.9894706091171697,
+              0.40570917499677733,
+              0.21724077995605262
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.5275182017383655,
+              0.387025844695971
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.5820578374798995,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.5675854956225375,
+              "log_linear_lifetime_cycles_diagnostic": 1.62794519557047,
+              "log_linear_fit_r_squared_diagnostic": 0.9841663802524372,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0000000000000002,
+              "final_value": 0.3108558668536102
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 1.2976446065969074,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.5099013857691546,
+              "log_linear_lifetime_cycles_diagnostic": 1.274255142919262,
+              "log_linear_fit_r_squared_diagnostic": 0.9931619329195867,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 0.9894706091171697,
+              "final_value": 0.21724077995605262
+            },
+            "selection_score": 0.538743440695846,
+            "terminal_fidelity": 0.3108558668536102,
+            "terminal_logical_z": 0.21724077995605262,
+            "terminal_code_survival": 0.387025844695971,
+            "mean_ground_outcome_probability": 0.73404094839038,
+            "ground_probability_by_half_cycle": [
+              0.8662439255345364,
+              0.7590437170799591,
+              0.7383638840572107,
+              0.572512266889814
+            ],
+            "expected_e_events": 1.0638362064384799,
+            "mean_control_residual_rms": 0.13127979329257167,
+            "mean_control_slew_rms": 0.06011991698722263,
+            "maximum_action_bound_violation": 0.0,
+            "maximum_trace_error": 2.220446049250313e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -1.6682821145150398e-16,
+            "branch_rows": [
+              {
+                "trajectory": "gggg",
+                "probability": 0.2660426302587876,
+                "terminal_fidelity": 0.6338351602861401,
+                "terminal_logical_z": 0.5733031956493498,
+                "terminal_code_survival": 0.681285700808674
+              },
+              {
+                "trajectory": "ggge",
+                "probability": 0.21066074391333256,
+                "terminal_fidelity": 0.05648275375472906,
+                "terminal_logical_z": 0.023672777060522437,
+                "terminal_code_survival": 0.0822821352334277
+              },
+              {
+                "trajectory": "ggeg",
+                "probability": 0.14321348357189784,
+                "terminal_fidelity": 0.19037623893292077,
+                "terminal_logical_z": 0.052352676344283096,
+                "terminal_code_survival": 0.31379696632164716
+              },
+              {
+                "trajectory": "ggee",
+                "probability": 0.06826861983684795,
+                "terminal_fidelity": 0.1095566780247448,
+                "terminal_logical_z": 0.06365793666046932,
+                "terminal_code_survival": 0.15342405746050203
+              },
+              {
+                "trajectory": "gegg",
+                "probability": 0.10222972019295705,
+                "terminal_fidelity": 0.4782291384325056,
+                "terminal_logical_z": 0.2533783212862335,
+                "terminal_code_survival": 0.6284106500846093
+              },
+              {
+                "trajectory": "gege",
+                "probability": 0.04410887186028618,
+                "terminal_fidelity": 0.14852149897344535,
+                "terminal_logical_z": -0.06464648272970816,
+                "terminal_code_survival": 0.3210802432907904
+              },
+              {
+                "trajectory": "geeg",
+                "probability": 0.01030568914813972,
+                "terminal_fidelity": 0.28456330625931425,
+                "terminal_logical_z": 0.01493688957905551,
+                "terminal_code_survival": 0.5433286469221903
+              },
+              {
+                "trajectory": "geee",
+                "probability": 0.021414166752287432,
+                "terminal_fidelity": 0.21556582393128476,
+                "terminal_logical_z": 0.17691499202003147,
+                "terminal_code_survival": 0.24047299482954637
+              },
+              {
+                "trajectory": "eggg",
+                "probability": 0.025719051450585256,
+                "terminal_fidelity": 0.497355299878488,
+                "terminal_logical_z": 0.4042889022319719,
+                "terminal_code_survival": 0.6233342963231143
+              },
+              {
+                "trajectory": "egge",
+                "probability": 0.032289159934381736,
+                "terminal_fidelity": 0.09388475838522656,
+                "terminal_logical_z": 0.022556583131980775,
+                "terminal_code_survival": 0.1524773428140472
+              },
+              {
+                "trajectory": "egeg",
+                "probability": 0.008091257342411477,
+                "terminal_fidelity": 0.28335811203243133,
+                "terminal_logical_z": 0.011168991036708516,
+                "terminal_code_survival": 0.6160517398783972
+              },
+              {
+                "trajectory": "egee",
+                "probability": 0.004758770771714621,
+                "terminal_fidelity": 0.09525419635611602,
+                "terminal_logical_z": 0.010510151505847767,
+                "terminal_code_survival": 0.1656709478559118
+              },
+              {
+                "trajectory": "eegg",
+                "probability": 0.01398842133929245,
+                "terminal_fidelity": 0.5529915928415711,
+                "terminal_logical_z": 0.4273874168626386,
+                "terminal_code_survival": 0.6436984824206091
+              },
+              {
+                "trajectory": "eege",
+                "probability": 0.04332528510758775,
+                "terminal_fidelity": 0.10752815911335192,
+                "terminal_logical_z": 0.054483534063892905,
+                "terminal_code_survival": 0.14399438749277646
+              },
+              {
+                "trajectory": "eeeg",
+                "probability": 0.0029220135857425536,
+                "terminal_fidelity": 0.463019919211091,
+                "terminal_logical_z": 0.3675050157003135,
+                "terminal_code_survival": 0.5382923837249542
+              },
+              {
+                "trajectory": "eeee",
+                "probability": 0.0026621149337478643,
+                "terminal_fidelity": 0.10556871562550818,
+                "terminal_logical_z": 0.08042158725978882,
+                "terminal_code_survival": 0.12387520984677092
+              }
+            ]
+          },
+          {
+            "strategy": "mf_agent_401",
+            "cutoff": 4,
+            "full_cycles": 2,
+            "branch_count": 16,
+            "trajectory_probability_sum": 1.0,
+            "fidelity_curve": [
+              1.0,
+              0.4454919367027071,
+              0.299208964715183
+            ],
+            "logical_z_curve": [
+              0.9894706091171698,
+              0.32300496093276143,
+              0.18337631395896511
+            ],
+            "code_survival_curve": [
+              0.9999999999999999,
+              0.5489631148491371,
+              0.40252610421104124
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.4755452677971665,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.5475482095301493,
+              "log_linear_lifetime_cycles_diagnostic": 1.55192639868646,
+              "log_linear_fit_r_squared_diagnostic": 0.9748378456796827,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0,
+              "final_value": 0.299208964715183
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 1.0956930373404945,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.4595530246634832,
+              "log_linear_lifetime_cycles_diagnostic": 1.1133968654475968,
+              "log_linear_fit_r_squared_diagnostic": 0.9817499873329717,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 0.9894706091171698,
+              "final_value": 0.18337631395896511
+            },
+            "selection_score": 0.5035506170968163,
+            "terminal_fidelity": 0.299208964715183,
+            "terminal_logical_z": 0.18337631395896511,
+            "terminal_code_survival": 0.40252610421104124,
+            "mean_ground_outcome_probability": 0.7217690563926051,
+            "ground_probability_by_half_cycle": [
+              0.7558266295187563,
+              0.7977553564942101,
+              0.7529991427940372,
+              0.5804950967634168
+            ],
+            "expected_e_events": 1.1129237744295795,
+            "mean_control_residual_rms": 0.15466916932895808,
+            "mean_control_slew_rms": 0.0860010568439874,
+            "maximum_action_bound_violation": 0.0,
+            "maximum_trace_error": 2.220446049250313e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -1.6346637305312763e-16,
+            "branch_rows": [
+              {
+                "trajectory": "gggg",
+                "probability": 0.2599045580808378,
+                "terminal_fidelity": 0.6996704158386802,
+                "terminal_logical_z": 0.6236341928350522,
+                "terminal_code_survival": 0.7495722324296136
+              },
+              {
+                "trajectory": "ggge",
+                "probability": 0.205908748746792,
+                "terminal_fidelity": 0.04095241030539268,
+                "terminal_logical_z": 0.01659509179809635,
+                "terminal_code_survival": 0.06063097502297396
+              },
+              {
+                "trajectory": "ggeg",
+                "probability": 0.11431758436026195,
+                "terminal_fidelity": 0.19259966942118684,
+                "terminal_logical_z": 0.041194962151952695,
+                "terminal_code_survival": 0.31992515776299413
+              },
+              {
+                "trajectory": "ggee",
+                "probability": 0.05699188585294221,
+                "terminal_fidelity": 0.09380260309376766,
+                "terminal_logical_z": 0.01669786281776299,
+                "terminal_code_survival": 0.15673218536487676
+              },
+              {
+                "trajectory": "gegg",
+                "probability": 0.05443060001244991,
+                "terminal_fidelity": 0.43904126133828686,
+                "terminal_logical_z": 0.2253061644555463,
+                "terminal_code_survival": 0.590255808643801
+              },
+              {
+                "trajectory": "gege",
+                "probability": 0.03696678801435232,
+                "terminal_fidelity": 0.12928834895635488,
+                "terminal_logical_z": -0.10105993550786899,
+                "terminal_code_survival": 0.320525443830076
+              },
+              {
+                "trajectory": "geeg",
+                "probability": 0.011392439818576065,
+                "terminal_fidelity": 0.14342082456915584,
+                "terminal_logical_z": -0.1595599267991175,
+                "terminal_code_survival": 0.4088452115416975
+              },
+              {
+                "trajectory": "geee",
+                "probability": 0.015914024632544068,
+                "terminal_fidelity": 0.1268058858348345,
+                "terminal_logical_z": -0.05400899109328558,
+                "terminal_code_survival": 0.27146981049267493
+              },
+              {
+                "trajectory": "eggg",
+                "probability": 0.08628543647455747,
+                "terminal_fidelity": 0.347591789016034,
+                "terminal_logical_z": 0.16680625627461518,
+                "terminal_code_survival": 0.5899052345415084
+              },
+              {
+                "trajectory": "egge",
+                "probability": 0.03858620225136825,
+                "terminal_fidelity": 0.061402103563698844,
+                "terminal_logical_z": -0.03888141712014399,
+                "terminal_code_survival": 0.1642369654757195
+              },
+              {
+                "trajectory": "egeg",
+                "probability": 0.028630442397358694,
+                "terminal_fidelity": 0.07307901779855704,
+                "terminal_logical_z": -0.41606912872408003,
+                "terminal_code_survival": 0.6029863647957583
+              },
+              {
+                "trajectory": "egee",
+                "probability": 0.007130498330091851,
+                "terminal_fidelity": 0.09547796187223656,
+                "terminal_logical_z": -0.1389419726404762,
+                "terminal_code_survival": 0.3027350525367103
+              },
+              {
+                "trajectory": "eegg",
+                "probability": 0.017303284864541135,
+                "terminal_fidelity": 0.5038391802323781,
+                "terminal_logical_z": 0.27889037959157914,
+                "terminal_code_survival": 0.670057712041361
+              },
+              {
+                "trajectory": "eege",
+                "probability": 0.05361352434913839,
+                "terminal_fidelity": 0.08306140153957103,
+                "terminal_logical_z": 0.04165290366600531,
+                "terminal_code_survival": 0.11196185392704704
+              },
+              {
+                "trajectory": "eeeg",
+                "probability": 0.008230750754833848,
+                "terminal_fidelity": 0.05144923722222834,
+                "terminal_logical_z": -0.09250923296946806,
+                "terminal_code_survival": 0.2027000382729266
+              },
+              {
+                "trajectory": "eeee",
+                "probability": 0.00439323105935419,
+                "terminal_fidelity": 0.11555797403056664,
+                "terminal_logical_z": 0.017152230464572246,
+                "terminal_code_survival": 0.1909788830374481
+              }
+            ]
+          },
+          {
+            "strategy": "mf_agent_503",
+            "cutoff": 4,
+            "full_cycles": 2,
+            "branch_count": 16,
+            "trajectory_probability_sum": 1.0000000000000004,
+            "fidelity_curve": [
+              1.0000000000000004,
+              0.4241873412135675,
+              0.27900555134588706
+            ],
+            "logical_z_curve": [
+              0.9894706091171701,
+              0.30332043788232144,
+              0.16363969902399994
+            ],
+            "code_survival_curve": [
+              1.0000000000000002,
+              0.5203978501473279,
+              0.3798208957284799
+            ],
+            "fidelity": {
+              "effective_lifetime_cycles": 1.3980913546469762,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.5318450584432554,
+              "log_linear_lifetime_cycles_diagnostic": 1.4660059839510413,
+              "log_linear_fit_r_squared_diagnostic": 0.9753541275188062,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 1.0000000000000004,
+              "final_value": 0.27900555134588706
+            },
+            "logical_z": {
+              "effective_lifetime_cycles": 1.0421697526009503,
+              "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+              "normalized_auc": 0.44461936708658434,
+              "log_linear_lifetime_cycles_diagnostic": 1.0457218276723037,
+              "log_linear_fit_r_squared_diagnostic": 0.9840625447312087,
+              "exponential_fit_is_diagnostic_only": true,
+              "initial_value": 0.9894706091171701,
+              "final_value": 0.16363969902399994
+            },
+            "selection_score": 0.48823221276491985,
+            "terminal_fidelity": 0.27900555134588706,
+            "terminal_logical_z": 0.16363969902399994,
+            "terminal_code_survival": 0.3798208957284799,
+            "mean_ground_outcome_probability": 0.6992270303158111,
+            "ground_probability_by_half_cycle": [
+              0.7808197333477577,
+              0.7606211216892809,
+              0.6866913901708174,
+              0.5687758760553882
+            ],
+            "expected_e_events": 1.203091878736756,
+            "mean_control_residual_rms": 0.15115091853839865,
+            "mean_control_slew_rms": 0.09544469337718234,
+            "maximum_action_bound_violation": 0.0,
+            "maximum_trace_error": 2.220446049250313e-16,
+            "maximum_hermiticity_error": 0.0,
+            "minimum_final_eigenvalue": -9.086535413836412e-17,
+            "branch_rows": [
+              {
+                "trajectory": "gggg",
+                "probability": 0.23544828886140265,
+                "terminal_fidelity": 0.661419676145386,
+                "terminal_logical_z": 0.5916561776024095,
+                "terminal_code_survival": 0.7062797201978479
+              },
+              {
+                "trajectory": "ggge",
+                "probability": 0.18196702786945043,
+                "terminal_fidelity": 0.04573775161551005,
+                "terminal_logical_z": 0.01695410845683124,
+                "terminal_code_survival": 0.06901212862051552
+              },
+              {
+                "trajectory": "ggeg",
+                "probability": 0.13630353225951408,
+                "terminal_fidelity": 0.18112580147594856,
+                "terminal_logical_z": 0.045347366880389546,
+                "terminal_code_survival": 0.2953933469794787
+              },
+              {
+                "trajectory": "ggee",
+                "probability": 0.06894912385824704,
+                "terminal_fidelity": 0.067879829638985,
+                "terminal_logical_z": -0.025502932652828048,
+                "terminal_code_survival": 0.15681116489650607
+              },
+              {
+                "trajectory": "gegg",
+                "probability": 0.06753635209733663,
+                "terminal_fidelity": 0.45759817834638017,
+                "terminal_logical_z": 0.24806309853698788,
+                "terminal_code_survival": 0.6025262059143992
+              },
+              {
+                "trajectory": "gege",
+                "probability": 0.04008376745492444,
+                "terminal_fidelity": 0.14992333280166537,
+                "terminal_logical_z": -0.10679940246512061,
+                "terminal_code_survival": 0.3622423393269139
+              },
+              {
+                "trajectory": "geeg",
+                "probability": 0.015633022950654402,
+                "terminal_fidelity": 0.12513415483834017,
+                "terminal_logical_z": -0.18304629646203652,
+                "terminal_code_survival": 0.410483561585703
+              },
+              {
+                "trajectory": "geee",
+                "probability": 0.03489861799622796,
+                "terminal_fidelity": 0.15292277099207915,
+                "terminal_logical_z": 0.04636097122561836,
+                "terminal_code_survival": 0.23144600005255608
+              },
+              {
+                "trajectory": "eggg",
+                "probability": 0.057845165134536095,
+                "terminal_fidelity": 0.34902938219263846,
+                "terminal_logical_z": 0.19623561914699017,
+                "terminal_code_survival": 0.5543087281006407
+              },
+              {
+                "trajectory": "egge",
+                "probability": 0.035147672308753555,
+                "terminal_fidelity": 0.05455201980816731,
+                "terminal_logical_z": -0.0531186809402689,
+                "terminal_code_survival": 0.16438490612084505
+              },
+              {
+                "trajectory": "egeg",
+                "probability": 0.03209655955486135,
+                "terminal_fidelity": 0.09015199355513388,
+                "terminal_logical_z": -0.31589515019580305,
+                "terminal_code_survival": 0.5394982850786364
+              },
+              {
+                "trajectory": "egee",
+                "probability": 0.012863751842515621,
+                "terminal_fidelity": 0.07050701050427953,
+                "terminal_logical_z": -0.22434548790561618,
+                "terminal_code_survival": 0.344429227994679
+              },
+              {
+                "trajectory": "eegg",
+                "probability": 0.01622460695540614,
+                "terminal_fidelity": 0.5210749445092361,
+                "terminal_logical_z": 0.4002136046539101,
+                "terminal_code_survival": 0.621653701800269
+              },
+              {
+                "trajectory": "eege",
+                "probability": 0.05243850948900754,
+                "terminal_fidelity": 0.08212248519121712,
+                "terminal_logical_z": 0.01974844150437162,
+                "terminal_code_survival": 0.12863631512732973
+              },
+              {
+                "trajectory": "eeeg",
+                "probability": 0.0076883482416767925,
+                "terminal_fidelity": 0.2959788839297547,
+                "terminal_logical_z": 0.19880087011151834,
+                "terminal_code_survival": 0.39630834512144014
+              },
+              {
+                "trajectory": "eeee",
+                "probability": 0.004875653125485691,
+                "terminal_fidelity": 0.08891039911605803,
+                "terminal_logical_z": 0.016880575641480447,
+                "terminal_code_survival": 0.14802143494381353
+              }
+            ]
+          }
+        ]
+      },
+      "teacher": {
+        "strategy": "teacher",
+        "cutoff": 4,
+        "full_cycles": 2,
+        "branch_count": 16,
+        "trajectory_probability_sum": 1.0,
+        "fidelity_curve": [
+          1.0,
+          0.4584875287517185,
+          0.2996573493822526
+        ],
+        "logical_z_curve": [
+          0.9894706091171698,
+          0.3791685385091874,
+          0.20055158568333575
+        ],
+        "code_survival_curve": [
+          1.0,
+          0.5145697618841547,
+          0.37934622724919614
+        ],
+        "fidelity": {
+          "effective_lifetime_cycles": 1.5096807222263822,
+          "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+          "normalized_auc": 0.5541581017214223,
+          "log_linear_lifetime_cycles_diagnostic": 1.5673718622494106,
+          "log_linear_fit_r_squared_diagnostic": 0.9803431069033143,
+          "exponential_fit_is_diagnostic_only": true,
+          "initial_value": 1.0,
+          "final_value": 0.2996573493822526
+        },
+        "logical_z": {
+          "effective_lifetime_cycles": 1.2227863397357739,
+          "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+          "normalized_auc": 0.49227315441871866,
+          "log_linear_lifetime_cycles_diagnostic": 1.2044169180041768,
+          "log_linear_fit_r_squared_diagnostic": 0.9915898683130155,
+          "exponential_fit_is_diagnostic_only": true,
+          "initial_value": 0.9894706091171698,
+          "final_value": 0.20055158568333575
+        },
+        "selection_score": 0.5232156280700705,
+        "terminal_fidelity": 0.2996573493822526,
+        "terminal_logical_z": 0.20055158568333575,
+        "terminal_code_survival": 0.37934622724919614,
+        "mean_ground_outcome_probability": 0.7320998367219433,
+        "ground_probability_by_half_cycle": [
+          0.8267630708829652,
+          0.7783736622515909,
+          0.7628438445151745,
+          0.5604187692380427
+        ],
+        "expected_e_events": 1.0716006531122266,
+        "mean_control_residual_rms": 0.12263683753976719,
+        "mean_control_slew_rms": 0.03511143884480823,
+        "maximum_action_bound_violation": 0.0,
+        "maximum_trace_error": 2.220446049250313e-16,
+        "maximum_hermiticity_error": 0.0,
+        "minimum_final_eigenvalue": -1.1218028279393655e-16,
+        "branch_rows": [
+          {
+            "trajectory": "gggg",
+            "probability": 0.2603129666500787,
+            "terminal_fidelity": 0.6455185446818537,
+            "terminal_logical_z": 0.5705563675980364,
+            "terminal_code_survival": 0.6940738727281414
+          },
+          {
+            "trajectory": "ggge",
+            "probability": 0.23699885831032927,
+            "terminal_fidelity": 0.034284329166658,
+            "terminal_logical_z": 0.009362289109638617,
+            "terminal_code_survival": 0.05463194760801007
+          },
+          {
+            "trajectory": "ggeg",
+            "probability": 0.12261103396441841,
+            "terminal_fidelity": 0.21185637574721802,
+            "terminal_logical_z": 0.03902684886484733,
+            "terminal_code_survival": 0.353114149353391
+          },
+          {
+            "trajectory": "ggee",
+            "probability": 0.05446018767177967,
+            "terminal_fidelity": 0.08960354563548738,
+            "terminal_logical_z": 0.040016537685246496,
+            "terminal_code_survival": 0.13212428766993767
+          },
+          {
+            "trajectory": "gegg",
+            "probability": 0.07868252823603945,
+            "terminal_fidelity": 0.4239721459871882,
+            "terminal_logical_z": 0.23624147153830893,
+            "terminal_code_survival": 0.5488900390828207
+          },
+          {
+            "trajectory": "gege",
+            "probability": 0.04433028314615747,
+            "terminal_fidelity": 0.33729419305776764,
+            "terminal_logical_z": 0.13451311704131635,
+            "terminal_code_survival": 0.47866476687565396
+          },
+          {
+            "trajectory": "geeg",
+            "probability": 0.01550177774836309,
+            "terminal_fidelity": 0.17541019931923493,
+            "terminal_logical_z": -0.0498677225595229,
+            "terminal_code_survival": 0.4138598970413521
+          },
+          {
+            "trajectory": "geee",
+            "probability": 0.013865435155799109,
+            "terminal_fidelity": 0.28048977094070565,
+            "terminal_logical_z": 0.2158023860909531,
+            "terminal_code_survival": 0.320767448074046
+          },
+          {
+            "trajectory": "eggg",
+            "probability": 0.03982745277612745,
+            "terminal_fidelity": 0.3305908813789809,
+            "terminal_logical_z": 0.20017908685937766,
+            "terminal_code_survival": 0.4839596876212391
+          },
+          {
+            "trajectory": "egge",
+            "probability": 0.04066168894723252,
+            "terminal_fidelity": 0.07673111390087681,
+            "terminal_logical_z": -0.001328189942513203,
+            "terminal_code_survival": 0.14160814648766143
+          },
+          {
+            "trajectory": "egeg",
+            "probability": 0.018387869795468085,
+            "terminal_fidelity": 0.1220367860305058,
+            "terminal_logical_z": -0.3213061887284948,
+            "terminal_code_survival": 0.6265277095139776
+          },
+          {
+            "trajectory": "egee",
+            "probability": 0.00511360413615674,
+            "terminal_fidelity": 0.09244346255643976,
+            "terminal_logical_z": -0.06669928772282477,
+            "terminal_code_survival": 0.2701596300860181
+          },
+          {
+            "trajectory": "eegg",
+            "probability": 0.020377205550783917,
+            "terminal_fidelity": 0.4071135335587945,
+            "terminal_logical_z": 0.2966970223405526,
+            "terminal_code_survival": 0.48914793698094405
+          },
+          {
+            "trajectory": "eege",
+            "probability": 0.04165286089842576,
+            "terminal_fidelity": 0.19409233654990932,
+            "terminal_logical_z": 0.1588945319935946,
+            "terminal_code_survival": 0.21316612261659146
+          },
+          {
+            "trajectory": "eeeg",
+            "probability": 0.004717934516763661,
+            "terminal_fidelity": 0.3203747344702921,
+            "terminal_logical_z": 0.20630013913973305,
+            "terminal_code_survival": 0.47989699880831965
+          },
+          {
+            "trajectory": "eeee",
+            "probability": 0.0024983124960768687,
+            "terminal_fidelity": 0.3299828841062393,
+            "terminal_logical_z": 0.30735190189713224,
+            "terminal_code_survival": 0.3661922882665773
+          }
+        ]
+      },
+      "handcrafted_recurrence": {
+        "strategy": "handcrafted_recurrence",
+        "cutoff": 4,
+        "full_cycles": 2,
+        "branch_count": 16,
+        "trajectory_probability_sum": 1.0000000000000002,
+        "fidelity_curve": [
+          1.0000000000000002,
+          0.8358566276840527,
+          0.9613687606488538
+        ],
+        "logical_z_curve": [
+          0.9894706091171694,
+          0.8317849375305869,
+          0.9529291024208113
+        ],
+        "code_survival_curve": [
+          1.0,
+          0.8526546890033644,
+          0.9694146476261565
+        ],
+        "fidelity": {
+          "effective_lifetime_cycles": 10.224228646434007,
+          "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+          "normalized_auc": 0.9082705040042396,
+          "log_linear_lifetime_cycles_diagnostic": 19.37289070173962,
+          "log_linear_fit_r_squared_diagnostic": -0.119737417495827,
+          "exponential_fit_is_diagnostic_only": true,
+          "initial_value": 1.0000000000000002,
+          "final_value": 0.9613687606488538
+        },
+        "logical_z": {
+          "effective_lifetime_cycles": 10.569724465450886,
+          "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+          "normalized_auc": 0.9110855727732255,
+          "log_linear_lifetime_cycles_diagnostic": 20.09200102459865,
+          "log_linear_fit_r_squared_diagnostic": -0.12252097012131502,
+          "exponential_fit_is_diagnostic_only": true,
+          "initial_value": 0.9894706091171694,
+          "final_value": 0.9529291024208113
+        },
+        "selection_score": 0.9096780383887326,
+        "terminal_fidelity": 0.9613687606488538,
+        "terminal_logical_z": 0.9529291024208113,
+        "terminal_code_survival": 0.9694146476261565,
+        "mean_ground_outcome_probability": 0.9846603202004174,
+        "ground_probability_by_half_cycle": [
+          0.984221233943197,
+          0.9847631834004916,
+          0.9850503619069316,
+          0.9846065015510489
+        ],
+        "expected_e_events": 0.0613587191983308,
+        "mean_control_residual_rms": 0.7177750565209318,
+        "mean_control_slew_rms": 0.05894321382395771,
+        "maximum_action_bound_violation": 0.0,
+        "maximum_trace_error": 2.220446049250313e-16,
+        "maximum_hermiticity_error": 0.0,
+        "minimum_final_eigenvalue": -2.694959216129277e-17,
+        "branch_rows": [
+          {
+            "trajectory": "gggg",
+            "probability": 0.9400435464760004,
+            "terminal_fidelity": 0.961375880901052,
+            "terminal_logical_z": 0.9529364555538892,
+            "terminal_code_survival": 0.9694218175404633
+          },
+          {
+            "trajectory": "ggge",
+            "probability": 0.014699655312024175,
+            "terminal_fidelity": 0.9610649742013858,
+            "terminal_logical_z": 0.9526594951172239,
+            "terminal_code_survival": 0.9691162112013736
+          },
+          {
+            "trajectory": "ggeg",
+            "probability": 0.014268394647460226,
+            "terminal_fidelity": 0.961330058454776,
+            "terminal_logical_z": 0.9528609815298732,
+            "terminal_code_survival": 0.9693786188415138
+          },
+          {
+            "trajectory": "ggee",
+            "probability": 0.0002135796321624014,
+            "terminal_fidelity": 0.9594734444087472,
+            "terminal_logical_z": 0.9510122476993008,
+            "terminal_code_survival": 0.9676316484240659
+          },
+          {
+            "trajectory": "gegg",
+            "probability": 0.014544359764900613,
+            "terminal_fidelity": 0.9614104934056711,
+            "terminal_logical_z": 0.9529572737859073,
+            "terminal_code_survival": 0.9694390604631666
+          },
+          {
+            "trajectory": "gege",
+            "probability": 0.00022696146974501887,
+            "terminal_fidelity": 0.959570835482859,
+            "terminal_logical_z": 0.9512900079322769,
+            "terminal_code_survival": 0.9677294264275244
+          },
+          {
+            "trajectory": "geeg",
+            "probability": 0.00022108621587807692,
+            "terminal_fidelity": 0.9604152901216845,
+            "terminal_logical_z": 0.9517586072116858,
+            "terminal_code_survival": 0.9686544004240004
+          },
+          {
+            "trajectory": "geee",
+            "probability": 3.6504250260325813e-06,
+            "terminal_fidelity": 0.9566926708831033,
+            "terminal_logical_z": 0.9472423742106822,
+            "terminal_code_survival": 0.9648588022298598
+          },
+          {
+            "trajectory": "eggg",
+            "probability": 0.015056718568285651,
+            "terminal_fidelity": 0.9613385396959853,
+            "terminal_logical_z": 0.9528983436660927,
+            "terminal_code_survival": 0.969379826826606
+          },
+          {
+            "trajectory": "egge",
+            "probability": 0.00024240136771528243,
+            "terminal_fidelity": 0.9595573305543981,
+            "terminal_logical_z": 0.9512921992436576,
+            "terminal_code_survival": 0.9677027234247414
+          },
+          {
+            "trajectory": "egeg",
+            "probability": 0.0002353208867014216,
+            "terminal_fidelity": 0.9605057557120712,
+            "terminal_logical_z": 0.9517209322695886,
+            "terminal_code_survival": 0.9686823049386031
+          },
+          {
+            "trajectory": "egee",
+            "probability": 3.5665101421203776e-06,
+            "terminal_fidelity": 0.9565046719399711,
+            "terminal_logical_z": 0.9472873199408515,
+            "terminal_code_survival": 0.9647209867726603
+          },
+          {
+            "trajectory": "eegg",
+            "probability": 0.00023312245273287668,
+            "terminal_fidelity": 0.9609473790580044,
+            "terminal_logical_z": 0.9523788590863058,
+            "terminal_code_survival": 0.9690212551255126
+          },
+          {
+            "trajectory": "eege",
+            "probability": 3.5964955276005753e-06,
+            "terminal_fidelity": 0.9569790066729993,
+            "terminal_logical_z": 0.9483754801014014,
+            "terminal_code_survival": 0.96517864333164
+          },
+          {
+            "trajectory": "eeeg",
+            "probability": 3.952539089589945e-06,
+            "terminal_fidelity": 0.9582122290437521,
+            "terminal_logical_z": 0.9488886810354216,
+            "terminal_code_survival": 0.9668616288455012
+          },
+          {
+            "trajectory": "eeee",
+            "probability": 8.723660860390243e-08,
+            "terminal_fidelity": 0.9525474127149635,
+            "terminal_logical_z": 0.9417627368375812,
+            "terminal_code_survival": 0.9609073085653836
+          }
+        ]
+      },
+      "distilled_student": {
+        "strategy": "distilled_student",
+        "cutoff": 4,
+        "full_cycles": 2,
+        "branch_count": 16,
+        "trajectory_probability_sum": 1.0000000000000002,
+        "fidelity_curve": [
+          1.0000000000000002,
+          0.4574171520644531,
+          0.2992164799382149
+        ],
+        "logical_z_curve": [
+          0.9894706091171697,
+          0.37854252700048485,
+          0.20045554139462252
+        ],
+        "code_survival_curve": [
+          1.0,
+          0.5131974123497454,
+          0.3789036606990163
+        ],
+        "fidelity": {
+          "effective_lifetime_cycles": 1.5063056465522844,
+          "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+          "normalized_auc": 0.5535126960167802,
+          "log_linear_lifetime_cycles_diagnostic": 1.5647809578129968,
+          "log_linear_fit_r_squared_diagnostic": 0.9800927837637539,
+          "exponential_fit_is_diagnostic_only": true,
+          "initial_value": 1.0000000000000002,
+          "final_value": 0.2992164799382149
+        },
+        "logical_z": {
+          "effective_lifetime_cycles": 1.221386963680918,
+          "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+          "normalized_auc": 0.4919325512482715,
+          "log_linear_lifetime_cycles_diagnostic": 1.2036600523210355,
+          "log_linear_fit_r_squared_diagnostic": 0.9914658718515839,
+          "exponential_fit_is_diagnostic_only": true,
+          "initial_value": 0.9894706091171697,
+          "final_value": 0.20045554139462252
+        },
+        "selection_score": 0.5227226236325259,
+        "terminal_fidelity": 0.2992164799382149,
+        "terminal_logical_z": 0.20045554139462252,
+        "terminal_code_survival": 0.3789036606990163,
+        "mean_ground_outcome_probability": 0.7326142081588436,
+        "ground_probability_by_half_cycle": [
+          0.8272855050858058,
+          0.7788214953878896,
+          0.7638442453423422,
+          0.5605055868193365
+        ],
+        "expected_e_events": 1.069543167364626,
+        "mean_control_residual_rms": 0.12289405194237395,
+        "mean_control_slew_rms": 0.0362154240268049,
+        "maximum_action_bound_violation": 0.0,
+        "maximum_trace_error": 2.220446049250313e-16,
+        "maximum_hermiticity_error": 0.0,
+        "minimum_final_eigenvalue": -1.4683379102988384e-16,
+        "branch_rows": [
+          {
+            "trajectory": "gggg",
+            "probability": 0.2615185790018711,
+            "terminal_fidelity": 0.6454962215147804,
+            "terminal_logical_z": 0.572806593223534,
+            "terminal_code_survival": 0.6930621205461555
+          },
+          {
+            "trajectory": "ggge",
+            "probability": 0.23758723510886207,
+            "terminal_fidelity": 0.03431529013994335,
+            "terminal_logical_z": 0.009304385647131735,
+            "terminal_code_survival": 0.0547562025109599
+          },
+          {
+            "trajectory": "ggeg",
+            "probability": 0.12256356844651102,
+            "terminal_fidelity": 0.2082571588467475,
+            "terminal_logical_z": 0.03295691385795584,
+            "terminal_code_survival": 0.35200904090913365
+          },
+          {
+            "trajectory": "ggee",
+            "probability": 0.05420817068065737,
+            "terminal_fidelity": 0.09397118713663073,
+            "terminal_logical_z": 0.046414325625782515,
+            "terminal_code_survival": 0.1348402420349496
+          },
+          {
+            "trajectory": "gegg",
+            "probability": 0.07816042119318517,
+            "terminal_fidelity": 0.4174152498758064,
+            "terminal_logical_z": 0.22348690487900702,
+            "terminal_code_survival": 0.5476801348752595
+          },
+          {
+            "trajectory": "gege",
+            "probability": 0.04428609643401311,
+            "terminal_fidelity": 0.3390964628750702,
+            "terminal_logical_z": 0.14039799005310358,
+            "terminal_code_survival": 0.4769547571847196
+          },
+          {
+            "trajectory": "geeg",
+            "probability": 0.015463676828406592,
+            "terminal_fidelity": 0.16763379827641156,
+            "terminal_logical_z": -0.06725785919052119,
+            "terminal_code_survival": 0.41779674826415286
+          },
+          {
+            "trajectory": "geee",
+            "probability": 0.013497757392299331,
+            "terminal_fidelity": 0.2769560929422294,
+            "terminal_logical_z": 0.21344700491772567,
+            "terminal_code_survival": 0.31683599626061154
+          },
+          {
+            "trajectory": "eggg",
+            "probability": 0.03930061307228955,
+            "terminal_fidelity": 0.3294004325731364,
+            "terminal_logical_z": 0.19862654230169857,
+            "terminal_code_survival": 0.4829014417809304
+          },
+          {
+            "trajectory": "egge",
+            "probability": 0.04054893312334493,
+            "terminal_fidelity": 0.07781620776106629,
+            "terminal_logical_z": 0.0008359983675232355,
+            "terminal_code_survival": 0.14136357219744822
+          },
+          {
+            "trajectory": "egeg",
+            "probability": 0.01810508322735882,
+            "terminal_fidelity": 0.12042694409710594,
+            "terminal_logical_z": -0.32197503844095654,
+            "terminal_code_survival": 0.6230114317201941
+          },
+          {
+            "trajectory": "egee",
+            "probability": 0.004989312726994738,
+            "terminal_fidelity": 0.09717479542044355,
+            "terminal_logical_z": -0.0560092485279375,
+            "terminal_code_survival": 0.2691662291985182
+          },
+          {
+            "trajectory": "eegg",
+            "probability": 0.020592608540489398,
+            "terminal_fidelity": 0.40775761161334734,
+            "terminal_logical_z": 0.29923605081469457,
+            "terminal_code_survival": 0.4887314334954598
+          },
+          {
+            "trajectory": "eege",
+            "probability": 0.04184975886828679,
+            "terminal_fidelity": 0.1941992175339855,
+            "terminal_logical_z": 0.1602739321720913,
+            "terminal_code_survival": 0.21246496200634085
+          },
+          {
+            "trajectory": "eeeg",
+            "probability": 0.004801036509224827,
+            "terminal_fidelity": 0.31960872497445236,
+            "terminal_logical_z": 0.20444855361172928,
+            "terminal_code_survival": 0.4806764840978941
+          },
+          {
+            "trajectory": "eeee",
+            "probability": 0.002527148846205305,
+            "terminal_fidelity": 0.331542563279652,
+            "terminal_logical_z": 0.3091448707760561,
+            "terminal_code_survival": 0.36777150984756457
+          }
+        ]
+      },
+      "control_oracle": {
+        "strategy": "control_oracle",
+        "cutoff": 4,
+        "full_cycles": 2,
+        "branch_count": 16,
+        "trajectory_probability_sum": 1.0000000000000002,
+        "fidelity_curve": [
+          1.0000000000000002,
+          0.3031794454508473,
+          0.4587236903914757
+        ],
+        "logical_z_curve": [
+          0.9894706091171697,
+          0.048061448200855415,
+          0.21941096771428548
+        ],
+        "code_survival_curve": [
+          1.0000000000000002,
+          0.6289981701947294,
+          0.7158608294350034
+        ],
+        "fidelity": {
+          "effective_lifetime_cycles": 1.325927192896339,
+          "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+          "normalized_auc": 0.5162706453232925,
+          "log_linear_lifetime_cycles_diagnostic": 1.8168308337626409,
+          "log_linear_fit_r_squared_diagnostic": 0.6609262550061759,
+          "exponential_fit_is_diagnostic_only": true,
+          "initial_value": 1.0000000000000002,
+          "final_value": 0.4587236903914757
+        },
+        "logical_z": {
+          "effective_lifetime_cycles": 0.6995487337670203,
+          "effective_lifetime_method": "finite_horizon_area_equivalent_exponential",
+          "normalized_auc": 0.32972289960121287,
+          "log_linear_lifetime_cycles_diagnostic": 0.8282071794862286,
+          "log_linear_fit_r_squared_diagnostic": 0.8438224764611557,
+          "exponential_fit_is_diagnostic_only": true,
+          "initial_value": 0.9894706091171697,
+          "final_value": 0.21941096771428548
+        },
+        "selection_score": 0.42299677246225265,
+        "terminal_fidelity": 0.4587236903914757,
+        "terminal_logical_z": 0.21941096771428548,
+        "terminal_code_survival": 0.7158608294350034,
+        "mean_ground_outcome_probability": 0.5784254896627888,
+        "ground_probability_by_half_cycle": [
+          0.7156355397097689,
+          0.3258223652198574,
+          0.690911312894571,
+          0.5813327408269581
+        ],
+        "expected_e_events": 1.6862980413488446,
+        "mean_control_residual_rms": 0.6714101377261211,
+        "mean_control_slew_rms": 0.8650886458556525,
+        "maximum_action_bound_violation": 0.0,
+        "maximum_trace_error": 2.220446049250313e-16,
+        "maximum_hermiticity_error": 0.0,
+        "minimum_final_eigenvalue": -1.4949400743755787e-16,
+        "branch_rows": [
+          {
+            "trajectory": "gggg",
+            "probability": 0.02260547603141287,
+            "terminal_fidelity": 0.7992032069259944,
+            "terminal_logical_z": 0.7026121687460667,
+            "terminal_code_survival": 0.9186546867327138
+          },
+          {
+            "trajectory": "ggge",
+            "probability": 0.012713610266721595,
+            "terminal_fidelity": 0.2647536983978547,
+            "terminal_logical_z": -0.21048800053977723,
+            "terminal_code_survival": 0.7265699515291458
+          },
+          {
+            "trajectory": "ggeg",
+            "probability": 0.005129429123292729,
+            "terminal_fidelity": 0.2236457164555885,
+            "terminal_logical_z": -0.19162436794201554,
+            "terminal_code_survival": 0.645725723440503
+          },
+          {
+            "trajectory": "ggee",
+            "probability": 0.004860945635606771,
+            "terminal_fidelity": 0.21976206456932798,
+            "terminal_logical_z": 0.07498473246035217,
+            "terminal_code_survival": 0.3337548765609775
+          },
+          {
+            "trajectory": "gegg",
+            "probability": 0.33481744579621553,
+            "terminal_fidelity": 0.7988871161049924,
+            "terminal_logical_z": 0.7020622603259811,
+            "terminal_code_survival": 0.918728252412521
+          },
+          {
+            "trajectory": "gege",
+            "probability": 0.18770204528304468,
+            "terminal_fidelity": 0.26422768798133894,
+            "terminal_logical_z": -0.21135656777151926,
+            "terminal_code_survival": 0.7260297104045524
+          },
+          {
+            "trajectory": "geeg",
+            "probability": 0.07603351113571132,
+            "terminal_fidelity": 0.22371825282330554,
+            "terminal_logical_z": -0.1914975293219517,
+            "terminal_code_survival": 0.6455203099184681
+          },
+          {
+            "trajectory": "geee",
+            "probability": 0.07177307643776337,
+            "terminal_fidelity": 0.21970298010070405,
+            "terminal_logical_z": 0.07540369185292439,
+            "terminal_code_survival": 0.33337541844981267
+          },
+          {
+            "trajectory": "eggg",
+            "probability": 0.037356031700939256,
+            "terminal_fidelity": 0.21416207967807777,
+            "terminal_logical_z": 0.033064406879804324,
+            "terminal_code_survival": 0.420971328979988
+          },
+          {
+            "trajectory": "egge",
+            "probability": 0.09366219396065674,
+            "terminal_fidelity": 0.09161195160899262,
+            "terminal_logical_z": -0.266936658786632,
+            "terminal_code_survival": 0.4710468080491794
+          },
+          {
+            "trajectory": "egeg",
+            "probability": 0.10344870167056185,
+            "terminal_fidelity": 0.41981572418104474,
+            "terminal_logical_z": 0.21498925023480997,
+            "terminal_code_survival": 0.7198050026949572
+          },
+          {
+            "trajectory": "egee",
+            "probability": 0.0460459768306656,
+            "terminal_fidelity": 0.5199728908160511,
+            "terminal_logical_z": 0.4683127687757182,
+            "terminal_code_survival": 0.5989608604985793
+          },
+          {
+            "trajectory": "eegg",
+            "probability": 0.0006422872093876881,
+            "terminal_fidelity": 0.24947063427007157,
+            "terminal_logical_z": 0.11178202797794667,
+            "terminal_code_survival": 0.38414202088511284
+          },
+          {
+            "trajectory": "eege",
+            "probability": 0.0014122226461925473,
+            "terminal_fidelity": 0.17485532013145694,
+            "terminal_logical_z": -0.10642251668212946,
+            "terminal_code_survival": 0.4810612706192148
+          },
+          {
+            "trajectory": "eeeg",
+            "probability": 0.001299858159436777,
+            "terminal_fidelity": 0.4145608251077437,
+            "terminal_logical_z": 0.2479909892914296,
+            "terminal_code_survival": 0.6640054395289497
+          },
+          {
+            "trajectory": "eeee",
+            "probability": 0.0004971881123908668,
+            "terminal_fidelity": 0.6451195971432155,
+            "terminal_logical_z": 0.6009792021203482,
+            "terminal_code_survival": 0.7106141008150954
+          }
+        ]
+      }
+    }
+  },
+  "exact_retention": {
+    "4": {
+      "selection_score": {
+        "defined": true,
+        "teacher_gain": 0.10603334622597482,
+        "student_gain": 0.10554034178843019,
+        "retention_fraction": 0.9953504774196793
+      },
+      "fidelity_effective_lifetime_cycles": {
+        "defined": true,
+        "teacher_gain": 0.3547637371290522,
+        "student_gain": 0.3513886614549544,
+        "retention_fraction": 0.990486413009935
+      },
+      "logical_z_effective_lifetime_cycles": {
+        "defined": true,
+        "teacher_gain": 0.4451836722137523,
+        "student_gain": 0.4437842961588965,
+        "retention_fraction": 0.9968566321224289
+      },
+      "terminal_fidelity": {
+        "defined": true,
+        "teacher_gain": 0.030697546131315312,
+        "student_gain": 0.030256676687277606,
+        "retention_fraction": 0.9856382838500578
+      }
+    }
+  },
+  "teacher_student_pg_absolute_difference": {
+    "stochastic": {
+      "primary": 0.0,
+      "confirmation": 0.0
+    },
+    "exact": {
+      "4": 0.0005143714369002517
+    }
+  },
+  "burden_summary": {
+    "stochastic": {
+      "primary": {
+        "standard": {
+          "observed_ground_fraction": 0.625,
+          "observed_e_fraction": 0.375,
+          "expected_e_events_from_observed_fraction": 1.5,
+          "multilevel_leakage_events": null
+        },
+        "exact_budget_mf_agent_mean": {
+          "observed_ground_fraction": 0.625,
+          "observed_e_fraction": 0.375,
+          "expected_e_events_from_observed_fraction": 1.5,
+          "multilevel_leakage_events": null
+        },
+        "teacher": {
+          "observed_ground_fraction": 0.625,
+          "observed_e_fraction": 0.375,
+          "expected_e_events_from_observed_fraction": 1.5,
+          "multilevel_leakage_events": null
+        },
+        "handcrafted_recurrence": {
+          "observed_ground_fraction": 1.0,
+          "observed_e_fraction": 0.0,
+          "expected_e_events_from_observed_fraction": 0.0,
+          "multilevel_leakage_events": null
+        },
+        "distilled_student": {
+          "observed_ground_fraction": 0.625,
+          "observed_e_fraction": 0.375,
+          "expected_e_events_from_observed_fraction": 1.5,
+          "multilevel_leakage_events": null
+        }
+      },
+      "confirmation": {
+        "standard": {
+          "observed_ground_fraction": 0.6875,
+          "observed_e_fraction": 0.3125,
+          "expected_e_events_from_observed_fraction": 1.25,
+          "multilevel_leakage_events": null
+        },
+        "exact_budget_mf_agent_mean": {
+          "observed_ground_fraction": 0.7375,
+          "observed_e_fraction": 0.26249999999999996,
+          "expected_e_events_from_observed_fraction": 1.0499999999999998,
+          "multilevel_leakage_events": null
+        },
+        "teacher": {
+          "observed_ground_fraction": 0.8125,
+          "observed_e_fraction": 0.1875,
+          "expected_e_events_from_observed_fraction": 0.75,
+          "multilevel_leakage_events": null
+        },
+        "handcrafted_recurrence": {
+          "observed_ground_fraction": 0.9375,
+          "observed_e_fraction": 0.0625,
+          "expected_e_events_from_observed_fraction": 0.25,
+          "multilevel_leakage_events": null
+        },
+        "distilled_student": {
+          "observed_ground_fraction": 0.8125,
+          "observed_e_fraction": 0.1875,
+          "expected_e_events_from_observed_fraction": 0.75,
+          "multilevel_leakage_events": null
+        }
+      }
+    },
+    "exact": {
+      "4": {
+        "standard": {
+          "expected_ground_fraction": 0.7151035629359368,
+          "expected_e_fraction": 0.2848964370640632,
+          "expected_e_events": 1.1395857482562528,
+          "multilevel_leakage_events": null
+        },
+        "teacher": {
+          "expected_ground_fraction": 0.7320998367219433,
+          "expected_e_fraction": 0.26790016327805666,
+          "expected_e_events": 1.0716006531122266,
+          "multilevel_leakage_events": null
+        },
+        "handcrafted_recurrence": {
+          "expected_ground_fraction": 0.9846603202004174,
+          "expected_e_fraction": 0.015339679799582617,
+          "expected_e_events": 0.0613587191983308,
+          "multilevel_leakage_events": null
+        },
+        "distilled_student": {
+          "expected_ground_fraction": 0.7326142081588436,
+          "expected_e_fraction": 0.2673857918411564,
+          "expected_e_events": 1.069543167364626,
+          "multilevel_leakage_events": null
+        },
+        "control_oracle": {
+          "expected_ground_fraction": 0.5784254896627888,
+          "expected_e_fraction": 0.42157451033721116,
+          "expected_e_events": 1.6862980413488446,
+          "multilevel_leakage_events": null
+        }
+      }
+    }
+  },
+  "leakage_burden": {
+    "native_multilevel_leakage_available": false,
+    "reported_value": null,
+    "e_burden_proxy": "one minus native two-level g fraction; never labelled leakage",
+    "student_failure_policy": "external leakage token resets state and returns exact zero residual"
+  },
+  "costs": [
+    {
+      "strategy": "standard",
+      "trainable_scalars": 0,
+      "stored_scalars": 15,
+      "persistent_state_scalars": 0,
+      "analytic_macs_per_half_cycle": 0,
+      "cost_scope": "fifteen fixed nominal control constants",
+      "deployable": true
+    },
+    {
+      "strategy": "exact_budget_mf",
+      "trainable_scalars": 72853,
+      "stored_scalars": 72853,
+      "persistent_state_scalars": 0,
+      "analytic_macs_per_half_cycle": 72266,
+      "cost_scope": "float learned model; no synthesis or board timing",
+      "deployable": false
+    },
+    {
+      "strategy": "fresh_gru_teacher",
+      "trainable_scalars": 72853,
+      "stored_scalars": 72853,
+      "persistent_state_scalars": 10,
+      "analytic_macs_per_half_cycle": 72266,
+      "cost_scope": "float offline teacher; not an online FPGA path",
+      "deployable": false
+    },
+    {
+      "strategy": "handcrafted_recurrence",
+      "trainable_scalars": 75,
+      "stored_scalars": 105,
+      "persistent_state_scalars": 15,
+      "analytic_macs_per_half_cycle": 45,
+      "cost_scope": "float affine recurrence; ten-cycle use is frozen extrapolation",
+      "deployable": false
+    },
+    {
+      "strategy": "distilled_student",
+      "trainable_scalars": 95,
+      "stored_scalars": 95,
+      "persistent_state_scalars": 4,
+      "analytic_macs_per_half_cycle": 87,
+      "cost_scope": "pure NumPy float artifact; quantized RTL and timing not measured",
+      "deployable": false
+    },
+    {
+      "strategy": "finite_horizon_control_oracle",
+      "trainable_scalars": 225,
+      "stored_scalars": 225,
+      "persistent_state_scalars": 4,
+      "analytic_macs_per_half_cycle": 0,
+      "cost_scope": "two-cycle 15-node table read only; address and exact optimization excluded; exponential growth",
+      "deployable": false
+    }
+  ],
+  "source_data": {
+    "path": "D:/Codes/Quantum/DriftAdaptiveQEC/tmp/pytest_t445_adjacent_20260716/test_pilot_executes_and_fails_0/pilot.csv",
+    "sha256": "263db26e95233290aadff902e236b5538a4a0dd970d042ff546188afc85f32fc",
+    "row_count": 212,
+    "expected_row_count": 212,
+    "row_types": [
+      "cost_summary",
+      "exact_branch",
+      "retention_gate",
+      "stochastic_seed_summary"
+    ]
+  },
+  "gates": {
+    "all_parent_artifacts_and_checkpoints_are_current_passes": true,
+    "new_stochastic_seeds_are_disjoint_from_teacher_and_student_fitting": true,
+    "ten_cycle_lane_retains_standard_all_five_mf_teacher_handcrafted_and_student": false,
+    "two_cycle_exact_lane_includes_all_comparators_and_horizon_bound_oracle": true,
+    "student_point_gain_retention_meets_frozen_ninety_percent_threshold": true,
+    "student_gain_retention_lower_confidence_bounds_meet_threshold": false,
+    "exact_two_cycle_student_gain_retention_meets_threshold": true,
+    "teacher_student_pg_difference_stays_inside_frozen_tolerance": true,
+    "student_actions_obey_all_fifteen_hard_bounds": true,
+    "all_physics_lanes_preserve_trace_hermiticity_and_positive_tolerance": true,
+    "all_five_mf_agents_are_reported_without_test_postselection": true,
+    "student_compresses_teacher_stored_scalars_by_more_than_ninety_nine_percent": true,
+    "cost_table_keeps_float_analytic_and_hardware_evidence_separate": true,
+    "source_data_contains_every_seed_branch_retention_and_cost_row": true,
+    "leakage_is_explicitly_unavailable_not_silently_encoded_as_e": true,
+    "g_e_and_unavailable_leakage_burdens_are_explicit_for_every_lane": true,
+    "control_oracle_is_never_extrapolated_into_ten_cycle_lane": true,
+    "claim_boundary_requires_t4_4_5_before_nmf_promotion": true
+  },
+  "gate_summary": {
+    "passed": 16,
+    "total": 18,
+    "failed": [
+      "ten_cycle_lane_retains_standard_all_five_mf_teacher_handcrafted_and_student",
+      "student_gain_retention_lower_confidence_bounds_meet_threshold"
+    ]
+  },
+  "execution": {
+    "device": "cpu",
+    "real_dtype": "float64",
+    "torch_version": "2.8.0.dev20250405+cu128",
+    "wall_time_seconds": 3.1714449999999488
+  },
+  "claim_boundary": {
+    "allowed": "student retention of frozen-teacher finite-model physical trajectory gain on paired unseen ten-cycle seeds and exact two-cycle histories",
+    "forbidden": "T4.4.5 NMF promotion before branch freeze; multilevel leakage robustness; long-horizon OOD; pulse device quantized RTL FPGA or board performance",
+    "control_oracle_boundary": "the empirical lookup reference appears only in the exact two-cycle lane and is neither globally certified nor extrapolated to ten cycles",
+    "next_gate": "T4.4.5 must consume this machine result and freeze strong or falsified branch"
+  }
+}

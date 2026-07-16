@@ -1,0 +1,344 @@
+{
+  "schema_version": "t4.1.4-hybrid-multiobjective-validation-v1",
+  "task_id": "T4.1.4",
+  "status": "PASS",
+  "implementation_sha256": "33c654cf6c1600473418fcb222b55a0af3dff2d9ca1b62fc9231e387cd827018",
+  "source_rows_sha256": "59ddfc9b6be78c2e391ef60af22a7a1bdb3a9716e14d3c7d69347b9b33e3a6bb",
+  "input_source": {
+    "csv_path": "docs/t4_1_3_hybrid_state_output_source_data.csv",
+    "csv_sha256": "61faf15c927c34d5a4869d71de3c443aac3e66b10a5c348e135ef3c216ec9e1b",
+    "manifest_path": "docs/t4_1_3_hybrid_state_output_validation.json",
+    "manifest_sha256": "1f1d4c0749d48f578920425b76ba59b36f5d3da2d0a7d58862624c3039cccd95"
+  },
+  "validation_config": {
+    "source_csv_path": "docs/t4_1_3_hybrid_state_output_source_data.csv",
+    "source_manifest_path": "docs/t4_1_3_hybrid_state_output_validation.json",
+    "cycles_per_seed": 2048,
+    "future_horizon_cycles": 32,
+    "training_seed_count": 3,
+    "validation_seed_count": 2,
+    "minimum_unsafe_recall": 0.9,
+    "uncertainty_floor_continuous": 0.0001,
+    "uncertainty_floor_rate": 0.003875968992248062
+  },
+  "split_counts": {
+    "training": 168,
+    "validation": 112,
+    "evaluation": 168
+  },
+  "split_seeds": {
+    "training": [
+      20261341,
+      20261342,
+      20261343
+    ],
+    "validation": [
+      20261344,
+      20261345
+    ],
+    "evaluation": [
+      20261346,
+      20261347,
+      20261348
+    ]
+  },
+  "regime_target_counts": {
+    "training": {
+      "normal": 94,
+      "burst": 24,
+      "leakage": 29,
+      "calibration_shift": 21
+    },
+    "validation": {
+      "normal": 61,
+      "burst": 17,
+      "leakage": 20,
+      "calibration_shift": 14
+    },
+    "evaluation": {
+      "normal": 90,
+      "burst": 27,
+      "leakage": 30,
+      "calibration_shift": 21
+    }
+  },
+  "required_fallback_counts": {
+    "training": 49,
+    "validation": 34,
+    "evaluation": 50
+  },
+  "calibration_manifest": {
+    "schema_version": "t4.1.4-multiobjective-calibration-v1",
+    "continuous_parameter_order": [
+      "mean_q",
+      "mean_p",
+      "sigma_q",
+      "sigma_p",
+      "rho_qp",
+      "tail_rate",
+      "x_e_rate",
+      "z_e_rate",
+      "leakage_rate"
+    ],
+    "regime_class_order": [
+      "normal",
+      "burst",
+      "leakage",
+      "calibration_shift"
+    ],
+    "objective_order": [
+      "state_estimation",
+      "oracle_gap",
+      "regime_detection",
+      "uncertainty_calibration",
+      "false_fallback",
+      "update_cost"
+    ],
+    "weights": {
+      "state_estimation": 0.24,
+      "oracle_gap": 0.22,
+      "regime_detection": 0.16,
+      "uncertainty_calibration": 0.16,
+      "false_fallback": 0.12,
+      "update_cost": 0.1
+    },
+    "state_scales": [
+      0.32239641379695666,
+      0.3105548011199905,
+      0.1497863757143706,
+      0.1474763443426878,
+      0.2751798481968817,
+      0.13899375,
+      0.13915273556231003,
+      0.14247720364741642,
+      0.08216185410334352
+    ],
+    "objective_scales": {
+      "state_estimation": 0.4598053685791021,
+      "oracle_gap": 0.03310267220252285,
+      "regime_detection": 3.151438334084998,
+      "uncertainty_calibration": 8.169508325630005,
+      "false_fallback": 1.0,
+      "update_cost": 0.28247384183039354
+    },
+    "regime_temperature": 4.0,
+    "regime_uniform_mix": 0.5,
+    "uncertainty_scale": 4.0,
+    "fallback_threshold": 0.7,
+    "minimum_unsafe_recall": 0.9,
+    "training_record_ids_sha256": "27e79f7344d28bdc49101771887cdca2706496437ddd50d05f61f055514a8a68",
+    "validation_record_ids_sha256": "486d84b7b70343dee729be25497b97f74868fb4ef5ce3a1222675e0427c4717e",
+    "training_seeds": [
+      20261341,
+      20261342,
+      20261343
+    ],
+    "validation_seeds": [
+      20261344,
+      20261345
+    ],
+    "selection_scope": "validation_only_after_training_normalizers",
+    "deployable": false,
+    "truth_use": "offline_targets_and_scores_only",
+    "manifest_sha256": "24c1efd3b8371288c1559880649c68d5c998acffe32055fdaff199e9ee5c2cc5"
+  },
+  "validation_identity": {
+    "split": "validation",
+    "record_count": 112,
+    "record_ids_sha256": "486d84b7b70343dee729be25497b97f74868fb4ef5ce3a1222675e0427c4717e",
+    "raw_objectives": {
+      "state_estimation": 0.49846263434559923,
+      "oracle_gap": 0.030837656677926355,
+      "regime_detection": 9.4840237242524,
+      "uncertainty_calibration": 8.760213910611297,
+      "false_fallback": 1.0,
+      "update_cost": 0.18425220741406317
+    },
+    "diagnostics": {
+      "regime_nll": 8.563501186901636,
+      "regime_brier": 0.9205225373507656,
+      "regime_accuracy": 0.45535714285714285,
+      "uncertainty_marginal_68_coverage": 0.23412698412698413,
+      "uncertainty_marginal_95_coverage": 0.4791666666666667,
+      "false_fallback_rate": 1.0,
+      "missed_required_fallback_rate": 0.0,
+      "required_fallback_recall": 1.0
+    }
+  },
+  "validation_calibrated": {
+    "split": "validation",
+    "record_count": 112,
+    "record_ids_sha256": "486d84b7b70343dee729be25497b97f74868fb4ef5ce3a1222675e0427c4717e",
+    "raw_objectives": {
+      "state_estimation": 0.49846263434559923,
+      "oracle_gap": 0.030837656677926355,
+      "regime_detection": 1.941565679714535,
+      "uncertainty_calibration": 1.7349817304691113,
+      "false_fallback": 1.0,
+      "update_cost": 0.18425220741406317
+    },
+    "diagnostics": {
+      "regime_nll": 1.262519924914441,
+      "regime_brier": 0.6790457548000942,
+      "regime_accuracy": 0.45535714285714285,
+      "uncertainty_marginal_68_coverage": 0.7797619047619048,
+      "uncertainty_marginal_95_coverage": 0.9474206349206349,
+      "false_fallback_rate": 1.0,
+      "missed_required_fallback_rate": 0.0,
+      "required_fallback_recall": 1.0
+    }
+  },
+  "evaluation_identity": {
+    "split": "evaluation",
+    "record_count": 168,
+    "record_ids_sha256": "4f1cd5fbcd09d04eed6d236ab0bd0a51320cf945ecdbefa7e409a0686e13527b",
+    "raw_objectives": {
+      "state_estimation": 0.487798666486712,
+      "oracle_gap": 0.03501530803089631,
+      "regime_detection": 16.964431897637095,
+      "uncertainty_calibration": 11.917117347625473,
+      "false_fallback": 1.0,
+      "update_cost": 0.05028640411027834
+    },
+    "diagnostics": {
+      "regime_nll": 16.03586046906567,
+      "regime_brier": 0.9285714285714245,
+      "regime_accuracy": 0.5357142857142857,
+      "uncertainty_marginal_68_coverage": 0.23412698412698413,
+      "uncertainty_marginal_95_coverage": 0.4689153439153439,
+      "false_fallback_rate": 1.0,
+      "missed_required_fallback_rate": 0.0,
+      "required_fallback_recall": 1.0
+    }
+  },
+  "evaluation_frozen": {
+    "record_count": 168,
+    "record_ids_sha256": "4f1cd5fbcd09d04eed6d236ab0bd0a51320cf945ecdbefa7e409a0686e13527b",
+    "evaluation_seeds": [
+      20261346,
+      20261347,
+      20261348
+    ],
+    "raw_objectives": {
+      "state_estimation": 0.487798666486712,
+      "oracle_gap": 0.03501530803089631,
+      "regime_detection": 1.8688635971979477,
+      "uncertainty_calibration": 1.880604673985029,
+      "false_fallback": 1.0,
+      "update_cost": 0.05028640411027834
+    },
+    "normalized_objectives": {
+      "state_estimation": 1.0608807548161416,
+      "oracle_gap": 1.05777889521039,
+      "regime_detection": 0.593019249967511,
+      "uncertainty_calibration": 0.23019802404571307,
+      "false_fallback": 1.0,
+      "update_cost": 0.1780214542501671
+    },
+    "weights": {
+      "state_estimation": 0.24,
+      "oracle_gap": 0.22,
+      "regime_detection": 0.16,
+      "uncertainty_calibration": 0.16,
+      "false_fallback": 0.12,
+      "update_cost": 0.1
+    },
+    "weighted_objectives": {
+      "state_estimation": 0.254611381155874,
+      "oracle_gap": 0.23271135694628578,
+      "regime_detection": 0.09488307999480176,
+      "uncertainty_calibration": 0.03683168384731409,
+      "false_fallback": 0.12,
+      "update_cost": 0.01780214542501671
+    },
+    "total_loss": 0.7568396473692923,
+    "diagnostics": {
+      "regime_nll": 1.2171412642604933,
+      "regime_brier": 0.6517223329374544,
+      "regime_accuracy": 0.5357142857142857,
+      "uncertainty_marginal_68_coverage": 0.7731481481481481,
+      "uncertainty_marginal_95_coverage": 0.9556878306878307,
+      "false_fallback_rate": 1.0,
+      "missed_required_fallback_rate": 0.0,
+      "required_fallback_recall": 1.0
+    },
+    "leave_one_objective_out": {
+      "state_estimation": {
+        "evaluation_total": 0.6608266660702873,
+        "delta_from_full": -0.09601298129900504,
+        "omitted_raw": 0.487798666486712,
+        "omitted_normalized": 1.0608807548161416,
+        "interpretation": "frozen-output_leave_one_objective_out_not_retrained_causal_ablation"
+      },
+      "oracle_gap": {
+        "evaluation_total": 0.6719593466961622,
+        "delta_from_full": -0.08488030067313013,
+        "omitted_raw": 0.03501530803089631,
+        "omitted_normalized": 1.05777889521039,
+        "interpretation": "frozen-output_leave_one_objective_out_not_retrained_causal_ablation"
+      },
+      "regime_detection": {
+        "evaluation_total": 0.7880435325886793,
+        "delta_from_full": 0.031203885219386995,
+        "omitted_raw": 1.8688635971979477,
+        "omitted_normalized": 0.593019249967511,
+        "interpretation": "frozen-output_leave_one_objective_out_not_retrained_causal_ablation"
+      },
+      "uncertainty_calibration": {
+        "evaluation_total": 0.8571523375261646,
+        "delta_from_full": 0.10031269015687228,
+        "omitted_raw": 1.880604673985029,
+        "omitted_normalized": 0.23019802404571307,
+        "interpretation": "frozen-output_leave_one_objective_out_not_retrained_causal_ablation"
+      },
+      "false_fallback": {
+        "evaluation_total": 0.723681417465105,
+        "delta_from_full": -0.033158229904187375,
+        "omitted_raw": 1.0,
+        "omitted_normalized": 1.0,
+        "interpretation": "frozen-output_leave_one_objective_out_not_retrained_causal_ablation"
+      },
+      "update_cost": {
+        "evaluation_total": 0.821152779938084,
+        "delta_from_full": 0.06431313256879168,
+        "omitted_raw": 0.05028640411027834,
+        "omitted_normalized": 0.1780214542501671,
+        "interpretation": "frozen-output_leave_one_objective_out_not_retrained_causal_ablation"
+      }
+    },
+    "selection_provenance": {
+      "normalizers": "training_only",
+      "calibration": "validation_only_after_training_normalizers",
+      "evaluation_used_for_selection": false
+    }
+  },
+  "gate_summary": {
+    "passed": 19,
+    "failed": 0,
+    "gates": {
+      "registered_t4_1_3_source_manifest_passes": true,
+      "future_alignment_drops_only_terminal_output_per_seed": true,
+      "three_two_three_seed_split_is_disjoint": true,
+      "every_split_has_all_four_regime_targets": true,
+      "normalizers_are_training_only": true,
+      "calibration_is_validation_only": true,
+      "evaluation_is_not_used_for_selection": true,
+      "validation_temperature_does_not_worsen_nll": true,
+      "validation_uncertainty_scale_does_not_worsen_proper_nll": true,
+      "validation_fallback_meets_registered_unsafe_recall": true,
+      "safe_and_required_fallback_targets_exist_in_every_split": true,
+      "all_six_objectives_are_finite": true,
+      "all_six_leave_one_out_diagnostics_are_reported": true,
+      "paired_candidate_oracle_trials_are_nonempty_and_vary": true,
+      "update_cost_exercises_stage_hold_and_churn": true,
+      "offline_truth_never_becomes_deployable_payload": true,
+      "calibration_manifest_is_hash_bound": true,
+      "source_rows_are_unique_and_hash_bound": true,
+      "scope_remains_synthetic_host_not_hardware": true
+    }
+  },
+  "claim_boundary": {
+    "allowed": "registered synthetic offline six-objective loss, strict-split calibration, proper-score diagnostics, and frozen-output leave-one-objective-out accounting",
+    "forbidden": "evaluation-tuned weights, retrained causal ablation, physical risk calibration, logical/control gain claim, RTL synthesis, FPGA timing, or board/device measurement"
+  }
+}

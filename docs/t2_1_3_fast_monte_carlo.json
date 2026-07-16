@@ -1,0 +1,84 @@
+{
+  "schema_version": "t2.1.3-fast-monte-carlo-v1",
+  "protocol_id": "PROTO-SBS-MAIN",
+  "model_scope": "vectorized_multitrajectory_syndrome_level_monte_carlo_not_device_calibrated",
+  "device_calibrated": false,
+  "seed": 2026071413,
+  "n_trajectories": 10000,
+  "rounds_per_trajectory": 100,
+  "simulated_cycles": 1000000,
+  "logical_error_probability": 0.04702085012500001,
+  "q_error_probability": 0.018579914625,
+  "p_error_probability": 0.029469969625000002,
+  "trajectory_failure_probability": 0.981251375,
+  "confidence_interval": {
+    "level": 0.95,
+    "low": 0.046438989615625,
+    "high": 0.04756082944375,
+    "method": "trajectory_cluster_percentile_bootstrap_with_zero-event_trajectory_upper_bound",
+    "bootstrap_standard_error": 0.00027559056021724063,
+    "zero_event_trajectory_upper_bound": 0.0
+  },
+  "rare_event": {
+    "kind": "burst_and_leakage",
+    "true_trajectory_probability": 0.0001,
+    "allocation_fraction": 0.2,
+    "mean_duration_cycles": 4.0,
+    "displacement_scale": 3.0,
+    "mean_shift": [
+      0.0,
+      0.0
+    ],
+    "extra_loss_gamma": 0.0,
+    "forced_leakage_fault_probability": 0.02
+  },
+  "strata": [
+    {
+      "name": "normal_no_extra_rare_episode",
+      "target_weight": 0.9999,
+      "n_trajectories": 8000,
+      "rounds_per_trajectory": 100,
+      "simulated_cycles": 800000,
+      "logical_event_count": 37615,
+      "q_event_count": 14863,
+      "p_event_count": 23575,
+      "failed_trajectory_count": 7850,
+      "conditional_cycle_error_rate": 0.04701875000000001,
+      "conditional_q_error_rate": 0.018578749999999998,
+      "conditional_p_error_rate": 0.029468750000000002,
+      "conditional_trajectory_failure_rate": 0.98125,
+      "trajectory_rate_std": 0.025144157910380053,
+      "leakage_cycle_count": 403,
+      "burst_cycle_count": 0
+    },
+    {
+      "name": "conditional_burst_and_leakage_episode",
+      "target_weight": 0.0001,
+      "n_trajectories": 2000,
+      "rounds_per_trajectory": 100,
+      "simulated_cycles": 200000,
+      "logical_event_count": 13604,
+      "q_event_count": 6045,
+      "p_event_count": 8333,
+      "failed_trajectory_count": 1990,
+      "conditional_cycle_error_rate": 0.06802000000000001,
+      "conditional_q_error_rate": 0.030225000000000002,
+      "conditional_p_error_rate": 0.04166500000000001,
+      "conditional_trajectory_failure_rate": 0.995,
+      "trajectory_rate_std": 0.032070139490240165,
+      "leakage_cycle_count": 8005,
+      "burst_cycle_count": 7856
+    }
+  ],
+  "performance": {
+    "elapsed_seconds": 0.25308380000205943,
+    "cycles_per_second": 3951260.412526849,
+    "at_least_1e5_cycles": true,
+    "one_million_cycle_target_met": true
+  },
+  "scope_limits": [
+    "syndrome-level effective model",
+    "trajectory-level rare-event mixture weights are assumptions",
+    "not device calibrated or target-board timed"
+  ]
+}

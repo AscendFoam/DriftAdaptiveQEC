@@ -1,0 +1,243 @@
+{
+  "schema_version": "t4.1.3-hybrid-state-output-validation-v1",
+  "task_id": "T4.1.3",
+  "status": "PASS",
+  "implementation_sha256": "02acb529d2881b624750c7d6ac3c8da2bb8072235f89254e3274bcbb17c387b8",
+  "source_rows_sha256": "b7b3a04f34a5d6d1599fc4a3874c1aabd2d9e410d9dd2b6e93504e907d9f23c8",
+  "validation_config": {
+    "seeds": [
+      20261341,
+      20261342,
+      20261343,
+      20261344,
+      20261345,
+      20261346,
+      20261347,
+      20261348
+    ],
+    "cycles_per_seed": 2048,
+    "history_cycles": 256,
+    "output_stride_cycles": 32,
+    "nominal_seed_count": 4,
+    "bootstrap_replicates": 64,
+    "block_length_cycles": 16,
+    "checkpoint_path": "docs/t4_1_1_slow_loop_model_selection_checkpoints.pt",
+    "checkpoint_manifest_path": "docs/t4_1_1_slow_loop_model_selection_validation.json"
+  },
+  "registered_hmm_checkpoint": {
+    "path": "docs/t4_1_1_slow_loop_model_selection_checkpoints.pt",
+    "sha256": "a8bf0f0bab865eeb0f0fbdccc60cf952f4963f29802d29bc8c17c5af34b502ed",
+    "manifest_path": "docs/t4_1_1_slow_loop_model_selection_validation.json",
+    "selected_family": "gaussian_hmm",
+    "temperature": 0.85
+  },
+  "output_schema": {
+    "schema_version": "t4.1.3-hybrid-state-output-v1",
+    "fields": {
+      "continuous": [
+        "mean_q",
+        "mean_p",
+        "sigma_q",
+        "sigma_p",
+        "rho_qp",
+        "tail_rate",
+        "x_e_rate",
+        "z_e_rate",
+        "leakage_rate"
+      ],
+      "regime_posterior": [
+        "normal",
+        "burst",
+        "leakage",
+        "calibration_shift"
+      ],
+      "leakage_recovery": [
+        "leakage_probability_next_cycle",
+        "leakage_probability_horizon",
+        "recovery_burden_posterior"
+      ],
+      "uncertainty": [
+        "continuous_covariance",
+        "regime_entropy_nats",
+        "leakage_entropy_nats",
+        "recovery_entropy_nats",
+        "ood_score",
+        "recommendation_confidence"
+      ],
+      "parameter_bank_recommendation": [
+        "bank_action",
+        "recommended_mode",
+        "gain_matrix",
+        "bias",
+        "base_active_version",
+        "valid_from_cycle",
+        "expires_after_cycle",
+        "recommendation_id",
+        "payload_crc32"
+      ]
+    },
+    "continuous_units": {
+      "mean_q": "lattice_coordinate",
+      "mean_p": "lattice_coordinate",
+      "sigma_q": "lattice_coordinate",
+      "sigma_p": "lattice_coordinate",
+      "rho_qp": "dimensionless",
+      "tail_rate": "probability",
+      "x_e_rate": "probability",
+      "z_e_rate": "probability",
+      "leakage_rate": "probability"
+    },
+    "forbidden_direct_output_tokens": [
+      "correction",
+      "frameupdate",
+      "pulseaction",
+      "gatepulse",
+      "fastaction",
+      "cycleaction",
+      "logicaltruth",
+      "hiddentruth"
+    ],
+    "has_forbidden_direct_output": false,
+    "recovery_semantics": "observed-data recovery-burden posterior, not simulator recovery-depth truth",
+    "bank_semantics": "future inactive-bank proposal with base version, validity interval and CRC; atomic commit remains ParamBank-owned",
+    "hardware_measured": false
+  },
+  "aggregate": {
+    "outputs": 456,
+    "outputs_per_seed": 57,
+    "lane_counts": {
+      "nominal": 228,
+      "stress": 228
+    },
+    "bank_action_counts": {
+      "stage_candidate": 58,
+      "hold_active": 398
+    },
+    "recommended_mode_counts": {
+      "fallback": 398,
+      "normal": 27,
+      "x_recovery": 11,
+      "leakage_hold": 4,
+      "z_recovery": 16
+    },
+    "atomic_commits": 58,
+    "max_commit_parameter_error": 0.0,
+    "trace_sha256": {
+      "20261341": "dcd30ecd179b96d003a8a5bca7e9841d606ec11a8696b2477e74f24a87747e0f",
+      "20261342": "aef7dd3f733b84ec8e8ff1615863ff9102317216672f6d1e241a8892de5473a9",
+      "20261343": "680779f2460300913aef8c65ee5691fd2d5ffeeac8bdee5506a71e8a2e99effd",
+      "20261344": "7a466f37faef10727bdd0b3a1dd2ecc527a64654613fc2026607785804c101ec",
+      "20261345": "913983a50111b322aead2d118a01e2f42106c2d5a9a9e138294fe02657de20b8",
+      "20261346": "75e79348c857af6ccb2c3095a1fdd86fe52987616ed77baf698eb262873d8b2e",
+      "20261347": "8464d75aea5f90a24fec8f11aab4388f176362b40dc9a493344723cbd43954d7",
+      "20261348": "852189007dabc68b525bd087da982cc01258d7143c4b0c80be05384da4cfb6ab"
+    },
+    "ood_score_range": [
+      0.46875,
+      1.0
+    ],
+    "leakage_horizon_range": [
+      0.06041543083321088,
+      0.9990888668559187
+    ],
+    "expected_recovery_depth_range": [
+      1.6007019710602863,
+      5.176517579790417
+    ]
+  },
+  "negative_probes": {
+    "pending_bank_conflict_rejected": true,
+    "stale_base_version_rejected": true,
+    "hold_active_stage_rejected": true,
+    "crc_corruption_rejected": true
+  },
+  "source_schema_audit": {
+    "fields": [
+      "seed",
+      "lane",
+      "output_sequence",
+      "as_of_cycle",
+      "history_start_cycle",
+      "regime_most_likely",
+      "regime_entropy_nats",
+      "leakage_probability_next_cycle",
+      "leakage_probability_horizon",
+      "expected_recovery_depth",
+      "ood_score",
+      "recommendation_confidence",
+      "bank_action",
+      "recommended_mode",
+      "base_active_version",
+      "valid_from_cycle",
+      "expires_after_cycle",
+      "recommendation_id",
+      "payload_crc32",
+      "staged_version",
+      "gain_qq",
+      "gain_qp",
+      "gain_pq",
+      "gain_pp",
+      "bias_q",
+      "bias_p",
+      "uncertainty_min_eigenvalue",
+      "mean_q",
+      "mean_p",
+      "sigma_q",
+      "sigma_p",
+      "rho_qp",
+      "tail_rate",
+      "x_e_rate",
+      "z_e_rate",
+      "leakage_rate",
+      "regime_p_normal",
+      "regime_p_burst",
+      "regime_p_leakage",
+      "regime_p_calibration_shift",
+      "recovery_depth_p_0",
+      "recovery_depth_p_1",
+      "recovery_depth_p_2",
+      "recovery_depth_p_3",
+      "recovery_depth_p_4",
+      "recovery_depth_p_5",
+      "recovery_depth_p_6",
+      "continuous_se_mean_q",
+      "continuous_se_mean_p",
+      "continuous_se_sigma_q",
+      "continuous_se_sigma_p",
+      "continuous_se_rho_qp",
+      "continuous_se_tail_rate",
+      "continuous_se_x_e_rate",
+      "continuous_se_z_e_rate",
+      "continuous_se_leakage_rate"
+    ],
+    "direct_action_token_hits": [],
+    "truth_field_hits": []
+  },
+  "gate_summary": {
+    "passed": 17,
+    "failed": 0,
+    "gates": {
+      "registered_t4_1_1_hmm_checkpoint_hash_and_winner_match": true,
+      "output_grid_is_complete": true,
+      "seed_output_traces_are_unique": true,
+      "hybrid_schema_has_every_required_family_and_no_direct_action": true,
+      "source_data_has_no_truth_hidden_logical_or_training_label": true,
+      "all_outputs_are_finite_and_normalized": true,
+      "all_uncertainty_covariances_are_psd": true,
+      "future_only_alignment_and_stride_are_exact": true,
+      "nominal_and_stress_lanes_both_produce_outputs": true,
+      "stage_and_hold_paths_are_both_exercised": true,
+      "atomic_staging_preserves_parameters_and_every_stage_commits": true,
+      "conflict_stale_hold_and_crc_negative_paths_reject": true,
+      "moving_block_output_replay_is_deterministic": true,
+      "continuous_and_risk_outputs_have_nonzero_variation": true,
+      "all_five_recommendation_profiles_are_exercised": true,
+      "recommendation_ids_are_unique_within_output_grid": true,
+      "scope_is_registered_synthetic_pilot_not_hardware": true
+    }
+  },
+  "claim_boundary": {
+    "allowed": "future-only observed hybrid software state with block-bootstrap uncertainty and versioned CRC-bound inactive-bank recommendation",
+    "forbidden": "per-cycle correction output, exact hidden recovery depth, calibrated physical risk, richer-input HMM retraining, logical/control gain, RTL or board measurement"
+  }
+}
