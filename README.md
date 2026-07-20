@@ -127,7 +127,8 @@
   - `docs/figures/t7_1_3_main_figures/`：主图 3--4 的 Python-only editable SVG/PDF、300-dpi PNG、600-dpi LZW-TIFF 与 live-hash/人工视觉 QA manifest
   - `docs/supplement_figures_contract.md` / `docs/t7_1_4_supplement_figure_contract.json` / Source Data：Supplement S1--S5 的 792-record 证据合同，覆盖 gradient/cutoff/noise-transfer、Petz/top-K/六 Pauli、all-seed/OOD、fixed-point/failure ledger 与 Phase 6C 六条独立 lane；禁止跨 task 总榜和 estimate/measured 升级
   - `docs/figures/t7_1_4_supplement_figures/`：Supplement S1--S4 的 Python-only editable SVG/PDF、300-dpi PNG、600-dpi LZW-TIFF，以及对既有 Phase 6C atlas 四格式输出的精确链接、live-hash/人工视觉 QA manifest
-  - `docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex`: 截止 T7.1.3 的 restricted pre-board Route-A 正式论文式 note；标题/摘要/结论消费 29 条 claim matrix，嵌入证据绑定的正式 Fig.1--4，并以不编号历史示意继续复用 PPT 双回路架构图
+  - `docs/introduction_related_work_contract.md` / `docs/t7_2_1_introduction_related_work_contract.json` / Source Data：T7.2.1 的 6 段 Introduction、5 组 Related Work 与 14 条 claim/citation/project-source 合同；30 个 citation keys、六条 task-signature lane、static/Window/V5/NMF/learned/FPGA/board 负边界由 18/18 gates/mutations fail-closed 约束
+  - `docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex`: 截止 T7.2.1 的 restricted pre-board Route-A 正式论文式 note；标题/摘要/结论消费 29 条 claim matrix，Introduction/Related Work 按 contract-centric 与机制分 lane 重写，正式 Fig.1--4 和 Supplement S1--S5 均保持任务与证据层边界
   - `docs/figures/route_a_manuscript_20260720/`: 三张 Python 主文图的 SVG/PDF/LZW-TIFF/PNG、58-row plotted Source Data 与 SHA-256 manifest
   - `docs/literature_matrix.md`: 当前新任务序列的四线文献、Zotero 覆盖和证据等级矩阵
   - `docs/gap_statement.md`: 基于四线证据的研究缺口、baseline/oracle contract 与英文 Introduction 草稿

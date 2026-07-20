@@ -27,7 +27,7 @@
 \title{An Evidence-Gated, Fail-Closed Pre-Board Contract\\
 for Drift-Adaptive GKP Decoding}
 \author{}
-\date{Evidence-synchronized manuscript note; snapshot through T7.1.3, 20 July 2026}
+\date{Evidence-synchronized manuscript note; snapshot through T7.2.1, 20 July 2026}
 
 \begin{document}
 \maketitle
@@ -57,6 +57,77 @@ unqualified decoder or hardware ranking.
 \end{abstract}
 
 \tableofcontents
+
+\section{Introduction}
+
+The Gottesman--Kitaev--Preskill (GKP) code protects oscillator-encoded quantum
+information by converting small phase-space displacements into analog modular
+syndromes \cite{gkp2001,grimsmo2021}.  Practical code states have finite energy,
+so peak width, envelope, loss, and the recovery map affect the induced logical
+channel rather than merely perturbing an ideal lattice decision
+\cite{hastrup2023,jafarzadeh2025}.  Autonomous stabilization and real-time GKP
+error correction have further made feedback timing and failure handling physical
+constraints, not optional implementation details \cite{lachance2024,sivak2023}.
+The classical path in a repeated GKP memory must therefore be assessed by what
+it observes, what action it controls, and when that action becomes valid.
+
+Neither analog decoding nor temporal inference is new.  Analog likelihoods have
+improved concatenated surface--GKP and QLDPC--GKP decoding, maximum-likelihood
+(ML) rules outperform closest-integer (CI) decisions in matched gate models,
+and multi-round Bayesian inference can exploit approximate-GKP syndrome history
+\cite{fukui2018,noh2020,noh2022,wan2020,berent2024}.  Closest-point decoding
+(CPD) also gives a principled formulation for structured multimode GKP lattices
+\cite{lin2023}.  These results establish the value of soft, correlated, and
+historical information.  They do not, however, make CI, gate-level ML,
+single-mode MAP, and multimode CPD interchangeable: their code spaces,
+observations, actions, and performance denominators differ.
+
+Nonstationarity introduces a second problem.  Syndrome statistics have been
+used to estimate time-varying error weights, infer noise parameters, calibrate
+experimental decoders, reweight decoding graphs, and optimize decoder priors
+\cite{spitz2018,wagner2021,chen2022,dgr2023,sivak2024}.  Learned decoders and
+calibration-conditioned models provide complementary ways to absorb complex or
+changing device statistics \cite{bausch2024,stein2026}.  In parallel, FPGA QEC
+decoders have demonstrated low-latency lookup, distributed, clustering, and
+neural implementations, including processor-integrated feedback
+\cite{lilliput2022,helios2023,collision2025,caune2024,yang2026}.  Yet an
+algorithmic latency, an FPGA core latency, and a source-to-action closed-loop
+latency are different observables; a numerical comparison is meaningful only
+after the task and boundary are matched.
+
+The source set audited in this work leaves a narrower systems question.  For a
+repeated single-mode approximate-GKP memory under smooth drift and abrupt fault
+regimes, can observed syndrome and health information update a decoder without
+giving a slow estimator authority over the cycle-critical action?  Answering
+this question requires an execution contract as well as an estimator: the
+contract must define causal observability, expert eligibility, atomic state
+publication, fallback and rollback semantics, latency boundaries, and the
+evidence needed to promote a simulator result to hardware.  It must also retain
+negative results when adaptation has insufficient causal action-space headroom.
+
+Here we study that question through the \RouteA{} contract system.  A locked MAP
+expert owns the logical-error decision; observed-only Window, EWMA, Kalman, or
+regime logic may propose bounded updates; typed event and fallback logic owns
+tail safety; and a versioned A/B bank with last-known-good rollback owns state
+publication.  The six-cycle, initiation-interval-one fast path executes only
+validated integer state.  CNN residuals, hidden-state models, and recurrent
+teacher--student modules remain replaceable software extensions rather than
+the authority or identity of the deployed decoder.
+
+The present evidence supports a restricted conclusion.  On the frozen smooth
+matrix, \RouteA{} improves aggregate paired logical error rate only relative to
+the locked EWMA baseline, with periodic drift the sole Holm-confirmed family;
+static joint MAP has a lower average error rate, and Window MAP remains a
+stronger counterexample.  Abrupt and out-of-distribution tests establish the
+registered non-inferiority margins rather than broad tail improvement.  A
+planned posterior-predictive V5 branch was stopped before formal or RTL work
+because its causal deployable headroom gates failed.  The retained hardware
+result is consequently a deterministic pre-board contract and post-route
+estimate, while physical-board latency, jitter, power, and any claim of being
+faster than prior FPGA decoders remain unmeasured.  The contribution is thus an
+evidence-gated integration and falsification framework: it separates LER,
+safety, and deterministic execution owners, preserves task-local positive
+results, and prevents heterogeneous evidence from becoming a global ranking.
 
 \section{Scope, argument, and evidence cutoff}
 
@@ -96,6 +167,7 @@ T6.16.1--T6.19.3 (Phase 6C) & Done & The 206-cell six-lane atlas passed 24/24 in
 T7.1.1 & Done & The 29-claim matrix passed 19/19 gates and mutations with 45 live artifacts; the manuscript decision is \texttt{RESTRICTED\_PREBOARD\_CONTRACT\_PAPER}. \\
 T7.1.2 & Done & Main Figures 1--2 bind 38 elements to parent claims and evidence, passed 16/16 gates and mutations, and preserve V5-dropped and board-null surfaces on the figure face. \\
 T7.1.3 & Done & Main Figures 3--4 bind 55 result/hardware rows to live parent evidence, passed 16/16 gates and mutations plus 153 parent-chain regressions, and passed manual visual QA. \\
+T7.1.4 & Done & Supplementary Figures S1--S5 bind 792 heterogeneous records to 13 live parent verifiers, passed 17/17 gates and mutations plus 210 environment-aware parent regressions, and preserve failure, incomparable, dropped, and board-null states. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -166,55 +238,91 @@ remains \texttt{NO\_GO}.  This decision also explains why independent Phase~6C
 advantages are retained below but removed from the abstract.  T7.1.2 consumes
 the same rows in 38 figure elements rather than introducing new claims.
 
-\section{Why the architecture changed without discarding the old work}
+\section{Related Work}
 
-The earlier CNN-centric line produced a useful design pattern: a slow estimator
-updates a low-dimensional correction surface, while the latency-critical path
-uses a small quantized rule.  It also produced a frozen four-scenario result in
-which a teacher-anchored residual branch outperformed UKF.  However, later
-evidence exposed three limitations.
+\subsection{Analog, history-aware, and structured GKP decoding}
 
-First, the learned strong branch did not survive the unified evidence gate.
-T5.1.4 found no matched learned decoder in the registered matrix, no Holm
-discoveries across 24 family tests, and a calibration-shift transient in which
-the adaptive candidate had 55 errors per 512 decisions against 37 for the
-reference.  Second, a generic uncertainty fallback had a positive aggregate
-OOD effect but significantly harmed the compound family and imposed a small
-nominal cost.  Third, the first unified \RouteA{} integration run was much worse
-than Window/EWMA because the policy froze or reverted the wrong state under
-tail evidence.
+Hard CI discards distance-to-boundary information that is retained by a wrapped
+likelihood.  Analog GKP information has consequently been incorporated into
+surface-code matching and QLDPC message passing, while gate-level ML can use
+correlated shift histories that a componentwise CI rule ignores
+\cite{fukui2018,noh2020,noh2022,raveendran2022,berent2024}.  For an approximate
+single-mode GKP memory, a Bayesian memory-assisted decoder instead uses the
+sequence of modular outcomes to infer the current correction \cite{wan2020}.
+Structured multimode lattices lead to another decision object: CPD identifies a
+lattice point or coset, with complexity determined by lattice structure
+\cite{lin2023}.  We therefore use separate task-signature lanes for single-mode
+MAP, two-GKP CNOT CI/ML, and multimode CPD.  The project reproduction that CI
+and Euclidean CPD coincide for the isotropic square single-mode case is a
+special-case equivalence, not a class-wide decoder ranking.
 
-These are not reasons to discard the affine fast path, the historical learned
-results, or the hardware work.  They are reasons to change the unit of
-contribution.  The new unit is an auditable contract that assigns each claim to
-the module and evidence lane that can actually support it.
+\subsection{Calibration and drift-adaptive decoding}
 
-\section{Positioning relative to GKP decoding and feedback control}
+Adaptive QEC includes several distinct operations.  Sliding or weighted
+windows can update matching weights under time-dependent noise
+\cite{spitz2018}; syndrome-only estimators can identify stationary noise
+parameters \cite{wagner2021}; experimental calibration can reconstruct
+correlated decoding graphs \cite{chen2022}; and graph reweighting or direct
+prior optimization can target decoder mismatch rather than physical-parameter
+error \cite{dgr2023,sivak2024}.  Calibration-conditioned neural models likewise
+separate slowly varying device context from the fast syndrome path
+\cite{stein2026}.  These studies motivate our observed-only update constraint
+and the inclusion of Window, EWMA, Kalman, and change-point baselines.  Our
+distinctive unit is not a new estimator family, but the contract that limits
+when an estimate may alter an action bank and records false update, fallback,
+recovery, and tail costs separately from average LER.
 
-Analog GKP decoding exploits more information than hard binning because the
-wrapped residual carries distance-to-boundary and noise-model information
-\cite{gkp2001,grimsmo2021}.  This motivates both joint MAP rules for correlated
-quadratures and analog likelihoods passed to an outer-code decoder.  Our static,
-adaptive, and CPD lanes share that statistical premise, but they answer
-different tasks: single-mode repeated correction, gate-level CNOT failure,
-structured outer-code decoding, and multimode lattice decoding are never
-collapsed into one leaderboard.
+\subsection{Learned, non-Markovian, and autonomous feedback}
 
-Calibration-aware QEC emphasizes that a decoder can become mismatched when
-priors or device statistics move \cite{chen2022,sivak2024}.  The present work
-extends this observation into a systems contract: adaptation is causal,
-versioned, bounded, and tested against static and multiple adaptive baselines;
-tail non-inferiority and update actions are reported separately from mean LER.
-This differs from treating an adaptive estimator as automatically beneficial
-whenever a truth oracle exposes nonzero headroom.
+Direct neural decoding maps a syndrome history to a correction, as demonstrated
+for surface and bosonic-code settings \cite{bausch2024,wang2022}.  Model-free
+reinforcement learning instead changes a control policy, whereas the
+non-Markovian feedback (NMF) method of Puviani \emph{et al.} uses model-based
+Feedback-GRAPE and a recurrent controller to choose future physical-control
+parameters from the measurement history \cite{sivak2026,puviani2025}.  An
+autonomous GKP protocol is different again: engineered dissipation and reset
+implement physical QEC without a per-round classical syndrome decoder
+\cite{lachance2024}.  We keep these decision objects separate.  The NMF paper
+motivates a teacher extension, but the available official repository did not
+support a paper-exact matched reproduction; existing project checkpoints yield
+zero learned/controller entries eligible for the frozen same-task ranking.
+Neither fact is evidence that the contract system surpasses NMF, RL, direct
+neural decoding, or autonomous QEC.
 
-Non-Markovian feedback and experimental real-time QEC demonstrate that memory
-and control policies can improve finite-horizon performance in suitable
-physical protocols \cite{puviani2025,sivak2023}.  Here those results motivate a
-teacher--student extension and an AQEC comparison lane, but literature facts are
-not promoted to project reproduction.  The contribution is therefore the
-evidence-bounded integration and falsification framework, together with the
-task-local decoder and pre-board results that survive it.
+\subsection{Deterministic and FPGA QEC decoders}
+
+FPGA QEC work spans compressed lookup tables, distributed union--find,
+collision/local clustering, belief propagation, and quantized neural inference
+\cite{lilliput2022,helios2023,collision2025,ziad2024,maurer2025,yang2026}.
+The literature demonstrates that useful hardware evidence must name the code,
+problem size, device, precision, throughput or initiation interval, latency
+boundary, and measurement layer.  Processor-integrated experiments further
+separate decoder-core time from communication and feedback response
+\cite{caune2024,yang2026}.  Our source normalization found no external FPGA
+implementation with the same single-mode analog input, MAP/event action,
+precision, and boundary.  A count of zero same-task comparators prevents a fair
+speed ranking; it does not imply that the project is faster.  We accordingly
+report six cycles and initiation interval one as an RTL contract, and frequency
+and resources as three-seed post-route estimates until the named board is
+measured.
+
+\subsection{Position of the present work}
+
+The component ideas in \RouteA{}---analog MAP, causal estimation, learned
+extensions, event handling, double-buffered state, and deterministic FPGA
+execution---all have relevant precedents.  The earlier CNN-centric prototype
+also established a useful slow-estimator/fast-rule decomposition, but its
+learned branch did not survive the later unified evidence gate: no matched
+learned checkpoint was eligible, no family-level learned discovery survived
+the registered correction, and one calibration transient worsened from 37 to
+55 errors per 512 decisions.  The present paper therefore makes a systems and
+evidence claim.  MAP owns LER; typed events, fallback, and rollback own safety;
+the fast path owns deterministic execution; and every result remains inside its
+task signature and evidence grade.  This positioning accommodates the legacy
+CNN and teacher--student evidence as ablations while leaving static-MAP,
+Window-MAP, V5 early-stop, NMF-reproduction, auxiliary-CPD, and physical-board
+boundaries visible.  It is neither a claim of a first adaptive GKP decoder nor a
+global comparison across CI, ML, direct NN, RL, AQEC, CPD, and FPGA systems.
 
 \section{Contract-centric dual-loop method}
 
@@ -795,7 +903,7 @@ aggregate ($\pL=0.261679$), whereas the observed-only adaptive rule nearly
 matched the metric oracle ($0.172261$ versus $0.171929$).  Its absolute
 improvement over static Euclidean decoding was
 \begin{equation}
-  0.0646684,qquad \mathrm{CI}_{95\%}=[0.0644128,0.0649264],
+  0.0646684,\qquad \mathrm{CI}_{95\%}=[0.0644128,0.0649264],
 \end{equation}
 and all 32 seed clusters favoured the adaptive lane.  The worst-window LER fell
 from 0.320313 to 0.291016 and $\mathrm{CVaR}_{95}$ from 0.277271 to 0.240627.
@@ -816,18 +924,42 @@ to the independent multimode CPD task rather than to the stopped V5 policy.
   \label{fig:auxiliary-matched-evidence}
 \end{figure}
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\textwidth]{../figures/t6_19_3_secondary_comparison_atlas.pdf}
-  \caption{Integrity-gated six-lane auxiliary atlas.  The panels retain, rather
-  than hide, a single-mode Route-A NO-GO, a positive CNOT ML reproduction, a
-  positive multimode observed-only CPD result, zero same-task learned/controller
-  eligibility, six negative AQEC wall-clock cells, and FPGA estimate/null
-  boundaries.  The 206 cells bind report, raw source data, frozen configuration
-  and SHA-256.  The atlas has no global winner and cannot upgrade the V5 early
-  stop or the blocked real-board gate.}
-  \label{fig:secondary-comparison-atlas}
-\end{figure}
+T7.1.4 retains the six-lane atlas as Supplementary
+Figure~\ref{fig:supp-phase6c-atlas}, alongside four new evidence-bounded
+supplementary figures.  Moving the atlas out of the main result sequence is a
+placement decision, not an evidence downgrade: it prevents a heterogeneous
+comparison map from being read as a fifth main-result ranking.
+
+\subsection{Supplementary validation and failure-domain audit}
+
+The supplementary contract contains 792 records across 17 categories.  Each
+record carries a panel, metric, condition, value or interval, evidence state,
+source selector, and source hash.  The contract passed 17/17 gates and
+substantive mutations, all 13 live parent verifiers, and 210 parent-chain tests
+split across the dependency-complete and frozen Phase~6C numerical
+environments.  This suite adds audit depth, not a new system-promotion result.
+
+Three quantitative patterns are nevertheless informative.  First, the
+noise-transfer surrogate is explicitly regime dependent: its relative error
+against the direct/Fock calculation is $0.56037$ at 3~dB, but falls to
+$7.4845\times10^{-3}$ at 10~dB and $1.3473\times10^{-4}$ at 12~dB.  The low-
+squeezing point is therefore a counterexample, not a calibration target.
+Second, all six finite-cutoff Pauli-eigenstate curves retain a QEC-on/QEC-off
+separation in the registered CPTNI simulation, but this is neither
+infinite-dimensional convergence nor experimental tomography.  Third, the
+selected production integer profile gives quantized-minus-float LER
+$3.0518\times10^{-5}$ with interval
+$[-4.5776\times10^{-5},1.2207\times10^{-4}]$, while the dense profile is
+bit-identical on the registered replay.  These are representation-retention
+results, not measured FPGA advantages.
+
+The same supplement makes the failure modes harder to omit.  In the software
+communication abstraction, the compound jitter--burst case increases LER from
+$0.01986$ to $0.06284$ while control availability falls from $0.94899$ to
+$0.08102$.  Supplementary Figure~\ref{fig:supp-fixed-failures} also keeps nine
+terminal states visible: the low-squeezing failure domain, host memory/runtime
+boundaries, unsynthesized top-$K$, an incomparable Petz--student question,
+lane-local OOD, no broad tail gain, V5 Dropped, and 42 null board fields.
 
 \section{Where the current data show an advantage}
 
@@ -838,7 +970,7 @@ objects and units.
 
 {\small
 \begin{longtable}{@{}L{0.19\textwidth} L{0.18\textwidth} L{0.35\textwidth} L{0.18\textwidth}@{}}
-\caption{Metric-level advantage matrix at the T6.19.3 evidence cutoff.}
+\caption{Metric-level advantage matrix at the T7.1.4 evidence cutoff.}
 \label{tab:advantage-matrix}\\
 \toprule
 Metric / property & Status & Evidence-supported statement & Boundary \\
@@ -865,6 +997,12 @@ Measured board / external speed & \blocked & Board latency, jitter and power are
 \bottomrule
 \end{longtable}
 }
+
+T7.1.4 does not add a new row of system-level superiority to this table.  Its
+positive objects are numerical correctness, validity-domain localization,
+finite-cutoff channel separation, and fixed-point retention.  They strengthen
+trust in specific components while leaving the V4 LER ordering, V5 early stop,
+tail non-inferiority, and board-null boundary unchanged.
 
 \section{Negative results that define the design}
 
@@ -919,6 +1057,7 @@ Auxiliary integrity (T6.19.3) & Terminal \path{PASS_AUX_COMPARISON_INTEGRITY}: 2
 Claim matrix (T7.1.1) & Terminal \path{PASS_RESTRICTED_PREBOARD_CLAIM_BOUNDARY_MATRIX}: 29 claims, 45 live artifacts, 19/19 gates and mutations & Freezes title/abstract/results/conclusion placement and permits only a restricted pre-board contract paper \\
 Main Figures 1--2 (T7.1.2) & Terminal \path{PASS_MAIN_FIGURES_1_2_RESTRICTED_PREBOARD_CONTRACT}: 38 bound elements, 16/16 gates and mutations & Freezes the implemented system/safety schematics while keeping V5 Dropped and board measurement null \\
 Main Figures 3--4 (T7.1.3) & Terminal \path{PASS_MAIN_FIGURES_3_4_RESTRICTED_PREBOARD_RESULTS}: 55 bound rows, 16/16 gates and mutations, 153 parent-chain regressions & Freezes the restricted V4 result and deterministic pre-board boundary while keeping Window/static/oracle-gap negatives, high fallback, V5 Dropped, and 42 board-null fields visible \\
+Supplement S1--S5 (T7.1.4) & Terminal \path{PASS_SUPPLEMENT_FIGURE_CONTRACT_RESTRICTED_NONRANKING}: 792 bound rows, 17/17 gates and mutations, 13/13 parents, 210 regressions & Adds physics/model, bound, all-seed/OOD, fixed-point, and Phase~6C audit depth without creating a global rank, device-robustness claim, or board result \\
 Real board (T6.9.2) & Bitstream, transport, correctness, latency distribution, deadline miss, resources and power on the named board & Hardware language remains CXXRTL/synthesis/P\&R estimate only \\
 Remaining Phase 7 gates & Frozen main figures, prose, supplement, provenance, and final claim audit must consume the T7.1.1 matrix without upgrading its rows & Figure and prose completion may improve presentation, but cannot change the restricted manuscript decision without new registered evidence \\
 \bottomrule
@@ -1002,6 +1141,16 @@ Window/static/oracle-gap negatives, and separates the six-cycle clock model
 and three-seed post-route estimates from the 42 null board fields.
 The repository-generated T6.19.3 atlas separately binds all 206 auxiliary cells
 and its SVG/PDF/TIFF/PNG bundle to the terminal integrity artifact.
+The T7.1.4 supplement then binds 792 records to 13 live parent verifiers through
+\path{docs/t7_1_4_supplement_figure_contract.json} and the corresponding
+Source Data CSV.  The Python-only renderer exports four new editable
+SVG/vector-PDF/PNG/600-dpi-TIFF figures and links, rather than copies, the four
+T6.19.3 atlas outputs as Supplement S5.  Its manifest records 407 editable SVG
+text nodes, minimum TIFF dimensions of 2952--4389 pixels, and manual visual
+QA.  The 210 parent regressions are intentionally environment aware: 201 use
+the dependency-complete environment and nine Phase~6C integrity checks use the
+frozen numerical environment so that a $1.53\times10^{-242}$ McNemar value is
+not spuriously rejected by an immaterial SciPy last-bit difference.
 
 Randomized comparisons report the independent cluster unit, paired interval,
 and decision denominator in their captions or tables.  Hardware-facing tables
@@ -1030,14 +1179,110 @@ teacher--student results therefore remain secondary evidence lanes rather than
 abstract-level support.
 
 The T7.1.1 matrix freezes this interpretation as 29 atomic claims bound to 45
-live artifacts.  T7.1.2 and T7.1.3 then map the contract, safety, V4 result, and
-pre-board boundary into four evidence-frozen main figures without changing the
-claim states.  Together they permit a restricted simulator/pre-board contract
-paper and reject a broad cross-lane performance or hardware-ranking paper.
-Future prose and supplementary work can clarify this result, but only new
-registered evidence can upgrade it.
+live artifacts.  T7.1.2 and T7.1.3 map the contract, safety, V4 result, and
+pre-board boundary into four evidence-frozen main figures.  T7.1.4 adds five
+non-ranking supplementary figures without changing any claim state.  Together
+they permit a restricted simulator/pre-board contract paper and reject a broad
+cross-lane performance or hardware-ranking paper.  Future prose can clarify
+this result, but only new registered evidence can upgrade it.
 
+\clearpage
 \appendix
+
+\section{Evidence-bounded supplementary figure suite}
+
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+
+The five supplementary figures form an audit trail rather than a second
+leaderboard.  S1 localizes numerical and model-validity domains; S2 separates
+nondeployable recovery bounds, a software cost proxy, and finite-cutoff channel
+curves; S3 exposes every formal seed and registered OOD lane; S4 couples
+fixed-point sensitivity to the non-promotion ledger; and S5 preserves the six
+Phase~6C task signatures without cross-lane ranking.  The complete 792-row
+Source Data file is \path{docs/t7_1_4_supplement_figure_source_data.csv}.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Supplementary figure roles and non-promotion boundaries.}
+\label{tab:supplement-roles}
+\begin{tabularx}{\textwidth}{@{}l L{0.28\textwidth} Y L{0.25\textwidth}@{}}
+\toprule
+Figure & Evidence object & What it establishes & What it does not establish \\
+\midrule
+S1 & Gradient, 65-point host envelope, noise-transfer sweep & Numerical validation and explicit validity/failure domains & Physical convergence, hardware timing, or low-squeezing validity \\
+S2 & Petz/SDP, cutoff extension, top-$K$, six Pauli states & Bound consistency, approximation sensitivity, finite-cutoff channel behaviour & Deployable recovery, synthesized cost, infinite-dimensional convergence, tomography \\
+S3 & 24 seeds $\times$ 7 methods and complete OOD lanes & Seed dispersion and lane-local degradation are visible & System- or device-level robustness \\
+S4 & Fixed-point OAT, four production profiles, nine terminal states & Representation retention and fail-closed non-promotion & Board-measured LER, resources, speed, or power \\
+S5 & Six Phase~6C task-signature lanes & Positive, negative, blocked, null, and literature-only states coexist & A global winner or rescue of the stopped V5 branch \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/t7_1_4_supplement_figures/supplement_s1_physics_validity.pdf}
+  \caption{Numerical validation and explicit model-validity domains.  (a) The
+  Feedback-GRAPE gradient is checked over the registered finite-difference
+  sweep.  (b) Sixty-five cutoff/batch/horizon points expose host memory and
+  runtime boundaries.  (c,d) The noise-transfer surrogate is localized at high
+  squeezing and fails at low squeezing.  All values are analytic, simulated,
+  or host-resource evidence; no physical-convergence or FPGA-timing claim is
+  implied.}
+  \label{fig:supp-physics-validity}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/t7_1_4_supplement_figures/supplement_s2_bounds_maps_channel.pdf}
+  \caption{Recovery bounds, truncated MAP, and six-state channel evidence.
+  (a,b) Small-cutoff SDP certificates and the Petz cutoff extension remain
+  arbitrary terminal-recovery bounds.  (c) Top-$K$ error is plotted against a
+  retained-state software proxy, not LUT/FF/BRAM or Fmax.  (d) QEC-on/off curves
+  cover all six Pauli eigenstates in the finite-cutoff CPTNI simulation without
+  post-selection.  The panels are deliberately incomparable to a deployable
+  student/controller or experimental tomography.}
+  \label{fig:supp-bounds-channel}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/t7_1_4_supplement_figures/supplement_s3_seeds_and_ood.pdf}
+  \caption{All formal seeds and complete registered OOD lanes.  (a) Every one
+  of the 24 seeds for all seven smooth methods is shown.  (b--d) Held-out drift,
+  measurement confusion, leakage/reset, and software communication disturbances
+  are reported with their registered cluster intervals.  The severe compound
+  communication degradation is a software timing-model result; lane-local OOD
+  does not establish system or device robustness.}
+  \label{fig:supp-seeds-ood}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/t7_1_4_supplement_figures/supplement_s4_fixed_point_and_failures.pdf}
+  \caption{Fixed-point sensitivity and fail-closed boundary ledger.  (a) The
+  six-axis OAT retains both benign and sharply degrading settings.  (b) Four
+  production integer profiles are compared with float over 32 clusters per
+  profile.  (c) Storage and disagreement remain representation proxies rather
+  than synthesized resources.  (d) Nine registered failure or non-promotion
+  states keep V5 Dropped and all 42 physical-board fields null.}
+  \label{fig:supp-fixed-failures}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/t6_19_3_secondary_comparison_atlas.pdf}
+  \caption{Integrity-gated six-lane auxiliary atlas.  The panels retain, rather
+  than hide, a single-mode Route-A NO-GO, a positive CNOT ML reproduction, a
+  positive multimode observed-only CPD result, zero same-task learned/controller
+  eligibility, six negative AQEC wall-clock cells, and FPGA estimate/null
+  boundaries.  The 206 cells have no global winner and cannot upgrade the V5
+  early stop or blocked real-board gate.}
+  \label{fig:supp-phase6c-atlas}
+\end{figure}
+
+\clearpage
 
 \section{Primary repository evidence map}
 
@@ -1069,6 +1314,7 @@ Six-lane auxiliary integrity & \path{docs/secondary_comparison_atlas.md} & \path
 Paper-level claim matrix & \path{docs/claim_evidence_boundary_matrix.md} & \path{docs/t7_1_1_claim_evidence_boundary_matrix.json}, 29-row CSV, and verifier \\
 Frozen Main Figures 1--2 & \path{docs/main_figures_1_2_contract.md} & \path{docs/t7_1_2_main_figure_contract.json}, 38-row Source Data, generator, and manifest \\
 Frozen Main Figures 3--4 & \path{docs/main_figures_3_4_contract.md} & \path{docs/t7_1_3_main_result_figure_contract.json}, 55-row Source Data, generator, and manifest \\
+Supplement Figures S1--S5 & \path{docs/supplement_figures_contract.md} & \path{docs/t7_1_4_supplement_figure_contract.json}, 792-row Source Data, bundle manifest, and 13 parent verifiers \\
 Legacy frozen result & \path{docs/paper_materials/paper_simulation_result_table_pack.md} & \path{runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/comparison.csv} \\
 Target P\&R & \path{docs/target_device_synthesis.md} & \path{docs/t5_5_2_target_device_synthesis.json} and raw reports \\
 Student Pareto & \path{docs/precision_resource_performance_pareto.md} & \path{docs/t5_5_3_precision_resource_pareto.json} and equivalence report \\
@@ -1113,38 +1359,7 @@ Auxiliary atlas figure & \path{docs/figures/t6_19_3_secondary_comparison_atlas.p
   six-cycle 222.222 ns value at 27 MHz is a contract-clock estimate.
 \end{itemize}
 
-\begin{thebibliography}{9}
-
-\bibitem{gkp2001}
-D. Gottesman, A. Kitaev, and J. Preskill,
-``Encoding a qubit in an oscillator,''
-\emph{Physical Review A} \textbf{64}, 012310 (2001).
-
-\bibitem{grimsmo2021}
-A. L. Grimsmo and S. Puri,
-``Quantum error correction with the Gottesman--Kitaev--Preskill code,''
-\emph{PRX Quantum} \textbf{2}, 020101 (2021).
-
-\bibitem{chen2022}
-E. H. Chen \emph{et al.},
-``Calibrated decoders for experimental quantum error correction,''
-\emph{Physical Review Letters} (2022).
-
-\bibitem{sivak2024}
-V. Sivak, M. Newman, and P. Klimov,
-``Optimization of decoder priors for accurate quantum error correction,''
-\emph{Physical Review Letters} \textbf{133}, 150603 (2024).
-
-\bibitem{puviani2025}
-M. Puviani, S. Borah, R. Zen, J. Olle, and F. Marquardt,
-``Non-Markovian feedback for optimized quantum error correction,''
-\emph{Physical Review Letters} \textbf{134}, 020601 (2025).
-
-\bibitem{sivak2023}
-V. Sivak \emph{et al.},
-``Real-time quantum error correction beyond break-even,''
-\emph{Nature} (2023).
-
-\end{thebibliography}
+\bibliographystyle{unsrt}
+\bibliography{CNN_FPGA_GKP_submission_refs}
 
 \end{document}
