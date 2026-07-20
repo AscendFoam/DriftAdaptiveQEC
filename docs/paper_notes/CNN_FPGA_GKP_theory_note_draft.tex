@@ -9,16 +9,18 @@
 \usepackage{tabularx}
 \usepackage{xcolor}
 \usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black,citecolor=blue!55!black}
 \emergencystretch=2em
 \captionsetup{font=small,skip=3pt}
 \setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
 \setlength{\floatsep}{8pt plus 2pt minus 2pt}
 \setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\newcommand{\RouteA}{\textsc{Route-A}}
 
 \title{A Dual-Loop Teacher-Anchored Residual Calibration Framework for Drift-Adaptive GKP Decoding\\
 \large Historical Architecture Note with Contract-Centric Evidence Update}
 \author{}
-\date{Evidence synchronized through T6.19.3, 20 July 2026}
+\date{Evidence synchronized through T7.1.2, 20 July 2026}
 
 \begin{document}
 \maketitle
@@ -45,21 +47,16 @@ identity of the estimator that populates it.
 
 The original four-scenario software-HIL result is preserved as historical
 extension evidence: Hybrid Residual-B reduced final LER by 1.75--2.89\%
-relative to UKF.  In the later unified V4 matrix, however, the contract-centric
-policy gained 2.14\% relative to locked EWMA but was worse than static and
-Window MAP; abrupt/OOD gates established EWMA non-inferiority, not tail
-advantage.  V4 therefore ended restricted, and V5 was stopped before
-implementation because deployable held-out headroom was only 0.459\% and the
-incremental action-space headroom was 0.02549\% versus a 12\% gate.  Independent
-positive evidence remains: a 9.6-million-cycle multimode posterior-weighted CPD
-task improved aggregate LER by 0.064668 with all 32 clusters positive; a matched
-two-GKP-CNOT reproduction found 31.16--67.98\% analog-ML failure reduction; and
-the integrated V4 pre-board stack passed one million CXXRTL cycles with zero
-visible mismatch.  Board latency, jitter and power remain unmeasured.  Thus the
-strongest current claim is an evidence-gated, hardware-bounded organizing
-principle with task-local advantages, not a universal CNN or FPGA win.
-The six-lane 206-cell atlas passed 24/24 integrity gates without changing the
-V5 early-stop or real-board blocked verdicts.
+relative to UKF.  The current paper-level claim is narrower.  In the later V4
+matrix, the \RouteA{} contract system lowered aggregate paired LER by 2.14\%
+relative to the locked EWMA baseline, with periodic drift the only
+Holm-confirmed family.  Its integrated pre-board stack passed one million
+CXXRTL cycles with zero visible mismatches, and the selected no-student profile
+preserved a six-cycle, II=1 architecture through three-seed placement and
+routing at 27 MHz.  Timing, resource, and power values remain post-route
+estimates rather than board measurements.  These statements support a
+restricted simulator/pre-board contract paper, not a universal CNN, adaptive,
+or FPGA ranking.
 \end{abstract}
 
 \tableofcontents
@@ -93,11 +90,44 @@ V4 pre-board & One million CXXRTL cycles with zero visible mismatch; six-cycle i
 V5 & Held-out deployable headroom $0.4587\%$; incremental action-space headroom $0.02549\%$ versus 12\% entry gate & Early stop; no V5 formal/RTL/P\&R evidence \\
 Independent decoder lanes & Multimode adaptive CPD gain 0.064668 with 32/32 positive clusters; CNOT analog-ML reductions 31.16--67.98\% & Positive task-local algorithm evidence; cannot rescue V5 \\
 Auxiliary evidence integrity & 206 cells; 24/24 gates and mutations; 162 joint regressions; explicit null/negative states & Within-lane reporting only; no global score or verdict promotion \\
+Paper claim contract & 29 atomic claims; 45 live artifacts; 19/19 gates and mutations; abstract limited to three restricted claims & Only a restricted pre-board contract paper is open; negative and blocked rows remain mandatory \\
+Frozen Main Figures 1--2 & 38 evidence-bound elements; 16/16 gates and mutations; V5 Dropped and board-null shown on the figure face & Current system/safety schematic, not new performance evidence \\
 Learning extension & Historical residual-CNN reductions 1.75--2.89\%; four-state student preserves most finite-model teacher gain with 95 scalars & Reusable extension/ablation, not universal learned superiority \\
 Physical board / external speed & Board latency, jitter and power null; 18 external implementations contain zero exact same-task comparator & No hardware-measured, fastest, or SOTA claim \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+\subsection{Current claim-placement overlay}
+
+T7.1.1 is the interpretation layer for the historical sections below.  It
+freezes 29 atomic claims against 45 live report, Source Data, and code
+artifacts: four are allowed only with restrictions, seven are Results-only,
+two are mandatory negative findings, thirteen are blocked or prohibited as
+positive claims, and three are meta/Related-Work boundaries.  The only current
+abstract-level performance statements are the locked-EWMA smooth contrast and
+the deterministic pre-board architecture; the third abstract claim is the
+integrated contract system itself.  Historical CNN/teacher/student numbers and
+independent Phase~6C results remain in their original result or extension
+sections and do not upgrade those three claims.
+
+The canonical terminology is now \RouteA{} contract system, \emph{static joint
+MAP}, \emph{legacy CNN residual}, \emph{secondary evidence lane},
+\emph{post-route estimate}, and \emph{board measurement}.  In particular,
+post-route timing is not board measurement, HMM inference is a software slow
+loop, and the no-student MAP/FSM profile owns the deployable pre-board claim.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/t7_1_2_main_figures/figure1_contract_system.pdf}
+  \caption{Current evidence-bounded \RouteA{} contract overview.  The
+  per-round MAP-LUT/event fast path is separated from the observed-only host
+  update loop, trusted A/B publication, and LKG recovery.  The evidence ladder
+  stops at a three-seed post-route estimate; physical-board measurement remains
+  blocked with 42 null fields.  The six-cycle, II=1 timing is a pre-board clock
+  contract, and CNN/teacher/student remain optional ablations.}
+  \label{fig:oldnote-current-contract-system}
+\end{figure}
 
 \begin{figure}[htbp]
   \centering
@@ -1855,12 +1885,19 @@ but no longer support a CNN-centric primary claim.
 The current evidence gives a sharper conclusion.  V4 is a restricted
 simulator/pre-board result: it improves over locked EWMA in one preregistered
 smooth contrast, but not over static or Window MAP, and it provides tail
-non-inferiority rather than tail advantage.  V5 is a principled early stop, not
-an unfinished success.  The clearest advantages now reside in explicitly
-separate lanes: multimode posterior-weighted CPD, matched CNOT analog ML,
-finite-model teacher--student compression, and deterministic pre-board
-execution.  Their task boundaries prevent them from being combined into a
-universal decoder or hardware claim.
+non-inferiority rather than tail advantage.  Its deterministic six-cycle path
+and one-million-cycle CXXRTL agreement support a pre-board contract, while the
+post-route values remain estimates.  V5 is a principled early stop, not an
+unfinished success.  Multimode posterior-weighted CPD, matched CNOT analog ML,
+and finite-model teacher--student compression remain explicitly secondary
+lanes whose task boundaries prevent a universal decoder or hardware claim.
+
+T7.1.1 freezes that interpretation as 29 placement-controlled claims bound to
+45 live artifacts.  Static-MAP superiority, zero eligible same-task learned
+checkpoints, the V5 revocations, GQF/NMF blockage, lack of an exact external
+FPGA comparator, and 42 null board-measured fields remain mandatory parts of
+the conclusion.  The open manuscript is therefore a restricted pre-board
+contract paper rather than a broad CNN+FPGA performance paper.
 
 Accordingly, this remains a useful historical theory and architecture note,
 now synchronized to the contract-centric evidence state.  It supports reuse of

@@ -316,6 +316,7 @@
 | 2026-07-20 | T7.1.2 | 不插入 | 38-element 主图合同、逐元素 live evidence/hash、16/16 gates/mutations、八个多格式输出和人工视觉 QA 已封住 fast/slow/learning 层混同、V5 视觉复活、estimate→measurement 与 board-null 淡化；R-N143 由既有 T7.1.3--T7.4 和 T6.9.2 承接。深审发现的画布高度元数据不一致已在本 task 修复并纳入 gate，无需新增旁路任务。 |
 
 | 2026-07-20 | T-DOC-20260720-02 | 不插入 | 双 note 已逐句保留 V4 static/Window/tail 反例、V5 early-stop、Phase 6C task-local 边界、pre-board estimate 与 board-null；T7.1.1 正在冻结正式 claim--evidence--boundary matrix，现有 T7.1/T7.3/T7.4 与 T6.9.2 足以承接后续风险，不应插入为正结果服务的 post-hoc rescue task。 |
+| 2026-07-20 | T-DOC-20260720-03 | 不插入 | 新 note 已直接消费 T7.1.1 的 29 条 placement 与 T7.1.2 的 38-element 图合同，旧 note 只增加解释覆盖层；V5 Dropped、static/Window 反例、learned eligible=0、GQF/board blocked 和 42 个 measured null 均保留。R-N142/R-N143 由既有 T7.1.3--T7.4 与 T6.9.2 承接，不插入 post-hoc 性能或伪板测任务。 |
 
 ## 已关闭风险
 

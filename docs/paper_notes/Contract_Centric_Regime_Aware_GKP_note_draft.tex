@@ -23,10 +23,10 @@
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 
-\title{Evidence-Gated, Contract-Centric Safe Adaptation\\
-for GKP Decoding under Drifting Noise}
+\title{An Evidence-Gated, Fail-Closed Pre-Board Contract\\
+for Drift-Adaptive GKP Decoding}
 \author{}
-\date{Evidence-synchronized note; snapshot through T6.19.3, 20 July 2026}
+\date{Evidence-synchronized manuscript note; snapshot through T7.1.2, 20 July 2026}
 
 \begin{document}
 \maketitle
@@ -35,39 +35,24 @@ for GKP Decoding under Drifting Noise}
 Approximate Gottesman--Kitaev--Preskill (GKP) quantum error correction must
 decode analog modular syndromes while the effective displacement, measurement,
 and control statistics drift.  We reorganize an earlier CNN-assisted,
-FPGA-oriented dual loop around an execution contract rather than a learned
-winner.  Static and adaptive MAP experts own logical-error-rate (LER) decisions;
-a causal regime posterior, event state machine, conservative fallback, and
-versioned A/B banks own tail-safety actions; and a fixed-point fast path owns
-deterministic source-to-action execution.  CNN, teacher, and distilled-student
-modules are replaceable extensions behind the same admission boundary.
+FPGA-oriented dual loop as the \RouteA{} contract system: a locked MAP fast
+path owns logical-error decisions, observed-only software logic owns bounded
+adaptation, and an event/state-machine layer governs fail-closed publication to
+versioned A/B banks.  CNN, teacher, student, and HMM inference remain optional
+software extensions rather than the deployable claim.
 
-The central result is an evidence-gated outcome, including the stopping rules.
-In the V4 untouched smooth matrix, \RouteA{} reduced LER relative to the
-pilot-locked EWMA comparator by $2.1687\times10^{-5}$ (paired 95\% interval
-$[1.9003,2.4548]\times10^{-5}$), but lost to static joint MAP and Window MAP;
-only periodic drift survived family-wise testing.  Abrupt/OOD tests established
-registered non-inferiority to EWMA, not a tail advantage, and static MAP was far
-better under calibration shift.  The resulting full-paper gate was NO-GO.  A
-subsequent causal-headroom audit then stopped V5 before implementation: the
-deployable held-out mixture gained only 0.459\% over its nested baseline and the
-incremental action-space headroom was 0.02549\%, far below the registered 12\%
-entry gate.  No V5 RTL or placement-and-routing result is therefore claimed.
-
-Several bounded advantages remain valid in independent evidence lanes.  The V4
-integrated pre-board stack completed one million CXXRTL cycles with zero
-visible-field mismatch, while a source-bound static-MAP core reached
-41.02--42.21 MHz in three post-route estimates with a six-cycle contract.  In a
-separate 9.6-million-cycle multimode study, observed-only posterior-weighted CPD
-reduced aggregate LER relative to static Euclidean decoding by 0.064668
-($[0.064413,0.064926]$), with all 32 seed clusters positive.  A matched
-two-GKP-CNOT reproduction found analog-ML failure reductions of 31.16\%, 58.07\%,
-and 67.98\% at 9, 12, and 13 dB.  These algorithmic and pre-board results do not
-rescue the stopped V5 system claim: measured board latency, jitter, power, an
-exact same-task external FPGA comparator, and official GQF controller
-superiority all remain null or blocked.  A final 206-cell auxiliary atlas passed
-24/24 integrity gates without introducing a cross-lane score or changing the V5
-and board verdicts.
+\RouteA{} passed preregistered simulator gates and a one-million-cycle CXXRTL
+pre-board replay with zero visible-field mismatches.  On the preregistered
+smooth matrix, it lowered aggregate paired logical error rate relative to the
+locked EWMA baseline by $2.1687\times10^{-5}$ (95\% interval
+$[1.9003,2.4548]\times10^{-5}$); periodic drift was the only family retained
+after Holm correction.  The selected no-student hardware profile preserved a
+six-cycle, initiation-interval-one architecture and passed three-seed
+open-source placement and routing at the 27-MHz contract clock.  Frequency,
+resource, and power values are post-route estimates rather than board
+measurements.  These results support a restricted simulator/pre-board contract
+paper whose contribution is deterministic, evidence-gated integration, not an
+unqualified decoder or hardware ranking.
 \end{abstract}
 
 \tableofcontents
@@ -77,11 +62,11 @@ and board verdicts.
 The one-sentence argument of this note is:
 
 \begin{quote}
-For repeated approximate-GKP correction, an evidence-gated dual loop makes LER,
-tail safety, deterministic execution, and learning extensions separately
-falsifiable: the main V4/V5 superiority route is currently stopped, while narrow
-V4, independent decoder, teacher--student, and pre-board engineering results
-remain usable only within their registered task and evidence layer.
+For repeated approximate-GKP correction, the \RouteA{} contract system
+integrates a locked MAP fast path with observed-only adaptation and fail-closed
+state publication, supported by restricted simulator and pre-board evidence;
+every performance, auxiliary, and hardware statement remains bounded by its
+registered task and evidence layer.
 \end{quote}
 
 The old task board and
@@ -107,7 +92,8 @@ Surface & Status at cutoff & Consequence for this note \\
 T6.5.1--T6.9.3 (V4) & Done except T6.9.2 Blocked & V4 passed restricted simulator/pre-board gates but ended \texttt{NO\_GO\_FULL\_HIGH\_LEVEL\_PAPER}; real-board fields remain null. \\
 T6.10.1 / T6.15.5 (V5) & Done & Causal-headroom entry gate failed and V5 ended \texttt{NO\_GO\_V5\_EARLY\_HEADROOM\_STOP}; no V5 formal, RTL, or P\&R evidence exists. \\
 T6.16.1--T6.19.3 (Phase 6C) & Done & The 206-cell six-lane atlas passed 24/24 integrity gates; literature/reproduction/project-native lanes remain separate and cannot upgrade V4/V5. \\
-T7.1.1 & In Progress, excluded & The paper-level claim--evidence--boundary matrix was not terminal at this cutoff. \\
+T7.1.1 & Done & The 29-claim matrix passed 19/19 gates and mutations with 45 live artifacts; the manuscript decision is \texttt{RESTRICTED\_PREBOARD\_CONTRACT\_PAPER}. \\
+T7.1.2 & Done & Main Figures 1--2 bind 38 elements to parent claims and evidence, passed 16/16 gates and mutations, and preserve V5-dropped and board-null surfaces on the figure face. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -125,20 +111,58 @@ The following names are used consistently throughout the note.
 \toprule
 Canonical term & Definition & What it does not mean \\
 \midrule
-\RouteA{} safe adaptive dual loop & Full contract-centric system: MAP experts, causal routing, event/fallback logic, A/B banks, and fast path & A synonym for the CNN, teacher, student, or oracle \\
+\RouteA{} contract system & Locked MAP fast path, observed-only routing, event/FSM safety, versioned A/B banks, and deterministic execution & A synonym for the CNN, teacher, student, HMM, or oracle \\
 Static joint MAP & Observed-only strong software comparator using a fixed noise model & A universal GKP MAP decoder; the current LUT is source-bound \\
 Window MAP / EWMA adaptive MAP & Observed-only adaptive MAP experts updated from completed causal windows & Hidden-state or per-scenario oracle tuning \\
-Regime posterior & Causal HMM/event evidence used to route between validated expert banks & A direct logical correction or privileged truth channel \\
+Observed-only posterior-predictive weighted CPD & Independent multimode secondary-lane decoder & A Route-A/V5 result or a cross-task comparator \\
+Regime posterior & Causal software evidence used to route between validated expert banks & An FPGA-resident HMM, direct correction, or privileged truth channel \\
 Tail-safety layer & Event FSM, health flags, fallback, leakage/reset handling, and integrity rollback & Tail-performance superiority; T6.7.2 establishes only locked-EWMA non-inferiority \\
-Fast path & Quantized phase-LUT, event, frame, and bank action with a six-cycle contract & Measured end-to-end board latency \\
-Learning extension & Legacy CNN, Feedback-GRAPE teacher, or distilled student behind the same contract & The required main-system winner \\
+Source-to-action latency & Time from accepted syndrome input to committed action at a stated boundary & A synonym for decoder-core or end-to-end QPU latency \\
+Fast path & Quantized phase-LUT, event, frame, and bank action with a six-cycle contract & A board measurement \\
+Legacy CNN residual & Historical bounded learning ablation behind the same contract & The required main-system winner \\
 Hidden-state oracle & Nondeployable model reference evaluated in an isolated truth lane & A deployable comparator or a paper-level recovery optimum \\
 V5 candidate family & A proposed continuation admitted only if causal deployable headroom clears the preregistered entry gate & An implemented system; V5 was stopped before formal/RTL work \\
-Auxiliary evidence lane & A task-local reproduction or project-native matched result with an explicit evidence grade & Evidence that can rescue or reopen the V4/V5 promotion gate \\
-Pre-board estimate & Fixed-point/CXXRTL/synthesis/P\&R result without a physical-board measurement & Measured latency, jitter, power, transport, or HIL \\
+Secondary evidence lane & A task-local reproduction or project-native matched result with an explicit evidence grade & Evidence that can rescue or reopen the V4/V5 promotion gate \\
+Post-route estimate & P\&R-derived timing, resources, or power without physical-board execution & Board measurement, transport, or HIL \\
+Board measurement & Result produced by the named physical bitstream, transport, clock, and measurement protocol & Any simulator, CXXRTL, synthesis, or post-route estimate \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+\subsection{Paper-level claim placement contract}
+
+T7.1.1 converts the accumulated evidence into 29 atomic manuscript claims.
+Each row binds safe English wording, a Chinese boundary, allowed manuscript
+locations, upgrade or revocation conditions, and report/raw/code hashes.  The
+matrix is therefore a publication contract rather than a post-hoc summary.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Terminal claim-placement state at the T7.1.1 cutoff.  Negative,
+blocked, and prohibited rows remain part of the result rather than being
+silently omitted.}
+\label{tab:claim-placement}
+\begin{tabularx}{\textwidth}{@{}L{0.25\textwidth} r Y@{}}
+\toprule
+Publication state & Count & Manuscript consequence \\
+\midrule
+Allowed restricted & 4 & Only three claims enter the abstract: contract-system integration, smooth locked-EWMA contrast, and deterministic pre-board architecture. \\
+Results only & 7 & Task-local quantitative results remain in Results or Supplement and do not enter the title. \\
+Mandatory negative & 2 & Static-MAP superiority and zero eligible learned checkpoint remain visible in Results/Conclusion. \\
+Blocked / prohibited positive & 13 & V5, board-measured, GQF/NMF, and speed-superiority claims remain absent as positive results and explicit as limitations. \\
+Meta / related-work only & 3 & Auxiliary-lane and FPGA-literature rows constrain provenance and placement but do not create a ranking. \\
+\midrule
+Total & 29 & 45 live artifacts; 19/19 integrity gates and 19/19 substantive mutations passed. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The terminal manuscript decision is
+\texttt{RESTRICTED\_PREBOARD\_CONTRACT\_PAPER}; the broader cross-lane paper
+remains \texttt{NO\_GO}.  This decision also explains why independent Phase~6C
+advantages are retained below but removed from the abstract.  T7.1.2 consumes
+the same rows in 38 figure elements rather than introducing new claims.
 
 \section{Why the architecture changed without discarding the old work}
 
@@ -194,26 +218,26 @@ task-local decoder and pre-board results that survive it.
 
 \subsection{System overview and reuse of the dual-loop pipeline}
 
-Figure~\ref{fig:dual-loop-architecture} is retained from the presentation
-material because its interface structure survives the move away from a
-CNN-centric claim.  The durable elements are observed syndrome history, a
-bounded slow-loop proposal, safe publication of a complete parameter image,
-versioned A/B banks, a quantized MAP-LUT, an event state machine, and a Pauli
-frame update.  These interfaces, rather than the identity of one learned
-estimator, define the reusable architecture.
+Figure~\ref{fig:t7-contract-system} is the evidence-bounded system overview
+frozen by T7.1.2.  It separates the per-round digital path, host update path,
+evidence ladder, timing owner, and physical-board null state on the same page.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{../figures/ppt_summary_20260716/drift_adaptive_architecture_cn.pdf}
-  \caption{Reused Chinese presentation schematic of the drift-adaptive GKP
-  dual loop.  Under the current \RouteA{} interpretation, the upper four-state
-  student is an optional learning extension; Window and EWMA adaptive MAP
-  provide the primary deployable parameter images, while HMM/event/fallback
-  logic controls safe routing and publication.  The maturity badges in this
-  16 July 2026 presentation asset are an archival snapshot: subsequent tasks
-  added student fixed-point RTL and pre-board resource evidence, but real-board
-  validation remains pending.}
-  \label{fig:dual-loop-architecture}
+  \includegraphics[width=\textwidth]{../figures/t7_1_2_main_figures/figure1_contract_system.pdf}
+  \caption{Evidence-bounded dual-loop \RouteA{} contract.  (a) Observed
+  syndrome and integrity inputs feed a deterministic MAP-LUT/event fast path,
+  while a software slow loop stages versioned parameter images through trusted
+  A/B banks and last-known-good recovery.  Solid and dashed arrows denote
+  per-round and update-cadence paths, respectively; CNN/teacher/student modules
+  remain optional ablations.  (b) Available evidence progresses from
+  project-native simulation through fixed-point and CXXRTL qualification to a
+  three-seed post-route estimate; physical-board measurement is blocked and all
+  42 measured fields remain null.  (c) The pre-board timing contract is six
+  cycles with initiation interval one, whereas host updates occur every 4000
+  cycles.  These values are not board-measured latency.  Source data are
+  provided in the T7.1.2 Source Data file.}
+  \label{fig:t7-contract-system}
 \end{figure}
 
 The fast loop consumes the current validated bank on every measurement and
@@ -289,6 +313,44 @@ LKG rollback.  The registered dual-shadow update cost was 1,218 MACs under the
 This trace proves structural execution and provenance, not tail-performance
 superiority.  The independent T6.7.2 matrix subsequently established bounded
 non-inferiority to locked EWMA, as reported below.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/t7_1_2_main_figures/figure2_safe_adaptation.pdf}
+  \caption{Typed fail-closed adaptation and atomic parameter control.  (a--c)
+  Observed syndrome, health, integrity, version, and age fields select typed
+  normal/smooth, tail, leakage, and integrity branches and their corresponding
+  stage, trusted-bank, reset, or last-known-good actions.  (d) Candidate images
+  cross CRC/SHA/version checks before inactive-bank write and safe-boundary
+  atomic commit; recovery requires eight-window hysteresis.  (e) IMM/BOCPD,
+  posterior-mixture MAP, the V5 risk compiler, and all V5 implementation
+  results were not run after the preregistered early stop, while board latency,
+  jitter, deadline, and power remain blocked.  Source data are provided in the
+  T7.1.2 Source Data file.}
+  \label{fig:t7-safe-adaptation}
+\end{figure}
+
+The earlier presentation schematic in Fig.~\ref{fig:dual-loop-architecture}
+is retained because its interface structure survives the move away from a
+CNN-centric claim.  The durable elements are observed syndrome history, a
+bounded slow-loop proposal, safe publication of a complete parameter image,
+versioned A/B banks, a quantized MAP-LUT, an event state machine, and a Pauli
+frame update.  These interfaces, rather than the identity of one learned
+estimator, define the reusable architecture.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/ppt_summary_20260716/drift_adaptive_architecture_cn.pdf}
+  \caption{Reused Chinese presentation schematic of the drift-adaptive GKP
+  dual loop.  Under the current \RouteA{} interpretation, the upper four-state
+  student is an optional learning extension; Window and EWMA adaptive MAP
+  provide the primary deployable parameter images, while HMM/event/fallback
+  logic controls safe routing and publication.  The maturity badges in this
+  16 July 2026 presentation asset are an archival snapshot: subsequent tasks
+  added student fixed-point RTL and pre-board resource evidence, but real-board
+  validation remains pending.}
+  \label{fig:dual-loop-architecture}
+\end{figure}
 
 \subsection{Replaceable learned modules}
 
@@ -833,21 +895,26 @@ Gate & Current requirement & Consequence for writing \\
 V4 final gate (T6.9.3) & Terminal NO-GO; restricted simulator/pre-board draft only & V4 may support a restricted simulator/pre-board systems account, not broad decoder superiority \\
 V5 final gate (T6.15.5) & Terminal \path{NO_GO_V5_EARLY_HEADROOM_STOP} & No V5 performance or hardware result may be synthesized from V4 artifacts \\
 Auxiliary integrity (T6.19.3) & Terminal \path{PASS_AUX_COMPARISON_INTEGRITY}: 206 cells, 24/24 gates and mutations, 162 joint regressions & Allows within-lane secondary reporting only; V5 NO-GO and board Blocked remain unchanged \\
+Claim matrix (T7.1.1) & Terminal \path{PASS_RESTRICTED_PREBOARD_CLAIM_BOUNDARY_MATRIX}: 29 claims, 45 live artifacts, 19/19 gates and mutations & Freezes title/abstract/results/conclusion placement and permits only a restricted pre-board contract paper \\
+Main Figures 1--2 (T7.1.2) & Terminal \path{PASS_MAIN_FIGURES_1_2_RESTRICTED_PREBOARD_CONTRACT}: 38 bound elements, 16/16 gates and mutations & Freezes the implemented system/safety schematics while keeping V5 Dropped and board measurement null \\
 Real board (T6.9.2) & Bitstream, transport, correctness, latency distribution, deadline miss, resources and power on the named board & Hardware language remains CXXRTL/synthesis/P\&R estimate only \\
-Phase 7 manuscript gate & Every abstract/conclusion sentence maps to a task-local artifact and evidence layer & The formal paper should be an evidence-gated/negative-results account or a narrower independent algorithm paper \\
+Remaining Phase 7 gates & Frozen main figures, prose, supplement, provenance, and final claim audit must consume the T7.1.1 matrix without upgrading its rows & Figure and prose completion may improve presentation, but cannot change the restricted manuscript decision without new registered evidence \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \section{Discussion}
 
-The main contribution at this cutoff is not a winning adaptive decoder.  It is
-an evidence-gated research object in which admission, causal observability,
-tail intervention, action capacity, fixed-point execution, and hardware
-maturity can fail independently.  This organization reuses the affine
+The main contribution at this cutoff is a restricted pre-board contract system,
+not a winning adaptive decoder.  Its scientific value is that admission,
+causal observability, tail intervention, action capacity, fixed-point
+execution, and hardware maturity can fail independently while remaining
+traceable to atomic manuscript claims.  This organization reuses the affine
 parameter surface, frozen CNN result, teacher/student work, fixed-point
 pipeline, and FPGA-oriented bank machinery without allowing any one extension
-to carry unsupported system-wide claims.
+to carry unsupported system-wide claims.  T7.1.1 makes that separation
+machine-checkable through 29 placement-controlled claims and 45 live artifact
+bindings.
 
 The smooth formal result illustrates both the value and the cost of this
 framing.  Because EWMA was selected before formal access, the positive primary
@@ -899,6 +966,11 @@ manifest records SHA-256, byte size, task-local source path, figure contract,
 and every output hash.  The two reused Chinese presentation figures retain
 their original source-data and generator paths and are labelled as archival
 interface/model evidence rather than current promotion results.
+The frozen system/safety figures use the independent Python entry point
+\path{docs/figures/make_t7_1_2_main_figures.py}; their 38-element Source Data,
+artifact hashes, dimensions, editable SVG/PDF, 600-dpi LZW-TIFF, and review PNG
+are bound by \path{docs/t7_1_2_main_figure_contract.json}.  Visual QA confirmed
+that the grey/red V5 and board boxes have no incoming production arrow.
 The repository-generated T6.19.3 atlas separately binds all 206 auxiliary cells
 and its SVG/PDF/TIFF/PNG bundle to the terminal integrity artifact.
 
@@ -910,23 +982,29 @@ maps each result to its human-readable report and machine artifact.
 
 \section{Conclusion}
 
-The current evidence supports a contract-centric, regime-aware dual loop as a
-disciplined way to separate GKP decoding performance, tail-safety control,
-learning extensions, and deterministic execution.  It does not support the
-broad adaptive-decoder paper originally sought.  V4 has a narrow positive
-contrast against locked EWMA and a periodic-family discovery, but static and
-Window MAP are better in aggregate and abrupt/OOD results provide
-non-inferiority rather than tail advantage.  V5 was correctly stopped because
-deployable and incremental action-space headroom were too small.
+The current evidence supports the \RouteA{} contract system as a deterministic,
+fail-closed way to separate GKP decoding, bounded adaptation, state
+publication, optional learning, and pre-board execution.  The decisive direct
+evidence is deliberately narrow: a positive paired smooth contrast against the
+locked EWMA baseline with a periodic-only Holm discovery, together with
+one-million-cycle integer/CXXRTL agreement and a six-cycle, II=1 architecture
+that passed three-seed placement and routing at the 27-MHz contract clock.
 
-The remaining positive claims are explicit and task-local: observed-only
-posterior weighting improves the independent multimode CPD task; analog ML
-improves the reproduced two-GKP-CNOT task; the compressed student retains most
-teacher gain in a finite model; and V4/static-MAP cores satisfy deterministic
-pre-board execution contracts.  None establishes measured FPGA speed, official
-GQF superiority, or a physical quantum-memory improvement.  This transparent
-partition---including the negative and null cells---is the result that can
-support a formal evidence-gated systems paper or a narrower algorithm paper.
+The conclusion must retain the experiments that limit this contribution.
+Static joint MAP has lower average LER on the frozen same-model smooth
+benchmark; abrupt/OOD evidence establishes registered locked-EWMA
+non-inferiority rather than broad tail improvement; V5 was stopped before
+implementation; no same-task learned checkpoint is eligible; official GQF/NMF
+comparison remains blocked; and 42 board-measured fields remain null.  The
+independent multimode CPD, two-GKP-CNOT, AQEC, FPGA-literature, and
+teacher--student results therefore remain secondary evidence lanes rather than
+abstract-level support.
+
+The T7.1.1 matrix freezes this interpretation as 29 atomic claims bound to 45
+live artifacts.  It permits a restricted simulator/pre-board contract paper
+and rejects a broad cross-lane performance or hardware-ranking paper.  Future
+main-figure and prose work can clarify this result, but only new registered
+evidence can upgrade it.
 
 \appendix
 
@@ -957,6 +1035,8 @@ Multimode CPD & \path{docs/multimode_posterior_weighted_cpd.md} & \path{docs/t6_
 Current pre-board profiles & \path{docs/project_preboard_profiles.md} & \path{docs/t6_19_1_project_preboard_profiles.json} and raw P\&R reports \\
 External FPGA refresh & \path{docs/external_fpga_decoder_refresh.md} & \path{docs/t6_19_2_external_fpga_normalization.json} and CSV \\
 Six-lane auxiliary integrity & \path{docs/secondary_comparison_atlas.md} & \path{docs/t6_19_3_secondary_evidence_integrity.json} and one-row-per-cell CSV \\
+Paper-level claim matrix & \path{docs/claim_evidence_boundary_matrix.md} & \path{docs/t7_1_1_claim_evidence_boundary_matrix.json}, 29-row CSV, and verifier \\
+Frozen Main Figures 1--2 & \path{docs/main_figures_1_2_contract.md} & \path{docs/t7_1_2_main_figure_contract.json}, 38-row Source Data, generator, and manifest \\
 Legacy frozen result & \path{docs/paper_materials/paper_simulation_result_table_pack.md} & \path{runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/comparison.csv} \\
 Target P\&R & \path{docs/target_device_synthesis.md} & \path{docs/t5_5_2_target_device_synthesis.json} and raw reports \\
 Student Pareto & \path{docs/precision_resource_performance_pareto.md} & \path{docs/t5_5_3_precision_resource_pareto.json} and equivalence report \\
@@ -971,6 +1051,9 @@ Auxiliary atlas figure & \path{docs/figures/t6_19_3_secondary_comparison_atlas.p
 \section{Claim wording guardrails}
 
 \begin{itemize}
+  \item Governing contract: each sentence in the title, abstract, results, and
+  conclusion must map to one of the 29 T7.1.1 rows and retain that row's
+  placement, evidence layer, and boundary.
   \item Allowed now: ``improves over the pilot-locked EWMA baseline on the
   untouched smooth aggregate, with the family-level discovery concentrated in
   periodic drift.''
