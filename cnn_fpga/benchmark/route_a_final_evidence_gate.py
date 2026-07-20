@@ -11,6 +11,9 @@ import json
 from pathlib import Path
 from typing import Any, Mapping
 
+from cnn_fpga.benchmark import route_a_board_measurement_gate as board_blocker_gate
+from cnn_fpga.benchmark import route_a_claim_matrix as claim_matrix_gate
+
 
 ROOT = Path(__file__).resolve().parents[2]
 TASK_ID = "T6.9.3"
@@ -229,7 +232,7 @@ def evaluate_gates(report: Mapping[str, Any], *, check_live_files: bool = True) 
     tail = claims["TAIL_SAFETY_AND_IMPROVEMENT"]["current_result"]
     board = claims["BOARD_MEASURED_CORRECTNESS_LATENCY"]["current_result"]
     return {
-        "G01_all_parents_source_data_and_implementation_are_live_hash_bound": set(report["parent_bindings"]) == set(PARENTS) and all(len(row["sha256"]) == 64 for row in bindings) and (not check_live_files or all(_live(row) for row in bindings)),
+        "G01_all_parents_source_data_and_implementation_are_live_hash_bound": set(report["parent_bindings"]) == set(PARENTS) and all(len(row["sha256"]) == 64 for row in bindings) and (not check_live_files or (all(_live(row) for row in bindings) and _claim_matrix_is_live())),
         "G02_atomic_final_claim_schema_is_complete": set(claims) == FINAL_CLAIM_IDS and len(claims) == 11 and all(row["allowed_wording"] and row["forbidden_wording"] and row["current_result"] and row["evidence"] and row["remaining_gate"] and row["revocation_conditions"] for row in claims.values()),
         "G03_restricted_system_and_smooth_claims_remain_narrow": claims["CONTRACT_SYSTEM_INTEGRATION"]["final_state"] == "SUPPORTED_RESTRICTED_PREBOARD" and claims["SMOOTH_LOCKED_EWMA_ADVANTAGE"]["final_state"] == "SUPPORTED_PAIRED_OUTCOME" and smooth["primary_contrast"]["ci95_low"] > 0 and smooth["holm_confirmed_families"] == ["periodic_drift"] and smooth["route_a_is_global_best"] is False,
         "G04_static_superiority_remains_falsified": claims["STATIC_GKP_SUPERIORITY"]["final_state"] == "FALSIFIED" and claims["STATIC_GKP_SUPERIORITY"]["current_result"]["static_minus_route_a"]["ci95_high"] < 0,
@@ -238,7 +241,7 @@ def evaluate_gates(report: Mapping[str, Any], *, check_live_files: bool = True) 
         "G06_external_drift_outcome_preserves_performance_and_budget_failure": claims["GENERAL_DRIFT_EXTERNAL_COMPARISON"]["final_state"] == "PERFORMANCE_OUTCOME_BUDGET_FAIL" and claims["GENERAL_DRIFT_EXTERNAL_COMPARISON"]["current_result"]["paired_outcome"]["external_minus_route_a"]["ci95_low"] > 0 and claims["GENERAL_DRIFT_EXTERNAL_COMPARISON"]["current_result"]["paired_outcome"]["external_update_worst_us"] > claims["GENERAL_DRIFT_EXTERNAL_COMPARISON"]["current_result"]["paired_outcome"]["wallclock_cap_us"],
         "G07_puviani_surpass_remains_prohibited": claims["PUVIANI_NMF_SURPASS"]["final_state"] == "PROHIBITED_SOURCE_INCOMPLETE" and claims["PUVIANI_NMF_SURPASS"]["current_result"]["paper_exact_passed"] == 0 and claims["PUVIANI_NMF_SURPASS"]["current_result"]["matched_metric_non_null_count"] == 0,
         "G08_preboard_hardware_is_supported_without_measured_promotion": claims["FPGA_DETERMINISTIC_ARCHITECTURE"]["final_state"] == "SUPPORTED_PR_ESTIMATE" and claims["FPGA_DETERMINISTIC_ARCHITECTURE"]["current_result"]["fmax_mhz"]["minimum"] >= 27.0 and claims["FPGA_DETERMINISTIC_ARCHITECTURE"]["current_result"]["clock_model_ns"] == 222.22222222222223,
-        "G09_board_and_speed_claims_fail_closed": claims["BOARD_MEASURED_CORRECTNESS_LATENCY"]["final_state"] == "BLOCKED_ALL_FIELDS_NULL" and board["null_measured_fields"] == 42 and board["physical_prerequisites_failed"] == 6 and claims["FPGA_SPEED_ADVANTAGE"]["final_state"] == "PROHIBITED_NO_SAME_TASK_BOARD_COMPARATOR" and claims["FPGA_SPEED_ADVANTAGE"]["current_result"]["same_task_external_comparator_count"] == 0,
+        "G09_board_and_speed_claims_fail_closed": claims["BOARD_MEASURED_CORRECTNESS_LATENCY"]["final_state"] == "BLOCKED_ALL_FIELDS_NULL" and board["null_measured_fields"] == 42 and board["physical_prerequisites_failed"] == 6 and claims["FPGA_SPEED_ADVANTAGE"]["final_state"] == "PROHIBITED_NO_SAME_TASK_BOARD_COMPARATOR" and claims["FPGA_SPEED_ADVANTAGE"]["current_result"]["same_task_external_comparator_count"] == 0 and (not check_live_files or _board_blocker_is_live()),
         "G10_learning_roles_remain_ablation_and_software_only": claims["CNN_AND_HMM_ROLE"]["final_state"] == "CNN_ABLATION_HMM_SOFTWARE_ONLY" and claims["CNN_AND_HMM_ROLE"]["current_result"]["cnn_state"] == "ABLATION_ONLY" and claims["CNN_AND_HMM_ROLE"]["current_result"]["hmm_is_in_rtl"] is False,
         "G11_full_high_level_paper_is_no_go_and_phase7_freeze_is_closed": report["paper_decision"]["full_cross_lane_high_level_paper"] == "NO_GO" and report["paper_decision"]["phase7_main_figure_and_prose_freeze_allowed"] is False and set(report["paper_decision"]["blocking_claims"]) == {"STATIC_GKP_SUPERIORITY", "TAIL_SAFETY_AND_IMPROVEMENT", "GENERAL_DRIFT_EXTERNAL_COMPARISON", "PUVIANI_NMF_SURPASS", "BOARD_MEASURED_CORRECTNESS_LATENCY", "FPGA_SPEED_ADVANTAGE"},
         "G12_downgrade_routes_are_explicit_and_not_full_go": report["paper_decision"]["selected_downgrade"] == "RESTRICTED_PREBOARD_SYSTEM_DRAFT" and report["paper_decision"]["allowed_downgrade_components"] == ["locked_EWMA_smooth_paired_outcome", "tail_safety_noninferiority_with_cost_limitations", "deterministic_six_cycle_preboard_architecture", "static_negative_result", "external_BOCD_performance_outcome_with_budget_fail", "official_GQF_negative_reproduction_audit"],
@@ -247,6 +250,22 @@ def evaluate_gates(report: Mapping[str, Any], *, check_live_files: bool = True) 
         "G15_source_csv_has_all_final_claims": report["source_data"]["rows"] == 11 and set(_source_claim_ids(ROOT / report["source_data"]["path"])) == FINAL_CLAIM_IDS and len(_source_claim_ids(ROOT / report["source_data"]["path"])) == 11 and (not check_live_files or _sha256(ROOT / report["source_data"]["path"]) == report["source_data"]["sha256"]),
         "G16_semantic_mutations_fail_closed": report["semantic_mutation_audit"]["count"] == report["semantic_mutation_audit"]["detected"] == 17 and len(report["semantic_mutation_audit"]["cases"]) == 17 and all(row["rejected"] for row in report["semantic_mutation_audit"]["cases"]),
     }
+
+
+def _board_blocker_is_live() -> bool:
+    try:
+        board_blocker_gate.verify_report(_load(PARENTS["board_blocker"]))
+    except (KeyError, OSError, TypeError, ValueError):
+        return False
+    return True
+
+
+def _claim_matrix_is_live() -> bool:
+    try:
+        claim_matrix_gate.verify_report(_load(PARENTS["claim_matrix"]))
+    except (KeyError, OSError, TypeError, ValueError):
+        return False
+    return True
 
 
 def _mutations(report: Mapping[str, Any]) -> dict[str, Any]:

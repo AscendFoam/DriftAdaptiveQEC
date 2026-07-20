@@ -1,0 +1,2327 @@
+{
+  "task_id": "T7.1.1",
+  "schema_version": "t7.1.1-claim-evidence-boundary-matrix-v1",
+  "generated_at_utc": "2026-07-20T06:29:34.023874+00:00",
+  "paper_argument": "The Route-A contract system establishes a deterministic, fail-closed pre-board GKP dual-loop execution contract with restricted task-specific simulation evidence; it does not establish V5 LER superiority, NMF lifetime superiority, board-measured break-even, or cross-FPGA SOTA.",
+  "terminology_ledger": {
+    "primary_system": "Route-A contract system",
+    "static_baseline": "static joint MAP",
+    "multimode_extension": "observed-only posterior-predictive weighted CPD",
+    "latency_metric": "source-to-action latency",
+    "hardware_estimate": "post-route estimate",
+    "physical_evidence": "board measurement",
+    "auxiliary_scope": "secondary evidence lane",
+    "oracle": "hidden-state oracle",
+    "learning_component": "legacy CNN residual"
+  },
+  "evidence_layer_ontology": {
+    "LITERATURE_ONLY": "reported external value without local reproduction",
+    "OFFICIAL_CODE_REPRODUCTION": "locally rerun pinned official implementation",
+    "PROJECT_NATIVE_SIMULATION": "project-native matched simulation",
+    "FIXED_POINT_INTEGER_REFERENCE": "bit-accurate integer software reference",
+    "CXXRTL_PREBOARD": "cycle-accurate pre-board RTL simulation",
+    "POST_ROUTE_ESTIMATE": "multi-seed synthesis/place-and-route estimate",
+    "BOARD_MEASURED": "same-bitstream physical-board measurement"
+  },
+  "provenance_policy": {
+    "literature_vs_reproduction_vs_project_native": "SEPARATE",
+    "cross_lane_ranking": "PROHIBITED",
+    "missing_value_imputation": "PROHIBITED"
+  },
+  "artifact_registry": {
+    "claim_matrix_report": {
+      "path": "docs/t6_8_7_route_a_claim_matrix.json",
+      "sha256": "2fd3df21c7c198be49c9495e83b3df96091065c7ab94bb4717ee72860baae2ac",
+      "bytes": 48010
+    },
+    "claim_matrix_source": {
+      "path": "docs/t6_8_7_route_a_claim_matrix_source_data.csv",
+      "sha256": "e867848c3a0a8060179e2841ea6e5638291e53dedfd87a7f6257c29905d833f9",
+      "bytes": 28721
+    },
+    "claim_matrix_code": {
+      "path": "cnn_fpga/benchmark/route_a_claim_matrix.py",
+      "sha256": "20f85f4242ed8a46672d0bc0b5163ad21d2227c79c198fd750b97a44db89f86c",
+      "bytes": 30839
+    },
+    "v4_report": {
+      "path": "docs/t6_9_3_route_a_final_evidence_gate.json",
+      "sha256": "45d159f0a5075e8d4f20d0e6a0f7909becf0456e86fe3fc3151d47fa6f899191",
+      "bytes": 27475
+    },
+    "v4_source": {
+      "path": "docs/t6_9_3_route_a_final_evidence_gate_source_data.csv",
+      "sha256": "efdf9de35dffa5e3379a4d06110c0a3764af3ce6eca743f42d1c8f72d4f6ed4c",
+      "bytes": 12957
+    },
+    "v4_code": {
+      "path": "cnn_fpga/benchmark/route_a_final_evidence_gate.py",
+      "sha256": "45e1ec5995546c2c54305df2989d7b40fead4a9074c2648f59c19de41278f762",
+      "bytes": 30679
+    },
+    "v5_report": {
+      "path": "docs/t6_15_5_route_a_v5_final_evidence_gate.json",
+      "sha256": "f742bbde35e5e7509f77a84562bf21073d65d8a71135cabb23aed8014d149f91",
+      "bytes": 6659
+    },
+    "v5_source": {
+      "path": "docs/t6_15_5_route_a_v5_final_evidence_gate_source_data.csv",
+      "sha256": "c8bc2e14456bee1bdbe2bde2197c56a899976e14779984bfa5cd9eb50ceb162a",
+      "bytes": 817
+    },
+    "v5_code": {
+      "path": "cnn_fpga/benchmark/route_a_v5_final_evidence_gate.py",
+      "sha256": "4e2aa0b26f72e3d4c98797e260033472180332de54abd73a2b6c264edbe60dbb",
+      "bytes": 19717
+    },
+    "phase6c_report": {
+      "path": "docs/t6_19_3_secondary_evidence_integrity.json",
+      "sha256": "a17f74d58203c3a90a540aeee0879bd8146682b19387094ad0958abe4aae7c33",
+      "bytes": 384096
+    },
+    "phase6c_source": {
+      "path": "docs/t6_19_3_secondary_evidence_integrity_source_data.csv",
+      "sha256": "3258f60a5b65b16c5f282afe9f46843bea29f355e91b393a35fbcb0a14d01ea4",
+      "bytes": 214886
+    },
+    "phase6c_code": {
+      "path": "cnn_fpga/benchmark/secondary_evidence_integrity_gate.py",
+      "sha256": "72825f7f9cdf01743717fed0e4216ed9e8cb67c1d16b624fa96190a2e2bcb21b",
+      "bytes": 52428
+    },
+    "single_cpd_report": {
+      "path": "docs/t6_17_1_single_mode_cpd_equivalence.json",
+      "sha256": "25734c74a0c13ff3d3e5def38dc89719587b68364a2b1d0b21056413a1f0f2bf",
+      "bytes": 26923
+    },
+    "single_cpd_source": {
+      "path": "docs/t6_17_1_single_mode_cpd_equivalence_source_data.csv",
+      "sha256": "dc1a8aa7f37def32f89c7510debb60f17cc3655053b019c3918e594d41d2739a",
+      "bytes": 17427
+    },
+    "single_cpd_code": {
+      "path": "cnn_fpga/benchmark/single_mode_cpd_equivalence.py",
+      "sha256": "08f182df806c4f2050b51c135790027024aa75422bd8adbe2d9e8e0c4bed751f",
+      "bytes": 45281
+    },
+    "surface_cnot_report": {
+      "path": "docs/t6_17_2_noh_cnot_ci_ml_reproduction.json",
+      "sha256": "6b19bc5d99f4dbfe30c3f826d05f3f49721ca6bb0854206c739cea16115ae81f",
+      "bytes": 42465
+    },
+    "surface_cnot_source": {
+      "path": "docs/t6_17_2_noh_cnot_ci_ml_reproduction_source_data.csv",
+      "sha256": "fd23828e201b580af7a7e810b74db5fb5ff4bc49e2dfc5fc92579f3da58c7e30",
+      "bytes": 15444
+    },
+    "surface_cnot_code": {
+      "path": "cnn_fpga/benchmark/surface_gkp_cnot_reproduction.py",
+      "sha256": "2dca9d298a1f5e9b5ee2456c64a77c20dbd08fd3ed2935c811be68047cfbbe2c",
+      "bytes": 48896
+    },
+    "learned_report": {
+      "path": "docs/t6_17_3_learned_model_eligibility_replay.json",
+      "sha256": "5ed1b79440863e7c5160298b22961f66fd0ca20e81b7ffdd0db0adeff43ce899",
+      "bytes": 188759
+    },
+    "learned_source": {
+      "path": "docs/t6_17_3_learned_model_eligibility_replay_source_data.csv",
+      "sha256": "c35d0625ee4830ece89c9541c0a444991aeb455e996282d54a20cc524befcdbb",
+      "bytes": 106888
+    },
+    "learned_code": {
+      "path": "cnn_fpga/benchmark/learned_model_eligibility_replay.py",
+      "sha256": "290ad775906c4ad57ca99d89f58122752ca0a743f902e8d10b782316eb646985",
+      "bytes": 51746
+    },
+    "gqf_exact_report": {
+      "path": "docs/t6_8_4_gqf_paper_exact_reproduction.json",
+      "sha256": "8677917ad3c8bc6f60f6630dd757546a86c676781594d2c4ecd6f4e41c45ad29",
+      "bytes": 24539
+    },
+    "gqf_exact_source": {
+      "path": "docs/t6_8_4_gqf_reproduction_source_data.csv",
+      "sha256": "674a0055202288706986e7da3af403f982cc2ad108cca0525acdb7ce1962a3cb",
+      "bytes": 106405
+    },
+    "gqf_exact_code": {
+      "path": "cnn_fpga/benchmark/gqf_paper_exact_reproduction.py",
+      "sha256": "0e60f5ee46da162036a644d2a6c70267d317a46ff19daf55a1703de62229c01b",
+      "bytes": 22418
+    },
+    "gqf_gate_report": {
+      "path": "docs/t6_8_5_gqf_route_a_matched_comparison_gate.json",
+      "sha256": "0ca9ff294e508e46ee10c84f72cc2601be04b3ac7da029f847437fded9c99a5e",
+      "bytes": 6564
+    },
+    "gqf_gate_source": {
+      "path": "docs/t6_8_5_gqf_route_a_matched_comparison_gate_source_data.csv",
+      "sha256": "cbc3a41b00d2a72f4885a167a6dfd682cff11a6e21299ebd5b32c717b57425bb",
+      "bytes": 922
+    },
+    "gqf_gate_code": {
+      "path": "cnn_fpga/benchmark/gqf_route_a_matched_comparison_gate.py",
+      "sha256": "e4bfbbbc11059373cebf4d881d1e8b5169a9c2f754597619eaa2b99d84a50ae8",
+      "bytes": 10970
+    },
+    "aqec_report": {
+      "path": "docs/t6_18_1_aqec_common_wallclock_replay.json",
+      "sha256": "87ee4862937858459f09ba9732abc67139df3dc625f0f2ce102f80d7e764503b",
+      "bytes": 8214744
+    },
+    "aqec_source": {
+      "path": "docs/t6_18_1_aqec_common_wallclock_source_data.csv",
+      "sha256": "78efa1efb0411b8c05d53f3f34d72bcd3ae8179a5aa1a8c5025d8ebd85543eab",
+      "bytes": 26614145
+    },
+    "aqec_code": {
+      "path": "cnn_fpga/benchmark/aqec_secondary_wallclock_replay.py",
+      "sha256": "482ec7b48bfe1c05cedb5d2f730e47b201e65544a7d62e1dc195b92fdc71b6ed",
+      "bytes": 48502
+    },
+    "official_cpd_report": {
+      "path": "docs/t6_18_2_official_structured_cpd_reproduction.json",
+      "sha256": "4ebdbef259db53675353d2e798c9825739ea926c50d58de18838026e1fe6494f",
+      "bytes": 678405
+    },
+    "official_cpd_source": {
+      "path": "docs/t6_18_2_official_structured_cpd_source_data.csv",
+      "sha256": "03ca4313a25f60bb1f45780ff9dec37713a8784de1e2f27cf5bdb07e3335c7a5",
+      "bytes": 261932
+    },
+    "official_cpd_code": {
+      "path": "cnn_fpga/benchmark/official_structured_cpd_reproduction.py",
+      "sha256": "290c2418297a1511cfc76ea7a34af06cdc4d5d32cab4508c04572acf5d661d01",
+      "bytes": 42378
+    },
+    "multimode_report": {
+      "path": "docs/t6_18_3_multimode_posterior_weighted_cpd.json",
+      "sha256": "064f2211aa30905744d5230b5556b81cd7635fb8fb92c6649c4c0ba23e613fd6",
+      "bytes": 32023
+    },
+    "multimode_source": {
+      "path": "docs/t6_18_3_multimode_posterior_weighted_cpd_source_data.csv",
+      "sha256": "560cea6e6e9a211347263b353db7b53a28d592038d6e98b48e08b06df52ab814",
+      "bytes": 17109010
+    },
+    "multimode_code": {
+      "path": "cnn_fpga/benchmark/multimode_posterior_weighted_cpd.py",
+      "sha256": "0669d3046d051fac3306902ed424adcd3f464528051c3c41d311c63e3f0fe320",
+      "bytes": 35985
+    },
+    "preboard_report": {
+      "path": "docs/t6_19_1_project_preboard_profiles.json",
+      "sha256": "cb2ce9f31c9e5b32f2250521307426d593fdbfa958ce8d765068bc96b9a3a315",
+      "bytes": 24276
+    },
+    "preboard_source": {
+      "path": "docs/t6_19_1_project_preboard_profiles_source_data.csv",
+      "sha256": "44751e8ea47f409e4c7825e726a5c76c41aa6dd6653d9bcd8f6f80f763d7645c",
+      "bytes": 789498
+    },
+    "preboard_code": {
+      "path": "cnn_fpga/benchmark/phase6c_preboard_profiles.py",
+      "sha256": "24a5c13dd1a03aee2dd774a537c1b4d7831943d3dd79e4ba0a14c32d8f4763d3",
+      "bytes": 46002
+    },
+    "external_fpga_report": {
+      "path": "docs/t6_19_2_external_fpga_normalization.json",
+      "sha256": "e8f28c8658b00f3117d915a5127f24c78b8a70c316d3f4fa8a861f662403b257",
+      "bytes": 83067
+    },
+    "external_fpga_source": {
+      "path": "docs/t6_19_2_external_fpga_normalization_source_data.csv",
+      "sha256": "7a2781c8f8e9a6f690967a5703596e852005e631a48777b34702b4721f01881c",
+      "bytes": 35861
+    },
+    "external_fpga_code": {
+      "path": "cnn_fpga/benchmark/external_fpga_decoder_refresh.py",
+      "sha256": "4ebb4e9bc8a78e79fe0800dacaae3f7bc7b4a3fdd5ed4bdade1d987b0765128b",
+      "bytes": 36593
+    },
+    "board_report": {
+      "path": "docs/t6_9_2_route_a_board_measurement_blocker.json",
+      "sha256": "4f6ca1017777a1bf2955d5dec2bc3bb1eb46fa308c44b8652a5051dbe71fed80",
+      "bytes": 9311
+    },
+    "board_code": {
+      "path": "cnn_fpga/benchmark/route_a_board_measurement_gate.py",
+      "sha256": "397c2dc76a7bba0d71a1b1582cddb01b385c8beee4429ea21d20ea322466352b",
+      "bytes": 14700
+    },
+    "implementation": {
+      "path": "cnn_fpga/benchmark/claim_evidence_boundary_matrix.py",
+      "sha256": "7dc987f1f5b53fac4f5bb30def81bd2188251296a6700a388db3c0e219ef7637",
+      "bytes": 47200
+    }
+  },
+  "parent_verification": {
+    "claim_matrix": true,
+    "v4_final": true,
+    "v5_final": true,
+    "phase6c_integrity": true,
+    "board_blocker": true
+  },
+  "board_status_binding": {
+    "path": "docs/new_task_board.md",
+    "statuses": {
+      "T6.14.3": "Dropped",
+      "T6.15.5": "Done",
+      "T6.19.3": "Done",
+      "T7.1.1": "ACTIVE_OR_DONE"
+    },
+    "canonical_sha256": "a1f967c91ff516133696ec6b660f3ce53382ae61ffee3acfa21abd961d2b2dbc"
+  },
+  "dropped_task_audit": {
+    "task_id": "T6.14.3",
+    "status": "Dropped",
+    "result_artifacts": []
+  },
+  "claims": [
+    {
+      "claim_id": "CONTRACT_SYSTEM_INTEGRATION",
+      "source_group": "V4_FINAL_GATE",
+      "source_state": "SUPPORTED_RESTRICTED_PREBOARD",
+      "publication_state": "ALLOWED_RESTRICTED",
+      "assertion_polarity": "POSITIVE",
+      "safe_wording_en": "Route-A integrates a locked MAP fast path with regime-aware contract/FSM safety and passes preregistered simulator plus one-million-cycle preboard correctness gates.",
+      "boundary_zh": "仅限预板系统集成与确定性执行合同，不代表新 V5 性能或真板结果。",
+      "evidence_grade": "PROJECT_NATIVE_PREBOARD",
+      "evidence_layers": {
+        "current": [
+          "PROJECT_NATIVE_SIMULATION",
+          "FIXED_POINT_INTEGER_REFERENCE",
+          "CXXRTL_PREBOARD"
+        ],
+        "required_for_upgrade": [
+          "BOARD_MEASURED"
+        ]
+      },
+      "placements": {
+        "title": true,
+        "abstract": true,
+        "results": true,
+        "conclusion": true,
+        "supplement": false,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v4_report"
+        ],
+        "raw_data": [
+          "v4_source"
+        ],
+        "code": [
+          "v4_code"
+        ],
+        "selectors": [
+          "claims.CONTRACT_SYSTEM_INTEGRATION",
+          "upstream:T6.7.4:promotion_decision",
+          "upstream:T6.7.4:scientific_results.rtl",
+          "upstream:T6.9.1:pareto_decision",
+          "upstream:T6.9.1:profiles.route_a_core_no_student"
+        ]
+      },
+      "display_target": "Fig. 1; Table 1",
+      "current_result": {
+        "promotion_verdict": "GO_ROUTE_A_CONTRACT_SYSTEM_RESTRICTED_SIMULATOR_AND_PREBOARD_CLAIMS",
+        "rtl_cycles": 1000000,
+        "rtl_mismatches": 0,
+        "measured_board_latency": false
+      },
+      "upgrade_or_revocation_condition": "T6.9.2 board evidence plus stronger full-system performance is required for a full cross-lane paper.",
+      "forbidden_wording": [
+        "overall best decoder",
+        "broad tail improvement",
+        "measured closed-loop hardware"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "SMOOTH_LOCKED_EWMA_ADVANTAGE",
+      "source_group": "V4_FINAL_GATE",
+      "source_state": "SUPPORTED_PAIRED_OUTCOME",
+      "publication_state": "ALLOWED_RESTRICTED",
+      "assertion_polarity": "POSITIVE",
+      "safe_wording_en": "On the preregistered smooth matrix, Route-A lowers aggregate paired LER relative to the locked EWMA baseline; periodic drift is the only Holm-confirmed family.",
+      "boundary_zh": "只允许报告冻结 smooth matrix 的 aggregate paired 结果；Holm 确认仅 periodic drift。",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "evidence_layers": {
+        "current": [
+          "PROJECT_NATIVE_SIMULATION"
+        ],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": true,
+        "results": true,
+        "conclusion": true,
+        "supplement": false,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v4_report"
+        ],
+        "raw_data": [
+          "v4_source"
+        ],
+        "code": [
+          "v4_code"
+        ],
+        "selectors": [
+          "claims.SMOOTH_LOCKED_EWMA_ADVANTAGE",
+          "upstream:T6.7.4:scientific_results.smooth.primary_contrast",
+          "upstream:T6.7.4:scientific_results.smooth.holm_confirmed_families"
+        ]
+      },
+      "display_target": "Fig. 3a; Table S2",
+      "current_result": {
+        "primary_contrast": {
+          "contrast": "ewma_adaptive_map_LER_minus_proposed_route_a_LER",
+          "estimate": 2.1687260380497668e-05,
+          "ci95_low": 1.9002843786168966e-05,
+          "ci95_high": 2.454828332971639e-05,
+          "one_sided_p_nonpositive": 4.999750012499375e-05,
+          "passes_95_lcb_strictly_greater_than_zero": true
+        },
+        "holm_confirmed_families": [
+          "periodic_drift"
+        ],
+        "route_a_is_global_best": false
+      },
+      "upgrade_or_revocation_condition": "A new frozen method must beat the strongest deployable baselines across preregistered families before global LER wording.",
+      "forbidden_wording": [
+        "best smooth decoder",
+        "advantage over static or Window MAP",
+        "all-family drift advantage"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "STATIC_GKP_SUPERIORITY",
+      "source_group": "V4_FINAL_GATE",
+      "source_state": "FALSIFIED",
+      "publication_state": "MANDATORY_NEGATIVE",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "Static joint MAP has lower average LER than Route-A on the frozen same-model smooth benchmark.",
+      "boundary_zh": "必须保留 static joint MAP 更优的反例，不得隐藏或改写为总体优势。",
+      "evidence_grade": "NEGATIVE",
+      "evidence_layers": {
+        "current": [
+          "PROJECT_NATIVE_SIMULATION"
+        ],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": true,
+        "conclusion": true,
+        "supplement": false,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v4_report"
+        ],
+        "raw_data": [
+          "v4_source"
+        ],
+        "code": [
+          "v4_code"
+        ],
+        "selectors": [
+          "claims.STATIC_GKP_SUPERIORITY",
+          "upstream:T6.8.7:claims.STATIC_GKP_SUPERIORITY"
+        ]
+      },
+      "display_target": "Fig. 3a; Table S2",
+      "current_result": {
+        "static_minus_route_a": {
+          "contrast": "static_full_MAP_LER_minus_Route_A_LER",
+          "estimate": -2.4548283329716452e-05,
+          "ci95_low": -3.9595144766348346e-05,
+          "ci95_high": -9.112887912326431e-06,
+          "one_sided_p_nonpositive": 0.9990000499975001,
+          "route_a_superiority_passes_lcb_gt_zero": false,
+          "cluster": "formal seed",
+          "clusters": 24,
+          "replicates": 20000,
+          "bootstrap_seed": 202607176999
+        },
+        "static_average_ler": 0.0009681913587782118,
+        "route_a_average_ler": 0.000992739642107928,
+        "static_worst_window_ler": 0.03125,
+        "route_a_worst_window_ler": 0.115234375
+      },
+      "upgrade_or_revocation_condition": "Requires a new preregistered same-model experiment with paired improvement CI above zero.",
+      "forbidden_wording": [
+        "Route-A outperforms static GKP",
+        "static-to-oracle gap closure"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "STATIC_K4_HARD_ACTION_EQUIVALENCE",
+      "source_group": "V4_FINAL_GATE",
+      "source_state": "SUPPORTED_PREBOARD_NARROW",
+      "publication_state": "RESULTS_ONLY",
+      "assertion_polarity": "POSITIVE",
+      "safe_wording_en": "For the frozen covariance/prior and complete 10-bit syndrome domain, K4/full static MAP hard actions are identical; resource reductions remain proxies until integrated implementation.",
+      "boundary_zh": "仅对冻结 covariance/prior 与完整 10-bit domain 的 hard action 等价成立。",
+      "evidence_grade": "PROJECT_NATIVE_PREBOARD",
+      "evidence_layers": {
+        "current": [
+          "PROJECT_NATIVE_SIMULATION",
+          "FIXED_POINT_INTEGER_REFERENCE"
+        ],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": true,
+        "conclusion": false,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v4_report"
+        ],
+        "raw_data": [
+          "v4_source"
+        ],
+        "code": [
+          "v4_code"
+        ],
+        "selectors": [
+          "claims.STATIC_K4_HARD_ACTION_EQUIVALENCE",
+          "upstream:T6.8.7:claims.STATIC_K4_HARD_ACTION_EQUIVALENCE"
+        ]
+      },
+      "display_target": "Table S3",
+      "current_result": {
+        "domain_points": 1048576,
+        "hard_action_disagreements": 0,
+        "retained_bits_k4": 512,
+        "retained_bits_full": 3200
+      },
+      "upgrade_or_revocation_condition": "Re-enumerate every changed model and integrate K4 into RTL/P&R before hardware promotion.",
+      "forbidden_wording": [
+        "K4 universally exact",
+        "measured FPGA compression advantage"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "TAIL_SAFETY_AND_IMPROVEMENT",
+      "source_group": "V4_FINAL_GATE",
+      "source_state": "SAFETY_NONINFERIORITY_ONLY",
+      "publication_state": "ALLOWED_RESTRICTED",
+      "assertion_polarity": "POSITIVE",
+      "safe_wording_en": "Abrupt/OOD gates establish locked-EWMA safety/non-inferiority under preregistered catastrophic and nominal margins, not broad tail-LER improvement.",
+      "boundary_zh": "结论是预注册 margin 下的 safety/non-inferiority，不是广义 tail-LER 改善。",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "evidence_layers": {
+        "current": [
+          "PROJECT_NATIVE_SIMULATION"
+        ],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": true,
+        "conclusion": true,
+        "supplement": false,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v4_report"
+        ],
+        "raw_data": [
+          "v4_source"
+        ],
+        "code": [
+          "v4_code"
+        ],
+        "selectors": [
+          "claims.TAIL_SAFETY_AND_IMPROVEMENT",
+          "upstream:T6.7.4:scientific_results.tail"
+        ]
+      },
+      "display_target": "Fig. 3b; Table S4",
+      "current_result": {
+        "tail_safety_gate_passes": true,
+        "confirmed_average_improvement_families": [],
+        "broad_tail_improvement_confirmed": false,
+        "exact_equal_average_families": [
+          "step_calibration_shift",
+          "telegraph_drift",
+          "readout_reset_fault",
+          "leakage_persistence",
+          "compound_ood"
+        ]
+      },
+      "upgrade_or_revocation_condition": "Requires preregistered induced-error reduction plus acceptable fallback/false-update costs across abrupt/compound families.",
+      "forbidden_wording": [
+        "tail advantage",
+        "fault robustness improvement",
+        "low-cost fallback"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "GENERAL_DRIFT_EXTERNAL_COMPARISON",
+      "source_group": "V4_FINAL_GATE",
+      "source_state": "PERFORMANCE_OUTCOME_BUDGET_FAIL",
+      "publication_state": "RESULTS_ONLY",
+      "assertion_polarity": "POSITIVE",
+      "safe_wording_en": "Route-A has lower paired LER than the pinned BOCD wrapper on common traces, while that external comparator fails the strict worst-update wall-clock budget; general drift-adaptive SOTA is not established.",
+      "boundary_zh": "BOCD 的 paired LER 结果必须与其 worst-update 预算失败同时报告。",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "evidence_layers": {
+        "current": [
+          "PROJECT_NATIVE_SIMULATION"
+        ],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": true,
+        "conclusion": false,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v4_report"
+        ],
+        "raw_data": [
+          "v4_source"
+        ],
+        "code": [
+          "v4_code"
+        ],
+        "selectors": [
+          "claims.GENERAL_DRIFT_EXTERNAL_COMPARISON",
+          "upstream:T6.8.7:claims.GENERAL_DRIFT_BOCD_OUTCOME",
+          "upstream:T6.8.7:claims.GENERAL_DRIFT_MATCHED_BUDGET_SOTA"
+        ]
+      },
+      "display_target": "Table S5",
+      "current_result": {
+        "paired_outcome": {
+          "external_minus_route_a": {
+            "contrast": "external_bocd_window_ewma_router_LER_minus_proposed_route_a_LER",
+            "estimate": 1.0018396859217312e-05,
+            "ci95_low": 7.667926826863132e-06,
+            "ci95_high": 1.2368866891571562e-05,
+            "left_worse_if_lcb_gt_zero": true,
+            "right_worse_if_ucb_lt_zero": false,
+            "clusters": 24,
+            "replicates": 20000
+          },
+          "route_a_equal_family_ler": 0.011959075927734375,
+          "external_equal_family_ler": 0.011969094324593593,
+          "external_update_worst_us": 13004.1,
+          "wallclock_cap_us": 5000.0,
+          "deadline_miss_count": 1
+        },
+        "sota_state": "NOT_ESTABLISHED"
+      },
+      "upgrade_or_revocation_condition": "At least two closest external methods must pass identical worst-case compute/wall-clock budgets.",
+      "forbidden_wording": [
+        "matched-budget external superiority",
+        "general drift-adaptive SOTA",
+        "Bhardwaj exact reproduction"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "PUVIANI_NMF_SURPASS",
+      "source_group": "V4_FINAL_GATE",
+      "source_state": "PROHIBITED_SOURCE_INCOMPLETE",
+      "publication_state": "PROHIBITED_POSITIVE",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "Official GQF paper-exact reproduction is blocked by missing/inconsistent source artifacts; no same-GQF lifetime comparison or NMF-surpass claim is available.",
+      "boundary_zh": "GQF 源码/协议未闭合，不得声称超过 NMF 寿命。",
+      "evidence_grade": "BLOCKED",
+      "evidence_layers": {
+        "current": [],
+        "required_for_upgrade": [
+          "OFFICIAL_CODE_REPRODUCTION"
+        ]
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": true,
+        "supplement": true,
+        "related_work": true
+      },
+      "evidence": {
+        "reports": [
+          "v4_report"
+        ],
+        "raw_data": [
+          "v4_source"
+        ],
+        "code": [
+          "v4_code"
+        ],
+        "selectors": [
+          "claims.PUVIANI_NMF_SURPASS",
+          "upstream:T6.8.7:claims.PUVIANI_NMF_SURPASS"
+        ]
+      },
+      "display_target": "Table S6 (blocked)",
+      "current_result": {
+        "paper_exact_passed": 0,
+        "paper_exact_failed": 15,
+        "exact_status": "NO_GO_SOURCE_INCOMPLETE",
+        "matched_branch": "INELIGIBLE_NEGATIVE_BRANCH_NO_MATCHED_RUN",
+        "matched_metric_non_null_count": 0
+      },
+      "upgrade_or_revocation_condition": "All 15 exact gates plus same-GQF matched lifetime LCB must pass; external missing artifacts are not imputed.",
+      "forbidden_wording": [
+        "surpasses Puviani NMF",
+        "longer physical lifetime than NMF",
+        "paper-exact reproduction"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "FPGA_DETERMINISTIC_ARCHITECTURE",
+      "source_group": "V4_FINAL_GATE",
+      "source_state": "SUPPORTED_PR_ESTIMATE",
+      "publication_state": "ALLOWED_RESTRICTED",
+      "assertion_polarity": "POSITIVE",
+      "safe_wording_en": "The no-student Route-A profile preserves the deterministic six-cycle architecture and passes three-seed open-source P&R at 27 MHz; Fmax/resources/power are estimates, not board measurements.",
+      "boundary_zh": "六周期、II=1、Fmax/资源均为预板或 post-route estimate。",
+      "evidence_grade": "PROJECT_NATIVE_PREBOARD",
+      "evidence_layers": {
+        "current": [
+          "FIXED_POINT_INTEGER_REFERENCE",
+          "CXXRTL_PREBOARD",
+          "POST_ROUTE_ESTIMATE"
+        ],
+        "required_for_upgrade": [
+          "BOARD_MEASURED"
+        ]
+      },
+      "placements": {
+        "title": false,
+        "abstract": true,
+        "results": true,
+        "conclusion": true,
+        "supplement": false,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v4_report"
+        ],
+        "raw_data": [
+          "v4_source"
+        ],
+        "code": [
+          "v4_code"
+        ],
+        "selectors": [
+          "claims.FPGA_DETERMINISTIC_ARCHITECTURE",
+          "upstream:T6.9.1:profiles.route_a_core_no_student",
+          "upstream:T6.9.1:evidence_boundary"
+        ]
+      },
+      "display_target": "Fig. 4a; Table 2",
+      "current_result": {
+        "fmax_mhz": {
+          "minimum": 39.13740921020508,
+          "median": 40.26413345336914,
+          "maximum": 40.402408599853516,
+          "spread": 1.2649993896484375
+        },
+        "resources": {
+          "LUT4": {
+            "used": 3859,
+            "available": 20736
+          },
+          "DFF": {
+            "used": 1069,
+            "available": 15552
+          },
+          "BSRAM": {
+            "used": 8,
+            "available": 46
+          },
+          "MULT18X18": {
+            "used": 1,
+            "available": 48
+          },
+          "MULT9X9": {
+            "used": 1,
+            "available": 96
+          },
+          "ALU": {
+            "used": 448,
+            "available": 15552
+          },
+          "IOB": {
+            "used": 18,
+            "available": 384
+          }
+        },
+        "clock_model_ns": 222.22222222222223,
+        "power_sensitivity_mw": {
+          "low": 2.0408889600000006,
+          "nominal": 12.245333760000001,
+          "high": 48.981335040000005
+        }
+      },
+      "upgrade_or_revocation_condition": "T6.9.2 must provide same-bitstream layered physical measurements.",
+      "forbidden_wording": [
+        "measured 222.222 ns",
+        "vendor timing closure",
+        "measured power",
+        "faster than prior FPGA decoders"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "BOARD_MEASURED_CORRECTNESS_LATENCY",
+      "source_group": "V4_FINAL_GATE",
+      "source_state": "BLOCKED_ALL_FIELDS_NULL",
+      "publication_state": "BLOCKED",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "No physical-board correctness, latency, deadline, jitter, resource-readback or power result is currently available.",
+      "boundary_zh": "42 个 measured 字段保持 null；不得用 P&R 数值填充。",
+      "evidence_grade": "BLOCKED",
+      "evidence_layers": {
+        "current": [],
+        "required_for_upgrade": [
+          "BOARD_MEASURED"
+        ]
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": true,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v4_report"
+        ],
+        "raw_data": [
+          "v4_source"
+        ],
+        "code": [
+          "v4_code"
+        ],
+        "selectors": [
+          "claims.BOARD_MEASURED_CORRECTNESS_LATENCY",
+          "upstream:T6.9.2:prerequisite_ledger",
+          "upstream:T6.9.2:measured_results",
+          "upstream:T6.9.2:claim_boundary"
+        ]
+      },
+      "display_target": "Table 2 measured rows (null)",
+      "current_result": {
+        "execution_branch": "BLOCKED_NO_PHYSICAL_BOARD_BITSTREAM_OR_TRANSPORT",
+        "null_measured_fields": 42,
+        "physical_prerequisites_failed": 6
+      },
+      "upgrade_or_revocation_condition": "Complete all nine T6.9.2 recovery conditions and rerun the final evidence gate.",
+      "forbidden_wording": [
+        "zero board deadline misses",
+        "measured source-to-action latency",
+        "measured board power"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "FPGA_SPEED_ADVANTAGE",
+      "source_group": "V4_FINAL_GATE",
+      "source_state": "PROHIBITED_NO_SAME_TASK_BOARD_COMPARATOR",
+      "publication_state": "PROHIBITED_POSITIVE",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "No FPGA speed advantage is supported because Route-A has no board measurement and the normalized literature table has zero same-task external comparator rows.",
+      "boundary_zh": "缺少同任务真板 comparator，不能声称 faster/fastest。",
+      "evidence_grade": "BLOCKED",
+      "evidence_layers": {
+        "current": [],
+        "required_for_upgrade": [
+          "BOARD_MEASURED"
+        ]
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": true,
+        "supplement": false,
+        "related_work": true
+      },
+      "evidence": {
+        "reports": [
+          "v4_report"
+        ],
+        "raw_data": [
+          "v4_source"
+        ],
+        "code": [
+          "v4_code"
+        ],
+        "selectors": [
+          "claims.FPGA_SPEED_ADVANTAGE",
+          "upstream:T6.8.7:claims.FPGA_SPEED_ADVANTAGE",
+          "upstream:T6.9.2:claim_boundary"
+        ]
+      },
+      "display_target": "Table 2 comparison row (not ranked)",
+      "current_result": {
+        "same_task_external_comparator_count": 0,
+        "board_measured": false,
+        "speed_state": "PROHIBITED"
+      },
+      "upgrade_or_revocation_condition": "Requires T6.9.2 physical measurement and a T6.8.6 same-task comparable subset.",
+      "forbidden_wording": [
+        "fastest",
+        "SOTA FPGA decoder",
+        "lower latency than existing FPGA decoder"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "CNN_AND_HMM_ROLE",
+      "source_group": "V4_FINAL_GATE",
+      "source_state": "CNN_ABLATION_HMM_SOFTWARE_ONLY",
+      "publication_state": "META_BOUNDARY",
+      "assertion_polarity": "META",
+      "safe_wording_en": "CNN/teacher/student remain optional learning ablations, and HMM posterior inference remains a software slow loop; MAP/FSM components own the primary deployable claim.",
+      "boundary_zh": "legacy CNN residual 仅为消融，HMM 仅为软件慢回路。",
+      "evidence_grade": "META",
+      "evidence_layers": {
+        "current": [
+          "PROJECT_NATIVE_SIMULATION"
+        ],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": true,
+        "conclusion": true,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v4_report"
+        ],
+        "raw_data": [
+          "v4_source"
+        ],
+        "code": [
+          "v4_code"
+        ],
+        "selectors": [
+          "claims.CNN_AND_HMM_ROLE",
+          "upstream:T6.7.4:claim_registry.CNN_PRIMARY",
+          "upstream:T6.7.4:scientific_results.rtl.hmm_is_in_rtl",
+          "upstream:T6.9.1:pareto_decision"
+        ]
+      },
+      "display_target": "Fig. 1; ablation Table S7",
+      "current_result": {
+        "cnn_state": "ABLATION_ONLY",
+        "hmm_is_in_rtl": false,
+        "selected_hardware_profile": "route_a_core_no_student"
+      },
+      "upgrade_or_revocation_condition": "A new matched schema/budget performance gate and functional integrated RTL are required for promotion.",
+      "forbidden_wording": [
+        "CNN-centric decoder",
+        "HMM implemented on FPGA",
+        "learning module causes primary LER gain"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "V5-ALG-LER-10PCT",
+      "source_group": "V5_EARLY_STOP",
+      "source_state": "REVOKED",
+      "publication_state": "PROHIBITED_POSITIVE",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "The preregistered V5 claim of at least 10% LER reduction was revoked at the causal-headroom gate.",
+      "boundary_zh": "该项服从 T6.10.1 早停，不得用 V4 或 Phase 6C 结果替代。",
+      "evidence_grade": "BLOCKED",
+      "evidence_layers": {
+        "current": [],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": true,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v5_report"
+        ],
+        "raw_data": [
+          "v5_source"
+        ],
+        "code": [
+          "v5_code"
+        ],
+        "selectors": [
+          "claim_registry.V5-ALG-LER-10PCT"
+        ]
+      },
+      "display_target": "Boundary Table S1",
+      "current_result": {
+        "reason": "strict-causal development headroom is below 10%"
+      },
+      "upgrade_or_revocation_condition": "Only a new preregistered route may reopen this claim.",
+      "forbidden_wording": [
+        "V5 outperforms",
+        "V5 is state-of-the-art",
+        "V5 hardware result"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "V5-TAIL-CALIBRATION-TELEGRAPH",
+      "source_group": "V5_EARLY_STOP",
+      "source_state": "NOT_RUN_EARLY_STOP",
+      "publication_state": "PROHIBITED_POSITIVE",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "No V5 calibration/telegraph tail experiment was run after the preregistered early stop.",
+      "boundary_zh": "该项服从 T6.10.1 早停，不得用 V4 或 Phase 6C 结果替代。",
+      "evidence_grade": "BLOCKED",
+      "evidence_layers": {
+        "current": [],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": true,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v5_report"
+        ],
+        "raw_data": [
+          "v5_source"
+        ],
+        "code": [
+          "v5_code"
+        ],
+        "selectors": [
+          "claim_registry.V5-TAIL-CALIBRATION-TELEGRAPH"
+        ]
+      },
+      "display_target": "Boundary Table S1",
+      "current_result": {
+        "reason": "no V5 candidate entered pilot/formal"
+      },
+      "upgrade_or_revocation_condition": "Only a new preregistered route may reopen this claim.",
+      "forbidden_wording": [
+        "V5 outperforms",
+        "V5 is state-of-the-art",
+        "V5 hardware result"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "V5-POSTERIOR-MIXTURE-ACTION",
+      "source_group": "V5_EARLY_STOP",
+      "source_state": "REVOKED",
+      "publication_state": "PROHIBITED_POSITIVE",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "The proposed V5 posterior-mixture action claim was revoked because incremental action-space headroom was below its entry gate.",
+      "boundary_zh": "该项服从 T6.10.1 早停，不得用 V4 或 Phase 6C 结果替代。",
+      "evidence_grade": "BLOCKED",
+      "evidence_layers": {
+        "current": [],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": true,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v5_report"
+        ],
+        "raw_data": [
+          "v5_source"
+        ],
+        "code": [
+          "v5_code"
+        ],
+        "selectors": [
+          "claim_registry.V5-POSTERIOR-MIXTURE-ACTION"
+        ]
+      },
+      "display_target": "Boundary Table S1",
+      "current_result": {
+        "reason": "incremental action-space upper bound is below 12%"
+      },
+      "upgrade_or_revocation_condition": "Only a new preregistered route may reopen this claim.",
+      "forbidden_wording": [
+        "V5 outperforms",
+        "V5 is state-of-the-art",
+        "V5 hardware result"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "V5-UNTOUCHED-FORMAL",
+      "source_group": "V5_EARLY_STOP",
+      "source_state": "NOT_RUN_EARLY_STOP",
+      "publication_state": "PROHIBITED_POSITIVE",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "No untouched V5 formal split was accessed or produced.",
+      "boundary_zh": "该项服从 T6.10.1 早停，不得用 V4 或 Phase 6C 结果替代。",
+      "evidence_grade": "BLOCKED",
+      "evidence_layers": {
+        "current": [],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": true,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v5_report"
+        ],
+        "raw_data": [
+          "v5_source"
+        ],
+        "code": [
+          "v5_code"
+        ],
+        "selectors": [
+          "claim_registry.V5-UNTOUCHED-FORMAL"
+        ]
+      },
+      "display_target": "Boundary Table S1",
+      "current_result": {
+        "reason": "formal manifest and outputs intentionally absent"
+      },
+      "upgrade_or_revocation_condition": "Only a new preregistered route may reopen this claim.",
+      "forbidden_wording": [
+        "V5 outperforms",
+        "V5 is state-of-the-art",
+        "V5 hardware result"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "V5-QUANTIZED-RETENTION",
+      "source_group": "V5_EARLY_STOP",
+      "source_state": "NOT_RUN_EARLY_STOP",
+      "publication_state": "PROHIBITED_POSITIVE",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "No V5 quantized-retention result exists because no candidate entered implementation.",
+      "boundary_zh": "该项服从 T6.10.1 早停，不得用 V4 或 Phase 6C 结果替代。",
+      "evidence_grade": "BLOCKED",
+      "evidence_layers": {
+        "current": [],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": true,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v5_report"
+        ],
+        "raw_data": [
+          "v5_source"
+        ],
+        "code": [
+          "v5_code"
+        ],
+        "selectors": [
+          "claim_registry.V5-QUANTIZED-RETENTION"
+        ]
+      },
+      "display_target": "Boundary Table S1",
+      "current_result": {
+        "reason": "no eligible V5 action to quantize"
+      },
+      "upgrade_or_revocation_condition": "Only a new preregistered route may reopen this claim.",
+      "forbidden_wording": [
+        "V5 outperforms",
+        "V5 is state-of-the-art",
+        "V5 hardware result"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "V5-LONG-CXXRTL",
+      "source_group": "V5_EARLY_STOP",
+      "source_state": "NOT_RUN_EARLY_STOP",
+      "publication_state": "PROHIBITED_POSITIVE",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "The V4 long CXXRTL replay does not qualify a nonexistent V5 design.",
+      "boundary_zh": "该项服从 T6.10.1 早停，不得用 V4 或 Phase 6C 结果替代。",
+      "evidence_grade": "BLOCKED",
+      "evidence_layers": {
+        "current": [],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": true,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v5_report"
+        ],
+        "raw_data": [
+          "v5_source"
+        ],
+        "code": [
+          "v5_code"
+        ],
+        "selectors": [
+          "claim_registry.V5-LONG-CXXRTL"
+        ]
+      },
+      "display_target": "Boundary Table S1",
+      "current_result": {
+        "reason": "V4 replay cannot substitute for V5 qualification"
+      },
+      "upgrade_or_revocation_condition": "Only a new preregistered route may reopen this claim.",
+      "forbidden_wording": [
+        "V5 outperforms",
+        "V5 is state-of-the-art",
+        "V5 hardware result"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "V5-FORMAL-ATOMIC-SAFETY",
+      "source_group": "V5_EARLY_STOP",
+      "source_state": "NOT_RUN_EARLY_STOP",
+      "publication_state": "PROHIBITED_POSITIVE",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "No V5 formal atomic-safety result exists.",
+      "boundary_zh": "该项服从 T6.10.1 早停，不得用 V4 或 Phase 6C 结果替代。",
+      "evidence_grade": "BLOCKED",
+      "evidence_layers": {
+        "current": [],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": true,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v5_report"
+        ],
+        "raw_data": [
+          "v5_source"
+        ],
+        "code": [
+          "v5_code"
+        ],
+        "selectors": [
+          "claim_registry.V5-FORMAL-ATOMIC-SAFETY"
+        ]
+      },
+      "display_target": "Boundary Table S1",
+      "current_result": {
+        "reason": "no V5 RTL/profile exists"
+      },
+      "upgrade_or_revocation_condition": "Only a new preregistered route may reopen this claim.",
+      "forbidden_wording": [
+        "V5 outperforms",
+        "V5 is state-of-the-art",
+        "V5 hardware result"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "V5-MULTISEED-PR",
+      "source_group": "V5_EARLY_STOP",
+      "source_state": "NOT_RUN_EARLY_STOP",
+      "publication_state": "PROHIBITED_POSITIVE",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "No V5 multi-seed place-and-route result exists.",
+      "boundary_zh": "该项服从 T6.10.1 早停，不得用 V4 或 Phase 6C 结果替代。",
+      "evidence_grade": "BLOCKED",
+      "evidence_layers": {
+        "current": [],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": true,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v5_report"
+        ],
+        "raw_data": [
+          "v5_source"
+        ],
+        "code": [
+          "v5_code"
+        ],
+        "selectors": [
+          "claim_registry.V5-MULTISEED-PR"
+        ]
+      },
+      "display_target": "Boundary Table S1",
+      "current_result": {
+        "reason": "no V5 RTL/profile exists"
+      },
+      "upgrade_or_revocation_condition": "Only a new preregistered route may reopen this claim.",
+      "forbidden_wording": [
+        "V5 outperforms",
+        "V5 is state-of-the-art",
+        "V5 hardware result"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "V5-MEASURED-HARDWARE",
+      "source_group": "V5_EARLY_STOP",
+      "source_state": "BLOCKED",
+      "publication_state": "BLOCKED",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "V5 board measurement remains blocked and all measured fields remain null.",
+      "boundary_zh": "该项服从 T6.10.1 早停，不得用 V4 或 Phase 6C 结果替代。",
+      "evidence_grade": "BLOCKED",
+      "evidence_layers": {
+        "current": [],
+        "required_for_upgrade": [
+          "BOARD_MEASURED"
+        ]
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": true,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "v5_report"
+        ],
+        "raw_data": [
+          "v5_source"
+        ],
+        "code": [
+          "v5_code"
+        ],
+        "selectors": [
+          "claim_registry.V5-MEASURED-HARDWARE"
+        ]
+      },
+      "display_target": "Boundary Table S1",
+      "current_result": {
+        "reason": "T6.9.2 still has 42 null measured fields"
+      },
+      "upgrade_or_revocation_condition": "Only a new preregistered route may reopen this claim.",
+      "forbidden_wording": [
+        "V5 outperforms",
+        "V5 is state-of-the-art",
+        "V5 hardware result"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "PHASE6C-READONLY-AUX",
+      "source_group": "V5_EARLY_STOP",
+      "source_state": "ALLOWED_AFTER_THIS_GATE",
+      "publication_state": "META_BOUNDARY",
+      "assertion_polarity": "META",
+      "safe_wording_en": "Phase 6C is a read-only secondary evidence layer and cannot rescue or upgrade Phase 6B.",
+      "boundary_zh": "该项服从 T6.10.1 早停，不得用 V4 或 Phase 6C 结果替代。",
+      "evidence_grade": "META",
+      "evidence_layers": {
+        "current": [],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": false,
+        "supplement": true,
+        "related_work": true
+      },
+      "evidence": {
+        "reports": [
+          "v5_report"
+        ],
+        "raw_data": [
+          "v5_source"
+        ],
+        "code": [
+          "v5_code"
+        ],
+        "selectors": [
+          "claim_registry.PHASE6C-READONLY-AUX"
+        ]
+      },
+      "display_target": "Boundary Table S1",
+      "current_result": {
+        "reason": "secondary lanes cannot modify or rescue Phase 6B"
+      },
+      "upgrade_or_revocation_condition": "Only a new preregistered route may reopen this claim.",
+      "forbidden_wording": [
+        "V5 outperforms",
+        "V5 is state-of-the-art",
+        "V5 hardware result"
+      ],
+      "lane_id": null
+    },
+    {
+      "claim_id": "P6C-SINGLE-CI-CPD-EQUIVALENCE",
+      "source_group": "PHASE6C_SECONDARY",
+      "source_state": "SUPPORTED_NARROW",
+      "publication_state": "RESULTS_ONLY",
+      "assertion_polarity": "POSITIVE",
+      "safe_wording_en": "For a single-mode square lattice with Euclidean distance, closest-point decoding reduces exactly to closest-integer binning; MAP boundaries remain distinct.",
+      "boundary_zh": "CI=Euclidean CPD 只在冻结的 single-mode square-lattice 条件成立。",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "evidence_layers": {
+        "current": [
+          "PROJECT_NATIVE_SIMULATION"
+        ],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": true,
+        "conclusion": false,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "phase6c_report",
+          "single_cpd_report"
+        ],
+        "raw_data": [
+          "phase6c_source",
+          "single_cpd_source"
+        ],
+        "code": [
+          "phase6c_code",
+          "single_cpd_code"
+        ],
+        "selectors": [
+          "cells.single_standard_binning_pl",
+          "upstream.proof_contract",
+          "upstream.production_domain",
+          "upstream.boundary_audit"
+        ]
+      },
+      "display_target": "Table S8",
+      "current_result": {
+        "atlas_cells": {
+          "single_standard_binning_pl": {
+            "metric_id": "p_L",
+            "value": 0.0009786111337167244,
+            "value_state": "REPRODUCED_VALUE",
+            "evidence_grade": "PROJECT_NATIVE_MATCHED"
+          }
+        },
+        "upstream_reports": {
+          "single_cpd_report": {
+            "task_id": "T6.17.1",
+            "verdict": "PASS_SINGLE_MODE_EUCLIDEAN_CPD_EQUALS_CI_WITH_MAP_BOUNDARIES"
+          }
+        }
+      },
+      "upgrade_or_revocation_condition": "A new preregistered same-task lane is required for any broader comparison.",
+      "forbidden_wording": [
+        "global winner",
+        "overall SOTA",
+        "faster than all FPGA decoders",
+        "rescues V5"
+      ],
+      "lane_id": "single_mode_decoder"
+    },
+    {
+      "claim_id": "P6C-SURFACE-NOH-CI-ML",
+      "source_group": "PHASE6C_SECONDARY",
+      "source_state": "PROJECT_NATIVE_MATCHED",
+      "publication_state": "RESULTS_ONLY",
+      "assertion_polarity": "POSITIVE",
+      "safe_wording_en": "A project-native matched replay of the Noh CNOT model yields lower failure probabilities for ML than CI at 9, 12 and 13 dB.",
+      "boundary_zh": "这是 outer-code/gate lane 的 project-native matched replay，不是本项目 single-mode 主系统排名。",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "evidence_layers": {
+        "current": [
+          "PROJECT_NATIVE_SIMULATION"
+        ],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": true,
+        "conclusion": false,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "phase6c_report",
+          "surface_cnot_report"
+        ],
+        "raw_data": [
+          "phase6c_source",
+          "surface_cnot_source"
+        ],
+        "code": [
+          "phase6c_code",
+          "surface_cnot_code"
+        ],
+        "selectors": [
+          "cells.surface_ci_9p0db",
+          "cells.surface_ml_9p0db",
+          "cells.surface_ci_12p0db",
+          "cells.surface_ml_12p0db",
+          "cells.surface_ci_13p0db",
+          "cells.surface_ml_13p0db",
+          "upstream.model_contract",
+          "upstream.points",
+          "upstream.multiplicity",
+          "upstream.boundary_audit"
+        ]
+      },
+      "display_target": "Fig. S1",
+      "current_result": {
+        "atlas_cells": {
+          "surface_ci_9p0db": {
+            "metric_id": "cnot_failure_probability",
+            "value": 0.1001434326171875,
+            "value_state": "REPRODUCED_VALUE",
+            "evidence_grade": "PROJECT_NATIVE_MATCHED"
+          },
+          "surface_ml_9p0db": {
+            "metric_id": "cnot_failure_probability",
+            "value": 0.068939208984375,
+            "value_state": "REPRODUCED_VALUE",
+            "evidence_grade": "PROJECT_NATIVE_MATCHED"
+          },
+          "surface_ci_12p0db": {
+            "metric_id": "cnot_failure_probability",
+            "value": 0.008724636501736112,
+            "value_state": "REPRODUCED_VALUE",
+            "evidence_grade": "PROJECT_NATIVE_MATCHED"
+          },
+          "surface_ml_12p0db": {
+            "metric_id": "cnot_failure_probability",
+            "value": 0.003658718532986111,
+            "value_state": "REPRODUCED_VALUE",
+            "evidence_grade": "PROJECT_NATIVE_MATCHED"
+          },
+          "surface_ci_13p0db": {
+            "metric_id": "cnot_failure_probability",
+            "value": 0.002623686919341216,
+            "value_state": "REPRODUCED_VALUE",
+            "evidence_grade": "PROJECT_NATIVE_MATCHED"
+          },
+          "surface_ml_13p0db": {
+            "metric_id": "cnot_failure_probability",
+            "value": 0.0008400581978462838,
+            "value_state": "REPRODUCED_VALUE",
+            "evidence_grade": "PROJECT_NATIVE_MATCHED"
+          }
+        },
+        "upstream_reports": {
+          "surface_cnot_report": {
+            "task_id": "T6.17.2",
+            "verdict": "PASS_PROJECT_NATIVE_MATCHED_NOH_CNOT_CI_ML_REPRODUCTION"
+          }
+        }
+      },
+      "upgrade_or_revocation_condition": "A new preregistered same-task lane is required for any broader comparison.",
+      "forbidden_wording": [
+        "global winner",
+        "overall SOTA",
+        "faster than all FPGA decoders",
+        "rescues V5"
+      ],
+      "lane_id": "surface_gkp_gate_outer_code"
+    },
+    {
+      "claim_id": "P6C-STRUCTURED-OFFICIAL-CPD",
+      "source_group": "PHASE6C_SECONDARY",
+      "source_state": "OFFICIAL_REPRODUCTION",
+      "publication_state": "RESULTS_ONLY",
+      "assertion_polarity": "POSITIVE",
+      "safe_wording_en": "The pinned official structured-lattice code reproduces small-distance CPD and analog-MWPM crossings near sigma=0.6025 and 0.5996, respectively.",
+      "boundary_zh": "只报告官方代码的小距离 crossing；不得外推到 single-mode 主任务或更大距离阈值。",
+      "evidence_grade": "OFFICIAL_CODE_REPRODUCTION",
+      "evidence_layers": {
+        "current": [
+          "OFFICIAL_CODE_REPRODUCTION"
+        ],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": true,
+        "conclusion": false,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "phase6c_report",
+          "official_cpd_report"
+        ],
+        "raw_data": [
+          "phase6c_source",
+          "official_cpd_source"
+        ],
+        "code": [
+          "phase6c_code",
+          "official_cpd_code"
+        ],
+        "selectors": [
+          "cells.structured_official_cpd_threshold",
+          "cells.structured_official_analog_mwpm_threshold",
+          "upstream.official_import",
+          "upstream.independent_experiment",
+          "upstream.evidence_boundary"
+        ]
+      },
+      "display_target": "Fig. S2",
+      "current_result": {
+        "atlas_cells": {
+          "structured_official_cpd_threshold": {
+            "metric_id": "noise_threshold_sigma",
+            "value": 0.6024563484296794,
+            "value_state": "REPRODUCED_VALUE",
+            "evidence_grade": "OFFICIAL_CODE_REPRODUCTION"
+          },
+          "structured_official_analog_mwpm_threshold": {
+            "metric_id": "noise_threshold_sigma",
+            "value": 0.5995937637028759,
+            "value_state": "REPRODUCED_VALUE",
+            "evidence_grade": "OFFICIAL_CODE_REPRODUCTION"
+          }
+        },
+        "upstream_reports": {
+          "official_cpd_report": {
+            "task_id": "T6.18.2",
+            "verdict": "PASS_OFFICIAL_CPD_SMALL_DISTANCE_THRESHOLD_REPRODUCTION_WITH_UPSTREAM_CAVEAT"
+          }
+        }
+      },
+      "upgrade_or_revocation_condition": "A new preregistered same-task lane is required for any broader comparison.",
+      "forbidden_wording": [
+        "global winner",
+        "overall SOTA",
+        "faster than all FPGA decoders",
+        "rescues V5"
+      ],
+      "lane_id": "multimode_structured_lattice_cpd"
+    },
+    {
+      "claim_id": "P6C-MULTIMODE-POSTERIOR-WEIGHTED",
+      "source_group": "PHASE6C_SECONDARY",
+      "source_state": "PROJECT_NATIVE_MATCHED",
+      "publication_state": "RESULTS_ONLY",
+      "assertion_polarity": "POSITIVE",
+      "safe_wording_en": "On the frozen multimode secondary split, observed-only posterior-predictive weighted CPD lowers aggregate pL relative to both static Euclidean and weighted-static CPD.",
+      "boundary_zh": "正结果仅属于独立 multimode secondary split，不进入 V5 >=10% 分母或 Route-A 主排名。",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "evidence_layers": {
+        "current": [
+          "PROJECT_NATIVE_SIMULATION"
+        ],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": true,
+        "conclusion": false,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "phase6c_report",
+          "multimode_report"
+        ],
+        "raw_data": [
+          "phase6c_source",
+          "multimode_source"
+        ],
+        "code": [
+          "phase6c_code",
+          "multimode_code"
+        ],
+        "selectors": [
+          "cells.multimode_static_euclidean_pl",
+          "cells.multimode_weighted_static_pl",
+          "cells.multimode_observed_only_posterior_predictive_weighted_pl",
+          "upstream.method_contract",
+          "upstream.summaries",
+          "upstream.comparisons",
+          "upstream.formal_counts"
+        ]
+      },
+      "display_target": "Fig. S3",
+      "current_result": {
+        "atlas_cells": {
+          "multimode_static_euclidean_pl": {
+            "metric_id": "p_L",
+            "value": 0.236929375,
+            "value_state": "REPRODUCED_VALUE",
+            "evidence_grade": "PROJECT_NATIVE_MATCHED"
+          },
+          "multimode_weighted_static_pl": {
+            "metric_id": "p_L",
+            "value": 0.26167854166666665,
+            "value_state": "REPRODUCED_VALUE",
+            "evidence_grade": "PROJECT_NATIVE_MATCHED"
+          },
+          "multimode_observed_only_posterior_predictive_weighted_pl": {
+            "metric_id": "p_L",
+            "value": 0.1722609375,
+            "value_state": "REPRODUCED_VALUE",
+            "evidence_grade": "PROJECT_NATIVE_MATCHED"
+          }
+        },
+        "upstream_reports": {
+          "multimode_report": {
+            "task_id": "T6.18.3",
+            "verdict": "GO_POSTERIOR_WEIGHTED_CPD_DRIFT_GAIN"
+          }
+        }
+      },
+      "upgrade_or_revocation_condition": "A new preregistered same-task lane is required for any broader comparison.",
+      "forbidden_wording": [
+        "global winner",
+        "overall SOTA",
+        "faster than all FPGA decoders",
+        "rescues V5"
+      ],
+      "lane_id": "multimode_structured_lattice_cpd"
+    },
+    {
+      "claim_id": "P6C-LEARNED-ELIGIBILITY",
+      "source_group": "PHASE6C_SECONDARY",
+      "source_state": "ZERO_ELIGIBLE",
+      "publication_state": "MANDATORY_NEGATIVE",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "No learned checkpoint satisfies the frozen same-task schema, observation, action and budget eligibility contract.",
+      "boundary_zh": "learned comparator 数量为零，不能用近似网络或旧 checkpoint 填补。",
+      "evidence_grade": "NEGATIVE",
+      "evidence_layers": {
+        "current": [
+          "PROJECT_NATIVE_SIMULATION"
+        ],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": true,
+        "conclusion": true,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "phase6c_report",
+          "learned_report"
+        ],
+        "raw_data": [
+          "phase6c_source",
+          "learned_source"
+        ],
+        "code": [
+          "phase6c_code",
+          "learned_code"
+        ],
+        "selectors": [
+          "cells.controller_learned_same_task",
+          "upstream.required_signature",
+          "upstream.candidates",
+          "upstream.eligibility_summary"
+        ]
+      },
+      "display_target": "Table S9",
+      "current_result": {
+        "atlas_cells": {
+          "controller_learned_same_task": {
+            "metric_id": "ler_reduction_fraction",
+            "value": null,
+            "value_state": "NULL_NOT_REPORTED",
+            "evidence_grade": "INELIGIBLE"
+          }
+        },
+        "upstream_reports": {
+          "learned_report": {
+            "task_id": "T6.17.3",
+            "verdict": "PASS_READONLY_LEARNED_ELIGIBILITY_NO_SAME_TASK_CHECKPOINT"
+          }
+        }
+      },
+      "upgrade_or_revocation_condition": "A new preregistered same-task lane is required for any broader comparison.",
+      "forbidden_wording": [
+        "global winner",
+        "overall SOTA",
+        "faster than all FPGA decoders",
+        "rescues V5"
+      ],
+      "lane_id": "controller_rl_nmf"
+    },
+    {
+      "claim_id": "P6C-NMF-GQF",
+      "source_group": "PHASE6C_SECONDARY",
+      "source_state": "BLOCKED",
+      "publication_state": "BLOCKED",
+      "assertion_polarity": "NEGATIVE",
+      "safe_wording_en": "Official GQF/NMF reproduction and a same-task lifetime comparison remain blocked; no NMF-surpass conclusion is available.",
+      "boundary_zh": "源码/协议缺口与跨 simulator lifetime 不可比性必须保留。",
+      "evidence_grade": "BLOCKED",
+      "evidence_layers": {
+        "current": [],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": true,
+        "supplement": true,
+        "related_work": true
+      },
+      "evidence": {
+        "reports": [
+          "phase6c_report",
+          "gqf_exact_report",
+          "gqf_gate_report"
+        ],
+        "raw_data": [
+          "phase6c_source",
+          "gqf_exact_source",
+          "gqf_gate_source"
+        ],
+        "code": [
+          "phase6c_code",
+          "gqf_exact_code",
+          "gqf_gate_code"
+        ],
+        "selectors": [
+          "cells.controller_gqf_exact",
+          "cells.controller_gqf_route_a_rank",
+          "upstream.exact_qualification",
+          "upstream.exact_reproduction_status",
+          "upstream.prerequisite_ledger",
+          "upstream.matched_comparison_metrics"
+        ]
+      },
+      "display_target": "Table S9 (blocked)",
+      "current_result": {
+        "atlas_cells": {
+          "controller_gqf_exact": {
+            "metric_id": "lifetime_gain_ratio",
+            "value": null,
+            "value_state": "FAILED",
+            "evidence_grade": "BLOCKED"
+          },
+          "controller_gqf_route_a_rank": {
+            "metric_id": "ler_reduction_fraction",
+            "value": null,
+            "value_state": "NEGATIVE",
+            "evidence_grade": "NEGATIVE"
+          }
+        },
+        "upstream_reports": {
+          "gqf_exact_report": {
+            "task_id": "T6.8.4",
+            "verdict": "COMPLETE_GQF_PAPER_EXACT_ATTEMPT_NO_GO_SOURCE_INCOMPLETE"
+          },
+          "gqf_gate_report": {
+            "task_id": "T6.8.5",
+            "verdict": "COMPLETE_T6_8_5_INELIGIBLE_NEGATIVE_BRANCH"
+          }
+        }
+      },
+      "upgrade_or_revocation_condition": "A new preregistered same-task lane is required for any broader comparison.",
+      "forbidden_wording": [
+        "global winner",
+        "overall SOTA",
+        "faster than all FPGA decoders",
+        "rescues V5"
+      ],
+      "lane_id": "controller_rl_nmf"
+    },
+    {
+      "claim_id": "P6C-AQEC-WALLCLOCK",
+      "source_group": "PHASE6C_SECONDARY",
+      "source_state": "PROJECT_NATIVE_ONLY",
+      "publication_state": "RESULTS_ONLY",
+      "assertion_polarity": "POSITIVE",
+      "safe_wording_en": "The common-wall-clock AQEC replay is project-native and reports active-versus-autonomous outcomes, while official-protocol reproduction remains blocked.",
+      "boundary_zh": "不能把 project-native 700-us wall-clock replay 写成官方 AQEC 物理复现或零延迟控制。",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "evidence_layers": {
+        "current": [
+          "PROJECT_NATIVE_SIMULATION"
+        ],
+        "required_for_upgrade": []
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": true,
+        "conclusion": false,
+        "supplement": true,
+        "related_work": false
+      },
+      "evidence": {
+        "reports": [
+          "phase6c_report",
+          "aqec_report"
+        ],
+        "raw_data": [
+          "phase6c_source",
+          "aqec_source"
+        ],
+        "code": [
+          "phase6c_code",
+          "aqec_code"
+        ],
+        "selectors": [
+          "cells.aqec_cutoff12_high_measurement_feedback",
+          "cells.aqec_cutoff12_high_autonomous",
+          "cells.aqec_official_protocol_blocked",
+          "upstream.cells",
+          "upstream.project_result",
+          "upstream.official_protocol_reproduction"
+        ]
+      },
+      "display_target": "Fig. S4",
+      "current_result": {
+        "atlas_cells": {
+          "aqec_cutoff12_high_measurement_feedback": {
+            "metric_id": "lifetime_gain_ratio",
+            "value": 0.26043829289388487,
+            "value_state": "REPRODUCED_VALUE",
+            "evidence_grade": "PROJECT_NATIVE_MATCHED"
+          },
+          "aqec_cutoff12_high_autonomous": {
+            "metric_id": "lifetime_gain_ratio",
+            "value": 0.24578455202481556,
+            "value_state": "REPRODUCED_VALUE",
+            "evidence_grade": "PROJECT_NATIVE_MATCHED"
+          },
+          "aqec_official_protocol_blocked": {
+            "metric_id": "lifetime_gain_ratio",
+            "value": null,
+            "value_state": "FAILED",
+            "evidence_grade": "BLOCKED"
+          }
+        },
+        "upstream_reports": {
+          "aqec_report": {
+            "task_id": "T6.18.1",
+            "verdict": "PASS_PROJECT_NATIVE_AQEC_WALLCLOCK_WITH_OFFICIAL_PROTOCOL_BLOCKED"
+          }
+        }
+      },
+      "upgrade_or_revocation_condition": "A new preregistered same-task lane is required for any broader comparison.",
+      "forbidden_wording": [
+        "global winner",
+        "overall SOTA",
+        "faster than all FPGA decoders",
+        "rescues V5"
+      ],
+      "lane_id": "aqec_wallclock"
+    },
+    {
+      "claim_id": "P6C-FPGA-NORMALIZATION",
+      "source_group": "PHASE6C_SECONDARY",
+      "source_state": "DESCRIPTIVE_ONLY",
+      "publication_state": "RELATED_WORK_ONLY",
+      "assertion_polarity": "META",
+      "safe_wording_en": "The FPGA atlas reports literature values and project post-route estimates descriptively; it contains zero same-task external comparator rows and supports no speed ranking.",
+      "boundary_zh": "18 个外部实现只作规范化 related-work atlas；null 不填补、跨任务不排名。",
+      "evidence_grade": "LITERATURE_ONLY",
+      "evidence_layers": {
+        "current": [
+          "LITERATURE_ONLY",
+          "POST_ROUTE_ESTIMATE"
+        ],
+        "required_for_upgrade": [
+          "BOARD_MEASURED"
+        ]
+      },
+      "placements": {
+        "title": false,
+        "abstract": false,
+        "results": false,
+        "conclusion": false,
+        "supplement": true,
+        "related_work": true
+      },
+      "evidence": {
+        "reports": [
+          "phase6c_report",
+          "preboard_report",
+          "external_fpga_report"
+        ],
+        "raw_data": [
+          "phase6c_source",
+          "preboard_source",
+          "external_fpga_source"
+        ],
+        "code": [
+          "phase6c_code",
+          "preboard_code",
+          "external_fpga_code"
+        ],
+        "selectors": [
+          "cells.fpga_project_latency_ns",
+          "cells.fpga_project_initiation_interval_ns",
+          "cells.fpga_external_same_task",
+          "cells.fpga_board_latency_null",
+          "upstream.hardware_profiles",
+          "upstream.board_measurement_state",
+          "upstream.external_rows",
+          "upstream.comparison_eligibility",
+          "upstream.claim_boundary"
+        ]
+      },
+      "display_target": "Table S10",
+      "current_result": {
+        "atlas_cells": {
+          "fpga_project_latency_ns": {
+            "metric_id": "latency_ns",
+            "value": 222.2222222222222,
+            "value_state": "ESTIMATE_VALUE",
+            "evidence_grade": "PROJECT_NATIVE_MATCHED"
+          },
+          "fpga_project_initiation_interval_ns": {
+            "metric_id": "initiation_interval_ns",
+            "value": 37.03703703703704,
+            "value_state": "ESTIMATE_VALUE",
+            "evidence_grade": "PROJECT_NATIVE_MATCHED"
+          },
+          "fpga_external_same_task": {
+            "metric_id": "latency_ns",
+            "value": null,
+            "value_state": "NEGATIVE",
+            "evidence_grade": "NEGATIVE"
+          },
+          "fpga_board_latency_null": {
+            "metric_id": "latency_ns",
+            "value": null,
+            "value_state": "NULL_NOT_REPORTED",
+            "evidence_grade": "BLOCKED"
+          }
+        },
+        "upstream_reports": {
+          "preboard_report": {
+            "task_id": "T6.19.1",
+            "verdict": "PASS_STATIC_MAP_LUT_PREBOARD_PROFILE_OTHERS_NA_HOST_STAGES_SEPARATE"
+          },
+          "external_fpga_report": {
+            "task_id": "T6.19.2",
+            "verdict": "PASS_EXTERNAL_FPGA_REFRESH_ZERO_SAME_TASK_NO_SPEED_CLAIM"
+          }
+        }
+      },
+      "upgrade_or_revocation_condition": "A new preregistered same-task lane is required for any broader comparison.",
+      "forbidden_wording": [
+        "global winner",
+        "overall SOTA",
+        "faster than all FPGA decoders",
+        "rescues V5"
+      ],
+      "lane_id": "fpga_implementation"
+    }
+  ],
+  "claim_coverage": {
+    "v4": [
+      "BOARD_MEASURED_CORRECTNESS_LATENCY",
+      "CNN_AND_HMM_ROLE",
+      "CONTRACT_SYSTEM_INTEGRATION",
+      "FPGA_DETERMINISTIC_ARCHITECTURE",
+      "FPGA_SPEED_ADVANTAGE",
+      "GENERAL_DRIFT_EXTERNAL_COMPARISON",
+      "PUVIANI_NMF_SURPASS",
+      "SMOOTH_LOCKED_EWMA_ADVANTAGE",
+      "STATIC_GKP_SUPERIORITY",
+      "STATIC_K4_HARD_ACTION_EQUIVALENCE",
+      "TAIL_SAFETY_AND_IMPROVEMENT"
+    ],
+    "v5": [
+      "PHASE6C-READONLY-AUX",
+      "V5-ALG-LER-10PCT",
+      "V5-FORMAL-ATOMIC-SAFETY",
+      "V5-LONG-CXXRTL",
+      "V5-MEASURED-HARDWARE",
+      "V5-MULTISEED-PR",
+      "V5-POSTERIOR-MIXTURE-ACTION",
+      "V5-QUANTIZED-RETENTION",
+      "V5-TAIL-CALIBRATION-TELEGRAPH",
+      "V5-UNTOUCHED-FORMAL"
+    ],
+    "phase6c": [
+      "P6C-AQEC-WALLCLOCK",
+      "P6C-FPGA-NORMALIZATION",
+      "P6C-LEARNED-ELIGIBILITY",
+      "P6C-MULTIMODE-POSTERIOR-WEIGHTED",
+      "P6C-NMF-GQF",
+      "P6C-SINGLE-CI-CPD-EQUIVALENCE",
+      "P6C-STRUCTURED-OFFICIAL-CPD",
+      "P6C-SURFACE-NOH-CI-ML"
+    ],
+    "total": 29
+  },
+  "manuscript_decision": {
+    "full_cross_lane_high_level_paper": "NO_GO",
+    "allowed_manuscript": "RESTRICTED_PREBOARD_CONTRACT_PAPER",
+    "abstract_claim_ids": [
+      "CONTRACT_SYSTEM_INTEGRATION",
+      "FPGA_DETERMINISTIC_ARCHITECTURE",
+      "SMOOTH_LOCKED_EWMA_ADVANTAGE"
+    ],
+    "conclusion_claim_ids": [
+      "BOARD_MEASURED_CORRECTNESS_LATENCY",
+      "CNN_AND_HMM_ROLE",
+      "CONTRACT_SYSTEM_INTEGRATION",
+      "FPGA_DETERMINISTIC_ARCHITECTURE",
+      "FPGA_SPEED_ADVANTAGE",
+      "P6C-LEARNED-ELIGIBILITY",
+      "P6C-NMF-GQF",
+      "PUVIANI_NMF_SURPASS",
+      "SMOOTH_LOCKED_EWMA_ADVANTAGE",
+      "STATIC_GKP_SUPERIORITY",
+      "TAIL_SAFETY_AND_IMPROVEMENT",
+      "V5-ALG-LER-10PCT",
+      "V5-FORMAL-ATOMIC-SAFETY",
+      "V5-LONG-CXXRTL",
+      "V5-MEASURED-HARDWARE",
+      "V5-MULTISEED-PR",
+      "V5-POSTERIOR-MIXTURE-ACTION",
+      "V5-QUANTIZED-RETENTION",
+      "V5-TAIL-CALIBRATION-TELEGRAPH",
+      "V5-UNTOUCHED-FORMAL"
+    ],
+    "mandatory_negative_claim_ids": [
+      "BOARD_MEASURED_CORRECTNESS_LATENCY",
+      "FPGA_SPEED_ADVANTAGE",
+      "P6C-LEARNED-ELIGIBILITY",
+      "P6C-NMF-GQF",
+      "PUVIANI_NMF_SURPASS",
+      "STATIC_GKP_SUPERIORITY",
+      "V5-ALG-LER-10PCT",
+      "V5-FORMAL-ATOMIC-SAFETY",
+      "V5-LONG-CXXRTL",
+      "V5-MEASURED-HARDWARE",
+      "V5-MULTISEED-PR",
+      "V5-POSTERIOR-MIXTURE-ACTION",
+      "V5-QUANTIZED-RETENTION",
+      "V5-TAIL-CALIBRATION-TELEGRAPH",
+      "V5-UNTOUCHED-FORMAL"
+    ]
+  },
+  "source_data": {
+    "path": "docs/t7_1_1_claim_evidence_boundary_matrix_source_data.csv",
+    "sha256": "e6c0e3c76a056292286407c70241716cf2496ea49d02fe8e390bb5a8a536924f",
+    "bytes": 44277,
+    "rows": 29
+  },
+  "markdown": {
+    "path": "docs/claim_evidence_boundary_matrix.md",
+    "sha256": "e3b6013321e1b33864d46ac1578998e4cdca2fcc6f7ddf5dabcc67677fec16ac",
+    "bytes": 11087
+  },
+  "semantic_mutation_audit": {
+    "count": 19,
+    "detected": 19,
+    "cases": [
+      {
+        "case": "parent_failure",
+        "target_gate": "G01_all_parent_verifiers_pass_live",
+        "rejected": true
+      },
+      {
+        "case": "artifact_hash_forge",
+        "target_gate": "G02_all_artifact_bindings_are_live",
+        "rejected": true
+      },
+      {
+        "case": "drop_v4_claim",
+        "target_gate": "G03_all_v4_claims_are_accounted_once",
+        "rejected": true
+      },
+      {
+        "case": "drop_v5_claim",
+        "target_gate": "G04_all_v5_claims_are_accounted_once",
+        "rejected": true
+      },
+      {
+        "case": "mislabel_secondary_lane",
+        "target_gate": "G05_phase6c_summaries_cover_all_six_lanes",
+        "rejected": true
+      },
+      {
+        "case": "unknown_publication_state",
+        "target_gate": "G06_publication_and_placement_schema_is_closed",
+        "rejected": true
+      },
+      {
+        "case": "promote_blocked_to_abstract",
+        "target_gate": "G07_revoked_blocked_and_negative_claims_are_not_positive_headline_claims",
+        "rejected": true
+      },
+      {
+        "case": "remove_boundary",
+        "target_gate": "G08_every_claim_has_wording_boundary_display_and_evidence_selectors",
+        "rejected": true
+      },
+      {
+        "case": "remove_positive_raw",
+        "target_gate": "G09_every_positive_claim_maps_report_raw_code_and_valid_layers",
+        "rejected": true
+      },
+      {
+        "case": "merge_provenance",
+        "target_gate": "G10_evidence_grades_and_phase6c_provenance_remain_separate",
+        "rejected": true
+      },
+      {
+        "case": "promote_estimate_to_measured",
+        "target_gate": "G11_board_measurement_is_blocked_and_all_fields_are_null",
+        "rejected": true
+      },
+      {
+        "case": "resurrect_v5",
+        "target_gate": "G12_v5_states_match_early_stop_registry_without_resurrection",
+        "rejected": true
+      },
+      {
+        "case": "invent_t6_14_3_result",
+        "target_gate": "G13_t6_14_3_remains_dropped_and_has_no_result_artifact",
+        "rejected": true
+      },
+      {
+        "case": "promote_full_paper",
+        "target_gate": "G14_no_global_ranking_or_unqualified_superiority_wording",
+        "rejected": true
+      },
+      {
+        "case": "rename_canonical_term",
+        "target_gate": "G15_terminology_ledger_is_exact_and_required_terms_are_used",
+        "rejected": true
+      },
+      {
+        "case": "forge_csv_rows",
+        "target_gate": "G16_source_csv_is_lossless_hash_bound_one_row_per_claim",
+        "rejected": true
+      },
+      {
+        "case": "disconnect_markdown",
+        "target_gate": "G17_human_matrix_is_live_and_contains_every_claim",
+        "rejected": true
+      },
+      {
+        "case": "change_dropped_status",
+        "target_gate": "G18_board_status_binding_is_semantic_and_live",
+        "rejected": true
+      },
+      {
+        "case": "forge_mutation_count",
+        "target_gate": "G19_one_substantive_mutation_per_gate_fails_closed",
+        "rejected": true
+      }
+    ]
+  },
+  "gates": {
+    "G01_all_parent_verifiers_pass_live": true,
+    "G02_all_artifact_bindings_are_live": true,
+    "G03_all_v4_claims_are_accounted_once": true,
+    "G04_all_v5_claims_are_accounted_once": true,
+    "G05_phase6c_summaries_cover_all_six_lanes": true,
+    "G06_publication_and_placement_schema_is_closed": true,
+    "G07_revoked_blocked_and_negative_claims_are_not_positive_headline_claims": true,
+    "G08_every_claim_has_wording_boundary_display_and_evidence_selectors": true,
+    "G09_every_positive_claim_maps_report_raw_code_and_valid_layers": true,
+    "G10_evidence_grades_and_phase6c_provenance_remain_separate": true,
+    "G11_board_measurement_is_blocked_and_all_fields_are_null": true,
+    "G12_v5_states_match_early_stop_registry_without_resurrection": true,
+    "G13_t6_14_3_remains_dropped_and_has_no_result_artifact": true,
+    "G14_no_global_ranking_or_unqualified_superiority_wording": true,
+    "G15_terminology_ledger_is_exact_and_required_terms_are_used": true,
+    "G16_source_csv_is_lossless_hash_bound_one_row_per_claim": true,
+    "G17_human_matrix_is_live_and_contains_every_claim": true,
+    "G18_board_status_binding_is_semantic_and_live": true,
+    "G19_one_substantive_mutation_per_gate_fails_closed": true
+  },
+  "gate_summary": {
+    "passed": 19,
+    "failed": []
+  },
+  "verdict": "PASS_RESTRICTED_PREBOARD_CLAIM_BOUNDARY_MATRIX",
+  "analysis_sha256": "61624e4d7de0e2ae7411da6192d402e03083ba7e5c945954382f10ef4adbccca"
+}

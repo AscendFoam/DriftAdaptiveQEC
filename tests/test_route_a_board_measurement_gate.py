@@ -65,6 +65,15 @@ def test_bindings_recovery_contract_and_mutations_are_complete() -> None:
     assert {row["target_gate"] for row in audit["cases"]} == set(report["gates"])
 
 
+def test_board_binding_ignores_unrelated_tasks_but_detects_prerequisite_changes() -> None:
+    board_text = gate.BOARD.read_text(encoding="utf-8")
+    original = gate._board_status_binding(board_text)
+    unrelated = gate._board_status_binding(board_text.replace("| T7.1.1 | In Progress |", "| T7.1.1 | Done |"))
+    assert unrelated["canonical_sha256"] == original["canonical_sha256"]
+    relevant = gate._board_status_binding(board_text.replace("| T6.1.1 | Blocked |", "| T6.1.1 | Done |"))
+    assert relevant["canonical_sha256"] != original["canonical_sha256"]
+
+
 def test_any_invented_board_result_fails_closed() -> None:
     report = deepcopy(_report())
     report["measured_results"]["deadline_miss_count"] = 0

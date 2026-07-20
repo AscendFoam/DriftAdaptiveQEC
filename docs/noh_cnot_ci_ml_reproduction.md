@@ -4,7 +4,7 @@
 - source-sufficiency：`PASS_SOURCE_SUFFICIENCY`
 - gates / mutations：15/15 / 15/15
 - correctness boundary：0/100,000 mismatch
-- runtime：2.682 s（Python correctness workload，非 decoder latency）
+- runtime：2.706 s（Python correctness workload，非 decoder latency）
 
 ## Table I 锚点复现
 

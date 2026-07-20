@@ -29,6 +29,7 @@ from cnn_fpga.benchmark import multimode_posterior_weighted_cpd as multimode
 from cnn_fpga.benchmark import official_structured_cpd_reproduction as official_cpd
 from cnn_fpga.benchmark import phase6c_preboard_profiles as preboard
 from cnn_fpga.benchmark import route_a_v5_final_evidence_gate as phase6b_gate
+from cnn_fpga.benchmark import route_a_board_measurement_gate as board_blocker_gate
 from cnn_fpga.benchmark import secondary_experiment_preregistration as prereg_module
 from cnn_fpga.benchmark import secondary_method_source_audit as source_audit
 from cnn_fpga.benchmark import single_mode_cpd_equivalence as single_cpd
@@ -177,6 +178,7 @@ def _verify_parents(parents: Mapping[str, Mapping[str, Any]]) -> dict[str, bool]
         "multimode": lambda: multimode.verify_report(REPORTS["multimode"]),
         "preboard": lambda: preboard.verify_report(REPORTS["preboard"]),
         "external_fpga": lambda: external_fpga.verify_report(parents["external_fpga"]),
+        "board_blocker": lambda: board_blocker_gate.verify_report(parents["board_blocker"]),
     }
     for key, verifier in verifiers.items():
         try:

@@ -16,6 +16,7 @@ def _report() -> dict:
 
 def test_repository_report_verifies_end_to_end() -> None:
     assert all(gate.verify_report().values())
+    assert gate._verify_parents(gate._parent_payloads())["board_blocker"] is True
 
 
 def test_six_lanes_and_all_explicit_nonvalue_states_are_present() -> None:

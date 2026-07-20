@@ -19,6 +19,9 @@ from pathlib import Path
 import re
 from typing import Any, Mapping, Sequence
 
+from cnn_fpga.benchmark import route_a_board_measurement_gate as board_blocker_gate
+from cnn_fpga.benchmark import route_a_final_evidence_gate as v4_final_gate
+
 
 ROOT = Path(__file__).resolve().parents[2]
 TASK_ID = "T6.15.5"
@@ -305,6 +308,8 @@ def validate_report(path: Path = DEFAULT_ARTIFACT) -> dict[str, bool]:
         "identity": report.get("task_id") == TASK_ID and report.get("schema_version") == SCHEMA_VERSION and report.get("verdict") == VERDICT,
         "source_data": source.is_file() and _sha256(source) == report["source_data_binding"]["sha256"] and report["source_data_binding"]["row_count"] == len(report["claim_registry"]),
         "parent_hashes": all((ROOT / rel).is_file() and _sha256(ROOT / rel) == digest for rel, digest in report["parent_bindings"].items()),
+        "board_gate_live": _board_gate_live(),
+        "v4_final_gate_live": _v4_final_gate_live(),
         "board_status_binding": report.get("board_status_binding") == _board_status_binding(_task_statuses(board)),
         "dropped_statuses": all(_task_statuses(board).get(task) == "Dropped" for task in report["dropped_tasks"]),
         "no_outputs": _v5_outputs() == report["v5_downstream_outputs_found"] == [],
@@ -314,6 +319,22 @@ def validate_report(path: Path = DEFAULT_ARTIFACT) -> dict[str, bool]:
     if not all(checks.values()):
         raise ValueError(f"T6.15.5 artifact validation failed: {[key for key,value in checks.items() if not value]}")
     return checks
+
+
+def _board_gate_live() -> bool:
+    try:
+        board_blocker_gate.verify_report(json.loads(BOARD_GATE_PATH.read_text(encoding="utf-8")))
+    except (KeyError, OSError, TypeError, ValueError):
+        return False
+    return True
+
+
+def _v4_final_gate_live() -> bool:
+    try:
+        v4_final_gate.verify_report(json.loads(V4_FINAL_PATH.read_text(encoding="utf-8")))
+    except (KeyError, OSError, TypeError, ValueError):
+        return False
+    return True
 
 
 def main(argv: Sequence[str] | None = None) -> int:

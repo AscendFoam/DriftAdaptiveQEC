@@ -14,7 +14,7 @@ from typing import Any, Mapping
 
 ROOT = Path(__file__).resolve().parents[2]
 TASK_ID = "T6.9.2"
-SCHEMA_VERSION = "t6.9.2-board-measurement-blocker-v1"
+SCHEMA_VERSION = "t6.9.2-board-measurement-blocker-v2"
 BOARD = ROOT / "docs/new_task_board.md"
 PARETO = ROOT / "docs/t6_9_1_route_a_hardware_pareto.json"
 NORMALIZATION = ROOT / "docs/t6_8_6_fpga_decoder_normalization.json"
@@ -42,6 +42,16 @@ MEASURED_FIELDS = (
     "same_task_external_comparator_count", "speed_advantage_effect_ns", "speed_advantage_ci95_low_ns", "speed_advantage_ci95_high_ns",
 )
 
+BOARD_STATUS_TASKS = (
+    "T6.1.1", "T6.1.2", "T6.1.3", "T6.2.3", "T6.4.1", "T6.4.2",
+    "T6.4.3", "T6.9.1", "T6.9.2",
+)
+EXPECTED_BOARD_STATUSES = {
+    "T6.1.1": "Blocked", "T6.1.2": "Todo", "T6.1.3": "Todo",
+    "T6.2.3": "Todo", "T6.4.1": "Todo", "T6.4.2": "Todo",
+    "T6.4.3": "Todo", "T6.9.1": "Done", "T6.9.2": "Blocked",
+}
+
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -64,12 +74,42 @@ def _load(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _canonical_sha256(value: Any) -> str:
+    encoded = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
 def _statuses(text: str) -> dict[str, str]:
     rows = re.findall(r"^\| (T[^| ]+) \| ([^|]+) \|", text, flags=re.MULTILINE)
     result: dict[str, str] = {}
     for task, status in rows:
         result.setdefault(task.strip(), status.strip())
     return result
+
+
+def _board_status_binding(text: str) -> dict[str, Any]:
+    statuses = _statuses(text)
+    selected = {task: statuses[task] for task in BOARD_STATUS_TASKS}
+    return {
+        "path": _relative(BOARD),
+        "task_ids": list(BOARD_STATUS_TASKS),
+        "statuses": selected,
+        "canonical_sha256": _canonical_sha256(selected),
+    }
+
+
+def _board_status_binding_live(binding: Mapping[str, Any]) -> bool:
+    path = ROOT / str(binding["path"])
+    if not path.is_file() or binding.get("task_ids") != list(BOARD_STATUS_TASKS):
+        return False
+    try:
+        live = _board_status_binding(path.read_text(encoding="utf-8"))
+    except (KeyError, OSError, UnicodeError):
+        return False
+    return (
+        binding.get("statuses") == live["statuses"]
+        and binding.get("canonical_sha256") == live["canonical_sha256"]
+    )
 
 
 def evaluate_gates(report: Mapping[str, Any], *, check_live_files: bool = True) -> dict[str, bool]:
@@ -79,7 +119,7 @@ def evaluate_gates(report: Mapping[str, Any], *, check_live_files: bool = True) 
     failed_external = [row for row in prereqs if row["kind"] == "physical_external" and not row["passed"]]
     return {
         "G01_preboard_pareto_parent_passes_and_is_live": report["parent_t6_9_1"]["verdict"] == "PASS_ROUTE_A_INTEGRATED_THREE_SEED_PR_ESTIMATE_NOT_BOARD_MEASURED" and (not check_live_files or _live(bindings["pareto"])),
-        "G02_board_and_hardware_upstream_tasks_are_not_done": report["board_statuses"] == {"T6.1.1": "Blocked", "T6.1.2": "Todo", "T6.1.3": "Todo", "T6.2.3": "Todo", "T6.4.1": "Todo", "T6.4.2": "Todo", "T6.4.3": "Todo", "T6.9.1": "Done", "T6.9.2": "Blocked"},
+        "G02_board_and_hardware_upstream_tasks_are_not_done": report["board_statuses"] == EXPECTED_BOARD_STATUSES and report["board_status_binding"]["statuses"] == report["board_statuses"] and (not check_live_files or _board_status_binding_live(report["board_status_binding"])),
         "G03_all_six_physical_prerequisites_are_absent": len(failed_external) == len(EXPECTED_EXTERNAL_ARTIFACTS) == 6 and all(row["expected_path"] == EXPECTED_EXTERNAL_ARTIFACTS[row["prerequisite"]] and row["observed_path"] is None for row in failed_external),
         "G04_execution_branch_is_blocked_before_board_run": report["execution_branch"] == "BLOCKED_NO_PHYSICAL_BOARD_BITSTREAM_OR_TRANSPORT" and report["measurement_run_manifest"] is None and report["measurement_raw_data"] is None,
         "G05_every_measured_field_is_explicit_null": set(measured) == set(MEASURED_FIELDS) and all(value is None for value in measured.values()),
@@ -87,7 +127,7 @@ def evaluate_gates(report: Mapping[str, Any], *, check_live_files: bool = True) 
         "G07_fpga_speed_claim_remains_prohibited": report["claim_boundary"] == {"board_correctness": "NOT_RUN_BLOCKED", "zero_deadline_miss": "NOT_ESTABLISHED", "measured_source_to_action": "UNDEFINED", "measured_power": "UNDEFINED", "fpga_speed_advantage": "PROHIBITED", "fastest_or_sota": "PROHIBITED"},
         "G08_recovery_requires_all_physical_evidence_not_one_file": len(report["recovery_conditions"]) == 9 and all(condition["required"] is True for condition in report["recovery_conditions"]),
         "G09_board_normalization_parent_is_live_and_same_task_count_zero": report["normalization_anchor"]["same_task_external_comparator_count"] == 0 and (not check_live_files or _live(bindings["normalization"])),
-        "G10_all_current_bindings_are_live": all(len(row["sha256"]) == 64 for row in bindings.values()) and (not check_live_files or all(_live(row) for row in bindings.values())),
+        "G10_all_current_bindings_are_live": set(bindings) == {"implementation", "pareto", "normalization"} and all(len(row["sha256"]) == 64 for row in bindings.values()) and (not check_live_files or all(_live(row) for row in bindings.values())),
         "G11_semantic_mutations_fail_closed": report["semantic_mutation_audit"]["count"] == report["semantic_mutation_audit"]["detected"] == 11,
     }
 
@@ -136,7 +176,8 @@ def build_report() -> dict[str, Any]:
         "schema_version": SCHEMA_VERSION,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "parent_t6_9_1": {"verdict": pareto["verdict"], "selected_profile": pareto["pareto_decision"]["selected_profile"]},
-        "board_statuses": {key: statuses[key] for key in ("T6.1.1", "T6.1.2", "T6.1.3", "T6.2.3", "T6.4.1", "T6.4.2", "T6.4.3", "T6.9.1", "T6.9.2")},
+        "board_statuses": {key: statuses[key] for key in BOARD_STATUS_TASKS},
+        "board_status_binding": _board_status_binding(board_text),
         "prerequisite_ledger": prereqs,
         "execution_branch": "BLOCKED_NO_PHYSICAL_BOARD_BITSTREAM_OR_TRANSPORT",
         "measurement_run_manifest": None,
@@ -156,7 +197,7 @@ def build_report() -> dict[str, Any]:
             {"condition": "layered latency/resource/power measurements", "required": True},
             {"condition": "same-task external comparator before any speed claim", "required": True},
         ],
-        "bindings": {"implementation": _binding(Path(__file__)), "board": _binding(BOARD), "pareto": _binding(PARETO), "normalization": _binding(NORMALIZATION)},
+        "bindings": {"implementation": _binding(Path(__file__)), "pareto": _binding(PARETO), "normalization": _binding(NORMALIZATION)},
     }
     report["semantic_mutation_audit"] = {"count": 11, "detected": 11, "cases": []}
     report["semantic_mutation_audit"] = _mutations(report)
