@@ -120,6 +120,9 @@
   - `docs/protocols/`: benchmark / execution protocol 文档
   - `docs/evidence_packs/`: 已完成任务的证据包、gate 输出和边界说明
   - `docs/paper_materials/`: 论文材料、claim/evidence ledger、草稿骨架和风险审计
+  - `docs/claim_evidence_boundary_matrix.md` / `docs/t7_1_1_claim_evidence_boundary_matrix.json` / Source Data：29 条 V4/V5/Phase6C 原子主张、45 个 live report/raw/code 证据绑定、逐位置安全措辞与 simulation/fixed-point/CXXRTL/P&R/board 层级；只开放 restricted pre-board contract paper
+  - `docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex`: 截止 T6.19.3 的 evidence-gated Route-A 正式论文式 note；主张跟随 V4/V5/Phase 6C 与 pre-board/board-null 终态
+  - `docs/figures/route_a_manuscript_20260720/`: 三张 Python 主文图的 SVG/PDF/LZW-TIFF/PNG、58-row plotted Source Data 与 SHA-256 manifest
   - `docs/literature_matrix.md`: 当前新任务序列的四线文献、Zotero 覆盖和证据等级矩阵
   - `docs/gap_statement.md`: 基于四线证据的研究缺口、baseline/oracle contract 与英文 Introduction 草稿
   - `docs/claim_ladder.md` / `docs/claim_ladder.json`: 第一篇论文五层 claim-evidence 升级契约、逐 claim 措辞与机器可读 gate

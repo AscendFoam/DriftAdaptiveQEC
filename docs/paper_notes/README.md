@@ -55,8 +55,9 @@
 
 ## 当前文件组
 
-- `Contract_Centric_Regime_Aware_GKP_note_draft.tex`：2026-07-17 新增并同步到 T6.7.2 的 Route-A 证据 note；以 `new_task_board.md` 为当前状态源，明确 T6.7.3 正在执行。该 note 复用旧 CNN+FPGA、teacher/student 与 FPGA fast-path 的有效结果，把 LER、tail safety 和确定性执行拆成独立证据 lane，并同时保留 static/Window 负结果、periodic 集中性、smooth 21.6% fallback signal，以及 T6.7.2 的 locked-EWMA non-inferiority、高 tail fallback/false-update 和 static calibration 优势。
-- `Contract_Centric_Regime_Aware_GKP_note_draft.tex` 已嵌入 `../figures/ppt_summary_20260716/` 下的双回路架构图和有效保真寿命图：前者只作 Route-A 接口图，后者只作 teacher/student finite-model 扩展证据，英文图注显式校正旧状态徽章、LER/寿命/板级口径。TeX Live `latexmk` 独立编译为 15 页，15/15 页完成渲染 QA；编译 PDF 与辅助文件仅放在 Codex 临时可视化目录，未覆盖本目录中冻结的旧 note 产物。
+- `Contract_Centric_Regime_Aware_GKP_note_draft.tex`：2026-07-20 大幅同步到 T6.19.3 的正式论文式 Route-A note。主线不再是 CNN 获胜，而是 V4 restricted/NO-GO、V5 causal-headroom early stop、Phase 6C 独立正负结果和 pre-board/board-null 分层；明确保留 locked-EWMA periodic 窄优势、static/Window 反例、multimode CPD 与 CNOT ML 的 task-local 优势、teacher/student 扩展和确定性 RTL 证据。
+- 新 note 复用 `../figures/ppt_summary_20260716/` 的双回路架构图与有效保真寿命图，并嵌入 `../figures/route_a_manuscript_20260720/` 三张 source-traceable 主文图和 T6.19.3 六-lane atlas。Python 图包含 SVG/PDF/LZW-TIFF/PNG、58-row plotted Source Data 与 SHA-256 manifest；TeX Live 编译为 22 页并完成 22/22 页渲染 QA。
+- `CNN_FPGA_GKP_theory_note_draft.tex` 保留旧 teacher-anchored affine/CNN 主体，新增 contract-centric status、PPT/主文图、V4/V5/Phase 6C 边界和当前结论；独立编译为 28 页并完成 28/28 页渲染 QA。两份 note 均不得把 P\&R estimate 写成 measured board，或把 Phase 6C 结果用于升级 V5。
 - `CNN_FPGA_GKP_theory_note_draft.tex`：当前主线 note 源文件。
 - `CNN_FPGA_GKP_theory_note_draft.pdf`：对应编译产物。
 - `CNN_FPGA_GKP_theory_note_draft.*`：保留的 LaTeX 辅助文件、日志与同步文件。

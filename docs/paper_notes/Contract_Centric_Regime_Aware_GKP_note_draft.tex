@@ -23,10 +23,10 @@
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 
-\title{Contract-Centric, Regime-Aware Safe Adaptive Dual-Loop Decoding\\
-for Approximate GKP Quantum Memories}
+\title{Evidence-Gated, Contract-Centric Safe Adaptation\\
+for GKP Decoding under Drifting Noise}
 \author{}
-\date{Evidence-synchronized note; snapshot through T6.7.2, 17 July 2026}
+\date{Evidence-synchronized note; snapshot through T6.19.3, 20 July 2026}
 
 \begin{document}
 \maketitle
@@ -34,41 +34,40 @@ for Approximate GKP Quantum Memories}
 \begin{abstract}
 Approximate Gottesman--Kitaev--Preskill (GKP) quantum error correction must
 decode analog modular syndromes while the effective displacement, measurement,
-and control statistics drift.  Earlier work in this repository organized this
-problem around a CNN-assisted slow loop and an FPGA-oriented affine fast loop.
-That architecture produced reusable simulation, fixed-point, and learning
-evidence, but it did not establish that a CNN simultaneously improves logical
-error rate (LER), tail safety, and latency against strong matched baselines.
+and control statistics drift.  We reorganize an earlier CNN-assisted,
+FPGA-oriented dual loop around an execution contract rather than a learned
+winner.  Static and adaptive MAP experts own logical-error-rate (LER) decisions;
+a causal regime posterior, event state machine, conservative fallback, and
+versioned A/B banks own tail-safety actions; and a fixed-point fast path owns
+deterministic source-to-action execution.  CNN, teacher, and distilled-student
+modules are replaceable extensions behind the same admission boundary.
 
-This note therefore reorganizes the same technical stack around an execution
-contract rather than a learned winner.  Static and adaptive MAP decoders own
-the LER decision; a causal regime posterior, event state machine, conservative
-fallback, and versioned A/B parameter banks own tail-safety decisions; and a
-fixed-point fast path owns deterministic source-to-action execution.  CNN,
-teacher, and distilled-student modules remain replaceable extensions that can
-populate the same bounded parameter surface only after matched promotion
-gates.
+The central result is an evidence-gated outcome, including the stopping rules.
+In the V4 untouched smooth matrix, \RouteA{} reduced LER relative to the
+pilot-locked EWMA comparator by $2.1687\times10^{-5}$ (paired 95\% interval
+$[1.9003,2.4548]\times10^{-5}$), but lost to static joint MAP and Window MAP;
+only periodic drift survived family-wise testing.  Abrupt/OOD tests established
+registered non-inferiority to EWMA, not a tail advantage, and static MAP was far
+better under calibration shift.  The resulting full-paper gate was NO-GO.  A
+subsequent causal-headroom audit then stopped V5 before implementation: the
+deployable held-out mixture gained only 0.459\% over its nested baseline and the
+incremental action-space headroom was 0.02549\%, far below the registered 12\%
+entry gate.  No V5 RTL or placement-and-routing result is therefore claimed.
 
-The current untouched smooth-drift formal matrix contains 576 trajectories and
-28,311,552 scored decisions per method.  Relative to the pilot-locked EWMA
-baseline, \RouteA{} reduces aggregate LER by
-$2.1687\times10^{-5}$ (paired 95\% interval
-$[1.9003,2.4548]\times10^{-5}$), a 2.14\% relative reduction.  This result is
-regime-specific: only periodic drift survives Holm correction, and \RouteA{}
-has higher aggregate LER than both static joint MAP and Window MAP.  Its
-static-to-oracle gap closure is negative.  The current evidence therefore
-supports a locked-EWMA, periodic-qualified smooth advantage, not general
-superiority.  Separately, the fast-path core has a six-cycle execution
-contract, target-device post-route estimates above 39.7 MHz, and a
-board-independent million-cycle CXXRTL qualification with zero visible-field
-mismatch.  These are deterministic pre-board engineering results, not measured
-FPGA latency or external speed records.  The separate abrupt/OOD matrix contains
-888 trajectories and 43,646,976 scored decisions per method.  All registered
-non-inferiority gates passed against locked EWMA, but five families were exactly
-tied on the core contrasts and static MAP was markedly better under calibration
-shift.  This supports bounded pass-through safety, not a tail-performance
-advantage.  Integrated \RouteA{} RTL, external comparisons, and real-board
-measurements remain open gates.
+Several bounded advantages remain valid in independent evidence lanes.  The V4
+integrated pre-board stack completed one million CXXRTL cycles with zero
+visible-field mismatch, while a source-bound static-MAP core reached
+41.02--42.21 MHz in three post-route estimates with a six-cycle contract.  In a
+separate 9.6-million-cycle multimode study, observed-only posterior-weighted CPD
+reduced aggregate LER relative to static Euclidean decoding by 0.064668
+($[0.064413,0.064926]$), with all 32 seed clusters positive.  A matched
+two-GKP-CNOT reproduction found analog-ML failure reductions of 31.16\%, 58.07\%,
+and 67.98\% at 9, 12, and 13 dB.  These algorithmic and pre-board results do not
+rescue the stopped V5 system claim: measured board latency, jitter, power, an
+exact same-task external FPGA comparator, and official GQF controller
+superiority all remain null or blocked.  A final 206-cell auxiliary atlas passed
+24/24 integrity gates without introducing a cross-lane score or changing the V5
+and board verdicts.
 \end{abstract}
 
 \tableofcontents
@@ -78,13 +77,11 @@ measurements remain open gates.
 The one-sentence argument of this note is:
 
 \begin{quote}
-For repeated approximate-GKP quantum-memory correction, a contract-centric
-dual loop can assign average LER, tail safety, and deterministic execution to
-separately testable modules; current evidence supports a narrow smooth-drift
-gain over a locked EWMA comparator, abrupt/OOD non-inferiority to that same
-locked comparator, and strong pre-board execution properties, but it does not
-support universal LER, tail-performance superiority, external-SOTA, or
-real-board claims.
+For repeated approximate-GKP correction, an evidence-gated dual loop makes LER,
+tail safety, deterministic execution, and learning extensions separately
+falsifiable: the main V4/V5 superiority route is currently stopped, while narrow
+V4, independent decoder, teacher--student, and pre-board engineering results
+remain usable only within their registered task and evidence layer.
 \end{quote}
 
 The old task board and
@@ -100,19 +97,17 @@ performance \cite{chen2022,sivak2024}.
 \begin{table}[htbp]
 \centering
 \small
-\caption{Evidence cutoff used in this note.  ``Done'' refers to the current
-task artifacts, not to a final paper or deployed system.}
+\caption{Evidence cutoff used in this note.  ``Done'' means that the registered
+task produced a terminal artifact; it does not imply a positive verdict.}
 \label{tab:evidence-cutoff}
 \begin{tabularx}{\textwidth}{@{}l l X@{}}
 \toprule
 Surface & Status at cutoff & Consequence for this note \\
 \midrule
-T6.5.1--T6.5.3 & Done & Claim roles, unified execution contract, and formal protocol are frozen. \\
-T6.6.1--T6.6.3 & Done & Comparator runner and V4 Window/EWMA dual-shadow policy are frozen before formal access. \\
-T6.7.1 & Done & Untouched smooth formal matrix may support only its registered contrasts and boundaries. \\
-T6.7.2 & Done & Abrupt/OOD and nominal gates support locked-EWMA non-inferiority, not tail or static-MAP superiority. \\
-T6.7.3 & In Progress & Integrated long-sequence fixed-point/RTL qualification remains open. \\
-T6.7.4--T6.9 & Todo or hardware-blocked & Promotion, external comparison, integrated P\&R, and real-board claims remain closed. \\
+T6.5.1--T6.9.3 (V4) & Done except T6.9.2 Blocked & V4 passed restricted simulator/pre-board gates but ended \texttt{NO\_GO\_FULL\_HIGH\_LEVEL\_PAPER}; real-board fields remain null. \\
+T6.10.1 / T6.15.5 (V5) & Done & Causal-headroom entry gate failed and V5 ended \texttt{NO\_GO\_V5\_EARLY\_HEADROOM\_STOP}; no V5 formal, RTL, or P\&R evidence exists. \\
+T6.16.1--T6.19.3 (Phase 6C) & Done & The 206-cell six-lane atlas passed 24/24 integrity gates; literature/reproduction/project-native lanes remain separate and cannot upgrade V4/V5. \\
+T7.1.1 & In Progress, excluded & The paper-level claim--evidence--boundary matrix was not terminal at this cutoff. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -131,13 +126,16 @@ The following names are used consistently throughout the note.
 Canonical term & Definition & What it does not mean \\
 \midrule
 \RouteA{} safe adaptive dual loop & Full contract-centric system: MAP experts, causal routing, event/fallback logic, A/B banks, and fast path & A synonym for the CNN, teacher, student, or oracle \\
-Static joint MAP & Observed-only strong software comparator using a fixed noise model & Current phase-LUT RTL equivalence; that promotion is blocked \\
+Static joint MAP & Observed-only strong software comparator using a fixed noise model & A universal GKP MAP decoder; the current LUT is source-bound \\
 Window MAP / EWMA adaptive MAP & Observed-only adaptive MAP experts updated from completed causal windows & Hidden-state or per-scenario oracle tuning \\
 Regime posterior & Causal HMM/event evidence used to route between validated expert banks & A direct logical correction or privileged truth channel \\
 Tail-safety layer & Event FSM, health flags, fallback, leakage/reset handling, and integrity rollback & Tail-performance superiority; T6.7.2 establishes only locked-EWMA non-inferiority \\
 Fast path & Quantized phase-LUT, event, frame, and bank action with a six-cycle contract & Measured end-to-end board latency \\
 Learning extension & Legacy CNN, Feedback-GRAPE teacher, or distilled student behind the same contract & The required main-system winner \\
 Hidden-state oracle & Nondeployable model reference evaluated in an isolated truth lane & A deployable comparator or a paper-level recovery optimum \\
+V5 candidate family & A proposed continuation admitted only if causal deployable headroom clears the preregistered entry gate & An implemented system; V5 was stopped before formal/RTL work \\
+Auxiliary evidence lane & A task-local reproduction or project-native matched result with an explicit evidence grade & Evidence that can rescue or reopen the V4/V5 promotion gate \\
+Pre-board estimate & Fixed-point/CXXRTL/synthesis/P\&R result without a physical-board measurement & Measured latency, jitter, power, transport, or HIL \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -164,6 +162,33 @@ These are not reasons to discard the affine fast path, the historical learned
 results, or the hardware work.  They are reasons to change the unit of
 contribution.  The new unit is an auditable contract that assigns each claim to
 the module and evidence lane that can actually support it.
+
+\section{Positioning relative to GKP decoding and feedback control}
+
+Analog GKP decoding exploits more information than hard binning because the
+wrapped residual carries distance-to-boundary and noise-model information
+\cite{gkp2001,grimsmo2021}.  This motivates both joint MAP rules for correlated
+quadratures and analog likelihoods passed to an outer-code decoder.  Our static,
+adaptive, and CPD lanes share that statistical premise, but they answer
+different tasks: single-mode repeated correction, gate-level CNOT failure,
+structured outer-code decoding, and multimode lattice decoding are never
+collapsed into one leaderboard.
+
+Calibration-aware QEC emphasizes that a decoder can become mismatched when
+priors or device statistics move \cite{chen2022,sivak2024}.  The present work
+extends this observation into a systems contract: adaptation is causal,
+versioned, bounded, and tested against static and multiple adaptive baselines;
+tail non-inferiority and update actions are reported separately from mean LER.
+This differs from treating an adaptive estimator as automatically beneficial
+whenever a truth oracle exposes nonzero headroom.
+
+Non-Markovian feedback and experimental real-time QEC demonstrate that memory
+and control policies can improve finite-horizon performance in suitable
+physical protocols \cite{puviani2025,sivak2023}.  Here those results motivate a
+teacher--student extension and an AQEC comparison lane, but literature facts are
+not promoted to project reproduction.  The contribution is therefore the
+evidence-bounded integration and falsification framework, together with the
+task-local decoder and pre-board results that survive it.
 
 \section{Contract-centric dual-loop method}
 
@@ -319,6 +344,30 @@ it is not clipped to zero.  Tail readouts use non-overlapping 512-decision
 windows, reporting p95 and global worst-window LER.  Action diagnostics report
 fallback, unnecessary fallback, avoided and induced errors, false updates,
 commits, and adaptation lag separately from average LER.
+
+\subsection{Evidence grades and stopping rules}
+
+Results are assigned to one of five non-interchangeable layers: literature
+fact, official-code reproduction, project-native matched simulation,
+fixed-point/CXXRTL/P\&R pre-board evidence, or measured board/HIL evidence.
+Missing task adapters, source artifacts, checkpoints, or timing boundaries are
+reported as \texttt{N/A}, \texttt{null}, \texttt{blocked}, or
+\texttt{ineligible}; they are not imputed from a neighbouring lane.  In
+particular, a positive Phase~6C decoder result cannot upgrade the V5 system
+gate, and a P\&R estimate cannot populate a board-measured field.
+
+V5 also used a causal entry gate before expensive implementation.  Let
+$H_{m nested}$ be the improvement of a deployable selector over the best
+nested baseline on development data and $H_{m action}$ the additional
+improvement made possible by expanding the correction-action family rather
+than by truth-privileged switching.  The preregistered continuation conditions
+included positive nested evidence and
+\begin{equation}
+  H_{m action}\ge 12\%.
+\end{equation}
+Failure stops formal evaluation, quantization, RTL, and P\&R for that candidate
+family.  This protects downstream engineering from turning a diagnostic oracle
+gap into a deployable claim.
 
 \section{Results}
 
@@ -491,6 +540,20 @@ the recoverable families (p95 256--320 decisions).  These diagnostics support
 auditable behavior and registered non-inferiority, while directly ruling out
 claims of lower tail LER, low fallback, or superiority to static MAP.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/route_a_manuscript_20260720/v4_evidence_boundary.pdf}
+  \caption{The V4 result is bounded rather than globally positive.  (a) Equal-
+  family smooth LER places Window and static MAP below \RouteA{}; the oracle is
+  truth-privileged.  Error bars are seed-cluster 95\% intervals.  (b) Only the
+  periodic EWMA-minus-\RouteA{} contrast survived Holm correction.  (c) Tail
+  non-inferiority required frequent fallback and unnecessary-fallback signals.
+  (d) Under calibration shift, \RouteA{} matched EWMA at 181 errors in the
+  worst 512-decision window, while static MAP had 32.  Source: frozen T6.7.1 and
+  T6.7.2 machine artifacts; plotted-source rows and hashes accompany the figure.}
+  \label{fig:v4-evidence-boundary}
+\end{figure}
+
 \subsection{Deterministic execution and pre-board hardware evidence}
 
 The latency advantage currently established is determinism and feasibility,
@@ -506,22 +569,65 @@ not vendor signoff or board measurements.}
 \toprule
 Surface & Quantitative result & Supported interpretation \\
 \midrule
-MAP/event fast-path core & Three-seed minimum Fmax 39.7456 MHz; maximum 3,362 LUT4, 865 DFF, 8 BSRAM; six cycles give 222.2 ns at the 27 MHz contract clock & The fixed-point core fits the reference device and clears the project-model clock in post-route estimate \\
-Core plus 4-state student & Minimum Fmax 39.5726 MHz; maximum 3,802 LUT4, 1,022 DFF, 8 BSRAM; 64-cycle student update is 2.370 $\mu$s at 27 MHz & A compressed replaceable student fits in the selected pre-board design point \\
-Production RTL qualification & 10 families $\times$ 100,000 cycles; all visible fields zero mismatch; zero undefined action and zero silent overflow & Board-independent bit-accurate execution and fault/recovery qualification \\
-V4 policy trace & 20,061 software cycles; every source-to-action field equals six cycles; 1,218-MAC registered dual-shadow update & Structural integration respects the contract before integrated RTL \\
+Source-bound static-MAP core & Three-seed Fmax 41.024--42.212 MHz; at most 3,387 LUT4, 865 FF, 8 BRAM and 2 DSP; six cycles and initiation interval one & A compact current-source core clears the 27 MHz contract clock in post-route estimate \\
+Integrated V4, no student & Minimum Fmax 39.137 MHz; at most 3,859 LUT4, 1,069 DFF and 8 BSRAM; six-cycle source-to-action path & The contract, router, bank and action path fit together in the selected open-tool target \\
+Integrated V4 plus 4-state student & Minimum Fmax 38.506 MHz; at most 4,889 LUT4, 1,210 DFF and 8 BSRAM & A compressed replaceable student remains feasible outside the per-shot critical path \\
+Integrated CXXRTL qualification & 4 smooth plus 6 fault families, each 100,000 cycles; zero visible-field mismatch, undefined action, route/core CRC error, or silent overflow; 19/19 gates & Board-independent bit-accurate execution and recovery qualification \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-The production qualification also exercised six modes, five health states,
+The integrated qualification also exercised six modes, five health states,
 three actions, nine reachable fault bits, CRC/version failures, FIFO
-disturbance, commit rejection, and counter/LLR saturation.  It does not cover
-real transport, clock-domain crossing, metastability, bitstream generation,
-power, ADC/DAC latency, or board deadline distributions.  Moreover, the full
-\RouteA{} router has not yet been integrated and placed-and-routed as one top.
-No claim of measured FPGA latency, end-to-end latency, or external fastest
-decoder is therefore active.
+disturbance, commit rejection, and counter/LLR saturation.  The HMM itself
+remains a software slow-loop component; the synthesized design consumes the
+quantized posterior/policy overlay.  Formal replay was 99.5802\% real traces and
+0.4198\% directed branch vectors.  This evidence does not cover real transport,
+clock-domain crossing, metastability, bitstream generation, power, ADC/DAC
+latency, or board deadline distributions.  No measured FPGA latency,
+end-to-end latency, or external fastest-decoder claim is active.
+
+\subsection{Causal-headroom audit and V5 early stop}
+
+The V4 NO-GO triggered a causal audit before any V5 model or RTL was built.
+Across 71,958,528 diagnostic expert decisions, the best deployable aggregate
+baseline was EWMA with $\pL=0.01154953$.  Truth-privileged selectors appeared
+to offer substantial improvement---2.4737\% at family level, 4.1784\% at cell
+level, 16.665\% when activation truth was exposed, and 29.523\% per decision---
+but these values use information unavailable to an online decoder.
+
+The deployable audit used 186 development trajectories and 4,571,136 decisions.
+A strict causal selector produced 35,396 errors against 35,314 for its nested
+baseline, or $-0.2322\%$ headroom.  A separately frozen held-out mixture
+produced 35,152 errors, only $0.4587\%$ better than the nested baseline.  More
+decisively, the hard decision oracle had 29,105 errors and the expanded action
+oracle had 29,096: nine errors separated them, corresponding to only
+$0.02549\%$ incremental action-space headroom versus the 12\% entry gate.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/route_a_manuscript_20260720/v5_headroom_early_stop.pdf}
+  \caption{Why V5 was stopped before implementation.  (a) Large diagnostic
+  oracle headroom grows with access to unavailable truth.  (b) Deployable
+  selectors do not approach the registered 10\% entry level.  (c) Hard and
+  expanded truth oracles are almost identical; the new action family contributes
+  0.02549\%, far below the 12\% action-space gate.  The logarithmic axis retains
+  the small positive value.  (d) The selector-to-oracle regret is dominated by
+  estimation/activation (76.46\%), not action-space capacity (0.14\%).  Source:
+  T6.10.1 causal-headroom JSON/CSV; percentages are independently recomputed by
+  the plotting script.}
+  \label{fig:v5-headroom-stop}
+\end{figure}
+
+The resulting verdict was
+\path{NO_GO_V5_INSUFFICIENT_ACTION_SPACE_HEADROOM}, later frozen as
+\path{NO_GO_V5_EARLY_HEADROOM_STOP}.  Tasks T6.10.2--T6.15.4 were
+dropped.  Consequently there is no V5 untouched LER matrix, tail test,
+quantized-retention result, formal proof, CXXRTL run, or P\&R profile.  Reusing
+V4 hardware artifacts as if they belonged to V5 would violate the evidence
+contract.  The early stop is therefore a substantive negative result: the
+observed oracle gap primarily calls for better causal state estimation or a
+different physical task, not a larger correction-action menu.
 
 \subsection{Teacher--student extension evidence}
 
@@ -569,6 +675,77 @@ larger quantized GRU lower-bound required 72,854 cycles (2,698.30 $\mu$s at
 result supports the architectural decision to keep learning outside the
 critical fast path.
 
+\subsection{Independent Phase 6C decoder and comparison lanes}
+
+After the V5 stop, Phase~6C was executed as a read-only auxiliary programme.
+Its split and hashes cannot enter the V5 denominator, and each result keeps its
+own task and evidence grade.  This separation matters because the strongest new
+algorithmic result is positive even though the system-promotion result is not.
+The final atlas contains 206 cells and passed 24/24 integrity gates, 24/24
+single-gate mutations, and 162 joint regressions.  Passing means that provenance,
+metric recomputation, null/negative states, and evidence boundaries are intact;
+it does not mean that every lane has a positive result.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Phase~6C evidence lanes through T6.19.3.  Rows are intentionally not
+combined into a global score.}
+\label{tab:phase6c-lanes}
+\begin{tabularx}{\textwidth}{@{}L{0.18\textwidth} L{0.21\textwidth} Y L{0.17\textwidth}@{}}
+\toprule
+Lane & Evidence grade & Result & Allowed interpretation \\
+\midrule
+Two-GKP CNOT CI/ML & Project-native matched reproduction & 3,080,192 trials; ML reduced gate failure by 31.160\%, 58.065\%, and 67.982\% at 9, 12, and 13 dB; maximum literature discrepancy 1.52\% & Analog ML helps for the reproduced matched gate model \\
+Structured surface--GKP CPD & Official-code reproduction & 2,005/2,005 upstream checks; small-distance crossing 0.599298 versus 0.600245; CPD lower LER in 27/27 reproduced cells & Partial crossing/ordering reproduction, not the full reported distance range \\
+Multimode posterior-weighted CPD & Project-native matched & 9.6 million cycles, 38.4 million modal decodes; adaptive $\pL=0.172261$ versus static Euclidean 0.236929 & Observed-only weighting gives a large drift gain in this independent model \\
+AQEC lifetime replay & Project-native negative / official blocked & Active QEC was worse than idle in all six project-native wall-clock cells; official experimental protocol unavailable & Negative project model, not a refutation of the experiment \\
+Learned-model eligibility & Ineligible & 0 of 16 candidate families met the same-task contract; one legacy CNN replayed only as an exact diagnostic & No learned same-task ranking \\
+GQF controller & Blocked & Exact source completeness 0/15; all 13 matched comparison metrics null & No reproduction or superiority over Puviani \emph{et al.} \\
+External FPGA decoders & Literature-only normalization & 18 implementations normalized; exact same-task comparator count 0 & No raw-ns ranking, fastest, or SOTA claim \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+For the multimode task, static posterior weighting alone was harmful in the
+aggregate ($\pL=0.261679$), whereas the observed-only adaptive rule nearly
+matched the metric oracle ($0.172261$ versus $0.171929$).  Its absolute
+improvement over static Euclidean decoding was
+\begin{equation}
+  0.0646684,qquad \mathrm{CI}_{95\%}=[0.0644128,0.0649264],
+\end{equation}
+and all 32 seed clusters favoured the adaptive lane.  The worst-window LER fell
+from 0.320313 to 0.291016 and $\mathrm{CVaR}_{95}$ from 0.277271 to 0.240627.
+These are the clearest current LER and tail-metric advantages, but they belong
+to the independent multimode CPD task rather than to the stopped V5 policy.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/route_a_manuscript_20260720/auxiliary_matched_evidence.pdf}
+  \caption{Bounded positive evidence outside the stopped V5 route.  (a) Matched
+  two-GKP-CNOT CI/ML reproduction; points show binomial estimates and 95\%
+  intervals.  (b) Scenario LERs for the independent multimode CPD task.
+  (c) Static-Euclidean-minus-adaptive LER is positive in the aggregate and each
+  family; error bars are paired seed-cluster 95\% intervals.  (d) A source-bound
+  six-cycle static-MAP core clears 27 MHz in three P\&R seeds, but 222.222 ns is
+  a contract-clock estimate and board latency, jitter, and power remain null.
+  Sources: T6.17.2, T6.18.3, and T6.19.1 machine artifacts.}
+  \label{fig:auxiliary-matched-evidence}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/t6_19_3_secondary_comparison_atlas.pdf}
+  \caption{Integrity-gated six-lane auxiliary atlas.  The panels retain, rather
+  than hide, a single-mode Route-A NO-GO, a positive CNOT ML reproduction, a
+  positive multimode observed-only CPD result, zero same-task learned/controller
+  eligibility, six negative AQEC wall-clock cells, and FPGA estimate/null
+  boundaries.  The 206 cells bind report, raw source data, frozen configuration
+  and SHA-256.  The atlas has no global winner and cannot upgrade the V5 early
+  stop or the blocked real-board gate.}
+  \label{fig:secondary-comparison-atlas}
+\end{figure}
+
 \section{Where the current data show an advantage}
 
 Table~\ref{tab:advantage-matrix} is the compact answer to which metrics
@@ -578,7 +755,7 @@ objects and units.
 
 {\small
 \begin{longtable}{@{}L{0.19\textwidth} L{0.18\textwidth} L{0.35\textwidth} L{0.18\textwidth}@{}}
-\caption{Metric-level advantage matrix at the T6.7.2 evidence cutoff.}
+\caption{Metric-level advantage matrix at the T6.19.3 evidence cutoff.}
 \label{tab:advantage-matrix}\\
 \toprule
 Metric / property & Status & Evidence-supported statement & Boundary \\
@@ -588,19 +765,20 @@ Metric / property & Status & Evidence-supported statement & Boundary \\
 Metric / property & Status & Evidence-supported statement & Boundary \\
 \midrule
 \endhead
-Correlated-noise LER & \supported & Joint MAP error 0.23067 versus independent MAP 0.30883 in the strong-correlation paired Monte Carlo ($z=29.60$) & Ideal/model-level decoder evidence, not full \RouteA{} \\
-Historical learned LER & \conditional & Hybrid Residual-B reduced T24 final LER by 1.75--2.89\% relative to UKF across four frozen scenarios & Old mock-backed software-HIL; not the new unified matrix \\
-Smooth LER vs locked EWMA & \supported & \RouteA{} reduced aggregate LER by $2.1687\times10^{-5}$, 2.14\% relative, with a positive paired interval & Only the pre-registered EWMA contrast \\
-Periodic-drift LER & \supported & Periodic EWMA-minus-\RouteA{} difference $8.618\times10^{-5}$; Holm-adjusted discovery & Effect does not generalize to the other three smooth families \\
-LER vs static / Window & \blocked & \RouteA{} LER is higher than static and Window; oracle-gap closure is negative & Current evidence is counterevidence, not missing reporting \\
-Smooth action balance & \conditional & 661 avoided versus 47 induced errors and zero false updates & High 21.6\% fallback signal; tied to smooth EWMA comparison \\
-Abrupt/OOD vs locked EWMA & \conditional & All catastrophic, calibration-strict, and nominal non-inferiority gates passed & Five families are core-statistic ties; burst is aggregate-neutral; this is not a tail advantage \\
-Tail LER vs static MAP & \blocked & Calibration worst was 181/512 for \RouteA{} versus 32/512 for static MAP & High tail fallback and false-update rates also remain visible \\
-Fast-path determinism & \supported & Six-cycle arithmetic/action contract; million-cycle bit-exact qualification & Pre-board core/RTL evidence only \\
-Target-device feasibility & \supported & Core and selected student exceed 39.5 MHz in three-seed post-route estimates and fit reported resources & Open-tool estimate; integrated \RouteA{} top and real board pending \\
-Teacher--student finite-model extension & \supported & Effective fidelity lifetime was $2.36\times/1.58\times$ fixed parameters at cutoffs 12/16; retention point at least 0.981457; 95-scalar student with bit-exact RTL & Two-level, ten-cycle component/model evidence; not LER, wall-clock lifetime, or official GQF superiority \\
-CNN as universal winner & \blocked & Learned strong branch failed; legacy CNN also violates new compute/state/workspace caps & CNN remains ablation or replaceable extension \\
-Measured board speed / resources & \blocked & No real-board result is available & No fastest/SOTA or measured latency claim \\
+V4 smooth LER vs locked EWMA & \conditional & \RouteA{} reduced aggregate LER by $2.1687\times10^{-5}$, 2.14\% relative, with a positive paired interval & Only the preregistered EWMA contrast; only periodic drift survived Holm correction \\
+V4 LER vs static / Window & \blocked & \RouteA{} LER is higher than static and Window; static-to-oracle gap closure is negative & Direct counterevidence to a general V4 decoder advantage \\
+V4 abrupt/OOD vs locked EWMA & \conditional & All catastrophic, calibration-strict, and nominal non-inferiority gates passed & Five families are ties; burst is aggregate-neutral; this is not a tail advantage \\
+V4 tail LER vs static MAP & \blocked & Calibration worst was 181/512 for \RouteA{} versus 32/512 for static MAP & High fallback and false-update rates remain visible \\
+V5 deployable headroom & \blocked & Nested causal selector $-0.2322\%$; held-out mixture $+0.4587\%$; new action family only $0.02549\%$ versus 12\% gate & V5 stopped before formal, quantized, RTL, or P\&R work \\
+Multimode CPD LER and tail & \supported & Observed-only adaptive CPD reduced aggregate LER by $0.0646684$ with positive 95\% interval; all 32 clusters positive; worst-window and $\mathrm{CVaR}_{95}$ improved & Independent project-native multimode task; cannot upgrade V5 \\
+Two-GKP CNOT analog ML & \supported & Failure reductions of 31.160\%, 58.065\%, 67.982\% at 9, 12, 13 dB across 3,080,192 trials & Matched gate-level reproduction, not a memory or hardware result \\
+Structured surface--GKP CPD & \conditional & Official-code small-distance crossing reproduced; CPD lower LER in 27/27 cells & Partial distance range; no full threshold or project hardware claim \\
+Fast-path determinism & \supported & Six-cycle contract and one-million-cycle integrated CXXRTL run with zero visible mismatch; 19/19 gates & V4 pre-board result, not V5 or board measurement \\
+Target-device feasibility & \supported & Integrated V4 minimum Fmax 39.137 MHz; source-bound static core 41.024--42.212 MHz; bounded resources & Open-tool estimate; 222.222 ns is a contract-clock estimate \\
+Teacher--student finite-model extension & \supported & Effective-fidelity lifetime was $2.36\times/1.58\times$ fixed parameters; 95-scalar student retained most teacher gain with bit-exact RTL & Ten-cycle component/model evidence; not LER, wall-clock lifetime, or official GQF superiority \\
+Historical CNN residual LER & \conditional & Hybrid Residual-B reduced T24 final LER by 1.75--2.89\% relative to UKF in four frozen scenarios & Old mock-backed software-HIL; 0/16 current learned families are same-task eligible \\
+Official GQF superiority & \blocked & Exact-source checklist 0/15 and all 13 matched metrics null & No reproduction or comparison with Puviani \emph{et al.} \\
+Measured board / external speed & \blocked & Board latency, jitter and power are null; 18 external rows contain 0 exact same-task comparator & No measured latency, raw-ns ranking, fastest, or SOTA claim \\
 \bottomrule
 \end{longtable}
 }
@@ -625,52 +803,62 @@ kept visible.
   \item \textbf{The smooth primary gate is not a leaderboard.}  \RouteA{}
   passed the locked EWMA contrast but was worse than static and Window MAP, with
   negative oracle-gap closure and a gain concentrated in periodic drift.
+  \item \textbf{V5 lacked deployable causal headroom.}  Most diagnostic oracle
+  gain came from truth-privileged estimation and activation.  The expanded
+  action family added only 0.02549\%, so implementation was correctly stopped.
+  \item \textbf{Positive auxiliary results do not repair a failed system gate.}
+  Multimode CPD and the two-GKP-CNOT reproduction are useful independent
+  results; using them to relabel V5 as successful would be cross-task leakage.
   \item \textbf{Hardware evidence remains layered.}  CXXRTL, synthesis, P\&R,
   and a six-cycle contract do not imply a bitstream, transport integration,
   board timing, power, or quantum-device experiment.
 \end{enumerate}
 
-\section{Decisive remaining experiments}
+\section{Terminal verdicts and remaining gates}
 
-The present note is intentionally a snapshot rather than a promotion decision.
-The following gates determine how the final paper must be written.
+The main simulation/pre-board promotion decision is already terminal: V4 is
+restricted and V5 was stopped.  Remaining work can improve integrity,
+reproducibility, or measured-hardware coverage, but it cannot silently change
+those verdicts.
 
 \begin{table}[htbp]
 \centering
 \small
-\caption{Remaining decision gates and mandatory downgrade paths.}
+\caption{Current terminal states and remaining evidence gates.}
 \label{tab:remaining-gates}
 \begin{tabularx}{\textwidth}{@{}l X X@{}}
 \toprule
-Gate & Required evidence & Failure consequence \\
+Gate & Current requirement & Consequence for writing \\
 \midrule
-T6.7.3 & At least $10^5$ cycles per family and $10^6$ aggregate integrated fixed-point/RTL cycles with zero action/state/reason/version mismatch & Keep deterministic core evidence only; no integrated-stack qualification \\
-T6.7.4 & Independent recomputation of every LER, tail, nominal, and safety gate & Promote only the branches that pass; otherwise static MAP-LUT plus deterministic FPGA is the fallback paper \\
-T6.8 & Same-trace static/drift comparison, official GQF reproduction, and task-normalized FPGA literature table & Claims remain internal-baseline and model-specific; no Puviani or FPGA superiority \\
-T6.9 & Integrated top P\&R followed by real-board correctness, latency, deadline, resource, and power measurements & Hardware language remains estimate/qualification only \\
+V4 final gate (T6.9.3) & Terminal NO-GO; restricted simulator/pre-board draft only & V4 may support a restricted simulator/pre-board systems account, not broad decoder superiority \\
+V5 final gate (T6.15.5) & Terminal \path{NO_GO_V5_EARLY_HEADROOM_STOP} & No V5 performance or hardware result may be synthesized from V4 artifacts \\
+Auxiliary integrity (T6.19.3) & Terminal \path{PASS_AUX_COMPARISON_INTEGRITY}: 206 cells, 24/24 gates and mutations, 162 joint regressions & Allows within-lane secondary reporting only; V5 NO-GO and board Blocked remain unchanged \\
+Real board (T6.9.2) & Bitstream, transport, correctness, latency distribution, deadline miss, resources and power on the named board & Hardware language remains CXXRTL/synthesis/P\&R estimate only \\
+Phase 7 manuscript gate & Every abstract/conclusion sentence maps to a task-local artifact and evidence layer & The formal paper should be an evidence-gated/negative-results account or a narrower independent algorithm paper \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \section{Discussion}
 
-The main contribution at this cutoff is a change in what is treated as the
-scientific object.  A CNN-centric paper asks whether a particular learned
-model wins.  The current system asks whether adaptation can be admitted,
-audited, reverted, and compared under one causal execution contract.  This
-change lets the project reuse the old affine parameter surface, frozen CNN
-result, teacher/student work, fixed-point pipeline, and FPGA-oriented bank
-machinery without allowing any one extension to carry unsupported system-wide
-claims.
+The main contribution at this cutoff is not a winning adaptive decoder.  It is
+an evidence-gated research object in which admission, causal observability,
+tail intervention, action capacity, fixed-point execution, and hardware
+maturity can fail independently.  This organization reuses the affine
+parameter surface, frozen CNN result, teacher/student work, fixed-point
+pipeline, and FPGA-oriented bank machinery without allowing any one extension
+to carry unsupported system-wide claims.
 
 The smooth formal result illustrates both the value and the cost of this
 framing.  Because EWMA was selected before formal access, the positive primary
 interval is meaningful for that contrast.  Because static and Window were also
 reported, the same experiment prevents a misleading best-method claim.  The
-periodic family reveals a real routing opportunity, while the other smooth
-families show that extra policy complexity can be neutral or harmful.  A
-regime-aware method is therefore scientifically useful only if it says where
-the regime logic helps and where it should stay out of the way.
+periodic family reveals a narrow routing opportunity, while the other families
+show that extra policy complexity can be neutral or harmful.  The V5 audit
+strengthens this interpretation: large truth-oracle gains did not survive
+causal observation, and adding actions did not address the dominant regret.
+Regime awareness is useful only when the observations contain enough
+deployable information to select a better action.
 
 The hardware line is similarly bounded.  Fixed cycles, packed words, atomic
 banks, mutation-tested failures, P\&R estimates, and million-cycle bit parity
@@ -678,7 +866,9 @@ are stronger than a software-only latency sketch.  They are nevertheless one
 layer below a measured control plane.  The eventual paper should report core,
 transport, source-to-action, and end-to-end latency separately, and should
 compare only with external work sharing a compatible task and timing
-definition.
+definition.  The normalized external table currently has no exact same-task
+comparator, which is a reason to leave the raw-nanosecond ranking empty rather
+than to force an incommensurate speed claim.
 
 The tail matrix illustrates an important distinction between bounded safety and
 performance advantage.  V4 passed every registered degradation margin against
@@ -686,30 +876,57 @@ locked EWMA, including nominal controls, so the policy did not reintroduce the
 earlier compound failure.  Yet most contrasts are exact ties, static MAP is far
 better under calibration shift, and safety signals are active through much of
 the tail interval.  The honest interpretation is auditable locked-baseline
-non-inferiority with high intervention cost.  Whether the integrated integer
-router preserves even that bounded statement remains subject to T6.7.3 and the
-independent T6.7.4 promotion/falsification audit.
+non-inferiority with high intervention cost.  The subsequent integer
+qualification preserved the execution fields over one million cycles, but did
+not change the algorithmic ordering or populate any board-measured metric.
+
+Phase~6C shows why evidence lanes should remain separate rather than be hidden.
+The multimode posterior-weighted CPD result has a large, consistent LER and tail
+gain; the CNOT reproduction validates an analog-ML effect; AQEC replay is
+negative; learned and GQF same-task comparisons are unavailable; and FPGA
+comparison is task-incommensurate.  Together they form a useful secondary map,
+not a scalar score and not a substitute for the failed V5 gate.
+
+\section{Reproducibility and evidence availability}
+
+Every numerical statement in the main figures is regenerated from repository
+JSON or source-data CSV rather than transcribed from presentation text.  The
+Python entry point is
+\path{docs/figures/make_route_a_manuscript_figures.py}.  It exports editable
+SVG, vector PDF, print-resolution LZW-TIFF, review PNG, and a 58-row plotted-data
+table under \path{docs/figures/route_a_manuscript_20260720/}.  The accompanying
+manifest records SHA-256, byte size, task-local source path, figure contract,
+and every output hash.  The two reused Chinese presentation figures retain
+their original source-data and generator paths and are labelled as archival
+interface/model evidence rather than current promotion results.
+The repository-generated T6.19.3 atlas separately binds all 206 auxiliary cells
+and its SVG/PDF/TIFF/PNG bundle to the terminal integrity artifact.
+
+Randomized comparisons report the independent cluster unit, paired interval,
+and decision denominator in their captions or tables.  Hardware-facing tables
+retain the evidence layer---fixed-point, CXXRTL, synthesis, P\&R estimate, or
+board measurement---and preserve unmeasured board fields as null.  The appendix
+maps each result to its human-readable report and machine artifact.
 
 \section{Conclusion}
 
-The current evidence supports a contract-centric, regime-aware dual-loop
-architecture as a disciplined way to separate GKP decoding performance,
-tail-safety control, and deterministic execution.  Quantitatively, \RouteA{}
-has a positive untouched smooth contrast against the pilot-locked EWMA
-baseline and a Holm-corrected periodic-drift advantage.  The same data show
-that static and Window MAP remain better in aggregate, so general LER
-superiority is not established.  Abrupt/OOD evidence supports registered
-non-inferiority to locked EWMA, not tail or static-MAP superiority.
-Hardware-facing evidence supports a
-six-cycle fixed-point contract, target-device feasibility, and million-cycle
-board-independent bit parity, but not measured FPGA speed or external
-leadership.  Historical CNN and teacher/student results remain valuable as
-replaceable extension evidence rather than as the identity of the system.
+The current evidence supports a contract-centric, regime-aware dual loop as a
+disciplined way to separate GKP decoding performance, tail-safety control,
+learning extensions, and deterministic execution.  It does not support the
+broad adaptive-decoder paper originally sought.  V4 has a narrow positive
+contrast against locked EWMA and a periodic-family discovery, but static and
+Window MAP are better in aggregate and abrupt/OOD results provide
+non-inferiority rather than tail advantage.  V5 was correctly stopped because
+deployable and incremental action-space headroom were too small.
 
-This evidence partition is the central result of the current note.  It makes
-the eventual claim contingent on integrated-RTL, independent promotion,
-external, and real-board gates, and it preserves explicit downgrade paths if
-those gates fail.
+The remaining positive claims are explicit and task-local: observed-only
+posterior weighting improves the independent multimode CPD task; analog ML
+improves the reproduced two-GKP-CNOT task; the compressed student retains most
+teacher gain in a finite model; and V4/static-MAP cores satisfy deterministic
+pre-board execution contracts.  None establishes measured FPGA speed, official
+GQF superiority, or a physical quantum-memory improvement.  This transparent
+partition---including the negative and null cells---is the result that can
+support a formal evidence-gated systems paper or a narrower algorithm paper.
 
 \appendix
 
@@ -732,12 +949,22 @@ V4 policy & \path{docs/regime_aware_safe_policy.md} & \path{docs/t6_6_2_regime_a
 Posterior/threshold lock & \path{docs/route_a_posterior_calibration.md} & \path{docs/t6_6_3_route_a_posterior_threshold_lock.json} and CSV \\
 Smooth formal matrix & \path{docs/route_a_smooth_formal.md} & \path{docs/t6_7_1_smooth_formal_matrix.json} and 498,240-row CSV \\
 Abrupt/OOD formal matrix & \path{docs/route_a_tail_formal.md} & \path{docs/t6_7_2_abrupt_ood_tail_formal_matrix.json} and 686,104-row CSV \\
+V4 integrated qualification & \path{docs/route_a_integrated_rtl_qualification.md} & \path{docs/t6_7_3_route_a_integrated_rtl_qualification.json} and raw traces \\
+V4 final evidence gate & \path{docs/route_a_final_evidence_gate.md} & \path{docs/t6_9_3_route_a_final_evidence_gate.json} and source-data CSV \\
+V5 causal headroom / stop & \path{docs/route_a_causal_headroom.md}; \path{docs/route_a_v5_final_evidence_gate.md} & \path{docs/t6_10_1_causal_headroom.json}; \path{docs/t6_15_5_route_a_v5_final_evidence_gate.json} \\
+Two-GKP CNOT reproduction & \path{docs/noh_cnot_ci_ml_reproduction.md} & \path{docs/t6_17_2_noh_cnot_ci_ml_reproduction_source_data.csv} \\
+Multimode CPD & \path{docs/multimode_posterior_weighted_cpd.md} & \path{docs/t6_18_3_multimode_posterior_weighted_cpd.json} and CSV \\
+Current pre-board profiles & \path{docs/project_preboard_profiles.md} & \path{docs/t6_19_1_project_preboard_profiles.json} and raw P\&R reports \\
+External FPGA refresh & \path{docs/external_fpga_decoder_refresh.md} & \path{docs/t6_19_2_external_fpga_normalization.json} and CSV \\
+Six-lane auxiliary integrity & \path{docs/secondary_comparison_atlas.md} & \path{docs/t6_19_3_secondary_evidence_integrity.json} and one-row-per-cell CSV \\
 Legacy frozen result & \path{docs/paper_materials/paper_simulation_result_table_pack.md} & \path{runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/comparison.csv} \\
 Target P\&R & \path{docs/target_device_synthesis.md} & \path{docs/t5_5_2_target_device_synthesis.json} and raw reports \\
 Student Pareto & \path{docs/precision_resource_performance_pareto.md} & \path{docs/t5_5_3_precision_resource_pareto.json} and equivalence report \\
 Long RTL qualification & \path{docs/long_rtl_qualification.md} & \path{docs/t6_2_2_long_rtl_qualification.json} and CSV \\
 Dual-loop presentation schematic & \path{docs/figures/ppt_summary_20260716/drift_adaptive_architecture_cn.pdf} & \path{docs/figures/make_ppt_summary_figures.py} \\
 Teacher--student presentation figure & \path{docs/figures/ppt_summary_20260716/effective_fidelity_lifetime_cn.pdf} & \path{docs/t4_4_4_teacher_student_gain_retention_source_data.csv} and figure generator \\
+Evidence-bounded manuscript figures & \path{docs/figures/route_a_manuscript_20260720/} & Source-data CSV and SHA-256 manifest in the same directory \\
+Auxiliary atlas figure & \path{docs/figures/t6_19_3_secondary_comparison_atlas.pdf} & T6.19.3 source-data CSV and integrity JSON \\
 \bottomrule
 \end{longtable}
 
@@ -753,6 +980,12 @@ Teacher--student presentation figure & \path{docs/figures/ppt_summary_20260716/e
   \item Not allowed now: ``outperforms static GKP decoding'', ``best adaptive
   decoder'', ``improves tail LER'', ``outperforms under OOD'', or ``CNN
   provides the main gain.''
+  \item Required now: state that V5 was stopped before implementation because
+  deployable and incremental action-space headroom failed the entry gates.
+  \item Allowed now: ``observed-only posterior-weighted CPD improved aggregate,
+  worst-window, and CVaR metrics in the independent multimode matched task.''
+  \item Not allowed now: use the multimode CPD result to claim V5 or full-system
+  promotion, or collapse Phase~6C lanes into a global ranking.
   \item Allowed now: ``the fixed-point core has a six-cycle contract and passed
   board-independent CXXRTL and target-device P\&R qualification.''
   \item Not allowed now: ``measured sub-microsecond FPGA decoder'', ``faster
@@ -761,6 +994,8 @@ Teacher--student presentation figure & \path{docs/figures/ppt_summary_20260716/e
   project finite model and fit a selected pre-board design point.''
   \item Not allowed now: ``reproduces or exceeds Puviani NMF'' or ``proves a
   universal non-Markovian memory advantage.''
+  \item Required now: board latency, jitter and power remain \texttt{null}; the
+  six-cycle 222.222 ns value at 27 MHz is a contract-clock estimate.
 \end{itemize}
 
 \begin{thebibliography}{9}
