@@ -496,6 +496,7 @@ python -m cnn_fpga.benchmark.run_p4_hybrid_vs_ukf_ablation \
 | `docs/t6_19_3_secondary_evidence_integrity.json` | `secondary_evidence_integrity_gate.py` | 六 lane、206-cell、24-gate只读完整性终态 |
 | `docs/t6_19_3_secondary_evidence_integrity_source_data.csv` | `secondary_evidence_integrity_gate.py` | 一行一cell的source/raw/config/hash/evidence/value-state ledger |
 | `docs/figures/t6_19_3_secondary_comparison_atlas.*` | `secondary_evidence_integrity_gate.py` | Python-only SVG/PDF/600-dpi TIFF/PNG非主排名图谱 |
+| `docs/t6_25_1_single_mode_rtl_boundary_audit.json` | `single_mode_rtl_boundary_audit.py` | single-mode 5-top live-hash/capability/实例化边界与 converged-production-top 缺口，不生成板测或 fastest claim |
 
 ## 关键依赖
 

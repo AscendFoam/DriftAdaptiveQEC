@@ -162,6 +162,7 @@
 | R-N152 | Mitigated | 官方仓库存在不等于项目 adapter 已完整复现；diagnostic probe 可能被误标 paper-exact | High | Monitor | T6.20.4 只把 explicit d3 coset/BSV、pure-T-join/pymatching、alias 对拍标为 headroom correctness；K-MWM/Roy 均未执行 | cancellation ledger 明确不追认为 T6.21 reproduction；未来 v2 需重做 source-qualified task | T-RISK-20260721-01 / T6.20.4 |
 | R-N153 | Mitigated | 局部 benchmark 结果可能被扩写成 universal multimode/device SOTA，或事后挑有利 family | Critical | Monitor | T6.20.4 保留全部13 family且 aggregate 门失败；T6.24 formal/SOTA gate未运行并 Dropped | T6.26.3/T7.3.8 必须展示 multimode NO-GO/null；挑 family、借T6.18.3或写universal/device SOTA均阻断发布 | T-RISK-20260721-01 / T6.20.4 / T6.26.3 / T7.3.8 |
 | R-N154 | Mitigated | 在看见 T6.20.4 对 strongest baseline 为零 headroom 后，可能通过改 amplitude/family/denominator/阈值，或把 correctness probe 冒充完整复现，post-hoc 重开并污染未访问的 v1 pilot/formal | Critical | Monitor | 已生成 cancellation ledger；20 个下游 task 明确 Dropped，v1 calibration/pilot/formal 继续未访问，correctness 与 performance gate 分栏；含 indirect decoder privilege 的探索性运行已作废 | 只允许新机制假设+全新 v2 前瞻 split 重开；不得修改 v1、读取 v1 pilot/formal、删除负 family/baseline或用 CNN/RTL 补门 | T6.20.4 / T6.26.3--T6.26.4 / T7.4 |
+| R-N155 | Open | production CRC/staging/CAS/drain、Route-A policy/LKG、百万周期 qualification 与三种子 P&R 当前分属不同 top；若横向拼接旧 PASS，会虚构同一 actual RTL 已具备 atomic/fail-closed 系统证据 | Critical | Immediate | T6.25.1 对 5 top×11 capability 做实例化与正文审计：production top 无 policy，integrated/long-run top 直连 raw cfg/trust，P&R harness 包裹 integrated；旧 T6.2.1/2 还无 direct input-source hashes。15/15 gates、20/20 mutations通过 | T6.25.2 先构建无 raw bypass 的 converged top并完成 property/cover/mutation；T6.25.3/4只对同一 top 重跑 >=1M CXXRTL 与三seed P&R。完成前只允许分项 regression/reference | T6.25.1--T6.25.4 / T6.26.3--T6.26.4 |
 
 ## 插入任务判断
 
@@ -345,6 +346,7 @@
 | 2026-07-21 | T6.20.2 邻接父链复核 | 不插入 | 联合回归暴露历史 T6.5.2 JSON 仍绑定旧版 T4.3.2 validation hash（expected `c2c3e6...`，live `7495bb...`）。按 R-N145 的 latest/immutable 分离原则，本 task 不覆盖历史 canonical 链，而是把新合同的 parent 改为 live unified-execution source 并直接读取冻结 schema 常量；T7.4.1/T7.4.3 已承接历史快照迁移和发布审计，无需插入旁路。 |
 | 2026-07-21 | T6.20.3 | 不插入 | v1 preregistration 已在 outcome absence proof 下 seal，T6.18.3/cross-split factor 隔离、single-pass pilot、60-cluster fixed N、simultaneous CI、zero missingness、no outcome stop/resize 和 analysis-amendment invalidation 均由 20/20 独立重算门约束。首轮 48-cluster 仅达最低 power 的问题在 seal 前增至60而非放宽目标。R-N148 降为 Mitigated；R-N153 的最终 frozen-benchmark wording 仍由 T6.24.5/T7.3.8 承接，不新增 post-hoc task。 |
 | 2026-07-21 | T6.20.4 | 不插入 | 79,872-round train-only headroom 的 source/coset/T-join/alias/causality/indirect-privilege/完整性全过；trusted action 虽净避免未保护 PP 的4,437错，但最终与 strongest static `p_L` 相同，point/LCB均0%，按预注册 direct NO-GO。新增性能 rescue 会形成 post-outcome 绕门；T6.25 正常承接独立 RTL lane。 |
+| 2026-07-21 | T6.25.1 | 不插入 | 新增 R-N155，但现有 T6.25.2--T6.25.4 已按正确顺序承接 converged top 的 property、百万周期与P&R；另插旁路会鼓励继续拼接旧 top。故直接收紧 T6.25.2 的入口与同-top要求。 |
 
 ## 已关闭风险
 

@@ -1724,6 +1724,8 @@ T6.20.3 已在 `docs/phase6d_multimode_preregistration.md` 和机器 JSON 中完
 
 RTL lane 只消费 actual parameterized production top。首先检查 T6.2.2/T6.7.3/T6.9.1/T6.19.1 的 live source/config/hash；若任何实现变化，必须真实重跑而非复制旧 PASS。
 
+T6.25.1 的 live audit 已确认旧报告与当前源码均未悄然漂移，但发现它们不是同一 top：`gkp_fast_path_production_top` 有 CRC32、完整 image staging、CAS/cancel/drain/snapshot，却没有 Route-A policy/LKG；`route_a_integrated_qualification_top` 有 policy/LKG，却直接暴露 core 的 raw `cfg_we` 和 `bank*_trusted`；`route_a_hardware_pareto_synth_top` 包裹的也是后者。T6.2.2 的百万周期同样只覆盖 raw-pin core wrapper，T6.2.1/T6.2.2 的 legacy report 还没有直接绑定输入 source hashes。因此旧 PASS 只作 regression/reference，不能横向拼成 actual-top atomic claim。T6.25.2 必须先构建唯一 converged production top；T6.25.3/T6.25.4 必须对完全相同的 top 重跑百万周期与三种子 P&R。
+
 完成条件为：
 
 - formal/property 证明 A/B old-or-new、读写隔离、CRC/version/age/ack、LKG rollback、commit/cancel/drain/reset/deadline、FIFO/backpressure 和 near-wrap fail-closed；
