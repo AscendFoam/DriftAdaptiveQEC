@@ -129,7 +129,8 @@
   - `docs/figures/t7_1_4_supplement_figures/`：Supplement S1--S4 的 Python-only editable SVG/PDF、300-dpi PNG、600-dpi LZW-TIFF，以及对既有 Phase 6C atlas 四格式输出的精确链接、live-hash/人工视觉 QA manifest
   - `docs/introduction_related_work_contract.md` / `docs/t7_2_1_introduction_related_work_contract.json` / Source Data：T7.2.1 的 6 段 Introduction、5 组 Related Work 与 14 条 claim/citation/project-source 合同；30 个 citation keys、六条 task-signature lane、static/Window/V5/NMF/learned/FPGA/board 负边界由 18/18 gates/mutations fail-closed 约束
   - `docs/methods_evidence_contract.md` / `docs/t7_2_2_methods_evidence_contract.json` / Source Data：T7.2.2 的 18-row Methods 四态/online-offline 权限合同；V4 implemented、V5 diagnostic、conditionally stopped 与 physical future 分栏，18/18 gates/mutations 防止 IMM/BOCPD/compiler/formal/RTL/board 越界升级
-  - `docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex`: 截止 T7.2.2 的 restricted pre-board Route-A 正式论文式 note；Introduction/Related Work 按 contract-centric 与机制分 lane，Methods 覆盖 simulator/contract/V4/V5-stop/预板/真板未来流程，正式 Fig.1--4 和 Supplement S1--S5 均保持任务与证据层边界
+  - `docs/results_evidence_contract.md` / `docs/t7_2_3_results_evidence_contract.json` / Source Data：T7.2.3 的 27-row 六态 Results 合同；同时冻结 V4 正负/tail/cost、V5 early-stop/absence、五条 eligible Phase 6C、literature nonranking、selection failure 与 42 board-null，20/20 gates/mutations fail closed
+  - `docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex`: 截止 T7.2.3 的 restricted pre-board Route-A 正式论文式 note；Introduction/Related Work、Methods 与 10 段 Results 均按 contract-centric/task-signature/evidence-state 边界组织，正式 Fig.1--4 和 Supplement S1--S5 不隐藏负结果、V5 stop 或 board-null
   - `docs/figures/route_a_manuscript_20260720/`: 三张 Python 主文图的 SVG/PDF/LZW-TIFF/PNG、58-row plotted Source Data 与 SHA-256 manifest
   - `docs/literature_matrix.md`: 当前新任务序列的四线文献、Zotero 覆盖和证据等级矩阵
   - `docs/gap_statement.md`: 基于四线证据的研究缺口、baseline/oracle contract 与英文 Introduction 草稿

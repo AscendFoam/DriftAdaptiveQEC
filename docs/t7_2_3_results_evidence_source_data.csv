@@ -1,0 +1,28 @@
+row_id,result_id,lane,result_state,evidence_grade,polarity,boundary,source_ids
+RES-001,v4_locked_ewma,V4 single-mode,PRIMARY_RESTRICTED,PROJECT_NATIVE_MATCHED,POSITIVE,Locked EWMA aggregate only; periodic is the sole Holm-confirmed family,T6.7.1/T6.7.4
+RES-002,v4_static_ordering,V4 single-mode,MANDATORY_NEGATIVE,NEGATIVE,NEGATIVE,Static joint MAP has lower average and calibration worst-window LER,T6.7.1/T6.7.2/T6.9.3
+RES-003,v4_window_ordering,V4 single-mode,MANDATORY_NEGATIVE,NEGATIVE,NEGATIVE,Window MAP is the strongest deployable smooth comparator,T6.7.1/T6.7.4
+RES-004,v4_oracle_gap,V4 single-mode,MANDATORY_NEGATIVE,NEGATIVE,NEGATIVE,Static-to-oracle gap closure is negative,T6.7.1/T6.9.3
+RES-005,v4_tail_noninferiority,V4 abrupt/OOD,MANDATORY_NEGATIVE,PROJECT_NATIVE_MATCHED,NEUTRAL,Five families are exactly equal to EWMA; no broad tail improvement,T6.7.2/T6.7.4
+RES-006,v4_fallback_cost,V4 abrupt/OOD,MANDATORY_NEGATIVE,PROJECT_NATIVE_MATCHED,NEGATIVE,High fallback and unnecessary-fallback rates remain visible,T6.7.2/T6.7.4
+RES-007,v4_false_updates,V4 abrupt/OOD,MANDATORY_NEGATIVE,PROJECT_NATIVE_MATCHED,NEGATIVE,All family-specific false-update counts remain visible,T6.7.2/T6.7.4
+RES-008,v4_failed_policy_families,V4 pilot,MANDATORY_NEGATIVE,NEGATIVE,NEGATIVE,Static-switch and freeze-all each failed all 38 safe tuples,T6.6.3
+RES-009,external_bocd_budget,V4 external drift,MANDATORY_NEGATIVE,PROJECT_NATIVE_MATCHED,MIXED,"Paired LER outcome is inseparable from the 13,004.1-us budget failure",T6.8.3/T6.8.7/T6.9.3
+RES-010,v4_cxxrtl,V4 pre-board,PRIMARY_RESTRICTED,CXXRTL_PREBOARD,POSITIVE,One million cycles and failure branches; no board inference,T6.7.3/T6.7.4
+RES-011,v4_commit_rollback_attempts,V4 pre-board,PRIMARY_RESTRICTED,CXXRTL_PREBOARD,NEUTRAL,All 75 commit and 25 rollback attempts stay in the denominator,T6.7.3
+RES-012,v4_post_route,V4 pre-board,PRIMARY_RESTRICTED,POST_ROUTE_ESTIMATE,POSITIVE,Six-cycle II=1 and three-seed P&R are estimates,T6.9.1/T6.9.3
+RES-013,physical_board_null,Physical board,NULL_OR_CONTEXTUAL,BLOCKED,NULL,All 42 measured fields remain null,T6.9.2/T6.9.3
+RES-014,v5_causal_selector,V5 entry diagnostic,DIAGNOSTIC_STOP,DIAGNOSTIC_ONLY,NEGATIVE,Strict causal selector headroom is negative,T6.10.1/T6.15.5
+RES-015,v5_action_headroom,V5 entry diagnostic,DIAGNOSTIC_STOP,DIAGNOSTIC_ONLY,NEGATIVE,"Expanded action-space headroom is 0.02549%, below 12%",T6.10.1/T6.15.5
+RES-016,v5_downstream_absence,V5 stopped branch,NULL_OR_CONTEXTUAL,BLOCKED,NULL,"No untouched LER/tail, quantized, formal, CXXRTL, or P&R output exists",T6.15.5
+RES-017,p6c_single_cpd,Phase 6C single-mode,SECONDARY_ELIGIBLE,PROJECT_NATIVE_MATCHED,EQUIVALENCE,CI equals Euclidean CPD only in the frozen square/isotropic domain,T6.17.1/T6.19.3
+RES-018,p6c_noh_cnot,Phase 6C CNOT,SECONDARY_ELIGIBLE,PROJECT_NATIVE_MATCHED,POSITIVE,ML lowers failure relative to CI on the matched two-GKP CNOT task,T6.17.2/T6.19.3
+RES-019,p6c_official_cpd,Phase 6C structured CPD,SECONDARY_ELIGIBLE,OFFICIAL_CODE_REPRODUCTION,POSITIVE,Official data plus partial small-distance CPD reproduction,T6.18.2/T6.19.3
+RES-020,p6c_multimode_adaptive,Phase 6C multimode CPD,SECONDARY_ELIGIBLE,PROJECT_NATIVE_MATCHED,POSITIVE,Observed-only adaptive weighting improves aggregate and tail metrics,T6.18.3/T6.19.3
+RES-021,p6c_aqec_project,Phase 6C AQEC,SECONDARY_ELIGIBLE,PROJECT_NATIVE_MATCHED,NEGATIVE,Project-native active/autonomous control fails to beat idle; official protocol blocked,T6.18.1/T6.19.3
+RES-022,p6c_learned_zero,Phase 6C learned,MANDATORY_NEGATIVE,INELIGIBLE,NULL,Zero of 16 candidate families is same-task eligible,T6.17.3/T6.19.3
+RES-023,p6c_gqf_blocked,Phase 6C GQF/NMF,NULL_OR_CONTEXTUAL,BLOCKED,NULL,Zero of 15 exact checks and all 13 matched metrics null,T6.8.4/T6.8.5/T6.19.3
+RES-024,p6c_external_fpga,Phase 6C FPGA,NULL_OR_CONTEXTUAL,LITERATURE_ONLY,NULL,18 normalized rows but zero exact same-task comparator,T6.19.2/T6.19.3
+RES-025,legacy_cnn,Historical T24,HISTORICAL_EXTENSION,PROJECT_NATIVE_HISTORICAL,POSITIVE,Four-scenario frozen software-HIL result is outside the Route-A ranking,T24/T7.1.1
+RES-026,teacher_student_retention,Teacher/student,HISTORICAL_EXTENSION,PROJECT_NATIVE_SIMULATION,POSITIVE,Finite-model gain retention and compression only,T4.4.4/T4.4.5
+RES-027,teacher_student_selection,Teacher/student,MANDATORY_NEGATIVE,SELECTION_AUDIT,NEGATIVE,"All restarts, cap hits, and test-hindsight reversals remain disclosed",T4.4.1/T4.4.3/T5.4.4

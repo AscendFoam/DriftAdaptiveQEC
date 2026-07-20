@@ -27,7 +27,7 @@
 \title{An Evidence-Gated, Fail-Closed Pre-Board Contract\\
 for Drift-Adaptive GKP Decoding}
 \author{}
-\date{Evidence-synchronized manuscript note; snapshot through T7.2.2, 20 July 2026}
+\date{Evidence-synchronized manuscript note; snapshot through T7.2.3, 20 July 2026}
 
 \begin{document}
 \maketitle
@@ -168,6 +168,7 @@ T7.1.1 & Done & The 29-claim matrix passed 19/19 gates and mutations with 45 liv
 T7.1.2 & Done & Main Figures 1--2 bind 38 elements to parent claims and evidence, passed 16/16 gates and mutations, and preserve V5-dropped and board-null surfaces on the figure face. \\
 T7.1.3 & Done & Main Figures 3--4 bind 55 result/hardware rows to live parent evidence, passed 16/16 gates and mutations plus 153 parent-chain regressions, and passed manual visual QA. \\
 T7.1.4 & Done & Supplementary Figures S1--S5 bind 792 heterogeneous records to 13 live parent verifiers, passed 17/17 gates and mutations plus 210 environment-aware parent regressions, and preserve failure, incomparable, dropped, and board-null states. \\
+T7.2.1--T7.2.3 & Done & Introduction/Related Work, Methods, and Results are governed by 14 source rows, 18 method-state rows, and 27 result-state rows; the three prose contracts pass 18/18, 18/18, and 20/20 gates with matched semantic mutations. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -699,43 +700,41 @@ power, or faster-than-existing-FPGA claim is admissible.
 
 \section{Results}
 
-\subsection{Legacy CNN+FPGA evidence retained as an extension lane}
+\subsection{Result-state and ranking convention}
 
-The earlier T24 frozen-set benchmark remains valid within its original
-mock-backed software-HIL scope.  Hybrid Residual-B was the winner and UKF the
-runner-up in all four scenarios.
+Results are ordered by evidential role rather than by effect size.  We first
+report the complete V4 system comparison, including comparator wins, family
+concentration, operational costs, and hardware-measurement nulls.  We then
+report the executed causal-headroom diagnostic and the resulting V5 early
+stop.  Only after that terminal decision do we show Phase~6C results, which use
+independent secondary splits and cannot alter the V4 or V5 verdicts.  Historical
+CNN and teacher--student results follow as replaceable extension evidence.
 
 \begin{table}[htbp]
 \centering
 \small
-\caption{Historical T24 result retained as learning-extension evidence.  The
-relative reduction is $(\pL^{\rm UKF}-\pL^{\rm hybrid})/\pL^{\rm UKF}$.
-This table is not part of the new unified \RouteA{} ranking.}
-\label{tab:legacy-t24}
-\begin{tabular}{@{}l r r r@{}}
+\caption{Result-state contract used throughout this section.  A row's position
+does not create cross-task comparability.}
+\label{tab:result-state-contract}
+\begin{tabularx}{\textwidth}{@{}L{0.20\textwidth} L{0.25\textwidth} Y@{}}
 \toprule
-Scenario & UKF final LER & Hybrid final LER & Relative reduction \\
+State & Admissible content & Ranking rule \\
 \midrule
-Static bias+$\theta$ & 0.825370 & 0.810902 & 1.75\% \\
-Linear ramp & 0.811201 & 0.787755 & 2.89\% \\
-Step $\sigma$+$\theta$ & 0.811548 & 0.788800 & 2.80\% \\
-Periodic drift & 0.821558 & 0.806392 & 1.85\% \\
+Primary restricted & Frozen V4 paired simulation and pre-board execution & Rank only methods sharing the V4 packet, split, observation, action, and budget contract \\
+Mandatory negative & Static/Window wins, tail equality, fallback/false-update cost, failed families and attempts & Report beside the positive contrast; never offset with another lane \\
+Diagnostic stop & Executed V5 causal/action-space entry audit and downstream absence & Report the stop decision, not a V5 decoder-performance result \\
+Secondary eligible & Official-code reproduction or project-native matched Phase~6C cells & Compare only within the frozen task signature; label every result secondary \\
+Null or contextual & blocked, ineligible, or \texttt{LITERATURE\_ONLY} cells & Preserve as a boundary ledger or Supplement/Related Work; no numerical ranking \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
-Two later scenario-specific repeat sets strengthened only the direction of this
-historical result.  With 12 paired formal-length repeats, the mean UKF-minus-
-hybrid differences were 0.015563 for static bias
-(paired-$t$ 95\% interval $[0.014778,0.016348]$) and 0.022417 for linear ramp
-($[0.021215,0.023619]$); all 12 pairs were positive in both scenarios.  The
-other two scenarios, all-scenario pooled inference, held-out robustness, and
-hardware validation were not closed by that evidence.
-
-The proper reuse is therefore modest: a learned residual can be useful on a
-bounded affine parameter surface.  It is not evidence that CNN is the best
-slow-loop estimator, that it satisfies the new matched budget, or that the
-complete system wins in tail and latency.
+This convention also fixes the denominator problem.  A positive multimode CPD
+result cannot rescue the stopped single-mode V5 route; a literature latency
+cannot replace a board measurement; and an oracle or unavailable-truth result
+cannot enter a deployable ranking.  Counts of failed families, restarts,
+attempts, and missing outputs are retained because their absence would change
+the scientific interpretation even when no scalar metric is available.
 
 \subsection{Untouched smooth formal comparison}
 
@@ -800,6 +799,16 @@ Thus the current smooth result supports a pre-registered EWMA contrast and a
 periodic-drift effect.  It does not support ``best deployable decoder'',
 ``better than static GKP decoding'', or ``general smooth-drift advantage''.
 
+A pinned Bayesian online change-detection wrapper was also replayed on the
+common traces.  Its paired LER exceeded \RouteA{} by
+$1.00184\times10^{-5}$ with a 95\% interval
+$[7.66793\times10^{-6},1.23689\times10^{-5}]$.  This is not evidence for a
+general drift-adaptive SOTA claim: the wrapper's worst update took
+13,004.1~$\mu$s against the frozen 5,000-$\mu$s cap and incurred one deadline
+miss.  The outcome and the matched-budget failure are therefore reported
+together, and the method is excluded from the strongest-deployable-baseline
+denominator rather than being counted as a favourable external win.
+
 \subsection{Action and update diagnostics}
 
 The formal action ledger contained 884,736 scored posterior updates and 13,824
@@ -817,6 +826,13 @@ generic uncertainty gating reduced aggregate OOD error by 0.00107490 with a
 compound family by $-0.00488536$ and imposed a small nominal cost.  T6.7.2
 therefore reported every abrupt/OOD family and the nominal negative control
 without using the periodic smooth gain to offset a failure.
+
+Policy selection also retained two complete failed families.  The static-switch
+and freeze-all-EWMA architectures each failed all 38 posterior-safe pilot
+tuples; their closest minimum safety slacks were $-0.037109375$ and
+$-0.044921875$, respectively.  No tuple from either family was promoted, and
+their failure is part of the rationale for the V4 dual-shadow design rather
+than an unreported hyperparameter restart.
 
 \subsection{Abrupt/OOD and nominal non-inferiority}
 
@@ -926,13 +942,16 @@ Integrated CXXRTL qualification & 4 smooth plus 6 fault families, each 100,000 c
 
 The integrated qualification also exercised six modes, five health states,
 three actions, nine reachable fault bits, CRC/version failures, FIFO
-disturbance, commit rejection, and counter/LLR saturation.  The HMM itself
-remains a software slow-loop component; the synthesized design consumes the
-quantized posterior/policy overlay.  Formal replay was 99.5802\% real traces and
-0.4198\% directed branch vectors.  This evidence does not cover real transport,
-clock-domain crossing, metastability, bitstream generation, power, ADC/DAC
-latency, or board deadline distributions.  No measured FPGA latency,
-end-to-end latency, or external fastest-decoder claim is active.
+disturbance, commit rejection, and counter/LLR saturation.  The directed fault
+family retained all 75 host-commit attempts and 25 rollback attempts; none is
+removed from the denominator because an assertion or recovery branch was
+unfavourable.  The HMM itself remains a software slow-loop component; the
+synthesized design consumes the quantized posterior/policy overlay.  Formal
+replay was 99.5802\% real traces and 0.4198\% directed branch vectors.  This
+evidence does not cover real transport, clock-domain crossing, metastability,
+bitstream generation, power, ADC/DAC latency, or board deadline distributions.
+No measured FPGA latency, end-to-end latency, or external fastest-decoder claim
+is active.
 
 \subsection{Causal-headroom audit and V5 early stop}
 
@@ -976,52 +995,6 @@ contract.  The early stop is therefore a substantive negative result: the
 observed oracle gap primarily calls for better causal state estimation or a
 different physical task, not a larger correction-action menu.
 
-\subsection{Teacher--student extension evidence}
-
-The non-Markovian teacher/student line remains useful as a replaceable control
-extension motivated by feedback-based QEC and real-time experimental control
-\cite{puviani2025,sivak2023}.  Figure~\ref{fig:teacher-student-lifetime} reuses
-the presentation result panel because it exposes both comparator ordering and
-the paired-seed sample structure.  The metric is a ten-cycle, finite-horizon
-area-equivalent effective fidelity lifetime; it is neither an asymptotic decay
-constant nor FPGA wall-clock time.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\textwidth]{../figures/ppt_summary_20260716/effective_fidelity_lifetime_cn.pdf}
-  \caption{Finite-model teacher--student extension evidence.  At cutoff 12
-  ($n=8$ paired evaluation seeds), the four-state student reached an effective
-  fidelity lifetime of 8.427 cycles versus 3.571 for fixed parameters, a
-  $2.36\times$ ratio.  At cutoff 16 ($n=4$), the corresponding values were
-  9.489 and 5.994 cycles, a $1.58\times$ ratio.  Bars show seed means and points
-  show paired seeds; the MF bar is the mean of five frozen agents, not a
-  test-selected winner.  The sidebar's 98.15\% is the lowest point retention,
-  whereas the lowest paired-bootstrap 95\% interval lower bound is 94.45\%.
-  All quantities are float finite-model results.}
-  \label{fig:teacher-student-lifetime}
-\end{figure}
-
-The student closely tracked the offline teacher: their cutoff-12 lifetimes were
-8.427 and 8.440 cycles, and their cutoff-16 lifetimes were 9.489 and 9.525
-cycles.  The five-agent MF mean was slightly higher at cutoff 12 (8.623 cycles)
-and lower at cutoff 16 (9.156 cycles), so the figure does not support universal
-teacher superiority.  Across the three preregistered retention metrics, the
-lowest student point retention was 0.981457 and the lowest 95\% interval lower
-bound was 0.944501 relative to teacher-versus-standard gain.
-
-The selected student uses four recurrent states and 95 stored scalars, versus
-72,853 for the teacher, a $\sim767\times$ float-model compression.  Its
-fixed-point RTL produced zero mismatches across 7,680 outputs, with maximum
-fixed-versus-float error $1.46038\times10^{-4}$.
-
-This is evidence for gain retention and compression within the project model.
-It is not an official reproduction or improvement over Puviani \emph{et al.},
-not a general memory-mechanism result, and not the main decoder LER claim.  The
-larger quantized GRU lower-bound required 72,854 cycles (2,698.30 $\mu$s at
-27 MHz), exceeded the five-microsecond slot, and was dropped.  That negative
-result supports the architectural decision to keep learning outside the
-critical fast path.
-
 \subsection{Independent Phase 6C decoder and comparison lanes}
 
 After the V5 stop, Phase~6C was executed as a read-only auxiliary programme.
@@ -1036,23 +1009,33 @@ it does not mean that every lane has a positive result.
 \begin{table}[htbp]
 \centering
 \small
-\caption{Phase~6C evidence lanes through T6.19.3.  Rows are intentionally not
-combined into a global score.}
+\caption{Phase~6C rows eligible for explicitly secondary Results.  Every row
+has evidence grade \texttt{OFFICIAL\_CODE\_REPRODUCTION} or
+\texttt{PROJECT\_NATIVE\_MATCHED}; rows are intentionally not combined into a
+global score.}
 \label{tab:phase6c-lanes}
 \begin{tabularx}{\textwidth}{@{}L{0.18\textwidth} L{0.21\textwidth} Y L{0.17\textwidth}@{}}
 \toprule
 Lane & Evidence grade & Result & Allowed interpretation \\
 \midrule
+Single-mode square CI/CPD & Project-native matched & Exact separability plus 1,048,576-point q10 audit; zero CI--Euclidean-CPD hard-action mismatches & Geometric equivalence only; likelihood/coset MAP remains distinct \\
 Two-GKP CNOT CI/ML & Project-native matched reproduction & 3,080,192 trials; ML reduced gate failure by 31.160\%, 58.065\%, and 67.982\% at 9, 12, and 13 dB; maximum literature discrepancy 1.52\% & Analog ML helps for the reproduced matched gate model \\
-Structured surface--GKP CPD & Official-code reproduction & 2,005/2,005 upstream checks; small-distance crossing 0.599298 versus 0.600245; CPD lower LER in 27/27 reproduced cells & Partial crossing/ordering reproduction, not the full reported distance range \\
+Structured surface--GKP CPD & Official-code reproduction & 2,005/2,005 upstream checks; official-data CPD/analog means 0.602456/0.599594; independent $d=3,5,7$ crossing means 0.599298/0.600245; CPD lower LER in 27/27 cells & Official-data reanalysis plus partial small-distance reproduction, not full-distance threshold precision \\
 Multimode posterior-weighted CPD & Project-native matched & 9.6 million cycles, 38.4 million modal decodes; adaptive $\pL=0.172261$ versus static Euclidean 0.236929 & Observed-only weighting gives a large drift gain in this independent model \\
-AQEC lifetime replay & Project-native negative / official blocked & Active QEC was worse than idle in all six project-native wall-clock cells; official experimental protocol unavailable & Negative project model, not a refutation of the experiment \\
-Learned-model eligibility & Ineligible & 0 of 16 candidate families met the same-task contract; one legacy CNN replayed only as an exact diagnostic & No learned same-task ranking \\
-GQF controller & Blocked & Exact source completeness 0/15; all 13 matched comparison metrics null & No reproduction or superiority over Puviani \emph{et al.} \\
-External FPGA decoders & Literature-only normalization & 18 implementations normalized; exact same-task comparator count 0 & No raw-ns ranking, fastest, or SOTA claim \\
+AQEC wall-clock replay & Project-native matched & Six cells $\times$ 24 clusters on a common 700-$\mu$s horizon; measurement-feedback and autonomous control failed to beat idle in every cell & Negative finite-cutoff project result; not an official AQEC reproduction or refutation \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+The corresponding non-ranking boundary ledger is separate from
+Table~\ref{tab:phase6c-lanes}.  Learned eligibility was zero of 16 candidate
+families; the exact GQF source checklist passed zero of 15 items and left all
+13 matched NMF metrics null; official AQEC protocol reproduction remained
+blocked; and 18 external FPGA implementations yielded zero exact same-task
+rows.  These counts document failed or unavailable comparisons, not additional
+performance observations.  Literature-only latency and lifetime values remain
+in Related Work or the Supplement and are never juxtaposed with project values
+as a numerical ranking.
 
 For the multimode task, static posterior weighting alone was harmful in the
 aggregate ($\pL=0.261679$), whereas the observed-only adaptive rule nearly
@@ -1085,6 +1068,100 @@ Figure~\ref{fig:supp-phase6c-atlas}, alongside four new evidence-bounded
 supplementary figures.  Moving the atlas out of the main result sequence is a
 placement decision, not an evidence downgrade: it prevents a heterogeneous
 comparison map from being read as a fifth main-result ranking.
+
+\subsection{Legacy CNN+FPGA evidence retained as an extension lane}
+
+The earlier T24 frozen-set benchmark remains valid within its original
+mock-backed software-HIL scope.  Hybrid Residual-B was the winner and UKF the
+runner-up in all four scenarios.
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Historical T24 result retained as learning-extension evidence.  The
+relative reduction is $(\pL^{\rm UKF}-\pL^{\rm hybrid})/\pL^{\rm UKF}$.
+This table is not part of the new unified \RouteA{} ranking.}
+\label{tab:legacy-t24}
+\begin{tabular}{@{}l r r r@{}}
+\toprule
+Scenario & UKF final LER & Hybrid final LER & Relative reduction \\
+\midrule
+Static bias+$\theta$ & 0.825370 & 0.810902 & 1.75\% \\
+Linear ramp & 0.811201 & 0.787755 & 2.89\% \\
+Step $\sigma$+$\theta$ & 0.811548 & 0.788800 & 2.80\% \\
+Periodic drift & 0.821558 & 0.806392 & 1.85\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two later scenario-specific repeat sets strengthened only the direction of this
+historical result.  With 12 paired formal-length repeats, the mean UKF-minus-
+hybrid differences were 0.015563 for static bias
+(paired-$t$ 95\% interval $[0.014778,0.016348]$) and 0.022417 for linear ramp
+($[0.021215,0.023619]$); all 12 pairs were positive in both scenarios.  The
+other two scenarios, all-scenario pooled inference, held-out robustness, and
+hardware validation were not closed by that evidence.
+
+The proper reuse is therefore modest: a learned residual can be useful on a
+bounded affine parameter surface.  It is not evidence that CNN is the best
+slow-loop estimator, that it satisfies the new matched budget, or that the
+complete system wins in tail and latency.
+
+\subsection{Teacher--student extension evidence}
+
+The non-Markovian teacher/student line remains useful as a replaceable control
+extension motivated by feedback-based QEC and real-time experimental control
+\cite{puviani2025,sivak2023}.  Figure~\ref{fig:teacher-student-lifetime} reuses
+the presentation result panel because it exposes both comparator ordering and
+the paired-seed sample structure.  The metric is a ten-cycle, finite-horizon
+area-equivalent effective fidelity lifetime; it is neither an asymptotic decay
+constant nor FPGA wall-clock time.
+
+The student closely tracked the offline teacher: their cutoff-12 lifetimes were
+8.427 and 8.440 cycles, and their cutoff-16 lifetimes were 9.489 and 9.525
+cycles.  The five-agent MF mean was slightly higher at cutoff 12 (8.623 cycles)
+and lower at cutoff 16 (9.156 cycles), so the figure does not support universal
+teacher superiority.  Across the three preregistered retention metrics, the
+lowest student point retention was 0.981457 and the lowest 95\% interval lower
+bound was 0.944501 relative to teacher-versus-standard gain.
+
+Selection multiplicity is retained rather than collapsed to the displayed
+candidate.  The fresh teacher used three restarts (601, 709, and 811) and was
+selected by validation only; restarts 601 and 811 hit the 320-epoch cap, and a
+test-hindsight restart would have differed but was not substituted.  The
+student search used 1-, 2-, and 4-state models with three restarts each; all six
+2-/4-state fits hit the 900-epoch cap, while evaluation remained excluded from
+restart and dimension selection.  These cap hits and ranking reversals prevent
+an optimizer-optimality claim even though the frozen candidate passed its
+retention gate.
+
+The selected student uses four recurrent states and 95 stored scalars, versus
+72,853 for the teacher, a $\sim767\times$ float-model compression.  Its
+fixed-point RTL produced zero mismatches across 7,680 outputs, with maximum
+fixed-versus-float error $1.46038\times10^{-4}$.
+
+This is evidence for gain retention and compression within the project model.
+It is not an official reproduction or improvement over Puviani \emph{et al.},
+not a general memory-mechanism result, and not the main decoder LER claim.  The
+larger quantized GRU lower-bound required 72,854 cycles (2,698.30 $\mu$s at
+27 MHz), exceeded the five-microsecond slot, and was dropped.  That negative
+result supports the architectural decision to keep learning outside the
+critical fast path.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/ppt_summary_20260716/effective_fidelity_lifetime_cn.pdf}
+  \caption{Finite-model teacher--student extension evidence.  At cutoff 12
+  ($n=8$ paired evaluation seeds), the four-state student reached an effective
+  fidelity lifetime of 8.427 cycles versus 3.571 for fixed parameters, a
+  $2.36\times$ ratio.  At cutoff 16 ($n=4$), the corresponding values were
+  9.489 and 5.994 cycles, a $1.58\times$ ratio.  Bars show seed means and points
+  show paired seeds; the MF bar is the mean of five frozen agents, not a
+  test-selected winner.  The sidebar's 98.15\% is the lowest point retention,
+  whereas the lowest paired-bootstrap 95\% interval lower bound is 94.45\%.
+  All quantities are float finite-model results.}
+  \label{fig:teacher-student-lifetime}
+\end{figure}
 
 \subsection{Supplementary validation and failure-domain audit}
 
