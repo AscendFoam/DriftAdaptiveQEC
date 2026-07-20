@@ -1,0 +1,811 @@
+{
+  "task_id": "T7.2.5",
+  "schema_version": "t7.2.5-supplementary-evidence-contract-v1",
+  "generated_at_utc": "2026-07-20T16:57:48.189920+00:00",
+  "manuscript": {
+    "sections": [
+      "Evidence-bounded supplementary figure suite",
+      "Mathematical and decision definitions",
+      "Frozen parameters and execution contract",
+      "Complete comparators and statistical protocol",
+      "Ablations, failure modes, and negative selection",
+      "RTL, toolchain, long-sequence, and reproduction procedure",
+      "Phase 6C source locator and non-mixing ledger",
+      "Primary repository evidence map",
+      "Claim wording guardrails"
+    ],
+    "characters": 34464,
+    "sha256": "729a1bd8a23dbbdffb4349c2272aec1841fd88012a3b2c24777fa7bc6ac72615",
+    "checks": {
+      "required_sections": true,
+      "ordered_sections": true,
+      "map_definitions": true,
+      "metric_boundaries": true,
+      "frozen_parameter_registry": true,
+      "complete_comparators": true,
+      "statistical_protocol": true,
+      "negative_ledger": true,
+      "long_rtl_reproduction": true,
+      "preboard_boundary": true,
+      "phase6c_task_signature": true,
+      "phase6c_locator": true,
+      "value_states": true,
+      "nonmixing_boundary": true,
+      "prohibited_assertions_absent": true
+    },
+    "prohibited_hits": []
+  },
+  "supplement_rows": [
+    {
+      "row_id": "SUP-001",
+      "topic": "folded_syndrome",
+      "supplement_state": "DEFINITION",
+      "source_ids": "Methods/T6.17.1",
+      "boundary": "Half-open square-GKP residue with production tie rule"
+    },
+    {
+      "row_id": "SUP-002",
+      "topic": "logical_coset_map",
+      "supplement_state": "DEFINITION",
+      "source_ids": "T2/T6.17.1",
+      "boundary": "Periodic likelihood sum; MAP is not renamed CPD"
+    },
+    {
+      "row_id": "SUP-003",
+      "topic": "joint_correlated_map",
+      "supplement_state": "DEFINITION",
+      "source_ids": "T6.6.1",
+      "boundary": "Two-dimensional software comparator differs from phase LUT"
+    },
+    {
+      "row_id": "SUP-004",
+      "topic": "pauli_ler",
+      "supplement_state": "DEFINITION",
+      "source_ids": "T6.5.3",
+      "boundary": "p_L equals p_X+p_Y+p_Z; raw denominators retained"
+    },
+    {
+      "row_id": "SUP-005",
+      "topic": "window_tail",
+      "supplement_state": "DEFINITION",
+      "source_ids": "T6.5.3/T6.7.2",
+      "boundary": "512-decision p95, worst and CVaR remain finite-horizon metrics"
+    },
+    {
+      "row_id": "SUP-006",
+      "topic": "paired_orientation",
+      "supplement_state": "DEFINITION",
+      "source_ids": "T6.5.3",
+      "boundary": "Positive baseline-minus-candidate difference favours candidate"
+    },
+    {
+      "row_id": "SUP-007",
+      "topic": "gap_closure",
+      "supplement_state": "DEFINITION",
+      "source_ids": "T6.5.3",
+      "boundary": "Negative static-to-oracle gap closure is not clipped"
+    },
+    {
+      "row_id": "SUP-008",
+      "topic": "observed_truth_split",
+      "supplement_state": "FROZEN_PARAMETER",
+      "source_ids": "T6.5.2",
+      "boundary": "Truth is evaluator/oracle only"
+    },
+    {
+      "row_id": "SUP-009",
+      "topic": "quantization",
+      "supplement_state": "FROZEN_PARAMETER",
+      "source_ids": "T6.5.2",
+      "boundary": "10-bit ADC, 8-bit address, 2-bit fraction"
+    },
+    {
+      "row_id": "SUP-010",
+      "topic": "map_word",
+      "supplement_state": "FROZEN_PARAMETER",
+      "source_ids": "T6.5.2/T6.7.3",
+      "boundary": "Signed Q9.12, ties-to-even, saturation"
+    },
+    {
+      "row_id": "SUP-011",
+      "topic": "fast_path",
+      "supplement_state": "FROZEN_PARAMETER",
+      "source_ids": "T6.5.2/T6.7.3",
+      "boundary": "Six cycles and II=1 before physical transport"
+    },
+    {
+      "row_id": "SUP-012",
+      "topic": "cadence",
+      "supplement_state": "FROZEN_PARAMETER",
+      "source_ids": "T6.5.2/T6.6.2",
+      "boundary": "32-decision posterior and 4,000-cycle image opportunity"
+    },
+    {
+      "row_id": "SUP-013",
+      "topic": "compute_budget",
+      "supplement_state": "FROZEN_PARAMETER",
+      "source_ids": "T6.5.2",
+      "boundary": "8,192 MAC/B/B and 5,000-us update ceilings"
+    },
+    {
+      "row_id": "SUP-014",
+      "topic": "hmm_contract",
+      "supplement_state": "FROZEN_PARAMETER",
+      "source_ids": "T6.6.2",
+      "boundary": "Four causal states with 0.1/4.0/2.0 calibration parameters"
+    },
+    {
+      "row_id": "SUP-015",
+      "topic": "policy_tuple",
+      "supplement_state": "FROZEN_PARAMETER",
+      "source_ids": "T6.6.3",
+      "boundary": "One tuple selected from 1,728 pilot candidates"
+    },
+    {
+      "row_id": "SUP-016",
+      "topic": "bank_transaction",
+      "supplement_state": "FROZEN_PARAMETER",
+      "source_ids": "T6.5.2/T6.7.3",
+      "boundary": "CRC/SHA/CAS A/B bank, six-cycle drain and LKG"
+    },
+    {
+      "row_id": "SUP-017",
+      "topic": "formal_split",
+      "supplement_state": "FROZEN_PARAMETER",
+      "source_ids": "T6.5.3",
+      "boundary": "12 calibration, 12 pilot and 24 formal clusters"
+    },
+    {
+      "row_id": "SUP-018",
+      "topic": "standard_binning",
+      "supplement_state": "COMPARATOR",
+      "source_ids": "T6.6.1",
+      "boundary": "Weak common-grid reference"
+    },
+    {
+      "row_id": "SUP-019",
+      "topic": "static_joint_map",
+      "supplement_state": "COMPARATOR",
+      "source_ids": "T6.6.1",
+      "boundary": "Strong software comparator, not current full joint-MAP RTL"
+    },
+    {
+      "row_id": "SUP-020",
+      "topic": "window_map",
+      "supplement_state": "COMPARATOR",
+      "source_ids": "T6.6.1/T6.7.1",
+      "boundary": "Strongest smooth deployable comparator"
+    },
+    {
+      "row_id": "SUP-021",
+      "topic": "ewma_map",
+      "supplement_state": "COMPARATOR",
+      "source_ids": "T6.6.1/T6.5.3",
+      "boundary": "Pilot-locked primary comparator"
+    },
+    {
+      "row_id": "SUP-022",
+      "topic": "kalman_map",
+      "supplement_state": "COMPARATOR",
+      "source_ids": "T6.6.1",
+      "boundary": "Secondary matched deployable comparator"
+    },
+    {
+      "row_id": "SUP-023",
+      "topic": "route_a_v4",
+      "supplement_state": "COMPARATOR",
+      "source_ids": "T6.6.2",
+      "boundary": "Safety router over Window/EWMA shadows"
+    },
+    {
+      "row_id": "SUP-024",
+      "topic": "oracle",
+      "supplement_state": "COMPARATOR",
+      "source_ids": "T6.6.1",
+      "boundary": "Truth-privileged non-ranking upper bound"
+    },
+    {
+      "row_id": "SUP-025",
+      "topic": "paired_bootstrap",
+      "supplement_state": "STATISTICAL_RULE",
+      "source_ids": "T6.5.3/T6.16.3",
+      "boundary": "20,000 whole-cluster resamples at 95% confidence"
+    },
+    {
+      "row_id": "SUP-026",
+      "topic": "multiplicity",
+      "supplement_state": "STATISTICAL_RULE",
+      "source_ids": "T6.5.3/T6.16.3",
+      "boundary": "Holm only within a preregistered endpoint family"
+    },
+    {
+      "row_id": "SUP-027",
+      "topic": "failed_policy_families",
+      "supplement_state": "NEGATIVE_OR_FAILURE",
+      "source_ids": "T6.6.3",
+      "boundary": "Static-switch and freeze-all each fail all 38 tuples"
+    },
+    {
+      "row_id": "SUP-028",
+      "topic": "static_window_counterevidence",
+      "supplement_state": "NEGATIVE_OR_FAILURE",
+      "source_ids": "T6.7.1/T6.9.3",
+      "boundary": "V4 is not the best deployable decoder"
+    },
+    {
+      "row_id": "SUP-029",
+      "topic": "calibration_tail",
+      "supplement_state": "NEGATIVE_OR_FAILURE",
+      "source_ids": "T6.7.2",
+      "boundary": "181/512 versus static 32/512 worst window"
+    },
+    {
+      "row_id": "SUP-030",
+      "topic": "bocd_budget",
+      "supplement_state": "NEGATIVE_OR_FAILURE",
+      "source_ids": "T6.8.3",
+      "boundary": "13,004.1-us worst update exceeds 5,000-us cap"
+    },
+    {
+      "row_id": "SUP-031",
+      "topic": "v5_entry_stop",
+      "supplement_state": "NEGATIVE_OR_FAILURE",
+      "source_ids": "T6.10.1/T6.15.5",
+      "boundary": "Causal/action headroom fails before implementation"
+    },
+    {
+      "row_id": "SUP-032",
+      "topic": "physical_board",
+      "supplement_state": "NEGATIVE_OR_FAILURE",
+      "source_ids": "T6.9.2",
+      "boundary": "All 42 measured fields remain null"
+    },
+    {
+      "row_id": "SUP-033",
+      "topic": "generic_long_rtl",
+      "supplement_state": "RTL_REPRODUCTION",
+      "source_ids": "T6.2.2",
+      "boundary": "One million cycles, ten fault families and all 61 attempts"
+    },
+    {
+      "row_id": "SUP-034",
+      "topic": "integrated_long_rtl",
+      "supplement_state": "RTL_REPRODUCTION",
+      "source_ids": "T6.7.3",
+      "boundary": "995,802 replay plus 4,198 directed cycles; all 75/25 attempts"
+    },
+    {
+      "row_id": "SUP-035",
+      "topic": "toolchain",
+      "supplement_state": "RTL_REPRODUCTION",
+      "source_ids": "T6.2.2/T6.7.3",
+      "boundary": "Trace/model/executable/log hashes and exact tool versions"
+    },
+    {
+      "row_id": "SUP-036",
+      "topic": "static_preboard_profile",
+      "supplement_state": "RTL_REPRODUCTION",
+      "source_ids": "T6.19.1",
+      "boundary": "Only static MAP-LUT has eligible current RTL/P&R estimate"
+    },
+    {
+      "row_id": "SUP-037",
+      "topic": "single_ci_cpd",
+      "supplement_state": "PHASE6C_LOCATOR",
+      "source_ids": "T6.17.1",
+      "boundary": "Project-native square/isotropic equivalence only"
+    },
+    {
+      "row_id": "SUP-038",
+      "topic": "two_gkp_cnot",
+      "supplement_state": "PHASE6C_LOCATOR",
+      "source_ids": "T6.17.2",
+      "boundary": "Project-native matched gate failure, not memory LER"
+    },
+    {
+      "row_id": "SUP-039",
+      "topic": "structured_cpd",
+      "supplement_state": "PHASE6C_LOCATOR",
+      "source_ids": "T6.18.2",
+      "boundary": "Official-code reproduction with small-distance caveat"
+    },
+    {
+      "row_id": "SUP-040",
+      "topic": "multimode_cpd",
+      "supplement_state": "PHASE6C_LOCATOR",
+      "source_ids": "T6.18.3",
+      "boundary": "Independent project-native d=3 drift result"
+    },
+    {
+      "row_id": "SUP-041",
+      "topic": "learned_eligibility",
+      "supplement_state": "PHASE6C_LOCATOR",
+      "source_ids": "T6.17.3",
+      "boundary": "Zero of 16 same-task eligible"
+    },
+    {
+      "row_id": "SUP-042",
+      "topic": "gqf_nmf",
+      "supplement_state": "PHASE6C_LOCATOR",
+      "source_ids": "T6.8.4/T6.8.5",
+      "boundary": "Blocked exact reproduction; 13 metrics null"
+    },
+    {
+      "row_id": "SUP-043",
+      "topic": "aqec",
+      "supplement_state": "PHASE6C_LOCATOR",
+      "source_ids": "T6.18.1",
+      "boundary": "Negative project replay; official protocol blocked"
+    },
+    {
+      "row_id": "SUP-044",
+      "topic": "external_fpga",
+      "supplement_state": "PHASE6C_LOCATOR",
+      "source_ids": "T6.19.2",
+      "boundary": "18 literature rows and zero exact same-task comparator"
+    },
+    {
+      "row_id": "SUP-045",
+      "topic": "value_state_semantics",
+      "supplement_state": "NON_MIXING_RULE",
+      "source_ids": "T6.16.2",
+      "boundary": "N/A, null, failed and negative remain distinct"
+    },
+    {
+      "row_id": "SUP-046",
+      "topic": "atlas_nonranking",
+      "supplement_state": "NON_MIXING_RULE",
+      "source_ids": "T6.19.3",
+      "boundary": "206 cells, no global score/winner or V5 rescue"
+    }
+  ],
+  "parent_state": {
+    "verdicts": {
+      "claim": "PASS_RESTRICTED_PREBOARD_CLAIM_BOUNDARY_MATRIX",
+      "introduction": "PASS_EVIDENCE_BOUNDED_INTRODUCTION_RELATED_WORK",
+      "methods": "PASS_EVIDENCE_STATE_BOUNDED_METHODS",
+      "results": "PASS_RESULTS_COMPLETE_NEGATIVE_AND_SECONDARY_BOUNDARIES",
+      "discussion": "PASS_DISCUSSION_LIMITATIONS_COST_AND_PHYSICAL_TRANSITION_BOUNDARIES",
+      "figures": "PASS_SUPPLEMENT_FIGURE_CONTRACT_RESTRICTED_NONRANKING",
+      "long_rtl": "PASS_BOARD_INDEPENDENT_LONG_RTL_QUALIFICATION_READY_FOR_ROUTE_A",
+      "integrated_rtl": "PASS_ROUTE_A_INTEGRATED_LONG_RTL_QUALIFICATION",
+      "preboard": "PASS_STATIC_MAP_LUT_PREBOARD_PROFILE_OTHERS_NA_HOST_STAGES_SEPARATE",
+      "board": "BLOCKED_T6_9_2_NO_PHYSICAL_BOARD_EVIDENCE_ALL_MEASURED_FIELDS_NULL",
+      "v5": "NO_GO_V5_EARLY_HEADROOM_STOP",
+      "single": "PASS_SINGLE_MODE_EUCLIDEAN_CPD_EQUALS_CI_WITH_MAP_BOUNDARIES",
+      "cnot": "PASS_PROJECT_NATIVE_MATCHED_NOH_CNOT_CI_ML_REPRODUCTION",
+      "learned": "PASS_READONLY_LEARNED_ELIGIBILITY_NO_SAME_TASK_CHECKPOINT",
+      "gqf": "COMPLETE_GQF_PAPER_EXACT_ATTEMPT_NO_GO_SOURCE_INCOMPLETE",
+      "aqec": "PASS_PROJECT_NATIVE_AQEC_WALLCLOCK_WITH_OFFICIAL_PROTOCOL_BLOCKED",
+      "structured": "PASS_OFFICIAL_CPD_SMALL_DISTANCE_THRESHOLD_REPRODUCTION_WITH_UPSTREAM_CAVEAT",
+      "multimode": "GO_POSTERIOR_WEIGHTED_CPD_DRIFT_GAIN",
+      "external": "PASS_EXTERNAL_FPGA_REFRESH_ZERO_SAME_TASK_NO_SPEED_CLAIM",
+      "atlas": "PASS_AUX_COMPARISON_INTEGRITY"
+    },
+    "previous_contracts_live": {
+      "introduction": true,
+      "methods": true,
+      "results": true,
+      "discussion": true
+    },
+    "figure_records": 792,
+    "secondary_statistics": {
+      "confidence_level": 0.95,
+      "paired_bootstrap_resamples": 20000,
+      "threshold_bootstrap_resamples": 2000,
+      "resampling_unit": "independent seed cluster or trajectory, never individual correlated rounds",
+      "multiplicity": "Holm correction within each task's predeclared primary endpoint family only; never pool p-values or wins across lanes",
+      "zero_event_rule": "report exact one-sided 95% binomial upper bound",
+      "raw_evidence": "always save raw counts, denominators, seed/config/hash and all attempted cells",
+      "selection_rule": "no performance-dependent early stopping, candidate reselection or scenario-specific threshold tuning"
+    },
+    "ontology": {
+      "signature_fields": [
+        "code_family",
+        "modes_or_distance",
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "noise_model",
+        "observability",
+        "online_privilege",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "value_states": [
+        "ESTIMATE_VALUE",
+        "FAILED",
+        "LITERATURE_VALUE",
+        "MEASURED_VALUE",
+        "NEGATIVE",
+        "NULL_NOT_REPORTED",
+        "N_A_NOT_APPLICABLE",
+        "REPRODUCED_VALUE"
+      ]
+    },
+    "long_rtl": {
+      "families": 10,
+      "cycles": 1000000,
+      "valid": 972386,
+      "commit_attempts": 61,
+      "undefined": 0,
+      "silent_overflow": 0,
+      "cxx_mismatches": 0
+    },
+    "integrated_rtl": {
+      "families": 10,
+      "cycles": 1000000,
+      "replay": 995802,
+      "directed": 4198,
+      "host_attempts": 75,
+      "rollback_attempts": 25,
+      "undefined": 0,
+      "silent_overflow": 0,
+      "cxx_mismatches": 0
+    },
+    "preboard": {
+      "eligible_profiles": 1,
+      "equivalence_rows": 4316,
+      "cycles": 6,
+      "ii": 1,
+      "pr_seeds": 3,
+      "fmax_min": 41.02396011352539,
+      "fmax_max": 42.2119026184082,
+      "lut_min": 3377,
+      "lut_max": 3387
+    },
+    "board": {
+      "fields": 42,
+      "nonnull": 0
+    },
+    "v5": {
+      "dropped_tasks": 20,
+      "downstream_outputs": 0
+    },
+    "phase6c": {
+      "single_domain": 1048576,
+      "single_boundary": 1000000,
+      "single_mismatches": 0,
+      "cnot_trials": 3080192,
+      "cnot_reductions": [
+        0.3115953070242268,
+        0.5806451612903226,
+        0.6798176674001886
+      ],
+      "learned_candidates": 16,
+      "learned_eligible": 0,
+      "gqf_passed": 0,
+      "gqf_failed": 15,
+      "aqec_cells": 6,
+      "aqec_clusters": 144,
+      "aqec_official": "BLOCKED_OFFICIAL_PROTOCOL_REPRODUCTION",
+      "structured_upstream": 2005,
+      "structured_cells": 27,
+      "structured_cpd_wins": 27,
+      "multimode_cycles": 9600000,
+      "multimode_decodes": 38400000,
+      "multimode_static": 0.236929375,
+      "multimode_adaptive": 0.1722609375,
+      "external_rows": 18,
+      "external_same_task": 0,
+      "atlas_cells": 206,
+      "global_score": false,
+      "global_winner": null
+    },
+    "task_status": "Done"
+  },
+  "source_bindings": {
+    "manuscript": {
+      "path": "docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex",
+      "sha256": "d16388e3c158ca9f24f007c79514caf2f96aa2251bcf9ff30b48a2d84d76ea76",
+      "bytes": 132040
+    },
+    "claim_matrix": {
+      "path": "docs/t7_1_1_claim_evidence_boundary_matrix.json",
+      "sha256": "d3126d0c7b3a8991a23b1b4281558020e5c76f8b00a071717c30a491d546253c",
+      "bytes": 80985
+    },
+    "introduction_contract": {
+      "path": "docs/t7_2_1_introduction_related_work_contract.json",
+      "sha256": "3355106bad4cfdf2fbfa9caca0606792aa319a4121fdb6e3f2e9a675e0991c56",
+      "bytes": 35614
+    },
+    "methods_contract": {
+      "path": "docs/t7_2_2_methods_evidence_contract.json",
+      "sha256": "98be040ec032974cbfcfe9dde7a5be51ed65815384c79eb9bb7d98f5b4e76234",
+      "bytes": 18319
+    },
+    "results_contract": {
+      "path": "docs/t7_2_3_results_evidence_contract.json",
+      "sha256": "2f995379becc8599a427d79cbbfcae3e48fcf60ac6af990e60c2864ec0bc841c",
+      "bytes": 34270
+    },
+    "discussion_contract": {
+      "path": "docs/t7_2_4_discussion_conclusion_contract.json",
+      "sha256": "9b0bd4720e615fa7dd71efcec3b058d83c89fe78f6c5822641117505ccd37749",
+      "bytes": 17136
+    },
+    "supplement_figure_contract": {
+      "path": "docs/t7_1_4_supplement_figure_contract.json",
+      "sha256": "23d99351b1e1389a4dcc2882361f1d19af3368d18c72f84722b0f9a27dac1451",
+      "bytes": 682498
+    },
+    "execution_contract": {
+      "path": "docs/t6_5_2_unified_execution_contract.json",
+      "sha256": "ecc431d810790e95b6d03128fdcf63c8a04f2fe94756b8485896fcd14c21e854",
+      "bytes": 65735
+    },
+    "formal_preregistration": {
+      "path": "docs/t6_5_3_route_a_preregistration.json",
+      "sha256": "702fe9f09f8716499ccdc03e7c18c8bb5d8b27997bbeb93495253d95bb93cc97",
+      "bytes": 90318
+    },
+    "posterior_lock": {
+      "path": "docs/t6_6_3_route_a_posterior_threshold_lock.json",
+      "sha256": "29989f311cbe1306690439bd6ea0303fd4587fb5d69d744b8e915c97ccf29bec",
+      "bytes": 584201
+    },
+    "smooth_formal": {
+      "path": "docs/t6_7_1_smooth_formal_matrix.json",
+      "sha256": "4196ded90f032ece0a3d983d128626d551d8805a0377680ef02634bce08c29aa",
+      "bytes": 48640622
+    },
+    "tail_formal": {
+      "path": "docs/t6_7_2_abrupt_ood_tail_formal_matrix.json",
+      "sha256": "2ae43652593d66198f6f7114b3b2945da23c6596aa0c7adbfa10be78805d4957",
+      "bytes": 66941154
+    },
+    "long_rtl": {
+      "path": "docs/t6_2_2_long_rtl_qualification.json",
+      "sha256": "207b4e82b65a286e5ee23f16f387730a783ea34101d8cf7b9f80ae6e39d2b2cd",
+      "bytes": 28673
+    },
+    "integrated_rtl": {
+      "path": "docs/t6_7_3_route_a_integrated_rtl_qualification.json",
+      "sha256": "76a00242af2a61900c1151eb77c64aec070b59fb7525fdb1bded73d6eb6c508c",
+      "bytes": 47777
+    },
+    "preboard_profiles": {
+      "path": "docs/t6_19_1_project_preboard_profiles.json",
+      "sha256": "cbab97d1057bf67249b2e8f97efc04433f4d3240b0407ae4a352e5845c21c07b",
+      "bytes": 24285
+    },
+    "board_blocker": {
+      "path": "docs/t6_9_2_route_a_board_measurement_blocker.json",
+      "sha256": "3ba6b5fbaf88049b62a6bb8fe32d3a1ccb2c4e234c7b4f96e7401e3f598bf8c8",
+      "bytes": 9311
+    },
+    "v5_final_gate": {
+      "path": "docs/t6_15_5_route_a_v5_final_evidence_gate.json",
+      "sha256": "537029824f305e001920e61cf03be457074655ee6112fd2db6ab9f0241607670",
+      "bytes": 6659
+    },
+    "ontology": {
+      "path": "docs/t6_16_2_comparison_ontology.json",
+      "sha256": "c3d1138466993c6685b1ec4a75feb857c436cc3c15ca9eedd18aab225a81b21c",
+      "bytes": 61056
+    },
+    "secondary_preregistration": {
+      "path": "docs/t6_16_3_secondary_preregistration.json",
+      "sha256": "556572d10cd9615ed0a4dae7f505f0ffaf9a44680e4e32973c2b5c1095cbff2d",
+      "bytes": 55832
+    },
+    "single_cpd": {
+      "path": "docs/t6_17_1_single_mode_cpd_equivalence.json",
+      "sha256": "25734c74a0c13ff3d3e5def38dc89719587b68364a2b1d0b21056413a1f0f2bf",
+      "bytes": 26923
+    },
+    "surface_cnot": {
+      "path": "docs/t6_17_2_noh_cnot_ci_ml_reproduction.json",
+      "sha256": "6b19bc5d99f4dbfe30c3f826d05f3f49721ca6bb0854206c739cea16115ae81f",
+      "bytes": 42465
+    },
+    "learned_eligibility": {
+      "path": "docs/t6_17_3_learned_model_eligibility_replay.json",
+      "sha256": "8b2cbaebc40075ef7cd0814699303b99f2f15bfaa362dc34d903279ea8469331",
+      "bytes": 188759
+    },
+    "gqf_exact": {
+      "path": "docs/t6_8_4_gqf_paper_exact_reproduction.json",
+      "sha256": "8677917ad3c8bc6f60f6630dd757546a86c676781594d2c4ecd6f4e41c45ad29",
+      "bytes": 24539
+    },
+    "aqec": {
+      "path": "docs/t6_18_1_aqec_common_wallclock_replay.json",
+      "sha256": "317b991735a51e781c6caf0fa37f73b00458cab134b0dc8efb400bb33ce5ba12",
+      "bytes": 8214743
+    },
+    "structured_cpd": {
+      "path": "docs/t6_18_2_official_structured_cpd_reproduction.json",
+      "sha256": "fd6d20258fc65debdb23c413553ab384d216ecf77e7dcdc84f42b50b54dd48a8",
+      "bytes": 678405
+    },
+    "multimode_cpd": {
+      "path": "docs/t6_18_3_multimode_posterior_weighted_cpd.json",
+      "sha256": "7d5f27225f377b88b130e721a3ba5d739662efa52f72796b852d99a0d6e857a8",
+      "bytes": 32023
+    },
+    "external_fpga": {
+      "path": "docs/t6_19_2_external_fpga_normalization.json",
+      "sha256": "72be049522d2fa531a122ddc8077f655f16a6f39b877716abc0b0fc7c790ec0a",
+      "bytes": 83067
+    },
+    "phase6c_integrity": {
+      "path": "docs/t6_19_3_secondary_evidence_integrity.json",
+      "sha256": "9402e7e33076b314b050788a9a657e7a47a245d55c6da289b2b6227f2d7e1027",
+      "bytes": 384096
+    },
+    "task_board": {
+      "path": "docs/new_task_board.md",
+      "sha256": "17695b829db3d0a54951bf5aadb7229109b0956307bf878f4cc9b8f3750b9f52",
+      "bytes": 241378
+    },
+    "implementation": {
+      "path": "cnn_fpga/benchmark/supplementary_evidence_contract.py",
+      "sha256": "22a81b86d592e973105b213e57657dba88599a0ca0ea3b2c19622c3a4b7c1819",
+      "bytes": 36790
+    }
+  },
+  "source_integrity_declared": true,
+  "gates": {
+    "G01_identity": true,
+    "G02_live_source_bindings": true,
+    "G03_appendix_sections_complete_and_ordered": true,
+    "G04_map_and_metric_definitions": true,
+    "G05_frozen_parameter_registry": true,
+    "G06_complete_comparator_registry": true,
+    "G07_statistical_protocol_complete": true,
+    "G08_negative_and_failure_ledger": true,
+    "G09_long_rtl_reproduction": true,
+    "G10_preboard_measurement_boundary": true,
+    "G11_phase6c_task_signature_and_locator": true,
+    "G12_value_states_and_nonmixing": true,
+    "G13_previous_prose_contracts_live": true,
+    "G14_supplement_figure_parent_complete": true,
+    "G15_ontology_exact": true,
+    "G16_long_rtl_parent_exact": true,
+    "G17_integrated_rtl_parent_exact": true,
+    "G18_preboard_parent_and_board_null": true,
+    "G19_phase6c_correctness_and_reproduction": true,
+    "G20_phase6c_positive_is_lane_local": true,
+    "G21_phase6c_absence_and_negative_states": true,
+    "G22_rows_complete_unique_and_stateful": true,
+    "G23_task_status": true,
+    "G24_prohibited_assertions_absent": true
+  },
+  "gate_summary": {
+    "passed": 24,
+    "total": 24
+  },
+  "verdict": "PASS_SUPPLEMENT_COMPLETE_REPRODUCIBLE_AND_NONMIXING",
+  "semantic_mutation_audit": {
+    "count": 24,
+    "detected": 24,
+    "cases": [
+      {
+        "mutation_id": "M01",
+        "target_gate": "G01_identity",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M02",
+        "target_gate": "G02_live_source_bindings",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M03",
+        "target_gate": "G03_appendix_sections_complete_and_ordered",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M04",
+        "target_gate": "G04_map_and_metric_definitions",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M05",
+        "target_gate": "G05_frozen_parameter_registry",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M06",
+        "target_gate": "G06_complete_comparator_registry",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M07",
+        "target_gate": "G07_statistical_protocol_complete",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M08",
+        "target_gate": "G08_negative_and_failure_ledger",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M09",
+        "target_gate": "G09_long_rtl_reproduction",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M10",
+        "target_gate": "G10_preboard_measurement_boundary",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M11",
+        "target_gate": "G11_phase6c_task_signature_and_locator",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M12",
+        "target_gate": "G12_value_states_and_nonmixing",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M13",
+        "target_gate": "G13_previous_prose_contracts_live",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M14",
+        "target_gate": "G14_supplement_figure_parent_complete",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M15",
+        "target_gate": "G15_ontology_exact",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M16",
+        "target_gate": "G16_long_rtl_parent_exact",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M17",
+        "target_gate": "G17_integrated_rtl_parent_exact",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M18",
+        "target_gate": "G18_preboard_parent_and_board_null",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M19",
+        "target_gate": "G19_phase6c_correctness_and_reproduction",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M20",
+        "target_gate": "G20_phase6c_positive_is_lane_local",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M21",
+        "target_gate": "G21_phase6c_absence_and_negative_states",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M22",
+        "target_gate": "G22_rows_complete_unique_and_stateful",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M23",
+        "target_gate": "G23_task_status",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M24",
+        "target_gate": "G24_prohibited_assertions_absent",
+        "rejected": true
+      }
+    ]
+  },
+  "analysis_sha256": "288064c1baa174d0eeba19dc42fe90cde3174881e1fbefe07fde1a7a2e9d0825"
+}

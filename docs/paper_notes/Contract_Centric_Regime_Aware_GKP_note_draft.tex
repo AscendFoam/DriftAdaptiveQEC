@@ -1680,6 +1680,330 @@ S5 & Six Phase~6C task-signature lanes & Positive, negative, blocked, null, and 
 
 \clearpage
 
+\section{Mathematical and decision definitions}
+
+This section fixes the notation used by the executable contracts.  It is not a
+second physical model.  Let $L=\sqrt{\pi}$ denote the square-GKP lattice
+spacing and let $y\in\mathbb R$ be one unwrapped scalar syndrome.  The folded
+residue and nearest-cell integer are
+\begin{equation}
+ r_L(y)=y-L\operatorname{round}(y/L)\in[-L/2,L/2),
+ \qquad n_L(y)=\operatorname{round}(y/L),
+\end{equation}
+with the production quantizer's ties-to-even and saturation rules applied
+before LUT addressing.  Closest-integer decoding returns the parity of
+$n_L(y)$.  Euclidean closest-point decoding is therefore action-equivalent to
+closest integer only for the registered separable square/isotropic domain; it
+is not another independent baseline there.
+
+For an observed residue $r$ and parameter state $\theta$, the one-dimensional
+logical-coset likelihood is
+\begin{equation}
+ \Lambda_b(r;\theta)=
+ \sum_{k\in\mathbb Z}p_\theta\!\left(r+(2k+b)L\right),
+ \qquad
+ \widehat b_{\rm MAP}=\arg\max_{b\in\{0,1\}}\Lambda_b(r;\theta).
+ \label{eq:supp-1d-map}
+\end{equation}
+For correlated $q/p$ noise, the strong software joint-MAP comparator instead
+uses
+\begin{equation}
+ \Lambda_{b_q,b_p}(\boldsymbol r;\theta)=
+ \sum_{k,\ell\in\mathbb Z}
+ p_\theta\!\left(
+ \boldsymbol r+L(2k+b_q,2\ell+b_p)^{\mathsf T}\right),
+ \qquad
+ (\widehat b_q,\widehat b_p)=\arg\max_{b_q,b_p}\Lambda_{b_q,b_p}.
+ \label{eq:supp-joint-map}
+\end{equation}
+The sums are evaluated with the task-specific frozen truncation or enumerated
+LUT image.  Equation~\eqref{eq:supp-joint-map} must not be identified with the
+current phase-conditioned hardware LUT when the correlated likelihood does not
+factorize.
+
+For $N$ scored rounds, $N_a$ denotes the count whose residual logical Pauli is
+$a\in\{I,X,Y,Z\}$.  The reported channel is
+\begin{equation}
+ p_a=N_a/N,\qquad \pL=p_X+p_Y+p_Z=1-p_I.
+ \label{eq:supp-pauli-ler}
+\end{equation}
+Non-overlapping windows $w$ contain 512 accepted decisions and have
+$\pL^{(w)}$.  The p95 is the empirical 0.95 quantile, the worst-window value is
+$\max_w\pL^{(w)}$, and $\operatorname{CVaR}_{95}$ is the arithmetic mean of the
+worst five per cent of registered windows, using the task's deterministic tie
+and endpoint rule.  These quantities are finite-horizon simulation summaries,
+not decay constants or physical lifetimes.
+
+Every paired contrast is oriented as baseline minus candidate:
+\begin{equation}
+ \Delta_B=\pL(B)-\pL(\mathrm{candidate}),\qquad
+ G_{\rm static}=
+ \frac{\pL(\mathrm{static})-\pL(\mathrm{candidate})}
+      {\pL(\mathrm{static})-\pL(\mathrm{oracle})}.
+ \label{eq:supp-contrasts}
+\end{equation}
+A positive $\Delta_B$ favours the candidate.  $G_{\rm static}$ is reported
+with its sign; a negative value means that the candidate moved away from the
+oracle relative to static MAP.  For a registered fault interval beginning at
+$t_0$, detection lag is the first causal declared-fault time minus $t_0$;
+recovery lag ends only after the required healthy hysteresis.  A fallback is
+unnecessary only under offline truth-defined nominal membership, and a false
+update is a committed update inside a preregistered unsafe interval.  Truth is
+used to compute these labels after replay and is absent from every deployable
+input packet.
+
+\section{Frozen parameters and execution contract}
+
+Table~\ref{tab:supp-frozen-parameters} is the parameter registry needed to
+interpret or repeat the V4 formal lane.  A field may be changed only by a new
+versioned protocol and fresh split; changing it after formal access would
+create a different experiment.
+
+{\small
+\begin{longtable}{@{}L{0.20\textwidth} L{0.25\textwidth} L{0.25\textwidth} L{0.20\textwidth}@{}}
+\caption{Frozen V4 parameter and execution registry.}
+\label{tab:supp-frozen-parameters}\\
+\toprule
+Surface & Frozen value & Operational use & Primary owner \\
+\midrule
+\endfirsthead
+\toprule
+Surface & Frozen value & Operational use & Primary owner \\
+\midrule
+\endhead
+Observed packet & Folded $q/p$ syndrome plus typed health, event, integrity, version and age fields & Only online feature surface & T6.5.1--T6.5.2 \\
+Truth packet & Separate exact-key simulator state and logical labels & Offline scoring and oracle only & T6.5.2--T6.6.1 \\
+Quantization & 10-bit ADC, 8-bit LUT address, 2-bit fraction & Common deployable input domain & T6.5.2 \\
+MAP word & Signed Q9.12, ties-to-even, saturation & Packed LUT arithmetic & T6.5.2/T6.7.3 \\
+Fast path & Five-cycle MAP plus one event/action cycle; II=1 & Accepted source word to registered action & T6.5.2/T6.7.3 \\
+Posterior cadence & 32 decisions & Four-state HMM/event update boundary & T6.6.2 \\
+Image cadence & 2,048 scalar observations every 4,000 cycles & Completed-window causal proposal & T6.5.2 \\
+Equivalent cadence & 1,024 paired decisions; 2,000-decision activation period & Comparator alignment & T6.5.2/T6.6.1 \\
+Update ceilings & 8,192 MAC; 8,192 B state; 8,192 B workspace; 5,000 $\mu$s & Admission and deadline accounting & T6.5.2/T6.8.3 \\
+HMM states & Normal, smooth, calibration shift, burst & Causal regime posterior & T6.6.2 \\
+HMM regularization & $0.1$ & Calibration-only model regularization & T6.6.2 \\
+Transition smoothing & $4.0$ & Calibration-only transition prior & T6.6.2 \\
+Posterior temperature & $2.0$ & Calibration-only posterior scaling & T6.6.2 \\
+Policy tuple & $(0.9,0.2,0.25,192,2,8)$ & Enter, exit, uncertainty, OOD code, enter and recovery hysteresis & T6.6.3 \\
+Smooth promotion floor & $0.30$ plus lower pre-update predictive NLL than EWMA & Window-bank eligibility & T6.6.2--T6.6.3 \\
+Pilot search & 1,728 common threshold tuples & One tuple selected before formal access & T6.6.3 \\
+Bank transaction & Full inactive image; wire/image CRC, manifest SHA, CAS version, six-cycle drain & Atomic A/B publication & T6.5.2/T6.7.3 \\
+Rollback & Monotonic last-known-good republish; eight healthy windows before reopening & Fail-closed integrity recovery & T6.6.2/T6.7.3 \\
+Formal split & 12 calibration, 12 pilot, 24 formal seed clusters & Model fit, policy selection, untouched inference & T6.5.3 \\
+Formal exposure & 143 cells; 71,958,528 decisions per method & Smooth plus abrupt/OOD protocol total & T6.5.3/T6.7.1--T6.7.2 \\
+Tail window & 512 non-overlapping accepted decisions & p95, worst, and action-cost readout & T6.5.3/T6.7.2 \\
+Bootstrap & 20,000 paired cluster resamples; 95\% interval & Seed cluster is the independent unit & T6.5.3 \\
+Multiplicity & Holm within each preregistered endpoint family & No cross-lane pooled discovery & T6.5.3/T6.16.3 \\
+\bottomrule
+\end{longtable}
+}
+
+The parameter image is accepted only after all checks in the same transaction
+pass.  Host acknowledgement without bank, version, epoch, CRC and SHA readback
+agreement is an incomplete transaction.  Deadline and age faults cancel the
+new candidate; leakage enters the reset FSM; integrity faults permit only LKG
+republish.  No algorithmic branch may convert missing provenance into an
+ordinary MAP action.
+
+\section{Complete comparators and statistical protocol}
+
+The common-trace baseline set is reproduced in
+Table~\ref{tab:supp-comparator-registry}.  ``Deployable'' here means observed-
+only and admitted by the common software execution contract; it does not mean
+that an independent current RTL image exists for every row.
+
+{\small
+\begin{longtable}{@{}L{0.20\textwidth} L{0.21\textwidth} L{0.16\textwidth} L{0.16\textwidth} L{0.17\textwidth}@{}}
+\caption{Complete comparator registry and ranking role.}
+\label{tab:supp-comparator-registry}\\
+\toprule
+Method & State/update rule & Observability & Ranking role & Boundary \\
+\midrule
+\endfirsthead
+\toprule
+Method & State/update rule & Observability & Ranking role & Boundary \\
+\midrule
+\endhead
+Standard binning & Nearest bin on the common quantized grid & Observed-only & Weak reference & Exhaustively checked and compiled to the common LUT domain \\
+Static joint MAP & Fixed full two-dimensional likelihood & Observed-only & Strong software baseline & Not relabelled as current phase-LUT RTL \\
+Window MAP & Completed sliding-window estimate and image & Observed-only & Deployable software comparator & Strongest smooth deployable result in the frozen run \\
+EWMA adaptive MAP & Exponentially weighted estimate and continuously validated shadow & Observed-only & Pilot-locked primary comparator & Only comparator named by the primary V4 hypothesis \\
+Kalman adaptive MAP & Causal state estimate and common image compiler & Observed-only & Secondary deployable baseline & Same trace, precision, cadence and ceilings \\
+V4 \RouteA{} & Four-state HMM/event routing between Window and EWMA shadows plus reset/LKG actions & Observed-only & Registered candidate & Safety policy, not a new MAP likelihood \\
+Hidden-state oracle & Simulator state chooses the corresponding likelihood/action & Truth privileged & Non-ranking upper bound & No deployable, cost, fixed-point or hardware row \\
+Legacy CNN residual & Historical affine residual proposer & Observed history & Matched-budget ablation only & 3,489,984 MAC and 1,586,368 B state violate the frozen ceiling \\
+BOCD wrapper & External change detector with matched output interface & Observed-only & External drift diagnostic & LER and 13,004.1-$\mu$s worst update must be read together \\
+V5 candidate & Posterior-predictive/risk-aware branch & Intended observed-only & Dropped before implementation & No formal LER, quantized, RTL or P\&R result exists \\
+\bottomrule
+\end{longtable}
+}
+
+Smooth inference uses four families, six held-out cells per family, 24 formal
+clusters, 576 trajectories and 28,311,552 scored decisions for every method.
+The locked abrupt/OOD and nominal matrix adds six fault families, one nominal
+cell, 24 formal clusters, 888 trajectories and 43,646,976 scored decisions per
+method.  Family aggregates weight the preregistered families equally rather
+than weighting longer traces more heavily.  All seeds, cells, zero-difference
+families, failed candidate tuples, censored lags and deadline outliers remain in
+their original denominators.
+
+Paired bootstrap resamples whole seed clusters, never correlated individual
+rounds.  Reported intervals accompany the estimate rather than replace raw
+counts.  Holm correction is applied only within the declared family-specific
+endpoint set.  Non-inferiority margins and catastrophic-degradation thresholds
+were fixed before formal access.  Phase~6C retains the same 95\% confidence
+level and 20,000 paired resamples where applicable, but its p-values and wins
+are never pooled with Phase~6B.  Zero-event hardware/correctness claims use the
+registered exact one-sided binomial upper bound when a probabilistic statement
+is made; bit-exact exhaustive or cycle equivalence is otherwise reported as a
+finite tested-domain statement.
+
+\section{Ablations, failure modes, and negative selection}
+
+Table~\ref{tab:supp-negative-ledger} records executed alternatives and missing
+branches that constrain interpretation.  A negative result is not converted
+to missing data, and a missing adapter is not converted to a failed algorithm.
+
+{\small
+\begin{longtable}{@{}L{0.20\textwidth} L{0.17\textwidth} L{0.31\textwidth} L{0.22\textwidth}@{}}
+\caption{Ablation and failure-domain ledger.}
+\label{tab:supp-negative-ledger}\\
+\toprule
+Object & State & Executed result & Consequence \\
+\midrule
+\endfirsthead
+\toprule
+Object & State & Executed result & Consequence \\
+\midrule
+\endhead
+Static-switch V2 & Negative & 0/38 pilot-safe tuples passed; closest aggregate slack $-0.037109375$ & A static trusted bank becomes stale under persistent change \\
+Freeze-all-EWMA V3 & Negative & 0/38 tuples passed; closest aggregate slack $-0.044921875$ & Tail safety cannot mean freezing every estimator \\
+Locked EWMA contrast & Restricted positive & Aggregate paired improvement $2.1687\times10^{-5}$; only periodic drift survived Holm & Does not establish the best deployable decoder \\
+Static/Window ordering & Mandatory negative & Both beat \RouteA{} on smooth average; static-to-oracle closure is negative & General LER-superiority claim prohibited \\
+Calibration tail & Mandatory negative & Worst window 181/512 for \RouteA{} and 32/512 for static MAP & Safety non-inferiority does not imply tail gain \\
+Fallback occupancy & Mandatory cost & Tail fallback/unnecessary-fallback ranges reach approximately 59--96\% and 59--95\% & Intervention cost must accompany LER \\
+BOCD matched wrapper & Budget failure & Paired difference $1.00184\times10^{-5}$, but worst update 13,004.1 $\mu$s exceeds 5,000 $\mu$s with one miss & Performance cannot be detached from deadline failure \\
+Legacy CNN & Ineligible primary & Historical gains persist, but the current matched MAC/state/workspace budget is violated & Ablation/extension only \\
+V5 causal selector & Negative diagnostic & Nested observed-only headroom $-0.2322\%$; held-out mixture $+0.4587\%$ & No estimator implementation without causal headroom \\
+V5 action family & Negative diagnostic & Incremental headroom $0.02549\%$ versus 12\% entry gate & No compiler, quantized, RTL or P\&R continuation \\
+Teacher/student selection & Qualified extension & Three teacher restarts and nine student fits retained; optimizer cap hits and hindsight reversals disclosed & Finite-model retention, not optimizer optimality \\
+Low-squeezing surrogate & Failure domain & Relative error 0.56037 at 3 dB, versus $7.4845\times10^{-3}$ at 10 dB & High-squeezing localization only \\
+Top-$K$/Petz & Nondeployable diagnostic & Accuracy/bound and software proxy available; no synthesized comparable hardware & Cannot rank against the deployed student or fast path \\
+Communication compound OOD & Negative software model & LER 0.01986 to 0.06284; availability 0.94899 to 0.08102 & Not device robustness or measured transport \\
+Physical board & Blocked/null & 42/42 measured fields remain null & No measured latency, jitter, power or deadline claim \\
+\bottomrule
+\end{longtable}
+}
+
+\section{RTL, toolchain, long-sequence, and reproduction procedure}
+
+Two one-million-cycle qualifications have different roles and are not merged.
+T6.2.2 exercised the production fast-path/event FSM over ten 100,000-cycle
+families: nominal, boundary/frame wrap, leakage/reset, integrity/OOD/stale,
+deadline pause/recovery, version/commit race, FIFO/backpressure,
+drop/duplicate/reorder, compound recovery, and saturation.  It produced
+972,386 valid outputs, zero undefined action, zero output/state CRC error and
+zero silent overflow.  All 61 commit attempts remain visible: 11 acknowledgements
+and 50 rejections, including ten rollback and ten untrusted rejections.
+
+T6.7.3 then bound the V4 router to frozen formal observed traces.  Its ten
+100,000-cycle families cover four smooth and six abrupt/OOD regimes.  Of the
+one million cycles, 995,802 are frozen-trace replay and 4,198 are directed
+boundary/fault vectors.  The run contains 31,250 posterior updates, 75 host
+commit attempts, 25 rollback attempts, 25 commit/config races, 47 tail entries,
+28 leakage entries and 59 integrity entries.  All visible Python-golden versus
+CXXRTL fields match, with zero undefined action, CRC error or silent overflow.
+The directed fraction is 0.4198\%; it is disclosed so the result cannot be
+described as one million independent real traces.
+
+Both qualifications use generated binary trace rows with stored byte counts
+and SHA-256 digests.  T6.2.2 records Yosys 0.67 and MSYS2 g++ 15.1.0, plus
+CXXRTL model/executable hashes and compile logs.  T6.7.3 records its own live
+source, trace, model, executable and log bindings.  The receiver/FIFO model is
+an abstract bounded disturbance model; CDC, pins, bitstream, analog front end,
+physical transport and board clock are excluded.
+
+The source-bound static MAP-LUT profile alone is eligible in the Phase~6C
+hardware table.  Its 4,316 accepted equivalence rows have zero action mismatch;
+the contract is six cycles, II=1, or 222.222 ns and 37.037 ns at an assumed
+27 MHz.  Three target-device P\&R seeds achieve 41.024--42.212 MHz with
+3,377--3,387 LUT4, 865 FF, eight BRAM and two DSP in the selected static-core profile.
+These are open-tool post-route estimates.  CI has no independent RTL, V5 was
+stopped before RTL, and no same-task eligible direct-NN RTL exists; their cells
+are \texttt{N/A}, not zero-cost hardware.
+
+The minimum reproducible sequence is:
+\begin{enumerate}
+  \item create the frozen environment named by the task record and verify all
+  input source/config hashes before running an adapter;
+  \item regenerate the software-golden trace and compare its row count, row
+  width, digest, family coverage and all attempt denominators;
+  \item regenerate CXXRTL from the bound RTL, compile the recorded harness, and
+  require equality of every visible output plus all injected semantic
+  mutations;
+  \item run all declared target-device seeds and report the minimum Fmax and
+  every resource count, including failed seeds rather than selecting the best;
+  \item keep board-only fields null until a named bitstream, physical link,
+  clock, measurement manifest and power/timing capture all exist.
+\end{enumerate}
+This sequence reproduces project pre-board evidence; it cannot reproduce a
+physical quantum experiment without the missing device and board inputs.
+
+\section{Phase 6C source locator and non-mixing ledger}
+
+The task signature has 13 fields: code family, modes/distance, decision target,
+input semantics, history horizon, output action, noise model, observability,
+online privilege, time basis, compute budget, precision and evidence level.
+Two numerical values may be ranked only when the decision object and the
+required signature fields match.  Table~\ref{tab:supp-phase6c-locator} locates
+the executable evidence and states the deviation that prevents broader reuse.
+
+{\scriptsize
+\begin{longtable}{@{}L{0.13\textwidth} L{0.15\textwidth} L{0.17\textwidth} L{0.18\textwidth} L{0.16\textwidth} L{0.12\textwidth}@{}}
+\caption{Phase~6C task signature, source locator, state, and non-mixing rule.}
+\label{tab:supp-phase6c-locator}\\
+\toprule
+Lane / task & Evidence grade & Executable and machine source & Registered result & Deviation / missing field & Non-mixing rule \\
+\midrule
+\endfirsthead
+\toprule
+Lane / task & Evidence grade & Executable and machine source & Registered result & Deviation / missing field & Non-mixing rule \\
+\midrule
+\endhead
+Single-mode CI/CPD, T6.17.1 & \path{PROJECT_NATIVE_MATCHED} & \path{single_mode_cpd_equivalence.py}; T6.17.1 JSON/58-row CSV & Complete q10$\times$q10 domain (1,048,576 points) plus $10^6$ boundary samples; zero CI--Euclidean-CPD mismatch & Square/isotropic geometric equivalence only; biased, correlated and finite-energy MAP differ & Do not count CI and equivalent Euclidean CPD twice or rename MAP as CPD \\
+Two-GKP CNOT, T6.17.2 & \path{PROJECT_NATIVE_MATCHED} & \path{surface_gkp_cnot_reproduction.py}; T6.17.2 JSON/119-row CSV & 3,080,192 trials; ML reductions 31.160\%, 58.065\%, 67.982\% at 9/12/13 dB & No official code; 9.9-dB threshold and hardware latency not reproduced & Gate failure is not single-mode memory LER or physical lifetime \\
+Structured CPD, T6.18.2 & \path{OFFICIAL_CODE_REPRODUCTION} & pinned upstream Julia tree; T6.18.2 JSON/1,279-row CSV & 2,005/2,005 upstream checks; CPD lower LER in 27/27 independent cells & Partial $d=3,5,7$ grid; no full-distance threshold precision & Threshold and crossing stay in the named surface--GKP construction \\
+Multimode CPD, T6.18.3 & \path{PROJECT_NATIVE_MATCHED} & \path{multimode_posterior_weighted_cpd.py}; T6.18.3 JSON/CSV & 9.6M cycles, 38.4M modal decodes; adaptive $\pL=0.172261$ vs 0.236929 & Independent $d=3$ balanced heteroscedastic family; not official Lin experiment & Positive LER/tail result cannot promote single-mode V5 \\
+Learned or controller, T6.17.3 & \path{INELIGIBLE} & T6.17.3 JSON/CSV & 0/16 candidate families pass same-task eligibility & No matching syndrome, action and privilege contract & Literature performance is context, not a result row \\
+GQF/NMF, T6.8.4--T6.8.5 & \path{BLOCKED} & GQF intake/exact-reproduction/gate JSON & 0/15 exact-source checks; all 13 matched metrics null & Exact official source/protocol not available in the frozen intake & No claim relative to Puviani NMF \\
+AQEC, T6.18.1 & \path{PROJECT_NATIVE_MATCHED} & \path{aqec_common_wallclock_replay.py}; T6.18.1 JSON/144,152-row CSV & Six cells$\times$24 clusters; active/autonomous minus idle is negative in all cells & Finite-cutoff project replay; official protocol blocked; cycle/us ranking reverses in 144/144 pairs & Control fidelity/lifetime does not rank GKP decoder LER \\
+Project FPGA, T6.19.1 & \path{ESTIMATE_VALUE} & pre-board profiler, RTL, P\&R logs; T6.19.1 JSON/3,003-row CSV & Static MAP-LUT six cycles, II=1, three P\&R seeds & Board power, jitter, deadline, latency, transfer and commit remain null & Estimate is not a measured speed row \\
+External FPGA, T6.19.2 & \path{LITERATURE_VALUE} & normalized 18-row literature table and source locators & 18 implementations; 0 exact same-task comparator & Different code, distance, device, boundary, clock or evidence level & No raw-ns ranking, fastest or SOTA claim \\
+Atlas integrity, T6.19.3 & Read-only gate & \path{secondary_evidence_integrity_gate.py}; 206-cell CSV/JSON & 24/24 gates and mutations; no global score or winner & Heterogeneous decision objects are intentionally retained & No averaging, vote counting or rescue of Phase~6B/V5 \\
+\bottomrule
+\end{longtable}
+}
+
+The value-state vocabulary is lossless.  \texttt{MEASURED\_VALUE} requires a
+physical measurement at the named boundary; \texttt{ESTIMATE\_VALUE} denotes
+simulation, analytic, synthesis or P\&R output; \texttt{REPRODUCED\_VALUE}
+requires the frozen official-code or project-native protocol;
+\texttt{LITERATURE\_VALUE} remains source-scoped.  For absent values,
+\texttt{N\_A\_NOT\_APPLICABLE} means that the metric or adapter does not apply,
+whereas \texttt{NULL\_NOT\_REPORTED} means the field applies but no source-backed
+value exists.  \texttt{FAILED} means an attempt ran but failed its frozen gate,
+and \texttt{NEGATIVE} means a valid result disfavouring promotion.  The board
+and GQF records additionally use \texttt{blocked} for an unmet external
+prerequisite and the learned record uses \texttt{ineligible} for a candidate
+whose task signature does not match.  None of these states may be replaced by
+zero or by a neighbouring lane's value.
+
+The final atlas contains 206 cells and no global winner.  Its five eligible
+secondary result objects remain within their own task signatures.  The V5
+verdict remains \path{NO_GO_V5_EARLY_HEADROOM_STOP}, and the real-board verdict
+remains blocked with 42 null measured fields regardless of any positive
+Phase~6C cell.
+
 \section{Primary repository evidence map}
 
 \begin{longtable}{@{}p{0.19\textwidth} p{0.35\textwidth} p{0.36\textwidth}@{}}
