@@ -55,9 +55,9 @@
 
 ## 当前文件组
 
-- `Contract_Centric_Regime_Aware_GKP_note_draft.tex`：2026-07-20 同步到 T7.1.2 的正式论文式 Route-A note。标题收紧为 restricted pre-board contract paper；摘要只保留 T7.1.1 允许的合同集成、locked-EWMA smooth 与确定性预板架构三条主张，Phase 6C 数字回到 Results/Supplement 位置；正文新增 29-claim placement 表与正式 Fig.1--2。
-- 新 note 继续复用 `../figures/ppt_summary_20260716/` 的双回路架构图和有效保真寿命图，并嵌入 `../figures/t7_1_2_main_figures/` 的 evidence-bounded Fig.1--2、`../figures/route_a_manuscript_20260720/` 三张 source-traceable 结果图及 T6.19.3 六-lane atlas。T7.1.2 两图有 38-row Source Data、editable SVG/PDF、300-dpi PNG、600-dpi LZW-TIFF 和 live-hash manifest；TeX Live 编译为 26 页并完成 26/26 页视觉 QA。
-- `CNN_FPGA_GKP_theory_note_draft.tex` 保留旧 teacher-anchored affine/CNN 主体，仅增加 T7.1.1 claim-placement 覆盖层、当前 Fig.1、结论边界和链接排版修正；独立编译为 29 页并完成 29/29 页视觉 QA。两份 note 均不得把 P\&R estimate 写成 board measurement，或把 Phase 6C 结果用于升级 V5。
+- `Contract_Centric_Regime_Aware_GKP_note_draft.tex`：2026-07-20 同步到 T7.1.3 的正式论文式 Route-A note。标题仍为 restricted pre-board contract paper；摘要只保留 T7.1.1 允许的合同集成、locked-EWMA smooth 与确定性预板架构三条主张，Phase 6C 数字仍在 Results/Supplement；正文现有 29-claim placement 表与正式 Fig.1--4。
+- 新 note 继续复用 `../figures/ppt_summary_20260716/` 的双回路架构图和有效保真寿命图：架构图改为不占正式 figure counter 的历史示意，teacher--student 图仍为扩展证据。正式 Fig.1--2 来自 `../figures/t7_1_2_main_figures/` 的 38-row contract，正式 Fig.3--4 来自 `../figures/t7_1_3_main_figures/` 的 55-row contract；后两图显式保留 Window/static/oracle-gap 负结果、tail/fallback cost、P\&R estimate、42 board-null 与 V5-Dropped 边界。TeX Live 编译为 27 页并完成 27/27 页视觉 QA。
+- `CNN_FPGA_GKP_theory_note_draft.tex` 保留旧 teacher-anchored affine/CNN 主体和 PPT 架构/寿命图，仅把当前 V4/预板覆盖层更新为正式 Fig.3--4，并同步当前证据表和结论；独立编译为 30 页并完成 30/30 页视觉 QA。两份 note 均不得把 P\&R estimate 写成 board measurement，或把 Phase 6C 结果用于升级 V5。
 - `CNN_FPGA_GKP_theory_note_draft.tex`：当前主线 note 源文件。
 - `CNN_FPGA_GKP_theory_note_draft.pdf`：对应编译产物。
 - `CNN_FPGA_GKP_theory_note_draft.*`：保留的 LaTeX 辅助文件、日志与同步文件。

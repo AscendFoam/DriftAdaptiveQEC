@@ -20,7 +20,7 @@
 \title{A Dual-Loop Teacher-Anchored Residual Calibration Framework for Drift-Adaptive GKP Decoding\\
 \large Historical Architecture Note with Contract-Centric Evidence Update}
 \author{}
-\date{Evidence synchronized through T7.1.2, 20 July 2026}
+\date{Evidence synchronized through T7.1.3, 20 July 2026}
 
 \begin{document}
 \maketitle
@@ -92,6 +92,7 @@ Independent decoder lanes & Multimode adaptive CPD gain 0.064668 with 32/32 posi
 Auxiliary evidence integrity & 206 cells; 24/24 gates and mutations; 162 joint regressions; explicit null/negative states & Within-lane reporting only; no global score or verdict promotion \\
 Paper claim contract & 29 atomic claims; 45 live artifacts; 19/19 gates and mutations; abstract limited to three restricted claims & Only a restricted pre-board contract paper is open; negative and blocked rows remain mandatory \\
 Frozen Main Figures 1--2 & 38 evidence-bound elements; 16/16 gates and mutations; V5 Dropped and board-null shown on the figure face & Current system/safety schematic, not new performance evidence \\
+Frozen Main Figures 3--4 & 55 evidence-bound rows; 16/16 gates and mutations; mandatory Window/static/oracle-gap negatives and 42 board-null fields shown on the figure face & Current V4 result/pre-board boundary; no global decoder or measured-hardware promotion \\
 Learning extension & Historical residual-CNN reductions 1.75--2.89\%; four-state student preserves most finite-model teacher gain with 95 scalars & Reusable extension/ablation, not universal learned superiority \\
 Physical board / external speed & Board latency, jitter and power null; 18 external implementations contain zero exact same-task comparator & No hardware-measured, fastest, or SOTA claim \\
 \bottomrule
@@ -143,14 +144,28 @@ loop, and the no-student MAP/FSM profile owns the deployable pre-board claim.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{../figures/route_a_manuscript_20260720/v4_evidence_boundary.pdf}
-  \caption{Current V4 evidence boundary.  Window/static MAP outperform V4 in
-  smooth aggregate LER; only periodic drift survives family-wise testing; tail
-  safety requires frequent intervention; and static MAP is markedly better
-  under calibration shift.  Error bars are paired seed-cluster 95\% intervals.
-  This figure supersedes any broad CNN/FPGA performance reading of the older
-  sections.}
+  \includegraphics[width=\textwidth]{../figures/t7_1_3_main_figures/figure3_v4_results.pdf}
+  \caption{Current V4 result boundary.  The seven-method untouched smooth
+  comparison identifies Window as the strongest deployable method and shows
+  negative static and oracle-gap contrasts.  Across six abrupt/OOD families,
+  \RouteA{} matches locked EWMA in the worst window rather than improving it,
+  while fallback and recovery costs remain visible.  Positive Phase~6C results
+  remain Supplement-only.  This 55-row evidence-frozen figure supersedes any
+  broad CNN/FPGA performance reading of the older sections.}
   \label{fig:oldnote-v4-boundary}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/t7_1_3_main_figures/figure4_preboard_evidence.pdf}
+  \caption{Current deterministic pre-board boundary.  The integrated integer
+  path completed one million CXXRTL cycles with zero mismatch, undefined
+  action, or silent overflow; the selected profile retains a six-cycle,
+  II=1 clock-model path and clears 27~MHz in three open-source P\&R seeds.
+  Resource bars describe complete core and optional-student profiles.  The
+  222.222-ns conversion is not board latency, all 42 board fields remain null,
+  and the stopped V5 branch has no quantized, formal, CXXRTL, or P\&R result.}
+  \label{fig:oldnote-preboard-boundary}
 \end{figure}
 
 \begin{figure}[htbp]
@@ -1893,11 +1908,13 @@ and finite-model teacher--student compression remain explicitly secondary
 lanes whose task boundaries prevent a universal decoder or hardware claim.
 
 T7.1.1 freezes that interpretation as 29 placement-controlled claims bound to
-45 live artifacts.  Static-MAP superiority, zero eligible same-task learned
-checkpoints, the V5 revocations, GQF/NMF blockage, lack of an exact external
-FPGA comparator, and 42 null board-measured fields remain mandatory parts of
-the conclusion.  The open manuscript is therefore a restricted pre-board
-contract paper rather than a broad CNN+FPGA performance paper.
+45 live artifacts, and T7.1.2--T7.1.3 map those states into four evidence-frozen
+system, safety, result, and pre-board figures.  Static-MAP superiority, zero
+eligible same-task learned checkpoints, the V5 revocations, GQF/NMF blockage,
+lack of an exact external FPGA comparator, and 42 null board-measured fields
+remain mandatory parts of the conclusion.  The open manuscript is therefore a
+restricted pre-board contract paper rather than a broad CNN+FPGA performance
+paper.
 
 Accordingly, this remains a useful historical theory and architecture note,
 now synchronized to the contract-centric evidence state.  It supports reuse of

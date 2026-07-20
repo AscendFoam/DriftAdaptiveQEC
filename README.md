@@ -125,7 +125,7 @@
   - `docs/figures/t7_1_2_main_figures/`：主图 1--2 的 Python-only editable SVG/PDF、300-dpi PNG、600-dpi LZW-TIFF 与 live-hash/人工视觉 QA manifest
   - `docs/main_figures_3_4_contract.md` / `docs/t7_1_3_main_result_figure_contract.json` / Source Data：主图 3--4 的 55-record 结果/硬件证据合同，强制保留 strongest-baseline、static/oracle-gap、tail cost、P&R-estimate 与 board-null 边界
   - `docs/figures/t7_1_3_main_figures/`：主图 3--4 的 Python-only editable SVG/PDF、300-dpi PNG、600-dpi LZW-TIFF 与 live-hash/人工视觉 QA manifest
-  - `docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex`: 截止 T7.1.2 的 restricted pre-board Route-A 正式论文式 note；标题/摘要/结论消费 29 条 claim matrix，并嵌入证据绑定的正式 Fig.1--2
+  - `docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex`: 截止 T7.1.3 的 restricted pre-board Route-A 正式论文式 note；标题/摘要/结论消费 29 条 claim matrix，嵌入证据绑定的正式 Fig.1--4，并以不编号历史示意继续复用 PPT 双回路架构图
   - `docs/figures/route_a_manuscript_20260720/`: 三张 Python 主文图的 SVG/PDF/LZW-TIFF/PNG、58-row plotted Source Data 与 SHA-256 manifest
   - `docs/literature_matrix.md`: 当前新任务序列的四线文献、Zotero 覆盖和证据等级矩阵
   - `docs/gap_statement.md`: 基于四线证据的研究缺口、baseline/oracle contract 与英文 Introduction 草稿

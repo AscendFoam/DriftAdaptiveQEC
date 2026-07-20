@@ -4,6 +4,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{array}
 \usepackage{booktabs}
+\usepackage{caption}
 \usepackage{graphicx}
 \usepackage{longtable}
 \usepackage{tabularx}
@@ -26,7 +27,7 @@
 \title{An Evidence-Gated, Fail-Closed Pre-Board Contract\\
 for Drift-Adaptive GKP Decoding}
 \author{}
-\date{Evidence-synchronized manuscript note; snapshot through T7.1.2, 20 July 2026}
+\date{Evidence-synchronized manuscript note; snapshot through T7.1.3, 20 July 2026}
 
 \begin{document}
 \maketitle
@@ -94,6 +95,7 @@ T6.10.1 / T6.15.5 (V5) & Done & Causal-headroom entry gate failed and V5 ended \
 T6.16.1--T6.19.3 (Phase 6C) & Done & The 206-cell six-lane atlas passed 24/24 integrity gates; literature/reproduction/project-native lanes remain separate and cannot upgrade V4/V5. \\
 T7.1.1 & Done & The 29-claim matrix passed 19/19 gates and mutations with 45 live artifacts; the manuscript decision is \texttt{RESTRICTED\_PREBOARD\_CONTRACT\_PAPER}. \\
 T7.1.2 & Done & Main Figures 1--2 bind 38 elements to parent claims and evidence, passed 16/16 gates and mutations, and preserve V5-dropped and board-null surfaces on the figure face. \\
+T7.1.3 & Done & Main Figures 3--4 bind 55 result/hardware rows to live parent evidence, passed 16/16 gates and mutations plus 153 parent-chain regressions, and passed manual visual QA. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -330,18 +332,19 @@ non-inferiority to locked EWMA, as reported below.
   \label{fig:t7-safe-adaptation}
 \end{figure}
 
-The earlier presentation schematic in Fig.~\ref{fig:dual-loop-architecture}
-is retained because its interface structure survives the move away from a
-CNN-centric claim.  The durable elements are observed syndrome history, a
-bounded slow-loop proposal, safe publication of a complete parameter image,
-versioned A/B banks, a quantized MAP-LUT, an event state machine, and a Pauli
-frame update.  These interfaces, rather than the identity of one learned
-estimator, define the reusable architecture.
+The earlier presentation schematic below is retained because its interface
+structure survives the move away from a CNN-centric claim.  It is presented as
+an unnumbered historical design aid so that the evidence-frozen main figures
+retain their registered numbering.  The durable elements are observed
+syndrome history, a bounded slow-loop proposal, safe publication of a complete
+parameter image, versioned A/B banks, a quantized MAP-LUT, an event state
+machine, and a Pauli frame update.  These interfaces, rather than the identity
+of one learned estimator, define the reusable architecture.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{../figures/ppt_summary_20260716/drift_adaptive_architecture_cn.pdf}
-  \caption{Reused Chinese presentation schematic of the drift-adaptive GKP
+  \caption*{Historical presentation schematic | Reused Chinese overview of the drift-adaptive GKP
   dual loop.  Under the current \RouteA{} interpretation, the upper four-state
   student is an optional learning extension; Window and EWMA adaptive MAP
   provide the primary deployable parameter images, while HMM/event/fallback
@@ -349,7 +352,6 @@ estimator, define the reusable architecture.
   16 July 2026 presentation asset are an archival snapshot: subsequent tasks
   added student fixed-point RTL and pre-board resource evidence, but real-board
   validation remains pending.}
-  \label{fig:dual-loop-architecture}
 \end{figure}
 
 \subsection{Replaceable learned modules}
@@ -604,16 +606,18 @@ claims of lower tail LER, low fallback, or superiority to static MAP.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{../figures/route_a_manuscript_20260720/v4_evidence_boundary.pdf}
-  \caption{The V4 result is bounded rather than globally positive.  (a) Equal-
-  family smooth LER places Window and static MAP below \RouteA{}; the oracle is
-  truth-privileged.  Error bars are seed-cluster 95\% intervals.  (b) Only the
-  periodic EWMA-minus-\RouteA{} contrast survived Holm correction.  (c) Tail
-  non-inferiority required frequent fallback and unnecessary-fallback signals.
-  (d) Under calibration shift, \RouteA{} matched EWMA at 181 errors in the
-  worst 512-decision window, while static MAP had 32.  Source: frozen T6.7.1 and
-  T6.7.2 machine artifacts; plotted-source rows and hashes accompany the figure.}
-  \label{fig:v4-evidence-boundary}
+  \includegraphics[width=\textwidth]{../figures/t7_1_3_main_figures/figure3_v4_results.pdf}
+  \caption{Restricted V4 performance and safety results.  (a) Smooth results
+  use 24 formal seed clusters and equal family weights.  \RouteA{} improves
+  only over the pilot-locked EWMA aggregate; Window remains the strongest
+  deployable method and the oracle is nondeployable.  (b) The paired static
+  contrast and static-to-oracle gap closure are negative.  (c) Across six
+  abrupt/OOD families, paired worst-window outcomes establish safety and
+  non-inferiority rather than improvement.  (d) That boundary requires
+  substantial fallback and recovery cost.  (e) Positive Phase~6C results are
+  excluded from the main ranking and retained only in task-local Supplement
+  lanes.  Source data are provided in the 55-row T7.1.3 Source Data file.}
+  \label{fig:t7-v4-results}
 \end{figure}
 
 \subsection{Deterministic execution and pre-board hardware evidence}
@@ -638,6 +642,23 @@ Integrated CXXRTL qualification & 4 smooth plus 6 fault families, each 100,000 c
 \bottomrule
 \end{tabularx}
 \end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/t7_1_3_main_figures/figure4_preboard_evidence.pdf}
+  \caption{Pre-board deterministic execution evidence and physical-measurement
+  boundary.  (a) The integer/CXXRTL path completed 1,000,000 cycles with zero
+  bit mismatch, undefined action, or silent overflow.  (b) The integrated
+  selected profile has a six-cycle, initiation-interval-one clock-model path;
+  222.222~ns is only the conversion at the assumed 27-MHz contract clock.
+  (c) Both the selected core and the optional-student sidecar cleared 27~MHz in
+  three open-source placement-and-routing seeds.  (d) Resource values describe
+  complete integrated profiles rather than a MAP-ROM-only core.  (e) All 42
+  physical-board fields remain null, and V5 quantized, formal, CXXRTL, and P\&R
+  stages were not run after the preregistered early stop.  Source data are
+  provided in the 55-row T7.1.3 Source Data file.}
+  \label{fig:t7-preboard-evidence}
+\end{figure}
 
 The integrated qualification also exercised six modes, five health states,
 three actions, nine reachable fault bits, CRC/version failures, FIFO
@@ -897,6 +918,7 @@ V5 final gate (T6.15.5) & Terminal \path{NO_GO_V5_EARLY_HEADROOM_STOP} & No V5 p
 Auxiliary integrity (T6.19.3) & Terminal \path{PASS_AUX_COMPARISON_INTEGRITY}: 206 cells, 24/24 gates and mutations, 162 joint regressions & Allows within-lane secondary reporting only; V5 NO-GO and board Blocked remain unchanged \\
 Claim matrix (T7.1.1) & Terminal \path{PASS_RESTRICTED_PREBOARD_CLAIM_BOUNDARY_MATRIX}: 29 claims, 45 live artifacts, 19/19 gates and mutations & Freezes title/abstract/results/conclusion placement and permits only a restricted pre-board contract paper \\
 Main Figures 1--2 (T7.1.2) & Terminal \path{PASS_MAIN_FIGURES_1_2_RESTRICTED_PREBOARD_CONTRACT}: 38 bound elements, 16/16 gates and mutations & Freezes the implemented system/safety schematics while keeping V5 Dropped and board measurement null \\
+Main Figures 3--4 (T7.1.3) & Terminal \path{PASS_MAIN_FIGURES_3_4_RESTRICTED_PREBOARD_RESULTS}: 55 bound rows, 16/16 gates and mutations, 153 parent-chain regressions & Freezes the restricted V4 result and deterministic pre-board boundary while keeping Window/static/oracle-gap negatives, high fallback, V5 Dropped, and 42 board-null fields visible \\
 Real board (T6.9.2) & Bitstream, transport, correctness, latency distribution, deadline miss, resources and power on the named board & Hardware language remains CXXRTL/synthesis/P\&R estimate only \\
 Remaining Phase 7 gates & Frozen main figures, prose, supplement, provenance, and final claim audit must consume the T7.1.1 matrix without upgrading its rows & Figure and prose completion may improve presentation, but cannot change the restricted manuscript decision without new registered evidence \\
 \bottomrule
@@ -971,6 +993,13 @@ The frozen system/safety figures use the independent Python entry point
 artifact hashes, dimensions, editable SVG/PDF, 600-dpi LZW-TIFF, and review PNG
 are bound by \path{docs/t7_1_2_main_figure_contract.json}.  Visual QA confirmed
 that the grey/red V5 and board boxes have no incoming production arrow.
+The frozen result/pre-board figures use
+\path{docs/figures/make_t7_1_3_main_figures.py}; their 55-row Source Data binds
+every plotted value, interval, status, claim identifier, selector, and parent
+artifact hash to \path{docs/t7_1_3_main_result_figure_contract.json}.  The
+bundle separates the restricted EWMA contrast from the mandatory
+Window/static/oracle-gap negatives, and separates the six-cycle clock model
+and three-seed post-route estimates from the 42 null board fields.
 The repository-generated T6.19.3 atlas separately binds all 206 auxiliary cells
 and its SVG/PDF/TIFF/PNG bundle to the terminal integrity artifact.
 
@@ -1001,10 +1030,12 @@ teacher--student results therefore remain secondary evidence lanes rather than
 abstract-level support.
 
 The T7.1.1 matrix freezes this interpretation as 29 atomic claims bound to 45
-live artifacts.  It permits a restricted simulator/pre-board contract paper
-and rejects a broad cross-lane performance or hardware-ranking paper.  Future
-main-figure and prose work can clarify this result, but only new registered
-evidence can upgrade it.
+live artifacts.  T7.1.2 and T7.1.3 then map the contract, safety, V4 result, and
+pre-board boundary into four evidence-frozen main figures without changing the
+claim states.  Together they permit a restricted simulator/pre-board contract
+paper and reject a broad cross-lane performance or hardware-ranking paper.
+Future prose and supplementary work can clarify this result, but only new
+registered evidence can upgrade it.
 
 \appendix
 
@@ -1037,6 +1068,7 @@ External FPGA refresh & \path{docs/external_fpga_decoder_refresh.md} & \path{doc
 Six-lane auxiliary integrity & \path{docs/secondary_comparison_atlas.md} & \path{docs/t6_19_3_secondary_evidence_integrity.json} and one-row-per-cell CSV \\
 Paper-level claim matrix & \path{docs/claim_evidence_boundary_matrix.md} & \path{docs/t7_1_1_claim_evidence_boundary_matrix.json}, 29-row CSV, and verifier \\
 Frozen Main Figures 1--2 & \path{docs/main_figures_1_2_contract.md} & \path{docs/t7_1_2_main_figure_contract.json}, 38-row Source Data, generator, and manifest \\
+Frozen Main Figures 3--4 & \path{docs/main_figures_3_4_contract.md} & \path{docs/t7_1_3_main_result_figure_contract.json}, 55-row Source Data, generator, and manifest \\
 Legacy frozen result & \path{docs/paper_materials/paper_simulation_result_table_pack.md} & \path{runs/p4_benchmark/T24_formal_software_revalidation_20260510_200743/comparison.csv} \\
 Target P\&R & \path{docs/target_device_synthesis.md} & \path{docs/t5_5_2_target_device_synthesis.json} and raw reports \\
 Student Pareto & \path{docs/precision_resource_performance_pareto.md} & \path{docs/t5_5_3_precision_resource_pareto.json} and equivalence report \\
