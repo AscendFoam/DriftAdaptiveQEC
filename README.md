@@ -1,6 +1,6 @@
 # DriftAdaptiveQEC
 
-`DriftAdaptiveQEC` 是一个围绕 “CNN + FPGA 快慢回路协同近似 GKP 解码” 的研究型工程仓库。当前代码已经覆盖物理仿真、数据集生成、Tiny-CNN 训练、量化/导出、软件侧 HIL 与 P4 多场景 benchmark。仓库现已完成第一轮恢复期治理收尾，进入“受控继续开发”阶段。
+`DriftAdaptiveQEC` 是一个围绕 **contract-centric、regime-aware 安全自适应双回路 GKP 解码** 的研究型工程仓库：static/adaptive MAP 承担 LER，HMM/event/fallback 承担 tail safety，FPGA fast path 承担确定性执行，CNN/teacher/student 是需要通过 matched promotion gate 的可替换学习模块。当前代码覆盖物理仿真、统一 comparator、Tiny-CNN、量化/RTL、软件 HIL 与多场景 benchmark；真实板卡证据仍与预板软件/RTL 资格分轨管理。
 
 ## 当前状态
 
@@ -19,6 +19,8 @@
   - `docs/08_risks_and_open_questions.md`
 - 自 `2026-07-14` 起，用户指定的“按新任务板顺序完整推进”工作流另以以下文件为当前执行状态源：
   - `docs/new_task_board.md`：新任务顺序、状态和当前推荐任务；
+  - `docs/rough_plan.md`：新任务序列的冻结原始规划，仅作历史/设计来源，不随日常任务改写；
+  - `docs/experiment_plan.md`：新任务序列的实验计划来源；第 14—16 节记录 v2—v2.2 的低频修订；
   - `docs/new_tasks/`：每个新 task 的输入、产物、验证、风险和同步记录；
   - `docs/new_risks.md`：新任务序列风险与插入任务判断。
   - 既有 `docs/02_experiment_plan.md`、`docs/04_task_board.md`、`docs/07_handoff.md` 和历史证据包继续作为可复用事实来源，但不能用旧日志替代新任务的当前产物与重新验证。
@@ -34,6 +36,11 @@
   - `physics/finite_energy_gkp.py`: normalized Gaussian-envelope / damped-projector 四逻辑态、syndrome 与 sampled-Wigner reference
   - `physics/quadrature_conventions.py`: canonical、decoder-standardized、symplectic bridge 与 displacement-amplitude 四坐标 chart 的辛性和方差/波函数变换合同
   - `physics/logical_channel.py`: parity-output decoder 的 Pauli-twirled logical channel、PTM 与 fidelity metrics
+  - `physics/fock_logical_channel.py`: 六 Pauli eigenstate 的 finite-cutoff CPTNI code-subchannel tomography、non-Pauli/leakage 与 matched QEC-on/off lifetime diagnostics
+  - `physics/logical_channel_fidelity.py`: CPTNI leakage-inclusive `F_e/F_avg`、六态 direct replay、无指数短时率与 cutoff/time-grid 数值敏感度
+  - `physics/operational_boundary.py`: matched active/passive 完整 `F_avg` 曲线的持续非劣与累计偿还边界，不生成终点比值或 coherence-gain 冒名指标
+  - `physics/qec_cost_accounting.py`: QEC 事件计数、`Delta`-to-dB 与 post-selection acceptance/rejection penalty 的单位安全成本恒等式
+  - `physics/channel_recovery_bound.py`: encoding--noise QEC matrix、transpose/Petz recovery fidelity、解析双边界，以及 small-cutoff primal/dual SDP 可行证书
   - `physics/finite_energy_trends.py`: train/eval 分离的 finite-energy shrinkage trend reproduction harness
   - `physics/drift_processes.py`: 七类可复现 synthetic drift、完整 `DriftState`、mixture sampler 与旧回调适配层
   - `physics/oracle_map.py`: 逐时读取完整 `DriftState` 的不可部署 periodic Gaussian-mixture Bayes oracle
@@ -79,6 +86,25 @@
   - `cnn_fpga/benchmark/low_dimensional_student_distillation.py` / `cnn_fpga/control/low_dimensional_recurrence.py`: 1/2/4-state×3-restart strict-split 指数递推蒸馏、validation-only 选维和 pure-NumPy fail-closed online artifact
   - `cnn_fpga/benchmark/teacher_student_gain_retention.py`: 全新 paired seeds 的 10-cycle teacher/student physical retention、全部五个 MF agents、显式 burden/cost 与独立 2-cycle exact control-oracle lane
   - `cnn_fpga/benchmark/teacher_student_branch_freeze.py`: hash-bound 只读消费 T4.4.1--T4.4.4，机器冻结 qualified student-retention 或 MAP-LUT fallback，并登记禁止 claim/撤销 gate
+  - `cnn_fpga/benchmark/causal_ablation_negative_results.py`: history/CNN residual/regime/run-length/update/fallback 六项 native-lane mechanism-off 对照、负结果表与禁止跨 metric 拼榜合同
+  - `cnn_fpga/benchmark/multi_agent_seed_selection_audit.py`: 六个 learned selection episodes 的 validation-only 重构、全 agent/restart/seed 分布与 test-best hindsight 偏差诊断
+  - `cnn_fpga/benchmark/horizon_extrapolation_validation.py`: 2/5/10/32-cycle training-horizon sweep、`1e3/1e5/1e6` cycle 全步 GRU/student 递归、float32 shadow 与 reset sensitivity 审计
+  - `cnn_fpga/benchmark/randomized_model_mismatch.py`: 64-cell 四原生 lane 随机失配验证；覆盖 full gate-bias vector、dephasing/timing/dynamics、完整 4×3 readout、leakage/reset 与 frozen-decoder drift
+  - `cnn_fpga/benchmark/bit_accurate_hardware_reference.py` / `cnn_fpga/runtime/bit_accurate_hardware_reference.py`: 58/118/232-bit CRC words、真实 5+1-cycle pipeline、binary parameter image、atomic A/B switch 与 hash-chained RTL golden trace
+  - `cnn_fpga/rtl/` / `cnn_fpga/benchmark/rtl_fast_path_equivalence.py` / `target_device_synthesis.py`: 可综合 fast-path RTL、CXXRTL full-word 对拍、Tang Nano 20K 三 seed synthesis/P&R 与 fail-closed 报告生成
+  - `cnn_fpga/benchmark/precision_resource_pareto.py` / `student_rtl_equivalence.py`: 108 点 precision/K/state/parallelism 审计、4-state Q3.14 student CXXRTL 与 integrated 三 seed P&R；估计值和实际工具报告严格分列
+  - `cnn_fpga/benchmark/gru_student_hardware_feasibility.py`: full-float storage fail-fast、完整参数 int8/Q3.14 functional shadow 与 lower-bound CXXRTL/P&R；量化 GRU fail-closed，4-state student 为唯一硬件路线
+  - `cnn_fpga/benchmark/long_rtl_qualification.py` / `cnn_fpga/runtime/fast_production_core_reference.py`: T6.2.2 十类各 100,000-cycle 独立整数 golden/CXXRTL 全字段资格验证、抽象 bounded FIFO/receiver faults、恢复与 mutation audit
+  - `cnn_fpga/benchmark/unified_comparator_runner.py`: T6.6.1 scalar phase packet→causal q/p bridge、六方法 common-trace 真实执行、legacy CNN schema/budget 自动降级、oracle 分栏、维度推导成本与 prefix/mutation qualification
+  - `cnn_fpga/runtime/regime_aware_safe_policy.py`: T6.6.2/V4 强类型安全编排；Window/EWMA observed-only 双影子 bank、prequential promotion proof、tail/uncertain trusted EWMA、leakage/reset 与 integrity-only monotonic LKG rollback 共用原子 bank，并逐 action 输出 posterior/reason/version/deadline provenance
+  - `cnn_fpga/benchmark/regime_aware_safe_policy_validation.py`: T6.6.2 production-cadence 结构长轨；验证 5+1-cycle ledger、完整双影子预算、tail EWMA promotion、hysteresis/residency、pending Window rejection、LKG commit、reset 与故障 fail-closed，不把 fixture 冒充已校准 HMM 或 LER 证据
+  - `cnn_fpga/decoder/route_a_regime_posterior.py`: T6.6.3 Route-A 专用 `normal/smooth/calibration_shift/burst` causal Gaussian HMM 与 observed heavy-tail event head；class order、模型 payload 和推理 hash 可复核
+  - `cnn_fpga/benchmark/route_a_posterior_calibration.py`: T6.6.3 calibration/pilot-only posterior、temperature、1,728 common threshold、full pilot LER/safety selector 与 causal Window/EWMA router 锁；保存 V2 static-switch/V3 freeze-all NO-GO，formal artifact 存在时拒绝重跑
+  - `cnn_fpga/benchmark/route_a_causal_headroom.py`: T6.10.1 对 1,464 条 V4 formal 做 diagnostic-only 五专家逐 decision exact replay，并在 186 条全新 development trajectories 上执行 nested strict-causal selector、posterior-mixture/action-space、regret、预算和 mutation audit；当前诚实结论为 V5 early NO-GO
+  - `cnn_fpga/benchmark/route_a_v5_final_evidence_gate.py`: T6.15.5 Phase 6B early-stop 终态门；重算 router/action 增量、验证 20 个 Dropped tasks 与零 V5 downstream outputs，撤销 V5 performance/formal/RTL/P&R claims，并只读开放 Phase 6C
+  - `cnn_fpga/benchmark/official_structured_cpd_reproduction.py`: T6.18.2 official structured-lattice CPD 复现后处理与完整性门；绑定官方 Julia commit/manifest、exact-CVP checks、作者聚合重算、独立小距离 crossing、runtime/memory 和 17 类 semantic mutation
+  - `cnn_fpga/benchmark/multimode_posterior_weighted_cpd.py`: T6.18.3 只读汇总器；对 9.6M-cycle official-validated d=3 structured family 重算 observed-only posterior-weighted CPD 的 paired LER、512-cycle tail、lag、runtime/memory、双侧 Holm 与 21 类 fail-closed mutation，oracle 永不进入 deployable ranking
+  - `cnn_fpga/benchmark/phase6c_preboard_profiles.py`: T6.19.1 项目原生预板与软件慢路径 profile；重新绑定当前 RTL 的 4,316-row CXXRTL 与 GW2AR 三种子 P&R，只让 static MAP-LUT fast-path 进入硬件表，CI/V5/Direct-NN 保持 N/A；Window/EWMA/Kalman 的 1000-repeat host stages 分表且禁止冒充 FPGA/板测
   - `cnn_fpga/decoder/regime_hmm.py`: 32×8 observed-window featurizer、full-covariance Gaussian emissions 与严格 causal four-state forward posterior
   - `cnn_fpga/decoder/slow_loop_model_selection.py`: 六族统一 bounded-history adapter、small TCN/GRU、classical heads、rolling-HMM cache 与可审计资源画像
   - `cnn_fpga/decoder/hybrid_state_output.py`: continuous/regime/leakage/recovery-burden/uncertainty 的 future-only output 与 version/validity/CRC-bound bank proposal
@@ -103,6 +129,34 @@
   - `docs/protocol_hierarchy.md` / `docs/protocol_hierarchy.json`: sBs 主数字孪生、sharpen--trim 交叉验证、secondary protocol 的周期/观测/动作/不可模拟项与禁止混用合同
   - `docs/literature_trend_reproduction_table.md` / `docs/t5_0_1_literature_trend_reproduction.json`: 14 行文献趋势复现注册表，区分主线/secondary、数值/方向容差、calibration/holdout 和 pending/reference 边界
   - `docs/independent_cross_fidelity_holdout.md` / `docs/t5_0_2_independent_cross_fidelity_holdout.json`: calibration/pilot 完全隔离的 T5.0.2 独立 holdout；显式保留 main cross-fidelity FAIL 与 secondary P-Steane PASS
+  - `docs/comparison_set_registry.md` / `docs/t5_1_1_comparison_set_registry.json`: 19-comparator、8-lane 的完整 comparison set，冻结信息/协议/时间/算力与 oracle/secondary 禁止混排规则
+  - `docs/secondary_method_source_audit.md` / `docs/t6_16_1_secondary_method_source_audit.json`: 两张异构方法图的 11-source/12-method 一手审计；逐项冻结 decision object、观测/动作/权限、metric denominator、latency boundary、资源和 null/negative 边界，不生成跨 lane 排名
+  - `docs/comparison_metric_ontology.md` / `docs/t6_16_2_comparison_ontology.json`: Phase 6C 六 lane、46 metric、六 timing boundary、五资源维度和八种 value-state 的 fail-closed ontology；只有 13-field task signature 完全一致才允许比较
+  - `docs/secondary_experiment_preregistration.md` / `docs/t6_16_3_secondary_preregistration.json`: Phase 6C 九项 secondary experiment 的 21-field 预注册、独立 seed/CRN/统计/停止与失败合同；以 live semantic/exact locks 保证外部补充比较不能改写 Phase 6B `10%/12%` 门、tail 未运行、Dropped/absence 或板测 null
+  - `docs/project_preboard_profiles.md` / `docs/t6_19_1_project_preboard_profiles.json` / Source Data: static MAP-LUT 完整 fast-path core 的 6-cycle/II=1、三种子目标器件 estimate，以及 Window/EWMA/Kalman 当前主机 update/compiler/软件事务阶段；资源不是 MAP ROM 单体面积，power/jitter/deadline/measured/physical transfer 均为 null
+  - `docs/single_mode_cpd_equivalence.md` / `docs/t6_17_1_single_mode_cpd_equivalence.json`: single-mode square/isotropic Euclidean CPD=CI 的解析与穷举边界；完整 q10×q10 加 100 万 unwrapped boundary points 均 0 mismatch，并以 biased/correlated/finite-energy likelihood 反例证明 coset MAP 不是同一 comparator
+  - `docs/noh_cnot_ci_ml_reproduction.md` / `docs/t6_17_2_noh_cnot_ci_ml_reproduction.json`: Noh 2022 Table-I 双 square-GKP CNOT 的 project-native matched 复现；8-shift 一手模型、32-seed CRN、9/12/13 dB raw counts/paired statistics、六锚点 discrepancy 与 100k true-facet likelihood oracle，outer-code 9.9 dB/latency/resources 继续为 null
+  - `docs/learned_model_eligibility_replay.md` / `docs/t6_17_3_learned_model_eligibility_replay.json`: 16 个 Direct NN、causal estimator、learned/controller student、RL/NMF family 的 13-field signature 与 7-field budget 只读资格审计；legacy TinyCNN 在 206 样本上五次 bit-exact 重推，但 same-task decoder eligible=0，LER/latency 排名保持 null
+  - `docs/aqec_common_wallclock_replay.md` / `docs/t6_18_1_aqec_common_wallclock_replay.json`: idle/measurement-reset/autonomous 三 anchor 的 6-cell×24-cluster exact finite-cutoff common-700-us replay；144,152-row raw ledger、20k paired bootstrap与144/144 cycle-vs-us ordering reversal，保留 active-QEC 弱于 idle 的负结果，Lachance reservoir结果仍为 literature-only/official-blocked
+  - `docs/official_structured_cpd_reproduction.md` / `docs/t6_18_2_official_structured_cpd_reproduction.json` / Source Data: 固定 `third_party/LatticeAlgorithms.jl@01f9bf1f...`、Apache-2.0 与 `configs/literature/t6_18_2_julia_env/`；312+64+384 个 exact checks 0 mismatch，官方聚合阈值逐位重算，1,728,000-trial d=3/5/7 coarse crossing 与小距离次序反转分列披露
+  - `docs/multimode_posterior_weighted_cpd.md` / `docs/t6_18_3_multimode_posterior_weighted_cpd.json` / Source Data: d=3 balanced heteroscedastic smooth/calibration/telegraph 的32-seed、9.6M-cycle project-native GO；adaptive/static-Euclidean `p_L=0.172261/0.236929`，absolute gain=`0.064668 [0.064413,0.064926]`，但严格禁止外推 unseen device、general multimode、SOTA、FPGA 或 Phase6B claim
+  - `docs/mixed_scenario_matrix.md` / `docs/t5_1_2_mixed_scenario_matrix.json`: 10 类 mixed noise/regime 的 lane-local production matrix；36 个 decoder seed-cluster 与 loss/fault/component 原生 gates，禁止跨 lane 拼榜
+  - `docs/oracle_gap_tail_report.md` / `docs/t5_1_3_oracle_gap_tail_report.json`: 1,152-window average/p95/worst、paired decoder-oracle gap、20k seed-cluster bootstrap、24-test Holm family 与独立 exact two-cycle control-reference gap
+  - `docs/algorithm_success_falsification.md` / `docs/t5_1_4_algorithm_branch_verdict.json`: fail-closed 算法成功/证否门；当前强 learned-decoder 分支失败并自动转入 event-aware adaptive MAP/FPGA co-design，不保留 CNN 性能主张
+  - `docs/time_cost_fairness.md` / `docs/t5_1_5_time_cost_fairness.json`: protocol/controller/host-estimator 三条公平 lanes；同时报告 cycle/μs、measurement/reset/gates、analytic cost 与 latency evidence/null，不生成跨 lane 总排名
+  - `docs/experimental_feasibility.md` / `docs/t5_1_6_experimental_feasibility.json`: controller p(g)/p(e)、reset/slew/cost 与软件 fault fallback/unsafe burden 的 fail-closed 汇总；七项缺失 evidence 保持 null/MISSING，deployment readiness 未建立
+  - `docs/displacement_large_error_causal.md` / `docs/t5_2_1_displacement_large_error_causal.json`: 17 幅度×8 seed-cluster 的独立 causal displacement campaign；分列 recovery/e-run、nearest-operation logical failure 和 identity-reference flip，不冒充 physical-memory LER
+  - `docs/ancilla_readout_causal.md` / `docs/t5_2_2_ancilla_readout_causal.json`: bit-only、phase-only、readout-only 三条互斥 sBs effective causal lanes；6 rate×8 seed clusters、全交叉负控和 whole-seed CI，不复现实验 65× 或 device LER
+  - `docs/leakage_reset_causal.md` / `docs/t5_2_3_leakage_reset_causal.json`: leakage injection 与 reset-failure 两条独立 causal lanes；96 个 seed cells、2,508-row Source Data，同报 detection/false alarm、occupancy/correlation tail、availability 与 raw reset cost，并保留 leakage-free 的 null 语义
+  - `docs/logical_channel_reconstruction.md` / `docs/t5_3_1_logical_channel_reconstruction.json`: cutoff 12/24/36/40×三噪声×QEC on/off 的六态 CPTNI logical-channel reconstruction；17,266-row Source Data，同报 full PTM、Choi/TNI、non-Pauli/leakage 与 cycle/wall-clock lifetime
+  - `docs/logical_channel_fidelity.md` / `docs/t5_3_2_logical_channel_fidelity.json`: 从六态 raw outputs 重算 leakage-inclusive `F_e/F_avg` 与无指数短时率；5,294-row Source Data，主动 lane 的 cycle-scale transient 明确保留为不合格寿命
+  - `docs/logical_operational_boundary.md` / `docs/t5_3_3_logical_operational_boundary.json`: 12 个 full-curve matched comparisons 的 wall-clock operational boundary；416-row Source Data，coherence gain/full-cost/experimental break-even 保持未建立
+  - `docs/qec_postselection_cost.md` / `docs/t5_3_4_qec_postselection_cost.json`: online QEC、offline post-selection、software safety 与 12 个 missing fields 的隔离成本账本；94-row Source Data，不生成跨 lane 总分或 full-cost break-even
+  - `docs/qec_channel_recovery_bound.md` / `docs/t5_3_5_qec_channel_recovery_bound.json`: 15 条 small-cutoff Petz/SDP 双证书、cutoff 48 与三档能量扩展、actual sBs 时序失配诊断及 teacher/student 不可比审计；119-row Source Data，不把 arbitrary recovery 写成 decoder/controller
+  - `docs/held_out_ood_validation.md` / `docs/t5_4_1_held_out_ood_validation.json`: frozen decoder、sBs confusion/leakage 与 software scheduler 的四条预注册 OOD lanes；104 seed cells、280-row Source Data，保留 telegraph reversal 与 short-pause null，不升级系统/装置稳健性
+  - `docs/uncertainty_gated_fallback.md` / `docs/t5_4_2_uncertainty_gated_fallback.json`: observed-only EWMA→static matched gate；12 个 fresh confirmation clusters、517-row Source Data，聚合微弱获益但保留 compound 显著退化与 nominal 代价
+  - `docs/causal_ablation_negative_results.md` / `docs/t5_4_3_causal_ablation_negative_results.json`: 六项 native-lane 因果消融与 claim 降级表；338-row Source Data，保留 history/run-length 负结果、regime delay 与 fallback 场景反转
+  - `docs/multi_agent_seed_selection_audit.md` / `docs/t5_4_4_multi_agent_seed_selection_audit.json`: 6 个 selection episodes、255 evaluation units、39 组 median/IQR/worst-quartile 与 420-row Source Data；保留 teacher test-ranking reversal 和 legacy coverage warning
   - `docs/quadrature_normalization_contract.md` / `docs/t_risk_20260714_01_quadrature_validation.json`: GKP 四坐标 chart、Fourier reciprocal-lattice 审计、机器验证门与 legacy 失效对照
   - `docs/sbs_error_space_model.md`: `K_gg/K_ge/K_eg/K_ee` grouped CPTP instrument、`C_i` trickle-down 与 Pauli-frame 的实现/验证边界
   - `docs/sbs_observation_reset_model.md`: ideal Kraus、hidden `g/e/f/higher`、observed `g/e/leakage`、conditional reset 与 e/leakage runs 的分层模型
@@ -161,6 +215,38 @@
   - `docs/bounded_residual_rnn_teacher.md` / `docs/t4_4_1_bounded_residual_rnn_teacher_validation.json` / `.pt` / `.csv`: 3-restart fresh GRU teacher、15-output hard action bounds、1,074-row strict-split Source Data、checkpoint non-reuse 与 cap-hit/非全局收敛边界
   - `docs/teacher_hidden_control_analysis.md` / `docs/t4_4_2_teacher_hidden_control_analysis.json` / `.csv`: 128-half-cycle hidden/control、strict-split p(g) belief probe、PCA/指数/有效记忆、2,089-row Source Data 与 leakage 非原生边界
   - `docs/low_dimensional_student_distillation.md` / `docs/t4_4_3_low_dimensional_student_validation.json` / candidate `.pt` / student `.json` / `.csv`: 4-state/95-scalar selected recurrence、held-out imitation error、58,356-row Source Data 与 gain-retention 未验证边界
+  - `docs/horizon_extrapolation_validation.md` / `docs/t5_4_5_horizon_extrapolation_validation.json` / candidate `.pt` / `.csv`: 四 training horizons、8 条真实百万-cycle streams、hidden/state bound、最坏流 imitation、float32 与 reset 证据；长时 physical gain 保持未建立
+  - `docs/randomized_model_mismatch.md` / `docs/t5_4_6_randomized_model_mismatch.json` / `.csv`: 64 个 parent-disjoint random cells、32-cell paired finite-cutoff control、完整 readout/leakage/reset/drift lanes 与 fail-closed student-retention branch；装置/长时/硬件 claim 保持关闭
+  - `docs/bit_accurate_hardware_reference.md` / `docs/t5_5_1_bit_accurate_hardware_reference.json` / Source Data / golden trace / binary bank: packed-word Python RTL golden、16,384-code parity 与 atomic in-flight bank switch；RTL/synthesis/Fmax/resource/board 字段保持未测
+  - `docs/synthesizable_rtl_equivalence.md` / `docs/target_device_synthesis.md` / T-RISK/T5.5.2 machine artifacts: 4,316 valid-row RTL 对拍、8 BSRAM 映射、三 seed Fmax/resource/critical-path estimate；vendor signoff/bitstream/真板仍未建立
+  - `docs/production_rtl_audit.md` / `docs/t6_2_1_production_rtl_audit.json` / Source Data: production synchronous management top、514-word CRC32 配置、inactive A/B bank、CAS/safe-boundary commit、drain guard 与 1,681-cycle CXXRTL；transport/CDC/P&R/真板仍未建立
+  - `docs/long_rtl_qualification.md` / `docs/t6_2_2_long_rtl_qualification.json` / Source Data: 10×100,000-cycle board-independent long trace、全 visible RTL word 0 mismatch、fault/recovery/saturation 与抽象 transport fail-closed；不替代真实 transport/bitstream/板测
+  - `docs/route_a_claim_contract.md` / `docs/t6_5_1_route_a_claim_contract.json` / Source Data: safe adaptive dual-loop 的 11-role canonical ledger、decoder/GQF/hardware 三条不可混排 lane 与逐 claim activation/revocation/wording gate
+  - `docs/unified_execution_contract.md` / `docs/t6_5_2_unified_execution_contract.json` / Source Data: 七个 observed-only comparator 的同输入、phase-LUT/Q9.12、A/B bank、cadence、matched-budget 与 deadline 合同，isolated oracle truth schema 和 70-case per-method fail-fast matrix；full 2D joint MAP 的 current-RTL 边界显式关闭
+  - `docs/unified_comparator_runner.md` / `docs/t6_6_1_unified_comparator_runner.json` / Source Data: 六个 common-trace adapter、真实 legacy CNN failure branch、隔离 oracle、standard/periodic grid 穷举、逐事件/累计计算成本与 integration-only Route-A 负结果
+  - `docs/regime_aware_safe_policy.md` / `docs/t6_6_2_regime_aware_safe_policy.json` / Source Data: T6.6.2 20,061-cycle V4 结构长轨、Window/EWMA 双影子总预算、tail EWMA 原子提交、integrity LKG rollback 与 6-cycle action provenance
+  - `docs/route_a_posterior_calibration.md` / `docs/t6_6_3_route_a_posterior_threshold_lock.json` / Source Data: T6.6.3 全量 calibration/pilot、V4 common tuple/router/EWMA baseline lock、完整 pilot selector；V2/V3 NO-GO、fallback/lag 与 formal 未访问边界完整披露
+  - `docs/route_a_smooth_formal.md` / `docs/t6_7_1_smooth_formal_matrix.json` / Source Data: T6.7.1 576 条 untouched smooth formal trajectories、七方法逐窗口 Pauli/paired/action 计数、独立 varying-state oracle 与 seed-cluster CI；锁定 EWMA contrast 通过，但 static/Window 更低、oracle-gap 为负且优势集中 periodic 的边界完整披露
+  - `docs/route_a_tail_formal.md` / `docs/t6_7_2_abrupt_ood_tail_formal_matrix.json` / Source Data: T6.7.2 888 条 abrupt/OOD+nominal formal trajectories、逐窗口 Pauli/paired/action 与逐事件 lag；catastrophic/calibration/nominal 门通过，但主要为 locked-EWMA 等价、static calibration 更强以及高 fallback/false-update 的边界完整披露
+  - `docs/route_a_integrated_rtl_qualification.md` / `docs/t6_7_3_route_a_integrated_rtl_qualification.json` / Source Data: T6.7.3 20条frozen formal trajectory、99.5802% unified posterior replay、10×100k production core+Route-A逐word CXXRTL 0 mismatch与完整commit/rollback/FIFO故障覆盖；明确HMM仍在软件且非板测/P&R/LER优势
+  - `docs/route_a_promotion_falsification_gate.md` / `docs/t6_7_4_route_a_promotion_gate.json` / Source Data: T6.7.4 从1,464条raw trajectory、两份大CSV与131MB trace独立重算；合同系统受限GO与Window/static/tail/CNN/HMM/板测负边界同时机器冻结
+  - `docs/static_gkp_same_model_lane.md` / `docs/t6_8_1_static_gkp_same_model_lane.json` / Source Data: T6.8.1 same-trace static GKP lane；Route-A相对static average优势被paired CI证否，K=4/full在完整1024²输入域hard-action等价并报告非板测成本代理
+  - `docs/external_drift_adaptive_lane.md` / `docs/t6_8_2_external_drift_adaptive_lane.json` / Source Data: T6.8.2 pinned external BOCD common-trace lane；Route-A paired LER较低但外部strict worst wall-clock超限，故只保留描述性结果并禁止matched-budget/general-SOTA升级
+  - `docs/gqf_official_intake.md` / `docs/t6_8_3_gqf_official_intake.json` / `configs/gqf_official/`: T6.8.3 Puviani official GQF intake；固定 pristine upstream、隔离四补丁和 Python/CUDA locks，CPU 真实环境一步通过但 GPU cuSolver 路径未合格，paper-exact/超过 NMF 仍禁止
+  - `docs/gqf_paper_exact_reproduction.md` / `docs/t6_8_4_gqf_paper_exact_reproduction.json` / Source Data: T6.8.4 paper/source/code exact审计；18项阻断、20-agent显式null ledger与六态三seed reduced official standard probe，exact资格0/15，MF/NMF ordering及surpass禁止
+  - `docs/gqf_route_a_matched_comparison_gate.md` / `docs/t6_8_5_gqf_route_a_matched_comparison_gate.json`: T6.8.5 前置失败负分支；8项eligibility全失败，未生成不公平comparison，全部性能/成本字段null并冻结恢复条件
+  - `docs/fpga_qec_decoder_normalization.md` / `docs/t6_8_6_fpga_decoder_normalization.json` / Source Data: T6.8.6 一手 FPGA QEC decoder 规范化；8个外部具体实现与2个项目证据行分离core/per-round/iteration/source-to-action/closed-loop，same-task comparator为0，fastest/SOTA/速度优势禁止
+  - `docs/external_fpga_decoder_refresh.md` / `docs/t6_19_2_external_fpga_normalization.json` / Source Data: T6.19.2 截止2026-07-20的外部FPGA QEC刷新；实时继承8个旧实现并新增10个一手实现，逐行冻结task signature、latency statistic、resource与evidence state；exact same-task comparator仍为0，禁止跨code family的raw-ns排名和faster/SOTA claim
+  - `docs/route_a_innovation_advantage_claim_matrix.md` / `docs/t6_8_7_route_a_claim_matrix.json` / Source Data: T6.8.7 十条原子 innovation/advantage 主张；四类对手分别绑定 required/current/gap/revocation 与 report/source/config/seed/hash，静态、general-SOTA、NMF-surpass、FPGA-speed 负边界 fail closed，T6.9 证据显式 pending/null
+  - `docs/route_a_hardware_pareto.md` / `docs/t6_9_1_route_a_hardware_pareto.json` / Source Data / durable netlists and tool logs: T6.9.1 integrated Route-A no-student/student-sidecar 两个真实 profile 各三 seed P&R；报告 Fmax/resource/六周期 clock model 和解析 power sensitivity，并保持 vendor/bitstream/transport/board/measured/speed claim 关闭
+  - `docs/route_a_board_measurement_blocker.md` / `docs/t6_9_2_route_a_board_measurement_blocker.json`: T6.9.2 实物板测 fail-closed prerequisite contract；6项physical prerequisite缺失、42个measured字段全null，禁止把P&R换算复制为板测，恢复需实板/transport/timestamp/bitstream/百万周期完整链
+  - `docs/route_a_board_preboard_candidate.md` / `docs/t6_9_2_preboard_bitstream_candidate.json`: T6.9.2 板到前候选闭环；40/96-byte framed UART、单脉冲事件门控、实际波特率比例 PHY 与完整栈 CXXRTL、GW2AR P&R/`.fs` 打包，Fmax `83.9701 MHz`、LUT4/DFF/BSRAM=`6532/2969/8`；manifest 强制标记未烧录/未测量，逐帧链路不替代满速百万周期 HIL
+  - `docs/route_a_final_evidence_gate.md` / `docs/t6_9_3_route_a_final_evidence_gate.json` / Source Data: T6.9.3 十一条最终原子主张与高水平论文GO/NO-GO；17/17 gates和mutations把完整论文判为NO-GO，仅允许受限pre-board system draft，并保持static/tail/external-budget/GQF/board/FPGA-speed负边界可见
+  - `docs/route_a_causal_headroom.md` / `docs/t6_10_1_causal_headroom.json` / Source Data: T6.10.1 exact formal diagnostic replay 与全新 development nested headroom；strict-causal router `-0.2322%`、fixed mixture `+0.4587%`、纯 action-space 增量上界 `0.02549%`，因此触发 Phase 6B early NO-GO 而不启动新 formal
+  - `docs/route_a_v5_final_evidence_gate.md` / `docs/t6_15_5_route_a_v5_final_evidence_gate.json` / Source Data: T6.15.5 early-stop claim registry 与 absence proof；12/12 gates、6/6 mutations，终态 `NO_GO_V5_EARLY_HEADROOM_STOP`，Phase 6C 只能 read-only auxiliary
+  - `docs/route_a_preregistration.md` / `docs/t6_5_3_route_a_preregistration.json` / Source Data: 新 formal 数据 result-blind 的 143-cell/24-cluster 场景设计、shared threshold selector、equal-family paired bootstrap、512-window tail、catastrophic/nominal non-inferiority 与失败降级门
+  - `docs/precision_resource_performance_pareto.md` / `docs/t5_5_3_precision_resource_pareto.json` / Source Data: 唯一 p10/K4-reference/state4/P1 点、7,680-code student RTL 对拍与 integrated resource/Fmax；在线 top-K/P2/P4/真板仍关闭
+  - `docs/gru_student_hardware_feasibility.md` / `docs/t5_5_4_gru_student_hardware_feasibility.json` / Source Data: full/quantized/student 同口径存储、MAC、BRAM/DSP、Fmax、latency 与 gain gate；quantized lower-bound 不冒充 functional RTL
   - `docs/teacher_student_gain_retention.md` / `docs/t4_4_4_teacher_student_gain_retention.json` / `.csv`: cutoff12/16 paired retention point/CI、MF 排名反转、g/e/leakage burden、解析成本与 short-horizon oracle 边界
   - `docs/teacher_student_branch_freeze.md` / `docs/t4_4_5_teacher_student_branch_freeze.json` / `.csv`: 8-predicate fail-closed branch freeze、112-row parent/claim/revocation ledger 与 armed MAP-LUT fallback
   - `docs/sidecar/`: sidecar 扩展实验治理与 worktree 规划

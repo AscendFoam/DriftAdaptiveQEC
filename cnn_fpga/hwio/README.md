@@ -161,3 +161,12 @@ ctrl = AXI_REGISTER_MAP.build_ctrl_word(start=True, commit_bank=True)
 2. **参数银行双缓冲**：Stage-then-commit 协议保证参数更新无毛刺
 3. **结构化事件日志**：MockFPGA 发出详细事件（窗口就绪、提交确认、预算违规等），便于 HIL 诊断
 4. **优雅降级**：板卡后端支持 `allow_missing_device`，设备不可用时给出明确错误而非崩溃
+
+## Route-A Tang Nano 20K framed UART 候选
+
+`route_a_uart_protocol.py` 是 T6.9.2 preboard candidate 的 host codec：固定 40-byte
+request / 96-byte response、CRC32、32-bit sequence、version/reserved-bit 校验和显式
+idempotent duplicate 状态。它与原 AXI/UIO backend 是不同 transport，不应混用证据口径。
+真板到位后使用 `scripts/route_a_board_uart_smoke.py --port <COMx> ...` 做首轮链路 smoke；
+脚本输出的 host round-trip 仅为诊断，不能代替 T6.1.3 的板上 action strobe/timestamp，
+也不能替代 T6.4 的满速百万周期 streaming/autonomous HIL。

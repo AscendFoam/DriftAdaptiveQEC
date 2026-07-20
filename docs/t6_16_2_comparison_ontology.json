@@ -1,0 +1,1693 @@
+{
+  "task_id": "T6.16.2",
+  "schema_version": "t6.16.2-comparison-metric-ontology-v1",
+  "generated_at_utc": "2026-07-20T04:32:11.571288+00:00",
+  "ontology": {
+    "frozen_at": "2026-07-20",
+    "task_signature_fields": [
+      "code_family",
+      "modes_or_distance",
+      "decision_target",
+      "input_semantics",
+      "history_horizon",
+      "output_action",
+      "noise_model",
+      "observability",
+      "online_privilege",
+      "time_basis",
+      "compute_budget",
+      "precision",
+      "evidence_level"
+    ],
+    "value_states": {
+      "MEASURED_VALUE": {
+        "value_required": true,
+        "ranking_allowed": true,
+        "meaning": "measured on the stated physical implementation and boundary"
+      },
+      "ESTIMATE_VALUE": {
+        "value_required": true,
+        "ranking_allowed": true,
+        "meaning": "synthesis, P&R, analytic or simulation estimate; never measured"
+      },
+      "REPRODUCED_VALUE": {
+        "value_required": true,
+        "ranking_allowed": true,
+        "meaning": "official-code or project-native reproduction with frozen configuration"
+      },
+      "LITERATURE_VALUE": {
+        "value_required": true,
+        "ranking_allowed": true,
+        "meaning": "source-scoped reported value, not a project reproduction"
+      },
+      "NULL_NOT_REPORTED": {
+        "value_required": false,
+        "ranking_allowed": false,
+        "meaning": "applicable field but no source-backed value"
+      },
+      "N_A_NOT_APPLICABLE": {
+        "value_required": false,
+        "ranking_allowed": false,
+        "meaning": "field does not apply to the decision object"
+      },
+      "FAILED": {
+        "value_required": false,
+        "ranking_allowed": false,
+        "meaning": "attempt executed but failed its frozen gate"
+      },
+      "NEGATIVE": {
+        "value_required": false,
+        "ranking_allowed": false,
+        "meaning": "valid negative/NO-GO result; absence of a positive claim"
+      }
+    },
+    "lanes": [
+      {
+        "lane_id": "single_mode_decoder",
+        "label": "single-mode repeated-memory GKP decoder",
+        "decision_object": "observed syndrome/history to logical coset, correction and safety action",
+        "required_task_signature": {
+          "code_family": "single-mode square approximate GKP",
+          "decision_target": "per-round or registered-window logical decision",
+          "output_action": "logical correction/frame plus typed safety action",
+          "time_basis": "per round and registered causal window",
+          "observability": "observed-only unless explicitly labeled oracle"
+        },
+        "allowed_metric_families": [
+          "logical_error",
+          "tail_risk",
+          "adaptation",
+          "safety",
+          "deadline",
+          "correctness",
+          "runtime_scaling",
+          "memory_scaling",
+          "timing",
+          "throughput",
+          "control_cost"
+        ],
+        "allowed_timing_boundaries": [
+          "decoder_core",
+          "update_compute",
+          "transport",
+          "source_to_action",
+          "closed_loop",
+          "initiation_interval"
+        ],
+        "ranking_unit": "same trace/seed, same syndrome/action, same observability, same fixed-point and compute budget",
+        "forbidden_cross_lane_targets": [
+          "surface-code finite-size threshold",
+          "multimode CVP",
+          "physical AQEC lifetime",
+          "controller training objective",
+          "different-code FPGA latency"
+        ]
+      },
+      {
+        "lane_id": "surface_gkp_gate_outer_code",
+        "label": "surface-GKP gate and outer-code",
+        "decision_object": "error-corrected GKP gate failure or concatenated outer-code recovery",
+        "required_task_signature": {
+          "code_family": "surface-GKP or explicitly named concatenated construction",
+          "decision_target": "gate failure or finite-size outer-code threshold",
+          "output_action": "gate Pauli/coset or outer-code recovery",
+          "time_basis": "per gate or code round as reported",
+          "observability": "source-specific analog/digital history"
+        },
+        "allowed_metric_families": [
+          "gate_failure",
+          "threshold",
+          "logical_error",
+          "finite_size_scaling",
+          "correctness",
+          "timing",
+          "throughput"
+        ],
+        "allowed_timing_boundaries": [
+          "decoder_core",
+          "source_to_action",
+          "closed_loop",
+          "initiation_interval"
+        ],
+        "ranking_unit": "same circuit/code family, distance set, noise law, decoder history and threshold estimator",
+        "forbidden_cross_lane_targets": [
+          "single-mode memory LER",
+          "AQEC lifetime",
+          "multimode lattice scaling",
+          "controller gain",
+          "different-code FPGA speed"
+        ]
+      },
+      {
+        "lane_id": "multimode_structured_lattice_cpd",
+        "label": "multimode structured-lattice CPD",
+        "decision_object": "multidimensional closest lattice point or logical coset",
+        "required_task_signature": {
+          "code_family": "named multimode/structured GKP lattice",
+          "decision_target": "closest point/coset",
+          "output_action": "lattice correction",
+          "time_basis": "per decode instance",
+          "observability": "current lattice displacement/syndrome vector"
+        },
+        "allowed_metric_families": [
+          "correctness",
+          "threshold",
+          "logical_error",
+          "tail_risk",
+          "adaptation",
+          "runtime_scaling",
+          "memory_scaling",
+          "complexity",
+          "timing",
+          "throughput"
+        ],
+        "allowed_timing_boundaries": [
+          "decoder_core",
+          "initiation_interval"
+        ],
+        "ranking_unit": "same lattice family/dimension/noise/precision/hardware and exactness tolerance",
+        "forbidden_cross_lane_targets": [
+          "single-mode CI renamed CPD",
+          "AQEC lifetime",
+          "controller adaptation",
+          "cross-code closed-loop latency"
+        ]
+      },
+      {
+        "lane_id": "controller_rl_nmf",
+        "label": "RL/NMF/experiment-in-loop controller",
+        "decision_object": "history/performance to physical-control parameter update",
+        "required_task_signature": {
+          "code_family": "named QEC physical protocol",
+          "decision_target": "control update or fixed optimized protocol",
+          "output_action": "continuous/discrete physical-control parameters",
+          "time_basis": "per control step, cycle or training epoch",
+          "observability": "source-specific measurement/performance history"
+        },
+        "allowed_metric_families": [
+          "lifetime",
+          "break_even",
+          "logical_error",
+          "adaptation",
+          "stability",
+          "training_cost",
+          "control_cost",
+          "timing",
+          "throughput"
+        ],
+        "allowed_timing_boundaries": [
+          "update_compute",
+          "source_to_action",
+          "closed_loop",
+          "initiation_interval"
+        ],
+        "ranking_unit": "same physical simulator/apparatus, history/action, training/search budget, horizon and selection rule",
+        "forbidden_cross_lane_targets": [
+          "direct decoder inference",
+          "surface-GKP threshold",
+          "AQEC no-decoder timing",
+          "different-task FPGA core"
+        ]
+      },
+      {
+        "lane_id": "aqec_wallclock",
+        "label": "AQEC/autonomous protocol wall-clock",
+        "decision_object": "physical autonomous/measurement-feedback memory preservation",
+        "required_task_signature": {
+          "code_family": "named single-mode GKP physical protocol",
+          "decision_target": "logical memory preservation",
+          "output_action": "physical pulse/reset/reservoir evolution",
+          "time_basis": "common physical wall-clock",
+          "observability": "protocol-native; classical decoder may be not applicable"
+        },
+        "allowed_metric_families": [
+          "lifetime",
+          "survival",
+          "break_even",
+          "physical_events",
+          "duty_cycle",
+          "control_cost"
+        ],
+        "allowed_timing_boundaries": [
+          "closed_loop"
+        ],
+        "ranking_unit": "same apparatus/model, wall-clock horizon, noise, cutoff, duty, event and control budget",
+        "forbidden_cross_lane_targets": [
+          "zero-latency decoder",
+          "per-cycle-only lifetime ranking",
+          "surface-code threshold",
+          "FPGA LUT comparison"
+        ]
+      },
+      {
+        "lane_id": "fpga_implementation",
+        "label": "FPGA implementation normalization",
+        "decision_object": "concrete code/task input to concrete decoder/control output",
+        "required_task_signature": {
+          "code_family": "exact named code family and size",
+          "decision_target": "exact decoder/control task",
+          "output_action": "exact frame/correction/feedback action",
+          "time_basis": "explicit latency boundary/statistic",
+          "observability": "exact hardware input stream"
+        },
+        "allowed_metric_families": [
+          "timing",
+          "throughput",
+          "resources",
+          "power",
+          "correctness",
+          "deadline",
+          "memory_scaling"
+        ],
+        "allowed_timing_boundaries": [
+          "decoder_core",
+          "update_compute",
+          "transport",
+          "source_to_action",
+          "closed_loop",
+          "initiation_interval"
+        ],
+        "ranking_unit": "same code/input/action/size/precision/device class/boundary/statistic/hardware evidence",
+        "forbidden_cross_lane_targets": [
+          "cross-code raw nanosecond leaderboard",
+          "estimate versus measured rank",
+          "per-iteration versus closed-loop rank",
+          "unmeasured zero fill"
+        ]
+      }
+    ],
+    "metrics": [
+      {
+        "metric_id": "p_L",
+        "family": "logical_error",
+        "value_type": "probability",
+        "unit": "probability_per_round",
+        "direction": "lower_is_better",
+        "denominator_contract": "registered decoded rounds",
+        "statistic_contract": "raw errors/rounds plus paired cluster CI",
+        "aggregation": "aggregate and scenario family",
+        "allowed_lanes": [
+          "single_mode_decoder",
+          "surface_gkp_gate_outer_code",
+          "multimode_structured_lattice_cpd"
+        ],
+        "conversion_policy": "no conversion from lifetime or threshold"
+      },
+      {
+        "metric_id": "p_X",
+        "family": "logical_error",
+        "value_type": "probability",
+        "unit": "probability_per_round",
+        "direction": "lower_is_better",
+        "denominator_contract": "registered decoded rounds with X component",
+        "statistic_contract": "raw X counts/rounds",
+        "aggregation": "aggregate and scenario family",
+        "allowed_lanes": [
+          "single_mode_decoder"
+        ],
+        "conversion_policy": "Pauli convention must match"
+      },
+      {
+        "metric_id": "p_Y",
+        "family": "logical_error",
+        "value_type": "probability",
+        "unit": "probability_per_round",
+        "direction": "lower_is_better",
+        "denominator_contract": "registered decoded rounds with joint X and Z component",
+        "statistic_contract": "raw Y counts/rounds",
+        "aggregation": "aggregate and scenario family",
+        "allowed_lanes": [
+          "single_mode_decoder"
+        ],
+        "conversion_policy": "never infer from pX+pZ"
+      },
+      {
+        "metric_id": "p_Z",
+        "family": "logical_error",
+        "value_type": "probability",
+        "unit": "probability_per_round",
+        "direction": "lower_is_better",
+        "denominator_contract": "registered decoded rounds with Z component",
+        "statistic_contract": "raw Z counts/rounds",
+        "aggregation": "aggregate and scenario family",
+        "allowed_lanes": [
+          "single_mode_decoder"
+        ],
+        "conversion_policy": "Pauli convention must match"
+      },
+      {
+        "metric_id": "average_ler",
+        "family": "logical_error",
+        "value_type": "probability",
+        "unit": "probability_per_round",
+        "direction": "lower_is_better",
+        "denominator_contract": "all registered rounds with frozen family weights",
+        "statistic_contract": "raw total errors/total rounds and cluster CI",
+        "aggregation": "pre-registered family weighting",
+        "allowed_lanes": [
+          "single_mode_decoder",
+          "surface_gkp_gate_outer_code"
+        ],
+        "conversion_policy": "no averaging across task signatures"
+      },
+      {
+        "metric_id": "p95_window_ler",
+        "family": "tail_risk",
+        "value_type": "probability",
+        "unit": "probability_per_round",
+        "direction": "lower_is_better",
+        "denominator_contract": "fixed-length causal windows",
+        "statistic_contract": "empirical 95th percentile over registered windows",
+        "aggregation": "scenario-local then pre-registered aggregate",
+        "allowed_lanes": [
+          "single_mode_decoder"
+        ],
+        "conversion_policy": "window length/overlap must match"
+      },
+      {
+        "metric_id": "worst_window_ler",
+        "family": "tail_risk",
+        "value_type": "probability",
+        "unit": "probability_per_round",
+        "direction": "lower_is_better",
+        "denominator_contract": "fixed-length causal windows",
+        "statistic_contract": "maximum over all registered windows",
+        "aggregation": "scenario family and global registered set",
+        "allowed_lanes": [
+          "single_mode_decoder",
+          "multimode_structured_lattice_cpd"
+        ],
+        "conversion_policy": "window length/overlap must match"
+      },
+      {
+        "metric_id": "cvar95_window_ler",
+        "family": "tail_risk",
+        "value_type": "probability",
+        "unit": "probability_per_round",
+        "direction": "lower_is_better",
+        "denominator_contract": "worst 5 percent fixed-length causal windows",
+        "statistic_contract": "mean above empirical 95th-percentile threshold with tie rule",
+        "aggregation": "scenario-local and aggregate",
+        "allowed_lanes": [
+          "single_mode_decoder",
+          "multimode_structured_lattice_cpd"
+        ],
+        "conversion_policy": "tail level/window contract must match"
+      },
+      {
+        "metric_id": "cnot_failure_probability",
+        "family": "gate_failure",
+        "value_type": "probability",
+        "unit": "probability_per_error_corrected_cnot",
+        "direction": "lower_is_better",
+        "denominator_contract": "one named error-corrected CNOT circuit",
+        "statistic_contract": "raw failures/CNOT trials with CI when reproduced",
+        "aggregation": "per squeezing/noise point",
+        "allowed_lanes": [
+          "surface_gkp_gate_outer_code"
+        ],
+        "conversion_policy": "not a per-round LER"
+      },
+      {
+        "metric_id": "squeezing_threshold_db",
+        "family": "threshold",
+        "value_type": "scalar",
+        "unit": "dB",
+        "direction": "lower_required_squeezing_is_better",
+        "denominator_contract": "named code/noise/decoder finite-size family",
+        "statistic_contract": "crossing/fit with distances and uncertainty",
+        "aggregation": "one frozen finite-size estimator",
+        "allowed_lanes": [
+          "surface_gkp_gate_outer_code"
+        ],
+        "conversion_policy": "requires explicit sigma-to-dB convention; never infer from gate failure"
+      },
+      {
+        "metric_id": "noise_threshold_sigma",
+        "family": "threshold",
+        "value_type": "scalar",
+        "unit": "source_sigma",
+        "direction": "higher_tolerable_noise_is_better",
+        "denominator_contract": "named code/noise/decoder finite-size family",
+        "statistic_contract": "crossing/fit with sizes and uncertainty",
+        "aggregation": "one frozen finite-size estimator",
+        "allowed_lanes": [
+          "surface_gkp_gate_outer_code",
+          "multimode_structured_lattice_cpd"
+        ],
+        "conversion_policy": "no cross-paper sigma or dB conversion without identical convention"
+      },
+      {
+        "metric_id": "finite_size_crossing_residual",
+        "family": "finite_size_scaling",
+        "value_type": "scalar",
+        "unit": "source_metric",
+        "direction": "lower_is_better",
+        "denominator_contract": "registered sizes and fit points",
+        "statistic_contract": "residual/bootstrap stability",
+        "aggregation": "one code/noise family",
+        "allowed_lanes": [
+          "surface_gkp_gate_outer_code"
+        ],
+        "conversion_policy": "fit diagnostic only"
+      },
+      {
+        "metric_id": "decision_mismatch_rate",
+        "family": "correctness",
+        "value_type": "probability",
+        "unit": "mismatches_per_instance",
+        "direction": "lower_is_better",
+        "denominator_contract": "same exact/brute-force input instances",
+        "statistic_contract": "raw mismatches/instances and zero-event bound",
+        "aggregation": "dimension/family strata",
+        "allowed_lanes": [
+          "single_mode_decoder",
+          "surface_gkp_gate_outer_code",
+          "multimode_structured_lattice_cpd",
+          "fpga_implementation"
+        ],
+        "conversion_policy": "requires same decision object"
+      },
+      {
+        "metric_id": "runtime_seconds",
+        "family": "runtime_scaling",
+        "value_type": "duration",
+        "unit": "s",
+        "direction": "lower_is_better",
+        "denominator_contract": "one named decode workload",
+        "statistic_contract": "median and tail over repeated runs",
+        "aggregation": "per dimension/problem size",
+        "allowed_lanes": [
+          "single_mode_decoder",
+          "multimode_structured_lattice_cpd"
+        ],
+        "conversion_policy": "hardware/environment must match"
+      },
+      {
+        "metric_id": "memory_bytes",
+        "family": "memory_scaling",
+        "value_type": "count",
+        "unit": "bytes",
+        "direction": "lower_is_better",
+        "denominator_contract": "one concrete implementation/problem size",
+        "statistic_contract": "peak resident or allocated as labeled",
+        "aggregation": "per dimension/problem size",
+        "allowed_lanes": [
+          "single_mode_decoder",
+          "multimode_structured_lattice_cpd",
+          "fpga_implementation"
+        ],
+        "conversion_policy": "BRAM conversion requires device primitive size"
+      },
+      {
+        "metric_id": "asymptotic_time_complexity",
+        "family": "complexity",
+        "value_type": "symbolic",
+        "unit": "big_O",
+        "direction": "source_scoped",
+        "denominator_contract": "named lattice family and exact/approximate algorithm",
+        "statistic_contract": "formal source locator or derivation",
+        "aggregation": "not numerically ranked",
+        "allowed_lanes": [
+          "multimode_structured_lattice_cpd"
+        ],
+        "conversion_policy": "generic exponential and structured linear/polynomial must remain separate"
+      },
+      {
+        "metric_id": "logical_lifetime_cycles",
+        "family": "lifetime",
+        "value_type": "duration",
+        "unit": "protocol_cycles",
+        "direction": "higher_is_better",
+        "denominator_contract": "named logical observable and native protocol cycle",
+        "statistic_contract": "registered decay fit with interval",
+        "aggregation": "state/observable/noise profile",
+        "allowed_lanes": [
+          "controller_rl_nmf",
+          "aqec_wallclock"
+        ],
+        "conversion_policy": "cannot compare across different cycle durations without wall-clock replay"
+      },
+      {
+        "metric_id": "logical_lifetime_us",
+        "family": "lifetime",
+        "value_type": "duration",
+        "unit": "us",
+        "direction": "higher_is_better",
+        "denominator_contract": "named logical observable under common physical wall-clock",
+        "statistic_contract": "registered decay fit or area-equivalent definition",
+        "aggregation": "state/observable/noise profile",
+        "allowed_lanes": [
+          "controller_rl_nmf",
+          "aqec_wallclock"
+        ],
+        "conversion_policy": "cycle multiplication allowed only with protocol-native duration and matching duty/noise"
+      },
+      {
+        "metric_id": "logical_lifetime_ms",
+        "family": "lifetime",
+        "value_type": "duration",
+        "unit": "ms",
+        "direction": "higher_is_better",
+        "denominator_contract": "named logical observable under common physical wall-clock",
+        "statistic_contract": "registered experimental/simulation decay fit",
+        "aggregation": "method/state/observable",
+        "allowed_lanes": [
+          "controller_rl_nmf",
+          "aqec_wallclock"
+        ],
+        "conversion_policy": "unit scale only; protocol must match"
+      },
+      {
+        "metric_id": "lifetime_gain_ratio",
+        "family": "break_even",
+        "value_type": "ratio",
+        "unit": "ratio",
+        "direction": "higher_is_better",
+        "denominator_contract": "active logical lifetime divided by explicitly named matched passive/free anchor",
+        "statistic_contract": "paired or propagated uncertainty",
+        "aggregation": "method/state/observable",
+        "allowed_lanes": [
+          "controller_rl_nmf",
+          "aqec_wallclock"
+        ],
+        "conversion_policy": "anchor identity is part of the metric"
+      },
+      {
+        "metric_id": "coherence_break_even_gain",
+        "family": "break_even",
+        "value_type": "ratio",
+        "unit": "ratio",
+        "direction": "higher_is_better",
+        "denominator_contract": "best explicitly named physical/passive component decay rate divided by logical decay rate",
+        "statistic_contract": "registered fit and uncertainty",
+        "aggregation": "one apparatus/protocol",
+        "allowed_lanes": [
+          "controller_rl_nmf",
+          "aqec_wallclock"
+        ],
+        "conversion_policy": "not interchangeable with free-GKP lifetime gain"
+      },
+      {
+        "metric_id": "final_code_survival",
+        "family": "survival",
+        "value_type": "probability",
+        "unit": "probability",
+        "direction": "higher_is_better",
+        "denominator_contract": "states at a common wall-clock horizon",
+        "statistic_contract": "raw/model survival with interval as applicable",
+        "aggregation": "cutoff/noise/horizon",
+        "allowed_lanes": [
+          "aqec_wallclock"
+        ],
+        "conversion_policy": "horizon and code projector must match"
+      },
+      {
+        "metric_id": "ler_reduction_fraction",
+        "family": "logical_error",
+        "value_type": "fraction",
+        "unit": "fraction",
+        "direction": "higher_is_better",
+        "denominator_contract": "baseline LER minus candidate LER divided by same baseline LER",
+        "statistic_contract": "paired contrast with interval",
+        "aggregation": "frozen experiment/family weights",
+        "allowed_lanes": [
+          "controller_rl_nmf",
+          "single_mode_decoder"
+        ],
+        "conversion_policy": "baseline and privilege are part of denominator"
+      },
+      {
+        "metric_id": "ler_stability_ratio",
+        "family": "stability",
+        "value_type": "ratio",
+        "unit": "ratio",
+        "direction": "higher_is_better",
+        "denominator_contract": "source-defined baseline variability divided by candidate variability",
+        "statistic_contract": "source-defined variability estimator with interval",
+        "aggregation": "one injected-drift experiment",
+        "allowed_lanes": [
+          "controller_rl_nmf"
+        ],
+        "conversion_policy": "stability definition must match exactly"
+      },
+      {
+        "metric_id": "adaptation_lag_cycles",
+        "family": "adaptation",
+        "value_type": "duration",
+        "unit": "cycles",
+        "direction": "lower_is_better",
+        "denominator_contract": "registered transition event to registered recovery condition",
+        "statistic_contract": "median/p95 and censored fraction",
+        "aggregation": "transition type/rate/amplitude/duration",
+        "allowed_lanes": [
+          "single_mode_decoder",
+          "multimode_structured_lattice_cpd",
+          "controller_rl_nmf"
+        ],
+        "conversion_policy": "cycle duration and recovery threshold must match"
+      },
+      {
+        "metric_id": "adaptation_lag_epochs",
+        "family": "adaptation",
+        "value_type": "duration",
+        "unit": "epochs",
+        "direction": "lower_is_better",
+        "denominator_contract": "registered drift intervention to recovery in optimization epochs",
+        "statistic_contract": "reported median/approximate response as labeled",
+        "aggregation": "one experiment protocol",
+        "allowed_lanes": [
+          "controller_rl_nmf"
+        ],
+        "conversion_policy": "never convert to inference microseconds without epoch workload"
+      },
+      {
+        "metric_id": "false_update_rate",
+        "family": "safety",
+        "value_type": "probability",
+        "unit": "updates_per_eligible_round",
+        "direction": "lower_is_better",
+        "denominator_contract": "nominal rounds eligible for update decision",
+        "statistic_contract": "raw false updates/eligible rounds with cluster CI",
+        "aggregation": "nominal scenario family",
+        "allowed_lanes": [
+          "single_mode_decoder"
+        ],
+        "conversion_policy": "eligibility definition must match"
+      },
+      {
+        "metric_id": "fallback_rate",
+        "family": "safety",
+        "value_type": "probability",
+        "unit": "fallbacks_per_round",
+        "direction": "lower_is_better_with_safety_constraint",
+        "denominator_contract": "all registered rounds",
+        "statistic_contract": "raw fallback rounds/rounds plus cause strata",
+        "aggregation": "scenario family and nominal",
+        "allowed_lanes": [
+          "single_mode_decoder"
+        ],
+        "conversion_policy": "not ranked without induced/avoided-error context"
+      },
+      {
+        "metric_id": "avoided_errors",
+        "family": "safety",
+        "value_type": "count",
+        "unit": "paired_rounds",
+        "direction": "higher_is_better",
+        "denominator_contract": "same-trace rounds where candidate correct and baseline wrong",
+        "statistic_contract": "paired raw count and cluster CI for rate",
+        "aggregation": "scenario family",
+        "allowed_lanes": [
+          "single_mode_decoder"
+        ],
+        "conversion_policy": "must accompany induced_errors"
+      },
+      {
+        "metric_id": "induced_errors",
+        "family": "safety",
+        "value_type": "count",
+        "unit": "paired_rounds",
+        "direction": "lower_is_better",
+        "denominator_contract": "same-trace rounds where candidate wrong and baseline correct",
+        "statistic_contract": "paired raw count and cluster CI for rate",
+        "aggregation": "scenario family",
+        "allowed_lanes": [
+          "single_mode_decoder"
+        ],
+        "conversion_policy": "must accompany avoided_errors"
+      },
+      {
+        "metric_id": "deadline_miss_rate",
+        "family": "deadline",
+        "value_type": "probability",
+        "unit": "misses_per_action",
+        "direction": "lower_is_better",
+        "denominator_contract": "all actions with registered deadline",
+        "statistic_contract": "raw misses/actions plus worst burst",
+        "aggregation": "scenario and implementation profile",
+        "allowed_lanes": [
+          "single_mode_decoder",
+          "fpga_implementation"
+        ],
+        "conversion_policy": "deadline and boundary must match"
+      },
+      {
+        "metric_id": "training_epoch_wall_time_s",
+        "family": "training_cost",
+        "value_type": "duration",
+        "unit": "s",
+        "direction": "lower_is_better",
+        "denominator_contract": "one named epoch workload",
+        "statistic_contract": "reported/observed statistic and environment",
+        "aggregation": "training setup",
+        "allowed_lanes": [
+          "controller_rl_nmf"
+        ],
+        "conversion_policy": "not inference latency"
+      },
+      {
+        "metric_id": "control_parameter_count",
+        "family": "control_cost",
+        "value_type": "count",
+        "unit": "parameters",
+        "direction": "context_dependent",
+        "denominator_contract": "one controller/action vector",
+        "statistic_contract": "exact architecture/action count",
+        "aggregation": "controller",
+        "allowed_lanes": [
+          "controller_rl_nmf",
+          "aqec_wallclock"
+        ],
+        "conversion_policy": "not hardware resources"
+      },
+      {
+        "metric_id": "macs_per_update",
+        "family": "control_cost",
+        "value_type": "count",
+        "unit": "MAC",
+        "direction": "lower_is_better_with_performance_constraint",
+        "denominator_contract": "one named inference/update",
+        "statistic_contract": "exact operation accounting",
+        "aggregation": "controller/profile",
+        "allowed_lanes": [
+          "controller_rl_nmf",
+          "single_mode_decoder"
+        ],
+        "conversion_policy": "operation definition and precision must match"
+      },
+      {
+        "metric_id": "measurements_per_100us",
+        "family": "physical_events",
+        "value_type": "rate",
+        "unit": "events_per_100us",
+        "direction": "context_dependent",
+        "denominator_contract": "common 100 us physical time",
+        "statistic_contract": "protocol-native event count/time",
+        "aggregation": "protocol/noise profile",
+        "allowed_lanes": [
+          "aqec_wallclock"
+        ],
+        "conversion_policy": "not decoder latency"
+      },
+      {
+        "metric_id": "resets_per_100us",
+        "family": "physical_events",
+        "value_type": "rate",
+        "unit": "events_per_100us",
+        "direction": "context_dependent",
+        "denominator_contract": "common 100 us physical time",
+        "statistic_contract": "protocol-native event count/time",
+        "aggregation": "protocol/noise profile",
+        "allowed_lanes": [
+          "aqec_wallclock"
+        ],
+        "conversion_policy": "reset definition must match"
+      },
+      {
+        "metric_id": "active_gates_per_100us",
+        "family": "duty_cycle",
+        "value_type": "rate",
+        "unit": "events_per_100us",
+        "direction": "lower_is_better_with_lifetime_constraint",
+        "denominator_contract": "common 100 us physical time",
+        "statistic_contract": "protocol-native gate count/time",
+        "aggregation": "protocol/noise profile",
+        "allowed_lanes": [
+          "aqec_wallclock"
+        ],
+        "conversion_policy": "gate granularity must match"
+      },
+      {
+        "metric_id": "latency_ns",
+        "family": "timing",
+        "value_type": "duration",
+        "unit": "ns",
+        "direction": "lower_is_better",
+        "denominator_contract": "one explicit timing boundary and statistic",
+        "statistic_contract": "deterministic/mean/p95/worst/estimate as labeled",
+        "aggregation": "implementation/problem size",
+        "allowed_lanes": [
+          "single_mode_decoder",
+          "surface_gkp_gate_outer_code",
+          "multimode_structured_lattice_cpd",
+          "controller_rl_nmf",
+          "fpga_implementation"
+        ],
+        "conversion_policy": "boundary, statistic and evidence must match"
+      },
+      {
+        "metric_id": "latency_cycles",
+        "family": "timing",
+        "value_type": "duration",
+        "unit": "clock_cycles",
+        "direction": "lower_is_better",
+        "denominator_contract": "one explicit timing boundary",
+        "statistic_contract": "fixed or distribution as labeled",
+        "aggregation": "implementation/profile",
+        "allowed_lanes": [
+          "single_mode_decoder",
+          "surface_gkp_gate_outer_code",
+          "fpga_implementation"
+        ],
+        "conversion_policy": "clock period required for ns conversion"
+      },
+      {
+        "metric_id": "initiation_interval_ns",
+        "family": "throughput",
+        "value_type": "duration",
+        "unit": "ns_per_accepted_input",
+        "direction": "lower_is_better",
+        "denominator_contract": "steady-state accepted input interval",
+        "statistic_contract": "fixed/mean/worst with backpressure contract",
+        "aggregation": "implementation/profile",
+        "allowed_lanes": [
+          "single_mode_decoder",
+          "surface_gkp_gate_outer_code",
+          "multimode_structured_lattice_cpd",
+          "controller_rl_nmf",
+          "fpga_implementation"
+        ],
+        "conversion_policy": "not end-to-end latency"
+      },
+      {
+        "metric_id": "clock_mhz",
+        "family": "throughput",
+        "value_type": "frequency",
+        "unit": "MHz",
+        "direction": "higher_is_better_with_same_design",
+        "denominator_contract": "one implementation timing result",
+        "statistic_contract": "constraint/achieved Fmax as labeled",
+        "aggregation": "device/seed/profile",
+        "allowed_lanes": [
+          "fpga_implementation"
+        ],
+        "conversion_policy": "target clock is not achieved Fmax"
+      },
+      {
+        "metric_id": "lut_count",
+        "family": "resources",
+        "value_type": "count",
+        "unit": "device_LUT",
+        "direction": "lower_is_better_with_same_task",
+        "denominator_contract": "one implementation/device/profile",
+        "statistic_contract": "synthesis/P&R/measured provenance",
+        "aggregation": "seed/profile",
+        "allowed_lanes": [
+          "fpga_implementation"
+        ],
+        "conversion_policy": "LUT primitive type/device must match"
+      },
+      {
+        "metric_id": "ff_count",
+        "family": "resources",
+        "value_type": "count",
+        "unit": "device_FF",
+        "direction": "lower_is_better_with_same_task",
+        "denominator_contract": "one implementation/device/profile",
+        "statistic_contract": "synthesis/P&R provenance",
+        "aggregation": "seed/profile",
+        "allowed_lanes": [
+          "fpga_implementation"
+        ],
+        "conversion_policy": "device primitive must match"
+      },
+      {
+        "metric_id": "bram_count",
+        "family": "resources",
+        "value_type": "count",
+        "unit": "device_BRAM",
+        "direction": "lower_is_better_with_same_task",
+        "denominator_contract": "one implementation/device/profile",
+        "statistic_contract": "synthesis/P&R provenance and primitive size",
+        "aggregation": "seed/profile",
+        "allowed_lanes": [
+          "fpga_implementation"
+        ],
+        "conversion_policy": "BRAM18/36/BSRAM not interchangeable without bits"
+      },
+      {
+        "metric_id": "dsp_count",
+        "family": "resources",
+        "value_type": "count",
+        "unit": "device_DSP",
+        "direction": "lower_is_better_with_same_task",
+        "denominator_contract": "one implementation/device/profile",
+        "statistic_contract": "synthesis/P&R provenance and primitive type",
+        "aggregation": "seed/profile",
+        "allowed_lanes": [
+          "fpga_implementation"
+        ],
+        "conversion_policy": "DSP primitive type/device must match"
+      },
+      {
+        "metric_id": "power_w",
+        "family": "power",
+        "value_type": "power",
+        "unit": "W",
+        "direction": "lower_is_better_with_same_task",
+        "denominator_contract": "one implementation/activity/voltage/clock profile",
+        "statistic_contract": "measured or tool estimate as labeled",
+        "aggregation": "profile",
+        "allowed_lanes": [
+          "fpga_implementation"
+        ],
+        "conversion_policy": "analytic sensitivity, tool estimate and measured power remain separate"
+      }
+    ],
+    "timing_boundaries": [
+      {
+        "boundary_id": "decoder_core",
+        "start_event": "decoder input accepted",
+        "end_event": "decoder decision valid",
+        "includes": [
+          "decoder datapath"
+        ],
+        "excludes": [
+          "ADC/readout",
+          "transport",
+          "actuation"
+        ],
+        "composable_from": []
+      },
+      {
+        "boundary_id": "update_compute",
+        "start_event": "update evidence batch/window closes",
+        "end_event": "candidate parameter image ready",
+        "includes": [
+          "estimation",
+          "policy/update computation"
+        ],
+        "excludes": [
+          "transport",
+          "bank commit",
+          "actuation"
+        ],
+        "composable_from": []
+      },
+      {
+        "boundary_id": "transport",
+        "start_event": "source payload available at interface",
+        "end_event": "payload/action delivered across registered link",
+        "includes": [
+          "serialization",
+          "link",
+          "CDC/FIFO as declared"
+        ],
+        "excludes": [
+          "decoder computation unless explicitly in path"
+        ],
+        "composable_from": []
+      },
+      {
+        "boundary_id": "source_to_action",
+        "start_event": "registered source/readout datum available",
+        "end_event": "digital action valid at actuation interface",
+        "includes": [
+          "declared transport",
+          "decoder",
+          "frame/action routing"
+        ],
+        "excludes": [
+          "physical pulse response unless declared"
+        ],
+        "composable_from": [
+          "transport",
+          "decoder_core"
+        ]
+      },
+      {
+        "boundary_id": "closed_loop",
+        "start_event": "end of physical readout/source event",
+        "end_event": "start/effect of physical feedback event as declared",
+        "includes": [
+          "readout processing",
+          "transport",
+          "decoder",
+          "control routing"
+        ],
+        "excludes": [],
+        "composable_from": [
+          "source_to_action"
+        ]
+      },
+      {
+        "boundary_id": "initiation_interval",
+        "start_event": "accepted input n",
+        "end_event": "accepted input n+1 in steady state",
+        "includes": [
+          "backpressure contract"
+        ],
+        "excludes": [
+          "latency to corresponding output"
+        ],
+        "composable_from": []
+      }
+    ],
+    "resource_dimensions": [
+      {
+        "resource_id": "LUT",
+        "required_qualifiers": [
+          "device",
+          "primitive_type",
+          "tool",
+          "stage",
+          "seed/profile"
+        ],
+        "allowed_evidence": [
+          "synthesis_estimate",
+          "post_route_estimate",
+          "board_readback_not_applicable"
+        ]
+      },
+      {
+        "resource_id": "FF",
+        "required_qualifiers": [
+          "device",
+          "primitive_type",
+          "tool",
+          "stage",
+          "seed/profile"
+        ],
+        "allowed_evidence": [
+          "synthesis_estimate",
+          "post_route_estimate"
+        ]
+      },
+      {
+        "resource_id": "BRAM",
+        "required_qualifiers": [
+          "device",
+          "primitive_bits",
+          "tool",
+          "stage",
+          "seed/profile"
+        ],
+        "allowed_evidence": [
+          "synthesis_estimate",
+          "post_route_estimate"
+        ]
+      },
+      {
+        "resource_id": "DSP",
+        "required_qualifiers": [
+          "device",
+          "primitive_type",
+          "tool",
+          "stage",
+          "seed/profile"
+        ],
+        "allowed_evidence": [
+          "synthesis_estimate",
+          "post_route_estimate"
+        ]
+      },
+      {
+        "resource_id": "power",
+        "required_qualifiers": [
+          "device",
+          "voltage",
+          "clock",
+          "activity",
+          "method",
+          "stage"
+        ],
+        "allowed_evidence": [
+          "analytic_sensitivity",
+          "tool_estimate",
+          "board_measured"
+        ]
+      }
+    ]
+  },
+  "source_audit_summary": {
+    "method_count": 12,
+    "metric_count": 30,
+    "method_lane_ids": [
+      "aqec_wallclock",
+      "controller_rl_nmf",
+      "fpga_implementation",
+      "multimode_structured_lattice_cpd",
+      "single_mode_decoder",
+      "surface_gkp_gate_outer_code"
+    ],
+    "claim_count": 24
+  },
+  "source_metric_crosswalk": [
+    {
+      "method_id": "noh_ci_cnot",
+      "source_metric_id": "cnot_failure_9db",
+      "source_lane_id": "surface_gkp_gate_outer_code",
+      "ontology_metric_id": "cnot_failure_probability",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "noh_ci_cnot",
+      "source_metric_id": "cnot_failure_12db",
+      "source_lane_id": "surface_gkp_gate_outer_code",
+      "ontology_metric_id": "cnot_failure_probability",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "noh_ci_cnot",
+      "source_metric_id": "cnot_failure_13db",
+      "source_lane_id": "surface_gkp_gate_outer_code",
+      "ontology_metric_id": "cnot_failure_probability",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "noh_ml_cnot_and_outer",
+      "source_metric_id": "cnot_failure_9db",
+      "source_lane_id": "surface_gkp_gate_outer_code",
+      "ontology_metric_id": "cnot_failure_probability",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "noh_ml_cnot_and_outer",
+      "source_metric_id": "cnot_failure_12db",
+      "source_lane_id": "surface_gkp_gate_outer_code",
+      "ontology_metric_id": "cnot_failure_probability",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "noh_ml_cnot_and_outer",
+      "source_metric_id": "cnot_failure_13db",
+      "source_lane_id": "surface_gkp_gate_outer_code",
+      "ontology_metric_id": "cnot_failure_probability",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "noh_ml_cnot_and_outer",
+      "source_metric_id": "surface_gkp_threshold_db",
+      "source_lane_id": "surface_gkp_gate_outer_code",
+      "ontology_metric_id": "squeezing_threshold_db",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "wang_direct_nn_surface_gkp",
+      "source_metric_id": "threshold_perfect_measurement",
+      "source_lane_id": "surface_gkp_gate_outer_code",
+      "ontology_metric_id": "noise_threshold_sigma",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "wang_direct_nn_surface_gkp",
+      "source_metric_id": "mwpm_threshold_perfect_measurement",
+      "source_lane_id": "surface_gkp_gate_outer_code",
+      "ontology_metric_id": "noise_threshold_sigma",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "wang_direct_nn_surface_gkp",
+      "source_metric_id": "threshold_noisy_measurement",
+      "source_lane_id": "surface_gkp_gate_outer_code",
+      "ontology_metric_id": "noise_threshold_sigma",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "wang_direct_nn_surface_gkp",
+      "source_metric_id": "mwpm_threshold_noisy_measurement",
+      "source_lane_id": "surface_gkp_gate_outer_code",
+      "ontology_metric_id": "noise_threshold_sigma",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "wang_direct_nn_surface_gkp",
+      "source_metric_id": "decoding_rate_improvement",
+      "source_lane_id": "surface_gkp_gate_outer_code",
+      "ontology_metric_id": null,
+      "status": "REJECTED_UNDEFINED_DENOMINATOR",
+      "allowed_in_lane": false,
+      "source_value_is_null": true,
+      "reason": "Wang decoding-rate prose has no portable denominator"
+    },
+    {
+      "method_id": "sivak2023_rl_controller",
+      "source_metric_id": "break_even_gain",
+      "source_lane_id": "controller_rl_nmf",
+      "ontology_metric_id": "coherence_break_even_gain",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "sivak2023_rl_controller",
+      "source_metric_id": "training_epoch_seconds",
+      "source_lane_id": "controller_rl_nmf",
+      "ontology_metric_id": "training_epoch_wall_time_s",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "sivak2026_rl_drift",
+      "source_metric_id": "control_only_ler_reduction",
+      "source_lane_id": "controller_rl_nmf",
+      "ontology_metric_id": "ler_reduction_fraction",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "sivak2026_rl_drift",
+      "source_metric_id": "control_only_ler_stability",
+      "source_lane_id": "controller_rl_nmf",
+      "ontology_metric_id": "ler_stability_ratio",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "sivak2026_rl_drift",
+      "source_metric_id": "control_decoder_ler_reduction",
+      "source_lane_id": "controller_rl_nmf",
+      "ontology_metric_id": "ler_reduction_fraction",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "sivak2026_rl_drift",
+      "source_metric_id": "control_decoder_ler_stability",
+      "source_lane_id": "controller_rl_nmf",
+      "ontology_metric_id": "ler_stability_ratio",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "sivak2026_rl_drift",
+      "source_metric_id": "calibrated_finetune_ler_reduction",
+      "source_lane_id": "controller_rl_nmf",
+      "ontology_metric_id": "ler_reduction_fraction",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "sivak2026_rl_drift",
+      "source_metric_id": "recovery_epochs",
+      "source_lane_id": "controller_rl_nmf",
+      "ontology_metric_id": "adaptation_lag_epochs",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "puviani_nmf_controller",
+      "source_metric_id": "low_noise_tz_standard_cycles",
+      "source_lane_id": "controller_rl_nmf",
+      "ontology_metric_id": "logical_lifetime_cycles",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "puviani_nmf_controller",
+      "source_metric_id": "low_noise_tz_nmf_cycles",
+      "source_lane_id": "controller_rl_nmf",
+      "ontology_metric_id": "logical_lifetime_cycles",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "lachance_aqec_experiment",
+      "source_metric_id": "method_a_gain",
+      "source_lane_id": "aqec_wallclock",
+      "ontology_metric_id": "lifetime_gain_ratio",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "lachance_aqec_experiment",
+      "source_metric_id": "method_b_gain",
+      "source_lane_id": "aqec_wallclock",
+      "ontology_metric_id": "lifetime_gain_ratio",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "lachance_aqec_experiment",
+      "source_metric_id": "method_a_free_lifetime_ms",
+      "source_lane_id": "aqec_wallclock",
+      "ontology_metric_id": "logical_lifetime_ms",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "lachance_aqec_experiment",
+      "source_metric_id": "method_b_free_lifetime_ms",
+      "source_lane_id": "aqec_wallclock",
+      "ontology_metric_id": "logical_lifetime_ms",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "lachance_aqec_experiment",
+      "source_metric_id": "method_a_lifetime_ms",
+      "source_lane_id": "aqec_wallclock",
+      "ontology_metric_id": "logical_lifetime_ms",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "lachance_aqec_experiment",
+      "source_metric_id": "method_b_lifetime_ms",
+      "source_lane_id": "aqec_wallclock",
+      "ontology_metric_id": "logical_lifetime_ms",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "lin_structured_cpd",
+      "source_metric_id": "surface_gkp_cpd_threshold",
+      "source_lane_id": "multimode_structured_lattice_cpd",
+      "ontology_metric_id": "noise_threshold_sigma",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    },
+    {
+      "method_id": "lin_structured_cpd",
+      "source_metric_id": "surface_gkp_analog_mwpm_threshold",
+      "source_lane_id": "multimode_structured_lattice_cpd",
+      "ontology_metric_id": "noise_threshold_sigma",
+      "status": "MAPPED",
+      "allowed_in_lane": true,
+      "source_value_is_null": false,
+      "reason": null
+    }
+  ],
+  "contract_self_tests": {
+    "valid_observation_passed": true,
+    "valid_observation_reasons": [],
+    "invalid_cases": [
+      {
+        "case": "wrong_lane_metric",
+        "expected_reason": "wrong_lane",
+        "reasons": [
+          "wrong_lane"
+        ],
+        "rejected": true
+      },
+      {
+        "case": "null_imputed_zero",
+        "expected_reason": "null_na_failed_negative_must_not_have_value",
+        "reasons": [
+          "null_na_failed_negative_must_not_have_value"
+        ],
+        "rejected": true
+      },
+      {
+        "case": "na_imputed_zero",
+        "expected_reason": "null_na_failed_negative_must_not_have_value",
+        "reasons": [
+          "null_na_failed_negative_must_not_have_value"
+        ],
+        "rejected": true
+      },
+      {
+        "case": "failed_imputed_value",
+        "expected_reason": "null_na_failed_negative_must_not_have_value",
+        "reasons": [
+          "null_na_failed_negative_must_not_have_value"
+        ],
+        "rejected": true
+      },
+      {
+        "case": "latency_without_boundary",
+        "expected_reason": "timing_boundary_missing_or_wrong_lane",
+        "reasons": [
+          "timing_boundary_missing_or_wrong_lane"
+        ],
+        "rejected": true
+      },
+      {
+        "case": "unsupported_qualitative_complexity",
+        "expected_reason": "qualitative_complexity_unsupported",
+        "reasons": [
+          "qualitative_complexity_unsupported"
+        ],
+        "rejected": true
+      }
+    ],
+    "comparison_cases": [
+      {
+        "case": "cross_denominator",
+        "reasons": [
+          "mismatch:denominator"
+        ],
+        "rejected": true
+      },
+      {
+        "case": "cross_family_raw_rank",
+        "reasons": [
+          "mismatch:lane_id",
+          "mismatch:metric_id",
+          "mismatch:unit",
+          "mismatch:denominator",
+          "mismatch:statistic",
+          "mismatch:task_signature"
+        ],
+        "rejected": true
+      },
+      {
+        "case": "cross_latency_boundary",
+        "reasons": [
+          "mismatch:timing_boundary"
+        ],
+        "rejected": true
+      },
+      {
+        "case": "null_rank",
+        "reasons": [
+          "mismatch:task_signature",
+          "right:state_not_rankable"
+        ],
+        "rejected": true
+      }
+    ],
+    "global_score_api": null,
+    "global_score_prohibited": true
+  },
+  "ranking_policy": {
+    "global_score": "PROHIBITED",
+    "cross_lane_raw_ranking": "PROHIBITED",
+    "same_lane_exact_signature_only": true,
+    "qualitative_complexity_without_numeric_or_asymptotic_locator": "PROHIBITED"
+  },
+  "parent_contracts": {
+    "T5.1.1": "PASS",
+    "T6.5.1": "PASS_ROUTE_A_CLAIM_ROLE_AND_LANE_CONTRACT_FROZEN",
+    "T6.8.7": "PASS_ROUTE_A_ATOMIC_CLAIM_MATRIX_WITH_RESTRICTED_POSITIVE_CLAIMS",
+    "T6.16.1": "PASS_SECONDARY_METHOD_SOURCE_AUDIT_NO_GLOBAL_RANKING"
+  },
+  "source_data": {
+    "path": "docs/t6_16_2_comparison_ontology_source_data.csv",
+    "sha256": "a27d41cd486b6ef5804f1039b9bbcc31fb4863d6b436f9225236029c5ad669ab",
+    "rows": 101
+  },
+  "bindings": {
+    "implementation": {
+      "path": "cnn_fpga/benchmark/comparison_metric_ontology.py",
+      "sha256": "a9d6fcc498ba1a127004a1f9eb2f1a2f91b632658b2a19503eeb82ddd010c10a",
+      "bytes": 35885
+    },
+    "ontology": {
+      "path": "configs/literature/t6_16_2_comparison_ontology.json",
+      "sha256": "ab2093dcb4e4ef6cdcce67482b08e687dd0b36739d48f1390661516f5d9ead35",
+      "bytes": 30262
+    },
+    "t6_16_1": {
+      "path": "docs/t6_16_1_secondary_method_source_audit.json",
+      "sha256": "0399768659537023318187a9d92c0421ae0a4e18b59c0d3796eddb2544749ef9",
+      "bytes": 69626
+    },
+    "t5_1_1": {
+      "path": "docs/t5_1_1_comparison_set_registry.json",
+      "sha256": "915317cdd9818b97f1e21051bb817d9b6cd41b7a8d1ebdabf13403aa466d9257",
+      "bytes": 42225
+    },
+    "t6_5_1": {
+      "path": "docs/t6_5_1_route_a_claim_contract.json",
+      "sha256": "3fe337fa3bf8f2c12c8495b86674e4448bf8b70c0cd9540904bc79bb0afa6d0a",
+      "bytes": 27158
+    },
+    "t6_8_7": {
+      "path": "docs/t6_8_7_route_a_claim_matrix.json",
+      "sha256": "e0abaf727b5d4170399698d6493817d22e3ff4f7cf468ad3272ecbddb8c8dc07",
+      "bytes": 48010
+    },
+    "source_csv": {
+      "path": "docs/t6_16_2_comparison_ontology_source_data.csv",
+      "sha256": "a27d41cd486b6ef5804f1039b9bbcc31fb4863d6b436f9225236029c5ad669ab",
+      "bytes": 19439
+    }
+  },
+  "semantic_mutation_audit": {
+    "count": 16,
+    "detected": 16,
+    "cases": [
+      {
+        "case": "drop_lane",
+        "target_gate": "G01_exactly_six_task_signature_lanes_are_frozen",
+        "rejected": true
+      },
+      {
+        "case": "drop_pY",
+        "target_gate": "G02_all_required_metric_families_and_board_metrics_are_defined",
+        "rejected": true
+      },
+      {
+        "case": "erase_denominator",
+        "target_gate": "G03_every_metric_has_unit_direction_denominator_statistic_and_conversion_policy",
+        "rejected": true
+      },
+      {
+        "case": "allow_pL_in_aqec",
+        "target_gate": "G04_metric_allowed_lanes_are_nonempty_known_and_family_allowed",
+        "rejected": true
+      },
+      {
+        "case": "rank_null",
+        "target_gate": "G05_null_na_failed_negative_and_value_states_are_disjoint",
+        "rejected": true
+      },
+      {
+        "case": "erase_closed_loop_end",
+        "target_gate": "G06_timing_boundaries_are_exact_and_start_end_include_exclude_are_explicit",
+        "rejected": true
+      },
+      {
+        "case": "rename_ii_as_latency",
+        "target_gate": "G07_latency_and_ii_are_not_interchangeable_or_implicitly_composed",
+        "rejected": true
+      },
+      {
+        "case": "erase_power_activity",
+        "target_gate": "G08_resource_dimensions_require_device_primitive_tool_stage_or_activity_qualifiers",
+        "rejected": true
+      },
+      {
+        "case": "move_aqec_method_to_decoder",
+        "target_gate": "G09_t6_16_1_all_methods_land_in_exactly_one_known_lane",
+        "rejected": true
+      },
+      {
+        "case": "drop_source_metric_mapping",
+        "target_gate": "G10_every_t6_16_1_metric_is_mapped_or_explicitly_rejected",
+        "rejected": true
+      },
+      {
+        "case": "accept_invalid_state_imputation",
+        "target_gate": "G11_observation_validator_rejects_wrong_lane_and_state_imputation",
+        "rejected": true
+      },
+      {
+        "case": "accept_cross_denominator",
+        "target_gate": "G12_comparator_requires_same_lane_metric_denominator_statistic_boundary_and_task_signature",
+        "rejected": true
+      },
+      {
+        "case": "add_global_score",
+        "target_gate": "G13_global_score_and_cross_family_raw_ranking_are_absent_and_prohibited",
+        "rejected": true
+      },
+      {
+        "case": "accept_opinion_complexity",
+        "target_gate": "G14_qualitative_complexity_requires_recomputable_numeric_or_source_asymptotic_basis",
+        "rejected": true
+      },
+      {
+        "case": "truncate_parent_hash",
+        "target_gate": "G15_parent_contracts_and_source_audit_are_hash_bound_without_claim_promotion",
+        "rejected": true
+      },
+      {
+        "case": "forge_mutation_count",
+        "target_gate": "G16_source_data_and_targeted_semantic_mutations_are_complete",
+        "rejected": true
+      }
+    ]
+  },
+  "gates": {
+    "G01_exactly_six_task_signature_lanes_are_frozen": true,
+    "G02_all_required_metric_families_and_board_metrics_are_defined": true,
+    "G03_every_metric_has_unit_direction_denominator_statistic_and_conversion_policy": true,
+    "G04_metric_allowed_lanes_are_nonempty_known_and_family_allowed": true,
+    "G05_null_na_failed_negative_and_value_states_are_disjoint": true,
+    "G06_timing_boundaries_are_exact_and_start_end_include_exclude_are_explicit": true,
+    "G07_latency_and_ii_are_not_interchangeable_or_implicitly_composed": true,
+    "G08_resource_dimensions_require_device_primitive_tool_stage_or_activity_qualifiers": true,
+    "G09_t6_16_1_all_methods_land_in_exactly_one_known_lane": true,
+    "G10_every_t6_16_1_metric_is_mapped_or_explicitly_rejected": true,
+    "G11_observation_validator_rejects_wrong_lane_and_state_imputation": true,
+    "G12_comparator_requires_same_lane_metric_denominator_statistic_boundary_and_task_signature": true,
+    "G13_global_score_and_cross_family_raw_ranking_are_absent_and_prohibited": true,
+    "G14_qualitative_complexity_requires_recomputable_numeric_or_source_asymptotic_basis": true,
+    "G15_parent_contracts_and_source_audit_are_hash_bound_without_claim_promotion": true,
+    "G16_source_data_and_targeted_semantic_mutations_are_complete": true
+  },
+  "gate_summary": {
+    "passed": 16,
+    "failed": []
+  },
+  "verdict": "PASS_FAIL_CLOSED_COMPARISON_ONTOLOGY"
+}

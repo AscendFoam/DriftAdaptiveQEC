@@ -1,0 +1,708 @@
+{
+  "schema_version": "t6.5.1-route-a-claim-contract-v1",
+  "task_id": "T6.5.1",
+  "one_sentence_argument": "Under one deployable execution contract, MAP owns average logical-error performance; regime/event/fallback logic owns tail safety; RTL owns deterministic execution; and learning modules remain replaceable extensions whose claims activate only through their own gates.",
+  "primary_system_role_id": "ROLE-SYSTEM",
+  "roles": [
+    {
+      "role_id": "ROLE-SYSTEM",
+      "canonical_term": "regime-aware safe adaptive dual-loop",
+      "responsibility": "paper-level system that composes performance, safety, atomic update and deterministic execution contracts",
+      "output_authority": "system orchestration only; it does not own a new decoder score",
+      "role_type": "primary_system",
+      "replaceable": false,
+      "deployability": "target_deployable_after_contract_and_promotion"
+    },
+    {
+      "role_id": "ROLE-MAP",
+      "canonical_term": "static/adaptive joint MAP decoder",
+      "responsibility": "produce logical-coset LLR/decision and own decoder-lane LER",
+      "output_authority": "logical decision and MAP-LUT candidate image",
+      "role_type": "required_component",
+      "replaceable": false,
+      "deployability": "deployable"
+    },
+    {
+      "role_id": "ROLE-REGIME",
+      "canonical_term": "causal regime posterior estimator",
+      "responsibility": "infer normal/smooth/shift/burst/leakage posterior from observed history",
+      "output_authority": "update permission/freeze/trusted-bank proposal; never the logical action",
+      "role_type": "required_component",
+      "replaceable": false,
+      "deployability": "deployable"
+    },
+    {
+      "role_id": "ROLE-EVENT",
+      "canonical_term": "event and leakage/reset FSM",
+      "responsibility": "convert accepted observations and safety state into hold/recovery/reset modes",
+      "output_authority": "event mode, reset request and hysteresis state",
+      "role_type": "required_component",
+      "replaceable": false,
+      "deployability": "deployable"
+    },
+    {
+      "role_id": "ROLE-FALLBACK",
+      "canonical_term": "conservative fallback and health monitor",
+      "responsibility": "fail closed on uncertainty, integrity, freshness or deadline faults",
+      "output_authority": "fallback/rollback/reason/health; never a better-than-oracle decision",
+      "role_type": "required_component",
+      "replaceable": false,
+      "deployability": "deployable"
+    },
+    {
+      "role_id": "ROLE-BANK",
+      "canonical_term": "versioned trusted A/B MAP bank",
+      "responsibility": "stage, validate, atomically commit and roll back last-known-good parameter images",
+      "output_authority": "bank/version/commit acknowledgement",
+      "role_type": "required_component",
+      "replaceable": false,
+      "deployability": "deployable"
+    },
+    {
+      "role_id": "ROLE-RTL",
+      "canonical_term": "FPGA fast-path executor",
+      "responsibility": "execute the latched fixed-point MAP/event/action contract with deterministic core timing",
+      "output_authority": "registered action/state words and core-cycle evidence, not host estimation",
+      "role_type": "required_component",
+      "replaceable": false,
+      "deployability": "deployable"
+    },
+    {
+      "role_id": "ROLE-CNN",
+      "canonical_term": "legacy CNN residual module",
+      "responsibility": "optional learned slow-loop proposal under matched budget",
+      "output_authority": "bounded proposal only; never primary system or unqualified LER owner",
+      "role_type": "replaceable_learning_extension",
+      "replaceable": true,
+      "deployability": "candidate_after_matched_gate"
+    },
+    {
+      "role_id": "ROLE-TEACHER",
+      "canonical_term": "Feedback-GRAPE/NMF teacher",
+      "responsibility": "offline high-capacity controller target inside the controller lane",
+      "output_authority": "training target/control residual; not a decoder oracle",
+      "role_type": "replaceable_learning_extension",
+      "replaceable": true,
+      "deployability": "offline_privileged_training_only"
+    },
+    {
+      "role_id": "ROLE-STUDENT",
+      "canonical_term": "distilled low-dimensional student",
+      "responsibility": "optional bounded controller recurrence distilled from a teacher",
+      "output_authority": "controller extension action subject to safety wrapper",
+      "role_type": "replaceable_learning_extension",
+      "replaceable": true,
+      "deployability": "candidate_after_retention_and_safety_gate"
+    },
+    {
+      "role_id": "ROLE-ORACLE",
+      "canonical_term": "hidden-state decoder/model oracle",
+      "responsibility": "provide an isolated nondeployable upper reference",
+      "output_authority": "upper-bound decision/gap only; excluded from deployable aggregates",
+      "role_type": "privileged_reference",
+      "replaceable": false,
+      "deployability": "nondeployable_hidden_truth"
+    }
+  ],
+  "terminology_ledger": [
+    {
+      "canonical": "regime-aware safe adaptive dual-loop",
+      "variants": [
+        "Route A",
+        "safe adaptive dual-loop"
+      ],
+      "rule": "paper-level primary system"
+    },
+    {
+      "canonical": "static/adaptive joint MAP decoder",
+      "variants": [
+        "MAP",
+        "adaptive MAP"
+      ],
+      "rule": "owns decoder LER"
+    },
+    {
+      "canonical": "causal regime posterior estimator",
+      "variants": [
+        "HMM",
+        "regime detector"
+      ],
+      "rule": "owns posterior, not logical action"
+    },
+    {
+      "canonical": "FPGA fast-path executor",
+      "variants": [
+        "fast path",
+        "RTL core"
+      ],
+      "rule": "owns registered execution timing, not host estimation"
+    },
+    {
+      "canonical": "hidden-state decoder/model oracle",
+      "variants": [
+        "oracle MAP",
+        "model oracle"
+      ],
+      "rule": "always qualified and nondeployable"
+    },
+    {
+      "canonical": "Feedback-GRAPE/NMF teacher",
+      "variants": [
+        "teacher",
+        "NMF teacher"
+      ],
+      "rule": "controller training target, never RNN decoder/oracle"
+    }
+  ],
+  "comparison_lanes": [
+    {
+      "lane_id": "LANE-DECODER",
+      "canonical_name": "same-trace GKP decoder lane",
+      "data_domain": "protocol-aligned syndrome stream",
+      "privilege": "observed_only_deployable_plus_isolated_hidden_oracle",
+      "allowed_metrics": [
+        "per_round_pL",
+        "per_round_pX",
+        "per_round_pY",
+        "per_round_pZ",
+        "average_LER",
+        "p95_LER",
+        "worst_window_LER",
+        "static_to_oracle_gap_closure",
+        "adaptation_lag",
+        "false_update",
+        "unnecessary_fallback",
+        "avoided_errors",
+        "induced_errors",
+        "decoder_MAC",
+        "decoder_memory",
+        "update_rate"
+      ],
+      "forbidden_comparisons": [
+        "GQF logical lifetime minus syndrome LER",
+        "privileged oracle inside deployable aggregate",
+        "raw LER copied from a different squeezing/noise/round definition"
+      ]
+    },
+    {
+      "lane_id": "LANE-GQF",
+      "canonical_name": "official GQF controller lane",
+      "data_domain": "fixed-commit official Matteo-Puviani/GQF environment",
+      "privilege": "same_simulator_same_training_selection_and_seed_budget",
+      "allowed_metrics": [
+        "GQF_TX",
+        "GQF_TY",
+        "GQF_TZ",
+        "GQF_Tch",
+        "GQF_Favg",
+        "GQF_lifetime_gain_retention",
+        "controller_params",
+        "controller_MAC",
+        "controller_memory",
+        "unsafe_control_action",
+        "controller_fallback"
+      ],
+      "forbidden_comparisons": [
+        "project syndrome LER relabelled as GQF lifetime",
+        "project T2.3.7 directional ranking relabelled as official reproduction",
+        "surpass NMF before paper-exact reproduction and paired lifetime gate"
+      ]
+    },
+    {
+      "lane_id": "LANE-HARDWARE",
+      "canonical_name": "task-normalized FPGA QEC hardware lane",
+      "data_domain": "matched code/problem/precision/latency-boundary hardware task",
+      "privilege": "evidence_level_explicit",
+      "allowed_metrics": [
+        "core_latency_cycles",
+        "core_latency_time",
+        "source_to_action_latency",
+        "closed_loop_latency",
+        "initiation_interval",
+        "deadline_miss",
+        "Fmax",
+        "LUT",
+        "FF",
+        "BRAM",
+        "DSP",
+        "estimated_power",
+        "measured_power"
+      ],
+      "forbidden_comparisons": [
+        "surface-code raw decoder latency as direct single-mode GKP ranking",
+        "P&R estimate relabelled as measured board latency",
+        "core-only latency compared with source-to-action latency"
+      ]
+    }
+  ],
+  "cross_lane_rule": {
+    "global_leaderboard_allowed": false,
+    "global_score_allowed": false,
+    "raw_cross_simulator_lifetime_subtraction_allowed": false,
+    "raw_cross_code_latency_ranking_allowed": false,
+    "oracle_in_deployable_aggregate_allowed": false
+  },
+  "claims": [
+    {
+      "claim_id": "CLAIM-ARCH-01",
+      "lane_id": "LANE-GOVERNANCE",
+      "support_status": "SUPPORTED_CONTRACT",
+      "canonical_wording_en": "We define a contract-centric, regime-aware safe adaptive dual-loop in which MAP decoding owns logical-error performance, regime/event/fallback logic owns tail safety, and the FPGA fast path owns deterministic execution.",
+      "canonical_wording_zh": "本项目已冻结 contract-centric、regime-aware 安全自适应双回路：MAP 负责逻辑错误性能，regime/event/fallback 负责 tail 安全，FPGA fast path 负责确定性执行。",
+      "metrics": [],
+      "data_domain": "cross-lane role and evidence contract",
+      "privilege": "governance_only",
+      "required_evidence_level": "governance_contract",
+      "current_evidence": [
+        "docs/experiment_plan.md"
+      ],
+      "activation_gate": [
+        "T6.5.1 contract validator passes"
+      ],
+      "revocation_conditions": [
+        "a component is allowed to claim another component's metric",
+        "lane nonmixing is removed"
+      ],
+      "forbidden_wording": [
+        "one model solves decoding, safety and hardware latency",
+        "global leaderboard"
+      ]
+    },
+    {
+      "claim_id": "CLAIM-RTL-QUAL-01",
+      "lane_id": "LANE-HARDWARE",
+      "support_status": "SUPPORTED_BOUNDED",
+      "canonical_wording_en": "The production fast-path core is cycle-exact against an independent integer reference over one million board-independent CXXRTL qualification cycles.",
+      "canonical_wording_zh": "production fast-path core 已在板卡无关 CXXRTL 中以独立整数 reference 完成百万周期全字段 cycle-exact 资格验证。",
+      "metrics": [
+        "core_latency_cycles",
+        "initiation_interval"
+      ],
+      "data_domain": "production core qualification trace",
+      "privilege": "observed_integer_words_no_physical_transport",
+      "required_evidence_level": "rtl_cxxrtl",
+      "current_evidence": [
+        "docs/t6_2_2_long_rtl_qualification.json"
+      ],
+      "activation_gate": [
+        "T6.2.2 all gates pass"
+      ],
+      "revocation_conditions": [
+        "source/trace hash changes without rerun",
+        "any bit mismatch or undefined action appears"
+      ],
+      "forbidden_wording": [
+        "board validated",
+        "transport qualified",
+        "measured FPGA latency"
+      ]
+    },
+    {
+      "claim_id": "CLAIM-FPGA-EST-01",
+      "lane_id": "LANE-HARDWARE",
+      "support_status": "SUPPORTED_BOUNDED",
+      "canonical_wording_en": "The current fixed-point fast path has a target-device-specific three-seed place-and-route timing and resource estimate; it is not a board measurement.",
+      "canonical_wording_zh": "当前定点 fast path 具有目标器件、三 seed 的 P&R 时序/资源估计，但不是板测。",
+      "metrics": [
+        "Fmax",
+        "LUT",
+        "FF",
+        "BRAM",
+        "DSP",
+        "core_latency_cycles"
+      ],
+      "data_domain": "Tang Nano 20K target-device estimate",
+      "privilege": "tool_report_only",
+      "required_evidence_level": "place_route_estimate",
+      "current_evidence": [
+        "docs/t5_5_2_target_device_synthesis.json"
+      ],
+      "activation_gate": [
+        "source/constraint hashes and all three P&R seeds pass"
+      ],
+      "revocation_conditions": [
+        "tool report or constraint hash changes",
+        "estimate is presented without target/clock qualifier"
+      ],
+      "forbidden_wording": [
+        "measured power",
+        "board timing",
+        "vendor signoff"
+      ]
+    },
+    {
+      "claim_id": "CLAIM-STATIC-01",
+      "lane_id": "LANE-DECODER",
+      "support_status": "CONDITIONAL_FUTURE",
+      "canonical_wording_en": "[Conditional; not currently supported] Under a shared protocol-aligned trace and compute contract, Route-A reduces aggregate and tail logical error relative to the strongest deployable static GKP decoder.",
+      "canonical_wording_zh": "仅当同 trace/预算证据通过时，Route-A 才可声称相对最强可部署 static GKP decoder 改善 aggregate/tail LER。",
+      "metrics": [
+        "average_LER",
+        "p95_LER",
+        "worst_window_LER",
+        "static_to_oracle_gap_closure"
+      ],
+      "data_domain": "unified syndrome benchmark",
+      "privilege": "observed_only_deployable",
+      "required_evidence_level": "software_simulation",
+      "current_evidence": [],
+      "activation_gate": [
+        "T6.7.1 and T6.7.2 pass",
+        "T6.8.1 same-trace paired CI supports the claim"
+      ],
+      "revocation_conditions": [
+        "aggregate paired 95% LCB is not positive",
+        "any preregistered tail gate fails"
+      ],
+      "forbidden_wording": [
+        "universal GKP superiority",
+        "surface-code threshold",
+        "state-of-the-art GKP decoder"
+      ]
+    },
+    {
+      "claim_id": "CLAIM-DRIFT-01",
+      "lane_id": "LANE-DECODER",
+      "support_status": "CONDITIONAL_FUTURE",
+      "canonical_wording_en": "[Conditional; not currently supported] Under matched history, update cadence and compute budget, Route-A improves drift adaptation without violating preregistered abrupt/OOD safety margins.",
+      "canonical_wording_zh": "仅在 matched history/cadence/预算与 OOD 安全门通过后，才声称 Route-A 具有一般漂移适应优势。",
+      "metrics": [
+        "average_LER",
+        "worst_window_LER",
+        "adaptation_lag",
+        "false_update",
+        "unnecessary_fallback"
+      ],
+      "data_domain": "held-out smooth and abrupt/OOD syndrome scenarios",
+      "privilege": "observed_only_deployable",
+      "required_evidence_level": "software_simulation",
+      "current_evidence": [],
+      "activation_gate": [
+        "T6.7.1, T6.7.2 and T6.7.4 pass",
+        "T6.8.2 includes at least one reproducible external method"
+      ],
+      "revocation_conditions": [
+        "external implementation is unavailable",
+        "catastrophic-degradation or nominal non-inferiority gate fails"
+      ],
+      "forbidden_wording": [
+        "adaptive decoding is universally superior",
+        "all noise regimes"
+      ]
+    },
+    {
+      "claim_id": "CLAIM-TAIL-01",
+      "lane_id": "LANE-DECODER",
+      "support_status": "CONDITIONAL_FUTURE",
+      "canonical_wording_en": "[Conditional; not currently supported] Regime-triggered freeze, trusted-bank switching and fail-closed fallback reduce harmful tail events without unacceptable nominal fallback cost.",
+      "canonical_wording_zh": "仅当 abrupt/OOD 与 nominal non-inferiority 门同时通过时，才声称 regime freeze/trusted-bank/fallback 改善 tail 安全。",
+      "metrics": [
+        "p95_LER",
+        "worst_window_LER",
+        "avoided_errors",
+        "induced_errors",
+        "false_update",
+        "unnecessary_fallback"
+      ],
+      "data_domain": "unified syndrome benchmark",
+      "privilege": "observed_only_deployable",
+      "required_evidence_level": "software_simulation",
+      "current_evidence": [],
+      "activation_gate": [
+        "T6.7.2 independent formal evaluation passes",
+        "T6.7.4 promotion gate passes"
+      ],
+      "revocation_conditions": [
+        "calibration-shift counterexample persists",
+        "nominal fallback cost exceeds frozen margin"
+      ],
+      "forbidden_wording": [
+        "guarantees safety",
+        "eliminates catastrophic errors"
+      ]
+    },
+    {
+      "claim_id": "CLAIM-CNN-01",
+      "lane_id": "LANE-DECODER",
+      "support_status": "ABLATION_ONLY",
+      "canonical_wording_en": "The legacy CNN residual is a replaceable matched-budget ablation and is not required for the Route-A system claim.",
+      "canonical_wording_zh": "legacy CNN residual 仅是 matched-budget 可替换消融，不是 Route-A 成立前提。",
+      "metrics": [
+        "average_LER",
+        "p95_LER",
+        "worst_window_LER",
+        "decoder_MAC",
+        "decoder_memory"
+      ],
+      "data_domain": "unified syndrome benchmark",
+      "privilege": "observed_only_candidate",
+      "required_evidence_level": "software_simulation",
+      "current_evidence": [
+        "docs/t5_1_4_algorithm_branch_verdict.json"
+      ],
+      "activation_gate": [
+        "may be promoted only by its own T6.6/T6.7 matched gate"
+      ],
+      "revocation_conditions": [
+        "matched comparison fails",
+        "checkpoint is absent or cost is unmatched"
+      ],
+      "forbidden_wording": [
+        "CNN is generally optimal",
+        "CNN drives the primary contribution",
+        "learned decoder is universally superior"
+      ]
+    },
+    {
+      "claim_id": "CLAIM-STUDENT-01",
+      "lane_id": "LANE-GOVERNANCE",
+      "support_status": "SUPPORTED_EXTENSION_ONLY",
+      "canonical_wording_en": "A low-dimensional student retains a preregistered fraction of teacher gain in the existing bounded project controller simulator, but this is neither official GQF reproduction nor decoder evidence.",
+      "canonical_wording_zh": "低维 student 在既有受限 controller simulator 中具有预注册 teacher gain-retention 证据，但不等于官方 GQF 复现，也不是 decoder 证据。",
+      "metrics": [],
+      "data_domain": "project bounded finite-cutoff controller simulator",
+      "privilege": "offline_teacher_and_candidate_student",
+      "required_evidence_level": "software_simulation",
+      "current_evidence": [
+        "docs/t4_4_5_teacher_student_branch_freeze.json"
+      ],
+      "activation_gate": [
+        "existing T4.4.5 bounded branch remains current"
+      ],
+      "revocation_conditions": [
+        "official GQF is implied",
+        "long-horizon/OOD retention is implied",
+        "controller result is used as decoder evidence"
+      ],
+      "forbidden_wording": [
+        "official GQF reproduction",
+        "surpasses Puviani NMF",
+        "RNN decoder"
+      ]
+    },
+    {
+      "claim_id": "CLAIM-GQF-01",
+      "lane_id": "LANE-GQF",
+      "support_status": "PROHIBITED_NOW",
+      "canonical_wording_en": "[Not currently claimable] In the same official GQF environment and budget, the Route-A extension improves logical-channel lifetime over Puviani NMF.",
+      "canonical_wording_zh": "[当前禁止] 在同一官方 GQF 环境与预算下超过 Puviani NMF 的 logical-channel lifetime。",
+      "metrics": [
+        "GQF_TX",
+        "GQF_TY",
+        "GQF_TZ",
+        "GQF_Tch",
+        "GQF_Favg"
+      ],
+      "data_domain": "official fixed-commit GQF simulator",
+      "privilege": "same_budget_official_comparison",
+      "required_evidence_level": "software_simulation",
+      "current_evidence": [],
+      "activation_gate": [
+        "T6.8.3 intake passes",
+        "T6.8.4 paper-exact reproduction passes",
+        "T6.8.5 paired lifetime 95% LCB > 0"
+      ],
+      "revocation_conditions": [
+        "absolute values or ordering miss reproduction tolerance",
+        "paired lifetime LCB is not positive"
+      ],
+      "forbidden_wording": [
+        "currently surpasses NMF",
+        "Puviani lifetime record"
+      ]
+    },
+    {
+      "claim_id": "CLAIM-HW-SPEED-01",
+      "lane_id": "LANE-HARDWARE",
+      "support_status": "PROHIBITED_NOW",
+      "canonical_wording_en": "[Not currently claimable] The Route-A FPGA decoder is faster than existing FPGA QEC decoders on a matched task boundary.",
+      "canonical_wording_zh": "[当前禁止] Route-A FPGA decoder 在同任务边界下比现有 FPGA QEC decoder 更快。",
+      "metrics": [
+        "source_to_action_latency",
+        "closed_loop_latency",
+        "initiation_interval",
+        "deadline_miss"
+      ],
+      "data_domain": "task-normalized real-board comparison",
+      "privilege": "board_measured_same_boundary",
+      "required_evidence_level": "board_measured",
+      "current_evidence": [],
+      "activation_gate": [
+        "T6.8.6 comparable subset is non-null",
+        "T6.9.2 same-bitstream board measurement passes"
+      ],
+      "revocation_conditions": [
+        "only core/P&R estimate is available",
+        "code/problem/precision/latency boundary differs",
+        "any board deadline miss occurs"
+      ],
+      "forbidden_wording": [
+        "fastest FPGA decoder",
+        "measured speed advantage",
+        "real-time board result"
+      ]
+    },
+    {
+      "claim_id": "CLAIM-BREAK-EVEN-01",
+      "lane_id": "LANE-GOVERNANCE",
+      "support_status": "PROHIBITED_NOW",
+      "canonical_wording_en": "[Not currently claimable] The system exceeds physical break-even or a measured physical-memory lifetime record.",
+      "canonical_wording_zh": "[当前禁止] 系统超过真实物理 break-even 或物理存储寿命记录。",
+      "metrics": [],
+      "data_domain": "physical oscillator experiment",
+      "privilege": "physical_device_measurement",
+      "required_evidence_level": "physical_device_measured",
+      "current_evidence": [],
+      "activation_gate": [
+        "protocol-aligned physical-device experiment with registered passive reference and lifetime uncertainty"
+      ],
+      "revocation_conditions": [
+        "evidence is simulation, CXXRTL, P&R or board-only digital control"
+      ],
+      "forbidden_wording": [
+        "real break-even",
+        "exceeds Sivak 2023",
+        "physical lifetime record"
+      ]
+    }
+  ],
+  "required_future_tasks": [
+    "T6.5.2",
+    "T6.5.3",
+    "T6.6.1",
+    "T6.6.2",
+    "T6.6.3",
+    "T6.7.1",
+    "T6.7.2",
+    "T6.7.3",
+    "T6.7.4",
+    "T6.8.1",
+    "T6.8.2",
+    "T6.8.3",
+    "T6.8.4",
+    "T6.8.5",
+    "T6.8.6",
+    "T6.8.7",
+    "T6.9.1",
+    "T6.9.2",
+    "T6.9.3"
+  ],
+  "source_bindings": [
+    {
+      "path": "docs/claim_ladder.json",
+      "sha256": "5ebb2f8c67dafacdbcfd380fcb7ddb9f15d037eb194fb986e7e1b90ea81dee1b",
+      "bytes": 10058
+    },
+    {
+      "path": "docs/decoder_controller_terminology.json",
+      "sha256": "de35daf9148cc55fc6a2c031c03bcf1769d1a6e54ac87f5738ac11c1904b4ee9",
+      "bytes": 31622
+    },
+    {
+      "path": "docs/t5_1_4_algorithm_branch_verdict.json",
+      "sha256": "2c08d760a1a453898a1644ffb319c8d8dccccfaa1c2d9271feebe9bf96ebefc2",
+      "bytes": 42312
+    },
+    {
+      "path": "docs/t4_4_5_teacher_student_branch_freeze.json",
+      "sha256": "15abd3e94c69e0fa85bc871ca9967eacbf3af8e948741f0b53986cbacd8ad612",
+      "bytes": 11774
+    },
+    {
+      "path": "docs/t5_5_2_target_device_synthesis.json",
+      "sha256": "fcd75de4bc3b5af589b10021df71a1de0a0b2d8c1bace7aa0d7ab3b846aec0c3",
+      "bytes": 26265
+    },
+    {
+      "path": "docs/t6_2_2_long_rtl_qualification.json",
+      "sha256": "207b4e82b65a286e5ee23f16f387730a783ea34101d8cf7b9f80ae6e39d2b2cd",
+      "bytes": 28673
+    },
+    {
+      "path": "docs/experiment_plan.md",
+      "sha256": "ed11b71b7b82aa6fcdebe831305e809d1ff10512cfcc36e2da6296ce35606fef",
+      "bytes": 77616
+    }
+  ],
+  "gates": {
+    "source_artifacts_exist_and_are_hash_bound": true,
+    "exactly_one_primary_system": true,
+    "canonical_roles_complete_and_unique": true,
+    "learning_modules_are_replaceable_extensions": true,
+    "oracle_is_isolated_and_nondeployable": true,
+    "map_regime_event_fallback_rtl_authorities_do_not_overlap": true,
+    "exactly_three_evaluation_lanes": true,
+    "lane_metric_namespaces_are_disjoint": true,
+    "global_ranking_and_oracle_mixing_are_forbidden": true,
+    "claims_are_schema_complete_and_unique": true,
+    "claim_lanes_metrics_status_and_evidence_levels_are_valid": true,
+    "every_claim_has_activation_revocation_and_forbidden_wording": true,
+    "supported_current_claims_have_existing_evidence": true,
+    "t5_negative_cnn_branch_is_preserved": true,
+    "teacher_student_is_bounded_extension_not_decoder_or_official_gqf": true,
+    "rtl_qualification_is_supported_but_board_claim_is_closed": true,
+    "gqf_surpass_hardware_speed_and_break_even_are_prohibited_now": true,
+    "canonical_wording_lint_rejects_unbounded_terms": true,
+    "future_task_chain_is_complete": true,
+    "semantic_mutations_rejected": true
+  },
+  "gate_summary": {
+    "passed": 20,
+    "total": 20,
+    "failed": []
+  },
+  "semantic_mutation_audit": {
+    "mutations": [
+      {
+        "mutation": "make_cnn_primary",
+        "rejected": true
+      },
+      {
+        "mutation": "make_oracle_deployable",
+        "rejected": true
+      },
+      {
+        "mutation": "let_regime_emit_logical_action",
+        "rejected": true
+      },
+      {
+        "mutation": "allow_global_leaderboard",
+        "rejected": true
+      },
+      {
+        "mutation": "mix_gqf_metric_into_decoder",
+        "rejected": true
+      },
+      {
+        "mutation": "promote_gqf_without_reproduction",
+        "rejected": true
+      },
+      {
+        "mutation": "promote_hardware_speed_without_board",
+        "rejected": true
+      },
+      {
+        "mutation": "erase_claim_revocation",
+        "rejected": true
+      },
+      {
+        "mutation": "insert_surface_threshold_wording",
+        "rejected": true
+      },
+      {
+        "mutation": "remove_future_gate_task",
+        "rejected": true
+      }
+    ],
+    "count": 10,
+    "detected": 10
+  },
+  "status": "PASS",
+  "verdict": "PASS_ROUTE_A_CLAIM_ROLE_AND_LANE_CONTRACT_FROZEN",
+  "implementation_sha256": "268a7106e00a54fa6658ac75422928e26beed09573a061ca5b8380ca7996c141",
+  "source_data": {
+    "path": "docs/t6_5_1_route_a_claim_contract_source_data.csv",
+    "row_count": 11,
+    "sha256": "033fb6f20f550ad2694e0c4845edf95347c01ae2e3c70cf05dbc94f78c063abb"
+  }
+}

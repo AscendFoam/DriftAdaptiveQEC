@@ -1,0 +1,102 @@
+record_type,record_id,lane_id,family,unit,direction,denominator,statistic,allowed_lanes,state,notes
+lane,single_mode_decoder,single_mode_decoder,,,,"same trace/seed, same syndrome/action, same observability, same fixed-point and compute budget",,single_mode_decoder,,"observed syndrome/history to logical coset, correction and safety action"
+lane,surface_gkp_gate_outer_code,surface_gkp_gate_outer_code,,,,"same circuit/code family, distance set, noise law, decoder history and threshold estimator",,surface_gkp_gate_outer_code,,error-corrected GKP gate failure or concatenated outer-code recovery
+lane,multimode_structured_lattice_cpd,multimode_structured_lattice_cpd,,,,same lattice family/dimension/noise/precision/hardware and exactness tolerance,,multimode_structured_lattice_cpd,,multidimensional closest lattice point or logical coset
+lane,controller_rl_nmf,controller_rl_nmf,,,,"same physical simulator/apparatus, history/action, training/search budget, horizon and selection rule",,controller_rl_nmf,,history/performance to physical-control parameter update
+lane,aqec_wallclock,aqec_wallclock,,,,"same apparatus/model, wall-clock horizon, noise, cutoff, duty, event and control budget",,aqec_wallclock,,physical autonomous/measurement-feedback memory preservation
+lane,fpga_implementation,fpga_implementation,,,,same code/input/action/size/precision/device class/boundary/statistic/hardware evidence,,fpga_implementation,,concrete code/task input to concrete decoder/control output
+metric,p_L,,logical_error,probability_per_round,lower_is_better,registered decoded rounds,raw errors/rounds plus paired cluster CI,single_mode_decoder;surface_gkp_gate_outer_code;multimode_structured_lattice_cpd,,no conversion from lifetime or threshold
+metric,p_X,,logical_error,probability_per_round,lower_is_better,registered decoded rounds with X component,raw X counts/rounds,single_mode_decoder,,Pauli convention must match
+metric,p_Y,,logical_error,probability_per_round,lower_is_better,registered decoded rounds with joint X and Z component,raw Y counts/rounds,single_mode_decoder,,never infer from pX+pZ
+metric,p_Z,,logical_error,probability_per_round,lower_is_better,registered decoded rounds with Z component,raw Z counts/rounds,single_mode_decoder,,Pauli convention must match
+metric,average_ler,,logical_error,probability_per_round,lower_is_better,all registered rounds with frozen family weights,raw total errors/total rounds and cluster CI,single_mode_decoder;surface_gkp_gate_outer_code,,no averaging across task signatures
+metric,p95_window_ler,,tail_risk,probability_per_round,lower_is_better,fixed-length causal windows,empirical 95th percentile over registered windows,single_mode_decoder,,window length/overlap must match
+metric,worst_window_ler,,tail_risk,probability_per_round,lower_is_better,fixed-length causal windows,maximum over all registered windows,single_mode_decoder;multimode_structured_lattice_cpd,,window length/overlap must match
+metric,cvar95_window_ler,,tail_risk,probability_per_round,lower_is_better,worst 5 percent fixed-length causal windows,mean above empirical 95th-percentile threshold with tie rule,single_mode_decoder;multimode_structured_lattice_cpd,,tail level/window contract must match
+metric,cnot_failure_probability,,gate_failure,probability_per_error_corrected_cnot,lower_is_better,one named error-corrected CNOT circuit,raw failures/CNOT trials with CI when reproduced,surface_gkp_gate_outer_code,,not a per-round LER
+metric,squeezing_threshold_db,,threshold,dB,lower_required_squeezing_is_better,named code/noise/decoder finite-size family,crossing/fit with distances and uncertainty,surface_gkp_gate_outer_code,,requires explicit sigma-to-dB convention; never infer from gate failure
+metric,noise_threshold_sigma,,threshold,source_sigma,higher_tolerable_noise_is_better,named code/noise/decoder finite-size family,crossing/fit with sizes and uncertainty,surface_gkp_gate_outer_code;multimode_structured_lattice_cpd,,no cross-paper sigma or dB conversion without identical convention
+metric,finite_size_crossing_residual,,finite_size_scaling,source_metric,lower_is_better,registered sizes and fit points,residual/bootstrap stability,surface_gkp_gate_outer_code,,fit diagnostic only
+metric,decision_mismatch_rate,,correctness,mismatches_per_instance,lower_is_better,same exact/brute-force input instances,raw mismatches/instances and zero-event bound,single_mode_decoder;surface_gkp_gate_outer_code;multimode_structured_lattice_cpd;fpga_implementation,,requires same decision object
+metric,runtime_seconds,,runtime_scaling,s,lower_is_better,one named decode workload,median and tail over repeated runs,single_mode_decoder;multimode_structured_lattice_cpd,,hardware/environment must match
+metric,memory_bytes,,memory_scaling,bytes,lower_is_better,one concrete implementation/problem size,peak resident or allocated as labeled,single_mode_decoder;multimode_structured_lattice_cpd;fpga_implementation,,BRAM conversion requires device primitive size
+metric,asymptotic_time_complexity,,complexity,big_O,source_scoped,named lattice family and exact/approximate algorithm,formal source locator or derivation,multimode_structured_lattice_cpd,,generic exponential and structured linear/polynomial must remain separate
+metric,logical_lifetime_cycles,,lifetime,protocol_cycles,higher_is_better,named logical observable and native protocol cycle,registered decay fit with interval,controller_rl_nmf;aqec_wallclock,,cannot compare across different cycle durations without wall-clock replay
+metric,logical_lifetime_us,,lifetime,us,higher_is_better,named logical observable under common physical wall-clock,registered decay fit or area-equivalent definition,controller_rl_nmf;aqec_wallclock,,cycle multiplication allowed only with protocol-native duration and matching duty/noise
+metric,logical_lifetime_ms,,lifetime,ms,higher_is_better,named logical observable under common physical wall-clock,registered experimental/simulation decay fit,controller_rl_nmf;aqec_wallclock,,unit scale only; protocol must match
+metric,lifetime_gain_ratio,,break_even,ratio,higher_is_better,active logical lifetime divided by explicitly named matched passive/free anchor,paired or propagated uncertainty,controller_rl_nmf;aqec_wallclock,,anchor identity is part of the metric
+metric,coherence_break_even_gain,,break_even,ratio,higher_is_better,best explicitly named physical/passive component decay rate divided by logical decay rate,registered fit and uncertainty,controller_rl_nmf;aqec_wallclock,,not interchangeable with free-GKP lifetime gain
+metric,final_code_survival,,survival,probability,higher_is_better,states at a common wall-clock horizon,raw/model survival with interval as applicable,aqec_wallclock,,horizon and code projector must match
+metric,ler_reduction_fraction,,logical_error,fraction,higher_is_better,baseline LER minus candidate LER divided by same baseline LER,paired contrast with interval,controller_rl_nmf;single_mode_decoder,,baseline and privilege are part of denominator
+metric,ler_stability_ratio,,stability,ratio,higher_is_better,source-defined baseline variability divided by candidate variability,source-defined variability estimator with interval,controller_rl_nmf,,stability definition must match exactly
+metric,adaptation_lag_cycles,,adaptation,cycles,lower_is_better,registered transition event to registered recovery condition,median/p95 and censored fraction,single_mode_decoder;multimode_structured_lattice_cpd;controller_rl_nmf,,cycle duration and recovery threshold must match
+metric,adaptation_lag_epochs,,adaptation,epochs,lower_is_better,registered drift intervention to recovery in optimization epochs,reported median/approximate response as labeled,controller_rl_nmf,,never convert to inference microseconds without epoch workload
+metric,false_update_rate,,safety,updates_per_eligible_round,lower_is_better,nominal rounds eligible for update decision,raw false updates/eligible rounds with cluster CI,single_mode_decoder,,eligibility definition must match
+metric,fallback_rate,,safety,fallbacks_per_round,lower_is_better_with_safety_constraint,all registered rounds,raw fallback rounds/rounds plus cause strata,single_mode_decoder,,not ranked without induced/avoided-error context
+metric,avoided_errors,,safety,paired_rounds,higher_is_better,same-trace rounds where candidate correct and baseline wrong,paired raw count and cluster CI for rate,single_mode_decoder,,must accompany induced_errors
+metric,induced_errors,,safety,paired_rounds,lower_is_better,same-trace rounds where candidate wrong and baseline correct,paired raw count and cluster CI for rate,single_mode_decoder,,must accompany avoided_errors
+metric,deadline_miss_rate,,deadline,misses_per_action,lower_is_better,all actions with registered deadline,raw misses/actions plus worst burst,single_mode_decoder;fpga_implementation,,deadline and boundary must match
+metric,training_epoch_wall_time_s,,training_cost,s,lower_is_better,one named epoch workload,reported/observed statistic and environment,controller_rl_nmf,,not inference latency
+metric,control_parameter_count,,control_cost,parameters,context_dependent,one controller/action vector,exact architecture/action count,controller_rl_nmf;aqec_wallclock,,not hardware resources
+metric,macs_per_update,,control_cost,MAC,lower_is_better_with_performance_constraint,one named inference/update,exact operation accounting,controller_rl_nmf;single_mode_decoder,,operation definition and precision must match
+metric,measurements_per_100us,,physical_events,events_per_100us,context_dependent,common 100 us physical time,protocol-native event count/time,aqec_wallclock,,not decoder latency
+metric,resets_per_100us,,physical_events,events_per_100us,context_dependent,common 100 us physical time,protocol-native event count/time,aqec_wallclock,,reset definition must match
+metric,active_gates_per_100us,,duty_cycle,events_per_100us,lower_is_better_with_lifetime_constraint,common 100 us physical time,protocol-native gate count/time,aqec_wallclock,,gate granularity must match
+metric,latency_ns,,timing,ns,lower_is_better,one explicit timing boundary and statistic,deterministic/mean/p95/worst/estimate as labeled,single_mode_decoder;surface_gkp_gate_outer_code;multimode_structured_lattice_cpd;controller_rl_nmf;fpga_implementation,,"boundary, statistic and evidence must match"
+metric,latency_cycles,,timing,clock_cycles,lower_is_better,one explicit timing boundary,fixed or distribution as labeled,single_mode_decoder;surface_gkp_gate_outer_code;fpga_implementation,,clock period required for ns conversion
+metric,initiation_interval_ns,,throughput,ns_per_accepted_input,lower_is_better,steady-state accepted input interval,fixed/mean/worst with backpressure contract,single_mode_decoder;surface_gkp_gate_outer_code;multimode_structured_lattice_cpd;controller_rl_nmf;fpga_implementation,,not end-to-end latency
+metric,clock_mhz,,throughput,MHz,higher_is_better_with_same_design,one implementation timing result,constraint/achieved Fmax as labeled,fpga_implementation,,target clock is not achieved Fmax
+metric,lut_count,,resources,device_LUT,lower_is_better_with_same_task,one implementation/device/profile,synthesis/P&R/measured provenance,fpga_implementation,,LUT primitive type/device must match
+metric,ff_count,,resources,device_FF,lower_is_better_with_same_task,one implementation/device/profile,synthesis/P&R provenance,fpga_implementation,,device primitive must match
+metric,bram_count,,resources,device_BRAM,lower_is_better_with_same_task,one implementation/device/profile,synthesis/P&R provenance and primitive size,fpga_implementation,,BRAM18/36/BSRAM not interchangeable without bits
+metric,dsp_count,,resources,device_DSP,lower_is_better_with_same_task,one implementation/device/profile,synthesis/P&R provenance and primitive type,fpga_implementation,,DSP primitive type/device must match
+metric,power_w,,power,W,lower_is_better_with_same_task,one implementation/activity/voltage/clock profile,measured or tool estimate as labeled,fpga_implementation,,"analytic sensitivity, tool estimate and measured power remain separate"
+timing_boundary,decoder_core,,timing,ns_or_cycles,,decoder input accepted -> decoder decision valid,,,,includes=decoder datapath excludes=ADC/readout;transport;actuation
+timing_boundary,update_compute,,timing,ns_or_cycles,,update evidence batch/window closes -> candidate parameter image ready,,,,includes=estimation;policy/update computation excludes=transport;bank commit;actuation
+timing_boundary,transport,,timing,ns_or_cycles,,source payload available at interface -> payload/action delivered across registered link,,,,includes=serialization;link;CDC/FIFO as declared excludes=decoder computation unless explicitly in path
+timing_boundary,source_to_action,,timing,ns_or_cycles,,registered source/readout datum available -> digital action valid at actuation interface,,,,includes=declared transport;decoder;frame/action routing excludes=physical pulse response unless declared
+timing_boundary,closed_loop,,timing,ns_or_cycles,,end of physical readout/source event -> start/effect of physical feedback event as declared,,,,includes=readout processing;transport;decoder;control routing excludes=
+timing_boundary,initiation_interval,,timing,ns_or_cycles,,accepted input n -> accepted input n+1 in steady state,,,,includes=backpressure contract excludes=latency to corresponding output
+resource,LUT,fpga_implementation,resources,LUT,,device;primitive_type;tool;stage;seed/profile,,fpga_implementation,,synthesis_estimate;post_route_estimate;board_readback_not_applicable
+resource,FF,fpga_implementation,resources,FF,,device;primitive_type;tool;stage;seed/profile,,fpga_implementation,,synthesis_estimate;post_route_estimate
+resource,BRAM,fpga_implementation,resources,BRAM,,device;primitive_bits;tool;stage;seed/profile,,fpga_implementation,,synthesis_estimate;post_route_estimate
+resource,DSP,fpga_implementation,resources,DSP,,device;primitive_type;tool;stage;seed/profile,,fpga_implementation,,synthesis_estimate;post_route_estimate
+resource,power,fpga_implementation,resources,power,,device;voltage;clock;activity;method;stage,,fpga_implementation,,analytic_sensitivity;tool_estimate;board_measured
+value_state,MEASURED_VALUE,,,,,,,,MEASURED_VALUE,measured on the stated physical implementation and boundary
+value_state,ESTIMATE_VALUE,,,,,,,,ESTIMATE_VALUE,"synthesis, P&R, analytic or simulation estimate; never measured"
+value_state,REPRODUCED_VALUE,,,,,,,,REPRODUCED_VALUE,official-code or project-native reproduction with frozen configuration
+value_state,LITERATURE_VALUE,,,,,,,,LITERATURE_VALUE,"source-scoped reported value, not a project reproduction"
+value_state,NULL_NOT_REPORTED,,,,,,,,NULL_NOT_REPORTED,applicable field but no source-backed value
+value_state,N_A_NOT_APPLICABLE,,,,,,,,N_A_NOT_APPLICABLE,field does not apply to the decision object
+value_state,FAILED,,,,,,,,FAILED,attempt executed but failed its frozen gate
+value_state,NEGATIVE,,,,,,,,NEGATIVE,valid negative/NO-GO result; absence of a positive claim
+source_crosswalk,noh_ci_cnot:cnot_failure_9db,surface_gkp_gate_outer_code,,,,,,surface_gkp_gate_outer_code,MAPPED,cnot_failure_probability
+source_crosswalk,noh_ci_cnot:cnot_failure_12db,surface_gkp_gate_outer_code,,,,,,surface_gkp_gate_outer_code,MAPPED,cnot_failure_probability
+source_crosswalk,noh_ci_cnot:cnot_failure_13db,surface_gkp_gate_outer_code,,,,,,surface_gkp_gate_outer_code,MAPPED,cnot_failure_probability
+source_crosswalk,noh_ml_cnot_and_outer:cnot_failure_9db,surface_gkp_gate_outer_code,,,,,,surface_gkp_gate_outer_code,MAPPED,cnot_failure_probability
+source_crosswalk,noh_ml_cnot_and_outer:cnot_failure_12db,surface_gkp_gate_outer_code,,,,,,surface_gkp_gate_outer_code,MAPPED,cnot_failure_probability
+source_crosswalk,noh_ml_cnot_and_outer:cnot_failure_13db,surface_gkp_gate_outer_code,,,,,,surface_gkp_gate_outer_code,MAPPED,cnot_failure_probability
+source_crosswalk,noh_ml_cnot_and_outer:surface_gkp_threshold_db,surface_gkp_gate_outer_code,,,,,,surface_gkp_gate_outer_code,MAPPED,squeezing_threshold_db
+source_crosswalk,wang_direct_nn_surface_gkp:threshold_perfect_measurement,surface_gkp_gate_outer_code,,,,,,surface_gkp_gate_outer_code,MAPPED,noise_threshold_sigma
+source_crosswalk,wang_direct_nn_surface_gkp:mwpm_threshold_perfect_measurement,surface_gkp_gate_outer_code,,,,,,surface_gkp_gate_outer_code,MAPPED,noise_threshold_sigma
+source_crosswalk,wang_direct_nn_surface_gkp:threshold_noisy_measurement,surface_gkp_gate_outer_code,,,,,,surface_gkp_gate_outer_code,MAPPED,noise_threshold_sigma
+source_crosswalk,wang_direct_nn_surface_gkp:mwpm_threshold_noisy_measurement,surface_gkp_gate_outer_code,,,,,,surface_gkp_gate_outer_code,MAPPED,noise_threshold_sigma
+source_crosswalk,wang_direct_nn_surface_gkp:decoding_rate_improvement,surface_gkp_gate_outer_code,,,,,,,REJECTED_UNDEFINED_DENOMINATOR,Wang decoding-rate prose has no portable denominator
+source_crosswalk,sivak2023_rl_controller:break_even_gain,controller_rl_nmf,,,,,,controller_rl_nmf,MAPPED,coherence_break_even_gain
+source_crosswalk,sivak2023_rl_controller:training_epoch_seconds,controller_rl_nmf,,,,,,controller_rl_nmf,MAPPED,training_epoch_wall_time_s
+source_crosswalk,sivak2026_rl_drift:control_only_ler_reduction,controller_rl_nmf,,,,,,controller_rl_nmf,MAPPED,ler_reduction_fraction
+source_crosswalk,sivak2026_rl_drift:control_only_ler_stability,controller_rl_nmf,,,,,,controller_rl_nmf,MAPPED,ler_stability_ratio
+source_crosswalk,sivak2026_rl_drift:control_decoder_ler_reduction,controller_rl_nmf,,,,,,controller_rl_nmf,MAPPED,ler_reduction_fraction
+source_crosswalk,sivak2026_rl_drift:control_decoder_ler_stability,controller_rl_nmf,,,,,,controller_rl_nmf,MAPPED,ler_stability_ratio
+source_crosswalk,sivak2026_rl_drift:calibrated_finetune_ler_reduction,controller_rl_nmf,,,,,,controller_rl_nmf,MAPPED,ler_reduction_fraction
+source_crosswalk,sivak2026_rl_drift:recovery_epochs,controller_rl_nmf,,,,,,controller_rl_nmf,MAPPED,adaptation_lag_epochs
+source_crosswalk,puviani_nmf_controller:low_noise_tz_standard_cycles,controller_rl_nmf,,,,,,controller_rl_nmf,MAPPED,logical_lifetime_cycles
+source_crosswalk,puviani_nmf_controller:low_noise_tz_nmf_cycles,controller_rl_nmf,,,,,,controller_rl_nmf,MAPPED,logical_lifetime_cycles
+source_crosswalk,lachance_aqec_experiment:method_a_gain,aqec_wallclock,,,,,,aqec_wallclock,MAPPED,lifetime_gain_ratio
+source_crosswalk,lachance_aqec_experiment:method_b_gain,aqec_wallclock,,,,,,aqec_wallclock,MAPPED,lifetime_gain_ratio
+source_crosswalk,lachance_aqec_experiment:method_a_free_lifetime_ms,aqec_wallclock,,,,,,aqec_wallclock,MAPPED,logical_lifetime_ms
+source_crosswalk,lachance_aqec_experiment:method_b_free_lifetime_ms,aqec_wallclock,,,,,,aqec_wallclock,MAPPED,logical_lifetime_ms
+source_crosswalk,lachance_aqec_experiment:method_a_lifetime_ms,aqec_wallclock,,,,,,aqec_wallclock,MAPPED,logical_lifetime_ms
+source_crosswalk,lachance_aqec_experiment:method_b_lifetime_ms,aqec_wallclock,,,,,,aqec_wallclock,MAPPED,logical_lifetime_ms
+source_crosswalk,lin_structured_cpd:surface_gkp_cpd_threshold,multimode_structured_lattice_cpd,,,,,,multimode_structured_lattice_cpd,MAPPED,noise_threshold_sigma
+source_crosswalk,lin_structured_cpd:surface_gkp_analog_mwpm_threshold,multimode_structured_lattice_cpd,,,,,,multimode_structured_lattice_cpd,MAPPED,noise_threshold_sigma

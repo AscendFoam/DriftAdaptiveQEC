@@ -1,0 +1,5909 @@
+{
+  "task_id": "T6.17.3",
+  "schema_version": "t6.17.3-learned-model-eligibility-replay-v1",
+  "generated_at_utc": "2026-07-20T04:32:20.772602+00:00",
+  "scope": "read-only checkpoint eligibility and diagnostic replay; no post-T6.15.5 training, selection or V5 promotion",
+  "preregistration": {
+    "experiment_id": "E6173_LEARNED_MODEL_ELIGIBILITY_REPLAY",
+    "record_sha256": "c0711eb7f19184a0538ca9223cfbc2c7f321fe221d19699b551bb36fe2439b2e",
+    "split": {
+      "name": "existing_parent_trace_replay",
+      "may_overlap_phase6b": true,
+      "purpose": "diagnostic eligibility/re-inference only; no training, selection or V5 promotion"
+    },
+    "required_budget_fields": [
+      "MAC",
+      "state_bytes",
+      "workspace_bytes",
+      "wall_clock",
+      "precision",
+      "cadence",
+      "warmup"
+    ]
+  },
+  "universe_contract": {
+    "included_parents": [
+      "T3.2.7",
+      "T3.2.10",
+      "T4.1.1",
+      "T4.1.5",
+      "T4.4.1",
+      "T4.4.3",
+      "T5.4.3",
+      "T5.4.5",
+      "T5.5.4",
+      "T2.3.7",
+      "T6.8.3",
+      "T6.16.1"
+    ],
+    "grouping_rule": "restarts/candidate horizons with identical decision object are one family row; member_count preserves multiplicity",
+    "excluded": [
+      "pytest/temp checkpoints",
+      "training-only scratch files",
+      "classical HMM/Kalman/FSM rows",
+      "newly trained or reselected models"
+    ],
+    "selection_rule": "no performance selection; eligibility depends only on frozen task signature and budget"
+  },
+  "required_signature": {
+    "code_family": "single-mode square approximate GKP",
+    "modes_or_distance": "one oscillator",
+    "decision_target": "per-round logical coset/correction and typed safety decision",
+    "input_semantics": "frozen parent q/p syndrome code and registered observed history",
+    "history_horizon": "registered causal per-round/window horizon",
+    "output_action": "logical Pauli/frame correction plus typed safety action",
+    "noise_model": "frozen parent secondary replay trace",
+    "observability": "observed-only",
+    "online_privilege": "causal inference without future or hidden truth",
+    "time_basis": "every registered decoded round",
+    "compute_budget": "matched registered production decoder budget",
+    "precision": "production fixed-point",
+    "evidence_level": "project checkpoint replay"
+  },
+  "signature_fields": [
+    "code_family",
+    "modes_or_distance",
+    "decision_target",
+    "input_semantics",
+    "history_horizon",
+    "output_action",
+    "noise_model",
+    "observability",
+    "online_privilege",
+    "time_basis",
+    "compute_budget",
+    "precision",
+    "evidence_level"
+  ],
+  "candidates": [
+    {
+      "candidate_id": "legacy_residual_tinycnn",
+      "category": "legacy_cnn_parameter_estimator",
+      "native_lane": "single_mode_decoder",
+      "source_id": null,
+      "artifact": {
+        "path": "artifacts/models/runtime_b_residual_v1/tiny_cnn_20260401_083648_2fc740424c0d.npz",
+        "sha256": "585ee844b0bd9b9046f01eb97835a2da788050d4197846265545f44ec8d5aabb",
+        "bytes": 1477611
+      },
+      "member_count": 1,
+      "signature": {
+        "code_family": "single-mode square approximate GKP",
+        "modes_or_distance": "one oscillator",
+        "decision_target": "five-window residual b_q/b_p parameter regression",
+        "input_semantics": "21-channel 5x32-cycle histograms plus teacher parameters/deltas",
+        "history_horizon": "five 32-cycle windows with edge-repeat warmup",
+        "output_action": "two continuous b_q/b_p residual estimates",
+        "noise_model": "four legacy static/ramp/step/periodic parameter scenarios",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "one update per histogram window",
+        "compute_budget": "unmatched host TinyCNN budget",
+        "precision": "float32 checkpoint evaluated in NumPy float64",
+        "evidence_level": "project checkpoint diagnostic replay"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "single-mode square approximate GKP",
+          "match": true
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "one oscillator",
+          "match": true
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "five-window residual b_q/b_p parameter regression",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "21-channel 5x32-cycle histograms plus teacher parameters/deltas",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "five 32-cycle windows with edge-repeat warmup",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "two continuous b_q/b_p residual estimates",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "four legacy static/ramp/step/periodic parameter scenarios",
+          "match": false
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "one update per histogram window",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "unmatched host TinyCNN budget",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "float32 checkpoint evaluated in NumPy float64",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "project checkpoint diagnostic replay",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "noise_model",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": 2519168,
+        "state_bytes": 0,
+        "workspace_bytes": 1548288,
+        "wall_clock": {
+          "value": 0.3943157999892719,
+          "unit": "s/206-sample batch",
+          "boundary": "current-host NumPy diagnostic; not decoder latency"
+        },
+        "precision": "float32 weights / float64 NumPy execution",
+        "cadence": "one residual update per 32-cycle window",
+        "warmup": "five windows with edge-repeat padding",
+        "provenance": "live artifact shape accounting and T6.17.3 host diagnostic"
+      },
+      "replay_state": "DIAGNOSTIC_REPLAY_EXACT_NOT_RANKED",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "legacy_static_theta_tinycnn",
+      "category": "legacy_cnn_noise_parameter_estimator",
+      "native_lane": "single_mode_decoder",
+      "source_id": null,
+      "artifact": {
+        "path": "artifacts/models/static_theta_v2/tiny_cnn_20260319_151717_b87c6c227b57.npz",
+        "sha256": "50a015379dd0341615d8c41cc1e1ed2929cf9098dbb5df762f7430e46f1abb6f",
+        "bytes": 392725
+      },
+      "member_count": 1,
+      "signature": {
+        "code_family": "single-mode square approximate GKP",
+        "modes_or_distance": "one oscillator",
+        "decision_target": "static noise-parameter regression",
+        "input_semantics": "single 32x32 histogram",
+        "history_horizon": "one aggregated histogram",
+        "output_action": "sigma/mu_q/mu_p/theta estimates",
+        "noise_model": "static anisotropic Gaussian",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "one estimate per dataset sample",
+        "compute_budget": "unmatched host TinyCNN budget",
+        "precision": "float32 checkpoint / NumPy float64",
+        "evidence_level": "project checkpoint not replayed because wrong action"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "single-mode square approximate GKP",
+          "match": true
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "one oscillator",
+          "match": true
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "static noise-parameter regression",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "single 32x32 histogram",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "one aggregated histogram",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "sigma/mu_q/mu_p/theta estimates",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "static anisotropic Gaussian",
+          "match": false
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "one estimate per dataset sample",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "unmatched host TinyCNN budget",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "float32 checkpoint / NumPy float64",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "project checkpoint not replayed because wrong action",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "noise_model",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": 307456,
+        "state_bytes": 0,
+        "workspace_bytes": 73728,
+        "wall_clock": null,
+        "precision": "float32 weights / float64 NumPy execution",
+        "cadence": "dataset sample",
+        "warmup": "none reported",
+        "provenance": "live artifact shape accounting"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "t411_causal_tcn",
+      "category": "causal_adaptive_nn_regime_estimator",
+      "native_lane": "single_mode_decoder",
+      "source_id": null,
+      "artifact": {
+        "path": "docs/t4_1_1_slow_loop_model_selection_checkpoints.pt",
+        "sha256": "a8bf0f0bab865eeb0f0fbdccc60cf952f4963f29802d29bc8c17c5af34b502ed",
+        "bytes": 32729
+      },
+      "member_count": 1,
+      "signature": {
+        "code_family": "single-mode square approximate GKP",
+        "modes_or_distance": "one oscillator",
+        "decision_target": "four-regime posterior classification",
+        "input_semantics": "14 observed summaries per non-overlapping window",
+        "history_horizon": "eight 32-cycle windows",
+        "output_action": "four-class regime posterior",
+        "noise_model": "frozen parent secondary replay trace",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "one update per 32-cycle window",
+        "compute_budget": "T4.1.1 slow-loop budget",
+        "precision": "torch float32",
+        "evidence_level": "project checkpoint parent replay only"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "single-mode square approximate GKP",
+          "match": true
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "one oscillator",
+          "match": true
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "four-regime posterior classification",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "14 observed summaries per non-overlapping window",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "eight 32-cycle windows",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "four-class regime posterior",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "frozen parent secondary replay trace",
+          "match": true
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "one update per 32-cycle window",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "T4.1.1 slow-loop budget",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "torch float32",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "project checkpoint parent replay only",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": 3556,
+        "state_bytes": 2508,
+        "workspace_bytes": 464,
+        "wall_clock": {
+          "value": 4.212109388390672,
+          "unit": "us/update",
+          "boundary": "T4.1.1 host batch diagnostic"
+        },
+        "precision": "torch float32",
+        "cadence": "one update per 32-cycle window",
+        "warmup": "eight windows",
+        "provenance": "T4.1.1 resource profile"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "t411_small_gru",
+      "category": "causal_adaptive_nn_regime_estimator",
+      "native_lane": "single_mode_decoder",
+      "source_id": null,
+      "artifact": {
+        "path": "docs/t4_1_1_slow_loop_model_selection_checkpoints.pt",
+        "sha256": "a8bf0f0bab865eeb0f0fbdccc60cf952f4963f29802d29bc8c17c5af34b502ed",
+        "bytes": 32729
+      },
+      "member_count": 1,
+      "signature": {
+        "code_family": "single-mode square approximate GKP",
+        "modes_or_distance": "one oscillator",
+        "decision_target": "four-regime posterior classification",
+        "input_semantics": "14 observed summaries per non-overlapping window",
+        "history_horizon": "eight 32-cycle windows",
+        "output_action": "four-class regime posterior",
+        "noise_model": "frozen parent secondary replay trace",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "one update per 32-cycle window",
+        "compute_budget": "T4.1.1 slow-loop budget",
+        "precision": "torch float32",
+        "evidence_level": "project checkpoint parent replay only"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "single-mode square approximate GKP",
+          "match": true
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "one oscillator",
+          "match": true
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "four-regime posterior classification",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "14 observed summaries per non-overlapping window",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "eight 32-cycle windows",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "four-class regime posterior",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "frozen parent secondary replay trace",
+          "match": true
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "one update per 32-cycle window",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "T4.1.1 slow-loop budget",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "torch float32",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "project checkpoint parent replay only",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": 2300,
+        "state_bytes": 1916,
+        "workspace_bytes": 156,
+        "wall_clock": {
+          "value": 6.790625036501297,
+          "unit": "us/update",
+          "boundary": "T4.1.1 host batch diagnostic"
+        },
+        "precision": "torch float32",
+        "cadence": "one update per 32-cycle window",
+        "warmup": "eight windows",
+        "provenance": "T4.1.1 resource profile"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "t327_latest_outcome_fnn",
+      "category": "latest_outcome_neural_controller",
+      "native_lane": "controller_rl_nmf",
+      "source_id": null,
+      "artifact": {
+        "path": "docs/t3_2_7_latest_outcome_markovian_checkpoints.pt",
+        "sha256": "11cc59ba48da4c27e18284acc46f80de805be57ce1dcab20184e44b3fd5ac877",
+        "bytes": 3144793
+      },
+      "member_count": 5,
+      "signature": {
+        "code_family": "single-mode square approximate GKP",
+        "modes_or_distance": "one oscillator",
+        "decision_target": "history/performance to physical-control update",
+        "input_semantics": "current observed g/e/leakage token plus static protocol features",
+        "history_horizon": "strict latest outcome only",
+        "output_action": "continuous physical-control parameters",
+        "noise_model": "frozen parent secondary replay trace",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "per control half-cycle/epoch",
+        "compute_budget": "T3.2.7 matched history-controller parameter/MAC budget",
+        "precision": "torch float64",
+        "evidence_level": "project controller checkpoint family"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "single-mode square approximate GKP",
+          "match": true
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "one oscillator",
+          "match": true
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "history/performance to physical-control update",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "current observed g/e/leakage token plus static protocol features",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "strict latest outcome only",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "continuous physical-control parameters",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "frozen parent secondary replay trace",
+          "match": true
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "per control half-cycle/epoch",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "T3.2.7 matched history-controller parameter/MAC budget",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "torch float64",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "project controller checkpoint family",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": 72266,
+        "state_bytes": 0,
+        "workspace_bytes": null,
+        "wall_clock": null,
+        "precision": "torch float64",
+        "cadence": "one action per half-cycle",
+        "warmup": "no recurrent state; current observed outcome required",
+        "provenance": "T3.2.7 compute contract and all-seed checkpoint"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "t3210_exponential_recurrence",
+      "category": "causal_adaptive_control_student",
+      "native_lane": "controller_rl_nmf",
+      "source_id": null,
+      "artifact": {
+        "path": "docs/t3_2_10_exponential_recurrence_checkpoints.pt",
+        "sha256": "a3246b42875570e94d870317d9dbe0ec631b0bc416a003f459e4e534b4f00830",
+        "bytes": 17781
+      },
+      "member_count": 3,
+      "signature": {
+        "code_family": "single-mode square approximate GKP",
+        "modes_or_distance": "one oscillator",
+        "decision_target": "history/performance to physical-control update",
+        "input_semantics": "observed g/e/leakage outcome token",
+        "history_horizon": "15-state exponential recurrence",
+        "output_action": "continuous physical-control parameters",
+        "noise_model": "frozen parent secondary replay trace",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "per control half-cycle/epoch",
+        "compute_budget": "T3.2.10 O(15) recurrence budget",
+        "precision": "torch float64",
+        "evidence_level": "project controller checkpoint family"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "single-mode square approximate GKP",
+          "match": true
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "one oscillator",
+          "match": true
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "history/performance to physical-control update",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "observed g/e/leakage outcome token",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "15-state exponential recurrence",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "continuous physical-control parameters",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "frozen parent secondary replay trace",
+          "match": true
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "per control half-cycle/epoch",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "T3.2.10 O(15) recurrence budget",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "torch float64",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "project controller checkpoint family",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": 15,
+        "state_bytes": 120,
+        "workspace_bytes": null,
+        "wall_clock": null,
+        "precision": "torch float64",
+        "cadence": "one action per half-cycle",
+        "warmup": "registered initial 15-control state",
+        "provenance": "T3.2.10 recurrence contract and all-restart checkpoint"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "t415_distilled_recurrence_student",
+      "category": "causal_adaptive_control_student",
+      "native_lane": "controller_rl_nmf",
+      "source_id": null,
+      "artifact": {
+        "path": "docs/t4_1_5_distilled_student_checkpoint.json",
+        "sha256": "8c990c3e1f5b81f845a9c0d25d504713831f20384accd1f9217180ae77d6faac",
+        "bytes": 4490
+      },
+      "member_count": 3,
+      "signature": {
+        "code_family": "single-mode square approximate GKP",
+        "modes_or_distance": "one oscillator",
+        "decision_target": "history/performance to physical-control update",
+        "input_semantics": "observed outcome and six health/validity fields",
+        "history_horizon": "15-state exponential recurrence",
+        "output_action": "continuous physical-control parameters",
+        "noise_model": "frozen parent secondary replay trace",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "per control half-cycle/epoch",
+        "compute_budget": "T4.1.5 deterministic online student budget",
+        "precision": "float64 JSON artifact",
+        "evidence_level": "project controller artifact"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "single-mode square approximate GKP",
+          "match": true
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "one oscillator",
+          "match": true
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "history/performance to physical-control update",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "observed outcome and six health/validity fields",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "15-state exponential recurrence",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "continuous physical-control parameters",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "frozen parent secondary replay trace",
+          "match": true
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "per control half-cycle/epoch",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "T4.1.5 deterministic online student budget",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "float64 JSON artifact",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "project controller artifact",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": 15,
+        "state_bytes": 120,
+        "workspace_bytes": null,
+        "wall_clock": null,
+        "precision": "float64 JSON artifact",
+        "cadence": "one action per half-cycle",
+        "warmup": "registered 15-control initial state",
+        "provenance": "T4.1.5 selected artifact and online resource profile"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "t441_bounded_residual_gru_teacher",
+      "category": "offline_teacher",
+      "native_lane": "controller_rl_nmf",
+      "source_id": null,
+      "artifact": {
+        "path": "docs/t4_4_1_bounded_residual_rnn_teacher_checkpoints.pt",
+        "sha256": "7c4e004cfb4e04e2ac4848242fbfe63217ef6b89f8780bbce723422be098711e",
+        "bytes": 1867285
+      },
+      "member_count": 3,
+      "signature": {
+        "code_family": "single-mode square approximate GKP",
+        "modes_or_distance": "one oscillator",
+        "decision_target": "history/performance to physical-control update",
+        "input_semantics": "protocol-specific observations or performance",
+        "history_horizon": "protocol-specific controller history",
+        "output_action": "continuous physical-control parameters",
+        "noise_model": "frozen parent secondary replay trace",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "per control half-cycle/epoch",
+        "compute_budget": "controller-specific unmatched budget",
+        "precision": "source/project controller precision",
+        "evidence_level": "project checkpoint replay"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "single-mode square approximate GKP",
+          "match": true
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "one oscillator",
+          "match": true
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "history/performance to physical-control update",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "protocol-specific observations or performance",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "protocol-specific controller history",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "continuous physical-control parameters",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "frozen parent secondary replay trace",
+          "match": true
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "per control half-cycle/epoch",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "controller-specific unmatched budget",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "source/project controller precision",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "project checkpoint replay",
+          "match": true
+        }
+      },
+      "mismatch_fields": [
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "time_basis",
+        "compute_budget",
+        "precision"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": 72266,
+        "state_bytes": 80,
+        "workspace_bytes": null,
+        "wall_clock": null,
+        "precision": "torch float64",
+        "cadence": "one action per half-cycle",
+        "warmup": "recurrent zero state / protocol reset",
+        "provenance": "T4.4.1/T4.4.4 parent accounting"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "t443_distilled_state4_student",
+      "category": "causal_adaptive_control_student",
+      "native_lane": "controller_rl_nmf",
+      "source_id": null,
+      "artifact": {
+        "path": "docs/t4_4_3_low_dimensional_student.json",
+        "sha256": "8d3b575c416795b3af522f0322f8c8b0eed937c41616067d163ce47e5fe9bbae",
+        "bytes": 5130
+      },
+      "member_count": 9,
+      "signature": {
+        "code_family": "single-mode square approximate GKP",
+        "modes_or_distance": "one oscillator",
+        "decision_target": "history/performance to physical-control update",
+        "input_semantics": "observed binary outcome and health flags",
+        "history_horizon": "four-state exponential recurrence",
+        "output_action": "continuous physical-control parameters",
+        "noise_model": "frozen parent secondary replay trace",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "per control half-cycle/epoch",
+        "compute_budget": "T4.4.3/T5.5.4 controller budget",
+        "precision": "float64 artifact and Q3.14 RTL side evidence",
+        "evidence_level": "project controller artifact"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "single-mode square approximate GKP",
+          "match": true
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "one oscillator",
+          "match": true
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "history/performance to physical-control update",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "observed binary outcome and health flags",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "four-state exponential recurrence",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "continuous physical-control parameters",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "frozen parent secondary replay trace",
+          "match": true
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "per control half-cycle/epoch",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "T4.4.3/T5.5.4 controller budget",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "float64 artifact and Q3.14 RTL side evidence",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "project controller artifact",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": 87,
+        "state_bytes": 32,
+        "workspace_bytes": null,
+        "wall_clock": {
+          "value": 2.3703703703703702,
+          "unit": "us/update",
+          "boundary": "CXXRTL/P&R estimate, not board"
+        },
+        "precision": "float64 artifact / Q3.14 RTL",
+        "cadence": "one action per half-cycle",
+        "warmup": "four-state reset vector",
+        "provenance": "T4.4.3 artifact and T5.5.4 report"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "t545_horizon_student_family",
+      "category": "causal_adaptive_control_student",
+      "native_lane": "controller_rl_nmf",
+      "source_id": null,
+      "artifact": {
+        "path": "docs/t5_4_5_horizon_extrapolation_candidates.pt",
+        "sha256": "518f13d5c834cfd5a2f78f45f9248af71fd57dfd174877fcb122276136b193bc",
+        "bytes": 414709
+      },
+      "member_count": 10,
+      "signature": {
+        "code_family": "single-mode square approximate GKP",
+        "modes_or_distance": "one oscillator",
+        "decision_target": "history/performance to physical-control update",
+        "input_semantics": "observed binary outcome stream",
+        "history_horizon": "2/5/10/32-cycle trained recurrent candidates",
+        "output_action": "continuous physical-control parameters",
+        "noise_model": "frozen parent secondary replay trace",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "per control half-cycle/epoch",
+        "compute_budget": "T5.4.5 diagnostic horizon budget",
+        "precision": "torch float64/float32 stability replay",
+        "evidence_level": "project controller checkpoint family"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "single-mode square approximate GKP",
+          "match": true
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "one oscillator",
+          "match": true
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "history/performance to physical-control update",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "observed binary outcome stream",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "2/5/10/32-cycle trained recurrent candidates",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "continuous physical-control parameters",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "frozen parent secondary replay trace",
+          "match": true
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "per control half-cycle/epoch",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "T5.4.5 diagnostic horizon budget",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "torch float64/float32 stability replay",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "project controller checkpoint family",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": 87,
+        "state_bytes": 32,
+        "workspace_bytes": null,
+        "wall_clock": null,
+        "precision": "torch float64 with float32 stability replay",
+        "cadence": "one action per half-cycle",
+        "warmup": "horizon-specific recurrent state",
+        "provenance": "T5.4.5 parent checkpoint/report"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "t554_quantized_gru_shadow",
+      "category": "quantized_offline_teacher_shadow",
+      "native_lane": "controller_rl_nmf",
+      "source_id": null,
+      "artifact": {
+        "path": "cnn_fpga/rtl/generated/t5_5_4_quantized_gru_manifest.json",
+        "sha256": "a833f2da428a867c11260bb055793a79046fc620b0675fdbff619c28b11ba898",
+        "bytes": 4133
+      },
+      "member_count": 1,
+      "signature": {
+        "code_family": "single-mode square approximate GKP",
+        "modes_or_distance": "one oscillator",
+        "decision_target": "history/performance to physical-control update",
+        "input_semantics": "protocol-specific observations or performance",
+        "history_horizon": "protocol-specific controller history",
+        "output_action": "continuous physical-control parameters",
+        "noise_model": "frozen parent secondary replay trace",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "per control half-cycle/epoch",
+        "compute_budget": "72,854-cycle optimistic lower-bound workload",
+        "precision": "int8 weights/Q3.14 state functional shadow",
+        "evidence_level": "project nonfunctional RTL workload"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "single-mode square approximate GKP",
+          "match": true
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "one oscillator",
+          "match": true
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "history/performance to physical-control update",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "protocol-specific observations or performance",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "protocol-specific controller history",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "continuous physical-control parameters",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "frozen parent secondary replay trace",
+          "match": true
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "per control half-cycle/epoch",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "72,854-cycle optimistic lower-bound workload",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "int8 weights/Q3.14 state functional shadow",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "project nonfunctional RTL workload",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": 72266,
+        "state_bytes": 40,
+        "workspace_bytes": null,
+        "wall_clock": {
+          "value": 2698.296296296296,
+          "unit": "us/update lower bound",
+          "boundary": "nonfunctional workload"
+        },
+        "precision": "int8/Q3.14",
+        "cadence": "one action per half-cycle",
+        "warmup": "GRU hidden reset",
+        "provenance": "T5.5.4 report/manifest"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "t237_project_nmf_controller",
+      "category": "model_based_nmf_controller",
+      "native_lane": "controller_rl_nmf",
+      "source_id": "PUVIANI2025_NMF",
+      "artifact": {
+        "path": "docs/t2_3_7_nmf_directional_ranking_checkpoints.pt",
+        "sha256": "6f97ea59d91f955ea62494b701bbb54bf1abb69a6d104fb85d0fccb9cf4ca48a",
+        "bytes": 6157559
+      },
+      "member_count": 5,
+      "signature": {
+        "code_family": "single-mode square approximate GKP",
+        "modes_or_distance": "one oscillator",
+        "decision_target": "history/performance to physical-control update",
+        "input_semantics": "binary ancilla history",
+        "history_horizon": "recurrent controller history",
+        "output_action": "continuous physical-control parameters",
+        "noise_model": "frozen parent secondary replay trace",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "per control half-cycle/epoch",
+        "compute_budget": "controller-specific unmatched budget",
+        "precision": "torch float64",
+        "evidence_level": "project controller checkpoint"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "single-mode square approximate GKP",
+          "match": true
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "one oscillator",
+          "match": true
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "history/performance to physical-control update",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "binary ancilla history",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "recurrent controller history",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "continuous physical-control parameters",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "frozen parent secondary replay trace",
+          "match": true
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "per control half-cycle/epoch",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "controller-specific unmatched budget",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "torch float64",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "project controller checkpoint",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": 72266,
+        "state_bytes": 80,
+        "workspace_bytes": null,
+        "wall_clock": null,
+        "precision": "torch float64",
+        "cadence": "one action per half-cycle",
+        "warmup": "recurrent state reset",
+        "provenance": "T2.3.7 checkpoint/T4.4.4 cost table"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "gqf_official_nmf_controller",
+      "category": "official_source_controller",
+      "native_lane": "controller_rl_nmf",
+      "source_id": "PUVIANI2025_NMF",
+      "artifact": {
+        "path": "docs/t6_8_3_gqf_official_intake.json",
+        "sha256": "f7f5f3f6ec8ab1e36230b11c6493d9323237c3b6b0abdeeef12d67f3876a5f51",
+        "bytes": 19904
+      },
+      "member_count": 1,
+      "signature": {
+        "code_family": "single-mode square approximate GKP",
+        "modes_or_distance": "one oscillator",
+        "decision_target": "history/performance to physical-control update",
+        "input_semantics": "protocol-specific observations or performance",
+        "history_horizon": "protocol-specific controller history",
+        "output_action": "continuous physical-control parameters",
+        "noise_model": "frozen parent secondary replay trace",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "per control half-cycle/epoch",
+        "compute_budget": "controller-specific unmatched budget",
+        "precision": "source/project controller precision",
+        "evidence_level": "official intake without usable paper checkpoint"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "single-mode square approximate GKP",
+          "match": true
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "one oscillator",
+          "match": true
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "history/performance to physical-control update",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "protocol-specific observations or performance",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "protocol-specific controller history",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "continuous physical-control parameters",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "frozen parent secondary replay trace",
+          "match": true
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "per control half-cycle/epoch",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "controller-specific unmatched budget",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "source/project controller precision",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "official intake without usable paper checkpoint",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": null,
+        "state_bytes": null,
+        "workspace_bytes": null,
+        "wall_clock": null,
+        "precision": null,
+        "cadence": "source protocol",
+        "warmup": "source protocol",
+        "provenance": "T6.8.3 official intake; exact paper reproduction remained blocked"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "wang2022_direct_nn",
+      "category": "external_direct_nn",
+      "native_lane": "surface_gkp_gate_outer_code",
+      "source_id": "WANG2022_DIRECT_NN",
+      "artifact": null,
+      "member_count": 1,
+      "signature": {
+        "code_family": "surface-GKP multidimensional construction",
+        "modes_or_distance": "source finite-size surface-GKP family",
+        "decision_target": "surface-code logical-error classification after GKP syndrome preprocessing",
+        "input_semantics": "syndrome/corrector features defined by the paper; no online drift state",
+        "history_horizon": "source-defined syndrome features",
+        "output_action": "one of three logical error classes",
+        "noise_model": "paper Gaussian displacement models with perfect or noisy GKP measurements",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "source decode instance",
+        "compute_budget": "not reported",
+        "precision": "not reported",
+        "evidence_level": "literature only; no exact public checkpoint"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "surface-GKP multidimensional construction",
+          "match": false
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "source finite-size surface-GKP family",
+          "match": false
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "surface-code logical-error classification after GKP syndrome preprocessing",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "syndrome/corrector features defined by the paper; no online drift state",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "source-defined syndrome features",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "one of three logical error classes",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "paper Gaussian displacement models with perfect or noisy GKP measurements",
+          "match": false
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "source decode instance",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "not reported",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "not reported",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "literature only; no exact public checkpoint",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "code_family",
+        "modes_or_distance",
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "noise_model",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": null,
+        "state_bytes": null,
+        "workspace_bytes": null,
+        "wall_clock": null,
+        "precision": null,
+        "cadence": null,
+        "warmup": null,
+        "provenance": "WANG2022 source record"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "sivak2023_rl_controller",
+      "category": "external_rl_controller",
+      "native_lane": "controller_rl_nmf",
+      "source_id": "SIVAK2023_RL_GKP",
+      "artifact": null,
+      "member_count": 1,
+      "signature": {
+        "code_family": "experimental cavity-transmon GKP",
+        "modes_or_distance": "one oscillator",
+        "decision_target": "history/performance to physical-control update",
+        "input_semantics": "300 experimental episodes for each of 10 candidates per training epoch",
+        "history_horizon": "300 episodes x 10 candidates per epoch",
+        "output_action": "next parameter-distribution update; final fixed circuit parameters",
+        "noise_model": "real superconducting cavity-transmon apparatus",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "optimization epoch / fixed deployed circuit",
+        "compute_budget": "controller-specific unmatched budget",
+        "precision": "source/project controller precision",
+        "evidence_level": "literature only"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "experimental cavity-transmon GKP",
+          "match": false
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "one oscillator",
+          "match": true
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "history/performance to physical-control update",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "300 experimental episodes for each of 10 candidates per training epoch",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "300 episodes x 10 candidates per epoch",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "next parameter-distribution update; final fixed circuit parameters",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "real superconducting cavity-transmon apparatus",
+          "match": false
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "optimization epoch / fixed deployed circuit",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "controller-specific unmatched budget",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "source/project controller precision",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "literature only",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "code_family",
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "noise_model",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": null,
+        "state_bytes": null,
+        "workspace_bytes": null,
+        "wall_clock": {
+          "value": 16.0,
+          "unit": "s/optimization epoch",
+          "boundary": "not inference latency"
+        },
+        "precision": null,
+        "cadence": "offline experiment-in-loop epoch",
+        "warmup": "not reported",
+        "provenance": "SIVAK2023 source record"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    },
+    {
+      "candidate_id": "sivak2026_rl_drift",
+      "category": "external_rl_controller",
+      "native_lane": "controller_rl_nmf",
+      "source_id": "SIVAK2026_RL_DRIFT",
+      "artifact": null,
+      "member_count": 1,
+      "signature": {
+        "code_family": "surface/color-code processor",
+        "modes_or_distance": "d=5/d=7 source experiments",
+        "decision_target": "adapt processor controls and optionally steer a decoder under injected drift",
+        "input_semantics": "error-detection rates; decoder-steering experiment additionally estimates LER",
+        "history_horizon": "source experiment-in-loop history",
+        "output_action": "updates to more than 1000 control parameters and optional decoder steering",
+        "noise_model": "real processor with injected calibration drift",
+        "observability": "observed-only",
+        "online_privilege": "causal inference without future or hidden truth",
+        "time_basis": "adaptation epochs",
+        "compute_budget": "controller-specific unmatched budget",
+        "precision": "source/project controller precision",
+        "evidence_level": "literature only"
+      },
+      "signature_checks": {
+        "code_family": {
+          "required": "single-mode square approximate GKP",
+          "actual": "surface/color-code processor",
+          "match": false
+        },
+        "modes_or_distance": {
+          "required": "one oscillator",
+          "actual": "d=5/d=7 source experiments",
+          "match": false
+        },
+        "decision_target": {
+          "required": "per-round logical coset/correction and typed safety decision",
+          "actual": "adapt processor controls and optionally steer a decoder under injected drift",
+          "match": false
+        },
+        "input_semantics": {
+          "required": "frozen parent q/p syndrome code and registered observed history",
+          "actual": "error-detection rates; decoder-steering experiment additionally estimates LER",
+          "match": false
+        },
+        "history_horizon": {
+          "required": "registered causal per-round/window horizon",
+          "actual": "source experiment-in-loop history",
+          "match": false
+        },
+        "output_action": {
+          "required": "logical Pauli/frame correction plus typed safety action",
+          "actual": "updates to more than 1000 control parameters and optional decoder steering",
+          "match": false
+        },
+        "noise_model": {
+          "required": "frozen parent secondary replay trace",
+          "actual": "real processor with injected calibration drift",
+          "match": false
+        },
+        "observability": {
+          "required": "observed-only",
+          "actual": "observed-only",
+          "match": true
+        },
+        "online_privilege": {
+          "required": "causal inference without future or hidden truth",
+          "actual": "causal inference without future or hidden truth",
+          "match": true
+        },
+        "time_basis": {
+          "required": "every registered decoded round",
+          "actual": "adaptation epochs",
+          "match": false
+        },
+        "compute_budget": {
+          "required": "matched registered production decoder budget",
+          "actual": "controller-specific unmatched budget",
+          "match": false
+        },
+        "precision": {
+          "required": "production fixed-point",
+          "actual": "source/project controller precision",
+          "match": false
+        },
+        "evidence_level": {
+          "required": "project checkpoint replay",
+          "actual": "literature only",
+          "match": false
+        }
+      },
+      "mismatch_fields": [
+        "code_family",
+        "modes_or_distance",
+        "decision_target",
+        "input_semantics",
+        "history_horizon",
+        "output_action",
+        "noise_model",
+        "time_basis",
+        "compute_budget",
+        "precision",
+        "evidence_level"
+      ],
+      "same_task_eligible": false,
+      "eligibility_state": "INELIGIBLE_TASK_SIGNATURE",
+      "budget": {
+        "MAC": null,
+        "state_bytes": null,
+        "workspace_bytes": null,
+        "wall_clock": null,
+        "precision": null,
+        "cadence": "adaptation epoch",
+        "warmup": "source-specific",
+        "provenance": "SIVAK2026 source record"
+      },
+      "replay_state": "NOT_REPLAYED_INELIGIBLE",
+      "metrics": {
+        "p_L": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_X": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Y": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "p_Z": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "average_ler": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "latency_ns": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        },
+        "macs_per_update": {
+          "value": null,
+          "value_state": "N_A_NOT_APPLICABLE",
+          "ranking_eligible": false,
+          "reason": "INELIGIBLE_TASK_SIGNATURE"
+        }
+      }
+    }
+  ],
+  "eligibility_summary": {
+    "candidate_families": 16,
+    "same_task_eligible": 0,
+    "eligible_replayed": 0,
+    "ineligible": 16,
+    "diagnostic_replays": 1
+  },
+  "diagnostic_replay": {
+    "state": "DIAGNOSTIC_REPLAY_EXACT_NOT_RANKED",
+    "reason_not_ranked": "input is a five-window histogram/teacher-feature tensor and output is b_q/b_p regression, not the frozen per-round syndrome-to-logical-action task",
+    "samples": 206,
+    "label_names": [
+      "b_q",
+      "b_p"
+    ],
+    "model_sha256": "585ee844b0bd9b9046f01eb97835a2da788050d4197846265545f44ec8d5aabb",
+    "input_file_sha256": "ebbec072f7bacb45d6e5faf5a6a646dfb25413ffa7eb623fca229dc0c748e91d",
+    "input_array_sha256": "3f2ab9f50fde0cac5dc44bab0288d26f7d65f2f8c04c618cda319dd3ac563390",
+    "output_sha256": "673e95c3fabca74466bfae775547da6dcda846865e46ad27164a82e860d9c6e1",
+    "repeat_output_sha256s": [
+      "673e95c3fabca74466bfae775547da6dcda846865e46ad27164a82e860d9c6e1",
+      "673e95c3fabca74466bfae775547da6dcda846865e46ad27164a82e860d9c6e1",
+      "673e95c3fabca74466bfae775547da6dcda846865e46ad27164a82e860d9c6e1",
+      "673e95c3fabca74466bfae775547da6dcda846865e46ad27164a82e860d9c6e1",
+      "673e95c3fabca74466bfae775547da6dcda846865e46ad27164a82e860d9c6e1"
+    ],
+    "repeat_count": 5,
+    "bit_exact_across_repeats": true,
+    "bit_exact_with_t5_4_3_preserved_predictions": true,
+    "maximum_abs_difference_from_t5_4_3": 0.0,
+    "mse": 2.4144528544831194e-06,
+    "mae": 0.0013235786119716116,
+    "parent_mse": 2.4144528544831194e-06,
+    "parent_evaluation_report_mse": 2.414452854483121e-06,
+    "host_batch_samples": 206,
+    "host_batch_runtime_seconds": [
+      0.4679775999975391,
+      0.38457130000460893,
+      0.38790509998216294,
+      0.3943157999892719,
+      0.41067979999934323
+    ],
+    "host_batch_median_seconds": 0.3943157999892719,
+    "host_timing_boundary": "whole NumPy batch on current host; diagnostic only, not decoder latency_ns",
+    "rows": [
+      {
+        "sample_id": 0,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 258,
+        "target": [
+          -0.00033259845804423094,
+          0.0005489839822985232
+        ],
+        "prediction": [
+          0.001733781932351461,
+          -0.0015719701945026757
+        ],
+        "squared_error": 4.384187268951152e-06
+      },
+      {
+        "sample_id": 1,
+        "scenario_id": "static_bias_theta",
+        "window_id": 146,
+        "target": [
+          0.004115992691367865,
+          -0.0039447094313800335
+        ],
+        "prediction": [
+          0.0014040408536934164,
+          -0.0019723778169407256
+        ],
+        "squared_error": 5.622387383591291e-06
+      },
+      {
+        "sample_id": 2,
+        "scenario_id": "static_bias_theta",
+        "window_id": 70,
+        "target": [
+          0.004054584540426731,
+          -0.004237720742821693
+        ],
+        "prediction": [
+          0.0010472138607804159,
+          -0.0018674829805926962
+        ],
+        "squared_error": 7.331152727146333e-06
+      },
+      {
+        "sample_id": 3,
+        "scenario_id": "static_bias_theta",
+        "window_id": 233,
+        "target": [
+          0.004747677128762007,
+          -0.0018415928352624178
+        ],
+        "prediction": [
+          0.002483399701680717,
+          -0.0009299482936536367
+        ],
+        "squared_error": 2.9790240185174756e-06
+      },
+      {
+        "sample_id": 4,
+        "scenario_id": "static_bias_theta",
+        "window_id": 379,
+        "target": [
+          0.004368554800748825,
+          -0.004540964495390654
+        ],
+        "prediction": [
+          0.0020913531238155995,
+          -0.0025762729456660404
+        ],
+        "squared_error": 4.522830181493399e-06
+      },
+      {
+        "sample_id": 5,
+        "scenario_id": "static_bias_theta",
+        "window_id": 339,
+        "target": [
+          0.00409367261454463,
+          -0.0037539019249379635
+        ],
+        "prediction": [
+          0.001554426118957728,
+          -0.0015624104558557485
+        ],
+        "squared_error": 5.625203812205244e-06
+      },
+      {
+        "sample_id": 6,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 135,
+        "target": [
+          0.0008190088556148112,
+          0.0008098803227767348
+        ],
+        "prediction": [
+          0.0023526880914441933,
+          -0.0010824283280177018
+        ],
+        "squared_error": 2.9665020141428294e-06
+      },
+      {
+        "sample_id": 7,
+        "scenario_id": "linear_ramp",
+        "window_id": 375,
+        "target": [
+          0.0014144910965114832,
+          -0.0010425900109112263
+        ],
+        "prediction": [
+          0.002962682287413674,
+          -0.00279714808443539
+        ],
+        "squared_error": 2.7376849984779837e-06
+      },
+      {
+        "sample_id": 8,
+        "scenario_id": "periodic_drift",
+        "window_id": 354,
+        "target": [
+          0.0020574023947119713,
+          -0.0016467405948787928
+        ],
+        "prediction": [
+          0.0029196308159278525,
+          -0.002862230090673228
+        ],
+        "squared_error": 1.1104262823695207e-06
+      },
+      {
+        "sample_id": 9,
+        "scenario_id": "static_bias_theta",
+        "window_id": 402,
+        "target": [
+          0.00481959106400609,
+          -0.004324179608374834
+        ],
+        "prediction": [
+          0.0022720333449830453,
+          -0.0027276338155103356
+        ],
+        "squared_error": 4.519504400233615e-06
+      },
+      {
+        "sample_id": 10,
+        "scenario_id": "periodic_drift",
+        "window_id": 69,
+        "target": [
+          0.002004404319450259,
+          -0.001227576402015984
+        ],
+        "prediction": [
+          0.0027675674086692988,
+          -0.002452657180709781
+        ],
+        "squared_error": 1.0416204075356737e-06
+      },
+      {
+        "sample_id": 11,
+        "scenario_id": "static_bias_theta",
+        "window_id": 69,
+        "target": [
+          0.004271248355507851,
+          -0.003532202448695898
+        ],
+        "prediction": [
+          0.0015610586000108723,
+          -0.0016441384439398648
+        ],
+        "squared_error": 5.454957098428081e-06
+      },
+      {
+        "sample_id": 12,
+        "scenario_id": "static_bias_theta",
+        "window_id": 497,
+        "target": [
+          0.004677440971136093,
+          -0.004885147791355848
+        ],
+        "prediction": [
+          0.0015771175565079728,
+          -0.0019541799437875883
+        ],
+        "squared_error": 9.101288899385144e-06
+      },
+      {
+        "sample_id": 13,
+        "scenario_id": "static_bias_theta",
+        "window_id": 268,
+        "target": [
+          0.004131814930588007,
+          -0.004615678917616606
+        ],
+        "prediction": [
+          0.0014778024825450637,
+          -0.002381258054397104
+        ],
+        "squared_error": 6.0182093341787405e-06
+      },
+      {
+        "sample_id": 14,
+        "scenario_id": "periodic_drift",
+        "window_id": 364,
+        "target": [
+          0.0013552006566897035,
+          -0.003207774832844734
+        ],
+        "prediction": [
+          0.001639254259255886,
+          -0.0029144224548422314
+        ],
+        "squared_error": 8.337103340527502e-08
+      },
+      {
+        "sample_id": 15,
+        "scenario_id": "static_bias_theta",
+        "window_id": 60,
+        "target": [
+          0.003993254620581865,
+          -0.0038551317993551493
+        ],
+        "prediction": [
+          0.0018455096443027526,
+          -0.0021287075261589923
+        ],
+        "squared_error": 3.796674627106523e-06
+      },
+      {
+        "sample_id": 16,
+        "scenario_id": "periodic_drift",
+        "window_id": 394,
+        "target": [
+          0.002076460048556328,
+          -0.002439712407067418
+        ],
+        "prediction": [
+          0.0022678980435821647,
+          -0.002706950633579832
+        ],
+        "squared_error": 5.4032387824506276e-08
+      },
+      {
+        "sample_id": 17,
+        "scenario_id": "periodic_drift",
+        "window_id": 331,
+        "target": [
+          0.0014970818301662803,
+          -0.002520546317100525
+        ],
+        "prediction": [
+          0.002353825451704917,
+          -0.003468111478076974
+        ],
+        "squared_error": 8.159446836717313e-07
+      },
+      {
+        "sample_id": 18,
+        "scenario_id": "linear_ramp",
+        "window_id": 481,
+        "target": [
+          0.001167372101917863,
+          -0.0005108804325573146
+        ],
+        "prediction": [
+          0.0028159776157416373,
+          -0.003117158093647568
+        ],
+        "squared_error": 4.755291693454117e-06
+      },
+      {
+        "sample_id": 19,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 23,
+        "target": [
+          0.00022585171973332763,
+          0.0003456258855294436
+        ],
+        "prediction": [
+          0.0022568191802861516,
+          -0.0017749308322368247
+        ],
+        "squared_error": 4.3107948095440175e-06
+      },
+      {
+        "sample_id": 20,
+        "scenario_id": "linear_ramp",
+        "window_id": 136,
+        "target": [
+          0.0012902711750939488,
+          -0.002660113386809826
+        ],
+        "prediction": [
+          0.0022161641950639603,
+          -0.0032326681363047307
+        ],
+        "squared_error": 5.925484127991806e-07
+      },
+      {
+        "sample_id": 21,
+        "scenario_id": "static_bias_theta",
+        "window_id": 500,
+        "target": [
+          0.004571971949189901,
+          -0.00457313098013401
+        ],
+        "prediction": [
+          0.0021192333277693814,
+          -0.0030591235970838203
+        ],
+        "squared_error": 4.154072550469158e-06
+      },
+      {
+        "sample_id": 22,
+        "scenario_id": "periodic_drift",
+        "window_id": 188,
+        "target": [
+          0.0022201002575457096,
+          -0.0033434403594583273
+        ],
+        "prediction": [
+          0.0018255499817774932,
+          -0.0024387207516999416
+        ],
+        "squared_error": 4.870937443856315e-07
+      },
+      {
+        "sample_id": 23,
+        "scenario_id": "static_bias_theta",
+        "window_id": 360,
+        "target": [
+          0.004750540945678949,
+          -0.0030898749828338623
+        ],
+        "prediction": [
+          0.002548865840825839,
+          -0.002128181469711105
+        ],
+        "squared_error": 2.886113840256173e-06
+      },
+      {
+        "sample_id": 24,
+        "scenario_id": "periodic_drift",
+        "window_id": 178,
+        "target": [
+          0.0019115834729745984,
+          -0.0017538608517497778
+        ],
+        "prediction": [
+          0.0018753766003353485,
+          -0.001626698420574806
+        ],
+        "squared_error": 8.740610764322139e-09
+      },
+      {
+        "sample_id": 25,
+        "scenario_id": "linear_ramp",
+        "window_id": 126,
+        "target": [
+          0.0018767652800306678,
+          -0.0023222698364406824
+        ],
+        "prediction": [
+          0.002128583126899343,
+          -0.0022061564129903593
+        ],
+        "squared_error": 3.844727755346478e-08
+      },
+      {
+        "sample_id": 26,
+        "scenario_id": "static_bias_theta",
+        "window_id": 98,
+        "target": [
+          0.004728198982775211,
+          -0.004164179787039757
+        ],
+        "prediction": [
+          0.002717920191952526,
+          -0.003470719420661718
+        ],
+        "squared_error": 2.2610540482843413e-06
+      },
+      {
+        "sample_id": 27,
+        "scenario_id": "periodic_drift",
+        "window_id": 186,
+        "target": [
+          0.0012765798019245267,
+          -0.002800361253321171
+        ],
+        "prediction": [
+          0.0008461925337094418,
+          -0.001422001939938686
+        ],
+        "squared_error": 1.0425537987149393e-06
+      },
+      {
+        "sample_id": 28,
+        "scenario_id": "periodic_drift",
+        "window_id": 190,
+        "target": [
+          0.002232853788882494,
+          -0.001761886291205883
+        ],
+        "prediction": [
+          0.0020156459532759143,
+          -0.0013269987106252026
+        ],
+        "squared_error": 1.1815322579610638e-07
+      },
+      {
+        "sample_id": 29,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 19,
+        "target": [
+          0.0006608247058466077,
+          -6.1903236201033e-05
+        ],
+        "prediction": [
+          0.0026879189507438873,
+          -0.0019444025520517886
+        ],
+        "squared_error": 3.826457375937117e-06
+      },
+      {
+        "sample_id": 30,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 93,
+        "target": [
+          -5.494131619343534e-05,
+          0.0007193754427134991
+        ],
+        "prediction": [
+          0.001868732872705856,
+          -0.0014145797517766403
+        ],
+        "squared_error": 4.127143578564397e-06
+      },
+      {
+        "sample_id": 31,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 201,
+        "target": [
+          0.00025060161715373397,
+          -0.0002977224939968437
+        ],
+        "prediction": [
+          0.0022756325310355563,
+          -0.0022245198043806557
+        ],
+        "squared_error": 3.90664903873967e-06
+      },
+      {
+        "sample_id": 32,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 358,
+        "target": [
+          0.0040875687263906,
+          -0.006240018643438816
+        ],
+        "prediction": [
+          0.0034214286528545367,
+          -0.005461656604851064
+        ],
+        "squared_error": 5.247950303425568e-07
+      },
+      {
+        "sample_id": 33,
+        "scenario_id": "periodic_drift",
+        "window_id": 10,
+        "target": [
+          0.0017109561013057828,
+          -0.001709847361780703
+        ],
+        "prediction": [
+          0.0018957443668792082,
+          -0.0014366439754570173
+        ],
+        "squared_error": 5.439339669618195e-08
+      },
+      {
+        "sample_id": 34,
+        "scenario_id": "periodic_drift",
+        "window_id": 338,
+        "target": [
+          0.0012039239518344402,
+          -0.0019454198190942407
+        ],
+        "prediction": [
+          0.0013882896522654346,
+          -0.0020971192650961167
+        ],
+        "squared_error": 2.8501716706343625e-08
+      },
+      {
+        "sample_id": 35,
+        "scenario_id": "static_bias_theta",
+        "window_id": 87,
+        "target": [
+          0.004721403121948242,
+          -0.003706899005919695
+        ],
+        "prediction": [
+          0.0021268934546887696,
+          -0.0017558518205327903
+        ],
+        "squared_error": 5.2690327665545105e-06
+      },
+      {
+        "sample_id": 36,
+        "scenario_id": "static_bias_theta",
+        "window_id": 192,
+        "target": [
+          0.005363257601857185,
+          -0.00269303098320961
+        ],
+        "prediction": [
+          0.002436117006188828,
+          -0.000998424407368824
+        ],
+        "squared_error": 5.7199217568462696e-06
+      },
+      {
+        "sample_id": 37,
+        "scenario_id": "linear_ramp",
+        "window_id": 344,
+        "target": [
+          0.0010366999777033925,
+          -0.0012929304502904415
+        ],
+        "prediction": [
+          0.002379489203431011,
+          -0.0030840894072756094
+        ],
+        "squared_error": 2.5056666569591858e-06
+      },
+      {
+        "sample_id": 38,
+        "scenario_id": "periodic_drift",
+        "window_id": 98,
+        "target": [
+          0.0016545956023037434,
+          -0.002814752981066704
+        ],
+        "prediction": [
+          0.002482417130213869,
+          -0.003979435818296589
+        ],
+        "squared_error": 1.0208872967046553e-06
+      },
+      {
+        "sample_id": 39,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 372,
+        "target": [
+          0.0036221658810973167,
+          -0.005540550220757723
+        ],
+        "prediction": [
+          0.002727358194973824,
+          -0.0047242708999621595
+        ],
+        "squared_error": 7.334963623520726e-07
+      },
+      {
+        "sample_id": 40,
+        "scenario_id": "static_bias_theta",
+        "window_id": 489,
+        "target": [
+          0.004845191724598408,
+          -0.004752911161631346
+        ],
+        "prediction": [
+          0.002342911835409115,
+          -0.0028746575224920237
+        ],
+        "squared_error": 4.8946206883906425e-06
+      },
+      {
+        "sample_id": 41,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 27,
+        "target": [
+          0.000500539259519428,
+          -0.00024025309539865702
+        ],
+        "prediction": [
+          0.0021548616596627217,
+          -0.0014049057019824252
+        ],
+        "squared_error": 2.0465991488191168e-06
+      },
+      {
+        "sample_id": 42,
+        "scenario_id": "periodic_drift",
+        "window_id": 101,
+        "target": [
+          0.001864665187895298,
+          -0.003172866767272353
+        ],
+        "prediction": [
+          0.002320162157474693,
+          -0.003684189769442045
+        ],
+        "squared_error": 2.344643509219195e-07
+      },
+      {
+        "sample_id": 43,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 33,
+        "target": [
+          -0.00014224524784367532,
+          -0.0007002112688496709
+        ],
+        "prediction": [
+          0.0016174992179416002,
+          -0.0021401915970988387
+        ],
+        "squared_error": 2.585121965303243e-06
+      },
+      {
+        "sample_id": 44,
+        "scenario_id": "static_bias_theta",
+        "window_id": 185,
+        "target": [
+          0.004319143947213888,
+          -0.004627597518265247
+        ],
+        "prediction": [
+          0.0020967534664367926,
+          -0.002781554683365195
+        ],
+        "squared_error": 4.173446798667236e-06
+      },
+      {
+        "sample_id": 45,
+        "scenario_id": "linear_ramp",
+        "window_id": 192,
+        "target": [
+          0.0008493479690514505,
+          -0.002318962477147579
+        ],
+        "prediction": [
+          0.0017146783354804016,
+          -0.0026787244779571365
+        ],
+        "squared_error": 4.391126701452793e-07
+      },
+      {
+        "sample_id": 46,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 203,
+        "target": [
+          -0.00010971792653435841,
+          -0.0005315272137522697
+        ],
+        "prediction": [
+          0.002071416420786681,
+          -0.003193345394149867
+        ],
+        "squared_error": 5.921311533279376e-06
+      },
+      {
+        "sample_id": 47,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 512,
+        "target": [
+          0.0036364858970046043,
+          -0.006623829714953899
+        ],
+        "prediction": [
+          0.002383134553711857,
+          -0.004211798364782472
+        ],
+        "squared_error": 3.6943924119717673e-06
+      },
+      {
+        "sample_id": 48,
+        "scenario_id": "periodic_drift",
+        "window_id": 401,
+        "target": [
+          0.0016892417334020138,
+          -0.0018505374900996685
+        ],
+        "prediction": [
+          0.002007779224974032,
+          -0.0022728926829729025
+        ],
+        "squared_error": 1.3992502124199011e-07
+      },
+      {
+        "sample_id": 49,
+        "scenario_id": "static_bias_theta",
+        "window_id": 226,
+        "target": [
+          0.004514986649155617,
+          -0.00353319407440722
+        ],
+        "prediction": [
+          0.002411735768116202,
+          -0.002587276394443433
+        ],
+        "squared_error": 2.6592122629305734e-06
+      },
+      {
+        "sample_id": 50,
+        "scenario_id": "linear_ramp",
+        "window_id": 321,
+        "target": [
+          0.0011919718235731125,
+          -0.0017415431793779135
+        ],
+        "prediction": [
+          0.002258055427205524,
+          -0.002801477742409019
+        ],
+        "squared_error": 1.1299977639209046e-06
+      },
+      {
+        "sample_id": 51,
+        "scenario_id": "periodic_drift",
+        "window_id": 13,
+        "target": [
+          0.0014862832613289356,
+          -0.0020831043366342783
+        ],
+        "prediction": [
+          0.0014426246288455414,
+          -0.00149228720270243
+        ],
+        "squared_error": 1.754854809688818e-07
+      },
+      {
+        "sample_id": 52,
+        "scenario_id": "linear_ramp",
+        "window_id": 255,
+        "target": [
+          0.0003879393625538796,
+          -0.0018725735135376453
+        ],
+        "prediction": [
+          0.0013979508296526246,
+          -0.0026886441262515062
+        ],
+        "squared_error": 8.430472043030677e-07
+      },
+      {
+        "sample_id": 53,
+        "scenario_id": "static_bias_theta",
+        "window_id": 319,
+        "target": [
+          0.004627388436347246,
+          -0.0038001046050339937
+        ],
+        "prediction": [
+          0.0021517101107046592,
+          -0.002026494833648967
+        ],
+        "squared_error": 4.637337396604465e-06
+      },
+      {
+        "sample_id": 54,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 495,
+        "target": [
+          0.003925751894712448,
+          -0.005163913127034903
+        ],
+        "prediction": [
+          0.0031234896875425894,
+          -0.004592295892763101
+        ],
+        "squared_error": 4.851854557847985e-07
+      },
+      {
+        "sample_id": 55,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 200,
+        "target": [
+          -2.2248137611313723e-05,
+          0.00080819585127756
+        ],
+        "prediction": [
+          0.002143208878604217,
+          -0.0017322271655377123
+        ],
+        "squared_error": 5.571476596720939e-06
+      },
+      {
+        "sample_id": 56,
+        "scenario_id": "periodic_drift",
+        "window_id": 266,
+        "target": [
+          0.0017682728357613087,
+          -0.0027062080334872007
+        ],
+        "prediction": [
+          0.0026617258816037997,
+          -0.0039085580588768196
+        ],
+        "squared_error": 1.1219519643398208e-06
+      },
+      {
+        "sample_id": 57,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 459,
+        "target": [
+          0.0037267026491463184,
+          -0.004407052416354418
+        ],
+        "prediction": [
+          0.002613091716253416,
+          -0.0030409502367205127
+        ],
+        "squared_error": 1.5531822375295532e-06
+      },
+      {
+        "sample_id": 58,
+        "scenario_id": "periodic_drift",
+        "window_id": 160,
+        "target": [
+          0.002118564210832119,
+          -0.0026858437340706587
+        ],
+        "prediction": [
+          0.0023055553361689234,
+          -0.0024869964834515266
+        ],
+        "squared_error": 3.7252955016756196e-08
+      },
+      {
+        "sample_id": 59,
+        "scenario_id": "linear_ramp",
+        "window_id": 98,
+        "target": [
+          0.00112207792699337,
+          -0.0018349816091358662
+        ],
+        "prediction": [
+          0.0013233565241199366,
+          -0.002002401442159069
+        ],
+        "squared_error": 3.427123707537789e-08
+      },
+      {
+        "sample_id": 60,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 150,
+        "target": [
+          -0.0004017372557427734,
+          0.00045972203952260315
+        ],
+        "prediction": [
+          0.001263819855368658,
+          -0.0009417503160141843
+        ],
+        "squared_error": 2.3691026268538447e-06
+      },
+      {
+        "sample_id": 61,
+        "scenario_id": "periodic_drift",
+        "window_id": 132,
+        "target": [
+          0.0015932283131405711,
+          -0.0031468404922634363
+        ],
+        "prediction": [
+          0.002474659838286294,
+          -0.004083029966287084
+        ],
+        "squared_error": 8.266861323966948e-07
+      },
+      {
+        "sample_id": 62,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 460,
+        "target": [
+          0.0032412514556199312,
+          -0.004848255775868893
+        ],
+        "prediction": [
+          0.0018176948148949145,
+          -0.0028411968452743165
+        ],
+        "squared_error": 3.027399530115869e-06
+      },
+      {
+        "sample_id": 63,
+        "scenario_id": "linear_ramp",
+        "window_id": 111,
+        "target": [
+          0.00151346274651587,
+          -0.0010848593665286899
+        ],
+        "prediction": [
+          0.002282473857953626,
+          -0.0018837524650292426
+        ],
+        "squared_error": 6.148041361732731e-07
+      },
+      {
+        "sample_id": 64,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 486,
+        "target": [
+          0.003819783218204975,
+          -0.0056122904643416405
+        ],
+        "prediction": [
+          0.0027590751013305223,
+          -0.00426425929363119
+        ],
+        "squared_error": 1.471144873205168e-06
+      },
+      {
+        "sample_id": 65,
+        "scenario_id": "static_bias_theta",
+        "window_id": 251,
+        "target": [
+          0.0049538020975887775,
+          -0.003054272150620818
+        ],
+        "prediction": [
+          0.002348396330977368,
+          -0.0016125912277404997
+        ],
+        "squared_error": 4.433291546044517e-06
+      },
+      {
+        "sample_id": 66,
+        "scenario_id": "periodic_drift",
+        "window_id": 404,
+        "target": [
+          0.002424541860818863,
+          -0.0026081460528075695
+        ],
+        "prediction": [
+          0.002488910489701397,
+          -0.0022570276936683072
+        ],
+        "squared_error": 6.371371125443268e-08
+      },
+      {
+        "sample_id": 67,
+        "scenario_id": "linear_ramp",
+        "window_id": 444,
+        "target": [
+          0.0011075215879827738,
+          -0.0024105191696435213
+        ],
+        "prediction": [
+          0.002915823435691772,
+          -0.005553179244498071
+        ],
+        "squared_error": 6.57313395925629e-06
+      },
+      {
+        "sample_id": 68,
+        "scenario_id": "linear_ramp",
+        "window_id": 229,
+        "target": [
+          0.0010680364212021232,
+          -0.0016632387414574623
+        ],
+        "prediction": [
+          0.0017053810204970688,
+          -0.002271101464020681
+        ],
+        "squared_error": 3.878526138662017e-07
+      },
+      {
+        "sample_id": 69,
+        "scenario_id": "static_bias_theta",
+        "window_id": 71,
+        "target": [
+          0.004220692906528711,
+          -0.0032050146255642176
+        ],
+        "prediction": [
+          0.0012157168584742786,
+          -0.000950769717795687
+        ],
+        "squared_error": 7.055750576790593e-06
+      },
+      {
+        "sample_id": 70,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 39,
+        "target": [
+          -0.0007346600759774446,
+          -0.0005440605455078185
+        ],
+        "prediction": [
+          0.001127843714345416,
+          -0.002564106069360954
+        ],
+        "squared_error": 3.7747521437030555e-06
+      },
+      {
+        "sample_id": 71,
+        "scenario_id": "linear_ramp",
+        "window_id": 132,
+        "target": [
+          0.0012520657619461417,
+          -0.0015574467834085226
+        ],
+        "prediction": [
+          0.001984908701921017,
+          -0.002178979986199459
+        ],
+        "squared_error": 4.6168114842128907e-07
+      },
+      {
+        "sample_id": 72,
+        "scenario_id": "linear_ramp",
+        "window_id": 105,
+        "target": [
+          0.0015056016854941845,
+          -0.0018999470630660653
+        ],
+        "prediction": [
+          0.0020868820160261006,
+          -0.0024012878780011876
+        ],
+        "squared_error": 2.946147176915531e-07
+      },
+      {
+        "sample_id": 73,
+        "scenario_id": "periodic_drift",
+        "window_id": 18,
+        "target": [
+          0.0021931142546236515,
+          -0.00228322297334671
+        ],
+        "prediction": [
+          0.0026541092835432423,
+          -0.002678697719856395
+        ],
+        "squared_error": 1.844583459077368e-07
+      },
+      {
+        "sample_id": 74,
+        "scenario_id": "linear_ramp",
+        "window_id": 24,
+        "target": [
+          0.0015302184037864208,
+          -0.001641616690903902
+        ],
+        "prediction": [
+          0.0016186487043650913,
+          -0.0009914666817335024
+        ],
+        "squared_error": 2.1525747624235236e-07
+      },
+      {
+        "sample_id": 75,
+        "scenario_id": "static_bias_theta",
+        "window_id": 30,
+        "target": [
+          0.004628221970051527,
+          -0.0038701784797012806
+        ],
+        "prediction": [
+          0.0021436372919110473,
+          -0.0019101425233400478
+        ],
+        "squared_error": 5.007450986539662e-06
+      },
+      {
+        "sample_id": 76,
+        "scenario_id": "linear_ramp",
+        "window_id": 222,
+        "target": [
+          0.0013104493264108896,
+          -0.00137265061493963
+        ],
+        "prediction": [
+          0.001896552146398395,
+          -0.002116560848806101
+        ],
+        "squared_error": 4.484594758242868e-07
+      },
+      {
+        "sample_id": 77,
+        "scenario_id": "linear_ramp",
+        "window_id": 9,
+        "target": [
+          0.001241021789610386,
+          -0.0008303043432533741
+        ],
+        "prediction": [
+          0.0009427348414656836,
+          0.0009369790549278211
+        ],
+        "squared_error": 1.6061328564601766e-06
+      },
+      {
+        "sample_id": 78,
+        "scenario_id": "periodic_drift",
+        "window_id": 247,
+        "target": [
+          0.0016858745366334915,
+          -0.0023780816700309515
+        ],
+        "prediction": [
+          0.002163920074600744,
+          -0.0027386995458917687
+        ],
+        "squared_error": 1.7928639438038387e-07
+      },
+      {
+        "sample_id": 79,
+        "scenario_id": "linear_ramp",
+        "window_id": 339,
+        "target": [
+          0.0007442376227118075,
+          -0.002281913999468088
+        ],
+        "prediction": [
+          0.00215177568678621,
+          -0.003596603847494945
+        ],
+        "squared_error": 1.8547863991615983e-06
+      },
+      {
+        "sample_id": 80,
+        "scenario_id": "periodic_drift",
+        "window_id": 75,
+        "target": [
+          0.0013437960296869278,
+          -0.0021680539939552546
+        ],
+        "prediction": [
+          0.0020733460430618594,
+          -0.003130791206542022
+        ],
+        "squared_error": 7.29553081257351e-07
+      },
+      {
+        "sample_id": 81,
+        "scenario_id": "periodic_drift",
+        "window_id": 94,
+        "target": [
+          0.00118030805606395,
+          -0.0018100623274222016
+        ],
+        "prediction": [
+          0.0019371074233548021,
+          -0.0028840781379588266
+        ],
+        "squared_error": 8.631276218072388e-07
+      },
+      {
+        "sample_id": 82,
+        "scenario_id": "periodic_drift",
+        "window_id": 378,
+        "target": [
+          0.0016761301085352898,
+          -0.0023330296389758587
+        ],
+        "prediction": [
+          0.0018500009468829025,
+          -0.0026885040081160235
+        ],
+        "squared_error": 7.82965477716499e-08
+      },
+      {
+        "sample_id": 83,
+        "scenario_id": "linear_ramp",
+        "window_id": 37,
+        "target": [
+          0.0016503810184076428,
+          -0.0007912268629297614
+        ],
+        "prediction": [
+          0.0022556971499500355,
+          -0.0013029589379064462
+        ],
+        "squared_error": 3.141386678326953e-07
+      },
+      {
+        "sample_id": 84,
+        "scenario_id": "periodic_drift",
+        "window_id": 56,
+        "target": [
+          0.0016922259237617254,
+          -0.0017120754346251488
+        ],
+        "prediction": [
+          0.002762057607623077,
+          -0.0035098060514207625
+        ],
+        "squared_error": 2.1881876011789762e-06
+      },
+      {
+        "sample_id": 85,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 473,
+        "target": [
+          0.004152009263634682,
+          -0.0052033704705536366
+        ],
+        "prediction": [
+          0.0030200510328599415,
+          -0.0034362047001355238
+        ],
+        "squared_error": 2.202102148178061e-06
+      },
+      {
+        "sample_id": 86,
+        "scenario_id": "linear_ramp",
+        "window_id": 146,
+        "target": [
+          0.0013629627646878362,
+          -0.001076834392733872
+        ],
+        "prediction": [
+          0.002223837218645842,
+          -0.002312608558677403
+        ],
+        "squared_error": 1.1341213073454621e-06
+      },
+      {
+        "sample_id": 87,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 38,
+        "target": [
+          -0.0003518437151797116,
+          0.0002572139783296734
+        ],
+        "prediction": [
+          0.0018486750932749253,
+          -0.0018906562728846481
+        ],
+        "squared_error": 4.727814821207044e-06
+      },
+      {
+        "sample_id": 88,
+        "scenario_id": "periodic_drift",
+        "window_id": 488,
+        "target": [
+          0.001389340846799314,
+          -0.0026832292787730694
+        ],
+        "prediction": [
+          0.001720370263894854,
+          -0.00258550719454017
+        ],
+        "squared_error": 5.956504036471745e-08
+      },
+      {
+        "sample_id": 89,
+        "scenario_id": "linear_ramp",
+        "window_id": 1,
+        "target": [
+          0.002289870986714959,
+          -0.00040895212441682816
+        ],
+        "prediction": [
+          0.0026780798761965965,
+          -0.0024264802480895202
+        ],
+        "squared_error": 2.11056293584141e-06
+      },
+      {
+        "sample_id": 90,
+        "scenario_id": "periodic_drift",
+        "window_id": 203,
+        "target": [
+          0.002177470363676548,
+          -0.0018059801077470183
+        ],
+        "prediction": [
+          0.002235627164494057,
+          -0.0018486570171059433
+        ],
+        "squared_error": 2.601766036878645e-09
+      },
+      {
+        "sample_id": 91,
+        "scenario_id": "linear_ramp",
+        "window_id": 302,
+        "target": [
+          0.000848827650770545,
+          -0.001679532346315682
+        ],
+        "prediction": [
+          0.0015395472652184287,
+          -0.0024839056762175583
+        ],
+        "squared_error": 5.620550198202329e-07
+      },
+      {
+        "sample_id": 92,
+        "scenario_id": "periodic_drift",
+        "window_id": 60,
+        "target": [
+          0.0014349749544635415,
+          -0.003050379455089569
+        ],
+        "prediction": [
+          0.0022457655461560174,
+          -0.0038755315314610746
+        ],
+        "squared_error": 6.691286663586209e-07
+      },
+      {
+        "sample_id": 93,
+        "scenario_id": "linear_ramp",
+        "window_id": 99,
+        "target": [
+          0.001246123225428164,
+          -0.00143823167309165
+        ],
+        "prediction": [
+          0.0014700957954289179,
+          -0.0013298702630742244
+        ],
+        "squared_error": 3.09529536468536e-08
+      },
+      {
+        "sample_id": 94,
+        "scenario_id": "static_bias_theta",
+        "window_id": 32,
+        "target": [
+          0.003868593368679285,
+          -0.004794591572135687
+        ],
+        "prediction": [
+          0.002240270495312061,
+          -0.003650579595811605
+        ],
+        "squared_error": 1.980099390951912e-06
+      },
+      {
+        "sample_id": 95,
+        "scenario_id": "static_bias_theta",
+        "window_id": 310,
+        "target": [
+          0.004275113809853792,
+          -0.004155219532549381
+        ],
+        "prediction": [
+          0.0018553915893862812,
+          -0.0022418083050972644
+        ],
+        "squared_error": 4.75809907478202e-06
+      },
+      {
+        "sample_id": 96,
+        "scenario_id": "static_bias_theta",
+        "window_id": 447,
+        "target": [
+          0.00475966464728117,
+          -0.0033697786275297403
+        ],
+        "prediction": [
+          0.0021861890585804468,
+          -0.0016555082041108471
+        ],
+        "squared_error": 4.780749845123663e-06
+      },
+      {
+        "sample_id": 97,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 208,
+        "target": [
+          -3.691644815262407e-05,
+          -0.0006426570471376181
+        ],
+        "prediction": [
+          0.002364837911095972,
+          -0.0031533393690653623
+        ],
+        "squared_error": 6.035974861905062e-06
+      },
+      {
+        "sample_id": 98,
+        "scenario_id": "periodic_drift",
+        "window_id": 387,
+        "target": [
+          0.0019797368440777063,
+          -0.0031055682338774204
+        ],
+        "prediction": [
+          0.002563742060611091,
+          -0.0033532166585337896
+        ],
+        "squared_error": 2.0119591758649351e-07
+      },
+      {
+        "sample_id": 99,
+        "scenario_id": "static_bias_theta",
+        "window_id": 374,
+        "target": [
+          0.0048049576580524445,
+          -0.003825213760137558
+        ],
+        "prediction": [
+          0.002437996308685153,
+          -0.002177701939134082
+        ],
+        "squared_error": 4.15840061487241e-06
+      },
+      {
+        "sample_id": 100,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 293,
+        "target": [
+          0.00046241853851825,
+          -0.00090851477580145
+        ],
+        "prediction": [
+          0.0024332571823615133,
+          -0.0024792081617716253
+        ],
+        "squared_error": 3.1756413363982035e-06
+      },
+      {
+        "sample_id": 101,
+        "scenario_id": "periodic_drift",
+        "window_id": 197,
+        "target": [
+          0.0023647015914320946,
+          -0.0030332854948937893
+        ],
+        "prediction": [
+          0.0019791962320951945,
+          -0.002159683924921943
+        ],
+        "squared_error": 4.5589704256737334e-07
+      },
+      {
+        "sample_id": 102,
+        "scenario_id": "periodic_drift",
+        "window_id": 112,
+        "target": [
+          0.001109380042180419,
+          -0.0017799737397581339
+        ],
+        "prediction": [
+          0.0016706745921415771,
+          -0.0027374434016399743
+        ],
+        "squared_error": 6.158998626201124e-07
+      },
+      {
+        "sample_id": 103,
+        "scenario_id": "periodic_drift",
+        "window_id": 275,
+        "target": [
+          0.0019250583136454225,
+          -0.0026631688233464956
+        ],
+        "prediction": [
+          0.0025918900457019096,
+          -0.00328802326753261
+        ],
+        "squared_error": 4.1755381764829626e-07
+      },
+      {
+        "sample_id": 104,
+        "scenario_id": "periodic_drift",
+        "window_id": 409,
+        "target": [
+          0.0022276360541582108,
+          -0.0030351849272847176
+        ],
+        "prediction": [
+          0.0022735526983961576,
+          -0.0024317950853453268
+        ],
+        "squared_error": 1.8309381978685858e-07
+      },
+      {
+        "sample_id": 105,
+        "scenario_id": "linear_ramp",
+        "window_id": 150,
+        "target": [
+          0.0007829908863641322,
+          -0.0013359114527702332
+        ],
+        "prediction": [
+          0.001373240915000928,
+          -0.0016869975149135662
+        ],
+        "squared_error": 2.3582825966852533e-07
+      },
+      {
+        "sample_id": 106,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 409,
+        "target": [
+          0.003576341550797224,
+          -0.005770119372755289
+        ],
+        "prediction": [
+          0.0020426006028195862,
+          -0.0032804360422045045
+        ],
+        "squared_error": 4.275442190962895e-06
+      },
+      {
+        "sample_id": 107,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 148,
+        "target": [
+          -0.000573016528505832,
+          0.0006862699519842863
+        ],
+        "prediction": [
+          0.0015623101181871167,
+          -0.0018728002018833802
+        ],
+        "squared_error": 5.554229970246618e-06
+      },
+      {
+        "sample_id": 108,
+        "scenario_id": "linear_ramp",
+        "window_id": 278,
+        "target": [
+          0.0015630342531949282,
+          -0.0030401430558413267
+        ],
+        "prediction": [
+          0.0022315972178281783,
+          -0.0039896987047697875
+        ],
+        "squared_error": 6.743161840455754e-07
+      },
+      {
+        "sample_id": 109,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 299,
+        "target": [
+          0.0002876331564038992,
+          -0.00030769110890105367
+        ],
+        "prediction": [
+          0.0021268013821302235,
+          -0.0019438889721047213
+        ],
+        "squared_error": 3.029841605036782e-06
+      },
+      {
+        "sample_id": 110,
+        "scenario_id": "periodic_drift",
+        "window_id": 323,
+        "target": [
+          0.0015540397725999355,
+          -0.0005295066512189806
+        ],
+        "prediction": [
+          0.0024722095510604637,
+          -0.0020982983591769874
+        ],
+        "squared_error": 1.6520715825180278e-06
+      },
+      {
+        "sample_id": 111,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 218,
+        "target": [
+          -0.00026921776589006186,
+          9.326246799901128e-05
+        ],
+        "prediction": [
+          0.001910442188190983,
+          -0.0019061675934172796
+        ],
+        "squared_error": 4.374319042959867e-06
+      },
+      {
+        "sample_id": 112,
+        "scenario_id": "linear_ramp",
+        "window_id": 55,
+        "target": [
+          0.0019178945804014802,
+          -0.0016451713163405657
+        ],
+        "prediction": [
+          0.0024254926794901738,
+          -0.002251275387462492
+        ],
+        "squared_error": 3.1250898761451405e-07
+      },
+      {
+        "sample_id": 113,
+        "scenario_id": "static_bias_theta",
+        "window_id": 451,
+        "target": [
+          0.003838497446849942,
+          -0.003848136868327856
+        ],
+        "prediction": [
+          0.0009164118908300824,
+          -0.0016575610771698843
+        ],
+        "squared_error": 6.668603146753634e-06
+      },
+      {
+        "sample_id": 114,
+        "scenario_id": "periodic_drift",
+        "window_id": 454,
+        "target": [
+          0.0020862403325736523,
+          -0.002032349118962884
+        ],
+        "prediction": [
+          0.0017581552989504473,
+          -0.0013458185426489346
+        ],
+        "squared_error": 2.8948201075075146e-07
+      },
+      {
+        "sample_id": 115,
+        "scenario_id": "linear_ramp",
+        "window_id": 462,
+        "target": [
+          0.0016762043815106153,
+          -0.0009409606573171914
+        ],
+        "prediction": [
+          0.0031891157447187786,
+          -0.0031178637635097127
+        ],
+        "squared_error": 3.5139039633375155e-06
+      },
+      {
+        "sample_id": 116,
+        "scenario_id": "linear_ramp",
+        "window_id": 198,
+        "target": [
+          0.0006503163604065776,
+          -0.0019513302249833941
+        ],
+        "prediction": [
+          0.001289063443354498,
+          -0.0023389450254000556
+        ],
+        "squared_error": 2.79121534738263e-07
+      },
+      {
+        "sample_id": 117,
+        "scenario_id": "periodic_drift",
+        "window_id": 83,
+        "target": [
+          0.0016663435380905867,
+          -0.0023537720553576946
+        ],
+        "prediction": [
+          0.0029768124661246455,
+          -0.0044109828708588684
+        ],
+        "squared_error": 2.9747225753788697e-06
+      },
+      {
+        "sample_id": 118,
+        "scenario_id": "linear_ramp",
+        "window_id": 91,
+        "target": [
+          0.0011523948051035404,
+          -0.0012691286392509937
+        ],
+        "prediction": [
+          0.0010031758551540643,
+          -0.000774389357370976
+        ],
+        "squared_error": 1.3351662602958994e-07
+      },
+      {
+        "sample_id": 119,
+        "scenario_id": "periodic_drift",
+        "window_id": 265,
+        "target": [
+          0.001667516422457993,
+          -0.002015826990827918
+        ],
+        "prediction": [
+          0.002584756293533016,
+          -0.0033086921082418662
+        ],
+        "squared_error": 1.2564145964577535e-06
+      },
+      {
+        "sample_id": 120,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 302,
+        "target": [
+          0.003597821807488799,
+          -0.004891299642622471
+        ],
+        "prediction": [
+          0.0022903044114092534,
+          -0.002669015954165415
+        ],
+        "squared_error": 3.3240732665164664e-06
+      },
+      {
+        "sample_id": 121,
+        "scenario_id": "linear_ramp",
+        "window_id": 190,
+        "target": [
+          0.0008261256734840572,
+          -0.0009744007256813347
+        ],
+        "prediction": [
+          0.0017805532602078197,
+          -0.0019552395471780456
+        ],
+        "squared_error": 9.364884060272009e-07
+      },
+      {
+        "sample_id": 122,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 123,
+        "target": [
+          0.00012471716036088765,
+          0.0008763063233345747
+        ],
+        "prediction": [
+          0.0022092119317107953,
+          -0.0014125217770897017
+        ],
+        "squared_error": 4.7919262625384525e-06
+      },
+      {
+        "sample_id": 123,
+        "scenario_id": "periodic_drift",
+        "window_id": 509,
+        "target": [
+          0.0020061838440597057,
+          -0.003230998059734702
+        ],
+        "prediction": [
+          0.0028237573732923134,
+          -0.004000062620430006
+        ],
+        "squared_error": 6.299433871096615e-07
+      },
+      {
+        "sample_id": 124,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 371,
+        "target": [
+          0.00415057735517621,
+          -0.007542106322944164
+        ],
+        "prediction": [
+          0.003470555521536636,
+          -0.006461852009019144
+        ],
+        "squared_error": 8.14689538490073e-07
+      },
+      {
+        "sample_id": 125,
+        "scenario_id": "linear_ramp",
+        "window_id": 107,
+        "target": [
+          0.001801642938517034,
+          -0.002109869383275509
+        ],
+        "prediction": [
+          0.0023418948855806433,
+          -0.0021750284998147823
+        ],
+        "squared_error": 1.4805893838709972e-07
+      },
+      {
+        "sample_id": 126,
+        "scenario_id": "periodic_drift",
+        "window_id": 110,
+        "target": [
+          0.0023167028557509184,
+          -0.002349672606214881
+        ],
+        "prediction": [
+          0.002974851599019664,
+          -0.003200246107820579
+        ],
+        "squared_error": 5.78317524950004e-07
+      },
+      {
+        "sample_id": 127,
+        "scenario_id": "periodic_drift",
+        "window_id": 429,
+        "target": [
+          0.0019240444526076317,
+          -0.002168987412005663
+        ],
+        "prediction": [
+          0.0019551742106236913,
+          -0.002119806896342707
+        ],
+        "squared_error": 1.6938924775063297e-09
+      },
+      {
+        "sample_id": 128,
+        "scenario_id": "periodic_drift",
+        "window_id": 468,
+        "target": [
+          0.0019547638949006796,
+          -0.0025686020962893963
+        ],
+        "prediction": [
+          0.0020410693981285075,
+          -0.0021619501020173322
+        ],
+        "squared_error": 8.640724216642771e-08
+      },
+      {
+        "sample_id": 129,
+        "scenario_id": "linear_ramp",
+        "window_id": 484,
+        "target": [
+          0.0009733295300975442,
+          -0.0017168873455375433
+        ],
+        "prediction": [
+          0.0028479215326990704,
+          -0.004268673897622351
+        ],
+        "squared_error": 5.0128548918092365e-06
+      },
+      {
+        "sample_id": 130,
+        "scenario_id": "static_bias_theta",
+        "window_id": 461,
+        "target": [
+          0.004697699565440416,
+          -0.003982627764344215
+        ],
+        "prediction": [
+          0.0021314942648621273,
+          -0.001939919403098004
+        ],
+        "squared_error": 5.379033546910645e-06
+      },
+      {
+        "sample_id": 131,
+        "scenario_id": "periodic_drift",
+        "window_id": 245,
+        "target": [
+          0.0019374055555090308,
+          -0.002381547586992383
+        ],
+        "prediction": [
+          0.0025181622230887597,
+          -0.0032051874612369436
+        ],
+        "squared_error": 5.078304746919536e-07
+      },
+      {
+        "sample_id": 132,
+        "scenario_id": "periodic_drift",
+        "window_id": 177,
+        "target": [
+          0.002050751354545355,
+          -0.002499353140592575
+        ],
+        "prediction": [
+          0.001739071783028326,
+          -0.0015687722165617733
+        ],
+        "squared_error": 4.815625057355299e-07
+      },
+      {
+        "sample_id": 133,
+        "scenario_id": "static_bias_theta",
+        "window_id": 356,
+        "target": [
+          0.004963388666510582,
+          -0.004364899825304747
+        ],
+        "prediction": [
+          0.002813489686523691,
+          -0.0029201672934760286
+        ],
+        "squared_error": 3.3546588563364462e-06
+      },
+      {
+        "sample_id": 134,
+        "scenario_id": "linear_ramp",
+        "window_id": 66,
+        "target": [
+          0.001327425125055015,
+          -0.0024301481898874044
+        ],
+        "prediction": [
+          0.001826642457010239,
+          -0.0021957509275325722
+        ],
+        "squared_error": 1.520800105619661e-07
+      },
+      {
+        "sample_id": 135,
+        "scenario_id": "linear_ramp",
+        "window_id": 123,
+        "target": [
+          0.0015249414136633277,
+          -0.0016508845146745443
+        ],
+        "prediction": [
+          0.0020485905351106466,
+          -0.001993232373547777
+        ],
+        "squared_error": 1.9570522943381793e-07
+      },
+      {
+        "sample_id": 136,
+        "scenario_id": "periodic_drift",
+        "window_id": 291,
+        "target": [
+          0.001020621508359909,
+          -0.00259026768617332
+        ],
+        "prediction": [
+          0.0008439864745322556,
+          -0.0029501685979936277
+        ],
+        "squared_error": 8.036430075219265e-08
+      },
+      {
+        "sample_id": 137,
+        "scenario_id": "static_bias_theta",
+        "window_id": 72,
+        "target": [
+          0.004379650577902794,
+          -0.004191089421510696
+        ],
+        "prediction": [
+          0.0015619906255779671,
+          -0.002287664363216649
+        ],
+        "squared_error": 5.781117279738421e-06
+      },
+      {
+        "sample_id": 138,
+        "scenario_id": "linear_ramp",
+        "window_id": 386,
+        "target": [
+          0.0010876531014218926,
+          -0.0022961487993597984
+        ],
+        "prediction": [
+          0.0026317781234677018,
+          -0.00449237330629332
+        ],
+        "squared_error": 3.6038620842816796e-06
+      },
+      {
+        "sample_id": 139,
+        "scenario_id": "static_bias_theta",
+        "window_id": 121,
+        "target": [
+          0.00458025187253952,
+          -0.004529715981334448
+        ],
+        "prediction": [
+          0.0023400366932080792,
+          -0.0028336774596996
+        ],
+        "squared_error": 3.94755535828816e-06
+      },
+      {
+        "sample_id": 140,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 356,
+        "target": [
+          0.003769662929698825,
+          -0.005963818170130253
+        ],
+        "prediction": [
+          0.002819282239668114,
+          -0.0041121506593941055
+        ],
+        "squared_error": 2.165948013149525e-06
+      },
+      {
+        "sample_id": 141,
+        "scenario_id": "static_bias_theta",
+        "window_id": 168,
+        "target": [
+          0.004401130601763725,
+          -0.004495986271649599
+        ],
+        "prediction": [
+          0.0019236849628297924,
+          -0.0024643329743846303
+        ],
+        "squared_error": 5.132676007080191e-06
+      },
+      {
+        "sample_id": 142,
+        "scenario_id": "static_bias_theta",
+        "window_id": 312,
+        "target": [
+          0.00433525862172246,
+          -0.004173154477030039
+        ],
+        "prediction": [
+          0.0017971494458033817,
+          -0.0017250778172357808
+        ],
+        "squared_error": 6.217538760557016e-06
+      },
+      {
+        "sample_id": 143,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 321,
+        "target": [
+          0.003471805015578866,
+          -0.0056732697412371635
+        ],
+        "prediction": [
+          0.0019135889470585513,
+          -0.0030360830899683385
+        ],
+        "squared_error": 4.691395374912693e-06
+      },
+      {
+        "sample_id": 144,
+        "scenario_id": "linear_ramp",
+        "window_id": 505,
+        "target": [
+          0.0009400550625286996,
+          -0.0023403686936944723
+        ],
+        "prediction": [
+          0.002439561865809656,
+          -0.004685878662738979
+        ],
+        "squared_error": 3.874968833986518e-06
+      },
+      {
+        "sample_id": 145,
+        "scenario_id": "periodic_drift",
+        "window_id": 141,
+        "target": [
+          0.0018769745947793126,
+          -0.003378835739567876
+        ],
+        "prediction": [
+          0.0022129695592556717,
+          -0.0032789579257922353
+        ],
+        "squared_error": 6.143409691903567e-08
+      },
+      {
+        "sample_id": 146,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 283,
+        "target": [
+          -0.00045061734272167087,
+          0.00027554031112231314
+        ],
+        "prediction": [
+          0.0015586061171039914,
+          -0.0016483089860417632
+        ],
+        "squared_error": 3.869087514856257e-06
+      },
+      {
+        "sample_id": 147,
+        "scenario_id": "linear_ramp",
+        "window_id": 341,
+        "target": [
+          0.0009763871785253286,
+          -0.00152534618973732
+        ],
+        "prediction": [
+          0.0017520732983070768,
+          -0.003073918024016184
+        ],
+        "squared_error": 1.4998818411719353e-06
+      },
+      {
+        "sample_id": 148,
+        "scenario_id": "static_bias_theta",
+        "window_id": 155,
+        "target": [
+          0.004442279692739248,
+          -0.003560389392077923
+        ],
+        "prediction": [
+          0.0020863130772743425,
+          -0.002188507777332022
+        ],
+        "squared_error": 3.7163189290314917e-06
+      },
+      {
+        "sample_id": 149,
+        "scenario_id": "static_bias_theta",
+        "window_id": 40,
+        "target": [
+          0.004006979987025261,
+          -0.003587489714846015
+        ],
+        "prediction": [
+          0.0016167237809473906,
+          -0.002113097301584513
+        ],
+        "squared_error": 3.943578859488425e-06
+      },
+      {
+        "sample_id": 150,
+        "scenario_id": "linear_ramp",
+        "window_id": 476,
+        "target": [
+          0.001493453630246222,
+          -0.0019923774525523186
+        ],
+        "prediction": [
+          0.003391325137464494,
+          -0.0051498044228486944
+        ],
+        "squared_error": 6.785630665332953e-06
+      },
+      {
+        "sample_id": 151,
+        "scenario_id": "linear_ramp",
+        "window_id": 351,
+        "target": [
+          0.0010829431703314185,
+          -0.0011145363096147776
+        ],
+        "prediction": [
+          0.0023077339272748877,
+          -0.0027019015665821276
+        ],
+        "squared_error": 2.0099204286605887e-06
+      },
+      {
+        "sample_id": 152,
+        "scenario_id": "linear_ramp",
+        "window_id": 370,
+        "target": [
+          0.0007334796828217804,
+          -0.002299106912687421
+        ],
+        "prediction": [
+          0.0016683923450955913,
+          -0.0030507175699659864
+        ],
+        "squared_error": 7.19490133107311e-07
+      },
+      {
+        "sample_id": 153,
+        "scenario_id": "linear_ramp",
+        "window_id": 319,
+        "target": [
+          0.0015293224714696407,
+          -0.000821270514279604
+        ],
+        "prediction": [
+          0.002775532950536518,
+          -0.0023043322589208107
+        ],
+        "squared_error": 1.8762563482771574e-06
+      },
+      {
+        "sample_id": 154,
+        "scenario_id": "static_bias_theta",
+        "window_id": 512,
+        "target": [
+          0.0041308896616101265,
+          -0.00400475924834609
+        ],
+        "prediction": [
+          0.0019367280328820848,
+          -0.002389277846182422
+        ],
+        "squared_error": 3.712062706859593e-06
+      },
+      {
+        "sample_id": 155,
+        "scenario_id": "static_bias_theta",
+        "window_id": 266,
+        "target": [
+          0.0049105375073850155,
+          -0.004103816580027342
+        ],
+        "prediction": [
+          0.002294475156759662,
+          -0.002071575223589814
+        ],
+        "squared_error": 5.486893576587246e-06
+      },
+      {
+        "sample_id": 156,
+        "scenario_id": "linear_ramp",
+        "window_id": 56,
+        "target": [
+          0.001072747865691781,
+          -0.0015906421467661858
+        ],
+        "prediction": [
+          0.001559250155625519,
+          -0.0015067829446721217
+        ],
+        "squared_error": 1.21858421943312e-07
+      },
+      {
+        "sample_id": 157,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 163,
+        "target": [
+          -0.00015916881966404617,
+          0.0011348965344950557
+        ],
+        "prediction": [
+          0.001866673417648317,
+          -0.0010544838914908984
+        ],
+        "squared_error": 4.4487117100846e-06
+      },
+      {
+        "sample_id": 158,
+        "scenario_id": "linear_ramp",
+        "window_id": 320,
+        "target": [
+          0.0010625488357618451,
+          -0.0007320618606172502
+        ],
+        "prediction": [
+          0.002629610751105742,
+          -0.002737131816871894
+        ],
+        "squared_error": 3.2379942879981414e-06
+      },
+      {
+        "sample_id": 159,
+        "scenario_id": "periodic_drift",
+        "window_id": 156,
+        "target": [
+          0.0019634065683931112,
+          -0.0026045984122902155
+        ],
+        "prediction": [
+          0.002005095791105474,
+          -0.002283220530849045
+        ],
+        "squared_error": 5.2510866984987956e-08
+      },
+      {
+        "sample_id": 160,
+        "scenario_id": "static_bias_theta",
+        "window_id": 322,
+        "target": [
+          0.004866714123636484,
+          -0.005027120467275381
+        ],
+        "prediction": [
+          0.0021429344504418457,
+          -0.0031011901274949224
+        ],
+        "squared_error": 5.564091690897582e-06
+      },
+      {
+        "sample_id": 161,
+        "scenario_id": "linear_ramp",
+        "window_id": 14,
+        "target": [
+          0.0015208607073873281,
+          -0.0015248955460265279
+        ],
+        "prediction": [
+          0.0013918359700012674,
+          -0.0006403740967702318
+        ],
+        "squared_error": 3.995127885260002e-07
+      },
+      {
+        "sample_id": 162,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 228,
+        "target": [
+          -0.00022364646429196,
+          -0.00038877935730852187
+        ],
+        "prediction": [
+          0.0012962724360036035,
+          -0.0015927025223174069
+        ],
+        "squared_error": 1.879792225360343e-06
+      },
+      {
+        "sample_id": 163,
+        "scenario_id": "linear_ramp",
+        "window_id": 26,
+        "target": [
+          0.0014889651210978627,
+          -0.001902950694784522
+        ],
+        "prediction": [
+          0.002056142745924958,
+          -0.002084831817762969
+        ],
+        "squared_error": 1.773856005002031e-07
+      },
+      {
+        "sample_id": 164,
+        "scenario_id": "static_bias_theta",
+        "window_id": 320,
+        "target": [
+          0.004244331736117601,
+          -0.004675543401390314
+        ],
+        "prediction": [
+          0.0018577858847285621,
+          -0.0027726799871224425
+        ],
+        "squared_error": 4.658245137070709e-06
+      },
+      {
+        "sample_id": 165,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 147,
+        "target": [
+          0.000547734263818711,
+          0.000466306897578761
+        ],
+        "prediction": [
+          0.0024245594160783386,
+          -0.0015314948105246235
+        ],
+        "squared_error": 3.7568421585275876e-06
+      },
+      {
+        "sample_id": 166,
+        "scenario_id": "periodic_drift",
+        "window_id": 483,
+        "target": [
+          0.0018199322512373328,
+          -0.0023664755281060934
+        ],
+        "prediction": [
+          0.0018515111683724836,
+          -0.002049115162958623
+        ],
+        "squared_error": 5.085741468698225e-08
+      },
+      {
+        "sample_id": 167,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 119,
+        "target": [
+          2.31578633247409e-05,
+          0.00017279964231420308
+        ],
+        "prediction": [
+          0.0018614695283089445,
+          -0.0016391984606163178
+        ],
+        "squared_error": 3.331363451320401e-06
+      },
+      {
+        "sample_id": 168,
+        "scenario_id": "static_bias_theta",
+        "window_id": 107,
+        "target": [
+          0.00429192278534174,
+          -0.0037872514221817255
+        ],
+        "prediction": [
+          0.0016507792887946217,
+          -0.0016396869446764885
+        ],
+        "squared_error": 5.793836077197739e-06
+      },
+      {
+        "sample_id": 169,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 275,
+        "target": [
+          -0.00025009733508341014,
+          1.171830081148073e-05
+        ],
+        "prediction": [
+          0.0016919339044857704,
+          -0.0016262981050481642
+        ],
+        "squared_error": 3.2272915406639783e-06
+      },
+      {
+        "sample_id": 170,
+        "scenario_id": "periodic_drift",
+        "window_id": 283,
+        "target": [
+          0.0011989607010036707,
+          -0.0020821893122047186
+        ],
+        "prediction": [
+          0.002278237417680779,
+          -0.003720892100788329
+        ],
+        "squared_error": 1.9250925302365105e-06
+      },
+      {
+        "sample_id": 171,
+        "scenario_id": "linear_ramp",
+        "window_id": 296,
+        "target": [
+          0.0010578911751508713,
+          0.00017900079546961933
+        ],
+        "prediction": [
+          0.002685064268100162,
+          -0.0020876446596158
+        ],
+        "squared_error": 3.892686946738774e-06
+      },
+      {
+        "sample_id": 172,
+        "scenario_id": "linear_ramp",
+        "window_id": 303,
+        "target": [
+          0.0011683412594720721,
+          -0.00157124362885952
+        ],
+        "prediction": [
+          0.0020700441010826297,
+          -0.002417084428193094
+        ],
+        "squared_error": 7.642573361929071e-07
+      },
+      {
+        "sample_id": 173,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 15,
+        "target": [
+          -0.00011188123608008027,
+          0.0004856820742134005
+        ],
+        "prediction": [
+          0.0021714999604219515,
+          -0.001948158719612248
+        ],
+        "squared_error": 5.5687053491144566e-06
+      },
+      {
+        "sample_id": 174,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 324,
+        "target": [
+          0.0030880263075232506,
+          -0.005569246131926775
+        ],
+        "prediction": [
+          0.0015304749535090343,
+          -0.003089476329726476
+        ],
+        "squared_error": 4.287612246148014e-06
+      },
+      {
+        "sample_id": 175,
+        "scenario_id": "static_bias_theta",
+        "window_id": 476,
+        "target": [
+          0.004702952224761248,
+          -0.0037746268790215254
+        ],
+        "prediction": [
+          0.0021097348987267513,
+          -0.0016811619510989455
+        ],
+        "squared_error": 5.553685752243697e-06
+      },
+      {
+        "sample_id": 176,
+        "scenario_id": "periodic_drift",
+        "window_id": 499,
+        "target": [
+          0.002202037489041686,
+          -0.001827042200602591
+        ],
+        "prediction": [
+          0.002744951993188042,
+          -0.00248707211797226
+        ],
+        "squared_error": 3.6519782531774775e-07
+      },
+      {
+        "sample_id": 177,
+        "scenario_id": "periodic_drift",
+        "window_id": 87,
+        "target": [
+          0.0018418064573779702,
+          -0.0021861570421606302
+        ],
+        "prediction": [
+          0.0026329370556190303,
+          -0.0032536941238754244
+        ],
+        "squared_error": 8.827615221546983e-07
+      },
+      {
+        "sample_id": 178,
+        "scenario_id": "linear_ramp",
+        "window_id": 241,
+        "target": [
+          0.001272037741728127,
+          -0.0009672465384937823
+        ],
+        "prediction": [
+          0.0022106543010290947,
+          -0.0021811841835163593
+        ],
+        "squared_error": 1.1773228256984736e-06
+      },
+      {
+        "sample_id": 179,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 510,
+        "target": [
+          0.0039357757195830345,
+          -0.005300220102071762
+        ],
+        "prediction": [
+          0.0029122029288700174,
+          -0.0035274360521923964
+        ],
+        "squared_error": 2.0952322726973597e-06
+      },
+      {
+        "sample_id": 180,
+        "scenario_id": "linear_ramp",
+        "window_id": 161,
+        "target": [
+          0.001319653238169849,
+          -0.0014895453350618482
+        ],
+        "prediction": [
+          0.002315716638262581,
+          -0.0022981894521482546
+        ],
+        "squared_error": 8.230238025513739e-07
+      },
+      {
+        "sample_id": 181,
+        "scenario_id": "static_bias_theta",
+        "window_id": 97,
+        "target": [
+          0.004653729032725096,
+          -0.004641178995370865
+        ],
+        "prediction": [
+          0.0024175148822930793,
+          -0.0029112321479034323
+        ],
+        "squared_error": 3.996684910827447e-06
+      },
+      {
+        "sample_id": 182,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 46,
+        "target": [
+          -0.00024656124878674746,
+          -0.0003470544470474124
+        ],
+        "prediction": [
+          0.001984455752975803,
+          -0.002219850661625419
+        ],
+        "squared_error": 4.242401261745635e-06
+      },
+      {
+        "sample_id": 183,
+        "scenario_id": "linear_ramp",
+        "window_id": 160,
+        "target": [
+          0.001627437537536025,
+          -0.0012760920217260718
+        ],
+        "prediction": [
+          0.002399772890831981,
+          -0.0020752640658468478
+        ],
+        "squared_error": 6.175889270274845e-07
+      },
+      {
+        "sample_id": 184,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 62,
+        "target": [
+          -0.00017160564311780035,
+          -0.0009158907341770828
+        ],
+        "prediction": [
+          0.0019961288108841435,
+          -0.00299322706386664
+        ],
+        "squared_error": 4.507199444857593e-06
+      },
+      {
+        "sample_id": 185,
+        "scenario_id": "periodic_drift",
+        "window_id": 419,
+        "target": [
+          0.002125298837199807,
+          -0.0027503441087901592
+        ],
+        "prediction": [
+          0.0020715439770730717,
+          -0.0022096583537713596
+        ],
+        "squared_error": 1.4761533533374711e-07
+      },
+      {
+        "sample_id": 186,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 271,
+        "target": [
+          -0.00050784379709512,
+          0.0001846657833084464
+        ],
+        "prediction": [
+          0.0016332773317817397,
+          -0.001883510726667628
+        ],
+        "squared_error": 4.430876882469866e-06
+      },
+      {
+        "sample_id": 187,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 260,
+        "target": [
+          0.00036402727710083127,
+          0.0010352755198255181
+        ],
+        "prediction": [
+          0.002077593055858388,
+          -0.0010078511393369685
+        ],
+        "squared_error": 3.5553371117547285e-06
+      },
+      {
+        "sample_id": 188,
+        "scenario_id": "linear_ramp",
+        "window_id": 242,
+        "target": [
+          0.0015104321064427495,
+          -0.001131414552219212
+        ],
+        "prediction": [
+          0.0023176806346559987,
+          -0.00207862804990888
+        ],
+        "squared_error": 7.744317982539756e-07
+      },
+      {
+        "sample_id": 189,
+        "scenario_id": "static_bias_theta",
+        "window_id": 267,
+        "target": [
+          0.00449124351143837,
+          -0.0029570453334599733
+        ],
+        "prediction": [
+          0.0024817982636969296,
+          -0.002117097485808259
+        ],
+        "squared_error": 2.3716912952227023e-06
+      },
+      {
+        "sample_id": 190,
+        "scenario_id": "periodic_drift",
+        "window_id": 211,
+        "target": [
+          0.00214143143966794,
+          -0.002612076234072447
+        ],
+        "prediction": [
+          0.0017454510930943559,
+          -0.001397939600082398
+        ],
+        "squared_error": 8.154641004346108e-07
+      },
+      {
+        "sample_id": 191,
+        "scenario_id": "static_bias_theta",
+        "window_id": 285,
+        "target": [
+          0.004345735069364309,
+          -0.00341711170040071
+        ],
+        "prediction": [
+          0.0018730362006518283,
+          -0.0022677474200611604
+        ],
+        "squared_error": 3.717638972126217e-06
+      },
+      {
+        "sample_id": 192,
+        "scenario_id": "periodic_drift",
+        "window_id": 200,
+        "target": [
+          0.0028623277321457863,
+          -0.0032196559477597475
+        ],
+        "prediction": [
+          0.0026493101312946928,
+          -0.0026698361707159024
+        ],
+        "squared_error": 1.7383914275044963e-07
+      },
+      {
+        "sample_id": 193,
+        "scenario_id": "static_bias_theta",
+        "window_id": 292,
+        "target": [
+          0.005115302745252848,
+          -0.004102903883904219
+        ],
+        "prediction": [
+          0.0028174402956117244,
+          -0.002518285326281949
+        ],
+        "squared_error": 3.895593905315793e-06
+      },
+      {
+        "sample_id": 194,
+        "scenario_id": "static_bias_theta",
+        "window_id": 281,
+        "target": [
+          0.004692540969699621,
+          -0.0032936823554337025
+        ],
+        "prediction": [
+          0.002185650572058146,
+          -0.0019677130882898926
+        ],
+        "squared_error": 4.0213469815984635e-06
+      },
+      {
+        "sample_id": 195,
+        "scenario_id": "static_bias_theta",
+        "window_id": 455,
+        "target": [
+          0.004309133160859346,
+          -0.004431683570146561
+        ],
+        "prediction": [
+          0.0014193897668843911,
+          -0.002059168489063375
+        ],
+        "squared_error": 6.989722346494525e-06
+      },
+      {
+        "sample_id": 196,
+        "scenario_id": "periodic_drift",
+        "window_id": 53,
+        "target": [
+          0.0019198523368686438,
+          -0.0020827120169997215
+        ],
+        "prediction": [
+          0.003012925610086048,
+          -0.003793164854896872
+        ],
+        "squared_error": 2.060229045646313e-06
+      },
+      {
+        "sample_id": 197,
+        "scenario_id": "periodic_drift",
+        "window_id": 270,
+        "target": [
+          0.0023219964932650328,
+          -0.001962859183549881
+        ],
+        "prediction": [
+          0.002917456472519597,
+          -0.002827339931186943
+        ],
+        "squared_error": 5.509497749644898e-07
+      },
+      {
+        "sample_id": 198,
+        "scenario_id": "static_bias_theta",
+        "window_id": 190,
+        "target": [
+          0.004682336002588272,
+          -0.003230320755392313
+        ],
+        "prediction": [
+          0.002124185974797191,
+          -0.001539878362724138
+        ],
+        "squared_error": 4.7008635238086065e-06
+      },
+      {
+        "sample_id": 199,
+        "scenario_id": "step_sigma_theta",
+        "window_id": 330,
+        "target": [
+          0.003371564205735922,
+          -0.005232066381722689
+        ],
+        "prediction": [
+          0.0022002221033204485,
+          -0.0038333926620502416
+        ],
+        "squared_error": 1.6641652474967301e-06
+      },
+      {
+        "sample_id": 200,
+        "scenario_id": "periodic_drift",
+        "window_id": 435,
+        "target": [
+          0.002387949964031577,
+          -0.0025175854098051786
+        ],
+        "prediction": [
+          0.0024498064341630225,
+          -0.0023387603130815174
+        ],
+        "squared_error": 1.7902319057674602e-08
+      },
+      {
+        "sample_id": 201,
+        "scenario_id": "static_bias_theta",
+        "window_id": 296,
+        "target": [
+          0.004610801115632057,
+          -0.003551891539245844
+        ],
+        "prediction": [
+          0.002744802785556421,
+          -0.0031252414229465514
+        ],
+        "squared_error": 1.8319900447916316e-06
+      },
+      {
+        "sample_id": 202,
+        "scenario_id": "linear_ramp",
+        "window_id": 396,
+        "target": [
+          0.0012568600941449404,
+          -0.001519988407380879
+        ],
+        "prediction": [
+          0.0028522027122031674,
+          -0.0035166744686978496
+        ],
+        "squared_error": 3.2659366482251777e-06
+      },
+      {
+        "sample_id": 203,
+        "scenario_id": "linear_ramp",
+        "window_id": 355,
+        "target": [
+          0.0012399049010127783,
+          -0.0007229452021420002
+        ],
+        "prediction": [
+          0.002361275588678157,
+          -0.0022441768537031096
+        ],
+        "squared_error": 1.7858089784332324e-06
+      },
+      {
+        "sample_id": 204,
+        "scenario_id": "linear_ramp",
+        "window_id": 61,
+        "target": [
+          0.0021845665760338306,
+          -0.0018631576094776392
+        ],
+        "prediction": [
+          0.0025895389167428094,
+          -0.002336135171565982
+        ],
+        "squared_error": 1.9385518548917065e-07
+      },
+      {
+        "sample_id": 205,
+        "scenario_id": "periodic_drift",
+        "window_id": 217,
+        "target": [
+          0.0022437211591750383,
+          -0.002014515222981572
+        ],
+        "prediction": [
+          0.0021971832670098367,
+          -0.0018312465516112052
+        ],
+        "squared_error": 1.787659065651975e-08
+      }
+    ]
+  },
+  "source_scope": {
+    "WANG2022_DIRECT_NN": "1705cfa8b605de739899676a77f6e01edcebdc967cdd94503aa7e2472421e8bb",
+    "SIVAK2023_RL_GKP": "0f627cbd67f0b28a7d942e7b379d0661fd3123c953e431cea1dff86ec36582e1",
+    "SIVAK2026_RL_DRIFT": "c3461e39ccb7ef7b2a0e22a20cd5f2bbd3bc6eb1c9ee27fb87af24e23d16faa1",
+    "PUVIANI2025_NMF": "26109c7cb0f31bc80796012ce6793d65887bd4622d092b3e73f9ebcc4ef291f0"
+  },
+  "execution_contract": {
+    "training_executed": false,
+    "hyperparameter_search_executed": false,
+    "checkpoint_reselection_executed": false,
+    "new_checkpoint_written": false,
+    "performance_p_value_computed": false,
+    "phase6b_outputs_modified": false
+  },
+  "cross_lane_aggregate": null,
+  "global_ranking": null,
+  "claim_registry": {
+    "SAME_TASK_LEARNED_DECODER_PERFORMANCE": "NOT_ESTABLISHED_NO_ELIGIBLE_CHECKPOINT",
+    "LEGACY_CNN_PARAMETER_REPLAY": "DIAGNOSTIC_EXACT_INELIGIBLE",
+    "WANG_DIRECT_NN": "LITERATURE_ONLY_DIFFERENT_SURFACE_GKP_LANE",
+    "SIVAK_RL": "LITERATURE_ONLY_CONTROLLER_LANE",
+    "PUVIANI_NMF": "CONTROLLER_LANE_NOT_DIRECT_DECODER",
+    "CNN_OR_RL_LATENCY": "NULL_UNMATCHED_BOUNDARY",
+    "PHASE6B_V5_VERDICT": "READ_ONLY_NO_GO_UNCHANGED"
+  },
+  "allowed_wording": [
+    "The preserved legacy TinyCNN can be re-inferred bit-exactly on its 206-sample residual-parameter test split, but it is not a same-task logical decoder.",
+    "No existing learned checkpoint matches the frozen single-mode syndrome/action/precision/compute signature; learned methods remain diagnostic or separate controller/surface-GKP evidence."
+  ],
+  "forbidden_wording": [
+    "The legacy CNN has a logical-error or latency advantage over the project decoders.",
+    "Wang Direct NN, Sivak RL and Puviani NMF form one decoder leaderboard.",
+    "A controller/student checkpoint is a per-round Pauli decoder because it is causal or neural."
+  ],
+  "execution_budget_audit": {
+    "runtime_seconds": 2.211231699999189,
+    "runtime_budget_seconds": 7200,
+    "memory_budget_bytes": 12884901888,
+    "estimated_peak_bytes_upper_bound": 4093037,
+    "within_runtime_budget": true,
+    "within_memory_budget": true,
+    "boundary": "eligibility audit plus one diagnostic NumPy batch; not a decoder latency benchmark"
+  },
+  "source_data": {
+    "path": "docs/t6_17_3_learned_model_eligibility_replay_source_data.csv",
+    "sha256": "c35d0625ee4830ece89c9541c0a444991aeb455e996282d54a20cc524befcdbb",
+    "rows": 434
+  },
+  "ontology_semantic_sha256": "5a84aee5bb6fec96886fc105b745634567d979edb5fcdb4a19493a5881c24ddd",
+  "source_audit_semantic_sha256": "8e47f094fd35e66fa0ab4f93d523a66d6b870cad6a90a3fa0e5cb7c92b21754d",
+  "bindings": {
+    "implementation": {
+      "path": "cnn_fpga/benchmark/learned_model_eligibility_replay.py",
+      "sha256": "290ad775906c4ad57ca99d89f58122752ca0a743f902e8d10b782316eb646985",
+      "bytes": 51746
+    },
+    "preregistration_config": {
+      "path": "configs/literature/t6_16_3_secondary_preregistration.json",
+      "sha256": "eca700725aac3d2b0d0fb312339323645a03c4089b2d1932cf757816a11585c4",
+      "bytes": 22974
+    },
+    "ontology_initial": {
+      "path": "docs/t6_16_2_comparison_ontology.json",
+      "sha256": "0c8c964ec8290f26bc42429b1f6df1504f3b20c1b2f7a3522c4b13ee4f95b214",
+      "bytes": 61056
+    },
+    "source_audit_initial": {
+      "path": "docs/t6_16_1_secondary_method_source_audit.json",
+      "sha256": "0399768659537023318187a9d92c0421ae0a4e18b59c0d3796eddb2544749ef9",
+      "bytes": 69626
+    },
+    "phase6b_terminal": {
+      "path": "docs/t6_15_5_route_a_v5_final_evidence_gate.json",
+      "sha256": "fb6283946a74fd61429ee72a24e237a52419e4f4d4cb78243edbb96b4b0af00d",
+      "bytes": 5908
+    },
+    "algorithm_verdict": {
+      "path": "docs/t5_1_4_algorithm_branch_verdict.json",
+      "sha256": "2c08d760a1a453898a1644ffb319c8d8dccccfaa1c2d9271feebe9bf96ebefc2",
+      "bytes": 42312
+    },
+    "causal_ablation_parent": {
+      "path": "docs/t5_4_3_causal_ablation_negative_results.json",
+      "sha256": "2ee23948b8eca966acf393d5d7e1d271ca58d1b7be498b0995a5fba33a6027fe",
+      "bytes": 228113
+    },
+    "t327_report": {
+      "path": "docs/t3_2_7_latest_outcome_markovian_validation.json",
+      "sha256": "3213b988cef743551a229cfeecfb4e588a959f12d32e4a8cf70d2361b152278d",
+      "bytes": 1353735
+    },
+    "t327_checkpoint": {
+      "path": "docs/t3_2_7_latest_outcome_markovian_checkpoints.pt",
+      "sha256": "11cc59ba48da4c27e18284acc46f80de805be57ce1dcab20184e44b3fd5ac877",
+      "bytes": 3144793
+    },
+    "t3210_report": {
+      "path": "docs/t3_2_10_exponential_recurrence_validation.json",
+      "sha256": "120171277b57267cd68f492e5a804b5ce5b5c54aa3ee7bc8517ed2f3a52fb8d7",
+      "bytes": 319665
+    },
+    "t3210_checkpoint": {
+      "path": "docs/t3_2_10_exponential_recurrence_checkpoints.pt",
+      "sha256": "a3246b42875570e94d870317d9dbe0ec631b0bc416a003f459e4e534b4f00830",
+      "bytes": 17781
+    },
+    "legacy_manifest": {
+      "path": "artifacts/datasets/runtime_b_residual_v1/manifest.json",
+      "sha256": "888a1b0a09559ad611a1ab09356556b8c54a5733d4092396769e0fc6f75bdd00",
+      "bytes": 3691
+    },
+    "legacy_input": {
+      "path": "artifacts/datasets/runtime_b_residual_v1/test.npz",
+      "sha256": "ebbec072f7bacb45d6e5faf5a6a646dfb25413ffa7eb623fca229dc0c748e91d",
+      "bytes": 1067138
+    },
+    "legacy_model": {
+      "path": "artifacts/models/runtime_b_residual_v1/tiny_cnn_20260401_083648_2fc740424c0d.npz",
+      "sha256": "585ee844b0bd9b9046f01eb97835a2da788050d4197846265545f44ec8d5aabb",
+      "bytes": 1477611
+    },
+    "legacy_eval": {
+      "path": "artifacts/reports/runtime_b_residual_v1/eval_test_20260401_083649.json",
+      "sha256": "af5ed6a1ee018a4abbc6beabd0de05d0a8f09a519bb7e8760929dee24c8d1e98",
+      "bytes": 727
+    },
+    "t411_report": {
+      "path": "docs/t4_1_1_slow_loop_model_selection_validation.json",
+      "sha256": "65a6f476b6d97a26a6aff8d7f6e33ce5c5abc37b055f17e48e0e0c4604aaef11",
+      "bytes": 260141
+    },
+    "t411_checkpoint": {
+      "path": "docs/t4_1_1_slow_loop_model_selection_checkpoints.pt",
+      "sha256": "a8bf0f0bab865eeb0f0fbdccc60cf952f4963f29802d29bc8c17c5af34b502ed",
+      "bytes": 32729
+    },
+    "t415_report": {
+      "path": "docs/t4_1_5_teacher_student_validation.json",
+      "sha256": "586c72dc636db2488d9f659e4c20b26b4b84584e86712798ab401858da49a085",
+      "bytes": 20536
+    },
+    "t415_artifact": {
+      "path": "docs/t4_1_5_distilled_student_checkpoint.json",
+      "sha256": "8c990c3e1f5b81f845a9c0d25d504713831f20384accd1f9217180ae77d6faac",
+      "bytes": 4490
+    },
+    "t441_checkpoint": {
+      "path": "docs/t4_4_1_bounded_residual_rnn_teacher_checkpoints.pt",
+      "sha256": "7c4e004cfb4e04e2ac4848242fbfe63217ef6b89f8780bbce723422be098711e",
+      "bytes": 1867285
+    },
+    "t443_artifact": {
+      "path": "docs/t4_4_3_low_dimensional_student.json",
+      "sha256": "8d3b575c416795b3af522f0322f8c8b0eed937c41616067d163ce47e5fe9bbae",
+      "bytes": 5130
+    },
+    "t443_checkpoint": {
+      "path": "docs/t4_4_3_low_dimensional_student_candidates.pt",
+      "sha256": "dd8ab3aa3cfbde8b186214e209c0abd037230e5958eca86ff2c1e2fb2e504a7c",
+      "bytes": 408685
+    },
+    "t545_checkpoint": {
+      "path": "docs/t5_4_5_horizon_extrapolation_candidates.pt",
+      "sha256": "518f13d5c834cfd5a2f78f45f9248af71fd57dfd174877fcb122276136b193bc",
+      "bytes": 414709
+    },
+    "t554_report": {
+      "path": "docs/t5_5_4_gru_student_hardware_feasibility.json",
+      "sha256": "d47d88062c6f625b1f68b9961b1fd8478ea85db4a8a83e430cd51c8654f4c506",
+      "bytes": 41587
+    },
+    "t554_manifest": {
+      "path": "cnn_fpga/rtl/generated/t5_5_4_quantized_gru_manifest.json",
+      "sha256": "a833f2da428a867c11260bb055793a79046fc620b0675fdbff619c28b11ba898",
+      "bytes": 4133
+    },
+    "t237_checkpoint": {
+      "path": "docs/t2_3_7_nmf_directional_ranking_checkpoints.pt",
+      "sha256": "6f97ea59d91f955ea62494b701bbb54bf1abb69a6d104fb85d0fccb9cf4ca48a",
+      "bytes": 6157559
+    },
+    "gqf_intake": {
+      "path": "docs/t6_8_3_gqf_official_intake.json",
+      "sha256": "f7f5f3f6ec8ab1e36230b11c6493d9323237c3b6b0abdeeef12d67f3876a5f51",
+      "bytes": 19904
+    },
+    "source_data": {
+      "path": "docs/t6_17_3_learned_model_eligibility_replay_source_data.csv",
+      "sha256": "c35d0625ee4830ece89c9541c0a444991aeb455e996282d54a20cc524befcdbb",
+      "bytes": 106888
+    }
+  },
+  "semantic_mutation_audit": {
+    "count": 16,
+    "detected": 16,
+    "cases": [
+      {
+        "case": "enable_posthoc_training",
+        "target_gate": "G01_frozen_readonly_preregistration_is_consumed_exactly",
+        "rejected": true
+      },
+      {
+        "case": "drop_candidate_family",
+        "target_gate": "G02_candidate_universe_covers_all_relevant_existing_families_without_temp_artifacts",
+        "rejected": true
+      },
+      {
+        "case": "merge_wang_with_rl",
+        "target_gate": "G03_direct_nn_causal_nn_rl_and_nmf_are_distinct_categories_and_lanes",
+        "rejected": true
+      },
+      {
+        "case": "forge_signature_match",
+        "target_gate": "G04_every_candidate_has_complete_13_field_signature_and_live_mismatch_projection",
+        "rejected": true
+      },
+      {
+        "case": "remove_workspace_budget",
+        "target_gate": "G05_every_candidate_has_all_seven_frozen_budget_fields_even_when_null",
+        "rejected": true
+      },
+      {
+        "case": "promote_ineligible_checkpoint",
+        "target_gate": "G06_no_existing_checkpoint_matches_same_syndrome_action_precision_and_budget",
+        "rejected": true
+      },
+      {
+        "case": "fill_ineligible_ler",
+        "target_gate": "G07_ineligible_rows_keep_all_primary_metrics_null_and_unranked",
+        "rejected": true
+      },
+      {
+        "case": "break_replay_exactness",
+        "target_gate": "G08_legacy_cnn_readonly_reinference_is_bit_exact_with_parent_and_repeats",
+        "rejected": true
+      },
+      {
+        "case": "rename_parameter_mse_as_ler",
+        "target_gate": "G09_legacy_cnn_diagnostic_metrics_recompute_parent_without_ler_promotion",
+        "rejected": true
+      },
+      {
+        "case": "forge_output_hash",
+        "target_gate": "G10_checkpoint_input_output_and_parent_hashes_are_complete",
+        "rejected": true
+      },
+      {
+        "case": "claim_external_checkpoint_replayed",
+        "target_gate": "G11_external_methods_without_exact_checkpoint_remain_literature_only_and_unreplayed",
+        "rejected": true
+      },
+      {
+        "case": "create_cross_lane_score",
+        "target_gate": "G12_controller_outputs_are_never_merged_into_direct_decoder_rank",
+        "rejected": true
+      },
+      {
+        "case": "claim_new_training",
+        "target_gate": "G13_no_training_reselection_or_phase6b_claim_upgrade_occurred",
+        "rejected": true
+      },
+      {
+        "case": "invent_latency",
+        "target_gate": "G14_runtime_budget_is_respected_and_host_batch_time_is_not_latency",
+        "rejected": true
+      },
+      {
+        "case": "forge_source_hash",
+        "target_gate": "G15_source_data_semantic_locks_and_exact_bindings_are_live",
+        "rejected": true
+      },
+      {
+        "case": "forge_mutation_count",
+        "target_gate": "G16_targeted_semantic_mutations_are_all_detected",
+        "rejected": true
+      }
+    ]
+  },
+  "gates": {
+    "G01_frozen_readonly_preregistration_is_consumed_exactly": true,
+    "G02_candidate_universe_covers_all_relevant_existing_families_without_temp_artifacts": true,
+    "G03_direct_nn_causal_nn_rl_and_nmf_are_distinct_categories_and_lanes": true,
+    "G04_every_candidate_has_complete_13_field_signature_and_live_mismatch_projection": true,
+    "G05_every_candidate_has_all_seven_frozen_budget_fields_even_when_null": true,
+    "G06_no_existing_checkpoint_matches_same_syndrome_action_precision_and_budget": true,
+    "G07_ineligible_rows_keep_all_primary_metrics_null_and_unranked": true,
+    "G08_legacy_cnn_readonly_reinference_is_bit_exact_with_parent_and_repeats": true,
+    "G09_legacy_cnn_diagnostic_metrics_recompute_parent_without_ler_promotion": true,
+    "G10_checkpoint_input_output_and_parent_hashes_are_complete": true,
+    "G11_external_methods_without_exact_checkpoint_remain_literature_only_and_unreplayed": true,
+    "G12_controller_outputs_are_never_merged_into_direct_decoder_rank": true,
+    "G13_no_training_reselection_or_phase6b_claim_upgrade_occurred": true,
+    "G14_runtime_budget_is_respected_and_host_batch_time_is_not_latency": true,
+    "G15_source_data_semantic_locks_and_exact_bindings_are_live": true,
+    "G16_targeted_semantic_mutations_are_all_detected": true
+  },
+  "gate_summary": {
+    "passed": 16,
+    "failed": []
+  },
+  "verdict": "PASS_READONLY_LEARNED_ELIGIBILITY_NO_SAME_TASK_CHECKPOINT"
+}

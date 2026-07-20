@@ -55,6 +55,8 @@
 
 ## 当前文件组
 
+- `Contract_Centric_Regime_Aware_GKP_note_draft.tex`：2026-07-17 新增并同步到 T6.7.2 的 Route-A 证据 note；以 `new_task_board.md` 为当前状态源，明确 T6.7.3 正在执行。该 note 复用旧 CNN+FPGA、teacher/student 与 FPGA fast-path 的有效结果，把 LER、tail safety 和确定性执行拆成独立证据 lane，并同时保留 static/Window 负结果、periodic 集中性、smooth 21.6% fallback signal，以及 T6.7.2 的 locked-EWMA non-inferiority、高 tail fallback/false-update 和 static calibration 优势。
+- `Contract_Centric_Regime_Aware_GKP_note_draft.tex` 已嵌入 `../figures/ppt_summary_20260716/` 下的双回路架构图和有效保真寿命图：前者只作 Route-A 接口图，后者只作 teacher/student finite-model 扩展证据，英文图注显式校正旧状态徽章、LER/寿命/板级口径。TeX Live `latexmk` 独立编译为 15 页，15/15 页完成渲染 QA；编译 PDF 与辅助文件仅放在 Codex 临时可视化目录，未覆盖本目录中冻结的旧 note 产物。
 - `CNN_FPGA_GKP_theory_note_draft.tex`：当前主线 note 源文件。
 - `CNN_FPGA_GKP_theory_note_draft.pdf`：对应编译产物。
 - `CNN_FPGA_GKP_theory_note_draft.*`：保留的 LaTeX 辅助文件、日志与同步文件。

@@ -1,0 +1,1832 @@
+{
+  "schema_version": "t6.5.2-unified-execution-validation-v1",
+  "task_id": "T6.5.2",
+  "protocol_id": "ROUTE-A-UNIFIED-EXECUTION-CONFORMANCE-V1",
+  "generated_at_utc": "2026-07-16T23:00:35.299880+00:00",
+  "contract": {
+    "schema_version": "t6.5.2-unified-execution-contract-v1",
+    "contract_id": "ROUTE-A-UNIFIED-EXECUTION-CONTRACT-V1",
+    "observed_schema": {
+      "schema_id": "route-a-observed-syndrome-v1",
+      "fields": [
+        "schema_id",
+        "trace_id",
+        "cycle_index",
+        "syndrome_code",
+        "syndrome_x",
+        "syndrome_z",
+        "quadrature_phase_bit",
+        "ood_score_code",
+        "parameter_age_code",
+        "reset_ack",
+        "observation_valid",
+        "deadline_ok"
+      ],
+      "wire_schema": {
+        "schema_id": "t5.5.1-fast-input-v1",
+        "bit_order": "little-endian field offsets; field LSB at offset",
+        "byte_order_for_crc": "little-endian payload padded with zero high bits",
+        "crc": "CRC-16/CCITT-FALSE poly=0x1021 init=0xffff xorout=0",
+        "payload_bits": 42,
+        "crc_bits": 16,
+        "word_bits": 58,
+        "fields": [
+          {
+            "name": "syndrome_code",
+            "width": 10,
+            "offset": 0
+          },
+          {
+            "name": "syndrome_x_code",
+            "width": 2,
+            "offset": 10
+          },
+          {
+            "name": "syndrome_z_code",
+            "width": 2,
+            "offset": 12
+          },
+          {
+            "name": "quadrature_phase_bit",
+            "width": 1,
+            "offset": 14
+          },
+          {
+            "name": "ood_score_code",
+            "width": 8,
+            "offset": 15
+          },
+          {
+            "name": "parameter_age_code",
+            "width": 16,
+            "offset": 23
+          },
+          {
+            "name": "reset_ack",
+            "width": 1,
+            "offset": 39
+          },
+          {
+            "name": "observation_valid",
+            "width": 1,
+            "offset": 40
+          },
+          {
+            "name": "deadline_ok",
+            "width": 1,
+            "offset": 41
+          }
+        ]
+      },
+      "truth_key_denylist": [
+        "truth",
+        "hidden",
+        "latent",
+        "drift_state",
+        "logical_class",
+        "regime_label",
+        "future",
+        "evaluation_label"
+      ]
+    },
+    "oracle_schema": {
+      "schema_id": "route-a-isolated-simulator-truth-v1",
+      "fields": [
+        "schema_id",
+        "trace_id",
+        "cycle_index",
+        "latent_displacement_q",
+        "latent_displacement_p",
+        "latent_mean_q",
+        "latent_mean_p",
+        "latent_sigma_q",
+        "latent_sigma_p",
+        "latent_correlation",
+        "logical_x",
+        "logical_z",
+        "regime_label"
+      ],
+      "physically_separate_from_observed": true,
+      "deployable_access": false
+    },
+    "action_schema": {
+      "schema_id": "t5.5.1-fast-output-v1",
+      "wire_schema": {
+        "schema_id": "t5.5.1-fast-output-v1",
+        "bit_order": "little-endian field offsets; field LSB at offset",
+        "byte_order_for_crc": "little-endian payload padded with zero high bits",
+        "crc": "CRC-16/CCITT-FALSE poly=0x1021 init=0xffff xorout=0",
+        "payload_bits": 102,
+        "crc_bits": 16,
+        "word_bits": 118,
+        "fields": [
+          {
+            "name": "output_valid",
+            "width": 1,
+            "offset": 0
+          },
+          {
+            "name": "mode_code",
+            "width": 3,
+            "offset": 1
+          },
+          {
+            "name": "correction_enable",
+            "width": 1,
+            "offset": 4
+          },
+          {
+            "name": "reset_request",
+            "width": 1,
+            "offset": 5
+          },
+          {
+            "name": "map_action_inhibited",
+            "width": 1,
+            "offset": 6
+          },
+          {
+            "name": "map_action_code",
+            "width": 2,
+            "offset": 7
+          },
+          {
+            "name": "pauli_frame_delta_x",
+            "width": 1,
+            "offset": 9
+          },
+          {
+            "name": "pauli_frame_delta_z",
+            "width": 1,
+            "offset": 10
+          },
+          {
+            "name": "pauli_frame_x",
+            "width": 1,
+            "offset": 11
+          },
+          {
+            "name": "pauli_frame_z",
+            "width": 1,
+            "offset": 12
+          },
+          {
+            "name": "phase_frame_x_code",
+            "width": 8,
+            "offset": 13
+          },
+          {
+            "name": "phase_frame_z_code",
+            "width": 8,
+            "offset": 21
+          },
+          {
+            "name": "x_e_run",
+            "width": 3,
+            "offset": 29
+          },
+          {
+            "name": "z_e_run",
+            "width": 3,
+            "offset": 32
+          },
+          {
+            "name": "leakage_run",
+            "width": 3,
+            "offset": 35
+          },
+          {
+            "name": "leakage_clean_run",
+            "width": 3,
+            "offset": 38
+          },
+          {
+            "name": "health_good_run",
+            "width": 3,
+            "offset": 41
+          },
+          {
+            "name": "reset_wait_run",
+            "width": 3,
+            "offset": 44
+          },
+          {
+            "name": "health_status_code",
+            "width": 3,
+            "offset": 47
+          },
+          {
+            "name": "fault_mask",
+            "width": 14,
+            "offset": 50
+          },
+          {
+            "name": "active_version",
+            "width": 16,
+            "offset": 64
+          },
+          {
+            "name": "map_llr_twos_complement",
+            "width": 22,
+            "offset": 80
+          }
+        ]
+      },
+      "latency_cycles": 6,
+      "decomposition": "5-cycle MAP plus 1-cycle registered event/action"
+    },
+    "map_lut": {
+      "contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "capability": "phase_conditioned_X_Z_LLR_not_full_2d_joint_MAP",
+      "adc_bits": 10,
+      "address_bits": 8,
+      "fraction_bits": 2,
+      "entries_per_phase": 257,
+      "phase_tables": 2,
+      "llr_format": "signed Q9.12",
+      "llr_word_bits": 22,
+      "rounding": "round_to_nearest_ties_to_even",
+      "saturation_codes": [
+        -2097152,
+        2097151
+      ],
+      "pipeline_latency_cycles": 5,
+      "content_semantics": "same code grid, interpolation, Q-format, CRC and bank image layout; method-specific LLR values may change only through the common cadence and commit protocol",
+      "joint_map_boundary": "full_2d_joint_MAP_is_observed_only_software_comparator_until_equivalence_or_new_RTL"
+    },
+    "bank": {
+      "contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "banks": [
+        "A",
+        "B"
+      ],
+      "version_rule": "new_version=active_version+1_with_CAS",
+      "integrity": [
+        "CRC16_wire",
+        "CRC32_image",
+        "SHA256_image",
+        "manifest_CRC32",
+        "manifest_SHA256"
+      ],
+      "rollback": "last_known_good_only",
+      "max_payload_age_cycles": 8192,
+      "min_residency_cycles": 4000,
+      "retired_bank_drain_cycles": 6,
+      "silent_partial_publish": "prohibited"
+    },
+    "cadence": {
+      "contract_id": "ROUTE-A-THREE-CADENCE-V1",
+      "fast_round_period_us": 5.0,
+      "event_evaluation_period_cycles": 1,
+      "regime_window_cycles": 32,
+      "regime_update_period_cycles": 32,
+      "parameter_window_samples": 2048,
+      "parameter_update_period_cycles": 4000,
+      "one_window_causal_delay_required": true,
+      "commit_delay_cycles": 1,
+      "max_parameter_age_cycles": 8192
+    },
+    "budget": {
+      "contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+      "fast_action_latency_cycles": 6,
+      "fast_action_budget_us_assumption": 1.5,
+      "parameter_window_samples": 2048,
+      "parameter_update_period_cycles": 4000,
+      "regime_window_cycles": 32,
+      "regime_update_period_cycles": 32,
+      "max_algorithm_macs_per_parameter_update": 8192,
+      "max_private_model_state_bytes": 8192,
+      "max_transient_workspace_bytes": 8192,
+      "max_host_update_wallclock_us": 5000.0,
+      "shared_dual_bank_lut_payload_bits": 22616,
+      "shared_current_rtl_mirror_bits": 45232,
+      "shared_lut_excluded_from_private_method_memory": true,
+      "actual_usage_reported_even_when_below_cap": true
+    },
+    "deadline": {
+      "contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "logical_action_valid_exactly_at_input_plus_cycles": 6,
+      "configured_fast_action_budget_us_assumption": 1.5,
+      "host_update_wallclock_ceiling_us": 5000.0,
+      "required_fields": [
+        "method_id",
+        "trace_id",
+        "cycle_index",
+        "action_valid_cycle",
+        "source_to_action_cycles",
+        "logical_deadline_miss",
+        "update_due",
+        "update_macs",
+        "private_model_state_bytes",
+        "transient_workspace_bytes",
+        "host_update_wallclock_us",
+        "host_update_deadline_miss",
+        "board_measured_deadline_miss"
+      ],
+      "board_deadline_field_must_be_null_before_measurement": true
+    },
+    "methods": [
+      {
+        "method_id": "standard_binning",
+        "online_privilege": "observed_only",
+        "input_schema_id": "route-a-observed-syndrome-v1",
+        "action_schema_id": "t5.5.1-fast-output-v1",
+        "map_lut_contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+        "bank_contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+        "cadence_contract_id": "ROUTE-A-THREE-CADENCE-V1",
+        "budget_contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+        "deadline_contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+        "parameter_update_behavior": "frozen_rule_compiled_to_common_lut_grid",
+        "benchmark_deployability": "observed_only_budgeted_candidate",
+        "current_rtl_compatibility": "standard_rule_lut_image_requires_t6_6_exhaustive_equivalence",
+        "implementation_path": "cnn_fpga/benchmark/standard_binning_baseline.py",
+        "adapter_entrypoint": "build_standard_binning_validation"
+      },
+      {
+        "method_id": "static_joint_map",
+        "online_privilege": "observed_only",
+        "input_schema_id": "route-a-observed-syndrome-v1",
+        "action_schema_id": "t5.5.1-fast-output-v1",
+        "map_lut_contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+        "bank_contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+        "cadence_contract_id": "ROUTE-A-THREE-CADENCE-V1",
+        "budget_contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+        "deadline_contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+        "parameter_update_behavior": "frozen_training_only_parameters",
+        "benchmark_deployability": "observed_only_budgeted_candidate",
+        "current_rtl_compatibility": "blocked_full_2d_joint_map_not_equivalent_to_current_phase_lut",
+        "implementation_path": "cnn_fpga/benchmark/static_map_baseline.py",
+        "adapter_entrypoint": "build_static_map_validation"
+      },
+      {
+        "method_id": "window_map",
+        "online_privilege": "observed_only",
+        "input_schema_id": "route-a-observed-syndrome-v1",
+        "action_schema_id": "t5.5.1-fast-output-v1",
+        "map_lut_contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+        "bank_contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+        "cadence_contract_id": "ROUTE-A-THREE-CADENCE-V1",
+        "budget_contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+        "deadline_contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+        "parameter_update_behavior": "common_parameter_window_boundary",
+        "benchmark_deployability": "observed_only_budgeted_candidate",
+        "current_rtl_compatibility": "phase_lut_candidate_requires_t6_6_adapter_proof",
+        "implementation_path": "cnn_fpga/benchmark/sliding_window_syndrome_estimator.py",
+        "adapter_entrypoint": "build_sliding_window_validation"
+      },
+      {
+        "method_id": "ewma_adaptive_map",
+        "online_privilege": "observed_only",
+        "input_schema_id": "route-a-observed-syndrome-v1",
+        "action_schema_id": "t5.5.1-fast-output-v1",
+        "map_lut_contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+        "bank_contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+        "cadence_contract_id": "ROUTE-A-THREE-CADENCE-V1",
+        "budget_contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+        "deadline_contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+        "parameter_update_behavior": "common_parameter_window_boundary",
+        "benchmark_deployability": "observed_only_budgeted_candidate",
+        "current_rtl_compatibility": "phase_lut_candidate_requires_t6_6_adapter_proof",
+        "implementation_path": "cnn_fpga/benchmark/continuous_adaptive_map.py",
+        "adapter_entrypoint": "build_continuous_adaptive_validation"
+      },
+      {
+        "method_id": "kalman_adaptive_map",
+        "online_privilege": "observed_only",
+        "input_schema_id": "route-a-observed-syndrome-v1",
+        "action_schema_id": "t5.5.1-fast-output-v1",
+        "map_lut_contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+        "bank_contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+        "cadence_contract_id": "ROUTE-A-THREE-CADENCE-V1",
+        "budget_contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+        "deadline_contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+        "parameter_update_behavior": "common_parameter_window_boundary",
+        "benchmark_deployability": "observed_only_budgeted_candidate",
+        "current_rtl_compatibility": "phase_lut_candidate_requires_t6_6_adapter_proof",
+        "implementation_path": "cnn_fpga/benchmark/continuous_adaptive_map.py",
+        "adapter_entrypoint": "build_continuous_adaptive_validation"
+      },
+      {
+        "method_id": "legacy_cnn_residual",
+        "online_privilege": "observed_only",
+        "input_schema_id": "route-a-observed-syndrome-v1",
+        "action_schema_id": "t5.5.1-fast-output-v1",
+        "map_lut_contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+        "bank_contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+        "cadence_contract_id": "ROUTE-A-THREE-CADENCE-V1",
+        "budget_contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+        "deadline_contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+        "parameter_update_behavior": "common_parameter_window_boundary",
+        "benchmark_deployability": "observed_only_budgeted_candidate",
+        "current_rtl_compatibility": "phase_lut_candidate_only_if_checkpoint_and_budget_pass",
+        "implementation_path": "cnn_fpga/runtime/inference_service.py",
+        "adapter_entrypoint": "ArtifactHistogramPredictor.predict"
+      },
+      {
+        "method_id": "proposed_route_a",
+        "online_privilege": "observed_only",
+        "input_schema_id": "route-a-observed-syndrome-v1",
+        "action_schema_id": "t5.5.1-fast-output-v1",
+        "map_lut_contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+        "bank_contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+        "cadence_contract_id": "ROUTE-A-THREE-CADENCE-V1",
+        "budget_contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+        "deadline_contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+        "parameter_update_behavior": "regime_32_cycles_and_parameter_4000_cycles",
+        "benchmark_deployability": "observed_only_budgeted_candidate",
+        "current_rtl_compatibility": "phase_lut_candidate_requires_t6_6_policy_and_adapter_proof",
+        "implementation_path": "cnn_fpga/runtime/unified_execution_contract.py",
+        "adapter_entrypoint": "route_a_adapter_pending_t6_6"
+      }
+    ],
+    "oracle_method": {
+      "method_id": "hidden_state_oracle",
+      "online_privilege": "isolated_simulator_truth",
+      "input_schema_id": "route-a-isolated-simulator-truth-v1",
+      "action_schema_id": "oracle-upper-bound-action-v1",
+      "map_lut_contract_id": "not_applicable_privileged_reference",
+      "bank_contract_id": "not_applicable_privileged_reference",
+      "cadence_contract_id": "same_trace_index_not_deployable_cadence",
+      "budget_contract_id": "reported_not_matched_not_ranked_as_deployable",
+      "deadline_contract_id": "not_deployable_no_deadline_claim",
+      "parameter_update_behavior": "reads_current_hidden_state",
+      "benchmark_deployability": "nondeployable_upper_bound_only",
+      "current_rtl_compatibility": "prohibited",
+      "implementation_path": "cnn_fpga/benchmark/oracle_baseline.py",
+      "adapter_entrypoint": "oracle_reference_only"
+    }
+  },
+  "contract_sha256": "7966ef96ea21c90ff16a87c3b300c47959ad812ce586c489ae1f7a4495faaab6",
+  "method_conformance": [
+    {
+      "method_id": "standard_binning",
+      "online_privilege": "observed_only",
+      "input_schema_id": "route-a-observed-syndrome-v1",
+      "action_schema_id": "t5.5.1-fast-output-v1",
+      "map_lut_contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "bank_contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "cadence_contract_id": "ROUTE-A-THREE-CADENCE-V1",
+      "budget_contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+      "deadline_contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "parameter_update_behavior": "frozen_rule_compiled_to_common_lut_grid",
+      "benchmark_deployability": "observed_only_budgeted_candidate",
+      "current_rtl_compatibility": "standard_rule_lut_image_requires_t6_6_exhaustive_equivalence",
+      "implementation_path": "cnn_fpga/benchmark/standard_binning_baseline.py",
+      "adapter_entrypoint": "build_standard_binning_validation",
+      "conforms": true
+    },
+    {
+      "method_id": "static_joint_map",
+      "online_privilege": "observed_only",
+      "input_schema_id": "route-a-observed-syndrome-v1",
+      "action_schema_id": "t5.5.1-fast-output-v1",
+      "map_lut_contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "bank_contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "cadence_contract_id": "ROUTE-A-THREE-CADENCE-V1",
+      "budget_contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+      "deadline_contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "parameter_update_behavior": "frozen_training_only_parameters",
+      "benchmark_deployability": "observed_only_budgeted_candidate",
+      "current_rtl_compatibility": "blocked_full_2d_joint_map_not_equivalent_to_current_phase_lut",
+      "implementation_path": "cnn_fpga/benchmark/static_map_baseline.py",
+      "adapter_entrypoint": "build_static_map_validation",
+      "conforms": true
+    },
+    {
+      "method_id": "window_map",
+      "online_privilege": "observed_only",
+      "input_schema_id": "route-a-observed-syndrome-v1",
+      "action_schema_id": "t5.5.1-fast-output-v1",
+      "map_lut_contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "bank_contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "cadence_contract_id": "ROUTE-A-THREE-CADENCE-V1",
+      "budget_contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+      "deadline_contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "parameter_update_behavior": "common_parameter_window_boundary",
+      "benchmark_deployability": "observed_only_budgeted_candidate",
+      "current_rtl_compatibility": "phase_lut_candidate_requires_t6_6_adapter_proof",
+      "implementation_path": "cnn_fpga/benchmark/sliding_window_syndrome_estimator.py",
+      "adapter_entrypoint": "build_sliding_window_validation",
+      "conforms": true
+    },
+    {
+      "method_id": "ewma_adaptive_map",
+      "online_privilege": "observed_only",
+      "input_schema_id": "route-a-observed-syndrome-v1",
+      "action_schema_id": "t5.5.1-fast-output-v1",
+      "map_lut_contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "bank_contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "cadence_contract_id": "ROUTE-A-THREE-CADENCE-V1",
+      "budget_contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+      "deadline_contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "parameter_update_behavior": "common_parameter_window_boundary",
+      "benchmark_deployability": "observed_only_budgeted_candidate",
+      "current_rtl_compatibility": "phase_lut_candidate_requires_t6_6_adapter_proof",
+      "implementation_path": "cnn_fpga/benchmark/continuous_adaptive_map.py",
+      "adapter_entrypoint": "build_continuous_adaptive_validation",
+      "conforms": true
+    },
+    {
+      "method_id": "kalman_adaptive_map",
+      "online_privilege": "observed_only",
+      "input_schema_id": "route-a-observed-syndrome-v1",
+      "action_schema_id": "t5.5.1-fast-output-v1",
+      "map_lut_contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "bank_contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "cadence_contract_id": "ROUTE-A-THREE-CADENCE-V1",
+      "budget_contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+      "deadline_contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "parameter_update_behavior": "common_parameter_window_boundary",
+      "benchmark_deployability": "observed_only_budgeted_candidate",
+      "current_rtl_compatibility": "phase_lut_candidate_requires_t6_6_adapter_proof",
+      "implementation_path": "cnn_fpga/benchmark/continuous_adaptive_map.py",
+      "adapter_entrypoint": "build_continuous_adaptive_validation",
+      "conforms": true
+    },
+    {
+      "method_id": "legacy_cnn_residual",
+      "online_privilege": "observed_only",
+      "input_schema_id": "route-a-observed-syndrome-v1",
+      "action_schema_id": "t5.5.1-fast-output-v1",
+      "map_lut_contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "bank_contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "cadence_contract_id": "ROUTE-A-THREE-CADENCE-V1",
+      "budget_contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+      "deadline_contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "parameter_update_behavior": "common_parameter_window_boundary",
+      "benchmark_deployability": "observed_only_budgeted_candidate",
+      "current_rtl_compatibility": "phase_lut_candidate_only_if_checkpoint_and_budget_pass",
+      "implementation_path": "cnn_fpga/runtime/inference_service.py",
+      "adapter_entrypoint": "ArtifactHistogramPredictor.predict",
+      "conforms": true
+    },
+    {
+      "method_id": "proposed_route_a",
+      "online_privilege": "observed_only",
+      "input_schema_id": "route-a-observed-syndrome-v1",
+      "action_schema_id": "t5.5.1-fast-output-v1",
+      "map_lut_contract_id": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "bank_contract_id": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "cadence_contract_id": "ROUTE-A-THREE-CADENCE-V1",
+      "budget_contract_id": "ROUTE-A-MATCHED-BUDGET-V1",
+      "deadline_contract_id": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "parameter_update_behavior": "regime_32_cycles_and_parameter_4000_cycles",
+      "benchmark_deployability": "observed_only_budgeted_candidate",
+      "current_rtl_compatibility": "phase_lut_candidate_requires_t6_6_policy_and_adapter_proof",
+      "implementation_path": "cnn_fpga/runtime/unified_execution_contract.py",
+      "adapter_entrypoint": "route_a_adapter_pending_t6_6",
+      "conforms": true
+    },
+    {
+      "method_id": "hidden_state_oracle",
+      "online_privilege": "isolated_simulator_truth",
+      "input_schema_id": "route-a-isolated-simulator-truth-v1",
+      "action_schema_id": "oracle-upper-bound-action-v1",
+      "map_lut_contract_id": "not_applicable_privileged_reference",
+      "bank_contract_id": "not_applicable_privileged_reference",
+      "cadence_contract_id": "same_trace_index_not_deployable_cadence",
+      "budget_contract_id": "reported_not_matched_not_ranked_as_deployable",
+      "deadline_contract_id": "not_deployable_no_deadline_claim",
+      "parameter_update_behavior": "reads_current_hidden_state",
+      "benchmark_deployability": "nondeployable_upper_bound_only",
+      "current_rtl_compatibility": "prohibited",
+      "implementation_path": "cnn_fpga/benchmark/oracle_baseline.py",
+      "adapter_entrypoint": "oracle_reference_only",
+      "conforms": true
+    }
+  ],
+  "method_mismatch_fail_fast": [
+    {
+      "method_id": "standard_binning",
+      "mutated_field": "online_privilege",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "online_privilege",
+      "expected": "observed_only",
+      "actual": "MUTATED-online_privilege"
+    },
+    {
+      "method_id": "standard_binning",
+      "mutated_field": "input_schema_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "input_schema_id",
+      "expected": "route-a-observed-syndrome-v1",
+      "actual": "MUTATED-input_schema_id"
+    },
+    {
+      "method_id": "standard_binning",
+      "mutated_field": "action_schema_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "action_schema_id",
+      "expected": "t5.5.1-fast-output-v1",
+      "actual": "MUTATED-action_schema_id"
+    },
+    {
+      "method_id": "standard_binning",
+      "mutated_field": "map_lut_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "map_lut_contract_id",
+      "expected": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "actual": "MUTATED-map_lut_contract_id"
+    },
+    {
+      "method_id": "standard_binning",
+      "mutated_field": "bank_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "bank_contract_id",
+      "expected": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "actual": "MUTATED-bank_contract_id"
+    },
+    {
+      "method_id": "standard_binning",
+      "mutated_field": "cadence_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "cadence_contract_id",
+      "expected": "ROUTE-A-THREE-CADENCE-V1",
+      "actual": "MUTATED-cadence_contract_id"
+    },
+    {
+      "method_id": "standard_binning",
+      "mutated_field": "budget_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "budget_contract_id",
+      "expected": "ROUTE-A-MATCHED-BUDGET-V1",
+      "actual": "MUTATED-budget_contract_id"
+    },
+    {
+      "method_id": "standard_binning",
+      "mutated_field": "deadline_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "deadline_contract_id",
+      "expected": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "actual": "MUTATED-deadline_contract_id"
+    },
+    {
+      "method_id": "standard_binning",
+      "mutated_field": "benchmark_deployability",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "benchmark_deployability",
+      "expected": "observed_only_budgeted_candidate",
+      "actual": "MUTATED-benchmark_deployability"
+    },
+    {
+      "method_id": "standard_binning",
+      "mutated_field": "current_rtl_compatibility",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "current_rtl_compatibility",
+      "expected": "standard_rule_lut_image_requires_t6_6_exhaustive_equivalence",
+      "actual": "MUTATED-current_rtl_compatibility"
+    },
+    {
+      "method_id": "static_joint_map",
+      "mutated_field": "online_privilege",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "online_privilege",
+      "expected": "observed_only",
+      "actual": "MUTATED-online_privilege"
+    },
+    {
+      "method_id": "static_joint_map",
+      "mutated_field": "input_schema_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "input_schema_id",
+      "expected": "route-a-observed-syndrome-v1",
+      "actual": "MUTATED-input_schema_id"
+    },
+    {
+      "method_id": "static_joint_map",
+      "mutated_field": "action_schema_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "action_schema_id",
+      "expected": "t5.5.1-fast-output-v1",
+      "actual": "MUTATED-action_schema_id"
+    },
+    {
+      "method_id": "static_joint_map",
+      "mutated_field": "map_lut_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "map_lut_contract_id",
+      "expected": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "actual": "MUTATED-map_lut_contract_id"
+    },
+    {
+      "method_id": "static_joint_map",
+      "mutated_field": "bank_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "bank_contract_id",
+      "expected": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "actual": "MUTATED-bank_contract_id"
+    },
+    {
+      "method_id": "static_joint_map",
+      "mutated_field": "cadence_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "cadence_contract_id",
+      "expected": "ROUTE-A-THREE-CADENCE-V1",
+      "actual": "MUTATED-cadence_contract_id"
+    },
+    {
+      "method_id": "static_joint_map",
+      "mutated_field": "budget_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "budget_contract_id",
+      "expected": "ROUTE-A-MATCHED-BUDGET-V1",
+      "actual": "MUTATED-budget_contract_id"
+    },
+    {
+      "method_id": "static_joint_map",
+      "mutated_field": "deadline_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "deadline_contract_id",
+      "expected": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "actual": "MUTATED-deadline_contract_id"
+    },
+    {
+      "method_id": "static_joint_map",
+      "mutated_field": "benchmark_deployability",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "benchmark_deployability",
+      "expected": "observed_only_budgeted_candidate",
+      "actual": "MUTATED-benchmark_deployability"
+    },
+    {
+      "method_id": "static_joint_map",
+      "mutated_field": "current_rtl_compatibility",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "current_rtl_compatibility",
+      "expected": "blocked_full_2d_joint_map_not_equivalent_to_current_phase_lut",
+      "actual": "MUTATED-current_rtl_compatibility"
+    },
+    {
+      "method_id": "window_map",
+      "mutated_field": "online_privilege",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "online_privilege",
+      "expected": "observed_only",
+      "actual": "MUTATED-online_privilege"
+    },
+    {
+      "method_id": "window_map",
+      "mutated_field": "input_schema_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "input_schema_id",
+      "expected": "route-a-observed-syndrome-v1",
+      "actual": "MUTATED-input_schema_id"
+    },
+    {
+      "method_id": "window_map",
+      "mutated_field": "action_schema_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "action_schema_id",
+      "expected": "t5.5.1-fast-output-v1",
+      "actual": "MUTATED-action_schema_id"
+    },
+    {
+      "method_id": "window_map",
+      "mutated_field": "map_lut_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "map_lut_contract_id",
+      "expected": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "actual": "MUTATED-map_lut_contract_id"
+    },
+    {
+      "method_id": "window_map",
+      "mutated_field": "bank_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "bank_contract_id",
+      "expected": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "actual": "MUTATED-bank_contract_id"
+    },
+    {
+      "method_id": "window_map",
+      "mutated_field": "cadence_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "cadence_contract_id",
+      "expected": "ROUTE-A-THREE-CADENCE-V1",
+      "actual": "MUTATED-cadence_contract_id"
+    },
+    {
+      "method_id": "window_map",
+      "mutated_field": "budget_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "budget_contract_id",
+      "expected": "ROUTE-A-MATCHED-BUDGET-V1",
+      "actual": "MUTATED-budget_contract_id"
+    },
+    {
+      "method_id": "window_map",
+      "mutated_field": "deadline_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "deadline_contract_id",
+      "expected": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "actual": "MUTATED-deadline_contract_id"
+    },
+    {
+      "method_id": "window_map",
+      "mutated_field": "benchmark_deployability",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "benchmark_deployability",
+      "expected": "observed_only_budgeted_candidate",
+      "actual": "MUTATED-benchmark_deployability"
+    },
+    {
+      "method_id": "window_map",
+      "mutated_field": "current_rtl_compatibility",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "current_rtl_compatibility",
+      "expected": "phase_lut_candidate_requires_t6_6_adapter_proof",
+      "actual": "MUTATED-current_rtl_compatibility"
+    },
+    {
+      "method_id": "ewma_adaptive_map",
+      "mutated_field": "online_privilege",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "online_privilege",
+      "expected": "observed_only",
+      "actual": "MUTATED-online_privilege"
+    },
+    {
+      "method_id": "ewma_adaptive_map",
+      "mutated_field": "input_schema_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "input_schema_id",
+      "expected": "route-a-observed-syndrome-v1",
+      "actual": "MUTATED-input_schema_id"
+    },
+    {
+      "method_id": "ewma_adaptive_map",
+      "mutated_field": "action_schema_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "action_schema_id",
+      "expected": "t5.5.1-fast-output-v1",
+      "actual": "MUTATED-action_schema_id"
+    },
+    {
+      "method_id": "ewma_adaptive_map",
+      "mutated_field": "map_lut_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "map_lut_contract_id",
+      "expected": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "actual": "MUTATED-map_lut_contract_id"
+    },
+    {
+      "method_id": "ewma_adaptive_map",
+      "mutated_field": "bank_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "bank_contract_id",
+      "expected": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "actual": "MUTATED-bank_contract_id"
+    },
+    {
+      "method_id": "ewma_adaptive_map",
+      "mutated_field": "cadence_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "cadence_contract_id",
+      "expected": "ROUTE-A-THREE-CADENCE-V1",
+      "actual": "MUTATED-cadence_contract_id"
+    },
+    {
+      "method_id": "ewma_adaptive_map",
+      "mutated_field": "budget_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "budget_contract_id",
+      "expected": "ROUTE-A-MATCHED-BUDGET-V1",
+      "actual": "MUTATED-budget_contract_id"
+    },
+    {
+      "method_id": "ewma_adaptive_map",
+      "mutated_field": "deadline_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "deadline_contract_id",
+      "expected": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "actual": "MUTATED-deadline_contract_id"
+    },
+    {
+      "method_id": "ewma_adaptive_map",
+      "mutated_field": "benchmark_deployability",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "benchmark_deployability",
+      "expected": "observed_only_budgeted_candidate",
+      "actual": "MUTATED-benchmark_deployability"
+    },
+    {
+      "method_id": "ewma_adaptive_map",
+      "mutated_field": "current_rtl_compatibility",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "current_rtl_compatibility",
+      "expected": "phase_lut_candidate_requires_t6_6_adapter_proof",
+      "actual": "MUTATED-current_rtl_compatibility"
+    },
+    {
+      "method_id": "kalman_adaptive_map",
+      "mutated_field": "online_privilege",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "online_privilege",
+      "expected": "observed_only",
+      "actual": "MUTATED-online_privilege"
+    },
+    {
+      "method_id": "kalman_adaptive_map",
+      "mutated_field": "input_schema_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "input_schema_id",
+      "expected": "route-a-observed-syndrome-v1",
+      "actual": "MUTATED-input_schema_id"
+    },
+    {
+      "method_id": "kalman_adaptive_map",
+      "mutated_field": "action_schema_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "action_schema_id",
+      "expected": "t5.5.1-fast-output-v1",
+      "actual": "MUTATED-action_schema_id"
+    },
+    {
+      "method_id": "kalman_adaptive_map",
+      "mutated_field": "map_lut_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "map_lut_contract_id",
+      "expected": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "actual": "MUTATED-map_lut_contract_id"
+    },
+    {
+      "method_id": "kalman_adaptive_map",
+      "mutated_field": "bank_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "bank_contract_id",
+      "expected": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "actual": "MUTATED-bank_contract_id"
+    },
+    {
+      "method_id": "kalman_adaptive_map",
+      "mutated_field": "cadence_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "cadence_contract_id",
+      "expected": "ROUTE-A-THREE-CADENCE-V1",
+      "actual": "MUTATED-cadence_contract_id"
+    },
+    {
+      "method_id": "kalman_adaptive_map",
+      "mutated_field": "budget_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "budget_contract_id",
+      "expected": "ROUTE-A-MATCHED-BUDGET-V1",
+      "actual": "MUTATED-budget_contract_id"
+    },
+    {
+      "method_id": "kalman_adaptive_map",
+      "mutated_field": "deadline_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "deadline_contract_id",
+      "expected": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "actual": "MUTATED-deadline_contract_id"
+    },
+    {
+      "method_id": "kalman_adaptive_map",
+      "mutated_field": "benchmark_deployability",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "benchmark_deployability",
+      "expected": "observed_only_budgeted_candidate",
+      "actual": "MUTATED-benchmark_deployability"
+    },
+    {
+      "method_id": "kalman_adaptive_map",
+      "mutated_field": "current_rtl_compatibility",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "current_rtl_compatibility",
+      "expected": "phase_lut_candidate_requires_t6_6_adapter_proof",
+      "actual": "MUTATED-current_rtl_compatibility"
+    },
+    {
+      "method_id": "legacy_cnn_residual",
+      "mutated_field": "online_privilege",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "online_privilege",
+      "expected": "observed_only",
+      "actual": "MUTATED-online_privilege"
+    },
+    {
+      "method_id": "legacy_cnn_residual",
+      "mutated_field": "input_schema_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "input_schema_id",
+      "expected": "route-a-observed-syndrome-v1",
+      "actual": "MUTATED-input_schema_id"
+    },
+    {
+      "method_id": "legacy_cnn_residual",
+      "mutated_field": "action_schema_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "action_schema_id",
+      "expected": "t5.5.1-fast-output-v1",
+      "actual": "MUTATED-action_schema_id"
+    },
+    {
+      "method_id": "legacy_cnn_residual",
+      "mutated_field": "map_lut_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "map_lut_contract_id",
+      "expected": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "actual": "MUTATED-map_lut_contract_id"
+    },
+    {
+      "method_id": "legacy_cnn_residual",
+      "mutated_field": "bank_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "bank_contract_id",
+      "expected": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "actual": "MUTATED-bank_contract_id"
+    },
+    {
+      "method_id": "legacy_cnn_residual",
+      "mutated_field": "cadence_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "cadence_contract_id",
+      "expected": "ROUTE-A-THREE-CADENCE-V1",
+      "actual": "MUTATED-cadence_contract_id"
+    },
+    {
+      "method_id": "legacy_cnn_residual",
+      "mutated_field": "budget_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "budget_contract_id",
+      "expected": "ROUTE-A-MATCHED-BUDGET-V1",
+      "actual": "MUTATED-budget_contract_id"
+    },
+    {
+      "method_id": "legacy_cnn_residual",
+      "mutated_field": "deadline_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "deadline_contract_id",
+      "expected": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "actual": "MUTATED-deadline_contract_id"
+    },
+    {
+      "method_id": "legacy_cnn_residual",
+      "mutated_field": "benchmark_deployability",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "benchmark_deployability",
+      "expected": "observed_only_budgeted_candidate",
+      "actual": "MUTATED-benchmark_deployability"
+    },
+    {
+      "method_id": "legacy_cnn_residual",
+      "mutated_field": "current_rtl_compatibility",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "current_rtl_compatibility",
+      "expected": "phase_lut_candidate_only_if_checkpoint_and_budget_pass",
+      "actual": "MUTATED-current_rtl_compatibility"
+    },
+    {
+      "method_id": "proposed_route_a",
+      "mutated_field": "online_privilege",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "online_privilege",
+      "expected": "observed_only",
+      "actual": "MUTATED-online_privilege"
+    },
+    {
+      "method_id": "proposed_route_a",
+      "mutated_field": "input_schema_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "input_schema_id",
+      "expected": "route-a-observed-syndrome-v1",
+      "actual": "MUTATED-input_schema_id"
+    },
+    {
+      "method_id": "proposed_route_a",
+      "mutated_field": "action_schema_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "action_schema_id",
+      "expected": "t5.5.1-fast-output-v1",
+      "actual": "MUTATED-action_schema_id"
+    },
+    {
+      "method_id": "proposed_route_a",
+      "mutated_field": "map_lut_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "map_lut_contract_id",
+      "expected": "T421-PHASE-CONDITIONED-MAP-LUT-Q9.12-V1",
+      "actual": "MUTATED-map_lut_contract_id"
+    },
+    {
+      "method_id": "proposed_route_a",
+      "mutated_field": "bank_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "bank_contract_id",
+      "expected": "T432-CRC-SHA-CAS-AB-BANK-V1",
+      "actual": "MUTATED-bank_contract_id"
+    },
+    {
+      "method_id": "proposed_route_a",
+      "mutated_field": "cadence_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "cadence_contract_id",
+      "expected": "ROUTE-A-THREE-CADENCE-V1",
+      "actual": "MUTATED-cadence_contract_id"
+    },
+    {
+      "method_id": "proposed_route_a",
+      "mutated_field": "budget_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "budget_contract_id",
+      "expected": "ROUTE-A-MATCHED-BUDGET-V1",
+      "actual": "MUTATED-budget_contract_id"
+    },
+    {
+      "method_id": "proposed_route_a",
+      "mutated_field": "deadline_contract_id",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "deadline_contract_id",
+      "expected": "ROUTE-A-DEADLINE-ACCOUNTING-V1",
+      "actual": "MUTATED-deadline_contract_id"
+    },
+    {
+      "method_id": "proposed_route_a",
+      "mutated_field": "benchmark_deployability",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "benchmark_deployability",
+      "expected": "observed_only_budgeted_candidate",
+      "actual": "MUTATED-benchmark_deployability"
+    },
+    {
+      "method_id": "proposed_route_a",
+      "mutated_field": "current_rtl_compatibility",
+      "expected_code": "method_contract_mismatch",
+      "rejected": true,
+      "code": "method_contract_mismatch",
+      "field": "current_rtl_compatibility",
+      "expected": "phase_lut_candidate_requires_t6_6_policy_and_adapter_proof",
+      "actual": "MUTATED-current_rtl_compatibility"
+    }
+  ],
+  "schema_rejections": [
+    {
+      "method_id": "standard_binning",
+      "case_id": "hidden_truth_key",
+      "rejected": true,
+      "code": "hidden_truth_key_rejected",
+      "field": "observed_packet",
+      "expected": "observed fields only",
+      "actual": [
+        "hidden_drift_state"
+      ]
+    },
+    {
+      "method_id": "static_joint_map",
+      "case_id": "hidden_truth_key",
+      "rejected": true,
+      "code": "hidden_truth_key_rejected",
+      "field": "observed_packet",
+      "expected": "observed fields only",
+      "actual": [
+        "hidden_drift_state"
+      ]
+    },
+    {
+      "method_id": "window_map",
+      "case_id": "hidden_truth_key",
+      "rejected": true,
+      "code": "hidden_truth_key_rejected",
+      "field": "observed_packet",
+      "expected": "observed fields only",
+      "actual": [
+        "hidden_drift_state"
+      ]
+    },
+    {
+      "method_id": "ewma_adaptive_map",
+      "case_id": "hidden_truth_key",
+      "rejected": true,
+      "code": "hidden_truth_key_rejected",
+      "field": "observed_packet",
+      "expected": "observed fields only",
+      "actual": [
+        "hidden_drift_state"
+      ]
+    },
+    {
+      "method_id": "kalman_adaptive_map",
+      "case_id": "hidden_truth_key",
+      "rejected": true,
+      "code": "hidden_truth_key_rejected",
+      "field": "observed_packet",
+      "expected": "observed fields only",
+      "actual": [
+        "hidden_drift_state"
+      ]
+    },
+    {
+      "method_id": "legacy_cnn_residual",
+      "case_id": "hidden_truth_key",
+      "rejected": true,
+      "code": "hidden_truth_key_rejected",
+      "field": "observed_packet",
+      "expected": "observed fields only",
+      "actual": [
+        "hidden_drift_state"
+      ]
+    },
+    {
+      "method_id": "proposed_route_a",
+      "case_id": "hidden_truth_key",
+      "rejected": true,
+      "code": "hidden_truth_key_rejected",
+      "field": "observed_packet",
+      "expected": "observed fields only",
+      "actual": [
+        "hidden_drift_state"
+      ]
+    },
+    {
+      "method_id": null,
+      "case_id": "missing_field",
+      "rejected": true,
+      "code": "schema_keys_mismatch",
+      "field": "route-a-observed-syndrome-v1",
+      "expected": [
+        "cycle_index",
+        "deadline_ok",
+        "observation_valid",
+        "ood_score_code",
+        "parameter_age_code",
+        "quadrature_phase_bit",
+        "reset_ack",
+        "schema_id",
+        "syndrome_code",
+        "syndrome_x",
+        "syndrome_z",
+        "trace_id"
+      ],
+      "actual": {
+        "missing": [
+          "deadline_ok"
+        ],
+        "extra": []
+      }
+    },
+    {
+      "method_id": null,
+      "case_id": "extra_field",
+      "rejected": true,
+      "code": "schema_keys_mismatch",
+      "field": "route-a-observed-syndrome-v1",
+      "expected": [
+        "cycle_index",
+        "deadline_ok",
+        "observation_valid",
+        "ood_score_code",
+        "parameter_age_code",
+        "quadrature_phase_bit",
+        "reset_ack",
+        "schema_id",
+        "syndrome_code",
+        "syndrome_x",
+        "syndrome_z",
+        "trace_id"
+      ],
+      "actual": {
+        "missing": [],
+        "extra": [
+          "debug"
+        ]
+      }
+    },
+    {
+      "method_id": null,
+      "case_id": "bool_as_integer",
+      "rejected": true,
+      "code": "integer_required",
+      "field": "syndrome_code",
+      "expected": "integer",
+      "actual": "bool"
+    },
+    {
+      "method_id": null,
+      "case_id": "code_out_of_range",
+      "rejected": true,
+      "code": "integer_out_of_range",
+      "field": "syndrome_code",
+      "expected": "[0,1023]",
+      "actual": 1024
+    },
+    {
+      "method_id": null,
+      "case_id": "oracle_schema_on_deployable",
+      "rejected": true,
+      "code": "schema_id_mismatch",
+      "field": "schema_id",
+      "expected": "route-a-observed-syndrome-v1",
+      "actual": "route-a-isolated-simulator-truth-v1"
+    }
+  ],
+  "wire_checks": {
+    "observed_packet_sha256": "dbdee2871dca0f127f115bdb3513968e48c6584ddeebb14a3875c692d6f69781",
+    "packed_word_hex": "3dcbb07cf8bc6db",
+    "roundtrip_pass": true,
+    "tamper_rejected": true
+  },
+  "accounting": {
+    "accepted_witnesses": [
+      {
+        "method_id": "standard_binning",
+        "accepted": true,
+        "trace_id": "contract-trace-0001",
+        "cycle_index": 4000,
+        "action_valid_cycle": 4006,
+        "source_to_action_cycles": 6,
+        "logical_deadline_miss": false,
+        "update_due": false,
+        "update_macs": 0,
+        "private_model_state_bytes": 0,
+        "transient_workspace_bytes": 0,
+        "host_update_wallclock_us": 0.0,
+        "host_update_deadline_miss": false,
+        "board_measured_deadline_miss": null
+      },
+      {
+        "method_id": "static_joint_map",
+        "accepted": true,
+        "trace_id": "contract-trace-0001",
+        "cycle_index": 4000,
+        "action_valid_cycle": 4006,
+        "source_to_action_cycles": 6,
+        "logical_deadline_miss": false,
+        "update_due": false,
+        "update_macs": 0,
+        "private_model_state_bytes": 0,
+        "transient_workspace_bytes": 0,
+        "host_update_wallclock_us": 0.0,
+        "host_update_deadline_miss": false,
+        "board_measured_deadline_miss": null
+      },
+      {
+        "method_id": "window_map",
+        "accepted": true,
+        "trace_id": "contract-trace-0001",
+        "cycle_index": 4000,
+        "action_valid_cycle": 4006,
+        "source_to_action_cycles": 6,
+        "logical_deadline_miss": false,
+        "update_due": false,
+        "update_macs": 0,
+        "private_model_state_bytes": 0,
+        "transient_workspace_bytes": 0,
+        "host_update_wallclock_us": 0.0,
+        "host_update_deadline_miss": false,
+        "board_measured_deadline_miss": null
+      },
+      {
+        "method_id": "ewma_adaptive_map",
+        "accepted": true,
+        "trace_id": "contract-trace-0001",
+        "cycle_index": 4000,
+        "action_valid_cycle": 4006,
+        "source_to_action_cycles": 6,
+        "logical_deadline_miss": false,
+        "update_due": false,
+        "update_macs": 0,
+        "private_model_state_bytes": 0,
+        "transient_workspace_bytes": 0,
+        "host_update_wallclock_us": 0.0,
+        "host_update_deadline_miss": false,
+        "board_measured_deadline_miss": null
+      },
+      {
+        "method_id": "kalman_adaptive_map",
+        "accepted": true,
+        "trace_id": "contract-trace-0001",
+        "cycle_index": 4000,
+        "action_valid_cycle": 4006,
+        "source_to_action_cycles": 6,
+        "logical_deadline_miss": false,
+        "update_due": false,
+        "update_macs": 0,
+        "private_model_state_bytes": 0,
+        "transient_workspace_bytes": 0,
+        "host_update_wallclock_us": 0.0,
+        "host_update_deadline_miss": false,
+        "board_measured_deadline_miss": null
+      },
+      {
+        "method_id": "legacy_cnn_residual",
+        "accepted": true,
+        "trace_id": "contract-trace-0001",
+        "cycle_index": 4000,
+        "action_valid_cycle": 4006,
+        "source_to_action_cycles": 6,
+        "logical_deadline_miss": false,
+        "update_due": false,
+        "update_macs": 0,
+        "private_model_state_bytes": 0,
+        "transient_workspace_bytes": 0,
+        "host_update_wallclock_us": 0.0,
+        "host_update_deadline_miss": false,
+        "board_measured_deadline_miss": null
+      },
+      {
+        "method_id": "proposed_route_a",
+        "accepted": true,
+        "trace_id": "contract-trace-0001",
+        "cycle_index": 4000,
+        "action_valid_cycle": 4006,
+        "source_to_action_cycles": 6,
+        "logical_deadline_miss": false,
+        "update_due": false,
+        "update_macs": 0,
+        "private_model_state_bytes": 0,
+        "transient_workspace_bytes": 0,
+        "host_update_wallclock_us": 0.0,
+        "host_update_deadline_miss": false,
+        "board_measured_deadline_miss": null
+      }
+    ],
+    "exact_cap_witness_accepted": true,
+    "exact_cap_witness": {
+      "method_id": "proposed_route_a",
+      "trace_id": "contract-trace-0001",
+      "cycle_index": 4000,
+      "action_valid_cycle": 4006,
+      "source_to_action_cycles": 6,
+      "logical_deadline_miss": false,
+      "update_due": true,
+      "update_macs": 8192,
+      "private_model_state_bytes": 8192,
+      "transient_workspace_bytes": 8192,
+      "host_update_wallclock_us": 5000.0,
+      "host_update_deadline_miss": false,
+      "board_measured_deadline_miss": null
+    },
+    "rejections": [
+      {
+        "case_id": "early_action",
+        "rejected": true,
+        "code": "action_latency_not_exact",
+        "field": "action_valid_cycle",
+        "expected": 4006,
+        "actual": 4005,
+        "method_id": "proposed_route_a"
+      },
+      {
+        "case_id": "late_action",
+        "rejected": true,
+        "code": "action_latency_not_exact",
+        "field": "action_valid_cycle",
+        "expected": 4006,
+        "actual": 4007,
+        "method_id": "proposed_route_a"
+      },
+      {
+        "case_id": "mac_overflow",
+        "rejected": true,
+        "code": "matched_budget_exceeded",
+        "field": "update_macs",
+        "expected": "<=8192",
+        "actual": 8193,
+        "method_id": "proposed_route_a"
+      },
+      {
+        "case_id": "state_overflow",
+        "rejected": true,
+        "code": "matched_budget_exceeded",
+        "field": "private_model_state_bytes",
+        "expected": "<=8192",
+        "actual": 8193,
+        "method_id": "proposed_route_a"
+      },
+      {
+        "case_id": "workspace_overflow",
+        "rejected": true,
+        "code": "matched_budget_exceeded",
+        "field": "transient_workspace_bytes",
+        "expected": "<=8192",
+        "actual": 8193,
+        "method_id": "proposed_route_a"
+      },
+      {
+        "case_id": "host_deadline_flag_missing",
+        "rejected": true,
+        "code": "host_deadline_flag_inconsistent",
+        "field": "host_update_deadline_miss",
+        "expected": true,
+        "actual": false,
+        "method_id": "proposed_route_a"
+      },
+      {
+        "case_id": "board_claim_before_measurement",
+        "rejected": true,
+        "code": "board_measurement_not_available",
+        "field": "board_measured_deadline_miss",
+        "expected": null,
+        "actual": false,
+        "method_id": "proposed_route_a"
+      },
+      {
+        "case_id": "work_when_update_not_due",
+        "rejected": true,
+        "code": "cost_charged_when_update_not_due",
+        "field": "update_due",
+        "expected": "zero update work",
+        "actual": {
+          "macs": 8192,
+          "wallclock_us": 5000.0
+        },
+        "method_id": "proposed_route_a"
+      },
+      {
+        "case_id": "oracle_in_deployable_ledger",
+        "rejected": true,
+        "code": "accounting_method_not_deployable",
+        "field": "method_id",
+        "expected": [
+          "standard_binning",
+          "static_joint_map",
+          "window_map",
+          "ewma_adaptive_map",
+          "kalman_adaptive_map",
+          "legacy_cnn_residual",
+          "proposed_route_a"
+        ],
+        "actual": "hidden_state_oracle",
+        "method_id": "hidden_state_oracle"
+      }
+    ],
+    "witness_scope": "contract_validator_boundary_witnesses_not_measured_method_costs"
+  },
+  "source_bindings": [
+    {
+      "path": "cnn_fpga/runtime/unified_execution_contract.py",
+      "exists": true,
+      "sha256": "4be20609164ea6ba6bf540dd9a8cffd8dd7515fa42ae2af37c8c78dcdf506f36"
+    },
+    {
+      "path": "cnn_fpga/runtime/bit_accurate_hardware_reference.py",
+      "exists": true,
+      "sha256": "f7fb4232d495b67f3759596a3b9d235e029df5ec16d3c467c240a6203fc2e801"
+    },
+    {
+      "path": "cnn_fpga/runtime/parametric_map_lut.py",
+      "exists": true,
+      "sha256": "468728aeeedef6b7569163417440bbf309284c21eb6cebdc4fbf604594d7ab8a"
+    },
+    {
+      "path": "cnn_fpga/runtime/atomic_parameter_bank.py",
+      "exists": true,
+      "sha256": "17f64ae9a6bd102a57fdc0bfeae79072b210ff70ced9629b1cf807c9a9fcd256"
+    },
+    {
+      "path": "cnn_fpga/runtime/three_timescale_cadence.py",
+      "exists": true,
+      "sha256": "3e494333c8a552ce32a837993299d053d13da29709e366b9a901917e8f507c24"
+    },
+    {
+      "path": "docs/t4_2_1_parametric_map_lut_validation.json",
+      "exists": true,
+      "sha256": "2cf8eb0b4aca5703f4a5513e1a8761aa811c973da1e9e47db996fb9529415a43",
+      "parent_pass": true
+    },
+    {
+      "path": "docs/t4_3_1_three_timescale_cadence_validation.json",
+      "exists": true,
+      "sha256": "58ee6336252cfb782666ab2d2afb3f2a3c8b90ae5e9aa0756df3348c80ca6735",
+      "parent_pass": true
+    },
+    {
+      "path": "docs/t4_3_2_atomic_parameter_bank_validation.json",
+      "exists": true,
+      "sha256": "c2c3e6f51115e0cf5556b1b6fed6c094ad886e415affb103bc673bf2dfa7c6e4",
+      "parent_pass": true
+    },
+    {
+      "path": "docs/t5_5_1_bit_accurate_hardware_reference.json",
+      "exists": true,
+      "sha256": "e3b0183cf1b27908dd321e3480b4e6cd78731aad71db9882f47f5e6474d189be",
+      "parent_pass": true
+    },
+    {
+      "path": "docs/t6_2_2_long_rtl_qualification.json",
+      "exists": true,
+      "sha256": "207b4e82b65a286e5ee23f16f387730a783ea34101d8cf7b9f80ae6e39d2b2cd",
+      "parent_pass": true
+    }
+  ],
+  "evidence_boundary": {
+    "allowed": "frozen observed-only execution schemas, exact current LUT/bank/cadence capabilities, matched resource ceilings, and fail-fast conformance validation",
+    "not_yet_claimed": [
+      "matched-budget comparator performance",
+      "full joint-MAP equivalence on the current phase-conditioned RTL LUT",
+      "legacy CNN checkpoint budget conformance",
+      "Route-A policy performance",
+      "target-board deadline or latency"
+    ]
+  },
+  "gates": [
+    {
+      "gate_id": "G01_contract_hash_recomputes",
+      "passed": true
+    },
+    {
+      "gate_id": "G02_exact_deployable_method_set",
+      "passed": true
+    },
+    {
+      "gate_id": "G03_all_canonical_manifests_conform",
+      "passed": true
+    },
+    {
+      "gate_id": "G04_all_methods_share_observed_schema",
+      "passed": true
+    },
+    {
+      "gate_id": "G05_all_methods_share_action_contracts",
+      "passed": true
+    },
+    {
+      "gate_id": "G06_oracle_physically_isolated",
+      "passed": true
+    },
+    {
+      "gate_id": "G07_hidden_truth_rejected_for_every_deployable",
+      "passed": true
+    },
+    {
+      "gate_id": "G08_all_schema_mutations_rejected",
+      "passed": true
+    },
+    {
+      "gate_id": "G09_each_method_each_contract_dimension_fails_fast",
+      "passed": true
+    },
+    {
+      "gate_id": "G10_wire_crc_and_roundtrip_verified",
+      "passed": true
+    },
+    {
+      "gate_id": "G11_lut_numeric_contract_exact",
+      "passed": true
+    },
+    {
+      "gate_id": "G12_joint_map_rtl_boundary_not_hidden",
+      "passed": true
+    },
+    {
+      "gate_id": "G13_bank_and_cadence_frozen",
+      "passed": true
+    },
+    {
+      "gate_id": "G14_all_accounting_witnesses_accept",
+      "passed": true
+    },
+    {
+      "gate_id": "G15_accounting_boundaries_and_mutations_fail_closed",
+      "passed": true
+    },
+    {
+      "gate_id": "G16_no_preboard_measured_deadline_claim",
+      "passed": true
+    },
+    {
+      "gate_id": "G17_all_source_bindings_exist_and_parent_pass",
+      "passed": true
+    }
+  ],
+  "status": "PASS",
+  "verdict": "PASS_UNIFIED_EXECUTION_CONTRACT_FROZEN"
+}

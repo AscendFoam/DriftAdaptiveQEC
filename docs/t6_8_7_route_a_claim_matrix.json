@@ -1,0 +1,1314 @@
+{
+  "task_id": "T6.8.7",
+  "schema_version": "t6.8.7-route-a-claim-matrix-v1",
+  "generated_at_utc": "2026-07-17T18:18:57.804471+00:00",
+  "scope": "Atomic innovation/advantage claim matrix across static GKP, general drift-adaptive decoders, Puviani NMF and FPGA QEC decoders.",
+  "aggregation_policy": {
+    "global_score": "PROHIBITED",
+    "cross_simulator_lifetime_subtraction": "PROHIBITED",
+    "cross_code_raw_latency_ranking": "PROHIBITED",
+    "per_claim_evidence_only": true
+  },
+  "state_legend": {
+    "positive": [
+      "SUPPORTED_PAIRED_OUTCOME",
+      "SUPPORTED_PREBOARD_NARROW",
+      "SUPPORTED_RESTRICTED"
+    ],
+    "negative_or_limited": [
+      "ABLATION_ONLY",
+      "FALSIFIED",
+      "NOT_ESTABLISHED",
+      "PROHIBITED"
+    ]
+  },
+  "claims": [
+    {
+      "claim_id": "CONTRACT_SYSTEM_INTEGRATION",
+      "opponent_class": "general_drift_adaptive",
+      "state": "SUPPORTED_RESTRICTED",
+      "strongest_supported_wording": "Route-A is a contract-centric, regime-aware safety orchestration whose locked-EWMA smooth primary gate and one-million-cycle preboard fail-closed correctness gate pass; this is not a global LER, tail-improvement, or measured-hardware claim.",
+      "required_evidence": [
+        "preregistered locked baseline",
+        "smooth paired CI",
+        "tail non-inferiority",
+        "one-million-cycle integer/CXXRTL trace"
+      ],
+      "current_result": {
+        "promotion_verdict": "GO_ROUTE_A_CONTRACT_SYSTEM_RESTRICTED_SIMULATOR_AND_PREBOARD_CLAIMS",
+        "rtl_cycles": 1000000,
+        "rtl_mismatches": 0,
+        "undefined_actions": 0,
+        "silent_overflow": 0,
+        "hmm_is_in_rtl": false,
+        "measured_board_latency": false
+      },
+      "remaining_gaps": [
+        "HMM posterior remains in the software slow loop",
+        "T6.9.1 integrated P&R and T6.9.2 board evidence absent",
+        "broad tail improvement is not established"
+      ],
+      "revocation_conditions": [
+        "any frozen-contract hash drift",
+        "any nonzero RTL mismatch/undefined action/silent overflow",
+        "T6.9.3 final evidence NO-GO"
+      ],
+      "evidence": {
+        "current_artifacts": [
+          {
+            "task_id": "T6.7.4",
+            "report": {
+              "path": "docs/t6_7_4_route_a_promotion_gate.json",
+              "sha256": "58f7bd09c1c9982b5be9656cc7404d399567e165b140dc2f76ab0f3c129c5d22",
+              "bytes": 20293
+            },
+            "source_data": {
+              "path": "docs/t6_7_4_route_a_promotion_gate_source_data.csv",
+              "sha256": "436766161867059f5d19afcff67ad9d15c8a193e3b4738567203b7379c75a9af",
+              "row_count": 24
+            }
+          }
+        ],
+        "selectors": [
+          "scientific_results.smooth",
+          "scientific_results.tail",
+          "scientific_results.rtl",
+          "frozen_contract"
+        ],
+        "config": {
+          "threshold_lock_sha256": "9347edb270bbeb3f50d8bd8aceaeefd8003e118f1e88712dd5265519bb0f67aa",
+          "formal_baseline_reselection": false
+        },
+        "seeds": {
+          "route_a_formal": "T6.7.1/T6.7.2 frozen formal seed manifests (hash-bound by T6.7.4 parents)",
+          "external_drift_formal": [
+            202607176201,
+            202607176202,
+            202607176203,
+            202607176204,
+            202607176205,
+            202607176206,
+            202607176207,
+            202607176208,
+            202607176209,
+            202607176210,
+            202607176211,
+            202607176212,
+            202607176213,
+            202607176214,
+            202607176215,
+            202607176216,
+            202607176217,
+            202607176218,
+            202607176219,
+            202607176220,
+            202607176221,
+            202607176222,
+            202607176223,
+            202607176224
+          ],
+          "gqf_reduced_probe": [
+            68401,
+            68407,
+            68419
+          ]
+        },
+        "t6_9_dependencies": [
+          {
+            "task_id": "T6.9.1",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_1_route_a_hardware_pareto.json",
+            "sha256": null,
+            "role": "integrated three-seed P&R/Fmax/resource/power estimate"
+          },
+          {
+            "task_id": "T6.9.2",
+            "status": "PENDING_BOARD",
+            "required_artifact": "docs/t6_9_2_route_a_board_measurement.json",
+            "sha256": null,
+            "role": "same-bitstream measured correctness/latency/deadline/resource/power"
+          },
+          {
+            "task_id": "T6.9.3",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_3_route_a_evidence_gate.json",
+            "sha256": null,
+            "role": "final claim-specific GO/NO-GO"
+          }
+        ]
+      },
+      "paper_target": "Main system claim; Table Route-A evidence gate and architecture figure"
+    },
+    {
+      "claim_id": "SMOOTH_LOCKED_EWMA_ADVANTAGE",
+      "opponent_class": "general_drift_adaptive",
+      "state": "SUPPORTED_PAIRED_OUTCOME",
+      "strongest_supported_wording": "On the preregistered smooth matrix, Route-A lowers aggregate paired LER relative to the locked EWMA baseline; only periodic drift is Holm-confirmed by family.",
+      "required_evidence": [
+        "paired trace identity",
+        "95% cluster-bootstrap CI lower bound above zero",
+        "multiple-comparison family report"
+      ],
+      "current_result": {
+        "ewma_minus_route_a": {
+          "contrast": "ewma_adaptive_map_LER_minus_proposed_route_a_LER",
+          "estimate": 2.1687260380497668e-05,
+          "ci95_low": 1.9002843786168966e-05,
+          "ci95_high": 2.454828332971639e-05,
+          "one_sided_p_nonpositive": 4.999750012499375e-05,
+          "passes_95_lcb_strictly_greater_than_zero": true
+        },
+        "holm_confirmed_families": [
+          "periodic_drift"
+        ],
+        "all_smooth_families_holm_confirmed": false
+      },
+      "remaining_gaps": [
+        "not an advantage over static joint MAP or Window MAP",
+        "only one smooth family is Holm-confirmed",
+        "no physical-board result"
+      ],
+      "revocation_conditions": [
+        "paired CI lower bound becomes non-positive under the frozen analysis",
+        "seed/config/source hash mismatch",
+        "wording expands beyond locked EWMA aggregate"
+      ],
+      "evidence": {
+        "current_artifacts": [
+          {
+            "task_id": "T6.7.4",
+            "report": {
+              "path": "docs/t6_7_4_route_a_promotion_gate.json",
+              "sha256": "58f7bd09c1c9982b5be9656cc7404d399567e165b140dc2f76ab0f3c129c5d22",
+              "bytes": 20293
+            },
+            "source_data": {
+              "path": "docs/t6_7_4_route_a_promotion_gate_source_data.csv",
+              "sha256": "436766161867059f5d19afcff67ad9d15c8a193e3b4738567203b7379c75a9af",
+              "row_count": 24
+            }
+          }
+        ],
+        "selectors": [
+          "scientific_results.smooth.primary_contrast",
+          "scientific_results.smooth.holm_confirmed_families"
+        ],
+        "config": {
+          "threshold_lock_sha256": "9347edb270bbeb3f50d8bd8aceaeefd8003e118f1e88712dd5265519bb0f67aa",
+          "formal_baseline_reselection": false
+        },
+        "seeds": {
+          "route_a_formal": "T6.7.1/T6.7.2 frozen formal seed manifests (hash-bound by T6.7.4 parents)",
+          "external_drift_formal": [
+            202607176201,
+            202607176202,
+            202607176203,
+            202607176204,
+            202607176205,
+            202607176206,
+            202607176207,
+            202607176208,
+            202607176209,
+            202607176210,
+            202607176211,
+            202607176212,
+            202607176213,
+            202607176214,
+            202607176215,
+            202607176216,
+            202607176217,
+            202607176218,
+            202607176219,
+            202607176220,
+            202607176221,
+            202607176222,
+            202607176223,
+            202607176224
+          ],
+          "gqf_reduced_probe": [
+            68401,
+            68407,
+            68419
+          ]
+        },
+        "t6_9_dependencies": [
+          {
+            "task_id": "T6.9.1",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_1_route_a_hardware_pareto.json",
+            "sha256": null,
+            "role": "integrated three-seed P&R/Fmax/resource/power estimate"
+          },
+          {
+            "task_id": "T6.9.2",
+            "status": "PENDING_BOARD",
+            "required_artifact": "docs/t6_9_2_route_a_board_measurement.json",
+            "sha256": null,
+            "role": "same-bitstream measured correctness/latency/deadline/resource/power"
+          },
+          {
+            "task_id": "T6.9.3",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_3_route_a_evidence_gate.json",
+            "sha256": null,
+            "role": "final claim-specific GO/NO-GO"
+          }
+        ]
+      },
+      "paper_target": "Primary smooth-drift panel with paired CI"
+    },
+    {
+      "claim_id": "STATIC_GKP_SUPERIORITY",
+      "opponent_class": "static_gkp",
+      "state": "FALSIFIED",
+      "strongest_supported_wording": "No static-GKP superiority claim is supported: static joint MAP has lower average LER than Route-A on the frozen same-model smooth matrix.",
+      "required_evidence": [
+        "same physical/statistical model",
+        "same traces and decisions",
+        "paired CI",
+        "average and tail metrics"
+      ],
+      "current_result": {
+        "static_minus_route_a": {
+          "contrast": "static_full_MAP_LER_minus_Route_A_LER",
+          "estimate": -2.4548283329716452e-05,
+          "ci95_low": -3.9595144766348346e-05,
+          "ci95_high": -9.112887912326431e-06,
+          "one_sided_p_nonpositive": 0.9990000499975001,
+          "route_a_superiority_passes_lcb_gt_zero": false,
+          "cluster": "formal seed",
+          "clusters": 24,
+          "replicates": 20000,
+          "bootstrap_seed": 202607176999
+        },
+        "static_average_ler": 0.0009681913587782118,
+        "route_a_average_ler": 0.000992739642107928,
+        "static_worst_window_ler": 0.03125,
+        "route_a_worst_window_ler": 0.115234375
+      },
+      "remaining_gaps": [
+        "requires a new method, not narrative relabeling",
+        "must retain current negative result in the main comparison"
+      ],
+      "revocation_conditions": [
+        "never promote without a new preregistered same-model paired experiment whose improvement CI excludes zero",
+        "any omission of static/Window rows invalidates the claim table"
+      ],
+      "evidence": {
+        "current_artifacts": [
+          {
+            "task_id": "T6.7.4",
+            "report": {
+              "path": "docs/t6_7_4_route_a_promotion_gate.json",
+              "sha256": "58f7bd09c1c9982b5be9656cc7404d399567e165b140dc2f76ab0f3c129c5d22",
+              "bytes": 20293
+            },
+            "source_data": {
+              "path": "docs/t6_7_4_route_a_promotion_gate_source_data.csv",
+              "sha256": "436766161867059f5d19afcff67ad9d15c8a193e3b4738567203b7379c75a9af",
+              "row_count": 24
+            }
+          },
+          {
+            "task_id": "T6.8.1",
+            "report": {
+              "path": "docs/t6_8_1_static_gkp_same_model_lane.json",
+              "sha256": "d44912c3dc64e7ca13feb430b35c83e0dbd43817f4eb34c44e28b06f6ee55e81",
+              "bytes": 23111
+            },
+            "source_data": {
+              "path": "docs/t6_8_1_static_gkp_same_model_lane_source_data.csv",
+              "sha256": "885986a8cb583eff52cbaeec4a8426f461bc7f80055ea12d7ec57ffe77ff6404",
+              "row_count": 68
+            }
+          }
+        ],
+        "selectors": [
+          "paired_static_contrast",
+          "method_table"
+        ],
+        "config": {
+          "threshold_lock_sha256": "9347edb270bbeb3f50d8bd8aceaeefd8003e118f1e88712dd5265519bb0f67aa",
+          "formal_baseline_reselection": false
+        },
+        "seeds": {
+          "route_a_formal": "T6.7.1/T6.7.2 frozen formal seed manifests (hash-bound by T6.7.4 parents)",
+          "external_drift_formal": [
+            202607176201,
+            202607176202,
+            202607176203,
+            202607176204,
+            202607176205,
+            202607176206,
+            202607176207,
+            202607176208,
+            202607176209,
+            202607176210,
+            202607176211,
+            202607176212,
+            202607176213,
+            202607176214,
+            202607176215,
+            202607176216,
+            202607176217,
+            202607176218,
+            202607176219,
+            202607176220,
+            202607176221,
+            202607176222,
+            202607176223,
+            202607176224
+          ],
+          "gqf_reduced_probe": [
+            68401,
+            68407,
+            68419
+          ]
+        },
+        "t6_9_dependencies": [
+          {
+            "task_id": "T6.9.1",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_1_route_a_hardware_pareto.json",
+            "sha256": null,
+            "role": "integrated three-seed P&R/Fmax/resource/power estimate"
+          },
+          {
+            "task_id": "T6.9.2",
+            "status": "PENDING_BOARD",
+            "required_artifact": "docs/t6_9_2_route_a_board_measurement.json",
+            "sha256": null,
+            "role": "same-bitstream measured correctness/latency/deadline/resource/power"
+          },
+          {
+            "task_id": "T6.9.3",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_3_route_a_evidence_gate.json",
+            "sha256": null,
+            "role": "final claim-specific GO/NO-GO"
+          }
+        ]
+      },
+      "paper_target": "Main comparison table as explicit negative result"
+    },
+    {
+      "claim_id": "STATIC_K4_HARD_ACTION_EQUIVALENCE",
+      "opponent_class": "static_gkp",
+      "state": "SUPPORTED_PREBOARD_NARROW",
+      "strongest_supported_wording": "For the frozen covariance/prior and complete 10-bit syndrome domain, top-K=4 and full static MAP produce identical hard actions; retained-bit and serial-cost reductions are preboard proxies.",
+      "required_evidence": [
+        "complete finite input-domain enumeration",
+        "zero hard-action disagreement",
+        "soft-error bounds",
+        "synthesis/board confirmation before hardware claims"
+      ],
+      "current_result": {
+        "domain_points": 1048576,
+        "hard_action_disagreements": 0,
+        "retained_bits_k4": 512,
+        "retained_bits_full": 3200
+      },
+      "remaining_gaps": [
+        "model-specific frozen covariance/prior only",
+        "no integrated P&R or measured resource/latency result"
+      ],
+      "revocation_conditions": [
+        "any nonzero disagreement on the declared domain",
+        "changed covariance/prior without re-enumeration",
+        "proxy presented as measured hardware"
+      ],
+      "evidence": {
+        "current_artifacts": [
+          {
+            "task_id": "T6.8.1",
+            "report": {
+              "path": "docs/t6_8_1_static_gkp_same_model_lane.json",
+              "sha256": "d44912c3dc64e7ca13feb430b35c83e0dbd43817f4eb34c44e28b06f6ee55e81",
+              "bytes": 23111
+            },
+            "source_data": {
+              "path": "docs/t6_8_1_static_gkp_same_model_lane_source_data.csv",
+              "sha256": "885986a8cb583eff52cbaeec4a8426f461bc7f80055ea12d7ec57ffe77ff6404",
+              "row_count": 68
+            }
+          }
+        ],
+        "selectors": [
+          "topk_full_exhaustive_equivalence",
+          "method_table.topk_k4_static_map.cost",
+          "method_table.static_joint_map.cost"
+        ],
+        "config": {
+          "threshold_lock_sha256": "9347edb270bbeb3f50d8bd8aceaeefd8003e118f1e88712dd5265519bb0f67aa",
+          "formal_baseline_reselection": false
+        },
+        "seeds": {
+          "route_a_formal": "T6.7.1/T6.7.2 frozen formal seed manifests (hash-bound by T6.7.4 parents)",
+          "external_drift_formal": [
+            202607176201,
+            202607176202,
+            202607176203,
+            202607176204,
+            202607176205,
+            202607176206,
+            202607176207,
+            202607176208,
+            202607176209,
+            202607176210,
+            202607176211,
+            202607176212,
+            202607176213,
+            202607176214,
+            202607176215,
+            202607176216,
+            202607176217,
+            202607176218,
+            202607176219,
+            202607176220,
+            202607176221,
+            202607176222,
+            202607176223,
+            202607176224
+          ],
+          "gqf_reduced_probe": [
+            68401,
+            68407,
+            68419
+          ]
+        },
+        "t6_9_dependencies": [
+          {
+            "task_id": "T6.9.1",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_1_route_a_hardware_pareto.json",
+            "sha256": null,
+            "role": "integrated three-seed P&R/Fmax/resource/power estimate"
+          },
+          {
+            "task_id": "T6.9.2",
+            "status": "PENDING_BOARD",
+            "required_artifact": "docs/t6_9_2_route_a_board_measurement.json",
+            "sha256": null,
+            "role": "same-bitstream measured correctness/latency/deadline/resource/power"
+          },
+          {
+            "task_id": "T6.9.3",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_3_route_a_evidence_gate.json",
+            "sha256": null,
+            "role": "final claim-specific GO/NO-GO"
+          }
+        ]
+      },
+      "paper_target": "Compression/sensitivity ablation or supplement"
+    },
+    {
+      "claim_id": "GENERAL_DRIFT_BOCD_OUTCOME",
+      "opponent_class": "general_drift_adaptive",
+      "state": "SUPPORTED_PAIRED_OUTCOME",
+      "strongest_supported_wording": "Against the pinned external BOCD-window-EWMA router on common formal traces, Route-A has lower paired LER; the external method fails the preregistered worst-update wall-clock budget and therefore is not a qualified matched-budget comparator.",
+      "required_evidence": [
+        "pinned external implementation",
+        "identical traces/truth",
+        "paired CI",
+        "strict worst-update compute and wall-clock caps"
+      ],
+      "current_result": {
+        "external_minus_route_a": {
+          "contrast": "external_bocd_window_ewma_router_LER_minus_proposed_route_a_LER",
+          "estimate": 1.0018396859217312e-05,
+          "ci95_low": 7.667926826863132e-06,
+          "ci95_high": 1.2368866891571562e-05,
+          "left_worse_if_lcb_gt_zero": true,
+          "right_worse_if_ucb_lt_zero": false,
+          "clusters": 24,
+          "replicates": 20000
+        },
+        "route_a_equal_family_ler": 0.011959075927734375,
+        "external_equal_family_ler": 0.011969094324593593,
+        "external_update_worst_us": 13004.1,
+        "wallclock_cap_us": 5000.0,
+        "deadline_miss_count": 1
+      },
+      "remaining_gaps": [
+        "one external algorithm is insufficient for general SOTA",
+        "external comparator budget qualification failed",
+        "Bhardwaj paper-exact path unavailable"
+      ],
+      "revocation_conditions": [
+        "trace/truth mismatch",
+        "paired CI lower bound becomes non-positive",
+        "external wrapper ceases to be pinned/unmodified",
+        "wording omits the budget failure"
+      ],
+      "evidence": {
+        "current_artifacts": [
+          {
+            "task_id": "T6.8.2",
+            "report": {
+              "path": "docs/t6_8_2_external_drift_adaptive_lane.json",
+              "sha256": "4556647351416dfecd2ba9c1c4a94deeed9881a51b065c0cafec0b9fed64062d",
+              "bytes": 5957723
+            },
+            "source_data": {
+              "path": "docs/t6_8_2_external_drift_adaptive_lane_source_data.csv",
+              "sha256": "615781c0f2257e949319c0f9318d9592b00a347f7cff61cbb89c297643bf2ca2",
+              "row_count": 588
+            }
+          }
+        ],
+        "selectors": [
+          "formal_results.paired_contrasts",
+          "formal_results.external_budget",
+          "external_upstream",
+          "split_contract.formal_seeds"
+        ],
+        "config": {
+          "threshold_lock_sha256": "9347edb270bbeb3f50d8bd8aceaeefd8003e118f1e88712dd5265519bb0f67aa",
+          "formal_baseline_reselection": false
+        },
+        "seeds": {
+          "route_a_formal": "T6.7.1/T6.7.2 frozen formal seed manifests (hash-bound by T6.7.4 parents)",
+          "external_drift_formal": [
+            202607176201,
+            202607176202,
+            202607176203,
+            202607176204,
+            202607176205,
+            202607176206,
+            202607176207,
+            202607176208,
+            202607176209,
+            202607176210,
+            202607176211,
+            202607176212,
+            202607176213,
+            202607176214,
+            202607176215,
+            202607176216,
+            202607176217,
+            202607176218,
+            202607176219,
+            202607176220,
+            202607176221,
+            202607176222,
+            202607176223,
+            202607176224
+          ],
+          "gqf_reduced_probe": [
+            68401,
+            68407,
+            68419
+          ]
+        },
+        "t6_9_dependencies": [
+          {
+            "task_id": "T6.9.1",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_1_route_a_hardware_pareto.json",
+            "sha256": null,
+            "role": "integrated three-seed P&R/Fmax/resource/power estimate"
+          },
+          {
+            "task_id": "T6.9.2",
+            "status": "PENDING_BOARD",
+            "required_artifact": "docs/t6_9_2_route_a_board_measurement.json",
+            "sha256": null,
+            "role": "same-bitstream measured correctness/latency/deadline/resource/power"
+          },
+          {
+            "task_id": "T6.9.3",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_3_route_a_evidence_gate.json",
+            "sha256": null,
+            "role": "final claim-specific GO/NO-GO"
+          }
+        ]
+      },
+      "paper_target": "External reproducible baseline table with qualification column"
+    },
+    {
+      "claim_id": "GENERAL_DRIFT_MATCHED_BUDGET_SOTA",
+      "opponent_class": "general_drift_adaptive",
+      "state": "NOT_ESTABLISHED",
+      "strongest_supported_wording": "General drift-adaptive SOTA is not established because the only executable external comparator violates the strict worst-update wall-clock ceiling and other literature mappings are not exact same-task reproductions.",
+      "required_evidence": [
+        "at least two closest external methods",
+        "all comparators pass common worst-case compute/wall-clock budget",
+        "same-task paired statistics"
+      ],
+      "current_result": {
+        "qualified_external_comparator_count": 0,
+        "external_updates": 13104,
+        "external_deadline_misses": 1,
+        "worst_update_us": 13004.1,
+        "cap_us": 5000.0
+      },
+      "remaining_gaps": [
+        "second close external implementation missing",
+        "zero budget-qualified external comparators"
+      ],
+      "revocation_conditions": [
+        "cannot become positive from a performance-only rerun",
+        "requires a newly preregistered and budget-qualified external lane"
+      ],
+      "evidence": {
+        "current_artifacts": [
+          {
+            "task_id": "T6.8.2",
+            "report": {
+              "path": "docs/t6_8_2_external_drift_adaptive_lane.json",
+              "sha256": "4556647351416dfecd2ba9c1c4a94deeed9881a51b065c0cafec0b9fed64062d",
+              "bytes": 5957723
+            },
+            "source_data": {
+              "path": "docs/t6_8_2_external_drift_adaptive_lane_source_data.csv",
+              "sha256": "615781c0f2257e949319c0f9318d9592b00a347f7cff61cbb89c297643bf2ca2",
+              "row_count": 588
+            }
+          }
+        ],
+        "selectors": [
+          "claim_registry.GENERAL_DRIFT_ADAPTIVE_SOTA",
+          "formal_results.external_budget"
+        ],
+        "config": {
+          "threshold_lock_sha256": "9347edb270bbeb3f50d8bd8aceaeefd8003e118f1e88712dd5265519bb0f67aa",
+          "formal_baseline_reselection": false
+        },
+        "seeds": {
+          "route_a_formal": "T6.7.1/T6.7.2 frozen formal seed manifests (hash-bound by T6.7.4 parents)",
+          "external_drift_formal": [
+            202607176201,
+            202607176202,
+            202607176203,
+            202607176204,
+            202607176205,
+            202607176206,
+            202607176207,
+            202607176208,
+            202607176209,
+            202607176210,
+            202607176211,
+            202607176212,
+            202607176213,
+            202607176214,
+            202607176215,
+            202607176216,
+            202607176217,
+            202607176218,
+            202607176219,
+            202607176220,
+            202607176221,
+            202607176222,
+            202607176223,
+            202607176224
+          ],
+          "gqf_reduced_probe": [
+            68401,
+            68407,
+            68419
+          ]
+        },
+        "t6_9_dependencies": [
+          {
+            "task_id": "T6.9.1",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_1_route_a_hardware_pareto.json",
+            "sha256": null,
+            "role": "integrated three-seed P&R/Fmax/resource/power estimate"
+          },
+          {
+            "task_id": "T6.9.2",
+            "status": "PENDING_BOARD",
+            "required_artifact": "docs/t6_9_2_route_a_board_measurement.json",
+            "sha256": null,
+            "role": "same-bitstream measured correctness/latency/deadline/resource/power"
+          },
+          {
+            "task_id": "T6.9.3",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_3_route_a_evidence_gate.json",
+            "sha256": null,
+            "role": "final claim-specific GO/NO-GO"
+          }
+        ]
+      },
+      "paper_target": "Claim registry/limitations, not a positive headline"
+    },
+    {
+      "claim_id": "PUVIANI_NMF_SURPASS",
+      "opponent_class": "puviani_nmf",
+      "state": "PROHIBITED",
+      "strongest_supported_wording": "No comparison or surpass claim against Puviani NMF is permitted: the official-source paper-exact gate passes 0/15 criteria and the matched lifetime branch is ineligible, so all 13 comparison metrics remain null.",
+      "required_evidence": [
+        "official checkpoints/seeds/evaluator",
+        "paper-exact Standard/MF/NMF reproduction",
+        "same-GQF matched lifetime",
+        "paired lifetime-improvement 95% lower bound above zero"
+      ],
+      "current_result": {
+        "paper_exact_passed": 0,
+        "paper_exact_failed": 15,
+        "exact_status": "NO_GO_SOURCE_INCOMPLETE",
+        "matched_branch": "INELIGIBLE_NEGATIVE_BRANCH_NO_MATCHED_RUN",
+        "matched_metric_non_null_count": 0
+      },
+      "remaining_gaps": [
+        "official checkpoints, seeds, six-state evaluator and raw trajectories absent",
+        "paper/source architecture and training settings conflict",
+        "full GPU accelerator path unqualified"
+      ],
+      "revocation_conditions": [
+        "remains prohibited until all T6.8.4 exact gates and T6.8.5 eligibility gates pass",
+        "directional reduced diagnostic may never substitute for exact reproduction"
+      ],
+      "evidence": {
+        "current_artifacts": [
+          {
+            "task_id": "T6.8.4",
+            "report": {
+              "path": "docs/t6_8_4_gqf_paper_exact_reproduction.json",
+              "sha256": "8677917ad3c8bc6f60f6630dd757546a86c676781594d2c4ecd6f4e41c45ad29",
+              "bytes": 24539
+            },
+            "source_data": {
+              "path": "docs/t6_8_4_gqf_reproduction_source_data.csv",
+              "sha256": "674a0055202288706986e7da3af403f982cc2ad108cca0525acdb7ce1962a3cb"
+            }
+          },
+          {
+            "task_id": "T6.8.5",
+            "report": {
+              "path": "docs/t6_8_5_gqf_route_a_matched_comparison_gate.json",
+              "sha256": "0ca9ff294e508e46ee10c84f72cc2601be04b3ac7da029f847437fded9c99a5e",
+              "bytes": 6564
+            },
+            "source_data": {
+              "path": "docs/t6_8_5_gqf_route_a_matched_comparison_gate_source_data.csv",
+              "sha256": "cbc3a41b00d2a72f4885a167a6dfd682cff11a6e21299ebd5b32c717b57425bb"
+            }
+          }
+        ],
+        "selectors": [
+          "exact_qualification",
+          "source_discrepancies",
+          "prerequisite_ledger",
+          "matched_comparison_metrics"
+        ],
+        "config": {
+          "threshold_lock_sha256": "9347edb270bbeb3f50d8bd8aceaeefd8003e118f1e88712dd5265519bb0f67aa",
+          "formal_baseline_reselection": false
+        },
+        "seeds": {
+          "route_a_formal": "T6.7.1/T6.7.2 frozen formal seed manifests (hash-bound by T6.7.4 parents)",
+          "external_drift_formal": [
+            202607176201,
+            202607176202,
+            202607176203,
+            202607176204,
+            202607176205,
+            202607176206,
+            202607176207,
+            202607176208,
+            202607176209,
+            202607176210,
+            202607176211,
+            202607176212,
+            202607176213,
+            202607176214,
+            202607176215,
+            202607176216,
+            202607176217,
+            202607176218,
+            202607176219,
+            202607176220,
+            202607176221,
+            202607176222,
+            202607176223,
+            202607176224
+          ],
+          "gqf_reduced_probe": [
+            68401,
+            68407,
+            68419
+          ]
+        },
+        "t6_9_dependencies": [
+          {
+            "task_id": "T6.9.1",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_1_route_a_hardware_pareto.json",
+            "sha256": null,
+            "role": "integrated three-seed P&R/Fmax/resource/power estimate"
+          },
+          {
+            "task_id": "T6.9.2",
+            "status": "PENDING_BOARD",
+            "required_artifact": "docs/t6_9_2_route_a_board_measurement.json",
+            "sha256": null,
+            "role": "same-bitstream measured correctness/latency/deadline/resource/power"
+          },
+          {
+            "task_id": "T6.9.3",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_3_route_a_evidence_gate.json",
+            "sha256": null,
+            "role": "final claim-specific GO/NO-GO"
+          }
+        ]
+      },
+      "paper_target": "Limitations/negative reproduction result; no lifetime ranking figure"
+    },
+    {
+      "claim_id": "FPGA_DETERMINISTIC_ARCHITECTURE",
+      "opponent_class": "fpga_qec_decoder",
+      "state": "SUPPORTED_PREBOARD_NARROW",
+      "strongest_supported_wording": "The integrated Route-A fast path is a deterministic six-cycle preboard architecture with one-million-cycle bit-exact CXXRTL qualification; nanosecond latency, resources, power and board deadline behavior remain unmeasured.",
+      "required_evidence": [
+        "synthesizable integrated top",
+        "long-sequence bit-exact replay",
+        "P&R for time/resources",
+        "board measurement for physical claims"
+      ],
+      "current_result": {
+        "latency_cycles": 6,
+        "qualified_cycles": 1000000,
+        "rtl_mismatches": 0,
+        "undefined_actions": 0,
+        "silent_overflow": 0,
+        "measured_board_latency": false
+      },
+      "remaining_gaps": [
+        "T6.9.1 integrated P&R absent",
+        "T6.9.2 board latency/deadline/resource/power absent",
+        "HMM is not in RTL"
+      ],
+      "revocation_conditions": [
+        "any nonzero bit mismatch/undefined action/silent overflow",
+        "integrated P&R does not preserve the declared cycle contract",
+        "preboard evidence described as measured"
+      ],
+      "evidence": {
+        "current_artifacts": [
+          {
+            "task_id": "T6.7.4",
+            "report": {
+              "path": "docs/t6_7_4_route_a_promotion_gate.json",
+              "sha256": "58f7bd09c1c9982b5be9656cc7404d399567e165b140dc2f76ab0f3c129c5d22",
+              "bytes": 20293
+            },
+            "source_data": {
+              "path": "docs/t6_7_4_route_a_promotion_gate_source_data.csv",
+              "sha256": "436766161867059f5d19afcff67ad9d15c8a193e3b4738567203b7379c75a9af",
+              "row_count": 24
+            }
+          },
+          {
+            "task_id": "T6.8.6",
+            "report": {
+              "path": "docs/t6_8_6_fpga_decoder_normalization.json",
+              "sha256": "75eb910c3fc9018a8345543493566ba34654c98fc11f15a0ecdeb50dd15ce59d",
+              "bytes": 36596
+            },
+            "source_data": {
+              "path": "docs/t6_8_6_fpga_decoder_normalization_source_data.csv",
+              "sha256": "c5a54e73e6b625cdce34f3178faddc50d06804aa032fb7f4733df8b77eec3f08",
+              "bytes": 13587,
+              "rows": 10
+            }
+          }
+        ],
+        "selectors": [
+          "scientific_results.rtl",
+          "rows.project_t6_route_a_integrated_cxxrtl"
+        ],
+        "config": {
+          "threshold_lock_sha256": "9347edb270bbeb3f50d8bd8aceaeefd8003e118f1e88712dd5265519bb0f67aa",
+          "formal_baseline_reselection": false
+        },
+        "seeds": {
+          "route_a_formal": "T6.7.1/T6.7.2 frozen formal seed manifests (hash-bound by T6.7.4 parents)",
+          "external_drift_formal": [
+            202607176201,
+            202607176202,
+            202607176203,
+            202607176204,
+            202607176205,
+            202607176206,
+            202607176207,
+            202607176208,
+            202607176209,
+            202607176210,
+            202607176211,
+            202607176212,
+            202607176213,
+            202607176214,
+            202607176215,
+            202607176216,
+            202607176217,
+            202607176218,
+            202607176219,
+            202607176220,
+            202607176221,
+            202607176222,
+            202607176223,
+            202607176224
+          ],
+          "gqf_reduced_probe": [
+            68401,
+            68407,
+            68419
+          ]
+        },
+        "t6_9_dependencies": [
+          {
+            "task_id": "T6.9.1",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_1_route_a_hardware_pareto.json",
+            "sha256": null,
+            "role": "integrated three-seed P&R/Fmax/resource/power estimate"
+          },
+          {
+            "task_id": "T6.9.2",
+            "status": "PENDING_BOARD",
+            "required_artifact": "docs/t6_9_2_route_a_board_measurement.json",
+            "sha256": null,
+            "role": "same-bitstream measured correctness/latency/deadline/resource/power"
+          },
+          {
+            "task_id": "T6.9.3",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_3_route_a_evidence_gate.json",
+            "sha256": null,
+            "role": "final claim-specific GO/NO-GO"
+          }
+        ]
+      },
+      "paper_target": "Hardware architecture panel and preboard qualification table"
+    },
+    {
+      "claim_id": "FPGA_SPEED_ADVANTAGE",
+      "opponent_class": "fpga_qec_decoder",
+      "state": "PROHIBITED",
+      "strongest_supported_wording": "No speed ranking against prior FPGA QEC decoders is supported: there are zero same-task external comparator rows and no Route-A board source-to-action measurement.",
+      "required_evidence": [
+        "same code/problem/input/action semantics",
+        "same latency boundary/statistic",
+        "physical-board source-to-action distributions",
+        "deadline, II, resources and power"
+      ],
+      "current_result": {
+        "same_task_external_comparator_count": 0,
+        "real_board_source_to_action": "PENDING_T6.9.2",
+        "speed_advantage": "UNESTABLISHED"
+      },
+      "remaining_gaps": [
+        "no same-task external comparator",
+        "no integrated board measurement",
+        "cross-code raw latency is non-comparable"
+      ],
+      "revocation_conditions": [
+        "only T6.9.2 same-task measured evidence may unlock this claim",
+        "any cross-code or mixed-boundary ranking forces immediate withdrawal"
+      ],
+      "evidence": {
+        "current_artifacts": [
+          {
+            "task_id": "T6.8.6",
+            "report": {
+              "path": "docs/t6_8_6_fpga_decoder_normalization.json",
+              "sha256": "75eb910c3fc9018a8345543493566ba34654c98fc11f15a0ecdeb50dd15ce59d",
+              "bytes": 36596
+            },
+            "source_data": {
+              "path": "docs/t6_8_6_fpga_decoder_normalization_source_data.csv",
+              "sha256": "c5a54e73e6b625cdce34f3178faddc50d06804aa032fb7f4733df8b77eec3f08",
+              "bytes": 13587,
+              "rows": 10
+            }
+          }
+        ],
+        "selectors": [
+          "comparison_eligibility",
+          "claim_boundary",
+          "rows"
+        ],
+        "config": {
+          "threshold_lock_sha256": "9347edb270bbeb3f50d8bd8aceaeefd8003e118f1e88712dd5265519bb0f67aa",
+          "formal_baseline_reselection": false
+        },
+        "seeds": {
+          "route_a_formal": "T6.7.1/T6.7.2 frozen formal seed manifests (hash-bound by T6.7.4 parents)",
+          "external_drift_formal": [
+            202607176201,
+            202607176202,
+            202607176203,
+            202607176204,
+            202607176205,
+            202607176206,
+            202607176207,
+            202607176208,
+            202607176209,
+            202607176210,
+            202607176211,
+            202607176212,
+            202607176213,
+            202607176214,
+            202607176215,
+            202607176216,
+            202607176217,
+            202607176218,
+            202607176219,
+            202607176220,
+            202607176221,
+            202607176222,
+            202607176223,
+            202607176224
+          ],
+          "gqf_reduced_probe": [
+            68401,
+            68407,
+            68419
+          ]
+        },
+        "t6_9_dependencies": [
+          {
+            "task_id": "T6.9.1",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_1_route_a_hardware_pareto.json",
+            "sha256": null,
+            "role": "integrated three-seed P&R/Fmax/resource/power estimate"
+          },
+          {
+            "task_id": "T6.9.2",
+            "status": "PENDING_BOARD",
+            "required_artifact": "docs/t6_9_2_route_a_board_measurement.json",
+            "sha256": null,
+            "role": "same-bitstream measured correctness/latency/deadline/resource/power"
+          },
+          {
+            "task_id": "T6.9.3",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_3_route_a_evidence_gate.json",
+            "sha256": null,
+            "role": "final claim-specific GO/NO-GO"
+          }
+        ]
+      },
+      "paper_target": "Normalization table and limitations; no fastest headline"
+    },
+    {
+      "claim_id": "CNN_PRIMARY_ROLE",
+      "opponent_class": "general_drift_adaptive",
+      "state": "ABLATION_ONLY",
+      "strongest_supported_wording": "Legacy CNN residual and teacher/student modules remain optional learning ablations; the primary deployable LER path is MAP-based and the safety path is contract/FSM-based.",
+      "required_evidence": [
+        "matched input/output schema",
+        "common compute/wall-clock budget",
+        "paired LER and tail evidence"
+      ],
+      "current_result": {
+        "promotion_state": "ABLATION_ONLY"
+      },
+      "remaining_gaps": [
+        "legacy checkpoint fails the matched schema/budget",
+        "no primary claim may depend on CNN"
+      ],
+      "revocation_conditions": [
+        "promoting CNN in title/abstract without a new matched gate",
+        "removing MAP/FSM attribution from the system claim"
+      ],
+      "evidence": {
+        "current_artifacts": [
+          {
+            "task_id": "T6.7.4",
+            "report": {
+              "path": "docs/t6_7_4_route_a_promotion_gate.json",
+              "sha256": "58f7bd09c1c9982b5be9656cc7404d399567e165b140dc2f76ab0f3c129c5d22",
+              "bytes": 20293
+            },
+            "source_data": {
+              "path": "docs/t6_7_4_route_a_promotion_gate_source_data.csv",
+              "sha256": "436766161867059f5d19afcff67ad9d15c8a193e3b4738567203b7379c75a9af",
+              "row_count": 24
+            }
+          }
+        ],
+        "selectors": [
+          "claim_registry.CNN_PRIMARY"
+        ],
+        "config": {
+          "threshold_lock_sha256": "9347edb270bbeb3f50d8bd8aceaeefd8003e118f1e88712dd5265519bb0f67aa",
+          "formal_baseline_reselection": false
+        },
+        "seeds": {
+          "route_a_formal": "T6.7.1/T6.7.2 frozen formal seed manifests (hash-bound by T6.7.4 parents)",
+          "external_drift_formal": [
+            202607176201,
+            202607176202,
+            202607176203,
+            202607176204,
+            202607176205,
+            202607176206,
+            202607176207,
+            202607176208,
+            202607176209,
+            202607176210,
+            202607176211,
+            202607176212,
+            202607176213,
+            202607176214,
+            202607176215,
+            202607176216,
+            202607176217,
+            202607176218,
+            202607176219,
+            202607176220,
+            202607176221,
+            202607176222,
+            202607176223,
+            202607176224
+          ],
+          "gqf_reduced_probe": [
+            68401,
+            68407,
+            68419
+          ]
+        },
+        "t6_9_dependencies": [
+          {
+            "task_id": "T6.9.1",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_1_route_a_hardware_pareto.json",
+            "sha256": null,
+            "role": "integrated three-seed P&R/Fmax/resource/power estimate"
+          },
+          {
+            "task_id": "T6.9.2",
+            "status": "PENDING_BOARD",
+            "required_artifact": "docs/t6_9_2_route_a_board_measurement.json",
+            "sha256": null,
+            "role": "same-bitstream measured correctness/latency/deadline/resource/power"
+          },
+          {
+            "task_id": "T6.9.3",
+            "status": "PENDING",
+            "required_artifact": "docs/t6_9_3_route_a_evidence_gate.json",
+            "sha256": null,
+            "role": "final claim-specific GO/NO-GO"
+          }
+        ]
+      },
+      "paper_target": "Ablation table or supplement only"
+    }
+  ],
+  "source_data": {
+    "path": "docs/t6_8_7_route_a_claim_matrix_source_data.csv",
+    "sha256": "227e5d02523866451e596c9b7957dfec50eff867c638b12ee0aa902d43df6f3c",
+    "bytes": 28721,
+    "rows": 10
+  },
+  "implementation_binding": {
+    "path": "cnn_fpga/benchmark/route_a_claim_matrix.py",
+    "sha256": "20f85f4242ed8a46672d0bc0b5163ad21d2227c79c198fd750b97a44db89f86c",
+    "bytes": 30839
+  },
+  "semantic_mutation_audit": {
+    "count": 14,
+    "detected": 14,
+    "cases": [
+      {
+        "case": "drop_opponent_class",
+        "target_gate": "G01_four_opponent_classes_are_explicit",
+        "rejected": true
+      },
+      {
+        "case": "duplicate_claim_id",
+        "target_gate": "G02_atomic_claim_schema_and_ids_are_complete",
+        "rejected": true
+      },
+      {
+        "case": "erase_revocation",
+        "target_gate": "G03_every_claim_has_required_result_gap_and_revocation",
+        "rejected": true
+      },
+      {
+        "case": "insert_fastest",
+        "target_gate": "G04_positive_wording_contains_no_unqualified_rank_tokens",
+        "rejected": true
+      },
+      {
+        "case": "promote_static",
+        "target_gate": "G05_static_superiority_remains_falsified",
+        "rejected": true
+      },
+      {
+        "case": "hide_budget_failure",
+        "target_gate": "G06_general_drift_budget_and_sota_fail_closed",
+        "rejected": true
+      },
+      {
+        "case": "promote_puviani",
+        "target_gate": "G07_puviani_surpass_is_prohibited_with_null_metrics",
+        "rejected": true
+      },
+      {
+        "case": "promote_fpga_speed",
+        "target_gate": "G08_fpga_speed_is_prohibited_until_same_task_board_evidence",
+        "rejected": true
+      },
+      {
+        "case": "claim_global",
+        "target_gate": "G09_positive_claims_are_scope_limited",
+        "rejected": true
+      },
+      {
+        "case": "forge_report_hash",
+        "target_gate": "G10_current_reports_and_source_data_are_hash_bound",
+        "rejected": true
+      },
+      {
+        "case": "invent_t69_hash",
+        "target_gate": "G11_every_claim_binds_config_seed_selectors_and_t6_9_nulls",
+        "rejected": true
+      },
+      {
+        "case": "allow_global_score",
+        "target_gate": "G12_no_global_score_or_cross_lane_arithmetic",
+        "rejected": true
+      },
+      {
+        "case": "forge_csv_rows",
+        "target_gate": "G13_source_csv_is_complete_and_hash_bound",
+        "rejected": true
+      },
+      {
+        "case": "forge_mutation_count",
+        "target_gate": "G14_semantic_mutations_fail_closed",
+        "rejected": true
+      }
+    ]
+  },
+  "gates": {
+    "G01_four_opponent_classes_are_explicit": true,
+    "G02_atomic_claim_schema_and_ids_are_complete": true,
+    "G03_every_claim_has_required_result_gap_and_revocation": true,
+    "G04_positive_wording_contains_no_unqualified_rank_tokens": true,
+    "G05_static_superiority_remains_falsified": true,
+    "G06_general_drift_budget_and_sota_fail_closed": true,
+    "G07_puviani_surpass_is_prohibited_with_null_metrics": true,
+    "G08_fpga_speed_is_prohibited_until_same_task_board_evidence": true,
+    "G09_positive_claims_are_scope_limited": true,
+    "G10_current_reports_and_source_data_are_hash_bound": true,
+    "G11_every_claim_binds_config_seed_selectors_and_t6_9_nulls": true,
+    "G12_no_global_score_or_cross_lane_arithmetic": true,
+    "G13_source_csv_is_complete_and_hash_bound": true,
+    "G14_semantic_mutations_fail_closed": true
+  },
+  "gate_summary": {
+    "passed": 14,
+    "failed": 0
+  },
+  "verdict": "PASS_ROUTE_A_ATOMIC_CLAIM_MATRIX_WITH_RESTRICTED_POSITIVE_CLAIMS"
+}

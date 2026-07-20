@@ -1,0 +1,3428 @@
+{
+  "schema_version": "t5.4.4-multi-agent-seed-selection-audit-v1",
+  "task_id": "T5.4.4",
+  "protocol_id": "VALIDATION-ONLY-ALL-UNIT-SELECTION-AUDIT-V1",
+  "generated_at_utc": "2026-07-16T07:14:34.583409+00:00",
+  "pass_semantics": "every current selection-bearing learned lane is traced to validation, every registered agent/restart/seed available to the active claim is reported with median IQR and worst quartile, and hindsight test-best diagnostics never alter the frozen candidate",
+  "parent_bindings": [
+    {
+      "task_id": "T2.3.7",
+      "path": "docs/t2_3_7_nmf_directional_ranking.json",
+      "sha256": "c690afed5143135dc4099b54b60f7a60128ce9594922312ef23fd33f8f7466b5",
+      "machine_pass": true
+    },
+    {
+      "task_id": "T4.1.1",
+      "path": "docs/t4_1_1_slow_loop_model_selection_validation.json",
+      "sha256": "65a6f476b6d97a26a6aff8d7f6e33ce5c5abc37b055f17e48e0e0c4604aaef11",
+      "machine_pass": true
+    },
+    {
+      "task_id": "T4.1.5",
+      "path": "docs/t4_1_5_teacher_student_validation.json",
+      "sha256": "586c72dc636db2488d9f659e4c20b26b4b84584e86712798ab401858da49a085",
+      "machine_pass": true
+    },
+    {
+      "task_id": "T4.4.1",
+      "path": "docs/t4_4_1_bounded_residual_rnn_teacher_validation.json",
+      "sha256": "c71094493a63f7a3b1287d28c0a1b71d3ce7a03e16a281a27967a87a65669d53",
+      "machine_pass": true
+    },
+    {
+      "task_id": "T4.4.3",
+      "path": "docs/t4_4_3_low_dimensional_student_validation.json",
+      "sha256": "1bb56e2d4c8839c4f25e91ece8f404427a1917114bc5e9c69249e92cd7ada26a",
+      "machine_pass": true
+    },
+    {
+      "task_id": "T4.4.4",
+      "path": "docs/t4_4_4_teacher_student_gain_retention.json",
+      "sha256": "5cd1478de22ecd998aaf678bc6f14873134e57bc8ae2fc4408df215544b86dfc",
+      "machine_pass": true
+    },
+    {
+      "task_id": "T5.1.4",
+      "path": "docs/t5_1_4_algorithm_branch_verdict.json",
+      "sha256": "2c08d760a1a453898a1644ffb319c8d8dccccfaa1c2d9271feebe9bf96ebefc2",
+      "machine_pass": true
+    }
+  ],
+  "parent_source_bindings": [
+    {
+      "binding_id": "T2.3.7",
+      "kind": "parent_source",
+      "path": "docs/t2_3_7_nmf_directional_ranking.csv",
+      "sha256": "17d623b49d3b62d93b7bef915362864e4ea72a7e3939469fc7aeea25d13fb42b"
+    },
+    {
+      "binding_id": "T4.1.1",
+      "kind": "parent_source",
+      "path": "docs/t4_1_1_slow_loop_model_selection_source_data.csv",
+      "sha256": "0726977318febeee0ee76bee2d79bc7e0d7fb89f52a87b60dec494230aa2ed58"
+    },
+    {
+      "binding_id": "T4.1.5",
+      "kind": "parent_source",
+      "path": "docs/t4_1_5_teacher_student_source_data.csv",
+      "sha256": "a5f8c3447c07c2da6fe70ba17d68086ac5978b5f0cc15aefa500fe6605c4bc1f"
+    },
+    {
+      "binding_id": "T4.4.1",
+      "kind": "parent_source",
+      "path": "docs/t4_4_1_bounded_residual_rnn_teacher_source_data.csv",
+      "sha256": "b59bc1c963a3e42cab4ca4f41244160ff1c7221be06be1bfdc070009765dbf88"
+    },
+    {
+      "binding_id": "T4.4.3",
+      "kind": "parent_source",
+      "path": "docs/t4_4_3_low_dimensional_student_source_data.csv",
+      "sha256": "74a7ebfc224b79c0b2b874632783684d55971eff486ed1e5dc22f5554bed73ff"
+    },
+    {
+      "binding_id": "T4.4.4",
+      "kind": "parent_source",
+      "path": "docs/t4_4_4_teacher_student_gain_retention_source_data.csv",
+      "sha256": "b24501ffaa644e427148f13b5a329d9494ca587c6a276bae94bac23455a834a4"
+    },
+    {
+      "binding_id": "T5.1.4",
+      "kind": "parent_source",
+      "path": "docs/t5_1_4_algorithm_branch_verdict_source_data.csv",
+      "sha256": "63ac8474be8c6657fbae3807e864bba43353e970a6864a053cc10a25d8974961"
+    }
+  ],
+  "implementation_bindings": [
+    {
+      "binding_id": "cnn_fpga/benchmark/multi_agent_seed_selection_audit.py",
+      "kind": "implementation",
+      "path": "cnn_fpga/benchmark/multi_agent_seed_selection_audit.py",
+      "sha256": "0d17890ebb2b8fe1c57e8e6c75158339ffcae13cd24840c1ee78e19947edd300"
+    },
+    {
+      "binding_id": "physics/nmf_directional_ranking.py",
+      "kind": "implementation",
+      "path": "physics/nmf_directional_ranking.py",
+      "sha256": "077b2f25cfb6571c0cc6a75b5710ecfa122a20087bfe29c3765aae6cd60f2149"
+    },
+    {
+      "binding_id": "cnn_fpga/benchmark/slow_loop_model_selection.py",
+      "kind": "implementation",
+      "path": "cnn_fpga/benchmark/slow_loop_model_selection.py",
+      "sha256": "ea9e475bf6492e8800c651816e0bd0fe2eb34c5e45fa83af2960f4473c85f4f8"
+    },
+    {
+      "binding_id": "cnn_fpga/benchmark/offline_teacher_student_distillation.py",
+      "kind": "implementation",
+      "path": "cnn_fpga/benchmark/offline_teacher_student_distillation.py",
+      "sha256": "f4480e069c452850c0e2914207971a9cfd103c2eb23a2336596b84abc52f43a1"
+    },
+    {
+      "binding_id": "cnn_fpga/benchmark/bounded_residual_rnn_teacher.py",
+      "kind": "implementation",
+      "path": "cnn_fpga/benchmark/bounded_residual_rnn_teacher.py",
+      "sha256": "948f411bc80148c97db994a1da26a4281b2ec34bc252a3e064647f1c81e27243"
+    },
+    {
+      "binding_id": "cnn_fpga/benchmark/low_dimensional_student_distillation.py",
+      "kind": "implementation",
+      "path": "cnn_fpga/benchmark/low_dimensional_student_distillation.py",
+      "sha256": "6f72ac2b1ec68013e06e6a9960f3a6ccee13c71e584a68362588430f0dde65de"
+    },
+    {
+      "binding_id": "cnn_fpga/benchmark/teacher_student_gain_retention.py",
+      "kind": "implementation",
+      "path": "cnn_fpga/benchmark/teacher_student_gain_retention.py",
+      "sha256": "f974a13b93b6e1142a3cbae0e15b4b5ca5ac2cc3c985a5b3eb44f94550100041"
+    }
+  ],
+  "selection_contract": {
+    "allowed_selection_split": "validation_only",
+    "independent_test_role": "evaluation_and_hindsight_bias_diagnostic_only",
+    "agent_reporting_rule": "all_registered_agents_restarts_and_seeds",
+    "distribution_rule": "linear q1 median q3; IQR=q3-q1; worst quartile contains ceil(n/4) lowest higher-is-better or highest lower-is-better units",
+    "postselection_rule": "test_best_may_be_reported_but_never_selected"
+  },
+  "selection_registry": [
+    {
+      "lane_id": "nmf_directional",
+      "parent_task": "T2.3.7",
+      "candidate_census": "5 MF plus 5 paired NMF agents",
+      "selection_stage": "validation checkpoint within each agent; no agent selection",
+      "evaluation_scope": "all five pairs on all primary and confirmation seeds",
+      "evaluation_used_for_selection": false,
+      "active_claim_role": "all-agent directional distribution"
+    },
+    {
+      "lane_id": "slow_loop_model_selection",
+      "parent_task": "T4.1.1",
+      "candidate_census": "6 families plus all 5x2 neural restart scans",
+      "selection_stage": "validation NLL lexicographic family selection",
+      "evaluation_scope": "all six families on eight seeds",
+      "evaluation_used_for_selection": false,
+      "active_claim_role": "matched synthetic host-estimator pilot"
+    },
+    {
+      "lane_id": "legacy_student_predecessor",
+      "parent_task": "T4.1.5",
+      "candidate_census": "3 validation-selected recurrence restarts",
+      "selection_stage": "minimum validation teacher-action MSE",
+      "evaluation_scope": "selected restart only; nonselected evaluation unavailable",
+      "evaluation_used_for_selection": false,
+      "active_claim_role": "superseded historical method detail only"
+    },
+    {
+      "lane_id": "fresh_teacher",
+      "parent_task": "T4.4.1",
+      "candidate_census": "3 fresh GRU restarts",
+      "selection_stage": "maximum validation selection score",
+      "evaluation_scope": "all three restarts on primary and confirmation seeds",
+      "evaluation_used_for_selection": false,
+      "active_claim_role": "frozen offline teacher"
+    },
+    {
+      "lane_id": "low_dimensional_student",
+      "parent_task": "T4.4.3",
+      "candidate_census": "1/2/4-state x 3 restarts",
+      "selection_stage": "validation-only restart then smallest eligible dimension",
+      "evaluation_scope": "all validation candidates and best-per-dimension evaluation",
+      "evaluation_used_for_selection": false,
+      "active_claim_role": "frozen distilled student candidate"
+    },
+    {
+      "lane_id": "gain_retention",
+      "parent_task": "T4.4.4",
+      "candidate_census": "frozen standard, all 5 MF, teacher, recurrence, student",
+      "selection_stage": "none after parent freeze",
+      "evaluation_scope": "all strategies on all 8 primary and 4 confirmation seeds",
+      "evaluation_used_for_selection": false,
+      "active_claim_role": "frozen physical retention audit"
+    }
+  ],
+  "lanes": {
+    "nmf_directional": {
+      "lane_id": "nmf_directional_all_agent",
+      "parent_task": "T2.3.7",
+      "selection_unit": "checkpoint_within_each_pre_registered_agent",
+      "agent_selection_rule": "none_all_five_paired_agents_retained",
+      "checkpoint_selection_split": "validation_only",
+      "evaluation_used_for_agent_selection": false,
+      "metric": "logical_z_effective_lifetime_cycles",
+      "metric_direction": "higher_is_better",
+      "splits": {
+        "primary": {
+          "cutoff": 12,
+          "registered_evaluation_seeds": [
+            20011,
+            20021,
+            20023,
+            20029,
+            20047,
+            20051,
+            20063,
+            20071
+          ],
+          "agent_rows": [
+            {
+              "unit_id": "agent-0",
+              "agent_index": 0,
+              "mf_training_seed": 101,
+              "nmf_training_seed": 101,
+              "mf_validation_score": 0.5521068846077827,
+              "nmf_validation_score": 0.5724009442107068,
+              "mf_test_value": 6.551203501400946,
+              "nmf_test_value": 6.610521591793351,
+              "value": 0.059318090392404876,
+              "selected_after_test": false
+            },
+            {
+              "unit_id": "agent-1",
+              "agent_index": 1,
+              "mf_training_seed": 211,
+              "nmf_training_seed": 211,
+              "mf_validation_score": 0.5526644539386212,
+              "nmf_validation_score": 0.5694714446376364,
+              "mf_test_value": 6.456223938000997,
+              "nmf_test_value": 6.757557183748309,
+              "value": 0.3013332457473119,
+              "selected_after_test": false
+            },
+            {
+              "unit_id": "agent-2",
+              "agent_index": 2,
+              "mf_training_seed": 307,
+              "nmf_training_seed": 307,
+              "mf_validation_score": 0.5588600308717924,
+              "nmf_validation_score": 0.5660806195312165,
+              "mf_test_value": 6.478425092234335,
+              "nmf_test_value": 6.735644106756286,
+              "value": 0.25721901452195084,
+              "selected_after_test": false
+            },
+            {
+              "unit_id": "agent-3",
+              "agent_index": 3,
+              "mf_training_seed": 401,
+              "nmf_training_seed": 401,
+              "mf_validation_score": 0.5579069616853197,
+              "nmf_validation_score": 0.5856706648016688,
+              "mf_test_value": 6.641337859535957,
+              "nmf_test_value": 6.663813007525279,
+              "value": 0.022475147989322153,
+              "selected_after_test": false
+            },
+            {
+              "unit_id": "agent-4",
+              "agent_index": 4,
+              "mf_training_seed": 503,
+              "nmf_training_seed": 503,
+              "mf_validation_score": 0.5641755437180349,
+              "nmf_validation_score": 0.5866580135554547,
+              "mf_test_value": 6.546162886028303,
+              "nmf_test_value": 6.936388012877256,
+              "value": 0.3902251268489527,
+              "selected_after_test": false
+            }
+          ],
+          "agent_seed_rows": [
+            {
+              "unit_id": "agent-0-seed-20011",
+              "agent_index": 0,
+              "evaluation_seed": 20011,
+              "mf_value": 6.615129631271943,
+              "nmf_value": 6.783502844041834,
+              "value": 0.16837321276989137
+            },
+            {
+              "unit_id": "agent-0-seed-20021",
+              "agent_index": 0,
+              "evaluation_seed": 20021,
+              "mf_value": 6.228408771488189,
+              "nmf_value": 6.003724077095297,
+              "value": -0.22468469439289152
+            },
+            {
+              "unit_id": "agent-0-seed-20023",
+              "agent_index": 0,
+              "evaluation_seed": 20023,
+              "mf_value": 7.176742334313534,
+              "nmf_value": 7.297504666703359,
+              "value": 0.12076233238982503
+            },
+            {
+              "unit_id": "agent-0-seed-20029",
+              "agent_index": 0,
+              "evaluation_seed": 20029,
+              "mf_value": 5.987528221289841,
+              "nmf_value": 6.476586855808195,
+              "value": 0.4890586345183543
+            },
+            {
+              "unit_id": "agent-0-seed-20047",
+              "agent_index": 0,
+              "evaluation_seed": 20047,
+              "mf_value": 6.03629958831314,
+              "nmf_value": 6.33059527329514,
+              "value": 0.294295684982
+            },
+            {
+              "unit_id": "agent-0-seed-20051",
+              "agent_index": 0,
+              "evaluation_seed": 20051,
+              "mf_value": 6.655271693079685,
+              "nmf_value": 6.616019109470049,
+              "value": -0.03925258360963646
+            },
+            {
+              "unit_id": "agent-0-seed-20063",
+              "agent_index": 0,
+              "evaluation_seed": 20063,
+              "mf_value": 6.633173587724407,
+              "nmf_value": 6.802686718232726,
+              "value": 0.16951313050831907
+            },
+            {
+              "unit_id": "agent-0-seed-20071",
+              "agent_index": 0,
+              "evaluation_seed": 20071,
+              "mf_value": 7.077074183726827,
+              "nmf_value": 6.573553189700203,
+              "value": -0.5035209940266245
+            },
+            {
+              "unit_id": "agent-1-seed-20011",
+              "agent_index": 1,
+              "evaluation_seed": 20011,
+              "mf_value": 6.321988911591843,
+              "nmf_value": 6.972482927853507,
+              "value": 0.6504940162616641
+            },
+            {
+              "unit_id": "agent-1-seed-20021",
+              "agent_index": 1,
+              "evaluation_seed": 20021,
+              "mf_value": 6.168395642343871,
+              "nmf_value": 6.2601246822919165,
+              "value": 0.09172903994804571
+            },
+            {
+              "unit_id": "agent-1-seed-20023",
+              "agent_index": 1,
+              "evaluation_seed": 20023,
+              "mf_value": 7.045636868290291,
+              "nmf_value": 7.564373522265399,
+              "value": 0.5187366539751075
+            },
+            {
+              "unit_id": "agent-1-seed-20029",
+              "agent_index": 1,
+              "evaluation_seed": 20029,
+              "mf_value": 5.972443073787922,
+              "nmf_value": 6.687489586126455,
+              "value": 0.7150465123385334
+            },
+            {
+              "unit_id": "agent-1-seed-20047",
+              "agent_index": 1,
+              "evaluation_seed": 20047,
+              "mf_value": 5.99210097076268,
+              "nmf_value": 6.118919865694304,
+              "value": 0.12681889493162402
+            },
+            {
+              "unit_id": "agent-1-seed-20051",
+              "agent_index": 1,
+              "evaluation_seed": 20051,
+              "mf_value": 6.641954198914508,
+              "nmf_value": 6.4005973363963875,
+              "value": -0.2413568625181206
+            },
+            {
+              "unit_id": "agent-1-seed-20063",
+              "agent_index": 1,
+              "evaluation_seed": 20063,
+              "mf_value": 6.90681981166648,
+              "nmf_value": 7.245829192637039,
+              "value": 0.339009380970559
+            },
+            {
+              "unit_id": "agent-1-seed-20071",
+              "agent_index": 1,
+              "evaluation_seed": 20071,
+              "mf_value": 6.600452026650386,
+              "nmf_value": 6.8106403567214695,
+              "value": 0.21018833007108384
+            },
+            {
+              "unit_id": "agent-2-seed-20011",
+              "agent_index": 2,
+              "evaluation_seed": 20011,
+              "mf_value": 6.248068365319085,
+              "nmf_value": 6.748132034903085,
+              "value": 0.5000636695839997
+            },
+            {
+              "unit_id": "agent-2-seed-20021",
+              "agent_index": 2,
+              "evaluation_seed": 20021,
+              "mf_value": 6.263161513751138,
+              "nmf_value": 6.193052445931011,
+              "value": -0.07010906782012682
+            },
+            {
+              "unit_id": "agent-2-seed-20023",
+              "agent_index": 2,
+              "evaluation_seed": 20023,
+              "mf_value": 7.02589364662424,
+              "nmf_value": 7.415370574666765,
+              "value": 0.38947692804252476
+            },
+            {
+              "unit_id": "agent-2-seed-20029",
+              "agent_index": 2,
+              "evaluation_seed": 20029,
+              "mf_value": 5.9378175481124185,
+              "nmf_value": 6.44143263542893,
+              "value": 0.5036150873165113
+            },
+            {
+              "unit_id": "agent-2-seed-20047",
+              "agent_index": 2,
+              "evaluation_seed": 20047,
+              "mf_value": 6.108799852456416,
+              "nmf_value": 6.448369605540847,
+              "value": 0.33956975308443127
+            },
+            {
+              "unit_id": "agent-2-seed-20051",
+              "agent_index": 2,
+              "evaluation_seed": 20051,
+              "mf_value": 6.491566907645318,
+              "nmf_value": 6.6040064345829865,
+              "value": 0.11243952693766879
+            },
+            {
+              "unit_id": "agent-2-seed-20063",
+              "agent_index": 2,
+              "evaluation_seed": 20063,
+              "mf_value": 7.055245330088866,
+              "nmf_value": 6.948506184647339,
+              "value": -0.10673914544152652
+            },
+            {
+              "unit_id": "agent-2-seed-20071",
+              "agent_index": 2,
+              "evaluation_seed": 20071,
+              "mf_value": 6.696847573877202,
+              "nmf_value": 7.086282938349324,
+              "value": 0.38943536447212246
+            },
+            {
+              "unit_id": "agent-3-seed-20011",
+              "agent_index": 3,
+              "evaluation_seed": 20011,
+              "mf_value": 6.561495266747706,
+              "nmf_value": 6.832495173203652,
+              "value": 0.2709999064559465
+            },
+            {
+              "unit_id": "agent-3-seed-20021",
+              "agent_index": 3,
+              "evaluation_seed": 20021,
+              "mf_value": 6.343865194757326,
+              "nmf_value": 6.282418596058967,
+              "value": -0.06144659869835856
+            },
+            {
+              "unit_id": "agent-3-seed-20023",
+              "agent_index": 3,
+              "evaluation_seed": 20023,
+              "mf_value": 7.235191549267421,
+              "nmf_value": 7.372767931673442,
+              "value": 0.13757638240602077
+            },
+            {
+              "unit_id": "agent-3-seed-20029",
+              "agent_index": 3,
+              "evaluation_seed": 20029,
+              "mf_value": 6.169701597670555,
+              "nmf_value": 6.435742156464519,
+              "value": 0.26604055879396427
+            },
+            {
+              "unit_id": "agent-3-seed-20047",
+              "agent_index": 3,
+              "evaluation_seed": 20047,
+              "mf_value": 6.17657862301372,
+              "nmf_value": 6.3366880829840735,
+              "value": 0.16010945997035364
+            },
+            {
+              "unit_id": "agent-3-seed-20051",
+              "agent_index": 3,
+              "evaluation_seed": 20051,
+              "mf_value": 6.846702238934462,
+              "nmf_value": 6.690833690865466,
+              "value": -0.1558685480689963
+            },
+            {
+              "unit_id": "agent-3-seed-20063",
+              "agent_index": 3,
+              "evaluation_seed": 20063,
+              "mf_value": 6.942332006853453,
+              "nmf_value": 6.698784078987726,
+              "value": -0.24354792786572688
+            },
+            {
+              "unit_id": "agent-3-seed-20071",
+              "agent_index": 3,
+              "evaluation_seed": 20071,
+              "mf_value": 6.85483639904302,
+              "nmf_value": 6.66077434996439,
+              "value": -0.19406204907862978
+            },
+            {
+              "unit_id": "agent-4-seed-20011",
+              "agent_index": 4,
+              "evaluation_seed": 20011,
+              "mf_value": 6.495134834955508,
+              "nmf_value": 6.63039514174843,
+              "value": 0.13526030679292234
+            },
+            {
+              "unit_id": "agent-4-seed-20021",
+              "agent_index": 4,
+              "evaluation_seed": 20021,
+              "mf_value": 6.077187650989407,
+              "nmf_value": 6.552847402198264,
+              "value": 0.4756597512088572
+            },
+            {
+              "unit_id": "agent-4-seed-20023",
+              "agent_index": 4,
+              "evaluation_seed": 20023,
+              "mf_value": 7.323072342910647,
+              "nmf_value": 7.486106842199677,
+              "value": 0.16303449928902936
+            },
+            {
+              "unit_id": "agent-4-seed-20029",
+              "agent_index": 4,
+              "evaluation_seed": 20029,
+              "mf_value": 6.108605627572187,
+              "nmf_value": 6.8220756619785945,
+              "value": 0.7134700344064075
+            },
+            {
+              "unit_id": "agent-4-seed-20047",
+              "agent_index": 4,
+              "evaluation_seed": 20047,
+              "mf_value": 6.284087304178243,
+              "nmf_value": 6.547926349896159,
+              "value": 0.2638390457179156
+            },
+            {
+              "unit_id": "agent-4-seed-20051",
+              "agent_index": 4,
+              "evaluation_seed": 20051,
+              "mf_value": 6.7136323674238465,
+              "nmf_value": 7.5266860649829415,
+              "value": 0.813053697559095
+            },
+            {
+              "unit_id": "agent-4-seed-20063",
+              "agent_index": 4,
+              "evaluation_seed": 20063,
+              "mf_value": 6.618556288762916,
+              "nmf_value": 7.388783904634693,
+              "value": 0.7702276158717769
+            },
+            {
+              "unit_id": "agent-4-seed-20071",
+              "agent_index": 4,
+              "evaluation_seed": 20071,
+              "mf_value": 6.749026671433674,
+              "nmf_value": 6.536282735379288,
+              "value": -0.21274393605438568
+            }
+          ],
+          "agent_distribution": {
+            "count": 5,
+            "higher_is_better": true,
+            "minimum": 0.022475147989322153,
+            "q1": 0.059318090392404876,
+            "median": 0.25721901452195084,
+            "q3": 0.3013332457473119,
+            "iqr": 0.24201515535490703,
+            "maximum": 0.3902251268489527,
+            "worst_quartile_rule": "lower_is_worse",
+            "worst_quartile_count": 2,
+            "worst_quartile": [
+              {
+                "unit_id": "agent-3",
+                "value": 0.022475147989322153
+              },
+              {
+                "unit_id": "agent-0",
+                "value": 0.059318090392404876
+              }
+            ]
+          },
+          "agent_seed_distribution_descriptive_only": {
+            "count": 40,
+            "higher_is_better": true,
+            "minimum": -0.5035209940266245,
+            "q1": -0.044801087381816984,
+            "median": 0.16894317163910522,
+            "q3": 0.41102263383410786,
+            "iqr": 0.45582372121592485,
+            "maximum": 0.813053697559095,
+            "worst_quartile_rule": "lower_is_worse",
+            "worst_quartile_count": 10,
+            "worst_quartile": [
+              {
+                "unit_id": "agent-0-seed-20071",
+                "value": -0.5035209940266245
+              },
+              {
+                "unit_id": "agent-3-seed-20063",
+                "value": -0.24354792786572688
+              },
+              {
+                "unit_id": "agent-1-seed-20051",
+                "value": -0.2413568625181206
+              },
+              {
+                "unit_id": "agent-0-seed-20021",
+                "value": -0.22468469439289152
+              },
+              {
+                "unit_id": "agent-4-seed-20071",
+                "value": -0.21274393605438568
+              },
+              {
+                "unit_id": "agent-3-seed-20071",
+                "value": -0.19406204907862978
+              },
+              {
+                "unit_id": "agent-3-seed-20051",
+                "value": -0.1558685480689963
+              },
+              {
+                "unit_id": "agent-2-seed-20063",
+                "value": -0.10673914544152652
+              },
+              {
+                "unit_id": "agent-2-seed-20021",
+                "value": -0.07010906782012682
+              },
+              {
+                "unit_id": "agent-3-seed-20021",
+                "value": -0.06144659869835856
+              }
+            ]
+          },
+          "hypothetical_test_best_agent": {
+            "agent_index": 4,
+            "value": 0.3902251268489527,
+            "inflation_over_all_agent_median": 0.13300611232700188,
+            "used_for_claim_or_selection": false
+          }
+        },
+        "confirmation": {
+          "cutoff": 16,
+          "registered_evaluation_seeds": [
+            30011,
+            30013,
+            30029,
+            30047
+          ],
+          "agent_rows": [
+            {
+              "unit_id": "agent-0",
+              "agent_index": 0,
+              "mf_training_seed": 101,
+              "nmf_training_seed": 101,
+              "mf_validation_score": 0.5521068846077827,
+              "nmf_validation_score": 0.5724009442107068,
+              "mf_test_value": 7.168155074222531,
+              "nmf_test_value": 7.554539488196756,
+              "value": 0.3863844139742252,
+              "selected_after_test": false
+            },
+            {
+              "unit_id": "agent-1",
+              "agent_index": 1,
+              "mf_training_seed": 211,
+              "nmf_training_seed": 211,
+              "mf_validation_score": 0.5526644539386212,
+              "nmf_validation_score": 0.5694714446376364,
+              "mf_test_value": 7.504904672859526,
+              "nmf_test_value": 8.024862999544883,
+              "value": 0.5199583266853569,
+              "selected_after_test": false
+            },
+            {
+              "unit_id": "agent-2",
+              "agent_index": 2,
+              "mf_training_seed": 307,
+              "nmf_training_seed": 307,
+              "mf_validation_score": 0.5588600308717924,
+              "nmf_validation_score": 0.5660806195312165,
+              "mf_test_value": 7.152823218270628,
+              "nmf_test_value": 7.49709695332687,
+              "value": 0.3442737350562419,
+              "selected_after_test": false
+            },
+            {
+              "unit_id": "agent-3",
+              "agent_index": 3,
+              "mf_training_seed": 401,
+              "nmf_training_seed": 401,
+              "mf_validation_score": 0.5579069616853197,
+              "nmf_validation_score": 0.5856706648016688,
+              "mf_test_value": 7.359018654046849,
+              "nmf_test_value": 7.640055170358347,
+              "value": 0.28103651631149784,
+              "selected_after_test": false
+            },
+            {
+              "unit_id": "agent-4",
+              "agent_index": 4,
+              "mf_training_seed": 503,
+              "nmf_training_seed": 503,
+              "mf_validation_score": 0.5641755437180349,
+              "nmf_validation_score": 0.5866580135554547,
+              "mf_test_value": 7.044613801811466,
+              "nmf_test_value": 7.825200377329432,
+              "value": 0.7805865755179662,
+              "selected_after_test": false
+            }
+          ],
+          "agent_seed_rows": [
+            {
+              "unit_id": "agent-0-seed-30011",
+              "agent_index": 0,
+              "evaluation_seed": 30011,
+              "mf_value": 6.968510437253796,
+              "nmf_value": 8.090480570995776,
+              "value": 1.1219701337419803
+            },
+            {
+              "unit_id": "agent-0-seed-30013",
+              "agent_index": 0,
+              "evaluation_seed": 30013,
+              "mf_value": 8.083567113424962,
+              "nmf_value": 8.015458123234868,
+              "value": -0.06810899019009398
+            },
+            {
+              "unit_id": "agent-0-seed-30029",
+              "agent_index": 0,
+              "evaluation_seed": 30029,
+              "mf_value": 6.2877853188952955,
+              "nmf_value": 6.839430947078359,
+              "value": 0.5516456281830635
+            },
+            {
+              "unit_id": "agent-0-seed-30047",
+              "agent_index": 0,
+              "evaluation_seed": 30047,
+              "mf_value": 7.332757427316068,
+              "nmf_value": 7.272788311478019,
+              "value": -0.05996911583804909
+            },
+            {
+              "unit_id": "agent-1-seed-30011",
+              "agent_index": 1,
+              "evaluation_seed": 30011,
+              "mf_value": 7.732973183851003,
+              "nmf_value": 8.433540884466371,
+              "value": 0.7005677006153679
+            },
+            {
+              "unit_id": "agent-1-seed-30013",
+              "agent_index": 1,
+              "evaluation_seed": 30013,
+              "mf_value": 8.134987725522599,
+              "nmf_value": 8.873150618250705,
+              "value": 0.7381628927281056
+            },
+            {
+              "unit_id": "agent-1-seed-30029",
+              "agent_index": 1,
+              "evaluation_seed": 30029,
+              "mf_value": 6.662796125236978,
+              "nmf_value": 6.904463230752338,
+              "value": 0.24166710551535964
+            },
+            {
+              "unit_id": "agent-1-seed-30047",
+              "agent_index": 1,
+              "evaluation_seed": 30047,
+              "mf_value": 7.488861656827522,
+              "nmf_value": 7.888297264710117,
+              "value": 0.39943560788259447
+            },
+            {
+              "unit_id": "agent-2-seed-30011",
+              "agent_index": 2,
+              "evaluation_seed": 30011,
+              "mf_value": 7.289976800991136,
+              "nmf_value": 7.795009399233441,
+              "value": 0.5050325982423054
+            },
+            {
+              "unit_id": "agent-2-seed-30013",
+              "agent_index": 2,
+              "evaluation_seed": 30013,
+              "mf_value": 7.815774010806646,
+              "nmf_value": 8.445962605856515,
+              "value": 0.6301885950498693
+            },
+            {
+              "unit_id": "agent-2-seed-30029",
+              "agent_index": 2,
+              "evaluation_seed": 30029,
+              "mf_value": 6.159593016633455,
+              "nmf_value": 6.636396267898808,
+              "value": 0.4768032512653537
+            },
+            {
+              "unit_id": "agent-2-seed-30047",
+              "agent_index": 2,
+              "evaluation_seed": 30047,
+              "mf_value": 7.345949044651276,
+              "nmf_value": 7.111019540318711,
+              "value": -0.23492950433256432
+            },
+            {
+              "unit_id": "agent-3-seed-30011",
+              "agent_index": 3,
+              "evaluation_seed": 30011,
+              "mf_value": 7.038176114833595,
+              "nmf_value": 8.138280379136738,
+              "value": 1.100104264303143
+            },
+            {
+              "unit_id": "agent-3-seed-30013",
+              "agent_index": 3,
+              "evaluation_seed": 30013,
+              "mf_value": 8.54297926290807,
+              "nmf_value": 8.282903478781634,
+              "value": -0.2600757841264354
+            },
+            {
+              "unit_id": "agent-3-seed-30029",
+              "agent_index": 3,
+              "evaluation_seed": 30029,
+              "mf_value": 6.495342468931669,
+              "nmf_value": 7.075239824265356,
+              "value": 0.5798973553336868
+            },
+            {
+              "unit_id": "agent-3-seed-30047",
+              "agent_index": 3,
+              "evaluation_seed": 30047,
+              "mf_value": 7.3595767695140655,
+              "nmf_value": 7.063796999249661,
+              "value": -0.2957797702644047
+            },
+            {
+              "unit_id": "agent-4-seed-30011",
+              "agent_index": 4,
+              "evaluation_seed": 30011,
+              "mf_value": 6.788461039786734,
+              "nmf_value": 7.902724345002397,
+              "value": 1.1142633052156636
+            },
+            {
+              "unit_id": "agent-4-seed-30013",
+              "agent_index": 4,
+              "evaluation_seed": 30013,
+              "mf_value": 7.452300257536889,
+              "nmf_value": 8.774612672329631,
+              "value": 1.3223124147927425
+            },
+            {
+              "unit_id": "agent-4-seed-30029",
+              "agent_index": 4,
+              "evaluation_seed": 30029,
+              "mf_value": 6.620149590629296,
+              "nmf_value": 6.494485037981592,
+              "value": -0.12566455264770404
+            },
+            {
+              "unit_id": "agent-4-seed-30047",
+              "agent_index": 4,
+              "evaluation_seed": 30047,
+              "mf_value": 7.317544319292946,
+              "nmf_value": 8.12897945400411,
+              "value": 0.8114351347111644
+            }
+          ],
+          "agent_distribution": {
+            "count": 5,
+            "higher_is_better": true,
+            "minimum": 0.28103651631149784,
+            "q1": 0.3442737350562419,
+            "median": 0.3863844139742252,
+            "q3": 0.5199583266853569,
+            "iqr": 0.17568459162911498,
+            "maximum": 0.7805865755179662,
+            "worst_quartile_rule": "lower_is_worse",
+            "worst_quartile_count": 2,
+            "worst_quartile": [
+              {
+                "unit_id": "agent-3",
+                "value": 0.28103651631149784
+              },
+              {
+                "unit_id": "agent-2",
+                "value": 0.3442737350562419
+              }
+            ]
+          },
+          "agent_seed_distribution_descriptive_only": {
+            "count": 20,
+            "higher_is_better": true,
+            "minimum": -0.2957797702644047,
+            "q1": -0.06200408442606031,
+            "median": 0.5283391132126845,
+            "q3": 0.7564809532238703,
+            "iqr": 0.8184850376499306,
+            "maximum": 1.3223124147927425,
+            "worst_quartile_rule": "lower_is_worse",
+            "worst_quartile_count": 5,
+            "worst_quartile": [
+              {
+                "unit_id": "agent-3-seed-30047",
+                "value": -0.2957797702644047
+              },
+              {
+                "unit_id": "agent-3-seed-30013",
+                "value": -0.2600757841264354
+              },
+              {
+                "unit_id": "agent-2-seed-30047",
+                "value": -0.23492950433256432
+              },
+              {
+                "unit_id": "agent-4-seed-30029",
+                "value": -0.12566455264770404
+              },
+              {
+                "unit_id": "agent-0-seed-30013",
+                "value": -0.06810899019009398
+              }
+            ]
+          },
+          "hypothetical_test_best_agent": {
+            "agent_index": 4,
+            "value": 0.7805865755179662,
+            "inflation_over_all_agent_median": 0.394202161543741,
+            "used_for_claim_or_selection": false
+          }
+        }
+      },
+      "claim_use": "all-agent directional distribution; never best-agent performance"
+    },
+    "slow_loop_model_selection": {
+      "lane_id": "matched_budget_slow_loop_family_selection",
+      "parent_task": "T4.1.1",
+      "selection_metric": "validation_negative_log_likelihood",
+      "evaluation_metric": "evaluation_negative_log_likelihood",
+      "metric_direction": "lower_is_better",
+      "candidate_rows": [
+        {
+          "unit_id": "causal_tcn",
+          "family": "causal_tcn",
+          "validation_nll": 0.4761804249798292,
+          "evaluation_nll": 0.5119359923296773,
+          "selected_on_validation": false
+        },
+        {
+          "unit_id": "small_gru",
+          "family": "small_gru",
+          "validation_nll": 0.5031340296825837,
+          "evaluation_nll": 0.5096188224765918,
+          "selected_on_validation": false
+        },
+        {
+          "unit_id": "gaussian_hmm",
+          "family": "gaussian_hmm",
+          "validation_nll": 0.45497471158723124,
+          "evaluation_nll": 0.45571074219319013,
+          "selected_on_validation": true
+        },
+        {
+          "unit_id": "diagonal_kalman",
+          "family": "diagonal_kalman",
+          "validation_nll": 0.5456925755054856,
+          "evaluation_nll": 0.5603211699999342,
+          "selected_on_validation": false
+        },
+        {
+          "unit_id": "exponential_recurrence",
+          "family": "exponential_recurrence",
+          "validation_nll": 0.5398244443979165,
+          "evaluation_nll": 0.5951951482428683,
+          "selected_on_validation": false
+        },
+        {
+          "unit_id": "run_length_fsm",
+          "family": "run_length_fsm",
+          "validation_nll": 0.7858174765491682,
+          "evaluation_nll": 0.8248366717705644,
+          "selected_on_validation": false
+        }
+      ],
+      "neural_restart_validation_rows": [
+        {
+          "unit_id": "causal_tcn-41101",
+          "family": "causal_tcn",
+          "restart_seed": 41101,
+          "value": 0.4936377125263768,
+          "selected_on_validation": false,
+          "evaluation_metric_available_for_this_restart": false
+        },
+        {
+          "unit_id": "causal_tcn-41102",
+          "family": "causal_tcn",
+          "restart_seed": 41102,
+          "value": 0.48476900360905956,
+          "selected_on_validation": false,
+          "evaluation_metric_available_for_this_restart": false
+        },
+        {
+          "unit_id": "causal_tcn-41103",
+          "family": "causal_tcn",
+          "restart_seed": 41103,
+          "value": 0.4761804249798292,
+          "selected_on_validation": true,
+          "evaluation_metric_available_for_this_restart": false
+        },
+        {
+          "unit_id": "causal_tcn-41104",
+          "family": "causal_tcn",
+          "restart_seed": 41104,
+          "value": 0.47942010455111655,
+          "selected_on_validation": false,
+          "evaluation_metric_available_for_this_restart": false
+        },
+        {
+          "unit_id": "causal_tcn-41105",
+          "family": "causal_tcn",
+          "restart_seed": 41105,
+          "value": 0.4897424171673445,
+          "selected_on_validation": false,
+          "evaluation_metric_available_for_this_restart": false
+        },
+        {
+          "unit_id": "small_gru-41101",
+          "family": "small_gru",
+          "restart_seed": 41101,
+          "value": 0.5031340296825837,
+          "selected_on_validation": true,
+          "evaluation_metric_available_for_this_restart": false
+        },
+        {
+          "unit_id": "small_gru-41102",
+          "family": "small_gru",
+          "restart_seed": 41102,
+          "value": 0.5527819331451882,
+          "selected_on_validation": false,
+          "evaluation_metric_available_for_this_restart": false
+        },
+        {
+          "unit_id": "small_gru-41103",
+          "family": "small_gru",
+          "restart_seed": 41103,
+          "value": 0.5247365302085327,
+          "selected_on_validation": false,
+          "evaluation_metric_available_for_this_restart": false
+        },
+        {
+          "unit_id": "small_gru-41104",
+          "family": "small_gru",
+          "restart_seed": 41104,
+          "value": 0.5045323136709269,
+          "selected_on_validation": false,
+          "evaluation_metric_available_for_this_restart": false
+        },
+        {
+          "unit_id": "small_gru-41105",
+          "family": "small_gru",
+          "restart_seed": 41105,
+          "value": 0.5463053317965919,
+          "selected_on_validation": false,
+          "evaluation_metric_available_for_this_restart": false
+        }
+      ],
+      "neural_restart_validation_distribution": {
+        "count": 10,
+        "higher_is_better": false,
+        "minimum": 0.4761804249798292,
+        "q1": 0.48601235699863077,
+        "median": 0.49838587110448024,
+        "q3": 0.5196854760741313,
+        "iqr": 0.033673119075500524,
+        "maximum": 0.5527819331451882,
+        "worst_quartile_rule": "higher_is_worse",
+        "worst_quartile_count": 3,
+        "worst_quartile": [
+          {
+            "unit_id": "small_gru-41102",
+            "value": 0.5527819331451882
+          },
+          {
+            "unit_id": "small_gru-41105",
+            "value": 0.5463053317965919
+          },
+          {
+            "unit_id": "small_gru-41103",
+            "value": 0.5247365302085327
+          }
+        ]
+      },
+      "evaluation_seed_rows": [
+        {
+          "unit_id": "causal_tcn-seed-20261231",
+          "family": "causal_tcn",
+          "evaluation_seed": 20261231,
+          "value": 0.5524175063552111
+        },
+        {
+          "unit_id": "small_gru-seed-20261231",
+          "family": "small_gru",
+          "evaluation_seed": 20261231,
+          "value": 0.6349296057300807
+        },
+        {
+          "unit_id": "gaussian_hmm-seed-20261231",
+          "family": "gaussian_hmm",
+          "evaluation_seed": 20261231,
+          "value": 0.49640472685794484
+        },
+        {
+          "unit_id": "diagonal_kalman-seed-20261231",
+          "family": "diagonal_kalman",
+          "evaluation_seed": 20261231,
+          "value": 0.6583402522956523
+        },
+        {
+          "unit_id": "exponential_recurrence-seed-20261231",
+          "family": "exponential_recurrence",
+          "evaluation_seed": 20261231,
+          "value": 0.646791429584895
+        },
+        {
+          "unit_id": "run_length_fsm-seed-20261231",
+          "family": "run_length_fsm",
+          "evaluation_seed": 20261231,
+          "value": 0.8678429593922726
+        },
+        {
+          "unit_id": "causal_tcn-seed-20261232",
+          "family": "causal_tcn",
+          "evaluation_seed": 20261232,
+          "value": 0.49263529710099013
+        },
+        {
+          "unit_id": "small_gru-seed-20261232",
+          "family": "small_gru",
+          "evaluation_seed": 20261232,
+          "value": 0.45689905425079885
+        },
+        {
+          "unit_id": "gaussian_hmm-seed-20261232",
+          "family": "gaussian_hmm",
+          "evaluation_seed": 20261232,
+          "value": 0.42163469210046084
+        },
+        {
+          "unit_id": "diagonal_kalman-seed-20261232",
+          "family": "diagonal_kalman",
+          "evaluation_seed": 20261232,
+          "value": 0.5350010525116159
+        },
+        {
+          "unit_id": "exponential_recurrence-seed-20261232",
+          "family": "exponential_recurrence",
+          "evaluation_seed": 20261232,
+          "value": 0.5630864919178001
+        },
+        {
+          "unit_id": "run_length_fsm-seed-20261232",
+          "family": "run_length_fsm",
+          "evaluation_seed": 20261232,
+          "value": 0.7596616593250073
+        },
+        {
+          "unit_id": "causal_tcn-seed-20261233",
+          "family": "causal_tcn",
+          "evaluation_seed": 20261233,
+          "value": 0.48198871460591414
+        },
+        {
+          "unit_id": "small_gru-seed-20261233",
+          "family": "small_gru",
+          "evaluation_seed": 20261233,
+          "value": 0.4489369330112947
+        },
+        {
+          "unit_id": "gaussian_hmm-seed-20261233",
+          "family": "gaussian_hmm",
+          "evaluation_seed": 20261233,
+          "value": 0.4071493424750491
+        },
+        {
+          "unit_id": "diagonal_kalman-seed-20261233",
+          "family": "diagonal_kalman",
+          "evaluation_seed": 20261233,
+          "value": 0.5339704717322556
+        },
+        {
+          "unit_id": "exponential_recurrence-seed-20261233",
+          "family": "exponential_recurrence",
+          "evaluation_seed": 20261233,
+          "value": 0.5820342237890861
+        },
+        {
+          "unit_id": "run_length_fsm-seed-20261233",
+          "family": "run_length_fsm",
+          "evaluation_seed": 20261233,
+          "value": 0.766510152864401
+        },
+        {
+          "unit_id": "causal_tcn-seed-20261234",
+          "family": "causal_tcn",
+          "evaluation_seed": 20261234,
+          "value": 0.40800057629138253
+        },
+        {
+          "unit_id": "small_gru-seed-20261234",
+          "family": "small_gru",
+          "evaluation_seed": 20261234,
+          "value": 0.43768567469230524
+        },
+        {
+          "unit_id": "gaussian_hmm-seed-20261234",
+          "family": "gaussian_hmm",
+          "evaluation_seed": 20261234,
+          "value": 0.36041833202758644
+        },
+        {
+          "unit_id": "diagonal_kalman-seed-20261234",
+          "family": "diagonal_kalman",
+          "evaluation_seed": 20261234,
+          "value": 0.4534805727928155
+        },
+        {
+          "unit_id": "exponential_recurrence-seed-20261234",
+          "family": "exponential_recurrence",
+          "evaluation_seed": 20261234,
+          "value": 0.4961584920473967
+        },
+        {
+          "unit_id": "run_length_fsm-seed-20261234",
+          "family": "run_length_fsm",
+          "evaluation_seed": 20261234,
+          "value": 0.8312921445717277
+        },
+        {
+          "unit_id": "causal_tcn-seed-20261235",
+          "family": "causal_tcn",
+          "evaluation_seed": 20261235,
+          "value": 0.514459992116227
+        },
+        {
+          "unit_id": "small_gru-seed-20261235",
+          "family": "small_gru",
+          "evaluation_seed": 20261235,
+          "value": 0.4935329235442998
+        },
+        {
+          "unit_id": "gaussian_hmm-seed-20261235",
+          "family": "gaussian_hmm",
+          "evaluation_seed": 20261235,
+          "value": 0.4659100425054968
+        },
+        {
+          "unit_id": "diagonal_kalman-seed-20261235",
+          "family": "diagonal_kalman",
+          "evaluation_seed": 20261235,
+          "value": 0.5356927914446244
+        },
+        {
+          "unit_id": "exponential_recurrence-seed-20261235",
+          "family": "exponential_recurrence",
+          "evaluation_seed": 20261235,
+          "value": 0.6065530155681377
+        },
+        {
+          "unit_id": "run_length_fsm-seed-20261235",
+          "family": "run_length_fsm",
+          "evaluation_seed": 20261235,
+          "value": 0.8496767254609169
+        },
+        {
+          "unit_id": "causal_tcn-seed-20261236",
+          "family": "causal_tcn",
+          "evaluation_seed": 20261236,
+          "value": 0.553163856936053
+        },
+        {
+          "unit_id": "small_gru-seed-20261236",
+          "family": "small_gru",
+          "evaluation_seed": 20261236,
+          "value": 0.5267452450693045
+        },
+        {
+          "unit_id": "gaussian_hmm-seed-20261236",
+          "family": "gaussian_hmm",
+          "evaluation_seed": 20261236,
+          "value": 0.4973612488773318
+        },
+        {
+          "unit_id": "diagonal_kalman-seed-20261236",
+          "family": "diagonal_kalman",
+          "evaluation_seed": 20261236,
+          "value": 0.5992651023867523
+        },
+        {
+          "unit_id": "exponential_recurrence-seed-20261236",
+          "family": "exponential_recurrence",
+          "evaluation_seed": 20261236,
+          "value": 0.6384754801984766
+        },
+        {
+          "unit_id": "run_length_fsm-seed-20261236",
+          "family": "run_length_fsm",
+          "evaluation_seed": 20261236,
+          "value": 0.8209901777943986
+        },
+        {
+          "unit_id": "causal_tcn-seed-20261237",
+          "family": "causal_tcn",
+          "evaluation_seed": 20261237,
+          "value": 0.4953097308195328
+        },
+        {
+          "unit_id": "small_gru-seed-20261237",
+          "family": "small_gru",
+          "evaluation_seed": 20261237,
+          "value": 0.5208290238449864
+        },
+        {
+          "unit_id": "gaussian_hmm-seed-20261237",
+          "family": "gaussian_hmm",
+          "evaluation_seed": 20261237,
+          "value": 0.4412492571044575
+        },
+        {
+          "unit_id": "diagonal_kalman-seed-20261237",
+          "family": "diagonal_kalman",
+          "evaluation_seed": 20261237,
+          "value": 0.5200793067745857
+        },
+        {
+          "unit_id": "exponential_recurrence-seed-20261237",
+          "family": "exponential_recurrence",
+          "evaluation_seed": 20261237,
+          "value": 0.5624094912500964
+        },
+        {
+          "unit_id": "run_length_fsm-seed-20261237",
+          "family": "run_length_fsm",
+          "evaluation_seed": 20261237,
+          "value": 0.7781052735816394
+        },
+        {
+          "unit_id": "causal_tcn-seed-20261238",
+          "family": "causal_tcn",
+          "evaluation_seed": 20261238,
+          "value": 0.5975122644121081
+        },
+        {
+          "unit_id": "small_gru-seed-20261238",
+          "family": "small_gru",
+          "evaluation_seed": 20261238,
+          "value": 0.5573921196696643
+        },
+        {
+          "unit_id": "gaussian_hmm-seed-20261238",
+          "family": "gaussian_hmm",
+          "evaluation_seed": 20261238,
+          "value": 0.5555582955971939
+        },
+        {
+          "unit_id": "diagonal_kalman-seed-20261238",
+          "family": "diagonal_kalman",
+          "evaluation_seed": 20261238,
+          "value": 0.6467398100611719
+        },
+        {
+          "unit_id": "exponential_recurrence-seed-20261238",
+          "family": "exponential_recurrence",
+          "evaluation_seed": 20261238,
+          "value": 0.6660525615870577
+        },
+        {
+          "unit_id": "run_length_fsm-seed-20261238",
+          "family": "run_length_fsm",
+          "evaluation_seed": 20261238,
+          "value": 0.9246142811741512
+        }
+      ],
+      "per_family_evaluation_distributions": {
+        "causal_tcn": {
+          "count": 8,
+          "higher_is_better": false,
+          "minimum": 0.40800057629138253,
+          "q1": 0.48997365147722116,
+          "median": 0.5048848614678798,
+          "q3": 0.5526040940004215,
+          "iqr": 0.06263044252320038,
+          "maximum": 0.5975122644121081,
+          "worst_quartile_rule": "higher_is_worse",
+          "worst_quartile_count": 2,
+          "worst_quartile": [
+            {
+              "unit_id": "causal_tcn-seed-20261238",
+              "value": 0.5975122644121081
+            },
+            {
+              "unit_id": "causal_tcn-seed-20261236",
+              "value": 0.553163856936053
+            }
+          ]
+        },
+        "diagonal_kalman": {
+          "count": 8,
+          "higher_is_better": false,
+          "minimum": 0.4534805727928155,
+          "q1": 0.5304976804928382,
+          "median": 0.5353469219781202,
+          "q3": 0.6111337793053573,
+          "iqr": 0.0806360988125191,
+          "maximum": 0.6583402522956523,
+          "worst_quartile_rule": "higher_is_worse",
+          "worst_quartile_count": 2,
+          "worst_quartile": [
+            {
+              "unit_id": "diagonal_kalman-seed-20261231",
+              "value": 0.6583402522956523
+            },
+            {
+              "unit_id": "diagonal_kalman-seed-20261238",
+              "value": 0.6467398100611719
+            }
+          ]
+        },
+        "exponential_recurrence": {
+          "count": 8,
+          "higher_is_better": false,
+          "minimum": 0.4961584920473967,
+          "q1": 0.5629172417508742,
+          "median": 0.5942936196786119,
+          "q3": 0.6405544675450812,
+          "iqr": 0.07763722579420695,
+          "maximum": 0.6660525615870577,
+          "worst_quartile_rule": "higher_is_worse",
+          "worst_quartile_count": 2,
+          "worst_quartile": [
+            {
+              "unit_id": "exponential_recurrence-seed-20261238",
+              "value": 0.6660525615870577
+            },
+            {
+              "unit_id": "exponential_recurrence-seed-20261231",
+              "value": 0.646791429584895
+            }
+          ]
+        },
+        "gaussian_hmm": {
+          "count": 8,
+          "higher_is_better": false,
+          "minimum": 0.36041833202758644,
+          "q1": 0.4180133546941079,
+          "median": 0.4535796498049771,
+          "q3": 0.4966438573627916,
+          "iqr": 0.07863050266868371,
+          "maximum": 0.5555582955971939,
+          "worst_quartile_rule": "higher_is_worse",
+          "worst_quartile_count": 2,
+          "worst_quartile": [
+            {
+              "unit_id": "gaussian_hmm-seed-20261238",
+              "value": 0.5555582955971939
+            },
+            {
+              "unit_id": "gaussian_hmm-seed-20261236",
+              "value": 0.4973612488773318
+            }
+          ]
+        },
+        "run_length_fsm": {
+          "count": 8,
+          "higher_is_better": false,
+          "minimum": 0.7596616593250073,
+          "q1": 0.7752064934023298,
+          "median": 0.8261411611830631,
+          "q3": 0.8542182839437558,
+          "iqr": 0.07901179054142593,
+          "maximum": 0.9246142811741512,
+          "worst_quartile_rule": "higher_is_worse",
+          "worst_quartile_count": 2,
+          "worst_quartile": [
+            {
+              "unit_id": "run_length_fsm-seed-20261238",
+              "value": 0.9246142811741512
+            },
+            {
+              "unit_id": "run_length_fsm-seed-20261231",
+              "value": 0.8678429593922726
+            }
+          ]
+        },
+        "small_gru": {
+          "count": 8,
+          "higher_is_better": false,
+          "minimum": 0.43768567469230524,
+          "q1": 0.45490852394092285,
+          "median": 0.5071809736946431,
+          "q3": 0.5344069637193944,
+          "iqr": 0.0794984397784716,
+          "maximum": 0.6349296057300807,
+          "worst_quartile_rule": "higher_is_worse",
+          "worst_quartile_count": 2,
+          "worst_quartile": [
+            {
+              "unit_id": "small_gru-seed-20261231",
+              "value": 0.6349296057300807
+            },
+            {
+              "unit_id": "small_gru-seed-20261238",
+              "value": 0.5573921196696643
+            }
+          ]
+        }
+      },
+      "selected_family": "gaussian_hmm",
+      "evaluation_used_for_selection": false,
+      "hindsight_test_best_diagnostic": {
+        "family": "gaussian_hmm",
+        "evaluation_nll": 0.45571074219319013,
+        "agrees_with_validation_selection": true,
+        "postselection_optimism": 0.0,
+        "used_to_change_selection": false
+      }
+    },
+    "legacy_student_predecessor": {
+      "lane_id": "legacy_offline_student_predecessor",
+      "parent_task": "T4.1.5",
+      "role": "superseded_predecessor_not_current_selected_student",
+      "selection_metric": "validation_teacher_action_mse",
+      "metric_direction": "lower_is_better",
+      "candidate_validation_rows": [
+        {
+          "unit_id": "restart-0",
+          "restart_index": 0,
+          "restart_seed": 131,
+          "value": 1.3224639525826453e-06,
+          "selected_on_validation": true,
+          "evaluation_metric_available_for_this_restart": true
+        },
+        {
+          "unit_id": "restart-1",
+          "restart_index": 1,
+          "restart_seed": 271,
+          "value": 1.3225648823628646e-06,
+          "selected_on_validation": false,
+          "evaluation_metric_available_for_this_restart": false
+        },
+        {
+          "unit_id": "restart-2",
+          "restart_index": 2,
+          "restart_seed": 419,
+          "value": 1.3234188770185685e-06,
+          "selected_on_validation": false,
+          "evaluation_metric_available_for_this_restart": false
+        }
+      ],
+      "candidate_validation_distribution": {
+        "count": 3,
+        "higher_is_better": false,
+        "minimum": 1.3224639525826453e-06,
+        "q1": 1.322514417472755e-06,
+        "median": 1.3225648823628646e-06,
+        "q3": 1.3229918796907166e-06,
+        "iqr": 4.774622179615024e-10,
+        "maximum": 1.3234188770185685e-06,
+        "worst_quartile_rule": "higher_is_worse",
+        "worst_quartile_count": 1,
+        "worst_quartile": [
+          {
+            "unit_id": "restart-2",
+            "value": 1.3234188770185685e-06
+          }
+        ]
+      },
+      "selected_restart": 0,
+      "evaluation_used_for_training_or_selection": false,
+      "selected_evaluation_metrics": {
+        "mse": 1.4536235700091976e-06,
+        "rmse": 0.0012056631245954226,
+        "mae": 0.0006437653722696509,
+        "max_abs_error": 0.012215130155488578,
+        "per_half_cycle_mse": [
+          4.7271533164895103e-07,
+          6.570270022678344e-07,
+          8.600066226958523e-07,
+          1.4713161600186285e-06,
+          1.7767592769255003e-06,
+          1.4733549191580297e-06,
+          1.4006950987382057e-06,
+          1.1819710981863405e-06,
+          1.6623118123151098e-06,
+          1.4939989249514233e-06,
+          1.6162352990167434e-06,
+          1.6107329968638882e-06,
+          1.6380205368303392e-06,
+          1.472511383401125e-06,
+          1.6745159222179748e-06,
+          1.72551090675453e-06,
+          1.5994051749397242e-06,
+          1.754170633596289e-06,
+          1.719053007660416e-06,
+          1.8121592919970563e-06
+        ],
+        "imitation_gain_retention_vs_zero": 0.9997239345759029
+      },
+      "all_candidate_evaluation_available": false,
+      "missing_evidence": "nonselected legacy restart weights/evaluation metrics were not retained; no hindsight test-best restart can be computed",
+      "claim_decision": "retain as validation-only historical method evidence; active low-dimensional student selection is audited separately from T4.4.3"
+    },
+    "fresh_teacher": {
+      "lane_id": "fresh_bounded_teacher_restart_selection",
+      "parent_task": "T4.4.1",
+      "selection_metric": "best_validation_selection_score",
+      "metric_direction": "higher_is_better",
+      "candidate_rows": [
+        {
+          "unit_id": "restart-0",
+          "restart_index": 0,
+          "training_seed": 601,
+          "validation_score": 0.587631778472019,
+          "primary_selection_score": 0.5635444236210414,
+          "confirmation_selection_score": 0.5970348522178355,
+          "primary_logical_z_lifetime": 7.001796091667185,
+          "confirmation_logical_z_lifetime": 8.042885862796526,
+          "selected_on_validation": true
+        },
+        {
+          "unit_id": "restart-1",
+          "restart_index": 1,
+          "training_seed": 709,
+          "validation_score": 0.5852638642400338,
+          "primary_selection_score": 0.5577910273920712,
+          "confirmation_selection_score": 0.5918596228743546,
+          "primary_logical_z_lifetime": 6.789208504969109,
+          "confirmation_logical_z_lifetime": 7.815242187209249,
+          "selected_on_validation": false
+        },
+        {
+          "unit_id": "restart-2",
+          "restart_index": 2,
+          "training_seed": 811,
+          "validation_score": 0.5867017738638844,
+          "primary_selection_score": 0.5676718942712915,
+          "confirmation_selection_score": 0.5984798272501237,
+          "primary_logical_z_lifetime": 7.085530024799882,
+          "confirmation_logical_z_lifetime": 8.030818496055215,
+          "selected_on_validation": false
+        }
+      ],
+      "candidate_validation_distribution": {
+        "count": 3,
+        "higher_is_better": true,
+        "minimum": 0.5852638642400338,
+        "q1": 0.5859828190519591,
+        "median": 0.5867017738638844,
+        "q3": 0.5871667761679518,
+        "iqr": 0.0011839571159926177,
+        "maximum": 0.587631778472019,
+        "worst_quartile_rule": "lower_is_worse",
+        "worst_quartile_count": 1,
+        "worst_quartile": [
+          {
+            "unit_id": "restart-1",
+            "value": 0.5852638642400338
+          }
+        ]
+      },
+      "selected_restart": 0,
+      "selection_rule": "maximum best validation selection score; evaluation and confirmation remain blind",
+      "evaluation_used_for_selection": false,
+      "splits": {
+        "primary": {
+          "registered_evaluation_seeds": [
+            42013,
+            42017,
+            42019,
+            42023,
+            42043,
+            42061,
+            42071,
+            42073
+          ],
+          "all_restart_seed_rows": [
+            {
+              "unit_id": "restart-0-seed-42013",
+              "restart_index": 0,
+              "evaluation_seed": 42013,
+              "value": 7.30761495292907
+            },
+            {
+              "unit_id": "restart-0-seed-42017",
+              "restart_index": 0,
+              "evaluation_seed": 42017,
+              "value": 6.862630614673412
+            },
+            {
+              "unit_id": "restart-0-seed-42019",
+              "restart_index": 0,
+              "evaluation_seed": 42019,
+              "value": 6.926515034736807
+            },
+            {
+              "unit_id": "restart-0-seed-42023",
+              "restart_index": 0,
+              "evaluation_seed": 42023,
+              "value": 7.398063813882628
+            },
+            {
+              "unit_id": "restart-0-seed-42043",
+              "restart_index": 0,
+              "evaluation_seed": 42043,
+              "value": 6.350120282739423
+            },
+            {
+              "unit_id": "restart-0-seed-42061",
+              "restart_index": 0,
+              "evaluation_seed": 42061,
+              "value": 7.107776525364498
+            },
+            {
+              "unit_id": "restart-0-seed-42071",
+              "restart_index": 0,
+              "evaluation_seed": 42071,
+              "value": 6.3888191318426735
+            },
+            {
+              "unit_id": "restart-0-seed-42073",
+              "restart_index": 0,
+              "evaluation_seed": 42073,
+              "value": 7.672828377168962
+            },
+            {
+              "unit_id": "restart-1-seed-42013",
+              "restart_index": 1,
+              "evaluation_seed": 42013,
+              "value": 6.82673872002716
+            },
+            {
+              "unit_id": "restart-1-seed-42017",
+              "restart_index": 1,
+              "evaluation_seed": 42017,
+              "value": 6.6940077374293665
+            },
+            {
+              "unit_id": "restart-1-seed-42019",
+              "restart_index": 1,
+              "evaluation_seed": 42019,
+              "value": 6.845041734208905
+            },
+            {
+              "unit_id": "restart-1-seed-42023",
+              "restart_index": 1,
+              "evaluation_seed": 42023,
+              "value": 6.788648928709129
+            },
+            {
+              "unit_id": "restart-1-seed-42043",
+              "restart_index": 1,
+              "evaluation_seed": 42043,
+              "value": 6.399614025257533
+            },
+            {
+              "unit_id": "restart-1-seed-42061",
+              "restart_index": 1,
+              "evaluation_seed": 42061,
+              "value": 6.633709435121277
+            },
+            {
+              "unit_id": "restart-1-seed-42071",
+              "restart_index": 1,
+              "evaluation_seed": 42071,
+              "value": 6.722847653021626
+            },
+            {
+              "unit_id": "restart-1-seed-42073",
+              "restart_index": 1,
+              "evaluation_seed": 42073,
+              "value": 7.403059805977875
+            },
+            {
+              "unit_id": "restart-2-seed-42013",
+              "restart_index": 2,
+              "evaluation_seed": 42013,
+              "value": 7.243034516624451
+            },
+            {
+              "unit_id": "restart-2-seed-42017",
+              "restart_index": 2,
+              "evaluation_seed": 42017,
+              "value": 6.898021922463601
+            },
+            {
+              "unit_id": "restart-2-seed-42019",
+              "restart_index": 2,
+              "evaluation_seed": 42019,
+              "value": 6.862348864751814
+            },
+            {
+              "unit_id": "restart-2-seed-42023",
+              "restart_index": 2,
+              "evaluation_seed": 42023,
+              "value": 7.352968513845804
+            },
+            {
+              "unit_id": "restart-2-seed-42043",
+              "restart_index": 2,
+              "evaluation_seed": 42043,
+              "value": 6.4860007647822115
+            },
+            {
+              "unit_id": "restart-2-seed-42061",
+              "restart_index": 2,
+              "evaluation_seed": 42061,
+              "value": 7.189589638662881
+            },
+            {
+              "unit_id": "restart-2-seed-42071",
+              "restart_index": 2,
+              "evaluation_seed": 42071,
+              "value": 6.940173202647445
+            },
+            {
+              "unit_id": "restart-2-seed-42073",
+              "restart_index": 2,
+              "evaluation_seed": 42073,
+              "value": 7.7121027746208455
+            }
+          ],
+          "all_restart_seed_distribution_descriptive_only": {
+            "count": 24,
+            "higher_is_better": true,
+            "minimum": 6.350120282739423,
+            "q1": 6.7156376741235615,
+            "median": 6.880326268568506,
+            "q3": 7.259179625700606,
+            "iqr": 0.5435419515770441,
+            "maximum": 7.7121027746208455,
+            "worst_quartile_rule": "lower_is_worse",
+            "worst_quartile_count": 6,
+            "worst_quartile": [
+              {
+                "unit_id": "restart-0-seed-42043",
+                "value": 6.350120282739423
+              },
+              {
+                "unit_id": "restart-0-seed-42071",
+                "value": 6.3888191318426735
+              },
+              {
+                "unit_id": "restart-1-seed-42043",
+                "value": 6.399614025257533
+              },
+              {
+                "unit_id": "restart-2-seed-42043",
+                "value": 6.4860007647822115
+              },
+              {
+                "unit_id": "restart-1-seed-42061",
+                "value": 6.633709435121277
+              },
+              {
+                "unit_id": "restart-1-seed-42017",
+                "value": 6.6940077374293665
+              }
+            ]
+          },
+          "restart_score_distribution": {
+            "count": 3,
+            "higher_is_better": true,
+            "minimum": 0.5577910273920712,
+            "q1": 0.5606677255065563,
+            "median": 0.5635444236210414,
+            "q3": 0.5656081589461665,
+            "iqr": 0.004940433439610148,
+            "maximum": 0.5676718942712915,
+            "worst_quartile_rule": "lower_is_worse",
+            "worst_quartile_count": 1,
+            "worst_quartile": [
+              {
+                "unit_id": "restart-1",
+                "value": 0.5577910273920712
+              }
+            ]
+          },
+          "hindsight_test_best_diagnostic": {
+            "restart_index": 2,
+            "value": 0.5676718942712915,
+            "validation_selected_restart": 0,
+            "validation_selected_value": 0.5635444236210414,
+            "agrees_with_validation_selection": false,
+            "postselection_optimism": 0.004127470650250098,
+            "used_to_change_selection": false
+          }
+        },
+        "confirmation": {
+          "registered_evaluation_seeds": [
+            43003,
+            43013,
+            43019,
+            43037
+          ],
+          "all_restart_seed_rows": [
+            {
+              "unit_id": "restart-0-seed-43003",
+              "restart_index": 0,
+              "evaluation_seed": 43003,
+              "value": 8.707642001636213
+            },
+            {
+              "unit_id": "restart-0-seed-43013",
+              "restart_index": 0,
+              "evaluation_seed": 43013,
+              "value": 7.8911520038578615
+            },
+            {
+              "unit_id": "restart-0-seed-43019",
+              "restart_index": 0,
+              "evaluation_seed": 43019,
+              "value": 7.913684535093994
+            },
+            {
+              "unit_id": "restart-0-seed-43037",
+              "restart_index": 0,
+              "evaluation_seed": 43037,
+              "value": 7.6590649105980315
+            },
+            {
+              "unit_id": "restart-1-seed-43003",
+              "restart_index": 1,
+              "evaluation_seed": 43003,
+              "value": 8.331636293564063
+            },
+            {
+              "unit_id": "restart-1-seed-43013",
+              "restart_index": 1,
+              "evaluation_seed": 43013,
+              "value": 8.053767746065553
+            },
+            {
+              "unit_id": "restart-1-seed-43019",
+              "restart_index": 1,
+              "evaluation_seed": 43019,
+              "value": 7.431387634617851
+            },
+            {
+              "unit_id": "restart-1-seed-43037",
+              "restart_index": 1,
+              "evaluation_seed": 43037,
+              "value": 7.444177074589524
+            },
+            {
+              "unit_id": "restart-2-seed-43003",
+              "restart_index": 2,
+              "evaluation_seed": 43003,
+              "value": 8.84761294768673
+            },
+            {
+              "unit_id": "restart-2-seed-43013",
+              "restart_index": 2,
+              "evaluation_seed": 43013,
+              "value": 7.900411557130273
+            },
+            {
+              "unit_id": "restart-2-seed-43019",
+              "restart_index": 2,
+              "evaluation_seed": 43019,
+              "value": 7.648351151157886
+            },
+            {
+              "unit_id": "restart-2-seed-43037",
+              "restart_index": 2,
+              "evaluation_seed": 43037,
+              "value": 7.726898328245966
+            }
+          ],
+          "all_restart_seed_distribution_descriptive_only": {
+            "count": 12,
+            "higher_is_better": true,
+            "minimum": 7.431387634617851,
+            "q1": 7.656386470737996,
+            "median": 7.895781780494067,
+            "q3": 8.123234882940181,
+            "iqr": 0.46684841220218587,
+            "maximum": 8.84761294768673,
+            "worst_quartile_rule": "lower_is_worse",
+            "worst_quartile_count": 3,
+            "worst_quartile": [
+              {
+                "unit_id": "restart-1-seed-43019",
+                "value": 7.431387634617851
+              },
+              {
+                "unit_id": "restart-1-seed-43037",
+                "value": 7.444177074589524
+              },
+              {
+                "unit_id": "restart-2-seed-43019",
+                "value": 7.648351151157886
+              }
+            ]
+          },
+          "restart_score_distribution": {
+            "count": 3,
+            "higher_is_better": true,
+            "minimum": 0.5918596228743546,
+            "q1": 0.594447237546095,
+            "median": 0.5970348522178355,
+            "q3": 0.5977573397339796,
+            "iqr": 0.0033101021878846337,
+            "maximum": 0.5984798272501237,
+            "worst_quartile_rule": "lower_is_worse",
+            "worst_quartile_count": 1,
+            "worst_quartile": [
+              {
+                "unit_id": "restart-1",
+                "value": 0.5918596228743546
+              }
+            ]
+          },
+          "hindsight_test_best_diagnostic": {
+            "restart_index": 2,
+            "value": 0.5984798272501237,
+            "validation_selected_restart": 0,
+            "validation_selected_value": 0.5970348522178355,
+            "agrees_with_validation_selection": false,
+            "postselection_optimism": 0.0014449750322882426,
+            "used_to_change_selection": false
+          }
+        }
+      }
+    },
+    "low_dimensional_student": {
+      "lane_id": "low_dimensional_student_candidate_selection",
+      "parent_task": "T4.4.3",
+      "selection_metric": "validation_teacher_action_mse_with_dimension_tolerance",
+      "metric_direction": "lower_is_better",
+      "training_candidate_rows": [
+        {
+          "unit_id": "d1-r0",
+          "dimension": 1,
+          "restart_index": 0,
+          "restart_seed": 44311,
+          "value": 1.2974364624235156e-05,
+          "selected_on_validation": false
+        },
+        {
+          "unit_id": "d1-r1",
+          "dimension": 1,
+          "restart_index": 1,
+          "restart_seed": 44321,
+          "value": 1.297469494249371e-05,
+          "selected_on_validation": false
+        },
+        {
+          "unit_id": "d1-r2",
+          "dimension": 1,
+          "restart_index": 2,
+          "restart_seed": 44331,
+          "value": 1.2974958205648455e-05,
+          "selected_on_validation": false
+        },
+        {
+          "unit_id": "d2-r0",
+          "dimension": 2,
+          "restart_index": 0,
+          "restart_seed": 44311,
+          "value": 1.2192077486619571e-05,
+          "selected_on_validation": false
+        },
+        {
+          "unit_id": "d2-r1",
+          "dimension": 2,
+          "restart_index": 1,
+          "restart_seed": 44321,
+          "value": 1.1981863025163392e-05,
+          "selected_on_validation": false
+        },
+        {
+          "unit_id": "d2-r2",
+          "dimension": 2,
+          "restart_index": 2,
+          "restart_seed": 44331,
+          "value": 1.0832970407575323e-05,
+          "selected_on_validation": false
+        },
+        {
+          "unit_id": "d4-r0",
+          "dimension": 4,
+          "restart_index": 0,
+          "restart_seed": 44311,
+          "value": 5.648504178206215e-06,
+          "selected_on_validation": true
+        },
+        {
+          "unit_id": "d4-r1",
+          "dimension": 4,
+          "restart_index": 1,
+          "restart_seed": 44321,
+          "value": 9.237523421616955e-06,
+          "selected_on_validation": false
+        },
+        {
+          "unit_id": "d4-r2",
+          "dimension": 4,
+          "restart_index": 2,
+          "restart_seed": 44331,
+          "value": 9.478675957922353e-06,
+          "selected_on_validation": false
+        }
+      ],
+      "all_nine_validation_distribution": {
+        "count": 9,
+        "higher_is_better": false,
+        "minimum": 5.648504178206215e-06,
+        "q1": 9.478675957922353e-06,
+        "median": 1.1981863025163392e-05,
+        "q3": 1.2974364624235156e-05,
+        "iqr": 3.495688666312803e-06,
+        "maximum": 1.2974958205648455e-05,
+        "worst_quartile_rule": "higher_is_worse",
+        "worst_quartile_count": 3,
+        "worst_quartile": [
+          {
+            "unit_id": "d1-r2",
+            "value": 1.2974958205648455e-05
+          },
+          {
+            "unit_id": "d1-r1",
+            "value": 1.297469494249371e-05
+          },
+          {
+            "unit_id": "d1-r0",
+            "value": 1.2974364624235156e-05
+          }
+        ]
+      },
+      "best_per_dimension_rows": [
+        {
+          "unit_id": "dimension-1",
+          "dimension": 1,
+          "restart_index": 0,
+          "validation_mse": 1.2974364624235156e-05,
+          "evaluation_mse": 1.407074438747453e-05,
+          "selected_on_validation": false
+        },
+        {
+          "unit_id": "dimension-2",
+          "dimension": 2,
+          "restart_index": 2,
+          "validation_mse": 1.0832970407575324e-05,
+          "evaluation_mse": 1.1716057432819005e-05,
+          "selected_on_validation": false
+        },
+        {
+          "unit_id": "dimension-4",
+          "dimension": 4,
+          "restart_index": 0,
+          "validation_mse": 5.648504178206216e-06,
+          "evaluation_mse": 6.08313615636731e-06,
+          "selected_on_validation": true
+        }
+      ],
+      "best_per_dimension_evaluation_distribution": {
+        "count": 3,
+        "higher_is_better": false,
+        "minimum": 6.08313615636731e-06,
+        "q1": 8.899596794593157e-06,
+        "median": 1.1716057432819005e-05,
+        "q3": 1.2893400910146767e-05,
+        "iqr": 3.99380411555361e-06,
+        "maximum": 1.407074438747453e-05,
+        "worst_quartile_rule": "higher_is_worse",
+        "worst_quartile_count": 1,
+        "worst_quartile": [
+          {
+            "unit_id": "dimension-1",
+            "value": 1.407074438747453e-05
+          }
+        ]
+      },
+      "selected_dimension": 4,
+      "selected_restart": 0,
+      "selection_rule": "smallest dimension within frozen relative-plus-absolute validation tolerance",
+      "evaluation_used_for_selection": false,
+      "hindsight_test_best_diagnostic": {
+        "dimension": 4,
+        "restart_index": 0,
+        "evaluation_mse": 6.08313615636731e-06,
+        "agrees_with_validation_selection": true,
+        "postselection_optimism": 0.0,
+        "used_to_change_selection": false
+      }
+    },
+    "gain_retention": {
+      "lane_id": "frozen_teacher_student_gain_retention",
+      "parent_task": "T4.4.4",
+      "metric": "logical_z_effective_lifetime_cycles",
+      "metric_direction": "higher_is_better",
+      "selection_stage": "none_frozen_parent_candidates_only",
+      "evaluation_used_for_selection": false,
+      "all_five_mf_agents_retained": true,
+      "splits": {
+        "primary": {
+          "cutoff": 12,
+          "registered_evaluation_seeds": [
+            444401,
+            444403,
+            444409,
+            444419,
+            444421,
+            444443,
+            444449,
+            444461
+          ],
+          "strategy_seed_rows": [
+            {
+              "unit_id": "standard-seed-444401",
+              "strategy": "standard",
+              "evaluation_seed": 444401,
+              "value": 2.7167202927427923
+            },
+            {
+              "unit_id": "standard-seed-444403",
+              "strategy": "standard",
+              "evaluation_seed": 444403,
+              "value": 2.765477005717912
+            },
+            {
+              "unit_id": "standard-seed-444409",
+              "strategy": "standard",
+              "evaluation_seed": 444409,
+              "value": 2.6546561451469852
+            },
+            {
+              "unit_id": "standard-seed-444419",
+              "strategy": "standard",
+              "evaluation_seed": 444419,
+              "value": 2.9645069541352242
+            },
+            {
+              "unit_id": "standard-seed-444421",
+              "strategy": "standard",
+              "evaluation_seed": 444421,
+              "value": 2.6397246082014743
+            },
+            {
+              "unit_id": "standard-seed-444443",
+              "strategy": "standard",
+              "evaluation_seed": 444443,
+              "value": 2.943431892638581
+            },
+            {
+              "unit_id": "standard-seed-444449",
+              "strategy": "standard",
+              "evaluation_seed": 444449,
+              "value": 2.71308268371949
+            },
+            {
+              "unit_id": "standard-seed-444461",
+              "strategy": "standard",
+              "evaluation_seed": 444461,
+              "value": 2.780132559149548
+            },
+            {
+              "unit_id": "mf_agent_101-seed-444401",
+              "strategy": "mf_agent_101",
+              "evaluation_seed": 444401,
+              "value": 7.201931834917657
+            },
+            {
+              "unit_id": "mf_agent_101-seed-444403",
+              "strategy": "mf_agent_101",
+              "evaluation_seed": 444403,
+              "value": 6.75599620620884
+            },
+            {
+              "unit_id": "mf_agent_101-seed-444409",
+              "strategy": "mf_agent_101",
+              "evaluation_seed": 444409,
+              "value": 7.005593424902122
+            },
+            {
+              "unit_id": "mf_agent_101-seed-444419",
+              "strategy": "mf_agent_101",
+              "evaluation_seed": 444419,
+              "value": 7.117653598731005
+            },
+            {
+              "unit_id": "mf_agent_101-seed-444421",
+              "strategy": "mf_agent_101",
+              "evaluation_seed": 444421,
+              "value": 6.736495715581649
+            },
+            {
+              "unit_id": "mf_agent_101-seed-444443",
+              "strategy": "mf_agent_101",
+              "evaluation_seed": 444443,
+              "value": 7.463358930024505
+            },
+            {
+              "unit_id": "mf_agent_101-seed-444449",
+              "strategy": "mf_agent_101",
+              "evaluation_seed": 444449,
+              "value": 6.573303184964038
+            },
+            {
+              "unit_id": "mf_agent_101-seed-444461",
+              "strategy": "mf_agent_101",
+              "evaluation_seed": 444461,
+              "value": 7.182472519028183
+            },
+            {
+              "unit_id": "mf_agent_211-seed-444401",
+              "strategy": "mf_agent_211",
+              "evaluation_seed": 444401,
+              "value": 6.896153093171986
+            },
+            {
+              "unit_id": "mf_agent_211-seed-444403",
+              "strategy": "mf_agent_211",
+              "evaluation_seed": 444403,
+              "value": 6.89446512255112
+            },
+            {
+              "unit_id": "mf_agent_211-seed-444409",
+              "strategy": "mf_agent_211",
+              "evaluation_seed": 444409,
+              "value": 7.170889562170926
+            },
+            {
+              "unit_id": "mf_agent_211-seed-444419",
+              "strategy": "mf_agent_211",
+              "evaluation_seed": 444419,
+              "value": 7.164681972990751
+            },
+            {
+              "unit_id": "mf_agent_211-seed-444421",
+              "strategy": "mf_agent_211",
+              "evaluation_seed": 444421,
+              "value": 6.763366799074795
+            },
+            {
+              "unit_id": "mf_agent_211-seed-444443",
+              "strategy": "mf_agent_211",
+              "evaluation_seed": 444443,
+              "value": 7.479049024863613
+            },
+            {
+              "unit_id": "mf_agent_211-seed-444449",
+              "strategy": "mf_agent_211",
+              "evaluation_seed": 444449,
+              "value": 6.643450780425386
+            },
+            {
+              "unit_id": "mf_agent_211-seed-444461",
+              "strategy": "mf_agent_211",
+              "evaluation_seed": 444461,
+              "value": 7.331598752398477
+            },
+            {
+              "unit_id": "mf_agent_307-seed-444401",
+              "strategy": "mf_agent_307",
+              "evaluation_seed": 444401,
+              "value": 6.1375537214449025
+            },
+            {
+              "unit_id": "mf_agent_307-seed-444403",
+              "strategy": "mf_agent_307",
+              "evaluation_seed": 444403,
+              "value": 5.9685068591855135
+            },
+            {
+              "unit_id": "mf_agent_307-seed-444409",
+              "strategy": "mf_agent_307",
+              "evaluation_seed": 444409,
+              "value": 6.33867589665857
+            },
+            {
+              "unit_id": "mf_agent_307-seed-444419",
+              "strategy": "mf_agent_307",
+              "evaluation_seed": 444419,
+              "value": 6.272141174035445
+            },
+            {
+              "unit_id": "mf_agent_307-seed-444421",
+              "strategy": "mf_agent_307",
+              "evaluation_seed": 444421,
+              "value": 6.116553357270467
+            },
+            {
+              "unit_id": "mf_agent_307-seed-444443",
+              "strategy": "mf_agent_307",
+              "evaluation_seed": 444443,
+              "value": 7.178346627918115
+            },
+            {
+              "unit_id": "mf_agent_307-seed-444449",
+              "strategy": "mf_agent_307",
+              "evaluation_seed": 444449,
+              "value": 5.8937090340504845
+            },
+            {
+              "unit_id": "mf_agent_307-seed-444461",
+              "strategy": "mf_agent_307",
+              "evaluation_seed": 444461,
+              "value": 7.082490824012478
+            },
+            {
+              "unit_id": "mf_agent_401-seed-444401",
+              "strategy": "mf_agent_401",
+              "evaluation_seed": 444401,
+              "value": 6.533251766708121
+            },
+            {
+              "unit_id": "mf_agent_401-seed-444403",
+              "strategy": "mf_agent_401",
+              "evaluation_seed": 444403,
+              "value": 6.301938588860226
+            },
+            {
+              "unit_id": "mf_agent_401-seed-444409",
+              "strategy": "mf_agent_401",
+              "evaluation_seed": 444409,
+              "value": 6.5553186117333055
+            },
+            {
+              "unit_id": "mf_agent_401-seed-444419",
+              "strategy": "mf_agent_401",
+              "evaluation_seed": 444419,
+              "value": 6.894290503910149
+            },
+            {
+              "unit_id": "mf_agent_401-seed-444421",
+              "strategy": "mf_agent_401",
+              "evaluation_seed": 444421,
+              "value": 6.222002505442751
+            },
+            {
+              "unit_id": "mf_agent_401-seed-444443",
+              "strategy": "mf_agent_401",
+              "evaluation_seed": 444443,
+              "value": 7.556009892977347
+            },
+            {
+              "unit_id": "mf_agent_401-seed-444449",
+              "strategy": "mf_agent_401",
+              "evaluation_seed": 444449,
+              "value": 6.5335724996793765
+            },
+            {
+              "unit_id": "mf_agent_401-seed-444461",
+              "strategy": "mf_agent_401",
+              "evaluation_seed": 444461,
+              "value": 7.531416010901468
+            },
+            {
+              "unit_id": "mf_agent_503-seed-444401",
+              "strategy": "mf_agent_503",
+              "evaluation_seed": 444401,
+              "value": 6.540159672111882
+            },
+            {
+              "unit_id": "mf_agent_503-seed-444403",
+              "strategy": "mf_agent_503",
+              "evaluation_seed": 444403,
+              "value": 6.503413748859661
+            },
+            {
+              "unit_id": "mf_agent_503-seed-444409",
+              "strategy": "mf_agent_503",
+              "evaluation_seed": 444409,
+              "value": 6.702307898279145
+            },
+            {
+              "unit_id": "mf_agent_503-seed-444419",
+              "strategy": "mf_agent_503",
+              "evaluation_seed": 444419,
+              "value": 6.511877695713881
+            },
+            {
+              "unit_id": "mf_agent_503-seed-444421",
+              "strategy": "mf_agent_503",
+              "evaluation_seed": 444421,
+              "value": 6.543715318126287
+            },
+            {
+              "unit_id": "mf_agent_503-seed-444443",
+              "strategy": "mf_agent_503",
+              "evaluation_seed": 444443,
+              "value": 7.247830685431557
+            },
+            {
+              "unit_id": "mf_agent_503-seed-444449",
+              "strategy": "mf_agent_503",
+              "evaluation_seed": 444449,
+              "value": 6.750800753050395
+            },
+            {
+              "unit_id": "mf_agent_503-seed-444461",
+              "strategy": "mf_agent_503",
+              "evaluation_seed": 444461,
+              "value": 7.525657054395335
+            },
+            {
+              "unit_id": "teacher-seed-444401",
+              "strategy": "teacher",
+              "evaluation_seed": 444401,
+              "value": 6.101318788806617
+            },
+            {
+              "unit_id": "teacher-seed-444403",
+              "strategy": "teacher",
+              "evaluation_seed": 444403,
+              "value": 6.294638368183778
+            },
+            {
+              "unit_id": "teacher-seed-444409",
+              "strategy": "teacher",
+              "evaluation_seed": 444409,
+              "value": 6.636705389265403
+            },
+            {
+              "unit_id": "teacher-seed-444419",
+              "strategy": "teacher",
+              "evaluation_seed": 444419,
+              "value": 6.383456213585067
+            },
+            {
+              "unit_id": "teacher-seed-444421",
+              "strategy": "teacher",
+              "evaluation_seed": 444421,
+              "value": 6.44105200964284
+            },
+            {
+              "unit_id": "teacher-seed-444443",
+              "strategy": "teacher",
+              "evaluation_seed": 444443,
+              "value": 7.762831377367775
+            },
+            {
+              "unit_id": "teacher-seed-444449",
+              "strategy": "teacher",
+              "evaluation_seed": 444449,
+              "value": 6.7691714634914835
+            },
+            {
+              "unit_id": "teacher-seed-444461",
+              "strategy": "teacher",
+              "evaluation_seed": 444461,
+              "value": 7.6664737664093945
+            },
+            {
+              "unit_id": "handcrafted_recurrence-seed-444401",
+              "strategy": "handcrafted_recurrence",
+              "evaluation_seed": 444401,
+              "value": 6.432221173148026
+            },
+            {
+              "unit_id": "handcrafted_recurrence-seed-444403",
+              "strategy": "handcrafted_recurrence",
+              "evaluation_seed": 444403,
+              "value": 6.432663703670283
+            },
+            {
+              "unit_id": "handcrafted_recurrence-seed-444409",
+              "strategy": "handcrafted_recurrence",
+              "evaluation_seed": 444409,
+              "value": 6.433484692054277
+            },
+            {
+              "unit_id": "handcrafted_recurrence-seed-444419",
+              "strategy": "handcrafted_recurrence",
+              "evaluation_seed": 444419,
+              "value": 6.43393495878037
+            },
+            {
+              "unit_id": "handcrafted_recurrence-seed-444421",
+              "strategy": "handcrafted_recurrence",
+              "evaluation_seed": 444421,
+              "value": 6.432773151373585
+            },
+            {
+              "unit_id": "handcrafted_recurrence-seed-444443",
+              "strategy": "handcrafted_recurrence",
+              "evaluation_seed": 444443,
+              "value": 6.43334996636735
+            },
+            {
+              "unit_id": "handcrafted_recurrence-seed-444449",
+              "strategy": "handcrafted_recurrence",
+              "evaluation_seed": 444449,
+              "value": 6.432247858616963
+            },
+            {
+              "unit_id": "handcrafted_recurrence-seed-444461",
+              "strategy": "handcrafted_recurrence",
+              "evaluation_seed": 444461,
+              "value": 6.432387486856642
+            },
+            {
+              "unit_id": "distilled_student-seed-444401",
+              "strategy": "distilled_student",
+              "evaluation_seed": 444401,
+              "value": 6.150167121156883
+            },
+            {
+              "unit_id": "distilled_student-seed-444403",
+              "strategy": "distilled_student",
+              "evaluation_seed": 444403,
+              "value": 6.242948547522143
+            },
+            {
+              "unit_id": "distilled_student-seed-444409",
+              "strategy": "distilled_student",
+              "evaluation_seed": 444409,
+              "value": 6.6743973265079415
+            },
+            {
+              "unit_id": "distilled_student-seed-444419",
+              "strategy": "distilled_student",
+              "evaluation_seed": 444419,
+              "value": 6.422667369888128
+            },
+            {
+              "unit_id": "distilled_student-seed-444421",
+              "strategy": "distilled_student",
+              "evaluation_seed": 444421,
+              "value": 6.472346577370294
+            },
+            {
+              "unit_id": "distilled_student-seed-444443",
+              "strategy": "distilled_student",
+              "evaluation_seed": 444443,
+              "value": 7.769560356486492
+            },
+            {
+              "unit_id": "distilled_student-seed-444449",
+              "strategy": "distilled_student",
+              "evaluation_seed": 444449,
+              "value": 6.7501681836020175
+            },
+            {
+              "unit_id": "distilled_student-seed-444461",
+              "strategy": "distilled_student",
+              "evaluation_seed": 444461,
+              "value": 7.463642261422494
+            }
+          ],
+          "per_strategy_distributions": {
+            "standard": {
+              "count": 8,
+              "higher_is_better": true,
+              "minimum": 2.6397246082014743,
+              "q1": 2.6984760490763637,
+              "median": 2.741098649230352,
+              "q3": 2.820957392521806,
+              "iqr": 0.12248134344544237,
+              "maximum": 2.9645069541352242,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 2,
+              "worst_quartile": [
+                {
+                  "unit_id": "standard-seed-444421",
+                  "value": 2.6397246082014743
+                },
+                {
+                  "unit_id": "standard-seed-444409",
+                  "value": 2.6546561451469852
+                }
+              ]
+            },
+            "mf_agent_101": {
+              "count": 8,
+              "higher_is_better": true,
+              "minimum": 6.573303184964038,
+              "q1": 6.751121083552042,
+              "median": 7.061623511816563,
+              "q3": 7.187337348000551,
+              "iqr": 0.43621626444850925,
+              "maximum": 7.463358930024505,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 2,
+              "worst_quartile": [
+                {
+                  "unit_id": "mf_agent_101-seed-444449",
+                  "value": 6.573303184964038
+                },
+                {
+                  "unit_id": "mf_agent_101-seed-444421",
+                  "value": 6.736495715581649
+                }
+              ]
+            },
+            "mf_agent_211": {
+              "count": 8,
+              "higher_is_better": true,
+              "minimum": 6.643450780425386,
+              "q1": 6.861690541682039,
+              "median": 7.030417533081368,
+              "q3": 7.211066859727813,
+              "iqr": 0.34937631804577407,
+              "maximum": 7.479049024863613,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 2,
+              "worst_quartile": [
+                {
+                  "unit_id": "mf_agent_211-seed-444449",
+                  "value": 6.643450780425386
+                },
+                {
+                  "unit_id": "mf_agent_211-seed-444421",
+                  "value": 6.763366799074795
+                }
+              ]
+            },
+            "mf_agent_307": {
+              "count": 8,
+              "higher_is_better": true,
+              "minimum": 5.8937090340504845,
+              "q1": 6.079541732749229,
+              "median": 6.204847447740174,
+              "q3": 6.524629628497047,
+              "iqr": 0.44508789574781815,
+              "maximum": 7.178346627918115,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 2,
+              "worst_quartile": [
+                {
+                  "unit_id": "mf_agent_307-seed-444449",
+                  "value": 5.8937090340504845
+                },
+                {
+                  "unit_id": "mf_agent_307-seed-444403",
+                  "value": 5.9685068591855135
+                }
+              ]
+            },
+            "mf_agent_401": {
+              "count": 8,
+              "higher_is_better": true,
+              "minimum": 6.222002505442751,
+              "q1": 6.475423472246147,
+              "median": 6.544445555706341,
+              "q3": 7.053571880657978,
+              "iqr": 0.5781484084118311,
+              "maximum": 7.556009892977347,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 2,
+              "worst_quartile": [
+                {
+                  "unit_id": "mf_agent_401-seed-444421",
+                  "value": 6.222002505442751
+                },
+                {
+                  "unit_id": "mf_agent_401-seed-444403",
+                  "value": 6.301938588860226
+                }
+              ]
+            },
+            "mf_agent_503": {
+              "count": 8,
+              "higher_is_better": true,
+              "minimum": 6.503413748859661,
+              "q1": 6.533089178012382,
+              "median": 6.623011608202716,
+              "q3": 6.875058236145685,
+              "iqr": 0.34196905813330325,
+              "maximum": 7.525657054395335,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 2,
+              "worst_quartile": [
+                {
+                  "unit_id": "mf_agent_503-seed-444403",
+                  "value": 6.503413748859661
+                },
+                {
+                  "unit_id": "mf_agent_503-seed-444419",
+                  "value": 6.511877695713881
+                }
+              ]
+            },
+            "teacher": {
+              "count": 8,
+              "higher_is_better": true,
+              "minimum": 6.101318788806617,
+              "q1": 6.361251752234745,
+              "median": 6.538878699454122,
+              "q3": 6.993497039220961,
+              "iqr": 0.6322452869862163,
+              "maximum": 7.762831377367775,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 2,
+              "worst_quartile": [
+                {
+                  "unit_id": "teacher-seed-444401",
+                  "value": 6.101318788806617
+                },
+                {
+                  "unit_id": "teacher-seed-444403",
+                  "value": 6.294638368183778
+                }
+              ]
+            },
+            "handcrafted_recurrence": {
+              "count": 8,
+              "higher_is_better": true,
+              "minimum": 6.432221173148026,
+              "q1": 6.4323525797967225,
+              "median": 6.432718427521934,
+              "q3": 6.433383647789082,
+              "iqr": 0.0010310679923595245,
+              "maximum": 6.43393495878037,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 2,
+              "worst_quartile": [
+                {
+                  "unit_id": "handcrafted_recurrence-seed-444401",
+                  "value": 6.432221173148026
+                },
+                {
+                  "unit_id": "handcrafted_recurrence-seed-444449",
+                  "value": 6.432247858616963
+                }
+              ]
+            },
+            "distilled_student": {
+              "count": 8,
+              "higher_is_better": true,
+              "minimum": 6.150167121156883,
+              "q1": 6.377737664296632,
+              "median": 6.573371951939118,
+              "q3": 6.928536703057137,
+              "iqr": 0.5507990387605055,
+              "maximum": 7.769560356486492,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 2,
+              "worst_quartile": [
+                {
+                  "unit_id": "distilled_student-seed-444401",
+                  "value": 6.150167121156883
+                },
+                {
+                  "unit_id": "distilled_student-seed-444403",
+                  "value": 6.242948547522143
+                }
+              ]
+            }
+          },
+          "mf_all_agent_distribution": {
+            "count": 5,
+            "higher_is_better": true,
+            "minimum": 6.3734971868219965,
+            "q1": 6.765975047526593,
+            "median": 6.790720353246018,
+            "q3": 7.00460067679475,
+            "iqr": 0.23862562926815656,
+            "maximum": 7.0429568884558815,
+            "worst_quartile_rule": "lower_is_worse",
+            "worst_quartile_count": 2,
+            "worst_quartile": [
+              {
+                "unit_id": "mf_agent_307",
+                "value": 6.3734971868219965
+              },
+              {
+                "unit_id": "mf_agent_401",
+                "value": 6.765975047526593
+              }
+            ]
+          },
+          "student_gain_retention": {
+            "metric": "logical_z_effective_lifetime_cycles",
+            "defined": true,
+            "point_retention_fraction": 0.996557189139068,
+            "ci_95": [
+              0.9824421365114248,
+              1.008013606513638
+            ],
+            "teacher_gain": 3.9847394044125437,
+            "student_gain": 3.9710207003130487,
+            "paired_seed_count": 8,
+            "bootstrap_repetitions": 20000,
+            "positive_teacher_gain_bootstrap_fraction": 1.0
+          }
+        },
+        "confirmation": {
+          "cutoff": 16,
+          "registered_evaluation_seeds": [
+            444503,
+            444517,
+            444523,
+            444527
+          ],
+          "strategy_seed_rows": [
+            {
+              "unit_id": "standard-seed-444503",
+              "strategy": "standard",
+              "evaluation_seed": 444503,
+              "value": 5.429250369944819
+            },
+            {
+              "unit_id": "standard-seed-444517",
+              "strategy": "standard",
+              "evaluation_seed": 444517,
+              "value": 5.042351813101126
+            },
+            {
+              "unit_id": "standard-seed-444523",
+              "strategy": "standard",
+              "evaluation_seed": 444523,
+              "value": 5.451759106940004
+            },
+            {
+              "unit_id": "standard-seed-444527",
+              "strategy": "standard",
+              "evaluation_seed": 444527,
+              "value": 4.617066504135758
+            },
+            {
+              "unit_id": "mf_agent_101-seed-444503",
+              "strategy": "mf_agent_101",
+              "evaluation_seed": 444503,
+              "value": 7.684461992078759
+            },
+            {
+              "unit_id": "mf_agent_101-seed-444517",
+              "strategy": "mf_agent_101",
+              "evaluation_seed": 444517,
+              "value": 7.489410156436481
+            },
+            {
+              "unit_id": "mf_agent_101-seed-444523",
+              "strategy": "mf_agent_101",
+              "evaluation_seed": 444523,
+              "value": 8.291144211176217
+            },
+            {
+              "unit_id": "mf_agent_101-seed-444527",
+              "strategy": "mf_agent_101",
+              "evaluation_seed": 444527,
+              "value": 7.151695604740276
+            },
+            {
+              "unit_id": "mf_agent_211-seed-444503",
+              "strategy": "mf_agent_211",
+              "evaluation_seed": 444503,
+              "value": 8.057249996832923
+            },
+            {
+              "unit_id": "mf_agent_211-seed-444517",
+              "strategy": "mf_agent_211",
+              "evaluation_seed": 444517,
+              "value": 7.083852407550431
+            },
+            {
+              "unit_id": "mf_agent_211-seed-444523",
+              "strategy": "mf_agent_211",
+              "evaluation_seed": 444523,
+              "value": 8.567501983474532
+            },
+            {
+              "unit_id": "mf_agent_211-seed-444527",
+              "strategy": "mf_agent_211",
+              "evaluation_seed": 444527,
+              "value": 7.581359255292902
+            },
+            {
+              "unit_id": "mf_agent_307-seed-444503",
+              "strategy": "mf_agent_307",
+              "evaluation_seed": 444503,
+              "value": 8.088084892043991
+            },
+            {
+              "unit_id": "mf_agent_307-seed-444517",
+              "strategy": "mf_agent_307",
+              "evaluation_seed": 444517,
+              "value": 7.186187685115302
+            },
+            {
+              "unit_id": "mf_agent_307-seed-444523",
+              "strategy": "mf_agent_307",
+              "evaluation_seed": 444523,
+              "value": 7.742702577028297
+            },
+            {
+              "unit_id": "mf_agent_307-seed-444527",
+              "strategy": "mf_agent_307",
+              "evaluation_seed": 444527,
+              "value": 6.85527587895718
+            },
+            {
+              "unit_id": "mf_agent_401-seed-444503",
+              "strategy": "mf_agent_401",
+              "evaluation_seed": 444503,
+              "value": 7.324664980704769
+            },
+            {
+              "unit_id": "mf_agent_401-seed-444517",
+              "strategy": "mf_agent_401",
+              "evaluation_seed": 444517,
+              "value": 7.14344115332773
+            },
+            {
+              "unit_id": "mf_agent_401-seed-444523",
+              "strategy": "mf_agent_401",
+              "evaluation_seed": 444523,
+              "value": 7.656526261957465
+            },
+            {
+              "unit_id": "mf_agent_401-seed-444527",
+              "strategy": "mf_agent_401",
+              "evaluation_seed": 444527,
+              "value": 6.205289214794213
+            },
+            {
+              "unit_id": "mf_agent_503-seed-444503",
+              "strategy": "mf_agent_503",
+              "evaluation_seed": 444503,
+              "value": 7.910878614575173
+            },
+            {
+              "unit_id": "mf_agent_503-seed-444517",
+              "strategy": "mf_agent_503",
+              "evaluation_seed": 444517,
+              "value": 7.227954217116068
+            },
+            {
+              "unit_id": "mf_agent_503-seed-444523",
+              "strategy": "mf_agent_503",
+              "evaluation_seed": 444523,
+              "value": 8.297682493874213
+            },
+            {
+              "unit_id": "mf_agent_503-seed-444527",
+              "strategy": "mf_agent_503",
+              "evaluation_seed": 444527,
+              "value": 6.607401174531322
+            },
+            {
+              "unit_id": "teacher-seed-444503",
+              "strategy": "teacher",
+              "evaluation_seed": 444503,
+              "value": 8.190258860400519
+            },
+            {
+              "unit_id": "teacher-seed-444517",
+              "strategy": "teacher",
+              "evaluation_seed": 444517,
+              "value": 8.284990580146701
+            },
+            {
+              "unit_id": "teacher-seed-444523",
+              "strategy": "teacher",
+              "evaluation_seed": 444523,
+              "value": 8.080491861766411
+            },
+            {
+              "unit_id": "teacher-seed-444527",
+              "strategy": "teacher",
+              "evaluation_seed": 444527,
+              "value": 7.287516157687234
+            },
+            {
+              "unit_id": "handcrafted_recurrence-seed-444503",
+              "strategy": "handcrafted_recurrence",
+              "evaluation_seed": 444503,
+              "value": 6.270571935607057
+            },
+            {
+              "unit_id": "handcrafted_recurrence-seed-444517",
+              "strategy": "handcrafted_recurrence",
+              "evaluation_seed": 444517,
+              "value": 6.27050576615237
+            },
+            {
+              "unit_id": "handcrafted_recurrence-seed-444523",
+              "strategy": "handcrafted_recurrence",
+              "evaluation_seed": 444523,
+              "value": 6.265377551648266
+            },
+            {
+              "unit_id": "handcrafted_recurrence-seed-444527",
+              "strategy": "handcrafted_recurrence",
+              "evaluation_seed": 444527,
+              "value": 6.2658307599350245
+            },
+            {
+              "unit_id": "distilled_student-seed-444503",
+              "strategy": "distilled_student",
+              "evaluation_seed": 444503,
+              "value": 8.191752989594608
+            },
+            {
+              "unit_id": "distilled_student-seed-444517",
+              "strategy": "distilled_student",
+              "evaluation_seed": 444517,
+              "value": 8.27195277772784
+            },
+            {
+              "unit_id": "distilled_student-seed-444523",
+              "strategy": "distilled_student",
+              "evaluation_seed": 444523,
+              "value": 8.082232747468655
+            },
+            {
+              "unit_id": "distilled_student-seed-444527",
+              "strategy": "distilled_student",
+              "evaluation_seed": 444527,
+              "value": 7.08773462897015
+            }
+          ],
+          "per_strategy_distributions": {
+            "standard": {
+              "count": 4,
+              "higher_is_better": true,
+              "minimum": 4.617066504135758,
+              "q1": 4.936030485859784,
+              "median": 5.235801091522973,
+              "q3": 5.434877554193616,
+              "iqr": 0.4988470683338315,
+              "maximum": 5.451759106940004,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 1,
+              "worst_quartile": [
+                {
+                  "unit_id": "standard-seed-444527",
+                  "value": 4.617066504135758
+                }
+              ]
+            },
+            "mf_agent_101": {
+              "count": 4,
+              "higher_is_better": true,
+              "minimum": 7.151695604740276,
+              "q1": 7.40498151851243,
+              "median": 7.58693607425762,
+              "q3": 7.836132546853124,
+              "iqr": 0.4311510283406941,
+              "maximum": 8.291144211176217,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 1,
+              "worst_quartile": [
+                {
+                  "unit_id": "mf_agent_101-seed-444527",
+                  "value": 7.151695604740276
+                }
+              ]
+            },
+            "mf_agent_211": {
+              "count": 4,
+              "higher_is_better": true,
+              "minimum": 7.083852407550431,
+              "q1": 7.4569825433572845,
+              "median": 7.819304626062912,
+              "q3": 8.184812993493324,
+              "iqr": 0.7278304501360395,
+              "maximum": 8.567501983474532,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 1,
+              "worst_quartile": [
+                {
+                  "unit_id": "mf_agent_211-seed-444517",
+                  "value": 7.083852407550431
+                }
+              ]
+            },
+            "mf_agent_307": {
+              "count": 4,
+              "higher_is_better": true,
+              "minimum": 6.85527587895718,
+              "q1": 7.103459733575772,
+              "median": 7.464445131071799,
+              "q3": 7.82904815578222,
+              "iqr": 0.7255884222064486,
+              "maximum": 8.088084892043991,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 1,
+              "worst_quartile": [
+                {
+                  "unit_id": "mf_agent_307-seed-444527",
+                  "value": 6.85527587895718
+                }
+              ]
+            },
+            "mf_agent_401": {
+              "count": 4,
+              "higher_is_better": true,
+              "minimum": 6.205289214794213,
+              "q1": 6.908903168694351,
+              "median": 7.23405306701625,
+              "q3": 7.407630301017943,
+              "iqr": 0.4987271323235918,
+              "maximum": 7.656526261957465,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 1,
+              "worst_quartile": [
+                {
+                  "unit_id": "mf_agent_401-seed-444527",
+                  "value": 6.205289214794213
+                }
+              ]
+            },
+            "mf_agent_503": {
+              "count": 4,
+              "higher_is_better": true,
+              "minimum": 6.607401174531322,
+              "q1": 7.072815956469881,
+              "median": 7.5694164158456205,
+              "q3": 8.007579584399933,
+              "iqr": 0.9347636279300513,
+              "maximum": 8.297682493874213,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 1,
+              "worst_quartile": [
+                {
+                  "unit_id": "mf_agent_503-seed-444527",
+                  "value": 6.607401174531322
+                }
+              ]
+            },
+            "teacher": {
+              "count": 4,
+              "higher_is_better": true,
+              "minimum": 7.287516157687234,
+              "q1": 7.8822479357466175,
+              "median": 8.135375361083465,
+              "q3": 8.213941790337064,
+              "iqr": 0.331693854590446,
+              "maximum": 8.284990580146701,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 1,
+              "worst_quartile": [
+                {
+                  "unit_id": "teacher-seed-444527",
+                  "value": 7.287516157687234
+                }
+              ]
+            },
+            "handcrafted_recurrence": {
+              "count": 4,
+              "higher_is_better": true,
+              "minimum": 6.265377551648266,
+              "q1": 6.265717457863335,
+              "median": 6.268168263043697,
+              "q3": 6.270522308516042,
+              "iqr": 0.004804850652706527,
+              "maximum": 6.270571935607057,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 1,
+              "worst_quartile": [
+                {
+                  "unit_id": "handcrafted_recurrence-seed-444523",
+                  "value": 6.265377551648266
+                }
+              ]
+            },
+            "distilled_student": {
+              "count": 4,
+              "higher_is_better": true,
+              "minimum": 7.08773462897015,
+              "q1": 7.833608217844029,
+              "median": 8.136992868531632,
+              "q3": 8.211802936627915,
+              "iqr": 0.37819471878388633,
+              "maximum": 8.27195277772784,
+              "worst_quartile_rule": "lower_is_worse",
+              "worst_quartile_count": 1,
+              "worst_quartile": [
+                {
+                  "unit_id": "distilled_student-seed-444527",
+                  "value": 7.08773462897015
+                }
+              ]
+            }
+          },
+          "mf_all_agent_distribution": {
+            "count": 5,
+            "higher_is_better": true,
+            "minimum": 7.082480402696044,
+            "q1": 7.468062758286193,
+            "median": 7.5109791250241935,
+            "q3": 7.654177991107933,
+            "iqr": 0.18611523282174058,
+            "maximum": 7.822490910787697,
+            "worst_quartile_rule": "lower_is_worse",
+            "worst_quartile_count": 2,
+            "worst_quartile": [
+              {
+                "unit_id": "mf_agent_401",
+                "value": 7.082480402696044
+              },
+              {
+                "unit_id": "mf_agent_307",
+                "value": 7.468062758286193
+              }
+            ]
+          },
+          "student_gain_retention": {
+            "metric": "logical_z_effective_lifetime_cycles",
+            "defined": true,
+            "point_retention_fraction": 0.9814573586937879,
+            "ci_95": [
+              0.9445014278749587,
+              1.0006002171067423
+            ],
+            "teacher_gain": 2.825707416469789,
+            "student_gain": 2.7733113374098863,
+            "paired_seed_count": 4,
+            "bootstrap_repetitions": 20000,
+            "positive_teacher_gain_bootstrap_fraction": 1.0
+          }
+        }
+      }
+    }
+  },
+  "audit_summary": {
+    "selection_episode_count": 6,
+    "evaluation_unit_row_count": 255,
+    "distribution_count": 39,
+    "active_selection_episodes_using_evaluation": 0,
+    "hindsight_diagnostic_count": 4,
+    "hindsight_selection_disagreement_count": 2,
+    "hindsight_diagnostics_used_to_change_selection": 0,
+    "legacy_all_candidate_evaluation_gap": "T4.1.5 nonselected restart evaluation unavailable; predecessor is superseded and does not support a best-restart performance claim",
+    "audit_verdict": "PASS_WITH_WARNINGS"
+  },
+  "claim_boundary": {
+    "allowed": "validation-only model selection, all-unit distribution summaries, worst-quartile outcomes, and explicit hindsight selection-bias diagnostics",
+    "forbidden": "best-of-N test selection, selected-agent-only reporting, optimizer optimality, universal memory benefit, physical-memory LER, device, RTL, FPGA, board, or experiment",
+    "physical_memory_ler_established": false,
+    "device_calibrated": false,
+    "hardware_measured": false
+  },
+  "gates": {
+    "all_parent_artifacts_are_hash_bound_and_pass": true,
+    "all_parent_source_and_implementation_files_are_hash_bound": true,
+    "all_parent_implementation_composites_are_current": true,
+    "selection_registry_covers_six_declared_episodes": true,
+    "nmf_retains_all_five_paired_agents_without_test_selection": true,
+    "nmf_checkpoint_selection_is_validation_only": true,
+    "nmf_best_agent_inflation_is_diagnostic_only": true,
+    "slow_loop_reports_all_families_restarts_and_seeds": true,
+    "slow_loop_selection_is_validation_only": true,
+    "legacy_student_all_restarts_and_missing_counterfactual_are_explicit": true,
+    "teacher_retains_all_three_restarts_and_all_registered_seeds": true,
+    "teacher_selection_recomputes_from_validation_only": true,
+    "teacher_test_best_reversal_is_retained_without_reselection": true,
+    "student_reports_all_nine_validation_candidates": true,
+    "student_selection_is_validation_only_and_evaluation_blind": true,
+    "retention_reports_all_five_mf_agents_and_all_seeds": true,
+    "gain_retention_uses_only_frozen_parent_candidates": true,
+    "every_distribution_has_median_iqr_and_worst_quartile": true,
+    "every_active_selection_episode_is_evaluation_blind": true,
+    "hindsight_diagnostics_never_change_frozen_selection": true,
+    "learned_decoder_performance_branch_remains_revoked": true,
+    "legacy_coverage_gap_is_warning_not_silent_pass": true,
+    "no_physical_memory_device_or_hardware_claim": true
+  },
+  "gate_summary": {
+    "passed": 23,
+    "total": 23
+  },
+  "status": "PASS",
+  "source_data": {
+    "path": "docs/t5_4_4_multi_agent_seed_selection_audit_source_data.csv",
+    "row_count": 420,
+    "rows_sha256": "b6a4e045cc1fb388b324ae4a41213a0019c6b31ca003d4e4f3fc9f8590d96594",
+    "csv_sha256": "763125fe0f7c5da3c73331855f0d3aad5cf6eba24472d6564062bdc24fd1c0ff"
+  },
+  "contract_sha256": "dcba0b0bb107a17328a61d052f48ce2cf0c7bd696306d64925b6b20efe1f934b"
+}

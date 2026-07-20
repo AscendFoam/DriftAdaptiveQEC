@@ -1,0 +1,112 @@
+{
+  "schema_version": "t6.8.3-gqf-runner-manifest-v1",
+  "repository": "https://github.com/Matteo-Puviani/GQF.git",
+  "commit": "c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d",
+  "tracked_tree_sha256": "64f849db145f3ae1653105ff7488e7c2b5315bfc81c3947a4f8861be4e7943fd",
+  "tracked_files": [
+    "GQF/GKP_environment.py",
+    "GQF/feedback_GRAPE.py",
+    "GQF/mesolve.py",
+    "GQF/operators.py",
+    "GQF/qutils.py",
+    "GQF/runner.py",
+    "GQF/states.py",
+    "LICENSE",
+    "README.md",
+    "images/scheme_GKP.png",
+    "images/scheme_QEC.png",
+    "requirements.txt"
+  ],
+  "upstream_requirements_unpinned": [
+    "numpy",
+    "matplotlib",
+    "tensorflow",
+    "gym"
+  ],
+  "official_runner_defaults": {
+    "source": "third_party/GQF/GQF/runner.py",
+    "N": 100,
+    "Delta": 0.34,
+    "max_steps": 21,
+    "batch_size": 8,
+    "num_controls": 15,
+    "num_training_episodes": 101,
+    "num_evaluation_episodes": 1,
+    "learning_rate": 0.0001,
+    "dynamics_type": "Sivak2023",
+    "noise_level": "high",
+    "upstream_model_token": "RNN",
+    "patched_model_token": "rNN"
+  },
+  "environment": {
+    "name": "GQFEnv",
+    "selected_packages": {
+      "cudatoolkit": {
+        "version": "11.2.2",
+        "build_string": "h7d7167e_13",
+        "channel": "conda-forge"
+      },
+      "cudnn": {
+        "version": "8.1.0.77",
+        "build_string": "h3e0f4f4_0",
+        "channel": "conda-forge"
+      },
+      "gym": {
+        "version": "0.26.2",
+        "build_string": "pypi_0",
+        "channel": "pypi"
+      },
+      "matplotlib": {
+        "version": "3.7.5",
+        "build_string": "pypi_0",
+        "channel": "pypi"
+      },
+      "numpy": {
+        "version": "1.23.5",
+        "build_string": "pypi_0",
+        "channel": "pypi"
+      },
+      "pip": {
+        "version": "26.0.1",
+        "build_string": "pyhc872135_1",
+        "channel": "pkgs/main"
+      },
+      "python": {
+        "version": "3.9.18",
+        "build_string": "h1aa4202_0",
+        "channel": "pkgs/main"
+      },
+      "tensorflow": {
+        "version": "2.10.1",
+        "build_string": "pypi_0",
+        "channel": "pypi"
+      }
+    },
+    "conda_explicit": {
+      "path": "configs/gqf_official/GQFEnv.conda-explicit-win-64.txt",
+      "sha256": "2aa5b2d83b7e497291aad2f24dd0fb011e452ea079e3658b4f2cb9e7e6c300c9"
+    },
+    "pip_freeze": {
+      "path": "configs/gqf_official/GQFEnv.pip-freeze.txt",
+      "sha256": "6649e063bf3640f504cafd45d9ada3f419d46a86c09ce5b81c65abfa88f93f50"
+    },
+    "history": {
+      "path": "configs/gqf_official/GQFEnv.history.yml",
+      "sha256": "430e709fd9e1e864f85e420b88d481d7f6e8cacea81492bcc00319fc42a65115"
+    },
+    "gpu_qualification": "UNQUALIFIED_CUSOLVER_FATAL"
+  },
+  "adapter": {
+    "patch_manifest": "configs/gqf_official/patch_manifest.json",
+    "derived_worktree": "runs/t6_8_3_gqf_worktrees/c9ab1ef2b3ff-810cfc3e3edd-local-git-clone-v2",
+    "smoke_script": "scripts/gqf_official_smoke.py",
+    "smoke_script_sha256": "b236b9a8afe2e9d2fe35d2f125f8fadab5e34c72f16dba002cbbe5c55c973b01"
+  },
+  "scope": {
+    "official_source_imported": true,
+    "minimum_real_smoke": true,
+    "paper_exact_reproduction": false,
+    "trained_checkpoints_present": false,
+    "claim": "INTAKE_ONLY_NOT_PAPER_REPRODUCTION"
+  }
+}

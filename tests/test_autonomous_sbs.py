@@ -12,6 +12,8 @@ from cnn_fpga.benchmark.autonomous_sbs_wallclock_baseline import (
 )
 from physics.autonomous_sbs import (
     AUTONOMOUS_TIMING,
+    IdleMemoryConfig,
+    IdleMemorySimulator,
     MEASUREMENT_TIMING,
     NonselectiveSBSConfig,
     NonselectiveSBSSimulator,
@@ -32,6 +34,16 @@ def run_small(mode: str, **overrides: object):
     }
     values.update(overrides)
     return NonselectiveSBSSimulator(NonselectiveSBSConfig(**values)).run()
+
+
+def run_idle(**overrides: object):
+    values: dict[str, object] = {
+        "full_cycles": 2,
+        "cutoff": 6,
+        "device": "cpu",
+    }
+    values.update(overrides)
+    return IdleMemorySimulator(IdleMemoryConfig(**values)).run()
 
 
 def test_literature_timing_contract_is_exact_and_not_board_measured() -> None:
@@ -72,6 +84,26 @@ def test_invalid_simulator_configs_fail_closed(updates: dict[str, object]) -> No
     values.update(updates)
     with pytest.raises(ValueError):
         NonselectiveSBSConfig(**values)
+
+
+@pytest.mark.parametrize(
+    "updates",
+    [
+        {"full_cycles": 0},
+        {"full_cycles": True},
+        {"cutoff": 49},
+        {"cycle_duration_us": 0.0},
+        {"cavity_lifetime_us": float("inf")},
+        {"ancilla_t1_us": 1.0, "ancilla_t2_us": 3.0},
+        {"device": "tpu"},
+        {"real_dtype": "float16"},
+    ],
+)
+def test_invalid_idle_memory_configs_fail_closed(updates: dict[str, object]) -> None:
+    values: dict[str, object] = {"full_cycles": 2, "cutoff": 6}
+    values.update(updates)
+    with pytest.raises(ValueError):
+        IdleMemoryConfig(**values)
 
 
 def test_measurement_feedback_is_exact_all_branch_expectation() -> None:
@@ -115,6 +147,36 @@ def test_event_accounting_matches_protocol_semantics() -> None:
     assert autonomous.event_accounting["active_gates_per_100us"] / measurement.event_accounting["active_gates_per_100us"] == pytest.approx(10.0 / 7.0)
 
 
+def test_no_correction_anchor_has_no_control_measurement_reset_or_frame_action() -> None:
+    idle = run_idle()
+    assert idle.time_us.tolist() == [0.0, 10.0, 20.0]
+    for field in (
+        "measurement_events",
+        "reset_events",
+        "active_gate_applications",
+        "frame_updates",
+        "outcome_dependent_parameter_updates",
+    ):
+        assert idle.event_accounting[field] == 0
+    assert idle.event_accounting["total_physical_time_us"] == 20.0
+
+
+def test_no_correction_channel_is_not_a_renamed_standard_sbs_curve() -> None:
+    idle = run_idle()
+    measurement = run_small("measurement_feedback")
+    assert np.array_equal(idle.time_us, measurement.time_us)
+    assert not np.array_equal(idle.logical_z_signal, measurement.logical_z_signal)
+    assert not torch.equal(idle.final_cavity_density, measurement.final_cavity_density)
+
+
+def test_no_correction_idle_channel_obeys_time_semigroup() -> None:
+    one_step = run_idle(full_cycles=1, cycle_duration_us=10.0)
+    two_steps = run_idle(full_cycles=2, cycle_duration_us=5.0)
+    assert torch.max(
+        torch.abs(one_step.final_cavity_density - two_steps.final_cavity_density)
+    ).item() <= 2.0e-12
+
+
 def test_metrics_are_recorded_at_every_full_cycle_and_density_is_healthy() -> None:
     for mode in ("measurement_feedback", "autonomous"):
         result = run_small(mode)
@@ -124,6 +186,14 @@ def test_metrics_are_recorded_at_every_full_cycle_and_density_is_healthy() -> No
         assert result.maximum_trace_error <= 2.0e-12
         assert result.maximum_hermiticity_error <= 2.0e-12
         assert result.minimum_final_eigenvalue >= -2.0e-12
+
+    idle = run_idle()
+    assert idle.fidelity.shape == idle.code_survival.shape == (3,)
+    assert idle.logical_z_signal.shape == idle.conditional_logical_z.shape == (3,)
+    assert np.all(np.isfinite(idle.fidelity))
+    assert idle.maximum_trace_error <= 2.0e-12
+    assert idle.maximum_hermiticity_error <= 2.0e-12
+    assert idle.minimum_final_eigenvalue >= -2.0e-12
 
 
 @pytest.mark.parametrize("lifetime", [3.0, 30.0, 300.0])
@@ -162,4 +232,3 @@ def test_result_serialization_keeps_event_and_timing_boundaries() -> None:
     assert payload["config"]["timing"]["target_hardware_measured"] is False
     assert payload["event_accounting"]["measurement_events"] == 0
     assert "final_cavity_density_real" not in payload
-

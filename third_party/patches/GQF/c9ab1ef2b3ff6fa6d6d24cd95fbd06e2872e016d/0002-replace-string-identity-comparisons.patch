@@ -1,0 +1,14 @@
+diff --git a/GQF/GKP_environment.py b/GQF/GKP_environment.py
+--- a/GQF/GKP_environment.py
++++ b/GQF/GKP_environment.py
+@@ -419,2 +419,2 @@ class GKPEnv(gym.Env):
+-        if self.dynamics_type is not 'autonomous':
++        if self.dynamics_type != 'autonomous':
+             rho, sign, prob = ops.POVM(rho, theta=theta, phi=phi, Lambda=Lambda, deterministic=self.deterministic, mu=mu_batch)
+diff --git a/GQF/mesolve.py b/GQF/mesolve.py
+--- a/GQF/mesolve.py
++++ b/GQF/mesolve.py
+@@ -45,2 +45,2 @@ class MESolve:
+-        if Hamiltonian is not 'off':
++        if Hamiltonian != 'off':
+             Coupl = chi/2. * qutils.tensor([ops.sigmaz(N=2, batch_size=batch_size),tf.matmul(ops.create(N, batch_size=batch_size),ops.destroy(N, batch_size=batch_size))])

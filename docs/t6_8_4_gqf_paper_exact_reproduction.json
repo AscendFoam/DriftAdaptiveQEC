@@ -1,0 +1,820 @@
+{
+  "task_id": "T6.8.4",
+  "schema_version": "t6.8.4-gqf-paper-exact-reproduction-v1",
+  "generated_at_utc": "2026-07-17T17:25:45.086615+00:00",
+  "primary_sources": {
+    "paper_path": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md",
+    "paper_sha256": "5dcda2ee0fec3191ddaa44fb539764dbebc2d089c9a3818bb17c132ca28e7c22",
+    "paper_doi": "10.1103/PhysRevLett.134.020601",
+    "paper_arxiv": "2312.07391",
+    "official_repository": "https://github.com/Matteo-Puviani/GQF.git",
+    "official_commit": "c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d",
+    "official_tree_sha256": "64f849db145f3ae1653105ff7488e7c2b5315bfc81c3947a4f8861be4e7943fd"
+  },
+  "official_intake": {
+    "verdict": "PASS_GQF_OFFICIAL_INTAKE_UNQUALIFIED_CUSOLVER_FATAL",
+    "commit": "c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d",
+    "gpu_status": "UNQUALIFIED_CUSOLVER_FATAL"
+  },
+  "preregistration": {
+    "schema_version": "t6.8.4-gqf-paper-exact-preregistration-v1",
+    "task_id": "T6.8.4",
+    "materialized_at_utc": "2026-07-17T17:25:45.078615+00:00",
+    "primary_sources": {
+      "paper_and_supplement": {
+        "path": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md",
+        "sha256": "5dcda2ee0fec3191ddaa44fb539764dbebc2d089c9a3818bb17c132ca28e7c22",
+        "doi": "10.1103/PhysRevLett.134.020601",
+        "arxiv": "2312.07391"
+      },
+      "official_repository": "https://github.com/Matteo-Puviani/GQF.git",
+      "official_commit": "c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d"
+    },
+    "paper_protocol": {
+      "fock_cutoff": 100,
+      "training_Delta": 0.2,
+      "evaluation_Delta": {
+        "status": "AMBIGUOUS",
+        "paper_finite_energy_section": 0.34,
+        "best_agent_training_section": 0.2
+      },
+      "training_noise": "high",
+      "evaluation_noise_levels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "dynamics": "Sivak2023 / Fig.S2 timing",
+      "full_cycle_us": 10.0,
+      "training_full_cycles": 10,
+      "training_half_measurements": 20,
+      "training_epochs": 1000,
+      "agents": 20,
+      "batch_sizes_reported": [
+        6,
+        8
+      ],
+      "learning_rate": 0.0001,
+      "controls": 15,
+      "rnn_architecture": [
+        10,
+        256,
+        256,
+        15
+      ],
+      "rnn_cell": "GRU",
+      "mf_architecture": [
+        256,
+        256,
+        15
+      ],
+      "training_state": "+Z_L",
+      "reward": "final state fidelity",
+      "evaluation_full_cycles": 1000,
+      "evaluation_logical_states": [
+        "+X",
+        "-X",
+        "+Y",
+        "-Y",
+        "+Z",
+        "-Z"
+      ],
+      "reported_sampling": {
+        "NMF": "6x85=510",
+        "standard": "8x64=512"
+      },
+      "lifetime_fit": "<P_k>(t)=<P_k>(0) exp(-t/T_k)",
+      "channel_lifetime": "3/(1/T_X+1/T_Y+1/T_Z)"
+    },
+    "published_numeric_anchors": {
+      "low_noise_T_Z_standard_cycles": 700.0,
+      "low_noise_T_Z_NMF_cycles": 1500.0,
+      "low_noise_T_minus_Y_NMF_cycles": 770.0,
+      "low_noise_entanglement_infidelity_standard": 0.0015,
+      "low_noise_entanglement_infidelity_NMF": 0.00043,
+      "status_of_complete_TX_TY_TZ_Tch_table": "NOT_TABULATED_NUMERICALLY_IN_SOURCE"
+    },
+    "frozen_acceptance": {
+      "categorical_and_integer_configuration": "exact match required",
+      "published_two_significant_digit_scalar_relative_tolerance": 0.1,
+      "ordering": [
+        "NMF > standard",
+        "NMF > MF",
+        "MF approximately standard"
+      ],
+      "all_agents_reported": true,
+      "all_seed_and_checkpoint_hashes_reported": true,
+      "six_state_1000_cycle_raw_trajectories_required": true,
+      "absolute_and_ordering_must_both_pass": true,
+      "any_source_sufficiency_blocker": "STOP_EXACT_RUN_AND_REPORT_NO_GO"
+    },
+    "executable_diagnostic_freeze": {
+      "probe_script": "scripts/gqf_paper_reproduction_probe.py",
+      "probe_script_sha256": "2aab24393ee45acb3008cc9e14940e3b704d97af16a9a751ae633e6b2a5b5087",
+      "probe_started_at_utc": "2026-07-17T17:18:54.346846+00:00",
+      "configuration_enforced_by_script": {
+        "cutoff": 8,
+        "Delta": 0.34,
+        "noise_level": "low",
+        "dynamics_type": "Sivak2023",
+        "max_steps": 21,
+        "paper_ten_cycle_prefix_half_steps": 20,
+        "official_terminal_half_steps": 21,
+        "official_terminal_cycle_coordinate": 10.5,
+        "batch_size": 2,
+        "seeds": [
+          68401,
+          68407,
+          68419
+        ],
+        "logical_states": [
+          "plus_z",
+          "minus_z",
+          "plus_x",
+          "minus_x",
+          "plus_y",
+          "minus_y"
+        ],
+        "strategy": "standard_sBs_TEST_true"
+      },
+      "manifest_materialized_after_probe": true,
+      "disclosure": "The executable diagnostic configuration was enforced in code before execution; this standalone manifest was materialized afterward. The first run expected 20 steps and failed on the official 21-step behavior; v2 preserves both the 20-step paper prefix and official step 21.",
+      "revision_history": [
+        {
+          "revision": "probe-v1",
+          "outcome": "REJECTED_756_ROWS_VS_720_EXPECTED",
+          "interpretation": "paper says 20 half-cycles but official max_steps=21 executes 21 env steps"
+        },
+        {
+          "revision": "probe-v2",
+          "outcome": "PRESERVE_ALL_21_STEPS",
+          "changed_scientific_thresholds": false
+        }
+      ]
+    },
+    "scope": {
+      "full_exact_run_authorized_only_if_source_sufficient": true,
+      "reduced_probe_is_exact_evidence": false,
+      "project_T2_3_7_may_substitute_official": false
+    }
+  },
+  "source_discrepancies": [
+    {
+      "id": "D01",
+      "field": "official HEAD syntax",
+      "paper": "runnable implementation",
+      "official": "GQF/mesolve.py:13 IndentationError",
+      "blocking": true
+    },
+    {
+      "id": "D02",
+      "field": "trained checkpoints",
+      "paper": "best of 20 agents",
+      "official": null,
+      "blocking": true
+    },
+    {
+      "id": "D03",
+      "field": "agent seeds",
+      "paper": "20 agents",
+      "official": null,
+      "blocking": true
+    },
+    {
+      "id": "D04",
+      "field": "RNN architecture",
+      "paper": [
+        10,
+        256,
+        256,
+        15
+      ],
+      "official": [
+        30,
+        30,
+        30,
+        15
+      ],
+      "blocking": true
+    },
+    {
+      "id": "D05",
+      "field": "MF architecture",
+      "paper": [
+        256,
+        256,
+        15
+      ],
+      "official": [
+        30,
+        30,
+        15
+      ],
+      "blocking": true
+    },
+    {
+      "id": "D06",
+      "field": "training epochs",
+      "paper": 1000,
+      "official_runner": 101,
+      "official_class_default": 500,
+      "blocking": true
+    },
+    {
+      "id": "D07",
+      "field": "Delta",
+      "paper_training": 0.2,
+      "paper_other_section": 0.34,
+      "official_runner": 0.34,
+      "blocking": true
+    },
+    {
+      "id": "D08",
+      "field": "bias initialization",
+      "paper_table": 0.01,
+      "paper_text": "[-0.1,0.1]",
+      "official": "[-0.01,0.01] output layer only",
+      "blocking": true
+    },
+    {
+      "id": "D09",
+      "field": "model token",
+      "paper": "RNN/GRU",
+      "official_runner": "RNN",
+      "official_class_accepts": "rNN",
+      "blocking": true
+    },
+    {
+      "id": "D10",
+      "field": "best-agent saving",
+      "paper": "post-select longest lifetime",
+      "official": "previous_reward initialized to 0 and never updated",
+      "blocking": true
+    },
+    {
+      "id": "D11",
+      "field": "20-agent orchestration and selection",
+      "paper": "train/evaluate/post-select 20",
+      "official": null,
+      "blocking": true
+    },
+    {
+      "id": "D12",
+      "field": "six-state 1000-cycle evaluator",
+      "paper": "six states and 1000 cycles",
+      "official": "no orchestration or lifetime fitter",
+      "blocking": true
+    },
+    {
+      "id": "D13",
+      "field": "raw trajectories",
+      "paper": "510 NMF / 512 standard",
+      "official": null,
+      "blocking": true
+    },
+    {
+      "id": "D14",
+      "field": "complete numeric targets",
+      "paper": "figures plus selected scalars",
+      "official": null,
+      "blocking": true
+    },
+    {
+      "id": "D15",
+      "field": "fit window/weighting",
+      "paper": "single exponential",
+      "official": "not implemented; fit range and weighting unspecified",
+      "blocking": true
+    },
+    {
+      "id": "D16",
+      "field": "max_steps semantics",
+      "paper": "20 measurements / 10 cycles",
+      "official": "max_steps=21 executes 21 env.step calls",
+      "blocking": true
+    },
+    {
+      "id": "D17",
+      "field": "GPU execution",
+      "paper": "not a claim",
+      "official_environment": "UNQUALIFIED_CUSOLVER_FATAL on current host",
+      "blocking": true
+    },
+    {
+      "id": "D18",
+      "field": "dependency versions",
+      "paper": null,
+      "official": "four unpinned top-level requirements",
+      "blocking": true
+    }
+  ],
+  "missing_required_fields": [
+    "20 agent seeds",
+    "20 selected/unselected checkpoints",
+    "selection results",
+    "six-state raw 1000-cycle trajectories",
+    "complete TX/TY/TZ/Tch numeric table",
+    "fit range and weighting",
+    "paper-matching RNN/MF implementation",
+    "exact dependency versions"
+  ],
+  "guessed_fields": [],
+  "reduced_probe": {
+    "scope": "REDUCED_STANDARD_PATH_DIAGNOSTIC_NOT_PAPER_REPRODUCTION",
+    "configuration": {
+      "cutoff": 8,
+      "Delta": 0.34,
+      "noise_level": "low",
+      "dynamics_type": "Sivak2023",
+      "max_steps": 21,
+      "paper_ten_cycle_prefix_half_steps": 20,
+      "official_terminal_half_steps": 21,
+      "official_terminal_cycle_coordinate": 10.5,
+      "batch_size": 2,
+      "seeds": [
+        68401,
+        68407,
+        68419
+      ],
+      "logical_states": [
+        "plus_z",
+        "minus_z",
+        "plus_x",
+        "minus_x",
+        "plus_y",
+        "minus_y"
+      ],
+      "strategy": "standard_sBs_TEST_true"
+    },
+    "coverage": {
+      "rows": 756,
+      "expected_rows": 756,
+      "trajectories": 36,
+      "environment_steps": 378
+    },
+    "checks": {
+      "row_count": true,
+      "six_states": true,
+      "three_seeds": true,
+      "paper_ten_cycle_prefix_present": true,
+      "official_max_steps21_executes21_steps": true,
+      "finite_observables": true,
+      "probabilities_valid": true,
+      "trace_one": true,
+      "trace_real": true
+    },
+    "paper_ten_cycle_prefix_signed_pauli_by_state": {
+      "plus_z": 0.13248725111285845,
+      "minus_z": -0.17585591847697893,
+      "plus_x": 0.04865360011657079,
+      "minus_x": 0.03423651804526647,
+      "plus_y": 0.15417966743310293,
+      "minus_y": -0.08324124291539192
+    },
+    "official_terminal_signed_pauli_by_state": {
+      "plus_z": 0.13188911726077399,
+      "minus_z": -0.14595929284890494,
+      "plus_x": 0.060932221511999764,
+      "minus_x": -0.02819592629869779,
+      "plus_y": 0.08252505275110404,
+      "minus_y": 0.004450172185897827
+    },
+    "elapsed_s": 218.58398780000002,
+    "status": "PASS_REDUCED_STANDARD_PATH_DIAGNOSTIC"
+  },
+  "source_data_rows": 756,
+  "paper_exact_outcomes": {
+    "standard": {
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "NOT_RUN_EXACT_PREREQUISITE_FAIL"
+    },
+    "MF": {
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "NOT_RUN_EXACT_PREREQUISITE_FAIL"
+    },
+    "NMF": {
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "NOT_RUN_EXACT_PREREQUISITE_FAIL"
+    }
+  },
+  "agent_ledger": [
+    {
+      "agent_index": 1,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 2,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 3,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 4,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 5,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 6,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 7,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 8,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 9,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 10,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 11,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 12,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 13,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 14,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 15,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 16,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 17,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 18,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 19,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    },
+    {
+      "agent_index": 20,
+      "seed": null,
+      "checkpoint_sha256": null,
+      "selection_metric": null,
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "F_avg": null,
+      "status": "MISSING_OFFICIAL_AGENT_ARTIFACT"
+    }
+  ],
+  "exact_qualification": {
+    "gates": {
+      "E01_unambiguous_physical_and_training_configuration": false,
+      "E02_official_twenty_agent_checkpoints_available": false,
+      "E03_official_seed_distribution_available": false,
+      "E04_paper_network_architectures_match_official_source": false,
+      "E05_paper_training_horizon_matches_official_runner": false,
+      "E06_official_agent_selection_pipeline_available": false,
+      "E07_official_six_state_1000_cycle_evaluator_available": false,
+      "E08_official_raw_trajectory_data_available": false,
+      "E09_complete_numeric_TX_TY_TZ_Tch_targets_available": false,
+      "E10_current_full_GQF_accelerator_path_qualified": false,
+      "E11_paper_exact_standard_rerun_completed": false,
+      "E12_paper_exact_MF_rerun_completed": false,
+      "E13_paper_exact_NMF_rerun_completed": false,
+      "E14_absolute_value_tolerances_pass": false,
+      "E15_published_ordering_passes": false
+    },
+    "passed": 0,
+    "failed": 15
+  },
+  "exact_reproduction_status": "NO_GO_SOURCE_INCOMPLETE",
+  "t6_8_5_eligible": false,
+  "claim_boundary": {
+    "paper_exact_reproduction": "PROHIBITED",
+    "directional_MF_NMF_ordering": "NOT_ESTABLISHED",
+    "surpass_puviani_nmf": "PROHIBITED",
+    "reduced_official_standard_path": "ESTABLISHED_DIAGNOSTIC_ONLY"
+  },
+  "resource_observation": {
+    "reduced_probe_elapsed_s": 218.58398780000002,
+    "reduced_probe_cutoff": 8,
+    "paper_cutoff": 100,
+    "reduced_probe_training_epochs": 0,
+    "paper_training_agent_epochs": 20000,
+    "statement": "No wall-clock extrapolation is claimed; the accelerator fatal and structurally larger paper workload preclude substituting the reduced CPU probe for exact training."
+  },
+  "bindings": {
+    "implementation": {
+      "path": "cnn_fpga/benchmark/gqf_paper_exact_reproduction.py",
+      "sha256": "0e60f5ee46da162036a644d2a6c70267d317a46ff19daf55a1703de62229c01b"
+    },
+    "paper": {
+      "path": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md",
+      "sha256": "5dcda2ee0fec3191ddaa44fb539764dbebc2d089c9a3818bb17c132ca28e7c22"
+    },
+    "intake": {
+      "path": "docs/t6_8_3_gqf_official_intake.json",
+      "sha256": "f7f5f3f6ec8ab1e36230b11c6493d9323237c3b6b0abdeeef12d67f3876a5f51"
+    },
+    "runner_manifest": {
+      "path": "configs/gqf_official/runner_manifest.json",
+      "sha256": "248a73bed9fc07db798088398a8309930d0574676f90b819de540f4134b79dfa"
+    },
+    "patch_manifest": {
+      "path": "configs/gqf_official/patch_manifest.json",
+      "sha256": "b28871424d408b726a768c00e45c0997237d8a879588c47085926105ac93aa4e"
+    },
+    "probe_script": {
+      "path": "scripts/gqf_paper_reproduction_probe.py",
+      "sha256": "2aab24393ee45acb3008cc9e14940e3b704d97af16a9a751ae633e6b2a5b5087"
+    },
+    "probe_artifact": {
+      "path": "docs/t6_8_4_gqf_reduced_standard_probe.json",
+      "sha256": "2ca6c76902853528ff319781824a9d1873df0e73be2ae6e944d3102527fbffe3"
+    },
+    "preregistration": {
+      "path": "configs/gqf_official/paper_exact_preregistration.json",
+      "sha256": "b1636d2d19f6565f559b33bb832b4ef1055068028984ba6699190f6491c92ff6"
+    },
+    "source_csv": {
+      "path": "docs/t6_8_4_gqf_reproduction_source_data.csv",
+      "sha256": "674a0055202288706986e7da3af403f982cc2ad108cca0525acdb7ce1962a3cb"
+    }
+  },
+  "semantic_mutation_audit": {
+    "count": 13,
+    "detected": 13,
+    "cases": [
+      {
+        "case": "wrong_commit",
+        "target_gate": "G01_official_intake_identity_is_reused",
+        "rejected": true
+      },
+      {
+        "case": "drop_paper_hash",
+        "target_gate": "G02_primary_paper_and_official_sources_are_hash_bound",
+        "rejected": true
+      },
+      {
+        "case": "hide_protocol_revision",
+        "target_gate": "G03_preregistration_and_post_probe_revision_are_disclosed",
+        "rejected": true
+      },
+      {
+        "case": "drop_blocker",
+        "target_gate": "G04_blocking_discrepancy_matrix_is_complete",
+        "rejected": true
+      },
+      {
+        "case": "guess_seed",
+        "target_gate": "G05_missing_fields_are_null_not_guessed",
+        "rejected": true
+      },
+      {
+        "case": "shrink_probe",
+        "target_gate": "G06_reduced_official_standard_probe_has_frozen_coverage",
+        "rejected": true
+      },
+      {
+        "case": "hide_trace_failure",
+        "target_gate": "G07_reduced_probe_physics_checks_and_source_rows_pass",
+        "rejected": true
+      },
+      {
+        "case": "fabricate_lifetime",
+        "target_gate": "G08_unexecuted_exact_metrics_remain_null",
+        "rejected": true
+      },
+      {
+        "case": "drop_agents",
+        "target_gate": "G09_all_twenty_missing_agents_are_explicit",
+        "rejected": true
+      },
+      {
+        "case": "promote_exact",
+        "target_gate": "G10_exact_no_go_follows_failed_qualification",
+        "rejected": true
+      },
+      {
+        "case": "enable_surpass_lane",
+        "target_gate": "G11_downstream_and_claim_boundaries_fail_closed",
+        "rejected": true
+      },
+      {
+        "case": "truncate_binding",
+        "target_gate": "G12_all_live_inputs_and_outputs_are_hash_bound",
+        "rejected": true
+      },
+      {
+        "case": "forge_mutation_count",
+        "target_gate": "G13_target_specific_semantic_mutations_fail_closed",
+        "rejected": true
+      }
+    ]
+  },
+  "integrity_gates": {
+    "G01_official_intake_identity_is_reused": true,
+    "G02_primary_paper_and_official_sources_are_hash_bound": true,
+    "G03_preregistration_and_post_probe_revision_are_disclosed": true,
+    "G04_blocking_discrepancy_matrix_is_complete": true,
+    "G05_missing_fields_are_null_not_guessed": true,
+    "G06_reduced_official_standard_probe_has_frozen_coverage": true,
+    "G07_reduced_probe_physics_checks_and_source_rows_pass": true,
+    "G08_unexecuted_exact_metrics_remain_null": true,
+    "G09_all_twenty_missing_agents_are_explicit": true,
+    "G10_exact_no_go_follows_failed_qualification": true,
+    "G11_downstream_and_claim_boundaries_fail_closed": true,
+    "G12_all_live_inputs_and_outputs_are_hash_bound": true,
+    "G13_target_specific_semantic_mutations_fail_closed": true
+  },
+  "integrity_summary": {
+    "passed": 13,
+    "failed": 0
+  },
+  "verdict": "COMPLETE_GQF_PAPER_EXACT_ATTEMPT_NO_GO_SOURCE_INCOMPLETE"
+}

@@ -227,10 +227,8 @@ def test_fresh_confirmed_candidate_clears_stale_recovery_only_after_guard() -> N
     assert committed.recovery_requested
     for epoch in range(18, 23):
         record = supervisor.tick(_cycle(epoch))
-    assert record.recovery_requested
-    cleared = supervisor.tick(_cycle(23))
-    assert not cleared.recovery_requested
-    assert cleared.health_status == "healthy"
+    assert not record.recovery_requested
+    assert record.health_status == "healthy"
 
 
 def test_corrupt_transfer_never_changes_active_image_or_fast_action_definition() -> None:

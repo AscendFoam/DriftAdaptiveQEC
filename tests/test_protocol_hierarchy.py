@@ -13,6 +13,7 @@ MARKDOWN_PATH = ROOT / "docs" / "protocol_hierarchy.md"
 PARAMETER_REGISTRY_PATH = ROOT / "docs" / "paper_parameter_registry.json"
 LITERATURE_TREND_PATH = ROOT / "docs" / "t5_0_1_literature_trend_reproduction.json"
 INDEPENDENT_HOLDOUT_PATH = ROOT / "docs" / "t5_0_2_independent_cross_fidelity_holdout.json"
+COMPARISON_SET_PATH = ROOT / "docs" / "t5_1_1_comparison_set_registry.json"
 
 
 @pytest.fixture(scope="module")
@@ -57,6 +58,24 @@ def test_t5_0_2_holdout_contract_preserves_failed_main_and_secondary_boundary(
     assert artifact["main_cross_fidelity_holdout"]["failed_gates"] == [
         "pooled_effective_holdout_matches_noise_transfer_within_two_sigma"
     ]
+
+
+def test_t5_1_1_comparison_contract_is_complete_lane_local_and_not_executed(
+    registry: dict,
+) -> None:
+    contract = registry["comparison_set_registry_contract"]
+    artifact = json.loads(COMPARISON_SET_PATH.read_text(encoding="utf-8"))
+    assert contract["task_id"] == "T5.1.1"
+    assert contract["comparator_count"] == len(artifact["comparators"]) == 19
+    assert contract["lane_count"] == len(artifact["comparison_lanes"]) == 8
+    assert contract["matrix_status"] == artifact["full_matrix_status"]
+    assert contract["matrix_status"] == "PREREGISTERED_NOT_EXECUTED_T5_1_2"
+    assert "no global" in contract["pass_semantics"]
+    assert "only decoder_oracle_map" in contract["oracle_rule"]
+    assert "component-only" in contract["component_rule"]
+    assert "Knill and P-Steane" in contract["nonmixing_rule"]
+    assert artifact["status"] == "PASS"
+    assert artifact["gate_summary"]["failed"] == []
 
 
 def test_hierarchy_has_one_main_one_cross_validation_and_two_secondary(registry: dict) -> None:
@@ -792,6 +811,76 @@ def test_t4_4_5_protocol_contract_freezes_qualified_and_fallback_branches(
     assert "T5.2" in contract["revocation_rule"] and "T6" in contract["revocation_rule"]
     assert "not_universal_nmf" in contract["implemented_model_scope"]
     for artifact in contract["production_artifacts"]:
+        assert (ROOT / artifact).is_file()
+
+
+def test_t5_5_2_protocol_contract_is_multiseed_target_specific_and_not_board_claim(
+    registry: dict,
+) -> None:
+    contract = registry["rtl_target_device_synthesis_contract"]
+    assert contract["task_ids"] == ["T-RISK-20260716-01", "T5.5.2"]
+    assert contract["protocol_id"].startswith("SOURCE-BOUND-RTL-THREE-SEED")
+    assert contract["target_device"] == "GW2AR-LV18QN88C8/I7"
+    assert contract["target_family"] == "GW2A-18C"
+    assert contract["place_route_seeds"] == [1, 7, 19]
+    assert contract["fmax_mhz_minimum"] > contract["target_mhz"] == 27.0
+    assert contract["maximum_resources"]["BSRAM"] == 8
+    assert "worst period" in contract["critical_path_rule"]
+    assert "six cycles" in contract["latency_rule"]
+    assert "eight mirrored" in contract["memory_rule"]
+    assert "no vendor timing signoff" in contract["claim_rule"]
+    for artifact in (
+        contract["equivalence_artifact"],
+        contract["synthesis_artifact"],
+        contract["source_data"],
+        contract["report"],
+    ):
+        assert (ROOT / artifact).is_file()
+
+
+def test_t5_5_3_protocol_contract_freezes_one_actual_pareto_point(
+    registry: dict,
+) -> None:
+    contract = registry["precision_resource_performance_pareto_contract"]
+    assert contract["task_id"] == "T5.5.3"
+    assert contract["joint_candidate_count"] == 108
+    assert contract["selected_candidate"] == "selected_p10_a8_q9_12__k4__d4__p1"
+    assert "not implemented" in contract["topk_rule"]
+    assert "sixty-four-cycle" in contract["student_rule"]
+    assert contract["student_equivalence"]["mismatch_count"] == 0
+    assert contract["student_equivalence"]["compared_output_codes"] == 7680
+    assert contract["integrated_fmax_mhz"]["minimum"] > 27.0
+    assert contract["integrated_maximum_resources"]["BSRAM"] == 8
+    assert "other rows are calibrated estimates" in contract["evidence_level_rule"]
+    assert "no online top-K" in contract["claim_rule"]
+    for artifact in (
+        contract["artifact"], contract["source_data"],
+        contract["student_equivalence_artifact"], contract["report"],
+    ):
+        assert (ROOT / artifact).is_file()
+
+
+def test_t5_5_4_protocol_contract_drops_nonfunctional_gru_and_selects_student(
+    registry: dict,
+) -> None:
+    contract = registry["gru_student_hardware_feasibility_contract"]
+    assert contract["task_id"] == "T5.5.4"
+    assert contract["parameter_accounting"]["total_parameters"] == 72_853
+    assert contract["parameter_accounting"]["weight_macs"] == 72_266
+    assert "offline teacher" in contract["full_gru_rule"]
+    assert "disqualifying lower bound" in contract["quantized_gru_rule"]
+    assert contract["quantized_gru_lower_bound"]["cycles"] == 72_854
+    assert contract["quantized_gru_lower_bound"]["maximum_resources"]["BSRAM"] == 41
+    assert contract["quantized_gru_lower_bound"]["minimum_fmax_mhz"] > 27.0
+    assert contract["quantized_gru_lower_bound"]["latency_us_at_minimum_fmax"] > 5.0
+    assert "physical gain retention remains null" in contract["quantized_shadow_rule"]
+    assert contract["selected_route"] == "distilled_student_q3_14_state4_serial"
+    assert contract["dropped_route"] == "quantized_gru_enhanced_route"
+    assert "no functional quantized-GRU" in contract["claim_rule"]
+    for artifact in (
+        contract["artifact"], contract["source_data"],
+        contract["workload_trace"], contract["report"],
+    ):
         assert (ROOT / artifact).is_file()
 
 

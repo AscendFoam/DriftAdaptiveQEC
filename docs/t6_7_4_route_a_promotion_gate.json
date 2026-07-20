@@ -1,0 +1,544 @@
+{
+  "task_id": "T6.7.4",
+  "schema_version": "t6.7.4-route-a-promotion-gate-v1",
+  "generated_at_utc": "2026-07-17T14:15:03.217471+00:00",
+  "independence_contract": {
+    "no_experiment_rerun": true,
+    "no_threshold_retuning": true,
+    "no_baseline_reselection": true,
+    "raw_trajectory_analysis_recomputed": true,
+    "large_source_files_rehashed": true,
+    "cross_lane_offset_prohibited": true
+  },
+  "frozen_contract": {
+    "primary_baseline": "ewma_adaptive_map",
+    "formal_baseline_reselection": false,
+    "threshold_lock_sha256": "9347edb270bbeb3f50d8bd8aceaeefd8003e118f1e88712dd5265519bb0f67aa"
+  },
+  "parent_audits": {
+    "artifacts": [
+      {
+        "path": "docs/t6_7_1_smooth_formal_matrix.json",
+        "expected_sha256": "4196ded90f032ece0a3d983d128626d551d8805a0377680ef02634bce08c29aa",
+        "observed_sha256": "4196ded90f032ece0a3d983d128626d551d8805a0377680ef02634bce08c29aa"
+      },
+      {
+        "path": "docs/t6_7_2_abrupt_ood_tail_formal_matrix.json",
+        "expected_sha256": "2ae43652593d66198f6f7114b3b2945da23c6596aa0c7adbfa10be78805d4957",
+        "observed_sha256": "2ae43652593d66198f6f7114b3b2945da23c6596aa0c7adbfa10be78805d4957"
+      },
+      {
+        "path": "docs/t6_7_3_route_a_integrated_rtl_qualification.json",
+        "expected_sha256": "76a00242af2a61900c1151eb77c64aec070b59fb7525fdb1bded73d6eb6c508c",
+        "observed_sha256": "76a00242af2a61900c1151eb77c64aec070b59fb7525fdb1bded73d6eb6c508c"
+      },
+      {
+        "path": "docs/t6_6_1_unified_comparator_runner.json",
+        "expected_sha256": "ec36f4ae5cb86c1bdc9c71067f0db504260708766040bdc74fdd93e702496f99",
+        "observed_sha256": "ec36f4ae5cb86c1bdc9c71067f0db504260708766040bdc74fdd93e702496f99"
+      }
+    ],
+    "source_data": [
+      {
+        "path": "docs/t6_7_1_smooth_formal_matrix_source_data.csv",
+        "expected_sha256": "6ce0f6793bd80bf88e4d3822304ae4ac36479e9334197f21cb8bda135025fe2b",
+        "observed_sha256": "6ce0f6793bd80bf88e4d3822304ae4ac36479e9334197f21cb8bda135025fe2b",
+        "expected_rows": 498240,
+        "observed_rows": 498240,
+        "passes": true
+      },
+      {
+        "path": "docs/t6_7_2_abrupt_ood_tail_formal_matrix_source_data.csv",
+        "expected_sha256": "0ebbf3eeca5bb6fedf3f714602ac2fbfea60e5c8c59d6230a5526df21b30eee1",
+        "observed_sha256": "0ebbf3eeca5bb6fedf3f714602ac2fbfea60e5c8c59d6230a5526df21b30eee1",
+        "expected_rows": 686104,
+        "observed_rows": 686104,
+        "passes": true
+      }
+    ]
+  },
+  "implementation_binding": {
+    "path": "cnn_fpga/benchmark/route_a_promotion_gate.py",
+    "sha256": "e76f95703b5737ea55b96a35a4b8f711cc69ef6e3ea68f069c3ed1ce9ea45055"
+  },
+  "scientific_results": {
+    "smooth": {
+      "raw_analysis_sha256": "1fcc3f6b3c969b64b85e248702b8221caf94d2165c30e118161572b734b5bc10",
+      "evidence_gates": {
+        "G01_parent_preregistration_v4_lock_and_source_hashes_match": true,
+        "G02_primary_baseline_remains_pilot_locked_ewma": true,
+        "G03_exact_24_seed_by_24_cell_matrix_executed": true,
+        "G04_all_four_smooth_families_and_six_cells_each_present": true,
+        "G05_every_trajectory_has_all_methods_and_96_complete_windows": true,
+        "G06_oracle_is_separate_non_deployable_evaluation_lane": true,
+        "G07_analysis_recomputes_exactly_from_raw_trajectory_counts": true,
+        "G08_paired_seed_cluster_bootstrap_and_equal_family_weights_frozen": true,
+        "G09_source_data_is_complete_and_hash_bound": true,
+        "G10_no_false_update_or_undefined_metric_in_smooth_matrix": true,
+        "G11_cache_context_binds_every_trace_to_lock_and_algorithm": true,
+        "G12_semantic_mutations_all_rejected": true
+      },
+      "all_evidence_gates_pass": true,
+      "primary_contrast": {
+        "contrast": "ewma_adaptive_map_LER_minus_proposed_route_a_LER",
+        "estimate": 2.1687260380497668e-05,
+        "ci95_low": 1.9002843786168966e-05,
+        "ci95_high": 2.454828332971639e-05,
+        "one_sided_p_nonpositive": 4.999750012499375e-05,
+        "passes_95_lcb_strictly_greater_than_zero": true
+      },
+      "primary_pass": true,
+      "average_ler": {
+        "standard_binning": 0.0009786111337167244,
+        "static_joint_map": 0.0009681913587782118,
+        "window_map": 0.0008964185361508971,
+        "ewma_adaptive_map": 0.001014426902488426,
+        "kalman_adaptive_map": 0.0017857374968352137,
+        "proposed_route_a": 0.000992739642107928
+      },
+      "strongest_deployable": "window_map",
+      "strongest_deployable_average_ler": 0.0008964185361508971,
+      "route_a_is_global_best_deployable": false,
+      "route_a_beats_static_average": false,
+      "route_a_beats_window_average": false,
+      "holm_confirmed_families": [
+        "periodic_drift"
+      ],
+      "all_smooth_families_holm_confirmed": false,
+      "oracle_gap_closure": {
+        "formula": "(static_LER-proposed_LER)/(static_LER-oracle_LER)",
+        "static_minus_oracle": 0.0008058547973632812,
+        "static_minus_oracle_ci95": [
+          0.0007913730762622974,
+          0.0008205484460901331
+        ],
+        "denominator_strictly_positive": true,
+        "gap_closure": -0.030462415077799714,
+        "gap_closure_ci95": [
+          -0.04966251005211896,
+          -0.011185313997759173
+        ],
+        "flags": []
+      }
+    },
+    "tail": {
+      "raw_analysis_sha256": "a2218247507d88e097ebc5d87e2224988a6a196038fa3e3892a82a1fcfa28216",
+      "evidence_gates": {
+        "G01_parent_v4_lock_and_sources_current": true,
+        "G02_primary_baseline_remains_pilot_locked_ewma": true,
+        "G03_exact_24_seed_by_37_cell_matrix_executed": true,
+        "G04_six_abrupt_families_and_nominal_complete": true,
+        "G05_every_trajectory_has_six_methods_and_96_windows": true,
+        "G06_analysis_recomputes_from_raw_counts": true,
+        "G07_cluster_bootstrap_contract_frozen": true,
+        "G08_source_data_complete_and_hash_bound": true,
+        "G09_cache_replay_binds_all_888_traces": true,
+        "G10_all_lag_events_and_censoring_are_defined": true,
+        "G11_semantic_mutations_all_rejected": true
+      },
+      "all_evidence_gates_pass": true,
+      "promotion_components": {
+        "all_six_catastrophic_gates_pass": true,
+        "calibration_shift_strict_gate_pass": true,
+        "nominal_noninferiority_gate_pass": true
+      },
+      "tail_safety_gate_passes": true,
+      "confirmed_average_improvement_families": [],
+      "broad_tail_improvement_confirmed": false,
+      "exact_equal_average_families": [
+        "step_calibration_shift",
+        "telegraph_drift",
+        "readout_reset_fault",
+        "leakage_persistence",
+        "compound_ood"
+      ],
+      "calibration_shift_strict_gate": {
+        "baseline_global_worst_error_count": 181,
+        "proposed_global_worst_error_count": 181,
+        "global_worst_proposed_not_greater": true,
+        "seed_worst_proposed_minus_baseline": {
+          "estimate": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "seed_worst_95_ucb_not_greater_than_zero": true,
+        "passes": true
+      },
+      "nominal_noninferiority_gate": {
+        "average_proposed_minus_policy_off": {
+          "estimate": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "fallback_rate": 0.001193576388888889,
+        "unnecessary_fallback_rate": 0.001178317599826389,
+        "induced_minus_avoided_rate": {
+          "estimate": 0.0,
+          "ci95_low": 0.0,
+          "ci95_high": 0.0
+        },
+        "components": {
+          "average_ucb": true,
+          "fallback_rate": true,
+          "unnecessary_fallback_rate": true,
+          "induced_minus_avoided_ucb": true
+        },
+        "passes": true
+      },
+      "action_metrics_by_family": [
+        {
+          "family": "step_calibration_shift",
+          "fallback_rate": 0.9585458260995371,
+          "false_updates": 3365,
+          "commits": 3456,
+          "unnecessary_fallback_rate": 0.9462783248336227,
+          "avoided_errors": 0,
+          "induced_errors": 0,
+          "events": {
+            "tail_onset_to_fallback": {
+              "events": 144,
+              "observed": 144,
+              "right_censored": 0,
+              "mean_decisions": 0.0,
+              "p95_higher_decisions": 0.0,
+              "max_decisions": 0
+            },
+            "tail_recovery_to_open": {
+              "events": 0,
+              "observed": 0,
+              "right_censored": 0,
+              "mean_decisions": null,
+              "p95_higher_decisions": null,
+              "max_decisions": null
+            }
+          }
+        },
+        {
+          "family": "telegraph_drift",
+          "fallback_rate": 0.5944959852430556,
+          "false_updates": 2044,
+          "commits": 3456,
+          "unnecessary_fallback_rate": 0.5880201834219473,
+          "avoided_errors": 0,
+          "induced_errors": 0,
+          "events": {
+            "tail_onset_to_fallback": {
+              "events": 310,
+              "observed": 310,
+              "right_censored": 0,
+              "mean_decisions": 0.1032258064516129,
+              "p95_higher_decisions": 0.0,
+              "max_decisions": 32
+            },
+            "tail_recovery_to_open": {
+              "events": 239,
+              "observed": 239,
+              "right_censored": 0,
+              "mean_decisions": 265.2384937238494,
+              "p95_higher_decisions": 288.0,
+              "max_decisions": 448
+            }
+          }
+        },
+        {
+          "family": "burst_outlier",
+          "fallback_rate": 0.7351842809606481,
+          "false_updates": 2617,
+          "commits": 3456,
+          "unnecessary_fallback_rate": 0.6869066026475694,
+          "avoided_errors": 2,
+          "induced_errors": 2,
+          "events": {
+            "tail_onset_to_fallback": {
+              "events": 360,
+              "observed": 360,
+              "right_censored": 0,
+              "mean_decisions": 11.2,
+              "p95_higher_decisions": 96.0,
+              "max_decisions": 256
+            },
+            "tail_recovery_to_open": {
+              "events": 274,
+              "observed": 274,
+              "right_censored": 0,
+              "mean_decisions": 225.63503649635035,
+              "p95_higher_decisions": 320.0,
+              "max_decisions": 416
+            }
+          }
+        },
+        {
+          "family": "readout_reset_fault",
+          "fallback_rate": 0.7496292679398148,
+          "false_updates": 2605,
+          "commits": 3456,
+          "unnecessary_fallback_rate": 0.7496087816026475,
+          "avoided_errors": 0,
+          "induced_errors": 0,
+          "events": {
+            "tail_onset_to_fallback": {
+              "events": 360,
+              "observed": 360,
+              "right_censored": 0,
+              "mean_decisions": 0.08888888888888889,
+              "p95_higher_decisions": 0.0,
+              "max_decisions": 32
+            },
+            "tail_recovery_to_open": {
+              "events": 270,
+              "observed": 270,
+              "right_censored": 0,
+              "mean_decisions": 226.01481481481483,
+              "p95_higher_decisions": 256.0,
+              "max_decisions": 288
+            }
+          }
+        },
+        {
+          "family": "leakage_persistence",
+          "fallback_rate": 0.7484311704282407,
+          "false_updates": 2598,
+          "commits": 3456,
+          "unnecessary_fallback_rate": 0.7484109666612413,
+          "avoided_errors": 0,
+          "induced_errors": 0,
+          "events": {
+            "tail_onset_to_fallback": {
+              "events": 360,
+              "observed": 360,
+              "right_censored": 0,
+              "mean_decisions": 0.0,
+              "p95_higher_decisions": 0.0,
+              "max_decisions": 0
+            },
+            "tail_recovery_to_open": {
+              "events": 278,
+              "observed": 278,
+              "right_censored": 0,
+              "mean_decisions": 227.9136690647482,
+              "p95_higher_decisions": 256.0,
+              "max_decisions": 480
+            }
+          }
+        },
+        {
+          "family": "compound_ood",
+          "fallback_rate": 0.7503074363425926,
+          "false_updates": 2615,
+          "commits": 3456,
+          "unnecessary_fallback_rate": 0.7051240426522715,
+          "avoided_errors": 0,
+          "induced_errors": 0,
+          "events": {
+            "tail_onset_to_fallback": {
+              "events": 360,
+              "observed": 360,
+              "right_censored": 0,
+              "mean_decisions": 0.0,
+              "p95_higher_decisions": 0.0,
+              "max_decisions": 0
+            },
+            "tail_recovery_to_open": {
+              "events": 277,
+              "observed": 277,
+              "right_censored": 0,
+              "mean_decisions": 227.35018050541515,
+              "p95_higher_decisions": 256.0,
+              "max_decisions": 480
+            }
+          }
+        },
+        {
+          "family": "nominal_static",
+          "fallback_rate": 0.001193576388888889,
+          "false_updates": 0,
+          "commits": 576,
+          "unnecessary_fallback_rate": 0.001178317599826389,
+          "avoided_errors": 0,
+          "induced_errors": 0,
+          "events": {
+            "tail_onset_to_fallback": {
+              "events": 0,
+              "observed": 0,
+              "right_censored": 0,
+              "mean_decisions": null,
+              "p95_higher_decisions": null,
+              "max_decisions": null
+            },
+            "tail_recovery_to_open": {
+              "events": 0,
+              "observed": 0,
+              "right_censored": 0,
+              "mean_decisions": null,
+              "p95_higher_decisions": null,
+              "max_decisions": null
+            }
+          }
+        }
+      ]
+    },
+    "rtl": {
+      "evidence_gates": {
+        "qualifying_scale": true,
+        "t622_anchor": true,
+        "v4_lock_anchor": true,
+        "yosys_structural_check": true,
+        "all_cycle_bit_exact": true,
+        "cxxrtl_full_scale": true,
+        "no_undefined_or_crc_error": true,
+        "all_policy_actions_and_reasons": true,
+        "posterior_boundary_coverage": true,
+        "unified_runner_replay_provenance": true,
+        "hysteresis_and_router_coverage": true,
+        "commit_rollback_race_coverage": true,
+        "event_integrity_coverage": true,
+        "transport_fail_closed": true,
+        "cxxrtl_comparator_mutations": true,
+        "source_hash_binding": true,
+        "evidence_scope_lint": true,
+        "semantic_mutations": true
+      },
+      "all_evidence_gates_pass": true,
+      "trace_path": "build/t6_7_3_route_a_integrated_rtl/route_a_integrated_trace.bin",
+      "trace_expected_sha256": "e37a23e4965fb072e71100e033ac67b8c3c526fced7056dae6e6fe283f307742",
+      "trace_observed_sha256": "e37a23e4965fb072e71100e033ac67b8c3c526fced7056dae6e6fe283f307742",
+      "trace_expected_bytes": 131000000,
+      "trace_observed_bytes": 131000000,
+      "trace_binding_pass": true,
+      "cycles": 1000000,
+      "rtl_mismatches": 0,
+      "undefined_actions": 0,
+      "silent_overflow": 0,
+      "unified_replay_fraction": 0.995802,
+      "scope": "board-independent integer golden, CXXRTL and synthesis-structural qualification; abstract FIFO receiver only",
+      "hmm_is_in_rtl": false,
+      "measured_board_latency": false
+    }
+  },
+  "promotion_decision": {
+    "verdict": "GO_ROUTE_A_CONTRACT_SYSTEM_RESTRICTED_SIMULATOR_AND_PREBOARD_CLAIMS",
+    "scope": "contract-level simulator and pre-board correctness only",
+    "route_a_system": "promoted with restricted claims",
+    "smooth_claim": "promoted only against pilot-locked EWMA aggregate",
+    "tail_claim": "safety/non-inferiority only; no improvement claim",
+    "global_performance_rank": "not promoted",
+    "cnn_role": "ablation only",
+    "fallback_branch_triggered": false,
+    "smooth_only_branch_triggered": false,
+    "static_deterministic_branch_triggered": false
+  },
+  "claim_registry": [
+    {
+      "claim_id": "ROUTE_A_SYSTEM",
+      "state": "PROMOTED_RESTRICTED",
+      "reason": "all preregistered scientific and integrated correctness gates pass"
+    },
+    {
+      "claim_id": "SMOOTH_LOCKED_EWMA",
+      "state": "PROMOTED",
+      "reason": "aggregate paired EWMA-minus-Route-A 95% LCB is strictly positive"
+    },
+    {
+      "claim_id": "GLOBAL_DEPLOYABLE_LER",
+      "state": "FALSIFIED",
+      "reason": "strongest deployable is window_map; Route-A is not global best"
+    },
+    {
+      "claim_id": "STATIC_GKP_SUPERIORITY",
+      "state": "FALSIFIED",
+      "reason": "Route-A average LER exceeds static joint MAP on the formal smooth matrix"
+    },
+    {
+      "claim_id": "TAIL_IMPROVEMENT",
+      "state": "NOT_ESTABLISHED",
+      "reason": "tail gates establish locked-EWMA safety/non-inferiority, not broad LER improvement"
+    },
+    {
+      "claim_id": "CNN_PRIMARY",
+      "state": "ABLATION_ONLY",
+      "reason": "legacy checkpoint executes but fails matched schema and budget"
+    },
+    {
+      "claim_id": "HMM_ON_FPGA",
+      "state": "PROHIBITED",
+      "reason": "posterior/HMM remains a software slow loop"
+    },
+    {
+      "claim_id": "MEASURED_FPGA_SPEED",
+      "state": "PROHIBITED",
+      "reason": "no physical-board latency, deadline, resource, or power measurement"
+    }
+  ],
+  "allowed_wording": [
+    "Under the frozen simulator/protocol, Route-A improves aggregate smooth-drift LER relative to the pilot-locked EWMA baseline.",
+    "The preregistered abrupt/OOD and nominal gates establish non-catastrophic behavior relative to that locked baseline.",
+    "A one-million-cycle pre-board integer-golden/CXXRTL qualification was bit exact and fail closed under the exercised faults."
+  ],
+  "forbidden_wording": [
+    "Route-A is the best deployable GKP decoder.",
+    "Route-A outperforms static joint MAP or Window MAP.",
+    "Route-A improves tail LER in general.",
+    "The HMM runs on FPGA.",
+    "The FPGA decoder is faster than prior hardware."
+  ],
+  "semantic_mutation_audit": {
+    "count": 8,
+    "detected": 8,
+    "cases": [
+      {
+        "case": "corrupt_parent_hash",
+        "rejected": true
+      },
+      {
+        "case": "corrupt_source_rows",
+        "rejected": true
+      },
+      {
+        "case": "zero_primary_lcb",
+        "rejected": true
+      },
+      {
+        "case": "erase_tail_gate",
+        "rejected": true
+      },
+      {
+        "case": "inject_rtl_mismatch",
+        "rejected": true
+      },
+      {
+        "case": "reselect_baseline",
+        "rejected": true
+      },
+      {
+        "case": "drop_claim",
+        "rejected": true
+      },
+      {
+        "case": "promote_global_rank",
+        "rejected": true
+      }
+    ]
+  },
+  "gates": {
+    "G01_all_parent_artifact_hashes_current": true,
+    "G02_all_large_source_bindings_current": true,
+    "G03_smooth_raw_analysis_and_evidence_recompute": true,
+    "G04_locked_ewma_primary_lcb_strictly_positive": true,
+    "G05_all_tail_compound_nominal_preregistered_gates_pass": true,
+    "G06_million_cycle_integrated_safety_qualifies": true,
+    "G07_no_formal_baseline_reselection_or_lock_drift": true,
+    "G08_branch_and_claim_registry_complete": true,
+    "G09_restricted_verdict_does_not_promote_falsified_claims": true,
+    "G10_semantic_mutations_fail_closed": true
+  },
+  "gate_summary": {
+    "passed": 10,
+    "failed": 0
+  },
+  "verdict": "GO_ROUTE_A_CONTRACT_SYSTEM_RESTRICTED_SIMULATOR_AND_PREBOARD_CLAIMS",
+  "output_source_data_binding": {
+    "path": "docs/t6_7_4_route_a_promotion_gate_source_data.csv",
+    "sha256": "436766161867059f5d19afcff67ad9d15c8a193e3b4738567203b7379c75a9af",
+    "row_count": 24
+  }
+}

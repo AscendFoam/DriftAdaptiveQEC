@@ -1,0 +1,4018 @@
+{
+  "schema_version": "t5.5.3-precision-resource-performance-pareto-v1",
+  "task_id": "T5.5.3",
+  "status": "PASS",
+  "verdict": "SELECT_P10_A8_Q9_12_K4_REFERENCE_STATE4_SERIAL_DSP_POST_ROUTE_PASS_NOT_BOARD_MEASURED",
+  "target": {
+    "device": "GW2AR-LV18QN88C8/I7",
+    "family": "GW2A-18C",
+    "target_mhz": 27.0,
+    "student_deadline_us": 5.0
+  },
+  "parents": [
+    {
+      "name": "precision",
+      "artifact": {
+        "path": "docs/t4_2_4_fast_path_fixed_point_validation.json",
+        "sha256": "dc775caa9347092b66cfbbbae0f86f107272358dc75055966d206cba6f335609",
+        "bytes": 10522
+      },
+      "task_id": "T4.2.4",
+      "status": "PASS",
+      "gate_summary": {
+        "passed": 21,
+        "total": 21
+      }
+    },
+    {
+      "name": "topk",
+      "artifact": {
+        "path": "docs/t3_1_5_topk_map_validation.json",
+        "sha256": "aac5cb70cf63cb238b2abd8f75d52b96dcda72c86a4e0e899cb9e30e05aec2ec",
+        "bytes": 95346
+      },
+      "task_id": "T3.1.5",
+      "status": "PASS",
+      "gate_summary": {
+        "passed": 8,
+        "total": 8
+      }
+    },
+    {
+      "name": "student_dimension",
+      "artifact": {
+        "path": "docs/t4_4_3_low_dimensional_student_validation.json",
+        "sha256": "1bb56e2d4c8839c4f25e91ece8f404427a1917114bc5e9c69249e92cd7ada26a",
+        "bytes": 2314106
+      },
+      "task_id": "T4.4.3",
+      "status": "PASS",
+      "gate_summary": {
+        "passed": 16,
+        "total": 16
+      }
+    },
+    {
+      "name": "student_gain",
+      "artifact": {
+        "path": "docs/t4_4_4_teacher_student_gain_retention.json",
+        "sha256": "5cd1478de22ecd998aaf678bc6f14873134e57bc8ae2fc4408df215544b86dfc",
+        "bytes": 502663
+      },
+      "task_id": "T4.4.4",
+      "status": "PASS",
+      "gate_summary": {
+        "passed": 18,
+        "total": 18
+      }
+    },
+    {
+      "name": "base_target_synthesis",
+      "artifact": {
+        "path": "docs/t5_5_2_target_device_synthesis.json",
+        "sha256": "fcd75de4bc3b5af589b10021df71a1de0a0b2d8c1bace7aa0d7ab3b846aec0c3",
+        "bytes": 26265
+      },
+      "task_id": "T5.5.2",
+      "status": "PASS",
+      "gate_summary": {
+        "passed": 12,
+        "total": 12
+      }
+    },
+    {
+      "name": "student_rtl_equivalence",
+      "artifact": {
+        "path": "docs/t5_5_3_student_rtl_equivalence.json",
+        "sha256": "031a8e92d8e274ba955eac1f16ed15bff7f4367d68e90bf0464e3223e10f9d24",
+        "bytes": 1930
+      },
+      "task_id": "T5.5.3",
+      "status": "PASS",
+      "gate_summary": {
+        "passed": 6,
+        "total": 6
+      }
+    }
+  ],
+  "source_bindings": [
+    {
+      "path": "cnn_fpga/benchmark/precision_resource_pareto.py",
+      "sha256": "4821bfb1e48d03c28b8cc1b002387655ced89a37b1c971077b53bb0776d435ff",
+      "bytes": 26653
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "sha256": "72f84c38bdf064d851ab389c457c9b1fe2115cea65dfca60d60f59efaad9f5af",
+      "bytes": 24895
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_synth_top.sv",
+      "sha256": "c0fb58acc208406aba6fcb98dd6cc1dfaa02040e5e074b05cdfba8f92e545260",
+      "bytes": 5340
+    },
+    {
+      "path": "cnn_fpga/rtl/low_dimensional_student_kernel.sv",
+      "sha256": "d8f1058b20f584deb30be41fb0eef7318048a60677449b3a47839fd09a52c9ac",
+      "bytes": 8595
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_student_synth_top.sv",
+      "sha256": "9b22fee451b41dcf01e4e641a858f903a5dbfa8d2ef1add018c79510dfcd79ed",
+      "bytes": 1782
+    },
+    {
+      "path": "cnn_fpga/rtl/generated/t5_5_3_student_memory_manifest.json",
+      "sha256": "6eeae41e4bd1b81269bd360a54e1d47120196c6eaeb5e4224f737b0daa6d83b2",
+      "bytes": 1852
+    },
+    {
+      "path": "cnn_fpga/rtl/tang_nano_20k_27mhz.sdc",
+      "sha256": "75cf6f2866062f7286fa58ccd45d95be42f2d2ebe7b5b3b173ab2c5e85ba62e8",
+      "bytes": 57
+    },
+    {
+      "path": "cnn_fpga/rtl/tang_nano_20k_synth_harness.cst",
+      "sha256": "636f9520efe8c6c0fd3d7391ee80cf99ae36dd67c81768468ad9dbeb28e5a3d0",
+      "bytes": 1581
+    },
+    {
+      "path": "cnn_fpga/rtl/generated/t5_5_3_student_initial_state.mem",
+      "sha256": "d36f818f30c744c15f452f92df2650ca1c9fed5e7d6cf99fb1ace5817609ac7a",
+      "bytes": 28
+    },
+    {
+      "path": "cnn_fpga/rtl/generated/t5_5_3_student_outcome_decays.mem",
+      "sha256": "0fd114ee86d284497b8df7038dd63a1cf6b7331047d66f32cb46fbd277fa1ff2",
+      "bytes": 56
+    },
+    {
+      "path": "cnn_fpga/rtl/generated/t5_5_3_student_outcome_saturations.mem",
+      "sha256": "0f66eb2be356f75832bd04f0fc2dfa9f53b62f4e375bd07e89f5337b9c37771b",
+      "bytes": 56
+    },
+    {
+      "path": "cnn_fpga/rtl/generated/t5_5_3_student_output_weights.mem",
+      "sha256": "5660f3690c8300657d1468520e35e44b405d70eaa2b0edfc6dbf54823d7a3de2",
+      "bytes": 420
+    },
+    {
+      "path": "cnn_fpga/rtl/generated/t5_5_3_student_output_bias.mem",
+      "sha256": "4dfa855744d3c834d436e67222ca7fa5f81ef513f523bacfb7e6d865bc4aeedc",
+      "bytes": 105
+    }
+  ],
+  "axes": {
+    "precision": [
+      {
+        "profile_id": "low_p6_a4_q5_6",
+        "adc_bits": 6,
+        "address_bits": 4,
+        "llr_word_bits": 12,
+        "quantized_ler_mean": 0.039764404296875,
+        "float_ler_mean": 0.0395965576171875,
+        "paired_ler_delta_ci": [
+          -7.62939453125e-05,
+          0.00042724609375
+        ],
+        "action_disagreement_mean": 0.0011138916015625,
+        "hard_action_mismatch_count": 0,
+        "quality_pass": false,
+        "estimated_bram_blocks_for_eight_mirrors": 8,
+        "resource_scope": "exact_memory_packing_only_other_resources_require_synthesis"
+      },
+      {
+        "profile_id": "medium_p8_a6_q7_10",
+        "adc_bits": 8,
+        "address_bits": 6,
+        "llr_word_bits": 18,
+        "quantized_ler_mean": 0.0395660400390625,
+        "float_ler_mean": 0.0395965576171875,
+        "paired_ler_delta_ci": [
+          -0.0001373291015625,
+          6.103515625e-05
+        ],
+        "action_disagreement_mean": 0.000213623046875,
+        "hard_action_mismatch_count": 0,
+        "quality_pass": false,
+        "estimated_bram_blocks_for_eight_mirrors": 8,
+        "resource_scope": "exact_memory_packing_only_other_resources_require_synthesis"
+      },
+      {
+        "profile_id": "selected_p10_a8_q9_12",
+        "adc_bits": 10,
+        "address_bits": 8,
+        "llr_word_bits": 22,
+        "quantized_ler_mean": 0.0396270751953125,
+        "float_ler_mean": 0.0395965576171875,
+        "paired_ler_delta_ci": [
+          -4.57763671875e-05,
+          0.0001220703125
+        ],
+        "action_disagreement_mean": 9.1552734375e-05,
+        "hard_action_mismatch_count": 0,
+        "quality_pass": true,
+        "estimated_bram_blocks_for_eight_mirrors": 8,
+        "resource_scope": "exact_memory_packing_only_other_resources_require_synthesis"
+      },
+      {
+        "profile_id": "dense_p12_a10_q10_14",
+        "adc_bits": 12,
+        "address_bits": 10,
+        "llr_word_bits": 25,
+        "quantized_ler_mean": 0.0395965576171875,
+        "float_ler_mean": 0.0395965576171875,
+        "paired_ler_delta_ci": [
+          0.0,
+          0.0
+        ],
+        "action_disagreement_mean": 0.0,
+        "hard_action_mismatch_count": 0,
+        "quality_pass": true,
+        "estimated_bram_blocks_for_eight_mirrors": 16,
+        "resource_scope": "exact_memory_packing_only_other_resources_require_synthesis"
+      }
+    ],
+    "topk": [
+      {
+        "k": 1,
+        "scenario_count": 6,
+        "all_scenarios_converged": false,
+        "maximum_absolute_ler_delta": 0.00024999999999997247,
+        "maximum_decision_disagreement_rate": 0.002479166666666667,
+        "maximum_axis_llr_p99_abs_error": 0.647223308303012,
+        "scenario_rows": [
+          {
+            "scenario": "narrow_isotropic",
+            "convergence_k": 2,
+            "topk_ler": 0.0035625,
+            "full_ler": 0.0035625,
+            "decision_disagreement_rate": 0.0,
+            "axis_llr_p99_abs_error": 0.6167954242490532
+          },
+          {
+            "scenario": "anisotropic",
+            "convergence_k": 4,
+            "topk_ler": 0.25683333333333336,
+            "full_ler": 0.25683333333333336,
+            "decision_disagreement_rate": 0.0,
+            "axis_llr_p99_abs_error": 0.641542206476136
+          },
+          {
+            "scenario": "positive_correlation",
+            "convergence_k": 2,
+            "topk_ler": 0.124875,
+            "full_ler": 0.124875,
+            "decision_disagreement_rate": 0.0,
+            "axis_llr_p99_abs_error": 0.6448162331345927
+          },
+          {
+            "scenario": "negative_correlation",
+            "convergence_k": 2,
+            "topk_ler": 0.13060416666666666,
+            "full_ler": 0.13060416666666666,
+            "decision_disagreement_rate": 0.0,
+            "axis_llr_p99_abs_error": 0.647223308303012
+          },
+          {
+            "scenario": "broad_correlated",
+            "convergence_k": 4,
+            "topk_ler": 0.5568333333333333,
+            "full_ler": 0.5565833333333333,
+            "decision_disagreement_rate": 0.002479166666666667,
+            "axis_llr_p99_abs_error": 0.5330928154055493
+          },
+          {
+            "scenario": "large_bias",
+            "convergence_k": 4,
+            "topk_ler": 0.40852083333333333,
+            "full_ler": 0.4085416666666667,
+            "decision_disagreement_rate": 0.00025,
+            "axis_llr_p99_abs_error": 0.5044440914816931
+          }
+        ],
+        "hardware_role": "off_device_reference_only_not_present_in_integrated_rtl"
+      },
+      {
+        "k": 2,
+        "scenario_count": 6,
+        "all_scenarios_converged": false,
+        "maximum_absolute_ler_delta": 2.0833333333358794e-05,
+        "maximum_decision_disagreement_rate": 0.0020416666666666665,
+        "maximum_axis_llr_p99_abs_error": 0.07186034435860801,
+        "scenario_rows": [
+          {
+            "scenario": "narrow_isotropic",
+            "convergence_k": 2,
+            "topk_ler": 0.0035625,
+            "full_ler": 0.0035625,
+            "decision_disagreement_rate": 0.0,
+            "axis_llr_p99_abs_error": 1.4138391435380976e-09
+          },
+          {
+            "scenario": "anisotropic",
+            "convergence_k": 4,
+            "topk_ler": 0.25683333333333336,
+            "full_ler": 0.25683333333333336,
+            "decision_disagreement_rate": 0.0,
+            "axis_llr_p99_abs_error": 0.041916578428368594
+          },
+          {
+            "scenario": "positive_correlation",
+            "convergence_k": 2,
+            "topk_ler": 0.124875,
+            "full_ler": 0.124875,
+            "decision_disagreement_rate": 0.0,
+            "axis_llr_p99_abs_error": 1.889333163997974e-06
+          },
+          {
+            "scenario": "negative_correlation",
+            "convergence_k": 2,
+            "topk_ler": 0.13060416666666666,
+            "full_ler": 0.13060416666666666,
+            "decision_disagreement_rate": 0.0,
+            "axis_llr_p99_abs_error": 1.8213216742068962e-06
+          },
+          {
+            "scenario": "broad_correlated",
+            "convergence_k": 4,
+            "topk_ler": 0.5565625,
+            "full_ler": 0.5565833333333333,
+            "decision_disagreement_rate": 0.0020416666666666665,
+            "axis_llr_p99_abs_error": 0.07186034435860801
+          },
+          {
+            "scenario": "large_bias",
+            "convergence_k": 4,
+            "topk_ler": 0.40852083333333333,
+            "full_ler": 0.4085416666666667,
+            "decision_disagreement_rate": 0.0001875,
+            "axis_llr_p99_abs_error": 0.03874410870397169
+          }
+        ],
+        "hardware_role": "off_device_reference_only_not_present_in_integrated_rtl"
+      },
+      {
+        "k": 4,
+        "scenario_count": 6,
+        "all_scenarios_converged": true,
+        "maximum_absolute_ler_delta": 6.249999999996536e-05,
+        "maximum_decision_disagreement_rate": 8.333333333333333e-05,
+        "maximum_axis_llr_p99_abs_error": 0.0003882436510756724,
+        "scenario_rows": [
+          {
+            "scenario": "narrow_isotropic",
+            "convergence_k": 2,
+            "topk_ler": 0.0035625,
+            "full_ler": 0.0035625,
+            "decision_disagreement_rate": 0.0,
+            "axis_llr_p99_abs_error": 3.552713678800501e-15
+          },
+          {
+            "scenario": "anisotropic",
+            "convergence_k": 4,
+            "topk_ler": 0.25683333333333336,
+            "full_ler": 0.25683333333333336,
+            "decision_disagreement_rate": 0.0,
+            "axis_llr_p99_abs_error": 1.665861628129752e-05
+          },
+          {
+            "scenario": "positive_correlation",
+            "convergence_k": 2,
+            "topk_ler": 0.124875,
+            "full_ler": 0.124875,
+            "decision_disagreement_rate": 0.0,
+            "axis_llr_p99_abs_error": 8.322231792590173e-13
+          },
+          {
+            "scenario": "negative_correlation",
+            "convergence_k": 2,
+            "topk_ler": 0.13060416666666666,
+            "full_ler": 0.13060416666666666,
+            "decision_disagreement_rate": 0.0,
+            "axis_llr_p99_abs_error": 8.082556846034025e-13
+          },
+          {
+            "scenario": "broad_correlated",
+            "convergence_k": 4,
+            "topk_ler": 0.5565208333333334,
+            "full_ler": 0.5565833333333333,
+            "decision_disagreement_rate": 8.333333333333333e-05,
+            "axis_llr_p99_abs_error": 0.0003882436510756724
+          },
+          {
+            "scenario": "large_bias",
+            "convergence_k": 4,
+            "topk_ler": 0.4085416666666667,
+            "full_ler": 0.4085416666666667,
+            "decision_disagreement_rate": 0.0,
+            "axis_llr_p99_abs_error": 7.70376997611066e-06
+          }
+        ],
+        "hardware_role": "off_device_reference_only_not_present_in_integrated_rtl"
+      }
+    ],
+    "student_dimension": [
+      {
+        "dimension": 1,
+        "validation_mse": 1.2974364624235156e-05,
+        "evaluation_mse": 1.407074438747453e-05,
+        "stored_scalars": 35,
+        "analytic_macs_per_healthy_step": 33,
+        "parent_dimension_eligible": false,
+        "physical_gain_retention_point_minimum": null,
+        "physical_gain_retention_ci_lower_minimum": null,
+        "fixed_rtl_equivalence_available": false
+      },
+      {
+        "dimension": 2,
+        "validation_mse": 1.0832970407575324e-05,
+        "evaluation_mse": 1.1716057432819005e-05,
+        "stored_scalars": 55,
+        "analytic_macs_per_healthy_step": 51,
+        "parent_dimension_eligible": false,
+        "physical_gain_retention_point_minimum": null,
+        "physical_gain_retention_ci_lower_minimum": null,
+        "fixed_rtl_equivalence_available": false
+      },
+      {
+        "dimension": 4,
+        "validation_mse": 5.648504178206216e-06,
+        "evaluation_mse": 6.08313615636731e-06,
+        "stored_scalars": 95,
+        "analytic_macs_per_healthy_step": 87,
+        "parent_dimension_eligible": true,
+        "physical_gain_retention_point_minimum": 0.9814573586937879,
+        "physical_gain_retention_ci_lower_minimum": 0.9445014278749587,
+        "fixed_rtl_equivalence_available": true
+      }
+    ],
+    "parallelism": [
+      {
+        "multipliers": 1,
+        "selected_state4_latency_cycles": 64,
+        "selected_state4_latency_us_at_27mhz": 2.3703703703703702,
+        "evidence_level": "actual_fixed_rtl"
+      },
+      {
+        "multipliers": 2,
+        "selected_state4_latency_cycles": 32,
+        "selected_state4_latency_us_at_27mhz": 1.1851851851851851,
+        "evidence_level": "operation_count_extrapolation_not_rtl"
+      },
+      {
+        "multipliers": 4,
+        "selected_state4_latency_cycles": 16,
+        "selected_state4_latency_us_at_27mhz": 0.5925925925925926,
+        "evidence_level": "operation_count_extrapolation_not_rtl"
+      }
+    ]
+  },
+  "integrated_synthesis": {
+    "path": "docs/t5_5_3_yosys_integrated.log",
+    "sha256": "fe101e93c2f31dd0bdd297559f0368379507058a711629b208cb502a561d444e",
+    "bytes": 1095828,
+    "zero_structural_problems": true,
+    "cell_counts": {
+      "LUT1": 0,
+      "LUT2": 0,
+      "LUT3": 0,
+      "LUT4": 0,
+      "MUX2_LUT5": 0,
+      "MUX2_LUT6": 0,
+      "MUX2_LUT7": 0,
+      "MUX2_LUT8": 0,
+      "ALU": 0,
+      "SDPX9B": 8,
+      "MULT18X18": 2,
+      "MULT9X9": 1,
+      "DFF": 9,
+      "DFFE": 346,
+      "DFFR": 441,
+      "DFFRE": 175,
+      "DFFS": 51,
+      "IBUF": 10,
+      "OBUF": 8
+    },
+    "register_count": 1022,
+    "lut1_to_lut4_count": 0,
+    "lut_count_scope": "pre_abc9_log_unavailable_use_post_route_utilization",
+    "warnings": [
+      "Replacing memory \\fault_counts with list of registers. See cnn_fpga/rtl/gkp_fast_path_core.sv:418\r\r"
+    ]
+  },
+  "integrated_place_route": [
+    {
+      "seed": 1,
+      "clock_name": "core_harness.clk",
+      "target_mhz": 27.0,
+      "achieved_fmax_mhz": 40.53506088256836,
+      "timing_pass": true,
+      "route_status": "PASS",
+      "critical_path": {
+        "period_ns": 24.670000199228525,
+        "segment_count": 83,
+        "clock_to_q_ns": 0.23100000619888306,
+        "logic_ns": 11.910000294446945,
+        "routing_ns": 12.493999898433685,
+        "setup_ns": 0.03500000014901161,
+        "start_cell": "core_harness.core.leakage_clean_run_DFFRE_Q",
+        "start_location": [
+          16,
+          21
+        ],
+        "end_cell": "core_harness.fold5_DFFR_Q_7",
+        "end_location": [
+          2,
+          20
+        ],
+        "from_clock": "posedge core_harness.clk",
+        "to_clock": "posedge core_harness.clk"
+      },
+      "utilization": {
+        "ALU": {
+          "used": 616,
+          "available": 15552
+        },
+        "ALU54D": {
+          "used": 0,
+          "available": 24
+        },
+        "BSRAM": {
+          "used": 8,
+          "available": 46
+        },
+        "BUFG": {
+          "used": 1,
+          "available": 24
+        },
+        "CLKDIV": {
+          "used": 0,
+          "available": 8
+        },
+        "CLKDIV2": {
+          "used": 0,
+          "available": 16
+        },
+        "DCS": {
+          "used": 0,
+          "available": 8
+        },
+        "DFF": {
+          "used": 1022,
+          "available": 15552
+        },
+        "DHCEN": {
+          "used": 0,
+          "available": 24
+        },
+        "DQCE": {
+          "used": 0,
+          "available": 24
+        },
+        "DUMMY_CELL": {
+          "used": 9,
+          "available": 0
+        },
+        "GND": {
+          "used": 1,
+          "available": 1
+        },
+        "GSR": {
+          "used": 1,
+          "available": 1
+        },
+        "IOB": {
+          "used": 18,
+          "available": 384
+        },
+        "IOLOGICI": {
+          "used": 0,
+          "available": 384
+        },
+        "IOLOGICO": {
+          "used": 0,
+          "available": 384
+        },
+        "LUT4": {
+          "used": 3802,
+          "available": 20736
+        },
+        "MULT18X18": {
+          "used": 2,
+          "available": 48
+        },
+        "MULT36X36": {
+          "used": 0,
+          "available": 12
+        },
+        "MULT9X9": {
+          "used": 1,
+          "available": 96
+        },
+        "MULTADDALU18X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MULTALU18X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MULTALU36X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MUX2_LUT5": {
+          "used": 1078,
+          "available": 10368
+        },
+        "MUX2_LUT6": {
+          "used": 396,
+          "available": 5184
+        },
+        "MUX2_LUT7": {
+          "used": 154,
+          "available": 2592
+        },
+        "MUX2_LUT8": {
+          "used": 41,
+          "available": 2592
+        },
+        "OSC": {
+          "used": 0,
+          "available": 1
+        },
+        "PADD18": {
+          "used": 0,
+          "available": 48
+        },
+        "PADD9": {
+          "used": 0,
+          "available": 96
+        },
+        "RAM16SDP4": {
+          "used": 0,
+          "available": 648
+        },
+        "VCC": {
+          "used": 1,
+          "available": 1
+        },
+        "rPLL": {
+          "used": 0,
+          "available": 2
+        }
+      },
+      "report_artifact": {
+        "path": "docs/t5_5_3_nextpnr_seed01_report.json",
+        "sha256": "af95d8aa8bf32084aa4790a483e1b85f04ef896e12d4a5bbf788e70a316ceb1d",
+        "bytes": 167706
+      },
+      "log_artifact": {
+        "path": "docs/t5_5_3_nextpnr_seed01_place_route.log",
+        "sha256": "c5c9505764e60580d911d2eca6c21e526940c6327f222e9c3d2f5830464e2b03",
+        "bytes": 55468
+      },
+      "log_contract": {
+        "exact_device_loaded": true,
+        "clock_constrained_to_27mhz": true,
+        "program_finished_normally": true
+      }
+    },
+    {
+      "seed": 7,
+      "clock_name": "core_harness.clk",
+      "target_mhz": 27.0,
+      "achieved_fmax_mhz": 40.32258224487305,
+      "timing_pass": true,
+      "route_status": "PASS",
+      "critical_path": {
+        "period_ns": 24.800000119954348,
+        "segment_count": 77,
+        "clock_to_q_ns": 0.23100000619888306,
+        "logic_ns": 10.79800021648407,
+        "routing_ns": 13.735999897122383,
+        "setup_ns": 0.03500000014901161,
+        "start_cell": "core_harness.core.leakage_clean_run_DFFRE_Q",
+        "start_location": [
+          10,
+          22
+        ],
+        "end_cell": "core_harness.fold5_DFFR_Q_15",
+        "end_location": [
+          1,
+          25
+        ],
+        "from_clock": "posedge core_harness.clk",
+        "to_clock": "posedge core_harness.clk"
+      },
+      "utilization": {
+        "ALU": {
+          "used": 616,
+          "available": 15552
+        },
+        "ALU54D": {
+          "used": 0,
+          "available": 24
+        },
+        "BSRAM": {
+          "used": 8,
+          "available": 46
+        },
+        "BUFG": {
+          "used": 1,
+          "available": 24
+        },
+        "CLKDIV": {
+          "used": 0,
+          "available": 8
+        },
+        "CLKDIV2": {
+          "used": 0,
+          "available": 16
+        },
+        "DCS": {
+          "used": 0,
+          "available": 8
+        },
+        "DFF": {
+          "used": 1022,
+          "available": 15552
+        },
+        "DHCEN": {
+          "used": 0,
+          "available": 24
+        },
+        "DQCE": {
+          "used": 0,
+          "available": 24
+        },
+        "DUMMY_CELL": {
+          "used": 9,
+          "available": 0
+        },
+        "GND": {
+          "used": 1,
+          "available": 1
+        },
+        "GSR": {
+          "used": 1,
+          "available": 1
+        },
+        "IOB": {
+          "used": 18,
+          "available": 384
+        },
+        "IOLOGICI": {
+          "used": 0,
+          "available": 384
+        },
+        "IOLOGICO": {
+          "used": 0,
+          "available": 384
+        },
+        "LUT4": {
+          "used": 3787,
+          "available": 20736
+        },
+        "MULT18X18": {
+          "used": 2,
+          "available": 48
+        },
+        "MULT36X36": {
+          "used": 0,
+          "available": 12
+        },
+        "MULT9X9": {
+          "used": 1,
+          "available": 96
+        },
+        "MULTADDALU18X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MULTALU18X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MULTALU36X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MUX2_LUT5": {
+          "used": 1078,
+          "available": 10368
+        },
+        "MUX2_LUT6": {
+          "used": 396,
+          "available": 5184
+        },
+        "MUX2_LUT7": {
+          "used": 154,
+          "available": 2592
+        },
+        "MUX2_LUT8": {
+          "used": 41,
+          "available": 2592
+        },
+        "OSC": {
+          "used": 0,
+          "available": 1
+        },
+        "PADD18": {
+          "used": 0,
+          "available": 48
+        },
+        "PADD9": {
+          "used": 0,
+          "available": 96
+        },
+        "RAM16SDP4": {
+          "used": 0,
+          "available": 648
+        },
+        "VCC": {
+          "used": 1,
+          "available": 1
+        },
+        "rPLL": {
+          "used": 0,
+          "available": 2
+        }
+      },
+      "report_artifact": {
+        "path": "docs/t5_5_3_nextpnr_seed07_report.json",
+        "sha256": "ee2f43dd674ecffab0487ea940fe87ef245b5831764bf6e5b41dff97ee9454bc",
+        "bytes": 166100
+      },
+      "log_artifact": {
+        "path": "docs/t5_5_3_nextpnr_seed07_place_route.log",
+        "sha256": "48f1342307b06cf094b0c27e01d2f8b26f53a2eb6e913f0dd97a2465fb857368",
+        "bytes": 50130
+      },
+      "log_contract": {
+        "exact_device_loaded": true,
+        "clock_constrained_to_27mhz": true,
+        "program_finished_normally": true
+      }
+    },
+    {
+      "seed": 19,
+      "clock_name": "core_harness.clk",
+      "target_mhz": 27.0,
+      "achieved_fmax_mhz": 39.57261657714844,
+      "timing_pass": true,
+      "route_status": "PASS",
+      "critical_path": {
+        "period_ns": 25.27000019326806,
+        "segment_count": 79,
+        "clock_to_q_ns": 0.23100000619888306,
+        "logic_ns": 10.740000247955322,
+        "routing_ns": 14.263999938964844,
+        "setup_ns": 0.03500000014901161,
+        "start_cell": "core_harness.core.z_e_run_DFFRE_Q_1",
+        "start_location": [
+          7,
+          29
+        ],
+        "end_cell": "core_harness.fold5_DFFR_Q_7",
+        "end_location": [
+          3,
+          28
+        ],
+        "from_clock": "posedge core_harness.clk",
+        "to_clock": "posedge core_harness.clk"
+      },
+      "utilization": {
+        "ALU": {
+          "used": 616,
+          "available": 15552
+        },
+        "ALU54D": {
+          "used": 0,
+          "available": 24
+        },
+        "BSRAM": {
+          "used": 8,
+          "available": 46
+        },
+        "BUFG": {
+          "used": 1,
+          "available": 24
+        },
+        "CLKDIV": {
+          "used": 0,
+          "available": 8
+        },
+        "CLKDIV2": {
+          "used": 0,
+          "available": 16
+        },
+        "DCS": {
+          "used": 0,
+          "available": 8
+        },
+        "DFF": {
+          "used": 1022,
+          "available": 15552
+        },
+        "DHCEN": {
+          "used": 0,
+          "available": 24
+        },
+        "DQCE": {
+          "used": 0,
+          "available": 24
+        },
+        "DUMMY_CELL": {
+          "used": 9,
+          "available": 0
+        },
+        "GND": {
+          "used": 1,
+          "available": 1
+        },
+        "GSR": {
+          "used": 1,
+          "available": 1
+        },
+        "IOB": {
+          "used": 18,
+          "available": 384
+        },
+        "IOLOGICI": {
+          "used": 0,
+          "available": 384
+        },
+        "IOLOGICO": {
+          "used": 0,
+          "available": 384
+        },
+        "LUT4": {
+          "used": 3783,
+          "available": 20736
+        },
+        "MULT18X18": {
+          "used": 2,
+          "available": 48
+        },
+        "MULT36X36": {
+          "used": 0,
+          "available": 12
+        },
+        "MULT9X9": {
+          "used": 1,
+          "available": 96
+        },
+        "MULTADDALU18X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MULTALU18X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MULTALU36X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MUX2_LUT5": {
+          "used": 1078,
+          "available": 10368
+        },
+        "MUX2_LUT6": {
+          "used": 396,
+          "available": 5184
+        },
+        "MUX2_LUT7": {
+          "used": 154,
+          "available": 2592
+        },
+        "MUX2_LUT8": {
+          "used": 41,
+          "available": 2592
+        },
+        "OSC": {
+          "used": 0,
+          "available": 1
+        },
+        "PADD18": {
+          "used": 0,
+          "available": 48
+        },
+        "PADD9": {
+          "used": 0,
+          "available": 96
+        },
+        "RAM16SDP4": {
+          "used": 0,
+          "available": 648
+        },
+        "VCC": {
+          "used": 1,
+          "available": 1
+        },
+        "rPLL": {
+          "used": 0,
+          "available": 2
+        }
+      },
+      "report_artifact": {
+        "path": "docs/t5_5_3_nextpnr_seed19_report.json",
+        "sha256": "c3ab306ea498384257b90c5f93b581d8369e38aced71a43ca245b84303749038",
+        "bytes": 174634
+      },
+      "log_artifact": {
+        "path": "docs/t5_5_3_nextpnr_seed19_place_route.log",
+        "sha256": "b6df6a933581d3f31bca410e8f65a1cabeb79ed0c8f6b84857f14a7985a204df",
+        "bytes": 56133
+      },
+      "log_contract": {
+        "exact_device_loaded": true,
+        "clock_constrained_to_27mhz": true,
+        "program_finished_normally": true
+      }
+    }
+  ],
+  "base_post_route_resources": {
+    "LUT4": {
+      "used": 3362,
+      "available": 20736
+    },
+    "DFF": {
+      "used": 865,
+      "available": 15552
+    },
+    "BSRAM": {
+      "used": 8,
+      "available": 46
+    },
+    "MULT18X18": {
+      "used": 1,
+      "available": 48
+    },
+    "MULT9X9": {
+      "used": 1,
+      "available": 96
+    },
+    "ALU": {
+      "used": 340,
+      "available": 15552
+    },
+    "IOB": {
+      "used": 18,
+      "available": 384
+    }
+  },
+  "integrated_post_route_resources": {
+    "LUT4": {
+      "used": 3802,
+      "available": 20736
+    },
+    "DFF": {
+      "used": 1022,
+      "available": 15552
+    },
+    "BSRAM": {
+      "used": 8,
+      "available": 46
+    },
+    "MULT18X18": {
+      "used": 2,
+      "available": 48
+    },
+    "MULT9X9": {
+      "used": 1,
+      "available": 96
+    },
+    "ALU": {
+      "used": 616,
+      "available": 15552
+    },
+    "IOB": {
+      "used": 18,
+      "available": 384
+    }
+  },
+  "integrated_fmax_mhz": {
+    "minimum": 39.57261657714844,
+    "median": 40.32258224487305,
+    "maximum": 40.53506088256836
+  },
+  "increment_over_t5_5_2_maxima": {
+    "LUT4": 440,
+    "DFF": 157,
+    "BSRAM": 0,
+    "MULT18X18": 1,
+    "MULT9X9": 0,
+    "ALU": 276,
+    "IOB": 0
+  },
+  "candidates": [
+    {
+      "candidate_id": "low_p6_a4_q5_6__k1__d1__p1",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 1,
+      "student_dimension": 1,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3472,
+        "DFF": 905,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k1__d1__p2",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 1,
+      "student_dimension": 1,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3484,
+        "DFF": 907,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k1__d1__p4",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 1,
+      "student_dimension": 1,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3505,
+        "DFF": 911,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k1__d2__p1",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 1,
+      "student_dimension": 2,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3582,
+        "DFF": 944,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k1__d2__p2",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 1,
+      "student_dimension": 2,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3605,
+        "DFF": 948,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k1__d2__p4",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 1,
+      "student_dimension": 2,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3648,
+        "DFF": 956,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k1__d4__p1",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 1,
+      "student_dimension": 4,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 64,
+      "student_latency_us_at_27mhz": 2.3703703703703702,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k1__d4__p2",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 1,
+      "student_dimension": 4,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3847,
+        "DFF": 1030,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k1__d4__p4",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 1,
+      "student_dimension": 4,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3934,
+        "DFF": 1046,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k2__d1__p1",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 2,
+      "student_dimension": 1,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3472,
+        "DFF": 905,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k2__d1__p2",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 2,
+      "student_dimension": 1,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3484,
+        "DFF": 907,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k2__d1__p4",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 2,
+      "student_dimension": 1,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3505,
+        "DFF": 911,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k2__d2__p1",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 2,
+      "student_dimension": 2,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3582,
+        "DFF": 944,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k2__d2__p2",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 2,
+      "student_dimension": 2,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3605,
+        "DFF": 948,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k2__d2__p4",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 2,
+      "student_dimension": 2,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3648,
+        "DFF": 956,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k2__d4__p1",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 2,
+      "student_dimension": 4,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 64,
+      "student_latency_us_at_27mhz": 2.3703703703703702,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k2__d4__p2",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 2,
+      "student_dimension": 4,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3847,
+        "DFF": 1030,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k2__d4__p4",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 2,
+      "student_dimension": 4,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3934,
+        "DFF": 1046,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k4__d1__p1",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 4,
+      "student_dimension": 1,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3472,
+        "DFF": 905,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k4__d1__p2",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 4,
+      "student_dimension": 1,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3484,
+        "DFF": 907,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k4__d1__p4",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 4,
+      "student_dimension": 1,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3505,
+        "DFF": 911,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k4__d2__p1",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 4,
+      "student_dimension": 2,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3582,
+        "DFF": 944,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k4__d2__p2",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 4,
+      "student_dimension": 2,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3605,
+        "DFF": 948,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k4__d2__p4",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 4,
+      "student_dimension": 2,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3648,
+        "DFF": 956,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k4__d4__p1",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 4,
+      "student_dimension": 4,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 64,
+      "student_latency_us_at_27mhz": 2.3703703703703702,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k4__d4__p2",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 4,
+      "student_dimension": 4,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3847,
+        "DFF": 1030,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "low_p6_a4_q5_6__k4__d4__p4",
+      "precision_id": "low_p6_a4_q5_6",
+      "topk_k": 4,
+      "student_dimension": 4,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3934,
+        "DFF": 1046,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k1__d1__p1",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 1,
+      "student_dimension": 1,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3472,
+        "DFF": 905,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k1__d1__p2",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 1,
+      "student_dimension": 1,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3484,
+        "DFF": 907,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k1__d1__p4",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 1,
+      "student_dimension": 1,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3505,
+        "DFF": 911,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k1__d2__p1",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 1,
+      "student_dimension": 2,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3582,
+        "DFF": 944,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k1__d2__p2",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 1,
+      "student_dimension": 2,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3605,
+        "DFF": 948,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k1__d2__p4",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 1,
+      "student_dimension": 2,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3648,
+        "DFF": 956,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k1__d4__p1",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 1,
+      "student_dimension": 4,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 64,
+      "student_latency_us_at_27mhz": 2.3703703703703702,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k1__d4__p2",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 1,
+      "student_dimension": 4,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3847,
+        "DFF": 1030,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k1__d4__p4",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 1,
+      "student_dimension": 4,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3934,
+        "DFF": 1046,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k2__d1__p1",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 2,
+      "student_dimension": 1,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3472,
+        "DFF": 905,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k2__d1__p2",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 2,
+      "student_dimension": 1,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3484,
+        "DFF": 907,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k2__d1__p4",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 2,
+      "student_dimension": 1,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3505,
+        "DFF": 911,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k2__d2__p1",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 2,
+      "student_dimension": 2,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3582,
+        "DFF": 944,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k2__d2__p2",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 2,
+      "student_dimension": 2,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3605,
+        "DFF": 948,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k2__d2__p4",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 2,
+      "student_dimension": 2,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3648,
+        "DFF": 956,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k2__d4__p1",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 2,
+      "student_dimension": 4,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 64,
+      "student_latency_us_at_27mhz": 2.3703703703703702,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k2__d4__p2",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 2,
+      "student_dimension": 4,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3847,
+        "DFF": 1030,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k2__d4__p4",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 2,
+      "student_dimension": 4,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3934,
+        "DFF": 1046,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k4__d1__p1",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 4,
+      "student_dimension": 1,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3472,
+        "DFF": 905,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k4__d1__p2",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 4,
+      "student_dimension": 1,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3484,
+        "DFF": 907,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k4__d1__p4",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 4,
+      "student_dimension": 1,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3505,
+        "DFF": 911,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k4__d2__p1",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 4,
+      "student_dimension": 2,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3582,
+        "DFF": 944,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k4__d2__p2",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 4,
+      "student_dimension": 2,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3605,
+        "DFF": 948,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k4__d2__p4",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 4,
+      "student_dimension": 2,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3648,
+        "DFF": 956,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k4__d4__p1",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 4,
+      "student_dimension": 4,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 64,
+      "student_latency_us_at_27mhz": 2.3703703703703702,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k4__d4__p2",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 4,
+      "student_dimension": 4,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3847,
+        "DFF": 1030,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "medium_p8_a6_q7_10__k4__d4__p4",
+      "precision_id": "medium_p8_a6_q7_10",
+      "topk_k": 4,
+      "student_dimension": 4,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": false,
+      "topk_quality_pass": true,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3934,
+        "DFF": 1046,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k1__d1__p1",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 1,
+      "student_dimension": 1,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3472,
+        "DFF": 905,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k1__d1__p2",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 1,
+      "student_dimension": 1,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3484,
+        "DFF": 907,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k1__d1__p4",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 1,
+      "student_dimension": 1,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3505,
+        "DFF": 911,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k1__d2__p1",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 1,
+      "student_dimension": 2,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3582,
+        "DFF": 944,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k1__d2__p2",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 1,
+      "student_dimension": 2,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3605,
+        "DFF": 948,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k1__d2__p4",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 1,
+      "student_dimension": 2,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3648,
+        "DFF": 956,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k1__d4__p1",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 1,
+      "student_dimension": 4,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 64,
+      "student_latency_us_at_27mhz": 2.3703703703703702,
+      "resource_evidence_level": "actual_three_seed_integrated_post_route",
+      "measured_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1,
+        "ALU": 616,
+        "IOB": 18
+      },
+      "estimated_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": 39.57261657714844,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k1__d4__p2",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 1,
+      "student_dimension": 4,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3847,
+        "DFF": 1030,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k1__d4__p4",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 1,
+      "student_dimension": 4,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3934,
+        "DFF": 1046,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k2__d1__p1",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 2,
+      "student_dimension": 1,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3472,
+        "DFF": 905,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k2__d1__p2",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 2,
+      "student_dimension": 1,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3484,
+        "DFF": 907,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k2__d1__p4",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 2,
+      "student_dimension": 1,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3505,
+        "DFF": 911,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k2__d2__p1",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 2,
+      "student_dimension": 2,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3582,
+        "DFF": 944,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k2__d2__p2",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 2,
+      "student_dimension": 2,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3605,
+        "DFF": 948,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k2__d2__p4",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 2,
+      "student_dimension": 2,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3648,
+        "DFF": 956,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k2__d4__p1",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 2,
+      "student_dimension": 4,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 64,
+      "student_latency_us_at_27mhz": 2.3703703703703702,
+      "resource_evidence_level": "actual_three_seed_integrated_post_route",
+      "measured_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1,
+        "ALU": 616,
+        "IOB": 18
+      },
+      "estimated_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": 39.57261657714844,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k2__d4__p2",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 2,
+      "student_dimension": 4,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3847,
+        "DFF": 1030,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k2__d4__p4",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 2,
+      "student_dimension": 4,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3934,
+        "DFF": 1046,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k4__d1__p1",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 4,
+      "student_dimension": 1,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3472,
+        "DFF": 905,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k4__d1__p2",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 4,
+      "student_dimension": 1,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3484,
+        "DFF": 907,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k4__d1__p4",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 4,
+      "student_dimension": 1,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3505,
+        "DFF": 911,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k4__d2__p1",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 4,
+      "student_dimension": 2,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3582,
+        "DFF": 944,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k4__d2__p2",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 4,
+      "student_dimension": 2,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3605,
+        "DFF": 948,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k4__d2__p4",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 4,
+      "student_dimension": 2,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3648,
+        "DFF": 956,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k4__d4__p1",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 4,
+      "student_dimension": 4,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 64,
+      "student_latency_us_at_27mhz": 2.3703703703703702,
+      "resource_evidence_level": "actual_three_seed_integrated_post_route",
+      "measured_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1,
+        "ALU": 616,
+        "IOB": 18
+      },
+      "estimated_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": 39.57261657714844,
+      "topk_hardware_resources_included": false,
+      "final_eligible": true
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k4__d4__p2",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 4,
+      "student_dimension": 4,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3847,
+        "DFF": 1030,
+        "BSRAM": 8,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "selected_p10_a8_q9_12__k4__d4__p4",
+      "precision_id": "selected_p10_a8_q9_12",
+      "topk_k": 4,
+      "student_dimension": 4,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3934,
+        "DFF": 1046,
+        "BSRAM": 8,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k1__d1__p1",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 1,
+      "student_dimension": 1,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3472,
+        "DFF": 905,
+        "BSRAM": 16,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k1__d1__p2",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 1,
+      "student_dimension": 1,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3484,
+        "DFF": 907,
+        "BSRAM": 16,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k1__d1__p4",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 1,
+      "student_dimension": 1,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3505,
+        "DFF": 911,
+        "BSRAM": 16,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k1__d2__p1",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 1,
+      "student_dimension": 2,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3582,
+        "DFF": 944,
+        "BSRAM": 16,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k1__d2__p2",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 1,
+      "student_dimension": 2,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3605,
+        "DFF": 948,
+        "BSRAM": 16,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k1__d2__p4",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 1,
+      "student_dimension": 2,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3648,
+        "DFF": 956,
+        "BSRAM": 16,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k1__d4__p1",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 1,
+      "student_dimension": 4,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 64,
+      "student_latency_us_at_27mhz": 2.3703703703703702,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 16,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k1__d4__p2",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 1,
+      "student_dimension": 4,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3847,
+        "DFF": 1030,
+        "BSRAM": 16,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k1__d4__p4",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 1,
+      "student_dimension": 4,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3934,
+        "DFF": 1046,
+        "BSRAM": 16,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k2__d1__p1",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 2,
+      "student_dimension": 1,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3472,
+        "DFF": 905,
+        "BSRAM": 16,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k2__d1__p2",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 2,
+      "student_dimension": 1,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3484,
+        "DFF": 907,
+        "BSRAM": 16,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k2__d1__p4",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 2,
+      "student_dimension": 1,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3505,
+        "DFF": 911,
+        "BSRAM": 16,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k2__d2__p1",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 2,
+      "student_dimension": 2,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3582,
+        "DFF": 944,
+        "BSRAM": 16,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k2__d2__p2",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 2,
+      "student_dimension": 2,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3605,
+        "DFF": 948,
+        "BSRAM": 16,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k2__d2__p4",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 2,
+      "student_dimension": 2,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3648,
+        "DFF": 956,
+        "BSRAM": 16,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k2__d4__p1",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 2,
+      "student_dimension": 4,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 64,
+      "student_latency_us_at_27mhz": 2.3703703703703702,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 16,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k2__d4__p2",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 2,
+      "student_dimension": 4,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3847,
+        "DFF": 1030,
+        "BSRAM": 16,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k2__d4__p4",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 2,
+      "student_dimension": 4,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": false,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3934,
+        "DFF": 1046,
+        "BSRAM": 16,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k4__d1__p1",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 4,
+      "student_dimension": 1,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3472,
+        "DFF": 905,
+        "BSRAM": 16,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k4__d1__p2",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 4,
+      "student_dimension": 1,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3484,
+        "DFF": 907,
+        "BSRAM": 16,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k4__d1__p4",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 4,
+      "student_dimension": 1,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3505,
+        "DFF": 911,
+        "BSRAM": 16,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k4__d2__p1",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 4,
+      "student_dimension": 2,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3582,
+        "DFF": 944,
+        "BSRAM": 16,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k4__d2__p2",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 4,
+      "student_dimension": 2,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3605,
+        "DFF": 948,
+        "BSRAM": 16,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k4__d2__p4",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 4,
+      "student_dimension": 2,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": false,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3648,
+        "DFF": 956,
+        "BSRAM": 16,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k4__d4__p1",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 4,
+      "student_dimension": 4,
+      "parallel_multipliers": 1,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 64,
+      "student_latency_us_at_27mhz": 2.3703703703703702,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 16,
+        "MULT18X18": 2,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k4__d4__p2",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 4,
+      "student_dimension": 4,
+      "parallel_multipliers": 2,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 32,
+      "student_latency_us_at_27mhz": 1.1851851851851851,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3847,
+        "DFF": 1030,
+        "BSRAM": 16,
+        "MULT18X18": 3,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    },
+    {
+      "candidate_id": "dense_p12_a10_q10_14__k4__d4__p4",
+      "precision_id": "dense_p12_a10_q10_14",
+      "topk_k": 4,
+      "student_dimension": 4,
+      "parallel_multipliers": 4,
+      "precision_quality_pass": true,
+      "topk_quality_pass": true,
+      "student_quality_pass": true,
+      "deadline_pass": true,
+      "student_latency_cycles": 16,
+      "student_latency_us_at_27mhz": 0.5925925925925926,
+      "resource_evidence_level": "calibrated_estimate_not_synthesis",
+      "measured_resources": null,
+      "estimated_resources": {
+        "LUT4": 3934,
+        "DFF": 1046,
+        "BSRAM": 16,
+        "MULT18X18": 5,
+        "MULT9X9": 1
+      },
+      "measured_fmax_mhz_minimum": null,
+      "topk_hardware_resources_included": false,
+      "final_eligible": false
+    }
+  ],
+  "selection": {
+    "candidate_id": "selected_p10_a8_q9_12__k4__d4__p1",
+    "precision_id": "selected_p10_a8_q9_12",
+    "topk_k": 4,
+    "student_dimension": 4,
+    "parallel_multipliers": 1,
+    "precision_quality_pass": true,
+    "topk_quality_pass": true,
+    "student_quality_pass": true,
+    "deadline_pass": true,
+    "student_latency_cycles": 64,
+    "student_latency_us_at_27mhz": 2.3703703703703702,
+    "resource_evidence_level": "actual_three_seed_integrated_post_route",
+    "measured_resources": {
+      "LUT4": 3802,
+      "DFF": 1022,
+      "BSRAM": 8,
+      "MULT18X18": 2,
+      "MULT9X9": 1,
+      "ALU": 616,
+      "IOB": 18
+    },
+    "estimated_resources": {
+      "LUT4": 3802,
+      "DFF": 1022,
+      "BSRAM": 8,
+      "MULT18X18": 2,
+      "MULT9X9": 1
+    },
+    "measured_fmax_mhz_minimum": 39.57261657714844,
+    "topk_hardware_resources_included": false,
+    "final_eligible": true
+  },
+  "selection_rule": "filter parent quality gates; require source-bound actual integrated synthesis/P&R; then choose the smallest measured multiplier count meeting the 5 us project-model deadline",
+  "durable_artifacts": [
+    {
+      "path": "docs/t5_5_3_yosys_integrated.log",
+      "sha256": "fe101e93c2f31dd0bdd297559f0368379507058a711629b208cb502a561d444e",
+      "bytes": 1095828
+    },
+    {
+      "path": "docs/t5_5_3_nextpnr_seed01_report.json",
+      "sha256": "af95d8aa8bf32084aa4790a483e1b85f04ef896e12d4a5bbf788e70a316ceb1d",
+      "bytes": 167706
+    },
+    {
+      "path": "docs/t5_5_3_nextpnr_seed01_place_route.log",
+      "sha256": "c5c9505764e60580d911d2eca6c21e526940c6327f222e9c3d2f5830464e2b03",
+      "bytes": 55468
+    },
+    {
+      "path": "docs/t5_5_3_nextpnr_seed07_report.json",
+      "sha256": "ee2f43dd674ecffab0487ea940fe87ef245b5831764bf6e5b41dff97ee9454bc",
+      "bytes": 166100
+    },
+    {
+      "path": "docs/t5_5_3_nextpnr_seed07_place_route.log",
+      "sha256": "48f1342307b06cf094b0c27e01d2f8b26f53a2eb6e913f0dd97a2465fb857368",
+      "bytes": 50130
+    },
+    {
+      "path": "docs/t5_5_3_nextpnr_seed19_report.json",
+      "sha256": "c3ab306ea498384257b90c5f93b581d8369e38aced71a43ca245b84303749038",
+      "bytes": 174634
+    },
+    {
+      "path": "docs/t5_5_3_nextpnr_seed19_place_route.log",
+      "sha256": "b6df6a933581d3f31bca410e8f65a1cabeb79ed0c8f6b84857f14a7985a204df",
+      "bytes": 56133
+    }
+  ],
+  "evidence_boundary": {
+    "candidate_pareto_audit": true,
+    "student_cxxrtl_equivalence": true,
+    "integrated_target_post_route": true,
+    "online_topk_rtl": false,
+    "parallelism_two_or_four_rtl": false,
+    "vendor_timing_signoff": false,
+    "bitstream_generated": false,
+    "board_measured": false,
+    "transport_implemented": false,
+    "quantum_hardware_measured": false
+  },
+  "gates": {
+    "all_six_parent_artifacts_are_hash_bound_and_pass": true,
+    "all_rtl_runner_memory_and_constraint_sources_are_hash_bound": true,
+    "four_precision_profiles_are_complete_and_thresholded": true,
+    "k4_is_the_smallest_six_scenario_topk_reference_and_stays_off_device": true,
+    "four_state_student_is_the_only_parent_eligible_dimension": true,
+    "parallelism_grid_separates_actual_serial_rtl_from_extrapolations": true,
+    "integrated_synthesis_preserves_core_and_one_additional_student_dsp": true,
+    "three_integrated_place_route_seeds_pass_27mhz": true,
+    "selected_integrated_resources_fit_the_exact_target_capacity": true,
+    "full_108_point_joint_grid_is_unique": true,
+    "exactly_one_source_bound_candidate_is_final_eligible": true,
+    "no_estimate_or_off_device_topk_is_mislabeled_as_measured_hardware": true,
+    "serial_student_meets_the_five_microsecond_model_deadline": true,
+    "all_durable_synthesis_and_place_route_artifacts_match_hashes": true,
+    "post_route_pareto_is_not_mislabeled_as_vendor_or_board_evidence": true,
+    "all_ten_shortcut_mutations_are_rejected": true
+  },
+  "mutation_audit": [
+    {
+      "mutation": "break_parent_hash",
+      "rejected": true,
+      "failed_gates": [
+        "all_six_parent_artifacts_are_hash_bound_and_pass"
+      ]
+    },
+    {
+      "mutation": "make_k2_pass",
+      "rejected": true,
+      "failed_gates": [
+        "k4_is_the_smallest_six_scenario_topk_reference_and_stays_off_device"
+      ]
+    },
+    {
+      "mutation": "make_dimension2_eligible",
+      "rejected": true,
+      "failed_gates": [
+        "four_state_student_is_the_only_parent_eligible_dimension"
+      ]
+    },
+    {
+      "mutation": "drop_joint_candidate",
+      "rejected": true,
+      "failed_gates": [
+        "full_108_point_joint_grid_is_unique"
+      ]
+    },
+    {
+      "mutation": "claim_estimate_as_measured",
+      "rejected": true,
+      "failed_gates": [
+        "no_estimate_or_off_device_topk_is_mislabeled_as_measured_hardware"
+      ]
+    },
+    {
+      "mutation": "claim_online_topk_hardware",
+      "rejected": true,
+      "failed_gates": [
+        "no_estimate_or_off_device_topk_is_mislabeled_as_measured_hardware"
+      ]
+    },
+    {
+      "mutation": "erase_student_dsp",
+      "rejected": true,
+      "failed_gates": [
+        "integrated_synthesis_preserves_core_and_one_additional_student_dsp"
+      ]
+    },
+    {
+      "mutation": "miss_27mhz",
+      "rejected": true,
+      "failed_gates": [
+        "three_integrated_place_route_seeds_pass_27mhz"
+      ]
+    },
+    {
+      "mutation": "break_deadline",
+      "rejected": true,
+      "failed_gates": [
+        "serial_student_meets_the_five_microsecond_model_deadline"
+      ]
+    },
+    {
+      "mutation": "claim_board_measurement",
+      "rejected": true,
+      "failed_gates": [
+        "post_route_pareto_is_not_mislabeled_as_vendor_or_board_evidence"
+      ]
+    }
+  ],
+  "gate_summary": {
+    "passed": 16,
+    "total": 16
+  },
+  "source_data": {
+    "path": "docs/t5_5_3_precision_resource_pareto_source_data.csv",
+    "candidate_rows": 108
+  }
+}

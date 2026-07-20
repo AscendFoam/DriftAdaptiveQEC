@@ -1,0 +1,337 @@
+
+-- Running command `read_verilog -sv cnn_fpga/rtl/quantized_gru_workload_kernel.sv; hierarchy -check -top quantized_gru_workload_kernel; proc; check; stat; write_cxxrtl -O0 -g0 .tmp_t554_cxxrtl/quantized_gru_workload_model.cc' --
+
+1. Executing Verilog-2005 frontend: cnn_fpga/rtl/quantized_gru_workload_kernel.sv
+Parsing SystemVerilog input from `cnn_fpga/rtl/quantized_gru_workload_kernel.sv' to AST representation.
+Generating RTLIL representation for module `\quantized_gru_workload_kernel'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \quantized_gru_workload_kernel
+
+2.2. Analyzing design hierarchy..
+Top module:  \quantized_gru_workload_kernel
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:34$30'.
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 5 switch rules as full_case in process $proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5 in module quantized_gru_workload_kernel.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 2 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~10 debug messages>
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5'.
+     1/11: $0\done[0:0]
+     2/11: $0\accumulator[39:0]
+     3/11: $0\activation[17:0]
+     4/11: $0\bias_phase[0:0]
+     5/11: $0\weight_valid[0:0]
+     6/11: $0\bias_address[9:0]
+     7/11: $0\weight_address[16:0]
+     8/11: $0\signature[31:0]
+     9/11: $0\biases_consumed[9:0]
+    10/11: $0\weight_macs_completed[16:0]
+    11/11: $0\busy[0:0]
+Creating decoders for process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:39$2'.
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\quantized_gru_workload_kernel.\busy' using process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5'.
+  created $dff cell `$procdff$187' with positive edge clock.
+Creating register for signal `\quantized_gru_workload_kernel.\done' using process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5'.
+  created $dff cell `$procdff$188' with positive edge clock.
+Creating register for signal `\quantized_gru_workload_kernel.\weight_macs_completed' using process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5'.
+  created $dff cell `$procdff$189' with positive edge clock.
+Creating register for signal `\quantized_gru_workload_kernel.\biases_consumed' using process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5'.
+  created $dff cell `$procdff$190' with positive edge clock.
+Creating register for signal `\quantized_gru_workload_kernel.\signature' using process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5'.
+  created $dff cell `$procdff$191' with positive edge clock.
+Creating register for signal `\quantized_gru_workload_kernel.\weight_address' using process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5'.
+  created $dff cell `$procdff$192' with positive edge clock.
+Creating register for signal `\quantized_gru_workload_kernel.\bias_address' using process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5'.
+  created $dff cell `$procdff$193' with positive edge clock.
+Creating register for signal `\quantized_gru_workload_kernel.\weight_valid' using process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5'.
+  created $dff cell `$procdff$194' with positive edge clock.
+Creating register for signal `\quantized_gru_workload_kernel.\bias_phase' using process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5'.
+  created $dff cell `$procdff$195' with positive edge clock.
+Creating register for signal `\quantized_gru_workload_kernel.\activation' using process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5'.
+  created $dff cell `$procdff$196' with positive edge clock.
+Creating register for signal `\quantized_gru_workload_kernel.\accumulator' using process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5'.
+  created $dff cell `$procdff$197' with positive edge clock.
+Creating register for signal `\quantized_gru_workload_kernel.\weight_q' using process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:39$2'.
+  created $dff cell `$procdff$198' with positive edge clock.
+Creating register for signal `\quantized_gru_workload_kernel.\bias_q' using process `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:39$2'.
+  created $dff cell `$procdff$199' with positive edge clock.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 10 empty switches in `\quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5'.
+Removing empty process `quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:44$5'.
+Removing empty process `quantized_gru_workload_kernel.$proc$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:39$2'.
+Cleaned up 10 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module quantized_gru_workload_kernel.
+<suppressed ~35 debug messages>
+
+4. Executing CHECK pass (checking for obvious problems).
+Checking module quantized_gru_workload_kernel...
+Found and reported 0 problems.
+
+5. Printing statistics.
+
+=== quantized_gru_workload_kernel ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      174 wires
+     1527 wire bits
+       18 public wires
+      221 public wire bits
+        9 ports
+       82 port bits
+        2 memories
+   588694 memory bits
+       99 cells
+        6   $add
+       13   $dff
+        2   $eq
+        4   $logic_not
+        2   $lt
+        2   $meminit_v2
+        2   $memrd
+        1   $mul
+       59   $mux
+        8   $xor
+
+6. Executing CXXRTL backend.
+
+6.1. Executing HIERARCHY pass (managing design hierarchy).
+Attribute `top' found on module `quantized_gru_workload_kernel'. Setting top module to quantized_gru_workload_kernel.
+
+6.1.1. Analyzing design hierarchy..
+Top module:  \quantized_gru_workload_kernel
+
+6.1.2. Analyzing design hierarchy..
+Top module:  \quantized_gru_workload_kernel
+Removed 0 unused modules.
+
+6.2. Executing FLATTEN pass (flatten design).
+
+6.3. Executing PROC pass (convert processes to netlists).
+
+6.3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+6.3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+6.3.4. Executing PROC_INIT pass (extract init attributes).
+
+6.3.5. Executing PROC_ARST pass (detect async resets in processes).
+
+6.3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+6.3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+6.3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+6.3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module quantized_gru_workload_kernel.
+
+Module `quantized_gru_workload_kernel' contains buffered combinatorial wires:
+  product
+  $mul$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:32$1_Y
+  $0\weight_q[7:0]
+  $0\bias_q[17:0]
+  $memrd$\weight_mem$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:40$3_DATA
+  $memrd$\bias_mem$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:41$4_DATA
+  $0\busy[0:0]
+  $0\done[0:0]
+  $0\weight_macs_completed[16:0]
+  $0\biases_consumed[9:0]
+  $0\signature[31:0]
+  $0\weight_address[16:0]
+  $0\bias_address[9:0]
+  $0\weight_valid[0:0]
+  $0\bias_phase[0:0]
+  $0\activation[17:0]
+  $0\accumulator[39:0]
+  $logic_not$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:46$6_Y
+  $logic_not$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:58$7_Y
+  $logic_not$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:70$8_Y
+  $add$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:72$9_Y
+  $xor$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:73$10_Y
+  $xor$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:73$11_Y
+  $xor$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:73$12_Y
+  $xor$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:75$13_Y
+  $xor$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:75$14_Y
+  $add$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:76$15_Y
+  $eq$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:77$16_Y
+  $logic_not$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:86$17_Y
+  $lt$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:89$18_Y
+  $add$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:90$19_Y
+  $add$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:93$20_Y
+  $xor$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:94$21_Y
+  $xor$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:94$22_Y
+  $xor$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:94$23_Y
+  $add$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:96$24_Y
+  $eq$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:97$25_Y
+  $lt$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:100$26_Y
+  $add$cnn_fpga/rtl/quantized_gru_workload_kernel.sv:101$27_Y
+  $procmux$33_CMP
+  $procmux$32_Y
+  $procmux$36_CMP
+  $procmux$35_Y
+  $procmux$39_CMP
+  $procmux$38_Y
+  $procmux$42_CMP
+  $procmux$41_Y
+  $procmux$45_CMP
+  $procmux$44_Y
+  $procmux$47_CMP
+  $procmux$46_Y
+  $procmux$50_CMP
+  $procmux$49_Y
+  $procmux$52_CMP
+  $procmux$51_Y
+  $procmux$55_CMP
+  $procmux$54_Y
+  $procmux$58_CMP
+  $procmux$57_Y
+  $procmux$60_CMP
+  $procmux$59_Y
+  $procmux$63_CMP
+  $procmux$62_Y
+  $procmux$65_CMP
+  $procmux$64_Y
+  $procmux$68_CMP
+  $procmux$67_Y
+  $procmux$71_CMP
+  $procmux$70_Y
+  $procmux$73_CMP
+  $procmux$72_Y
+  $procmux$75_CMP
+  $procmux$74_Y
+  $procmux$78_CMP
+  $procmux$77_Y
+  $procmux$80_CMP
+  $procmux$79_Y
+  $procmux$83_CMP
+  $procmux$82_Y
+  $procmux$86_CMP
+  $procmux$85_Y
+  $procmux$88_CMP
+  $procmux$87_Y
+  $procmux$91_CMP
+  $procmux$90_Y
+  $procmux$93_CMP
+  $procmux$92_Y
+  $procmux$96_CMP
+  $procmux$95_Y
+  $procmux$98_CMP
+  $procmux$97_Y
+  $procmux$101_CMP
+  $procmux$100_Y
+  $procmux$103_CMP
+  $procmux$102_Y
+  $procmux$106_CMP
+  $procmux$105_Y
+  $procmux$109_CMP
+  $procmux$108_Y
+  $procmux$111_CMP
+  $procmux$110_Y
+  $procmux$113_CMP
+  $procmux$112_Y
+  $procmux$116_CMP
+  $procmux$115_Y
+  $procmux$118_CMP
+  $procmux$117_Y
+  $procmux$121_CMP
+  $procmux$120_Y
+  $procmux$124_CMP
+  $procmux$123_Y
+  $procmux$127_CMP
+  $procmux$126_Y
+  $procmux$129_CMP
+  $procmux$128_Y
+  $procmux$132_CMP
+  $procmux$131_Y
+  $procmux$134_CMP
+  $procmux$133_Y
+  $procmux$137_CMP
+  $procmux$136_Y
+  $procmux$140_CMP
+  $procmux$139_Y
+  $procmux$142_CMP
+  $procmux$141_Y
+  $procmux$145_CMP
+  $procmux$144_Y
+  $procmux$148_CMP
+  $procmux$147_Y
+  $procmux$151_CMP
+  $procmux$150_Y
+  $procmux$154_CMP
+  $procmux$153_Y
+  $procmux$156_CMP
+  $procmux$155_Y
+  $procmux$159_CMP
+  $procmux$158_Y
+  $procmux$162_CMP
+  $procmux$161_Y
+  $procmux$164_CMP
+  $procmux$163_Y
+  $procmux$167_CMP
+  $procmux$166_Y
+  $procmux$169_CMP
+  $procmux$168_Y
+  $procmux$172_CMP
+  $procmux$171_Y
+  $procmux$175_CMP
+  $procmux$174_Y
+  $procmux$178_CMP
+  $procmux$177_Y
+  $procmux$181_CMP
+  $procmux$180_Y
+  $procmux$183_CMP
+  $procmux$182_Y
+  $procmux$186_CMP
+  $procmux$185_Y
+Warning: Design contains buffered combinatorial wires, which require delta cycles during evaluation.
+
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: b02bf592bc, time: 0.15s, user: 0.15s, system: 0.00s
+Yosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)
+Time spent: 36% 2x read_verilog (0 sec), 25% 2x write_cxxrtl (0 sec), ...

@@ -1,0 +1,734 @@
+{
+  "task_id": "T6.9.3",
+  "schema_version": "t6.9.3-route-a-final-evidence-gate-v1",
+  "generated_at_utc": "2026-07-19T23:18:48.924695+00:00",
+  "parent_bindings": {
+    "promotion": {
+      "path": "docs/t6_7_4_route_a_promotion_gate.json",
+      "sha256": "58f7bd09c1c9982b5be9656cc7404d399567e165b140dc2f76ab0f3c129c5d22",
+      "bytes": 20293
+    },
+    "claim_matrix": {
+      "path": "docs/t6_8_7_route_a_claim_matrix.json",
+      "sha256": "e0abaf727b5d4170399698d6493817d22e3ff4f7cf468ad3272ecbddb8c8dc07",
+      "bytes": 48010
+    },
+    "hardware_pareto": {
+      "path": "docs/t6_9_1_route_a_hardware_pareto.json",
+      "sha256": "838f0e7fd22b9148b37ae65964c65ac0d6639b03c7e5f90134ed7c374763cd96",
+      "bytes": 61709
+    },
+    "board_blocker": {
+      "path": "docs/t6_9_2_route_a_board_measurement_blocker.json",
+      "sha256": "4c385e3b1d7b6ebdf0c1f9b03ee8aaf049b97b146069263bec404c11642f8fff",
+      "bytes": 8882
+    }
+  },
+  "aggregation_policy": {
+    "global_score": "PROHIBITED",
+    "cross_lane_compensation": "PROHIBITED",
+    "missing_evidence_imputation": "PROHIBITED",
+    "overall_sota_fastest_first_surpass": "PROHIBITED"
+  },
+  "claims": [
+    {
+      "claim_id": "CONTRACT_SYSTEM_INTEGRATION",
+      "final_state": "SUPPORTED_RESTRICTED_PREBOARD",
+      "phase7_role": "restricted_preboard_main",
+      "allowed_wording": "Route-A integrates a locked MAP fast path with regime-aware contract/FSM safety and passes preregistered simulator plus one-million-cycle preboard correctness gates.",
+      "forbidden_wording": [
+        "overall best decoder",
+        "broad tail improvement",
+        "measured closed-loop hardware"
+      ],
+      "current_result": {
+        "promotion_verdict": "GO_ROUTE_A_CONTRACT_SYSTEM_RESTRICTED_SIMULATOR_AND_PREBOARD_CLAIMS",
+        "rtl_cycles": 1000000,
+        "rtl_mismatches": 0,
+        "measured_board_latency": false
+      },
+      "evidence": [
+        {
+          "task_id": "T6.7.4",
+          "artifact": {
+            "path": "docs/t6_7_4_route_a_promotion_gate.json",
+            "sha256": "58f7bd09c1c9982b5be9656cc7404d399567e165b140dc2f76ab0f3c129c5d22",
+            "bytes": 20293
+          },
+          "selectors": [
+            "promotion_decision",
+            "scientific_results.rtl"
+          ]
+        },
+        {
+          "task_id": "T6.9.1",
+          "artifact": {
+            "path": "docs/t6_9_1_route_a_hardware_pareto.json",
+            "sha256": "838f0e7fd22b9148b37ae65964c65ac0d6639b03c7e5f90134ed7c374763cd96",
+            "bytes": 61709
+          },
+          "selectors": [
+            "pareto_decision",
+            "profiles.route_a_core_no_student"
+          ]
+        }
+      ],
+      "remaining_gate": "T6.9.2 board evidence plus stronger full-system performance is required for a full cross-lane paper.",
+      "revocation_conditions": [
+        "any source/config/seed hash drift",
+        "any nonzero RTL/board mismatch",
+        "wording expands beyond simulator/preboard scope"
+      ]
+    },
+    {
+      "claim_id": "SMOOTH_LOCKED_EWMA_ADVANTAGE",
+      "final_state": "SUPPORTED_PAIRED_OUTCOME",
+      "phase7_role": "restricted_preboard_main",
+      "allowed_wording": "On the preregistered smooth matrix, Route-A lowers aggregate paired LER relative to the locked EWMA baseline; periodic drift is the only Holm-confirmed family.",
+      "forbidden_wording": [
+        "best smooth decoder",
+        "advantage over static or Window MAP",
+        "all-family drift advantage"
+      ],
+      "current_result": {
+        "primary_contrast": {
+          "contrast": "ewma_adaptive_map_LER_minus_proposed_route_a_LER",
+          "estimate": 2.1687260380497668e-05,
+          "ci95_low": 1.9002843786168966e-05,
+          "ci95_high": 2.454828332971639e-05,
+          "one_sided_p_nonpositive": 4.999750012499375e-05,
+          "passes_95_lcb_strictly_greater_than_zero": true
+        },
+        "holm_confirmed_families": [
+          "periodic_drift"
+        ],
+        "route_a_is_global_best": false
+      },
+      "evidence": [
+        {
+          "task_id": "T6.7.4",
+          "artifact": {
+            "path": "docs/t6_7_4_route_a_promotion_gate.json",
+            "sha256": "58f7bd09c1c9982b5be9656cc7404d399567e165b140dc2f76ab0f3c129c5d22",
+            "bytes": 20293
+          },
+          "selectors": [
+            "scientific_results.smooth.primary_contrast",
+            "scientific_results.smooth.holm_confirmed_families"
+          ]
+        }
+      ],
+      "remaining_gate": "A new frozen method must beat the strongest deployable baselines across preregistered families before global LER wording.",
+      "revocation_conditions": [
+        "paired LCB becomes non-positive",
+        "periodic-only boundary is omitted",
+        "static/Window rows are removed"
+      ]
+    },
+    {
+      "claim_id": "STATIC_GKP_SUPERIORITY",
+      "final_state": "FALSIFIED",
+      "phase7_role": "mandatory_main_negative",
+      "allowed_wording": "Static joint MAP has lower average LER than Route-A on the frozen same-model smooth benchmark.",
+      "forbidden_wording": [
+        "Route-A outperforms static GKP",
+        "static-to-oracle gap closure"
+      ],
+      "current_result": {
+        "static_minus_route_a": {
+          "contrast": "static_full_MAP_LER_minus_Route_A_LER",
+          "estimate": -2.4548283329716452e-05,
+          "ci95_low": -3.9595144766348346e-05,
+          "ci95_high": -9.112887912326431e-06,
+          "one_sided_p_nonpositive": 0.9990000499975001,
+          "route_a_superiority_passes_lcb_gt_zero": false,
+          "cluster": "formal seed",
+          "clusters": 24,
+          "replicates": 20000,
+          "bootstrap_seed": 202607176999
+        },
+        "static_average_ler": 0.0009681913587782118,
+        "route_a_average_ler": 0.000992739642107928,
+        "static_worst_window_ler": 0.03125,
+        "route_a_worst_window_ler": 0.115234375
+      },
+      "evidence": [
+        {
+          "task_id": "T6.8.7",
+          "artifact": {
+            "path": "docs/t6_8_7_route_a_claim_matrix.json",
+            "sha256": "e0abaf727b5d4170399698d6493817d22e3ff4f7cf468ad3272ecbddb8c8dc07",
+            "bytes": 48010
+          },
+          "selectors": [
+            "claims.STATIC_GKP_SUPERIORITY"
+          ]
+        }
+      ],
+      "remaining_gate": "Requires a new preregistered same-model experiment with paired improvement CI above zero.",
+      "revocation_conditions": [
+        "never promote from p95 alone",
+        "average/worst and paired CI must remain visible"
+      ]
+    },
+    {
+      "claim_id": "STATIC_K4_HARD_ACTION_EQUIVALENCE",
+      "final_state": "SUPPORTED_PREBOARD_NARROW",
+      "phase7_role": "supplement_or_hardware_ablation",
+      "allowed_wording": "For the frozen covariance/prior and complete 10-bit syndrome domain, K4/full static MAP hard actions are identical; resource reductions remain proxies until integrated implementation.",
+      "forbidden_wording": [
+        "K4 universally exact",
+        "measured FPGA compression advantage"
+      ],
+      "current_result": {
+        "domain_points": 1048576,
+        "hard_action_disagreements": 0,
+        "retained_bits_k4": 512,
+        "retained_bits_full": 3200
+      },
+      "evidence": [
+        {
+          "task_id": "T6.8.7",
+          "artifact": {
+            "path": "docs/t6_8_7_route_a_claim_matrix.json",
+            "sha256": "e0abaf727b5d4170399698d6493817d22e3ff4f7cf468ad3272ecbddb8c8dc07",
+            "bytes": 48010
+          },
+          "selectors": [
+            "claims.STATIC_K4_HARD_ACTION_EQUIVALENCE"
+          ]
+        }
+      ],
+      "remaining_gate": "Re-enumerate every changed model and integrate K4 into RTL/P&R before hardware promotion.",
+      "revocation_conditions": [
+        "any hard disagreement",
+        "changed prior without revalidation",
+        "proxy described as measurement"
+      ]
+    },
+    {
+      "claim_id": "TAIL_SAFETY_AND_IMPROVEMENT",
+      "final_state": "SAFETY_NONINFERIORITY_ONLY",
+      "phase7_role": "mandatory_main_limitation",
+      "allowed_wording": "Abrupt/OOD gates establish locked-EWMA safety/non-inferiority under preregistered catastrophic and nominal margins, not broad tail-LER improvement.",
+      "forbidden_wording": [
+        "tail advantage",
+        "fault robustness improvement",
+        "low-cost fallback"
+      ],
+      "current_result": {
+        "tail_safety_gate_passes": true,
+        "confirmed_average_improvement_families": [],
+        "broad_tail_improvement_confirmed": false,
+        "exact_equal_average_families": [
+          "step_calibration_shift",
+          "telegraph_drift",
+          "readout_reset_fault",
+          "leakage_persistence",
+          "compound_ood"
+        ]
+      },
+      "evidence": [
+        {
+          "task_id": "T6.7.4",
+          "artifact": {
+            "path": "docs/t6_7_4_route_a_promotion_gate.json",
+            "sha256": "58f7bd09c1c9982b5be9656cc7404d399567e165b140dc2f76ab0f3c129c5d22",
+            "bytes": 20293
+          },
+          "selectors": [
+            "scientific_results.tail"
+          ]
+        }
+      ],
+      "remaining_gate": "Requires preregistered induced-error reduction plus acceptable fallback/false-update costs across abrupt/compound families.",
+      "revocation_conditions": [
+        "any catastrophic/noninferiority gate failure",
+        "claim says improvement while confirmed family count remains zero"
+      ]
+    },
+    {
+      "claim_id": "GENERAL_DRIFT_EXTERNAL_COMPARISON",
+      "final_state": "PERFORMANCE_OUTCOME_BUDGET_FAIL",
+      "phase7_role": "external_table_with_qualification",
+      "allowed_wording": "Route-A has lower paired LER than the pinned BOCD wrapper on common traces, while that external comparator fails the strict worst-update wall-clock budget; general drift-adaptive SOTA is not established.",
+      "forbidden_wording": [
+        "matched-budget external superiority",
+        "general drift-adaptive SOTA",
+        "Bhardwaj exact reproduction"
+      ],
+      "current_result": {
+        "paired_outcome": {
+          "external_minus_route_a": {
+            "contrast": "external_bocd_window_ewma_router_LER_minus_proposed_route_a_LER",
+            "estimate": 1.0018396859217312e-05,
+            "ci95_low": 7.667926826863132e-06,
+            "ci95_high": 1.2368866891571562e-05,
+            "left_worse_if_lcb_gt_zero": true,
+            "right_worse_if_ucb_lt_zero": false,
+            "clusters": 24,
+            "replicates": 20000
+          },
+          "route_a_equal_family_ler": 0.011959075927734375,
+          "external_equal_family_ler": 0.011969094324593593,
+          "external_update_worst_us": 13004.1,
+          "wallclock_cap_us": 5000.0,
+          "deadline_miss_count": 1
+        },
+        "sota_state": "NOT_ESTABLISHED"
+      },
+      "evidence": [
+        {
+          "task_id": "T6.8.7",
+          "artifact": {
+            "path": "docs/t6_8_7_route_a_claim_matrix.json",
+            "sha256": "e0abaf727b5d4170399698d6493817d22e3ff4f7cf468ad3272ecbddb8c8dc07",
+            "bytes": 48010
+          },
+          "selectors": [
+            "claims.GENERAL_DRIFT_BOCD_OUTCOME",
+            "claims.GENERAL_DRIFT_MATCHED_BUDGET_SOTA"
+          ]
+        }
+      ],
+      "remaining_gate": "At least two closest external methods must pass identical worst-case compute/wall-clock budgets.",
+      "revocation_conditions": [
+        "budget failure omitted",
+        "one external wrapper is generalized to the field",
+        "trace identity fails"
+      ]
+    },
+    {
+      "claim_id": "PUVIANI_NMF_SURPASS",
+      "final_state": "PROHIBITED_SOURCE_INCOMPLETE",
+      "phase7_role": "negative_reproduction_or_supplement",
+      "allowed_wording": "Official GQF paper-exact reproduction is blocked by missing/inconsistent source artifacts; no same-GQF lifetime comparison or NMF-surpass claim is available.",
+      "forbidden_wording": [
+        "surpasses Puviani NMF",
+        "longer physical lifetime than NMF",
+        "paper-exact reproduction"
+      ],
+      "current_result": {
+        "paper_exact_passed": 0,
+        "paper_exact_failed": 15,
+        "exact_status": "NO_GO_SOURCE_INCOMPLETE",
+        "matched_branch": "INELIGIBLE_NEGATIVE_BRANCH_NO_MATCHED_RUN",
+        "matched_metric_non_null_count": 0
+      },
+      "evidence": [
+        {
+          "task_id": "T6.8.7",
+          "artifact": {
+            "path": "docs/t6_8_7_route_a_claim_matrix.json",
+            "sha256": "e0abaf727b5d4170399698d6493817d22e3ff4f7cf468ad3272ecbddb8c8dc07",
+            "bytes": 48010
+          },
+          "selectors": [
+            "claims.PUVIANI_NMF_SURPASS"
+          ]
+        }
+      ],
+      "remaining_gate": "All 15 exact gates plus same-GQF matched lifetime LCB must pass; external missing artifacts are not imputed.",
+      "revocation_conditions": [
+        "reduced diagnostic substitutes for exact",
+        "project-internal controller substitutes for official NMF"
+      ]
+    },
+    {
+      "claim_id": "FPGA_DETERMINISTIC_ARCHITECTURE",
+      "final_state": "SUPPORTED_PR_ESTIMATE",
+      "phase7_role": "restricted_preboard_main",
+      "allowed_wording": "The no-student Route-A profile preserves the deterministic six-cycle architecture and passes three-seed open-source P&R at 27 MHz; Fmax/resources/power are estimates, not board measurements.",
+      "forbidden_wording": [
+        "measured 222.222 ns",
+        "vendor timing closure",
+        "measured power",
+        "faster than prior FPGA decoders"
+      ],
+      "current_result": {
+        "fmax_mhz": {
+          "minimum": 39.13740921020508,
+          "median": 40.26413345336914,
+          "maximum": 40.402408599853516,
+          "spread": 1.2649993896484375
+        },
+        "resources": {
+          "LUT4": {
+            "used": 3859,
+            "available": 20736
+          },
+          "DFF": {
+            "used": 1069,
+            "available": 15552
+          },
+          "BSRAM": {
+            "used": 8,
+            "available": 46
+          },
+          "MULT18X18": {
+            "used": 1,
+            "available": 48
+          },
+          "MULT9X9": {
+            "used": 1,
+            "available": 96
+          },
+          "ALU": {
+            "used": 448,
+            "available": 15552
+          },
+          "IOB": {
+            "used": 18,
+            "available": 384
+          }
+        },
+        "clock_model_ns": 222.22222222222223,
+        "power_sensitivity_mw": {
+          "low": 2.0408889600000006,
+          "nominal": 12.245333760000001,
+          "high": 48.981335040000005
+        }
+      },
+      "evidence": [
+        {
+          "task_id": "T6.9.1",
+          "artifact": {
+            "path": "docs/t6_9_1_route_a_hardware_pareto.json",
+            "sha256": "838f0e7fd22b9148b37ae65964c65ac0d6639b03c7e5f90134ed7c374763cd96",
+            "bytes": 61709
+          },
+          "selectors": [
+            "profiles.route_a_core_no_student",
+            "evidence_boundary"
+          ]
+        }
+      ],
+      "remaining_gate": "T6.9.2 must provide same-bitstream layered physical measurements.",
+      "revocation_conditions": [
+        "any P&R seed falls below target",
+        "estimate labels removed",
+        "harness path described as measured action path"
+      ]
+    },
+    {
+      "claim_id": "BOARD_MEASURED_CORRECTNESS_LATENCY",
+      "final_state": "BLOCKED_ALL_FIELDS_NULL",
+      "phase7_role": "blocks_phase7_main_freeze",
+      "allowed_wording": "No physical-board correctness, latency, deadline, jitter, resource-readback or power result is currently available.",
+      "forbidden_wording": [
+        "zero board deadline misses",
+        "measured source-to-action latency",
+        "measured board power"
+      ],
+      "current_result": {
+        "execution_branch": "BLOCKED_NO_PHYSICAL_BOARD_BITSTREAM_OR_TRANSPORT",
+        "null_measured_fields": 42,
+        "physical_prerequisites_failed": 6
+      },
+      "evidence": [
+        {
+          "task_id": "T6.9.2",
+          "artifact": {
+            "path": "docs/t6_9_2_route_a_board_measurement_blocker.json",
+            "sha256": "4c385e3b1d7b6ebdf0c1f9b03ee8aaf049b97b146069263bec404c11642f8fff",
+            "bytes": 8882
+          },
+          "selectors": [
+            "prerequisite_ledger",
+            "measured_results",
+            "claim_boundary"
+          ]
+        }
+      ],
+      "remaining_gate": "Complete all nine T6.9.2 recovery conditions and rerun the final evidence gate.",
+      "revocation_conditions": [
+        "any P&R/model value copied into measured fields",
+        "phase7 main freeze before physical evidence"
+      ]
+    },
+    {
+      "claim_id": "FPGA_SPEED_ADVANTAGE",
+      "final_state": "PROHIBITED_NO_SAME_TASK_BOARD_COMPARATOR",
+      "phase7_role": "mandatory_limitation",
+      "allowed_wording": "No FPGA speed advantage is supported because Route-A has no board measurement and the normalized literature table has zero same-task external comparator rows.",
+      "forbidden_wording": [
+        "fastest",
+        "SOTA FPGA decoder",
+        "lower latency than existing FPGA decoder"
+      ],
+      "current_result": {
+        "same_task_external_comparator_count": 0,
+        "board_measured": false,
+        "speed_state": "PROHIBITED"
+      },
+      "evidence": [
+        {
+          "task_id": "T6.8.7",
+          "artifact": {
+            "path": "docs/t6_8_7_route_a_claim_matrix.json",
+            "sha256": "e0abaf727b5d4170399698d6493817d22e3ff4f7cf468ad3272ecbddb8c8dc07",
+            "bytes": 48010
+          },
+          "selectors": [
+            "claims.FPGA_SPEED_ADVANTAGE"
+          ]
+        },
+        {
+          "task_id": "T6.9.2",
+          "artifact": {
+            "path": "docs/t6_9_2_route_a_board_measurement_blocker.json",
+            "sha256": "4c385e3b1d7b6ebdf0c1f9b03ee8aaf049b97b146069263bec404c11642f8fff",
+            "bytes": 8882
+          },
+          "selectors": [
+            "claim_boundary"
+          ]
+        }
+      ],
+      "remaining_gate": "Requires T6.9.2 physical measurement and a T6.8.6 same-task comparable subset.",
+      "revocation_conditions": [
+        "cross-code raw latency ranking",
+        "mixed latency boundaries",
+        "P&R estimate used as measurement"
+      ]
+    },
+    {
+      "claim_id": "CNN_AND_HMM_ROLE",
+      "final_state": "CNN_ABLATION_HMM_SOFTWARE_ONLY",
+      "phase7_role": "ablation_or_supplement",
+      "allowed_wording": "CNN/teacher/student remain optional learning ablations, and HMM posterior inference remains a software slow loop; MAP/FSM components own the primary deployable claim.",
+      "forbidden_wording": [
+        "CNN-centric decoder",
+        "HMM implemented on FPGA",
+        "learning module causes primary LER gain"
+      ],
+      "current_result": {
+        "cnn_state": "ABLATION_ONLY",
+        "hmm_is_in_rtl": false,
+        "selected_hardware_profile": "route_a_core_no_student"
+      },
+      "evidence": [
+        {
+          "task_id": "T6.7.4",
+          "artifact": {
+            "path": "docs/t6_7_4_route_a_promotion_gate.json",
+            "sha256": "58f7bd09c1c9982b5be9656cc7404d399567e165b140dc2f76ab0f3c129c5d22",
+            "bytes": 20293
+          },
+          "selectors": [
+            "claim_registry.CNN_PRIMARY",
+            "scientific_results.rtl.hmm_is_in_rtl"
+          ]
+        },
+        {
+          "task_id": "T6.9.1",
+          "artifact": {
+            "path": "docs/t6_9_1_route_a_hardware_pareto.json",
+            "sha256": "838f0e7fd22b9148b37ae65964c65ac0d6639b03c7e5f90134ed7c374763cd96",
+            "bytes": 61709
+          },
+          "selectors": [
+            "pareto_decision"
+          ]
+        }
+      ],
+      "remaining_gate": "A new matched schema/budget performance gate and functional integrated RTL are required for promotion.",
+      "revocation_conditions": [
+        "CNN appears as unconditional title/abstract contribution",
+        "HMM-on-FPGA wording without RTL"
+      ]
+    }
+  ],
+  "paper_decision": {
+    "full_cross_lane_high_level_paper": "NO_GO",
+    "phase7_main_figure_and_prose_freeze_allowed": false,
+    "blocking_claims": [
+      "STATIC_GKP_SUPERIORITY",
+      "TAIL_SAFETY_AND_IMPROVEMENT",
+      "GENERAL_DRIFT_EXTERNAL_COMPARISON",
+      "PUVIANI_NMF_SURPASS",
+      "BOARD_MEASURED_CORRECTNESS_LATENCY",
+      "FPGA_SPEED_ADVANTAGE"
+    ],
+    "selected_downgrade": "RESTRICTED_PREBOARD_SYSTEM_DRAFT",
+    "allowed_downgrade_components": [
+      "locked_EWMA_smooth_paired_outcome",
+      "tail_safety_noninferiority_with_cost_limitations",
+      "deterministic_six_cycle_preboard_architecture",
+      "static_negative_result",
+      "external_BOCD_performance_outcome_with_budget_fail",
+      "official_GQF_negative_reproduction_audit"
+    ],
+    "resume_condition": "complete T6.9.2 and rerun T6.9.3; performance claims additionally require new preregistered methods/experiments, not narrative changes"
+  },
+  "figure_table_plan": [
+    {
+      "item_id": "ARCH",
+      "role": "contract-centric Route-A architecture",
+      "status": "READY_RESTRICTED",
+      "boundary": "student optional; HMM software; preboard"
+    },
+    {
+      "item_id": "SMOOTH",
+      "role": "locked-EWMA paired smooth result",
+      "status": "READY_RESTRICTED",
+      "boundary": "periodic only Holm-confirmed; static/Window visible"
+    },
+    {
+      "item_id": "TAIL",
+      "role": "abrupt/OOD safety and cost",
+      "status": "MANDATORY_NEGATIVE",
+      "boundary": "noninferiority; zero broad improvement; high fallback/false update"
+    },
+    {
+      "item_id": "STATIC_EXTERNAL",
+      "role": "static and BOCD comparisons",
+      "status": "MANDATORY_NEGATIVE",
+      "boundary": "static wins average; BOCD budget fails"
+    },
+    {
+      "item_id": "GQF",
+      "role": "official Puviani exact audit",
+      "status": "MANDATORY_NEGATIVE",
+      "boundary": "0/15 exact; no lifetime comparison"
+    },
+    {
+      "item_id": "HW_PREBOARD",
+      "role": "three-seed P&R/resource/Fmax",
+      "status": "READY_RESTRICTED",
+      "boundary": "estimate and analytic power sensitivity only"
+    },
+    {
+      "item_id": "HW_MEASURED",
+      "role": "board latency/deadline/power and same-task speed",
+      "status": "BLOCKED",
+      "boundary": "all measured fields null"
+    }
+  ],
+  "source_data": {
+    "path": "docs/t6_9_3_route_a_final_evidence_gate_source_data.csv",
+    "sha256": "865c38f806d9f2b54d369a2a637aede78e44d4f724f8a2e8a17f52f22bfe5ba2",
+    "bytes": 12957,
+    "rows": 11
+  },
+  "implementation_binding": {
+    "path": "cnn_fpga/benchmark/route_a_final_evidence_gate.py",
+    "sha256": "0eb72198e78fc4f08670f2471f2e71e43d5f42f5112bedc76890ef0974124c62",
+    "bytes": 30009
+  },
+  "semantic_mutation_audit": {
+    "count": 17,
+    "detected": 17,
+    "cases": [
+      {
+        "case": "forge_parent_hash",
+        "target_gate": "G01_all_parents_source_data_and_implementation_are_live_hash_bound",
+        "rejected": true
+      },
+      {
+        "case": "drop_revocation",
+        "target_gate": "G02_atomic_final_claim_schema_is_complete",
+        "rejected": true
+      },
+      {
+        "case": "claim_all_smooth_families",
+        "target_gate": "G03_restricted_system_and_smooth_claims_remain_narrow",
+        "rejected": true
+      },
+      {
+        "case": "promote_static",
+        "target_gate": "G04_static_superiority_remains_falsified",
+        "rejected": true
+      },
+      {
+        "case": "weaken_k4_domain",
+        "target_gate": "G04b_static_k4_equivalence_remains_narrow_and_exhaustive",
+        "rejected": true
+      },
+      {
+        "case": "promote_tail",
+        "target_gate": "G05_tail_is_safety_noninferiority_not_improvement",
+        "rejected": true
+      },
+      {
+        "case": "hide_budget_fail",
+        "target_gate": "G06_external_drift_outcome_preserves_performance_and_budget_failure",
+        "rejected": true
+      },
+      {
+        "case": "promote_nmf",
+        "target_gate": "G07_puviani_surpass_remains_prohibited",
+        "rejected": true
+      },
+      {
+        "case": "label_hardware_measured",
+        "target_gate": "G08_preboard_hardware_is_supported_without_measured_promotion",
+        "rejected": true
+      },
+      {
+        "case": "invent_board_result",
+        "target_gate": "G09_board_and_speed_claims_fail_closed",
+        "rejected": true
+      },
+      {
+        "case": "promote_cnn",
+        "target_gate": "G10_learning_roles_remain_ablation_and_software_only",
+        "rejected": true
+      },
+      {
+        "case": "promote_full_paper",
+        "target_gate": "G11_full_high_level_paper_is_no_go_and_phase7_freeze_is_closed",
+        "rejected": true
+      },
+      {
+        "case": "hide_downgrade",
+        "target_gate": "G12_downgrade_routes_are_explicit_and_not_full_go",
+        "rejected": true
+      },
+      {
+        "case": "mark_hw_figure_ready",
+        "target_gate": "G13_figure_table_plan_keeps_blocked_and_negative_panels_visible",
+        "rejected": true
+      },
+      {
+        "case": "allow_global_score",
+        "target_gate": "G14_no_global_score_cross_lane_arithmetic_or_sota_wording",
+        "rejected": true
+      },
+      {
+        "case": "forge_csv_rows",
+        "target_gate": "G15_source_csv_has_all_final_claims",
+        "rejected": true
+      },
+      {
+        "case": "forge_mutation_count",
+        "target_gate": "G16_semantic_mutations_fail_closed",
+        "rejected": true
+      }
+    ]
+  },
+  "gates": {
+    "G01_all_parents_source_data_and_implementation_are_live_hash_bound": true,
+    "G02_atomic_final_claim_schema_is_complete": true,
+    "G03_restricted_system_and_smooth_claims_remain_narrow": true,
+    "G04_static_superiority_remains_falsified": true,
+    "G04b_static_k4_equivalence_remains_narrow_and_exhaustive": true,
+    "G05_tail_is_safety_noninferiority_not_improvement": true,
+    "G06_external_drift_outcome_preserves_performance_and_budget_failure": true,
+    "G07_puviani_surpass_remains_prohibited": true,
+    "G08_preboard_hardware_is_supported_without_measured_promotion": true,
+    "G09_board_and_speed_claims_fail_closed": true,
+    "G10_learning_roles_remain_ablation_and_software_only": true,
+    "G11_full_high_level_paper_is_no_go_and_phase7_freeze_is_closed": true,
+    "G12_downgrade_routes_are_explicit_and_not_full_go": true,
+    "G13_figure_table_plan_keeps_blocked_and_negative_panels_visible": true,
+    "G14_no_global_score_cross_lane_arithmetic_or_sota_wording": true,
+    "G15_source_csv_has_all_final_claims": true,
+    "G16_semantic_mutations_fail_closed": true
+  },
+  "gate_summary": {
+    "passed": 17,
+    "failed": 0
+  },
+  "verdict": "NO_GO_FULL_HIGH_LEVEL_PAPER_RESTRICTED_PREBOARD_DRAFT_ONLY"
+}

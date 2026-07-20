@@ -1,0 +1,185 @@
+{
+  "task_id": "T6.15.5",
+  "schema_version": "t6.15.5-route-a-v5-final-evidence-gate-v1",
+  "protocol_id": "ROUTE-A-V5-EARLY-HEADROOM-STOP-V1",
+  "generated_at_utc": "2026-07-20T04:32:11.377570+00:00",
+  "execution_path": "EARLY_STOP_AT_T6.10.1_HEADROOM_GATE",
+  "headroom_recomputation": {
+    "nested_selector_errors": 35396,
+    "nested_baseline_errors": 35314,
+    "strict_causal_router_headroom": -0.0023220252591040383,
+    "router_gate": 0.1,
+    "hard_decision_oracle_errors": 29105,
+    "expanded_candidate_oracle_errors": 29096,
+    "incremental_action_space_headroom": 0.0002548564308772725,
+    "action_gate": 0.12,
+    "overall_truth_oracle_headroom_not_used_for_gate": 0.1760774763549867
+  },
+  "dropped_tasks": [
+    "T6.10.2",
+    "T6.10.3",
+    "T6.11.1",
+    "T6.11.2",
+    "T6.11.3",
+    "T6.11.4",
+    "T6.12.1",
+    "T6.12.2",
+    "T6.12.3",
+    "T6.12.4",
+    "T6.13.1",
+    "T6.13.2",
+    "T6.13.3",
+    "T6.14.1",
+    "T6.14.2",
+    "T6.14.3",
+    "T6.15.1",
+    "T6.15.2",
+    "T6.15.3",
+    "T6.15.4"
+  ],
+  "v5_downstream_outputs_found": [],
+  "formal_access": {
+    "v5_formal_manifest_exists": false,
+    "v5_formal_output_exists": false,
+    "v4_formal_used_only_as_t6_10_1_diagnostic": true
+  },
+  "claim_registry": [
+    {
+      "claim_id": "V5-ALG-LER-10PCT",
+      "state": "REVOKED",
+      "reason": "strict-causal development headroom is below 10%"
+    },
+    {
+      "claim_id": "V5-TAIL-CALIBRATION-TELEGRAPH",
+      "state": "NOT_RUN_EARLY_STOP",
+      "reason": "no V5 candidate entered pilot/formal"
+    },
+    {
+      "claim_id": "V5-POSTERIOR-MIXTURE-ACTION",
+      "state": "REVOKED",
+      "reason": "incremental action-space upper bound is below 12%"
+    },
+    {
+      "claim_id": "V5-UNTOUCHED-FORMAL",
+      "state": "NOT_RUN_EARLY_STOP",
+      "reason": "formal manifest and outputs intentionally absent"
+    },
+    {
+      "claim_id": "V5-QUANTIZED-RETENTION",
+      "state": "NOT_RUN_EARLY_STOP",
+      "reason": "no eligible V5 action to quantize"
+    },
+    {
+      "claim_id": "V5-LONG-CXXRTL",
+      "state": "NOT_RUN_EARLY_STOP",
+      "reason": "V4 replay cannot substitute for V5 qualification"
+    },
+    {
+      "claim_id": "V5-FORMAL-ATOMIC-SAFETY",
+      "state": "NOT_RUN_EARLY_STOP",
+      "reason": "no V5 RTL/profile exists"
+    },
+    {
+      "claim_id": "V5-MULTISEED-PR",
+      "state": "NOT_RUN_EARLY_STOP",
+      "reason": "no V5 RTL/profile exists"
+    },
+    {
+      "claim_id": "V5-MEASURED-HARDWARE",
+      "state": "BLOCKED",
+      "reason": "T6.9.2 still has 42 null measured fields"
+    },
+    {
+      "claim_id": "PHASE6C-READONLY-AUX",
+      "state": "ALLOWED_AFTER_THIS_GATE",
+      "reason": "secondary lanes cannot modify or rescue Phase 6B"
+    }
+  ],
+  "parent_bindings": {
+    "docs/t6_10_1_causal_headroom.json": "e1f9eac68cd6d27b6ffe4b71b8dbe37957c81481f448f8ad7b96a8adb56fbe38",
+    "docs/new_task_board.md": "3aee14f704722e712e0bfcbe2df2fe7be8aaa8189cbbbc7f81e0ba3e6aec9c33",
+    "docs/t6_9_2_route_a_board_measurement_blocker.json": "4c385e3b1d7b6ebdf0c1f9b03ee8aaf049b97b146069263bec404c11642f8fff",
+    "docs/t6_9_3_route_a_final_evidence_gate.json": "01007da67aeb1f85ad707fc3a9b6a3bf6a2231c139c86ba98d7ad88390ad416d"
+  },
+  "semantic_mutations": [
+    {
+      "mutation": "overall_oracle_as_action_gain",
+      "detected": true,
+      "failed_checks": [
+        "incremental_action_headroom_recomputes_below_gate"
+      ]
+    },
+    {
+      "mutation": "router_headroom_promotion",
+      "detected": true,
+      "failed_checks": [
+        "router_headroom_recomputes_below_gate"
+      ]
+    },
+    {
+      "mutation": "dropped_task_promoted",
+      "detected": true,
+      "failed_checks": [
+        "all_conditional_tasks_are_dropped"
+      ]
+    },
+    {
+      "mutation": "invented_v5_formal_output",
+      "detected": true,
+      "failed_checks": [
+        "no_v5_downstream_outputs_exist"
+      ]
+    },
+    {
+      "mutation": "measured_null_imputed",
+      "detected": true,
+      "failed_checks": [
+        "measured_hardware_remains_blocked_and_null"
+      ]
+    },
+    {
+      "mutation": "revoked_claim_promoted",
+      "detected": true,
+      "failed_checks": [
+        "all_v5_performance_and_implementation_claims_closed"
+      ]
+    }
+  ],
+  "gates": {
+    "G01_t6_10_1_identity_and_negative_verdict": true,
+    "G02_all_1464_formal_replays_are_exact_diagnostic_only": true,
+    "G03_router_headroom_recomputes_below_10_percent": true,
+    "G04_incremental_action_headroom_recomputes_below_12_percent": true,
+    "G05_overall_truth_oracle_is_not_action_space_gain": true,
+    "G06_all_20_conditional_tasks_are_dropped": true,
+    "G07_no_v5_downstream_output_exists": true,
+    "G08_all_v5_claims_are_revoked_not_run_or_blocked": true,
+    "G09_measured_hardware_remains_blocked_with_42_nulls": true,
+    "G10_v4_full_paper_no_go_is_not_overwritten": true,
+    "G11_phase6c_permission_is_readonly_only": true,
+    "G12_all_semantic_mutations_are_detected": true
+  },
+  "gate_summary": {
+    "passed": 12,
+    "failed": []
+  },
+  "phase6c_permission": {
+    "allowed": true,
+    "mode": "READ_ONLY_AUXILIARY_COMPARISONS",
+    "may_modify_phase6b_verdict": false,
+    "may_rescue_v5_claim": false
+  },
+  "measured_hardware_claim": {
+    "state": "BLOCKED",
+    "source_task": "T6.9.2",
+    "null_fields": 42
+  },
+  "status": "DONE_EARLY_STOP_NEGATIVE_RESULT_PRESERVED",
+  "verdict": "NO_GO_V5_EARLY_HEADROOM_STOP",
+  "source_data_binding": {
+    "path": "docs/t6_15_5_route_a_v5_final_evidence_gate_source_data.csv",
+    "sha256": "c8bc2e14456bee1bdbe2bde2197c56a899976e14779984bfa5cd9eb50ceb162a",
+    "row_count": 10
+  },
+  "analysis_sha256": "856431ffaba337830c27dbeb26d5d0119802c32162955f961a3b0f97b241b706"
+}

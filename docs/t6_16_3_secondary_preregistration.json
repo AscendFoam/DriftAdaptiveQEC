@@ -1,0 +1,1701 @@
+{
+  "task_id": "T6.16.3",
+  "schema_version": "t6.16.3-secondary-experiment-preregistration-v1",
+  "generated_at_utc": "2026-07-20T04:32:11.757236+00:00",
+  "protocol_id": "PHASE6C-READONLY-SECONDARY-PREREGISTRATION-V1",
+  "frozen_at": "2026-07-20",
+  "secondary_namespace": "phase6c-secondary-v1",
+  "statistics": {
+    "confidence_level": 0.95,
+    "paired_bootstrap_resamples": 20000,
+    "threshold_bootstrap_resamples": 2000,
+    "resampling_unit": "independent seed cluster or trajectory, never individual correlated rounds",
+    "multiplicity": "Holm correction within each task's predeclared primary endpoint family only; never pool p-values or wins across lanes",
+    "zero_event_rule": "report exact one-sided 95% binomial upper bound",
+    "raw_evidence": "always save raw counts, denominators, seed/config/hash and all attempted cells",
+    "selection_rule": "no performance-dependent early stopping, candidate reselection or scenario-specific threshold tuning"
+  },
+  "experiments": [
+    {
+      "experiment_id": "E6171_SINGLE_MODE_CPD_CI_EQUIVALENCE",
+      "task_id": "T6.17.1",
+      "lane_id": "single_mode_decoder",
+      "execution_type": "PROJECT_NATIVE_MATCHED",
+      "entry_gate": "T6.16.2 ontology PASS and ideal-decoder conventions live",
+      "sources": [
+        "NOH2022_SURFACE_GKP",
+        "LIN2023_CPD"
+      ],
+      "source_code": {
+        "url": null,
+        "commit": null,
+        "license": null,
+        "state": "PROJECT_IMPLEMENTATION_TO_BE_CREATED_UNDER_TASK"
+      },
+      "environment": {
+        "runtime": "Python 3.12 frozen host",
+        "required_packages": [
+          "numpy",
+          "scipy",
+          "pytest"
+        ],
+        "required_external_tools": []
+      },
+      "adapter": {
+        "path": "cnn_fpga/benchmark/single_mode_cpd_equivalence.py",
+        "state": "PLANNED_NOT_EXECUTED",
+        "decision_object": "same canonical q/p syndrome to nearest lattice point / CI parity"
+      },
+      "split": {
+        "name": "secondary_correctness",
+        "may_overlap_phase6b": false,
+        "purpose": "mathematical correctness and counterexamples only"
+      },
+      "seeds": {
+        "kind": "deterministic_plus_rng",
+        "values": [
+          61710001
+        ],
+        "namespace": "phase6c-secondary-v1"
+      },
+      "config": {
+        "production_domain": "complete q10 x q10 address domain = 1048576 points",
+        "random_boundary_samples": 1000000,
+        "counterexample_families": [
+          "biased",
+          "correlated",
+          "finite_energy_likelihood"
+        ],
+        "duplicate_comparator_policy": "equivalent Euclidean CPD and CI count once"
+      },
+      "sample_size": {
+        "exact_domain_points": 1048576,
+        "boundary_samples": 1000000,
+        "minimum_counterexamples_per_family": 1
+      },
+      "pairing": "same syndrome words and likelihood parameters for CI/CPD/MAP; exact/brute-force reference",
+      "primary_metrics": [
+        "decision_mismatch_rate",
+        "runtime_seconds",
+        "memory_bytes"
+      ],
+      "statistics": "zero mismatch required on exact domain and boundary set; no performance p-value",
+      "stopping_rule": "complete all exact/boundary samples; stop only on correctness failure or 2-hour runtime cap",
+      "runtime_budget": {
+        "wall_clock_seconds": 7200,
+        "memory_gib": 8,
+        "failure_on_exceed": "PARTIAL_RUNTIME_BUDGET_EXCEEDED"
+      },
+      "failure_branches": [
+        "NEGATIVE_EQUIVALENCE_FAILED",
+        "PARTIAL_RUNTIME_BUDGET_EXCEEDED"
+      ],
+      "allowed_evidence": [
+        "PROJECT_NATIVE_MATCHED",
+        "NEGATIVE"
+      ],
+      "forbidden_actions": [
+        "count equivalent CPD and CI twice",
+        "rename MAP as CPD",
+        "tune counterexample parameters after seeing outcomes"
+      ]
+    },
+    {
+      "experiment_id": "E6172_NOH_CNOT_CI_ML_REPRODUCTION",
+      "task_id": "T6.17.2",
+      "lane_id": "surface_gkp_gate_outer_code",
+      "execution_type": "PROJECT_NATIVE_MATCHED_OR_BLOCKED",
+      "entry_gate": "paper circuit/noise/decoder specification passes source-sufficiency audit before simulation",
+      "sources": [
+        "NOH2022_SURFACE_GKP"
+      ],
+      "source_code": {
+        "url": null,
+        "commit": null,
+        "license": null,
+        "state": "NO_OFFICIAL_CODE_IDENTIFIED"
+      },
+      "environment": {
+        "runtime": "Python 3.12 frozen host",
+        "required_packages": [
+          "numpy",
+          "scipy",
+          "pytest"
+        ],
+        "required_external_tools": []
+      },
+      "adapter": {
+        "path": "cnn_fpga/benchmark/surface_gkp_cnot_reproduction.py",
+        "state": "PLANNED_SOURCE_SUFFICIENCY_FIRST",
+        "decision_object": "one error-corrected two-square-GKP-qubit CNOT under Noh Table-I model"
+      },
+      "split": {
+        "name": "secondary_gate_reproduction",
+        "may_overlap_phase6b": false,
+        "purpose": "same-gate literature reproduction; never V5 evidence"
+      },
+      "seeds": {
+        "kind": "common_random_numbers",
+        "values": [
+          61720001,
+          61720002,
+          61720003,
+          61720004,
+          61720005,
+          61720006,
+          61720007,
+          61720008,
+          61720009,
+          61720010,
+          61720011,
+          61720012,
+          61720013,
+          61720014,
+          61720015,
+          61720016,
+          61720017,
+          61720018,
+          61720019,
+          61720020,
+          61720021,
+          61720022,
+          61720023,
+          61720024,
+          61720025,
+          61720026,
+          61720027,
+          61720028,
+          61720029,
+          61720030,
+          61720031,
+          61720032
+        ],
+        "namespace": "phase6c-secondary-v1"
+      },
+      "config": {
+        "squeezing_db": [
+          9.0,
+          12.0,
+          13.0
+        ],
+        "ci_anchors": [
+          0.101,
+          0.00869,
+          0.0026
+        ],
+        "ml_anchors": [
+          0.0689,
+          0.00361,
+          0.000853
+        ],
+        "absolute_tolerance": [
+          0.01,
+          0.002,
+          0.0005
+        ],
+        "relative_tolerance": 0.25,
+        "boundary_likelihood_samples": 100000,
+        "outer_code_threshold_9p9db": "LITERATURE_ONLY_UNLESS_FINITE_SIZE_OUTER_CODE_IS_EXECUTED"
+      },
+      "sample_size": {
+        "target_failures_per_method_point": 2000,
+        "n_max_per_squeezing_point": 5000000,
+        "minimum_boundary_samples": 100000
+      },
+      "pairing": "CI and ML consume identical primitive Gaussian draws and gate faults; report discordant paired counts",
+      "primary_metrics": [
+        "cnot_failure_probability",
+        "decision_mismatch_rate"
+      ],
+      "statistics": "raw failures/trials, Wilson intervals, paired McNemar/cluster bootstrap; three squeezing points are one Holm family",
+      "stopping_rule": "per point stop at 2000 failures in both methods or N_max; never stop for favorable agreement",
+      "runtime_budget": {
+        "wall_clock_seconds": 28800,
+        "memory_gib": 8,
+        "failure_on_exceed": "PARTIAL_NMAX_OR_RUNTIME"
+      },
+      "failure_branches": [
+        "BLOCKED_SOURCE_INCOMPLETE",
+        "NEGATIVE_ANCHOR_TOLERANCE_FAIL",
+        "PARTIAL_NMAX_OR_RUNTIME"
+      ],
+      "allowed_evidence": [
+        "LITERATURE_ONLY",
+        "PROJECT_NATIVE_MATCHED",
+        "BLOCKED",
+        "NEGATIVE"
+      ],
+      "forbidden_actions": [
+        "infer 9.9 dB from gate failure",
+        "replace missing circuit details with favorable heuristics",
+        "change tolerance after results"
+      ]
+    },
+    {
+      "experiment_id": "E6173_LEARNED_MODEL_ELIGIBILITY_REPLAY",
+      "task_id": "T6.17.3",
+      "lane_id": "single_mode_decoder",
+      "execution_type": "READONLY_CHECKPOINT_REPLAY",
+      "entry_gate": "existing checkpoint has same syndrome/action/observability/precision/compute task signature",
+      "sources": [
+        "WANG2022_DIRECT_NN",
+        "SIVAK2023_RL_GKP",
+        "SIVAK2026_RL_DRIFT",
+        "PUVIANI2025_NMF"
+      ],
+      "source_code": {
+        "url": null,
+        "commit": null,
+        "license": null,
+        "state": "ONLY_EXISTING_PROJECT_CHECKPOINTS_AND_PINNED_GQF_INTAKE"
+      },
+      "environment": {
+        "runtime": "existing project Python/PyTorch environments",
+        "required_packages": [
+          "numpy",
+          "torch"
+        ],
+        "required_external_tools": []
+      },
+      "adapter": {
+        "path": "cnn_fpga/benchmark/learned_model_eligibility_replay.py",
+        "state": "PLANNED_READONLY",
+        "decision_object": "existing direct decoder replay only; RL/NMF remain controller lane"
+      },
+      "split": {
+        "name": "existing_parent_trace_replay",
+        "may_overlap_phase6b": true,
+        "purpose": "diagnostic eligibility/re-inference only; no training, selection or V5 promotion"
+      },
+      "seeds": {
+        "kind": "reuse_parent_trace_ids_no_new_selection",
+        "values": [],
+        "namespace": "parent-readonly"
+      },
+      "config": {
+        "training_allowed": false,
+        "hyperparameter_search_allowed": false,
+        "checkpoint_reselection_allowed": false,
+        "required_budget_fields": [
+          "MAC",
+          "state_bytes",
+          "workspace_bytes",
+          "wall_clock",
+          "precision",
+          "cadence",
+          "warmup"
+        ]
+      },
+      "sample_size": {
+        "all_eligible_existing_checkpoints": true,
+        "all_registered_parent_traces": true
+      },
+      "pairing": "bit-identical parent syndrome traces and actions; save checkpoint/input/output hashes",
+      "primary_metrics": [
+        "p_L",
+        "p_X",
+        "p_Y",
+        "p_Z",
+        "average_ler",
+        "latency_ns",
+        "macs_per_update"
+      ],
+      "statistics": "reuse parent paired raw counts; no new selection p-value",
+      "stopping_rule": "evaluate every pre-existing eligible checkpoint; ineligible rows finish with null metrics",
+      "runtime_budget": {
+        "wall_clock_seconds": 7200,
+        "memory_gib": 12,
+        "failure_on_exceed": "PARTIAL_REPLAY"
+      },
+      "failure_branches": [
+        "INELIGIBLE_TASK_SIGNATURE",
+        "NEGATIVE_REPLAY",
+        "PARTIAL_REPLAY"
+      ],
+      "allowed_evidence": [
+        "PROJECT_NATIVE_MATCHED",
+        "INELIGIBLE",
+        "NEGATIVE"
+      ],
+      "forbidden_actions": [
+        "train after T6.15.5",
+        "select a better checkpoint after replay",
+        "merge Direct NN with RL/NMF controller"
+      ]
+    },
+    {
+      "experiment_id": "E6181_AQEC_COMMON_WALLCLOCK_REPLAY",
+      "task_id": "T6.18.1",
+      "lane_id": "aqec_wallclock",
+      "execution_type": "PROJECT_NATIVE_MATCHED",
+      "entry_gate": "existing protocol-native simulator and 700 us contract pass; no claim of paper-native reservoir reproduction",
+      "sources": [
+        "LACHANCE2024_AQEC"
+      ],
+      "source_code": {
+        "url": null,
+        "commit": null,
+        "license": null,
+        "state": "PROJECT_SIMULATOR_ONLY_OFFICIAL_AQEC_CODE_ABSENT"
+      },
+      "environment": {
+        "runtime": "Python 3.12 frozen host",
+        "required_packages": [
+          "numpy",
+          "scipy"
+        ],
+        "required_external_tools": []
+      },
+      "adapter": {
+        "path": "cnn_fpga/benchmark/aqec_secondary_wallclock_replay.py",
+        "state": "PLANNED_REUSE_PHYSICS_AUTONOMOUS_SBS",
+        "decision_object": "autonomous versus measurement-feedback memory preservation at common physical time"
+      },
+      "split": {
+        "name": "secondary_aqec_independent",
+        "may_overlap_phase6b": false,
+        "purpose": "independent project-native replay"
+      },
+      "seeds": {
+        "kind": "independent_seed_clusters",
+        "values": [
+          61810001,
+          61810002,
+          61810003,
+          61810004,
+          61810005,
+          61810006,
+          61810007,
+          61810008,
+          61810009,
+          61810010,
+          61810011,
+          61810012,
+          61810013,
+          61810014,
+          61810015,
+          61810016,
+          61810017,
+          61810018,
+          61810019,
+          61810020,
+          61810021,
+          61810022,
+          61810023,
+          61810024
+        ],
+        "namespace": "phase6c-secondary-v1"
+      },
+      "config": {
+        "common_horizon_us": 700,
+        "cutoffs": [
+          12,
+          16
+        ],
+        "noise_profiles": [
+          "high",
+          "medium",
+          "low"
+        ],
+        "anchors": [
+          "idle_memory",
+          "measurement_feedback",
+          "autonomous"
+        ],
+        "report_per_cycle_and_per_us": true,
+        "official_reservoir_adapter": false
+      },
+      "sample_size": {
+        "seed_clusters_per_cell": 24,
+        "cells": 6,
+        "minimum_time_points": 71
+      },
+      "pairing": "common random numbers/noise trajectories within cutoff and noise cell",
+      "primary_metrics": [
+        "logical_lifetime_us",
+        "logical_lifetime_cycles",
+        "lifetime_gain_ratio",
+        "final_code_survival",
+        "measurements_per_100us",
+        "resets_per_100us",
+        "active_gates_per_100us"
+      ],
+      "statistics": "seed-cluster paired bootstrap, fit diagnostics and cycle-vs-wallclock ordering reversal",
+      "stopping_rule": "run all 6 cells and 24 clusters; no desired ordering gate",
+      "runtime_budget": {
+        "wall_clock_seconds": 14400,
+        "memory_gib": 12,
+        "failure_on_exceed": "PARTIAL_RUNTIME"
+      },
+      "failure_branches": [
+        "NEGATIVE_NO_LIFETIME_GAIN",
+        "PARTIAL_RUNTIME",
+        "BLOCKED_OFFICIAL_PROTOCOL_REPRODUCTION"
+      ],
+      "allowed_evidence": [
+        "PROJECT_NATIVE_MATCHED",
+        "LITERATURE_ONLY",
+        "BLOCKED",
+        "NEGATIVE"
+      ],
+      "forbidden_actions": [
+        "report zero latency",
+        "claim universal 20 percent",
+        "build a simplified reservoir stack only to fill a table"
+      ]
+    },
+    {
+      "experiment_id": "E6182_OFFICIAL_STRUCTURED_CPD_REPRODUCTION",
+      "task_id": "T6.18.2",
+      "lane_id": "multimode_structured_lattice_cpd",
+      "execution_type": "OFFICIAL_CODE_REPRODUCTION",
+      "entry_gate": "official repository commit/license verified, Julia environment resolved, upstream tests attempted",
+      "sources": [
+        "LIN2023_CPD"
+      ],
+      "source_code": {
+        "url": "https://github.com/amazon-science/LatticeAlgorithms.jl",
+        "commit": "01f9bf1f6970b3e229b43aac9da3325c75518db8",
+        "license": "Apache-2.0",
+        "state": "PINNED_NOT_YET_IMPORTED"
+      },
+      "environment": {
+        "runtime": "Julia environment created from pinned Project/Manifest when available",
+        "required_packages": [],
+        "required_external_tools": [
+          "julia"
+        ]
+      },
+      "adapter": {
+        "path": "scripts/run_lattice_algorithms_reproduction.jl",
+        "state": "PLANNED_OFFICIAL_FIRST",
+        "decision_object": "official CPD correctness and structured surface-GKP threshold"
+      },
+      "split": {
+        "name": "secondary_cpd_stationary",
+        "may_overlap_phase6b": false,
+        "purpose": "official-code correctness/threshold reproduction"
+      },
+      "seeds": {
+        "kind": "common_random_numbers",
+        "values": [
+          61820001,
+          61820002,
+          61820003,
+          61820004,
+          61820005,
+          61820006,
+          61820007,
+          61820008,
+          61820009,
+          61820010,
+          61820011,
+          61820012,
+          61820013,
+          61820014,
+          61820015,
+          61820016,
+          61820017,
+          61820018,
+          61820019,
+          61820020,
+          61820021,
+          61820022,
+          61820023,
+          61820024,
+          61820025,
+          61820026,
+          61820027,
+          61820028,
+          61820029,
+          61820030,
+          61820031,
+          61820032
+        ],
+        "namespace": "phase6c-secondary-v1"
+      },
+      "config": {
+        "small_dimension_exact_checks": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "surface_gkp_sizes": [
+          3,
+          5,
+          7
+        ],
+        "sigma_grid": [
+          0.56,
+          0.57,
+          0.58,
+          0.59,
+          0.6,
+          0.61,
+          0.62,
+          0.63,
+          0.64
+        ],
+        "threshold_anchors": {
+          "cpd": 0.602,
+          "analog_mwpm": 0.599
+        },
+        "absolute_threshold_tolerance": 0.02,
+        "single_mode_degenerates_to_ci": true
+      },
+      "sample_size": {
+        "minimum_trials_per_size_sigma_seed": 2000,
+        "seed_clusters": 32,
+        "minimum_sizes": 3,
+        "threshold_bootstrap_resamples": 2000
+      },
+      "pairing": "CPD and analog-MWPM share identical generated displacement/error instances",
+      "primary_metrics": [
+        "decision_mismatch_rate",
+        "noise_threshold_sigma",
+        "runtime_seconds",
+        "memory_bytes",
+        "asymptotic_time_complexity"
+      ],
+      "statistics": "zero exact mismatch; finite-size crossing with seed-cluster bootstrap; CPD/MWPM one paired family",
+      "stopping_rule": "run upstream/small exact gates first; if failed, stop threshold run and report partial/blocked",
+      "runtime_budget": {
+        "wall_clock_seconds": 28800,
+        "memory_gib": 16,
+        "failure_on_exceed": "PARTIAL_RUNTIME"
+      },
+      "failure_branches": [
+        "BLOCKED_TOOLCHAIN",
+        "PARTIAL_UPSTREAM_OR_MODEL_MISMATCH",
+        "NEGATIVE_THRESHOLD_TOLERANCE_FAIL",
+        "PARTIAL_RUNTIME"
+      ],
+      "allowed_evidence": [
+        "OFFICIAL_CODE_REPRODUCTION",
+        "BLOCKED",
+        "NEGATIVE"
+      ],
+      "forbidden_actions": [
+        "substitute a project single-mode decoder for official code",
+        "fill a threshold from literature after failed run",
+        "change code sizes or sigma grid for a favorable crossing"
+      ]
+    },
+    {
+      "experiment_id": "E6183_MULTIMODE_POSTERIOR_WEIGHTED_CPD",
+      "task_id": "T6.18.3",
+      "lane_id": "multimode_structured_lattice_cpd",
+      "execution_type": "CONDITIONAL_PROJECT_NATIVE_MATCHED",
+      "entry_gate": "E6182 correctness and threshold scope pass; otherwise NOT_RUN_SCOPE_GATE",
+      "sources": [
+        "LIN2023_CPD"
+      ],
+      "source_code": {
+        "url": "https://github.com/amazon-science/LatticeAlgorithms.jl",
+        "commit": "01f9bf1f6970b3e229b43aac9da3325c75518db8",
+        "license": "Apache-2.0",
+        "state": "CONDITIONAL_ON_E6182"
+      },
+      "environment": {
+        "runtime": "same frozen Julia/Python bridge as E6182",
+        "required_packages": [
+          "numpy",
+          "scipy"
+        ],
+        "required_external_tools": [
+          "julia"
+        ]
+      },
+      "adapter": {
+        "path": "cnn_fpga/benchmark/multimode_posterior_weighted_cpd.py",
+        "state": "CONDITIONAL_PLANNED",
+        "decision_object": "one E6182-supported structured family under observed-only drift"
+      },
+      "split": {
+        "name": "secondary_multimode_drift",
+        "may_overlap_phase6b": false,
+        "purpose": "independent smooth and calibration/telegraph evidence"
+      },
+      "seeds": {
+        "kind": "independent_seed_clusters",
+        "values": [
+          61830001,
+          61830002,
+          61830003,
+          61830004,
+          61830005,
+          61830006,
+          61830007,
+          61830008,
+          61830009,
+          61830010,
+          61830011,
+          61830012,
+          61830013,
+          61830014,
+          61830015,
+          61830016,
+          61830017,
+          61830018,
+          61830019,
+          61830020,
+          61830021,
+          61830022,
+          61830023,
+          61830024,
+          61830025,
+          61830026,
+          61830027,
+          61830028,
+          61830029,
+          61830030,
+          61830031,
+          61830032
+        ],
+        "namespace": "phase6c-secondary-v1"
+      },
+      "config": {
+        "families": [
+          "smooth",
+          "calibration_shift",
+          "telegraph"
+        ],
+        "comparators": [
+          "static_euclidean",
+          "weighted_static",
+          "observed_only_posterior_predictive_weighted",
+          "oracle_metric_upper_bound"
+        ],
+        "thresholds_shared_across_scenarios": true,
+        "oracle_ranking_eligible": false
+      },
+      "sample_size": {
+        "seed_clusters_per_family": 32,
+        "cycles_per_cluster": 100000,
+        "window_cycles": 512
+      },
+      "pairing": "all comparators share displacement/drift trajectories; oracle is reference only",
+      "primary_metrics": [
+        "p_L",
+        "worst_window_ler",
+        "cvar95_window_ler",
+        "adaptation_lag_cycles",
+        "runtime_seconds",
+        "memory_bytes"
+      ],
+      "statistics": "paired seed-cluster bootstrap; Holm within three primary deployable contrasts only",
+      "stopping_rule": "if E6182 entry fails, finish as NOT_RUN_SCOPE_GATE; otherwise run all frozen cells",
+      "runtime_budget": {
+        "wall_clock_seconds": 28800,
+        "memory_gib": 16,
+        "failure_on_exceed": "PARTIAL_RUNTIME"
+      },
+      "failure_branches": [
+        "NOT_RUN_SCOPE_GATE",
+        "NEGATIVE_NO_DRIFT_GAIN",
+        "PARTIAL_RUNTIME"
+      ],
+      "allowed_evidence": [
+        "PROJECT_NATIVE_MATCHED",
+        "BLOCKED",
+        "NEGATIVE"
+      ],
+      "forbidden_actions": [
+        "extrapolate single-mode V5",
+        "insert a rescue task after scope failure",
+        "rank oracle as deployable"
+      ]
+    },
+    {
+      "experiment_id": "E6191_PROJECT_PREBOARD_PROFILES",
+      "task_id": "T6.19.1",
+      "lane_id": "fpga_implementation",
+      "execution_type": "PROJECT_NATIVE_MATCHED",
+      "entry_gate": "only methods with existing synthesizable RTL enter hardware rows; absent V5/NN RTL is N/A",
+      "sources": [
+        "PROJECT_T5_FAST_PATH",
+        "PROJECT_V5_ROUTE_A"
+      ],
+      "source_code": {
+        "url": null,
+        "commit": null,
+        "license": null,
+        "state": "LOCAL_HASH_BOUND_RTL_ONLY"
+      },
+      "environment": {
+        "runtime": "existing CXXRTL/Yosys/nextpnr-gowin flow",
+        "required_packages": [
+          "pytest"
+        ],
+        "required_external_tools": [
+          "yosys",
+          "nextpnr-gowin",
+          "c++"
+        ]
+      },
+      "adapter": {
+        "path": "cnn_fpga/benchmark/phase6c_preboard_profiles.py",
+        "state": "PLANNED_EXISTING_RTL_ONLY",
+        "decision_object": "same target/tool/precision/syndrome/action profile"
+      },
+      "split": {
+        "name": "secondary_preboard_hardware",
+        "may_overlap_phase6b": true,
+        "purpose": "read-only existing RTL replay/P&R; no V5 rescue"
+      },
+      "seeds": {
+        "kind": "place_route_seeds",
+        "values": [
+          1,
+          7,
+          19
+        ],
+        "namespace": "tool-seed-fixed"
+      },
+      "config": {
+        "target": "Gowin GW2AR-LV18QN88C8/I7",
+        "clock_mhz": 27,
+        "methods": [
+          "CI_if_rtl",
+          "static_map_lut_if_rtl",
+          "v5_fast_path_if_rtl",
+          "eligible_direct_nn_if_rtl"
+        ],
+        "host_profiles": [
+          "Window",
+          "EWMA",
+          "Kalman",
+          "V5_if_exists"
+        ],
+        "board_measured_fields": "NULL_UNTIL_T6.9.2"
+      },
+      "sample_size": {
+        "place_route_seeds": 3,
+        "integer_cxxrtl_action_mismatches_allowed": 0,
+        "host_runtime_repeats": 1000
+      },
+      "pairing": "same toolchain/target/clock/precision and exact task signature; host and FPGA tables separate",
+      "primary_metrics": [
+        "latency_cycles",
+        "latency_ns",
+        "initiation_interval_ns",
+        "clock_mhz",
+        "lut_count",
+        "ff_count",
+        "bram_count",
+        "dsp_count",
+        "power_w",
+        "decision_mismatch_rate"
+      ],
+      "statistics": "all seeds reported; host p50/p95/p99/worst; no estimate-measured pooling",
+      "stopping_rule": "no RTL means N/A, not a new implementation task; all eligible profiles attempted",
+      "runtime_budget": {
+        "wall_clock_seconds": 14400,
+        "memory_gib": 12,
+        "failure_on_exceed": "PARTIAL_TOOL_RUNTIME"
+      },
+      "failure_branches": [
+        "N_A_NO_RTL",
+        "NEGATIVE_ACTION_MISMATCH",
+        "PARTIAL_TOOL_RUNTIME"
+      ],
+      "allowed_evidence": [
+        "PROJECT_NATIVE_MATCHED",
+        "INELIGIBLE",
+        "NEGATIVE"
+      ],
+      "forbidden_actions": [
+        "write demo RTL to fill table",
+        "call Python runtime FPGA latency",
+        "fill power/jitter/deadline/measured values"
+      ]
+    },
+    {
+      "experiment_id": "E6192_EXTERNAL_FPGA_REFRESH",
+      "task_id": "T6.19.2",
+      "lane_id": "fpga_implementation",
+      "execution_type": "LITERATURE_REFRESH",
+      "entry_gate": "primary source with concrete implementation/problem size and timing boundary",
+      "sources": [
+        "OVERWATER2022_FPGA_NN",
+        "YANG2026_FPGA_NN"
+      ],
+      "source_code": {
+        "url": null,
+        "commit": null,
+        "license": null,
+        "state": "SOURCE_SPECIFIC_NULL_WHEN_NOT_PUBLIC"
+      },
+      "environment": {
+        "runtime": "source audit only",
+        "required_packages": [],
+        "required_external_tools": []
+      },
+      "adapter": {
+        "path": "cnn_fpga/benchmark/fpga_decoder_normalization.py",
+        "state": "EXISTING_EXTEND_READONLY",
+        "decision_object": "concrete implementation normalization"
+      },
+      "split": {
+        "name": "secondary_literature_refresh",
+        "may_overlap_phase6b": false,
+        "purpose": "sources through frozen search date 2026-07-20"
+      },
+      "seeds": {
+        "kind": "not_applicable",
+        "values": [],
+        "namespace": "N_A"
+      },
+      "config": {
+        "search_cutoff": "2026-07-20",
+        "required_fields": [
+          "code_family",
+          "distance_or_window",
+          "input",
+          "output",
+          "device",
+          "precision",
+          "clock",
+          "latency_boundary",
+          "statistic",
+          "cycles",
+          "II",
+          "resources",
+          "power",
+          "evidence"
+        ],
+        "same_task_signature_required_for_rank": true
+      },
+      "sample_size": {
+        "all_primary_sources_meeting_entry_gate": true
+      },
+      "pairing": "no numeric pairing across different task signatures",
+      "primary_metrics": [
+        "latency_ns",
+        "latency_cycles",
+        "initiation_interval_ns",
+        "clock_mhz",
+        "lut_count",
+        "ff_count",
+        "bram_count",
+        "dsp_count",
+        "power_w"
+      ],
+      "statistics": "descriptive source normalization only",
+      "stopping_rule": "search to frozen cutoff; unknown values remain null",
+      "runtime_budget": {
+        "wall_clock_seconds": 7200,
+        "memory_gib": 4,
+        "failure_on_exceed": "PARTIAL_SEARCH"
+      },
+      "failure_branches": [
+        "PARTIAL_SEARCH",
+        "INELIGIBLE_TASK_SIGNATURE",
+        "NEGATIVE_ZERO_SAME_TASK_COMPARATOR"
+      ],
+      "allowed_evidence": [
+        "LITERATURE_ONLY",
+        "INELIGIBLE",
+        "NEGATIVE"
+      ],
+      "forbidden_actions": [
+        "rank surface-code nanoseconds against single-mode GKP",
+        "impute unknown resources",
+        "claim fastest when same-task count is zero"
+      ]
+    },
+    {
+      "experiment_id": "E6193_AUXILIARY_ATLAS_INTEGRITY",
+      "task_id": "T6.19.3",
+      "lane_id": "fpga_implementation",
+      "execution_type": "READONLY_INTEGRITY_GATE",
+      "entry_gate": "T6.16.1-T6.19.2 terminal artifacts exist or carry explicit blocked/failed/negative states",
+      "sources": [
+        "NOH2022_SURFACE_GKP",
+        "WANG2022_DIRECT_NN",
+        "PUVIANI2025_NMF",
+        "LACHANCE2024_AQEC",
+        "LIN2023_CPD",
+        "PROJECT_T5_FAST_PATH",
+        "PROJECT_V5_ROUTE_A"
+      ],
+      "source_code": {
+        "url": null,
+        "commit": null,
+        "license": null,
+        "state": "NO_NEW_ALGORITHM"
+      },
+      "environment": {
+        "runtime": "Python read-only artifact verifier",
+        "required_packages": [
+          "numpy",
+          "scipy"
+        ],
+        "required_external_tools": []
+      },
+      "adapter": {
+        "path": "cnn_fpga/benchmark/secondary_evidence_integrity_gate.py",
+        "state": "PLANNED_READONLY",
+        "decision_object": "six-facet atlas and integrity verdict"
+      },
+      "split": {
+        "name": "no_new_data",
+        "may_overlap_phase6b": false,
+        "purpose": "artifact verification only"
+      },
+      "seeds": {
+        "kind": "not_applicable",
+        "values": [],
+        "namespace": "N_A"
+      },
+      "config": {
+        "facets": [
+          "single_mode_decoder",
+          "surface_gkp_gate_outer_code",
+          "multimode_structured_lattice_cpd",
+          "controller_rl_nmf",
+          "aqec_wallclock",
+          "fpga_implementation"
+        ],
+        "states_shown": [
+          "N_A_NOT_APPLICABLE",
+          "NULL_NOT_REPORTED",
+          "FAILED",
+          "NEGATIVE"
+        ],
+        "global_score": false,
+        "may_upgrade_phase6b": false,
+        "may_unblock_t6_9_2": false
+      },
+      "sample_size": {
+        "all_registered_cells_and_hashes": true
+      },
+      "pairing": "independent recomputation only within exact ontology lane/signature",
+      "primary_metrics": [],
+      "statistics": "recompute raw ratios, threshold fits, timing conversions and hashes; no new hypothesis test",
+      "stopping_rule": "integrity can pass with all-negative/null/blocked cells; any hash/ontology violation fails",
+      "runtime_budget": {
+        "wall_clock_seconds": 7200,
+        "memory_gib": 8,
+        "failure_on_exceed": "FAIL_INTEGRITY_INCOMPLETE"
+      },
+      "failure_branches": [
+        "FAIL_INTEGRITY_HASH",
+        "FAIL_INTEGRITY_CROSS_LANE",
+        "FAIL_INTEGRITY_EVIDENCE_PROMOTION",
+        "FAIL_INTEGRITY_INCOMPLETE"
+      ],
+      "allowed_evidence": [
+        "LITERATURE_ONLY",
+        "OFFICIAL_CODE_REPRODUCTION",
+        "PROJECT_NATIVE_MATCHED",
+        "INELIGIBLE",
+        "BLOCKED",
+        "NEGATIVE"
+      ],
+      "forbidden_actions": [
+        "upgrade T6.15.5",
+        "unblock T6.9.2",
+        "hide negative/null/failed cells",
+        "create global winner"
+      ]
+    }
+  ],
+  "environment": {
+    "python": "3.12.7",
+    "python_executable": "C:\\ProgramData\\anaconda3\\python.exe",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "packages": {
+      "numpy": "1.26.4",
+      "scipy": "1.13.1",
+      "pytest": "7.4.4",
+      "torch": null
+    },
+    "tools": {
+      "julia": null,
+      "yosys": null,
+      "nextpnr-gowin": null,
+      "c++": "C:\\ProgramData\\msys2\\mingw64\\bin\\c++.EXE"
+    },
+    "missing_tools_do_not_invalidate_preregistration": true,
+    "missing_required_tool_at_execution_uses_frozen_blocked_or_partial_branch": true
+  },
+  "source_record_locks": [
+    {
+      "source_id": "NOH2022_SURFACE_GKP",
+      "record_sha256": "179cc555c9240fea48e79da4e178dcd103d3cff516519f2c8cebd8b8c5ff3aa9",
+      "version": "PRX Quantum 3, 010315 / arXiv:2103.06994",
+      "code_url": null,
+      "code_commit": null,
+      "code_license": null
+    },
+    {
+      "source_id": "WANG2022_DIRECT_NN",
+      "record_sha256": "1705cfa8b605de739899676a77f6e01edcebdc967cdd94503aa7e2472421e8bb",
+      "version": "npj Quantum Information 8, 134, version of record 18 November 2022",
+      "code_url": null,
+      "code_commit": null,
+      "code_license": null
+    },
+    {
+      "source_id": "OVERWATER2022_FPGA_NN",
+      "record_sha256": "aabbdd7b55009cc6e98cafb9827b4e5ac73f7d3bdf4b8d8cd00f9310747e2ec7",
+      "version": "Quantum 6, 859",
+      "code_url": null,
+      "code_commit": null,
+      "code_license": null
+    },
+    {
+      "source_id": "YANG2026_FPGA_NN",
+      "record_sha256": "0a1ee717eb5f9a596c37f930d83523a749ab342c9913cde0b1afaac4f88108d2",
+      "version": "arXiv:2605.04892v1",
+      "code_url": null,
+      "code_commit": null,
+      "code_license": null
+    },
+    {
+      "source_id": "SIVAK2023_RL_GKP",
+      "record_sha256": "0f627cbd67f0b28a7d942e7b379d0661fd3123c953e431cea1dff86ec36582e1",
+      "version": "Nature 616, 50-55, version of record",
+      "code_url": null,
+      "code_commit": null,
+      "code_license": null
+    },
+    {
+      "source_id": "SIVAK2026_RL_DRIFT",
+      "record_sha256": "c3461e39ccb7ef7b2a0e22a20cd5f2bbd3bc6eb1c9ee27fb87af24e23d16faa1",
+      "version": "Nature version of record, 8 July 2026",
+      "code_url": null,
+      "code_commit": null,
+      "code_license": null
+    },
+    {
+      "source_id": "PUVIANI2025_NMF",
+      "record_sha256": "26109c7cb0f31bc80796012ce6793d65887bd4622d092b3e73f9ebcc4ef291f0",
+      "version": "Physical Review Letters 134, 020601 / arXiv:2312.07391",
+      "code_url": "https://github.com/Matteo-Puviani/GQF",
+      "code_commit": "c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d",
+      "code_license": "MIT"
+    },
+    {
+      "source_id": "LACHANCE2024_AQEC",
+      "record_sha256": "c2488af55af70f17a2fc061f259ca990697a2fcc0102d8ffb0bace60e0b10beb",
+      "version": "Physical Review Letters 132, 150607 / arXiv:2310.11400v2",
+      "code_url": null,
+      "code_commit": null,
+      "code_license": null
+    },
+    {
+      "source_id": "LIN2023_CPD",
+      "record_sha256": "375288e867fae42591dfee26101182b24d161e24d771983c88f184689d76ca89",
+      "version": "PRX Quantum 4, 040334 / arXiv:2303.04702v3",
+      "code_url": "https://github.com/amazon-science/LatticeAlgorithms.jl",
+      "code_commit": "01f9bf1f6970b3e229b43aac9da3325c75518db8",
+      "code_license": "Apache-2.0"
+    },
+    {
+      "source_id": "PROJECT_T5_FAST_PATH",
+      "record_sha256": "9533431ffc77211e058f6773d0d3ba0f55e5bce6069bd5aadc54aca9bc7e9e5c",
+      "version": "hash-bound local artifact",
+      "code_url": null,
+      "code_commit": null,
+      "code_license": null
+    },
+    {
+      "source_id": "PROJECT_V5_ROUTE_A",
+      "record_sha256": "13b6b273f1dfe6a53fe4878f00cb506283864e6b72e1727ba62176b033085743",
+      "version": "hash-bound local artifact",
+      "code_url": null,
+      "code_commit": null,
+      "code_license": null
+    }
+  ],
+  "ontology_summary": {
+    "lane_ids": [
+      "single_mode_decoder",
+      "surface_gkp_gate_outer_code",
+      "multimode_structured_lattice_cpd",
+      "controller_rl_nmf",
+      "aqec_wallclock",
+      "fpga_implementation"
+    ],
+    "metric_allowed_lanes": {
+      "p_L": [
+        "single_mode_decoder",
+        "surface_gkp_gate_outer_code",
+        "multimode_structured_lattice_cpd"
+      ],
+      "p_X": [
+        "single_mode_decoder"
+      ],
+      "p_Y": [
+        "single_mode_decoder"
+      ],
+      "p_Z": [
+        "single_mode_decoder"
+      ],
+      "average_ler": [
+        "single_mode_decoder",
+        "surface_gkp_gate_outer_code"
+      ],
+      "p95_window_ler": [
+        "single_mode_decoder"
+      ],
+      "worst_window_ler": [
+        "single_mode_decoder",
+        "multimode_structured_lattice_cpd"
+      ],
+      "cvar95_window_ler": [
+        "single_mode_decoder",
+        "multimode_structured_lattice_cpd"
+      ],
+      "cnot_failure_probability": [
+        "surface_gkp_gate_outer_code"
+      ],
+      "squeezing_threshold_db": [
+        "surface_gkp_gate_outer_code"
+      ],
+      "noise_threshold_sigma": [
+        "surface_gkp_gate_outer_code",
+        "multimode_structured_lattice_cpd"
+      ],
+      "finite_size_crossing_residual": [
+        "surface_gkp_gate_outer_code"
+      ],
+      "decision_mismatch_rate": [
+        "single_mode_decoder",
+        "surface_gkp_gate_outer_code",
+        "multimode_structured_lattice_cpd",
+        "fpga_implementation"
+      ],
+      "runtime_seconds": [
+        "single_mode_decoder",
+        "multimode_structured_lattice_cpd"
+      ],
+      "memory_bytes": [
+        "single_mode_decoder",
+        "multimode_structured_lattice_cpd",
+        "fpga_implementation"
+      ],
+      "asymptotic_time_complexity": [
+        "multimode_structured_lattice_cpd"
+      ],
+      "logical_lifetime_cycles": [
+        "controller_rl_nmf",
+        "aqec_wallclock"
+      ],
+      "logical_lifetime_us": [
+        "controller_rl_nmf",
+        "aqec_wallclock"
+      ],
+      "logical_lifetime_ms": [
+        "controller_rl_nmf",
+        "aqec_wallclock"
+      ],
+      "lifetime_gain_ratio": [
+        "controller_rl_nmf",
+        "aqec_wallclock"
+      ],
+      "coherence_break_even_gain": [
+        "controller_rl_nmf",
+        "aqec_wallclock"
+      ],
+      "final_code_survival": [
+        "aqec_wallclock"
+      ],
+      "ler_reduction_fraction": [
+        "controller_rl_nmf",
+        "single_mode_decoder"
+      ],
+      "ler_stability_ratio": [
+        "controller_rl_nmf"
+      ],
+      "adaptation_lag_cycles": [
+        "single_mode_decoder",
+        "multimode_structured_lattice_cpd",
+        "controller_rl_nmf"
+      ],
+      "adaptation_lag_epochs": [
+        "controller_rl_nmf"
+      ],
+      "false_update_rate": [
+        "single_mode_decoder"
+      ],
+      "fallback_rate": [
+        "single_mode_decoder"
+      ],
+      "avoided_errors": [
+        "single_mode_decoder"
+      ],
+      "induced_errors": [
+        "single_mode_decoder"
+      ],
+      "deadline_miss_rate": [
+        "single_mode_decoder",
+        "fpga_implementation"
+      ],
+      "training_epoch_wall_time_s": [
+        "controller_rl_nmf"
+      ],
+      "control_parameter_count": [
+        "controller_rl_nmf",
+        "aqec_wallclock"
+      ],
+      "macs_per_update": [
+        "controller_rl_nmf",
+        "single_mode_decoder"
+      ],
+      "measurements_per_100us": [
+        "aqec_wallclock"
+      ],
+      "resets_per_100us": [
+        "aqec_wallclock"
+      ],
+      "active_gates_per_100us": [
+        "aqec_wallclock"
+      ],
+      "latency_ns": [
+        "single_mode_decoder",
+        "surface_gkp_gate_outer_code",
+        "multimode_structured_lattice_cpd",
+        "controller_rl_nmf",
+        "fpga_implementation"
+      ],
+      "latency_cycles": [
+        "single_mode_decoder",
+        "surface_gkp_gate_outer_code",
+        "fpga_implementation"
+      ],
+      "initiation_interval_ns": [
+        "single_mode_decoder",
+        "surface_gkp_gate_outer_code",
+        "multimode_structured_lattice_cpd",
+        "controller_rl_nmf",
+        "fpga_implementation"
+      ],
+      "clock_mhz": [
+        "fpga_implementation"
+      ],
+      "lut_count": [
+        "fpga_implementation"
+      ],
+      "ff_count": [
+        "fpga_implementation"
+      ],
+      "bram_count": [
+        "fpga_implementation"
+      ],
+      "dsp_count": [
+        "fpga_implementation"
+      ],
+      "power_w": [
+        "fpga_implementation"
+      ]
+    },
+    "semantic_sha256": "5a84aee5bb6fec96886fc105b745634567d979edb5fcdb4a19493a5881c24ddd",
+    "initial_artifact_sha256": "0c8c964ec8290f26bc42429b1f6df1504f3b20c1b2f7a3522c4b13ee4f95b214"
+  },
+  "source_audit_semantic_lock": {
+    "semantic_sha256": "8e47f094fd35e66fa0ab4f93d523a66d6b870cad6a90a3fa0e5cb7c92b21754d",
+    "initial_artifact_sha256": "0399768659537023318187a9d92c0421ae0a4e18b59c0d3796eddb2544749ef9"
+  },
+  "phase6b_lock": {
+    "t6_10_1": {
+      "artifact": {
+        "path": "docs/t6_10_1_causal_headroom.json",
+        "sha256": "e1f9eac68cd6d27b6ffe4b71b8dbe37957c81481f448f8ad7b96a8adb56fbe38",
+        "bytes": 42556
+      },
+      "verdict": "NO_GO_V5_INSUFFICIENT_ACTION_SPACE_HEADROOM",
+      "router_gate": 0.1,
+      "action_gate": 0.12
+    },
+    "t6_15_5": {
+      "initial_artifact": {
+        "path": "docs/t6_15_5_route_a_v5_final_evidence_gate.json",
+        "sha256": "fb6283946a74fd61429ee72a24e237a52419e4f4d4cb78243edbb96b4b0af00d",
+        "bytes": 5908
+      },
+      "semantic_sha256": "f0bcfa27ee376a12a814ba949826161b06e1f350893b0cdad1b2d8c36da0ed93",
+      "semantic_snapshot": {
+        "execution_path": "EARLY_STOP_AT_T6.10.1_HEADROOM_GATE",
+        "headroom_recomputation": {
+          "nested_selector_errors": 35396,
+          "nested_baseline_errors": 35314,
+          "strict_causal_router_headroom": -0.0023220252591040383,
+          "router_gate": 0.1,
+          "hard_decision_oracle_errors": 29105,
+          "expanded_candidate_oracle_errors": 29096,
+          "incremental_action_space_headroom": 0.0002548564308772725,
+          "action_gate": 0.12,
+          "overall_truth_oracle_headroom_not_used_for_gate": 0.1760774763549867
+        },
+        "dropped_tasks": [
+          "T6.10.2",
+          "T6.10.3",
+          "T6.11.1",
+          "T6.11.2",
+          "T6.11.3",
+          "T6.11.4",
+          "T6.12.1",
+          "T6.12.2",
+          "T6.12.3",
+          "T6.12.4",
+          "T6.13.1",
+          "T6.13.2",
+          "T6.13.3",
+          "T6.14.1",
+          "T6.14.2",
+          "T6.14.3",
+          "T6.15.1",
+          "T6.15.2",
+          "T6.15.3",
+          "T6.15.4"
+        ],
+        "v5_downstream_outputs_found": [],
+        "formal_access": {
+          "v5_formal_manifest_exists": false,
+          "v5_formal_output_exists": false,
+          "v4_formal_used_only_as_t6_10_1_diagnostic": true
+        },
+        "claim_registry": [
+          {
+            "claim_id": "V5-ALG-LER-10PCT",
+            "state": "REVOKED",
+            "reason": "strict-causal development headroom is below 10%"
+          },
+          {
+            "claim_id": "V5-TAIL-CALIBRATION-TELEGRAPH",
+            "state": "NOT_RUN_EARLY_STOP",
+            "reason": "no V5 candidate entered pilot/formal"
+          },
+          {
+            "claim_id": "V5-POSTERIOR-MIXTURE-ACTION",
+            "state": "REVOKED",
+            "reason": "incremental action-space upper bound is below 12%"
+          },
+          {
+            "claim_id": "V5-UNTOUCHED-FORMAL",
+            "state": "NOT_RUN_EARLY_STOP",
+            "reason": "formal manifest and outputs intentionally absent"
+          },
+          {
+            "claim_id": "V5-QUANTIZED-RETENTION",
+            "state": "NOT_RUN_EARLY_STOP",
+            "reason": "no eligible V5 action to quantize"
+          },
+          {
+            "claim_id": "V5-LONG-CXXRTL",
+            "state": "NOT_RUN_EARLY_STOP",
+            "reason": "V4 replay cannot substitute for V5 qualification"
+          },
+          {
+            "claim_id": "V5-FORMAL-ATOMIC-SAFETY",
+            "state": "NOT_RUN_EARLY_STOP",
+            "reason": "no V5 RTL/profile exists"
+          },
+          {
+            "claim_id": "V5-MULTISEED-PR",
+            "state": "NOT_RUN_EARLY_STOP",
+            "reason": "no V5 RTL/profile exists"
+          },
+          {
+            "claim_id": "V5-MEASURED-HARDWARE",
+            "state": "BLOCKED",
+            "reason": "T6.9.2 still has 42 null measured fields"
+          },
+          {
+            "claim_id": "PHASE6C-READONLY-AUX",
+            "state": "ALLOWED_AFTER_THIS_GATE",
+            "reason": "secondary lanes cannot modify or rescue Phase 6B"
+          }
+        ],
+        "phase6c_permission": {
+          "allowed": true,
+          "mode": "READ_ONLY_AUXILIARY_COMPARISONS",
+          "may_modify_phase6b_verdict": false,
+          "may_rescue_v5_claim": false
+        },
+        "measured_hardware_claim": {
+          "state": "BLOCKED",
+          "source_task": "T6.9.2",
+          "null_fields": 42
+        },
+        "status": "DONE_EARLY_STOP_NEGATIVE_RESULT_PRESERVED",
+        "verdict": "NO_GO_V5_EARLY_HEADROOM_STOP"
+      }
+    },
+    "t6_9_3": {
+      "initial_artifact": {
+        "path": "docs/t6_9_3_route_a_final_evidence_gate.json",
+        "sha256": "01007da67aeb1f85ad707fc3a9b6a3bf6a2231c139c86ba98d7ad88390ad416d",
+        "bytes": 27475
+      },
+      "semantic_sha256": "db48b3f17e9eabaccb4d71f2333c9998d73ec0708536a6617976afc210bab9c0",
+      "verdict": "NO_GO_FULL_HIGH_LEVEL_PAPER_RESTRICTED_PREBOARD_DRAFT_ONLY"
+    },
+    "board_status_snapshot": {
+      "T6.10.2": "Dropped",
+      "T6.10.3": "Dropped",
+      "T6.11.1": "Dropped",
+      "T6.11.2": "Dropped",
+      "T6.11.3": "Dropped",
+      "T6.11.4": "Dropped",
+      "T6.12.1": "Dropped",
+      "T6.12.2": "Dropped",
+      "T6.12.3": "Dropped",
+      "T6.12.4": "Dropped",
+      "T6.13.1": "Dropped",
+      "T6.13.2": "Dropped",
+      "T6.13.3": "Dropped",
+      "T6.14.1": "Dropped",
+      "T6.14.2": "Dropped",
+      "T6.14.3": "Dropped",
+      "T6.15.1": "Dropped",
+      "T6.15.2": "Dropped",
+      "T6.15.3": "Dropped",
+      "T6.15.4": "Dropped"
+    },
+    "v5_absence_proof": {
+      "patterns": {
+        "docs/t6_13_3*": [],
+        "docs/t6_14_1*": [],
+        "docs/t6_14_2*": [],
+        "docs/t6_14_3*": [],
+        "docs/t6_15_1*": [],
+        "docs/t6_15_2*": [],
+        "docs/t6_15_3*": [],
+        "docs/t6_15_4*": []
+      },
+      "all_absent": true
+    },
+    "frozen_main_contract": {
+      "v5_relative_ler_gate": 0.1,
+      "incremental_action_space_gate": 0.12,
+      "v5_comparator_selection": "NONE_EARLY_STOP",
+      "v5_formal_split": "NOT_CREATED",
+      "v5_tail_endpoints": [
+        "step_calibration_shift_worst_window_ler",
+        "telegraph_drift_worst_window_ler"
+      ],
+      "v5_tail_state": "NOT_RUN_EARLY_STOP",
+      "phase6c_may_change_phase6b": false,
+      "phase6c_may_rescue_v5": false,
+      "phase6c_may_unblock_t6_9_2": false
+    }
+  },
+  "live_phase6b_lock_checks": {
+    "t6_10_1_exact_artifact_unchanged": true,
+    "t6_15_5_semantics_unchanged": true,
+    "t6_9_3_semantics_unchanged": true,
+    "all_20_conditional_tasks_remain_dropped": true,
+    "v5_downstream_outputs_remain_absent": true,
+    "phase6c_permissions_remain_readonly": true
+  },
+  "immutable_parent_locks": {
+    "t3_2_8_aqec_project": {
+      "path": "docs/t3_2_8_autonomous_sbs_wallclock_validation.json",
+      "sha256": "0e82244bec0e71b30ccc79a0e1a49e30f89cc7a94c63c0e4beeefbae31da6441",
+      "bytes": 204113
+    },
+    "t4_4_5_student_freeze": {
+      "path": "docs/t4_4_5_teacher_student_branch_freeze.json",
+      "sha256": "15abd3e94c69e0fa85bc871ca9967eacbf3af8e948741f0b53986cbacd8ad612",
+      "bytes": 11774
+    },
+    "t5_5_2_preboard_pr": {
+      "path": "docs/t5_5_2_target_device_synthesis.json",
+      "sha256": "1df1bd4572f70fbc9f63cc191c3dccfce508d29476ecf0e17aa17fbc2e458faa",
+      "bytes": 26490
+    },
+    "t5_5_4_student_hardware": {
+      "path": "docs/t5_5_4_gru_student_hardware_feasibility.json",
+      "sha256": "d47d88062c6f625b1f68b9961b1fd8478ea85db4a8a83e430cd51c8654f4c506",
+      "bytes": 41587
+    },
+    "t6_8_3_gqf_intake": {
+      "path": "docs/t6_8_3_gqf_official_intake.json",
+      "sha256": "f7f5f3f6ec8ab1e36230b11c6493d9323237c3b6b0abdeeef12d67f3876a5f51",
+      "bytes": 19904
+    },
+    "t6_8_4_gqf_exact": {
+      "path": "docs/t6_8_4_gqf_paper_exact_reproduction.json",
+      "sha256": "8677917ad3c8bc6f60f6630dd757546a86c676781594d2c4ecd6f4e41c45ad29",
+      "bytes": 24539
+    },
+    "t6_8_5_gqf_matched": {
+      "path": "docs/t6_8_5_gqf_route_a_matched_comparison_gate.json",
+      "sha256": "0ca9ff294e508e46ee10c84f72cc2601be04b3ac7da029f847437fded9c99a5e",
+      "bytes": 6564
+    },
+    "t6_8_6_fpga_normalization": {
+      "path": "docs/t6_8_6_fpga_decoder_normalization.json",
+      "sha256": "40fbc514d5ab8ac67a589213f26295927b09718e7b556021f755f1db268f3f08",
+      "bytes": 36597
+    }
+  },
+  "source_data": {
+    "path": "docs/t6_16_3_secondary_preregistration_source_data.csv",
+    "sha256": "189453e9f05a2ddb6dcf001f5afde76ab5f98b56100448f0b4bbaac4d5bfaf54",
+    "rows": 158
+  },
+  "bindings": {
+    "implementation": {
+      "path": "cnn_fpga/benchmark/secondary_experiment_preregistration.py",
+      "sha256": "7e816286796085424142a63aaf9f267756a6bc4afa52eac3a7bef6af9b707a74",
+      "bytes": 30412
+    },
+    "config": {
+      "path": "configs/literature/t6_16_3_secondary_preregistration.json",
+      "sha256": "eca700725aac3d2b0d0fb312339323645a03c4089b2d1932cf757816a11585c4",
+      "bytes": 22974
+    },
+    "source_audit_initial": {
+      "path": "docs/t6_16_1_secondary_method_source_audit.json",
+      "sha256": "0399768659537023318187a9d92c0421ae0a4e18b59c0d3796eddb2544749ef9",
+      "bytes": 69626
+    },
+    "ontology_initial": {
+      "path": "docs/t6_16_2_comparison_ontology.json",
+      "sha256": "0c8c964ec8290f26bc42429b1f6df1504f3b20c1b2f7a3522c4b13ee4f95b214",
+      "bytes": 61056
+    },
+    "source_csv": {
+      "path": "docs/t6_16_3_secondary_preregistration_source_data.csv",
+      "sha256": "189453e9f05a2ddb6dcf001f5afde76ab5f98b56100448f0b4bbaac4d5bfaf54",
+      "bytes": 24558
+    }
+  },
+  "live_input_lock_checks": {
+    "implementation_exact_unchanged": true,
+    "config_exact_unchanged": true,
+    "source_csv_exact_unchanged": true,
+    "source_audit_semantics_unchanged": true,
+    "ontology_semantics_unchanged": true,
+    "source_records_unchanged": true,
+    "parent_t3_2_8_aqec_project_exact_unchanged": true,
+    "parent_t4_4_5_student_freeze_exact_unchanged": true,
+    "parent_t5_5_2_preboard_pr_exact_unchanged": true,
+    "parent_t5_5_4_student_hardware_exact_unchanged": true,
+    "parent_t6_8_3_gqf_intake_exact_unchanged": true,
+    "parent_t6_8_4_gqf_exact_exact_unchanged": true,
+    "parent_t6_8_5_gqf_matched_exact_unchanged": true,
+    "parent_t6_8_6_fpga_normalization_exact_unchanged": true
+  },
+  "semantic_mutation_audit": {
+    "count": 17,
+    "detected": 17,
+    "cases": [
+      {
+        "case": "drop_task_prereg",
+        "target_gate": "G01_nine_downstream_tasks_have_exact_complete_preregistration_schema",
+        "rejected": true
+      },
+      {
+        "case": "wrong_lane_metric",
+        "target_gate": "G02_every_experiment_uses_one_known_ontology_lane_and_allowed_metrics",
+        "rejected": true
+      },
+      {
+        "case": "change_official_cpd_commit",
+        "target_gate": "G03_source_records_versions_commits_licenses_and_code_absence_are_frozen",
+        "rejected": true
+      },
+      {
+        "case": "missing_tool_means_silent_substitute",
+        "target_gate": "G04_environment_and_missing_tool_failure_semantics_are_explicit",
+        "rejected": true
+      },
+      {
+        "case": "claim_adapter_executed",
+        "target_gate": "G05_adapters_are_planned_or_existing_but_none_are_claimed_executed",
+        "rejected": true
+      },
+      {
+        "case": "reuse_seed_between_tasks",
+        "target_gate": "G06_secondary_seed_namespace_is_unique_disjoint_and_no_selection_reuse",
+        "rejected": true
+      },
+      {
+        "case": "individual_round_bootstrap",
+        "target_gate": "G07_sample_size_crn_pairing_raw_counts_and_cluster_resampling_are_frozen",
+        "rejected": true
+      },
+      {
+        "case": "cross_lane_win_count",
+        "target_gate": "G08_multiplicity_is_within_task_only_and_never_cross_lane",
+        "rejected": true
+      },
+      {
+        "case": "remove_runtime_failure_branch",
+        "target_gate": "G09_stopping_rules_are_performance_independent_and_runtime_bounded",
+        "rejected": true
+      },
+      {
+        "case": "erase_all_failure_branches",
+        "target_gate": "G10_every_experiment_has_predeclared_partial_blocked_ineligible_or_negative_failure",
+        "rejected": true
+      },
+      {
+        "case": "rescue_multimode_after_failed_entry",
+        "target_gate": "G11_conditional_multimode_extension_stops_without_rescue_task",
+        "rejected": true
+      },
+      {
+        "case": "invent_v5_rtl_profile",
+        "target_gate": "G12_hardware_profiles_keep_absent_rtl_na_and_measured_fields_null",
+        "rejected": true
+      },
+      {
+        "case": "alter_v5_semantic_lock",
+        "target_gate": "G13_phase6b_semantic_lock_and_v5_absence_proof_are_live",
+        "rejected": true
+      },
+      {
+        "case": "lower_main_gate_after_no_go",
+        "target_gate": "G14_phase6b_10pct_action_tail_comparator_and_permissions_are_immutable",
+        "rejected": true
+      },
+      {
+        "case": "allow_atlas_to_upgrade_phase6b",
+        "target_gate": "G15_evidence_grades_are_closed_and_atlas_cannot_promote_main_or_hardware",
+        "rejected": true
+      },
+      {
+        "case": "truncate_parent_hash",
+        "target_gate": "G16_all_parent_source_ontology_config_and_output_data_are_hash_bound",
+        "rejected": true
+      },
+      {
+        "case": "forge_mutation_count",
+        "target_gate": "G17_source_data_and_targeted_mutations_are_complete",
+        "rejected": true
+      }
+    ]
+  },
+  "gates": {
+    "G01_nine_downstream_tasks_have_exact_complete_preregistration_schema": true,
+    "G02_every_experiment_uses_one_known_ontology_lane_and_allowed_metrics": true,
+    "G03_source_records_versions_commits_licenses_and_code_absence_are_frozen": true,
+    "G04_environment_and_missing_tool_failure_semantics_are_explicit": true,
+    "G05_adapters_are_planned_or_existing_but_none_are_claimed_executed": true,
+    "G06_secondary_seed_namespace_is_unique_disjoint_and_no_selection_reuse": true,
+    "G07_sample_size_crn_pairing_raw_counts_and_cluster_resampling_are_frozen": true,
+    "G08_multiplicity_is_within_task_only_and_never_cross_lane": true,
+    "G09_stopping_rules_are_performance_independent_and_runtime_bounded": true,
+    "G10_every_experiment_has_predeclared_partial_blocked_ineligible_or_negative_failure": true,
+    "G11_conditional_multimode_extension_stops_without_rescue_task": true,
+    "G12_hardware_profiles_keep_absent_rtl_na_and_measured_fields_null": true,
+    "G13_phase6b_semantic_lock_and_v5_absence_proof_are_live": true,
+    "G14_phase6b_10pct_action_tail_comparator_and_permissions_are_immutable": true,
+    "G15_evidence_grades_are_closed_and_atlas_cannot_promote_main_or_hardware": true,
+    "G16_all_parent_source_ontology_config_and_output_data_are_hash_bound": true,
+    "G17_source_data_and_targeted_mutations_are_complete": true
+  },
+  "gate_summary": {
+    "passed": 17,
+    "failed": []
+  },
+  "verdict": "PASS_PHASE6C_READONLY_SECONDARY_PREREGISTRATION"
+}

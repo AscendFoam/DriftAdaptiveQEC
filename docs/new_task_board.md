@@ -1,4 +1,4 @@
-# CNN-FPGA GKP 项目任务板
+# Contract-centric 双回路 GKP 项目任务板
 
 来源文档：
 
@@ -9,7 +9,7 @@
 
 状态枚举：`Todo`、`In Progress`、`Blocked`、`Review`、`Done`、`Dropped`。
 
-当前推荐任务：`T5.1.1`。
+当前推荐任务：`T6.19.3`（T6.19.2 已完成截止 2026-07-20 的外部 FPGA QEC decoder 刷新：实时继承 T6.8.6 的 8 个实现并从 8 个新一手来源加入 10 个具体实现，合计 18 行，其中 5 行带 Direct-NN/learned implementation 描述；18/18 gates、18/18 mutations。逐行规范化 code family/problem size/window、I/O、device、precision、clock、latency boundary/statistic、cycles/II、resources/power 和 evidence state；same-task external comparator 仍为 `0`，因此无 raw-ns 排名且 faster/SOTA claim 继续关闭。深审同时修复 T6.8.6 旧 LUT4=3357 锚点为当前 3377，并重建下游 exact-hash 证据链。下一步生成六条 lane 的非主要 comparison atlas 与完整性终态门）。
 
 ## 任务记录规则
 
@@ -48,7 +48,7 @@
 | 约 300 元 FPGA | measured digital control-plane latency/resource、HIL/replay | 真实微波生成、真实量子读出、真实 cavity/transmon 控制 |
 | 可选真实硬件 | 仅在未来确有数据和接入证据后表述 | 用计划或模拟替代真实实验 |
 
-核心贡献暂定为：实验协议启发的 syndrome-history-aware GKP 经典控制架构，由主机估计连续漂移和离散健康状态，由 model-aware recurrent teacher 发现短时 history-dependent sBs 控制规律，再蒸馏为低成本 FPGA 可执行的确定性定点 student；若 teacher/distillation 证否，则回退到 run-length-aware MAP-LUT。证据来自多保真数字孪生、强 baseline、因果故障注入、真实板卡测量和 HIL。
+核心贡献暂定为：**contract-centric、observed-only、posterior-predictive、risk-aware 的安全自适应双回路**。static-anchored predictive IMM/BOCPD slow loop 对 wrapped GKP 噪声状态、动力学 subtype、fault posterior 与 activation horizon 建模，并把参数不确定性边缘化为可部署 MAP-LUT；LER/CVaR 风险门和 typed trusted experts 负责 update/freeze/reacquire/reset/LKG 决策；FPGA fast path 继续负责 atomic A/B bank、CRC/version、LKG rollback、固定 6-cycle、II=1 的 fail-closed action。CNN、Feedback-GRAPE teacher 与 distilled student 仍是可替换扩展。第一优先证据是全新未见漂移上的 matched deployable LER、calibration/telegraph tail 与板卡无关 fixed-point/RTL qualification；真板只决定 measured latency/deadline/fastest 等硬件主张，不阻塞算法和预板系统主张。
 
 ---
 
@@ -248,72 +248,80 @@
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
-| T5.1.1 | In Progress | 建立完整 comparison set。 | 比较 no correction、standard/autonomous sBs、static/top-K/decoder-oracle MAP、finite-energy static、Bayesian、EWMA/Kalman、window、run-length、HMM、MF/FNN、指数递推、RNN teacher、distilled student 和 control oracle；Knill/P-Steane 不进入 sBs 主排名。 | `experiment_plan.md:779`, `experiment_plan.md §14.3, §15.3, §16.2` |
-| T5.1.2 | Todo | 运行混合 noise/regime scenario matrix。 | 覆盖 static Gaussian、mean/variance/correlation drift、loss、readout/ancilla drift、burst/outlier、large-error recovery、leakage 和 calibration shift。 | `experiment_plan.md:792`, `experiment_plan.md §14.1` |
-| T5.1.3 | Todo | 报告 average、tail 和双 oracle-gap 指标。 | 报告 `P_L`、worst/95% window LER、decoder-oracle gap、短时 control-oracle gap、bootstrap CI、paired seeds 和多重比较策略。 | `experiment_plan.md:805`, `experiment_plan.md §15.1` |
-| T5.1.4 | Todo | 执行成功/证否分支。 | static 下不退化；drift/regime 下至少对强可部署 baseline 有可重复优势；否则改为事件感知 adaptive MAP/FPGA co-design 论文，不保留 CNN 性能主张。 | `experiment_plan.md:832` |
-| T5.1.5 | Todo | 执行物理时间与控制成本公平化。 | 同时报 per-cycle、per-microsecond、measurement/reset 次数、active-control 次数和 classical latency；autonomous/feedback 周期差异不能隐去。 | `experiment_plan.md §15.3` |
-| T5.1.6 | Todo | 报告实验可行性约束。 | 报告 `p(g)`、e/leakage occupancy、reset burden、parameter slew/saturation、fallback 和 unsafe-action rate；峰值 lifetime 不得覆盖不可部署代价。 | `experiment_plan.md §15.3` |
+| T5.1.1 | Done | 建立完整 comparison set。 | 19 comparator、8 lane、16 artifact/19 code bindings、exact no-correction 与 finite-energy probes、100-row Source Data、14/14 gates；统一 matrix 明确未执行，Knill/P-Steane 不进入 sBs 主排名；375 adjacent tests。 | `experiment_plan.md:779`, `experiment_plan.md §14.3, §15.3, §16.2` |
+| T5.1.2 | Done | 运行混合 noise/regime scenario matrix。 | 10 类场景分 4 条原生 lanes 执行；36 个 decoder seed-cluster、589,824 paired decisions、fresh loss/fault/component runs、116-row Source Data、15/15 gates；不建立跨 lane 排名，R-N083 登记。 | `experiment_plan.md:792`, `experiment_plan.md §14.1` |
+| T5.1.3 | Done | 报告 average、tail 和双 oracle-gap 指标。 | 精确重放 1,152 windows；20k paired seed-bootstrap；average/p95/worst、reliable decoder-gap、cutoff12/16 exact two-cycle control-reference gap；24-test Holm 为 0 discovery，adaptive transient worst 反证保留；7,139 rows、15/15 gates。 | `experiment_plan.md:805`, `experiment_plan.md §15.1` |
+| T5.1.4 | Done | 执行成功/证否分支。 | 8-parent hash-bound verdict、8 strong predicates、278-row ledger、16/16 gates；无 matched learned decoder、24-test Holm 为 0 discovery 且 calibration transient 恶化，强分支失败，自动切换 adaptive MAP/FPGA co-design 并删除 CNN 性能主张。 | `experiment_plan.md:832` |
+| T5.1.5 | Done | 执行物理时间与控制成本公平化。 | 12 protocol/10 controller/6 host rows、537-row ledger、18/18 gates；同报 cycles/μs、measurement/reset/gates，保留 6/6 排序反转、latency null 和无跨 lane 总分。 | `experiment_plan.md §15.3` |
+| T5.1.6 | Done | 报告实验可行性约束。 | 10 controller/8 fault rows、408-row ledger、21/21 gates；同报 p(g)/p(e)、reset/slew/cost、fallback/unsafe，保留 7 个 MISSING fields 与 `NOT_ESTABLISHED` deployment readiness。 | `experiment_plan.md §15.3` |
 
 ### Milestone 5.2：因果故障注入与 syndrome 诊断门
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
-| T5.2.1 | Todo | 注入 displacement / large-distance error。 | recovery depth、e-run、逻辑失败率随到最近逻辑操作距离呈可解释趋势。 | `experiment_plan.md §14.3` |
-| T5.2.2 | Todo | 分别注入 ancilla bit/phase flip 与 readout error。 | 敏感度方向与协议设计一致；不得用同一扰动同时改变多个通道后声称因果。 | `experiment_plan.md §14.3` |
-| T5.2.3 | Todo | 注入 leakage 与 reset failure。 | 报告 detection delay、false alarm、correlation tail、availability 和 recovery cost；做 leakage-free 消融。 | `experiment_plan.md §14.3` |
+| T5.2.1 | Done | 注入 displacement / large-distance error。 | 17 幅度×8 seed clusters、136 recovery/272 logical rows、1,863-row ledger、20/20 gates；midpoint depth/e-run 与双 logical estimand 均通过，physical-memory LER 保持未建立。 | `experiment_plan.md §14.3` |
+| T5.2.2 | Done | 分别注入 ancilla bit/phase flip 与 readout error。 | 3 个互斥 family×6 rates×8 seed clusters×4096 cycles；144 seed/18 summary rows、1,960-row ledger、22/22 gates；主效应、解析 rate 与全部 cross-channel zeros 通过，65×/device/LER 保持未建立。 | `experiment_plan.md §14.3` |
+| T5.2.3 | Done | 注入 leakage 与 reset failure。 | 2 个互斥 family×6 rates×8 seeds×256 trajectories×512 cycles；96 seed/12 summary rows、2,508-row ledger、23/23 gates；detection/false alarm、tail、availability、raw reset cost 与 leakage-free null semantics 完整，device/LER claim 保持关闭。 | `experiment_plan.md §14.3` |
 
 ### Milestone 5.3：逻辑通道、coherence gain 与成本门
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
-| T5.3.1 | Todo | 重构 logical channel。 | 对六个 Pauli eigenstates 或等价 PTM 数据报告 Pauli lifetimes、PTM、non-Pauli/leakage 诊断；QEC on/off 同时报 per-cycle 与 wall-clock lifetime，不以跨平台 cycle time 替代本项目时序。 | `experiment_plan.md:856`, `experiment_plan.md §14.3, §16.2` |
-| T5.3.2 | Todo | 报告 `F_avg`、`F_e` 与短时有效退极化率。 | 不用不适用的单指数拟合替代平均通道定义；不确定度可追溯。 | `experiment_plan.md:869`, `experiment_plan.md §14.3` |
-| T5.3.3 | Todo | 定义 simulated break-even / operational boundary。 | 仅在同一模型和成本口径下比较 passive/uncorrected 与 active logical channel；写作中使用 simulation-derived coherence gain。 | `experiment_plan.md:983-1018`, `experiment_plan.md §14.4` |
-| T5.3.4 | Todo | 核算真实纠错和 post-selection 成本。 | 计入 repeats、active pulses、rejection/survival、squeezing、classical resource、latency 和 achieved LER/fidelity。 | `experiment_plan.md:1018`, `experiment_plan.md §14.4` |
-| T5.3.5 | Todo | 计算 QEC-matrix/Petz near-optimal channel-recovery bound。 | 小 cutoff 与 SDP optimal recovery 校验双边界；可行时扩展到更高能量/更大 cutoff；报告实际 sBs、teacher/student 到该 bound 的 gap，并明确它是假设任意恢复的编码—噪声性能界而非可部署 decoder。 | `experiment_plan.md §16.1` |
+| T5.3.1 | Done | 重构 logical channel。 | 4 cutoff×3 noise×QEC on/off 的 24 条 exact six-state CPTNI lanes；逐 cycle full PTM/Choi/TNI/non-Pauli/leakage 与 cycle/μs lifetime；17,266-row ledger、26/26 gates，36→40 terminal stability 通过且低 cutoff 方向反转保留。 | `experiment_plan.md:856`, `experiment_plan.md §14.3, §16.2` |
+| T5.3.2 | Done | 报告 `F_avg`、`F_e` 与短时有效退极化率。 | 24 条 parent-bound CPTNI lanes；5,294-row Source Data、23/23 gates；泄漏后公式、TP 高估与 deterministic sensitivity 可追溯，qec-on 初始瞬态不强报寿命。 | `experiment_plan.md:869`, `experiment_plan.md §14.3` |
+| T5.3.3 | Done | 定义 simulated break-even / operational boundary。 | 12 个 full-curve comparisons、416 rows、25/25 gates；36/40 建立 `40/40/60 us` 持续非劣与 `60/90/110 us` 累计偿还边界，cutoff12 全失败保留；coherence gain/full-cost/experimental break-even 未建立。 | `experiment_plan.md:983-1018`, `experiment_plan.md §14.4` |
+| T5.3.4 | Done | 核算真实纠错和 post-selection 成本。 | 6 parents、6 online/8 post-selection/12 missing rows、94-row Source Data、27/27 gates；30-cycle 原生事件、6.360 dB、解析资源、Favg/survival 与 4 档 rejection cost 分列，full-cost/coherence-gain/postselected break-even 未建立。 | `experiment_plan.md:1018`, `experiment_plan.md §14.4` |
+| T5.3.5 | Done | 计算 QEC-matrix/Petz near-optimal channel-recovery bound。 | 15 small-cutoff Petz/SDP lanes、15 cutoff-extension、27 energy-extension、119-row Source Data、21/21 gates；actual sBs 仅为 schedule-mismatched diagnostic，teacher/student gap 保持 null/incomparable。 | `experiment_plan.md §16.1` |
 
 ### Milestone 5.4：鲁棒性、消融与负结果门
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
-| T5.4.1 | Todo | 运行 held-out/OOD 测试。 | 覆盖未见 drift family、参数范围、leakage rate、measurement confusion 和通信扰动。 | `experiment_plan.md:900` |
-| T5.4.2 | Todo | 验证 uncertainty-gated fallback。 | 相对不带 fallback 的系统降低 catastrophic failure，同时报告不必要 fallback 率和性能代价。 | `experiment_plan.md:910` |
-| T5.4.3 | Todo | 完成因果消融和负结果表。 | 分别关闭 history、CNN residual、regime state、run-length、parameter update、fallback；保留失败场景和 claim 降级决定。 | `experiment_plan.md:914`, `experiment_plan.md §14.3` |
-| T5.4.4 | Todo | 审计 multi-agent/seed 选择偏差。 | 报告全部 agents/seeds、median/IQR/worst quartile；模型只按 validation 选择，独立 test 不参与 best-agent post-selection。 | `experiment_plan.md §15.3` |
-| T5.4.5 | Todo | 验证训练 horizon 到长时部署的外推。 | 扫描训练 horizon；检查 hidden-state boundedness、reset sensitivity 和在 `1e3/1e5/1e6` cycles 的性能与数值稳定性。 | `experiment_plan.md §15.3` |
-| T5.4.6 | Todo | 运行 randomized model-mismatch family。 | 覆盖随机 gate bias、readout confusion、leakage/reset failure、cavity dephasing、drift 和 unseen timing/dynamics；不得只报告单一 bias vector。 | `experiment_plan.md §15.3` |
+| T5.4.1 | Done | 运行 held-out/OOD 测试。 | 4 条原生 lane、32 个全新 seed clusters、104 cells、280-row Source Data、20/20 gates；覆盖 unseen drift family/range、confusion、leakage rate 与 communication，保留 telegraph reversal/short-pause null，系统/装置稳健性未建立。 | `experiment_plan.md:900` |
+| T5.4.2 | Done | 验证 uncertainty-gated fallback。 | 12 fresh confirmation clusters、1,179,648 OOD decisions、517-row Source Data、21/21 gates；aggregate reduction `0.00107490 [0.00001950,0.00227615]`，但 compound 显著退化、nominal 略有代价，universal benefit 未建立。 | `experiment_plan.md:910` |
+| T5.4.3 | Done | 完成因果消融和负结果表。 | 六项 native-lane mechanism-off、338-row Source Data、18/18 gates；保留 history cutoff reversal、run-length harm、regime delay、legacy CNN 无 cluster CI 与 fallback 场景反转，禁止跨 metric 拼榜。 | `experiment_plan.md:914`, `experiment_plan.md §14.3` |
+| T5.4.4 | Done | 审计 multi-agent/seed 选择偏差。 | 6 selection episodes、255 evaluation units、39 median/IQR/worst-quartile distributions、420-row Source Data、23/23 gates；active selection 全为 validation-only，保留 teacher test-ranking reversal 与 legacy coverage warning。 | `experiment_plan.md §15.3` |
+| T5.4.5 | Done | 验证训练 horizon 到长时部署的外推。 | 2/5/10/32-cycle sweep、8 条 `1e6`-cycle streams、双精度全步递归、13,631 checkpoints、120 reset interventions、521-row Source Data、21/21 gates；保留 2-cycle/all-e 失败，长时 physical gain 未建立。 | `experiment_plan.md §15.3` |
+| T5.4.6 | Done | 运行 randomized model-mismatch family。 | 64 个 parent-disjoint cells、32-cell paired physical sweep、完整 4×3 readout/leakage-reset/三动力学 drift lanes、273-row Source Data、19/19 gates；relative student retention 通过但保留 absolute degradation。 | `experiment_plan.md §15.3` |
 
 ### Milestone 5.5：硬件设计冻结门
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
-| T5.5.1 | Todo | 冻结 Python bit-accurate hardware reference。 | 输入/输出、位宽、饱和、舍入、FSM、parameter-bank 和 trace schema 固定，作为 RTL golden model。 | `experiment_plan.md:942`, `experiment_plan.md §14.3` |
-| T5.5.2 | Todo | 运行目标器件 synthesis / timing estimate。 | 报告 Fmax、LUT/FF/BRAM/DSP、critical path 和估计 latency；明确尚非板级实测。 | `experiment_plan.md:946` |
-| T5.5.3 | Todo | 做 precision-resource-performance Pareto 选择。 | 联合扫描位宽、top-K、student 状态维数和并行度，报告 LER/gain、LUT/FF/BRAM/DSP、Fmax、latency；选择能装入实际廉价板卡且满足 deadline 的单一部署点，装不下则缩小模型。 | `experiment_plan.md:960`, `experiment_plan.md §14.1, §16.1` |
-| T5.5.4 | Todo | 比较完整 GRU、量化 GRU 与蒸馏 student 的硬件可行性。 | 报告参数/权重存储、MAC、BRAM/DSP、Fmax、worst-case latency 和 gain retention；默认 student 主线，完整 GRU 只有综合通过才进入增强路线。 | `experiment_plan.md §15.4` |
+| T5.5.1 | Done | 冻结 Python bit-accurate hardware reference。 | 58/118/232-bit CRC words、binary image/bundle、真实 5+1-cycle pipeline、atomic A/B in-flight switch、4,116-row golden trace、16,503-row Source Data、16/16 gates。 | `experiment_plan.md:942`, `experiment_plan.md §14.3` |
+| T5.5.2 | Done | 运行目标器件 synthesis / timing estimate。 | 修复 harness 配置地址后，`GW2AR-LV18QN88C8/I7` 三 seed Fmax `40.4318/39.8661/39.7456 MHz`；最大 LUT4/DFF/BSRAM `3362/865/8`，DSP 1+1；12/12 gates、9 mutations、20 tests。 | `experiment_plan.md:946` |
+| T5.5.3 | Done | 做 precision-resource-performance Pareto 选择。 | 108-point matrix；唯一 p10/K4-reference/state4/P1。student 7,680-code CXXRTL 0 mismatch；修复后 integrated Fmax min `39.5726 MHz`，最大 LUT4/DFF/BSRAM `3802/1022/8`；16/16 gates、25 tests。 | `experiment_plan.md:960`, `experiment_plan.md §14.1, §16.1` |
+| T5.5.4 | Done | 比较完整 GRU、量化 GRU 与蒸馏 student 的硬件可行性。 | full float storage fail-fast；修复 bias ROM 顺序/越界和共享 harness 地址后，quantized lower-bound 41/46 BSRAM、min Fmax 39.1527 MHz、72,854 cycles，因非功能 RTL/超 deadline/无 physical gain而 Dropped；student 唯一 eligible。16/16 gates、12 mutations、13 tests。 | `experiment_plan.md §15.4` |
 
 ---
 
-## Phase 6：低成本 FPGA 实测与 hardware-in-the-loop
+## Phase 6：真板前软件/RTL 资格验证与低成本 FPGA hardware-in-the-loop
+
+### Phase 6 依赖拆分（2026-07-17）
+
+- **板卡无关资格验证轨（当前短期主线）**：`T6.2.1 -> T6.2.2`。直接复用 T5.5.1—T5.5.4 的 bit-accurate golden、可综合 RTL、CXXRTL 与 target-device P&R；不以 `T6.1.1` 为前置条件，也不需要实物板卡、bitstream、引脚或真实 transport。
+- **实物板卡验证轨（外部依赖）**：`T6.1.1 -> T6.1.2 -> T6.1.3`。只有型号/版本/接口被实物确认后，才实现所选板卡的真实 transport adapter、下载链路和板级测量；当前仅 `T6.1.1` 为 Blocked。
+- **汇合点**：`T6.2.3` 同时依赖 `T6.2.2` 与 `T6.1.1—T6.1.3`，负责把已经通过软件/RTL 资格验证的对象带到实际板上。`T6.2.4` 可在 T6.2.2 后继续板卡无关实现，但不是本轮短期主线。
+- **证据不互换**：T6.2.2 必须先完成长序列与故障路径的软件/CXXRTL 仿真；T6.4.1/T6.4.3 在 T6.2.3 后于实际板卡/HIL 重新执行对应实验。真板前结果只能称 software/RTL qualification，不得升级为 bitstream、vendor signoff、board、transport、power 或真实 HIL 证据。
+- **Route-A 后续轨**：Phase 6A 的板卡无关工作在 `T6.2.2` 通过后启动，不等待 T6.1.1；只有 Phase 6A 的板测闭环 `T6.9.2` 依赖 T6.2.3 与 T6.4。这样把“整条研究主线等待真板”缩小为“只有 measured hardware claim 等待真板”。
 
 ### Milestone 6.1：板卡与通信链路 bring-up
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
-| T6.1.1 | Todo | 锁定并记录实际开发板。 | 记录型号、采购成本、FPGA 器件、工具链版本、时钟、供电和接口；照片与版本信息可用于论文 supplement。 | `experiment_plan.md §14.1` |
-| T6.1.2 | Todo | 实现可复现 syndrome replay 协议。 | PC 通过可用 UART/USB/JTAG 发送带 sequence/version/CRC 的定点 I/Q 或分类后 syndrome；支持错误注入和流控。 | `experiment_plan.md §14.1, §14.3` |
-| T6.1.3 | Todo | 建立板级时间戳和测量方法。 | 明确 on-chip cycle counter、logic analyzer/GPIO 测量、host timestamp 的用途和分辨率；区分 transport latency 与 core latency。 | `experiment_plan.md §14.3` |
+| T6.1.1 | Blocked | 锁定并记录实际开发板。 | 记录型号、采购成本、FPGA 器件、工具链版本、时钟、供电和接口；照片与版本信息可用于论文 supplement。当前只有 target-device contract，没有用户实物/照片/采购与板载版本证据，按约定暂停。 | `experiment_plan.md §14.1` |
+| T6.1.2 | Todo | 为已确认的实际板卡实现可复现 syndrome replay 链路。 | 在 T6.1.1 后，按所选板卡真实可用的 UART/USB-SPI/JTAG 实现带 sequence/version/CRC 的定点 I/Q 或分类后 syndrome transport adapter、下载脚本、错误注入和流控；不得把 T6.2.2 的抽象 transport 行为模型冒充板载链路。 | `experiment_plan.md §14.1, §14.3, §17.2` |
+| T6.1.3 | Todo | 建立实际板级时间戳和测量方法。 | 在真实板上明确 on-chip cycle counter、logic analyzer/GPIO 测量、host timestamp 的用途、校准和分辨率；区分 core、transport 与 end-to-end latency。 | `experiment_plan.md §14.3, §17.2` |
 
 ### Milestone 6.2：FPGA fast path 原型
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
-| T6.2.1 | Todo | 实现定点 MAP-LUT 与事件 FSM。 | RTL/HDL 实现 syndrome classification、MAP-LUT、run-length、frame accumulator、fallback 和 action 输出。 | `experiment_plan.md §14.1` |
-| T6.2.2 | Todo | 完成 testbench 与 Python golden 对齐。 | 正常、边界、饱和、leakage、CRC/version、reset、deadline cases bit-for-bit 一致；记录覆盖率。 | `experiment_plan.md §14.3` |
-| T6.2.3 | Todo | 完成板级 correctness smoke。 | 实际板上回放固定 trace，输出与 RTL simulation/Python golden 一致；失败可通过 trace 定位。 | `experiment_plan.md §14.3` |
+| T6.2.1 | Done | 审计并补强 production 定点 MAP-LUT 与事件 FSM。 | 完成 requirement-to-RTL mapping、core fail-closed guard 与板卡无关 `gkp_fast_path_production_top.sv`：严格 514-word CRC32、inactive-bank-only、uint16 CAS、safe-boundary/cancel commit、6-cycle drain、18-cycle coherent CRC snapshot。独立 Python/CXXRTL 1,681 cycles 全字段 0 mismatch，11/11 rejection、8/8 gates、7/7 mutations、24 项邻近回归通过；详见 `docs/production_rtl_audit.md` 与机器 JSON/Source Data。transport/CDC/P&R/board claim 保持关闭。 | `experiment_plan.md §14.1, §17.2—§17.3` |
+| T6.2.2 | Done | 完成独立 golden、长序列与故障路径的软件/RTL 资格验证。 | 10 个 family 各 100,000、聚合 1,000,000 cycles；独立 fast integer golden 经 legacy 10,000-row 交叉检查，CXXRTL 对 commit/bank/version、MAP debug、118-bit output 与 232-bit state 全字段 0 mismatch。完整覆盖 normal/boundary/saturation/leakage、CRC/version、stale/rollback/untrusted bank、reset、deadline、commit race、FIFO overflow/backpressure 与 pause/drop/duplicate/reorder；6 modes/5 health/3 actions、9 个可达 fault bits、extreme LLR/255 saturation 与恢复均非空。0 undefined/CRC error/silent overflow，8+8 mutations、16 gates 与 8 tests 通过。首轮 reorder=0 被深审发现后强化 family-specific gate 并完整重跑；详见 `docs/long_rtl_qualification.md`。无板测/真实 transport claim。 | `experiment_plan.md §14.3, §17.3—§17.4` |
+| T6.2.3 | Todo | 完成实际板级 correctness smoke。 | 同时依赖 T6.2.2 与 T6.1.1—T6.1.3；在实际板上回放固定 trace，输出与 RTL simulation/Python golden 一致，且失败可通过 sequence/version/CRC、板载 cycle counter 和 host trace 定位。 | `experiment_plan.md §14.3, §17.2` |
 | T6.2.4 | Todo | 实现定点蒸馏递推 student。 | RTL/HDL 支持 g/e/leakage 分支的低维递推、参数安全包络、饱和和 fallback；与 Python student bit-for-bit 一致。 | `experiment_plan.md §15.4` |
-| T6.2.5 | Todo | 评估 optional quantized GRU datapath。 | 仅在 T5.5.4 证明目标器件可装入并满足 deadline 后实现；否则记录为 Dropped，不影响 student 主线。 | `experiment_plan.md §15.4` |
+| T6.2.5 | Dropped | 评估 optional quantized GRU datapath。 | T5.5.4 的完整参数 optimistic lower-bound 已需 72,854 cycles=`2698.30 us`@27MHz，远超 5 us，且 functional RTL/physical gain 未建立；按预注册规则 Dropped，不影响 student 主线。 | `experiment_plan.md §15.4` |
 
 ### Milestone 6.3：主机慢回路与 HIL 闭环
 
@@ -327,51 +335,230 @@
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
-| T6.4.1 | Todo | 运行至少 `1e5`、目标 `1e6` cycles 长序列。 | 覆盖稀有 leakage、burst、计数器/hidden-state 饱和、parameter update、通信停顿；报告状态有界性和零/非零 deadline miss 的置信上界。 | `experiment_plan.md §14.3, §15.3` |
+| T6.4.1 | Todo | 在实际板卡/HIL 重跑至少 `1e5`、目标 `1e6` cycles 长序列。 | 在 T6.2.3 后，覆盖稀有 leakage、burst、计数器/hidden-state 饱和、parameter update 和真实通信停顿；报告状态有界性及零/非零 deadline miss 的置信上界。T6.2.2 的软件长序列只作为回归基线，不得替代本项板上证据。 | `experiment_plan.md §14.3, §15.3, §17.4` |
 | T6.4.2 | Todo | 测量板级 latency、jitter、throughput 和资源。 | 报告 core/transport/end-to-end 三种延迟、worst case、Fmax、LUT/FF/BRAM/DSP；可测时补充功耗。 | `experiment_plan.md §14.3` |
-| T6.4.3 | Todo | 运行故障恢复和 negative-path 实验。 | CRC 错误、stale bank、host timeout、FIFO overflow、reset storm 下无未定义动作；形成失败模式表。 | `experiment_plan.md §14.3` |
+| T6.4.3 | Todo | 在实际 transport/板卡上重跑故障恢复和 negative-path 实验。 | 在 T6.2.3 后，对 CRC 错误、stale bank、host timeout、FIFO overflow、reset storm 做真实链路注入，要求无未定义动作并形成失败模式表；T6.2.2 的抽象故障只作预板回归和预期基线。 | `experiment_plan.md §14.3, §17.4` |
+
+---
+
+## Phase 6A：Route-A contract-centric 安全自适应双回路与对外优势闭环
+
+本阶段由 `T-RISK-20260717-02` 插入，用于把 T5 已证否的 CNN-centric 强主张重构为可验证的系统主张。它不是从零重写：统一复用既有 static/joint MAP、Window/EWMA/Kalman、HMM、event FSM、fallback、trusted A/B MAP bank、fixed-point/CXXRTL 与 production RTL；新增工作集中在统一 contract、regime-aware 安全编排、matched benchmark、外部复现和论文证据门。
+
+### Phase 6A 依赖、比较域与失败分支
+
+- **入口**：`T6.2.1 -> T6.2.2 -> T6.5.1`。T6.5—T6.8 以及 T6.9.1 均可在无实物板卡时完成；不得把 T6.2.2 的 qualification 写成板测。
+- **统一系统域**：所有 deployable 方法使用同一 syndrome 输入、MAP-LUT、定点精度、6-cycle event/action path、versioned A/B bank、update cadence、observed-only 约束、wall-clock 与计算预算。hidden-state oracle 只作不可部署上界，不得进入 deployable aggregate。
+- **RTL 资格规模**：每个 smooth/fault family 至少 `1e5` cycles、聚合不少于 `1e6` cycles，并要求零 bit mismatch、零 undefined action、零 silent overflow；该门只证明预板正确性，不等于实测 latency/resource/power。
+- **三条外部比较 lane 不混排**：GKP decoder lane 比 LER/tail/oracle gap；Puviani/GQF controller lane 比同一官方环境内的 logical-channel lifetime、gain retention 与计算成本；FPGA lane 比同任务口径下的 core/source-to-action latency、II、deadline、资源和功耗。禁止跨 simulator 相减 lifetime、跨 code family 排 raw latency，或生成 global score。
+- **分支门**：Route A 只有在 T6.7.4 全部主门通过后才能成为论文主结果；legacy CNN 若未通过 matched comparison 只保留消融；GQF exact reproduction 未通过则禁止“超过 Puviani NMF”；真板未通过则只保留 hardware-aware/synthesis estimate，禁止“比已有 FPGA decoder 更快”。
+
+### Milestone 6.5：主张、统一执行合同与预注册
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.5.1 | Done | 冻结 Route-A claim contract、canonical role 和三类比较 lane。 | 已交付 machine/human-readable contract：11 个 canonical role、decoder/GQF/hardware 3 条 metric-disjoint lane、11 条逐项带 metric/domain/privilege/evidence/revocation 的 claim；20/20 gates、10/10 semantic mutations、6 tests。safe adaptive dual-loop 为唯一系统主角；MAP/regime/event/fallback/bank/RTL 职责分离；CNN/teacher/student 仅为 replaceable extension；禁止 global leaderboard、surface-code threshold、CNN 普遍最优、未复现 GQF surpass 与未板测 fastest claim。 | `T-RISK-20260717-02`, `experiment_plan.md §18.1`, `docs/route_a_claim_contract.md` |
+| T6.5.2 | Done | 冻结所有 deployable 方法共享的 unified execution contract。 | 已冻结七个 observed-only 候选与 isolated oracle 的 exact-key schema、10/8/2-bit phase-LUT、signed Q9.12/ties-to-even/saturation、5+1-cycle path、CRC/SHA/CAS A/B bank、32/4000 cadence、8,192 MAC/8,192 B/5,000-us caps 与强类型 deadline ledger；17/17 gates、70/70 per-method mismatch、12 schema、9 accounting rejection、13 tests。full 2D joint MAP 与当前 phase-LUT 不等价，current-RTL promotion 保持 blocked。 | `T-RISK-20260717-02`, `experiment_plan.md §18.2`, `docs/unified_execution_contract.md` |
+| T6.5.3 | Done | 在访问正式结果前预注册场景、split、阈值和统计门。 | 已冻结 12/12/24 split-disjoint seed clusters、rate/amplitude/duration levels、143 cells、每方法 71,958,528 formal decisions、shared SHA-derived trace/onset、common pilot-only threshold selector、equal-family 20k paired cluster bootstrap、Holm、512-window p95/worst、strict calibration-tail、catastrophic 与 nominal margins；23/23 gates、12/12 mutations、15 tests。旧反例知情且披露，只对新 T6.7 formal result blind。 | `T-RISK-20260717-02`, `experiment_plan.md §18.2`, `docs/route_a_preregistration.md` |
+
+### Milestone 6.6：统一 comparator 与 regime-aware 安全编排
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.6.1 | Done | 实现统一 comparator adapter 与 matched-budget runner。 | 已完成 2048-scalar/1024-pair causal packet bridge；同 runner 真实执行 standard binning、static joint MAP、Window MAP、EWMA adaptive MAP、Kalman adaptive MAP、proposed Route-A，legacy CNN residual 真实推理后 schema/budget 自动降级，hidden-state oracle 物理分栏；另交付 HMM provenance export、八 role adapter overlay、逐窗实际/累计成本、2048-case standard LUT 与 2,097,152-case periodic grid 穷举、prefix/mutation 审计；18/18 gates、15 tests。qualification 明确保留 Route-A LER `0.023376` 差于 Window `0.007446`，只证明 integration runner，不形成性能 claim。 | `experiment_plan.md §18.3`, `docs/unified_comparator_runner.md` |
+| T6.6.2 | Done | 实现 proposed regime-aware safe adaptive policy。 | 已按 V4 交付 Window/EWMA observed-only 双影子 bank：Window 需 smooth posterior+pre-update NLL proof，tail/uncertain 只允许 continuously updated validated EWMA，integrity-only LKG rollback；候选必须申报 router SHA 与完整 `1,218/8,192 MAC`。20,061-cycle 长轨 20/20 gates、11/11 mutations、source-to-action 全为 6 cycles，versions `1,2,3,4` confirmed；tail 8000 stage EWMA/8002 commit，16,001 integrity 取消 pending Window，实际 defer 6 且正常 commit 间隔均>=4000。当前仅为 structural software policy。 | `experiment_plan.md §18.3`, `docs/regime_aware_safe_policy.md` |
+| T6.6.3 | Done | 完成 posterior 校准、因果/observed-only 与阈值冻结审计。 | V4 formal-entry lock 已完成：28/28 gates，candidate 1316 tuple `(0.9,0.2,0.25,192,2,8)`，EWMA baseline，双影子总成本 1,218 MAC；38/38 posterior-safe tuples 通过完整 pilot LER/safety selector，dynamic pilot improvement LCB `3.88e-6`、minimum slack 0。V2 static-switch 与 V3 freeze-all 的 38/38 NO-GO、future-window 因果 bug、overall fallback/unnecessary 代价均保留；formal 未访问。lock `9347edb2...f67aa`。 | `experiment_plan.md §18.3`, `docs/route_a_posterior_calibration.md` |
+
+### Milestone 6.7：统一 smooth、abrupt/OOD、tail 与长序列决定性实验
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.7.1 | Done | 运行 smooth drift formal matrix。 | 已只读 V4 lock 覆盖 mean、variance、correlation、periodic 并执行 24 seeds×24 cells=576 trajectories；每方法 28,311,552 scored decisions、七方法逐 512-window Pauli/paired/action Source Data 498,240 行。预注册的 aggregate paired LER improvement 95% 下界必须 `>0`，实际 EWMA−Route-A=`2.1687e-5 [1.9003e-5,2.4548e-5]`，主门通过；12/12 gates、6/6 mutations、576 cache hits/0 misses、8 tests。但只 periodic 为 Holm discovery；Route-A `p_L=9.9274e-4` 高于 static `9.6819e-4` 和 Window `8.9642e-4`，oracle-gap closure `-0.03046`，fallback signal `21.63%`。只支持锁定 EWMA contrast，不支持“最佳 smooth/static 优势”。 | `experiment_plan.md §18.4`, `docs/route_a_smooth_formal.md` |
+| T6.7.2 | Done | 运行 abrupt/OOD 与 tail-safety formal matrix。 | 已覆盖 step、telegraph、burst、readout/reset、leakage、compound 各 144 trajectories 与 nominal 24，共 888 条、43,646,976 scored decisions/方法、686,104-row Source Data。六 family catastrophic、calibration strict、nominal 四门全部通过；11/11 gates、6/6 mutations、888 hits/0 misses、8 tests。原反例 `55/512 > 37/512` 在锁定 baseline 口径变为 Route-A/EWMA `181/512=181/512`；但五 family 核心差异全为0，burst最大单窗+1，step static 仅`32/512`；tail fallback/unnecessary=`59%--96%/59%--95%`，每 family 2044--3365 false updates。只支持 locked-EWMA non-inferiority，不支持 tail/static 优势。 | `experiment_plan.md §18.4`, `docs/route_a_tail_formal.md` |
+| T6.7.3 | Done | 对 integrated Route-A stack 做长序列 fixed-point/RTL 与故障资格验证。 | 已重放20条 frozen formal observed trajectory：99.5802% unified replay + 0.4198%独立 safety vectors；10×100,000 cycles、production core+Route-A逐word CXXRTL 0 mismatch、0 undefined/CRC/silent overflow。19/19 gates、130/130 comparator mutations、12/12 semantic mutations、23 tests；99 auto commit含14次untrusted rejection、75 host block/14 collision，FIFO 1451 overflow全accounted。只支持board-independent correctness/fail-closed；HMM仍在软件，0.30 smooth gate在OPEN条件下非绑定。 | `experiment_plan.md §18.4`, `docs/route_a_integrated_rtl_qualification.md` |
+| T6.7.4 | Done | 执行 Route-A promotion/falsification gate。 | 已从576+888条raw trajectory重算20k bootstrap、两份大CSV与131MB trace并复核当前哈希；10/10 gates、8/8 mutations、7 tests。locked-EWMA主门`2.1687e-5 [1.9003e-5,2.4548e-5]`通过，tail/correctness门通过，故合同系统受限晋级；但Window `8.9642e-4`、static `9.6819e-4`均低于Route-A `9.9274e-4`，tail改善family为0/6，CNN消融、HMM非RTL、无板测speed。 | `experiment_plan.md §18.4`, `docs/route_a_promotion_falsification_gate.md` |
+
+### Milestone 6.8：静态/漂移、Puviani NMF 与 FPGA 外部优势对照
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.8.1 | Done | 建立相对静态 GKP 解码的同模型优势 lane。 | 已映射GKP/analog/finite-energy/prior-calibration一手来源且禁止跨模型raw排名；同一576 trajectories、28,311,552 decisions比较standard/static full/K4/Route-A/oracle。static−Route-A=`-2.4548e-5 [-3.9595e-5,-9.1129e-6]`，Route-A static优势证否；完整`1024²`网格K4/full 0 hard差，retained bits `512/3200`、serial proxy `424/2209`但非板测。11/11 gates、8/8 mutations、8 tests。 | `experiment_plan.md §18.5`, `docs/static_gkp_same_model_lane.md` |
+| T6.8.2 | Done | 建立相对一般 drift-adaptive decoder 的 matched-budget lane。 | pinned `y-bar/bocd@5f272b1f`真实执行；27-candidate pilot冻结非退化全局tuple，504 formal/24,772,608 decisions/method与T6.7逐轨迹input/truth hash 0 mismatch，102/504输出不同于EWMA。Route-A−external paired结果更低，但external 1/13,104 update以`13,004.1 us`违反`5,000 us` strict worst ceiling；故evidence integrity 11/11通过而budget资格失败，general-SOTA/Bhardwaj-exact均禁止。10/10 target mutations、12 tests。 | `experiment_plan.md §18.5`, `docs/external_drift_adaptive_lane.md` |
+| T6.8.3 | Done | 导入并固定 Puviani 官方 `Matteo-Puviani/GQF` 源码与运行环境。 | fixed `https://github.com/Matteo-Puviani/GQF@c9ab1ef...` pristine 12-file tree/MIT；官方HEAD的`mesolve.py:13`语法缺陷等以四个hash-bound patch仅应用到独立local clone；Python3.9/TF2.10/CUDA11.2三类locks齐全。CPU cutoff8真实`GKPEnv`一步及物理不变量通过；GPU cuSolver fatal如实标为unqualified。12/12 gates、12/12 mutations、13 tests；intake-only。 | `experiment_plan.md §18.5`, `docs/gqf_official_intake.md` |
+| T6.8.4 | Done | 用官方 GQF 路径做 Puviani paper-exact reproduction。 | paper/source/code审计发现18项blocking discrepancy：无20-agent checkpoint/seed/raw、论文与源码网络/epochs/Delta/selection/evaluator不一致，GPU cuSolver fatal；20 agents与standard/MF/NMF全部exact metrics显式null。六态×3seed reduced official standard诊断756行/218.58s通过，但仅diagnostic。13/13 integrity、13/13 mutations、21 tests；exact 0/15，NO-GO。 | `experiment_plan.md §18.5`, `docs/gqf_paper_exact_reproduction.md` |
+| T6.8.5 | Done | 在 GQF 同一物理环境中做 Route-A 学习扩展的 matched comparison。 | T6.8.4 exact为0/15，故8项eligibility全失败并在训练前选择ineligible negative branch；未生成comparison manifest/raw data，lifetime/LCB/gain/params/MAC/memory/fallback/unsafe共13字段全null，不使用T2.3.7/T4.4替代official NMF。10/10 gates、10/10 mutations、26 tests。 | `experiment_plan.md §18.5`, `docs/gqf_route_a_matched_comparison_gate.md` |
+| T6.8.6 | Done | 建立现有 FPGA QEC decoder 的任务/时延/资源规范化表。 | 一手正式版/预印本冻结8个外部具体实现+2个项目层级行；23个数值字段逐项locator/null，分离core/per-round/iteration/source-to-action/closed-loop与synthetic/QPU/preboard。same-task comparator=0；13/13 gates、13/13 mutations、5 tests，fastest/SOTA/speed advantage禁止。 | `experiment_plan.md §18.5`, `docs/fpga_qec_decoder_normalization.md` |
+| T6.8.7 | Done | 冻结四类对手的 innovation/advantage claim matrix。 | 已冻结10条atomic claims与4类对手；每条都有最强措辞、required/current/gap/revocation/paper target、live T6.7/T6.8 report/source/config/seed/hash和T6.9.1—T6.9.3 pending/null。static superiority证否、external BOCD仅performance outcome且budget fail、GQF exact 0/15、FPGA same-task comparator=0均fail closed；14/14 gates、14/14 mutations、5 tests。 | `experiment_plan.md §18.6`, `docs/route_a_innovation_advantage_claim_matrix.md` |
+
+### Milestone 6.9：硬件收口与高水平论文 GO/NO-GO
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.9.1 | Done | 完成 integrated Route-A 的真板前 hardware-aware P&R/Pareto。 | 已用同一parameterized top真实综合no-student主fast path和4-state student sidecar两个profile，各seeds 1/7/19共6次P&R且全过27MHz；主profile Fmax=`39.137/40.264/40.402 MHz`、最大`3859 LUT4/1069 DFF/8 BSRAM/1+1 DSP`，student为`38.506/39.348/39.474 MHz`、`4889/1210/8/2+1 DSP`。六周期clock model=`222.222 ns`、1.5us margin=`1.27778us`；power仅解析敏感性，vendor/board字段null。15/15 gates、15/15 mutations、6 tests。 | `experiment_plan.md §18.6`, `docs/route_a_hardware_pareto.md` |
+| T6.9.2 | Blocked | 在实物板上完成 Route-A measured correctness、latency 与 deadline 对照。 | 依赖 T6.2.3、T6.4 和 T6.9.1；同一 bitstream/source hash 重跑至少 `1e6` cycles，要求零 bit mismatch、零 undefined action、零 silent overflow、零 deadline miss，并给出零事件 95% 上界。已完成真板前增量：40/96-byte CRC/sequence/idempotent UART、事件单脉冲门控、完整栈与9 clocks/bit PHY CXXRTL、GW2AR P&R/打包；Fmax=`83.9701 MHz`，LUT4/DFF/BSRAM=`6532/2969/8`，manifest=`PASS_PREBOARD_CANDIDATE_NOT_PHYSICAL_QUALIFICATION`。但板卡未识别、候选未烧录、pinout/transport/timestamp未实测，逐帧UART含链路间隙且不能替代满速百万周期HIL；正式physical manifest与42项measured字段仍缺失，禁止以候选位流/P&R/host round-trip代替板测。 | `experiment_plan.md §18.6`, `docs/route_a_board_preboard_candidate.md` |
+| T6.9.3 | Done | 执行 Route-A 高水平论文 evidence GO/NO-GO。 | 已消费T6.7.4、T6.8.7、T6.9.1与T6.9.2 blocker，冻结11条最终原子主张、live parent/source/implementation hash、7项图表计划与6条blocking claims。17/17 gates、17/17 mutations、6 tests。完整论文=`NO_GO`，只允许restricted pre-board draft；static superiority证否、tail仅non-inferiority、BOCD budget fail、GQF exact 0/15、42项板测null、same-task FPGA comparator=0均不得叙事绕过。 | `experiment_plan.md §18.6`, `docs/route_a_final_evidence_gate.md` |
+
+---
+
+## Phase 6B：Observed-only posterior-predictive risk-aware GKP MAP V5
+
+本阶段由 `T-RISK-20260720-01` 插入。它不覆盖 Phase 6A 的负结果：T6.7.1/T6.8.1 已证明 V4 Route-A 不优于 Window/static，T6.7.2 已证明把 tail 统一交给 EWMA 不能产生 calibration/telegraph 优势。V5 保留 unified execution contract、production MAP-LUT、atomic A/B bank、LKG rollback、event/leakage/reset FSM 和 6-cycle/II=1 fast path，只重做 host slow loop、posterior-to-LUT compiler、risk gate 和 typed trusted policy。
+
+### Phase 6B 依赖、证据隔离与目标合同
+
+- **入口与顺序**：`T6.7.4 + T6.8.1 + T6.8.2 + T6.9.3 -> T6.10.1`，随后严格按 `T6.10 -> T6.11 -> T6.12 -> T6.13 -> T6.14 -> T6.15` 执行。复用 T6.2.1/T6.2.2/T6.7.3/T6.9.1 的 production RTL、CXXRTL、bank 和 P&R 证据；不依赖 Blocked 的 T6.9.2。
+- **旧结果只作诊断**：T6.7/T6.8 已打开的数据只允许用于复算 headroom、专家分歧、action value 和方法设计，不能重命名或混入 V5 formal。新 protocol 必须让 seed、transition rate、amplitude、duration、phase/frequency 和 compound composition 与旧 formal 及新 train/calibration/pilot 均互斥。
+- **最强可部署 baseline**：候选集合至少包含 standard binning、可证明映射到 production LUT 的 static MAP、Window、EWMA、Kalman；外部 BOCD 只有重新满足相同 observed-only、MAP-LUT/定点、cadence、wall-clock、MAC/memory 和 deadline 合同才 eligible。hidden-state oracle 始终单独作为不可部署上界。
+- **LER 主门**：对全部 eligible baseline 同时推断，要求最小相对降幅 `min_b((p_L^b-p_L^V5)/p_L^b) >= 10%`，且每个 paired absolute improvement 的 simultaneous 95% 下界均 `>0`；不得在 formal 后选择最有利 comparator。static-to-oracle gap closure 的点估计和 95% 下界也必须 `>0`。
+- **tail 主门**：step/calibration 与 telegraph 各自相对 V4 的预注册 512-round per-trajectory worst-window endpoint 至少下降 `50%`，Holm-adjusted paired 95% 上界 `<0`；同时相对各自最强 eligible tail baseline 保持预注册 non-inferiority，默认 margin 不宽于 `5/512`。global maximum 只作描述性极值，不能替代可推断的 paired endpoint/CVaR。
+- **安全与预算门**：online 决策不得读取 scenario ID、hidden `theta`、change onset、future suffix 或 logical truth；slow-loop 总预算保持 `<8192 MAC/update`、private state/workspace 各 `<8192 B`、host update worst `<5000 us`。预板 RTL 要求逐周期零 bit mismatch、零 undefined action、零 silent overflow，所有 accepted syndrome 的 source-to-action 恰为 6 cycles，持续输入和 bank update/commit 期间 II=1、无 bubble。
+- **真板边界**：T6.10—T6.15 可在没有实物板卡时完成，只能形成 simulation/fixed-point/CXXRTL/formal/P&R estimate 证据。T6.9.2 继续独立 Blocked；未通过它之前禁止 measured latency、deadline、power、physical closed loop、bitstream-validated 或 faster-than-existing-FPGA claim。
+- **失败分支**：任一正式性能或安全门失败都必须保存完整负结果并关闭相应主张；不得读取 formal 后调阈、删 family、改权重、换 endpoint 或反复扩 seed 追逐显著性。若需 V6，必须另建新 protocol/split，不能覆盖 V5。
+- **T6.10.1 early-stop（2026-07-20）**：1,464 条 V4 formal 逐 decision exact diagnostic replay 与 186 条新 development trajectory 已完成。nested strict-causal selector 相对 strongest fold-selected Window 为 `-0.2322%`；held-out fixed mixture 为 `+0.4587%`，而 posterior-mixture/action-space 超出 per-decision hard-expert oracle 的纯 action-space 增量只有 9 errors=`0.02549%` baseline-relative。由于 `10%` router 与 `12%` incremental-action 两门均失败，当前 V5 不进入合同、四分割、IMM/BOCPD、compiler、pilot/formal 或 RTL/P&R 实现；T6.10.2—T6.15.4 按预注册失败分支 Dropped。原合同的 `actual parameterized production module/source hash` 等要求不得伪写为已执行。T6.15.5 仍需执行 early-stop evidence closure，以便 Phase 6C 在只读状态继续。
+
+### Milestone 6.10：Causal headroom、V5 合同与全新预注册
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.10.1 | Done | 冻结旧证据边界并执行 causal headroom、expert disagreement 与 action-value audit。 | 1,464/1,464 V4 formal exact replay；186 条新 development trajectories、4,571,136 decisions、2,418 activation units。strict-causal selector headroom=`-0.2322%`，held-out fixed mixture=`+0.4587%`，纯 incremental action-space upper bound=`0.02549%`；future/scenario/truth/hash mutations 与 7,505-MAC budget 通过，结论 `NO_GO_V5_INSUFFICIENT_ACTION_SPACE_HEADROOM`。 | `T6.7.1--T6.7.2`, `T6.8.1`, `R-N118--R-N122` |
+| T6.10.2 | Dropped | 冻结 V5 claim/execution-contract delta、baseline eligibility 和撤销条件。 | T6.10.1 的 router/action-space 双入口门均失败；当前 V5 不成立，禁止为未通过 headroom 的候选建立 execution contract。撤销条件由 T6.15.5 early-stop closure 固定。 | `T6.10.1 NO-GO` |
+| T6.10.3 | Dropped | 建立全新的 train/calibration/pilot/formal 四分割并预注册统计协议。 | T6.10.1 已 direct NO-GO；不创建 formal manifest、不做 power plan，也不留下可被误读为 V5 formal-entry 的空壳协议。未来 V6 必须另建任务和互斥 protocol。 | `T6.10.1 NO-GO` |
+
+### Milestone 6.11：多尺度 observed-only 后验与 activation-horizon prediction
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.11.1 | Dropped | 实现 streaming multiscale wrapped/circular feature extractor。 | T6.10.1 入口 NO-GO；不为当前无 headroom 候选新增 feature 工程。若未来 V6 先证明独立 development headroom，再新建任务。 | `T6.10.1 NO-GO` |
+| T6.11.2 | Dropped | 实现 continuous-state static/trend/harmonic IMM posterior estimator。 | T6.10.1 入口 NO-GO；不以 richer estimator 代替已失败的可获取 LER/action-space 证据。 | `T6.10.1 NO-GO` |
+| T6.11.3 | Dropped | 实现 BOCPD/telegraph 与 robust fault posterior。 | T6.10.1 入口 NO-GO；当前 Phase 6B 不继续 BOCPD/robust head 实现。 | `T6.10.1 NO-GO` |
+| T6.11.4 | Dropped | 实现 activation-horizon posterior prediction 和联合校准。 | T6.10.1 入口 NO-GO；不存在可校准并进入 pilot 的 V5 candidate。 | `T6.10.1 NO-GO` |
+
+### Milestone 6.12：Posterior-mixture MAP、risk gate 与 typed trusted policy
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.12.1 | Dropped | 建立统一 expert/likelihood library。 | T6.10.1 入口 NO-GO；现有 hard experts 的短时 oracle 不可因果获取，新增 expert library 不能在未证明 headroom 时启动。 | `T6.10.1 NO-GO` |
+| T6.12.2 | Dropped | 实现 uncertainty-marginalized posterior-predictive MAP-LUT compiler。 | posterior-mixture 纯 action-space 上界仅 `0.02549%`；不实现 production compiler 或 RTL 扩展。 | `T6.10.1 NO-GO` |
+| T6.12.3 | Dropped | 实现 calibrated LER/CVaR risk gate、typed tail action 与 hysteretic recovery。 | T6.10.1 入口 NO-GO；无 eligible V5 risk candidate。 | `T6.10.1 NO-GO` |
+| T6.12.4 | Dropped | 证明 typed policy 可由真实 two-bank residency、LKG 和 event FSM 执行。 | 当前 V5 未进入；不为不存在的 typed policy 构造软件/RTL deployability 证据。 | `T6.10.1 NO-GO` |
+
+### Milestone 6.13：训练、pilot selection 与 formal-entry lock
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.13.1 | Dropped | 仅在 train/calibration split 拟合 estimator、risk calibration 与 domain-randomized prior。 | T6.10.1 入口 NO-GO；未建立 V5 train/calibration split，不训练 checkpoint。 | `T6.10.1 NO-GO` |
+| T6.13.2 | Dropped | 运行 matched-budget pilot 并选择唯一 V5 candidate。 | T6.10.1 development 入口门已失败；不得另开 pilot 或用更多 seed 追逐候选。 | `T6.10.1 NO-GO` |
+| T6.13.3 | Dropped | 冻结唯一 V5 formal-entry lock。 | 无 pilot candidate；不生成 formal lock、manifest 或 output。 | `T6.10.1 NO-GO` |
+
+### Milestone 6.14：全新 untouched formal 性能实验与 promotion gate
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.14.1 | Dropped | 运行 untouched unseen smooth-drift formal matrix。 | V5 未获 formal-entry；禁止运行或缓存新 formal output。 | `T6.10.1 NO-GO` |
+| T6.14.2 | Dropped | 在同一 lock 下运行 untouched abrupt/OOD/tail formal matrix。 | V5 未获 formal-entry；禁止运行或缓存新 formal output。 | `T6.10.1 NO-GO` |
+| T6.14.3 | Dropped | 执行 V5 algorithm promotion/falsification gate。 | 算法在 T6.10.1 前置 headroom gate 已证否；由 T6.15.5 固定 early-stop claim revocation。 | `T6.10.1 NO-GO` |
+
+### Milestone 6.15：Fixed-point/CXXRTL fail-closed 与真板前论文收口
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.15.1 | Dropped | 完成 V5 LUT/image、risk decision 与 transaction 的独立 fixed-point golden。 | 无 V5 candidate/quantized action；不构造空壳 fixed-point golden。 | `T6.10.1 NO-GO` |
+| T6.15.2 | Dropped | 重跑 integrated V5 long-sequence CXXRTL qualification。 | 无 V5 candidate 或 formal-observed V5 trajectories；不得用 V4 replay 冒充 V5 qualification。 | `T6.10.1 NO-GO` |
+| T6.15.3 | Dropped | 完成 A/B atomicity、LKG rollback 与 fail-closed property/mutation closure。 | V5 未进入；保留既有 V4/production 安全证据，不为不存在的 V5 声称新 property closure。 | `T6.10.1 NO-GO` |
+| T6.15.4 | Dropped | 重跑 V5 `production_minimal`/`audit_full` 多 seed synthesis/P&R 与 action-equivalence。 | 无 V5 RTL/profile；不重复 V4 P&R 或冒称 V5 action equivalence。 | `T6.10.1 NO-GO` |
+| T6.15.5 | Done | 执行 V5 simulation/pre-board 高水平论文 evidence GO/NO-GO。 | early-stop 路径完成：独立重算 router/action 增量，20/20 conditional tasks Dropped、0 V5 downstream outputs、10 条 claim registry、42 measured null 保持；12/12 gates、6/6 mutations、5 tests。正常 `GO_SIM_PREBOARD` 路径未执行，终态 `NO_GO_V5_EARLY_HEADROOM_STOP`，Phase 6C 仅 read-only auxiliary。 | `T6.10.1`, `T6.8.7`, `T6.9.2--T6.9.3`, `R-N128--R-N132` |
+
+---
+
+## Phase 6C：异构 GKP/QEC 方法与指标的非主要排名比较
+
+本阶段由 `T-RISK-20260720-02` 插入，严格在原 Phase 6B 完成后执行。入口是 `T6.15.5=Done`，无论其 verdict 是 `GO_SIM_PREBOARD` 还是诚实的 NO-GO；Phase 6B 的 source/config/split/hash、baseline eligibility、主指标、阈值和正式 verdict 在本阶段全部只读。Phase 6C 负责把两张方法对比图中的 CI、ML/MAP、Direct NN、RL、AQEC、CPD、Hybrid 和 latency/drift/hardware 指标改造成可复现的分赛道补充证据，不负责重开或挽救 V5 主排名。
+
+### Phase 6C 依赖、证据 lane 与完成合同
+
+- **严格顺序**：`T6.15.5 -> T6.16 -> T6.17 -> T6.18 -> T6.19 -> Phase 7`。本阶段不依赖 Blocked 的 T6.9.2；无真板时只允许 software simulation、official-code reproduction、fixed-point/CXXRTL、synthesis/P&R estimate，硬件 measured 字段继续为 null。
+- **六条证据 lane**：① single-mode same-task decoder（CI/standard binning、static/adaptive MAP、eligible Direct NN、V5）；② surface–GKP gate/outer-code reproduction（standard binning 与 analog ML）；③ multimode structured-lattice CPD；④ controller/RL/NMF 与 Sivak/Puviani protocol-native 系统；⑤ AQEC/autonomous protocol 的共同 wall-clock lifetime；⑥ FPGA/QEC implementation 的同任务 profile 与跨 code-family 文献规范化。
+- **禁止 global leaderboard**：LER、CNOT failure、squeezing/noise threshold、logical lifetime、drift adaptation、latency 和 hardware cost 不得合成为总分、胜场数或统一 SOTA 排名。只有 task signature、输入/输出、code family/size、noise、online privilege、precision、timing boundary 和预算都一致时，才允许在单一 lane、单一指标内排序。
+- **术语与缺失值**：CI 是 standard-binning baseline；ML/MAP 是决策准则而非固定延迟实现；Direct NN 与 RL controller 分开；AQEC 是物理协议而非 syndrome decoder；single-mode square/isotropic Euclidean CPD 与 CI 等价时不得重复计数；Hybrid 是系统架构而非独立算法类别。`N/A` 表示不适用，`null` 表示无证据，`failed` 表示已执行但未通过，三者不得互换或插补。
+- **证据等级**：每个单元只能取 `LITERATURE_ONLY`、`OFFICIAL_CODE_REPRODUCTION`、`PROJECT_NATIVE_MATCHED`、`INELIGIBLE`、`BLOCKED` 或 `NEGATIVE`，并绑定论文/源码 locator、版本/commit、配置、seed、原始计数和 hash。截图中的“高/中/低”“<50 ns”“零延迟”“约20%”“9.9 dB/约50%”不能脱离原任务和分母直接进入结果表。
+- **非主要地位与失败分支**：Phase 6C 只支持 Related Work、Supplementary、外部效度与边界讨论；其方法不进入 V5 `>=10%` LER 的 denominator，不改变 T6.14/T6.15 verdict。外部源码/checkpoint/protocol 缺失时允许以带完整 provenance 的 partial/NO-GO/null 完成，禁止自行构造“近似论文方法”后标为 exact reproduction。
+
+### Milestone 6.16：方法分类、指标本体与二级比较预注册
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.16.1 | Done | 审计两张图中的方法分类和定量陈述，生成 source-verified schema。 | 完成 `secondary_method_source_audit.py`、11-source/12-method/24-claim registry、82-row Source Data 与报告；15/15 gates、15/15 mutations、9 focused tests。`9.9 dB` 仅属 full surface–GKP threshold；CNOT 降幅为 31.782%/58.458%/67.192%；AQEC 为 1.14(18)/1.14(16) 且 latency=N/A；NN 分列 87.6 ns estimate、124 ns core、550 ns closed loop；类别“高/中/低”和无分母数值均 null，global/faster/SOTA 与 V5 rescue 禁止。 | `T2.4.1`, `T3.2.8`, `T6.8.3--T6.8.6` |
+| T6.16.2 | Done | 建立 machine-readable comparison-lane、metric 与 timing/resource ontology。 | 完成六 lane、46 metrics、六 timing boundaries、五 resource dimensions、八 value states、13-field task signature 和 30-row T6.16.1 crosswalk；101-row Source Data、16/16 gates、16/16 mutations、12 focused tests。wrong-lane、跨 denominator/statistic/signature/boundary、estimate-vs-measured、N/A/null/failed/negative 填值、无依据定性复杂度和 global score 均 fail closed。 | `T5.1.1`, `T6.5.1`, `T6.8.7` |
+| T6.16.3 | Done | 冻结 Phase 6C 二级实验协议、统计计划和只读边界。 | 九项 downstream task 的 21-field 协议、独立 secondary seeds、20k/2k bootstrap、task 内 Holm、raw-data 与 runtime/failure branch 已冻结；official CPD commit、Noh source-sufficiency、AQEC common-wallclock 和 absent-RTL N/A 边界明确。158-row Source Data、17/17 gates/mutations、6/6 Phase 6B locks、14/14 live input locks、12 tests；Phase 6B `10%/12%` 门、20 Dropped、零 downstream outputs、tail 未运行和 T6.9.2 null 不可回写。 | `T6.10.3`, `T6.13.3`, `T6.15.5`, `R-N133--R-N136` |
+
+### Milestone 6.17：CI/ML、single-mode CPD 与 learned-decoder lane
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.17.1 | Done | 证明 single-mode square/isotropic Euclidean CPD 与 CI 的等价边界，并与 coset-summing MAP 分离。 | 解析 half-open Voronoi region 与独立 16-candidate oracle完成；production q10×q10 0/1,048,576 mismatch、unwrapped boundary 0/1,000,000 mismatch（含332,386 exact-tie coordinates），95%零事件上界分别 `2.857e-6/2.996e-6`。biased/correlated/finite-energy 三类 likelihood 反例均由 alias sum/peak table 独立重算；CPD/CI ranking weight合计1。58-row Source Data、15/15 gates/mutations、12 focused/77 adjacent tests。 | `T1.1.1--T1.1.3`, `T3.1.1`, `T6.16.2` |
+| T6.17.2 | Done | 独立复现两 GKP-qubit error-corrected CNOT 中 CI 与 analog ML 的同 gate 比较。 | 一手 Eq.24--33/Algorithms 1--2/Appendix C source-sufficiency PASS；32 CRN seeds 下 9/12/13 dB 分别运行 65,536/589,824/2,424,832 trials，CI failures=6,563/5,146/6,362，ML=4,518/2,158/2,037；六 anchors 最大 relative discrepancy 1.52%，paired reduction=31.160%/58.065%/67.982%，cluster-bootstrap lower bounds全大于0且 Holm significant。50,000 对真实 facet 双侧点、100,000 decisions 对独立 25-candidate oracle 0 mismatch。119-row Source Data、15/15 gates/mutations、13 focused/58 adjacent tests。`9.9 dB` full surface–GKP threshold 与 latency/resources保持 null。 | `T5.0.1`, `T6.16.1--T6.16.3` |
+| T6.17.3 | Done | 分离 Direct NN、causal adaptive NN 与 RL controller，并执行已有 learned model 的 eligibility/replay。 | 16 个 family 全量纳入 13-field signature、7-field budget 与 agent/restart multiplicity；same-task eligible=0，primary LER/latency 全为 null。legacy TinyCNN 206 samples×5 NumPy 重推与 T5.4.3 bit-exact，MSE=`2.41445e-6`，但仅为参数 residual diagnostic。434-row Source Data、16/16 gates/mutations、13 focused/79 adjacent tests；深审补回 T3.2.7/T3.2.10/T4.1.5 三个遗漏 family，并修复 signature flag、output hash 和 external-source fail-closed 检查。零 post-formal training/search/reselection，Phase 6B NO-GO 不变。 | `T4.1`, `T5.4.3--T5.5.4`, `T6.6.1`, `T6.8.3--T6.8.5` |
+
+### Milestone 6.18：AQEC、multimode CPD 与 protocol-native secondary lanes
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.18.1 | Done | 完成 AQEC/autonomous 与 measurement-feedback 的共同 wall-clock 归一和 project-native replay。 | 6 cells×24 clusters×3 exact anchors 全跑700 us，idle/feedback/autonomous为71/71/101 points；144,152-row Source Data、20k paired bootstrap、16/16 gates/mutations。feedback/idle=`0.218--0.477`、autonomous/idle=`0.196--0.407`且所有CI上界<1；144/144 cycle-vs-us reversal。logical-Z/survival R²低至`0.181/0.047`完整保留；event burden分列，energy/duty null，latency N/A。14 focused/80 adjacent/50 DLEnv tests；official Lachance reservoir reproduction BLOCKED，Phase6B不变。 | `T3.2.8`, `T5.1.5`, `T6.16.3` |
+| T6.18.2 | Done | 导入 official structured-lattice CPD 并完成 stationary correctness/threshold reproduction。 | 固定 `amazon-science/LatticeAlgorithms.jl` official commit/license/Julia manifest；确定性 upstream 2005/2005。312+64+384 项 exact correctness 均 0 mismatch；官方聚合阈值逐位重算为 `0.6024563/0.5995938`。独立 d=3/5/7、32 seeds、1,728,000 paired trials 的粗 crossing=`0.599298/0.600245`，两者 CI 均覆盖预注册 anchor±0.02；27/27 cells CPD LER 更低，mean ΔLER=`-0.011621`。16/16 gates、17/17 mutations、12 focused/97 adjacent tests；无 seed upstream 2004/2005 随机失败、小距离次序反转、三尺寸 scaling 和 864.3 MiB sampled high-water 均按边界披露。 | `T3.1.5`, `T6.16.1--T6.16.3`, `T6.17.1` |
+| T6.18.3 | Done | 对 multimode posterior-weighted CPD 漂移扩展执行独立 GO/NO-GO。 | 完成32 seeds×smooth/calibration/telegraph×100k cycles=9.6M physical cycles、38.4M decodes；adaptive/static-Euclidean/weighted-static/oracle aggregate `p_L=0.172261/0.236929/0.261679/0.171929`。相对最强 static absolute gain=`0.064668 [0.064413,0.064926]`（约27.3%），32/32同向、Holm `p=3.0e-5`；calibration/telegraph worst=`0.2539/0.2188`，均优于最强 static。lag median=`136/18.5/16` cycles；最长shard 1984.924s、sampled concurrent high-water 2.539GiB。512+512 adapter checks、64-cycle future mutation、21/21 gates/mutations、13 focused/118 adjacent；入口通过故未触发预注册 `NOT_RUN_SCOPE_GATE`，verdict=`GO_POSTERIOR_WEIGHTED_CPD_DRIFT_GAIN`，但严格限于 project-native balanced heteroscedastic d=3 family，oracle不排名且Phase6B不变。 | `T6.11--T6.14`, `T6.18.2` |
+
+### Milestone 6.19：预板硬件规范化、comparison atlas 与完整性收口
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.19.1 | Done | 建立本项目 CI、MAP、eligible Direct NN 与 V5 Hybrid 的同任务预板 latency/resource profiles。 | 资格优先审计后仅 static MAP-LUT 完整 fast-path core 有合格 RTL；当前源码 CXXRTL 4,316 map-valid rows 0 mismatch，seeds 1/7/19 P&R 全过 27 MHz，min Fmax=`41.024 MHz`、LUT4=`3377--3387`、FF=865、BSRAM=8、6-cycle/II=1=`222.222/37.037 ns`。CI/V5/Direct-NN 均 N/A。Window/EWMA/Kalman 各 1000-repeat 的 update/compiler/software transfer/commit 从 3,003-row raw 重算 p50/p95/p99/worst；12/12 gates、13/13 mutations、atomic-bank 17/17 gates。完整 core/harness 资源不冒充 MAP ROM 单体；power/jitter/deadline/measured/physical transfer 全 null。 | `T6.5.2`, `T6.9.1`, `T6.15.1--T6.15.4` |
+| T6.19.2 | Done | 更新外部 FPGA QEC decoder 的 task/latency/resource 规范化和 same-task comparator 计数。 | 实时验证 T6.8.6 的8个旧实现，并从8个新一手来源增加10个具体行，合计18行、其中5行带Direct-NN描述；完整登记task signature、device/precision/clock、boundary/statistic、cycles/II、resource/power/evidence state与不可比原因。Micro Blossom、GNN、Rethink TCN、BP+OSD、DECONET、CED、GARI均保持各自问题和证据边界；6类不能精确提取的候选显式排除而不反推数值。same-task external comparator=`0`，无raw-ns排名，fastest/SOTA/速度优势禁止。18/18 gates与18/18 mutations；深审修复T6.8.6旧LUT锚并重建exact-hash链，T6.9.2继续Blocked。 | `T6.8.6--T6.9.2`, `T6.16.2` |
+| T6.19.3 | In Progress | 生成六条 lane 的非主要 comparison atlas，并执行 secondary-evidence integrity gate。 | 分面输出：single-mode decoder LER/drift、surface–GKP gate/threshold、multimode CPD、AQEC lifetime、RL/NMF/controller、FPGA latency/resources；每个单元绑定 raw/source/config/hash/evidence grade并显式显示 N/A/null/failed/negative。独立复算 CI、threshold fit、timing conversion和artifact hash，验证 Phase 6B hash未变、无跨 lane总分、无 literature value冒充项目复现、无 estimate冒充measured。完整性全过即输出 `PASS_AUX_COMPARISON_INTEGRITY`，即使所有结果为负或不可比也可通过；该 verdict 不能升级 T6.15.5 或 T6.9.2，只向 Phase 7 移交可信的补充表和允许措辞。 | `T6.15.5`, `T6.16--T6.19.2`, `T6.9.3` |
 
 ---
 
 ## Phase 7：论文、审稿风险与可复现发布
 
+T6.9.3 是 V4 的历史 evidence snapshot，其实际结果 `NO_GO_FULL_HIGH_LEVEL_PAPER_RESTRICTED_PREBOARD_DRAFT_ONLY` 不因插入 V5 而改写。执行顺序上，Phase 7 等待 T6.19.3 完成；其中算法/仿真/预板系统论文的主张冻结仍同时要求 `T6.15.5=GO_SIM_PREBOARD`，外部/Related Work 补充比较要求 `T6.19.3=PASS_AUX_COMPARISON_INTEGRITY`。若 T6.15.5 为 NO-GO，Phase 6C 仍可诚实完成负结果与不可比性图谱，但不能据此挽救或重开主论文门。若两门均通过，可写 V5 的 matched LER、tail、fixed-point/CXXRTL/formal/P&R-estimate 结果，并按独立 lane 使用 Phase 6C；所有 measured hardware 图表和措辞继续依赖 Blocked 的 T6.9.2，并保持 null/omitted。teacher/student/CNN 仍只按各自既有 promotion 结果进入扩展或消融。
+
 ### Milestone 7.1：主张—证据—主图冻结
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
-| T7.1.1 | Todo | 冻结 claim-evidence-boundary matrix。 | 每个 abstract/conclusion claim 映射到 figure/table/data/code 和证据层级；无证据 claim 删除或降级。 | `experiment_plan.md §14.3, §14.4` |
-| T7.1.2 | Todo | 冻结主图 1—2。 | Fig.1：实验边界、POMDP/belief-state 与三时间尺度架构；Fig.2：sBs 数字孪生、Feedback-GRAPE teacher 和 distilled FPGA student。 | `experiment_plan.md §14.3, §15.5` |
-| T7.1.3 | Todo | 冻结主图 3—4。 | Fig.3：standard/autonomous/MF/NMF/student/control-oracle 的决定性性能、OOD 与故障注入；Fig.4：策略解释、gain retention 和板级 latency/resource/HIL。 | `experiment_plan.md §14.3, §15.5` |
-| T7.1.4 | Todo | 冻结 Supplement figure contract。 | 将 cutoff/gradient、noise-transfer 有效域、Petz bound、top-K Pareto、secondary protocol reproduction、六 Pauli states、all-seed distributions、完整 OOD、fixed-point 和 failure modes 放入 Supplement，主文保持单一论证主线。 | `experiment_plan.md §15.5, §16.2` |
+| T7.1.1 | Todo | 冻结 claim-evidence-boundary matrix。 | 直接消费 T6.15.5 的逐 claim verdict 和 T6.19.3 的 secondary-lane integrity verdict；每个 abstract/conclusion claim 映射到 figure/table/raw data/code/hash 和 simulation/fixed-point/CXXRTL/P&R/board 证据层级，Phase 6C 的 literature/reproduction/project-native 等级必须分列，无证据或未过门 claim 删除或降级。 | `T6.14.3`, `T6.15.5`, `T6.19.3`, `experiment_plan.md §14.3--§14.4` |
+| T7.1.2 | Todo | 冻结主图 1—2。 | Fig.1：证据边界、unified contract 与 host/FPGA 双回路；Fig.2：multiscale observed features、IMM/BOCPD continuous posterior、posterior-predictive LUT、LER/CVaR risk gate、typed trusted action、A/B/LKG/rollback/hysteresis 的可审计链。 | `T6.10--T6.12` |
+| T7.1.3 | Todo | 冻结主图 3—4。 | Fig.3：全新 untouched smooth + abrupt/OOD 的 strongest-baseline LER、tail、oracle gap、lag/fallback 与 avoided/induced；Fig.4：fixed-point retention、formal properties、million-cycle CXXRTL、6-cycle/II=1 与多 seed P&R estimate。T6.9.2 未过时，measured latency/deadline/power panel 保持明确空缺，不用 estimate 填充。 | `T6.14--T6.15` |
+| T7.1.4 | Todo | 冻结 Supplement figure contract。 | 将 cutoff/gradient、noise-transfer 有效域、Petz bound、top-K Pareto、六 Pauli states、all-seed distributions、完整 OOD、fixed-point、failure modes，以及 Phase 6C 六条独立 comparison lane 放入 Supplement；禁止把 atlas 压成全局排名，主文保持单一 V5 论证主线。 | `T6.19.3`, `experiment_plan.md §15.5, §16.2` |
 
 ### Milestone 7.2：论文正文与补充材料
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
-| T7.2.1 | Todo | 起草 Introduction 与 Related Work。 | 叙事聚焦 experiment-informed classical control / decoding gap，不声称替代真实量子实验。 | `experiment_plan.md:1070`, `experiment_plan.md §14.4` |
-| T7.2.2 | Todo | 起草 Methods。 | 覆盖协议数字孪生、混合噪声、baseline、三时间尺度控制、定点/RTL/HIL 和统计方法，可复现。 | `experiment_plan.md:1070`, `experiment_plan.md §14.3` |
-| T7.2.3 | Todo | 起草 Results。 | 依证据门顺序报告 protocol、causal injection、algorithm、logical channel、robustness、board/HIL；负结果不隐藏。 | `experiment_plan.md:1070`, `experiment_plan.md §14.3` |
+| T7.2.1 | Todo | 起草 Introduction 与 Related Work。 | 叙事聚焦 observed-only posterior-predictive safe adaptation：MAP 负责 LER、typed event/fallback 负责 tail、FPGA contract 负责 deterministic execution；按 T6.16—T6.19 的 task signature 和证据等级，相对 static GKP、CI/ML、Direct NN/RL、AQEC、CPD、Puviani NMF 和 FPGA decoder 分 lane 定位，不声称替代真实量子实验或形成跨协议总榜。 | `T6.10.2`, `T6.8`, `T6.16--T6.19` |
+| T7.2.2 | Todo | 起草 Methods。 | 覆盖 protocol-aligned simulator、unified contract、四分割预注册、multiscale wrapped features、IMM/BOCPD、activation prediction、posterior integration、risk calibration、typed bank policy、matched baselines、统计、fixed-point/formal/CXXRTL/P&R；逐项标出 online observed-only 与 offline truth-only scoring，真实板卡方法保持 future work。 | `T6.10--T6.15` |
+| T7.2.3 | Todo | 起草 Results。 | 先完整报告 V4 的 Window/static/tail 负结果和 causal-headroom 诊断，再按 V5 锁顺序报告 untouched LER、tail、消融、quantized retention、formal safety、长序列 CXXRTL 与 P&R estimate；Phase 6C 只有 `OFFICIAL_CODE_REPRODUCTION` 或 `PROJECT_NATIVE_MATCHED` 结果可进入明确标注的 secondary Results，`LITERATURE_ONLY` 仅进 Related Work/Supplement。失败 family/restart/attempt 不隐藏，measured hardware 不生成结果段。 | `T6.7--T6.15`, `T6.19.3` |
 | T7.2.4 | Todo | 起草 Discussion/Conclusion。 | 明确无 cavity/transmon、无真实 beyond-break-even、无板上训练；讨论成本、外部效度和真实实验接入路径。 | `experiment_plan.md:1070`, `experiment_plan.md §14.4` |
-| T7.2.5 | Todo | 完成 Supplementary。 | 包含公式、参数表、完整 baseline、置信区间、消融、失败模式、RTL/工具链、长序列和复现说明。 | `experiment_plan.md:1070` |
+| T7.2.5 | Todo | 完成 Supplementary。 | 包含公式、参数表、完整 baseline、置信区间、消融、失败模式、RTL/工具链、长序列和复现说明；附 Phase 6C source locator、task signature、N/A/null/failed 状态、外部复现偏差和非混排比较 atlas。 | `T6.16--T6.19`, `experiment_plan.md:1070` |
 
 ### Milestone 7.3：审稿风险预处理
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
 | T7.3.1 | Todo | 回答“为何不用 exact/oracle MAP？” | oracle 是不可部署上界；贡献限定为 drift/regime 下缩小 static-to-oracle gap。 | `experiment_plan.md:1099` |
-| T7.3.2 | Todo | 回答“CNN 是否只是过拟合模拟器？” | 用强 baseline、held-out protocol/range、跨保真度、消融和 board HIL 回答；证据不足则删除 CNN 主张。 | `experiment_plan.md:1099` |
-| T7.3.3 | Todo | 回答“为何称实验相关但没有量子硬件？” | 清楚区分 literature fact、digital twin、board measurement 和 HIL；标题摘要不得使用 experimental GKP QEC。 | `experiment_plan.md §14.4` |
+| T7.3.2 | Todo | 回答“CNN 是否只是过拟合模拟器，项目是否仍是 CNN-centric？” | 明确 CNN/teacher/student 是 matched-budget replaceable extension；主系统不依赖 learned winner。只有 T6.7.4/T6.8.5 通过才保留相应收益，否则放入消融/补充材料。 | `experiment_plan.md §18.1, §18.4` |
+| T7.3.3 | Todo | 回答“为何称实验相关但没有量子硬件？” | 清楚区分 literature fact、official-code reproduction、project-native simulation、board measurement 和 HIL；AQEC/Sivak 的真实系统证据不得迁移成本项目证据，标题摘要不得使用 experimental GKP QEC。 | `T6.18.1`, `T6.19.3`, `experiment_plan.md §14.4` |
 | T7.3.4 | Todo | 回答“post-selection/break-even 是否夸大？” | 主指标不依赖 post-selection；仅报告 simulation-derived coherence gain 和完整成本。 | `experiment_plan.md §14.4` |
-| T7.3.5 | Todo | 回答“是否只是复现 NMF PRL？” | 新贡献必须落在 leakage/drift/model mismatch、teacher-to-student compression、低成本 FPGA deadline/HIL 和严格选择偏差审计；缺一则降低 novelty claim。 | `experiment_plan.md §15.5` |
-| T7.3.6 | Todo | 回答“完整 RNN 是否真的能实时上板？” | 以 T5.5.4/Phase 6 实测区分 full GRU、quantized GRU 和 distilled student；不能把 teacher GPU 推理写成 FPGA critical path。 | `experiment_plan.md §15.4` |
+| T7.3.5 | Todo | 回答“是否只是复现 NMF PRL？” | 先给 official GQF exact/partial reproduction 状态，再把本项目贡献限定为 drift/tail contract、safe fallback、teacher-to-student retention/compression 与 deterministic deployment；Puviani/Sivak 只在 protocol-native controller/system lane，只有同 observation/action/environment/budget 的 paired CI 支持才写 physical lifetime surpass。 | `T6.17.3`, `T6.18.1`, `T6.19.3`, `experiment_plan.md §18.5` |
+| T7.3.6 | Todo | 回答“完整 RNN 是否真的能实时上板？” | RNN 不在 FPGA critical path；以 Route-A 6-cycle MAP/event fast path 和实板 source-to-action 证据为主，full/quantized GRU/student 分列。不能把 teacher GPU 推理、P&R estimate 或 host latency写成板上确定性延迟。 | `experiment_plan.md §18.6` |
+| T7.3.7 | Todo | 回答“为何能与 FPGA QEC decoder 比快？” | 逐项对齐 code family、problem size、core/source-to-action、average/worst、II、precision 与板卡；只在 T6.19.2 的 exact task-signature 子集和 T6.9.2 实测同时支持时写 speed advantage，否则只报告本设计 deterministic pre-board latency contract。 | `T6.19.1--T6.19.2`, `T6.9.2`, `experiment_plan.md §18.5—§18.6` |
 
 ### Milestone 7.4：可复现发布
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
-| T7.4.1 | Todo | 冻结数据、配置和 provenance。 | 每张主图可追溯到 raw/processed data、config、seed、commit、板卡/工具链版本。 | `experiment_plan.md §14.3` |
+| T7.4.1 | Todo | 冻结数据、配置和 provenance。 | 每张主图和 Phase 6C atlas 单元均可追溯到 raw/processed data、source locator、evidence grade、config、seed、commit、板卡/工具链版本；literature-only 值不得绑定成项目 run。 | `T6.19.3`, `experiment_plan.md §14.3` |
 | T7.4.2 | Todo | 提供一键复现实验和 artifact manifest。 | 软件仿真可一键运行；硬件结果提供 trace、golden output、bitstream/source 或可审计替代物。 | `experiment_plan.md §14.3` |
-| T7.4.3 | Todo | 完成投稿前证据审计。 | claim-evidence matrix、任务记录、风险表、主文、补充材料和仓库状态一致，无“estimate 写成 measured”。 | `experiment_plan.md §14.4` |
+| T7.4.3 | Todo | 完成投稿前证据审计。 | claim-evidence matrix、任务记录、风险表、主文、补充材料和仓库状态一致；T6.15.5 与 T6.19.3 verdict 均被逐句消费，无 global leaderboard、literature/reproduction 混写或“estimate 写成 measured”。 | `T6.15.5`, `T6.19.3`, `experiment_plan.md §14.4` |
 
 ---
 
@@ -416,12 +603,19 @@
 | baseline 必须协议原生且强。 | Phase 3 和 T5.1 覆盖 MAP、Bayesian、Kalman、window、run-length、HMM/change-point。 | `rough_plan.md:447`, `experiment_plan.md §14.3` |
 | post-selection 不得冒充在线纠错。 | T3.2.4 和 T5.3.4 仅把它作为诊断上界并核算 survival cost。 | `experiment_plan.md §14.4` |
 | 低成本 FPGA 不等于真实量子实验。 | T1.4、Phase 6 和 T7.3.3 分离 digital control-plane/HIL 与 cavity/transmon/microwave claim。 | `experiment_plan.md §14.1, §14.4` |
-| 论文主图不得先于真实板卡证据冻结。 | v2 将低成本 FPGA/HIL 设为 Phase 6，论文和主图设为 Phase 7。 | `experiment_plan.md §14.2` |
+| 缺少实物板卡不得整体冻结 Phase 6。 | `T6.1.1`/`T6.9.2` 的 Blocked 只沿实物板卡轨传播；T6.10—T6.15 继续完成 V5 性能、fixed-point、formal、CXXRTL 与 P&R estimate，T6.2.3/T6.4/T6.9.2 再以独立板测证据汇合。 | `experiment_plan.md §17`, `T-RISK-20260720-01` |
+| CNN/teacher/student 不得重新成为无条件核心贡献。 | Phase 6B 以 posterior-predictive MAP + LER/CVaR risk gate + typed tail policy + deterministic FPGA contract 为主线；学习模块必须通过 matched-budget promotion gate，否则只进消融或 supplement。 | `T6.10.2`, `T6.14.3` |
+| static GKP、drift decoder、Puviani NMF 与 FPGA decoder 不得拼成全局榜。 | T6.8 分别建立 decoder/controller/hardware lane；跨 simulator lifetime、跨 code family raw latency、privileged oracle 与 deployable aggregate 均禁止。 | `experiment_plan.md §18.5` |
+| 已打开的 V4 formal 不得成为 V5 确认性证据。 | T6.7/T6.8 只作 prior-informed diagnosis；T6.10.3 新建四分割和 effect-blind power plan，T6.13.3 在任何新 formal 访问前锁定全部 source/config/checkpoint/threshold/analysis/hash。 | `T6.10.1--T6.10.3`, `T6.13.3` |
+| simulation/pre-board 主图与 measured-hardware 主图必须分层。 | `T6.15.5=GO_SIM_PREBOARD` 后可冻结算法、fixed-point、formal、CXXRTL、P&R-estimate 图；真实 latency/jitter/deadline/power panel 仍须 T6.9.2，通过前保持 null/omitted。 | `T6.15.5`, `T6.9.2`, `T7.1.3` |
+| 两张异构方法图不得直接作为实验总榜。 | Phase 6C 把 CI/ML、Direct NN/RL、AQEC、CPD、Hybrid 和 FPGA 指标拆为六条 task-signature lane；只做同 lane 排名，N/A/null/failed 与 evidence grade 显式保留。 | `T6.16--T6.19`, `T-RISK-20260720-02` |
+| Phase 6C 不得在 V5 formal 后寻找有利对手或改写主门。 | `T6.15.5=Done` 后才启动，冻结 T6.14/T6.15 live hashes；所有新增实验使用独立 secondary split，不能进入 V5 `>=10%` denominator或升级 T6.15.5 verdict。 | `T6.16.3`, `T6.19.3` |
+| 外部代码复现、项目原生重放与文献数值不得混写。 | 每个 atlas 单元固定 `LITERATURE_ONLY/OFFICIAL_CODE_REPRODUCTION/PROJECT_NATIVE_MATCHED/INELIGIBLE/BLOCKED/NEGATIVE`；缺源码、checkpoint、协议或同任务 adapter 时保持 partial/null。 | `T6.16.1`, `T6.19.3` |
 | single-mode GKP 避免 surface-code threshold 语言。 | T5.3.3、T7.3.4 使用 operational boundary、simulation-derived coherence gain 和 logical lifetime。 | `rough_plan.md:270`, `experiment_plan.md §14.4` |
 
 ## 插入任务区
 
-当 `docs/risks.md` 中的风险被判定为需要立即处理，且原 `experiment_plan.md` 没有对应 task 时，在这里插入 `T-RISK-YYYYMMDD-NN` 任务。插入任务不得修改 `docs/rough_plan.md`；只有真实结果与计划发生实质出入时，才低频更新 `docs/experiment_plan.md`。
+当 `docs/new_risks.md` 中的风险被判定为需要立即处理，且原 `experiment_plan.md` 没有对应 task 时，在这里插入 `T-RISK-YYYYMMDD-NN` 任务。插入任务不得修改 `docs/rough_plan.md`；只有真实结果与计划发生实质出入时，才低频更新 `docs/experiment_plan.md`。
 
 | ID | 状态 | 来源风险 | 建议位置 | 任务 | 产物 / 通过标准 |
 | --- | --- | --- | --- | --- | --- |
@@ -430,6 +624,11 @@
 | T-RISK-20260713-01 | Done | R-019—R-023 | T1.4/M2.3 后、Phase 3 前 | 根据 NMF PRL 定向补强 memory-specific baseline、Feedback-GRAPE 可行性门、teacher-to-student 路线和 FPGA 部署证据门。 | 完成 `docs/tasks/T-RISK-20260713-01_nonmarkovian_teacher_student_board_strengthening.md`；新增 `experiment_plan.md` 第 15 节和 v2.1 task/风险闭环，当前推荐任务保持 `T1.3.3`。 |
 | T-RISK-20260713-02 | Done | R-024—R-026 | T1.4/M2.3 后、Phase 3 前 | 根据六篇补充论文进行 v2.2 小幅补强，增加 noise-transfer surrogate、channel-recovery bound、top-K lattice-coset MAP，并限制 secondary protocol 的范围。 | 完成 v2.2 `docs/task_board.md`、`experiment_plan.md` 第 16 节、风险同步和 `docs/tasks/T-RISK-20260713-02_six_paper_v22_board_strengthening.md`；当前推荐任务保持 `T1.3.3`。 |
 | T-RISK-20260714-01 | Done | R-N041 | T2.3.3 后、T2.3.4 前 | 冻结 canonical/decoder/displacement/symplectic quadrature normalization，解释并修复 Fourier-p audit。 | 完成四 chart、完整 damped-projector dilation、32 direct、15 machine gates、canonical q/p high-dB gap `1.51e-7` 与 legacy gap `>0.418`；R-N041 降为 Mitigated，joint coherent claim 仍 fail closed。 |
+| T-RISK-20260716-01 | Done | R-N104 | T5.5.1 后、T5.5.2 前 | 补齐可综合的 T5.5.1 fast-path RTL 前提，冻结小引脚 synthesis harness，并与 Python golden 做逐向量对拍。 | 8 mirrored 1R1W memories、full state/pipeline；4,316 valid MAP rows 全字 0 mismatch；8/8 gates、8 mutations、13 tests。T5.5.2 已独立完成目标器件 P&R。 |
+| T-RISK-20260717-01 | Done | R-N109 | T5.5.4 后、T6.2.1 前 | 把 Phase 6 的全局真板阻塞拆成板卡无关资格验证轨和实物板卡验证轨，使已有合法 RTL 能先完成 production 审计、长序列和故障路径仿真。 | 完成 `docs/new_tasks/T-RISK-20260717-01_phase6_preboard_dependency_split.md` 与镜像记录；`experiment_plan.md` 新增 §17，任务板当前推荐切换为 T6.2.1；T6.1.1 仅局部 Blocked，板测证据边界不变。 |
+| T-RISK-20260717-02 | Done | R-N084 / R-N086 / R-N098 / R-N110 | T6.2.2 后、Phase 7 前 | 插入 Route-A Phase 6A，把 CNN-centric 叙事重构为 contract-centric、regime-aware 安全自适应双回路，并建立相对 static GKP、一般 drift-adaptive、Puviani NMF 与 FPGA decoder 的不可混排优势证据。 | 完成 `docs/new_tasks/T-RISK-20260717-02_route_a_phase_insertion.md` 与镜像记录；新增 Milestone 6.5—6.9 共 20 个 task、统一 benchmark/安全门/GQF 官方复现/实板 GO-NO-GO；`experiment_plan.md` 新增 §18，Phase 7 改为消费 Route-A 证据。 |
+| T-RISK-20260720-01 | Done | R-N130 / R-N131 / R-N132 | Phase 6A 后、Phase 7 前 | 插入软件优先的 Phase 6B，把 V4 的 strongest-baseline/tail 负结果转化为 static-anchored predictive IMM/BOCPD、posterior-predictive MAP、LER/CVaR risk gate、typed trusted experts 和独立 V5 formal 路线；真板只阻塞 measured hardware claim。 | 完成 `docs/new_tasks/T-RISK-20260720-01_predictive_risk_aware_v5_phase.md` 与镜像记录；新增 Milestone 6.10—6.15 共 22 个 task，冻结相对全部 eligible baselines 至少 `10%` LER、step/telegraph tail、observed-only、quantized/CXXRTL/formal/P&R 门；当前推荐切换为 T6.10.1，T6.9.2 保持 Blocked。 |
+| T-RISK-20260720-02 | Done | R-N133 / R-N134 / R-N135 / R-N136 | Phase 6B 完成后、Phase 7 前 | 把两张图中的 CI、ML/MAP、Direct NN、RL、AQEC、CPD、Hybrid 及 LER/threshold/lifetime/drift/latency/resource 指标改造成只读、分 task-signature lane 的非主要比较；禁止 global leaderboard 和 post-formal 主结论污染。 | 完成 `docs/new_tasks/T-RISK-20260720-02_secondary_comparison_phase6c.md` 与镜像记录；新增 Milestone 6.16—6.19 共 12 个 Todo task，覆盖 source/ontology/preregistration、gate-level CI-ML、CPD、learned eligibility、AQEC wall-clock、预板/外部 FPGA 规范化和 integrity atlas；当前推荐保持 T6.10.1。 |
 
 ## 进度日志
 
@@ -616,67 +815,120 @@
 | 2026-07-16 | T5.0.2 | Todo -> In Progress | 开始按 T5.0.1 冻结的 calibration/holdout contract 执行跨保真度独立验证，优先选择一个主线趋势和一个 secondary 解析趋势，测试参数不得回流调参。 | 必须使用未参与 T2.3.3/T5.0.1 阈值建立的参数范围或协议点；pending 只有对应独立 gate 通过才能升级，secondary 仍不进入 sBs 主排名。 |
 | 2026-07-16 | T5.0.2 | In Progress -> Done | 完成 disjoint `2.5/10.25/11.75 dB` 四-fidelity holdout、4 fresh seeds/点、252-point P-Steane 双路径解析回归、291-row Source Data、human report、protocol contract 与双任务记录。 | task 6/6 gates；main 明确 FAIL（`10.25 dB` z=`2.293338>2`）、secondary PASS；118 focused、319 adjacent tests；未重选失败点或改写 T5.0.1 snapshot，R-N081 登记，当前推荐更新为 T5.1.1。 |
 | 2026-07-16 | T5.1.1 | Todo -> In Progress | 开始盘点并冻结完整 comparison set 的 canonical role、实现绑定、输入可见性、deployability、预算和 ranking eligibility。 | 必须覆盖任务板列出的全部 comparator，区分 decoder/control/channel oracle 与主/secondary；缺失实现需 fail closed，不得用同名弱 baseline 或 Knill/P-Steane 填入 sBs 主排名。 |
-
-## 任务改进说明(含参考文献)
-
-最有价值的是 2411.05262 的低成本噪声传递模型和 2401.02022 的近最优逻辑通道界；其余四篇主要用于协议 baseline、计算量折中和论文实验叙事。
-
-| 论文 | 类型与核心结果 | 对本项目的价值 | 优先级 |
-| --- | --- | --- | --- |
-| [2605.08009：Error Correction of Beamsplitter-Generated Entangled GKP States](https://arxiv.org/abs/2605.08009) | 真实 trapped-ion 双模实验；四种 Bell 态平均保真度约 69%，QEC 将纠缠态寿命平均延长约 `2.0(2)` 倍；单轮 QEC 约 `500 μs` | 不作为 single-mode baseline，但非常适合借鉴论文叙事：分别报告 Pauli lifetime、QEC on/off、wall-clock、轮次成本、reset recoil 和并行控制代价 | 中 |
-| [2604.08247：Optimized GKP Error Correction via Tunable Preprocessing](https://arxiv.org/abs/2604.08247) | 理论与数值工作；用可调压缩参数 `(a,b)` 构造 P-Steane，依据 data/ancilla 噪声比例主动整形输出噪声；`2a=b` 给出重要最优条件 | 可作为 Steane-secondary 路线的 gain-scheduled protocol baseline。主机估计噪声比例，输出 `(a,b)` 参数库；但 FPGA 只能选择参数，不能实现物理 squeezing | 中高 |
-| [2411.05262：Noise Transfer Approach to GKP Quantum Circuits](https://www.mdpi.com/1099-4300/26/10/874) | Heisenberg-picture 解析方法，把 GKP 信号、连续涨落噪声和离散逻辑错误分开传播；可处理 loss、measurement efficiency、feedforward gain | 非常适合成为 syndrome model 与 Fock model 之间的低成本中间保真度模型，并用于逐组件 noise budget 归因 | 最高 |
-| [2505.14775：Performance analysis of GKP error correction](https://arxiv.org/abs/2505.14775) | 解析比较 Knill 与 Steane；证明 Steane 是特定资源态下的 Knill 特例；qunaught + beamsplitter 的 Knill 方案保留更好的对称 squeezing；数值等价误差低于 `10^-8` | 增加 Knill/qunaught、Steane/ME-Steane 的协议对照和解析回归测试，但因项目以 sBs 为主，应放 Supplement 或 secondary reproduction lane | 中 |
-| [2401.02022：The Near-optimal Performance of Quantum Error Correction Codes](https://arxiv.org/abs/2401.02022) | 基于 QEC matrix 和 transpose/Petz channel 构造无需优化的 near-optimal channel fidelity，并给出 optimal recovery 的双边界；可扩展到高能 GKP | 应作为新的“channel-recovery bound”，衡量实际 sBs、teacher/student 与编码本身潜在性能之间还有多大差距 | 最高 |
-| [2510.06531：Approximate maximum-likelihood decoding with K minimum weight matchings](https://arxiv.org/abs/2510.06531) | 用前 `K` 个 MWM 近似 MLD，通过 `K` 调节精度和计算量；主要实验对象是 surface/surface-GKP | 原算法超出 single-mode 范围，不应直接实现；但可借鉴为 top-K lattice-coset MAP：每个逻辑陪集只累加最可能的 K 个 lattice aliases，并测量 K—LER—资源 Pareto | 中高 |
-
-建议对任务板进行一次“小幅 v2.2 补强”，不需要再次整体重构：
-
-1. 在 `T1.4.5` 增加第三类上界术语：
-
-   - decoder oracle；
-   - control oracle；
-   - channel-recovery bound，即 QEC-matrix/Petz 近最优恢复界。
-
-   后者不是可部署 decoder，不能与 oracle MAP 混称。
-
-2. 在 M2.3 增加 noise-transfer surrogate：
-
-   - 分离 lattice signal、continuous fluctuation 和 discrete logical jump；
-   - 传播 covariance、loss、measurement efficiency 和 feedforward gain；
-   - 与 syndrome model、Fock model 交叉验证；
-   - 明确适用门槛：论文指出约 `10 dB` 以上 squeezing 时近似更可靠，低 squeezing 下会出现 clipping 和 state-dependent 偏差。
-
-3. 在 M3.1 增加 top-K lattice-coset MAP baseline：
-
-   - `K=1`：近似 nearest/minimum-distance 路线；
-   - 有限 `K`：硬件友好的 truncated MAP；
-   - 足够大 `K`：逼近当前 periodic Gaussian MAP；
-   - 报告 K、LER、LUT/BRAM/DSP、latency 和数值误差。
-
-4. 在 T5.0.1 的 reproduction table 中加入：
-
-   - Knill/Steane 数值等价；
-   - qunaught-Knill 与标准 Bell-resource Knill 的 squeezing/displacement 趋势；
-   - P-Steane 在不同 data/ancilla 噪声比下的参数趋势。
-
-   这些只作为 secondary protocol evidence，不进入 sBs 主图竞争。
-
-5. 在 M5.3 增加 near-optimal channel fidelity：
-
-   - 小 cutoff 下与 SDP optimal recovery 对齐；
-   - 中高 cutoff 使用 QEC-matrix/Petz bound；
-   - 报告实际控制器到该 bound 的 gap；
-   - 如果 bound 本身改善但实际 controller 没改善，应归因于 recovery/controller 不充分，而不是编码失效。
-
-6. 利用 2605.08009 补强既有实验叙事，不新增多模任务：
-
-   - 六个 Pauli eigenstates/各逻辑方向 lifetime；
-   - QEC on/off；
-   - cycle 数与真实 wall-clock 同时报；
-   - reset、recoil、测量和并行模式带来的成本；
-   - 明确不同平台的 `500 μs` 不能作为本项目 FPGA deadline。
-
-最重要的范围控制是：不引入 surface-GKP 主线，不把 P-Steane 的物理 squeezing 写成 FPGA 能实现的功能，也不把 Petz bound 写成实际 decoder 性能。按这个边界吸收后，六篇论文能够增强项目的物理建模、baseline 强度和论文说服力，而不会把当前 v2.1 再次扩散成协议大全。
-
-本轮仅完成论文筛选与任务映射分析，尚未修改 [task_board.md](D:/Codes/Quantum/CNN_FPGA_GKP/docs/task_board.md)。
+| 2026-07-16 | T5.1.1 | In Progress -> Done | 完成 19-comparator/8-lane registry、exact no-correction idle-memory anchor、finite-energy five-point probe、16 artifact/19 code bindings、100-row Source Data、human report、protocol contract 与双任务记录。 | 14/14 gates；48 direct、87 focused+governance、375 adjacent；T3.2.8 stale hash 被检出后正式重生成且 17/17 gates 保持；matrix 仍为未执行，R-N082 登记，当前推荐更新为 T5.1.2。 |
+| 2026-07-16 | T5.1.2 | Todo -> In Progress | 开始冻结 mixed noise/regime scenario schema、shared trace/seed contract、lane adapters、failure injection 与执行预算。 | 必须覆盖 static、mean/variance/correlation drift、loss、readout/ancilla、burst/outlier、large-error recovery、leakage 和 calibration shift；不允许把 component-only/oracle/secondary 行直接塞进全局榜。 |
+| 2026-07-16 | T5.1.2 | In Progress -> Done | 完成 10 类场景的 4-lane production matrix、36 个 decoder seed-cluster、fresh loss/fault/component runs、116-row Source Data、15 machine gates、failure mutations、human report、protocol contract 和双任务记录。 | 两次 loss isolation 自检失败均修正根因而未降阈值；11 direct、51 protocol/governance、207 adjacent tests；R-N082 Mitigated、R-N083 登记，当前推荐更新为 T5.1.3。 |
+| 2026-07-16 | T5.1.3 | Todo -> In Progress | 开始冻结 average/tail、decoder-oracle 与 short-horizon control-oracle 的 estimand、paired unit、bootstrap 和多重比较策略。 | 只在信息集、trace、horizon 与 metric 匹配的 lane 内报告 gap；先审计 T5.1.2 是否保存逐 window/trajectory outcome，缺失时需重放而不能从 seed aggregate 伪造 tail。 |
+| 2026-07-16 | T5.1.3 | In Progress -> Done | 完成 1,152-window exact replay、20k paired seed-bootstrap、24-test exact sign-flip+Holm、reliable decoder gaps、dual-cutoff exact two-cycle control-reference gaps、7,139-row ledger、15 gates 与双任务记录。 | 0 Holm discoveries、calibration transient worst `55/512>37/512` 和 negative control gaps 全保留；10 direct、162 adjacent、50 protocol/governance tests；R-N084/R-N085 登记，当前推荐更新为 T5.1.4。 |
+| 2026-07-16 | T5.1.4 | Todo -> In Progress | 开始把 T5.1.3 的 static nondegradation、drift/regime repeatability、Holm family、tail transient 与 deployment boundary 编译成唯一成功/证否 verdict。 | 不新增 evaluation seeds、不把 windows 当 seeds、不重选 scenario/method/metric；若冻结强分支任一必要门失败，必须走事件感知 adaptive MAP/FPGA co-design fallback 并删除 CNN 性能主张。 |
+| 2026-07-16 | T5.1.4 | In Progress -> Done | 完成 `algorithm_success_falsification.py`、278-row ledger、16/16 machine gates、19 direct/semantic-mutation tests 和 claim/reopen contract；邻近回归 `110 passed`。 | 强 learned-decoder 分支正式失败；保留 0 Holm discovery 与 `55/512 > 37/512` tail 反证，T4.4.5/T24 不跨 lane，当前唯一方向为 bounded adaptive MAP/FPGA co-design。 |
+| 2026-07-16 | T5.1.5 | Todo -> In Progress | 开始审计 protocol-native cycle/time、measurement/reset/active-control burden 与 classical latency 的可比定义和现有证据。 | 必须同时报告 per-cycle/per-microsecond 与操作成本；不同 cycle、decision target 或未测 latency 不得通过缩放/填零混成统一排名。 |
+| 2026-07-16 | T5.1.5 | In Progress -> Done | 完成 `time_cost_fairness.py`、12 protocol/10 controller/6 host rows、537-row ledger、18/18 gates 和 25 direct/165 adjacent tests。 | 6/6 cycle-vs-μs 排序反转、`e != reset`、two-cycle exclusion、controller/board latency null 与无 cross-lane total 均冻结；R-N087 登记。 |
+| 2026-07-16 | T5.1.6 | Todo -> In Progress | 开始审计 `p(g)`、e/leakage occupancy、reset、slew/saturation、fallback 与 unsafe-action 的共同可行性口径和已有 production evidence。 | 必须同时保留有利 lifetime 与全部代价/不可用字段；不同 model layer 的 burden 不得拼成同一 device-feasibility 结论。 |
+| 2026-07-16 | T5.1.6 | In Progress -> Done | 完成 `experimental_feasibility.py`、10 controller/8 fault rows、408-row ledger、21/21 gates、34 direct/mutation 与 94 parent-adjacent tests。 | 保留 11,552 fallback、4 reset request、0 observed unsafe/undefined 和七项 MISSING；峰值仍带完整成本/null，R-N088 登记。 |
+| 2026-07-16 | T5.2.1 | Todo -> In Progress | 开始冻结 displacement/large-distance fault 的注入坐标、最近逻辑操作距离、paired trace、recovery-depth/e-run/logical-failure estimand 与失败分支。 | 必须先审计 T2.0.5/T5.1.2 component evidence 是否足够；不能把预设趋势或 component proxy 冒充 matched closed-loop 因果结果。 |
+| 2026-07-16 | T5.2.1 | In Progress -> Done | 完成 17 幅度×8 独立 seed-cluster causal campaign、136 recovery/272 logical rows、1,863-row Source Data、20/20 gates、43 direct/mutation 与 137 adjacent tests。 | depth/e-run 与 nearest-op failure 在 `l_S/4` 达峰；identity flip 0→1 同报，解析差 `<0.005`，R-N029 更新、R-N089 登记。 |
+| 2026-07-16 | T5.2.2 | Todo -> In Progress | 开始冻结 ancilla bit flip、phase flip 与 readout error 的独立注入点、固定其他通道、paired seed/trace、协议原生观测和敏感度 estimands。 | 三类 fault 必须一次只改变一个 channel；若既有 T2.2.2/T5.1.2 只提供 aggregate overlay，需补正式 seed-cluster 因果矩阵而不能直接改名。 |
+| 2026-07-16 | T5.2.2 | In Progress -> Done | 完成 bit-only/phase-only/readout-only 3×6×8×4096 独立 campaign、144 seed rows、1,960-row Source Data、22/22 gates、23 direct/mutation 与 139 adjacent tests。 | bit logical、phase small-backaction、readout virtual-rotation 分列且全交叉负控为 0；R-N090 登记，实验 65×、physical-memory LER 和 device claim 保持关闭。 |
+| 2026-07-16 | T5.2.3 | Todo -> In Progress | 开始冻结 leakage injection、reset-failure intervention、leakage-free ablation、detector/action availability、recovery-cost estimands与失败分支。 | 必须分别改变 leakage 与 reset channel，保留 hidden/observed/truth 边界；不得把 T2.0.6 occupancy component 或 T5.1.2 aggregate lane 改名为正式 closed-loop 结果。 |
+| 2026-07-16 | T5.2.3 | In Progress -> Done | 完成 leakage-injection/reset-failure 两条 6-rate×8-seed causal lanes、96 seed/12 summary rows、2,508-row Source Data、23/23 gates、27 direct/mutation 与 145 adjacent tests。 | leakage-free 的 detection/delay 保持 null；formal detection fraction=1 不外推总体，tail、availability 与 raw reset cost 分列；R-N091 登记。 |
+| 2026-07-16 | T5.3.1 | Todo -> In Progress | 开始审计 `physics/logical_channel.py`、finite-Fock channel/PTM、T4.4 physical trajectories与 T5.2 causal diagnostics，冻结六态/equivalent PTM、QEC on/off、per-cycle/wall-clock 和 non-Pauli/leakage 诊断合同。 | 不能把异构历史结果拼成逻辑通道；必须在同一 matched channel lane 重构并保留 trace/non-TP 失败分支。 |
+| 2026-07-16 | T5.3.1 | In Progress -> Done | 完成 cutoff 12/24/36/40×3 noise×QEC on/off 的 24 条六态 CPTNI channel lanes、17,266-row Source Data、26/26 gates、33 direct/mutation 与 196 adjacent tests。 | 低 cutoff 性能方向反转未隐藏；36→40 terminal PTM/leakage 稳定，raw outputs 可全链重算；R-N092 登记，不升级 break-even/device claim。 |
+| 2026-07-16 | T5.3.2 | Todo -> In Progress | 开始冻结 CPTNI code subchannel 下 `F_e/F_avg` 的定义、leakage-inclusive 与 conditional 指标边界、短时有效退极化率、cycle cluster/截断不确定度及失败分支。 | 必须从 T5.3.1 raw six-state outputs/PTM 重算；不能用单态保真度或单指数拟合替代平均通道，也不能把 cutoff spread 伪装成统计 CI。 |
+| 2026-07-16 | T5.3.2 | In Progress -> Done | 完成 24 条 parent-bound CPTNI fidelity lanes、5,294-row Source Data、23/23 gates、31 direct/mutation 与 116 adjacent closeout tests；TP 公式高估、六态 direct replay、conditional diagnostic、1/3/4-point rate 和 cutoff sensitivity 全链可重算。 | cutoff40 qec-on 终点 `F_avg` 更高但初始 rate spread `0.835--0.908`，故 qualified lifetime 保持 null；R-N093 登记，不升级 break-even。 |
+| 2026-07-16 | T5.3.3 | Todo -> In Progress | 开始审计 passive/uncorrected 与 active channel 的共同 horizon、time/cost、full-curve crossing、cutoff sensitivity 和 boundary qualification。 | 必须同时消费 T5.3.1 channel 与 T5.3.2 transient/reliability 反证；不能用单终点、raw area ratio 或不合格 `1/Gamma` 宣称 break-even。 |
+| 2026-07-16 | T5.3.3 | In Progress -> Done | 完成 12 个 full-curve comparisons、416-row Source Data、25/25 gates、36 core/direct/mutation 与 152 adjacent closeout tests；36/40 的三种 noise 均建立稳定 wall-clock operational boundary，cutoff12 全失败完整保留。 | 主动短时率不合格、qec-off 不是 best-passive physical encoding 且 active cost 未完整定价，因此 coherence gain/full-cost/experimental break-even 均保持 `NOT_ESTABLISHED`；R-N094 登记。 |
+| 2026-07-16 | T5.3.4 | Todo -> In Progress | 开始冻结 repeats、active pulses、measurement/reset、post-selection survival/rejection、squeezing、classical resources、latency 与 achieved fidelity/LER 的统一成本账本。 | 必须复用 T3.2.4、T5.1.5、T5.1.6 和 T5.3.3 原生证据，字段不匹配或未测量时保持 null；不得用 conditional post-selected performance 或配置 latency 冒充在线/full-cost 增益。 |
+| 2026-07-16 | T5.3.4 | In Progress -> Done | 完成 6-parent cost ledger、6 online/8 post-selection/12 missing rows、94-row Source Data、27/27 gates、38 core/direct/mutation 与 264 adjacent closeout tests；T5.3.1 native events 与 T5.1.5 protocol cross-check 一致。 | 8/8 conditional error 改善但 unit-rejection total cost 恶化；12 项 latency/pulse/device/LER/reference 保持 null，full-cost/coherence-gain/postselected break-even 未建立；R-N095 登记。 |
+| 2026-07-16 | T5.3.5 | Todo -> In Progress | 开始审计 encoding/noise channel、small-cutoff Choi/QEC-matrix、Petz/transpose recovery、SDP optimal recovery、cutoff extension 与 sBs/teacher/student gap 的共同 metric 和计算预算。 | 必须先做 small-cutoff SDP-vs-Petz 双边界和 solver certificate；任意 recovery bound 不是 deployable decoder/controller，不能用异构 teacher/student lifetime 直接相减。 |
+| 2026-07-16 | T5.3.5 | In Progress -> Done | 完成 QEC matrix/direct Petz 双算、15 个 small-cutoff repaired primal/dual SDP、15 个 cutoff-extension、27 个 energy-extension、119-row Source Data、21/21 gates 与双任务记录。 | 26 direct/mutation、218 adjacent tests；最大 SDP certificate width `1.484154e-7`，Petz-to-SDP gap `0.001788472`；actual sBs 仅作 schedule-mismatched diagnostic，teacher/student gap 为 null，R-N096 登记。 |
+| 2026-07-16 | T5.4.1 | Todo -> In Progress | 开始审计 held-out/OOD 的 family、参数边界、split/provenance、统一 observable、fallback/unsafe 与已有 T4/T5 artifacts 的可重放性。 | 必须覆盖 unseen drift family/range、leakage、measurement confusion 和 communication disturbance；不得从既有 evaluation 结果事后挑选 OOD 阈值或把异构 component lanes 拼成系统稳健性。 |
+| 2026-07-16 | T5.4.1 | In Progress -> Done | 完成 frozen-decoder drift、sBs measurement-confusion、persistent leakage-rate 与 scheduler communication 四条 OOD lanes；104 seed cells、280-row Source Data、20/20 gates、15 direct/mutation 与 224 combined adjacent tests。 | telegraph adaptive point reversal 的 CI 跨 0、micro-outage null 与 compound communication degradation 全保留；validator 重算 evidence gates，R-N097 登记，不升级 system/device robustness。 |
+| 2026-07-16 | T5.4.2 | Todo -> In Progress | 开始冻结 uncertainty signal、catastrophic event、gated/no-fallback matched actions、unnecessary fallback、performance cost、paired seed/trace 与 threshold provenance。 | 必须在同一可执行系统和同一 fault population 上做因果对照；不得把 T4.2.3 的安全 taxonomy、T4.1.4 false-fallback 或 T5.4.1 异构 lanes 直接相减成 fallback benefit。 |
+| 2026-07-16 | T5.4.2 | In Progress -> Done | 完成 development-only threshold、12 fresh confirmation clusters、36 OOD/12 nominal cells、517-row Source Data、21/21 gates、17 direct/mutation 与 180 combined adjacent tests；逐 window/cell 重算 avoided/induced/unnecessary accounting。 | aggregate OOD 微弱正向但 telegraph/compound 方向相反、nominal 点估计略差；R-N098 登记，不升级 universal/device/physical-memory claim，当前推荐更新为 T5.4.3。 |
+| 2026-07-16 | T5.4.3 | Todo -> In Progress | 开始审计 history、CNN residual、regime state、run-length、parameter update 与 fallback 六项机制在现有 artifacts 中的可执行路径、共同 outcome/trace 和反事实关闭语义。 | 必须对每项做真实 intervention，不以字段归零或旧异构 task 指标拼接冒充消融；全部失败场景和 claim 降级决定必须进入正式负结果表。 |
+| 2026-07-16 | T5.4.3 | In Progress -> Done | 完成六项 native-lane mechanism-off、legacy CNN checkpoint 重推理、338-row Source Data、18/18 gates 与 18 direct/mutation tests；负号、代价、nonmixing 和 claim 降级均 fail-closed。 | history/run-length 正式为负，regime 有 delay cost，fallback 非场景普适；R-N099 登记，当前推荐更新为 T5.4.4。 |
+| 2026-07-16 | T5.4.4 | Todo -> In Progress | 开始审计全部 multi-agent/restart/seed 结果、selection stage 与独立 evaluation 边界。 | 必须报告全体 median/IQR/worst quartile，并证明 test 未参与 best-agent/model post-selection。 |
+| 2026-07-16 | T5.4.4 | In Progress -> Done | 完成 6 selection episodes、255 evaluation units、39 distributions、420-row Source Data、23/23 gates 与 21 direct/mutation tests；全 agents/restarts/seeds 与 hindsight bias 均 fail-closed。 | active selection 使用 test 的数量为 0；teacher 两条 test ranking reversal 与 legacy coverage gap 保留，R-N100 登记，当前推荐更新为 T5.4.5。 |
+| 2026-07-16 | T5.4.5 | Todo -> In Progress | 开始冻结训练 horizon sweep、`1e3/1e5/1e6` cycle deployment horizons、hidden-state boundedness、reset sensitivity 与数值稳定性验收。 | 必须执行真实长时递推与 outcome/performance 评估，不以短 smoke、单终点或只检查 finite 值替代。 |
+| 2026-07-16 | T5.4.5 | In Progress -> Done | 完成 4 training horizons、9 fresh fits、8 条两百万-step streams、float64/float32 全步递归、13,631 action checkpoints、120 reset interventions、521-row Source Data、21/21 gates 与 24 direct/mutation tests。 | 保留 2-cycle 独立评估/all-e 长时失败；10/32-cycle mean+worst action gate 通过但 physical gain 未建立；R-N101 登记，当前推荐更新为 T5.4.6。 |
+| 2026-07-16 | T5.4.6 | Todo -> In Progress | 开始冻结 randomized model-mismatch joint design、随机化分布、held-out seeds 与 per-family/compound reporting。 | 必须覆盖 gate/readout/leakage-reset/dephasing/drift/timing-dynamics，不得以单一 bias vector、固定 stress point 或跨 family 总分替代。 |
+| 2026-07-16 | T5.4.6 | In Progress -> Done | 完成 64 个 parent-disjoint random cells、四条 native lanes、273-row Source Data、19/19 gates、30 direct 与 176 combined adjacent tests。 | student relative retention median/Q1/min `0.998101/0.990413/0.897630`；保留 gate-bias/compound teacher worst degradation `0.424155/0.395654`，R-N102 登记，当前推荐更新为 T5.5.1。 |
+| 2026-07-16 | T5.5.1 | Todo -> In Progress | 开始审计现有 fixed-point chain、fast path、FSM、ParamBank、trace schema 与 RTL golden-model 缺口。 | 必须冻结逐 word 位宽/舍入/饱和、逐 cycle 状态转移、bank image/CRC/version 与 bit-for-bit trace；不得把 Python float 或资源 proxy 冒充 bit-accurate reference。 |
+| 2026-07-16 | T5.5.1 | In Progress -> Done | 完成 58/118/232-bit packed words、8-image binary bank、16,384-code parity、4,110-input true pipeline、atomic in-flight switch、4,116-row trace、16,503-row ledger、16/16 gates 与 25 focused tests。 | core adjacent 157、closed-loop adjacent 19 全通过；R-N103 登记，RTL/synthesis/Fmax/resources/board 保持未测，当前推荐更新为 T5.5.2。 |
+| 2026-07-16 | T5.5.2 | Todo -> In Progress | 开始核查本机 Gowin/Yosys/nextpnr 工具链、Tang Nano 20K 器件约束、现有 RTL 与 T5.5.1 golden trace 的可综合映射。 | 必须产出真实工具 report 或明确 fail-closed；不得把 Python representation proxy、估算公式或软件耗时冒充 synthesis/timing。 |
+| 2026-07-16 | T5.5.2 / T-RISK-20260716-01 | In Progress -> Blocked / Inserted -> In Progress | 确认固定版本 YoWASP Yosys/nextpnr 可用且器件库识别 `GW2AR-LV18QN88C8/I7`，但仓库不存在任何 HDL，空设计或临时 demo 无法支撑资源/时序 claim。 | 登记 R-N104；先补可综合 core、synthesis-only 小引脚 harness 与 golden 对拍，完成后自动恢复 T5.5.2。 |
+| 2026-07-16 | T-RISK-20260716-01 / T5.5.2 | In Progress -> Done / Blocked -> In Progress | 完成 8-memory 可综合 core、CXXRTL fault/exhaustive 全字对拍、4,316 valid rows 0 mismatch、8/8 gates、8 mutations 与 13 tests；真实 2R1W 映射和同步读问题已修复。 | R-N104 降为 Mitigated；合法被测对象与 source-bound parent evidence 已建立，恢复目标器件 synthesis/P&R。 |
+| 2026-07-16 | T5.5.2 | In Progress -> Done | 完成固定 `GW2AR-LV18QN88C8/I7` 的 Yosys synthesis 与 seed 1/7/19 nextpnr P&R；复核修复 modulo-257 harness 配置地址后 Fmax min/median/max `39.7456/39.8661/40.4318 MHz`，最大 LUT4/DFF/BSRAM `3362/865/8`。 | 12/12 gates、9 mutations、20 focused tests；runner cache/retry 强化，vendor signoff/bitstream/board/transport 保持 false。 |
+| 2026-07-16 | T5.5.3 | Todo -> In Progress | 开始联合审计位宽、top-K、student 状态维数和并行度的真实软件性能与目标器件 resource/timing 映射。 | 必须建立统一候选合同、真实精度/性能证据与可复核综合估计；不得用静态公式代理冒充所有候选的工具报告，也不得提前进入真板 claim。 |
+| 2026-07-16 | T5.5.3 | In Progress -> Done | 完成 108-point joint matrix、4-state Q3.14 student RTL、512-update/7,680-output CXXRTL 0 mismatch 与 core+student 三 seed P&R；共享 harness 修复后重跑 Fmax min/median/max `39.5726/40.3226/40.5351 MHz`。 | 最大 LUT4/DFF/BSRAM `3802/1022/8`；补 core/top/SDC/CST source bindings；16 gates、10 mutations、25 focused tests；在线 top-K/P2/P4/board 保持 false。 |
+| 2026-07-16 | T5.5.4 | Todo -> In Progress | 开始比较 fresh full GRU、量化 GRU 与已综合 4-state student 的参数存储、MAC、量化误差、目标器件资源/时序和 gain-retention 证据。 | full/quantized GRU 只有真实 target synthesis 且 deadline/gain gate 通过才可进入增强路线；否则保持 student 主线或 MAP-LUT fallback。 |
+| 2026-07-16 | T5.5.4 | In Progress -> Done | 完成 full-float storage fail-fast、完整参数 int8/Q3.14 shadow、72,854-cycle CXXRTL lower-bound、三 seed P&R、4-row Source Data、16/16 gates、12 mutations 与 13 focused tests。 | 独立 signature 修复 bias 顺序/越界，共享 harness 修复后再次重跑 min Fmax 39.1527 MHz、41/46 BSRAM；provenance/netlist 已绑定，student 唯一 eligible，T6.2.5 Dropped。 |
+| 2026-07-16 | T6.1.1 | Todo -> Blocked | 下一顺序任务要求锁定用户实际持有的开发板、采购成本、照片、供电/接口与板载工具版本；当前仓库只有 Tang Nano 20K target contract，不能把 target database 冒充实物。 | 按用户约定暂停真板任务推进，转入此前任务非简化实现复核；待用户提供/确认实物信息后恢复。 |
+| 2026-07-16 | T5.5.2--T5.5.4 | Blocked-boundary review | 复核发现并修复 shared harness 257-entry ROM 配置地址越界、量化 GRU bias 重复/漏读/terminal 越界、YoWASP cache/retry 与 integrated source-binding 缺口；三层 P&R/report 全部按依赖重跑。 | T5.5/protocol 定向 `138 passed`；全量 2,469 tests 在 30 分钟约 20% 处 timeout、已执行部分无 failure，未冒充 full PASS；T6.1.1 仍因缺真实板卡证据阻塞。 |
+| 2026-07-17 | T0--T5 / 迁移证据审计 | Blocked-boundary review | 全任务板 108 个 Done task 的记录完整性审计发现 4 个历史插入任务、2 份 BibTeX 和两份源计划在跨仓迁移时漏失；已从只读原始工作区恢复，任务记录/BibTeX 逐字节 hash 对齐，源计划逐行对齐，并删除末尾已被 v2.2 吸收的矛盾旧分析。 | 全部 Done task 现均具 `docs/new_tasks/` 与 `docs/tasks/` 记录；440 个 JSON 文件绑定零失配；DLEnv 下 Phase 5 全链 `633 passed`。T6.1.1 仍只因缺真实板卡证据阻塞。 |
+| 2026-07-17 | T-RISK-20260717-01 | Proposed -> In Progress | 发现 T6.1.1 的外部板卡依赖被误当成 Phase 6 全局前置条件，但 T5.5 已提供 bit-accurate golden、可综合 core、CXXRTL 和目标器件 P&R，可合法承接预板软件/RTL 验证。 | 登记 R-N109；重写 T6.2.1/T6.2.2 的直接依赖、长序列/故障验收和证据边界。 |
+| 2026-07-17 | T-RISK-20260717-01 | In Progress -> Done | 完成 Phase 6 双轨依赖：预板轨 `T6.2.1 -> T6.2.2`，实物轨 `T6.1.1 -> T6.1.2 -> T6.1.3`，在 T6.2.3 汇合；T6.4.1/T6.4.3 保留为板上重复验证。 | 当前推荐任务更新为 T6.2.1；T6.1.1 保持局部 Blocked。预板结果仍不得冒充 bitstream/vendor/board/transport/power/HIL 证据。 |
+| 2026-07-17 | T-RISK-20260717-02 | Proposed -> In Progress | 用户确认路线 A；R-N084 的 learned 强分支已失败，R-N086 的模块未统一、R-N098 的 compound/nominal 反例和 R-N110 的跨域伪比较风险使原 Phase 7 不能直接冻结高水平论文主张。 | 设计独立 Phase 6A；保持当前执行指针 T6.2.1，不跳过 T6.2.1/T6.2.2，也不等待真板才开始 unified software benchmark。 |
+| 2026-07-17 | T-RISK-20260717-02 | In Progress -> Done | 新增 Milestone 6.5—6.9：claim/contract/pre-registration、统一 comparators、regime-safe policy、smooth + abrupt/OOD + `1e6` RTL、static/drift/GQF/FPGA 分 lane比较、实板和论文 GO/NO-GO。 | 当前推荐任务仍为 T6.2.1；Phase 6A 从 T6.2.2 后启动，只有 T6.9.2 等 measured hardware 部分等待 T6.2.3/T6.4。CNN 失败自动降为消融，GQF exact/板测未过禁止 surpass/fastest。 |
+| 2026-07-17 | T6.2.1 | Todo -> In Progress | 开始以 T5.5 bit-accurate contract、现有 `gkp_fast_path_core`、CXXRTL 与目标器件 P&R 为输入建立 production requirement-to-RTL mapping。 | 逐项审计 syndrome/MAP-LUT/run-length/frame/bank/version/CRC/saturation/leakage/deadline/fallback/action；先证明现状与缺口，再补 RTL，不以综合成功或 activity harness 代替 production 完成。 |
+| 2026-07-17 | T6.2.1 | In Progress -> Done | 完成 production core guard、同步 management top、独立时序 reference、CXXRTL driver、requirement mapping、机器报告、Source Data 与双任务记录；首版长组合 snapshot CRC 被主动重构为 18-cycle byte-serial，漏测 drain gate 未被放宽而是重排后重跑。 | Yosys 0 problems；1,681-cycle CXXRTL 0 mismatch；11/11 rejection、5/5 CRC snapshots、8/8 gates、7/7 mutations、24 tests。新增 R-N111；不插入旁路 task，当前推荐更新为 T6.2.2。 |
+| 2026-07-17 | T6.2.2 | Todo -> In Progress | 开始冻结 nominal/boundary/saturation/leakage/integrity/version/reset/deadline/commit/transport disturbance families、每 family `>=1e5` 与聚合 `>=1e6` cycles 的执行和证据分层。 | 百万周期使用独立快速 golden 全量覆盖，CXXRTL 仅作 source/hash-bound 抽样锚点；必须报告功能分支、fault/mutation、undefined action、silent overflow、状态有界和所有失败分支，不生成板测 claim。 |
+| 2026-07-17 | T6.2.2 | In Progress -> Done | 完成独立 fast golden、production qualification wrapper、82-byte trace ABI、10-family runner、1,000,000-cycle CXXRTL 全字段对拍、family-specific fault/recovery、Source Data 与双任务记录。 | legacy 10,000 rows 与 CXXRTL 1,000,000 rows 均 0 mismatch；16/16 gates、8+8 mutations、8 tests。首轮全字段虽一致但 reorder 注入为 0，深审后未放宽 gate，而是修正相位/恢复尾段并完整重跑。新增 R-N112；transport/board claim 继续关闭。 |
+| 2026-07-17 | T6.5.1 | Todo -> In Progress | T6.2.1—T6.2.2 板卡无关入口已满足，开始冻结 Route-A 主角、组件职责、逐 claim metric/domain/privilege/evidence/revocation 与三类不可混排比较 lane。 | 不提前执行 T6.5.2 unified execution schema，也不把 CXXRTL qualification 升级为 measured FPGA；CNN/teacher/student 先固定为 replaceable extension。 |
+| 2026-07-17 | T6.5.1 | In Progress -> Done | 完成 `route_a_claim_contract.py`、中英文主张合同、机器报告、Source Data 与双任务记录；冻结 11 role、3 条 metric-disjoint lane 与 11 条 claim 的现行/条件式/禁止措辞和撤销级联。 | 20/20 gates、10/10 semantic mutations、6 tests；student 项目证据与官方 GQF lane 隔离，system 仅在 contract/promotion 后可 deploy，T6.2.2 仍只支持 RTL qualification。 |
+| 2026-07-17 | T6.5.2 | Todo -> In Progress | 开始冻结 syndrome、MAP-LUT/Q-format、6-cycle path、A/B bank、update cadence、observed-only、资源与 deadline 的逐方法统一执行合同。 | oracle truth schema 必须物理隔离；所有 deployable 方法先过 schema/conformance/fail-fast，才可进入 T6.6 matched-budget runner。 |
+| 2026-07-17 | T6.5.2 | In Progress -> Done | 完成 strict observed/oracle schemas、7+1 manifests、Q9.12 phase-LUT、CRC/SHA/CAS bank、32/4000 cadence、matched caps、deadline ledger、机器报告、Source Data 与双任务记录。 | 17/17 gates、70/70 per-method mismatches、12/12 schema、9/9 accounting rejections、13 tests；两轮深审修复 logical/mirrored memory 重复计数、负成本 API 绕过和 standard-LUT bypass；新增 R-N113，full 2D joint MAP 不冒充 current RTL。 |
+| 2026-07-17 | T6.5.3 | Todo -> In Progress | 开始在任何 T6.7 formal result 访问前冻结 smooth/abrupt/OOD 场景、互斥 split、common thresholds、paired cluster inference、worst-window 与 degradation/non-inferiority gates。 | 评估后任何变更必须生成新 protocol/version；不得逐场景调阈或覆盖原 preregistration。 |
+| 2026-07-17 | T6.5.3 | In Progress -> Done | 完成 12/12/24 split-disjoint clusters、143 cells、shared trace/onset、common validation-only threshold selector、equal-family paired bootstrap、tail/catastrophic/nominal gates、机器报告、Source Data 与双任务记录。 | 每方法 71,958,528 formal decisions；23/23 gates、12/12 mutations、15 tests。深审补 equal-family weighting 和 method-independent event schedule；新增 R-N114 披露 prior-informed、new-formal-blind 边界。 |
+| 2026-07-17 | T6.6.1 | Todo -> In Progress | 开始将七个 observed-only 候选和独立 oracle 接入同一 trace、LUT/action、cadence、budget 与 accounting runner。 | 必须执行真实算法/checkpoint，不得返回预构造 decision；static joint 的 software lane 与 current phase-LUT hardware eligibility 保持分栏。 |
+| 2026-07-17 | T6.6.1 | In Progress -> Done | 完成 `unified_comparator_runner.py`、q/p wire bridge、六方法 common trace、HMM export、legacy CNN 自动 ablation、oracle 分栏、adapter overlay、维度推导/逐窗累计成本、机器报告、Source Data 与双任务记录。 | 18/18 gates、7/7 mutations、15 tests；深审修复 Kalman MAC 漏算和 HMM+Kalman 同 boundary wall-clock 漏加；Route-A qualification LER `0.023376` 明显劣于 Window/EWMA/Kalman，登记 R-N115，未调阈或升级 claim。 |
+| 2026-07-17 | T6.6.2 | Todo -> In Progress | 开始把 integration-only HMM/Kalman/static 编排升级为完整 normal/tail/leakage/integrity/rollback/hysteresis state policy。 | 必须输出逐 action posterior/reason/bank/version/fallback/rollback/deadline，真实连接 trusted A/B bank、event/leakage/reset 与 last-known-good；不得用 T6.6.1 qualification 阈值冒充 T6.6.3 frozen threshold。 |
+| 2026-07-17 | T6.6.2 | In Progress -> Done | 完成 regime-aware safe policy、真实 EWMA/Kalman image、动态版本 registry、trusted/LKG 原子 bank、event/reset 与逐 action provenance；20,061-cycle production cadence 长轨 source-to-action 全为 6 cycles。 | 19/19 gates、8/8 mutations、58 tests；深审修复四类非 demo 缺陷并保留 tail trusted switch 的 3,942 deferred cycles。新增 R-N116；只支持 structural software claim，当前推荐更新为 T6.6.3。 |
+| 2026-07-17 | T6.6.3 | Todo -> In Progress | 开始在 formal evaluation 前仅用 calibration/validation split 校准 HMM/event posterior、transition lag、hysteresis 和唯一 common thresholds，并冻结不可变 protocol/config/source hash。 | 不读取 T6.7 formal outcome，不逐场景调阈；必须通过 prefix/observed-only、same-trace policy intervention、late/stale/CRC/version mutation 和独立重算后才能关闭本 task。 |
+| 2026-07-17 | T6.6.3 | In Progress -> Done | 完成 Route-A 专用四态 HMM、burst event head、全量 calibration/pilot、1,728 tuple、pilot-only baseline race、双 hash lock、Source Data 与双任务记录；formal 入口复核又发现并修复错误 protocol/shared RNG，按五流全量重锁。 | 26/26 gates、4,920 unique seeds、5 runtime + 11 semantic mutations、26 focused tests；EWMA 对 Window 仅窄胜 `4.90e-6`，2,460 条 cell 记录独立重算。V1→V2、smooth recall/总 fallback/max lag 边界均披露，formal 未访问。新增 R-N117。 |
+| 2026-07-17 | T6.7.1 | Todo -> In Progress | 开始只读取 T6.6.3 冻结 model/event/threshold/baseline hash，运行 untouched mean/variance/correlation/periodic formal matrix。 | primary contrast 固定为 EWMA；必须执行 24 个 formal seed clusters、equal-family paired bootstrap 与完整 pX/pY/pZ/average/p95/worst/gap/lag/cost，不得结果后重选 baseline、改阈值或删 family。 |
+| 2026-07-17 | T6.6.3 formal-entry 深审 | Done -> In Progress | 发现 V2 只通过 posterior screening；补齐 T6.5.3 full pilot selector 后，static-tail 架构 38/38 NO-GO，formal 仍未访问。 | 固化 V2 closest slack `-0.037109375` 与失败 families；禁止旧 lock 进入 T6.7。 |
+| 2026-07-17 | T6.6.3 V3 | In Progress -> NO-GO revision | 对 38 tuples×492 trajectories 执行真实 stateful freeze-all EWMA；persistent calibration/telegraph 使 LKG stale，仍 38/38 NO-GO。 | 固化 V3 closest slack `-0.044921875`；不放宽 gate，转向持续更新的 validated shadow architecture。 |
+| 2026-07-17 | T6.6.2 V4 复核 | Done -> In Progress -> Done | 将 runtime 从 tail→static/freeze-all 改为 Window/EWMA 双影子 router；tail/uncertain 只允许 EWMA shadow，integrity-only LKG rollback。 | 20/20 gates、11/11 mutations、20,061 cycles、1,218/8,192 MAC、25 focused tests；实际 defer 6，正常 commit residency 均>=4000。 |
+| 2026-07-17 | T6.6.3 V4 | In Progress -> Done | 完成逐 decision 双专家 replay、baseline equality、20k paired bootstrap、完整 pilot selector与 source re-lock；保留 V2/V3 NO-GO 及 future-window causality 修复。 | 28/28 gates、38/38 eligible tuples pass、candidate 1316、lock `9347edb2...f67aa`、492 cache hits/0 misses、30 联合 focused tests；formal 未访问。 |
+| 2026-07-17 | T6.7.1 | Todo -> In Progress | V4 formal-entry gate 已满足，开始只读 lock 执行 untouched smooth formal split。 | EWMA primary、tuple/router/family weights 全冻结；formal 后不得回调或重选。 |
+| 2026-07-17 | T6.7.1 | In Progress -> Done | 完成 576 条 untouched smooth formal trajectories、七方法逐窗口 Pauli/paired/action raw evidence、20k paired cluster bootstrap、独立 varying-state oracle、498,240-row Source Data 与双任务记录。 | 12/12 gates、6/6 mutations、576 cache hits/0 misses、8 tests；primary EWMA contrast 通过，但 static/Window 更低、oracle-gap 为负且只有 periodic Holm discovery。新增 R-N118，禁止包装成普适/static 优势。 |
+| 2026-07-17 | T6.7.2 | Todo -> In Progress | 保持 V4 lock、EWMA primary、formal seeds/cells 与预注册 catastrophic/nominal margins不变，开始 abrupt/OOD + nominal tail-safety matrix。 | 必须覆盖六 fault families 和 negative control，独立报告 calibration worst、false update、fallback、avoided/induced、recovery lag与每个 degradation gate；不得用 T6.7.1 periodic gain抵消 tail failure。 |
+| 2026-07-17 | T6.7.2 | In Progress -> Done | 完成 888 条 abrupt/OOD+nominal formal、六方法逐窗口 Pauli/paired/action、逐事件 detection/recovery、20k seed-cluster CI、686,104-row Source Data 与双任务记录。 | 11/11 gates、6/6 mutations、888 hits/0 misses、8 tests；所有预注册 safety/non-inferiority 门通过，但主要为 Route-A=EWMA，static calibration 更强且 tail fallback/false-update 很高。新增 R-N119，禁止升级为 tail 性能优势。 |
+| 2026-07-17 | T6.7.3 | Todo -> In Progress | 开始把 V4 posterior/action/bank/reason/version words 与 T6.2.2 production core 接到同一 long-sequence integer golden/CXXRTL/RTL qualification。 | 每个 smooth/fault family 至少 1e5、聚合>=1e6 cycles；必须真实触发 commit/rollback、hysteresis、leakage/reset、CRC/version/age、FIFO/backpressure/deadline/overflow，并对所有可见字逐 cycle 0 mismatch。 |
+| 2026-07-17 | T6.7.3 | In Progress -> Done | 完成20条 frozen formal observed trajectory驱动的 integrated Route-A million-cycle qualification；深审先否决 directed-only伪unified版本，formal-replay初版又因race不可达FAIL，最终用最小状态无关安全向量完整重跑通过。 | 99.5802% unified replay；10×100k CXXRTL 0 mismatch；19/19 gates、130/130 comparator mutations、12/12 semantic mutations、23 tests。新增R-N120；T6.7.4进入In Progress。 |
+| 2026-07-17 | T6.7.4 | In Progress -> Done | 完成 raw-count promotion/falsification gate；独立重算 T6.7.1/2 analysis、20k bootstrap、两份大 CSV、百万周期 trace与T6.7.3 gates，并建立8态claim registry与current-state fail-closed verifier。 | 10/10 gates、8/8 mutations、7 tests；Route-A合同系统受限GO，但global/static/tail强主张不晋级，CNN仅消融。新增R-N121；T6.8.1进入In Progress。 |
+| 2026-07-17 | T6.8.1 | In Progress -> Done | 完成静态GKP same-model lane、一手文献口径映射、24-seed paired static contrast、完整10-bit syndrome域K4/full等价与成本代理。 | 11/11 gates、8/8 mutations、8 tests；Route-A average static superiority被证否，K4仅model-specific pre-board hard-action/cost proxy成立。新增R-N122；T6.8.2进入In Progress。 |
+| 2026-07-18 | T6.8.2 | In Progress -> Done | 完成 pinned external BOCD + Window/EWMA/Kalman 的 common-trace lane；pilot只选一次，formal 504轨迹逐条绑定父input/truth hash，并把evidence integrity与performance qualification分开。 | 11/11 integrity gates、10/10 target mutations、12 tests；external−Route-A paired CI全正但external 1/13,104 update超5ms，故matched-budget/general-SOTA主张失败。新增R-N123；T6.8.3进入In Progress。 |
+| 2026-07-18 | T6.8.3 | In Progress -> Done | 固定Puviani official GQF pristine tree/license、四个隔离补丁、Python/CUDA重建锁、runner/patch manifests；执行CPU真实环境一步与隔离GPU probe。 | 12/12 gates、12/12 mutations、13 tests；CPU通过而GPU cuSolver fatal为unqualified，paper-exact/超过NMF禁止。新增R-N124；T6.8.4进入In Progress。 |
+| 2026-07-18 | T6.8.4 | In Progress -> Done | 冻结论文exact规格并对照官方完整历史/源码；建立18项阻断差异、20-agent null ledger和六态三seed reduced standard官方路径。 | 13/13 integrity、13/13 mutations、21 tests；exact 0/15，NO-GO_SOURCE_INCOMPLETE，paper-exact/MF-NMF ordering/surpass禁止；T6.8.5进入前置失败分支。 |
+| 2026-07-18 | T6.8.5 | In Progress -> Done | 消费T6.8.4 NO-GO并逐项执行matched-comparison eligibility；在任何不公平训练前选择negative branch。 | 8/8 prerequisites false、13 metrics null、10/10 gates、10/10 mutations、26 tests；same-GQF/surpass禁止，T6.8.6进入In Progress。 |
+| 2026-07-18 | T6.8.6 | In Progress -> Done | 刷新八项一手FPGA QEC工作并把具体实现按code/task/size/precision/latency boundary/statistic/evidence level规范化；项目core与integrated Route-A分列。 | 10 rows、23 numeric fields locator/null、13/13 gates、13/13 mutations、5 tests；same-task comparator=0，fastest/SOTA/speed-advantage禁止，T6.8.7进入In Progress。 |
+| 2026-07-18 | T6.8.7 | In Progress -> Done | 把系统、static、external drift、GQF与FPGA结论拆成10条原子主张，分别绑定current evidence、缺口、撤销条件与未来T6.9空槽。 | 4 opponent classes、14/14 gates、14/14 mutations、5 tests；总门不能覆盖static/general-SOTA/NMF-surpass/FPGA-speed负边界，T6.9.1进入In Progress。 |
+| 2026-07-18 | T6.9.1 / T6.9.2 | In Progress -> Done / Todo -> Blocked | 完成Route-A两个真实integrated profile各三seed P&R、结构存活、资源/Fmax/六周期clock model与power sensitivity；随后复核实物板依赖。 | 6/6 P&R、15/15 gates、15/15 mutations、6 tests；vendor/bitstream/transport/board字段仍false/null，T6.9.2因T6.1.1板卡未到阻塞。 |
+| 2026-07-18 | T6.9.2 blocker audit / T6.9.3 | Blocked retained / Todo -> In Progress | 建立实物板测prerequisite/null contract，并允许最终论文门消费明确缺失证据而不是伪测量。 | 6 physical prerequisites false、42 measured fields null、11/11 gates、11/11 mutations、5 tests；T6.9.3进入NO-GO/降级评估。 |
+| 2026-07-18 | T6.9.3 | In Progress -> Done | 完成11条原子最终主张、逐claim允许/禁止措辞、live父报告/Source Data/implementation绑定、7项图表计划和机器可复算GO/NO-GO。 | 17/17 gates、17/17 mutations、6 tests；完整cross-lane论文NO-GO，只允许restricted pre-board system draft。Phase 7完整冻结关闭，当前推荐回到T6.9.2 Blocked。 |
+| 2026-07-17 | T-DOC-20260717-01 | User request -> Done | 新建 `docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex`，把旧 CNN+FPGA 可复用结果与 T6.7.1 截止的 Route-A 合同、LER、tail、FPGA fast-path 和 learning-extension 证据整理成独立 12 页 note。 | 明确优势只成立于 locked-EWMA smooth primary、Holm-corrected periodic、模型/组件和预板执行层；static/Window、abrupt/OOD tail、集成 RTL、真板与外部 SOTA 不升级。当前推荐任务仍为 `T6.7.2 In Progress`。 |
+| 2026-07-17 | T-DOC-20260717-01 图与证据同步 | Follow-up -> Done | 将 PPT 双回路架构图与有效保真寿命图以矢量 PDF 嵌入 Route-A note，并把证据截止点同步到已完成的 T6.7.2；新增 abrupt/OOD/nominal non-inferiority、static calibration 反例、高 tail fallback/false-update 与 claim guardrail。 | note 独立编译 15 页并完成 15/15 页视觉 QA；图注明确 student 为可选扩展、寿命非 LER/板上时间、旧徽章为历史快照。当前推荐任务保持 `T6.7.3 In Progress`。 |
+| 2026-07-20 | T-RISK-20260720-01 | User request -> In Progress | 基于 T6.7/T6.8/T6.9.3 的已冻结负结果，开始设计不依赖真板的 V5 方法、全新 formal 与 pre-board fail-closed qualification。 | 不修改或重解释 V4 raw evidence；T6.9.2 保持局部 Blocked。 |
+| 2026-07-20 | T-RISK-20260720-01 | In Progress -> Done | 插入 Phase 6B / Milestone 6.10—6.15，建立 causal headroom、predictive IMM/BOCPD、posterior-mixture MAP、risk/typed policy、四分割 formal、quantized/CXXRTL/formal/P&R 与最终 claim gate。 | 新增 22 个 Todo task；当前推荐更新为 T6.10.1。目标主门为相对全部 eligible deployable baselines 的最小 LER 降幅至少 `10%`、step/telegraph tail 显著改善和 6-cycle/II=1 atomic fail-closed 预板闭环；measured hardware claim 继续等待 T6.9.2。 |
+| 2026-07-20 | T-RISK-20260720-02 | User request -> In Progress | 开始把两张异构方法图转换为 Phase 6B 之后的 secondary experimental comparison；先审计 CI/ML、NN/RL、AQEC、CPD 与 FPGA 指标能否共享 task、分母和证据边界。 | 保持 Phase 6B、当前推荐 T6.10.1 与 T6.9.2 Blocked 状态不变，不把外部方法加入 V5 主排名。 |
+| 2026-07-20 | T-RISK-20260720-02 | In Progress -> Done | 插入 Phase 6C / Milestone 6.16—6.19，建立六条 evidence lane、source/metric ontology、二级预注册、三类可执行复现、learned eligibility、AQEC wall-clock、multimode CPD、同任务预板 profile、外部 FPGA 规范化和 integrity gate。 | 新增 12 个 Todo task；Phase 6C 仅在 T6.15.5 形成终态后执行，最终 `PASS_AUX_COMPARISON_INTEGRITY` 不要求性能获胜，也不能升级 T6.15.5/T6.9.2；Phase 7 增加 auxiliary-integrity 前置。 |
+| 2026-07-20 | T6.10.1 | Todo -> In Progress | 开始冻结 T6.7/T6.8 已打开证据的 diagnostic-only 边界，并审计 existing-expert/action-space 的真实可获取 headroom。 | 先复算旧 formal 的 family/cell/decision oracle，再用全新 non-formal development split 做 nested strict-causal selector、activation-delay/budget 与 mutation 审计；不足门槛时按合同 NO-GO，不靠扩 seed 或读取新 formal 挽救。 |
+| 2026-07-20 | T6.10.1 | In Progress -> Done | 完成 1,464 条 V4 formal 逐 decision exact replay、186 条新 development trajectories、nested strict-causal selector、36 个 posterior-mixture candidates、regret/不可辨识区/预算/mutation 审计；深审修正了把 hard-expert decision oracle 错算成 mixture gain 及重复 MAP 未计预算两个问题。 | 71,958,528 formal diagnostic decisions 全部 parent exact；development 4,571,136 decisions。router=`-0.2322%`、held-out fixed mixture=`+0.4587%`、纯 incremental action-space=`0.02549%`，两入口门失败，verdict=`NO_GO_V5_INSUFFICIENT_ACTION_SPACE_HEADROOM`；5 tests、7 artifact checks 通过。 |
+| 2026-07-20 | T6.10.2--T6.15.4 / T6.15.5 | Todo -> Dropped / Todo retained | 执行 T6.10.1 预注册 direct-NO-GO 分支：停止当前 V5 contract、split、IMM/BOCPD、compiler、pilot/formal、fixed-point/CXXRTL/property/P&R，不以额外工程量掩盖入口 headroom 失败。 | T6.10.2--T6.15.4 全部 Dropped；未创建 V5 formal manifest/output。当前推荐切换为 T6.15.5 early-stop evidence closure，完成机器 claim revocation 后进入只读 Phase 6C。 |
+| 2026-07-20 | T6.15.5 | Todo -> In Progress | 开始执行 Phase 6B early-stop evidence closure；只消费 T6.10.1 negative artifact、任务板 Dropped 状态与既有 V4/board evidence。 | 必须机器验证 V5 formal/quantized/CXXRTL/property/P&R 未运行且所有相关 claim revoked；不得补造实验，终态只能是 `NO_GO_V5_EARLY_HEADROOM_STOP`。 |
+| 2026-07-20 | T6.15.5 | In Progress -> Done | 完成 Phase 6B early-stop evidence gate，独立重算 headroom、验证 20 个 Dropped 状态与零 V5 outputs，并建立十条 claim registry 和六类语义篡改。 | 12/12 gates、6/6 mutations、5 tests；42 measured fields 继续 null，V4 full-paper NO-GO 不被覆盖。verdict=`NO_GO_V5_EARLY_HEADROOM_STOP`；Phase 6C 只读开放，当前推荐 T6.16.1。 |
+| 2026-07-20 | T6.16.1 | Todo -> In Progress | 开始把用户两张图中的 CI、ML/MAP、Direct NN、RL、AQEC、CPD、Hybrid 与定量/定性字段拆成 source-verified registry。 | 先复用项目内一手 PDF/官方仓库/既有 normalization，再按 CrossRef/arXiv/出版社与官方源码补检；没有直接 locator 的 `<50 ns`、零延迟、约20%、10--100 us 和“高/低”一律 null。 |
+| 2026-07-20 | T6.16.1 / T6.16.2 | In Progress -> Done / Todo -> In Progress | 完成 11-source/12-method/24-claim source registry、82-row Source Data、human report 与 live project bindings；开始把结果升级为六条 fail-closed ontology。 | 15/15 gates、15/15 mutations、9 focused tests；CNOT 降幅按 squeezing 重算，AQEC/NN/CPD/Hybrid 边界不再按类别插补；R-N134 降为 Mitigated，Phase 6B verdict 与板测 null 不变。 |
+| 2026-07-20 | T6.16.2 / T6.16.3 | In Progress -> Done / Todo -> In Progress | 完成六 lane、46 metrics、timing/resource/value-state/task-signature ontology 与 T6.16.1 全量 metric crosswalk；开始冻结 secondary preregistration 与 Phase 6B read-only hashes。 | 16/16 gates、16/16 mutations、12 focused tests；深审补上 state/evidence 一致性，estimate/measured、core/closed-loop、N/A/null/failed/negative 无法混排；R-N133 降为 Mitigated。 |
+| 2026-07-20 | T6.16.3 / T6.17.1 | In Progress -> Done / Todo -> In Progress | 完成九项 secondary experiment 的逐项预注册、独立 seed/statistics/runtime/failure contract、official-source 边界和 Phase 6B semantic read-only lock；开始 single-mode CPD/CI exact equivalence。 | 158-row Source Data、17/17 gates、17/17 mutations、6/6 Phase 6B locks、14/14 live input locks、12 focused tests；深审修正旧 schema gate 读取并新增 live hash recomputation，R-N135 降为 Mitigated，R-N136 保持 Open。 |
+| 2026-07-20 | T6.17.1 / T6.17.2 | In Progress -> Done / Todo -> In Progress | 完成 single-mode square/isotropic Euclidean CPD=CI 的解析、完整 q10×q10 穷举、100 万 unwrapped boundary audit、三类 likelihood 反例和 comparator 去重；开始 Noh CNOT source-sufficiency/reproduction。 | production/boundary 均 0 mismatch，15/15 gates/mutations、12 focused/77 adjacent tests；首轮 83 个 float tie 假差和 `floor(x+0.5)` one-ULP bug均在不放宽门限下修正，outer-code/multimode threshold 保持未评估。 |
+| 2026-07-20 | T6.17.2 / T6.17.3 | In Progress -> Done / Todo -> In Progress | 完成 Noh Table-I gate-level source-sufficiency、8-shift CNOT model、CI/ML CRN reproduction、paired statistics、真实 Voronoi facet oracle audit 与 claim boundary；开始既有 learned checkpoint eligibility/replay。 | 3,080,192 trials，六 anchors 最大相对偏差1.52%，ML reduction=31.160%/58.065%/67.982%；0/100,000 boundary mismatch，15/15 gates/mutations、13 focused/58 adjacent tests。深审修正 Algorithm-2 facet 转录并将 anchor/statistics/live-hash 全改为 raw recomputation；9.9 dB 与 latency/hardware null不变。 |
+| 2026-07-20 | T6.17.3 / T6.18.1 | In Progress -> Done / Todo -> In Progress | 完成 learned/controller checkpoint 资格全集、只读 legacy CNN replay、null ranking 与 post-formal noninterference；开始 AQEC/autonomous 共同 wall-clock 重放。 | 16 family、434-row Source Data、16/16 gates/mutations；legacy 206 samples×5 与父任务 bit-exact，same-task eligible=0。13 focused/79 adjacent tests；深审补回三个遗漏 family 并修复三类 fail-closed 缺陷，未新增训练旁路。 |
+| 2026-07-20 | T6.18.1 / T6.18.2 | In Progress -> Done / Todo -> In Progress | 完成 AQEC/autonomous 共同 wall-clock project-native replay与official-protocol边界；开始 official structured-lattice CPD intake/correctness/threshold复现。 | 432 exact channels、144,152 rows、16/16 gates/mutations；六cell active-QEC相对idle全负、144/144 cycle-vs-us reversal。深审补齐survival/fidelity fit、host-memory、NumPy兼容与raw-only provenance；14 focused/80 adjacent/50 DLEnv tests。 |
+| 2026-07-20 | T6.18.2 / T6.18.3 | In Progress -> Done / Todo -> In Progress | 完成 official structured-lattice CPD 固定、上游/正确性、官方聚合重算、独立小距离 finite-size crossing 与资源诊断；开始 posterior-weighted multimode CPD 漂移扩展。 | official commit `01f9bf1f...`；确定性 upstream 2005/2005；312+64+384 checks 0 mismatch；1,728,000 paired trials，CPD/analog crossing=`0.599298/0.600245` 且均进 ±0.02；16/16 gates、17/17 mutations、12 focused/97 adjacent tests。小距离次序反转和无 seed upstream caveat 不隐藏，R-N136 降为 Mitigated、R-N138 登记。 |
+| 2026-07-20 | T6.18.3 / T6.19.1 | In Progress -> Done / Todo -> In Progress | 完成 d=3 structured family 的 observed-only posterior-weighted CPD 独立 smooth/calibration/telegraph formal，并开始只读同任务预板 profile。 | 9.6M physical cycles、38.4M decodes；adaptive/static-Euclidean `p_L=0.172261/0.236929`，absolute gain=`0.064668 [0.064413,0.064926]`、32/32 seeds同向；calibration/telegraph worst显著降低。21/21 gates/mutations、13 focused/118 adjacent；最长shard 1984.924s、2.539GiB sampled concurrent high-water。R-N139登记，Phase6B与板测null不变。 |
+| 2026-07-20 | T6.19.1 / T6.19.2 | In Progress -> Done / Todo -> In Progress | 完成资格优先的项目预板/host慢路径 profile，并开始外部 FPGA decoder source normalization。 | 检出旧 RTL hash 失效后重跑 CXXRTL 与三 seed P&R：4,316 rows 0 mismatch，min Fmax 41.024 MHz，LUT4 3377--3387；CI/V5/Direct-NN N/A。Window/EWMA/Kalman 各1000-repeat、3,003 raw rows；12/12 gates、13/13 mutations、atomic-bank 17/17 gates。重建 T6.17.1--T6.18.3 下游绑定后最终联合回归 `259 passed, 1 skipped`；R-N105更新、R-N140登记，板测与 fastest/SOTA claim仍关闭。 |
+| 2026-07-20 | T6.19.2 / T6.19.3 | In Progress -> Done / Todo -> In Progress | 完成外部 FPGA decoder 一手来源刷新、task/latency/resource 规范化和 exact same-task 计数；开始六 lane comparison atlas 与 secondary-evidence integrity gate。 | 18个外部实现（10个新增）、5个Direct-NN描述行、6类显式排除候选；18/18 gates/mutations，same-task comparator=0，禁止raw-ns排名与faster/SOTA。深审修复T6.8.6旧LUT4=3357锚并重建T6.15.5--T6.19.2证据链；最终联合回归`201 passed, 1 skipped`，R-N141登记，T6.9.2继续Blocked。 |

@@ -1,0 +1,1475 @@
+{
+  "task_id": "T6.17.2",
+  "schema_version": "t6.17.2-noh-cnot-ci-ml-reproduction-v1",
+  "generated_at_utc": "2026-07-20T04:32:17.720026+00:00",
+  "scope": "project-native matched reproduction of Noh 2022 Table-I gate-level CI versus analog ML only",
+  "preregistration": {
+    "experiment_id": "E6172_NOH_CNOT_CI_ML_REPRODUCTION",
+    "record_sha256": "6c8e1f762c6fab524a8b9d4e234b885780c0643deef9e6f623281347a76edc90",
+    "source_record_sha256": "179cc555c9240fea48e79da4e178dcd103d3cff516519f2c8cebd8b8c5ff3aa9",
+    "seeds": [
+      61720001,
+      61720002,
+      61720003,
+      61720004,
+      61720005,
+      61720006,
+      61720007,
+      61720008,
+      61720009,
+      61720010,
+      61720011,
+      61720012,
+      61720013,
+      61720014,
+      61720015,
+      61720016,
+      61720017,
+      61720018,
+      61720019,
+      61720020,
+      61720021,
+      61720022,
+      61720023,
+      61720024,
+      61720025,
+      61720026,
+      61720027,
+      61720028,
+      61720029,
+      61720030,
+      61720031,
+      61720032
+    ],
+    "seed_namespace": "phase6c-secondary-v1",
+    "target_failures_per_method_point": 2000,
+    "n_max_per_squeezing_point": 5000000,
+    "runtime_budget_seconds": 28800,
+    "memory_budget_gib": 8
+  },
+  "source_sufficiency": {
+    "status": "PASS_SOURCE_SUFFICIENCY",
+    "primary_source_id": "NOH2022_SURFACE_GKP",
+    "paper_version": "PRX Quantum 3, 010315 / arXiv:2103.06994",
+    "local_primary_reader": "relative_papers/08_Low overhead fault-tolerant quantum error correction with the surface-GK.md",
+    "ingredients": [
+      {
+        "ingredient": "finite_squeezing_variance",
+        "locator": "Eq. (24)",
+        "content": "sigma_gkp^2=(1/2)*10^(-squeezing_dB/10)"
+      },
+      {
+        "ingredient": "eight_iid_primitive_shifts",
+        "locator": "Appendix C1d, Eq. (C19)",
+        "content": "xi_1,...,xi_8 iid N(0,sigma_gkp^2)"
+      },
+      {
+        "ingredient": "q_net_shifts_lambda_1",
+        "locator": "Eq. (25); Eq. (C19)",
+        "content": "q1=xi1+xi2; q2=xi1+xi3+xi4"
+      },
+      {
+        "ingredient": "p_net_shifts_lambda_1",
+        "locator": "Eq. (25); Eq. (C19)",
+        "content": "p1=-xi5+xi6+xi7; p2=xi5+xi8"
+      },
+      {
+        "ingredient": "closest_integer_rule",
+        "locator": "Eq. (27)",
+        "content": "n=floor(shift/lattice_spacing+1/2) componentwise"
+      },
+      {
+        "ingredient": "q_joint_ml",
+        "locator": "Eqs. (29)-(30); Algorithm 1",
+        "content": "min 3*x1^2+2*x2^2-2*x1*x2 at lambda=1"
+      },
+      {
+        "ingredient": "p_joint_ml",
+        "locator": "Eqs. (31)-(33); Algorithm 2",
+        "content": "min 2*x1^2+3*x2^2+2*x1*x2 at lambda=1"
+      },
+      {
+        "ingredient": "logical_failure_mapping",
+        "locator": "Appendix C, Eqs. (C20)-(C21)",
+        "content": "failure iff any of nq1,nq2,np1,np2 is odd"
+      },
+      {
+        "ingredient": "anchors",
+        "locator": "Table I",
+        "content": "CI/ML failure at 9,12,13 dB"
+      }
+    ],
+    "complete_ingredients": 9,
+    "missing_ingredients": [],
+    "model_scope": "one error-corrected CNOT between two square-lattice GKP qubits, lambda=1, finite-squeezing-only noise",
+    "explicit_exclusions": [
+      "photon loss and other physical channels",
+      "surface-code lattice, matching graph and finite-size scaling",
+      "the 9.9 dB outer surface-GKP threshold",
+      "hardware or closed-loop decoder latency"
+    ]
+  },
+  "model_contract": {
+    "lambda": 1.0,
+    "lattice_spacing": "sqrt(pi)",
+    "primitive_shift_count": 8,
+    "primitive_distribution": "iid N(0,sigma_gkp^2)",
+    "sigma_gkp_squared": "0.5*10^(-squeezing_dB/10)",
+    "q_covariance_over_sigma_squared": [
+      [
+        2.0,
+        1.0
+      ],
+      [
+        1.0,
+        3.0
+      ]
+    ],
+    "p_covariance_over_sigma_squared": [
+      [
+        3.0,
+        -1.0
+      ],
+      [
+        -1.0,
+        2.0
+      ]
+    ],
+    "logical_failure": "any decoded integer odd"
+  },
+  "points": [
+    {
+      "squeezing_db": 9.0,
+      "sigma_gkp_squared": 0.06294627058970838,
+      "sigma_gkp": 0.2508909535828432,
+      "trials": 65536,
+      "completed_seed_sweeps": 1,
+      "seed_batch": 2048,
+      "stop_reason": "TARGET_FAILURES_BOTH_METHODS",
+      "target_failures_per_method": 2000,
+      "n_max": 5000000,
+      "ci_failures": 6563,
+      "ml_failures": 4518,
+      "both_fail": 3558,
+      "ci_only": 3005,
+      "ml_only": 960,
+      "neither": 58013,
+      "ci_probability": 0.1001434326171875,
+      "ml_probability": 0.068939208984375,
+      "ci_wilson_95": [
+        0.09786852085214232,
+        0.10246521762768446
+      ],
+      "ml_wilson_95": [
+        0.0670246859497323,
+        0.0709042631842157
+      ],
+      "paired_difference": 0.0312042236328125,
+      "relative_failure_reduction": 0.3115953070242268,
+      "mcnemar_exact_two_sided_p": 1.5318014119140348e-242,
+      "cluster_bootstrap": {
+        "resamples": 20000,
+        "unit": "independent_seed_cluster",
+        "seed": 61728456,
+        "ci_minus_ml_95_interval": [
+          0.0294952392578125,
+          0.032928466796875
+        ],
+        "relative_reduction_95_interval": [
+          0.29679465833519925,
+          0.3262840223824146
+        ]
+      },
+      "clusters": [
+        {
+          "seed": 61720001,
+          "trials": 2048,
+          "ci_failures": 199,
+          "ml_failures": 143,
+          "both_fail": 109,
+          "ci_only": 90,
+          "ml_only": 34
+        },
+        {
+          "seed": 61720002,
+          "trials": 2048,
+          "ci_failures": 194,
+          "ml_failures": 127,
+          "both_fail": 97,
+          "ci_only": 97,
+          "ml_only": 30
+        },
+        {
+          "seed": 61720003,
+          "trials": 2048,
+          "ci_failures": 217,
+          "ml_failures": 156,
+          "both_fail": 122,
+          "ci_only": 95,
+          "ml_only": 34
+        },
+        {
+          "seed": 61720004,
+          "trials": 2048,
+          "ci_failures": 195,
+          "ml_failures": 124,
+          "both_fail": 94,
+          "ci_only": 101,
+          "ml_only": 30
+        },
+        {
+          "seed": 61720005,
+          "trials": 2048,
+          "ci_failures": 191,
+          "ml_failures": 139,
+          "both_fail": 109,
+          "ci_only": 82,
+          "ml_only": 30
+        },
+        {
+          "seed": 61720006,
+          "trials": 2048,
+          "ci_failures": 192,
+          "ml_failures": 125,
+          "both_fail": 104,
+          "ci_only": 88,
+          "ml_only": 21
+        },
+        {
+          "seed": 61720007,
+          "trials": 2048,
+          "ci_failures": 227,
+          "ml_failures": 145,
+          "both_fail": 125,
+          "ci_only": 102,
+          "ml_only": 20
+        },
+        {
+          "seed": 61720008,
+          "trials": 2048,
+          "ci_failures": 226,
+          "ml_failures": 169,
+          "both_fail": 125,
+          "ci_only": 101,
+          "ml_only": 44
+        },
+        {
+          "seed": 61720009,
+          "trials": 2048,
+          "ci_failures": 196,
+          "ml_failures": 134,
+          "both_fail": 102,
+          "ci_only": 94,
+          "ml_only": 32
+        },
+        {
+          "seed": 61720010,
+          "trials": 2048,
+          "ci_failures": 222,
+          "ml_failures": 161,
+          "both_fail": 129,
+          "ci_only": 93,
+          "ml_only": 32
+        },
+        {
+          "seed": 61720011,
+          "trials": 2048,
+          "ci_failures": 203,
+          "ml_failures": 132,
+          "both_fail": 111,
+          "ci_only": 92,
+          "ml_only": 21
+        },
+        {
+          "seed": 61720012,
+          "trials": 2048,
+          "ci_failures": 220,
+          "ml_failures": 158,
+          "both_fail": 124,
+          "ci_only": 96,
+          "ml_only": 34
+        },
+        {
+          "seed": 61720013,
+          "trials": 2048,
+          "ci_failures": 191,
+          "ml_failures": 150,
+          "both_fail": 119,
+          "ci_only": 72,
+          "ml_only": 31
+        },
+        {
+          "seed": 61720014,
+          "trials": 2048,
+          "ci_failures": 217,
+          "ml_failures": 148,
+          "both_fail": 121,
+          "ci_only": 96,
+          "ml_only": 27
+        },
+        {
+          "seed": 61720015,
+          "trials": 2048,
+          "ci_failures": 221,
+          "ml_failures": 146,
+          "both_fail": 109,
+          "ci_only": 112,
+          "ml_only": 37
+        },
+        {
+          "seed": 61720016,
+          "trials": 2048,
+          "ci_failures": 188,
+          "ml_failures": 137,
+          "both_fail": 105,
+          "ci_only": 83,
+          "ml_only": 32
+        },
+        {
+          "seed": 61720017,
+          "trials": 2048,
+          "ci_failures": 206,
+          "ml_failures": 139,
+          "both_fail": 108,
+          "ci_only": 98,
+          "ml_only": 31
+        },
+        {
+          "seed": 61720018,
+          "trials": 2048,
+          "ci_failures": 210,
+          "ml_failures": 144,
+          "both_fail": 119,
+          "ci_only": 91,
+          "ml_only": 25
+        },
+        {
+          "seed": 61720019,
+          "trials": 2048,
+          "ci_failures": 201,
+          "ml_failures": 152,
+          "both_fail": 120,
+          "ci_only": 81,
+          "ml_only": 32
+        },
+        {
+          "seed": 61720020,
+          "trials": 2048,
+          "ci_failures": 193,
+          "ml_failures": 142,
+          "both_fail": 113,
+          "ci_only": 80,
+          "ml_only": 29
+        },
+        {
+          "seed": 61720021,
+          "trials": 2048,
+          "ci_failures": 201,
+          "ml_failures": 147,
+          "both_fail": 114,
+          "ci_only": 87,
+          "ml_only": 33
+        },
+        {
+          "seed": 61720022,
+          "trials": 2048,
+          "ci_failures": 213,
+          "ml_failures": 136,
+          "both_fail": 110,
+          "ci_only": 103,
+          "ml_only": 26
+        },
+        {
+          "seed": 61720023,
+          "trials": 2048,
+          "ci_failures": 192,
+          "ml_failures": 130,
+          "both_fail": 96,
+          "ci_only": 96,
+          "ml_only": 34
+        },
+        {
+          "seed": 61720024,
+          "trials": 2048,
+          "ci_failures": 210,
+          "ml_failures": 135,
+          "both_fail": 113,
+          "ci_only": 97,
+          "ml_only": 22
+        },
+        {
+          "seed": 61720025,
+          "trials": 2048,
+          "ci_failures": 214,
+          "ml_failures": 140,
+          "both_fail": 110,
+          "ci_only": 104,
+          "ml_only": 30
+        },
+        {
+          "seed": 61720026,
+          "trials": 2048,
+          "ci_failures": 226,
+          "ml_failures": 150,
+          "both_fail": 127,
+          "ci_only": 99,
+          "ml_only": 23
+        },
+        {
+          "seed": 61720027,
+          "trials": 2048,
+          "ci_failures": 207,
+          "ml_failures": 126,
+          "both_fail": 96,
+          "ci_only": 111,
+          "ml_only": 30
+        },
+        {
+          "seed": 61720028,
+          "trials": 2048,
+          "ci_failures": 203,
+          "ml_failures": 144,
+          "both_fail": 114,
+          "ci_only": 89,
+          "ml_only": 30
+        },
+        {
+          "seed": 61720029,
+          "trials": 2048,
+          "ci_failures": 203,
+          "ml_failures": 129,
+          "both_fail": 104,
+          "ci_only": 99,
+          "ml_only": 25
+        },
+        {
+          "seed": 61720030,
+          "trials": 2048,
+          "ci_failures": 206,
+          "ml_failures": 137,
+          "both_fail": 106,
+          "ci_only": 100,
+          "ml_only": 31
+        },
+        {
+          "seed": 61720031,
+          "trials": 2048,
+          "ci_failures": 199,
+          "ml_failures": 145,
+          "both_fail": 106,
+          "ci_only": 93,
+          "ml_only": 39
+        },
+        {
+          "seed": 61720032,
+          "trials": 2048,
+          "ci_failures": 180,
+          "ml_failures": 128,
+          "both_fail": 97,
+          "ci_only": 83,
+          "ml_only": 31
+        }
+      ],
+      "ci_primitive_draw_sha256": "89ce410b5e0b0c4dcb14d6fecdab7748c496e20dd5501728a80cf59a97fc304d",
+      "ml_primitive_draw_sha256": "89ce410b5e0b0c4dcb14d6fecdab7748c496e20dd5501728a80cf59a97fc304d",
+      "runtime_seconds": 0.055632100004004315,
+      "peak_tracemalloc_bytes": 581649
+    },
+    {
+      "squeezing_db": 12.0,
+      "sigma_gkp_squared": 0.03154786722400967,
+      "sigma_gkp": 0.17761719292909026,
+      "trials": 589824,
+      "completed_seed_sweeps": 9,
+      "seed_batch": 2048,
+      "stop_reason": "TARGET_FAILURES_BOTH_METHODS",
+      "target_failures_per_method": 2000,
+      "n_max": 5000000,
+      "ci_failures": 5146,
+      "ml_failures": 2158,
+      "both_fail": 1550,
+      "ci_only": 3596,
+      "ml_only": 608,
+      "neither": 584070,
+      "ci_probability": 0.008724636501736112,
+      "ml_probability": 0.003658718532986111,
+      "ci_wilson_95": [
+        0.008490482544732503,
+        0.008965189661848998
+      ],
+      "ml_wilson_95": [
+        0.003507834473123042,
+        0.003816067783061463
+      ],
+      "paired_difference": 0.005065917968750001,
+      "relative_failure_reduction": 0.5806451612903226,
+      "mcnemar_exact_two_sided_p": 0.0,
+      "cluster_bootstrap": {
+        "resamples": 20000,
+        "unit": "independent_seed_cluster",
+        "seed": 61729536,
+        "ci_minus_ml_95_interval": [
+          0.004831949869791667,
+          0.005298190646701389
+        ],
+        "relative_reduction_95_interval": [
+          0.5635533803114102,
+          0.5970577277529278
+        ]
+      },
+      "clusters": [
+        {
+          "seed": 61720001,
+          "trials": 18432,
+          "ci_failures": 162,
+          "ml_failures": 73,
+          "both_fail": 47,
+          "ci_only": 115,
+          "ml_only": 26
+        },
+        {
+          "seed": 61720002,
+          "trials": 18432,
+          "ci_failures": 159,
+          "ml_failures": 57,
+          "both_fail": 39,
+          "ci_only": 120,
+          "ml_only": 18
+        },
+        {
+          "seed": 61720003,
+          "trials": 18432,
+          "ci_failures": 180,
+          "ml_failures": 64,
+          "both_fail": 43,
+          "ci_only": 137,
+          "ml_only": 21
+        },
+        {
+          "seed": 61720004,
+          "trials": 18432,
+          "ci_failures": 167,
+          "ml_failures": 67,
+          "both_fail": 50,
+          "ci_only": 117,
+          "ml_only": 17
+        },
+        {
+          "seed": 61720005,
+          "trials": 18432,
+          "ci_failures": 163,
+          "ml_failures": 64,
+          "both_fail": 45,
+          "ci_only": 118,
+          "ml_only": 19
+        },
+        {
+          "seed": 61720006,
+          "trials": 18432,
+          "ci_failures": 151,
+          "ml_failures": 56,
+          "both_fail": 41,
+          "ci_only": 110,
+          "ml_only": 15
+        },
+        {
+          "seed": 61720007,
+          "trials": 18432,
+          "ci_failures": 149,
+          "ml_failures": 76,
+          "both_fail": 53,
+          "ci_only": 96,
+          "ml_only": 23
+        },
+        {
+          "seed": 61720008,
+          "trials": 18432,
+          "ci_failures": 164,
+          "ml_failures": 78,
+          "both_fail": 57,
+          "ci_only": 107,
+          "ml_only": 21
+        },
+        {
+          "seed": 61720009,
+          "trials": 18432,
+          "ci_failures": 148,
+          "ml_failures": 68,
+          "both_fail": 52,
+          "ci_only": 96,
+          "ml_only": 16
+        },
+        {
+          "seed": 61720010,
+          "trials": 18432,
+          "ci_failures": 164,
+          "ml_failures": 71,
+          "both_fail": 54,
+          "ci_only": 110,
+          "ml_only": 17
+        },
+        {
+          "seed": 61720011,
+          "trials": 18432,
+          "ci_failures": 147,
+          "ml_failures": 79,
+          "both_fail": 56,
+          "ci_only": 91,
+          "ml_only": 23
+        },
+        {
+          "seed": 61720012,
+          "trials": 18432,
+          "ci_failures": 163,
+          "ml_failures": 73,
+          "both_fail": 47,
+          "ci_only": 116,
+          "ml_only": 26
+        },
+        {
+          "seed": 61720013,
+          "trials": 18432,
+          "ci_failures": 158,
+          "ml_failures": 63,
+          "both_fail": 46,
+          "ci_only": 112,
+          "ml_only": 17
+        },
+        {
+          "seed": 61720014,
+          "trials": 18432,
+          "ci_failures": 170,
+          "ml_failures": 60,
+          "both_fail": 40,
+          "ci_only": 130,
+          "ml_only": 20
+        },
+        {
+          "seed": 61720015,
+          "trials": 18432,
+          "ci_failures": 151,
+          "ml_failures": 60,
+          "both_fail": 42,
+          "ci_only": 109,
+          "ml_only": 18
+        },
+        {
+          "seed": 61720016,
+          "trials": 18432,
+          "ci_failures": 153,
+          "ml_failures": 65,
+          "both_fail": 48,
+          "ci_only": 105,
+          "ml_only": 17
+        },
+        {
+          "seed": 61720017,
+          "trials": 18432,
+          "ci_failures": 172,
+          "ml_failures": 72,
+          "both_fail": 54,
+          "ci_only": 118,
+          "ml_only": 18
+        },
+        {
+          "seed": 61720018,
+          "trials": 18432,
+          "ci_failures": 167,
+          "ml_failures": 76,
+          "both_fail": 59,
+          "ci_only": 108,
+          "ml_only": 17
+        },
+        {
+          "seed": 61720019,
+          "trials": 18432,
+          "ci_failures": 180,
+          "ml_failures": 58,
+          "both_fail": 44,
+          "ci_only": 136,
+          "ml_only": 14
+        },
+        {
+          "seed": 61720020,
+          "trials": 18432,
+          "ci_failures": 180,
+          "ml_failures": 80,
+          "both_fail": 62,
+          "ci_only": 118,
+          "ml_only": 18
+        },
+        {
+          "seed": 61720021,
+          "trials": 18432,
+          "ci_failures": 170,
+          "ml_failures": 74,
+          "both_fail": 58,
+          "ci_only": 112,
+          "ml_only": 16
+        },
+        {
+          "seed": 61720022,
+          "trials": 18432,
+          "ci_failures": 166,
+          "ml_failures": 68,
+          "both_fail": 53,
+          "ci_only": 113,
+          "ml_only": 15
+        },
+        {
+          "seed": 61720023,
+          "trials": 18432,
+          "ci_failures": 145,
+          "ml_failures": 61,
+          "both_fail": 45,
+          "ci_only": 100,
+          "ml_only": 16
+        },
+        {
+          "seed": 61720024,
+          "trials": 18432,
+          "ci_failures": 176,
+          "ml_failures": 70,
+          "both_fail": 53,
+          "ci_only": 123,
+          "ml_only": 17
+        },
+        {
+          "seed": 61720025,
+          "trials": 18432,
+          "ci_failures": 132,
+          "ml_failures": 54,
+          "both_fail": 28,
+          "ci_only": 104,
+          "ml_only": 26
+        },
+        {
+          "seed": 61720026,
+          "trials": 18432,
+          "ci_failures": 169,
+          "ml_failures": 68,
+          "both_fail": 53,
+          "ci_only": 116,
+          "ml_only": 15
+        },
+        {
+          "seed": 61720027,
+          "trials": 18432,
+          "ci_failures": 144,
+          "ml_failures": 76,
+          "both_fail": 53,
+          "ci_only": 91,
+          "ml_only": 23
+        },
+        {
+          "seed": 61720028,
+          "trials": 18432,
+          "ci_failures": 182,
+          "ml_failures": 73,
+          "both_fail": 53,
+          "ci_only": 129,
+          "ml_only": 20
+        },
+        {
+          "seed": 61720029,
+          "trials": 18432,
+          "ci_failures": 158,
+          "ml_failures": 63,
+          "both_fail": 43,
+          "ci_only": 115,
+          "ml_only": 20
+        },
+        {
+          "seed": 61720030,
+          "trials": 18432,
+          "ci_failures": 151,
+          "ml_failures": 54,
+          "both_fail": 35,
+          "ci_only": 116,
+          "ml_only": 19
+        },
+        {
+          "seed": 61720031,
+          "trials": 18432,
+          "ci_failures": 148,
+          "ml_failures": 69,
+          "both_fail": 48,
+          "ci_only": 100,
+          "ml_only": 21
+        },
+        {
+          "seed": 61720032,
+          "trials": 18432,
+          "ci_failures": 157,
+          "ml_failures": 68,
+          "both_fail": 49,
+          "ci_only": 108,
+          "ml_only": 19
+        }
+      ],
+      "ci_primitive_draw_sha256": "ec52a0616b7941c9d14efcd06bef14d554397dcc655462736ff4d922a406c9e8",
+      "ml_primitive_draw_sha256": "ec52a0616b7941c9d14efcd06bef14d554397dcc655462736ff4d922a406c9e8",
+      "runtime_seconds": 0.4898803000105545,
+      "peak_tracemalloc_bytes": 579977
+    },
+    {
+      "squeezing_db": 13.0,
+      "sigma_gkp_squared": 0.025059361681363614,
+      "sigma_gkp": 0.15830148982673414,
+      "trials": 2424832,
+      "completed_seed_sweeps": 37,
+      "seed_batch": 2048,
+      "stop_reason": "TARGET_FAILURES_BOTH_METHODS",
+      "target_failures_per_method": 2000,
+      "n_max": 5000000,
+      "ci_failures": 6362,
+      "ml_failures": 2037,
+      "both_fail": 1459,
+      "ci_only": 4903,
+      "ml_only": 578,
+      "neither": 2417892,
+      "ci_probability": 0.002623686919341216,
+      "ml_probability": 0.0008400581978462838,
+      "ci_wilson_95": [
+        0.002560083899697848,
+        0.002688865839993982
+      ],
+      "ml_wilson_95": [
+        0.0008043751575664749,
+        0.0008773227904345736
+      ],
+      "paired_difference": 0.0017836287214949322,
+      "relative_failure_reduction": 0.6798176674001886,
+      "mcnemar_exact_two_sided_p": 0.0,
+      "cluster_bootstrap": {
+        "resamples": 20000,
+        "unit": "independent_seed_cluster",
+        "seed": 61732648,
+        "ci_minus_ml_95_interval": [
+          0.001720119167018581,
+          0.0018454886771537163
+        ],
+        "relative_reduction_95_interval": [
+          0.6662514489350059,
+          0.6936515616039224
+        ]
+      },
+      "clusters": [
+        {
+          "seed": 61720001,
+          "trials": 75776,
+          "ci_failures": 218,
+          "ml_failures": 66,
+          "both_fail": 48,
+          "ci_only": 170,
+          "ml_only": 18
+        },
+        {
+          "seed": 61720002,
+          "trials": 75776,
+          "ci_failures": 197,
+          "ml_failures": 56,
+          "both_fail": 39,
+          "ci_only": 158,
+          "ml_only": 17
+        },
+        {
+          "seed": 61720003,
+          "trials": 75776,
+          "ci_failures": 202,
+          "ml_failures": 60,
+          "both_fail": 38,
+          "ci_only": 164,
+          "ml_only": 22
+        },
+        {
+          "seed": 61720004,
+          "trials": 75776,
+          "ci_failures": 197,
+          "ml_failures": 61,
+          "both_fail": 39,
+          "ci_only": 158,
+          "ml_only": 22
+        },
+        {
+          "seed": 61720005,
+          "trials": 75776,
+          "ci_failures": 185,
+          "ml_failures": 62,
+          "both_fail": 43,
+          "ci_only": 142,
+          "ml_only": 19
+        },
+        {
+          "seed": 61720006,
+          "trials": 75776,
+          "ci_failures": 203,
+          "ml_failures": 62,
+          "both_fail": 44,
+          "ci_only": 159,
+          "ml_only": 18
+        },
+        {
+          "seed": 61720007,
+          "trials": 75776,
+          "ci_failures": 197,
+          "ml_failures": 67,
+          "both_fail": 47,
+          "ci_only": 150,
+          "ml_only": 20
+        },
+        {
+          "seed": 61720008,
+          "trials": 75776,
+          "ci_failures": 197,
+          "ml_failures": 57,
+          "both_fail": 43,
+          "ci_only": 154,
+          "ml_only": 14
+        },
+        {
+          "seed": 61720009,
+          "trials": 75776,
+          "ci_failures": 196,
+          "ml_failures": 64,
+          "both_fail": 48,
+          "ci_only": 148,
+          "ml_only": 16
+        },
+        {
+          "seed": 61720010,
+          "trials": 75776,
+          "ci_failures": 204,
+          "ml_failures": 58,
+          "both_fail": 43,
+          "ci_only": 161,
+          "ml_only": 15
+        },
+        {
+          "seed": 61720011,
+          "trials": 75776,
+          "ci_failures": 167,
+          "ml_failures": 52,
+          "both_fail": 41,
+          "ci_only": 126,
+          "ml_only": 11
+        },
+        {
+          "seed": 61720012,
+          "trials": 75776,
+          "ci_failures": 179,
+          "ml_failures": 62,
+          "both_fail": 43,
+          "ci_only": 136,
+          "ml_only": 19
+        },
+        {
+          "seed": 61720013,
+          "trials": 75776,
+          "ci_failures": 180,
+          "ml_failures": 55,
+          "both_fail": 40,
+          "ci_only": 140,
+          "ml_only": 15
+        },
+        {
+          "seed": 61720014,
+          "trials": 75776,
+          "ci_failures": 203,
+          "ml_failures": 61,
+          "both_fail": 45,
+          "ci_only": 158,
+          "ml_only": 16
+        },
+        {
+          "seed": 61720015,
+          "trials": 75776,
+          "ci_failures": 186,
+          "ml_failures": 63,
+          "both_fail": 39,
+          "ci_only": 147,
+          "ml_only": 24
+        },
+        {
+          "seed": 61720016,
+          "trials": 75776,
+          "ci_failures": 196,
+          "ml_failures": 70,
+          "both_fail": 46,
+          "ci_only": 150,
+          "ml_only": 24
+        },
+        {
+          "seed": 61720017,
+          "trials": 75776,
+          "ci_failures": 197,
+          "ml_failures": 76,
+          "both_fail": 52,
+          "ci_only": 145,
+          "ml_only": 24
+        },
+        {
+          "seed": 61720018,
+          "trials": 75776,
+          "ci_failures": 209,
+          "ml_failures": 68,
+          "both_fail": 53,
+          "ci_only": 156,
+          "ml_only": 15
+        },
+        {
+          "seed": 61720019,
+          "trials": 75776,
+          "ci_failures": 197,
+          "ml_failures": 39,
+          "both_fail": 30,
+          "ci_only": 167,
+          "ml_only": 9
+        },
+        {
+          "seed": 61720020,
+          "trials": 75776,
+          "ci_failures": 218,
+          "ml_failures": 60,
+          "both_fail": 39,
+          "ci_only": 179,
+          "ml_only": 21
+        },
+        {
+          "seed": 61720021,
+          "trials": 75776,
+          "ci_failures": 228,
+          "ml_failures": 77,
+          "both_fail": 64,
+          "ci_only": 164,
+          "ml_only": 13
+        },
+        {
+          "seed": 61720022,
+          "trials": 75776,
+          "ci_failures": 173,
+          "ml_failures": 67,
+          "both_fail": 47,
+          "ci_only": 126,
+          "ml_only": 20
+        },
+        {
+          "seed": 61720023,
+          "trials": 75776,
+          "ci_failures": 209,
+          "ml_failures": 72,
+          "both_fail": 54,
+          "ci_only": 155,
+          "ml_only": 18
+        },
+        {
+          "seed": 61720024,
+          "trials": 75776,
+          "ci_failures": 208,
+          "ml_failures": 58,
+          "both_fail": 43,
+          "ci_only": 165,
+          "ml_only": 15
+        },
+        {
+          "seed": 61720025,
+          "trials": 75776,
+          "ci_failures": 170,
+          "ml_failures": 62,
+          "both_fail": 45,
+          "ci_only": 125,
+          "ml_only": 17
+        },
+        {
+          "seed": 61720026,
+          "trials": 75776,
+          "ci_failures": 201,
+          "ml_failures": 70,
+          "both_fail": 49,
+          "ci_only": 152,
+          "ml_only": 21
+        },
+        {
+          "seed": 61720027,
+          "trials": 75776,
+          "ci_failures": 182,
+          "ml_failures": 52,
+          "both_fail": 38,
+          "ci_only": 144,
+          "ml_only": 14
+        },
+        {
+          "seed": 61720028,
+          "trials": 75776,
+          "ci_failures": 229,
+          "ml_failures": 88,
+          "both_fail": 62,
+          "ci_only": 167,
+          "ml_only": 26
+        },
+        {
+          "seed": 61720029,
+          "trials": 75776,
+          "ci_failures": 189,
+          "ml_failures": 71,
+          "both_fail": 55,
+          "ci_only": 134,
+          "ml_only": 16
+        },
+        {
+          "seed": 61720030,
+          "trials": 75776,
+          "ci_failures": 213,
+          "ml_failures": 60,
+          "both_fail": 51,
+          "ci_only": 162,
+          "ml_only": 9
+        },
+        {
+          "seed": 61720031,
+          "trials": 75776,
+          "ci_failures": 212,
+          "ml_failures": 65,
+          "both_fail": 38,
+          "ci_only": 174,
+          "ml_only": 27
+        },
+        {
+          "seed": 61720032,
+          "trials": 75776,
+          "ci_failures": 220,
+          "ml_failures": 76,
+          "both_fail": 53,
+          "ci_only": 167,
+          "ml_only": 23
+        }
+      ],
+      "ci_primitive_draw_sha256": "532a656dc6902af19e330144d861e525299a364dfa08de1808f113a1ce12ee58",
+      "ml_primitive_draw_sha256": "532a656dc6902af19e330144d861e525299a364dfa08de1808f113a1ce12ee58",
+      "runtime_seconds": 2.056101199996192,
+      "peak_tracemalloc_bytes": 580169
+    }
+  ],
+  "anchor_discrepancies": [
+    {
+      "squeezing_db": 9.0,
+      "method": "CI",
+      "literature_anchor": 0.101,
+      "estimate": 0.1001434326171875,
+      "absolute_discrepancy": 0.0008565673828125064,
+      "relative_discrepancy": 0.008480865176361449,
+      "absolute_tolerance": 0.01,
+      "relative_tolerance": 0.25,
+      "absolute_pass": true,
+      "relative_pass": true,
+      "joint_pass": true
+    },
+    {
+      "squeezing_db": 9.0,
+      "method": "ML",
+      "literature_anchor": 0.0689,
+      "estimate": 0.068939208984375,
+      "absolute_discrepancy": 3.920898437499709e-05,
+      "relative_discrepancy": 0.0005690708907837023,
+      "absolute_tolerance": 0.01,
+      "relative_tolerance": 0.25,
+      "absolute_pass": true,
+      "relative_pass": true,
+      "joint_pass": true
+    },
+    {
+      "squeezing_db": 12.0,
+      "method": "CI",
+      "literature_anchor": 0.00869,
+      "estimate": 0.008724636501736112,
+      "absolute_discrepancy": 3.4636501736112074e-05,
+      "relative_discrepancy": 0.003985788462153288,
+      "absolute_tolerance": 0.002,
+      "relative_tolerance": 0.25,
+      "absolute_pass": true,
+      "relative_pass": true,
+      "joint_pass": true
+    },
+    {
+      "squeezing_db": 12.0,
+      "method": "ML",
+      "literature_anchor": 0.00361,
+      "estimate": 0.003658718532986111,
+      "absolute_discrepancy": 4.871853298611109e-05,
+      "relative_discrepancy": 0.01349543850030778,
+      "absolute_tolerance": 0.002,
+      "relative_tolerance": 0.25,
+      "absolute_pass": true,
+      "relative_pass": true,
+      "joint_pass": true
+    },
+    {
+      "squeezing_db": 13.0,
+      "method": "CI",
+      "literature_anchor": 0.0026,
+      "estimate": 0.002623686919341216,
+      "absolute_discrepancy": 2.3686919341216195e-05,
+      "relative_discrepancy": 0.00911035359277546,
+      "absolute_tolerance": 0.0005,
+      "relative_tolerance": 0.25,
+      "absolute_pass": true,
+      "relative_pass": true,
+      "joint_pass": true
+    },
+    {
+      "squeezing_db": 13.0,
+      "method": "ML",
+      "literature_anchor": 0.000853,
+      "estimate": 0.0008400581978462838,
+      "absolute_discrepancy": 1.294180215371621e-05,
+      "relative_discrepancy": 0.015172101000839636,
+      "absolute_tolerance": 0.0005,
+      "relative_tolerance": 0.25,
+      "absolute_pass": true,
+      "relative_pass": true,
+      "joint_pass": true
+    }
+  ],
+  "multiplicity": {
+    "family": "three squeezing-point paired CI-vs-ML tests",
+    "raw_mcnemar_p": [
+      1.5318014119140348e-242,
+      0.0,
+      0.0
+    ],
+    "holm_adjusted_mcnemar_p": [
+      1.5318014119140348e-242,
+      0.0,
+      0.0
+    ],
+    "alpha": 0.05
+  },
+  "boundary_audit": {
+    "seed": 61729001,
+    "points": 100000,
+    "boundary_pairs": 50000,
+    "epsilon_lattice_units": 9.313225746154785e-10,
+    "facet_tangent_span_lattice_units": 0.22,
+    "exact_ties_excluded_due_nonunique_argmin": true,
+    "all_pairs_cross_decision_boundary": true,
+    "one_sided_crossing_pairs": 50000,
+    "production_brute_mismatches": 0,
+    "decision_mismatch_rate": 0.0,
+    "maximum_likelihood_cost_gap": 0.0,
+    "production_action_sha256": "441c4809161453f7f100e04b6b0ff0551a8998b6d8217af2980ee5fc6231799f",
+    "brute_action_sha256": "441c4809161453f7f100e04b6b0ff0551a8998b6d8217af2980ee5fc6231799f",
+    "brute_candidate_count_per_pair": 25,
+    "brute_radius": 2,
+    "enclosure_proof": "lambda_min(A)*2.5^2 > lambda_max(A)*0.5 proves candidates outside radius 2 cannot beat componentwise CI base for A eigenvalues (5+-sqrt(5))/2",
+    "chunks": [
+      {
+        "quadrature": "q",
+        "points": 50000,
+        "boundary_pairs": 25000,
+        "candidate_attempt_pairs": 25000,
+        "production_brute_mismatches": 0,
+        "one_sided_crossing_pairs": 25000,
+        "maximum_likelihood_cost_gap": 0.0
+      },
+      {
+        "quadrature": "p",
+        "points": 50000,
+        "boundary_pairs": 25000,
+        "candidate_attempt_pairs": 25000,
+        "production_brute_mismatches": 0,
+        "one_sided_crossing_pairs": 25000,
+        "maximum_likelihood_cost_gap": 0.0
+      }
+    ],
+    "runtime_seconds": 0.4131939000217244,
+    "peak_tracemalloc_bytes": 77293124
+  },
+  "operation_cost": {
+    "ci": {
+      "scalar_round_to_nearest": 4,
+      "correlated_2d_classifiers": 0,
+      "asymptotic_per_gate": "O(1)"
+    },
+    "ml": {
+      "scalar_round_to_nearest": 4,
+      "correlated_2d_classifiers": 2,
+      "classifier_facet_tests": "at most 9 scalar comparisons per quadrature",
+      "asymptotic_per_gate": "O(1)",
+      "exponentials_or_alias_sums": 0
+    },
+    "independent_oracle": {
+      "candidates_per_quadrature_pair": 25,
+      "used_for_correctness_only": true
+    },
+    "measured_latency_ns": null,
+    "python_runtime_boundary": "host vectorized Monte Carlo correctness workload; not latency, FPGA timing or real-time throughput"
+  },
+  "claim_registry": {
+    "NOH_TABLE_I_GATE_REPRODUCTION": "PROJECT_NATIVE_MATCHED",
+    "NOH_9P9DB_OUTER_THRESHOLD": "LITERATURE_ONLY_NULL",
+    "CI_LT50NS": "NULL_UNSOURCED",
+    "ML_GT1MS": "NULL_UNSOURCED",
+    "HARDWARE_RESOURCES": "NULL_NOT_IMPLEMENTED",
+    "PHASE6B_V5_VERDICT": "READ_ONLY_NO_GO_UNCHANGED"
+  },
+  "allowed_wording": [
+    "Under the Noh 2022 finite-squeezing-only two-GKP CNOT model, an independent project implementation reproduces the Table-I CI and analog-ML gate failure rates within the frozen tolerance.",
+    "The correlated ML decoder significantly reduces gate failure relative to CI at 9, 12 and 13 dB in paired common-random-number simulation."
+  ],
+  "forbidden_wording": [
+    "The project reproduces or exceeds the 9.9 dB surface-GKP threshold.",
+    "The host Monte Carlo runtime is a decoder latency or FPGA measurement.",
+    "Gate-level CNOT failure proves superiority on the project's repeated-memory drift task."
+  ],
+  "execution_budget_audit": {
+    "runtime_seconds": 3.0627685000072233,
+    "runtime_budget_seconds": 28800,
+    "peak_tracemalloc_bytes": 77293124,
+    "memory_budget_bytes": 8589934592,
+    "within_runtime_budget": true,
+    "within_memory_budget": true,
+    "measurement_boundary": "Python simulation/correctness workload only"
+  },
+  "source_data": {
+    "path": "docs/t6_17_2_noh_cnot_ci_ml_reproduction_source_data.csv",
+    "sha256": "fd23828e201b580af7a7e810b74db5fb5ff4bc49e2dfc5fc92579f3da58c7e30",
+    "rows": 119
+  },
+  "ontology_semantic_sha256": "5a84aee5bb6fec96886fc105b745634567d979edb5fcdb4a19493a5881c24ddd",
+  "source_audit_semantic_sha256": "8e47f094fd35e66fa0ab4f93d523a66d6b870cad6a90a3fa0e5cb7c92b21754d",
+  "bindings": {
+    "implementation": {
+      "path": "cnn_fpga/benchmark/surface_gkp_cnot_reproduction.py",
+      "sha256": "2dca9d298a1f5e9b5ee2456c64a77c20dbd08fd3ed2935c811be68047cfbbe2c",
+      "bytes": 48896
+    },
+    "preregistration_config": {
+      "path": "configs/literature/t6_16_3_secondary_preregistration.json",
+      "sha256": "eca700725aac3d2b0d0fb312339323645a03c4089b2d1932cf757816a11585c4",
+      "bytes": 22974
+    },
+    "ontology_initial": {
+      "path": "docs/t6_16_2_comparison_ontology.json",
+      "sha256": "0c8c964ec8290f26bc42429b1f6df1504f3b20c1b2f7a3522c4b13ee4f95b214",
+      "bytes": 61056
+    },
+    "source_audit_initial": {
+      "path": "docs/t6_16_1_secondary_method_source_audit.json",
+      "sha256": "0399768659537023318187a9d92c0421ae0a4e18b59c0d3796eddb2544749ef9",
+      "bytes": 69626
+    },
+    "primary_reader": {
+      "path": "relative_papers/08_Low overhead fault-tolerant quantum error correction with the surface-GK.md",
+      "sha256": "ee3e2eda23999ebe57123546f7b95ed7048729e782f10ed7f582ad8d0961b033",
+      "bytes": 356026
+    },
+    "source_data": {
+      "path": "docs/t6_17_2_noh_cnot_ci_ml_reproduction_source_data.csv",
+      "sha256": "fd23828e201b580af7a7e810b74db5fb5ff4bc49e2dfc5fc92579f3da58c7e30",
+      "bytes": 15444
+    }
+  },
+  "semantic_mutation_audit": {
+    "count": 15,
+    "detected": 15,
+    "cases": [
+      {
+        "case": "change_preregistration_hash",
+        "target_gate": "G01_frozen_preregistration_and_primary_source_are_consumed_exactly",
+        "rejected": true
+      },
+      {
+        "case": "remove_failure_mapping_source",
+        "target_gate": "G02_source_sufficiency_covers_noise_circuit_decoders_and_failure_mapping",
+        "rejected": true
+      },
+      {
+        "case": "change_noise_variance",
+        "target_gate": "G03_frozen_square_lattice_variance_and_three_anchor_points_are_exact",
+        "rejected": true
+      },
+      {
+        "case": "claim_early_target_stop",
+        "target_gate": "G04_every_point_obeys_failure_target_or_nmax_stopping",
+        "rejected": true
+      },
+      {
+        "case": "break_crn_hash",
+        "target_gate": "G05_common_random_numbers_and_seed_clusters_are_complete",
+        "rejected": true
+      },
+      {
+        "case": "forge_paired_partition",
+        "target_gate": "G06_raw_paired_counts_are_internally_conservative",
+        "rejected": true
+      },
+      {
+        "case": "forge_anchor_pass",
+        "target_gate": "G07_all_six_table_i_anchor_discrepancies_pass_frozen_dual_tolerance",
+        "rejected": true
+      },
+      {
+        "case": "erase_paired_advantage",
+        "target_gate": "G08_ml_reduction_is_paired_significant_at_all_points_after_holm",
+        "rejected": true
+      },
+      {
+        "case": "individual_round_bootstrap",
+        "target_gate": "G09_wilson_and_cluster_bootstrap_statistics_are_complete",
+        "rejected": true
+      },
+      {
+        "case": "inject_boundary_mismatch",
+        "target_gate": "G10_boundary_likelihood_oracle_has_100k_actual_crossings_and_zero_mismatch",
+        "rejected": true
+      },
+      {
+        "case": "shrink_brute_radius",
+        "target_gate": "G11_independent_brute_enclosure_and_likelihood_optimality_are_explicit",
+        "rejected": true
+      },
+      {
+        "case": "invent_nanosecond_latency",
+        "target_gate": "G12_operation_cost_is_fixed_and_not_mislabeled_as_latency",
+        "rejected": true
+      },
+      {
+        "case": "promote_outer_threshold",
+        "target_gate": "G13_outer_threshold_and_hardware_claims_remain_literature_only_or_null",
+        "rejected": true
+      },
+      {
+        "case": "forge_well_formed_source_data_hash",
+        "target_gate": "G14_runtime_memory_raw_source_data_and_live_bindings_are_valid",
+        "rejected": true
+      },
+      {
+        "case": "forge_mutation_count",
+        "target_gate": "G15_targeted_semantic_mutations_are_all_detected",
+        "rejected": true
+      }
+    ]
+  },
+  "gates": {
+    "G01_frozen_preregistration_and_primary_source_are_consumed_exactly": true,
+    "G02_source_sufficiency_covers_noise_circuit_decoders_and_failure_mapping": true,
+    "G03_frozen_square_lattice_variance_and_three_anchor_points_are_exact": true,
+    "G04_every_point_obeys_failure_target_or_nmax_stopping": true,
+    "G05_common_random_numbers_and_seed_clusters_are_complete": true,
+    "G06_raw_paired_counts_are_internally_conservative": true,
+    "G07_all_six_table_i_anchor_discrepancies_pass_frozen_dual_tolerance": true,
+    "G08_ml_reduction_is_paired_significant_at_all_points_after_holm": true,
+    "G09_wilson_and_cluster_bootstrap_statistics_are_complete": true,
+    "G10_boundary_likelihood_oracle_has_100k_actual_crossings_and_zero_mismatch": true,
+    "G11_independent_brute_enclosure_and_likelihood_optimality_are_explicit": true,
+    "G12_operation_cost_is_fixed_and_not_mislabeled_as_latency": true,
+    "G13_outer_threshold_and_hardware_claims_remain_literature_only_or_null": true,
+    "G14_runtime_memory_raw_source_data_and_live_bindings_are_valid": true,
+    "G15_targeted_semantic_mutations_are_all_detected": true
+  },
+  "gate_summary": {
+    "passed": 15,
+    "failed": []
+  },
+  "verdict": "PASS_PROJECT_NATIVE_MATCHED_NOH_CNOT_CI_ML_REPRODUCTION"
+}

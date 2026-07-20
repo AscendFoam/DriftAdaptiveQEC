@@ -1,0 +1,50 @@
+{
+  "schema_version": "t6.6.3-v3-gated-lkg-pilot-selector-nogo-v1",
+  "task_id": "T6.6.3",
+  "recorded_date": "2026-07-17",
+  "protocol_id": "ROUTE-A-POSTERIOR-THRESHOLD-LOCK-V3",
+  "verdict": "NO_GO_BEFORE_FORMAL",
+  "formal_evaluation_accessed": false,
+  "architecture": {
+    "adaptive_candidate_method_id": "ewma_adaptive_map",
+    "tail_trusted_source": "last_known_good_adaptive_ewma_bank",
+    "policy_action": "keep the last committed EWMA image active and suppress future commits while policy is non-open",
+    "algorithm_contract_sha256": "e750281e57f8e6cf89d84d3f76b502292584074ea359fb170d51d01ffb3c59a0"
+  },
+  "inputs": {
+    "posterior_safe_candidate_count": 38,
+    "pilot_trajectories": 492,
+    "paired_seed_clusters": 12,
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 202607176999,
+    "stateful_trajectory_cache_complete": true
+  },
+  "selector_result": {
+    "pilot_ler_safe_candidate_count": 0,
+    "closest_candidate_index": 1316,
+    "closest_threshold_tuple": {
+      "regime_posterior_enter_min": 0.9,
+      "regime_posterior_exit_max": 0.2,
+      "uncertainty_fallback_min": 0.25,
+      "ood_score_min_code": 192,
+      "enter_hysteresis_windows": 2,
+      "recovery_hysteresis_windows": 8
+    },
+    "closest_minimum_safety_slack": -0.044921875,
+    "failed_gates": [
+      "step_calibration_shift:average",
+      "step_calibration_shift:p95",
+      "step_calibration_shift:single_window",
+      "telegraph_drift:average",
+      "telegraph_drift:p95",
+      "telegraph_drift:single_window",
+      "compound_ood:average",
+      "compound_ood:p95",
+      "compound_ood:seed_worst",
+      "compound_ood:single_window"
+    ]
+  },
+  "interpretation": "Freezing EWMA commits during a persistent calibration shift or telegraph transition makes the last-known-good image stale. The observed-only safety action therefore needs a continuously updated, validated trusted shadow and bank arbitration rather than a freeze-all rule.",
+  "superseded_by": "ROUTE-A-POSTERIOR-THRESHOLD-LOCK-V4",
+  "v4_change": "Maintain budget-conforming Window and EWMA shadow experts, select Window only from causal prequential likelihood under smooth/open posterior evidence, and force the strongest pilot baseline EWMA for tail or uncertain states."
+}
