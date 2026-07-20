@@ -385,10 +385,22 @@ def test_phase6d_dual_evidence_lanes_are_strong_baseline_first_and_nontransferab
     assert statuses["T6.20.1"] == "Done"
     assert statuses["T6.20.2"] == "Done"
     assert statuses["T6.20.3"] == "Done"
-    assert statuses["T6.20.4"] == "In Progress"
+    assert statuses["T6.20.4"] == "Done"
+    dropped = {
+        *(f"T6.21.{i}" for i in range(1, 5)),
+        *(f"T6.22.{i}" for i in range(1, 5)),
+        *(f"T6.23.{i}" for i in range(1, 6)),
+        *(f"T6.24.{i}" for i in range(1, 6)),
+        "T6.26.1",
+        "T6.26.2",
+    }
+    assert all(statuses[task] == "Dropped" for task in dropped)
+    assert statuses["T6.25.1"] == "In Progress"
     assert all(
         statuses[task] == "Todo"
-        for task in expected_tasks - {"T6.20.1", "T6.20.2", "T6.20.3", "T6.20.4"}
+        for task in expected_tasks
+        - {"T6.20.1", "T6.20.2", "T6.20.3", "T6.20.4", "T6.25.1"}
+        - dropped
     )
     assert statuses["T6.9.2"] == "Blocked"
     assert statuses["T7.3.1"] == "Blocked"
@@ -425,6 +437,10 @@ def test_phase6d_dual_evidence_lanes_are_strong_baseline_first_and_nontransferab
     assert "该 lane 不声称执行 multimode exact/posterior-predictive MLD" in phase6d
     assert "single-mode 六周期不证明 multimode 方法的硬件 latency" in board
     assert "multimode LER 不证明现有 RTL 执行 multimode decoder" in board
+    assert "NO_GO_MULTIMODE_CAUSAL_HEADROOM" in phase6d
+    assert "79,872" in phase6d
+    assert "pilot/formal 保持未访问" in board
+    assert (ROOT / "docs" / "phase6d_multimode_v1_cancellation_ledger.md").is_file()
 
     registry = ROOT / "docs" / "multimode_strong_baseline_registry.md"
     assert registry.is_file()

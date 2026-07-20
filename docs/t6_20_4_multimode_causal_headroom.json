@@ -1,0 +1,968 @@
+{
+  "task_id": "T6.20.4",
+  "schema_version": "t6.20.4-causal-headroom-report-v1",
+  "generated_at_utc": "2026-07-20T21:23:27.263683+00:00",
+  "scope": {
+    "split": "train",
+    "development_only": true,
+    "distance": 3,
+    "seed_clusters": 12,
+    "families": 13,
+    "cells": 156,
+    "physical_rounds": 79872,
+    "formal_or_pilot_accessed": false,
+    "claim_limit": "GO only authorizes T6.21 implementation; it is not an LER/SOTA result",
+    "ceiling_boundary": "registered finite observed-only diagnostic stack; not the supremum over all causal decoders"
+  },
+  "integrity_repair_ledger": {
+    "invalidated_outcomes_not_used": true,
+    "registered_seeds_families_rounds_baselines_and_gates_changed": false,
+    "performance_threshold_tuned_after_outcomes": false,
+    "repairs": [
+      {
+        "issue": "official pymatching through PythonCall crashed with a Windows native access violation",
+        "resolution": "replace only the long-run execution path with exhaustive d=3 T-join after 128 zero-mismatch official qualifications"
+      },
+      {
+        "issue": "the Gaussian CPD edge gap used sign(0), producing a zero gap at the cell centre",
+        "resolution": "replace it with the exact closed form 1-2*abs(r)"
+      },
+      {
+        "issue": "an invalid exploratory run passed generator-only spatial-pattern and variance-law loadings into decoder state",
+        "resolution": "discard that run and restrict the final decoder to past folded-residual moments, current observation and nominal base sigma"
+      }
+    ]
+  },
+  "correctness": {
+    "alias_action_mismatches": 0,
+    "alias_convergence_samples": 512,
+    "coset_cardinality_max": 16,
+    "coset_cardinality_min": 16,
+    "maximum_official_log10_odds_error": 2.049915792667889e-12,
+    "maximum_probability_normalization_error": 4.440892098500626e-16,
+    "official_bsv_action_mismatches": 0,
+    "official_bsv_samples": 128,
+    "passed": true,
+    "pure_julia_tjoin_samples": 128,
+    "pure_julia_vs_official_correction_mismatches": 0
+  },
+  "causality": {
+    "mutated_suffix_action_divergence": true,
+    "mutated_suffix_prior_divergence": true,
+    "passed": true,
+    "prefix_action_mismatches": 0,
+    "prefix_prior_max_abs_error": 0.0,
+    "prefix_rounds": 64
+  },
+  "source_privilege_audit": {
+    "decision_function_signatures": {
+      "decode_cpd": "prepared::PreparedSubspace, stabilizers, weights; backend::Symbol=:pure_julia)",
+      "periodic_mwpm_weights": "residuals, posterior, grid, nominal_sigmas, means; terms::Int)",
+      "exact_state_scores": "table, syndrome, residuals, nominal_sigmas, means, grid; terms::Int)",
+      "mixture_action": "scores0, scores1, posterior)",
+      "plugin_action": "table, syndrome, residuals, nominal_sigmas, means, filter; terms::Int)",
+      "robust_action": "scores0, scores1, posterior, trusted_scores0, trusted_scores1, trusted_posterior, risk_cfg)",
+      "causal_probe": "noise_trace, cell, config, tables)"
+    },
+    "predecision_update_order": "decode current round, then update for next round",
+    "hidden_truth_signature_hits": 0,
+    "spatial_metadata_decision_hits": 0
+  },
+  "strongest_development_baseline_selection": {
+    "candidates_retained": [
+      "current_adaptive_weighted_cpd",
+      "static_mixture_exact_mld"
+    ],
+    "selection_rule": "minimum aggregate train-only p_L; no candidate deleted",
+    "selected": "static_mixture_exact_mld",
+    "candidate_p_L": {
+      "current_adaptive_weighted_cpd": 0.11795122195512821,
+      "static_mixture_exact_mld": 0.11197916666666667
+    },
+    "boundary": "not yet the T6.22.4 strongest eligible formal denominator"
+  },
+  "method_summary": {
+    "current_adaptive_weighted_cpd": {
+      "errors": 9421,
+      "rounds": 79872,
+      "x": 4409,
+      "y": 559,
+      "z": 4453,
+      "p_L": 0.11795122195512821,
+      "p_X": 0.05520082131410257,
+      "p_Y": 0.006998697916666667,
+      "p_Z": 0.055751702724358976
+    },
+    "static_mixture_exact_mld": {
+      "errors": 8944,
+      "rounds": 79872,
+      "x": 4169,
+      "y": 529,
+      "z": 4246,
+      "p_L": 0.11197916666666667,
+      "p_X": 0.05219601362179487,
+      "p_Y": 0.006623096955128205,
+      "p_Z": 0.05316005608974359
+    },
+    "estimator_upgrade_weighted_cpd": {
+      "errors": 9523,
+      "rounds": 79872,
+      "x": 4487,
+      "y": 549,
+      "z": 4487,
+      "p_L": 0.11922826522435898,
+      "p_X": 0.05617738381410257,
+      "p_Y": 0.006873497596153846,
+      "p_Z": 0.05617738381410257
+    },
+    "periodic_likelihood_mwpm": {
+      "errors": 12211,
+      "rounds": 79872,
+      "x": 5646,
+      "y": 751,
+      "z": 5814,
+      "p_L": 0.15288211137820512,
+      "p_X": 0.07068810096153846,
+      "p_Y": 0.00940254407051282,
+      "p_Z": 0.07279146634615384
+    },
+    "plugin_exact_logical_coset_mld": {
+      "errors": 13380,
+      "rounds": 79872,
+      "x": 6163,
+      "y": 879,
+      "z": 6338,
+      "p_L": 0.16751802884615385,
+      "p_X": 0.07716095753205128,
+      "p_Y": 0.011005108173076924,
+      "p_Z": 0.07935196314102565
+    },
+    "posterior_predictive_exact_mld": {
+      "errors": 13381,
+      "rounds": 79872,
+      "x": 6161,
+      "y": 879,
+      "z": 6341,
+      "p_L": 0.16753054887820512,
+      "p_X": 0.07713591746794872,
+      "p_Y": 0.011005108173076924,
+      "p_Z": 0.07938952323717949
+    },
+    "risk_aware_observed_only_action": {
+      "errors": 8944,
+      "rounds": 79872,
+      "x": 4169,
+      "y": 529,
+      "z": 4246,
+      "p_L": 0.11197916666666667,
+      "p_X": 0.05219601362179487,
+      "p_Y": 0.006623096955128205,
+      "p_Z": 0.05316005608974359
+    }
+  },
+  "family_summary": {
+    "burst_outlier": {
+      "current_adaptive_weighted_cpd": {
+        "errors": 884,
+        "rounds": 6144,
+        "p_L": 0.14388020833333334
+      },
+      "static_mixture_exact_mld": {
+        "errors": 829,
+        "rounds": 6144,
+        "p_L": 0.13492838541666666
+      },
+      "estimator_upgrade_weighted_cpd": {
+        "errors": 883,
+        "rounds": 6144,
+        "p_L": 0.14371744791666666
+      },
+      "periodic_likelihood_mwpm": {
+        "errors": 1101,
+        "rounds": 6144,
+        "p_L": 0.17919921875
+      },
+      "plugin_exact_logical_coset_mld": {
+        "errors": 1206,
+        "rounds": 6144,
+        "p_L": 0.1962890625
+      },
+      "posterior_predictive_exact_mld": {
+        "errors": 1208,
+        "rounds": 6144,
+        "p_L": 0.19661458333333334
+      },
+      "risk_aware_observed_only_action": {
+        "errors": 829,
+        "rounds": 6144,
+        "p_L": 0.13492838541666666
+      }
+    },
+    "compound_ood": {
+      "current_adaptive_weighted_cpd": {
+        "errors": 795,
+        "rounds": 6144,
+        "p_L": 0.12939453125
+      },
+      "static_mixture_exact_mld": {
+        "errors": 814,
+        "rounds": 6144,
+        "p_L": 0.13248697916666666
+      },
+      "estimator_upgrade_weighted_cpd": {
+        "errors": 800,
+        "rounds": 6144,
+        "p_L": 0.13020833333333334
+      },
+      "periodic_likelihood_mwpm": {
+        "errors": 1058,
+        "rounds": 6144,
+        "p_L": 0.17220052083333334
+      },
+      "plugin_exact_logical_coset_mld": {
+        "errors": 1176,
+        "rounds": 6144,
+        "p_L": 0.19140625
+      },
+      "posterior_predictive_exact_mld": {
+        "errors": 1176,
+        "rounds": 6144,
+        "p_L": 0.19140625
+      },
+      "risk_aware_observed_only_action": {
+        "errors": 814,
+        "rounds": 6144,
+        "p_L": 0.13248697916666666
+      }
+    },
+    "correlation_drift": {
+      "current_adaptive_weighted_cpd": {
+        "errors": 675,
+        "rounds": 6144,
+        "p_L": 0.10986328125
+      },
+      "static_mixture_exact_mld": {
+        "errors": 629,
+        "rounds": 6144,
+        "p_L": 0.10237630208333333
+      },
+      "estimator_upgrade_weighted_cpd": {
+        "errors": 698,
+        "rounds": 6144,
+        "p_L": 0.11360677083333333
+      },
+      "periodic_likelihood_mwpm": {
+        "errors": 898,
+        "rounds": 6144,
+        "p_L": 0.14615885416666666
+      },
+      "plugin_exact_logical_coset_mld": {
+        "errors": 988,
+        "rounds": 6144,
+        "p_L": 0.16080729166666666
+      },
+      "posterior_predictive_exact_mld": {
+        "errors": 988,
+        "rounds": 6144,
+        "p_L": 0.16080729166666666
+      },
+      "risk_aware_observed_only_action": {
+        "errors": 629,
+        "rounds": 6144,
+        "p_L": 0.10237630208333333
+      }
+    },
+    "heavy_tail": {
+      "current_adaptive_weighted_cpd": {
+        "errors": 781,
+        "rounds": 6144,
+        "p_L": 0.12711588541666666
+      },
+      "static_mixture_exact_mld": {
+        "errors": 773,
+        "rounds": 6144,
+        "p_L": 0.12581380208333334
+      },
+      "estimator_upgrade_weighted_cpd": {
+        "errors": 787,
+        "rounds": 6144,
+        "p_L": 0.12809244791666666
+      },
+      "periodic_likelihood_mwpm": {
+        "errors": 833,
+        "rounds": 6144,
+        "p_L": 0.13557942708333334
+      },
+      "plugin_exact_logical_coset_mld": {
+        "errors": 823,
+        "rounds": 6144,
+        "p_L": 0.13395182291666666
+      },
+      "posterior_predictive_exact_mld": {
+        "errors": 818,
+        "rounds": 6144,
+        "p_L": 0.13313802083333334
+      },
+      "risk_aware_observed_only_action": {
+        "errors": 773,
+        "rounds": 6144,
+        "p_L": 0.12581380208333334
+      }
+    },
+    "likelihood_mismatch": {
+      "current_adaptive_weighted_cpd": {
+        "errors": 727,
+        "rounds": 6144,
+        "p_L": 0.11832682291666667
+      },
+      "static_mixture_exact_mld": {
+        "errors": 670,
+        "rounds": 6144,
+        "p_L": 0.10904947916666667
+      },
+      "estimator_upgrade_weighted_cpd": {
+        "errors": 754,
+        "rounds": 6144,
+        "p_L": 0.12272135416666667
+      },
+      "periodic_likelihood_mwpm": {
+        "errors": 951,
+        "rounds": 6144,
+        "p_L": 0.15478515625
+      },
+      "plugin_exact_logical_coset_mld": {
+        "errors": 1045,
+        "rounds": 6144,
+        "p_L": 0.17008463541666666
+      },
+      "posterior_predictive_exact_mld": {
+        "errors": 1045,
+        "rounds": 6144,
+        "p_L": 0.17008463541666666
+      },
+      "risk_aware_observed_only_action": {
+        "errors": 670,
+        "rounds": 6144,
+        "p_L": 0.10904947916666667
+      }
+    },
+    "mean_drift": {
+      "current_adaptive_weighted_cpd": {
+        "errors": 696,
+        "rounds": 6144,
+        "p_L": 0.11328125
+      },
+      "static_mixture_exact_mld": {
+        "errors": 639,
+        "rounds": 6144,
+        "p_L": 0.10400390625
+      },
+      "estimator_upgrade_weighted_cpd": {
+        "errors": 722,
+        "rounds": 6144,
+        "p_L": 0.11751302083333333
+      },
+      "periodic_likelihood_mwpm": {
+        "errors": 920,
+        "rounds": 6144,
+        "p_L": 0.14973958333333334
+      },
+      "plugin_exact_logical_coset_mld": {
+        "errors": 996,
+        "rounds": 6144,
+        "p_L": 0.162109375
+      },
+      "posterior_predictive_exact_mld": {
+        "errors": 996,
+        "rounds": 6144,
+        "p_L": 0.162109375
+      },
+      "risk_aware_observed_only_action": {
+        "errors": 639,
+        "rounds": 6144,
+        "p_L": 0.10400390625
+      }
+    },
+    "ou_drift": {
+      "current_adaptive_weighted_cpd": {
+        "errors": 703,
+        "rounds": 6144,
+        "p_L": 0.11442057291666667
+      },
+      "static_mixture_exact_mld": {
+        "errors": 658,
+        "rounds": 6144,
+        "p_L": 0.10709635416666667
+      },
+      "estimator_upgrade_weighted_cpd": {
+        "errors": 729,
+        "rounds": 6144,
+        "p_L": 0.11865234375
+      },
+      "periodic_likelihood_mwpm": {
+        "errors": 909,
+        "rounds": 6144,
+        "p_L": 0.14794921875
+      },
+      "plugin_exact_logical_coset_mld": {
+        "errors": 1002,
+        "rounds": 6144,
+        "p_L": 0.1630859375
+      },
+      "posterior_predictive_exact_mld": {
+        "errors": 1002,
+        "rounds": 6144,
+        "p_L": 0.1630859375
+      },
+      "risk_aware_observed_only_action": {
+        "errors": 658,
+        "rounds": 6144,
+        "p_L": 0.10709635416666667
+      }
+    },
+    "periodic_drift": {
+      "current_adaptive_weighted_cpd": {
+        "errors": 730,
+        "rounds": 6144,
+        "p_L": 0.11881510416666667
+      },
+      "static_mixture_exact_mld": {
+        "errors": 670,
+        "rounds": 6144,
+        "p_L": 0.10904947916666667
+      },
+      "estimator_upgrade_weighted_cpd": {
+        "errors": 717,
+        "rounds": 6144,
+        "p_L": 0.11669921875
+      },
+      "periodic_likelihood_mwpm": {
+        "errors": 940,
+        "rounds": 6144,
+        "p_L": 0.15299479166666666
+      },
+      "plugin_exact_logical_coset_mld": {
+        "errors": 1035,
+        "rounds": 6144,
+        "p_L": 0.16845703125
+      },
+      "posterior_predictive_exact_mld": {
+        "errors": 1037,
+        "rounds": 6144,
+        "p_L": 0.16878255208333334
+      },
+      "risk_aware_observed_only_action": {
+        "errors": 670,
+        "rounds": 6144,
+        "p_L": 0.10904947916666667
+      }
+    },
+    "random_walk": {
+      "current_adaptive_weighted_cpd": {
+        "errors": 678,
+        "rounds": 6144,
+        "p_L": 0.1103515625
+      },
+      "static_mixture_exact_mld": {
+        "errors": 624,
+        "rounds": 6144,
+        "p_L": 0.1015625
+      },
+      "estimator_upgrade_weighted_cpd": {
+        "errors": 688,
+        "rounds": 6144,
+        "p_L": 0.11197916666666667
+      },
+      "periodic_likelihood_mwpm": {
+        "errors": 959,
+        "rounds": 6144,
+        "p_L": 0.15608723958333334
+      },
+      "plugin_exact_logical_coset_mld": {
+        "errors": 1037,
+        "rounds": 6144,
+        "p_L": 0.16878255208333334
+      },
+      "posterior_predictive_exact_mld": {
+        "errors": 1038,
+        "rounds": 6144,
+        "p_L": 0.1689453125
+      },
+      "risk_aware_observed_only_action": {
+        "errors": 624,
+        "rounds": 6144,
+        "p_L": 0.1015625
+      }
+    },
+    "stationary_control": {
+      "current_adaptive_weighted_cpd": {
+        "errors": 671,
+        "rounds": 6144,
+        "p_L": 0.10921223958333333
+      },
+      "static_mixture_exact_mld": {
+        "errors": 601,
+        "rounds": 6144,
+        "p_L": 0.09781901041666667
+      },
+      "estimator_upgrade_weighted_cpd": {
+        "errors": 681,
+        "rounds": 6144,
+        "p_L": 0.11083984375
+      },
+      "periodic_likelihood_mwpm": {
+        "errors": 925,
+        "rounds": 6144,
+        "p_L": 0.15055338541666666
+      },
+      "plugin_exact_logical_coset_mld": {
+        "errors": 1009,
+        "rounds": 6144,
+        "p_L": 0.16422526041666666
+      },
+      "posterior_predictive_exact_mld": {
+        "errors": 1009,
+        "rounds": 6144,
+        "p_L": 0.16422526041666666
+      },
+      "risk_aware_observed_only_action": {
+        "errors": 601,
+        "rounds": 6144,
+        "p_L": 0.09781901041666667
+      }
+    },
+    "step_calibration_shift": {
+      "current_adaptive_weighted_cpd": {
+        "errors": 669,
+        "rounds": 6144,
+        "p_L": 0.10888671875
+      },
+      "static_mixture_exact_mld": {
+        "errors": 688,
+        "rounds": 6144,
+        "p_L": 0.11197916666666667
+      },
+      "estimator_upgrade_weighted_cpd": {
+        "errors": 656,
+        "rounds": 6144,
+        "p_L": 0.10677083333333333
+      },
+      "periodic_likelihood_mwpm": {
+        "errors": 890,
+        "rounds": 6144,
+        "p_L": 0.14485677083333334
+      },
+      "plugin_exact_logical_coset_mld": {
+        "errors": 1025,
+        "rounds": 6144,
+        "p_L": 0.16682942708333334
+      },
+      "posterior_predictive_exact_mld": {
+        "errors": 1025,
+        "rounds": 6144,
+        "p_L": 0.16682942708333334
+      },
+      "risk_aware_observed_only_action": {
+        "errors": 688,
+        "rounds": 6144,
+        "p_L": 0.11197916666666667
+      }
+    },
+    "telegraph_drift": {
+      "current_adaptive_weighted_cpd": {
+        "errors": 690,
+        "rounds": 6144,
+        "p_L": 0.1123046875
+      },
+      "static_mixture_exact_mld": {
+        "errors": 681,
+        "rounds": 6144,
+        "p_L": 0.11083984375
+      },
+      "estimator_upgrade_weighted_cpd": {
+        "errors": 702,
+        "rounds": 6144,
+        "p_L": 0.1142578125
+      },
+      "periodic_likelihood_mwpm": {
+        "errors": 931,
+        "rounds": 6144,
+        "p_L": 0.15152994791666666
+      },
+      "plugin_exact_logical_coset_mld": {
+        "errors": 1059,
+        "rounds": 6144,
+        "p_L": 0.17236328125
+      },
+      "posterior_predictive_exact_mld": {
+        "errors": 1060,
+        "rounds": 6144,
+        "p_L": 0.17252604166666666
+      },
+      "risk_aware_observed_only_action": {
+        "errors": 681,
+        "rounds": 6144,
+        "p_L": 0.11083984375
+      }
+    },
+    "variance_drift": {
+      "current_adaptive_weighted_cpd": {
+        "errors": 722,
+        "rounds": 6144,
+        "p_L": 0.11751302083333333
+      },
+      "static_mixture_exact_mld": {
+        "errors": 668,
+        "rounds": 6144,
+        "p_L": 0.10872395833333333
+      },
+      "estimator_upgrade_weighted_cpd": {
+        "errors": 706,
+        "rounds": 6144,
+        "p_L": 0.11490885416666667
+      },
+      "periodic_likelihood_mwpm": {
+        "errors": 896,
+        "rounds": 6144,
+        "p_L": 0.14583333333333334
+      },
+      "plugin_exact_logical_coset_mld": {
+        "errors": 979,
+        "rounds": 6144,
+        "p_L": 0.15934244791666666
+      },
+      "posterior_predictive_exact_mld": {
+        "errors": 979,
+        "rounds": 6144,
+        "p_L": 0.15934244791666666
+      },
+      "risk_aware_observed_only_action": {
+        "errors": 668,
+        "rounds": 6144,
+        "p_L": 0.10872395833333333
+      }
+    }
+  },
+  "family_headroom": {
+    "burst_outlier": {
+      "baseline": "static_mixture_exact_mld",
+      "baseline_p_L": 0.13492838541666666,
+      "proposed_p_L": 0.13492838541666666,
+      "relative_improvement": 0.0
+    },
+    "compound_ood": {
+      "baseline": "static_mixture_exact_mld",
+      "baseline_p_L": 0.13248697916666666,
+      "proposed_p_L": 0.13248697916666666,
+      "relative_improvement": 0.0
+    },
+    "correlation_drift": {
+      "baseline": "static_mixture_exact_mld",
+      "baseline_p_L": 0.10237630208333333,
+      "proposed_p_L": 0.10237630208333333,
+      "relative_improvement": 0.0
+    },
+    "heavy_tail": {
+      "baseline": "static_mixture_exact_mld",
+      "baseline_p_L": 0.12581380208333334,
+      "proposed_p_L": 0.12581380208333334,
+      "relative_improvement": 0.0
+    },
+    "likelihood_mismatch": {
+      "baseline": "static_mixture_exact_mld",
+      "baseline_p_L": 0.10904947916666667,
+      "proposed_p_L": 0.10904947916666667,
+      "relative_improvement": 0.0
+    },
+    "mean_drift": {
+      "baseline": "static_mixture_exact_mld",
+      "baseline_p_L": 0.10400390625,
+      "proposed_p_L": 0.10400390625,
+      "relative_improvement": 0.0
+    },
+    "ou_drift": {
+      "baseline": "static_mixture_exact_mld",
+      "baseline_p_L": 0.10709635416666667,
+      "proposed_p_L": 0.10709635416666667,
+      "relative_improvement": 0.0
+    },
+    "periodic_drift": {
+      "baseline": "static_mixture_exact_mld",
+      "baseline_p_L": 0.10904947916666667,
+      "proposed_p_L": 0.10904947916666667,
+      "relative_improvement": 0.0
+    },
+    "random_walk": {
+      "baseline": "static_mixture_exact_mld",
+      "baseline_p_L": 0.1015625,
+      "proposed_p_L": 0.1015625,
+      "relative_improvement": 0.0
+    },
+    "stationary_control": {
+      "baseline": "static_mixture_exact_mld",
+      "baseline_p_L": 0.09781901041666667,
+      "proposed_p_L": 0.09781901041666667,
+      "relative_improvement": 0.0
+    },
+    "step_calibration_shift": {
+      "baseline": "static_mixture_exact_mld",
+      "baseline_p_L": 0.11197916666666667,
+      "proposed_p_L": 0.11197916666666667,
+      "relative_improvement": 0.0
+    },
+    "telegraph_drift": {
+      "baseline": "static_mixture_exact_mld",
+      "baseline_p_L": 0.11083984375,
+      "proposed_p_L": 0.11083984375,
+      "relative_improvement": 0.0
+    },
+    "variance_drift": {
+      "baseline": "static_mixture_exact_mld",
+      "baseline_p_L": 0.10872395833333333,
+      "proposed_p_L": 0.10872395833333333,
+      "relative_improvement": 0.0
+    }
+  },
+  "regret_decomposition": [
+    {
+      "component": "estimator",
+      "before_method": "current_adaptive_weighted_cpd",
+      "after_method": "estimator_upgrade_weighted_cpd",
+      "before_p_L": 0.11795122195512821,
+      "after_p_L": 0.11922826522435898,
+      "absolute_improvement": -0.0012770432692307682,
+      "relative_to_path_start": -0.010826876127799588
+    },
+    {
+      "component": "metric_likelihood",
+      "before_method": "estimator_upgrade_weighted_cpd",
+      "after_method": "periodic_likelihood_mwpm",
+      "before_p_L": 0.11922826522435898,
+      "after_p_L": 0.15288211137820512,
+      "absolute_improvement": -0.033653846153846145,
+      "relative_to_path_start": -0.28532002972083637
+    },
+    {
+      "component": "logical_coset_sum",
+      "before_method": "periodic_likelihood_mwpm",
+      "after_method": "plugin_exact_logical_coset_mld",
+      "before_p_L": 0.15288211137820512,
+      "after_p_L": 0.16751802884615385,
+      "absolute_improvement": -0.014635917467948734,
+      "relative_to_path_start": -0.12408449209213472
+    },
+    {
+      "component": "posterior_marginalization",
+      "before_method": "plugin_exact_logical_coset_mld",
+      "after_method": "posterior_predictive_exact_mld",
+      "before_p_L": 0.16751802884615385,
+      "after_p_L": 0.16753054887820512,
+      "absolute_improvement": -1.2520032051266394e-05,
+      "relative_to_path_start": -0.00010614584439005939
+    },
+    {
+      "component": "risk_action",
+      "before_method": "posterior_predictive_exact_mld",
+      "after_method": "risk_aware_observed_only_action",
+      "before_p_L": 0.16753054887820512,
+      "after_p_L": 0.11197916666666667,
+      "absolute_improvement": 0.05555138221153845,
+      "relative_to_path_start": 0.47096911155928234
+    }
+  ],
+  "paired_bootstrap": {
+    "cluster_count": 12,
+    "resamples": 50000,
+    "bootstrap_seed": 620049999,
+    "baseline": "static_mixture_exact_mld",
+    "proposed": "risk_aware_observed_only_action",
+    "baseline_p_L": 0.11197916666666667,
+    "proposed_p_L": 0.11197916666666667,
+    "relative_improvement_point": 0.0,
+    "relative_improvement_lcb": 0.0,
+    "relative_improvement_ucb": 0.0,
+    "absolute_improvement_point": 0.0,
+    "absolute_improvement_lcb": 0.0,
+    "absolute_improvement_ucb": 0.0
+  },
+  "risk_action_diagnostics": {
+    "interventions": 9884,
+    "rounds": 79872,
+    "intervention_rate": 0.12374799679487179,
+    "net_errors_reduced_vs_unprotected_posterior_predictive": 4437,
+    "interpretation": "trusted-bank robust action prevents induced adaptive errors, but final p_L only equals the strongest static baseline and therefore contributes zero usable headroom"
+  },
+  "headroom_gate": {
+    "point_threshold": 0.15,
+    "lcb_threshold": 0.12,
+    "point_pass": false,
+    "lcb_pass": false,
+    "passed": false,
+    "failure_action": "do not enter T6.21 under Phase 6D v1; do not rescue by scenario deletion, denominator deletion or pilot/formal access"
+  },
+  "semantic_mutation_audit": [
+    {
+      "mutation": "pilot_split_poisoning",
+      "caught": true
+    },
+    {
+      "mutation": "missing_cell",
+      "caught": true
+    },
+    {
+      "mutation": "duplicate_cell",
+      "caught": true
+    },
+    {
+      "mutation": "wrong_rounds",
+      "caught": true
+    },
+    {
+      "mutation": "delete_method",
+      "caught": true
+    },
+    {
+      "mutation": "inflate_error_count",
+      "caught": true
+    },
+    {
+      "mutation": "break_pauli_sum",
+      "caught": true
+    },
+    {
+      "mutation": "forged_correctness",
+      "caught": true
+    },
+    {
+      "mutation": "forged_tjoin",
+      "caught": true
+    },
+    {
+      "mutation": "alias_failure",
+      "caught": true
+    },
+    {
+      "mutation": "causal_failure",
+      "caught": true
+    },
+    {
+      "mutation": "invalid_trace_hash",
+      "caught": true
+    },
+    {
+      "mutation": "duplicate_trace_hash",
+      "caught": true
+    },
+    {
+      "mutation": "formal_label_injection",
+      "caught": true
+    },
+    {
+      "mutation": "metadata_relabel",
+      "caught": true
+    }
+  ],
+  "gates": [
+    {
+      "gate": "raw_integrity_complete",
+      "passed": true
+    },
+    {
+      "gate": "train_only",
+      "passed": true
+    },
+    {
+      "gate": "all_registered_families",
+      "passed": true
+    },
+    {
+      "gate": "paired_trace_count",
+      "passed": true
+    },
+    {
+      "gate": "official_bsv_zero_decision_mismatch",
+      "passed": true
+    },
+    {
+      "gate": "official_log_odds_tolerance",
+      "passed": true
+    },
+    {
+      "gate": "pure_julia_tjoin_zero_mismatch",
+      "passed": true
+    },
+    {
+      "gate": "alias_convergence",
+      "passed": true
+    },
+    {
+      "gate": "coset_normalization",
+      "passed": true
+    },
+    {
+      "gate": "causal_prefix_mutation",
+      "passed": true
+    },
+    {
+      "gate": "decoder_source_privilege_audit",
+      "passed": true
+    },
+    {
+      "gate": "semantic_mutations_caught",
+      "passed": true
+    },
+    {
+      "gate": "headroom_point_ge_15pct",
+      "passed": false
+    },
+    {
+      "gate": "headroom_lcb_ge_12pct",
+      "passed": false
+    }
+  ],
+  "gate_summary": {
+    "passed": 12,
+    "total": 14,
+    "integrity_passed": true,
+    "headroom_passed": false
+  },
+  "bindings": [
+    {
+      "path": "configs/phase6d/t6_20_4_causal_headroom.json",
+      "sha256": "e0f21b8aa220bee40aa9b6e27e84d13cdf2e40a6a69d906e23ddb6c53ff8297f",
+      "bytes": 2942
+    },
+    {
+      "path": "runs/t6_20_4_causal_headroom_raw.json",
+      "sha256": "cf825e703b54a15de05bf8a54ffd498ffd5917fb3727e14f53ccf610105fde35",
+      "bytes": 391830
+    },
+    {
+      "path": "docs/t6_20_3_phase6d_multimode_preregistration.json",
+      "sha256": "189c647f255ed959b6af339f5056c24e2dd69ff7e5e32b9351e44055da4c70ce",
+      "bytes": 1381177
+    },
+    {
+      "path": "scripts/run_t6_20_4_causal_headroom.jl",
+      "sha256": "88358c54da640a852fdb9314f29853a464039dcd2b8fcd16d1e0d4301d01e7ae",
+      "bytes": 41726
+    },
+    {
+      "path": "cnn_fpga/benchmark/multimode_causal_headroom.py",
+      "sha256": "7b10532716d08e48f1a46c45a2583dcfac6df427218d67386fe19c3b60dbe1e7",
+      "bytes": 34126
+    },
+    {
+      "path": "third_party/LatticeAlgorithms.jl/src/surface_code.jl",
+      "sha256": "3f520f2bc09abaea4e78da61fc60c2babed111f4269a2bd0ded2826f4d665b29",
+      "bytes": 40842
+    },
+    {
+      "path": "third_party/LatticeAlgorithms.jl/src/matching_utils.jl",
+      "sha256": "f3826ddefd3b197c94bcbb2dc0c6831bb4886eed3dfede14d5f8aceb921848b1",
+      "bytes": 28862
+    }
+  ],
+  "verdict": "NO_GO_MULTIMODE_CAUSAL_HEADROOM",
+  "analysis_sha256": "43be130de84588eb075465431976a5966a14b2a4b9d6fe84fecd5bfd0c9c0588"
+}

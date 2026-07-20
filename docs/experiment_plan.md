@@ -1687,6 +1687,14 @@ q_t(\theta)=p(\theta_t\mid s_{<t}),\qquad
 
 正式实现前先在 development-only split 分解 estimator、likelihood metric、coset sum、posterior marginalization 和 action headroom。相对 strongest eligible deployable 的可用 headroom point 少于 15% 或 paired 95% LCB 少于 12% 时直接 NO-GO，不运行大规模 formal。
 
+### 19.3.1 T6.20.4 causal-headroom 终态
+
+T6.20.4 已只读使用 T6.20.3 的 `d=3 train` cells，保留 12 个 seed-cluster 和全部 13 family，每 cell 512 轮，共 79,872 physical rounds。explicit logical-coset sum 已与 official BSV 在128个样本上零 action mismatch（最大 log10-odds 误差 `2.050e-12`）；pure-Julia exhaustive T-join 与 official pymatching 128 样本零 correction mismatch；512 个 alias-convergence 样本零 action mismatch；future-suffix mutation 的 64-round prefix 严格不变且 suffix 后真实分叉。
+
+最强当前可执行 development baseline 是 static-mixture exact MLD：`p_L=0.1119792`；current adaptive weighted CPD 为 `0.1179512`，两者均保留。未保护的 observed-only posterior-predictive exact MLD 退化到 `0.1675305`；trusted-bank risk action 通过 9,884 次 fail-closed 干预、相对该未保护 arm 净减少 4,437 个逻辑错误，最终只回到 static baseline 的 `0.1119792`。paired seed-cluster 50,000-bootstrap relative headroom=`0% [0%,0%]`。五段 estimator/metric/coset/marginalization/action 的绝对 LER 贡献为 `-0.0012770/-0.0336538/-0.0146359/-0.0000125/+0.0555514`；最后一段是安全回退价值，不是相对 strongest baseline 的 LER 优势。这里的 causal ceiling 是本任务注册的有限 observed-only 候选栈，不是所有因果解码器的数学上确界。
+
+因此 verdict=`NO_GO_MULTIMODE_CAUSAL_HEADROOM`。这不是 source/correctness/causality/integrity 失败，而是可用 effect size 明显不足。Phase 6D v1 不进入 T6.21--T6.24，calibration/pilot/formal 均未访问；CNN/student 因没有合法 T6.23 teacher 同步 Dropped。任何 multimode 重开必须使用新的机制假设、前瞻 v2 协议与全新 split，不能删除本次 family/baseline、调低门或用 T6.18.3/RTL/CNN 补门。独立 single-mode RTL lane 从 T6.25.1 继续。
+
 ## 19.4 全新 split、formal benchmark 与 SOTA 门
 
 T6.18.3 的 seeds、spatial pattern、balanced variance law 和 transition 参数全部视为 opened。新 train/calibration/pilot/formal 四分割必须在任何结果访问前冻结，并覆盖至少：
