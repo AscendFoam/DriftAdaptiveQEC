@@ -22,7 +22,7 @@ from typing import Any, Mapping, Sequence
 
 ROOT = Path(__file__).resolve().parents[2]
 TASK_ID = "T6.15.5"
-SCHEMA_VERSION = "t6.15.5-route-a-v5-final-evidence-gate-v1"
+SCHEMA_VERSION = "t6.15.5-route-a-v5-final-evidence-gate-v2"
 PROTOCOL_ID = "ROUTE-A-V5-EARLY-HEADROOM-STOP-V1"
 HEADROOM_PATH = ROOT / "docs" / "t6_10_1_causal_headroom.json"
 BOARD_PATH = ROOT / "docs" / "new_task_board.md"
@@ -74,6 +74,24 @@ def _canonical_sha256(payload: object) -> str:
         allow_nan=False,
     ).encode("ascii")
     return hashlib.sha256(encoded).hexdigest()
+
+
+def _board_status_binding(statuses: Mapping[str, str]) -> dict[str, Any]:
+    """Bind only the preregistered V5 early-stop state, not board prose/history.
+
+    The task board is a living status document.  Hashing the complete Markdown
+    made an unrelated next-task pointer or history entry invalidate the frozen
+    Phase-6B scientific state.  The evidence gate depends only on the exact 20
+    conditional V5 tasks, so the binding is deliberately scoped to those rows.
+    """
+
+    scoped = {task: statuses.get(task) for task in DOWNSTREAM_DROPPED_TASKS}
+    return {
+        "path": str(BOARD_PATH.relative_to(ROOT)).replace("\\", "/"),
+        "scope": "T6.10.2--T6.15.4 preregistered conditional-task statuses only",
+        "statuses": scoped,
+        "semantic_sha256": _canonical_sha256(scoped),
+    }
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
@@ -239,7 +257,7 @@ def build_report(
     expanded = nested["expanded_candidate_action_oracle"]
     bindings = {
         str(path.relative_to(ROOT)).replace("\\", "/"): _sha256(path)
-        for path in (HEADROOM_PATH, BOARD_PATH, BOARD_GATE_PATH, V4_FINAL_PATH)
+        for path in (HEADROOM_PATH, BOARD_GATE_PATH, V4_FINAL_PATH)
     }
     report: dict[str, Any] = {
         "task_id": TASK_ID,
@@ -263,6 +281,7 @@ def build_report(
         "formal_access": {"v5_formal_manifest_exists": False, "v5_formal_output_exists": False, "v4_formal_used_only_as_t6_10_1_diagnostic": True},
         "claim_registry": claims,
         "parent_bindings": bindings,
+        "board_status_binding": _board_status_binding(statuses),
         "semantic_mutations": mutations,
         "gates": gates,
         "gate_summary": {"passed": len(gates), "failed": []},
@@ -273,7 +292,7 @@ def build_report(
     }
     _write_source_data(source_data, claims)
     report["source_data_binding"] = {"path": str(source_data.relative_to(ROOT)).replace("\\", "/"), "sha256": _sha256(source_data), "row_count": len(claims)}
-    report["analysis_sha256"] = _canonical_sha256({key: report[key] for key in ("execution_path", "headroom_recomputation", "dropped_tasks", "formal_access", "claim_registry", "parent_bindings", "semantic_mutations", "gates", "phase6c_permission", "measured_hardware_claim", "verdict")})
+    report["analysis_sha256"] = _canonical_sha256({key: report[key] for key in ("execution_path", "headroom_recomputation", "dropped_tasks", "formal_access", "claim_registry", "parent_bindings", "board_status_binding", "semantic_mutations", "gates", "phase6c_permission", "measured_hardware_claim", "verdict")})
     _write_json(artifact, report)
     return report
 
@@ -286,10 +305,11 @@ def validate_report(path: Path = DEFAULT_ARTIFACT) -> dict[str, bool]:
         "identity": report.get("task_id") == TASK_ID and report.get("schema_version") == SCHEMA_VERSION and report.get("verdict") == VERDICT,
         "source_data": source.is_file() and _sha256(source) == report["source_data_binding"]["sha256"] and report["source_data_binding"]["row_count"] == len(report["claim_registry"]),
         "parent_hashes": all((ROOT / rel).is_file() and _sha256(ROOT / rel) == digest for rel, digest in report["parent_bindings"].items()),
+        "board_status_binding": report.get("board_status_binding") == _board_status_binding(_task_statuses(board)),
         "dropped_statuses": all(_task_statuses(board).get(task) == "Dropped" for task in report["dropped_tasks"]),
         "no_outputs": _v5_outputs() == report["v5_downstream_outputs_found"] == [],
         "gates": report["gate_summary"] == {"passed": len(report["gates"]), "failed": []} and all(report["gates"].values()),
-        "analysis_hash": report["analysis_sha256"] == _canonical_sha256({key: report[key] for key in ("execution_path", "headroom_recomputation", "dropped_tasks", "formal_access", "claim_registry", "parent_bindings", "semantic_mutations", "gates", "phase6c_permission", "measured_hardware_claim", "verdict")}),
+        "analysis_hash": report["analysis_sha256"] == _canonical_sha256({key: report[key] for key in ("execution_path", "headroom_recomputation", "dropped_tasks", "formal_access", "claim_registry", "parent_bindings", "board_status_binding", "semantic_mutations", "gates", "phase6c_permission", "measured_hardware_claim", "verdict")}),
     }
     if not all(checks.values()):
         raise ValueError(f"T6.15.5 artifact validation failed: {[key for key,value in checks.items() if not value]}")

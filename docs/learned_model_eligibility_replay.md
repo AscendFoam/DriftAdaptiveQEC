@@ -30,7 +30,7 @@
 
 ## Legacy CNN diagnostic replay
 
-保留模型 `artifacts/models/runtime_b_residual_v1/tiny_cnn_20260401_083648_2fc740424c0d.npz` 在冻结的 206-sample test split 上重推理 5 次，输出 hash 完全一致，并与 T5.4.3 保存的逐样本预测 bit-exact。该模型输入为 21-channel、5-window histograms 与 teacher 参数/差分，输出为连续 `b_q/b_p` residual；它证明 artifact 可重放，不证明 logical decoding、drift-control gain 或 latency advantage。host batch median=0.394316 s，也不转换为 `latency_ns`。
+保留模型 `artifacts/models/runtime_b_residual_v1/tiny_cnn_20260401_083648_2fc740424c0d.npz` 在冻结的 206-sample test split 上重推理 5 次，输出 hash 完全一致，并与 T5.4.3 保存的逐样本预测 bit-exact。该模型输入为 21-channel、5-window histograms 与 teacher 参数/差分，输出为连续 `b_q/b_p` residual；它证明 artifact 可重放，不证明 logical decoding、drift-control gain 或 latency advantage。host batch median=0.376165 s，也不转换为 `latency_ns`。
 
 ## 方法边界
 

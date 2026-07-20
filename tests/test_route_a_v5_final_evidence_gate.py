@@ -57,3 +57,14 @@ def test_build_and_validate_report(tmp_path: Path) -> None:
 def test_repository_report_validates_when_present() -> None:
     if gate.DEFAULT_ARTIFACT.is_file():
         assert all(gate.validate_report().values())
+
+
+def test_board_binding_is_scoped_but_status_sensitive() -> None:
+    _, statuses, _, _, _ = _parents()
+    original = gate._board_status_binding(statuses)
+    unrelated = dict(statuses)
+    unrelated["T7.1.1"] = "Done"
+    assert gate._board_status_binding(unrelated) == original
+    changed = dict(statuses)
+    changed[gate.DOWNSTREAM_DROPPED_TASKS[0]] = "Todo"
+    assert gate._board_status_binding(changed) != original

@@ -1,8 +1,8 @@
 # T6.17.1 single-mode Euclidean CPD 与 CI 等价边界
 
 - verdict：`PASS_SINGLE_MODE_EUCLIDEAN_CPD_EQUALS_CI_WITH_MAP_BOUNDARIES`
-- production q10×q10：1,048,576 points，mismatch=0，runtime=0.660 s
-- boundary：1,000,000 points / 2,000,000 coordinates，exact-tie coordinates=332,386，mismatch=0，runtime=0.840 s
+- production q10×q10：1,048,576 points，mismatch=0，runtime=0.628 s
+- boundary：1,000,000 points / 2,000,000 coordinates，exact-tie coordinates=332,386，mismatch=0，runtime=0.759 s
 - gates/mutations：15/15、15/15；Source Data=58 rows
 
 ## 结论
