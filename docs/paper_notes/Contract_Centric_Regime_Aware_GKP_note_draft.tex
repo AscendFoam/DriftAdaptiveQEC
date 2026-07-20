@@ -27,7 +27,7 @@
 \title{An Evidence-Gated, Fail-Closed Pre-Board Contract\\
 for Drift-Adaptive GKP Decoding}
 \author{}
-\date{Evidence-synchronized manuscript note; snapshot through T7.2.1, 20 July 2026}
+\date{Evidence-synchronized manuscript note; snapshot through T7.2.2, 20 July 2026}
 
 \begin{document}
 \maketitle
@@ -325,6 +325,42 @@ boundaries visible.  It is neither a claim of a first adaptive GKP decoder nor a
 global comparison across CI, ML, direct NN, RL, AQEC, CPD, and FPGA systems.
 
 \section{Contract-centric dual-loop method}
+\label{sec:methods}
+
+\subsection{Method-state convention}
+
+This section uses four explicit method states.  \emph{Implemented and
+evaluated} denotes code that produced the frozen project results;
+\emph{diagnostic only} denotes executed analysis that was not eligible for a
+confirmatory performance claim; \emph{conditionally registered and stopped}
+denotes a task-board design whose continuation depended on a prior entry gate
+and whose implementation was never started; and \emph{future physical work}
+denotes procedures that require the unavailable board or quantum apparatus.
+These states are methodological attributes, not missing-value conventions.
+
+\subsection{Protocol-aligned simulation stack}
+
+The implemented simulator is a single-mode square-lattice GKP abstraction, not
+a calibrated cavity--transmon digital twin.  A synthetic drift process supplies
+continuous displacement mean, covariance, loss, and outlier variables together
+with discrete regime and burst state.  The finite-squeezing layer separates
+channel, data-GKP, ancilla/measurement, and envelope contributions.  The
+protocol layer adds stage-resolved ancilla faults, readout confusion,
+conditional reset, leakage persistence, and sharpen--trim or small--big--small
+state-machine bookkeeping.  These components generate a causal modular
+syndrome stream and a logical label under the same registered lattice and
+correction convention.
+
+Each simulated cycle produces two physically distinct records.  The observed
+record contains the quantized syndrome, readout/event health, reset status,
+parameter age, and integrity fields that a deployable decoder may receive.  A
+read-only truth record contains latent drift state, regime, unwrapped
+displacement, and logical outcome.  Truth is used only to generate the channel,
+score errors, define evaluation-only event intervals, and construct the
+isolated oracle.  It is absent from every online adapter, posterior, expert,
+bank image, and action.  Prefix and truth-mutation tests enforce this separation.
+The vectorized engine supports trajectory-clustered Monte Carlo and rare-event
+strata, but host throughput is not interpreted as hardware latency.
 
 \subsection{System overview and reuse of the dual-loop pipeline}
 
@@ -353,31 +389,32 @@ evidence ladder, timing owner, and physical-board null state on the same page.
 The fast loop consumes the current validated bank on every measurement and
 never invokes the offline teacher.  The slow loop may host analytical,
 filtering, or learned estimators, but each candidate must emit the same bounded
-image and pass the same admission, integrity, and rollback rules.  The diagram
-therefore acts as an interface map, not as evidence that the four-state student
-is the main LER winner or that a complete FPGA deployment has been measured.
+image and pass the same admission, integrity, and rollback rules.  MAP owns
+logical decoding, typed event/fallback logic owns safety authority, and the
+fixed-latency path owns deterministic action delivery.  The diagram therefore
+acts as an interface map, not as evidence that the four-state student is the
+main LER winner or that a complete FPGA deployment has been measured.
 
 \subsection{Task formulation}
 
 At cycle $t$, the deployable decoder receives only quantized observed syndrome
-packets and health/event fields.  It returns a logical action, frame update,
-fallback reason, active-bank identity, and versioned provenance.  Truth fields
-used to generate trajectories are denied to all deployable adapters and are
-available only to the isolated evaluator and model oracle.
+packets $o_{1:t}$ and health/event fields.  It returns a logical action, frame
+update, fallback reason, active-bank identity, and versioned provenance.  Truth
+fields used to generate trajectories are denied to all deployable adapters and
+are available only to the isolated evaluator and model oracle.
 
 For each completed parameter window, the host side maintains two causal expert
 estimates:
 \begin{equation}
-  \widehat\theta_t^{\mathrm W}=\mathrm{Window}(y_{1:t}),
+  \widehat\theta_t^{\mathrm W}=\mathrm{Window}(o_{1:t}),
   \qquad
-  \widehat\theta_t^{\mathrm E}=\mathrm{EWMA}(y_{1:t}),
+  \widehat\theta_t^{\mathrm E}=\mathrm{EWMA}(o_{1:t}),
 \end{equation}
-where $y_{1:t}$ denotes observed syndrome history only.  Each estimate compiles
-to a parameter-bank image for the same fixed-point fast path.  The router may
-promote the Window bank only when the causal smooth posterior, pre-update
-predictive score, and hysteresis checks all pass.  Tail or uncertain evidence
-uses the continuously updated and validated EWMA shadow; integrity faults alone
-may republish the last-known-good image.
+Each estimate compiles to a complete parameter-bank image for the same
+fixed-point fast path.  The router may promote the Window bank only when the
+causal smooth posterior, pre-update predictive score, and hysteresis checks all
+pass.  Tail or uncertain evidence uses the continuously updated and validated
+EWMA shadow; integrity faults alone may republish the last-known-good image.
 
 \subsection{Unified execution contract}
 
@@ -393,21 +430,46 @@ Field & Frozen value & Interpretation \\
 \midrule
 Syndrome quantization & 10-bit ADC; 8-bit LUT address; 2-bit fraction & Same quantized packet domain for every deployable comparator \\
 MAP-LUT word & Signed Q9.12, ties-to-even, saturation & Deterministic arithmetic and packed-word behavior \\
-Fast path & 5-cycle MAP plus 1-cycle event/action & Six-cycle logical action-valid contract \\
-Bank protocol & CRC/SHA/CAS A/B bank, versioned commit, six-cycle drain & No silent partial publication; integrity-only LKG rollback \\
-Cadence & 32-cycle regime update; 2,048 scalar samples; 4,000-cycle parameter update & Completed-window causality and explicit update age \\
-Matched ceilings & 8,192 update MACs; 8,192 B state; 8,192 B workspace; 5,000 $\mu$s host update & Fail-fast budget admission, with actual use still reported \\
-Oracle isolation & Separate exact-key truth packet & No deployable aggregate may consume hidden state \\
+Fast path & 5-cycle MAP plus 1-cycle event/action; II=1 & Six-cycle action-valid contract before transport \\
+Bank protocol & CRC/SHA/CAS A/B bank, versioned commit, six-cycle drain & No partial publication; integrity-only monotonic LKG republish \\
+Cadence & 32-cycle posterior update; 2,048 scalar samples; 4,000-cycle image opportunity & Completed-window causality; equivalently 1,024 paired decisions and a 2,000-decision activation period \\
+Matched ceilings & 8,192 update MACs; 8,192 B state; 8,192 B workspace; 5,000 $\mu$s host update & Admission cap, while actual cost and every deadline outlier remain reported \\
+Oracle isolation & Separate exact-key truth packet & Truth may score or bound performance but cannot select an online action \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-The current hardware LUT is phase-conditioned and is not mathematically
-equivalent to the full two-dimensional joint MAP used as a strong software
-comparator.  The latter is therefore retained in the comparison table but is
-not relabelled as current-RTL deployable.
+A/B transactions write a complete inactive image, verify wire/image CRC plus
+manifest SHA, compare-and-swap against the active version, and activate only at
+a safe boundary.  The retired bank remains protected for six cycles.  Host ack
+does not complete the transaction until bank, version, activation epoch, CRC,
+and SHA readback agree.  Board-measured deadline miss is required to remain
+\texttt{null} before a physical run.  The current hardware LUT is
+phase-conditioned and is not mathematically equivalent to the full
+two-dimensional joint MAP used as a strong software comparator.  The latter is
+therefore retained in the comparison table but is not relabelled as current-RTL
+deployable.
 
 \subsection{Safety state and atomic updates}
+
+The implemented V4 slow loop uses a four-state causal HMM with class order
+\{normal, smooth, calibration shift, burst\}.  Circular syndrome statistics and
+an observed heavy-tail event head are updated every 32 decisions.  Model
+regularization, transition smoothing, and temperature were fixed to
+$0.1$, $4.0$, and $2.0$ on calibration/pilot data.  This model is an
+implemented synthetic-data classifier; it is neither an IMM nor BOCPD and it
+does not use an activation-horizon posterior predictor.
+
+The six common policy thresholds were chosen from 1,728 pilot tuples; the
+selected tuple was $(0.9,0.2,0.25,192,2,8)$ for enter probability, exit
+probability, uncertainty, OOD code, enter hysteresis, and recovery hysteresis.
+Window may be promoted for the next activation period only when the policy is
+open, the causal smooth posterior is at least $0.30$, and its previous complete
+window has lower pre-update predictive negative log likelihood than EWMA.
+Tail/uncertain evidence permits only the validated EWMA shadow; leakage requests
+reset and blocks commits; CRC, SHA, version, age, deadline, or router-hash
+failure cancels algorithmic candidates and permits only monotonic LKG
+republishing.
 
 The V4 policy replaced two failed architectures.  A static-switch design and a
 freeze-all-EWMA design both failed all 38 pilot-safe candidate tuples because
@@ -420,9 +482,11 @@ static.  An integrity fault cancelled a pending Window update and completed an
 LKG rollback.  The registered dual-shadow update cost was 1,218 MACs under the
 8,192-MAC ceiling.
 
-This trace proves structural execution and provenance, not tail-performance
-superiority.  The independent T6.7.2 matrix subsequently established bounded
-non-inferiority to locked EWMA, as reported below.
+This prior-informed V1--V4 revision history is part of the method; the formal
+evaluation was result-blind only after V4 was locked, not from the beginning of
+the project.  The structural trace proves execution and provenance, not
+tail-performance superiority.  The independent T6.7.2 matrix subsequently
+established bounded non-inferiority to locked EWMA, as reported below.
 
 \begin{figure}[htbp]
   \centering
@@ -462,7 +526,16 @@ of one learned estimator, define the reusable architecture.
   validation remains pending.}
 \end{figure}
 
-\subsection{Replaceable learned modules}
+\subsection{Matched baselines, oracle, and replaceable learned modules}
+
+The common-trace runner executes standard binning, static joint MAP, Window
+MAP, EWMA adaptive MAP, Kalman adaptive MAP, and V4 \RouteA{}.  Standard
+binning is compiled to the common LUT grid and checked exhaustively rather than
+bypassing the fast path.  Static joint MAP remains a software-only strong
+baseline because full two-dimensional likelihood integration is not equivalent
+to the current phase LUT.  The hidden-state oracle knows the simulator state
+and is reported only as an upper bound; it has no matched hardware or cost
+entry.
 
 Learning is outside the critical claim path.  A legacy CNN can propose a
 bounded update, a non-Markovian teacher can supply an offline control target,
@@ -470,22 +543,29 @@ and a low-dimensional student can compress that target.  All three must obey
 the same schema, cadence, bank, and failure rules.  In the unified runner, the
 legacy CNN required 3,489,984 MACs, 1,586,368 B of state, and at least 65,536 B
 of workspace, so it was correctly demoted to ablation-only under the frozen
-budget.  This failure does not invalidate the contract; it demonstrates why
-learned modules must be replaceable rather than definitional.
+budget.  The offline non-Markovian teacher may use simulator truth to generate
+training targets, but no teacher output is an online action.  Any distilled
+student must consume only observed history and pass the same packet, precision,
+cadence, bank, and deadline contract.  This failure does not invalidate the
+contract; it demonstrates why learned modules must be replaceable rather than
+definitional.
 
-\section{Evaluation protocol and metrics}
+\subsection{Evaluation protocol and metrics}
 
-\subsection{Result-blind formal design}
+\subsubsection{V4 result-blind formal design}
 
-The formal protocol was frozen after disclosure of earlier counterexamples but
-before access to the new formal split.  Calibration, pilot, and formal data use
-12, 12, and 24 independent seed clusters.  The complete protocol contains 143
-cells and 71,958,528 formal decisions per method across smooth and abrupt/OOD
-families.  T6.7.1 consumed the smooth subset: four families, six held-out cells
-per family, 24 formal clusters, and 576 trajectories.  T6.7.2 then consumed the
-locked abrupt/OOD and nominal subset: six fault families, one nominal cell,
-24 formal clusters, and 888 trajectories.  Together the two tasks exhaust the
-pre-registered formal decision count without retuning the V4 lock.
+The V4 formal protocol was frozen after disclosure of earlier counterexamples
+but before access to the new formal split.  Calibration, pilot, and formal data
+use 12, 12, and 24 independent seed clusters; V4 did not use the later proposed
+V5 training partition.  Calibration fit the HMM/event model, and pilot alone
+selected the baseline, architecture revision, and one common threshold tuple.
+The complete protocol contains 143 cells and 71,958,528 formal decisions per
+method across smooth and abrupt/OOD families.  T6.7.1 consumed the smooth
+subset: four families, six held-out cells per family, 24 formal clusters, and
+576 trajectories.  T6.7.2 then consumed the locked abrupt/OOD and nominal
+subset: six fault families, one nominal cell, 24 formal clusters, and 888
+trajectories.  Together the two tasks exhaust the preregistered formal decision
+count without retuning the V4 lock.
 
 All methods receive the same quantized trace.  The primary comparator was
 selected once on pilot data and frozen as EWMA.  Formal results cannot trigger
@@ -494,7 +574,7 @@ retuning.  Inference uses 20,000 paired bootstrap replicates with the formal
 seed as the independent cluster and equal family weighting.  Family-specific
 discoveries use Holm correction.
 
-\subsection{Metrics}
+\subsubsection{Metrics and offline scoring}
 
 The Pauli-resolved logical error rate is
 \begin{equation}
@@ -515,9 +595,11 @@ Negative $G_{\mathrm{static}}$ means that \RouteA{} is worse than static MAP;
 it is not clipped to zero.  Tail readouts use non-overlapping 512-decision
 windows, reporting p95 and global worst-window LER.  Action diagnostics report
 fallback, unnecessary fallback, avoided and induced errors, false updates,
-commits, and adaptation lag separately from average LER.
+commits, detection/recovery lag, and censoring separately from average LER.
+Simulator truth supplies only these offline scores and event intervals; it
+never enters a deployable feature or bank decision.
 
-\subsection{Evidence grades and stopping rules}
+\subsubsection{Evidence grades and stopping rules}
 
 Results are assigned to one of five non-interchangeable layers: literature
 fact, official-code reproduction, project-native matched simulation,
@@ -528,18 +610,92 @@ reported as \texttt{N/A}, \texttt{null}, \texttt{blocked}, or
 particular, a positive Phase~6C decoder result cannot upgrade the V5 system
 gate, and a P\&R estimate cannot populate a board-measured field.
 
-V5 also used a causal entry gate before expensive implementation.  Let
-$H_{m nested}$ be the improvement of a deployable selector over the best
-nested baseline on development data and $H_{m action}$ the additional
-improvement made possible by expanding the correction-action family rather
-than by truth-privileged switching.  The preregistered continuation conditions
-included positive nested evidence and
+\subsection{Executed V5 entry diagnostic and conditional stopping branch}
+
+V5 was governed by an entry gate before estimator or RTL implementation.  The
+already-opened V4 formal trajectories were used only to audit expert
+disagreement and a truth-privileged upper bound.  Selection feasibility was
+then tested on a separate, non-formal development set of 186 trajectories and
+4,571,136 decisions using leave-one-seed-cluster-out nested evaluation.  The
+strict-causal selector could use current Window sufficient state, causal expert
+state, and the previous activation period's hard disagreement, but not family,
+cell, truth, or future observations.  Cost was charged under the same
+8,192-MAC/B limits.
+
+Let $H_{\mathrm{nested}}$ be improvement of that deployable selector over its
+fold-selected baseline, and let $H_{\mathrm{action}}$ be the additional gain
+from expanding the correction-action family beyond the hard-expert decision
+oracle.  Continuation required positive nested evidence and
 \begin{equation}
-  H_{m action}\ge 12\%.
+  H_{\mathrm{action}}\ge 12\%.
 \end{equation}
-Failure stops formal evaluation, quantization, RTL, and P\&R for that candidate
-family.  This protects downstream engineering from turning a diagnostic oracle
-gap into a deployable claim.
+Instead, $H_{\mathrm{nested}}=-0.2322\%$, a held-out fixed mixture gave only
+$+0.4587\%$, and the pure mixture/action-space increment was nine avoided
+errors, or $0.02549\%$ baseline-relative.  The much larger truth-switched
+hard-expert oracle gap was not counted as attainable action-space gain.  The
+entry verdict was therefore
+\texttt{NO\_GO\_V5\_INSUFFICIENT\_ACTION\_SPACE\_HEADROOM}.
+
+The V5 items in Table~\ref{tab:v5-stopped-methods} describe the stopped design,
+not implemented modules.  The task board had conditionally registered a fresh
+train/calibration/pilot/formal four-way split, multiscale wrapped features,
+continuous-state static/trend/harmonic IMM, BOCPD/telegraph and robust-fault
+posterior, activation-horizon prediction, uncertainty-marginalized
+posterior-predictive MAP compilation, calibrated LER/CVaR gating, and typed
+two-bank actions.  Because the entry gate failed, no four-split manifest,
+checkpoint, compiler image, V5 threshold, or production transaction was
+created.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{Evidence state of the conditionally registered V5 method.}
+\label{tab:v5-stopped-methods}
+\begin{tabularx}{\textwidth}{@{}L{0.23\textwidth} L{0.20\textwidth} Y@{}}
+\toprule
+Component & State & Consequence \\
+\midrule
+Causal/action headroom audit & Diagnostic only; executed & Negative entry result may be reported, but not as a V5 performance experiment \\
+Fresh four-way split and statistics lock & Conditionally registered; not instantiated & No V5 formal manifest, power calculation, or untouched split exists \\
+Multiscale wrapped features; IMM/BOCPD; activation prediction & Dropped before implementation & V4 four-state HMM must not be renamed as any of these components \\
+Posterior-predictive MAP and LER/CVaR risk calibration & Dropped before implementation & No posterior mean plug-in or Python mixture is promoted as a production V5 compiler \\
+Typed expert/bank policy & Dropped before implementation & Existing V4 Window/EWMA/LKG transactions are not evidence for V5 bank residency \\
+V5 fixed-point golden and long CXXRTL & Not run & V4 integer/CXXRTL traces cannot be relabelled as V5 retention or equivalence \\
+Actual-module formal properties and multi-seed P\&R & Not run & There is no V5 SVA/SMT atomicity proof, netlist, resource, Fmax, or power estimate \\
+Physical-board measurement & Future work; blocked & Latency, jitter, deadline miss, power, and closed-loop fields remain null \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Fixed-point, RTL, formal, and post-route evidence boundary}
+
+The implemented V4/pre-board path has an independent packed-word integer
+reference, complete fixed-point saturation and ties-to-even rules, and CXXRTL
+cycle comparison.  The integrated qualification replayed ten 100,000-cycle
+families, including frozen observed trajectories and directed threshold,
+commit-race, version, CRC, leakage, reset, deadline, and FIFO faults.  All
+visible action/state words matched and no undefined action or silent overflow
+was observed.  This is sampled long-sequence equivalence and failure-path
+coverage, not exhaustive formal verification.
+
+An open-source synthesis/place-and-route flow evaluated the parameterized V4
+top with and without the optional student at seeds 1, 7, and 19.  It binds
+netlists, reports, logs, memories, and source hashes, but reports an estimate,
+not vendor signoff or board timing.  The planned actual-parameterized V5
+SVA/SMT proof, V5 long CXXRTL, and V5 P\&R were all stopped.  Consequently the
+Methods include formal verification as an explicit absent branch rather than
+conflating the V4 mutation/CXXRTL evidence with a proof over all bank states.
+
+\subsection{Future physical-board procedure}
+
+The available UART/bitstream package is a pre-board candidate only.  A physical
+run must first bind the actual board and revision, pinout, transport, timestamp
+method, bitstream, and source hashes.  It must then repeat at least one million
+cycles with a streaming or autonomous trace so that serial request gaps do not
+replace II=1 input semantics, and measure core, transport, source-to-action, and
+end-to-end latency separately.  Until that procedure is executed, all 42
+board-measured fields remain null and no measured speed, zero-deadline-miss,
+power, or faster-than-existing-FPGA claim is admissible.
 
 \section{Results}
 

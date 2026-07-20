@@ -1,0 +1,482 @@
+{
+  "task_id": "T7.2.2",
+  "schema_version": "t7.2.2-methods-evidence-contract-v1",
+  "generated_at_utc": "2026-07-20T13:08:13.138475+00:00",
+  "manuscript": {
+    "section_title": "Contract-centric dual-loop method",
+    "section_order": [
+      "Introduction",
+      "Scope, argument, and evidence cutoff",
+      "Related Work",
+      "Contract-centric dual-loop method",
+      "Results",
+      "Where the current data show an advantage",
+      "Negative results that define the design",
+      "Terminal verdicts and remaining gates",
+      "Discussion",
+      "Reproducibility and evidence availability",
+      "Conclusion",
+      "Evidence-bounded supplementary figure suite",
+      "Primary repository evidence map",
+      "Claim wording guardrails"
+    ],
+    "subsections": [
+      "Method-state convention",
+      "Protocol-aligned simulation stack",
+      "System overview and reuse of the dual-loop pipeline",
+      "Task formulation",
+      "Unified execution contract",
+      "Safety state and atomic updates",
+      "Matched baselines, oracle, and replaceable learned modules",
+      "Evaluation protocol and metrics",
+      "Executed V5 entry diagnostic and conditional stopping branch",
+      "Fixed-point, RTL, formal, and post-route evidence boundary",
+      "Future physical-board procedure"
+    ],
+    "subsubsections": [
+      "V4 result-blind formal design",
+      "Metrics and offline scoring",
+      "Evidence grades and stopping rules"
+    ],
+    "characters": 21724,
+    "sha256": "6c44d49a99b9d1805661f13c5b0adc9893ad92ed571d420e60b343f93a329951",
+    "state_phrases": {
+      "IMPLEMENTED_EVALUATED": "implemented and evaluated",
+      "DIAGNOSTIC_ONLY_EXECUTED": "diagnostic only",
+      "CONDITIONALLY_REGISTERED_STOPPED": "conditionally registered and stopped",
+      "FUTURE_PHYSICAL_WORK_BLOCKED": "future physical work"
+    },
+    "checks": {
+      "section_order": true,
+      "required_subsections": true,
+      "four_method_states": true,
+      "simulator_scope": true,
+      "privilege_separation": true,
+      "unified_contract": true,
+      "v4_hmm_and_policy": true,
+      "matched_baselines": true,
+      "v4_three_split_statistics": true,
+      "v5_diagnostic": true,
+      "v5_four_split_absent": true,
+      "v5_components_stopped": true,
+      "v4_fixed_point_cxxrtl": true,
+      "formal_absence": true,
+      "pr_estimate_boundary": true,
+      "board_future_boundary": true,
+      "no_assertive_overclaim": true
+    },
+    "prohibited_hits": []
+  },
+  "method_rows": [
+    {
+      "row_id": "MTH-001",
+      "component_id": "protocol_aligned_simulator",
+      "component": "Protocol-aligned syndrome/effective simulator",
+      "evidence_state": "IMPLEMENTED_EVALUATED",
+      "online_privilege": "ONLINE_OBSERVED_ONLY",
+      "offline_truth_role": "OFFLINE_TRUTH_ONLY_SCORING",
+      "source_ids": "T2.1.1/T2.1.3/T2.2.1/T2.2.2",
+      "boundary": "Not a calibrated cavity--transmon digital twin"
+    },
+    {
+      "row_id": "MTH-002",
+      "component_id": "observation_truth_split",
+      "component": "Observed packet and isolated truth record",
+      "evidence_state": "IMPLEMENTED_EVALUATED",
+      "online_privilege": "ONLINE_OBSERVED_ONLY",
+      "offline_truth_role": "OFFLINE_TRUTH_ONLY_SCORING",
+      "source_ids": "T2.1.1/T6.5.2",
+      "boundary": "Truth cannot enter an adapter, posterior, image, or action"
+    },
+    {
+      "row_id": "MTH-003",
+      "component_id": "unified_execution_contract",
+      "component": "Packet/LUT/budget/deadline contract",
+      "evidence_state": "IMPLEMENTED_EVALUATED",
+      "online_privilege": "ONLINE_OBSERVED_ONLY",
+      "offline_truth_role": "NONE",
+      "source_ids": "T6.5.2/T6.6.1",
+      "boundary": "A common cap is not equal measured cost"
+    },
+    {
+      "row_id": "MTH-004",
+      "component_id": "v4_hmm",
+      "component": "Four-state causal HMM and heavy-tail event head",
+      "evidence_state": "IMPLEMENTED_EVALUATED",
+      "online_privilege": "ONLINE_OBSERVED_ONLY",
+      "offline_truth_role": "OFFLINE_TRUTH_ONLY_SCORING",
+      "source_ids": "T6.6.3",
+      "boundary": "Must not be renamed IMM, BOCPD, or activation prediction"
+    },
+    {
+      "row_id": "MTH-005",
+      "component_id": "v4_window_ewma",
+      "component": "Window/EWMA dual-shadow estimators",
+      "evidence_state": "IMPLEMENTED_EVALUATED",
+      "online_privilege": "ONLINE_OBSERVED_ONLY",
+      "offline_truth_role": "OFFLINE_TRUTH_ONLY_SCORING",
+      "source_ids": "T6.6.2/T6.6.3/T6.7",
+      "boundary": "Tail behavior establishes EWMA-relative non-inferiority, not improvement"
+    },
+    {
+      "row_id": "MTH-006",
+      "component_id": "v4_typed_bank",
+      "component": "A/B commit, event/reset, and LKG policy",
+      "evidence_state": "IMPLEMENTED_EVALUATED",
+      "online_privilege": "ONLINE_OBSERVED_ONLY",
+      "offline_truth_role": "NONE",
+      "source_ids": "T6.6.2/T6.7.3",
+      "boundary": "V4 transactions are not V5 typed-policy residency evidence"
+    },
+    {
+      "row_id": "MTH-007",
+      "component_id": "matched_baselines",
+      "component": "Standard/static/Window/EWMA/Kalman comparators",
+      "evidence_state": "IMPLEMENTED_EVALUATED",
+      "online_privilege": "ONLINE_OBSERVED_ONLY",
+      "offline_truth_role": "OFFLINE_TRUTH_ONLY_SCORING",
+      "source_ids": "T6.6.1/T6.7.1/T6.7.2",
+      "boundary": "Static joint MAP remains software-only for current RTL"
+    },
+    {
+      "row_id": "MTH-008",
+      "component_id": "hidden_oracle",
+      "component": "Hidden-state MAP oracle",
+      "evidence_state": "IMPLEMENTED_EVALUATED",
+      "online_privilege": "NONE",
+      "offline_truth_role": "OFFLINE_TRUTH_ONLY_SCORING",
+      "source_ids": "T6.5.2/T6.7.1",
+      "boundary": "Nondeployable upper bound; excluded from matched cost/rank"
+    },
+    {
+      "row_id": "MTH-009",
+      "component_id": "v4_statistics",
+      "component": "Calibration/pilot/formal lock and clustered inference",
+      "evidence_state": "IMPLEMENTED_EVALUATED",
+      "online_privilege": "ONLINE_OBSERVED_ONLY",
+      "offline_truth_role": "OFFLINE_TRUTH_ONLY_SCORING",
+      "source_ids": "T6.5.3/T6.6.3/T6.7.1/T6.7.2",
+      "boundary": "Prior-informed V1--V4 history must remain disclosed"
+    },
+    {
+      "row_id": "MTH-010",
+      "component_id": "v4_integer_cxxrtl",
+      "component": "Integer golden and million-cycle CXXRTL",
+      "evidence_state": "IMPLEMENTED_EVALUATED",
+      "online_privilege": "ONLINE_OBSERVED_ONLY",
+      "offline_truth_role": "NONE",
+      "source_ids": "T6.2.2/T6.7.3",
+      "boundary": "Sampled equivalence and mutation coverage are not exhaustive formal proof"
+    },
+    {
+      "row_id": "MTH-011",
+      "component_id": "v4_post_route",
+      "component": "Two-profile, three-seed open-source P&R",
+      "evidence_state": "IMPLEMENTED_EVALUATED",
+      "online_privilege": "ONLINE_OBSERVED_ONLY",
+      "offline_truth_role": "NONE",
+      "source_ids": "T6.9.1",
+      "boundary": "Estimate only; no vendor signoff, transport, or board timing"
+    },
+    {
+      "row_id": "MTH-012",
+      "component_id": "v5_headroom",
+      "component": "Causal/action-space headroom audit",
+      "evidence_state": "DIAGNOSTIC_ONLY_EXECUTED",
+      "online_privilege": "ONLINE_OBSERVED_ONLY",
+      "offline_truth_role": "OFFLINE_TRUTH_ONLY_SCORING",
+      "source_ids": "T6.10.1/T6.15.5",
+      "boundary": "Negative entry audit is not a V5 formal performance result"
+    },
+    {
+      "row_id": "MTH-013",
+      "component_id": "v5_four_split",
+      "component": "Fresh train/calibration/pilot/formal split",
+      "evidence_state": "CONDITIONALLY_REGISTERED_STOPPED",
+      "online_privilege": "NONE_NOT_RUN",
+      "offline_truth_role": "NONE_NOT_RUN",
+      "source_ids": "T6.10.3",
+      "boundary": "No split manifest, power plan, or untouched V5 formal data exists"
+    },
+    {
+      "row_id": "MTH-014",
+      "component_id": "v5_posterior",
+      "component": "Multiscale features, IMM/BOCPD, activation prediction",
+      "evidence_state": "CONDITIONALLY_REGISTERED_STOPPED",
+      "online_privilege": "NONE_NOT_RUN",
+      "offline_truth_role": "NONE_NOT_RUN",
+      "source_ids": "T6.11.1--T6.11.4",
+      "boundary": "Dropped before implementation or calibration"
+    },
+    {
+      "row_id": "MTH-015",
+      "component_id": "v5_map_risk",
+      "component": "Posterior-predictive MAP and LER/CVaR risk calibration",
+      "evidence_state": "CONDITIONALLY_REGISTERED_STOPPED",
+      "online_privilege": "NONE_NOT_RUN",
+      "offline_truth_role": "NONE_NOT_RUN",
+      "source_ids": "T6.12.1--T6.12.3",
+      "boundary": "No compiler image, risk threshold, or quantized action exists"
+    },
+    {
+      "row_id": "MTH-016",
+      "component_id": "v5_typed_policy",
+      "component": "Typed expert/two-bank V5 policy",
+      "evidence_state": "CONDITIONALLY_REGISTERED_STOPPED",
+      "online_privilege": "NONE_NOT_RUN",
+      "offline_truth_role": "NONE_NOT_RUN",
+      "source_ids": "T6.12.4",
+      "boundary": "No V5 resident-bank transaction or event action was executed"
+    },
+    {
+      "row_id": "MTH-017",
+      "component_id": "v5_qualification",
+      "component": "V5 fixed-point/formal/CXXRTL/P&R",
+      "evidence_state": "CONDITIONALLY_REGISTERED_STOPPED",
+      "online_privilege": "NONE_NOT_RUN",
+      "offline_truth_role": "NONE_NOT_RUN",
+      "source_ids": "T6.15.1--T6.15.4",
+      "boundary": "No V5 golden, proof, trace, netlist, resource, or timing result"
+    },
+    {
+      "row_id": "MTH-018",
+      "component_id": "physical_board",
+      "component": "Physical board/HIL measurement",
+      "evidence_state": "FUTURE_PHYSICAL_WORK_BLOCKED",
+      "online_privilege": "PHYSICAL_INPUT_PENDING",
+      "offline_truth_role": "PHYSICAL_SCORING_PENDING",
+      "source_ids": "T6.9.2",
+      "boundary": "All 42 measured fields remain null"
+    }
+  ],
+  "parent_state": {
+    "verdicts": {
+      "unified_contract": "PASS_UNIFIED_EXECUTION_CONTRACT_FROZEN",
+      "posterior_lock": "PASS_ROUTE_A_POSTERIOR_AND_COMMON_THRESHOLD_LOCK",
+      "v4_promotion": "GO_ROUTE_A_CONTRACT_SYSTEM_RESTRICTED_SIMULATOR_AND_PREBOARD_CLAIMS",
+      "integrated_rtl": "PASS_ROUTE_A_INTEGRATED_LONG_RTL_QUALIFICATION",
+      "hardware_pareto": "PASS_ROUTE_A_INTEGRATED_THREE_SEED_PR_ESTIMATE_NOT_BOARD_MEASURED",
+      "v5_headroom": "NO_GO_V5_INSUFFICIENT_ACTION_SPACE_HEADROOM",
+      "v5_final": "NO_GO_V5_EARLY_HEADROOM_STOP",
+      "board": "BLOCKED_T6_9_2_NO_PHYSICAL_BOARD_EVIDENCE_ALL_MEASURED_FIELDS_NULL"
+    },
+    "posterior_class_order": [
+      "normal",
+      "smooth",
+      "calibration_shift",
+      "burst"
+    ],
+    "v4_formal_accessed_at_lock": false,
+    "v4_rtl_cycles": 1000000,
+    "pr_profile_count": 2,
+    "pr_seed_counts": [
+      3,
+      3
+    ],
+    "v5_development_trajectories": 186,
+    "v5_development_decisions": 4571136,
+    "strict_causal_router_headroom": -0.0023220252591040383,
+    "incremental_action_space_headroom": 0.0002548564308772725,
+    "v5_dropped_task_count": 20,
+    "v5_downstream_output_count": 0,
+    "v5_formal_manifest_exists": false,
+    "v5_formal_output_exists": false,
+    "board_measured_field_count": 42,
+    "board_measured_nonnull_count": 0
+  },
+  "source_bindings": {
+    "manuscript": {
+      "path": "docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex",
+      "sha256": "30e58284ee6554f39b1c090e27d67ddc43b1ee324334cff8149ab61fe581577d",
+      "bytes": 93568
+    },
+    "protocol_hierarchy": {
+      "path": "docs/protocol_hierarchy.json",
+      "sha256": "fb1316e9da3f5d7f787d61cfabaa7365b9b12949c17ce0dffbe7e8ad48ecb26b",
+      "bytes": 130167
+    },
+    "syndrome_stream": {
+      "path": "physics/syndrome_stream.py",
+      "sha256": "141b4387cdca942c25bfe6de46e8e7b30a3a88dab56710f983b958a1d9f40ea5",
+      "bytes": 20386
+    },
+    "fast_monte_carlo": {
+      "path": "docs/t2_1_3_fast_monte_carlo.json",
+      "sha256": "94e1b9a0a4d2261e6e3f602ec6dd309cd94ad1588b8629cc15a0e386b57aa091",
+      "bytes": 2944
+    },
+    "unified_contract": {
+      "path": "docs/t6_5_2_unified_execution_contract.json",
+      "sha256": "ecc431d810790e95b6d03128fdcf63c8a04f2fe94756b8485896fcd14c21e854",
+      "bytes": 65735
+    },
+    "posterior_lock": {
+      "path": "docs/t6_6_3_route_a_posterior_threshold_lock.json",
+      "sha256": "29989f311cbe1306690439bd6ea0303fd4587fb5d69d744b8e915c97ccf29bec",
+      "bytes": 584201
+    },
+    "promotion_gate": {
+      "path": "docs/t6_7_4_route_a_promotion_gate.json",
+      "sha256": "58f7bd09c1c9982b5be9656cc7404d399567e165b140dc2f76ab0f3c129c5d22",
+      "bytes": 20293
+    },
+    "integrated_rtl": {
+      "path": "docs/t6_7_3_route_a_integrated_rtl_qualification.json",
+      "sha256": "76a00242af2a61900c1151eb77c64aec070b59fb7525fdb1bded73d6eb6c508c",
+      "bytes": 47777
+    },
+    "hardware_pareto": {
+      "path": "docs/t6_9_1_route_a_hardware_pareto.json",
+      "sha256": "fa0182f238976531dfb01c5fbd18fe3ee31c418ab006b1fcbf68d76c549b0887",
+      "bytes": 62338
+    },
+    "causal_headroom": {
+      "path": "docs/t6_10_1_causal_headroom.json",
+      "sha256": "e1f9eac68cd6d27b6ffe4b71b8dbe37957c81481f448f8ad7b96a8adb56fbe38",
+      "bytes": 42556
+    },
+    "v5_final_gate": {
+      "path": "docs/t6_15_5_route_a_v5_final_evidence_gate.json",
+      "sha256": "537029824f305e001920e61cf03be457074655ee6112fd2db6ab9f0241607670",
+      "bytes": 6659
+    },
+    "board_blocker": {
+      "path": "docs/t6_9_2_route_a_board_measurement_blocker.json",
+      "sha256": "3ba6b5fbaf88049b62a6bb8fe32d3a1ccb2c4e234c7b4f96e7401e3f598bf8c8",
+      "bytes": 9311
+    },
+    "task_board": {
+      "path": "docs/new_task_board.md",
+      "sha256": "b2bd912de84672d92bbcd6a3b49b392641fe66b9573fce90722f31adcef08dbd",
+      "bytes": 238707
+    },
+    "implementation": {
+      "path": "cnn_fpga/benchmark/methods_evidence_contract.py",
+      "sha256": "ee27fd95f31723189c1aeea98c5fd2b2a051ed11235fee56d6fe2022982fa588",
+      "bytes": 27558
+    }
+  },
+  "source_integrity_declared": true,
+  "gates": {
+    "G01_identity": true,
+    "G02_method_section_before_results": true,
+    "G03_required_method_subsections": true,
+    "G04_four_evidence_states": true,
+    "G05_protocol_aligned_simulator_scope": true,
+    "G06_online_observed_offline_truth_separation": true,
+    "G07_unified_execution_contract": true,
+    "G08_v4_hmm_typed_policy_accuracy": true,
+    "G09_matched_baseline_oracle_boundary": true,
+    "G10_v4_three_split_and_statistics": true,
+    "G11_v5_entry_diagnostic_accuracy": true,
+    "G12_v5_four_split_not_instantiated": true,
+    "G13_v5_components_explicitly_stopped": true,
+    "G14_v4_fixed_point_cxxrtl_boundary": true,
+    "G15_formal_proof_absence_visible": true,
+    "G16_post_route_estimate_boundary": true,
+    "G17_board_future_work_and_42_null": true,
+    "G18_parent_and_source_integrity": true
+  },
+  "gate_summary": {
+    "passed": 18,
+    "total": 18
+  },
+  "verdict": "PASS_EVIDENCE_STATE_BOUNDED_METHODS",
+  "semantic_mutation_audit": {
+    "count": 18,
+    "detected": 18,
+    "cases": [
+      {
+        "mutation_id": "M01",
+        "target_gate": "G01_identity",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M02",
+        "target_gate": "G02_method_section_before_results",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M03",
+        "target_gate": "G03_required_method_subsections",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M04",
+        "target_gate": "G04_four_evidence_states",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M05",
+        "target_gate": "G05_protocol_aligned_simulator_scope",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M06",
+        "target_gate": "G06_online_observed_offline_truth_separation",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M07",
+        "target_gate": "G07_unified_execution_contract",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M08",
+        "target_gate": "G08_v4_hmm_typed_policy_accuracy",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M09",
+        "target_gate": "G09_matched_baseline_oracle_boundary",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M10",
+        "target_gate": "G10_v4_three_split_and_statistics",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M11",
+        "target_gate": "G11_v5_entry_diagnostic_accuracy",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M12",
+        "target_gate": "G12_v5_four_split_not_instantiated",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M13",
+        "target_gate": "G13_v5_components_explicitly_stopped",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M14",
+        "target_gate": "G14_v4_fixed_point_cxxrtl_boundary",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M15",
+        "target_gate": "G15_formal_proof_absence_visible",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M16",
+        "target_gate": "G16_post_route_estimate_boundary",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M17",
+        "target_gate": "G17_board_future_work_and_42_null",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M18",
+        "target_gate": "G18_parent_and_source_integrity",
+        "rejected": true
+      }
+    ]
+  },
+  "analysis_sha256": "2a95b43386c3cb7612699046b8377bb14cc668d1659a0609ee1c5ee41b5c56f2"
+}
