@@ -1697,6 +1697,8 @@ T6.18.3 的 seeds、spatial pattern、balanced variance law 和 transition 参�
 - 未见 spatial sign/permutation、variance law、off-diagonal covariance、transition rate/amplitude/duration 和 likelihood mismatch；
 - noisy auxiliary 仅在 COR-MED source/protocol 资格通过后进入独立表。
 
+T6.20.3 已在 `docs/phase6d_multimode_preregistration.md` 和机器 JSON 中完成 v1 seal：train/calibration/pilot/formal 分别为 24/16/24/60 个互斥 seed-cluster；13 个 scenario family 逐 seed 展开为 1612 个 immutable cells。Formal 每 cell 4096 rounds，每方法 3,194,880 physical rounds，最多 12 个方法为 38,338,560 method-decodes。设计功效用 `p_L>=0.16`、10% relative effect、paired cluster SD=0.028、12 重 Bonferroni 一侧门计算，minimum N=48、实际 N=60、approximate power=0.9631；该计算只冻结样本量，最终仍由 paired simultaneous bootstrap CI 决定，pilot 后不得按方差、显著性或方向扩样。T6.18.3 seed/sigma/amplitude/duration/fixed spatial pattern overlap 均为零；所有 split 的 spatial key/sign/permutation、variance law、covariance、scale、transition、amplitude、duration 和 auxiliary noise 也逐项互斥。
+
 同一 physical trace 使用 paired seeds；统计单位是 trajectory/transition block cluster，不把 round 当独立样本。pilot 只能一次性选择一个 candidate；只有 pilot point gain `>=10%` 且 95% LCB `>0` 才进入 untouched formal。
 
 “frozen-benchmark SOTA”必须同时满足：
