@@ -326,6 +326,7 @@
 | 2026-07-20 | T-DOC-20260720-02 | 不插入 | 双 note 已逐句保留 V4 static/Window/tail 反例、V5 early-stop、Phase 6C task-local 边界、pre-board estimate 与 board-null；T7.1.1 正在冻结正式 claim--evidence--boundary matrix，现有 T7.1/T7.3/T7.4 与 T6.9.2 足以承接后续风险，不应插入为正结果服务的 post-hoc rescue task。 |
 | 2026-07-20 | T-DOC-20260720-03 | 不插入 | 新 note 已直接消费 T7.1.1 的 29 条 placement 与 T7.1.2 的 38-element 图合同，旧 note 只增加解释覆盖层；V5 Dropped、static/Window 反例、learned eligible=0、GQF/board blocked 和 42 个 measured null 均保留。R-N142/R-N143 由既有 T7.1.3--T7.4 与 T6.9.2 承接，不插入 post-hoc 性能或伪板测任务。 |
 | 2026-07-20 | T-DOC-20260720-04 | 不插入 | 双 note 已消费 T7.1.3 的 55-row 正式 Fig.3--4 合同，同时保留 locked-EWMA 窄正结果、Window/static/oracle-gap 负结果、六类 tail non-inferiority、高 fallback/recovery cost、P\&R estimate、42 board-null 和 V5-Dropped；PPT 架构图改为不占正式主图编号的历史示意。R-N142--R-N144 由既有 T7.1.4--T7.4 与 T6.9.2 承接，不插入 post-hoc 求正、伪板测或 V5 复活任务。 |
+| 2026-07-20 | T-DOC-20260720-05 | 不插入 | 新 note 已消费 T7.1.4 的 792-row S1--S5 合同及 T7.2.1--T7.2.4 四份正文合同，旧 note 仅增加正式结构、成本、外部效度和六级物理接入覆盖层；两份稿件继续保留 static/Window 负结果、59--96\% tail 干预成本、V5 stop、no cavity/transmon、42 board-null 和无 measured speed/power。R-N005/R-N110/R-N142/R-N145 已由 T6.9.2、T7.2.5--T7.4 与 Phase 8 承接，不插入 V5 rescue、伪 lifetime 或跨任务总榜。 |
 
 ## 已关闭风险
 

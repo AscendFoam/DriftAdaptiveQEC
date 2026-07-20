@@ -55,9 +55,9 @@
 
 ## 当前文件组
 
-- `Contract_Centric_Regime_Aware_GKP_note_draft.tex`：2026-07-20 同步到 T7.2.2 的正式论文式 Route-A note。标题仍为 restricted pre-board contract paper；摘要只保留 T7.1.1 允许的合同集成、locked-EWMA smooth 与确定性预板架构三条主张。T7.2.1 将正文改成 6 段 Introduction 与 5 个机制分组 Related Work；T7.2.2 将 Methods 扩展为 protocol-aligned simulator、统一合同、V4 HMM/Window/EWMA、统计、V5 early diagnostic/stopped design、integer/CXXRTL/P\&R estimate 与 physical future work，并以 18-row 四态/权限合同禁止把未运行的 IMM/BOCPD/compiler/formal/RTL 写成 implemented。
-- 新 note 继续复用 `../figures/ppt_summary_20260716/` 的双回路架构图和有效保真寿命图：架构图改为不占正式 figure counter 的历史示意，teacher--student 图仍为扩展证据。正式 Fig.1--2 来自 `../figures/t7_1_2_main_figures/` 的 38-row contract，正式 Fig.3--4 来自 `../figures/t7_1_3_main_figures/` 的 55-row contract；Supplement S1--S5 来自 T7.1.4 的 792-row contract。TeX Live/BibTeX 编译为 38 页，日志 0 overfull/undefined/warning，38/38 页视觉 QA 通过。
-- `CNN_FPGA_GKP_theory_note_draft.tex` 保留旧 teacher-anchored affine/CNN 主体和 PPT 架构/寿命图，仅把当前 V4/预板覆盖层更新为正式 Fig.3--4，并同步当前证据表和结论；独立编译为 30 页并完成 30/30 页视觉 QA。两份 note 均不得把 P\&R estimate 写成 board measurement，或把 Phase 6C 结果用于升级 V5。
+- `Contract_Centric_Regime_Aware_GKP_note_draft.tex`：2026-07-20 同步到 T7.2.4 的正式论文式 Route-A note。标题仍为 restricted pre-board contract paper；摘要只保留合同集成、locked-EWMA smooth 与确定性预板架构三条受限主张。正文现含 6 段 Introduction、5 个机制分组 Related Work、11 个 Methods 小节加 3 个统计小节、10 个有序 Results 小节和 8 个 Discussion 小节；四份 live prose contract 禁止把 V5 early-stop、跨任务指标或 future physical gate 写成已实现结果。
+- 新 note 继续复用 `../figures/ppt_summary_20260716/` 的双回路架构图和有效保真寿命图：架构图是不占正式 figure counter 的历史示意，teacher--student 图仍为扩展证据。正式 Fig.1--2 来自 `../figures/t7_1_2_main_figures/` 的 38-row contract，正式 Fig.3--4 来自 `../figures/t7_1_3_main_figures/` 的 55-row contract；Supplement S1--S5 来自 T7.1.4 的 792-row non-ranking contract。TeX Live/BibTeX 编译为 45 页，日志 0 overfull/undefined/warning，45/45 页视觉 QA 通过。
+- `CNN_FPGA_GKP_theory_note_draft.tex` 保留旧 teacher-anchored affine/CNN 主体、PPT 架构/寿命图与历史实验，仅增加 T7.2.1--T7.2.4 正式论文结构、成本、外部效度和六级物理接入覆盖层，并同步当前证据表、Discussion 与 Conclusion；独立编译为 33 页并完成 33/33 页视觉 QA。两份 note 均不得把 P\&R estimate 写成 board measurement，或把 Phase 6C/legacy CNN 结果用于升级 V5。
 - `CNN_FPGA_GKP_theory_note_draft.tex`：当前主线 note 源文件。
 - `CNN_FPGA_GKP_theory_note_draft.pdf`：对应编译产物。
 - `CNN_FPGA_GKP_theory_note_draft.*`：保留的 LaTeX 辅助文件、日志与同步文件。

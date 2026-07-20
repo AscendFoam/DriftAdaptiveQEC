@@ -132,6 +132,7 @@
   - `docs/results_evidence_contract.md` / `docs/t7_2_3_results_evidence_contract.json` / Source Data：T7.2.3 的 27-row 六态 Results 合同；同时冻结 V4 正负/tail/cost、V5 early-stop/absence、五条 eligible Phase 6C、literature nonranking、selection failure 与 42 board-null，20/20 gates/mutations fail closed
   - `docs/discussion_conclusion_contract.md` / `docs/t7_2_4_discussion_conclusion_contract.json` / Source Data：T7.2.4 的 27-row 六态 Discussion/Conclusion 合同；22/22 gates/mutations 冻结成本、外部效度、无真实 cavity/transmon/lifetime/break-even/板上训练/板测 speed-power 和六级物理接入门
   - `docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex`: 截止 T7.2.4 的 restricted pre-board Route-A 正式论文式 note；Introduction/Related Work、Methods、Results、8段Discussion与Conclusion均按 contract/task-signature/evidence-state 边界组织，正式 Fig.1--4 和 Supplement S1--S5 不隐藏负结果、V5 stop、物理缺口或 board-null
+  - `docs/paper_notes/CNN_FPGA_GKP_theory_note_draft.tex`: 截止 T7.2.4 的历史 companion note；保留原 CNN/affine/teacher--student/FPGA 主体和两张 PPT 图，只增加正式论文结构、成本、外部效度与六级物理接入覆盖层，当前独立编译 33 页且不得覆盖 static/Window、V5 stop 或 board-null
   - `docs/figures/route_a_manuscript_20260720/`: 三张 Python 主文图的 SVG/PDF/LZW-TIFF/PNG、58-row plotted Source Data 与 SHA-256 manifest
   - `docs/literature_matrix.md`: 当前新任务序列的四线文献、Zotero 覆盖和证据等级矩阵
   - `docs/gap_statement.md`: 基于四线证据的研究缺口、baseline/oracle contract 与英文 Introduction 草稿
