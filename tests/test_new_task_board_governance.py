@@ -367,6 +367,82 @@ def test_phase6c_secondary_comparisons_are_post_phase6b_nonmixed_and_read_only()
     assert "Milestone 6.16—6.19 共 12 个 Todo task" in insertion
 
 
+def test_phase6d_dual_evidence_lanes_are_strong_baseline_first_and_nontransferable() -> None:
+    board = BOARD_PATH.read_text(encoding="utf-8")
+    phase6d = board.split("## Phase 6D", 1)[1].split("## Phase 7", 1)[0]
+    statuses = _authoritative_task_statuses(board)
+
+    expected_tasks = {
+        *(f"T6.20.{i}" for i in range(1, 5)),
+        *(f"T6.21.{i}" for i in range(1, 5)),
+        *(f"T6.22.{i}" for i in range(1, 5)),
+        *(f"T6.23.{i}" for i in range(1, 6)),
+        *(f"T6.24.{i}" for i in range(1, 6)),
+        *(f"T6.25.{i}" for i in range(1, 5)),
+        *(f"T6.26.{i}" for i in range(1, 5)),
+    }
+    assert len(expected_tasks) == 30
+    assert statuses["T6.20.1"] == "Done"
+    assert statuses["T6.20.2"] == "In Progress"
+    assert all(
+        statuses[task] == "Todo"
+        for task in expected_tasks - {"T6.20.1", "T6.20.2"}
+    )
+    assert statuses["T6.9.2"] == "Blocked"
+    assert statuses["T7.3.1"] == "Blocked"
+
+    for milestone in ("6.20", "6.21", "6.22", "6.23", "6.24", "6.25", "6.26"):
+        assert f"### Milestone {milestone}" in phase6d
+
+    for required in (
+        "multimode surface-square GKP",
+        "periodic analog-MWPM",
+        "exact logical-coset MLD",
+        "K-MWM",
+        "static-mixture exact MLD",
+        "adapted SMC-EAP",
+        "BOCPD/IMM",
+        "true_metric_CPD_reference",
+        "true_theta_exact_MLD_oracle",
+        "全新 train/calibration/pilot/formal 四分割",
+        "T6.18.3 的 seeds",
+        "point `>=15%`",
+        "paired 95% LCB `>=12%`",
+        "posterior-predictive exact logical-coset MLD",
+        "relative LER improvement 的 simultaneous paired 95% LCB 均须 `>10%`",
+        "source-to-action 恰 6 cycles",
+        "GO_TWO_LANE",
+        "GO_MULTIMODE_ONLY",
+        "GO_RTL_ONLY",
+        "CNN/student",
+        "不做加权总分",
+    ):
+        assert required in phase6d
+
+    assert "T6.9.2 真板任务继续独立 Blocked" in phase6d
+    assert "该 lane 不声称执行 multimode exact/posterior-predictive MLD" in phase6d
+    assert "single-mode 六周期不证明 multimode 方法的硬件 latency" in board
+    assert "multimode LER 不证明现有 RTL 执行 multimode decoder" in board
+
+    registry = ROOT / "docs" / "multimode_strong_baseline_registry.md"
+    assert registry.is_file()
+    registry_text = registry.read_text(encoding="utf-8")
+    for required in (
+        "DIRECT_OFFICIAL_REPRODUCTION",
+        "DIRECT_OFFICIAL_PENDING_REPRODUCTION",
+        "paper-inspired adapted baseline",
+        "不同 task signature",
+        "true_metric_CPD_reference",
+        "true_theta_exact_MLD_oracle",
+        "在冻结 benchmark 上达到 SOTA",
+    ):
+        assert required in registry_text
+
+    insertion = board.split("## 插入任务区", 1)[1].split("## 进度日志", 1)[0]
+    assert "T-RISK-20260721-01" in insertion
+    assert "Milestone 6.20—6.26 共 30 个 task" in insertion
+
+
 def test_zotero_migration_bibliographies_retain_all_41_entries() -> None:
     task_dir = ROOT / "docs" / "tasks"
     paths = (

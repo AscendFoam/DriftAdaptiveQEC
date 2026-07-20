@@ -1635,6 +1635,107 @@ Route A 的 promotion 必须同时满足：
 
 Phase 7 只有在 Route-A evidence gate 为 GO 后才能冻结主图和正文。若 official GQF、外部 drift baseline 或真板证据未完成，相应主张必须删除或降级；不能用同 simulator 的方向性结果替代 official reproduction，也不能用 P&R estimate 替代 measured latency。
 
+# 19. 2026-07-21 双证据 lane 与 multimode LER SOTA 路线
+
+本节记录 v2.3 的实质修订。此前 single-mode Route-A/V5 在 strongest Window、static 与 tail 上没有建立主算法优势，而 Phase 6C 的 multimode posterior-weighted CPD 在冻结 `d=3` balanced heteroscedastic family 上出现约 27.3% 的 project-native LER 改善。该结果既不能追认为 SOTA，也不能迁移到现有 single-mode RTL。后续论文因此改为两个并列、但不共享性能分母的证据 lane：
+
+1. **multimode software algorithm lane**：在 surface-square GKP、全新未见漂移和 strongest eligible baselines 下争取 LER SOTA；
+2. **single-mode deterministic RTL lane**：证明 6-cycle、II=1、atomic A/B、CRC/version、LKG rollback 与 fail-closed；
+3. **CNN/student extension**：只近似 posterior、LLR、coset probability 或 action，不作为独立主线。
+
+`docs/new_task_board.md` 是具体顺序与状态源；本节只冻结科学问题、基线和证据门。T6.18.3 与 T7.1—T7.2 现有产物保持历史快照，不作新 formal。
+
+## 19.1 两条 lane 的 task signature 与禁止迁移
+
+Multimode 算法 lane 的主对象是 surface-square multimode GKP、Gaussian displacement 及其非平稳扩展；observable 为当前 analog syndrome 和历史 syndrome，action 为 logical coset correction，主指标为 per-round `p_L`。Single-mode RTL lane 的对象是现有 production MAP/event fast path，指标为 cycles、II、atomicity、fault response、bit agreement、资源与 pre-board timing。
+
+必须机器阻断：
+
+- multimode `p_L` 改善被写成现有 FPGA 实现的 LER；
+- single-mode 6-cycle 被写成 multimode MLD latency；
+- CNN/student agreement 被写成 classical algorithm 或 RTL safety gate；
+- 两 lane 的指标形成加权总分、胜场或相互补门。
+
+最终只允许 `GO_TWO_LANE`、`GO_MULTIMODE_ONLY`、`GO_RTL_ONLY` 或 `NO_GO`。真板未到时 measured latency/jitter/deadline/power 继续为 null。
+
+## 19.2 Multimode strong-baseline denominator
+
+最低可信 direct decoder backend 为：
+
+- Euclidean CPD/MWPM 与 nominal/estimated-metric weighted CPD；
+- folded-Gaussian periodic analog-likelihood MWPM；
+- surface-square exact logical-coset MLD；
+- K-MWM 的 `K`—accuracy—cost Pareto；
+- syndrome-estimated frozen marginal/mixture exact MLD。
+
+最低可信 causal frontend 为 delayed sliding/overlapping Window、EWMA、Kalman、adapted SMC-EAP、causal GP，以及 BOCPD 或 IMM/HMM。所有 frontend 必须接相同 decoder backend，分别报告 estimator 与 backend 的贡献。Lin–Chamberland–Noh CPD、Lin–Noh exact MLD 与 Lin K-MWM 使用固定的官方 `LatticeAlgorithms.jl` source；Fukui analog information 按 folded likelihood 转录。Roy–Pousset–Royer noisy-auxiliary、Noh full-history circuit-level、Borah QLDPC-GKP、Sivak prior optimization、Puviani NMF 和外部 FPGA 不共享 task signature，只进入独立协议或边界表。
+
+完整来源、资格标签与失败分支见 `docs/multimode_strong_baseline_registry.md`。任何 eligible strong baseline 缺失时，只能写“相对已实现 baselines”，不能写 SOTA。
+
+## 19.3 Prequential posterior-predictive coset MLD
+
+所有 deployable 方法使用同一因果顺序：
+
+\[
+q_t(\theta)=p(\theta_t\mid s_{<t}),\qquad
+\hat L_t=\arg\max_L\int P(L,s_t\mid\theta)q_t(\theta)\,d\theta,
+\]
+
+随后才用 `s_t` 更新 posterior，candidate bank 最早在 `t+1` 生效。`true theta`、scenario ID、future suffix、formal logical label、RTS/forward-backward/Viterbi、retrospective BOCPD 和 full-record GP/FFT 禁止进入 deployable 表。
+
+共享隐藏参数经边缘化后可能诱导 mode 间相关性，因此不能用 `E[precision] -> weighted CPD/MWPM` 冒充 posterior-predictive MLD。proposed 方法必须在 logical-coset probability 层积分；posterior delta 极限退化到 plug-in exact MLD，`d=3` 与显式 coset sum/高精度 quadrature 对拍。旧 `oracle_metric_upper_bound` 改名为 `true_metric_CPD_reference`；真正不可部署上界是 `true_theta_exact_MLD_oracle`。
+
+正式实现前先在 development-only split 分解 estimator、likelihood metric、coset sum、posterior marginalization 和 action headroom。相对 strongest eligible deployable 的可用 headroom point 少于 15% 或 paired 95% LCB 少于 12% 时直接 NO-GO，不运行大规模 formal。
+
+## 19.4 全新 split、formal benchmark 与 SOTA 门
+
+T6.18.3 的 seeds、spatial pattern、balanced variance law 和 transition 参数全部视为 opened。新 train/calibration/pilot/formal 四分割必须在任何结果访问前冻结，并覆盖至少：
+
+- `d=3,5` 与多个 below/near/above operating `sigma`；
+- stationary、mean/variance/correlation/periodic、OU/random walk；
+- step、telegraph、burst、heavy-tail、compound；
+- 未见 spatial sign/permutation、variance law、off-diagonal covariance、transition rate/amplitude/duration 和 likelihood mismatch；
+- noisy auxiliary 仅在 COR-MED source/protocol 资格通过后进入独立表。
+
+同一 physical trace 使用 paired seeds；统计单位是 trajectory/transition block cluster，不把 round 当独立样本。pilot 只能一次性选择一个 candidate；只有 pilot point gain `>=10%` 且 95% LCB `>0` 才进入 untouched formal。
+
+“frozen-benchmark SOTA”必须同时满足：
+
+1. 相对每个 eligible strongest deployable baseline，aggregate relative LER improvement 的 simultaneous paired 95% LCB 均 `>10%`，absolute LCB `>0`；
+2. calibration/telegraph 预注册 worst-window/CVaR improvement LCB `>0`；
+3. stationary degradation 的 95% 上界 `<=2%`，任一 OOD family degradation 上界 `<=5%`；
+4. `d=3/5`、多个 `sigma` 方向一致；
+5. source、adapter、precision、compute、memory、deadline 和 missingness 资格完整；
+6. 第二实现只从 raw data/hash 独立重算全部结论。
+
+任一门失败即降为 best-among-implemented、non-inferior 或 negative。禁止 universal multimode/device SOTA、删除不利 baseline、按 family 重调或复用 T6.18.3 恢复主张。
+
+## 19.5 Single-mode deterministic RTL 独立门
+
+RTL lane 只消费 actual parameterized production top。首先检查 T6.2.2/T6.7.3/T6.9.1/T6.19.1 的 live source/config/hash；若任何实现变化，必须真实重跑而非复制旧 PASS。
+
+完成条件为：
+
+- formal/property 证明 A/B old-or-new、读写隔离、CRC/version/age/ack、LKG rollback、commit/cancel/drain/reset/deadline、FIFO/backpressure 和 near-wrap fail-closed；
+- 每项 property 有 reachable cover 和可杀死的 targeted mutation；
+- 每 family 至少 `1e5`、aggregate 至少 `1e6` CXXRTL cycles，6-cycle、II=1、零 mismatch、零 undefined、零 silent overflow/version wrap；
+- actual top 至少 3 seed synthesis/P&R，报告 Fmax/resource/critical path/clock-model 与 analytic power sensitivity；
+- 全部 measured 字段保持 null，真实板测继续由 T6.9.2 独立升级。
+
+该 lane 可以支持 deterministic、atomic、fail-closed 的预板系统贡献，但不能支持 multimode decoder latency、真实 source-to-action 或 fastest FPGA claim。
+
+## 19.6 CNN/student 与论文汇合
+
+CNN/student 的 teacher target、权限、split、参数量、精度、training compute、latency/memory 和选择规则必须预先冻结。报告 posterior calibration、action agreement、LER retention、worst-family retention、量化误差与成本。只有在 matched budget 下达到冻结 retention margin 且有明确压缩/成本收益，才作为 optional approximation；否则进入消融，不影响 classical algorithm 或 RTL verdict。
+
+论文主图和正文必须分成：
+
+- multimode LER/tail/scaling/compute panel；
+- single-mode 6-cycle/II=1、atomic/fail-closed、CXXRTL/formal/P&R/board-null panel；
+- learning approximation 只作 inset/ablation。
+
+Phase 7 保留 T7.1.1—T7.2.5 历史 restricted snapshot，待 T6.26.4 后通过 T7.1.5/T7.2.6 生成 delta。投稿前审计同时消费 T6.15.5、T6.19.3 与 T6.26.4，防止旧 V5/Phase 6C 证据被重新包装。
+
 [1]: https://arxiv.org/abs/quant-ph/0008040?utm_source=chatgpt.com "Encoding a qubit in an oscillator"
 [2]: https://arxiv.org/abs/2504.13383?utm_source=chatgpt.com "Logical channels in approximate Gottesman-Kitaev-Preskill error correction"
 [3]: https://arxiv.org/abs/1907.12487?utm_source=chatgpt.com "Quantum error correction of a qubit encoded in grid states ..."

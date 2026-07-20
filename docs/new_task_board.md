@@ -9,7 +9,7 @@
 
 状态枚举：`Todo`、`In Progress`、`Blocked`、`Review`、`Done`、`Dropped`。
 
-当前推荐任务：`T7.3.1`（T7.2.5 已完成可独立复核的 Supplementary：主 note 扩为 51 页，新增数学/决策定义、冻结参数表、十类完整 comparator/statistics、失败域、两次百万周期 RTL/工具链复现和十行 Phase 6C task-signature/source locator。46-row 八态合同以 24/24 gates/mutations 区分 N/A/null/failed/negative/blocked/ineligible、锁定 206-cell 无全局排名与 V5/board nonpromotion；12 focused/66 joint tests、日志 0 overfull/warning/undefined/fatal/package error和页 39--47视觉 QA 通过。下一步回答为何不用 exact/oracle MAP，并保持 oracle 为不可部署上界）。
+当前推荐任务：`T6.20.2`（T6.20.1 已完成 multimode 强 baseline 文献/源码资格注册，确认 direct 主排名至少需要 Euclidean/weighted CPD、periodic analog-MWPM、exact logical-coset MLD、K-MWM、static-mixture exact MLD，以及 delayed Window、EWMA/Kalman、adapted SMC-EAP 和 BOCPD/IMM 等因果 frontend；`true_metric_CPD` 已降为参考项，真正不可部署上界改为 `true_theta_exact_MLD`。下一步冻结论文的双证据 lane、task signature、禁止跨 lane 迁移与 CNN/student 扩展边界）。
 
 ## 任务记录规则
 
@@ -37,6 +37,17 @@
 - v2.2 只增加 noise-transfer 中保真度代理、QEC-matrix/Petz channel-recovery bound 和 top-K lattice-coset MAP；不重排阶段，不把 surface-GKP、多模 GKP、Knill/P-Steane 或物理 squeezing 扩成主线。
 - `docs/rough_plan.md` 保持冻结；三次实质变更分别在 `docs/experiment_plan.md` 第 14、15、16 节登记。
 
+## v2.3 双证据 lane 与 multimode 主算法迁移说明
+
+本任务板于 2026-07-21 根据 `T-RISK-20260721-01` 插入 Phase 6D。该修订不重解释已经完成的 V4/V5/Phase 6C 或 T7.1—T7.2 证据，而是为高水平论文建立全新的确认性执行路线：
+
+- **算法 lane：** multimode surface-square GKP 软件仿真负责争取同 task-signature 下的 LER SOTA；主对象是 observed-only、posterior-predictive、risk-aware logical-coset MLD，而不是 T6.18.3 的 posterior-weighted CPD。
+- **硬件 lane：** single-mode production RTL 只负责确定性 6-cycle、II=1、atomic A/B bank、CRC/version、LKG rollback 与 fail-closed 系统贡献；没有真板时只写 CXXRTL/formal/synthesis/P&R estimate。
+- **学习扩展：** CNN/student 只近似 posterior、LLR、coset probability 或 action，不作为第三条独立主贡献；matched-budget 不过门就进入消融。
+- **证据不迁移：** multimode LER 不证明现有 RTL 执行 multimode decoder，single-mode 六周期不证明 multimode 方法的硬件 latency，CNN agreement 不补算法 LER 或 RTL safety 门。
+- **新数据隔离：** T6.18.3 的 `d=3`、balanced heteroscedastic、9.6M-cycle 结果只作 development/headroom 依据；Phase 6D 必须使用全新互斥 split、strongest eligible baselines 和一次性 formal。
+- 本次实质修订同步写入 `docs/experiment_plan.md` 第 19 节；`docs/rough_plan.md` 继续冻结。
+
 ## 暂定论文 claim contract
 
 在 `T1.4.1` 正式冻结前，所有任务遵守以下板级边界：
@@ -48,7 +59,7 @@
 | 约 300 元 FPGA | measured digital control-plane latency/resource、HIL/replay | 真实微波生成、真实量子读出、真实 cavity/transmon 控制 |
 | 可选真实硬件 | 仅在未来确有数据和接入证据后表述 | 用计划或模拟替代真实实验 |
 
-核心贡献暂定为：**contract-centric、observed-only、posterior-predictive、risk-aware 的安全自适应双回路**。static-anchored predictive IMM/BOCPD slow loop 对 wrapped GKP 噪声状态、动力学 subtype、fault posterior 与 activation horizon 建模，并把参数不确定性边缘化为可部署 MAP-LUT；LER/CVaR 风险门和 typed trusted experts 负责 update/freeze/reacquire/reset/LKG 决策；FPGA fast path 继续负责 atomic A/B bank、CRC/version、LKG rollback、固定 6-cycle、II=1 的 fail-closed action。CNN、Feedback-GRAPE teacher 与 distilled student 仍是可替换扩展。第一优先证据是全新未见漂移上的 matched deployable LER、calibration/telegraph tail 与板卡无关 fixed-point/RTL qualification；真板只决定 measured latency/deadline/fastest 等硬件主张，不阻塞算法和预板系统主张。
+核心贡献改为两个并列但不混淆的证据 lane：① **multimode observed-only、posterior-predictive、risk-aware logical-coset MLD**，在全新未见漂移上以 exact MLD/K-MWM/analog-MWPM 和 strongest causal adaptive frontend 为 denominator，争取 LER 与 calibration/telegraph tail 优势；② **single-mode deterministic contract RTL**，以 atomic A/B bank、CRC/version、LKG rollback、固定 6-cycle、II=1 和 fail-closed property/long-sequence closure 建立预板系统贡献。CNN、Feedback-GRAPE teacher 与 distilled student 只作为 posterior/MLD 的可替换近似或蒸馏扩展。真板只决定 measured latency/deadline/fastest 等硬件主张，不阻塞 multimode software formal 或 single-mode pre-board qualification。
 
 ---
 
@@ -517,9 +528,91 @@
 
 ---
 
+## Phase 6D：双证据 lane——multimode LER SOTA 与 single-mode deterministic RTL
+
+本阶段由 `T-RISK-20260721-01` 插入。它不把 Phase 6C 从 secondary 追认成主排名，也不复活 `NO_GO_V5_EARLY_HEADROOM_STOP`。T6.18.3 的 27.3% 结果只说明新的 multimode 路线值得进行强基线审计和 headroom 诊断；新主张必须来自全新 protocol/split。Phase 6D 将论文组织成两个并列而不可互相补门的证据 lane，并把 CNN/student 降为可替换近似。
+
+### Phase 6D 依赖、证据隔离与终态合同
+
+- **入口与顺序**：算法 lane 入口为 `T6.18.2 + T6.18.3 + T6.19.3 -> T6.20 -> T6.21 -> T6.22 -> T6.23 -> T6.24`；硬件 lane 入口为 `T6.2.2 + T6.7.3 + T6.9.1 + T6.19.1 -> T6.25`。两者在 T6.26 汇合。T6.9.2 真板任务继续独立 Blocked，不阻塞软件 formal 或预板 RTL 资格验证。
+- **算法 lane 的唯一主指标**：multimode surface-square GKP 的 per-round `p_L`，按 `d`、`sigma` 和场景 family 分层；calibration/telegraph worst-window/CVaR、lag、calibration、runtime/memory 为 key secondary。threshold、physical lifetime、single-mode LER 和 raw FPGA ns 不得补主门。
+- **硬件 lane 的唯一主对象**：现有 single-mode production RTL 的 6-cycle、II=1、atomic old-or-new、CRC/version、LKG rollback、fail-closed、零 undefined/silent overflow 与 pre-board P&R。该 lane 不声称执行 multimode exact/posterior-predictive MLD。
+- **学习模块边界**：CNN/student 只能蒸馏 posterior、LLR、coset probability 或 action；即使压缩成功，也只能成为 optional implementation result，不能替代 T6.24 的 classical algorithm gate或 T6.25 的 actual-RTL property gate。
+- **历史证据只读**：T6.18.3 的 seeds、spatial pattern、variance law、transition rate/amplitude/duration 和结果全部视为 opened development evidence；Phase 6D formal 不能复用。T7.1—T7.2 的 Done 产物保留为 restricted historical snapshot，等待 T6.26.4 后由新增 task 生成 delta，不覆盖原快照。
+- **最终状态**：T6.26.4 只能输出 `GO_TWO_LANE`、`GO_MULTIMODE_ONLY`、`GO_RTL_ONLY` 或 `NO_GO`。没有任一跨 lane 补门；没有真板时所有 measured-hardware 字段仍为 null。
+
+### Milestone 6.20：双 lane、强 baseline 与全新确认性协议冻结
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.20.1 | Done | 建立 multimode 强 baseline 的一手文献、官方源码、task-signature 与排名资格注册表。 | 完成 `docs/multimode_strong_baseline_registry.md`：直接主排名固定 Euclidean/weighted CPD、periodic analog-MWPM、exact logical-coset MLD、K-MWM、static-mixture exact MLD；adaptive frontend 固定 delayed Window、EWMA/Kalman、adapted SMC-EAP、causal GP 与 BOCPD/IMM；Roy noisy-aux、Noh circuit-level、Sivak、NMF/FPGA 分到独立协议。固定 `LatticeAlgorithms.jl@01f9bf1f...`/Apache-2.0，明确当前除 T6.18.2 外均为待复现；9 focused/30 joint tests 与 30/30 unique task audit 通过。 | `T6.18.2--T6.19.3`, `R-N146--R-N153` |
+| T6.20.2 | In Progress | 冻结双证据 lane 的 claim、task signature、接口与禁止跨 lane 迁移合同。 | 生成 machine-readable claim/execution contract：逐 lane 固定 code family、observable、action、metric、timing boundary、precision、deployment status 和 required evidence；至少包含 multimode-LER→RTL、single-mode-latency→multimode、CNN→algorithm/RTL 三类 forbidden transfer 及 mutation tests。T7.3.1 的现有草稿只读停放。 | `T6.20.1`, `T7.1.1`, `R-N147` |
+| T6.20.3 | Todo | 冻结 Phase 6D 全新 train/calibration/pilot/formal 四分割、统计功效和 immutable manifest。 | seeds、spatial signs/permutations、variance laws、overall scale、off-diagonal covariance、transition rate/amplitude/duration、aux-noise 与 T6.18.3 全互斥；在任何 pilot/formal outcome 访问前固定 sample size、trajectory/block cluster bootstrap、simultaneous CI、tail endpoint、missingness、stopping rule、compute cap 和 source/config/hash；formal 后只允许 amendment ledger，不允许改 denominator。 | `T6.18.3`, `R-N148`, `R-N153` |
+| T6.20.4 | Todo | 在 development-only split 执行 causal headroom 与 regret 分解，决定是否值得进入实现和 formal。 | 将总 gap 分成 estimator、metric/likelihood、logical-coset sum、posterior marginalization 与 action 五项；相对 strongest eligible deployable 使用 observed-only causal ceiling，禁止 hidden truth、future suffix 或 formal labels。只有可用相对 headroom point `>=15%` 且 paired 95% LCB `>=12%` 才进入 T6.21；否则输出 direct `NO_GO_MULTIMODE_CAUSAL_HEADROOM`，不以换场景/删 baseline 救援。 | `T6.20.1--T6.20.3`, `R-N146`, `R-N149--R-N150` |
+
+### Milestone 6.21：Exact/approximate MLD 与强 static backend 闭环
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.21.1 | Todo | 导入并复现官方 surface-square exact logical-coset MLD。 | upstream tree 保持 pristine；固定 Julia/environment/manifest 和独立 adapter patch。`d=3` 全部逻辑陪集概率与显式 stabilizer/coset sum 对拍，零 decision mismatch且概率归一/对称/极端 `sigma` 通过；stationary anchors 与官方 example/curve 在预注册容差内；`d>=5` 保存运行时、峰值内存和失败分支。 | [Lin & Noh 2024/2025](https://arxiv.org/abs/2411.04277), `T6.18.2` |
+| T6.21.2 | Todo | 实现 periodic analog-likelihood MWPM、heteroscedastic metric adapter 与 K-MWM 精度—成本曲线。 | folded Gaussian even/odd likelihood 由独立高精度求和验证；isotropic/diagonal/correlated 极限、normalization 和 tail truncation 均有误差界。K=`1...Kmax` 在 exact 子集上单调接近或显式解释非单调，报告 action mismatch、LER、wall-clock、memory；禁止用 Euclidean distance weight 冒充 analog likelihood。 | Fukui 2017, Lin 2023/2025, `R-N146`, `R-N152` |
+| T6.21.3 | Todo | 建立 strongest frozen static：syndrome-estimated marginal/mixture exact MLD，并修正 oracle 层级。 | prior 仅在 train/calibration 学得且 formal 完全冻结；与 nominal point exact MLD、weighted CPD 同 trace 比较。将旧 `oracle_metric_upper_bound` 迁移为 `true_metric_CPD_reference`；新增 `true_theta_exact_MLD_oracle`，证明 exact MLD 可优于 true-metric CPD 而无术语冲突。 | Wagner 2021, `T6.20.1`, `R-N146`, `R-N150` |
+| T6.21.4 | Todo | 审计并条件复现 Roy–Pousset–Royer noisy-auxiliary MED/COR-MED。 | 先冻结 Steane-type circuit、auxiliary noise、measurement back-action、observable/action 与本项目差异；若一手公式充分，建立独立 noisy-aux benchmark 并标 `SOURCE_TRANSCRIBED`，至少通过 paper anchor/limit checks；若缺件则 `INELIGIBLE/PARTIAL`。不得把 ideal-syndrome project adapter标成论文 exact或填入主表。 | [Roy et al. 2025](https://arxiv.org/abs/2510.12677), `R-N152` |
+
+### Milestone 6.22：Observed-only causal adaptive 强 baseline 闭环
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.22.1 | Todo | 建立统一 `PosteriorProvider`/prequential API，并接入 delayed Window、EWMA、Kalman。 | round `t` 只用 `s_<t` 形成 prior，结合 `s_t` 解码，随后更新并最早 `t+1` 提交；三方法共享 sufficient statistics、decoder backend、precision、warm-up、cadence 和超参选择预算。Bhardwaj overlapping-window 的未来样本按真实可用时刻重索引，iterative/full-record 版本仅进 ceiling 表。 | Bhardwaj 2025, `T1.3.4`, `R-N149--R-N150` |
+| T6.22.2 | Todo | 实现 adapted SMC-EAP 与 causal GP baselines。 | SMC 固定 particle 数、ESS、resampling/jitter 和 compute cap；同一 posterior 同时报 EAP plug-in 与 marginalization，隔离 estimator/decision 贡献。GP 只用 syndrome sufficient statistics，冻结 kernel/inducing/refit cadence；full-sequence GP 只作 nonranking ceiling。合成已知 posterior/periodic drift tests 通过。 | Kobori–Todo 2024/2025, Huo–Li 2017 |
+| T6.22.3 | Todo | 实现 abrupt drift 的 BOCPD 与 IMM/HMM baselines。 | BOCPD 固定 hazard、run-length cap；IMM/HMM 固定 state 数、transition matrix、recovery hysteresis。step/telegraph 的 detection delay、false alarm、posterior calibration 与 stationary false update 在 calibration-only 阈值下通过；retrospective segmentation/Viterbi 禁止进入 deployable 表。 | Adams–MacKay 2007, `T3.2`, `R-N149` |
+| T6.22.4 | Todo | 执行所有 adaptive baseline 的同权限、同精度、同预算与反泄漏资格门。 | 生成两张榜：matched deployable 与 unbudgeted accuracy ceiling。前者固定 CPU/core、memory、update deadline、cadence、precision、CPD/MLD call 数并报告 p50/p95/p99/worst、RSS、deadline miss；future-suffix、latent/scenario poisoning、formal-label、bank `t/t+1` mutations 全通过。资格不全则关闭 SOTA wording，不删 baseline。 | `T6.20.1`, `R-N146`, `R-N149--R-N150` |
+
+### Milestone 6.23：Posterior-predictive、risk-aware logical-coset MLD
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.23.1 | Todo | 实现 wrapped/circular、multiscale、observed-only 的 multimode drift posterior 与 activation-horizon prediction。 | posterior 覆盖 overall scale、modewise variance pattern、correlation 与 smooth/abrupt regime；synthetic posterior recovery、coverage/ECE/log score、mode permutation、long-horizon stability 和 missing/readout fault tests 通过。所有 latent truth 仅离线评分，不进入更新。 | `T6.20.3`, `T6.22`, `R-N149` |
+| T6.23.2 | Todo | 实现真正的 posterior-predictive exact logical-coset MLD。 | 对每个逻辑陪集计算 `P(L|s_t,s_<t)=integral P(L,s_t|theta)p(theta|s_<t)dtheta`；共享 hidden `theta` 导致的 mode correlation 在 coset probability 层积分。posterior delta 必须退化到 plug-in exact MLD；`d=3` 与高精度 quadrature/大粒子 reference 零 action mismatch或满足预注册误差界。禁止 `E[precision] -> MWPM` 冒充本方法。 | `T6.21.1--T6.21.3`, `R-N150` |
+| T6.23.3 | Todo | 建立 risk-aware safe update/fallback 策略，但不把硬件 safety 当 LER 来源。 | 基于 posterior predictive risk、calibration、regime 和 compute deadline输出 update/freeze/trusted-bank/rollback/fallback reason code；threshold只在 calibration冻结。报告 avoided/induced error、unnecessary fallback、false update、availability和 tail cost；与 decoder action 的贡献分开消融。 | `T6.5--T6.7`, `R-N147`, `R-N150` |
+| T6.23.4 | Todo | 验证 exact/approx convergence、数值稳定、因果性和复杂度。 | 对 quadrature/particle/K/precision/alias truncation 分别做收敛；rare likelihood 使用 log-domain，零 NaN/underflow/silent clipping；prefix mutation、seed determinism、independent implementation 和 end-to-end profiler 通过。任何 approximation error 上界不得超过 pilot gain budget 的 10%。 | `T6.21--T6.23.3`, `R-N149--R-N150` |
+| T6.23.5 | Todo | 在 pilot-only split 一次性选择并冻结唯一 proposed candidate。 | 选择规则、超参、checkpoint、posterior approximation、risk threshold 和 decoder backend 均 effect-blind/hash-bound。相对 strongest eligible deployable 的 pilot point gain须 `>=10%` 且 paired 95% LCB `>0`，calibration/telegraph tail 不劣；否则 `NO_GO_MULTIMODE_PILOT`，禁止访问 formal 或重开 candidate search。 | `T6.20.3--T6.20.4`, `T6.22.4`, `R-N148`, `R-N153` |
+
+### Milestone 6.24：Untouched multimode formal、SOTA gate 与独立重算
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.24.1 | Todo | 冻结并生成 source-derived multimode benchmark schema 与 formal shards。 | 至少覆盖 `d=3,5`、多个 below/near/above operating `sigma`；stationary control、mean/variance/correlation/periodic/OU/random walk、step/telegraph/burst/heavy-tail/compound、未见 spatial signs/permutations、variance laws、off-diagonal covariance 和 likelihood mismatch。noisy auxiliary 若通过 T6.21.4 则放独立协议表。 | `T6.20.3`, `T6.21.4`, `R-N148`, `R-N153` |
+| T6.24.2 | Todo | 冻结 formal 的 observation、precision、compute、update 与 eligibility ledger。 | 每方法绑定 source/adapter/hash、online privilege、decoder backend、precision、CPU/core、memory、warm-up、cadence、timeout/failure 和 raw event denominator；同 physical trace 使用 paired seeds。超预算方法保留 accuracy-ceiling/null，不用更弱替代项偷偷进入 strongest deployable。 | `T6.21--T6.23`, `R-N146`, `R-N150` |
+| T6.24.3 | Todo | 运行 untouched stationary 与 smooth-drift formal matrix。 | 对全部 eligible methods 保存逐 trajectory raw counts、`p_L,p_X,p_Y,p_Z`、paired differences、runtime/memory/deadline；至少 32 independent scenario clusters，`d=3,5` 与多 `sigma` 分层；stationary degradation 的 simultaneous 95% 上界须 `<=2%`。失败/timeout 按预注册 missingness 规则保留。 | `T6.23.5`, `T6.24.1--T6.24.2` |
+| T6.24.4 | Todo | 运行 untouched abrupt/OOD 与 calibration/telegraph tail formal matrix。 | 固定 window/CVaR endpoint；报告 worst-window、CVaR95、lag/censor、false update、fallback、avoided/induced、catastrophic degradation。任一 OOD family degradation 的 simultaneous 95% 上界须 `<=5%`，calibration/telegraph tail improvement 95% LCB `>0`；禁止跨 family aggregate 掩盖 reversal。 | `T6.23.5`, `T6.24.1--T6.24.2` |
+| T6.24.5 | Todo | 独立重算并执行 benchmark-SOTA promotion/falsification gate。 | 第二实现只从 raw counts/hash 重算。相对**每个** eligible strongest deployable baseline，aggregate relative LER improvement 的 simultaneous paired 95% LCB 均须 `>10%` 且 absolute LCB `>0`；同时通过 T6.24.3—T6.24.4、`d=3/5` 多 `sigma` 方向一致和 source sufficiency，才允许“frozen-benchmark SOTA”。否则降为 best-among-implemented/non-inferior/negative；oracle永不排名，禁止 universal/general-device SOTA。 | `T6.20.1`, `T6.24.3--T6.24.4`, `R-N146`, `R-N153` |
+
+### Milestone 6.25：Single-mode 六周期 RTL 的独立 deterministic/safety lane
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.25.1 | Todo | 冻结 single-mode production RTL 与 multimode software decoder 的边界，并审计 live source hashes。 | 逐模块映射只允许共享 A/B bank、CRC/version、LKG、event/action 与 update transaction 合同；明确当前 RTL 不含 multimode graph/exact MLD/posterior integration。若 T6.2.2/T6.7.3/T6.9.1/T6.19.1 源码/配置/hash 全 live，可复用证据；任一变化则触发真实重跑而非复制旧 PASS。 | `T6.2.2`, `T6.7.3`, `T6.9.1`, `T6.19.1`, `R-N147` |
+| T6.25.2 | Todo | 对 actual parameterized RTL 完成 atomic/fail-closed property、cover 与 mutation closure。 | 证明 A/B commit 只能 old-or-new、读写隔离、CRC/version/age/ack、LKG rollback、commit/cancel/drain/reset/deadline、FIFO/backpressure 和 near-wrap；任何 violation 必须进入 fail-closed。对每个 property 提供 reachable cover 与 targeted mutation kill；sampled simulation 不能代替全状态证明。 | `R-N132`, `T6.15.3` |
+| T6.25.3 | Todo | 重跑或实时验证 long-sequence independent-golden/CXXRTL qualification。 | 每 family `>=1e5` cycles、aggregate `>=1e6`，source-to-action 恰 6 cycles、II=1 无 bubble、零 bit mismatch、零 undefined action、零 silent overflow、零 silent version wrap；fault recovery 与 reason code 逐事件对拍。只报 pre-board，不填 measured deadline/jitter。 | `T6.2.2`, `T6.7.3`, `R-N132` |
+| T6.25.4 | Todo | 完成 multi-seed synthesis/P&R、资源/时序/功耗敏感性与硬件 lane verdict。 | 对 actual qualified top 至少 3 seeds，报告 min/median/max Fmax、LUT/FF/BRAM/DSP、critical path、6-cycle clock-model 和 analytic power sensitivity；estimate/measured 分栏且所有板测字段 null。T6.9.2 保持独立 Blocked；无同任务外部硬件时只写 deterministic architecture，不写 fastest。 | `T6.9.1--T6.9.2`, `T6.19.1--T6.19.2` |
+
+### Milestone 6.26：CNN/student 可替换近似与双 lane 论文汇合
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T6.26.1 | Todo | 冻结 CNN/student 蒸馏对象、信息权限、split 与 matched budget。 | teacher target 只能是 T6.23 的 posterior/LLR/coset probability/action；train/cal/pilot/formal 与 classical candidate 一致，禁止 truth/scenario/future label。固定参数量、precision、latency/memory、training compute 和选择规则；不得用 learned 模块重开 T6.24.5。 | `T4.4`, `T6.20.2`, `R-N151` |
+| T6.26.2 | Todo | 训练、量化并评估可替换 CNN/student。 | 报告 posterior calibration、action agreement、relative LER retention、worst-family retention、runtime/memory/quantization error；同 budget 与 classical approximation 比较。只有 formal retention 下界达到冻结 margin 且有明确压缩/成本收益才标 optional promoted；否则 `DROPPED_TO_ABLATION`，经典主方法保持不变。 | `T6.23--T6.24`, `R-N151` |
+| T6.26.3 | Todo | 生成不混淆的双 lane claim-evidence matrix、Source Data 和主图合同。 | multimode 图只呈现 LER/tail/scaling/compute；single-mode 图只呈现 6-cycle/II=1、atomic/fail-closed、CXXRTL/formal/P&R 与 board-null；learning 以 inset/ablation 标注。每个元素绑定 raw/config/code/source/hash 和 allowed/forbidden wording，mutation 阻断跨 lane 箭头与补门。 | `T6.24.5`, `T6.25.4`, `T6.26.2`, `R-N147`, `R-N153` |
+| T6.26.4 | Todo | 执行 Phase 6D 最终双 lane evidence GO/NO-GO 并移交 Phase 7。 | 独立消费 T6.24.5 与 T6.25.4，不做加权总分；输出 `GO_TWO_LANE/GO_MULTIMODE_ONLY/GO_RTL_ONLY/NO_GO`。逐 claim 给 current evidence、blocking gap、revocation 和论文 placement；CNN 只附加 optional/ablation 状态。真板字段保持 null，T6.9.2 不因任一 GO 被升级。 | `T6.24.5`, `T6.25.4`, `T6.26.3` |
+
+---
+
 ## Phase 7：论文、审稿风险与可复现发布
 
 T6.9.3 是 V4 的历史 evidence snapshot，其实际结果 `NO_GO_FULL_HIGH_LEVEL_PAPER_RESTRICTED_PREBOARD_DRAFT_ONLY` 不因插入 V5 而改写。执行顺序上，Phase 7 等待 T6.19.3 完成；其中算法/仿真/预板系统论文的主张冻结仍同时要求 `T6.15.5=GO_SIM_PREBOARD`，外部/Related Work 补充比较要求 `T6.19.3=PASS_AUX_COMPARISON_INTEGRITY`。若 T6.15.5 为 NO-GO，Phase 6C 仍可诚实完成负结果与不可比性图谱，但不能据此挽救或重开主论文门。若两门均通过，可写 V5 的 matched LER、tail、fixed-point/CXXRTL/formal/P&R-estimate 结果，并按独立 lane 使用 Phase 6C；所有 measured hardware 图表和措辞继续依赖 Blocked 的 T6.9.2，并保持 null/omitted。teacher/student/CNN 仍只按各自既有 promotion 结果进入扩展或消融。
+
+上段和 T7.1.1—T7.2.5 是截至 Phase 6C 的不可变 restricted snapshot。v2.3 不覆盖这些 Done 产物，而是在 `T6.26.4` 后追加 T7.1.5/T7.2.6 的 delta：multimode algorithm lane 只消费 T6.24.5，single-mode RTL lane 只消费 T6.25.4，CNN/student 只消费 T6.26.2。T7.3.1 的 partial 草稿暂时 Blocked，等待 exact MLD/oracle 层级在 T6.21 完成后再续写；最终发布门同时依赖 T6.26.4，不能用旧稿绕过新双 lane gate。
 
 ### Milestone 7.1：主张—证据—主图冻结
 
@@ -529,6 +622,7 @@ T6.9.3 是 V4 的历史 evidence snapshot，其实际结果 `NO_GO_FULL_HIGH_LEV
 | T7.1.2 | Done | 冻结主图 1—2。 | 完成 38-element evidence-bound figure contract、38-row Source Data、16/16 gates/mutations和两张 Python-only 183 mm 双栏主图；每图均有 editable SVG/PDF、300-dpi PNG、600-dpi LZW-TIFF及 live-hash manifest，人工视觉 QA=PASS。Fig.1 分离 fast/slow/learning/physical 层并明示 P&R estimate、42 board null；Fig.2 展示 observed-only typed safety 与 atomic A/B/LKG，Dropped V5 只在无生产箭头的边界框出现。verdict=`PASS_MAIN_FIGURES_1_2_RESTRICTED_PREBOARD_CONTRACT`。 | `T6.7--T6.9`, `T6.10.1`, `T6.15.5`, `T7.1.1` |
 | T7.1.3 | Done | 冻结主图 3—4。 | 完成 55-record evidence contract/Source Data、16/16 gates/mutations、两张 Python-only 183 mm 双栏主图和 8 个 SVG/PDF/PNG/TIFF 输出，人工 QA=PASS。Fig.3 同时展示 locked-EWMA 窄正结果、Window strongest、static/oracle-gap 负结果、tail non-inferiority 与 fallback cost；Fig.4 展示百万周期 CXXRTL、6-cycle/II=1 clock model、2×3 seed P&R/resource estimate 和 42-null/V5-Dropped 边界。153 项父链联合回归通过，verdict=`PASS_MAIN_FIGURES_3_4_RESTRICTED_PREBOARD_RESULTS`。 | `T6.7--T6.9`, `T6.15.5`, `T6.19.3`, `T7.1.1` |
 | T7.1.4 | Done | 冻结 Supplement figure contract。 | 完成 792-record/row evidence contract 与 Source Data、17/17 gates/mutations、13/13 live parent verifiers；S1--S4 生成 16 个 SVG/PDF/PNG/TIFF，S5 精确链接 Phase 6C atlas 的 4 个既有输出，人工 QA=PASS。图包完整覆盖 gradient/cutoff、noise-transfer failure/validity domain、Petz/SDP 与 cutoff extension、top-K Pareto、六 Pauli states、24 formal seeds×7 methods、四类完整 OOD、46-point fixed-point OAT、4 个 production profiles 和 9 个 failure/non-promotion 状态；禁止 global ranking、large-cutoff SDP/无限维收敛、device robustness、P&R/board 伪升级。210 项跨环境父链回归通过；T4.2.4 stale implementation hash 已真实重跑修复，冻结 prereg 未事后改写。 | `T6.19.3`, `experiment_plan.md §15.5, §16.2` |
+| T7.1.5 | Todo | 在保留 T7.1.1—T7.1.4 历史快照的前提下，冻结 Phase 6D 双 lane claim/figure delta。 | 逐项消费 T6.26.3—T6.26.4：multimode LER/tail/scaling/compute 与 single-mode deterministic/atomic/fail-closed/board-null 必须分 panel、分 caption、分证据状态；CNN/student 只作 inset/ablation。每个新增 claim/figure element 绑定 raw/config/code/source/hash 和 revocation；禁止把旧 Phase 6C/T7 图重新着色为新 formal。 | `T6.26.3--T6.26.4`, `R-N147--R-N153` |
 
 ### Milestone 7.2：论文正文与补充材料
 
@@ -539,26 +633,29 @@ T6.9.3 是 V4 的历史 evidence snapshot，其实际结果 `NO_GO_FULL_HIGH_LEV
 | T7.2.3 | Done | 起草 Results。 | 主 note 建立 10 个有序 Results 小节与 27-row 六态 evidence contract；主结果强制同时呈现 V4 Window/static/oracle-gap/tail/cost 正负证据、BOCD budget 失败、38+38 policy-family 失败和 75/25 attempts，V5 只报告 71,958,528-decision diagnostic early-stop、20 Dropped/0 downstream 与结果缺席。正文仅开放五条 eligible Phase 6C secondary lanes，literature-only 数值为 0；selection restart/cap/hindsight failure 不隐藏。20/20 gates/mutations、10 focused tests、41 页 TeX/逐页视觉 QA 通过。 | `T6.7--T6.15`, `T6.19.3` |
 | T7.2.4 | Done | 起草 Discussion/Conclusion。 | 主 note 建立 8 个 Discussion 小节、成本表与六级物理接入阶梯；27-row 六态合同以 22/22 gates/mutations 同时冻结 static/Window 反例、tail 干预成本、V5 stop、Phase 6C 非营救、single-mode/effective 外部效度、无 cavity/transmon/真实 lifetime/break-even/板上训练/板测 speed-power 及 42-null。10 focused/70 adjacent tests；45 页日志 0 overfull/undefined/warning并完成 45/45 页视觉 QA，修复终态表切断句子和 Conclusion 孤行。 | `experiment_plan.md:1070`, `experiment_plan.md §14.4` |
 | T7.2.5 | Done | 完成 Supplementary。 | 51 页 note 新增公式/冻结参数/十类 comparator/statistics/失败域/双百万周期 RTL 与工具链复现；十行 Phase 6C locator 和 46-row 八态合同明确 task signature、N/A/null/failed/negative/blocked/ineligible、外部复现偏差及 206-cell 非混排。24/24 gates/mutations、66 项联合回归和页 39--47 视觉 QA 通过；日志 0 overfull/warning/undefined/fatal。 | `T6.16--T6.19`, `experiment_plan.md:1070`, `docs/t7_2_5_supplementary_evidence_contract.json` |
+| T7.2.6 | Todo | 按 T7.1.5 重写高水平论文的摘要、Introduction、Methods、Results、Discussion 与 Supplement delta。 | 正文明确两个并列贡献和三类 forbidden transfer；算法主张严格取决于 T6.24.5 的实际 verdict，硬件只写 T6.25.4 支持的 pre-board deterministic/safety，CNN/student 按 T6.26.2 的 promoted/ablation 状态处理。所有负结果、ineligible baseline、board-null 和 frozen-benchmark 限定同时出现；编译、引用、逐页视觉 QA 与 claim mutation 通过。 | `T7.1.5`, `T6.26.4`, `experiment_plan.md §19` |
 
 ### Milestone 7.3：审稿风险预处理
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
-| T7.3.1 | In Progress | 回答“为何不用 exact/oracle MAP？” | oracle 是不可部署上界；贡献限定为 drift/regime 下缩小 static-to-oracle gap。 | `experiment_plan.md:1099` |
-| T7.3.2 | Todo | 回答“CNN 是否只是过拟合模拟器，项目是否仍是 CNN-centric？” | 明确 CNN/teacher/student 是 matched-budget replaceable extension；主系统不依赖 learned winner。只有 T6.7.4/T6.8.5 通过才保留相应收益，否则放入消融/补充材料。 | `experiment_plan.md §18.1, §18.4` |
+| T7.3.1 | Blocked | 回答“为何不用 exact/oracle MAP？” | 现有 partial 草稿只读保留；待 T6.21.1—T6.21.3 后改写为 exact logical-coset MLD 已进入 strongest denominator，`true_metric_CPD_reference` 不是 oracle，`true_theta_exact_MLD_oracle` 才是不可部署上界。只有 T6.24.5 支持时才写 observed-only posterior-predictive 相对 strongest deployable 的优势。 | `T6.21.1--T6.21.3`, `T6.24.5`, `experiment_plan.md §19` |
+| T7.3.2 | Todo | 回答“CNN 是否只是过拟合模拟器，项目是否仍是 CNN-centric？” | 明确 CNN/teacher/student 只蒸馏 posterior/LLR/coset/action，是 matched-budget replaceable approximation；T6.26.2 不过门就只进消融，不能改变 classical algorithm 或 RTL verdict。 | `T6.26.1--T6.26.2`, `experiment_plan.md §19` |
 | T7.3.3 | Todo | 回答“为何称实验相关但没有量子硬件？” | 清楚区分 literature fact、official-code reproduction、project-native simulation、board measurement 和 HIL；AQEC/Sivak 的真实系统证据不得迁移成本项目证据，标题摘要不得使用 experimental GKP QEC。 | `T6.18.1`, `T6.19.3`, `experiment_plan.md §14.4` |
 | T7.3.4 | Todo | 回答“post-selection/break-even 是否夸大？” | 主指标不依赖 post-selection；仅报告 simulation-derived coherence gain 和完整成本。 | `experiment_plan.md §14.4` |
 | T7.3.5 | Todo | 回答“是否只是复现 NMF PRL？” | 先给 official GQF exact/partial reproduction 状态，再把本项目贡献限定为 drift/tail contract、safe fallback、teacher-to-student retention/compression 与 deterministic deployment；Puviani/Sivak 只在 protocol-native controller/system lane，只有同 observation/action/environment/budget 的 paired CI 支持才写 physical lifetime surpass。 | `T6.17.3`, `T6.18.1`, `T6.19.3`, `experiment_plan.md §18.5` |
 | T7.3.6 | Todo | 回答“完整 RNN 是否真的能实时上板？” | RNN 不在 FPGA critical path；以 Route-A 6-cycle MAP/event fast path 和实板 source-to-action 证据为主，full/quantized GRU/student 分列。不能把 teacher GPU 推理、P&R estimate 或 host latency写成板上确定性延迟。 | `experiment_plan.md §18.6` |
 | T7.3.7 | Todo | 回答“为何能与 FPGA QEC decoder 比快？” | 逐项对齐 code family、problem size、core/source-to-action、average/worst、II、precision 与板卡；只在 T6.19.2 的 exact task-signature 子集和 T6.9.2 实测同时支持时写 speed advantage，否则只报告本设计 deterministic pre-board latency contract。 | `T6.19.1--T6.19.2`, `T6.9.2`, `experiment_plan.md §18.5—§18.6` |
+| T7.3.8 | Todo | 回答“multimode LER 是否真的超过了最强已发表/可部署 baseline？” | 逐项给 exact MLD、K-MWM、analog-MWPM、static-mixture、Window、SMC、BOCPD/IMM 的 source/adapter/eligibility/budget；报告对每个 eligible baseline 的 simultaneous paired CI，而不是只对 Euclidean CPD。任一 comparator 缺失或 10% LCB 门失败，就降为 best-among-implemented/non-inferior/negative。 | `T6.20.1`, `T6.24.5`, `R-N146`, `R-N153` |
+| T7.3.9 | Todo | 回答“两个 evidence lane 是否只是把互不相关结果拼成系统论文？” | 用共同 contract 而非共同性能分母连接两 lane：multimode 提供算法证据，single-mode 提供已实现的 transaction/safety/timing design pattern；明确当前 RTL 不执行 multimode MLD，并列出未来迁移所需 compiler/architecture gate。禁止 LER 与 latency 加权总分或跨 lane 补门。 | `T6.20.2`, `T6.25.1`, `T6.26.3--T6.26.4`, `R-N147` |
 
 ### Milestone 7.4：可复现发布
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
-| T7.4.1 | Todo | 冻结数据、配置和 provenance。 | 每张主图和 Phase 6C atlas 单元均可追溯到 raw/processed data、source locator、evidence grade、config、seed、commit、板卡/工具链版本；literature-only 值不得绑定成项目 run。 | `T6.19.3`, `experiment_plan.md §14.3` |
-| T7.4.2 | Todo | 提供一键复现实验和 artifact manifest。 | 软件仿真可一键运行；硬件结果提供 trace、golden output、bitstream/source 或可审计替代物。 | `experiment_plan.md §14.3` |
-| T7.4.3 | Todo | 完成投稿前证据审计。 | claim-evidence matrix、任务记录、风险表、主文、补充材料和仓库状态一致；T6.15.5 与 T6.19.3 verdict 均被逐句消费，无 global leaderboard、literature/reproduction 混写或“estimate 写成 measured”。 | `T6.15.5`, `T6.19.3`, `experiment_plan.md §14.4` |
+| T7.4.1 | Todo | 冻结数据、配置和 provenance。 | 每张旧主图、Phase 6C atlas 与 Phase 6D 双 lane 单元均可追溯到 raw/processed data、source locator、evidence grade、config、seed、commit、split、amendment 和工具链版本；latest implementation 与 immutable prereg/formal snapshot 分路径，literature-only 值不得绑定成项目 run。 | `T6.19.3`, `T6.26.3--T6.26.4`, `experiment_plan.md §19` |
+| T7.4.2 | Todo | 提供一键复现实验和 artifact manifest。 | multimode software formal、independent recomputation 与 single-mode CXXRTL/formal/P&R 分命令和环境锁；硬件结果提供 trace、golden output、source/netlist 或可审计替代物，板测缺失保持 null。CNN/student 可选路径不得成为经典结果的隐含依赖。 | `T6.24--T6.26`, `experiment_plan.md §19` |
+| T7.4.3 | Todo | 完成投稿前证据审计。 | claim-evidence matrix、任务记录、风险表、主文、补充材料和仓库状态一致；T6.15.5、T6.19.3 与 T6.26.4 verdict 均被逐句消费，无 global leaderboard、跨 lane 补门、literature/reproduction 混写、benchmark-SOTA 外溢或“estimate 写成 measured”。 | `T6.15.5`, `T6.19.3`, `T6.26.4`, `experiment_plan.md §19` |
 
 ---
 
@@ -590,7 +687,7 @@ T6.9.3 是 V4 的历史 evidence snapshot，其实际结果 `NO_GO_FULL_HIGH_LEV
 | --- | --- | --- |
 | 已完成证据不得因重构丢失。 | T0—T1.3.2 原状态和产物保留；只重排未开始任务。 | `docs/tasks/`, `experiment_plan.md §14.2` |
 | 不声称 CNN 超过 oracle / 已知静态噪声下 MAP。 | T1.3.2—T1.3.3、T3.1.3、T5.1.4、T7.3.1 将 oracle 设为不可部署上界。 | `rough_plan.md:72`, `experiment_plan.md:320` |
-| 主范围保持 single-mode approximate GKP。 | T0.1.1 保持 Done；sBs/sharpen–trim 是同一主对象的实验协议层，不引入外层码。 | `experiment_plan.md:57`, `experiment_plan.md §14.1` |
+| 截至 Phase 6C 的历史主范围保持 single-mode approximate GKP；Phase 6D 的 multimode 算法 lane 必须独立签名。 | T0.1.1 与 T7.1—T7.2 历史快照不改写；T6.20—T6.24 以全新 surface-square multimode protocol/split 建立算法证据，T6.25 仍是 single-mode RTL，二者不得互相迁移 LER/latency。 | `experiment_plan.md §14.1, §19`, `T-RISK-20260721-01` |
 | 实验 syndrome 不能只建模为平稳连续高斯。 | T2.0.2—T2.1.3 加入 error hierarchy、g/e/leakage、recovery 和离散 regime。 | `experiment_plan.md §14.1` |
 | 主机学习不进入逐周期 critical path。 | T4.1.5、T4.2、T4.3 和 T6.3 将 offline teacher、host estimator 与 FPGA fast path 分开。 | `experiment_plan.md §14.1, §14.4` |
 | decoder、controller、两类 oracle 与 recovery bound 不得混称。 | T1.4.5 冻结术语；T1.3.2/T3.1.3 使用 decoder oracle，T3.2.9 使用 control oracle，T4.4 使用 controller teacher/student，T5.3.5 使用 channel-recovery bound。 | `experiment_plan.md §15.1, §16.1` |
@@ -598,18 +695,21 @@ T6.9.3 是 V4 的历史 evidence snapshot，其实际结果 `NO_GO_FULL_HIGH_LEV
 | 不能用 best-of-N 或短时训练外推包装稳定性。 | T5.4.4—T5.4.5 报告全部 agents/seeds、validation-based selection、horizon sweep 和长时 hidden-state 有界性。 | `experiment_plan.md §15.3` |
 | teacher 不直接等于可部署 FPGA 控制器。 | T4.4.3—T4.4.4 先蒸馏低维 student；T5.5.4、T6.2.4—T6.2.5 以资源/deadline gate 决定 student、量化 GRU 或 Dropped 分支。 | `experiment_plan.md §15.4` |
 | noise-transfer 代理不得替代高保真物理验证。 | T2.3.8 明确高 squeezing 有效区和 clipping 失效区；T2.3.3 必须与 Fock/effective/syndrome model 交叉验证。 | `experiment_plan.md §16.1` |
-| K-MWM 与 surface-GKP 不得借机进入 single-mode 主范围。 | T3.1.5 只借鉴 top-K likelihood accumulation，形成 single-mode lattice-coset truncated MAP；不实现外层匹配图。 | `experiment_plan.md §16.1, §16.3` |
-| Knill/P-Steane 与多模 trapped-ion 只作 secondary evidence。 | T2.0.1、T2.2.2、T5.0.1 和 T7.1.4 将其限制为协议趋势、解析回归和实验报告模板，不进入 sBs 主排名或 FPGA 物理 claim。 | `experiment_plan.md §16.2, §16.3` |
+| K-MWM 与 surface-GKP 不得冒充 single-mode RTL 能力。 | T3.1.5 的 single-mode top-K 历史不变；Phase 6D 允许官方 K-MWM/exact MLD 进入独立 multimode 软件主排名，但 T6.25 当前 RTL 不含外层匹配图或 exact MLD。 | `experiment_plan.md §16.1, §19`, `T6.21`, `T6.25.1` |
+| Knill/P-Steane 与 trapped-ion protocol 保持 secondary；Phase 6D 仅开放 exact-signature 的 surface-square multimode software lane。 | T2.0.1、T2.2.2、T5.0.1 和 T7.1.4 的历史限制不变；T6.20.1/T6.21.4 把 noisy auxiliary、circuit-level 与其他 multimode protocol 分表，不能进入 ideal-syndrome主排名或 FPGA claim。 | `experiment_plan.md §16.2, §19`, `T6.20.1`, `T6.21.4` |
 | baseline 必须协议原生且强。 | Phase 3 和 T5.1 覆盖 MAP、Bayesian、Kalman、window、run-length、HMM/change-point。 | `rough_plan.md:447`, `experiment_plan.md §14.3` |
 | post-selection 不得冒充在线纠错。 | T3.2.4 和 T5.3.4 仅把它作为诊断上界并核算 survival cost。 | `experiment_plan.md §14.4` |
 | 低成本 FPGA 不等于真实量子实验。 | T1.4、Phase 6 和 T7.3.3 分离 digital control-plane/HIL 与 cavity/transmon/microwave claim。 | `experiment_plan.md §14.1, §14.4` |
-| 缺少实物板卡不得整体冻结 Phase 6。 | `T6.1.1`/`T6.9.2` 的 Blocked 只沿实物板卡轨传播；T6.10—T6.15 继续完成 V5 性能、fixed-point、formal、CXXRTL 与 P&R estimate，T6.2.3/T6.4/T6.9.2 再以独立板测证据汇合。 | `experiment_plan.md §17`, `T-RISK-20260720-01` |
+| 缺少实物板卡不得整体冻结 Phase 6。 | `T6.1.1`/`T6.9.2` 的 Blocked 只沿实物板卡轨传播；Phase 6D 可继续完成 multimode software formal 与 single-mode CXXRTL/formal/P&R estimate，T6.2.3/T6.4/T6.9.2 以后再以独立板测证据升级 measured claim。 | `experiment_plan.md §17, §19`, `T-RISK-20260721-01` |
 | CNN/teacher/student 不得重新成为无条件核心贡献。 | Phase 6B 以 posterior-predictive MAP + LER/CVaR risk gate + typed tail policy + deterministic FPGA contract 为主线；学习模块必须通过 matched-budget promotion gate，否则只进消融或 supplement。 | `T6.10.2`, `T6.14.3` |
 | static GKP、drift decoder、Puviani NMF 与 FPGA decoder 不得拼成全局榜。 | T6.8 分别建立 decoder/controller/hardware lane；跨 simulator lifetime、跨 code family raw latency、privileged oracle 与 deployable aggregate 均禁止。 | `experiment_plan.md §18.5` |
 | 已打开的 V4 formal 不得成为 V5 确认性证据。 | T6.7/T6.8 只作 prior-informed diagnosis；T6.10.3 新建四分割和 effect-blind power plan，T6.13.3 在任何新 formal 访问前锁定全部 source/config/checkpoint/threshold/analysis/hash。 | `T6.10.1--T6.10.3`, `T6.13.3` |
 | simulation/pre-board 主图与 measured-hardware 主图必须分层。 | `T6.15.5=GO_SIM_PREBOARD` 后可冻结算法、fixed-point、formal、CXXRTL、P&R-estimate 图；真实 latency/jitter/deadline/power panel 仍须 T6.9.2，通过前保持 null/omitted。 | `T6.15.5`, `T6.9.2`, `T7.1.3` |
 | 两张异构方法图不得直接作为实验总榜。 | Phase 6C 把 CI/ML、Direct NN/RL、AQEC、CPD、Hybrid 和 FPGA 指标拆为六条 task-signature lane；只做同 lane 排名，N/A/null/failed 与 evidence grade 显式保留。 | `T6.16--T6.19`, `T-RISK-20260720-02` |
 | Phase 6C 不得在 V5 formal 后寻找有利对手或改写主门。 | `T6.15.5=Done` 后才启动，冻结 T6.14/T6.15 live hashes；所有新增实验使用独立 secondary split，不能进入 V5 `>=10%` denominator或升级 T6.15.5 verdict。 | `T6.16.3`, `T6.19.3` |
+| Phase 6D 不能把 Phase 6C 的已打开正结果追认为新 formal。 | T6.18.3 只作 development/headroom；T6.20.3 建立全新四分割，T6.23.5 只在 pilot 选一次 candidate，T6.24 使用 untouched formal 并对全部 eligible strongest baselines 同时过门。 | `T6.20.3--T6.24.5`, `R-N148`, `R-N153` |
+| Multimode LER 与 single-mode deterministic RTL 是并列而非相加的证据 lane。 | T6.20.2 冻结三类 forbidden transfer，T6.24.5 与 T6.25.4 独立给 verdict，T6.26.4 只输出分 lane GO/NO-GO，不做加权总分或跨 lane 补门。 | `experiment_plan.md §19`, `T6.20.2`, `T6.26.4` |
+| CNN/student 只作为 posterior/MLD 的可替换近似。 | T6.26.1—T6.26.2 冻结 teacher target、权限、split 和 matched budget；不过门即进入消融，不能改变 classical algorithm 或 RTL verdict。 | `experiment_plan.md §19`, `T6.26.1--T6.26.2` |
 | 外部代码复现、项目原生重放与文献数值不得混写。 | 每个 atlas 单元固定 `LITERATURE_ONLY/OFFICIAL_CODE_REPRODUCTION/PROJECT_NATIVE_MATCHED/INELIGIBLE/BLOCKED/NEGATIVE`；缺源码、checkpoint、协议或同任务 adapter 时保持 partial/null。 | `T6.16.1`, `T6.19.3` |
 | single-mode GKP 避免 surface-code threshold 语言。 | T5.3.3、T7.3.4 使用 operational boundary、simulation-derived coherence gain 和 logical lifetime。 | `rough_plan.md:270`, `experiment_plan.md §14.4` |
 
@@ -629,6 +729,7 @@ T6.9.3 是 V4 的历史 evidence snapshot，其实际结果 `NO_GO_FULL_HIGH_LEV
 | T-RISK-20260717-02 | Done | R-N084 / R-N086 / R-N098 / R-N110 | T6.2.2 后、Phase 7 前 | 插入 Route-A Phase 6A，把 CNN-centric 叙事重构为 contract-centric、regime-aware 安全自适应双回路，并建立相对 static GKP、一般 drift-adaptive、Puviani NMF 与 FPGA decoder 的不可混排优势证据。 | 完成 `docs/new_tasks/T-RISK-20260717-02_route_a_phase_insertion.md` 与镜像记录；新增 Milestone 6.5—6.9 共 20 个 task、统一 benchmark/安全门/GQF 官方复现/实板 GO-NO-GO；`experiment_plan.md` 新增 §18，Phase 7 改为消费 Route-A 证据。 |
 | T-RISK-20260720-01 | Done | R-N130 / R-N131 / R-N132 | Phase 6A 后、Phase 7 前 | 插入软件优先的 Phase 6B，把 V4 的 strongest-baseline/tail 负结果转化为 static-anchored predictive IMM/BOCPD、posterior-predictive MAP、LER/CVaR risk gate、typed trusted experts 和独立 V5 formal 路线；真板只阻塞 measured hardware claim。 | 完成 `docs/new_tasks/T-RISK-20260720-01_predictive_risk_aware_v5_phase.md` 与镜像记录；新增 Milestone 6.10—6.15 共 22 个 task，冻结相对全部 eligible baselines 至少 `10%` LER、step/telegraph tail、observed-only、quantized/CXXRTL/formal/P&R 门；当前推荐切换为 T6.10.1，T6.9.2 保持 Blocked。 |
 | T-RISK-20260720-02 | Done | R-N133 / R-N134 / R-N135 / R-N136 | Phase 6B 完成后、Phase 7 前 | 把两张图中的 CI、ML/MAP、Direct NN、RL、AQEC、CPD、Hybrid 及 LER/threshold/lifetime/drift/latency/resource 指标改造成只读、分 task-signature lane 的非主要比较；禁止 global leaderboard 和 post-formal 主结论污染。 | 完成 `docs/new_tasks/T-RISK-20260720-02_secondary_comparison_phase6c.md` 与镜像记录；新增 Milestone 6.16—6.19 共 12 个 Todo task，覆盖 source/ontology/preregistration、gate-level CI-ML、CPD、learned eligibility、AQEC wall-clock、预板/外部 FPGA 规范化和 integrity atlas；当前推荐保持 T6.10.1。 |
+| T-RISK-20260721-01 | Done | R-N146 / R-N147 / R-N148 / R-N149 / R-N150 / R-N151 / R-N152 / R-N153 | Phase 6C 后、Phase 7 最终发布前 | 插入 Phase 6D：将论文重组为 multimode software LER 与 single-mode deterministic RTL 两个并列、不可补门的 evidence lane；CNN/student 只作 posterior/MLD 近似。先补 exact MLD/K-MWM/analog-MWPM 与 syndrome-only adaptive 强基线，再以全新 split 执行 posterior-predictive formal。 | 完成 `docs/new_tasks/T-RISK-20260721-01_dual_evidence_lane_phase6d.md` 与镜像记录、`docs/multimode_strong_baseline_registry.md` 和 `experiment_plan.md §19`；新增 Milestone 6.20—6.26 共 30 个 task，T6.20.1 Done、T6.20.2 In Progress；T7 增加 delta tasks，T7.3.1 暂停为 Blocked，T6.9.2 保持 Blocked。 |
 
 ## 进度日志
 
@@ -947,3 +1048,7 @@ T6.9.3 是 V4 的历史 evidence snapshot，其实际结果 `NO_GO_FULL_HIGH_LEV
 | 2026-07-20 | T-DOC-20260720-04 | User request -> Done | 将 T7.1.3 evidence-bounded Fig.3--4 同步到 Route-A 新 note，并保守覆盖旧 CNN+FPGA note；PPT 架构图继续复用但在新 note 中改为不占正式主图编号的历史示意。 | 新/旧 note 分别编译为27/30页，57/57页渲染QA和日志审计通过；正式Fig.1--4连续消费38+55 row合同，Window/static/oracle-gap/tail-cost、V5-Dropped和42 board-null均保留。当前推荐任务保持 `T7.1.4 In Progress`。 |
 | 2026-07-20 | T-DOC-20260720-05 | User request -> Done | 消费 T7.1.4 的 S1--S5 补充图与 T7.2.1--T7.2.4 正式正文合同；Route-A 新 note 已形成 45 页完整论文主干，旧 CNN+FPGA note 以正式结构/成本/外部效度/六级物理接入覆盖层做保守同步，继续复用 PPT 架构与寿命图。 | 新/旧 note 分别为45/33页，78/78页渲染QA与日志审计通过；优势只保留 locked-EWMA 窄对照、task-local CPD/CNOT/teacher--student 和确定性预板执行，static/Window、tail高干预、V5 early-stop、无真实物理/板测边界均保留。当前推荐任务保持 `T7.2.5 In Progress`。 |
 | 2026-07-21 | T-DOC-20260721-06 | User request -> Done | 消费 T7.2.5 的完整 Supplementary 合同并保守同步旧 CNN+FPGA note；复用既有 PPT 架构/寿命图与 S1--S5，不增加重复图片。 | 新/旧 note 分别为51/33页，84/84页渲染QA与日志审计通过；纠正原记录的50页/文件大小误记。46-row 八态、双百万周期资格分离、206-cell non-ranking、static/Window反例、V5 stop与42 board-null均保留；当前推荐任务保持 `T7.3.1 In Progress`。 |
+| 2026-07-21 | T-RISK-20260721-01 | User request -> In Progress | 开始把论文重组为 multimode software LER 与 single-mode deterministic RTL 两个并列 evidence lane；先审计 multimode exact MLD/K-MWM/analog-MWPM 和 syndrome-only adaptive 强基线。 | 保持 T6.18.3 为 opened development evidence、Phase 6C 为 secondary historical snapshot，T7.3.1 partial 文件不覆盖；T6.9.2 真板任务继续局部 Blocked。 |
+| 2026-07-21 | T-RISK-20260721-01 | In Progress -> Done | 插入 Phase 6D / Milestone 6.20—6.26 共 30 个 task，并为 Phase 7 增加 claim/figure/manuscript delta 与两项 reviewer-risk task。 | 冻结双 lane 不补门、全新 split、headroom early-stop、strong-baseline reproduction、posterior-predictive formal、single-mode actual-RTL property/long-sequence/P&R、CNN/student optional distillation和四态最终 verdict；30/30 task IDs唯一，9 focused/30 joint tests通过，`experiment_plan.md §19`、风险与双任务记录同步。 |
+| 2026-07-21 | T6.20.1 | Todo -> In Progress | 依据一手论文、官方仓库和本地 pinned source 建立 multimode 强 baseline/source/task-signature registry。 | 直接主排名、adapted estimator 和不同协议边界三层分开；明确 exact MLD/K-MWM 待复现、Roy 无官方代码、Bhardwaj/SMC 等只能标 adapted。 |
+| 2026-07-21 | T6.20.1 / T6.20.2 | In Progress -> Done / Todo -> In Progress | 完成强 baseline 注册表并开始冻结双证据 lane 的 machine-readable claim/execution contract。 | 本地 `LatticeAlgorithms.jl@01f9bf1f...`/Apache-2.0/CPD+exact MLD+K-MWM source 已核；current recommendation 切换为 T6.20.2，T7.3.1 转为 Blocked，既有 partial 改动只读保留。 |
