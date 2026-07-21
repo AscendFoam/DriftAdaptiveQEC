@@ -400,7 +400,7 @@ def test_phase6d_dual_evidence_lanes_are_strong_baseline_first_and_nontransferab
     assert statuses["T6.25.3"] == "Done"
     assert statuses["T6.25.4"] == "Done"
     assert statuses["T6.26.3"] == "Done"
-    assert statuses["T6.26.4"] == "In Progress"
+    assert statuses["T6.26.4"] == "Done"
     assert all(
         statuses[task] == "Todo"
         for task in expected_tasks
@@ -409,6 +409,7 @@ def test_phase6d_dual_evidence_lanes_are_strong_baseline_first_and_nontransferab
     )
     assert statuses["T6.9.2"] == "Blocked"
     assert statuses["T7.3.1"] == "Blocked"
+    assert statuses["T7.1.5"] == "In Progress"
 
     for milestone in ("6.20", "6.21", "6.22", "6.23", "6.24", "6.25", "6.26"):
         assert f"### Milestone {milestone}" in phase6d
