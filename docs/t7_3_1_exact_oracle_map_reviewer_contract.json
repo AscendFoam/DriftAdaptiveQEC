@@ -1,0 +1,451 @@
+{
+  "task_id": "T7.3.1",
+  "schema_version": "t7.3.1-exact-oracle-map-reviewer-contract-v1",
+  "generated_at_utc": "2026-07-20T17:17:43.028567+00:00",
+  "reviewer_response": {
+    "question": "Why not use exact/oracle MAP?",
+    "short_answer": "We do use exact MAP for the frozen model as a strong baseline. The hidden-state oracle instead receives simulator truth unavailable to a deployable decoder and is therefore an information upper reference, not an implementation choice. Current V4 data do not close the static-to-oracle gap; only the locked-EWMA contrast is positive.",
+    "allowed_claim": "The oracle quantifies assumed-model headroom; a future adaptive claim requires positive held-out paired gap closure against the strongest deployable comparator.",
+    "current_result": "NEGATIVE_GAP_CLOSURE_RETAINED"
+  },
+  "manuscript": {
+    "paragraph_sha256": "69a147cced2011c1ef46c0706d3cd58f3c464bd34ff26aa9b28dcb069091f1b6",
+    "characters": 2750,
+    "checks": {
+      "three_map_objects": true,
+      "information_sets_separated": true,
+      "bayes_role": true,
+      "not_compute_strawman": true,
+      "negative_gap_disclosed": true,
+      "tail_counterexample_disclosed": true,
+      "current_claim_restricted": true,
+      "future_gate": true,
+      "causal_headroom_disclosed": true,
+      "citations_present": true,
+      "prohibited_assertions_absent": true
+    }
+  },
+  "evidence": {
+    "oracle_reference": {
+      "samples": 320000,
+      "static_ler": 0.07641875,
+      "oracle_ler": 0.025103125,
+      "static_minus_oracle": {
+        "estimate": 0.051315625,
+        "standard_error": 0.0004294619310413671,
+        "ci_low": 0.050473895082427896,
+        "ci_high": 0.0521573549175721,
+        "first_only_failure_count": 18075,
+        "second_only_failure_count": 1654
+      },
+      "allowed": "exact-state periodic-mixture oracle is a nondeployable assumed-model upper reference; hidden leakage supplies only a perfect erasure flag with explicit cost bounds",
+      "forbidden": "oracle is deployable, oracle_delayed is the decoder oracle, leakage is perfectly corrected for free, or this is a finite-energy/device/channel-recovery optimum"
+    },
+    "smooth": {
+      "decisions_per_method": 28311552,
+      "static_ler": 0.0009681913587782118,
+      "window_ler": 0.0008964185361508971,
+      "ewma_ler": 0.001014426902488426,
+      "proposed_ler": 0.000992739642107928,
+      "oracle_ler": 0.00016233656141493053,
+      "oracle_deployable": false,
+      "gap_formula": "(static_LER-proposed_LER)/(static_LER-oracle_LER)",
+      "gap_closure": -0.030462415077799714,
+      "gap_ci95": [
+        -0.04966251005211896,
+        -0.011185313997759173
+      ],
+      "denominator": 0.0008058547973632812,
+      "primary_ewma_contrast": {
+        "contrast": "ewma_adaptive_map_LER_minus_proposed_route_a_LER",
+        "estimate": 2.1687260380497668e-05,
+        "ci95_low": 1.9002843786168966e-05,
+        "ci95_high": 2.454828332971639e-05,
+        "one_sided_p_nonpositive": 4.999750012499375e-05,
+        "passes_95_lcb_strictly_greater_than_zero": true
+      }
+    },
+    "calibration_shift": {
+      "static_average_ler": 0.010865529378255209,
+      "proposed_average_ler": 0.012268348976417825,
+      "static_worst_errors_per_512": 32,
+      "proposed_worst_errors_per_512": 181
+    },
+    "causal_headroom": {
+      "trajectories": 186,
+      "decisions": 4571136,
+      "selector_relative_headroom": -0.0023220252591040383,
+      "fixed_mixture_relative_headroom": 0.004587415755790905,
+      "incremental_action_space_headroom": 0.0002548564308772725,
+      "incremental_errors": 9,
+      "truth_privileged": true,
+      "verdict": "NO_GO_V5_INSUFFICIENT_ACTION_SPACE_HEADROOM"
+    },
+    "claim_states": {
+      "CONTRACT_SYSTEM_INTEGRATION": "SUPPORTED_RESTRICTED",
+      "SMOOTH_LOCKED_EWMA_ADVANTAGE": "SUPPORTED_PAIRED_OUTCOME",
+      "STATIC_GKP_SUPERIORITY": "FALSIFIED",
+      "STATIC_K4_HARD_ACTION_EQUIVALENCE": "SUPPORTED_PREBOARD_NARROW",
+      "GENERAL_DRIFT_BOCD_OUTCOME": "SUPPORTED_PAIRED_OUTCOME",
+      "GENERAL_DRIFT_MATCHED_BUDGET_SOTA": "NOT_ESTABLISHED",
+      "PUVIANI_NMF_SURPASS": "PROHIBITED",
+      "FPGA_DETERMINISTIC_ARCHITECTURE": "SUPPORTED_PREBOARD_NARROW",
+      "FPGA_SPEED_ADVANTAGE": "PROHIBITED",
+      "CNN_PRIMARY_ROLE": "ABLATION_ONLY"
+    },
+    "parent_contracts": {
+      "results_live": false,
+      "supplement_live": false,
+      "results_verdict": "PASS_RESULTS_COMPLETE_NEGATIVE_AND_SECONDARY_BOUNDARIES",
+      "supplement_verdict": "PASS_SUPPLEMENT_COMPLETE_REPRODUCIBLE_AND_NONMIXING"
+    }
+  },
+  "response_rows": [
+    {
+      "row_id": "OR-001",
+      "topic": "frozen_model_exact_map",
+      "response_state": "TERM_DEFINITION",
+      "source_ids": "T3.1.2/T6.7.1",
+      "boundary": "Exact MAP for a specified frozen likelihood is a deployable baseline and is not omitted."
+    },
+    {
+      "row_id": "OR-002",
+      "topic": "hidden_state_oracle",
+      "response_state": "TERM_DEFINITION",
+      "source_ids": "T1.3.2/T3.1.3",
+      "boundary": "Per-round MAP receives exact simulator theta_t; it is an assumed-model reference."
+    },
+    {
+      "row_id": "OR-003",
+      "topic": "channel_control_optimum",
+      "response_state": "TERM_DEFINITION",
+      "source_ids": "T1.4.5/T3.2.9/T5.3.5",
+      "boundary": "Decoder oracle is not a channel-recovery or finite-horizon control optimum."
+    },
+    {
+      "row_id": "OR-004",
+      "topic": "observed_information",
+      "response_state": "INFORMATION_BOUNDARY",
+      "source_ids": "T6.5.2",
+      "boundary": "Deployable methods receive quantized syndrome history, integrity fields, and causal expert state."
+    },
+    {
+      "row_id": "OR-005",
+      "topic": "privileged_information",
+      "response_state": "INFORMATION_BOUNDARY",
+      "source_ids": "T3.1.3",
+      "boundary": "Exact mean, covariance, outlier mixture, regime, burst state, and labels remain evaluator-only."
+    },
+    {
+      "row_id": "OR-006",
+      "topic": "online_calibration",
+      "response_state": "INFORMATION_BOUNDARY",
+      "source_ids": "spitz2018/wagner2021/sivak2024",
+      "boundary": "Noise estimation uses finite causal data and does not reveal theta_t instantaneously."
+    },
+    {
+      "row_id": "OR-007",
+      "topic": "bayes_risk_role",
+      "response_state": "DECISION_THEORY",
+      "source_ids": "T1.3.2",
+      "boundary": "Within the assumed per-round likelihood and zero-one loss, hidden-state MAP minimizes conditional Bayes risk."
+    },
+    {
+      "row_id": "OR-008",
+      "topic": "oracle_nonzero",
+      "response_state": "DECISION_THEORY",
+      "source_ids": "T3.1.3",
+      "boundary": "Oracle LER is nonzero (0.02510313); oracle does not mean perfect physical correction."
+    },
+    {
+      "row_id": "OR-009",
+      "topic": "locked_ewma_contrast",
+      "response_state": "CURRENT_POSITIVE",
+      "source_ids": "T6.7.1",
+      "boundary": "EWMA minus Route-A is 2.168726038e-05 with a positive paired interval."
+    },
+    {
+      "row_id": "OR-010",
+      "topic": "static_ordering",
+      "response_state": "CURRENT_NEGATIVE",
+      "source_ids": "T6.7.1",
+      "boundary": "Smooth static/Route-A/oracle LER = 0.00096819136/0.00099273964/0.00016233656."
+    },
+    {
+      "row_id": "OR-011",
+      "topic": "negative_gap_closure",
+      "response_state": "CURRENT_NEGATIVE",
+      "source_ids": "T6.7.1",
+      "boundary": "Static-to-oracle closure = -0.03046242, CI [-0.04966251,-0.01118531]."
+    },
+    {
+      "row_id": "OR-012",
+      "topic": "window_counterexample",
+      "response_state": "CURRENT_NEGATIVE",
+      "source_ids": "T6.7.1",
+      "boundary": "Window MAP LER 0.00089641854 is lower than Route-A 0.00099273964."
+    },
+    {
+      "row_id": "OR-013",
+      "topic": "calibration_counterexample",
+      "response_state": "CURRENT_NEGATIVE",
+      "source_ids": "T6.7.2",
+      "boundary": "Calibration worst is 181/512 versus static 32/512."
+    },
+    {
+      "row_id": "OR-014",
+      "topic": "causal_selector_stop",
+      "response_state": "CURRENT_NEGATIVE",
+      "source_ids": "T6.10.1",
+      "boundary": "Nested selector headroom = -0.2322%; V5 stopped."
+    },
+    {
+      "row_id": "OR-015",
+      "topic": "action_oracle_nonpromotion",
+      "response_state": "CLAIM_BOUNDARY",
+      "source_ids": "T6.10.1",
+      "boundary": "Truth-privileged action expansion adds only 9 errors avoided (0.02549%)."
+    },
+    {
+      "row_id": "OR-016",
+      "topic": "allowed_current_claim",
+      "response_state": "CLAIM_BOUNDARY",
+      "source_ids": "T6.8.7/T7.2.3",
+      "boundary": "Current claim is restricted EWMA improvement plus information-safe architecture, not positive oracle-gap closure."
+    },
+    {
+      "row_id": "OR-017",
+      "topic": "prohibited_claims",
+      "response_state": "CLAIM_BOUNDARY",
+      "source_ids": "T6.8.7",
+      "boundary": "Do not claim oracle deployability, oracle superiority, exact-MAP impossibility, or static omission."
+    },
+    {
+      "row_id": "OR-018",
+      "topic": "future_gap_gate",
+      "response_state": "FUTURE_PROMOTION_GATE",
+      "source_ids": "T7.3.1",
+      "boundary": "Require held-out positive paired gap closure against the strongest deployable comparator."
+    },
+    {
+      "row_id": "OR-019",
+      "topic": "new_observed_state",
+      "response_state": "FUTURE_PROMOTION_GATE",
+      "source_ids": "T8.1/T8.2",
+      "boundary": "A physically measured calibration variable defines a new observed-input signature with delay and budget."
+    },
+    {
+      "row_id": "OR-020",
+      "topic": "population_crossing_audit",
+      "response_state": "FUTURE_PROMOTION_GATE",
+      "source_ids": "T7.3.1",
+      "boundary": "Any apparent oracle crossing requires uncertainty, object, model, and implementation audits."
+    }
+  ],
+  "task_status": {
+    "T7.3.1": "In Progress",
+    "T7.3.2": "Todo"
+  },
+  "source_bindings": {
+    "manuscript": {
+      "path": "docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex",
+      "sha256": "12d085b0dc099ac0a9d6b64ee61581868802fc0f29aac976bfcc8741583baf08",
+      "bytes": 134834
+    },
+    "bibliography": {
+      "path": "docs/paper_notes/CNN_FPGA_GKP_submission_refs.bib",
+      "sha256": "d99de3eb0b41c4c1d0da75242c85d888d3d52bf7dcd49fd519e44082fb4132ad",
+      "bytes": 35726
+    },
+    "oracle_implementation": {
+      "path": "physics/oracle_map.py",
+      "sha256": "344cda91f9c32f73093857ec8b2e2f793f2c154c9aa1e9e377e0adb79950a304",
+      "bytes": 10824
+    },
+    "oracle_tests": {
+      "path": "tests/test_oracle_map.py",
+      "sha256": "779b496db23bc382e486c1b5b46ef1ff628e96b5514199a7f87a278a791ce173",
+      "bytes": 13342
+    },
+    "oracle_validation": {
+      "path": "docs/t3_1_3_oracle_validation.json",
+      "sha256": "d539acf3beb2b06e4329a1140b9d80efec630905c7d50d9aa5055deb008324a9",
+      "bytes": 3390
+    },
+    "smooth_formal": {
+      "path": "docs/t6_7_1_smooth_formal_matrix.json",
+      "sha256": "4196ded90f032ece0a3d983d128626d551d8805a0377680ef02634bce08c29aa",
+      "bytes": 48640622
+    },
+    "tail_formal": {
+      "path": "docs/t6_7_2_abrupt_ood_tail_formal_matrix.json",
+      "sha256": "2ae43652593d66198f6f7114b3b2945da23c6596aa0c7adbfa10be78805d4957",
+      "bytes": 66941154
+    },
+    "causal_headroom": {
+      "path": "docs/t6_10_1_causal_headroom.json",
+      "sha256": "e1f9eac68cd6d27b6ffe4b71b8dbe37957c81481f448f8ad7b96a8adb56fbe38",
+      "bytes": 42556
+    },
+    "claim_matrix": {
+      "path": "docs/t6_8_7_route_a_claim_matrix.json",
+      "sha256": "2fd3df21c7c198be49c9495e83b3df96091065c7ab94bb4717ee72860baae2ac",
+      "bytes": 48010
+    },
+    "results_contract": {
+      "path": "docs/t7_2_3_results_evidence_contract.json",
+      "sha256": "2f995379becc8599a427d79cbbfcae3e48fcf60ac6af990e60c2864ec0bc841c",
+      "bytes": 34270
+    },
+    "supplement_contract": {
+      "path": "docs/t7_2_5_supplementary_evidence_contract.json",
+      "sha256": "bb3983b1046711bf1116568fb7ccaffc915440dd7a5fa4af92a0a49bf0871538",
+      "bytes": 27550
+    },
+    "task_board": {
+      "path": "docs/new_task_board.md",
+      "sha256": "17695b829db3d0a54951bf5aadb7229109b0956307bf878f4cc9b8f3750b9f52",
+      "bytes": 241378
+    },
+    "implementation": {
+      "path": "cnn_fpga/benchmark/exact_oracle_map_reviewer_contract.py",
+      "sha256": "f2d6209e784eb3d9f21874f149a53ae51f92e3a679df94cc7a8660665b6050dc",
+      "bytes": 29860
+    }
+  },
+  "source_integrity_declared": true,
+  "gates": {
+    "G01_identity": true,
+    "G02_live_source_bindings": true,
+    "G03_three_map_objects": true,
+    "G04_information_sets_separated": true,
+    "G05_conditional_bayes_role": true,
+    "G06_no_computational_impossibility_strawman": true,
+    "G07_oracle_reference_is_nonperfect_and_nonuniversal": true,
+    "G08_smooth_values_and_nondeployability": true,
+    "G09_gap_formula_sign_and_interval": true,
+    "G10_static_window_counterevidence": true,
+    "G11_calibration_counterexample": true,
+    "G12_positive_claim_only_locked_ewma": true,
+    "G13_causal_headroom_not_oracle_gain": true,
+    "G14_claim_matrix_falsification_preserved": true,
+    "G15_future_promotion_is_heldout_and_deployable": true,
+    "G16_literature_citations_present": true,
+    "G17_parent_prose_contracts_live": false,
+    "G18_response_rows_complete": true,
+    "G19_task_board_terminal_and_next": false,
+    "G20_prohibited_assertions_absent": true
+  },
+  "gate_summary": {
+    "passed": 18,
+    "total": 20
+  },
+  "verdict": "FAIL_EXACT_ORACLE_MAP_REVIEWER_CONTRACT",
+  "semantic_mutation_audit": {
+    "count": 20,
+    "detected": 20,
+    "cases": [
+      {
+        "mutation_id": "M01",
+        "target_gate": "G01_identity",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M02",
+        "target_gate": "G02_live_source_bindings",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M03",
+        "target_gate": "G03_three_map_objects",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M04",
+        "target_gate": "G04_information_sets_separated",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M05",
+        "target_gate": "G05_conditional_bayes_role",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M06",
+        "target_gate": "G06_no_computational_impossibility_strawman",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M07",
+        "target_gate": "G07_oracle_reference_is_nonperfect_and_nonuniversal",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M08",
+        "target_gate": "G08_smooth_values_and_nondeployability",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M09",
+        "target_gate": "G09_gap_formula_sign_and_interval",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M10",
+        "target_gate": "G10_static_window_counterevidence",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M11",
+        "target_gate": "G11_calibration_counterexample",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M12",
+        "target_gate": "G12_positive_claim_only_locked_ewma",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M13",
+        "target_gate": "G13_causal_headroom_not_oracle_gain",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M14",
+        "target_gate": "G14_claim_matrix_falsification_preserved",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M15",
+        "target_gate": "G15_future_promotion_is_heldout_and_deployable",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M16",
+        "target_gate": "G16_literature_citations_present",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M17",
+        "target_gate": "G17_parent_prose_contracts_live",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M18",
+        "target_gate": "G18_response_rows_complete",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M19",
+        "target_gate": "G19_task_board_terminal_and_next",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M20",
+        "target_gate": "G20_prohibited_assertions_absent",
+        "rejected": true
+      }
+    ]
+  },
+  "analysis_sha256": "cc97fe33272874ba223166fdd57e36d48912baefa709740c42294c27d4e46ac4"
+}

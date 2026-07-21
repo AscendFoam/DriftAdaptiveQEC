@@ -1444,6 +1444,49 @@ Relative to existing FPGA QEC decoders, the project supplies an integrated
 pre-board six-cycle/II=1 path, but the task signatures and timing boundaries do
 not match and the board has not been measured.
 
+\paragraph{Why not use exact/oracle MAP?}
+The word ``exact'' hides three different decision objects.  First, an exact
+MAP rule for a \emph{specified frozen likelihood} is an ordinary deployable
+baseline; our full two-dimensional static joint MAP is retained for precisely
+this reason.  Second, the registered hidden-state oracle applies the
+per-round periodic Gaussian-mixture MAP after receiving the simulator's exact
+$\theta_t$---including mean, covariance, outlier mixture, regime, and burst
+state.  That information is absent from the observed packet and hence cannot
+be supplied to an online decoder without truth leakage.  Third, neither of
+these objects is an arbitrary channel-recovery or finite-horizon control
+optimum.  Syndrome-based estimation and decoder-prior calibration can make
+$\theta_t$ less uncertain, but require identifiable data, finite samples, and
+causal update time \cite{spitz2018,wagner2021,sivak2024}.
+
+For the assumed per-round model and zero--one logical loss, the hidden-state
+MAP minimizes conditional Bayes risk.  A deployable method is therefore not
+expected to beat its population risk; an apparent crossing must be treated as
+finite-sample uncertainty, a model/object mismatch, or an implementation
+error.  The scientifically relevant quantity is the fraction of the
+static-model mismatch gap closed using only the causal observed information,
+with the oracle excluded from deployable rankings and cost comparisons.  This
+is an information constraint, not an assertion that exact likelihood
+evaluation is computationally impossible.  If a physical instrument later
+provides a calibrated state variable online, that variable becomes part of a
+new observed-input task signature and must be evaluated under the same delay
+and budget contract.
+
+The present data do \emph{not} establish positive gap closure.  On the frozen
+smooth matrix, static joint MAP, \RouteA{}, and the hidden-state oracle have
+$p_L=9.68191\times10^{-4}$, $9.92740\times10^{-4}$, and
+$1.62337\times10^{-4}$, respectively.  Consequently
+$G_{\mathrm{static}}=-0.03046$ with a 95\% interval
+$[-0.04966,-0.01119]$; the calibration-shift global worst is likewise
+$181/512$ for \RouteA{} versus $32/512$ for static MAP.  The achieved claim
+is only the narrower paired improvement over the preregistered locked EWMA
+contrast and the contract-level separation of observed adaptation from truth.
+Positive held-out gap closure against the strongest deployable comparator is
+a future promotion gate, not a completed contribution.  The V5 causal audit
+reinforces this boundary: the nested selector was $-0.2322\%$ relative to its
+fold-selected baseline and the expanded action family added only nine avoided
+errors ($0.02549\%$), so oracle headroom was not relabelled as realizable
+algorithmic gain.
+
 The Phase~6C results remain useful precisely because they are kept separate.
 The multimode posterior-weighted CPD task has a large, consistent LER and tail
 gain; the two-GKP-CNOT reproduction validates an analog-ML effect; the
