@@ -1,0 +1,903 @@
+{
+  "task_id": "T7.3.2",
+  "schema_version": "t7.3.2-cnn-centric-reviewer-contract-v1",
+  "generated_at_utc": "2026-07-21T06:07:56.913382+00:00",
+  "reviewer_context": {
+    "mode": "draft",
+    "decision_type": "unclear",
+    "comment_id": "PRQ-CNN-1",
+    "comment_origin": "preemptive task-board reviewer risk; no verbatim reviewer report supplied",
+    "reviewer_concern": "Is the CNN merely overfitting the simulator, and is the project still CNN-centric?",
+    "category": [
+      "evidence_interpretation",
+      "methodological",
+      "positioning"
+    ],
+    "severity": "major",
+    "actions": [
+      "CLARIFY_EXISTING",
+      "SOFTEN_CLAIM",
+      "PARTIAL"
+    ],
+    "package_readiness": "draft_with_placeholders",
+    "visible_placeholder": "ACTUAL_REVIEWER_ID_AND_VERBATIM_WORDING"
+  },
+  "task_status": {
+    "T6.26.1": "Dropped",
+    "T6.26.2": "Dropped",
+    "T7.3.2": "Done",
+    "T7.3.3": "In Progress"
+  },
+  "current_phase6d": {
+    "final_verdict": "GO_RTL_ONLY",
+    "truth_key": "multimode=false,rtl=true",
+    "multimode": {
+      "required_task": "T6.24.5",
+      "gate_passed": false,
+      "decision": "NO_GO",
+      "direct_evidence": {
+        "task_status": "Dropped",
+        "headroom_verdict": "NO_GO_MULTIMODE_CAUSAL_HEADROOM",
+        "strongest_baseline": "static_mixture_exact_mld",
+        "baseline_p_L": 0.11197916666666667,
+        "proposed_p_L": 0.11197916666666667,
+        "relative_improvement_point": 0.0,
+        "relative_improvement_lcb": 0.0,
+        "formal_or_pilot_accessed": false
+      },
+      "matrix_context": "NO_GO_PRIMARY_WITH_OPENED_TASK_LOCAL_CONTEXT",
+      "permitted_claim": "opened task-local context plus mandatory v1 strongest-baseline NO-GO"
+    },
+    "rtl": {
+      "required_task": "T6.25.4",
+      "gate_passed": true,
+      "decision": "GO",
+      "direct_evidence": {
+        "task_status": "Done",
+        "hardware_verdict": "PASS_EXACT_CONVERGED_TOP_THREE_SEED_PREBOARD_HARDWARE_LANE",
+        "formal_verdict": "PASS_CONVERGED_PRODUCTION_TOP_PROPERTY_COVER_MUTATION_CLOSED",
+        "long_verdict": "PASS_EXACT_CONVERGED_TOP_MILLION_CYCLE_CXXRTL_QUALIFICATION",
+        "latency_cycles": 6,
+        "initiation_interval_cycles": 1,
+        "minimum_fmax_mhz": 36.79446792602539,
+        "wrapper_may_dominate_all": true,
+        "measured_fields": {
+          "board_latency_ns": null,
+          "board_jitter_ns": null,
+          "board_deadline_miss_rate": null,
+          "board_power_mw": null,
+          "physical_transfer_latency_us": null,
+          "physical_commit_latency_us": null
+        }
+      },
+      "matrix_context": "GO_EXACT_TOP_PREBOARD_HARDWARE_LANE",
+      "permitted_claim": "exact-top deterministic/atomic/fail-closed pre-board hardware lane"
+    },
+    "learning": {
+      "required_task": "T6.26.2",
+      "gate_passed": false,
+      "decision": "DROPPED_ABLATION_ONLY",
+      "direct_evidence": {
+        "task_status": "Dropped",
+        "changes_overall_verdict": false
+      },
+      "matrix_context": "DROPPED_ABSENT",
+      "permitted_claim": "dropped/ablation status only"
+    },
+    "publication_boundary": {
+      "phase6d_verdict": "GO_RTL_ONLY",
+      "multimode_frozen_benchmark_sota": false,
+      "multimode_opened_context_only": true,
+      "single_mode_preboard_deterministic_atomic_fail_closed": true,
+      "board_measured": false,
+      "hardware_fastest_or_sota": false,
+      "multimode_decoder_in_rtl": false,
+      "learning_primary": false
+    },
+    "matrix_learning_outcome": "DROPPED_ABSENT",
+    "matrix_learning_primary": false,
+    "headroom_verdict": "NO_GO_MULTIMODE_CAUSAL_HEADROOM",
+    "headroom_strongest_baseline": "static_mixture_exact_mld",
+    "headroom_baseline_p_l": 0.11197916666666667,
+    "headroom_proposed_p_l": 0.11197916666666667,
+    "headroom_point": 0.0,
+    "headroom_lcb": 0.0,
+    "dual_learning_role": {
+      "lane_id": "LEARNED_APPROXIMATION_EXTENSION",
+      "role": "OPTIONAL_DEPENDENT_EXTENSION",
+      "code_family": "replaceable_cnn_or_student_approximation",
+      "observable": "exactly the parent algorithm observed-only inputs",
+      "action": "posterior/LLR/coset-probability/action approximation",
+      "primary_metrics": [],
+      "secondary_metrics": [
+        "posterior_calibration",
+        "action_agreement",
+        "LER_retention",
+        "worst_family_retention",
+        "runtime",
+        "memory",
+        "quantization_error"
+      ],
+      "timing_boundaries": [
+        "software_inference_only_unless_separately_integrated"
+      ],
+      "precision": "frozen matched-budget floating or quantized student",
+      "deployment_status": "OPTIONAL_NOT_AN_INDEPENDENT_PRIMARY_LANE",
+      "required_evidence": [
+        "UNTOUCHED_FORMAL_SIMULATION"
+      ],
+      "prohibited_claims": [
+        "independent algorithm SOTA",
+        "replacement for exact decoder formal gate",
+        "RTL safety or latency without actual RTL integration proof"
+      ],
+      "primary_gate_ids": [],
+      "depends_on_lane": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "promotion_task": "T6.26.2",
+      "failure_disposition": "DROPPED_TO_ABLATION",
+      "task_signature": {
+        "code_family": "replaceable_cnn_or_student_approximation",
+        "modes_or_distance": "inherits_frozen_multimode_parent",
+        "decision_target": "posterior_llr_coset_probability_or_action",
+        "input_semantics": "same_observed_only_parent_inputs",
+        "history_horizon": "same_causal_parent_horizon",
+        "output_action": "approximation_target_plus_uncertainty",
+        "noise_model": "same_phase6d_frozen_multimode_suite",
+        "observability": "observed_only_no_truth_teacher_at_inference",
+        "online_privilege": "matched_budget_optional",
+        "time_basis": "software_inference_boundary",
+        "compute_budget": "matched_against_classical_approximation",
+        "precision": "frozen_float_or_quantized_student",
+        "evidence_level": "dependent_retention_evidence_only"
+      }
+    }
+  },
+  "legacy_learning": {
+    "cnn": {
+      "status": "PASS",
+      "samples": 206,
+      "active_mse": 2.4144528544831194e-06,
+      "zero_residual_mse": 8.0340452043047e-06,
+      "uncertainty_status": "NO_INDEPENDENT_SEED_CLUSTER_CI_SINGLE_LEGACY_TEST_SPLIT",
+      "claim_decision": "RETAIN_METHOD_DETAIL_ONLY_REMOVE_PERFORMANCE_CLAIM",
+      "scope": "held-out residual-parameter prediction only; not LER or control gain",
+      "eligibility_verdict": "PASS_READONLY_LEARNED_ELIGIBILITY_NO_SAME_TASK_CHECKPOINT",
+      "candidate_families": 16,
+      "same_task_eligible": 0,
+      "diagnostic_samples": 206,
+      "repeat_count": 5,
+      "bit_exact_across_repeats": true,
+      "claim_registry": {
+        "SAME_TASK_LEARNED_DECODER_PERFORMANCE": "NOT_ESTABLISHED_NO_ELIGIBLE_CHECKPOINT",
+        "LEGACY_CNN_PARAMETER_REPLAY": "DIAGNOSTIC_EXACT_INELIGIBLE",
+        "WANG_DIRECT_NN": "LITERATURE_ONLY_DIFFERENT_SURFACE_GKP_LANE",
+        "SIVAK_RL": "LITERATURE_ONLY_CONTROLLER_LANE",
+        "PUVIANI_NMF": "CONTROLLER_LANE_NOT_DIRECT_DECODER",
+        "CNN_OR_RL_LATENCY": "NULL_UNMATCHED_BOUNDARY",
+        "PHASE6B_V5_VERDICT": "READ_ONLY_NO_GO_UNCHANGED"
+      }
+    },
+    "teacher": {
+      "status": "PASS",
+      "scope": "fresh multi-start GRU10-DENSE256-DENSE256-OUT15 offline teacher trained with Feedback-GRAPE in the finite-cutoff two-level differentiable sBs model; nominal-plus-bounded-residual actions; not global optimality, multilevel leakage/SPAM/pulse calibration, online FPGA, or device evidence",
+      "parameter_count": 72853,
+      "architecture": "GRU10-DENSE256-DENSE256-OUT15",
+      "selected_restart": 0,
+      "training_cap_hits": [
+        0,
+        2
+      ],
+      "claim_boundary": {
+        "allowed": "fresh strict-split bounded-residual GRU teacher within the finite-cutoff two-level differentiable sBs model",
+        "forbidden": "global optimizer convergence, paper-exact 1000-cycle channel lifetime, multilevel leakage/SPAM/pulse robustness, online/FPGA deployment, or experimental device gain",
+        "failure_branch": "if status is FAIL, do not start teacher hidden-state/distillation claims; retain drift/regime-aware MAP-LUT as the deployable fallback",
+        "optimizer_note": "all budget-cap hits and failed restarts are listed; no global convergence claim is made even when the production gate passes"
+      }
+    },
+    "student": {
+      "status": "PASS",
+      "scope": "fresh 1/2/4-dimensional outcome-specific exponential recurrence candidates fit to one frozen T4.4.1 finite-model teacher with training/validation/evaluation separation; deterministic NumPy artifact with exact leakage/health zero-residual fallback; imitation evidence only, not physical gain retention or hardware",
+      "state_dimension": 4,
+      "stored_trainable_scalars": 95,
+      "evaluation_mse": 6.083136156367311e-06,
+      "evaluation_blind": true,
+      "claim_boundary": {
+        "allowed": "strict-split low-dimensional recurrence imitation of one frozen finite-model teacher",
+        "forbidden": "teacher physical gain retention, calibrated leakage response, long-horizon/OOD robustness, global optimization, fixed-point/RTL/FPGA or device evidence",
+        "next_gate": "T4.4.4 must compare physical trajectories and lifetime/fidelity/burden; imitation MSE alone cannot advance the NMF claim",
+        "failure_branch": "if status FAIL, do not use this student; retain teacher only as offline reference and drift/regime-aware MAP-LUT as deployable fallback"
+      }
+    },
+    "retention": {
+      "status": "PASS",
+      "minimum_point": 0.9814573586937879,
+      "minimum_ci_lower": 0.9445014278749587,
+      "claim_boundary": {
+        "allowed": "student retention of frozen-teacher finite-model physical trajectory gain on paired unseen ten-cycle seeds and exact two-cycle histories",
+        "forbidden": "T4.4.5 NMF promotion before branch freeze; multilevel leakage robustness; long-horizon OOD; pulse device quantized RTL FPGA or board performance",
+        "control_oracle_boundary": "the empirical lookup reference appears only in the exact two-cycle lane and is neither globally certified nor extrapolated to ten cycles",
+        "next_gate": "T4.4.5 must consume this machine result and freeze strong or falsified branch"
+      }
+    },
+    "mismatch": {
+      "status": "PASS",
+      "verdict": "EVIDENCE_COMPLETE_QUALIFIED_STUDENT_BRANCH_RETAINED",
+      "minimum_retention": 0.8976304408841681,
+      "retention_median": 0.9981009023160294,
+      "claim_boundary": {
+        "allowed": "lane-local randomized mismatch distributions, matched physical-control degradation, frozen-decoder errors, readout/leakage/reset burdens, and threshold-bound student branch decision",
+        "forbidden": "single-vector robustness, cross-lane global score, universal robustness, physical-memory LER, device calibration, RTL, FPGA, board, or experiment",
+        "physical_memory_ler_established": false,
+        "device_calibrated": false,
+        "hardware_measured": false,
+        "experimental_claim": false
+      }
+    },
+    "hardware": {
+      "verdict": "DISTILLED_STUDENT_ONLY_QUANTIZED_GRU_DROPPED_FULL_GRU_OFFLINE_TEACHER",
+      "quantized_gru_cycles": 72854,
+      "quantized_gru_latency_us_at_27mhz": 2698.296296296296,
+      "quantized_gru_functional_rtl": false,
+      "quantized_gru_physical_gain_retention": null,
+      "quantized_gru_eligible": false,
+      "selected_candidate": "distilled_student_q3_14_state4_serial",
+      "student_cycles": 64,
+      "student_present_in_current_rtl": false,
+      "evidence_boundary": {
+        "full_gru_parameter_and_mac_accounting": true,
+        "full_gru_target_synthesis": false,
+        "quantized_gru_functional_fake_quantization": true,
+        "quantized_gru_functional_rtl": false,
+        "quantized_gru_lower_bound_target_post_route": true,
+        "quantized_gru_physical_gain_retention": false,
+        "student_cxxrtl_equivalence": true,
+        "student_target_post_route": true,
+        "student_physical_gain_retention": true,
+        "vendor_timing_signoff": false,
+        "bitstream_generated": false,
+        "board_measured": false,
+        "quantum_hardware_measured": false
+      }
+    }
+  },
+  "task_signature": {
+    "legacy_role": "finite_cutoff_two_level_sbs_controller_action_imitation",
+    "phase6d_role": "multimode_posterior_or_exact_logical_coset_mld_approximation",
+    "same_task": false,
+    "migration_allowed": false,
+    "authorized_teacher_targets": [
+      "posterior",
+      "log_likelihood_ratio",
+      "logical_coset_probability",
+      "action"
+    ],
+    "forbidden_online_inputs": [
+      "truth",
+      "scenario_identity",
+      "future_label"
+    ]
+  },
+  "promotion_gate": {
+    "required_fields": [
+      "same_train_calibration_pilot_formal_split",
+      "observed_only_online_information",
+      "matched_classical_approximation_budget",
+      "posterior_calibration",
+      "action_agreement",
+      "relative_ler_retention",
+      "worst_family_retention",
+      "held_out_ood_retention",
+      "runtime",
+      "memory",
+      "quantization_error",
+      "compression_or_cost_benefit",
+      "formal_retention_lower_bound"
+    ],
+    "failure_disposition": "DROPPED_TO_ABLATION",
+    "can_change_classical_algorithm_verdict": false,
+    "can_change_rtl_verdict": false
+  },
+  "manuscript": {
+    "sections": {
+      "Abstract": true,
+      "Introduction": true,
+      "Methods": true,
+      "Results": true,
+      "Discussion": true,
+      "Limitations": true,
+      "Conclusion": true,
+      "Supplementary evidence delta": true
+    },
+    "markers": {
+      "CNN, teacher and student components have no independent vote": true,
+      "Replaceable CNN/student extension": true,
+      "Phase 6D did not authorize the teacher": true,
+      "legacy CNN evidence cannot reopen either primary lane": true,
+      "Learning remains optional by construction": true,
+      "current use is an explicit dropped ablation": true,
+      "CNN/student dropped ablation": true,
+      "No vote in either lane": true
+    },
+    "cnn_title": false
+  },
+  "response_package": {
+    "strategy": {
+      "overall_posture": "accept framing concern; disclose legacy positives; separate task signatures; retain future promotion gate",
+      "major_risks": [
+        "hiding favorable legacy learning evidence",
+        "migrating controller evidence into the multimode decoder task",
+        "calling absent Phase-6D learning a primary contribution",
+        "claiming universal generalization from deletion-invariant current results"
+      ],
+      "suggested_order": [
+        "current paper center",
+        "Phase-6D disposition",
+        "legacy evidence",
+        "nonmigration",
+        "future gate"
+      ]
+    },
+    "tracker": {
+      "comment_id": "PRQ-CNN-1",
+      "concern": "Is the CNN merely overfitting the simulator, and is the project still CNN-centric?",
+      "category": [
+        "evidence_interpretation",
+        "methodological",
+        "positioning"
+      ],
+      "severity": "major",
+      "actions": [
+        "CLARIFY_EXISTING",
+        "SOFTEN_CLAIM",
+        "PARTIAL"
+      ],
+      "manuscript_locations": [
+        "Abstract",
+        "Introduction",
+        "Methods: Replaceable CNN/student extension",
+        "Discussion",
+        "Supplementary evidence delta"
+      ],
+      "missing_author_input": "ACTUAL_REVIEWER_ID_AND_VERBATIM_WORDING"
+    },
+    "english_response": "We agree that the earlier CNN--FPGA framing could make the learned component appear more central than the evidence supports. The revised manuscript is not CNN-centric: its two primary evidence lanes are (i) a strongest-baseline-gated multimode software qualification and (ii) an exact single-mode deterministic, atomic and fail-closed RTL qualification. CNN, teacher and student modules have no independent vote in either lane.\n\nFor Phase 6D, the multimode causal-headroom entry test stopped with the proposed method tied to static-mixture exact MLD, at p_L=0.1119791667 for both methods and a paired relative improvement of 0% [0%, 0%]. Consequently, no Phase-6D teacher was authorized, T6.26.1 and T6.26.2 were Dropped, and no learned training, checkpoint, quantization or formal-retention result was created. The final GO_RTL_ONLY verdict therefore does not depend on a CNN or student.\n\nWe have not hidden the favorable historical learning results. In a different finite-cutoff, two-level sBs controller task, a 72,853-parameter GRU teacher was distilled to a four-state, 95-scalar recurrence with evaluation action-imitation MSE 6.083136e-6 and a minimum matched retention point/lower bound of 0.981457/0.944501. Those results have a different observation, objective, simulator and action signature from the current multimode posterior/MLD task. They are therefore reported only as task-local historical evidence and cannot validate the current algorithm or the exact RTL. The full quantized-GRU route was also dropped after a 72,854-cycle optimistic lower bound without functional RTL or physical-retention evidence.\n\nWe also reran the preserved tiny CNN bit-exact five times on its 206-sample held-out residual-parameter split. It reduced parameter MSE from 8.034045e-6 to 2.414453e-6, but this was a single legacy split without an independent seed-cluster confidence interval and measured neither LER nor control gain. An exhaustive 16-family eligibility registry found zero same-task eligible learned checkpoints. We therefore retain the replay as a diagnostic method detail, not as evidence against simulator overfitting in the current task.\n\nA future learned module can be reconsidered only as a replaceable approximation to an already authorized posterior, log-likelihood ratio, logical-coset probability or action. It must share the registered split and observed-only information contract, beat a matched classical approximation under the same runtime and memory budget, and pass calibration, action-agreement, LER-retention, worst-family, held-out-OOD, quantization and formal-retention gates while providing a concrete compression or cost benefit. Otherwise it remains an ablation. Thus, the present claims avoid the simulator-overfitting concern by being independent of learning; they do not claim that every future learned model will generalize.",
+    "manuscript_change_checklist": [
+      "Keep the two primary lanes explicit in Abstract and Introduction.",
+      "Keep the Phase-6D teacher/training/formal absence explicit in Methods and Results.",
+      "Keep legacy positive results task-local and non-migrating in the response and Supplement.",
+      "Keep future promotion fields and ablation fallback explicit in Discussion."
+    ],
+    "missing_information": [
+      "ACTUAL_REVIEWER_ID_AND_VERBATIM_WORDING"
+    ],
+    "package_readiness": "draft_with_placeholders"
+  },
+  "response_rows": [
+    {
+      "row_id": "CNN-R01",
+      "response_state": "REVIEWER_CONCERN",
+      "topic": "comment_origin",
+      "claim": "The question is a pre-emptive reviewer risk, not a supplied verbatim report.",
+      "boundary": "Keep the actual reviewer ID and verbatim wording as a visible placeholder.",
+      "source_ids": [
+        "task_board"
+      ]
+    },
+    {
+      "row_id": "CNN-R02",
+      "response_state": "CURRENT_PRIMARY",
+      "topic": "paper_center",
+      "claim": "The current paper has two primary lanes: multimode software qualification and exact single-mode deterministic RTL.",
+      "boundary": "Learning is not a third primary lane.",
+      "source_ids": [
+        "final_gate",
+        "manuscript"
+      ]
+    },
+    {
+      "row_id": "CNN-R03",
+      "response_state": "CURRENT_NEGATIVE",
+      "topic": "multimode_entry_stop",
+      "claim": "The Phase-6D multimode entry test had zero causal headroom over static-mixture exact MLD.",
+      "boundary": "The result did not authorize a downstream teacher or formal split.",
+      "source_ids": [
+        "multimode_headroom",
+        "final_gate"
+      ]
+    },
+    {
+      "row_id": "CNN-R04",
+      "response_state": "CURRENT_NEGATIVE",
+      "topic": "learning_disposition",
+      "claim": "T6.26.1 and T6.26.2 are Dropped and the Phase-6D learned extension is absent.",
+      "boundary": "No Phase-6D training, checkpoint, quantization or formal retention result exists.",
+      "source_ids": [
+        "evidence_matrix",
+        "final_gate",
+        "task_board"
+      ]
+    },
+    {
+      "row_id": "CNN-R05",
+      "response_state": "CURRENT_PRIMARY",
+      "topic": "verdict_independence",
+      "claim": "The learned extension has no vote and cannot change GO_RTL_ONLY.",
+      "boundary": "Removing every learned artifact leaves both primary lane decisions unchanged.",
+      "source_ids": [
+        "final_gate"
+      ]
+    },
+    {
+      "row_id": "CNN-R06",
+      "response_state": "LEGACY_POSITIVE",
+      "topic": "legacy_teacher",
+      "claim": "A 72,853-parameter bounded-residual GRU teacher passed its historical finite-model task.",
+      "boundary": "It is a finite-cutoff two-level sBs controller, not the current multimode decoder teacher.",
+      "source_ids": [
+        "legacy_teacher"
+      ]
+    },
+    {
+      "row_id": "CNN-R07",
+      "response_state": "LEGACY_POSITIVE",
+      "topic": "legacy_student",
+      "claim": "A four-state, 95-scalar student achieved evaluation action-imitation MSE 6.083136e-6.",
+      "boundary": "Imitation accuracy is not current multimode LER or exact-RTL evidence.",
+      "source_ids": [
+        "legacy_student"
+      ]
+    },
+    {
+      "row_id": "CNN-R08",
+      "response_state": "LEGACY_POSITIVE",
+      "topic": "legacy_retention",
+      "claim": "Historical matched finite-model retention had minimum point 0.981457 and lower bound 0.944501.",
+      "boundary": "The result is task-local and cannot be migrated across simulator, objective or action signature.",
+      "source_ids": [
+        "legacy_retention"
+      ]
+    },
+    {
+      "row_id": "CNN-R09",
+      "response_state": "RISK_DISCLOSURE",
+      "topic": "legacy_ood",
+      "claim": "Randomized mismatch retained a minimum relative retention of 0.897630 on its qualifying cells.",
+      "boundary": "Relative retention coexists with absolute degradation and does not establish universal OOD robustness.",
+      "source_ids": [
+        "legacy_mismatch"
+      ]
+    },
+    {
+      "row_id": "CNN-R10",
+      "response_state": "DEPLOYMENT_BOUNDARY",
+      "topic": "full_gru_hardware",
+      "claim": "The quantized GRU route was dropped after a 72,854-cycle optimistic lower bound and no functional RTL or physical retention.",
+      "boundary": "A post-route workload lower bound is not a deployed learned controller.",
+      "source_ids": [
+        "legacy_hardware"
+      ]
+    },
+    {
+      "row_id": "CNN-R11",
+      "response_state": "LEGACY_POSITIVE",
+      "topic": "legacy_student_hardware",
+      "claim": "The historical four-state student was the only eligible learned hardware candidate in its own task.",
+      "boundary": "It is not present in the current exact production RTL and has no Phase-6D vote.",
+      "source_ids": [
+        "legacy_hardware",
+        "final_gate"
+      ]
+    },
+    {
+      "row_id": "CNN-R12",
+      "response_state": "TASK_SIGNATURE_BOUNDARY",
+      "topic": "nonmigration",
+      "claim": "Legacy controller action imitation and current multimode posterior/MLD approximation are different tasks.",
+      "boundary": "Positive legacy evidence is disclosed but cannot be promoted by analogy.",
+      "source_ids": [
+        "legacy_teacher",
+        "dual_contract",
+        "final_gate"
+      ]
+    },
+    {
+      "row_id": "CNN-R13",
+      "response_state": "PROMOTION_GATE",
+      "topic": "authorized_targets",
+      "claim": "A future learned module may approximate only an authorized posterior, LLR, coset probability or action.",
+      "boundary": "Truth, scenario identity and future labels are forbidden online inputs.",
+      "source_ids": [
+        "dual_contract",
+        "task_board"
+      ]
+    },
+    {
+      "row_id": "CNN-R14",
+      "response_state": "PROMOTION_GATE",
+      "topic": "data_split",
+      "claim": "Teacher and approximation must share the newly registered train/calibration/pilot/formal split.",
+      "boundary": "Legacy checkpoints and Phase-6D evaluation data cannot select the model.",
+      "source_ids": [
+        "task_board",
+        "manuscript"
+      ]
+    },
+    {
+      "row_id": "CNN-R15",
+      "response_state": "PROMOTION_GATE",
+      "topic": "matched_budget",
+      "claim": "Promotion requires a matched classical approximation budget and a real compression or cost benefit.",
+      "boundary": "Parameter compression alone cannot rescue failed LER or safety gates.",
+      "source_ids": [
+        "task_board",
+        "manuscript"
+      ]
+    },
+    {
+      "row_id": "CNN-R16",
+      "response_state": "PROMOTION_GATE",
+      "topic": "retention_metrics",
+      "claim": "Promotion requires calibration, action agreement, LER retention, worst-family and held-out OOD retention.",
+      "boundary": "Imitation MSE alone is insufficient.",
+      "source_ids": [
+        "task_board",
+        "manuscript"
+      ]
+    },
+    {
+      "row_id": "CNN-R17",
+      "response_state": "PROMOTION_GATE",
+      "topic": "implementation_metrics",
+      "claim": "Runtime, memory, quantization error and formal retention lower bound must be reported.",
+      "boundary": "Learned accuracy does not prove atomic or fail-closed RTL behavior.",
+      "source_ids": [
+        "task_board",
+        "manuscript"
+      ]
+    },
+    {
+      "row_id": "CNN-R18",
+      "response_state": "MANUSCRIPT_CHANGE",
+      "topic": "main_text",
+      "claim": "Abstract, Introduction, Methods and Discussion explicitly remove CNN from the paper center.",
+      "boundary": "The answer maps to named sections, not invented line numbers.",
+      "source_ids": [
+        "manuscript",
+        "manuscript_contract"
+      ]
+    },
+    {
+      "row_id": "CNN-R19",
+      "response_state": "MANUSCRIPT_CHANGE",
+      "topic": "supplement",
+      "claim": "Supplement tables label CNN/student as Dropped ablation with no vote in either lane.",
+      "boundary": "A status row is not a performance claim.",
+      "source_ids": [
+        "manuscript",
+        "claim_figure_delta"
+      ]
+    },
+    {
+      "row_id": "CNN-R20",
+      "response_state": "RESPONSE_WORDING",
+      "topic": "direct_answer",
+      "claim": "The project is contract-centric; the overfitting risk is avoided for current claims by making them independent of learning.",
+      "boundary": "This does not establish that every future learned model generalizes.",
+      "source_ids": [
+        "final_gate",
+        "manuscript"
+      ]
+    },
+    {
+      "row_id": "CNN-R21",
+      "response_state": "RISK_DISCLOSURE",
+      "topic": "unresolved_future",
+      "claim": "A future learned approximation still requires new held-out and OOD evidence.",
+      "boundary": "Until that gate passes, it remains ablation or future work.",
+      "source_ids": [
+        "task_board",
+        "new_risks"
+      ]
+    },
+    {
+      "row_id": "CNN-R22",
+      "response_state": "RESPONSE_WORDING",
+      "topic": "submission_readiness",
+      "claim": "The scientific substance is evidence-complete as a pre-emptive answer.",
+      "boundary": "Submission readiness remains draft_with_placeholders until an actual reviewer ID and verbatim wording exist.",
+      "source_ids": [
+        "task_board"
+      ]
+    },
+    {
+      "row_id": "CNN-R23",
+      "response_state": "LEGACY_POSITIVE",
+      "topic": "legacy_cnn_replay",
+      "claim": "The preserved tiny CNN was rerun bit-exact five times on 206 held-out residual-parameter samples and improved parameter MSE over zero residual.",
+      "boundary": "The single legacy split has no independent seed-cluster CI and measures parameter regression, not LER or control gain.",
+      "source_ids": [
+        "legacy_cnn_ablation",
+        "learned_eligibility"
+      ]
+    },
+    {
+      "row_id": "CNN-R24",
+      "response_state": "TASK_SIGNATURE_BOUNDARY",
+      "topic": "legacy_cnn_eligibility",
+      "claim": "The exhaustive learned/controller registry found zero same-task eligible checkpoints among 16 candidate families.",
+      "boundary": "The exact legacy replay remains diagnostic and cannot enter the current learned-decoder ranking.",
+      "source_ids": [
+        "learned_eligibility"
+      ]
+    }
+  ],
+  "forbidden_response_phrases": [
+    "CNN proves multimode SOTA",
+    "student proves RTL safety",
+    "legacy retention validates Phase 6D",
+    "the overfitting concern is fully eliminated",
+    "current RTL executes the learned decoder",
+    "learning rescues the algorithm verdict",
+    "learning rescues the RTL verdict"
+  ],
+  "artifact_registry": {
+    "implementation": {
+      "path": "cnn_fpga/benchmark/cnn_centric_reviewer_contract.py",
+      "sha256": "19267a31e7b320a9c1d048581a6e0728912cdbf9cf55420aa99e03f74d920e96",
+      "bytes": 40044
+    },
+    "config": {
+      "path": "configs/phase6d/t7_3_2_cnn_centric_reviewer_contract.json",
+      "sha256": "0138342724e6253d90b3ca323452d3316b2ef330780e084a40c635223dbc0e6a",
+      "bytes": 11183
+    },
+    "task_board": {
+      "path": "docs/new_task_board.md",
+      "sha256": "cda554d38c17a7bfa8f6507b5b97c14416826f0d444249675d7b0a0c1c9e8e65",
+      "bytes": 278469
+    },
+    "new_risks": {
+      "path": "docs/new_risks.md",
+      "sha256": "eaa9a437753ebc9f1f2f97071eb90b6834b2b039f957d3f98110a1752ca26cbc",
+      "bytes": 197703
+    },
+    "manuscript": {
+      "path": "docs/paper_notes/Phase6D_Dual_Lane_GKP_manuscript.tex",
+      "sha256": "3aa68422512d568532d1eee01c3d7ee8120c6eb219ce334476c3ce1a8fb7c4ab",
+      "bytes": 35075
+    },
+    "manuscript_contract": {
+      "path": "docs/t7_2_6_phase6d_manuscript_delta.json",
+      "sha256": "55b2c7c0fd1741de007a3375ae009f15079fe1280c867432dab33efb313767b9",
+      "bytes": 162820
+    },
+    "claim_figure_delta": {
+      "path": "docs/t7_1_5_phase6d_claim_figure_delta.json",
+      "sha256": "6c89e67bc381963b3b8c3d6df802a3adfa47d92ef82916fac09057e97646f075",
+      "bytes": 134228
+    },
+    "dual_contract": {
+      "path": "docs/t6_20_2_dual_evidence_lane_contract.json",
+      "sha256": "33433227b6c6ec32c25d530f33502f17fbdf307dbb04a5960fe5117e5984dad6",
+      "bytes": 23824
+    },
+    "multimode_headroom": {
+      "path": "docs/t6_20_4_multimode_causal_headroom.json",
+      "sha256": "091e68bdd63f7245999e7506c9eda4fc37970d02792f5d82eb53583364098d93",
+      "bytes": 28011
+    },
+    "evidence_matrix": {
+      "path": "docs/t6_26_3_dual_lane_evidence_matrix.json",
+      "sha256": "3a45888a836faae56b6640a5437342de4cebcdce69bddd6716a92472f33220a1",
+      "bytes": 65189
+    },
+    "final_gate": {
+      "path": "docs/t6_26_4_final_dual_lane_gate.json",
+      "sha256": "d34298991b0aab0af0550a57afdcf63bb2a5f9f16fcb57706e625d973a015780",
+      "bytes": 41235
+    },
+    "legacy_teacher": {
+      "path": "docs/t4_4_1_bounded_residual_rnn_teacher_validation.json",
+      "sha256": "c71094493a63f7a3b1287d28c0a1b71d3ce7a03e16a281a27967a87a65669d53",
+      "bytes": 612076
+    },
+    "legacy_student_validation": {
+      "path": "docs/t4_4_3_low_dimensional_student_validation.json",
+      "sha256": "1bb56e2d4c8839c4f25e91ece8f404427a1917114bc5e9c69249e92cd7ada26a",
+      "bytes": 2314106
+    },
+    "legacy_student": {
+      "path": "docs/t4_4_3_low_dimensional_student.json",
+      "sha256": "8d3b575c416795b3af522f0322f8c8b0eed937c41616067d163ce47e5fe9bbae",
+      "bytes": 5130
+    },
+    "legacy_retention": {
+      "path": "docs/t4_4_4_teacher_student_gain_retention.json",
+      "sha256": "5cd1478de22ecd998aaf678bc6f14873134e57bc8ae2fc4408df215544b86dfc",
+      "bytes": 502663
+    },
+    "legacy_mismatch": {
+      "path": "docs/t5_4_6_randomized_model_mismatch.json",
+      "sha256": "8c77a55d9f73b20efc8ea6e9640f83dc0de4548f10af6aa462d552405aca4429",
+      "bytes": 327380
+    },
+    "legacy_hardware": {
+      "path": "docs/t5_5_4_gru_student_hardware_feasibility.json",
+      "sha256": "d47d88062c6f625b1f68b9961b1fd8478ea85db4a8a83e430cd51c8654f4c506",
+      "bytes": 41587
+    },
+    "legacy_cnn_ablation": {
+      "path": "docs/t5_4_3_causal_ablation_negative_results.json",
+      "sha256": "2ee23948b8eca966acf393d5d7e1d271ca58d1b7be498b0995a5fba33a6027fe",
+      "bytes": 228113
+    },
+    "learned_eligibility": {
+      "path": "docs/t6_17_3_learned_model_eligibility_replay.json",
+      "sha256": "8b2cbaebc40075ef7cd0814699303b99f2f15bfaa362dc34d903279ea8469331",
+      "bytes": 188759
+    }
+  },
+  "gates": {
+    "G01_identity": true,
+    "G02_preemptive_context_and_readiness_honest": true,
+    "G03_task_board_lifecycle": true,
+    "G04_final_truth_table_exact": true,
+    "G05_learning_dropped_absent_no_vote": true,
+    "G06_primary_verdict_is_learning_deletion_invariant": true,
+    "G07_legacy_teacher_positive_and_scoped": true,
+    "G08_legacy_student_positive_and_scoped": true,
+    "G09_legacy_retention_positive_and_nonmigrating": true,
+    "G10_legacy_ood_is_bounded_not_universal": true,
+    "G11_full_gru_dropped_and_legacy_student_not_current_rtl": true,
+    "G12_task_signatures_are_explicitly_nonmatching": true,
+    "G13_teacher_targets_and_online_privilege_closed": true,
+    "G14_promotion_gate_is_matched_complete_and_fail_closed": true,
+    "G15_manuscript_locations_and_markers_complete": true,
+    "G16_response_directly_accepts_framing_and_answers_centrality": true,
+    "G17_response_discloses_legacy_positive_and_remaining_risk": true,
+    "G18_response_contains_no_forbidden_overclaim": true,
+    "G19_artifact_bindings_complete_and_live": true,
+    "G20_response_rows_are_complete_unique_and_stateful": true,
+    "G21_source_data_is_lossless": true,
+    "G22_response_package_is_traceable_and_actionable": true,
+    "G23_legacy_cnn_is_exactly_replayed_but_ineligible": true
+  },
+  "gate_summary": {
+    "passed": 23,
+    "total": 23
+  },
+  "verdict": "PASS_CNN_NONCENTRIC_REPLACEABLE_LEARNING_REVIEWER_RESPONSE",
+  "semantic_mutation_audit": {
+    "count": 23,
+    "detected": 23,
+    "cases": [
+      {
+        "mutation_id": "M01_wrong_identity",
+        "target_gate": "G01_identity",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M02_hide_placeholder",
+        "target_gate": "G02_preemptive_context_and_readiness_honest",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M03_skip_next_task",
+        "target_gate": "G03_task_board_lifecycle",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M04_promote_global_go",
+        "target_gate": "G04_final_truth_table_exact",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M05_make_learning_primary",
+        "target_gate": "G05_learning_dropped_absent_no_vote",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M06_allow_learning_vote",
+        "target_gate": "G06_primary_verdict_is_learning_deletion_invariant",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M07_forge_teacher_size",
+        "target_gate": "G07_legacy_teacher_positive_and_scoped",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M08_forge_student_dimension",
+        "target_gate": "G08_legacy_student_positive_and_scoped",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M09_promote_retention",
+        "target_gate": "G09_legacy_retention_positive_and_nonmigrating",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M10_claim_universal_ood",
+        "target_gate": "G10_legacy_ood_is_bounded_not_universal",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M11_promote_quantized_gru",
+        "target_gate": "G11_full_gru_dropped_and_legacy_student_not_current_rtl",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M12_migrate_legacy_task",
+        "target_gate": "G12_task_signatures_are_explicitly_nonmatching",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M13_add_truth_target",
+        "target_gate": "G13_teacher_targets_and_online_privilege_closed",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M14_drop_worst_family_gate",
+        "target_gate": "G14_promotion_gate_is_matched_complete_and_fail_closed",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M15_erase_manuscript_marker",
+        "target_gate": "G15_manuscript_locations_and_markers_complete",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M16_remove_direct_answer",
+        "target_gate": "G16_response_directly_accepts_framing_and_answers_centrality",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M17_hide_legacy_positive",
+        "target_gate": "G17_response_discloses_legacy_positive_and_remaining_risk",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M18_add_overclaim",
+        "target_gate": "G18_response_contains_no_forbidden_overclaim",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M19_corrupt_binding",
+        "target_gate": "G19_artifact_bindings_complete_and_live",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M20_duplicate_row",
+        "target_gate": "G20_response_rows_are_complete_unique_and_stateful",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M21_corrupt_source_data",
+        "target_gate": "G21_source_data_is_lossless",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M22_remove_action_map",
+        "target_gate": "G22_response_package_is_traceable_and_actionable",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M23_promote_legacy_cnn",
+        "target_gate": "G23_legacy_cnn_is_exactly_replayed_but_ineligible",
+        "rejected": true
+      }
+    ]
+  },
+  "analysis_sha256": "b45ccbc6b7d5ab848560691438340230b2056830d46d3780243d811cfc208753",
+  "source_data": {
+    "path": "docs/t7_3_2_cnn_centric_reviewer_source_data.csv",
+    "sha256": "be597c42b27494daa74d38abcc01b4026e8c8f30b3cf8798212be05bcc67d13f",
+    "bytes": 7621,
+    "rows": 24
+  },
+  "markdown": {
+    "path": "docs/cnn_centric_reviewer_response.md",
+    "sha256": "eb7c15cb037c5f25110dd435f1344c601eb6290814303a60bae2fe253dce06b5",
+    "bytes": 11789
+  }
+}

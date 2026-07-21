@@ -1,0 +1,258 @@
+{
+  "task_id": "T7.3.2",
+  "schema_version": "t7.3.2-cnn-centric-reviewer-contract-v1",
+  "reviewer_context": {
+    "mode": "draft",
+    "decision_type": "unclear",
+    "comment_id": "PRQ-CNN-1",
+    "comment_origin": "preemptive task-board reviewer risk; no verbatim reviewer report supplied",
+    "reviewer_concern": "Is the CNN merely overfitting the simulator, and is the project still CNN-centric?",
+    "category": [
+      "evidence_interpretation",
+      "methodological",
+      "positioning"
+    ],
+    "severity": "major",
+    "actions": [
+      "CLARIFY_EXISTING",
+      "SOFTEN_CLAIM",
+      "PARTIAL"
+    ],
+    "package_readiness": "draft_with_placeholders",
+    "visible_placeholder": "ACTUAL_REVIEWER_ID_AND_VERBATIM_WORDING"
+  },
+  "authorized_teacher_targets": [
+    "posterior",
+    "log_likelihood_ratio",
+    "logical_coset_probability",
+    "action"
+  ],
+  "required_promotion_fields": [
+    "same_train_calibration_pilot_formal_split",
+    "observed_only_online_information",
+    "matched_classical_approximation_budget",
+    "posterior_calibration",
+    "action_agreement",
+    "relative_ler_retention",
+    "worst_family_retention",
+    "held_out_ood_retention",
+    "runtime",
+    "memory",
+    "quantization_error",
+    "compression_or_cost_benefit",
+    "formal_retention_lower_bound"
+  ],
+  "required_manuscript_markers": [
+    "CNN, teacher and student components have no independent vote",
+    "Replaceable CNN/student extension",
+    "Phase 6D did not authorize the teacher",
+    "legacy CNN evidence cannot reopen either primary lane",
+    "Learning remains optional by construction",
+    "current use is an explicit dropped ablation",
+    "CNN/student dropped ablation",
+    "No vote in either lane"
+  ],
+  "forbidden_response_phrases": [
+    "CNN proves multimode SOTA",
+    "student proves RTL safety",
+    "legacy retention validates Phase 6D",
+    "the overfitting concern is fully eliminated",
+    "current RTL executes the learned decoder",
+    "learning rescues the algorithm verdict",
+    "learning rescues the RTL verdict"
+  ],
+  "response_rows": [
+    {
+      "row_id": "CNN-R01",
+      "response_state": "REVIEWER_CONCERN",
+      "topic": "comment_origin",
+      "claim": "The question is a pre-emptive reviewer risk, not a supplied verbatim report.",
+      "boundary": "Keep the actual reviewer ID and verbatim wording as a visible placeholder.",
+      "source_ids": ["task_board"]
+    },
+    {
+      "row_id": "CNN-R02",
+      "response_state": "CURRENT_PRIMARY",
+      "topic": "paper_center",
+      "claim": "The current paper has two primary lanes: multimode software qualification and exact single-mode deterministic RTL.",
+      "boundary": "Learning is not a third primary lane.",
+      "source_ids": ["final_gate", "manuscript"]
+    },
+    {
+      "row_id": "CNN-R03",
+      "response_state": "CURRENT_NEGATIVE",
+      "topic": "multimode_entry_stop",
+      "claim": "The Phase-6D multimode entry test had zero causal headroom over static-mixture exact MLD.",
+      "boundary": "The result did not authorize a downstream teacher or formal split.",
+      "source_ids": ["multimode_headroom", "final_gate"]
+    },
+    {
+      "row_id": "CNN-R04",
+      "response_state": "CURRENT_NEGATIVE",
+      "topic": "learning_disposition",
+      "claim": "T6.26.1 and T6.26.2 are Dropped and the Phase-6D learned extension is absent.",
+      "boundary": "No Phase-6D training, checkpoint, quantization or formal retention result exists.",
+      "source_ids": ["evidence_matrix", "final_gate", "task_board"]
+    },
+    {
+      "row_id": "CNN-R05",
+      "response_state": "CURRENT_PRIMARY",
+      "topic": "verdict_independence",
+      "claim": "The learned extension has no vote and cannot change GO_RTL_ONLY.",
+      "boundary": "Removing every learned artifact leaves both primary lane decisions unchanged.",
+      "source_ids": ["final_gate"]
+    },
+    {
+      "row_id": "CNN-R06",
+      "response_state": "LEGACY_POSITIVE",
+      "topic": "legacy_teacher",
+      "claim": "A 72,853-parameter bounded-residual GRU teacher passed its historical finite-model task.",
+      "boundary": "It is a finite-cutoff two-level sBs controller, not the current multimode decoder teacher.",
+      "source_ids": ["legacy_teacher"]
+    },
+    {
+      "row_id": "CNN-R07",
+      "response_state": "LEGACY_POSITIVE",
+      "topic": "legacy_student",
+      "claim": "A four-state, 95-scalar student achieved evaluation action-imitation MSE 6.083136e-6.",
+      "boundary": "Imitation accuracy is not current multimode LER or exact-RTL evidence.",
+      "source_ids": ["legacy_student"]
+    },
+    {
+      "row_id": "CNN-R08",
+      "response_state": "LEGACY_POSITIVE",
+      "topic": "legacy_retention",
+      "claim": "Historical matched finite-model retention had minimum point 0.981457 and lower bound 0.944501.",
+      "boundary": "The result is task-local and cannot be migrated across simulator, objective or action signature.",
+      "source_ids": ["legacy_retention"]
+    },
+    {
+      "row_id": "CNN-R09",
+      "response_state": "RISK_DISCLOSURE",
+      "topic": "legacy_ood",
+      "claim": "Randomized mismatch retained a minimum relative retention of 0.897630 on its qualifying cells.",
+      "boundary": "Relative retention coexists with absolute degradation and does not establish universal OOD robustness.",
+      "source_ids": ["legacy_mismatch"]
+    },
+    {
+      "row_id": "CNN-R10",
+      "response_state": "DEPLOYMENT_BOUNDARY",
+      "topic": "full_gru_hardware",
+      "claim": "The quantized GRU route was dropped after a 72,854-cycle optimistic lower bound and no functional RTL or physical retention.",
+      "boundary": "A post-route workload lower bound is not a deployed learned controller.",
+      "source_ids": ["legacy_hardware"]
+    },
+    {
+      "row_id": "CNN-R11",
+      "response_state": "LEGACY_POSITIVE",
+      "topic": "legacy_student_hardware",
+      "claim": "The historical four-state student was the only eligible learned hardware candidate in its own task.",
+      "boundary": "It is not present in the current exact production RTL and has no Phase-6D vote.",
+      "source_ids": ["legacy_hardware", "final_gate"]
+    },
+    {
+      "row_id": "CNN-R12",
+      "response_state": "TASK_SIGNATURE_BOUNDARY",
+      "topic": "nonmigration",
+      "claim": "Legacy controller action imitation and current multimode posterior/MLD approximation are different tasks.",
+      "boundary": "Positive legacy evidence is disclosed but cannot be promoted by analogy.",
+      "source_ids": ["legacy_teacher", "dual_contract", "final_gate"]
+    },
+    {
+      "row_id": "CNN-R13",
+      "response_state": "PROMOTION_GATE",
+      "topic": "authorized_targets",
+      "claim": "A future learned module may approximate only an authorized posterior, LLR, coset probability or action.",
+      "boundary": "Truth, scenario identity and future labels are forbidden online inputs.",
+      "source_ids": ["dual_contract", "task_board"]
+    },
+    {
+      "row_id": "CNN-R14",
+      "response_state": "PROMOTION_GATE",
+      "topic": "data_split",
+      "claim": "Teacher and approximation must share the newly registered train/calibration/pilot/formal split.",
+      "boundary": "Legacy checkpoints and Phase-6D evaluation data cannot select the model.",
+      "source_ids": ["task_board", "manuscript"]
+    },
+    {
+      "row_id": "CNN-R15",
+      "response_state": "PROMOTION_GATE",
+      "topic": "matched_budget",
+      "claim": "Promotion requires a matched classical approximation budget and a real compression or cost benefit.",
+      "boundary": "Parameter compression alone cannot rescue failed LER or safety gates.",
+      "source_ids": ["task_board", "manuscript"]
+    },
+    {
+      "row_id": "CNN-R16",
+      "response_state": "PROMOTION_GATE",
+      "topic": "retention_metrics",
+      "claim": "Promotion requires calibration, action agreement, LER retention, worst-family and held-out OOD retention.",
+      "boundary": "Imitation MSE alone is insufficient.",
+      "source_ids": ["task_board", "manuscript"]
+    },
+    {
+      "row_id": "CNN-R17",
+      "response_state": "PROMOTION_GATE",
+      "topic": "implementation_metrics",
+      "claim": "Runtime, memory, quantization error and formal retention lower bound must be reported.",
+      "boundary": "Learned accuracy does not prove atomic or fail-closed RTL behavior.",
+      "source_ids": ["task_board", "manuscript"]
+    },
+    {
+      "row_id": "CNN-R18",
+      "response_state": "MANUSCRIPT_CHANGE",
+      "topic": "main_text",
+      "claim": "Abstract, Introduction, Methods and Discussion explicitly remove CNN from the paper center.",
+      "boundary": "The answer maps to named sections, not invented line numbers.",
+      "source_ids": ["manuscript", "manuscript_contract"]
+    },
+    {
+      "row_id": "CNN-R19",
+      "response_state": "MANUSCRIPT_CHANGE",
+      "topic": "supplement",
+      "claim": "Supplement tables label CNN/student as Dropped ablation with no vote in either lane.",
+      "boundary": "A status row is not a performance claim.",
+      "source_ids": ["manuscript", "claim_figure_delta"]
+    },
+    {
+      "row_id": "CNN-R20",
+      "response_state": "RESPONSE_WORDING",
+      "topic": "direct_answer",
+      "claim": "The project is contract-centric; the overfitting risk is avoided for current claims by making them independent of learning.",
+      "boundary": "This does not establish that every future learned model generalizes.",
+      "source_ids": ["final_gate", "manuscript"]
+    },
+    {
+      "row_id": "CNN-R21",
+      "response_state": "RISK_DISCLOSURE",
+      "topic": "unresolved_future",
+      "claim": "A future learned approximation still requires new held-out and OOD evidence.",
+      "boundary": "Until that gate passes, it remains ablation or future work.",
+      "source_ids": ["task_board", "new_risks"]
+    },
+    {
+      "row_id": "CNN-R22",
+      "response_state": "RESPONSE_WORDING",
+      "topic": "submission_readiness",
+      "claim": "The scientific substance is evidence-complete as a pre-emptive answer.",
+      "boundary": "Submission readiness remains draft_with_placeholders until an actual reviewer ID and verbatim wording exist.",
+      "source_ids": ["task_board"]
+    },
+    {
+      "row_id": "CNN-R23",
+      "response_state": "LEGACY_POSITIVE",
+      "topic": "legacy_cnn_replay",
+      "claim": "The preserved tiny CNN was rerun bit-exact five times on 206 held-out residual-parameter samples and improved parameter MSE over zero residual.",
+      "boundary": "The single legacy split has no independent seed-cluster CI and measures parameter regression, not LER or control gain.",
+      "source_ids": ["legacy_cnn_ablation", "learned_eligibility"]
+    },
+    {
+      "row_id": "CNN-R24",
+      "response_state": "TASK_SIGNATURE_BOUNDARY",
+      "topic": "legacy_cnn_eligibility",
+      "claim": "The exhaustive learned/controller registry found zero same-task eligible checkpoints among 16 candidate families.",
+      "boundary": "The exact legacy replay remains diagnostic and cannot enter the current learned-decoder ranking.",
+      "source_ids": ["learned_eligibility"]
+    }
+  ]
+}
