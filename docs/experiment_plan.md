@@ -1750,6 +1750,115 @@ CNN/student 的 teacher target、权限、split、参数量、精度、training 
 
 Phase 7 保留 T7.1.1—T7.2.5 历史 restricted snapshot，待 T6.26.4 后通过 T7.1.5/T7.2.6 生成 delta。投稿前审计同时消费 T6.15.5、T6.19.3 与 T6.26.4，防止旧 V5/Phase 6C 证据被重新包装。
 
+# 20. 2026-07-22 Performance-first 单模 GKP 多速率双回路重启
+
+本节记录 `T-RISK-20260722-01` 的低频实质修订。Phase 6D v1 已经证明：现有 multimode candidate 对 strongest static exact MLD 没有可用 headroom，而 single-mode RTL 只建立了预板 deterministic/atomic/fail-closed 证据。后续若仍以旧结果直接组织高水平论文，会把系统工程优点与未建立的算法/物理 SOTA 混在一起。因此新程序改为重新生成三类证据，而不是继续包装旧稿：
+
+1. 单模 GKP、完整分母、无 postselection 的 per-round LER；
+2. 六个 Pauli eigenstates 上的长时 logical-channel lifetime；
+3. 高速数字链上的 raw/recorded IQ 到 action/trigger 的 measured HIL latency。
+
+慢回路不以“某个神经网络”为贡献，而以 observed-only belief/risk estimation 为职责；快回路不运行自由形式 AI 控制，而执行 trusted codebook、MAP/LUT、phase-frame、leakage/reset FSM 和 fail-closed transaction。具体 task/状态以 `docs/new_task_board.md` Phase 9 为准。
+
+## 20.1 Puviani 资产缺失的非阻塞证据合同
+
+缺少 official checkpoint、20-agent seeds、selection ledger 和 six-state evaluator 不阻止项目继续建立数字孪生、codebook、模型、project-native lifetime、RTL 或 HIL；它只关闭两句特定主张：`OFFICIAL_EXACT_REPRODUCTION` 和“超过 Puviani NMF”。后续必须并存以下两条 lane：
+
+- `OFFICIAL_EXACT_REPRODUCTION`：四类官方资产、上游 commit/hash/license/environment、selection 逻辑和论文 six-state 数值均通过后才可开放。任一项缺失就保持 null/blocked；不得拿论文曲线、项目 seed 或方向性复现补齐。
+- `PAPER_CONSTRAINED_REIMPLEMENTATION`：依据正文、补充材料和公开 GQF source，项目自行生成不少于 20 个独立 agent/seed、所有 checkpoint、validation-only selection ledger、六态 evaluator 和 raw trajectory。论文未规定或源码不一致之处逐项进入 deviation ledger。这条 lane 可参加“registered implementation”比较，但不能改名为 official/exact。
+
+两条 lane 使用不同 evidence grade 和 claim namespace。官方资产以后到位时，只新增 exact qualification；不得覆盖项目自建 ledger，也不得用看到的新结果重新选择已经打开的 formal candidate。
+
+## 20.2 三个 task signature、强 baseline 与结果门
+
+三个主问题分别冻结 code/state family、observation、action、cycle time、denominator、precision、compute、wall-clock、statistical unit 和 evidence grade：
+
+1. **round-LER signature**：单模 approximate GKP，输入 raw/derived IQ 与 history，动作来自同一 trusted recovery set；主指标为六态完整分母的 `p_L,p_X,p_Y,p_Z` 和 logical PTM。
+2. **lifetime signature**：相同物理后端、相同 cycle/action/reset cost，长序列传播六态；主指标为 `T_X,T_Y,T_Z,T_ch`、area/e-folding、survival/fit diagnostics。accepted-only、matched-idle crossover 和未计 reset/control 的曲线不可进入主表。
+3. **digital-HIL signature**：依次分开 core、discriminator-output-to-action、ADC-last-sample-to-trigger、raw-IQ-source-to-trigger；主指标为 p50/p95/p99/max/WCET、II、deadline miss、resource/power。不同 code family 或 boundary 的 ns 数值只作 context。
+
+最小 baseline registry 包含 standard sBs/no-feedback、static recovery、MF、paper-constrained NMF、Window/EWMA/Kalman、HMM/IMM/BOCPD、particle/SMC、Bayesian predictor，以及 GRU、TCN、SSM、causal Transformer。hidden-state teacher/oracle、unbudgeted model 和未来信息方法独立分栏。排名分为：
+
+- matched deployable：同 observation/action、同 samples、同 update cadence、同 precision、同 memory/compute/wall-clock/deadline；
+- capacity ceiling：允许更大模型，但不能用于 deployable/SOTA claim；
+- privileged upper bound：hidden truth/teacher/oracle 永不排名。
+
+正式结果前冻结 cluster-level paired CI、multiple comparisons、timeout/missingness、power/sample size 和一次性 pilot selection。不能让不同模型看到不同 IQ 表示、不同 history、不同 formal samples 或不同 action space。
+
+## 20.3 双后端、action-conditioned 数字孪生
+
+统一因果状态图为
+
+\[
+z_t \xrightarrow[a_{t-1}]{\text{physical drift/backaction}}
+z_{t+1},\qquad
+o_t=(I_t,Q_t,\mathrm{LLR}_t,c_t,r_t),\qquad
+a_t\in\mathcal A_{\mathrm{trusted}},
+\]
+
+其中 latent `z_t` 至少包含 oscillator shift/loss、ancilla `g/e/f`、leakage age、readout/reset state、calibration 和 drift regime；observed `o_t` 包含 complex IQ、derived discriminator quantities、timestamp、reset acknowledgement 和既往 action。`a_t` 是 codebook ID、bounded residual、phase-frame 或 reset/leakage FSM，不是任意 waveform。
+
+backend A 在 `physics/` 中实现 finite-cutoff oscillator、multilevel ancilla、measurement backaction、IQ emission、leakage persistence、reset failure 与 action-conditioned transition。backend B 使用独立演化 solver/代码路径和 measurement likelihood，不共享 backend A 的 transition kernel、logical-label routine、IQ sampler、RNG stream 或 truth cache。两者必须分别通过 trace/CP/positivity/Hermiticity、ideal/zero-noise/large-reset limits、step-size/Fock-cutoff convergence、seed determinism 和 action intervention tests。
+
+正式 lifetime 前，两后端在六态、固定动作、短 trajectory、IQ distribution、logical PTM、leakage/reset residence 和 step/telegraph/burst/compound fault 上以预冻结 tolerance 对拍。主量不一致即 `NO_GO_TWIN_QUALIFICATION`。为长时计算建立的 surrogate 只可扩样，必须在 held-out device/action/drift cells 上校准，并由至少一个未参与训练的 exact backend 重评 controller；禁止 learned controller 只在自身 learned simulator 上取得 lifetime gain。
+
+## 20.4 Trusted recovery codebook 与多速率系统
+
+离线 codebook 覆盖 squeezing/cutoff、loss/dephasing、readout confusion、leakage/reset、mean/variance/correlation、action-conditioned drift 和 timing uncertainty。每个 device cell 的 safe action envelope、train/cal/pilot/formal 身份和 OOD fallback 在优化前冻结。Feedback-GRAPE、MPC、动态规划或等价方法必须运行多起点/多 seed，并发布全部候选/失败；目标同时包括六态 logical loss、leakage/reset burden、control effort 和 CVaR，不能只保存 best checkpoint。
+
+codebook 经独立 backend 验证后做 size/bitwidth/lookup-depth/quantization/LER/lifetime Pareto，并编译为完整 bank image：schema、version、CRC、image generation、activation epoch、validity envelope、bounded residual 和 source hash 缺一不可。未覆盖或不确定 cell 只能回到 trusted LKG/static/reset FSM；不得让 host 或 AI 绕过 envelope 直接写 raw configuration/pulse。
+
+多速率闭环职责固定为：
+
+- slow loop：从 `o_{<t},a_{<t}` 估计 posterior、预测 next IQ/syndrome、计算 codebook risk，异步产生 candidate package；
+- admission/safety：shadow validation、OOD/uncertainty、staleness、CVaR、CRC/version/age、hysteresis 和 rollback；
+- fast loop：六周期 II=1 执行 MAP/LUT、codebook action、phase-frame、event/leakage/reset FSM；slow inference 超时只导致“不更新”，不阻塞逐周期路径。
+
+risk selector 最小化 posterior expected logical loss + CVaR + switching/staleness/control cost。candidate 只有通过 shadow window 和 independent risk bound 后才能原子提交。唯一 converged top 必须证明 A/B old-or-new、exact-once action、host/policy race、partial/corrupt/replay、near-wrap、commit/cancel/drain/reset、in-flight read、deadline、FIFO/backpressure 与 LKG recovery；每项 property 需要 reachable cover 和 targeted mutation。
+
+## 20.5 同权限模型 tournament 与 observed-only posterior
+
+数据先按 device cell、drift rate/amplitude/duration、action history 和 seed 分为互斥 train/calibration/pilot/formal。formal 覆盖未见 smooth、step、telegraph、burst、readout/reset、leakage 和 compound；不能给不同 architecture 不同 formal difficulty。
+
+统一 sequence API 只接受 causal prefix `o_{<t},a_{<t}`。Bayesian/classical 组至少含 Kalman/UKF、HMM/IMM/BOCPD、particle/SMC、static/Window；learning 组含 CNN/GRU、TCN、SSM 和 causal Transformer。每个 family 记录全部 restart、checkpoint、hyperparameter、early stop、training compute、state bytes、MAC/FLOP、CPU/GPU time、inference deadline 和 missingness。binary-syndrome、derived LLR、raw-IQ 作为共同输入消融，不能把“多看信息”写成 architecture 优势。
+
+hidden-state teacher 仅能提供训练 target 或 diagnostic upper bound。deployable model 必须独立预测 drift/regime/leakage/OOD posterior、next-observation distribution 与 codebook risk，并用 log score/Brier/ECE/coverage/counterfactual-action consistency 校准。formal decision API 不包含 truth、scenario ID、future suffix、smoother、formal label 或 teacher call；删除 teacher 后 formal action必须逐 bit 不变。
+
+calibration 只定阈值，pilot 只选择一次 promoted slow model。tournament 同时报 predictive calibration、one-round LER proxy、CVaR、OOD、adaptation lag、deadline/memory，并做 input/history/parameter-count/architecture 消融。若 Bayesian、TCN 或其他简单方法获胜，就将更复杂 family 降为 ablation；不能因为论文叙事偏好强行选择 Transformer。
+
+## 20.6 六态 formal 与高速板 HIL 门
+
+formal 统计单位是独立 device/scenario/trajectory cluster，不把 cycle 当独立样本。所有六态都保留完整 denominator、全部 timeout/fallback/reset/leakage/control cost和逐 trajectory raw data。长序列每 trajectory 至少运行至预注册 `10^4` cycles、survival endpoint 或显式 censor，并同时报告 non-exponential diagnostics；不能用单一指数拟合掩盖 tail 或 reset cost。
+
+性能门冻结为：
+
+1. LER SOTA candidate 相对**每个** eligible strongest deployable baseline，relative improvement point `>=15%`、simultaneous paired 95% LCB `>=10%` 且 absolute LCB `>0`；
+2. 六态 lifetime 的最小 relative gain point `>=15%`、simultaneous 95% LCB `>0`，且不以额外 postselection/reset/control burden换取；
+3. stationary paired degradation 95% UCB `<=2%`，任一 OOD family UCB `<=5%`，calibration/telegraph worst-window/CVaR improvement simultaneous LCB `>0`；
+4. 第二 physics backend 和第二统计实现只从 raw hashes 独立重算；
+5. official Puviani lane 未通过时，最强允许措辞为“best among registered paper-constrained/project-native baselines”，Puviani surpass 字段保持 null。
+
+失败分别降为 tail-only、robustness-only、non-inferior、compression/safety 或 negative，不允许通过删不利 state/family/baseline 或改 denominator 救援。
+
+板卡无关集成先在 CXXRTL 运行真实 update cadence、完整 package、host/policy race、fault/recovery 和 compound transport：每 family `>=1e5` cycles、aggregate `>=1e6`，全部公开 output/state 零 mismatch、零 undefined、零 silent overflow/version wrap、零 fast deadline miss，source-to-action 恰 6 cycles、II=1。
+
+实物 HIL 先冻结四个 latency boundary，再在高速 RFSoC/Zynq/等价平台使用同 source/hash bitstream运行 recorded IQ 和 raw IQ：`IQ -> discriminator -> action -> trigger`。至少三 implementation seeds，报告 p50/p95/p99/max/WCET、queue/backlog、clock/temperature、resource 与 idle/active power，并在 `>=1e6` cycles 中零 mismatch/undefined/silent overflow/deadline miss。没有板卡时只保持 `BLOCKED_NO_HIGH_SPEED_BOARD`；CXXRTL、P&R 或 host loop 不能升级 measured 字段。只有同 code/problem/action/precision/boundary 的真实 measured comparator 才允许“更快”。
+
+## 20.7 执行依赖、局部阻塞与论文拓扑
+
+执行顺序为：
+
+1. T9.1.1 冻结签名；T9.1.2 official exact 独立等待，T9.1.3 paper-constrained 不等待它；
+2. T9.2 双后端数字孪生与资格；
+3. T9.3 codebook；
+4. T9.4 matched tournament/observed posterior；
+5. T9.5 risk selector、bank compiler 和唯一 converged top；
+6. T9.6 六态 round/lifetime formal；
+7. T9.7.1 CXXRTL 可与 formal 后段并行，T9.7.3--T9.7.4 只在实物板可用时执行；
+8. T9.8 独立终门和论文决定。
+
+最终不使用加权总分，而输出三项独立 verdict：`GO_LER_SOTA`、`GO_LIFETIME`、`GO_HIL_SPEED`。只有 LER 与 lifetime 均通过、集成 HIL 通过且至少一个外部同任务 SOTA 可辩护时，才开放 `GO_SINGLE_PAPER`；否则选择 `GO_SPLIT_ALGORITHM_HARDWARE`、`GO_ALGORITHM_ONLY`、`GO_HARDWARE_ONLY` 或 `NO_GO`。QPU/真实 GKP 数据、experimental break-even 与 official Puviani exact 均可后插升级，但在证据缺失时必须保持 null，不阻止仿真/预板论文或诚实负结果归档。
+
 [1]: https://arxiv.org/abs/quant-ph/0008040?utm_source=chatgpt.com "Encoding a qubit in an oscillator"
 [2]: https://arxiv.org/abs/2504.13383?utm_source=chatgpt.com "Logical channels in approximate Gottesman-Kitaev-Preskill error correction"
 [3]: https://arxiv.org/abs/1907.12487?utm_source=chatgpt.com "Quantum error correction of a qubit encoded in grid states ..."

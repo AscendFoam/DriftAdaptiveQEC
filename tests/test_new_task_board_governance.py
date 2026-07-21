@@ -475,6 +475,84 @@ def test_phase6d_dual_evidence_lanes_are_strong_baseline_first_and_nontransferab
     assert "Milestone 6.20—6.26 共 30 个 task" in insertion
 
 
+def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_closed() -> None:
+    board = BOARD_PATH.read_text(encoding="utf-8")
+    phase9 = board.split("## Phase 9", 1)[1].split("## 与规划约束", 1)[0]
+    statuses = _authoritative_task_statuses(board)
+
+    expected_tasks = {
+        *(f"T9.1.{i}" for i in range(1, 5)),
+        *(f"T9.2.{i}" for i in range(1, 6)),
+        *(f"T9.3.{i}" for i in range(1, 5)),
+        *(f"T9.4.{i}" for i in range(1, 6)),
+        *(f"T9.5.{i}" for i in range(1, 5)),
+        *(f"T9.6.{i}" for i in range(1, 6)),
+        *(f"T9.7.{i}" for i in range(1, 5)),
+        *(f"T9.8.{i}" for i in range(1, 4)),
+    }
+    assert len(expected_tasks) == 34
+    blocked = {"T9.1.2", "T9.7.3", "T9.7.4"}
+    assert all(statuses[task] == "Blocked" for task in blocked)
+    assert all(statuses[task] == "Todo" for task in expected_tasks - blocked)
+    assert statuses["T7.3.5"] == "In Progress"
+
+    for milestone in ("9.1", "9.2", "9.3", "9.4", "9.5", "9.6", "9.7", "9.8"):
+        assert f"### Milestone {milestone}" in phase9
+
+    for required in (
+        "BLOCKED_OFFICIAL_EXACT_ASSETS",
+        "PAPER_CONSTRAINED_REIMPLEMENTATION",
+        "不少于 20 个独立 agent/seed",
+        "不依赖 `T9.1.2`",
+        "complex raw/recorded IQ",
+        "不得复用 backend A 的 transition kernel",
+        "未参与训练的 exact backend",
+        "trusted recovery codebook",
+        "GRU、TCN、SSM、causal Transformer",
+        "hidden-state teacher",
+        "slow inference/transfer 永不进入逐周期 critical path",
+        "每 trajectory 至少运行到预注册 `10^4` cycles",
+        "relative improvement point `>=15%`",
+        "simultaneous paired 95% LCB `>=10%`",
+        "best among registered paper-constrained/project-native baselines",
+        "raw/recorded IQ -> discriminator -> action -> trigger HIL",
+        "GO_SINGLE_PAPER",
+        "GO_SPLIT_ALGORITHM_HARDWARE",
+        "不得用三项胜场/加权总分",
+    ):
+        assert required in phase9
+
+    assert "`T9.1.2` 局部 `Blocked`" in phase9
+    assert all(task in phase9 for task in ("T9.7.3", "T9.7.4"))
+    assert "CXXRTL/P&R/host loop 代替" in phase9
+    assert "Phase 8 的真实 GKP/QPU 接入" in phase9
+
+    experiment_plan = (ROOT / "docs" / "experiment_plan.md").read_text(
+        encoding="utf-8"
+    )
+    section20 = experiment_plan.split("# 20.", 1)[1].split("\n[1]:", 1)[0]
+    for required in (
+        "Puviani 资产缺失的非阻塞证据合同",
+        "OFFICIAL_EXACT_REPRODUCTION",
+        "PAPER_CONSTRAINED_REIMPLEMENTATION",
+        "双后端、action-conditioned 数字孪生",
+        "同权限模型 tournament",
+        "六态 formal 与高速板 HIL 门",
+        "GO_LER_SOTA",
+        "GO_LIFETIME",
+        "GO_HIL_SPEED",
+    ):
+        assert required in section20
+
+    risks = (ROOT / "docs" / "new_risks.md").read_text(encoding="utf-8")
+    for risk_number in range(162, 169):
+        assert f"R-N{risk_number}" in risks
+
+    insertion = board.split("## 插入任务区", 1)[1].split("## 进度日志", 1)[0]
+    assert "T-RISK-20260722-01" in insertion
+    assert "Milestone 9.1—9.8 共 34 个 task" in insertion
+
+
 def test_zotero_migration_bibliographies_retain_all_41_entries() -> None:
     task_dir = ROOT / "docs" / "tasks"
     paths = (

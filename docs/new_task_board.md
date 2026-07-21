@@ -48,6 +48,19 @@
 - **新数据隔离：** T6.18.3 的 `d=3`、balanced heteroscedastic、9.6M-cycle 结果只作 development/headroom 依据；Phase 6D 必须使用全新互斥 split、strongest eligible baselines 和一次性 formal。
 - 本次实质修订同步写入 `docs/experiment_plan.md` 第 19 节；`docs/rough_plan.md` 继续冻结。
 
+## v2.4 Performance-first 单模多速率双回路重启说明
+
+本任务板于 2026-07-22 根据 `T-RISK-20260722-01` 新增 Phase 9。该阶段不把尚缺的 Puviani official checkpoint、20-agent seeds、selection ledger 和 six-state evaluator 当成全局前置条件，而把证据拆成两个严格分级、可并行等待的 lane：
+
+- **official-exact lane：** 只有四类官方资产齐全、hash-bound、协议和数值资格全部通过，才允许写 `OFFICIAL_EXACT_REPRODUCTION` 或“超过 Puviani NMF”；该 lane 当前局部 `Blocked`。
+- **paper-constrained/project-native lane：** 现在即可依据论文、补充材料、公开源码和项目自建的 20-agent/seed/selection/evaluator 运行；所有偏差进入 deviation ledger，只允许写 `PAPER_CONSTRAINED_REIMPLEMENTATION`、`PROJECT_NATIVE_MATCHED` 或“best among registered implementations”，不得冒充官方复现。
+- **性能重启对象：** 单模 GKP 的慢回路使用 GRU/TCN/SSM/causal Transformer/Bayesian 等方法估计 observed-only posterior、风险和 trusted recovery codebook；快回路继续使用有界 MAP/LUT、phase-frame、leakage/reset FSM、A/B bank、CRC/version、LKG rollback 与六周期 II=1 RTL。
+- **三条独立结果链：** 单轮无 postselection LER、六态长序列 logical-channel lifetime、真实数字链 HIL latency 各有自己的 task signature、强 baseline、统计门和失败分支；任何一条不能替另一条补门。
+- **两套物理后端：** 正式寿命结果必须由两个不共享演化/测量 likelihood/kernel/RNG 的 physics backend 对拍；学习控制器不得只在其训练所用的 learned surrogate 上自评。
+- **局部阻塞：** Phase 9 软件、codebook、模型 tournament、CXXRTL 和 formal 不依赖 Phase 8 或实物板卡；只有 official Puviani exact claim、真实高速板 HIL 和物理 QPU/break-even claim 保持局部 Blocked。
+- 本次插入不覆盖 Phase 6D/T7 的负结果或历史稿，也不静默中止当前 `T7.3.5`；Phase 9 的首个可执行任务是 `T9.1.1`，何时切换当前指针须在任务板显式记录。
+- 本次实质修订同步写入 `docs/experiment_plan.md` 第 20 节；`docs/rough_plan.md` 继续冻结。
+
 ## 暂定论文 claim contract
 
 在 `T1.4.1` 正式冻结前，所有任务遵守以下板级边界：
@@ -59,7 +72,9 @@
 | 约 300 元 FPGA | measured digital control-plane latency/resource、HIL/replay | 真实微波生成、真实量子读出、真实 cavity/transmon 控制 |
 | 可选真实硬件 | 仅在未来确有数据和接入证据后表述 | 用计划或模拟替代真实实验 |
 
-核心贡献改为两个并列但不混淆的证据 lane：① **multimode observed-only、posterior-predictive、risk-aware logical-coset MLD**，在全新未见漂移上以 exact MLD/K-MWM/analog-MWPM 和 strongest causal adaptive frontend 为 denominator，争取 LER 与 calibration/telegraph tail 优势；② **single-mode deterministic contract RTL**，以 atomic A/B bank、CRC/version、LKG rollback、固定 6-cycle、II=1 和 fail-closed property/long-sequence closure 建立预板系统贡献。CNN、Feedback-GRAPE teacher 与 distilled student 只作为 posterior/MLD 的可替换近似或蒸馏扩展。真板只决定 measured latency/deadline/fastest 等硬件主张，不阻塞 multimode software formal 或 single-mode pre-board qualification。
+截至 Phase 6D/T7 的历史稿合同仍是两个并列但不混淆的证据 lane：① **multimode observed-only、posterior-predictive、risk-aware logical-coset MLD**，在全新未见漂移上以 exact MLD/K-MWM/analog-MWPM 和 strongest causal adaptive frontend 为 denominator，争取 LER 与 calibration/telegraph tail 优势；② **single-mode deterministic contract RTL**，以 atomic A/B bank、CRC/version、LKG rollback、固定 6-cycle、II=1 和 fail-closed property/long-sequence closure 建立预板系统贡献。其实际终态仍是 multimode NO-GO、RTL-only pre-board GO，不能被 Phase 9 计划改写。
+
+Phase 9 使用新的前瞻合同：single-mode slow AI/Bayesian posterior + trusted recovery codebook 争取单轮 LER 和六态 lifetime，既有六周期 RTL 负责 deterministic/atomic/fail-closed，高速板负责真实数字链 HIL；三项分别过门后再决定是否合为一篇。CNN/GRU/TCN/SSM/Transformer 只是 tournament candidates，hidden teacher 只训练/上界。真板只决定 measured latency/deadline/faster 等硬件主张，不阻塞双后端 physics、software formal 或 CXXRTL。
 
 ---
 
@@ -683,6 +698,88 @@ T6.9.3 是 V4 的历史 evidence snapshot，其实际结果 `NO_GO_FULL_HIGH_LEV
 
 ---
 
+## Phase 9：Performance-first 单模 GKP 多速率非马尔可夫双回路重启
+
+本阶段是新的前瞻证据程序，不重开或改写 Phase 6D v1。执行主链为 `M9.1 -> M9.2 -> M9.3 -> M9.4 -> M9.5 -> M9.6`；`M9.7` 的 CXXRTL 可与 M9.6 后段并行，真实高速板 HIL 只阻塞自身；`M9.8` 最后按独立结果门决定单篇、拆篇、单 lane 或 NO-GO。Phase 8 的真实 GKP/QPU 接入是物理 claim 的额外升级条件，不是 Phase 9 软件主链的依赖。
+
+Puviani official checkpoint、20-agent seeds、selection ledger 与 six-state evaluator 当前均不可得，因此 `T9.1.2` 局部 `Blocked`。`T9.1.3` 及其后续任务明确不依赖 `T9.1.2`：项目自行生成的 checkpoint/seeds/ledger/evaluator 必须完整发布并标记为 paper-constrained/project-native；在官方资产齐备前，Puviani-specific surpass 字段保持 `null`，但数字孪生、模型 tournament、project-native lifetime 与 HIL 工作继续。
+
+### Milestone 9.1：任务签名、Puviani 非阻塞双 lane 与确认性合同
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T9.1.1 | Todo | 冻结单轮 LER、六态长时 lifetime 与数字链 latency 三个不可混排的 task signature、claim ladder 和失败分支。 | 机器可读 protocol 同时冻结 code/state family、IQ/syndrome observation、action set、cycle time、no-postselection denominator、baseline eligibility、compute/wall-clock、split、统计单位、multiple-comparison、missingness 和 evidence grade。三个结果门分别给 GO/NO-GO；禁止以 lifetime 补 LER、以 core cycles 补 raw-IQ latency、以 simulator gain 补 physical break-even。 | `T-RISK-20260722-01`, `R-N162`, `R-N168`, `experiment_plan.md §20.1--§20.2` |
+| T9.1.2 | Blocked | 接收并资格化 Puviani official checkpoint、20-agent seeds、selection ledger 和 six-state evaluator。 | 四类资产必须来自可验证上游，固定 commit/hash/license/environment，逐项重放论文 selection 与 six-state logical-channel 数值；任一缺失、不可运行或不一致均维持 `BLOCKED_OFFICIAL_EXACT_ASSETS`，且**只阻塞** `OFFICIAL_EXACT_REPRODUCTION`/“超过 Puviani”字段，不阻塞 T9.1.3 以后任务。 | `T6.8.4`, `T6.17.3`, `R-N162` |
+| T9.1.3 | Todo | 建立 paper-constrained Puviani MF/NMF 独立重实现与项目自有完整 artifact lane。 | 依据正文、补充与公开 GQF source 转录所有已明确的 state/action/timing/noise/training 条件；项目生成不少于 20 个独立 agent/seed、全部 checkpoint、validation-only selection ledger、`+/-X,+/-Y,+/-Z` evaluator 和逐 trajectory raw records。所有歧义、补丁和未复现量进入 deviation ledger；只能标记 `PAPER_CONSTRAINED_REIMPLEMENTATION`，不得写 official exact。 | `T9.1.1`, `R-N162`, `experiment_plan.md §20.2` |
+| T9.1.4 | Todo | 冻结同输入、同样本、同 action、同 compute 的 controller/decoder baseline registry 与统计功效。 | 排名表至少含 standard sBs/no-feedback、static recovery、MF、paper-constrained NMF、Window/EWMA/Kalman、HMM/BOCPD、particle/Bayesian、GRU、TCN、SSM、causal Transformer；hidden-state oracle 只作上界。分成 matched-deployable 与 unbudgeted-ceiling 两榜，预注册 pilot/formal effect、cluster N、simultaneous CI 和失败/timeout 计数，禁止隐藏 best-of-N。 | `T9.1.1`, `T9.1.3`, `R-N164`, `experiment_plan.md §20.2` |
+
+### Milestone 9.2：IQ/leakage/reset/action-conditioned 单模 GKP 双后端数字孪生
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T9.2.1 | Todo | 冻结数字孪生的 latent/observed/action schema 与时间因果图。 | observed 包含 complex raw/recorded IQ、matched-filter/LLR、discriminator confidence、timestamp、reset acknowledgement 和既往 action；latent 包含 oscillator shift/loss、ancilla `g/e/f`、leakage age、readout/reset state、calibration 与 drift regime。action 只允许 trusted codebook ID、bounded residual、phase-frame、reset/leakage FSM；future/hidden truth 从 deployable API 结构上删除。 | `T9.1.1`, `R-N164`, `experiment_plan.md §20.3` |
+| T9.2.2 | Todo | 在 `physics/` 实现高保真 backend A：有限截断 oscillator + multilevel ancilla 的测量、复位、泄漏和 action-conditioned drift。 | 实现明确的 Hamiltonian/Kraus/Lindblad/trajectory 语义、IQ emission、measurement backaction、reset failure、`f`-state persistence、action-dependent transition 与 logical tracking；通过 trace/CP/positivity/Hermiticity/probability、ideal/zero-noise/large-reset limits、Fock cutoff/step-size convergence、seed determinism 和 intervention tests。不得用给 label 加独立噪声冒充 action-conditioned dynamics。 | `T9.2.1`, `R-N163`, `R-N166` |
+| T9.2.3 | Todo | 实现独立 physics backend B，并建立实现独立性证明。 | backend B 使用独立演化求解器/代码路径和独立 measurement likelihood；不得复用 backend A 的 transition kernel、IQ sampler、logical-label routine、RNG stream 或预计算 truth。记录 solver/toolchain/source provenance，至少由独立 reference formula 或第二语言/第二库实现关键通道。 | `T9.2.1`, `R-N163`, `experiment_plan.md §20.3` |
+| T9.2.4 | Todo | 对两个 backend 做六态、动作干预、故障与截断收敛资格对拍。 | 在 formal 结果访问前冻结 tolerance；覆盖六个 Pauli eigenstates、idle/standard/static/codebook actions、IQ moments/likelihood、logical PTM、leakage/reset residence、短 trajectory distribution 和 injected step/telegraph/burst/compound。使用独立 seeds、distributional CI 与 conservation tests；任一主量超界即 `NO_GO_TWIN_QUALIFICATION`，禁止运行正式 lifetime。 | `T9.2.2--T9.2.3`, `R-N163`, `R-N166` |
+| T9.2.5 | Todo | 构建由双后端 exact anchors 约束的长时 multi-fidelity surrogate。 | surrogate 只用于扩展长时采样；在 held-out device cells、未见 action sequence 和未见 drift 上报告 one-step、multi-step、IQ calibration、logical-event、leakage-duration 与 uncertainty coverage。任何学习 controller 必须在至少一个未参与训练的 exact backend 上复评，禁止 controller 与其自建 surrogate 共适应后形成伪 lifetime gain。 | `T9.2.4`, `R-N166`, `experiment_plan.md §20.3` |
+
+### Milestone 9.3：器件参数网格上的 trusted recovery codebook
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T9.3.1 | Todo | 冻结器件参数覆盖网格、safe action envelope 与 OOD/fallback 边界。 | 网格覆盖 squeezing/cutoff、loss/dephasing、readout confusion、leakage/reset、mean/variance/correlation、action-dependent drift 和 timing uncertainty；每 cell 标 train/cal/pilot/formal，禁止事后增删有利 cell。safe action 由物理/数值稳定/硬件幅宽共同约束，未覆盖区域映射到 trusted LKG/fallback。 | `T9.2.4`, `R-N165`, `experiment_plan.md §20.4` |
+| T9.3.2 | Todo | 离线生成 trusted recovery codebook，并完整记录多起点优化与失败。 | 对固定 safe action family 运行可复核的 Feedback-GRAPE/MPC/动态规划或等价优化；目标同时含六态 round loss、leakage/reset burden、control effort 与 CVaR，至少多起点/多 seed，validation-only 选择。保存所有候选、收敛轨迹和失败，不得只发布 best checkpoint；相对 static action 无 headroom 时提前降级为 static codebook。 | `T9.3.1`, `T9.1.3`, `R-N165` |
+| T9.3.3 | Todo | 压缩、量化并编译 codebook 到 versioned bank image。 | 给出 codebook size/bitwidth/lookup depth/quantization/LER/lifetime Pareto；保留 bounded residual 的上下界、动作 checksum、schema/version/CRC、activation epoch 与 provenance。量化后六态风险和最坏 cell 不越过预注册 margin；不得用 free-form waveform 或 host callback 绕过 fast-path action envelope。 | `T9.3.2`, `T6.25.2--T6.25.4`, `R-N165` |
+| T9.3.4 | Todo | 用独立 backend 验证 codebook coverage、插值、边界和 fail-closed fallback。 | 全网格与 held-out cells 报 coverage/holes、nearest/mixing error、unsafe action count、fallback rate、induced/avoided error；unsafe=0，CRC/version/age/OOD/partial image 均落入 LKG 或 reset FSM。若 codebook 相对 static 最坏风险无优势，只保留压缩/安全贡献并停止 AI action-selection 主张。 | `T9.2.4`, `T9.3.3`, `R-N165--R-N166` |
+
+### Milestone 9.4：同权限模型 tournament 与 observed-only posterior
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T9.4.1 | Todo | 生成不可变 train/calibration/pilot/formal trajectory split。 | device cells、drift rate/amplitude/duration、action history 与 random seeds 四重互斥；formal 覆盖未见 smooth、step、telegraph、burst、readout/reset、leakage、compound。raw IQ、derived LLR 与 binary syndrome 作为预注册输入消融，不允许按 architecture 更换样本或 formal 后扩样。 | `T9.2.5`, `T9.3.4`, `R-N164`, `R-N166` |
+| T9.4.2 | Todo | 建立统一 causal sequence API、matched-budget profiler 与 Bayesian/classical 强 baseline。 | 同一 prefix `o_{<t},a_{<t}` 输出 posterior/predictive risk；实现 Kalman/UKF、HMM/IMM/BOCPD、particle/SMC 和明确的 static/Window 基线。逐模型固定 update cadence、state bytes、MAC/FLOP、CPU core、wall-clock/deadline、precision 与 missingness；future suffix、scenario ID、truth poisoning 和 smoother mutations 全失败。 | `T9.1.4`, `T9.4.1`, `R-N164` |
+| T9.4.3 | Todo | 在同一 API 实现 CNN/GRU、TCN、SSM 与 causal Transformer candidates。 | 每个 family 使用相同 observation tokens、train samples、augmentation 权限和 formal denominator；同时报告 matched-deployable budget 与 capacity/Pareto ceiling。所有 restart/checkpoint/hyperparameter/early-stop 均入 ledger，禁止给某 family 额外 IQ、history、future mask 或隐藏 best-of-N。 | `T9.4.1--T9.4.2`, `R-N164` |
+| T9.4.4 | Todo | 训练 calibrated observed-only posterior model；hidden-state teacher 只作训练辅助和上界。 | deployable model 预测 drift/regime/leakage/OOD posterior、next-IQ/syndrome distribution 与 codebook risk，使用 proper scoring rule、posterior calibration、coverage 和 counterfactual action consistency。privileged teacher/latent truth 只能进入 train target/diagnostic upper bound，删除 teacher 后 formal action不变；formal 决策 API 不含 hidden state。 | `T9.4.1--T9.4.3`, `R-N164`, `experiment_plan.md §20.5` |
+| T9.4.5 | Todo | 运行一次性 architecture tournament 并冻结唯一 promoted slow model 或 classical fallback。 | calibration 只定阈值，pilot 只选择一次；比较 predictive NLL/Brier/ECE、one-round LER proxy、CVaR、OOD、adaptation lag、deadline/memory。必须做 binary-vs-IQ、history-vs-architecture、parameter-count-vs-information 消融；若 Bayesian/TCN 等简单模型胜出，AI family 如实 Dropped，不以“用了 Transformer”作为贡献。 | `T9.4.2--T9.4.4`, `R-N164`, `R-N168` |
+
+### Milestone 9.5：Posterior-risk 慢回路与六周期原子 fast path 集成
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T9.5.1 | Todo | 实现 posterior-predictive、risk-aware codebook selector。 | 只在 trusted codebook 中最小化 posterior expected logical loss + CVaR + switch/staleness/control cost；报告 risk decomposition、uncertainty、candidate bank 和 reason code。selector 不直接输出任意 pulse/每周期 correction；posterior delta 和单一 codebook 极限分别退化到 plug-in/static。 | `T9.3.4`, `T9.4.5`, `R-N165` |
+| T9.5.2 | Todo | 实现 shadow validation、OOD/uncertainty gate、freeze/fallback 与 hysteresis recovery。 | candidate 必须在 shadow window 和 independent risk bound 通过后才能提交；step/burst/leakage/CRC/version/age/deadline 异常分别触发 trusted-bank、reset FSM 或 LKG rollback。报告 adaptation lag、false update、unnecessary fallback、availability、avoided/induced error；同 trace policy-off 反事实与 fault mutations 通过。 | `T9.5.1`, `T6.6.2--T6.7.3` |
+| T9.5.3 | Todo | 将 slow-model candidate 编译为定点 bank package 并接入既有 A/B、CRC/version、LKG 和六周期 fast path。 | compiler 固定 rounding/saturation/schema/precision，输出 full image、CRC、generation、activation epoch、validity envelope 和 source hash；slow inference/transfer 永不进入逐周期 critical path，stale/timeout 只是不更新。零 raw cfg/trust bypass，cycle-boundary commit 为 old-or-new，fast path 保持 6-cycle、II=1。 | `T9.3.3`, `T9.5.2`, `T6.25.2--T6.25.3` |
+| T9.5.4 | Todo | 对唯一 converged top 完成并发提交、故障恢复与有界动作的 formal/mutation closure。 | 覆盖 host/policy race、partial/corrupt/replayed package、near-wrap、commit/cancel/drain/reset、in-flight read、deadline、FIFO/backpressure、LKG recovery 与 exact-once action；每条 property 有 reachable cover 和可杀 mutation。失败时保留最后可信 bank，禁止为了通过 proof 删除并发或 action path。 | `T9.5.3`, `R-N168` |
+
+### Milestone 9.6：六态、长序列、无 postselection 的确认性 lifetime benchmark
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T9.6.1 | Todo | 在 outcome-blind 状态冻结 pilot/formal、样本量、estimand 与 promotion 门。 | 统计单位为独立 device/scenario/trajectory cluster；冻结六态权重、round/trajectory denominator、censoring、survival/logical-channel fit、worst-window/CVaR、simultaneous CI、stationary/OOD non-inferiority、timeout/missingness。pilot 后不得按效果方向、显著性或最优 family 扩样。 | `T9.1.1`, `T9.4.5`, `T9.5.4`, `R-N168` |
+| T9.6.2 | Todo | 运行六态、完整分母的单轮 LER formal。 | 对 `+/-X,+/-Y,+/-Z` 报 `p_L,p_X,p_Y,p_Z`、logical PTM/diamond-compatible bounds、leakage/reset/control cost；同 physical trace paired 比较全部 eligible deployable baseline，zero postselection/trajectory deletion。hidden teacher/oracle 与 unbudgeted ceiling 单列，不进入 strongest deployable denominator。 | `T9.6.1`, `T9.2.4--T9.2.5` |
+| T9.6.3 | Todo | 运行六态长序列 logical-channel lifetime benchmark。 | 每 trajectory 至少运行到预注册 `10^4` cycles、survival endpoint 或显式 censor；报告 `T_X,T_Y,T_Z,T_ch`、area/e-folding、bootstrap CI、non-exponential/fit residual、leakage/reset burden和wall-clock-normalized cost。不得将有限截断 matched-idle crossing、accepted-only trajectory 或 simulator cycle 写成 physical lifetime/break-even。 | `T9.6.1--T9.6.2`, `R-N161`, `R-N166` |
+| T9.6.4 | Todo | 运行未见 smooth、step/telegraph/burst/compound 的 tail、适应和故障 formal。 | 固定 family 与 window 报 average/p95/worst-window/CVaR95、adaptation lag、false update、fallback、availability、avoided/induced errors和catastrophic degradation；不按场景单独调阈值。stationary paired degradation 95% UCB `<=2%`，任一 OOD family UCB `<=5%`，calibration/telegraph tail improvement simultaneous LCB `>0`。 | `T9.6.1`, `T9.5.2`, `R-N168` |
+| T9.6.5 | Todo | 用第二 backend/第二统计实现独立重算并执行 LER/lifetime promotion。 | **LER SOTA 候选门：** 相对每个 eligible strongest deployable baseline，relative improvement point `>=15%`、simultaneous paired 95% LCB `>=10%` 且 absolute LCB `>0`；**lifetime 门：** 六态最小 relative gain point `>=15%`、simultaneous 95% LCB `>0`，且不以额外 reset/control/postselection 换取。任一门失败分别降为 tail-only、robustness-only、non-inferior、compression/safety 或 negative。T9.1.2 未通过时只允许“best among registered paper-constrained/project-native baselines”，Puviani surpass 保持 null。 | `T9.2.4`, `T9.6.2--T9.6.4`, `R-N162--R-N166`, `R-N168` |
+
+### Milestone 9.7：集成 CXXRTL 与高速板 raw/recorded-IQ HIL
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T9.7.1 | Todo | 对真实 slow-update cadence 和 bank package 运行集成 CXXRTL 长序列。 | independent golden 覆盖 IQ discriminator output、selector package、host/policy race、fault/recovery 与 compound transport；每 family `>=1e5` cycles、aggregate `>=1e6`，全部公开 state/output 逐周期零 mismatch、零 undefined、零 silent overflow/version wrap、零 fast deadline miss，source-to-action 恰 6 cycles、II=1。 | `T9.5.3--T9.5.4`, `R-N167` |
+| T9.7.2 | Todo | 刷新外部硬件一手来源，选择高速 RFSoC/Zynq/等价平台并冻结可比 latency boundary。 | 在采购/上板前冻结 `core`、`discriminator-out -> action`、`ADC last sample -> trigger`、`raw-IQ source -> trigger` 四个不混排边界，统一 clock/precision/problem/action/II/WCET/resource/power 字段；给出板卡、ADC/DAC/trigger/transport/CDC/sequencer 接口与可达 engineering target。外部 446/550 ns 等 cross-code 数值只作边界参考，除非 same-task adapter 资格通过。 | `T9.1.1`, `T9.7.1`, `R-N167` |
+| T9.7.3 | Blocked | 在高速实物板完成 raw/recorded IQ -> discriminator -> action -> trigger HIL。 | 依赖板卡/采集链可用；生成并下载与 T9.7.1 同 source/hash 的 bitstream，先 recorded-IQ deterministic replay，再 raw-IQ streaming；测 CDC、DMA/stream、backpressure、trigger/action、bank update 和 injected faults。没有板卡时保持 `BLOCKED_NO_HIGH_SPEED_BOARD`，不得用 CXXRTL/P&R/host loop 代替。 | `T9.7.2`, `T6.9.2`, `R-N167` |
+| T9.7.4 | Blocked | 完成多 seed build、板上正确性、真实 latency/jitter/deadline/resource/power 与同任务比较。 | 至少三 implementation seeds；报告 p50/p95/p99/max/WCET、queue/backlog、clock/temperature、LUT/FF/BRAM/DSP、idle/active power，`>=1e6` HIL cycles 零 mismatch/undefined/silent overflow/deadline miss。只有 same boundary、same task、真实 measured comparator 同时支持时才写“更快”；否则只写 deterministic integrated digital-chain result。 | `T9.7.3`, `R-N167--R-N168` |
+
+### Milestone 9.8：证据独立终门、论文拓扑与可复现交付
+
+| ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
+| --- | --- | --- | --- | --- |
+| T9.8.1 | Todo | 建立 LER、lifetime、HIL 三门的 claim-evidence matrix 和 null/revocation ledger。 | 每项只消费相同 task signature 的 raw/source/config/hash；official Puviani、真实板、QPU/physical break-even 缺失项保持 null，不允许其他 lane 填充。分别输出 `GO_LER_SOTA`、`GO_LIFETIME`、`GO_HIL_SPEED` 或对应 NO-GO，并为删 baseline、改 denominator、跨 lane 迁移和 estimate-as-measured 设置 mutation gate。`T9.1.2`/`T9.7.4` 仍 Blocked 是合法 null 输入，不阻止输出 algorithm-only/split verdict。 | `T9.6.5`, `T9.7.4`, `R-N168` |
+| T9.8.2 | Todo | 按预注册真值表决定单篇、拆篇、单 lane 或 NO-GO。 | `GO_SINGLE_PAPER` 仅在 LER 与 lifetime 均通过、集成 HIL 通过且至少一项外部同任务 SOTA 可辩护时开放；否则按证据选择 `GO_SPLIT_ALGORITHM_HARDWARE`、`GO_ALGORITHM_ONLY`、`GO_HARDWARE_ONLY` 或 `NO_GO`。不得用三项胜场/加权总分掩盖任何失败。 | `T9.8.1`, `R-N168`, `experiment_plan.md §20.7` |
+| T9.8.3 | Todo | 冻结与 verdict 一致的论文/负结果包和一键复现环境。 | 只在 T9.8.2 后生成对应 title/abstract/figures；发布双 backend、codebook、所有 model restarts/checkpoints、selection ledger、six-state evaluator、raw counts、CXXRTL/bitstream/HIL manifests 与环境锁。若 official/board/QPU 仍缺，清楚列入 limitation 和 future qualification，不删除负结果。 | `T9.8.2`, `T7.4`, `R-N162--R-N168` |
+
+---
+
 ## 与规划约束的交叉检查
 
 | 约束 | v2.2 任务板处理方式 | 来源 |
@@ -713,6 +810,11 @@ T6.9.3 是 V4 的历史 evidence snapshot，其实际结果 `NO_GO_FULL_HIGH_LEV
 | Multimode LER 与 single-mode deterministic RTL 是并列而非相加的证据 lane。 | T6.20.2 冻结三类 forbidden transfer，T6.24.5 与 T6.25.4 独立给 verdict，T6.26.4 只输出分 lane GO/NO-GO，不做加权总分或跨 lane 补门。 | `experiment_plan.md §19`, `T6.20.2`, `T6.26.4` |
 | CNN/student 只作为 posterior/MLD 的可替换近似。 | T6.26.1—T6.26.2 冻结 teacher target、权限、split 和 matched budget；不过门即进入消融，不能改变 classical algorithm 或 RTL verdict。 | `experiment_plan.md §19`, `T6.26.1--T6.26.2` |
 | 外部代码复现、项目原生重放与文献数值不得混写。 | 每个 atlas 单元固定 `LITERATURE_ONLY/OFFICIAL_CODE_REPRODUCTION/PROJECT_NATIVE_MATCHED/INELIGIBLE/BLOCKED/NEGATIVE`；缺源码、checkpoint、协议或同任务 adapter 时保持 partial/null。 | `T6.16.1`, `T6.19.3` |
+| Puviani 官方资产缺失不得冻结整个性能重启，也不得被项目自建 artifact 偷换。 | T9.1.2 只局部阻塞 official-exact/surpass wording；T9.1.3 以项目自有 20-agent seeds、全 checkpoint、selection ledger 和 six-state evaluator 建 paper-constrained lane，并把全部偏差公开。 | `experiment_plan.md §20.2`, `T9.1.2--T9.1.3`, `R-N162` |
+| 单模数字孪生不能只靠一个 learned/effective simulator 自证。 | T9.2.2--T9.2.4 要求两个不共享演化、measurement likelihood、logical truth 和 RNG 的 backend 对拍；T9.2.5 要求 learned controller 在未参与训练的 exact backend 上重评。 | `experiment_plan.md §20.3`, `R-N163`, `R-N166` |
+| AI 模型优势不能来自更多输入、自由动作、隐藏 truth 或更大预算。 | T9.4 冻结同 IQ/tokens、同样本、同 cadence、同 compute 与完整 restart ledger；hidden teacher 只训练/上界。T9.5 的模型只选择 trusted codebook/risk，不进入逐周期 critical path或生成任意 pulse。 | `T9.4--T9.5`, `R-N164--R-N165` |
+| 单轮 LER、六态 lifetime 与 HIL latency 不得形成全局总分。 | T9.6、T9.7 和 T9.8.1 分别给独立 verdict；T9.8.2 只按预注册真值表决定单篇/拆篇/单 lane/NO-GO，不允许跨 lane 补门。 | `experiment_plan.md §20.6--§20.7`, `R-N168` |
+| 暂无高速板只阻塞真实 HIL，不阻塞软件、codebook、模型、formal 和 CXXRTL。 | T9.7.3--T9.7.4 保持局部 Blocked；T9.1.1--T9.7.2 可继续。CXXRTL/P&R/host loop 不得复制为 measured latency、jitter、deadline 或 power。 | `T9.7`, `R-N167` |
 | single-mode GKP 避免 surface-code threshold 语言。 | T5.3.3、T7.3.4 使用 operational boundary、simulation-derived coherence gain 和 logical lifetime。 | `rough_plan.md:270`, `experiment_plan.md §14.4` |
 
 ## 插入任务区
@@ -732,6 +834,7 @@ T6.9.3 是 V4 的历史 evidence snapshot，其实际结果 `NO_GO_FULL_HIGH_LEV
 | T-RISK-20260720-01 | Done | R-N130 / R-N131 / R-N132 | Phase 6A 后、Phase 7 前 | 插入软件优先的 Phase 6B，把 V4 的 strongest-baseline/tail 负结果转化为 static-anchored predictive IMM/BOCPD、posterior-predictive MAP、LER/CVaR risk gate、typed trusted experts 和独立 V5 formal 路线；真板只阻塞 measured hardware claim。 | 完成 `docs/new_tasks/T-RISK-20260720-01_predictive_risk_aware_v5_phase.md` 与镜像记录；新增 Milestone 6.10—6.15 共 22 个 task，冻结相对全部 eligible baselines 至少 `10%` LER、step/telegraph tail、observed-only、quantized/CXXRTL/formal/P&R 门；当前推荐切换为 T6.10.1，T6.9.2 保持 Blocked。 |
 | T-RISK-20260720-02 | Done | R-N133 / R-N134 / R-N135 / R-N136 | Phase 6B 完成后、Phase 7 前 | 把两张图中的 CI、ML/MAP、Direct NN、RL、AQEC、CPD、Hybrid 及 LER/threshold/lifetime/drift/latency/resource 指标改造成只读、分 task-signature lane 的非主要比较；禁止 global leaderboard 和 post-formal 主结论污染。 | 完成 `docs/new_tasks/T-RISK-20260720-02_secondary_comparison_phase6c.md` 与镜像记录；新增 Milestone 6.16—6.19 共 12 个 Todo task，覆盖 source/ontology/preregistration、gate-level CI-ML、CPD、learned eligibility、AQEC wall-clock、预板/外部 FPGA 规范化和 integrity atlas；当前推荐保持 T6.10.1。 |
 | T-RISK-20260721-01 | Done | R-N146 / R-N147 / R-N148 / R-N149 / R-N150 / R-N151 / R-N152 / R-N153 | Phase 6C 后、Phase 7 最终发布前 | 插入 Phase 6D：将论文重组为 multimode software LER 与 single-mode deterministic RTL 两个并列、不可补门的 evidence lane；CNN/student 只作 posterior/MLD 近似。先补 exact MLD/K-MWM/analog-MWPM 与 syndrome-only adaptive 强基线，再以全新 split 执行 posterior-predictive formal。 | 完成 `docs/new_tasks/T-RISK-20260721-01_dual_evidence_lane_phase6d.md` 与镜像记录、`docs/multimode_strong_baseline_registry.md` 和 `experiment_plan.md §19`；新增 Milestone 6.20—6.26 共 30 个 task，T6.20.1 Done、T6.20.2 In Progress；T7 增加 delta tasks，T7.3.1 暂停为 Blocked，T6.9.2 保持 Blocked。 |
+| T-RISK-20260722-01 | Done | R-N162 / R-N163 / R-N164 / R-N165 / R-N166 / R-N167 / R-N168 | Phase 7 现有证据快照之后；与可选 Phase 8 正交 | 插入 performance-first Phase 9：把 official Puviani exact 变为局部资格 lane，同时建立 IQ/leakage/reset/action-conditioned 双后端数字孪生、trusted codebook、GRU/TCN/SSM/Transformer/Bayesian tournament、observed-only posterior、六周期原子集成、六态长寿命和高速板 HIL。 | 完成 `docs/new_tasks/T-RISK-20260722-01_performance_first_single_mode_phase9.md` 与镜像记录、`experiment_plan.md §20`；新增 Milestone 9.1—9.8 共 34 个 task。`T9.1.2` 和真实板 `T9.7.3--T9.7.4` 局部 Blocked，其余软件/预板任务可继续；当前 active `T7.3.5` 不被静默改写，Phase 9 首项为 `T9.1.1`。 |
 
 ## 进度日志
 
@@ -1067,3 +1170,5 @@ T6.9.3 是 V4 的历史 evidence snapshot，其实际结果 `NO_GO_FULL_HIGH_LEV
 | 2026-07-21 | T7.3.2 / T7.3.3 | In Progress -> Done / Todo -> In Progress | 完成 CNN-centric/模拟器过拟合 pre-emptive reviewer response，并开始实验相关性/无量子硬件边界回答。 | 24-row lossless ledger、19 live artifacts、23/23 gates/mutations；legacy CNN 206样本五次 bit-exact但16 family中same-task eligible=0，teacher/student 正结果保留且不迁移。当前主 verdict 对 learning 删除不变；无真实 reviewer 原文故 readiness=`draft_with_placeholders`。 |
 | 2026-07-21 | T7.3.3 / T7.3.4 | In Progress -> Done / Todo -> In Progress | 完成实验相关性/无量子硬件 pre-emptive response，并开始 post-selection/break-even 夸大边界回答。 | 七级 ladder 分开 literature、official reproduction、simulation、mock HIL、pre-board RTL、physical board 与 QPU/real data；17 artifacts、24-row Source Data、24/24 gates/mutations。真板全null、Phase8全Todo，AQEC/Sivak不迁移，readiness保持placeholder。 |
 | 2026-07-21 | T7.3.4 / T7.3.5 | In Progress -> Done / Todo -> In Progress | 完成post-selection/break-even夸大边界回答，并开始NMF PRL关系回答。 | 当前primary全分母、历史channel无拒绝；离线90%点同报conditional/acceptance/unit cost，8/8 unit-cost反转。仅300us finite-cutoff operational boundary成立，coherence/full-cost/physical break-even均未建立；24/24 gates/mutations。 |
+| 2026-07-22 | T-RISK-20260722-01 | User request -> In Progress | 开始把缺少 Puviani checkpoint/20-agent seeds/selection ledger/six-state evaluator 从全局阻塞改为 official-exact 局部阻塞，并设计性能优先的单模多速率双回路新阶段。 | 保留 Phase6D v1 NO-GO、T7 历史稿和当前 T7.3.5；不把项目自建 Puviani artifact 冒充官方复现，也不让真板缺失冻结数字孪生、模型、codebook、formal 或 CXXRTL。 |
+| 2026-07-22 | T-RISK-20260722-01 | In Progress -> Done | 插入 Phase 9 / Milestone 9.1—9.8 共 34 个 task，并同步 experiment plan、七项风险、双任务记录和治理测试。 | 冻结 official/paper-constrained 双 lane、双 physics backend、同权限模型 tournament、trusted codebook、observed-only posterior、A/B/CRC/LKG/6-cycle 集成、六态无 postselection lifetime、真实高速板 HIL 和五态论文 verdict；只有 T9.1.2/T9.7.3/T9.7.4 局部 Blocked。 |
