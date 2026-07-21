@@ -1,0 +1,59 @@
+{
+  "task_id": "T7.3.4",
+  "schema_version": "t7.3.4-postselection-breakeven-reviewer-contract-v1",
+  "reviewer_context": {
+    "mode": "draft",
+    "decision_type": "unclear",
+    "comment_id": "PRQ-BE-1",
+    "comment_origin": "preemptive task-board reviewer risk; no verbatim reviewer report supplied",
+    "reviewer_concern": "Are the post-selection and break-even claims exaggerated?",
+    "category": ["metric_definition", "evidence_interpretation", "cost_accounting"],
+    "severity": "major",
+    "actions": ["CLARIFY_EXISTING", "SOFTEN_CLAIM", "PARTIAL"],
+    "package_readiness": "draft_with_placeholders",
+    "visible_placeholder": "ACTUAL_REVIEWER_ID_AND_VERBATIM_WORDING"
+  },
+  "forbidden_response_phrases": [
+    "post-selection improves our online decoder",
+    "free rejection",
+    "postselected break-even",
+    "we demonstrate physical break-even",
+    "simulation-derived coherence gain is established",
+    "matched idle is the best passive physical qubit",
+    "conditional error is the primary LER",
+    "missing physical costs are zero"
+  ],
+  "required_manuscript_markers": [
+    "per-round simulated LER cannot be compared with the logical lifetime or break-even values",
+    "our per-round simulation does not estimate a physical lifetime",
+    "measured logical lifetime or physical break-even result",
+    "Those claims require a separate protocol-matched experiment",
+    "not multimode SOTA, physical lifetime gain or fastest-FPGA status"
+  ],
+  "response_rows": [
+    {"row_id":"BE-R01","response_state":"REVIEWER_CONCERN","topic":"comment_origin","claim":"The question is a pre-emptive risk, not a supplied verbatim reviewer report.","boundary":"Keep reviewer identity and exact wording as a visible placeholder.","source_ids":["task_board"]},
+    {"row_id":"BE-R02","response_state":"PRIMARY_DENOMINATOR","topic":"phase6d_main_metric","claim":"The current Phase-6D primary denominator includes all 79,872 registered physical rounds and all 13 families.","boundary":"No confidence-based rejection or accepted-only LER enters the primary result.","source_ids":["headroom","posterior_source"]},
+    {"row_id":"BE-R03","response_state":"PRIMARY_DENOMINATOR","topic":"phase6d_outcome","claim":"The proposed method ties strongest static exact MLD at zero relative improvement.","boundary":"Post-selection is not used to rescue the negative algorithm verdict.","source_ids":["headroom","final_gate"]},
+    {"row_id":"BE-R04","response_state":"PRIMARY_DENOMINATOR","topic":"logical_channel","claim":"All 24 historical logical-channel lanes have zero postselected and discarded trajectories.","boundary":"The CPTNI channel uses unconditional leakage-erasure accounting.","source_ids":["logical_channel"]},
+    {"row_id":"BE-R05","response_state":"OFFLINE_DIAGNOSTIC","topic":"postselection_role","claim":"T3.2.4 is an offline observed-confidence diagnostic with primary_metric_eligible=false.","boundary":"It is not an online decoder, physical controller or main-paper gain.","source_ids":["postselection"]},
+    {"row_id":"BE-R06","response_state":"OFFLINE_DIAGNOSTIC","topic":"data_scale","claim":"Thresholds use 294,912 training samples and evaluation uses 1,572,864 disjoint samples.","boundary":"The task remains synthetic wrapped-Gaussian diagnostic evidence.","source_ids":["postselection"]},
+    {"row_id":"BE-R07","response_state":"OFFLINE_DIAGNOSTIC","topic":"conditional_improvement","claim":"At the 90% target, raw/conditional error is 0.013785/0.001242 with 0.899108 acceptance.","boundary":"Conditional error is reported together with rejection and is not a primary LER.","source_ids":["postselection","cost"]},
+    {"row_id":"BE-R08","response_state":"REJECTION_COST","topic":"unit_penalty","claim":"The same 90% point has unit-rejection total cost 0.102009, worse than raw error 0.013785.","boundary":"The apparent conditional improvement is not free.","source_ids":["cost"]},
+    {"row_id":"BE-R09","response_state":"REJECTION_COST","topic":"frontier","claim":"All eight targets reduce conditional error and all eight are worse under unit rejection penalty.","boundary":"Both directions remain visible; favorable targets are not cherry-picked.","source_ids":["cost"]},
+    {"row_id":"BE-R10","response_state":"REJECTION_COST","topic":"lane_nonmixing","claim":"The offline rejection ledger is not joined to the online QEC channel or safety ledger.","boundary":"No cross-lane global cost score is constructed.","source_ids":["cost"]},
+    {"row_id":"BE-R11","response_state":"COST_GAP","topic":"missing_costs","claim":"Twelve physical/control/board cost fields remain explicit null values.","boundary":"Operation counts do not fill pulse energy, physical reset, latency or best-passive reference.","source_ids":["cost"]},
+    {"row_id":"BE-R12","response_state":"OPERATIONAL_BOUNDARY","topic":"what_is_established","claim":"A 300-us finite-cutoff matched-idle wall-clock operational boundary is established for three terminal profiles.","boundary":"It is a sampled sustained/cumulative crossover, not paper-defined break-even.","source_ids":["operational_boundary"]},
+    {"row_id":"BE-R13","response_state":"OPERATIONAL_BOUNDARY","topic":"metric_definition","claim":"The boundary uses full CPTNI F_avg curves, matched idle, no fit and no ratio.","boundary":"Single-point, area-ratio or exponential-lifetime substitutions are forbidden.","source_ids":["operational_boundary","fidelity"]},
+    {"row_id":"BE-R14","response_state":"OPERATIONAL_BOUNDARY","topic":"counterexample","claim":"The cutoff-12 counterexample is retained and the active short-time rate is unqualified.","boundary":"Low-cutoff/favorable-terminal selection cannot create a gain.","source_ids":["operational_boundary","fidelity"]},
+    {"row_id":"BE-R15","response_state":"COHERENCE_GAIN","topic":"not_established","claim":"Paper-defined simulation-derived coherence gain remains NOT_ESTABLISHED and its value is null.","boundary":"Matched encoded idle is not the best passive physical-qubit reference and active costs are incomplete.","source_ids":["operational_boundary","cost"]},
+    {"row_id":"BE-R16","response_state":"PHYSICAL_BREAK_EVEN","topic":"not_established","claim":"Experimental/physical break-even remains NOT_ESTABLISHED.","boundary":"No quantum hardware, measured logical lifetime or best-passive device reference exists.","source_ids":["operational_boundary","cost","manuscript"]},
+    {"row_id":"BE-R17","response_state":"NONTRANSFER","topic":"sivak","claim":"Sivak's reported 2.27±0.07 physical coherence gain belongs to its device and protocol.","boundary":"It is a literature reference, not a denominator or validation for this project.","source_ids":["source_registry","manuscript"]},
+    {"row_id":"BE-R18","response_state":"NONTRANSFER","topic":"operational_to_physical","claim":"The finite-model crossover cannot be renamed physical break-even.","boundary":"Different baseline, observable, cost and apparatus prevent metric migration.","source_ids":["operational_boundary","manuscript"]},
+    {"row_id":"BE-R19","response_state":"MANUSCRIPT_CHANGE","topic":"current_text","claim":"The canonical manuscript explicitly disclaims physical lifetime and break-even.","boundary":"The historical diagnostic remains supplementary/context only.","source_ids":["manuscript","manuscript_contract"]},
+    {"row_id":"BE-R20","response_state":"MANUSCRIPT_CHANGE","topic":"terminology","claim":"Use wall-clock operational boundary only with 300-us finite-cutoff matched-idle qualifiers.","boundary":"Do not abbreviate it to break-even or coherence gain.","source_ids":["operational_boundary","manuscript"]},
+    {"row_id":"BE-R21","response_state":"FUTURE_PROMOTION","topic":"simulation_gain_gate","claim":"A future simulation-derived coherence gain needs a qualified short-time rate, best-passive matched reference and complete active cost.","boundary":"A terminal crossover alone cannot pass the gate.","source_ids":["operational_boundary","cost"]},
+    {"row_id":"BE-R22","response_state":"FUTURE_PROMOTION","topic":"physical_gate","claim":"Physical break-even additionally requires a protocol-matched quantum experiment and measured logical lifetime uncertainty.","boundary":"Software/RTL evidence cannot substitute for the apparatus.","source_ids":["experiment_plan","manuscript"]},
+    {"row_id":"BE-R23","response_state":"RISK_DISCLOSURE","topic":"remaining_gap","claim":"Full physical/control cost and external validity remain unresolved.","boundary":"The nulls and limitation remain visible rather than being imputed.","source_ids":["cost","new_risks"]},
+    {"row_id":"BE-R24","response_state":"RESPONSE_WORDING","topic":"submission_readiness","claim":"The evidence-boundary answer is complete as a pre-emptive package.","boundary":"It remains draft_with_placeholders until actual reviewer wording is supplied.","source_ids":["task_board"]}
+  ]
+}

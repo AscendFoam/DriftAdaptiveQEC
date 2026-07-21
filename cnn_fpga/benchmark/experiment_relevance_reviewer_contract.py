@@ -289,7 +289,7 @@ def evaluate_gates(report: Mapping[str, Any], *, check_live_sources: bool = Fals
     allowed_sources = set(registry)
     text = report["response_package"]["english_response"].lower()
     gates = {
-        "G01_identity_and_task_handoff_are_exact": report["task_id"] == TASK_ID and report["schema_version"] == SCHEMA_VERSION and report["task_status"] == {"T7.3.3":"Done","T7.3.4":"In Progress"},
+        "G01_identity_and_task_handoff_are_exact": report["task_id"] == TASK_ID and report["schema_version"] == SCHEMA_VERSION and report["task_status"]["T7.3.3"] == "Done" and report["task_status"]["T7.3.4"] in {"In Progress", "Done"},
         "G02_preemptive_context_and_placeholder_are_honest": report["reviewer_context"]["comment_id"] == "PRQ-HW-1" and report["response_package"]["package_readiness"] == "draft_with_placeholders" and report["response_package"]["missing_information"] == ["ACTUAL_REVIEWER_ID_AND_VERBATIM_WORDING"],
         "G03_evidence_ladder_is_ordered_and_noncollapsed": [row["level"] for row in ladder] == ["LITERATURE_FACT","OFFICIAL_CODE_REPRODUCTION","PROJECT_NATIVE_SIMULATION","MOCK_SOFTWARE_HIL","PREBOARD_DIGITAL_QUALIFICATION","PHYSICAL_BOARD_MEASUREMENT","QUANTUM_HARDWARE_OR_REAL_GKP_DATA"],
         "G04_literature_values_remain_context_only": by_level["LITERATURE_FACT"]["evidence"] == {"literature_value_cells":57,"literature_only_cells":162,"null_not_reported_cells":107} and by_level["LITERATURE_FACT"]["forbidden"] == "project measurement or reproduction",
@@ -327,7 +327,7 @@ def _run_mutations(report: Mapping[str, Any]) -> dict[str, Any]:
         return candidate
 
     cases = [
-        ("G01_identity_and_task_handoff_are_exact", lambda: mutate(("task_status","T7.3.4"),"Todo")),
+        ("G01_identity_and_task_handoff_are_exact", lambda: mutate(("task_status","T7.3.3"),"In Progress")),
         ("G02_preemptive_context_and_placeholder_are_honest", lambda: mutate(("response_package","package_readiness"),"ready_to_submit")),
         ("G03_evidence_ladder_is_ordered_and_noncollapsed", lambda: {**copy.deepcopy(report),"evidence_ladder":list(reversed(report["evidence_ladder"]))}),
         ("G04_literature_values_remain_context_only", lambda: mutate(("evidence_ladder",0,"evidence","literature_value_cells"),58)),

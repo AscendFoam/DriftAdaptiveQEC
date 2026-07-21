@@ -1,0 +1,813 @@
+{
+  "task_id": "T7.3.4",
+  "schema_version": "t7.3.4-postselection-breakeven-reviewer-contract-v1",
+  "generated_at_utc": "2026-07-21T07:43:30.449143+00:00",
+  "reviewer_context": {
+    "mode": "draft",
+    "decision_type": "unclear",
+    "comment_id": "PRQ-BE-1",
+    "comment_origin": "preemptive task-board reviewer risk; no verbatim reviewer report supplied",
+    "reviewer_concern": "Are the post-selection and break-even claims exaggerated?",
+    "category": [
+      "metric_definition",
+      "evidence_interpretation",
+      "cost_accounting"
+    ],
+    "severity": "major",
+    "actions": [
+      "CLARIFY_EXISTING",
+      "SOFTEN_CLAIM",
+      "PARTIAL"
+    ],
+    "package_readiness": "draft_with_placeholders",
+    "visible_placeholder": "ACTUAL_REVIEWER_ID_AND_VERBATIM_WORDING"
+  },
+  "task_status": {
+    "T7.3.4": "Done",
+    "T7.3.5": "In Progress"
+  },
+  "current_phase6d_primary": {
+    "families": 13,
+    "physical_rounds": 79872,
+    "all_registered_families": true,
+    "postselection_used": false,
+    "hard_ood_rows_retained": true,
+    "verdict": "NO_GO_MULTIMODE_CAUSAL_HEADROOM",
+    "relative_improvement": 0.0,
+    "final_verdict": "GO_RTL_ONLY"
+  },
+  "historical_logical_channel": {
+    "lanes": 24,
+    "source_rows": 17266,
+    "postselected_trajectories": 0,
+    "discarded_trajectories": 0,
+    "primary_metric": "leakage-inclusive CPTNI average fidelity",
+    "conditional_postselected_forbidden": true
+  },
+  "offline_postselection": {
+    "status": "PASS",
+    "online_decoder": false,
+    "primary_metric_eligible": false,
+    "observed_inputs": [
+      "static_map_logical_posterior"
+    ],
+    "hidden_truth_inputs": [],
+    "training_samples": 294912,
+    "evaluation_samples": 1572864,
+    "target90": {
+      "target_survival": 0.9,
+      "training_threshold": 0.010223105775464814,
+      "realized_survival_fraction": 0.8991082509358723,
+      "raw_error_rate": 0.013785044352213543,
+      "conditional_error_rate": 0.0012424775303850107,
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.01254256682182853,
+        "standard_error": 7.789076180130222e-05,
+        "ci_low": 0.012358384437498135,
+        "ci_high": 0.012726749206158926,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      }
+    }
+  },
+  "rejection_cost": {
+    "target90": {
+      "row_id": "postselection_target_0.900",
+      "lane_role": "offline_postselection_diagnostic",
+      "target_survival": 0.9,
+      "training_threshold": 0.010223105775464814,
+      "acceptance_fraction": 0.8991082509358723,
+      "rejection_fraction": 0.10089174906412768,
+      "raw_error_rate": 0.013785044352213543,
+      "conditional_error_rate": 0.0012424775303850107,
+      "accepted_failures_per_input": 0.0011171217991715891,
+      "rejection_penalties": [
+        0.0,
+        0.25,
+        0.5,
+        1.0
+      ],
+      "total_costs": [
+        0.0011171217991715891,
+        0.026340059065203508,
+        0.05156299633123543,
+        0.10200887086329927
+      ],
+      "total_cost_by_rejection_penalty": {
+        "0.00": 0.0011171217991715891,
+        "0.25": 0.026340059065203508,
+        "0.50": 0.05156299633123543,
+        "1.00": 0.10200887086329927
+      },
+      "break_even_rejection_penalty": 0.12555954942351244,
+      "cost_definition": "accepted_failures_per_input + rejection_penalty * rejection_fraction",
+      "conditional_metric_online_eligible": false,
+      "raw_minus_conditional_seed_cluster_ci": {
+        "estimate": 0.01254256682182853,
+        "standard_error": 7.789076180130222e-05,
+        "ci_low": 0.012358384437498135,
+        "ci_high": 0.012726749206158926,
+        "cluster_unit": "evaluation_seed",
+        "interval_method": "two_sided_student_t_cluster_mean",
+        "degrees_freedom": 7
+      },
+      "truth_upper_conditional_error_rate": 0.0,
+      "truth_upper_deployable": false,
+      "online_correction_eligible": false,
+      "primary_metric_eligible": false,
+      "achieved_average_fidelity": null,
+      "achieved_logical_error_rate": null,
+      "conditional_error_scope": "synthetic wrapped-Gaussian decoder decision error, not CPTNI F_avg or physical-memory LER",
+      "measurement_events": null,
+      "reset_events": null,
+      "active_pulse_or_gate_count": null,
+      "classical_latency_us": null,
+      "cross_lane_cost_aggregate_eligible": false
+    },
+    "targets": 8,
+    "targets_lower_conditional": 8,
+    "targets_worse_unit_penalty": 8,
+    "postselection_joined_to_qec": false,
+    "global_cost_score": null,
+    "cross_lane_total": null,
+    "missing_fields": [
+      {
+        "field": "matched_controller_classical_latency_us",
+        "value": null,
+        "evidence": "not_measured_for_fixed_nominal_controller_and_target"
+      },
+      {
+        "field": "active_pulse_duration_and_energy",
+        "value": null,
+        "evidence": "only active gate counts are available"
+      },
+      {
+        "field": "device_calibrated_reset_fidelity_and_energy",
+        "value": null,
+        "evidence": "software event counts and effective reset assumptions only"
+      },
+      {
+        "field": "matched_physical_memory_logical_error_rate",
+        "value": null,
+        "evidence": "T5.3 channel reports CPTNI F_avg/F_e, not physical-memory LER"
+      },
+      {
+        "field": "best_passive_physical_qubit_reference",
+        "value": null,
+        "evidence": "qec_off is matched encoded idle only"
+      },
+      {
+        "field": "on_chip_core_latency",
+        "value": null,
+        "evidence": "target_board_unmeasured"
+      },
+      {
+        "field": "measured_transport_latency",
+        "value": null,
+        "evidence": "target_board_unmeasured"
+      },
+      {
+        "field": "end_to_end_digital_replay_latency",
+        "value": null,
+        "evidence": "target_board_unmeasured"
+      },
+      {
+        "field": "quantum_measurement_latency",
+        "value": null,
+        "evidence": "not_integrated_not_measured"
+      },
+      {
+        "field": "high_speed_quantum_adc_acquisition_latency",
+        "value": null,
+        "evidence": "not_integrated_not_measured"
+      },
+      {
+        "field": "awg_or_dac_waveform_output_latency",
+        "value": null,
+        "evidence": "not_integrated_not_measured"
+      },
+      {
+        "field": "physical_action_latency",
+        "value": null,
+        "evidence": "not_integrated_not_measured"
+      }
+    ]
+  },
+  "break_even_taxonomy": {
+    "wall_clock_operational_boundary": "ESTABLISHED_WITHIN_300US_FINITE_CUTOFF_MODEL",
+    "terminal_profiles": 3,
+    "low_cutoff_counterexample_retained": true,
+    "baseline": "matched idle evolution of the same encoded finite-cutoff state",
+    "fit": null,
+    "ratio": null,
+    "full_cost_operational_boundary": "NOT_ESTABLISHED",
+    "simulation_derived_coherence_gain": "NOT_ESTABLISHED",
+    "coherence_gain_value": null,
+    "postselected_break_even": "NOT_ESTABLISHED",
+    "experimental_break_even": "NOT_ESTABLISHED",
+    "sivak_literature": {
+      "value": 2.27,
+      "uncertainty": 0.07,
+      "evidence_grade": "LITERATURE_ONLY",
+      "ranking_eligible": false,
+      "same_task": false
+    }
+  },
+  "nontransfer_contract": {
+    "conditional_error_to_primary_ler": false,
+    "operational_boundary_to_coherence_gain": false,
+    "matched_idle_to_best_passive": false,
+    "sivak_to_project_break_even": false,
+    "missing_cost_to_zero": false,
+    "software_or_rtl_to_physical_break_even": false
+  },
+  "manuscript_audit": {
+    "required_markers": {
+      "per-round simulated LER cannot be compared with the logical lifetime or break-even values": true,
+      "our per-round simulation does not estimate a physical lifetime": true,
+      "measured logical lifetime or physical break-even result": true,
+      "Those claims require a separate protocol-matched experiment": true,
+      "not multimode SOTA, physical lifetime gain or fastest-FPGA status": true
+    },
+    "forbidden_phrases": {
+      "we demonstrate physical break-even": false,
+      "postselected break-even": false,
+      "simulation-derived coherence gain of": false
+    },
+    "named_locations": [
+      "Related Work: physical lifetime",
+      "Limitations",
+      "Conclusion"
+    ]
+  },
+  "response_package": {
+    "strategy": {
+      "overall_posture": "accept metric ambiguity; separate primary denominator, offline diagnostic, finite-model boundary and physical break-even",
+      "major_risks": [
+        "accepted-only denominator",
+        "unpriced rejection",
+        "finite-model-to-physical rename",
+        "literature transfer"
+      ],
+      "suggested_order": [
+        "primary denominator",
+        "diagnostic and cost",
+        "operational boundary",
+        "not-established claims",
+        "future gates"
+      ]
+    },
+    "tracker": {
+      "comment_id": "PRQ-BE-1",
+      "concern": "Are the post-selection and break-even claims exaggerated?",
+      "severity": "major",
+      "actions": [
+        "CLARIFY_EXISTING",
+        "SOFTEN_CLAIM",
+        "PARTIAL"
+      ],
+      "manuscript_locations": [
+        "Methods: denominators",
+        "Results: historical diagnostic",
+        "Limitations",
+        "Conclusion"
+      ],
+      "missing_author_input": "ACTUAL_REVIEWER_ID_AND_VERBATIM_WORDING"
+    },
+    "english_response": "We agree that post-selection and break-even are easy to overstate, and we have separated three distinct quantities. First, no Phase-6D primary metric uses post-selection: all 79,872 registered rounds and all 13 drift families remain in the denominator, and the proposed decoder retains its zero-improvement NO-GO result against static-mixture exact MLD.\n\nSecond, the historical post-selection result is an offline diagnostic, not online correction. Its threshold is fitted on 294,912 training samples and evaluated on 1,572,864 disjoint samples using an observed static-MAP confidence score. At the 90% target, conditional decision error decreases from 0.013785 to 0.001242 at 0.899108 acceptance. However, accepted failures plus a unit rejection penalty gives total cost 0.102009, compared with raw error 0.013785. All eight targets improve conditional error and all eight become worse at unit rejection cost. The diagnostic is therefore reported with acceptance, rejection and cost and is ineligible for the primary LER or break-even claim.\n\nThird, the finite-model result is only a 300-us wall-clock operational boundary: a sustained/cumulative crossover of leakage-inclusive CPTNI average-fidelity curves against matched encoded idle. It uses neither an exponential fit nor a lifetime ratio. The low-cutoff counterexample is retained, the active short-time rate is unqualified, matched idle is not the best passive physical-qubit encoding, and twelve physical/control cost fields remain null. Consequently, paper-defined simulation-derived coherence gain, full-cost break-even and experimental break-even are all NOT_ESTABLISHED, with no reported gain value.\n\nSivak's 2.27±0.07 coherence gain is a literature-reported physical-system result under its own device, best-passive denominator and fitted lifetime protocol. It cannot be transferred to our simulator or RTL. The manuscript therefore uses the fully qualified term finite-cutoff wall-clock operational boundary only for the historical result and explicitly states that the current work contains no measured logical lifetime or physical break-even result.",
+    "manuscript_change_checklist": [
+      "State that every Phase-6D round remains in the primary denominator.",
+      "Keep post-selection diagnostic, acceptance and rejection cost in one paragraph/table.",
+      "Use the full finite-cutoff wall-clock operational-boundary qualifier.",
+      "Keep coherence gain, full-cost and physical break-even NOT_ESTABLISHED.",
+      "Attribute Sivak 2.27±0.07 only to the cited physical system."
+    ],
+    "missing_information": [
+      "ACTUAL_REVIEWER_ID_AND_VERBATIM_WORDING"
+    ],
+    "package_readiness": "draft_with_placeholders"
+  },
+  "response_rows": [
+    {
+      "row_id": "BE-R01",
+      "response_state": "REVIEWER_CONCERN",
+      "topic": "comment_origin",
+      "claim": "The question is a pre-emptive risk, not a supplied verbatim reviewer report.",
+      "boundary": "Keep reviewer identity and exact wording as a visible placeholder.",
+      "source_ids": [
+        "task_board"
+      ]
+    },
+    {
+      "row_id": "BE-R02",
+      "response_state": "PRIMARY_DENOMINATOR",
+      "topic": "phase6d_main_metric",
+      "claim": "The current Phase-6D primary denominator includes all 79,872 registered physical rounds and all 13 families.",
+      "boundary": "No confidence-based rejection or accepted-only LER enters the primary result.",
+      "source_ids": [
+        "headroom",
+        "posterior_source"
+      ]
+    },
+    {
+      "row_id": "BE-R03",
+      "response_state": "PRIMARY_DENOMINATOR",
+      "topic": "phase6d_outcome",
+      "claim": "The proposed method ties strongest static exact MLD at zero relative improvement.",
+      "boundary": "Post-selection is not used to rescue the negative algorithm verdict.",
+      "source_ids": [
+        "headroom",
+        "final_gate"
+      ]
+    },
+    {
+      "row_id": "BE-R04",
+      "response_state": "PRIMARY_DENOMINATOR",
+      "topic": "logical_channel",
+      "claim": "All 24 historical logical-channel lanes have zero postselected and discarded trajectories.",
+      "boundary": "The CPTNI channel uses unconditional leakage-erasure accounting.",
+      "source_ids": [
+        "logical_channel"
+      ]
+    },
+    {
+      "row_id": "BE-R05",
+      "response_state": "OFFLINE_DIAGNOSTIC",
+      "topic": "postselection_role",
+      "claim": "T3.2.4 is an offline observed-confidence diagnostic with primary_metric_eligible=false.",
+      "boundary": "It is not an online decoder, physical controller or main-paper gain.",
+      "source_ids": [
+        "postselection"
+      ]
+    },
+    {
+      "row_id": "BE-R06",
+      "response_state": "OFFLINE_DIAGNOSTIC",
+      "topic": "data_scale",
+      "claim": "Thresholds use 294,912 training samples and evaluation uses 1,572,864 disjoint samples.",
+      "boundary": "The task remains synthetic wrapped-Gaussian diagnostic evidence.",
+      "source_ids": [
+        "postselection"
+      ]
+    },
+    {
+      "row_id": "BE-R07",
+      "response_state": "OFFLINE_DIAGNOSTIC",
+      "topic": "conditional_improvement",
+      "claim": "At the 90% target, raw/conditional error is 0.013785/0.001242 with 0.899108 acceptance.",
+      "boundary": "Conditional error is reported together with rejection and is not a primary LER.",
+      "source_ids": [
+        "postselection",
+        "cost"
+      ]
+    },
+    {
+      "row_id": "BE-R08",
+      "response_state": "REJECTION_COST",
+      "topic": "unit_penalty",
+      "claim": "The same 90% point has unit-rejection total cost 0.102009, worse than raw error 0.013785.",
+      "boundary": "The apparent conditional improvement is not free.",
+      "source_ids": [
+        "cost"
+      ]
+    },
+    {
+      "row_id": "BE-R09",
+      "response_state": "REJECTION_COST",
+      "topic": "frontier",
+      "claim": "All eight targets reduce conditional error and all eight are worse under unit rejection penalty.",
+      "boundary": "Both directions remain visible; favorable targets are not cherry-picked.",
+      "source_ids": [
+        "cost"
+      ]
+    },
+    {
+      "row_id": "BE-R10",
+      "response_state": "REJECTION_COST",
+      "topic": "lane_nonmixing",
+      "claim": "The offline rejection ledger is not joined to the online QEC channel or safety ledger.",
+      "boundary": "No cross-lane global cost score is constructed.",
+      "source_ids": [
+        "cost"
+      ]
+    },
+    {
+      "row_id": "BE-R11",
+      "response_state": "COST_GAP",
+      "topic": "missing_costs",
+      "claim": "Twelve physical/control/board cost fields remain explicit null values.",
+      "boundary": "Operation counts do not fill pulse energy, physical reset, latency or best-passive reference.",
+      "source_ids": [
+        "cost"
+      ]
+    },
+    {
+      "row_id": "BE-R12",
+      "response_state": "OPERATIONAL_BOUNDARY",
+      "topic": "what_is_established",
+      "claim": "A 300-us finite-cutoff matched-idle wall-clock operational boundary is established for three terminal profiles.",
+      "boundary": "It is a sampled sustained/cumulative crossover, not paper-defined break-even.",
+      "source_ids": [
+        "operational_boundary"
+      ]
+    },
+    {
+      "row_id": "BE-R13",
+      "response_state": "OPERATIONAL_BOUNDARY",
+      "topic": "metric_definition",
+      "claim": "The boundary uses full CPTNI F_avg curves, matched idle, no fit and no ratio.",
+      "boundary": "Single-point, area-ratio or exponential-lifetime substitutions are forbidden.",
+      "source_ids": [
+        "operational_boundary",
+        "fidelity"
+      ]
+    },
+    {
+      "row_id": "BE-R14",
+      "response_state": "OPERATIONAL_BOUNDARY",
+      "topic": "counterexample",
+      "claim": "The cutoff-12 counterexample is retained and the active short-time rate is unqualified.",
+      "boundary": "Low-cutoff/favorable-terminal selection cannot create a gain.",
+      "source_ids": [
+        "operational_boundary",
+        "fidelity"
+      ]
+    },
+    {
+      "row_id": "BE-R15",
+      "response_state": "COHERENCE_GAIN",
+      "topic": "not_established",
+      "claim": "Paper-defined simulation-derived coherence gain remains NOT_ESTABLISHED and its value is null.",
+      "boundary": "Matched encoded idle is not the best passive physical-qubit reference and active costs are incomplete.",
+      "source_ids": [
+        "operational_boundary",
+        "cost"
+      ]
+    },
+    {
+      "row_id": "BE-R16",
+      "response_state": "PHYSICAL_BREAK_EVEN",
+      "topic": "not_established",
+      "claim": "Experimental/physical break-even remains NOT_ESTABLISHED.",
+      "boundary": "No quantum hardware, measured logical lifetime or best-passive device reference exists.",
+      "source_ids": [
+        "operational_boundary",
+        "cost",
+        "manuscript"
+      ]
+    },
+    {
+      "row_id": "BE-R17",
+      "response_state": "NONTRANSFER",
+      "topic": "sivak",
+      "claim": "Sivak's reported 2.27±0.07 physical coherence gain belongs to its device and protocol.",
+      "boundary": "It is a literature reference, not a denominator or validation for this project.",
+      "source_ids": [
+        "source_registry",
+        "manuscript"
+      ]
+    },
+    {
+      "row_id": "BE-R18",
+      "response_state": "NONTRANSFER",
+      "topic": "operational_to_physical",
+      "claim": "The finite-model crossover cannot be renamed physical break-even.",
+      "boundary": "Different baseline, observable, cost and apparatus prevent metric migration.",
+      "source_ids": [
+        "operational_boundary",
+        "manuscript"
+      ]
+    },
+    {
+      "row_id": "BE-R19",
+      "response_state": "MANUSCRIPT_CHANGE",
+      "topic": "current_text",
+      "claim": "The canonical manuscript explicitly disclaims physical lifetime and break-even.",
+      "boundary": "The historical diagnostic remains supplementary/context only.",
+      "source_ids": [
+        "manuscript",
+        "manuscript_contract"
+      ]
+    },
+    {
+      "row_id": "BE-R20",
+      "response_state": "MANUSCRIPT_CHANGE",
+      "topic": "terminology",
+      "claim": "Use wall-clock operational boundary only with 300-us finite-cutoff matched-idle qualifiers.",
+      "boundary": "Do not abbreviate it to break-even or coherence gain.",
+      "source_ids": [
+        "operational_boundary",
+        "manuscript"
+      ]
+    },
+    {
+      "row_id": "BE-R21",
+      "response_state": "FUTURE_PROMOTION",
+      "topic": "simulation_gain_gate",
+      "claim": "A future simulation-derived coherence gain needs a qualified short-time rate, best-passive matched reference and complete active cost.",
+      "boundary": "A terminal crossover alone cannot pass the gate.",
+      "source_ids": [
+        "operational_boundary",
+        "cost"
+      ]
+    },
+    {
+      "row_id": "BE-R22",
+      "response_state": "FUTURE_PROMOTION",
+      "topic": "physical_gate",
+      "claim": "Physical break-even additionally requires a protocol-matched quantum experiment and measured logical lifetime uncertainty.",
+      "boundary": "Software/RTL evidence cannot substitute for the apparatus.",
+      "source_ids": [
+        "experiment_plan",
+        "manuscript"
+      ]
+    },
+    {
+      "row_id": "BE-R23",
+      "response_state": "RISK_DISCLOSURE",
+      "topic": "remaining_gap",
+      "claim": "Full physical/control cost and external validity remain unresolved.",
+      "boundary": "The nulls and limitation remain visible rather than being imputed.",
+      "source_ids": [
+        "cost",
+        "new_risks"
+      ]
+    },
+    {
+      "row_id": "BE-R24",
+      "response_state": "RESPONSE_WORDING",
+      "topic": "submission_readiness",
+      "claim": "The evidence-boundary answer is complete as a pre-emptive package.",
+      "boundary": "It remains draft_with_placeholders until actual reviewer wording is supplied.",
+      "source_ids": [
+        "task_board"
+      ]
+    }
+  ],
+  "forbidden_response_phrases": [
+    "post-selection improves our online decoder",
+    "free rejection",
+    "postselected break-even",
+    "we demonstrate physical break-even",
+    "simulation-derived coherence gain is established",
+    "matched idle is the best passive physical qubit",
+    "conditional error is the primary LER",
+    "missing physical costs are zero"
+  ],
+  "artifact_registry": {
+    "implementation": {
+      "path": "cnn_fpga/benchmark/postselection_breakeven_reviewer_contract.py",
+      "sha256": "73c71c9e22b251cb109ab92328402ad1df5109accfab6ddfd20ea28fa0cd32fb",
+      "bytes": 29630
+    },
+    "config": {
+      "path": "configs/phase6d/t7_3_4_postselection_breakeven_reviewer_contract.json",
+      "sha256": "93187f6c31e5615e19c6f7c0f7db0c198722806cc0521001002650e3e8aebdce",
+      "bytes": 8880
+    },
+    "task_board": {
+      "path": "docs/new_task_board.md",
+      "sha256": "c3d6ea95bd01be2ef52c9ed9ea13bea4a469ec74300b1c5cfed7bdd0bf89ecda",
+      "bytes": 279794
+    },
+    "new_risks": {
+      "path": "docs/new_risks.md",
+      "sha256": "71c92656ea02f9585e291d09ae7fb4ae66d554360a5bd7e3702bc716d8777a15",
+      "bytes": 200212
+    },
+    "experiment_plan": {
+      "path": "docs/experiment_plan.md",
+      "sha256": "dbc8ff7a5e2dc0277d3ffba136f800292d83b60423c583c039e636bd51545bdc",
+      "bytes": 90517
+    },
+    "manuscript": {
+      "path": "docs/paper_notes/Phase6D_Dual_Lane_GKP_manuscript.tex",
+      "sha256": "3aa68422512d568532d1eee01c3d7ee8120c6eb219ce334476c3ce1a8fb7c4ab",
+      "bytes": 35075
+    },
+    "manuscript_contract": {
+      "path": "docs/t7_2_6_phase6d_manuscript_delta.json",
+      "sha256": "54a7b5107d8019fb2fa5f5866d08e3f254cc9b22e11db393978596588db8f10a",
+      "bytes": 162820
+    },
+    "postselection": {
+      "path": "docs/t3_2_4_postselection_validation.json",
+      "sha256": "35ef970fb8ef7cebf5137f547c2fdeaa2b6ce1b8b8669a4d04a2564ef3a20e75",
+      "bytes": 60511
+    },
+    "logical_channel": {
+      "path": "docs/t5_3_1_logical_channel_reconstruction.json",
+      "sha256": "715362ba2daa017ea32f08a9366aea9be1746150c4fe56f1908baee97eda3900",
+      "bytes": 5224048
+    },
+    "fidelity": {
+      "path": "docs/t5_3_2_logical_channel_fidelity.json",
+      "sha256": "a4fce032ef83a6ff27a3d0ef4ff87dece3a0b5ce35ffe8ec141f299fc232265f",
+      "bytes": 904362
+    },
+    "operational_boundary": {
+      "path": "docs/t5_3_3_logical_operational_boundary.json",
+      "sha256": "324b291d3b8b55d4d03e182e403ccb60566c27eafb0a4c19ab7ccca47b22b188",
+      "bytes": 93637
+    },
+    "cost": {
+      "path": "docs/t5_3_4_qec_postselection_cost.json",
+      "sha256": "0d780f2a991c48d51734ddc917d4b8057092da97ada2bddea8a1c10ac2b3317f",
+      "bytes": 41875
+    },
+    "headroom": {
+      "path": "docs/t6_20_4_multimode_causal_headroom.json",
+      "sha256": "091e68bdd63f7245999e7506c9eda4fc37970d02792f5d82eb53583364098d93",
+      "bytes": 28011
+    },
+    "final_gate": {
+      "path": "docs/t6_26_4_final_dual_lane_gate.json",
+      "sha256": "d34298991b0aab0af0550a57afdcf63bb2a5f9f16fcb57706e625d973a015780",
+      "bytes": 41235
+    },
+    "posterior_source": {
+      "path": "cnn_fpga/decoder/route_a_regime_posterior.py",
+      "sha256": "9c2126019c1dc8cac696a9254756868d7c40723b18a7034f47f53819924f953b",
+      "bytes": 19764
+    },
+    "source_registry": {
+      "path": "configs/literature/t6_16_1_secondary_method_sources.json",
+      "sha256": "165a6d6d2641da9b5badbd9b139981355cbc757aa917c1c08b90ca61b6faa1a4",
+      "bytes": 50083
+    }
+  },
+  "risk_audit": {
+    "r_n161_present": true,
+    "t7_3_4_audit_present": true
+  },
+  "gates": {
+    "G01_identity_and_lifecycle": true,
+    "G02_preemptive_placeholder_honest": true,
+    "G03_phase6d_primary_keeps_full_denominator": true,
+    "G04_phase6d_negative_verdict_not_rescued": true,
+    "G05_logical_channel_is_unconditional_cptni": true,
+    "G06_postselection_is_offline_observed_and_ineligible": true,
+    "G07_postselection_scale_and_disjoint_evaluation_visible": true,
+    "G08_target90_conditional_gain_reports_acceptance": true,
+    "G09_unit_rejection_penalty_reverses_apparent_gain": true,
+    "G10_all_eight_targets_report_both_directions": true,
+    "G11_postselection_and_online_qec_ledgers_do_not_mix": true,
+    "G12_twelve_missing_physical_costs_stay_null": true,
+    "G13_only_finite_model_operational_boundary_is_established": true,
+    "G14_boundary_uses_matched_idle_without_fit_or_ratio": true,
+    "G15_coherence_and_full_cost_claims_not_established": true,
+    "G16_postselected_and_experimental_break_even_not_established": true,
+    "G17_sivak_value_is_literature_only_nonranking_different_task": true,
+    "G18_all_metric_and_evidence_transfers_forbidden": true,
+    "G19_manuscript_disclaims_physical_break_even": true,
+    "G20_response_answers_with_numbers_and_no_overclaim": true,
+    "G21_rows_are_unique_state_complete_and_lossless": true,
+    "G22_all_sources_registered_and_live": true,
+    "G23_risk_and_task_audit_present": true,
+    "G24_future_promotion_checklist_is_complete": true
+  },
+  "gate_summary": {
+    "passed": 24,
+    "total": 24
+  },
+  "verdict": "PASS_POSTSELECTION_DIAGNOSTIC_AND_BREAKEVEN_NOT_ESTABLISHED",
+  "semantic_mutation_audit": {
+    "count": 24,
+    "detected": 24,
+    "cases": [
+      {
+        "mutation_id": "M01",
+        "target_gate": "G01_identity_and_lifecycle",
+        "detected": true
+      },
+      {
+        "mutation_id": "M02",
+        "target_gate": "G02_preemptive_placeholder_honest",
+        "detected": true
+      },
+      {
+        "mutation_id": "M03",
+        "target_gate": "G03_phase6d_primary_keeps_full_denominator",
+        "detected": true
+      },
+      {
+        "mutation_id": "M04",
+        "target_gate": "G04_phase6d_negative_verdict_not_rescued",
+        "detected": true
+      },
+      {
+        "mutation_id": "M05",
+        "target_gate": "G05_logical_channel_is_unconditional_cptni",
+        "detected": true
+      },
+      {
+        "mutation_id": "M06",
+        "target_gate": "G06_postselection_is_offline_observed_and_ineligible",
+        "detected": true
+      },
+      {
+        "mutation_id": "M07",
+        "target_gate": "G07_postselection_scale_and_disjoint_evaluation_visible",
+        "detected": true
+      },
+      {
+        "mutation_id": "M08",
+        "target_gate": "G08_target90_conditional_gain_reports_acceptance",
+        "detected": true
+      },
+      {
+        "mutation_id": "M09",
+        "target_gate": "G09_unit_rejection_penalty_reverses_apparent_gain",
+        "detected": true
+      },
+      {
+        "mutation_id": "M10",
+        "target_gate": "G10_all_eight_targets_report_both_directions",
+        "detected": true
+      },
+      {
+        "mutation_id": "M11",
+        "target_gate": "G11_postselection_and_online_qec_ledgers_do_not_mix",
+        "detected": true
+      },
+      {
+        "mutation_id": "M12",
+        "target_gate": "G12_twelve_missing_physical_costs_stay_null",
+        "detected": true
+      },
+      {
+        "mutation_id": "M13",
+        "target_gate": "G13_only_finite_model_operational_boundary_is_established",
+        "detected": true
+      },
+      {
+        "mutation_id": "M14",
+        "target_gate": "G14_boundary_uses_matched_idle_without_fit_or_ratio",
+        "detected": true
+      },
+      {
+        "mutation_id": "M15",
+        "target_gate": "G15_coherence_and_full_cost_claims_not_established",
+        "detected": true
+      },
+      {
+        "mutation_id": "M16",
+        "target_gate": "G16_postselected_and_experimental_break_even_not_established",
+        "detected": true
+      },
+      {
+        "mutation_id": "M17",
+        "target_gate": "G17_sivak_value_is_literature_only_nonranking_different_task",
+        "detected": true
+      },
+      {
+        "mutation_id": "M18",
+        "target_gate": "G18_all_metric_and_evidence_transfers_forbidden",
+        "detected": true
+      },
+      {
+        "mutation_id": "M19",
+        "target_gate": "G19_manuscript_disclaims_physical_break_even",
+        "detected": true
+      },
+      {
+        "mutation_id": "M20",
+        "target_gate": "G20_response_answers_with_numbers_and_no_overclaim",
+        "detected": true
+      },
+      {
+        "mutation_id": "M21",
+        "target_gate": "G21_rows_are_unique_state_complete_and_lossless",
+        "detected": true
+      },
+      {
+        "mutation_id": "M22",
+        "target_gate": "G22_all_sources_registered_and_live",
+        "detected": true
+      },
+      {
+        "mutation_id": "M23",
+        "target_gate": "G23_risk_and_task_audit_present",
+        "detected": true
+      },
+      {
+        "mutation_id": "M24",
+        "target_gate": "G24_future_promotion_checklist_is_complete",
+        "detected": true
+      }
+    ]
+  },
+  "analysis_sha256": "4bbf99efddd341e06f419b529ea8fab4b09c09dad15c20f74dc28acc8eee1bcc",
+  "source_data": {
+    "path": "docs/t7_3_4_postselection_breakeven_reviewer_source_data.csv",
+    "sha256": "1d53aed3421a0dc8cda8274d4f0c977bc58bb3826743224bee756dbba842aade",
+    "bytes": 7194,
+    "rows": 24
+  },
+  "markdown": {
+    "path": "docs/postselection_breakeven_reviewer_response.md",
+    "sha256": "d4f56b82442b9355a5d19646714de321513dea313dacb05e6f3e112b2fdc9e63",
+    "bytes": 3509
+  }
+}
