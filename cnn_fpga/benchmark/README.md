@@ -54,6 +54,7 @@
 | [bit_accurate_hardware_reference.py](bit_accurate_hardware_reference.py) | T5.5.1 | 验证 packed input/output/state、binary parameter image、真实 5+1-cycle pipeline、atomic in-flight bank switch 与 deterministic golden trace |
 | [gru_student_hardware_feasibility.py](gru_student_hardware_feasibility.py) | T5.5.4 | 对 full float GRU、完整参数 int8/Q3.14 lower-bound 与 4-state student 做 fail-closed 存储/MAC/CXXRTL/三 seed P&R/deadline/gain 比较 |
 | [long_rtl_qualification.py](long_rtl_qualification.py) | T6.2.2 | 生成 10×100,000-cycle independent integer trace，以并行 CXXRTL 全字段对拍 production core，并审计抽象 FIFO/通信故障、恢复、饱和和 mutation gates |
+| [converged_long_rtl_qualification.py](converged_long_rtl_qualification.py) | T6.25.3 | 对 T6.25.2 exact converged top 重建 10×100,000-cycle independent golden，逐周期比较 148-byte public vector，并闭合六周期/II=1、full-image、host/policy atomic commit、fault/recovery、transport 与 mutation gates |
 | [route_a_claim_contract.py](route_a_claim_contract.py) | T6.5.1 | 冻结/验证 Route-A 11 个 canonical roles、三条 metric-disjoint comparison lanes、11 条 claim 的 evidence/activation/revocation/forbidden-wording 合同 |
 | [unified_execution_contract_validation.py](unified_execution_contract_validation.py) | T6.5.2 | 验证七个 observed-only 方法和隔离 oracle 的统一 syndrome/LUT/bank/cadence/budget/deadline contract；生成逐方法 70-case fail-fast matrix |
 | [route_a_preregistration.py](route_a_preregistration.py) | T6.5.3 | 在 T6.7 formal 结果前冻结 143 场景 cells、24 independent clusters、common validation-only threshold selector、paired cluster statistics、tail/catastrophic/nominal GO-NO-GO |
@@ -498,6 +499,7 @@ python -m cnn_fpga.benchmark.run_p4_hybrid_vs_ukf_ablation \
 | `docs/figures/t6_19_3_secondary_comparison_atlas.*` | `secondary_evidence_integrity_gate.py` | Python-only SVG/PDF/600-dpi TIFF/PNG非主排名图谱 |
 | `docs/t6_25_1_single_mode_rtl_boundary_audit.json` | `single_mode_rtl_boundary_audit.py` | single-mode 5-top live-hash/capability/实例化边界与 converged-production-top 缺口，不生成板测或 fastest claim |
 | `docs/t6_25_2_converged_rtl_formal.json` | `converged_rtl_formal.py` | unique converged production top 的 arbitrary-state guards、k-inductive invariants、all-state transition refinement、20-cycle BMC、真实 core atomic refinement、14 witnesses 与 21 formal mutation kills；不生成板测/fastest/multimode RTL claim |
+| `docs/t6_25_3_converged_long_rtl.json` | `converged_long_rtl_qualification.py` | 同一 exact top 的 1,000,000-cycle independent-golden/CXXRTL 全公开输出资格验证；19/19 gates、148/148 comparator-byte mutations、21/21 semantic mutations，板测字段继续关闭 |
 
 ## 关键依赖
 

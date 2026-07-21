@@ -871,10 +871,10 @@ def evaluate_gates(report: Mapping[str, Any]) -> list[dict[str, Any]]:
         ("all_public_outputs_bit_exact", len(cxx) == 10 and sum(int(row["mismatches"]) for row in cxx) == 0 and all(row["actual_digest"] == row["expected_digest"] for row in cxx)),
         ("cxxrtl_full_scale", full_scale and min(int(row["rows"]) for row in cxx) >= FAMILY_CYCLES and sum(int(row["rows"]) for row in cxx) >= 1_000_000),
         ("all_expected_bytes_mutation_checked", sum(int(row["shadow_mutations"]) for row in cxx) == EXPECTED_BYTES and sum(int(row["shadow_mutations_detected"]) for row in cxx) == EXPECTED_BYTES),
-        ("six_cycle_source_to_action_and_five_cycle_map", int(aggregate["latency_violations"]) == 0 and int(aggregate["map_latency_violations"]) == 0 and int(aggregate["route_alignment_violations"]) == 0 and sum(int(row["latency_violations"] + row["map_latency_violations"] + row["route_alignment_violations"]) for row in cxx) == 0),
+        ("six_cycle_source_to_action_and_five_cycle_map", int(aggregate["latency_violations"]) == 0 and int(aggregate["map_latency_violations"]) == 0 and int(aggregate["route_alignment_violations"]) == 0 and int(aggregate["input_valid"]) == int(aggregate["output_valid"]) == int(aggregate["route_valid"]) == int(aggregate["map_valid"]) and sum(int(row["latency_violations"] + row["map_latency_violations"] + row["route_alignment_violations"]) for row in cxx) == 0 and all(int(rtl["output_valid"]) == int(py["output_valid"]) and int(rtl["route_valid"]) == int(py["route_valid"]) and int(rtl["map_valid"]) == int(py["map_valid"]) for rtl, py in zip(cxx, report["python_families"], strict=True))),
         ("ii1_has_no_bubbles", int(aggregate["ii1_input_pairs"]) > 800_000 and int(aggregate["ii1_input_pairs"]) == int(aggregate["ii1_output_pairs"]) and sum(int(row["ii1_input_pairs"] - row["ii1_output_pairs"]) for row in cxx) == 0),
         ("no_undefined_action_or_crc_error", int(aggregate["undefined_actions"]) == 0 and int(aggregate["crc_errors"]) == 0 and sum(int(row["undefined_actions"]) for row in cxx) == 0),
-        ("transport_faults_accounted_and_drained", int(aggregate["silent_overflow"]) == 0 and int(aggregate["pending_transport"]) == 0 and all(int(transport.get(key, 0)) > 0 for key in ("pause_cycles", "overflow_events", "drop_events", "duplicate_events", "reorder_events", "sequence_faults", "deadline_faults", "explicit_fault_markers"))),
+        ("transport_faults_accounted_and_drained", int(aggregate["silent_overflow"]) == 0 and int(aggregate["pending_transport"]) == 0 and int(transport.get("accounted_overflow_events", -1)) == int(transport.get("overflow_events", -2)) and all(int(transport.get(key, 0)) > 0 for key in ("pause_cycles", "overflow_events", "drop_events", "duplicate_events", "reorder_events", "sequence_faults", "deadline_faults", "explicit_fault_markers"))),
         ("all_policy_actions_and_reasons_covered", all(int(value) > 0 for value in aggregate["actions"].values()) and all(int(value) > 0 for value in aggregate["reasons"].values())),
         ("all_manager_reject_reasons_covered", all(int(value) > 0 for value in aggregate["reject_reasons"].values())),
         ("full_image_abort_snapshot_cancel_paths_covered", int(aggregate["cfg_begin_acks"]) > 0 and int(aggregate["cfg_word_acks"]) >= 1028 and int(aggregate["cfg_finalize_acks"]) > 0 and int(aggregate["cfg_abort_acks"]) > 0 and int(aggregate["snapshot_acks"]) > 0 and int(aggregate["snapshot_valids"]) > 0 and int(aggregate["cancel_acks"]) > 0 and int(aggregate["trust_zero_cycles"]) > 0),
@@ -893,7 +893,7 @@ def semantic_mutation_audit(report: Mapping[str, Any]) -> dict[str, Any]:
     def attempt(name: str, mutate: Any) -> None:
         candidate = copy.deepcopy(report)
         mutate(candidate)
-        candidate["semantic_mutations"] = {"detected": 20, "total": 20}
+        candidate["semantic_mutations"] = {"detected": 21, "total": 21}
         rejected = not all(row["passed"] for row in evaluate_gates(candidate))
         mutations.append({"mutation": name, "rejected": rejected})
 
@@ -901,6 +901,7 @@ def semantic_mutation_audit(report: Mapping[str, Any]) -> dict[str, Any]:
     attempt("short_family", lambda x: x.update(cycles_per_family=99_999))
     attempt("erase_comparator_byte", lambda x: x["cxxrtl_families"][0].update(shadow_mutations_detected=147))
     attempt("change_latency", lambda x: x["aggregate_python"].update(latency_violations=1))
+    attempt("drop_final_output", lambda x: x["aggregate_python"].update(output_valid=x["aggregate_python"]["output_valid"] - 1))
     attempt("insert_ii1_bubble", lambda x: x["aggregate_python"].update(ii1_output_pairs=x["aggregate_python"]["ii1_output_pairs"] - 1))
     attempt("undefined_action", lambda x: x["aggregate_python"].update(undefined_actions=1))
     attempt("silent_overflow", lambda x: x["aggregate_python"].update(silent_overflow=1))
@@ -924,13 +925,21 @@ def _validate_report(report: Mapping[str, Any], *, check_files: bool = True) -> 
     _require(report["task_id"] == "T6.25.3", "wrong task")
     _require(report["verdict"] == VERDICT, "wrong verdict")
     _require(report["gate_summary"] == {"passed": 19, "total": 19}, "gate closure failed")
-    _require(report["semantic_mutations"] == {"detected": 20, "total": 20}, "mutation closure failed")
+    _require(report["semantic_mutations"] == {"detected": 21, "total": 21}, "mutation closure failed")
+    recomputed_gates = evaluate_gates(report)
+    _require(report["gates"][:-1] == recomputed_gates, "stored gates differ from recomputation")
+    recomputed_mutations = semantic_mutation_audit(report)
+    _require(report["semantic_mutation_results"] == recomputed_mutations["mutations"], "stored semantic mutations differ from recomputation")
     _require(all(row["passed"] for row in report["gates"]), "failed gate stored")
     _require(all(row["rejected"] for row in report["semantic_mutation_results"]), "surviving semantic mutation")
     _require(sum(int(row["mismatches"]) for row in report["cxxrtl_families"]) == 0, "stored mismatch")
     _require(report["trace"]["bytes"] == report["trace"]["rows"] * INPUT_STRUCT.size, "trace size mismatch")
     if check_files:
         _require(all(_binding_live(row) for row in report["bindings"]), "live binding mismatch")
+        _require(_binding_live(report["toolchain"]["model"]), "generated CXXRTL model binding mismatch")
+        _require(_binding_live(report["toolchain"]["executable_binding"]), "CXXRTL executable binding mismatch")
+        formal = ROOT / report["formal_anchor"]["path"]
+        _require(formal.is_file() and _sha256(formal) == report["formal_anchor"]["sha256"], "formal anchor binding mismatch")
         trace = ROOT / report["trace"]["path"]
         _require(trace.is_file() and _sha256(trace) == report["trace"]["sha256"], "trace binding mismatch")
 
@@ -971,7 +980,8 @@ def _write_outputs(report: Mapping[str, Any]) -> None:
 
 - source-to-action 恰为 6 cycles，MAP debug 恰为 5 cycles；连续输入的 II=1 pair 为 {aggregate['ii1_input_pairs']:,}，输出 pair 数相同，无 bubble。
 - 完整镜像事务实际传输 257×2 个 22-bit words，覆盖 CRC32、inactive write、trust、host/policy commit、cancel、drain、snapshot 与全部 11 类 reject reason。
-- CXXRTL comparator 对 148 个 expected bytes 逐字节 shadow mutation，{sum(int(row['shadow_mutations_detected']) for row in report['cxxrtl_families'])}/148 被检测；18/18 report semantic mutations 被独立 gate 重算拒绝。
+- 可从封装端注入的 core fault 位均被命中并恢复；由 converged manager/数据通路结构排除的 fault 位始终为 0，未通过重建 raw bypass 伪造覆盖。
+- CXXRTL comparator 对 148 个 expected bytes 逐字节 shadow mutation，{sum(int(row['shadow_mutations_detected']) for row in report['cxxrtl_families'])}/148 被检测；21/21 report semantic mutations 被独立 gate 重算拒绝。
 - 版本长轨无下降；near-wrap 不是靠百万周期从 0 暴力递增，而是绑定同一源码 T6.25.2 的 actual-core arbitrary-state atomic proof 与 near-wrap witness。
 
 ## 边界
@@ -1031,7 +1041,7 @@ def run_qualification(
     report["semantic_mutations"] = {"detected": audit["detected"], "total": audit["total"]}
     report["semantic_mutation_results"] = audit["mutations"]
     # Mutation closure is itself the nineteenth gate at qualifying scale.
-    report["gates"].append({"gate": "all_semantic_mutations_rejected", "passed": audit["detected"] == audit["total"] == 20})
+    report["gates"].append({"gate": "all_semantic_mutations_rejected", "passed": audit["detected"] == audit["total"] == 21})
     report["gate_summary"] = {
         "passed": sum(int(row["passed"]) for row in report["gates"]),
         "total": len(report["gates"]),
