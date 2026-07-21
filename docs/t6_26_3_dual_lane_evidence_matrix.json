@@ -1,0 +1,2048 @@
+{
+  "task_id": "T6.26.3",
+  "schema_version": "t6.26.3-dual-lane-evidence-matrix-v1",
+  "generated_at_utc": "2026-07-21T02:43:12.767666+00:00",
+  "parent_verification": {
+    "dual_contract": true,
+    "opened_multimode": true,
+    "multimode_headroom": true,
+    "rtl_formal": true,
+    "rtl_long": true,
+    "rtl_hardware": true
+  },
+  "parent_verdicts": {
+    "dual_contract": "PASS_DUAL_LANE_CONTRACT_FROZEN",
+    "opened_multimode": "GO_POSTERIOR_WEIGHTED_CPD_DRIFT_GAIN",
+    "multimode_headroom": "NO_GO_MULTIMODE_CAUSAL_HEADROOM",
+    "rtl_formal": "PASS_CONVERGED_PRODUCTION_TOP_PROPERTY_COVER_MUTATION_CLOSED",
+    "rtl_long": "PASS_EXACT_CONVERGED_TOP_MILLION_CYCLE_CXXRTL_QUALIFICATION",
+    "rtl_hardware": "PASS_EXACT_CONVERGED_TOP_THREE_SEED_PREBOARD_HARDWARE_LANE"
+  },
+  "parent_summaries": {
+    "opened_multimode": {
+      "verdict": "GO_POSTERIOR_WEIGHTED_CPD_DRIFT_GAIN",
+      "candidate_p_L": 0.1722609375,
+      "static_euclidean_p_L": 0.236929375,
+      "cycles": 9600000,
+      "claim_boundary": {
+        "allowed": [
+          "project-native observed-only posterior-weighted CPD result on the frozen d=3 heteroscedastic drift family",
+          "paired p_L and registered 512-cycle tail metrics against two same-task static deployable baselines",
+          "strict-causal software simulation, runtime and sampled host-memory evidence"
+        ],
+        "forbidden": [
+          "rewrite Phase 6B NO-GO or the V5 >=10% target",
+          "rank the hidden-state oracle as deployable",
+          "claim general multimode, stationary-threshold, FPGA or physical-device superiority",
+          "call a project-native heteroscedastic drift extension an official Lin et al. experiment"
+        ]
+      }
+    },
+    "multimode_headroom": {
+      "verdict": "NO_GO_MULTIMODE_CAUSAL_HEADROOM",
+      "strongest_baseline": "static_mixture_exact_mld",
+      "baseline_p_L": 0.11197916666666667,
+      "proposed_p_L": 0.11197916666666667,
+      "relative_improvement_point": 0.0,
+      "relative_improvement_lcb": 0.0,
+      "formal_or_pilot_accessed": false
+    },
+    "rtl_formal": {
+      "verdict": "PASS_CONVERGED_PRODUCTION_TOP_PROPERTY_COVER_MUTATION_CLOSED",
+      "gates": {
+        "passed": 17,
+        "total": 17
+      },
+      "mutations": {
+        "killed": 21,
+        "total": 21,
+        "minimum": 18
+      }
+    },
+    "rtl_long": {
+      "verdict": "PASS_EXACT_CONVERGED_TOP_MILLION_CYCLE_CXXRTL_QUALIFICATION",
+      "gates": {
+        "passed": 19,
+        "total": 19
+      },
+      "cycles": 1000000,
+      "mismatches": 0,
+      "ii1_input_pairs": 998435,
+      "ii1_output_pairs": 998435
+    },
+    "rtl_hardware": {
+      "verdict": "PASS_EXACT_CONVERGED_TOP_THREE_SEED_PREBOARD_HARDWARE_LANE",
+      "gates": {
+        "passed": 16,
+        "total": 16
+      },
+      "cycles": 6,
+      "ii": 1,
+      "seeds": [
+        1,
+        7,
+        19
+      ],
+      "all_timing_pass": true,
+      "minimum_fmax_mhz": 36.79446792602539,
+      "wrapper_may_dominate_all": true,
+      "measured_fields": {
+        "board_latency_ns": null,
+        "board_jitter_ns": null,
+        "board_deadline_miss_rate": null,
+        "board_power_mw": null,
+        "physical_transfer_latency_us": null,
+        "physical_commit_latency_us": null
+      }
+    }
+  },
+  "board_snapshot": {
+    "path": "docs/new_task_board.md",
+    "statuses": {
+      "T6.20.4": "Done",
+      "T6.24.5": "Dropped",
+      "T6.25.2": "Done",
+      "T6.25.3": "Done",
+      "T6.25.4": "Done",
+      "T6.26.1": "Dropped",
+      "T6.26.2": "Dropped",
+      "T6.26.3": "ACTIVE_OR_DONE"
+    },
+    "canonical_sha256": "ffcd816c41393c6ed106e7f3988046be6a70d7263833d610331944460cbef36d"
+  },
+  "lane_outcomes": {
+    "MULTIMODE_SOFTWARE_ALGORITHM": "NO_GO_PRIMARY_WITH_OPENED_TASK_LOCAL_CONTEXT",
+    "SINGLE_MODE_DETERMINISTIC_RTL": "GO_EXACT_TOP_PREBOARD_HARDWARE_LANE",
+    "LEARNED_APPROXIMATION_EXTENSION": "DROPPED_ABSENT"
+  },
+  "artifact_registry": {
+    "implementation": {
+      "path": "cnn_fpga/benchmark/phase6d_dual_lane_evidence_matrix.py",
+      "sha256": "e86ffa21c9623ba5391f66289e975ed3e7d4675c75985c317418422f654574f5",
+      "bytes": 50664
+    },
+    "self_config": {
+      "path": "configs/phase6d/t6_26_3_dual_lane_evidence_matrix.json",
+      "sha256": "09dd65e9b3d8b655025e4965951bfe40d20fe876961c84abc756815800984d7c",
+      "bytes": 2312
+    },
+    "cancellation_ledger": {
+      "path": "docs/phase6d_multimode_v1_cancellation_ledger.md",
+      "sha256": "d468d37c973c3360036feab148195013e0247f1a88d0d54f7282d59dde8abf31",
+      "bytes": 3034
+    },
+    "dual_contract_report": {
+      "path": "docs/t6_20_2_dual_evidence_lane_contract.json",
+      "sha256": "33433227b6c6ec32c25d530f33502f17fbdf307dbb04a5960fe5117e5984dad6",
+      "bytes": 23824
+    },
+    "dual_contract_raw": {
+      "path": "docs/t6_20_2_dual_evidence_lane_contract_source_data.csv",
+      "sha256": "29aa63a6bfceefa0c83f5d09ff5f4e3a9bb4ef525b446bba4baaf3933a46ac72",
+      "bytes": 18164
+    },
+    "dual_contract_code": {
+      "path": "cnn_fpga/benchmark/dual_evidence_lane_contract.py",
+      "sha256": "385c7e87e4c0f274f5746f980c2a128381a7a9f27b1abdc92541b241b7a40ece",
+      "bytes": 41834
+    },
+    "mm_opened_report": {
+      "path": "docs/t6_18_3_multimode_posterior_weighted_cpd.json",
+      "sha256": "7d5f27225f377b88b130e721a3ba5d739662efa52f72796b852d99a0d6e857a8",
+      "bytes": 32023
+    },
+    "mm_opened_raw": {
+      "path": "docs/t6_18_3_multimode_posterior_weighted_cpd_source_data.csv",
+      "sha256": "560cea6e6e9a211347263b353db7b53a28d592038d6e98b48e08b06df52ab814",
+      "bytes": 17109010
+    },
+    "mm_opened_config": {
+      "path": "configs/literature/t6_18_3_multimode_drift.json",
+      "sha256": "62ffd7b788b3f320d736696506875b7054b78775cd586621c06881a06458ce4b",
+      "bytes": 3003
+    },
+    "mm_opened_code": {
+      "path": "cnn_fpga/benchmark/multimode_posterior_weighted_cpd.py",
+      "sha256": "0669d3046d051fac3306902ed424adcd3f464528051c3c41d311c63e3f0fe320",
+      "bytes": 35985
+    },
+    "mm_official_source": {
+      "path": "third_party/LatticeAlgorithms.jl/src/gkp.jl",
+      "sha256": "9f8c62d77731ed41d95ac9d6fde73facec3db9498bde83462737e2823bdd1d29",
+      "bytes": 6914
+    },
+    "mm_headroom_report": {
+      "path": "docs/t6_20_4_multimode_causal_headroom.json",
+      "sha256": "091e68bdd63f7245999e7506c9eda4fc37970d02792f5d82eb53583364098d93",
+      "bytes": 28011
+    },
+    "mm_headroom_raw": {
+      "path": "runs/t6_20_4_causal_headroom_raw.json",
+      "sha256": "cf825e703b54a15de05bf8a54ffd498ffd5917fb3727e14f53ccf610105fde35",
+      "bytes": 391830
+    },
+    "mm_headroom_source_data": {
+      "path": "docs/t6_20_4_multimode_causal_headroom_source_data.csv",
+      "sha256": "41d5dbe60186a2aae3a4b289357c341d83143951fddfd976658ce9c6330c1334",
+      "bytes": 12810
+    },
+    "mm_headroom_config": {
+      "path": "configs/phase6d/t6_20_4_causal_headroom.json",
+      "sha256": "e0f21b8aa220bee40aa9b6e27e84d13cdf2e40a6a69d906e23ddb6c53ff8297f",
+      "bytes": 2942
+    },
+    "mm_headroom_code": {
+      "path": "cnn_fpga/benchmark/multimode_causal_headroom.py",
+      "sha256": "7b10532716d08e48f1a46c45a2583dcfac6df427218d67386fe19c3b60dbe1e7",
+      "bytes": 34126
+    },
+    "mm_headroom_source": {
+      "path": "scripts/run_t6_20_4_causal_headroom.jl",
+      "sha256": "88358c54da640a852fdb9314f29853a464039dcd2b8fcd16d1e0d4301d01e7ae",
+      "bytes": 41726
+    },
+    "rtl_formal_report": {
+      "path": "docs/t6_25_2_converged_rtl_formal.json",
+      "sha256": "a8e8b8427cfa0557b77cfe0774dc50fb9300c832acc61cfc5ce5b622f2c4cab7",
+      "bytes": 102658
+    },
+    "rtl_formal_raw": {
+      "path": "docs/t6_25_2_converged_rtl_formal_source_data.csv",
+      "sha256": "3f5f816931431aaab2f70947954490125c2c831e31a67a5f24a693737052b54b",
+      "bytes": 7985
+    },
+    "rtl_formal_config": {
+      "path": "configs/phase6d/t6_25_2_converged_rtl_formal.json",
+      "sha256": "dad88961619f782c033376f72a9897ba5872803447eab97eb401dc62a9ccb077",
+      "bytes": 2970
+    },
+    "rtl_formal_code": {
+      "path": "cnn_fpga/benchmark/converged_rtl_formal.py",
+      "sha256": "7ca58c14dcfb28bced2fe653f18e0a54ed47ffb9d6bd1dc0fd36ec55fa09e707",
+      "bytes": 33350
+    },
+    "rtl_production_source": {
+      "path": "cnn_fpga/rtl/gkp_route_a_converged_production_top.sv",
+      "sha256": "67bd18122a60d9107e048b2f97f49d52d39be784835ffcff85d404f105618269",
+      "bytes": 13007
+    },
+    "rtl_long_report": {
+      "path": "docs/t6_25_3_converged_long_rtl.json",
+      "sha256": "24f39dcad4677895d07b087793823f9054cc8d48ac4dd13fe4346cfa62fcadea",
+      "bytes": 40956
+    },
+    "rtl_long_raw": {
+      "path": "docs/t6_25_3_converged_long_rtl_source_data.csv",
+      "sha256": "d7050e84605cd066b75be4b4cbf24171d9bb4db7e5e40f85f6f97c548f5d2d2a",
+      "bytes": 6546
+    },
+    "rtl_long_config": {
+      "path": "configs/phase6d/t6_25_3_converged_long_rtl.json",
+      "sha256": "93eb6b537164c148fb646626e9d2a8b4e15205bcd52bb3cbc05974c7a510333f",
+      "bytes": 782
+    },
+    "rtl_long_code": {
+      "path": "cnn_fpga/benchmark/converged_long_rtl_qualification.py",
+      "sha256": "5e61ba4b1a1bd9e321438ebdc85761cafbf77c25bbf10a242f854c90c5d5af11",
+      "bytes": 55315
+    },
+    "rtl_long_source": {
+      "path": "cnn_fpga/runtime/converged_production_reference.py",
+      "sha256": "0508324c57d78bd212586878f6933a710f34165f5c5fb1499a721f35c752bf96",
+      "bytes": 26137
+    },
+    "rtl_hardware_report": {
+      "path": "docs/t6_25_4_converged_hardware.json",
+      "sha256": "953162d728e887ec563c6a96d08395024345ea0ae12780fb3c85b2292d435104",
+      "bytes": 32395
+    },
+    "rtl_hardware_raw": {
+      "path": "docs/t6_25_4_converged_hardware_source_data.csv",
+      "sha256": "26c55466146625d9c360560609839128b7b0a83a5591f3715c3939d7b942e425",
+      "bytes": 1137
+    },
+    "rtl_hardware_config": {
+      "path": "configs/phase6d/t6_25_4_converged_hardware.json",
+      "sha256": "678622dcd19a34d939d9cd00d6902dd78ed82d32f839841bdcf0e6ea0038bcf1",
+      "bytes": 754
+    },
+    "rtl_hardware_code": {
+      "path": "cnn_fpga/benchmark/converged_hardware_lane_qualification.py",
+      "sha256": "6b1c61f4690ff22501b47f0a1c6a1238281645b3a39dfcae254e6514dcebf4da",
+      "bytes": 36856
+    },
+    "rtl_hardware_source": {
+      "path": "cnn_fpga/rtl/gkp_route_a_converged_synth_top.sv",
+      "sha256": "9f59e2afe58832ef27d3390e37743de0a22cf8086645f744628db4087f12cfd0",
+      "bytes": 12317
+    },
+    "rtl_hardware_netlist": {
+      "path": "docs/t6_25_4_converged_synth_netlist.json",
+      "sha256": "b771b5da8761cd458b3d159b4e2d004aed3fdc024e78574a0fbcf36f1c08feaf",
+      "bytes": 11898531
+    },
+    "board_blocker_report": {
+      "path": "docs/t6_9_2_route_a_board_measurement_blocker.json",
+      "sha256": "3ba6b5fbaf88049b62a6bb8fe32d3a1ccb2c4e234c7b4f96e7401e3f598bf8c8",
+      "bytes": 9311
+    },
+    "board_blocker_code": {
+      "path": "cnn_fpga/benchmark/route_a_board_measurement_gate.py",
+      "sha256": "397c2dc76a7bba0d71a1b1582cddb01b385c8beee4429ea21d20ea322466352b",
+      "bytes": 14700
+    }
+  },
+  "claims": [
+    {
+      "claim_id": "MM_OPENED_TASK_LOCAL_GAIN",
+      "lane_id": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "state": "RESULTS_ONLY_NONRANKING",
+      "metric_namespaces": [
+        "LER",
+        "TAIL",
+        "COMPUTE"
+      ],
+      "safe_wording": "On the opened project-native d=3 heteroscedastic drift extension, observed-only posterior-weighted CPD lowers paired LER and registered tail metrics relative to the two implemented static CPD baselines.",
+      "boundary": "This is task-local opened development evidence; it is not the Phase-6D strongest-baseline or frozen-benchmark SOTA result.",
+      "current_result": {
+        "cycles": 9600000,
+        "candidate_p_L": 0.1722609375,
+        "static_euclidean_p_L": 0.236929375,
+        "absolute_improvement": {
+          "mean": 0.0646684375,
+          "ci_low": 0.0644128125,
+          "ci_high": 0.06492635677083333,
+          "clusters": 32,
+          "resamples": 20000
+        },
+        "candidate_worst_window_ler": 0.291015625,
+        "candidate_cvar95_window_ler": 0.24062666933760685,
+        "candidate_runtime_seconds": 1853.8019994000108,
+        "candidate_seconds_per_decode": 0.00019310437493750112,
+        "candidate_allocated_bytes_first_decode_max": 20448
+      },
+      "evidence": {
+        "reports": [
+          "mm_opened_report"
+        ],
+        "raw_data": [
+          "mm_opened_raw"
+        ],
+        "configs": [
+          "self_config",
+          "mm_opened_config"
+        ],
+        "code": [
+          "mm_opened_code"
+        ],
+        "sources": [
+          "mm_official_source"
+        ],
+        "selectors": [
+          "summaries.aggregate",
+          "comparisons.aggregate",
+          "formal_counts",
+          "claim_boundary"
+        ]
+      },
+      "forbidden_wording": [
+        "multimode SOTA",
+        "strongest deployable baseline",
+        "implemented by the six-cycle RTL"
+      ],
+      "wording_status": "SAFE"
+    },
+    {
+      "claim_id": "MM_V1_CAUSAL_HEADROOM_NO_GO",
+      "lane_id": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "state": "MANDATORY_NEGATIVE",
+      "metric_namespaces": [
+        "LER",
+        "EVIDENCE_STATE"
+      ],
+      "safe_wording": "The preregistered Phase-6D v1 causal-headroom gate failed: the risk-aware action equals the strongest retained static-mixture exact-MLD baseline, giving zero paired relative improvement and zero lower confidence bound.",
+      "boundary": "All 13 development families and both retained baseline candidates remain visible; pilot and formal splits were not accessed.",
+      "current_result": {
+        "strongest_baseline": "static_mixture_exact_mld",
+        "baseline_p_L": 0.11197916666666667,
+        "proposed_p_L": 0.11197916666666667,
+        "relative_improvement_point": 0.0,
+        "relative_improvement_lcb": 0.0,
+        "formal_or_pilot_accessed": false,
+        "verdict": "NO_GO_MULTIMODE_CAUSAL_HEADROOM"
+      },
+      "evidence": {
+        "reports": [
+          "mm_headroom_report"
+        ],
+        "raw_data": [
+          "mm_headroom_raw",
+          "mm_headroom_source_data"
+        ],
+        "configs": [
+          "self_config",
+          "mm_headroom_config"
+        ],
+        "code": [
+          "mm_headroom_code"
+        ],
+        "sources": [
+          "mm_headroom_source",
+          "cancellation_ledger"
+        ],
+        "selectors": [
+          "strongest_development_baseline_selection",
+          "paired_bootstrap",
+          "headroom_gate",
+          "scope"
+        ]
+      },
+      "forbidden_wording": [
+        "passed the 10% gate",
+        "delete the strongest baseline",
+        "rescued by RTL safety"
+      ],
+      "wording_status": "SAFE"
+    },
+    {
+      "claim_id": "MM_FROZEN_BENCHMARK_SOTA_BLOCKED",
+      "lane_id": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "state": "BLOCKED_NOT_RUN",
+      "metric_namespaces": [
+        "EVIDENCE_STATE"
+      ],
+      "safe_wording": "No frozen-benchmark multimode SOTA result exists because the preregistered v1 headroom gate failed and T6.24.5 was dropped without pilot or formal access.",
+      "boundary": "T6.18.3 remains a task-local positive comparator result and cannot replace the unrun strongest-baseline promotion gate.",
+      "current_result": null,
+      "evidence": {
+        "reports": [
+          "mm_headroom_report"
+        ],
+        "raw_data": [
+          "mm_headroom_raw",
+          "mm_headroom_source_data"
+        ],
+        "configs": [
+          "self_config",
+          "mm_headroom_config"
+        ],
+        "code": [
+          "mm_headroom_code"
+        ],
+        "sources": [
+          "mm_headroom_source",
+          "cancellation_ledger"
+        ],
+        "selectors": [
+          "strongest_development_baseline_selection",
+          "paired_bootstrap",
+          "headroom_gate",
+          "scope"
+        ]
+      },
+      "forbidden_wording": [
+        "frozen-benchmark SOTA",
+        "universal GKP SOTA",
+        "formal confirmation"
+      ],
+      "wording_status": "SAFE"
+    },
+    {
+      "claim_id": "RTL_DETERMINISTIC_SIX_CYCLE_II1",
+      "lane_id": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "state": "CURRENT_RESTRICTED",
+      "metric_namespaces": [
+        "LATENCY_CYCLES",
+        "INITIATION_INTERVAL",
+        "CXXRTL"
+      ],
+      "safe_wording": "The exact single-mode converged RTL has a six-cycle, II=1 pre-board source-to-action architecture and passed a one-million-cycle full-public-vector CXXRTL qualification with zero mismatch.",
+      "boundary": "Cycles are RTL/CXXRTL evidence; nanoseconds are a post-route clock model without transport, CDC, pins or physical jitter.",
+      "current_result": {
+        "latency_cycles": 6,
+        "initiation_interval_cycles": 1,
+        "cycles_qualified": 1000000,
+        "mismatches": 0,
+        "ii1_input_pairs": 998435,
+        "ii1_output_pairs": 998435
+      },
+      "evidence": {
+        "reports": [
+          "rtl_formal_report",
+          "rtl_long_report",
+          "rtl_hardware_report"
+        ],
+        "raw_data": [
+          "rtl_formal_raw",
+          "rtl_long_raw",
+          "rtl_hardware_raw"
+        ],
+        "configs": [
+          "self_config",
+          "rtl_formal_config",
+          "rtl_long_config",
+          "rtl_hardware_config"
+        ],
+        "code": [
+          "rtl_formal_code",
+          "rtl_long_code",
+          "rtl_hardware_code"
+        ],
+        "sources": [
+          "rtl_production_source",
+          "rtl_long_source",
+          "rtl_hardware_source"
+        ],
+        "selectors": [
+          "formal_results",
+          "aggregate_python",
+          "clock_model",
+          "fmax_mhz",
+          "resource_summary",
+          "critical_paths"
+        ]
+      },
+      "forbidden_wording": [
+        "multimode decoder latency",
+        "board-measured latency",
+        "fastest FPGA decoder"
+      ],
+      "wording_status": "SAFE"
+    },
+    {
+      "claim_id": "RTL_ATOMIC_FAIL_CLOSED",
+      "lane_id": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "state": "CURRENT_RESTRICTED",
+      "metric_namespaces": [
+        "PROPERTY",
+        "CXXRTL"
+      ],
+      "safe_wording": "The exact converged production top passes the stated atomic versioned-bank, fail-closed, cover and mutation-closed pre-board property contract.",
+      "boundary": "The proof scope is the stated two-state RTL model and does not establish physical CDC, metastability or unbounded liveness.",
+      "current_result": {
+        "formal_gates": {
+          "passed": 17,
+          "total": 17
+        },
+        "formal_mutations": {
+          "killed": 21,
+          "total": 21,
+          "minimum": 18
+        },
+        "long_gates": {
+          "passed": 19,
+          "total": 19
+        },
+        "long_semantic_mutations": {
+          "detected": 21,
+          "total": 21
+        }
+      },
+      "evidence": {
+        "reports": [
+          "rtl_formal_report",
+          "rtl_long_report",
+          "rtl_hardware_report"
+        ],
+        "raw_data": [
+          "rtl_formal_raw",
+          "rtl_long_raw",
+          "rtl_hardware_raw"
+        ],
+        "configs": [
+          "self_config",
+          "rtl_formal_config",
+          "rtl_long_config",
+          "rtl_hardware_config"
+        ],
+        "code": [
+          "rtl_formal_code",
+          "rtl_long_code",
+          "rtl_hardware_code"
+        ],
+        "sources": [
+          "rtl_production_source",
+          "rtl_long_source",
+          "rtl_hardware_source"
+        ],
+        "selectors": [
+          "formal_results",
+          "aggregate_python",
+          "clock_model",
+          "fmax_mhz",
+          "resource_summary",
+          "critical_paths"
+        ]
+      },
+      "forbidden_wording": [
+        "physical fail-safe proof",
+        "multimode safety proof",
+        "board verified"
+      ],
+      "wording_status": "SAFE"
+    },
+    {
+      "claim_id": "RTL_POST_ROUTE_ESTIMATE",
+      "lane_id": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "state": "CURRENT_RESTRICTED",
+      "metric_namespaces": [
+        "POST_ROUTE",
+        "RESOURCE",
+        "LATENCY_CYCLES"
+      ],
+      "safe_wording": "The exact qualified top passes three-seed open-source GW2AR place-and-route at 27 MHz with the reported whole-harness Fmax and resource ranges.",
+      "boundary": "All three critical paths terminate in the observability fold, so Fmax is a conservative qualification-harness estimate rather than bare-core or board source-to-action speed.",
+      "current_result": {
+        "fmax_mhz": {
+          "minimum": 36.79446792602539,
+          "median": 37.73584747314453,
+          "maximum": 37.86874771118164,
+          "spread": 1.07427978515625
+        },
+        "resource_summary": {
+          "LUT4": {
+            "minimum": 6108,
+            "median": 6118,
+            "maximum": 6130,
+            "available": 20736
+          },
+          "DFF": {
+            "minimum": 2495,
+            "median": 2495,
+            "maximum": 2495,
+            "available": 15552
+          },
+          "BSRAM": {
+            "minimum": 8,
+            "median": 8,
+            "maximum": 8,
+            "available": 46
+          },
+          "MULT18X18": {
+            "minimum": 1,
+            "median": 1,
+            "maximum": 1,
+            "available": 48
+          },
+          "MULT9X9": {
+            "minimum": 1,
+            "median": 1,
+            "maximum": 1,
+            "available": 96
+          },
+          "ALU": {
+            "minimum": 590,
+            "median": 590,
+            "maximum": 590,
+            "available": 15552
+          },
+          "IOB": {
+            "minimum": 18,
+            "median": 18,
+            "maximum": 18,
+            "available": 384
+          }
+        },
+        "critical_paths": [
+          {
+            "seed": 1,
+            "period_ns": 26.40700029209256,
+            "segment_count": 93,
+            "clock_to_q_ns": 0.23100000619888306,
+            "logic_ns": 11.972000300884247,
+            "routing_ns": 14.16899998486042,
+            "setup_ns": 0.03500000014901161,
+            "start_cell": "converged.core.phase_frame_x_DFFRE_Q",
+            "start_location": [
+              22,
+              14
+            ],
+            "end_cell": "fold[11]_DFFR_Q",
+            "end_location": [
+              7,
+              12
+            ],
+            "from_clock": "posedge converged.clk",
+            "to_clock": "posedge converged.clk",
+            "start_component": "production_core",
+            "end_component": "observability_fold",
+            "wrapper_may_dominate": true
+          },
+          {
+            "seed": 7,
+            "period_ns": 26.500000212341547,
+            "segment_count": 77,
+            "clock_to_q_ns": 0.23100000619888306,
+            "logic_ns": 9.858000248670578,
+            "routing_ns": 16.375999957323074,
+            "setup_ns": 0.03500000014901161,
+            "start_cell": "converged.core.leakage_clean_run_DFFRE_Q_1",
+            "start_location": [
+              19,
+              15
+            ],
+            "end_cell": "fold[11]_DFFR_Q_15",
+            "end_location": [
+              6,
+              14
+            ],
+            "from_clock": "posedge converged.clk",
+            "to_clock": "posedge converged.clk",
+            "start_component": "production_core",
+            "end_component": "observability_fold",
+            "wrapper_may_dominate": true
+          },
+          {
+            "seed": 19,
+            "period_ns": 27.17800024524331,
+            "segment_count": 81,
+            "clock_to_q_ns": 0.23100000619888306,
+            "logic_ns": 10.30700021982193,
+            "routing_ns": 16.605000019073486,
+            "setup_ns": 0.03500000014901161,
+            "start_cell": "converged.core.leakage_clean_run_DFFRE_Q",
+            "start_location": [
+              22,
+              11
+            ],
+            "end_cell": "fold[11]_DFFR_Q",
+            "end_location": [
+              7,
+              10
+            ],
+            "from_clock": "posedge converged.clk",
+            "to_clock": "posedge converged.clk",
+            "start_component": "production_core",
+            "end_component": "observability_fold",
+            "wrapper_may_dominate": true
+          }
+        ],
+        "clock_model": {
+          "cycles": 6,
+          "initiation_interval_cycles": 1,
+          "at_27mhz_ns": 222.22222222222223,
+          "at_minimum_fmax_ns": 163.06799196180498,
+          "deadline_miss_count": null,
+          "jitter_ns": null,
+          "evidence_level": "post-route clock model; no transport or physical jitter"
+        }
+      },
+      "evidence": {
+        "reports": [
+          "rtl_formal_report",
+          "rtl_long_report",
+          "rtl_hardware_report"
+        ],
+        "raw_data": [
+          "rtl_formal_raw",
+          "rtl_long_raw",
+          "rtl_hardware_raw"
+        ],
+        "configs": [
+          "self_config",
+          "rtl_formal_config",
+          "rtl_long_config",
+          "rtl_hardware_config"
+        ],
+        "code": [
+          "rtl_formal_code",
+          "rtl_long_code",
+          "rtl_hardware_code"
+        ],
+        "sources": [
+          "rtl_production_source",
+          "rtl_long_source",
+          "rtl_hardware_source"
+        ],
+        "selectors": [
+          "formal_results",
+          "aggregate_python",
+          "clock_model",
+          "fmax_mhz",
+          "resource_summary",
+          "critical_paths"
+        ]
+      },
+      "forbidden_wording": [
+        "bare-core Fmax",
+        "vendor signoff",
+        "measured power",
+        "fastest"
+      ],
+      "wording_status": "SAFE"
+    },
+    {
+      "claim_id": "RTL_BOARD_MEASUREMENT_BLOCKED",
+      "lane_id": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "state": "BLOCKED_NOT_RUN",
+      "metric_namespaces": [
+        "BOARD_NULL",
+        "EVIDENCE_STATE"
+      ],
+      "safe_wording": "Physical-board correctness, latency, jitter, deadline, transport and power remain unavailable and null.",
+      "boundary": "No pre-board clock model, post-route estimate or analytic power sensitivity may fill a measured field.",
+      "current_result": {
+        "board_latency_ns": null,
+        "board_jitter_ns": null,
+        "board_deadline_miss_rate": null,
+        "board_power_mw": null,
+        "physical_transfer_latency_us": null,
+        "physical_commit_latency_us": null
+      },
+      "evidence": {
+        "reports": [
+          "rtl_hardware_report",
+          "board_blocker_report"
+        ],
+        "raw_data": [
+          "rtl_hardware_raw"
+        ],
+        "configs": [
+          "self_config",
+          "rtl_hardware_config"
+        ],
+        "code": [
+          "rtl_hardware_code",
+          "board_blocker_code"
+        ],
+        "sources": [
+          "rtl_production_source",
+          "rtl_hardware_source"
+        ],
+        "selectors": [
+          "measured_fields",
+          "evidence_boundary"
+        ]
+      },
+      "forbidden_wording": [
+        "board measured",
+        "zero physical deadline miss",
+        "measured power"
+      ],
+      "wording_status": "SAFE"
+    },
+    {
+      "claim_id": "RTL_SPEED_ADVANTAGE_PROHIBITED",
+      "lane_id": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "state": "PROHIBITED_POSITIVE",
+      "metric_namespaces": [
+        "EVIDENCE_STATE"
+      ],
+      "safe_wording": "No faster or fastest claim is supported because no same-task physical-board comparator is available and the current Fmax belongs to an observability harness.",
+      "boundary": "The hardware contribution is deterministic, atomic and fail-closed pre-board architecture, not a cross-paper speed rank.",
+      "current_result": {
+        "fastest_or_sota": false
+      },
+      "evidence": {
+        "reports": [
+          "rtl_formal_report",
+          "rtl_long_report",
+          "rtl_hardware_report"
+        ],
+        "raw_data": [
+          "rtl_formal_raw",
+          "rtl_long_raw",
+          "rtl_hardware_raw"
+        ],
+        "configs": [
+          "self_config",
+          "rtl_formal_config",
+          "rtl_long_config",
+          "rtl_hardware_config"
+        ],
+        "code": [
+          "rtl_formal_code",
+          "rtl_long_code",
+          "rtl_hardware_code"
+        ],
+        "sources": [
+          "rtl_production_source",
+          "rtl_long_source",
+          "rtl_hardware_source"
+        ],
+        "selectors": [
+          "formal_results",
+          "aggregate_python",
+          "clock_model",
+          "fmax_mhz",
+          "resource_summary",
+          "critical_paths"
+        ]
+      },
+      "forbidden_wording": [
+        "faster than existing FPGA decoders",
+        "fastest",
+        "SOTA latency"
+      ],
+      "wording_status": "SAFE"
+    },
+    {
+      "claim_id": "LEARNING_APPROXIMATION_DROPPED",
+      "lane_id": "LEARNED_APPROXIMATION_EXTENSION",
+      "state": "DROPPED_ABSENT",
+      "metric_namespaces": [
+        "STATUS",
+        "EVIDENCE_STATE"
+      ],
+      "safe_wording": "CNN/student is absent from the primary Phase-6D result because the v1 headroom gate did not authorize a teacher, distillation, quantization or matched formal-retention run.",
+      "boundary": "Legacy CNN evidence remains an ablation only and cannot rescue either primary lane.",
+      "current_result": {
+        "T6.26.1": "Dropped",
+        "T6.26.2": "Dropped",
+        "present_in_primary_rtl": false
+      },
+      "evidence": {
+        "reports": [
+          "dual_contract_report",
+          "mm_headroom_report",
+          "rtl_hardware_report"
+        ],
+        "raw_data": [
+          "dual_contract_raw",
+          "mm_headroom_source_data",
+          "rtl_hardware_raw"
+        ],
+        "configs": [
+          "self_config",
+          "mm_headroom_config",
+          "rtl_hardware_config"
+        ],
+        "code": [
+          "dual_contract_code",
+          "mm_headroom_code",
+          "rtl_hardware_code"
+        ],
+        "sources": [
+          "cancellation_ledger",
+          "rtl_hardware_source"
+        ],
+        "selectors": [
+          "lanes.LEARNED_APPROXIMATION_EXTENSION",
+          "scope",
+          "learning_extension"
+        ]
+      },
+      "forbidden_wording": [
+        "CNN-centric primary contribution",
+        "student proves SOTA",
+        "student proves RTL safety"
+      ],
+      "wording_status": "SAFE"
+    },
+    {
+      "claim_id": "DUAL_LANE_NONTRANSFERABILITY",
+      "lane_id": "META_CONTRACT",
+      "state": "META_BOUNDARY",
+      "metric_namespaces": [
+        "EVIDENCE_STATE"
+      ],
+      "safe_wording": "Multimode software LER evidence and single-mode RTL deterministic/safety evidence are parallel but non-transferable; no weighted global score or cross-lane gate substitution is permitted.",
+      "boundary": "The learning extension is dependent and absent, not a third primary evidence lane.",
+      "current_result": {
+        "global_weighted_score": null,
+        "one_lane_cannot_satisfy_another_lane_gate": true
+      },
+      "evidence": {
+        "reports": [
+          "dual_contract_report",
+          "mm_headroom_report",
+          "rtl_hardware_report"
+        ],
+        "raw_data": [
+          "dual_contract_raw",
+          "mm_headroom_source_data",
+          "rtl_hardware_raw"
+        ],
+        "configs": [
+          "self_config",
+          "mm_headroom_config",
+          "rtl_hardware_config"
+        ],
+        "code": [
+          "dual_contract_code",
+          "mm_headroom_code",
+          "rtl_hardware_code"
+        ],
+        "sources": [
+          "cancellation_ledger",
+          "rtl_production_source"
+        ],
+        "selectors": [
+          "forbidden_transfers",
+          "headroom_gate",
+          "evidence_boundary"
+        ]
+      },
+      "forbidden_wording": [
+        "combined LER-latency score",
+        "RTL rescues multimode",
+        "multimode validates RTL"
+      ],
+      "wording_status": "SAFE"
+    }
+  ],
+  "figure_contract": {
+    "figure_id": "PHASE6D_DUAL_LANE_MAIN_FIGURE",
+    "panels": [
+      {
+        "panel_id": "MULTIMODE_SOFTWARE",
+        "lane_id": "MULTIMODE_SOFTWARE_ALGORITHM",
+        "allowed_metric_namespaces": [
+          "LER",
+          "TAIL",
+          "SCALING",
+          "COMPUTE",
+          "EVIDENCE_STATE"
+        ]
+      },
+      {
+        "panel_id": "SINGLE_MODE_RTL",
+        "lane_id": "SINGLE_MODE_DETERMINISTIC_RTL",
+        "allowed_metric_namespaces": [
+          "LATENCY_CYCLES",
+          "INITIATION_INTERVAL",
+          "PROPERTY",
+          "CXXRTL",
+          "POST_ROUTE",
+          "RESOURCE",
+          "BOARD_NULL",
+          "EVIDENCE_STATE"
+        ]
+      },
+      {
+        "panel_id": "LEARNING_EXTENSION",
+        "lane_id": "LEARNED_APPROXIMATION_EXTENSION",
+        "allowed_metric_namespaces": [
+          "STATUS",
+          "EVIDENCE_STATE"
+        ]
+      }
+    ],
+    "elements": [
+      {
+        "element_id": "MM-E1",
+        "panel_id": "MULTIMODE_SOFTWARE",
+        "lane_id": "MULTIMODE_SOFTWARE_ALGORITHM",
+        "metric_namespace": "LER",
+        "title": "Opened task-local d=3 LER",
+        "value": {
+          "cycles": 9600000,
+          "candidate_p_L": 0.1722609375,
+          "static_euclidean_p_L": 0.236929375,
+          "absolute_improvement": {
+            "mean": 0.0646684375,
+            "ci_low": 0.0644128125,
+            "ci_high": 0.06492635677083333,
+            "clusters": 32,
+            "resamples": 20000
+          }
+        },
+        "evidence": {
+          "reports": [
+            "mm_opened_report"
+          ],
+          "raw_data": [
+            "mm_opened_raw"
+          ],
+          "configs": [
+            "self_config",
+            "mm_opened_config"
+          ],
+          "code": [
+            "mm_opened_code"
+          ],
+          "sources": [
+            "mm_official_source"
+          ],
+          "selectors": [
+            "summaries.aggregate",
+            "comparisons.aggregate",
+            "formal_counts",
+            "claim_boundary"
+          ]
+        },
+        "allowed_wording": "Opened development context; not strongest-baseline SOTA.",
+        "annotation": "Opened development context; not strongest-baseline SOTA.",
+        "forbidden_interpretation": [
+          "global SOTA",
+          "hardware latency"
+        ]
+      },
+      {
+        "element_id": "MM-E2",
+        "panel_id": "MULTIMODE_SOFTWARE",
+        "lane_id": "MULTIMODE_SOFTWARE_ALGORITHM",
+        "metric_namespace": "TAIL",
+        "title": "Opened task-local registered tail",
+        "value": {
+          "candidate_worst_window_ler": 0.291015625,
+          "candidate_cvar95_window_ler": 0.24062666933760685
+        },
+        "evidence": {
+          "reports": [
+            "mm_opened_report"
+          ],
+          "raw_data": [
+            "mm_opened_raw"
+          ],
+          "configs": [
+            "self_config",
+            "mm_opened_config"
+          ],
+          "code": [
+            "mm_opened_code"
+          ],
+          "sources": [
+            "mm_official_source"
+          ],
+          "selectors": [
+            "summaries.aggregate",
+            "comparisons.aggregate",
+            "formal_counts",
+            "claim_boundary"
+          ]
+        },
+        "allowed_wording": "Non-overlapping 512-cycle windows under the frozen task-local rule.",
+        "annotation": "Non-overlapping 512-cycle windows under the frozen task-local rule.",
+        "forbidden_interpretation": [
+          "general tail SOTA",
+          "strongest-baseline tail"
+        ]
+      },
+      {
+        "element_id": "MM-E3",
+        "panel_id": "MULTIMODE_SOFTWARE",
+        "lane_id": "MULTIMODE_SOFTWARE_ALGORITHM",
+        "metric_namespace": "COMPUTE",
+        "title": "Opened task-local host compute",
+        "value": {
+          "candidate_runtime_seconds": 1853.8019994000108,
+          "candidate_seconds_per_decode": 0.00019310437493750112,
+          "candidate_allocated_bytes_first_decode_max": 20448
+        },
+        "evidence": {
+          "reports": [
+            "mm_opened_report"
+          ],
+          "raw_data": [
+            "mm_opened_raw"
+          ],
+          "configs": [
+            "self_config",
+            "mm_opened_config"
+          ],
+          "code": [
+            "mm_opened_code"
+          ],
+          "sources": [
+            "mm_official_source"
+          ],
+          "selectors": [
+            "summaries.aggregate",
+            "comparisons.aggregate",
+            "formal_counts",
+            "claim_boundary"
+          ]
+        },
+        "allowed_wording": "Software runtime and sampled allocation, not RTL timing or physical power.",
+        "annotation": "Software runtime and sampled allocation, not RTL timing or physical power.",
+        "forbidden_interpretation": [
+          "six-cycle latency",
+          "FPGA resource"
+        ]
+      },
+      {
+        "element_id": "MM-E4",
+        "panel_id": "MULTIMODE_SOFTWARE",
+        "lane_id": "MULTIMODE_SOFTWARE_ALGORITHM",
+        "metric_namespace": "LER",
+        "title": "Phase-6D v1 strongest-baseline headroom",
+        "value": {
+          "strongest_baseline": "static_mixture_exact_mld",
+          "baseline_p_L": 0.11197916666666667,
+          "proposed_p_L": 0.11197916666666667,
+          "relative_improvement_point": 0.0,
+          "relative_improvement_lcb": 0.0,
+          "formal_or_pilot_accessed": false,
+          "verdict": "NO_GO_MULTIMODE_CAUSAL_HEADROOM"
+        },
+        "evidence": {
+          "reports": [
+            "mm_headroom_report"
+          ],
+          "raw_data": [
+            "mm_headroom_raw",
+            "mm_headroom_source_data"
+          ],
+          "configs": [
+            "self_config",
+            "mm_headroom_config"
+          ],
+          "code": [
+            "mm_headroom_code"
+          ],
+          "sources": [
+            "mm_headroom_source",
+            "cancellation_ledger"
+          ],
+          "selectors": [
+            "strongest_development_baseline_selection",
+            "paired_bootstrap",
+            "headroom_gate",
+            "scope"
+          ]
+        },
+        "allowed_wording": "Mandatory negative: point and LCB are both zero.",
+        "annotation": "Mandatory negative: point and LCB are both zero.",
+        "forbidden_interpretation": [
+          "remove denominator",
+          "rescue with RTL"
+        ]
+      },
+      {
+        "element_id": "MM-E5",
+        "panel_id": "MULTIMODE_SOFTWARE",
+        "lane_id": "MULTIMODE_SOFTWARE_ALGORITHM",
+        "metric_namespace": "EVIDENCE_STATE",
+        "title": "Frozen-benchmark promotion state",
+        "value": null,
+        "evidence": {
+          "reports": [
+            "mm_headroom_report"
+          ],
+          "raw_data": [
+            "mm_headroom_raw",
+            "mm_headroom_source_data"
+          ],
+          "configs": [
+            "self_config",
+            "mm_headroom_config"
+          ],
+          "code": [
+            "mm_headroom_code"
+          ],
+          "sources": [
+            "mm_headroom_source",
+            "cancellation_ledger"
+          ],
+          "selectors": [
+            "strongest_development_baseline_selection",
+            "paired_bootstrap",
+            "headroom_gate",
+            "scope"
+          ]
+        },
+        "allowed_wording": "T6.24.5 Dropped; pilot/formal unaccessed.",
+        "annotation": "T6.24.5 Dropped; pilot/formal unaccessed.",
+        "forbidden_interpretation": [
+          "formal result",
+          "frozen SOTA"
+        ]
+      },
+      {
+        "element_id": "RTL-E1",
+        "panel_id": "SINGLE_MODE_RTL",
+        "lane_id": "SINGLE_MODE_DETERMINISTIC_RTL",
+        "metric_namespace": "LATENCY_CYCLES",
+        "title": "Deterministic pipeline",
+        "value": {
+          "cycles": 6,
+          "II": 1
+        },
+        "evidence": {
+          "reports": [
+            "rtl_formal_report",
+            "rtl_long_report",
+            "rtl_hardware_report"
+          ],
+          "raw_data": [
+            "rtl_formal_raw",
+            "rtl_long_raw",
+            "rtl_hardware_raw"
+          ],
+          "configs": [
+            "self_config",
+            "rtl_formal_config",
+            "rtl_long_config",
+            "rtl_hardware_config"
+          ],
+          "code": [
+            "rtl_formal_code",
+            "rtl_long_code",
+            "rtl_hardware_code"
+          ],
+          "sources": [
+            "rtl_production_source",
+            "rtl_long_source",
+            "rtl_hardware_source"
+          ],
+          "selectors": [
+            "formal_results",
+            "aggregate_python",
+            "clock_model",
+            "fmax_mhz",
+            "resource_summary",
+            "critical_paths"
+          ]
+        },
+        "allowed_wording": "Cycle contract, not physical nanoseconds.",
+        "annotation": "Cycle contract, not physical nanoseconds.",
+        "forbidden_interpretation": [
+          "multimode latency",
+          "board latency"
+        ]
+      },
+      {
+        "element_id": "RTL-E2",
+        "panel_id": "SINGLE_MODE_RTL",
+        "lane_id": "SINGLE_MODE_DETERMINISTIC_RTL",
+        "metric_namespace": "PROPERTY",
+        "title": "Atomic/fail-closed property closure",
+        "value": {
+          "formal_gates": {
+            "passed": 17,
+            "total": 17
+          },
+          "formal_mutations": {
+            "killed": 21,
+            "total": 21,
+            "minimum": 18
+          },
+          "long_gates": {
+            "passed": 19,
+            "total": 19
+          },
+          "long_semantic_mutations": {
+            "detected": 21,
+            "total": 21
+          }
+        },
+        "evidence": {
+          "reports": [
+            "rtl_formal_report",
+            "rtl_long_report",
+            "rtl_hardware_report"
+          ],
+          "raw_data": [
+            "rtl_formal_raw",
+            "rtl_long_raw",
+            "rtl_hardware_raw"
+          ],
+          "configs": [
+            "self_config",
+            "rtl_formal_config",
+            "rtl_long_config",
+            "rtl_hardware_config"
+          ],
+          "code": [
+            "rtl_formal_code",
+            "rtl_long_code",
+            "rtl_hardware_code"
+          ],
+          "sources": [
+            "rtl_production_source",
+            "rtl_long_source",
+            "rtl_hardware_source"
+          ],
+          "selectors": [
+            "formal_results",
+            "aggregate_python",
+            "clock_model",
+            "fmax_mhz",
+            "resource_summary",
+            "critical_paths"
+          ]
+        },
+        "allowed_wording": "Two-state pre-board property scope.",
+        "annotation": "Two-state pre-board property scope.",
+        "forbidden_interpretation": [
+          "physical metastability proof",
+          "multimode safety"
+        ]
+      },
+      {
+        "element_id": "RTL-E3",
+        "panel_id": "SINGLE_MODE_RTL",
+        "lane_id": "SINGLE_MODE_DETERMINISTIC_RTL",
+        "metric_namespace": "CXXRTL",
+        "title": "Million-cycle exact qualification",
+        "value": {
+          "latency_cycles": 6,
+          "initiation_interval_cycles": 1,
+          "cycles_qualified": 1000000,
+          "mismatches": 0,
+          "ii1_input_pairs": 998435,
+          "ii1_output_pairs": 998435
+        },
+        "evidence": {
+          "reports": [
+            "rtl_formal_report",
+            "rtl_long_report",
+            "rtl_hardware_report"
+          ],
+          "raw_data": [
+            "rtl_formal_raw",
+            "rtl_long_raw",
+            "rtl_hardware_raw"
+          ],
+          "configs": [
+            "self_config",
+            "rtl_formal_config",
+            "rtl_long_config",
+            "rtl_hardware_config"
+          ],
+          "code": [
+            "rtl_formal_code",
+            "rtl_long_code",
+            "rtl_hardware_code"
+          ],
+          "sources": [
+            "rtl_production_source",
+            "rtl_long_source",
+            "rtl_hardware_source"
+          ],
+          "selectors": [
+            "formal_results",
+            "aggregate_python",
+            "clock_model",
+            "fmax_mhz",
+            "resource_summary",
+            "critical_paths"
+          ]
+        },
+        "allowed_wording": "Full 148-byte public vector; zero mismatch.",
+        "annotation": "Full 148-byte public vector; zero mismatch.",
+        "forbidden_interpretation": [
+          "four-state proof",
+          "board correctness"
+        ]
+      },
+      {
+        "element_id": "RTL-E4",
+        "panel_id": "SINGLE_MODE_RTL",
+        "lane_id": "SINGLE_MODE_DETERMINISTIC_RTL",
+        "metric_namespace": "POST_ROUTE",
+        "title": "Three-seed whole-harness P&R",
+        "value": {
+          "fmax_mhz": {
+            "minimum": 36.79446792602539,
+            "median": 37.73584747314453,
+            "maximum": 37.86874771118164,
+            "spread": 1.07427978515625
+          },
+          "critical_paths": [
+            {
+              "seed": 1,
+              "period_ns": 26.40700029209256,
+              "segment_count": 93,
+              "clock_to_q_ns": 0.23100000619888306,
+              "logic_ns": 11.972000300884247,
+              "routing_ns": 14.16899998486042,
+              "setup_ns": 0.03500000014901161,
+              "start_cell": "converged.core.phase_frame_x_DFFRE_Q",
+              "start_location": [
+                22,
+                14
+              ],
+              "end_cell": "fold[11]_DFFR_Q",
+              "end_location": [
+                7,
+                12
+              ],
+              "from_clock": "posedge converged.clk",
+              "to_clock": "posedge converged.clk",
+              "start_component": "production_core",
+              "end_component": "observability_fold",
+              "wrapper_may_dominate": true
+            },
+            {
+              "seed": 7,
+              "period_ns": 26.500000212341547,
+              "segment_count": 77,
+              "clock_to_q_ns": 0.23100000619888306,
+              "logic_ns": 9.858000248670578,
+              "routing_ns": 16.375999957323074,
+              "setup_ns": 0.03500000014901161,
+              "start_cell": "converged.core.leakage_clean_run_DFFRE_Q_1",
+              "start_location": [
+                19,
+                15
+              ],
+              "end_cell": "fold[11]_DFFR_Q_15",
+              "end_location": [
+                6,
+                14
+              ],
+              "from_clock": "posedge converged.clk",
+              "to_clock": "posedge converged.clk",
+              "start_component": "production_core",
+              "end_component": "observability_fold",
+              "wrapper_may_dominate": true
+            },
+            {
+              "seed": 19,
+              "period_ns": 27.17800024524331,
+              "segment_count": 81,
+              "clock_to_q_ns": 0.23100000619888306,
+              "logic_ns": 10.30700021982193,
+              "routing_ns": 16.605000019073486,
+              "setup_ns": 0.03500000014901161,
+              "start_cell": "converged.core.leakage_clean_run_DFFRE_Q",
+              "start_location": [
+                22,
+                11
+              ],
+              "end_cell": "fold[11]_DFFR_Q",
+              "end_location": [
+                7,
+                10
+              ],
+              "from_clock": "posedge converged.clk",
+              "to_clock": "posedge converged.clk",
+              "start_component": "production_core",
+              "end_component": "observability_fold",
+              "wrapper_may_dominate": true
+            }
+          ],
+          "clock_model": {
+            "cycles": 6,
+            "initiation_interval_cycles": 1,
+            "at_27mhz_ns": 222.22222222222223,
+            "at_minimum_fmax_ns": 163.06799196180498,
+            "deadline_miss_count": null,
+            "jitter_ns": null,
+            "evidence_level": "post-route clock model; no transport or physical jitter"
+          }
+        },
+        "evidence": {
+          "reports": [
+            "rtl_formal_report",
+            "rtl_long_report",
+            "rtl_hardware_report"
+          ],
+          "raw_data": [
+            "rtl_formal_raw",
+            "rtl_long_raw",
+            "rtl_hardware_raw"
+          ],
+          "configs": [
+            "self_config",
+            "rtl_formal_config",
+            "rtl_long_config",
+            "rtl_hardware_config"
+          ],
+          "code": [
+            "rtl_formal_code",
+            "rtl_long_code",
+            "rtl_hardware_code"
+          ],
+          "sources": [
+            "rtl_production_source",
+            "rtl_long_source",
+            "rtl_hardware_source"
+          ],
+          "selectors": [
+            "formal_results",
+            "aggregate_python",
+            "clock_model",
+            "fmax_mhz",
+            "resource_summary",
+            "critical_paths"
+          ]
+        },
+        "allowed_wording": "Critical paths end in observability fold; conservative harness estimate.",
+        "annotation": "Critical paths end in observability fold; conservative harness estimate.",
+        "forbidden_interpretation": [
+          "bare-core Fmax",
+          "fastest"
+        ]
+      },
+      {
+        "element_id": "RTL-E5",
+        "panel_id": "SINGLE_MODE_RTL",
+        "lane_id": "SINGLE_MODE_DETERMINISTIC_RTL",
+        "metric_namespace": "RESOURCE",
+        "title": "Three-seed resource range",
+        "value": {
+          "LUT4": {
+            "minimum": 6108,
+            "median": 6118,
+            "maximum": 6130,
+            "available": 20736
+          },
+          "DFF": {
+            "minimum": 2495,
+            "median": 2495,
+            "maximum": 2495,
+            "available": 15552
+          },
+          "BSRAM": {
+            "minimum": 8,
+            "median": 8,
+            "maximum": 8,
+            "available": 46
+          },
+          "MULT18X18": {
+            "minimum": 1,
+            "median": 1,
+            "maximum": 1,
+            "available": 48
+          },
+          "MULT9X9": {
+            "minimum": 1,
+            "median": 1,
+            "maximum": 1,
+            "available": 96
+          },
+          "ALU": {
+            "minimum": 590,
+            "median": 590,
+            "maximum": 590,
+            "available": 15552
+          },
+          "IOB": {
+            "minimum": 18,
+            "median": 18,
+            "maximum": 18,
+            "available": 384
+          }
+        },
+        "evidence": {
+          "reports": [
+            "rtl_formal_report",
+            "rtl_long_report",
+            "rtl_hardware_report"
+          ],
+          "raw_data": [
+            "rtl_formal_raw",
+            "rtl_long_raw",
+            "rtl_hardware_raw"
+          ],
+          "configs": [
+            "self_config",
+            "rtl_formal_config",
+            "rtl_long_config",
+            "rtl_hardware_config"
+          ],
+          "code": [
+            "rtl_formal_code",
+            "rtl_long_code",
+            "rtl_hardware_code"
+          ],
+          "sources": [
+            "rtl_production_source",
+            "rtl_long_source",
+            "rtl_hardware_source"
+          ],
+          "selectors": [
+            "formal_results",
+            "aggregate_python",
+            "clock_model",
+            "fmax_mhz",
+            "resource_summary",
+            "critical_paths"
+          ]
+        },
+        "allowed_wording": "Post-route utilization range for the qualification harness.",
+        "annotation": "Post-route utilization range for the qualification harness.",
+        "forbidden_interpretation": [
+          "board readback",
+          "cross-device rank"
+        ]
+      },
+      {
+        "element_id": "RTL-E6",
+        "panel_id": "SINGLE_MODE_RTL",
+        "lane_id": "SINGLE_MODE_DETERMINISTIC_RTL",
+        "metric_namespace": "BOARD_NULL",
+        "title": "Physical board fields",
+        "value": {
+          "board_latency_ns": null,
+          "board_jitter_ns": null,
+          "board_deadline_miss_rate": null,
+          "board_power_mw": null,
+          "physical_transfer_latency_us": null,
+          "physical_commit_latency_us": null
+        },
+        "evidence": {
+          "reports": [
+            "rtl_hardware_report",
+            "board_blocker_report"
+          ],
+          "raw_data": [
+            "rtl_hardware_raw"
+          ],
+          "configs": [
+            "self_config",
+            "rtl_hardware_config"
+          ],
+          "code": [
+            "rtl_hardware_code",
+            "board_blocker_code"
+          ],
+          "sources": [
+            "rtl_production_source",
+            "rtl_hardware_source"
+          ],
+          "selectors": [
+            "measured_fields",
+            "evidence_boundary"
+          ]
+        },
+        "allowed_wording": "All measured fields remain null.",
+        "annotation": "All measured fields remain null.",
+        "forbidden_interpretation": [
+          "measured latency",
+          "measured power"
+        ]
+      },
+      {
+        "element_id": "ML-E1",
+        "panel_id": "LEARNING_EXTENSION",
+        "lane_id": "LEARNED_APPROXIMATION_EXTENSION",
+        "metric_namespace": "STATUS",
+        "title": "CNN/student disposition",
+        "value": {
+          "T6.26.1": "Dropped",
+          "T6.26.2": "Dropped",
+          "present_in_primary_rtl": false
+        },
+        "evidence": {
+          "reports": [
+            "dual_contract_report",
+            "mm_headroom_report",
+            "rtl_hardware_report"
+          ],
+          "raw_data": [
+            "dual_contract_raw",
+            "mm_headroom_source_data",
+            "rtl_hardware_raw"
+          ],
+          "configs": [
+            "self_config",
+            "mm_headroom_config",
+            "rtl_hardware_config"
+          ],
+          "code": [
+            "dual_contract_code",
+            "mm_headroom_code",
+            "rtl_hardware_code"
+          ],
+          "sources": [
+            "cancellation_ledger",
+            "rtl_hardware_source"
+          ],
+          "selectors": [
+            "lanes.LEARNED_APPROXIMATION_EXTENSION",
+            "scope",
+            "learning_extension"
+          ]
+        },
+        "allowed_wording": "Inset/status only; no primary result metric.",
+        "annotation": "Inset/status only; no primary result metric.",
+        "forbidden_interpretation": [
+          "third primary lane",
+          "algorithm or RTL promotion"
+        ]
+      }
+    ],
+    "edges": [
+      {
+        "edge_id": "MM-CONTEXT-TO-DECISION",
+        "source_lane": "MULTIMODE_SOFTWARE_ALGORITHM",
+        "target_lane": "MULTIMODE_SOFTWARE_ALGORITHM",
+        "relation": "opened_context_then_preregistered_headroom_decision"
+      },
+      {
+        "edge_id": "RTL-PROPERTY-TO-LONG",
+        "source_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+        "target_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+        "relation": "same_exact_source_property_then_long_qualification"
+      },
+      {
+        "edge_id": "RTL-LONG-TO-PR",
+        "source_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+        "target_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+        "relation": "same_exact_source_long_qualification_then_postroute"
+      }
+    ],
+    "global_weighted_score": null,
+    "ranking_policy": "NO_CROSS_LANE_RANKING_OR_GATE_SUBSTITUTION",
+    "caption_contract": "Panel A reports multimode software LER/tail/compute and the mandatory v1 NO-GO; Panel B reports exact single-mode RTL cycles/properties/CXXRTL/P&R with board-null; the learning inset reports Dropped/absent only."
+  },
+  "forbidden_transfers": [
+    {
+      "transfer_id": "MM_LER_TO_RTL",
+      "source_lane": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "target_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "trigger": "attach multimode LER to current RTL implementation",
+      "disposition": "REJECT"
+    },
+    {
+      "transfer_id": "RTL_LATENCY_TO_MM",
+      "source_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "target_lane": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "trigger": "attach six-cycle latency to the multimode software decoder",
+      "disposition": "REJECT"
+    },
+    {
+      "transfer_id": "MM_POSITIVE_TO_MM_SOTA",
+      "source_lane": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "target_lane": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "trigger": "promote opened T6.18.3 context to frozen strongest-baseline SOTA",
+      "disposition": "REJECT"
+    },
+    {
+      "transfer_id": "MM_NEGATIVE_RESOLVED_BY_RTL",
+      "source_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "target_lane": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "trigger": "use RTL safety to rescue zero multimode headroom",
+      "disposition": "REJECT"
+    },
+    {
+      "transfer_id": "RTL_SAFETY_RESOLVED_BY_MM",
+      "source_lane": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "target_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "trigger": "use LER evidence to satisfy RTL property gates",
+      "disposition": "REJECT"
+    },
+    {
+      "transfer_id": "LEARNING_TO_MM_PROMOTION",
+      "source_lane": "LEARNED_APPROXIMATION_EXTENSION",
+      "target_lane": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "trigger": "use absent student as algorithm promotion evidence",
+      "disposition": "REJECT"
+    },
+    {
+      "transfer_id": "LEARNING_TO_RTL_PROMOTION",
+      "source_lane": "LEARNED_APPROXIMATION_EXTENSION",
+      "target_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "trigger": "use learned accuracy as atomic/fail-closed evidence",
+      "disposition": "REJECT"
+    },
+    {
+      "transfer_id": "PREBOARD_TO_BOARD",
+      "source_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "target_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "trigger": "rename P&R/clock model as measured",
+      "disposition": "REJECT"
+    },
+    {
+      "transfer_id": "HARNESS_FMAX_TO_BARE_CORE",
+      "source_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "target_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "trigger": "rename observability-harness Fmax as bare-core Fmax",
+      "disposition": "REJECT"
+    },
+    {
+      "transfer_id": "CROSS_LANE_WEIGHTED_SCORE",
+      "source_lane": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "target_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "trigger": "combine LER, latency and safety into one weighted rank",
+      "disposition": "REJECT"
+    }
+  ],
+  "evidence_boundary": {
+    "global_weighted_score": "PROHIBITED",
+    "cross_lane_gate_substitution": "PROHIBITED",
+    "multimode_frozen_benchmark_sota": false,
+    "single_mode_preboard_hardware_lane": true,
+    "board_measured": false,
+    "fastest_or_sota_hardware": false,
+    "multimode_decoder_in_rtl": false,
+    "learning_primary": false
+  },
+  "source_data": {
+    "path": "docs/t6_26_3_dual_lane_evidence_source_data.csv",
+    "sha256": "882823c835fb3f79d05f7d5fe779edc262422811d855938b4a98b97c1ceeef02",
+    "bytes": 47002,
+    "rows": 67
+  },
+  "markdown": {
+    "path": "docs/phase6d_dual_lane_evidence_matrix.md",
+    "sha256": "1e4f389924a2c05675a354c4942443c72462edf70f0d9248b0bfc92a611c1cba",
+    "bytes": 3633
+  },
+  "gates": [
+    {
+      "gate": "identity_and_frozen_config",
+      "passed": true
+    },
+    {
+      "gate": "all_six_parent_verifiers_pass",
+      "passed": true
+    },
+    {
+      "gate": "parent_verdicts_exact",
+      "passed": true
+    },
+    {
+      "gate": "board_states_exact_and_phase6d_active_or_done",
+      "passed": true
+    },
+    {
+      "gate": "lane_outcomes_are_independent",
+      "passed": true
+    },
+    {
+      "gate": "claim_states_and_wording_are_closed",
+      "passed": true
+    },
+    {
+      "gate": "every_claim_and_figure_element_has_report_raw_config_code_source_hashes",
+      "passed": true
+    },
+    {
+      "gate": "all_artifact_hash_bindings_are_live",
+      "passed": true
+    },
+    {
+      "gate": "opened_positive_is_task_local_and_recomputed",
+      "passed": true
+    },
+    {
+      "gate": "multimode_headroom_no_go_and_strongest_denominator_visible",
+      "passed": true
+    },
+    {
+      "gate": "multimode_formal_sota_is_blocked_and_unaccessed",
+      "passed": true
+    },
+    {
+      "gate": "rtl_six_cycle_ii1_and_million_cycle_zero_mismatch",
+      "passed": true
+    },
+    {
+      "gate": "rtl_atomic_fail_closed_property_and_mutations_pass",
+      "passed": true
+    },
+    {
+      "gate": "three_seed_postroute_is_exact_and_wrapper_caveat_preserved",
+      "passed": true
+    },
+    {
+      "gate": "board_measurements_remain_null_and_speed_claim_prohibited",
+      "passed": true
+    },
+    {
+      "gate": "learning_is_dropped_absent_and_nonprimary",
+      "passed": true
+    },
+    {
+      "gate": "panel_metric_namespaces_and_wording_are_disjoint",
+      "passed": true
+    },
+    {
+      "gate": "no_cross_lane_edges_or_weighted_score",
+      "passed": true
+    },
+    {
+      "gate": "all_ten_forbidden_transfers_are_explicit_rejections",
+      "passed": true
+    },
+    {
+      "gate": "lossless_source_data_is_bound_and_reconstructed",
+      "passed": true
+    },
+    {
+      "gate": "all_twenty_one_semantic_mutations_rejected",
+      "passed": true
+    }
+  ],
+  "semantic_mutations": {
+    "detected": 21,
+    "total": 21
+  },
+  "semantic_mutation_results": [
+    {
+      "mutation": "promote_multimode_sota",
+      "rejected": true
+    },
+    {
+      "mutation": "forge_headroom_gain",
+      "rejected": true
+    },
+    {
+      "mutation": "delete_strongest_denominator",
+      "rejected": true
+    },
+    {
+      "mutation": "invent_formal_access",
+      "rejected": true
+    },
+    {
+      "mutation": "attach_rtl_latency_to_mm",
+      "rejected": true
+    },
+    {
+      "mutation": "attach_ler_to_rtl",
+      "rejected": true
+    },
+    {
+      "mutation": "break_formal_gate",
+      "rejected": true
+    },
+    {
+      "mutation": "invent_cxxrtl_mismatch",
+      "rejected": true
+    },
+    {
+      "mutation": "change_latency_cycles",
+      "rejected": true
+    },
+    {
+      "mutation": "forge_fmax",
+      "rejected": true
+    },
+    {
+      "mutation": "erase_wrapper_caveat",
+      "rejected": true
+    },
+    {
+      "mutation": "invent_board_measurement",
+      "rejected": true
+    },
+    {
+      "mutation": "promote_fastest",
+      "rejected": true
+    },
+    {
+      "mutation": "mark_learning_done",
+      "rejected": true
+    },
+    {
+      "mutation": "make_learning_primary",
+      "rejected": true
+    },
+    {
+      "mutation": "add_global_weighted_score",
+      "rejected": true
+    },
+    {
+      "mutation": "insert_cross_lane_edge",
+      "rejected": true
+    },
+    {
+      "mutation": "corrupt_artifact_hash",
+      "rejected": true
+    },
+    {
+      "mutation": "remove_element_config_evidence",
+      "rejected": true
+    },
+    {
+      "mutation": "erase_element_allowed_wording",
+      "rejected": true
+    },
+    {
+      "mutation": "forge_source_data_rows",
+      "rejected": true
+    }
+  ],
+  "gate_summary": {
+    "passed": 21,
+    "total": 21
+  },
+  "verdict": "PASS_NONTRANSFERABLE_DUAL_LANE_EVIDENCE_AND_FIGURE_CONTRACT",
+  "analysis_sha256": "a6c1ee637ada6b0f65bbd130dd2dd5966f808666ba1c95cf224dd5a2a0ee4965"
+}
