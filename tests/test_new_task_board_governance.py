@@ -398,11 +398,12 @@ def test_phase6d_dual_evidence_lanes_are_strong_baseline_first_and_nontransferab
     assert statuses["T6.25.1"] == "Done"
     assert statuses["T6.25.2"] == "Done"
     assert statuses["T6.25.3"] == "Done"
-    assert statuses["T6.25.4"] == "In Progress"
+    assert statuses["T6.25.4"] == "Done"
+    assert statuses["T6.26.3"] == "In Progress"
     assert all(
         statuses[task] == "Todo"
         for task in expected_tasks
-        - {"T6.20.1", "T6.20.2", "T6.20.3", "T6.20.4", "T6.25.1", "T6.25.2", "T6.25.3", "T6.25.4"}
+        - {"T6.20.1", "T6.20.2", "T6.20.3", "T6.20.4", "T6.25.1", "T6.25.2", "T6.25.3", "T6.25.4", "T6.26.3"}
         - dropped
     )
     assert statuses["T6.9.2"] == "Blocked"
