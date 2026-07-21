@@ -1,0 +1,150 @@
+{
+  "task_id": "T7.1.5",
+  "schema_version": "t7.1.5-phase6d-claim-figure-delta-v1",
+  "expected_parent_verdicts": {
+    "matrix": "PASS_NONTRANSFERABLE_DUAL_LANE_EVIDENCE_AND_FIGURE_CONTRACT",
+    "final_gate": "GO_RTL_ONLY"
+  },
+  "figure_contracts": {
+    "Figure 5": {
+      "lane_id": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "core_conclusion": "Phase-6D v1 does not establish frozen-benchmark multimode LER SOTA because causal headroom over static-mixture exact MLD is zero; opened task-local LER, tail and compute values remain context only.",
+      "archetype": "quantitative grid",
+      "width_mm": 183,
+      "height_mm": 127,
+      "panel_map": {
+        "a": "strongest-baseline LER and no-go gate",
+        "b": "opened task-local LER, tail and host-compute context",
+        "c": "pilot, formal and scaling evidence-state boundary",
+        "d": "CNN/student dropped ablation inset"
+      }
+    },
+    "Figure 6": {
+      "lane_id": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "core_conclusion": "The exact single-mode converged RTL provides a deterministic six-cycle, II=1, atomic and fail-closed pre-board implementation contract, while physical-board latency, jitter, deadline and power remain unmeasured.",
+      "archetype": "schematic-led composite",
+      "width_mm": 183,
+      "height_mm": 137,
+      "panel_map": {
+        "a": "six-cycle II=1 deterministic pipeline",
+        "b": "atomic A/B bank, LKG and fail-closed transaction",
+        "c": "formal and million-cycle CXXRTL qualification",
+        "d": "three-seed whole-harness Fmax estimate",
+        "e": "post-route resource utilization",
+        "f": "board-null and speed-claim boundary"
+      }
+    }
+  },
+  "parent_element_layout": {
+    "MM-E1": ["Figure 5", "b"],
+    "MM-E2": ["Figure 5", "b"],
+    "MM-E3": ["Figure 5", "b"],
+    "MM-E4": ["Figure 5", "a"],
+    "MM-E5": ["Figure 5", "c"],
+    "RTL-E1": ["Figure 6", "a"],
+    "RTL-E2": ["Figure 6", "b"],
+    "RTL-E3": ["Figure 6", "c"],
+    "RTL-E4": ["Figure 6", "d"],
+    "RTL-E5": ["Figure 6", "e"],
+    "RTL-E6": ["Figure 6", "f"],
+    "ML-E1": ["Figure 5", "d"]
+  },
+  "derived_elements": {
+    "MM-D6": {
+      "figure_id": "Figure 5",
+      "panel": "c",
+      "lane_id": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "metric_namespace": "SCALING",
+      "title": "Frozen-benchmark scaling state",
+      "status": "NOT_RUN_AFTER_HEADROOM_NO_GO",
+      "value": {
+        "distance_scaling": null,
+        "sigma_scaling": null,
+        "pilot_accessed": false,
+        "formal_accessed": false
+      },
+      "allowed_wording": "No frozen-benchmark scaling result was produced after the causal-headroom no-go.",
+      "forbidden_interpretation": [
+        "scaling advantage",
+        "formal multimode result",
+        "SOTA extrapolation"
+      ],
+      "claim_ids": [
+        "MM_FROZEN_BENCHMARK_SOTA_BLOCKED"
+      ],
+      "evidence_template": "MM-E5"
+    }
+  },
+  "element_claims": {
+    "MM-E1": ["MM_OPENED_TASK_LOCAL_GAIN"],
+    "MM-E2": ["MM_OPENED_TASK_LOCAL_GAIN"],
+    "MM-E3": ["MM_OPENED_TASK_LOCAL_GAIN"],
+    "MM-E4": ["MM_V1_CAUSAL_HEADROOM_NO_GO"],
+    "MM-E5": ["MM_FROZEN_BENCHMARK_SOTA_BLOCKED"],
+    "MM-D6": ["MM_FROZEN_BENCHMARK_SOTA_BLOCKED"],
+    "RTL-E1": ["RTL_DETERMINISTIC_SIX_CYCLE_II1"],
+    "RTL-E2": ["RTL_ATOMIC_FAIL_CLOSED"],
+    "RTL-E3": ["RTL_DETERMINISTIC_SIX_CYCLE_II1", "RTL_ATOMIC_FAIL_CLOSED"],
+    "RTL-E4": ["RTL_POST_ROUTE_ESTIMATE", "RTL_SPEED_ADVANTAGE_PROHIBITED"],
+    "RTL-E5": ["RTL_POST_ROUTE_ESTIMATE"],
+    "RTL-E6": ["RTL_BOARD_MEASUREMENT_BLOCKED", "RTL_SPEED_ADVANTAGE_PROHIBITED"],
+    "ML-E1": ["LEARNING_APPROXIMATION_DROPPED"]
+  },
+  "claim_figure_map": {
+    "MM_OPENED_TASK_LOCAL_GAIN": ["Figure 5"],
+    "MM_V1_CAUSAL_HEADROOM_NO_GO": ["Figure 5"],
+    "MM_FROZEN_BENCHMARK_SOTA_BLOCKED": ["Figure 5"],
+    "RTL_DETERMINISTIC_SIX_CYCLE_II1": ["Figure 6"],
+    "RTL_ATOMIC_FAIL_CLOSED": ["Figure 6"],
+    "RTL_POST_ROUTE_ESTIMATE": ["Figure 6"],
+    "RTL_BOARD_MEASUREMENT_BLOCKED": ["Figure 6"],
+    "RTL_SPEED_ADVANTAGE_PROHIBITED": ["Figure 6"],
+    "LEARNING_APPROXIMATION_DROPPED": ["Figure 5"],
+    "DUAL_LANE_NONTRANSFERABILITY": ["Figure 5", "Figure 6"]
+  },
+  "required_metric_namespaces": {
+    "Figure 5": ["LER", "TAIL", "SCALING", "COMPUTE", "EVIDENCE_STATE", "STATUS"],
+    "Figure 6": ["LATENCY_CYCLES", "PROPERTY", "CXXRTL", "POST_ROUTE", "RESOURCE", "BOARD_NULL"]
+  },
+  "output_files": [
+    "figure5_multimode_software_delta.svg",
+    "figure5_multimode_software_delta.pdf",
+    "figure5_multimode_software_delta.png",
+    "figure5_multimode_software_delta.tiff",
+    "figure6_single_mode_rtl_delta.svg",
+    "figure6_single_mode_rtl_delta.pdf",
+    "figure6_single_mode_rtl_delta.png",
+    "figure6_single_mode_rtl_delta.tiff"
+  ],
+  "historical_snapshot_paths": [
+    "docs/t7_1_1_claim_evidence_boundary_matrix.json",
+    "docs/t7_1_1_claim_evidence_boundary_matrix_source_data.csv",
+    "docs/t7_1_2_main_figure_contract.json",
+    "docs/t7_1_2_main_figure_source_data.csv",
+    "docs/figures/t7_1_2_main_figures/figure_manifest.json",
+    "docs/t7_1_3_main_result_figure_contract.json",
+    "docs/t7_1_3_main_result_figure_source_data.csv",
+    "docs/figures/t7_1_3_main_figures/figure_manifest.json",
+    "docs/t7_1_4_supplement_figure_contract.json",
+    "docs/t7_1_4_supplement_figure_source_data.csv",
+    "docs/figures/t7_1_4_supplement_figures/figure_manifest.json"
+  ],
+  "forbidden_bundle_properties": {
+    "global_weighted_score": null,
+    "cross_lane_visual_edges": 0,
+    "old_outputs_overwritten": 0,
+    "multimode_decoder_in_current_rtl": false,
+    "board_measured": false,
+    "hardware_fastest_or_sota": false,
+    "learning_primary": false
+  },
+  "export_contract": {
+    "backend": "Python/matplotlib only",
+    "svg_text": "editable",
+    "pdf_fonttype": 42,
+    "png_dpi": 300,
+    "tiff_dpi": 600,
+    "tiff_compression": "LZW",
+    "white_background": true
+  }
+}

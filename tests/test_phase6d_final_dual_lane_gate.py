@@ -45,7 +45,8 @@ def test_board_snapshot_directly_consumes_t6_24_5_t6_25_4_and_t6_26_2(report: di
     assert snapshot["statuses"]["T6.26.2"] == "Dropped"
     assert snapshot["statuses"]["T6.26.4"] == "ACTIVE_OR_DONE"
     assert snapshot["statuses"]["T6.9.2"] == "Blocked"
-    assert snapshot["statuses"]["T7.1.5"] == "TODO_OR_ACTIVE"
+    assert snapshot["statuses"]["T7.1.5"] == "TODO_ACTIVE_OR_DONE"
+    assert snapshot["statuses"]["T7.2.6"] == "TODO_ACTIVE_OR_DONE"
 
 
 def test_multimode_lane_is_no_go_from_direct_headroom_and_task_state(report: dict) -> None:

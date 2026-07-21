@@ -58,6 +58,7 @@
 | [converged_hardware_lane_qualification.py](converged_hardware_lane_qualification.py) | T6.25.4 | 对 T6.25.3 exact qualified source 做 GW2AR 三 seed synthesis/P&R，重算资源/Fmax/critical path/6-cycle clock model 与 analytic power sensitivity，并保持全部 board-measured 字段为 null |
 | [phase6d_dual_lane_evidence_matrix.py](phase6d_dual_lane_evidence_matrix.py) | T6.26.3 | 生成 multimode software、single-mode RTL 与 learning extension 的不可迁移 claim/figure 合同；同时展示 opened task-local positive 和 strongest-baseline NO-GO，禁止总分、跨 lane 补门、board/fastest 升级 |
 | [phase6d_final_dual_lane_gate.py](phase6d_final_dual_lane_gate.py) | T6.26.4 | 直接消费 multimode、RTL 与 learning 的各自终态证据，以两 primary boolean 查四态真值表；当前输出 `GO_RTL_ONLY`，并逐 claim 冻结 blocking gap、revocation、placement 与 forbidden wording |
+| [phase6d_claim_figure_delta.py](phase6d_claim_figure_delta.py) | T7.1.5 | 冻结不覆盖历史快照的 Figure5 multimode-only / Figure6 exact-single-mode-RTL-only delta；逐字段保留13 elements/10 claims，绑定11 snapshots/58 artifacts/94-row Source Data，并验证Python图包与22类mutation |
 | [route_a_claim_contract.py](route_a_claim_contract.py) | T6.5.1 | 冻结/验证 Route-A 11 个 canonical roles、三条 metric-disjoint comparison lanes、11 条 claim 的 evidence/activation/revocation/forbidden-wording 合同 |
 | [unified_execution_contract_validation.py](unified_execution_contract_validation.py) | T6.5.2 | 验证七个 observed-only 方法和隔离 oracle 的统一 syndrome/LUT/bank/cadence/budget/deadline contract；生成逐方法 70-case fail-fast matrix |
 | [route_a_preregistration.py](route_a_preregistration.py) | T6.5.3 | 在 T6.7 formal 结果前冻结 143 场景 cells、24 independent clusters、common validation-only threshold selector、paired cluster statistics、tail/catastrophic/nominal GO-NO-GO |
@@ -506,6 +507,8 @@ python -m cnn_fpga.benchmark.run_p4_hybrid_vs_ukf_ablation \
 | `docs/t6_25_4_converged_hardware.json` | `converged_hardware_lane_qualification.py` | 同一 exact qualified top 的 GW2AR 三 seed pre-board P&R；16/16 gates、19/19 mutations，Fmax/resource/tool/raw artifacts 全 hash-bound；critical path 的 observability-wrapper 边界和全部 board-null 字段显式保留 |
 | `docs/t6_26_3_dual_lane_evidence_matrix.json` / `docs/t6_26_3_dual_lane_evidence_source_data.csv` | `phase6d_dual_lane_evidence_matrix.py` | 10 claim、12 figure elements、10 forbidden transfers、35 live artifact bindings 与 67-row lossless Source Data；multimode NO-GO/context、RTL GO、learning Dropped 三状态不可补门 |
 | `docs/t6_26_4_final_dual_lane_gate.json` / `docs/t6_26_4_final_dual_lane_gate_source_data.csv` | `phase6d_final_dual_lane_gate.py` | 21/21 gates、22/22 semantic mutations 与 54-row lossless Source Data；`GO_RTL_ONLY` 只允许 exact single-mode pre-board RTL lane，不表示论文整体、板测、速度 SOTA 或 multimode-in-RTL GO |
+| `docs/t7_1_5_phase6d_claim_figure_delta.json` / `docs/t7_1_5_phase6d_claim_figure_delta_source_data.csv` | `phase6d_claim_figure_delta.py` | 22/22 gates/mutations；Figure5只含MM NO-GO/context/unavailable/learning Dropped，Figure6只含RTL pre-board GO/board-null；旧图输出未覆盖或复用 |
+| `docs/figures/t7_1_5_phase6d_delta/figure_manifest.json` | `docs/figures/make_t7_1_5_phase6d_delta.py` | 8份SVG/PDF/PNG/TIFF，editable SVG text 56/88、TIFF最短边3000/3236px、零边缘裁切、人工视觉QA=PASS |
 
 ## 关键依赖
 

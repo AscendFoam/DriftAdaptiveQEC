@@ -137,6 +137,8 @@ def _board_snapshot() -> dict[str, Any]:
         actual = statuses.get(task, "MISSING")
         if expected == "ACTIVE_OR_DONE" and actual in {"In Progress", "Done"}:
             selected[task] = "ACTIVE_OR_DONE"
+        elif expected == "TODO_ACTIVE_OR_DONE" and actual in {"Todo", "In Progress", "Done"}:
+            selected[task] = "TODO_ACTIVE_OR_DONE"
         elif expected == "TODO_OR_ACTIVE" and actual in {"Todo", "In Progress"}:
             selected[task] = "TODO_OR_ACTIVE"
         else:
