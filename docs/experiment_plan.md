@@ -1726,6 +1726,8 @@ RTL lane 只消费 actual parameterized production top。首先检查 T6.2.2/T6.
 
 T6.25.1 的 live audit 已确认旧报告与当前源码均未悄然漂移，但发现它们不是同一 top：`gkp_fast_path_production_top` 有 CRC32、完整 image staging、CAS/cancel/drain/snapshot，却没有 Route-A policy/LKG；`route_a_integrated_qualification_top` 有 policy/LKG，却直接暴露 core 的 raw `cfg_we` 和 `bank*_trusted`；`route_a_hardware_pareto_synth_top` 包裹的也是后者。T6.2.2 的百万周期同样只覆盖 raw-pin core wrapper，T6.2.1/T6.2.2 的 legacy report 还没有直接绑定输入 source hashes。因此旧 PASS 只作 regression/reference，不能横向拼成 actual-top atomic claim。T6.25.2 必须先构建唯一 converged production top；T6.25.3/T6.25.4 必须对完全相同的 top 重跑百万周期与三种子 P&R。
 
+T6.25.2 已建立 `gkp_route_a_converged_production_top`：参数管理器独占完整镜像 CRC32、inactive-bank write、trust、CAS/cancel/drain/snapshot，提交仲裁器只在 policy 无 valid/pending 且 action OPEN 时接受 host request，policy safety request 始终优先；single-mode core 与 LKG policy 均在同一 top 内。image generation 与 activation epoch 被明确分离，使旧 trusted LKG image 可在新的单调 activation epoch 下原子恢复。证明采用分解闭合而非把短 trace 冒充全状态：k-induction 先证明 reset-reachable invariants 与 present guards，再在任意满足这些已证不变量的 predecessor state 上证明全部 transition assertions；20-cycle BMC、14 个 reachable SAT witness 和 21 个独立 RTL mutant 作为额外回归。实际核心另以连续 deadline/age II=1 输入证明六周期 fallback 与零 action，并以三步任意状态 harness 证明 ACK/bank/activation-version 更新细化 manager 原子提交契约；两步 harness 的初始化空窗由错误版本 mutant 检出后才修正。该证据只升级 atomic/fail-closed property；T6.25.3/4 完成前不迁移旧百万周期或 P&R PASS，也不声称 unbounded liveness、板测或 multimode RTL。
+
 完成条件为：
 
 - formal/property 证明 A/B old-or-new、读写隔离、CRC/version/age/ack、LKG rollback、commit/cancel/drain/reset/deadline、FIFO/backpressure 和 near-wrap fail-closed；

@@ -1,0 +1,67 @@
+{
+  "schema_version": "t6.25.2-converged-rtl-formal-config-v1",
+  "task_id": "T6.25.2",
+  "evidence_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+  "top_module": "gkp_route_a_converged_production_top",
+  "production_words_per_phase": 257,
+  "formal_words_per_phase": 2,
+  "reachable_transition_bound_cycles": 20,
+  "core_fail_closed_bound_cycles": 10,
+  "inductive_maxsteps": 10,
+  "max_parallel_yosys_jobs": 4,
+  "required_top_children": [
+    "route_a_commit_admission",
+    "gkp_parameter_bank_manager",
+    "gkp_fast_path_core",
+    "route_a_policy_overlay"
+  ],
+  "forbidden_external_ports": [
+    "cfg_we",
+    "bank0_trusted",
+    "bank1_trusted",
+    "core_commit_valid"
+  ],
+  "all_state_properties": [
+    "prop_all_state_management_guards",
+    "prop_all_state_admission_guards",
+    "prop_all_state_policy_output_guards"
+  ],
+  "reachable_covers": [
+    {"name": "cover_cfg_write", "cycles": 5, "initial_version": 0},
+    {"name": "cover_cfg_finalize_success", "cycles": 9, "initial_version": 0},
+    {"name": "cover_crc_reject", "cycles": 9, "initial_version": 0},
+    {"name": "cover_commit_admitted", "cycles": 6, "initial_version": 0},
+    {"name": "cover_active_switch", "cycles": 7, "initial_version": 0},
+    {"name": "cover_lkg_reactivation", "cycles": 18, "initial_version": 0},
+    {"name": "cover_cancel", "cycles": 6, "initial_version": 0},
+    {"name": "cover_drain_reject", "cycles": 12, "initial_version": 0},
+    {"name": "cover_near_wrap_reject", "cycles": 18, "initial_version": 65534},
+    {"name": "cover_host_blocked", "cycles": 5, "initial_version": 0},
+    {"name": "cover_policy_priority", "cycles": 8, "initial_version": 0},
+    {"name": "cover_integrity_rollback", "cycles": 6, "initial_version": 0},
+    {"name": "cover_conflict_reject", "cycles": 5, "initial_version": 0}
+  ],
+  "property_families": [
+    "inactive-bank ordered image writes",
+    "complete-image CRC32 trust admission",
+    "image-version monotonicity separated from activation epoch",
+    "CAS plus-one activation and near-wrap refusal",
+    "trusted-target atomic old-or-new commit",
+    "commit cancel and retired-bank drain guard",
+    "lossless depth-zero backpressure with explicit ack/reject",
+    "policy-priority host admission",
+    "integrity-triggered LKG rollback",
+    "no undefined Route-A action",
+    "six-cycle II=1 deadline fail-closed",
+    "six-cycle II=1 parameter-age fail-closed",
+    "no raw configuration or trust bypass"
+  ],
+  "mutation_minimum": 18,
+  "claim_boundary": {
+    "board_measurement": null,
+    "fastest_or_speed_advantage": false,
+    "multimode_decoder_deployed_in_rtl": false,
+    "allowed_now": "same-top structural elaboration, compositional unbounded safety proof, 20-cycle reset-reachable BMC regression, reachable SAT witnesses, mutation closure, and actual-core six-cycle fail-closed proof",
+    "not_allowed_now": "unbounded liveness, board latency/power, multimode RTL execution, or cross-paper fastest claim"
+  }
+}

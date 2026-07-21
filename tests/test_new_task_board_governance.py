@@ -396,11 +396,12 @@ def test_phase6d_dual_evidence_lanes_are_strong_baseline_first_and_nontransferab
     }
     assert all(statuses[task] == "Dropped" for task in dropped)
     assert statuses["T6.25.1"] == "Done"
-    assert statuses["T6.25.2"] == "In Progress"
+    assert statuses["T6.25.2"] == "Done"
+    assert statuses["T6.25.3"] == "In Progress"
     assert all(
         statuses[task] == "Todo"
         for task in expected_tasks
-        - {"T6.20.1", "T6.20.2", "T6.20.3", "T6.20.4", "T6.25.1", "T6.25.2"}
+        - {"T6.20.1", "T6.20.2", "T6.20.3", "T6.20.4", "T6.25.1", "T6.25.2", "T6.25.3"}
         - dropped
     )
     assert statuses["T6.9.2"] == "Blocked"
@@ -443,6 +444,7 @@ def test_phase6d_dual_evidence_lanes_are_strong_baseline_first_and_nontransferab
     assert "pilot/formal 保持未访问" in board
     assert (ROOT / "docs" / "phase6d_multimode_v1_cancellation_ledger.md").is_file()
     assert (ROOT / "docs" / "t6_25_1_single_mode_rtl_boundary_audit.json").is_file()
+    assert (ROOT / "docs" / "t6_25_2_converged_rtl_formal.json").is_file()
     assert "converged production top" in phase6d
 
     registry = ROOT / "docs" / "multimode_strong_baseline_registry.md"
