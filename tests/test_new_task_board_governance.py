@@ -412,7 +412,8 @@ def test_phase6d_dual_evidence_lanes_are_strong_baseline_first_and_nontransferab
     assert statuses["T7.1.5"] == "Done"
     assert statuses["T7.2.6"] == "Done"
     assert statuses["T7.3.2"] == "Done"
-    assert statuses["T7.3.3"] == "In Progress"
+    assert statuses["T7.3.3"] == "Done"
+    assert statuses["T7.3.4"] == "In Progress"
 
     for milestone in ("6.20", "6.21", "6.22", "6.23", "6.24", "6.25", "6.26"):
         assert f"### Milestone {milestone}" in phase6d

@@ -374,7 +374,7 @@ def evaluate_gates(report: Mapping[str, Any], *, check_live_sources: bool = Fals
     gates = {
         "G01_identity": report.get("task_id") == TASK_ID and report.get("schema_version") == SCHEMA_VERSION,
         "G02_preemptive_context_and_readiness_honest": report["reviewer_context"]["comment_origin"].startswith("preemptive") and package["package_readiness"] == "draft_with_placeholders" and package["missing_information"] == ["ACTUAL_REVIEWER_ID_AND_VERBATIM_WORDING"],
-        "G03_task_board_lifecycle": statuses["T6.26.1"] == "Dropped" and statuses["T6.26.2"] == "Dropped" and statuses["T7.3.2"] in {"In Progress", "Done"} and statuses["T7.3.3"] in {"Todo", "In Progress"},
+        "G03_task_board_lifecycle": statuses["T6.26.1"] == "Dropped" and statuses["T6.26.2"] == "Dropped" and statuses["T7.3.2"] == "Done" and statuses["T7.3.3"] in {"In Progress", "Done"},
         "G04_final_truth_table_exact": current["final_verdict"] == "GO_RTL_ONLY" and current["truth_key"] == "multimode=false,rtl=true" and current["multimode"]["gate_passed"] is False and current["rtl"]["gate_passed"] is True,
         "G05_learning_dropped_absent_no_vote": current["learning"]["decision"] == "DROPPED_ABLATION_ONLY" and current["learning"]["direct_evidence"]["changes_overall_verdict"] is False and current["matrix_learning_outcome"] == "DROPPED_ABSENT" and current["matrix_learning_primary"] is False,
         "G06_primary_verdict_is_learning_deletion_invariant": package["strategy"]["suggested_order"][0] == "current paper center" and current["publication_boundary"]["learning_primary"] is False and report["promotion_gate"]["can_change_classical_algorithm_verdict"] is False and report["promotion_gate"]["can_change_rtl_verdict"] is False,
@@ -403,7 +403,7 @@ def _mutation_audit(report: Mapping[str, Any]) -> dict[str, Any]:
     cases: list[tuple[str, str, Callable[[dict[str, Any]], None]]] = [
         ("M01_wrong_identity", "G01_identity", lambda x: x.update(task_id="T7.3.X")),
         ("M02_hide_placeholder", "G02_preemptive_context_and_readiness_honest", lambda x: x["response_package"].update(package_readiness="ready_to_submit")),
-        ("M03_skip_next_task", "G03_task_board_lifecycle", lambda x: x["task_status"].update({"T7.3.3": "Done"})),
+        ("M03_reopen_completed_task", "G03_task_board_lifecycle", lambda x: x["task_status"].update({"T7.3.2": "In Progress"})),
         ("M04_promote_global_go", "G04_final_truth_table_exact", lambda x: x["current_phase6d"].update(final_verdict="GO_TWO_LANE")),
         ("M05_make_learning_primary", "G05_learning_dropped_absent_no_vote", lambda x: x["current_phase6d"].update(matrix_learning_primary=True)),
         ("M06_allow_learning_vote", "G06_primary_verdict_is_learning_deletion_invariant", lambda x: x["promotion_gate"].update(can_change_rtl_verdict=True)),

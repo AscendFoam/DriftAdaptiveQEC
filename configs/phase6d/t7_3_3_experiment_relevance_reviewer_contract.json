@@ -1,0 +1,82 @@
+{
+  "task_id": "T7.3.3",
+  "schema_version": "t7.3.3-experiment-relevance-reviewer-contract-v1",
+  "reviewer_context": {
+    "mode": "draft",
+    "decision_type": "unclear",
+    "comment_id": "PRQ-HW-1",
+    "comment_origin": "preemptive task-board reviewer risk; no verbatim reviewer report supplied",
+    "reviewer_concern": "Why is the work described as experiment-related when no quantum hardware was used?",
+    "category": ["evidence_interpretation", "positioning", "hardware_boundary"],
+    "severity": "major",
+    "actions": ["CLARIFY_EXISTING", "SOFTEN_CLAIM", "PARTIAL"],
+    "package_readiness": "draft_with_placeholders",
+    "visible_placeholder": "ACTUAL_REVIEWER_ID_AND_VERBATIM_WORDING"
+  },
+  "evidence_ladder_order": [
+    "LITERATURE_FACT",
+    "OFFICIAL_CODE_REPRODUCTION",
+    "PROJECT_NATIVE_SIMULATION",
+    "MOCK_SOFTWARE_HIL",
+    "PREBOARD_DIGITAL_QUALIFICATION",
+    "PHYSICAL_BOARD_MEASUREMENT",
+    "QUANTUM_HARDWARE_OR_REAL_GKP_DATA"
+  ],
+  "preferred_terms": [
+    "experiment-informed",
+    "experiment-facing",
+    "project-native simulation",
+    "pre-board RTL qualification"
+  ],
+  "forbidden_title_abstract_phrases": [
+    "experimental GKP QEC",
+    "experimental quantum error correction",
+    "hardware-validated GKP decoder",
+    "real-board demonstration",
+    "quantum-hardware demonstration"
+  ],
+  "forbidden_response_phrases": [
+    "we experimentally demonstrate",
+    "our quantum hardware",
+    "our physical GKP experiment",
+    "board-measured latency",
+    "measured FPGA power",
+    "AQEC validates our hardware",
+    "Sivak validates our decoder",
+    "software HIL is equivalent to real-board HIL"
+  ],
+  "required_manuscript_markers": [
+    "pre-board estimates, not physical measurements",
+    "Board latency, jitter, deadline misses and power remain null",
+    "no FPGA speed advantage is claimed",
+    "without transferring evidence between the two lanes",
+    "our per-round simulation does not estimate a physical lifetime",
+    "matched device experiment"
+  ],
+  "response_rows": [
+    {"row_id":"HW-R01","response_state":"REVIEWER_CONCERN","topic":"comment_origin","claim":"The question is a pre-emptive reviewer risk, not a supplied verbatim report.","boundary":"Keep reviewer identity and verbatim wording as a visible placeholder.","source_ids":["task_board"]},
+    {"row_id":"HW-R02","response_state":"TERM_BOUNDARY","topic":"direct_concession","claim":"Without a QPU or physical board, the paper is not an experimental GKP-QEC demonstration.","boundary":"Use experiment-informed or experiment-facing only when the exact evidence level is stated.","source_ids":["manuscript","board_blocker"]},
+    {"row_id":"HW-R03","response_state":"LITERATURE_FACT","topic":"atlas_literature","claim":"The auxiliary atlas contains literature-reported values and explicit not-reported cells.","boundary":"Literature values are contextual facts, not project measurements or reproductions.","source_ids":["atlas"]},
+    {"row_id":"HW-R04","response_state":"LITERATURE_FACT","topic":"aqec_physical_result","claim":"AQEC lifetime values are paper-reported physical-system results.","boundary":"The project-native finite-cutoff replay neither reproduces nor refutes the physical apparatus.","source_ids":["aqec"]},
+    {"row_id":"HW-R05","response_state":"OFFICIAL_CODE_REPRODUCTION","topic":"official_cpd","claim":"Two official-code CPD/analog-MWPM threshold cells were reproduced in their own surface-lattice task signature.","boundary":"Official-code execution is still numerical reproduction, not device evidence.","source_ids":["atlas"]},
+    {"row_id":"HW-R06","response_state":"PROJECT_NATIVE_SIMULATION","topic":"aqec_replay","claim":"The AQEC lane executes 432 exact finite-cutoff channels across 144 paired seed clusters and preserves a negative result.","boundary":"It is nominal-control project-native simulation, not a paper-native reservoir or quantum experiment.","source_ids":["aqec"]},
+    {"row_id":"HW-R07","response_state":"PROJECT_NATIVE_SIMULATION","topic":"multimode_decoder","claim":"The multimode lane is a project-native causal decoder simulation whose strongest-static headroom is zero.","boundary":"Logical-error simulation does not establish physical lifetime or experimental break-even.","source_ids":["headroom","final_gate"]},
+    {"row_id":"HW-R08","response_state":"MOCK_SOFTWARE_HIL","topic":"legacy_hil","claim":"A software HIL orchestrator and mock FPGA backend exist.","boundary":"The P4 wrapper inherits the mock backend; software HIL is not real-board HIL.","source_ids":["hil_audit"]},
+    {"row_id":"HW-R09","response_state":"MOCK_SOFTWARE_HIL","topic":"board_backend","claim":"The legacy real-board backend remains a placeholder with incomplete device event semantics.","boundary":"Configuration names and readiness documents cannot upgrade it to physical validation.","source_ids":["hil_audit","board_blocker"]},
+    {"row_id":"HW-R10","response_state":"PREBOARD_RTL","topic":"formal","claim":"The exact single-mode production top passes 17 formal gates and kills 21 targeted mutants.","boundary":"Formal proof establishes bounded digital properties, not board timing, power or QPU behavior.","source_ids":["formal"]},
+    {"row_id":"HW-R11","response_state":"PREBOARD_RTL","topic":"long_sequence","claim":"The same exact top passes a ten-family one-million-cycle CXXRTL replay with zero mismatch, undefined action and silent overflow.","boundary":"CXXRTL is executable RTL simulation, not FPGA or quantum-hardware measurement.","source_ids":["long_rtl"]},
+    {"row_id":"HW-R12","response_state":"PREBOARD_RTL","topic":"place_route","claim":"Three open-source place-and-route seeds meet the 27-MHz contract with whole-harness Fmax 36.794--37.869 MHz.","boundary":"Resources, Fmax and analytic power remain pre-board estimates and the observability wrapper may dominate timing.","source_ids":["hardware"]},
+    {"row_id":"HW-R13","response_state":"PREBOARD_RTL","topic":"bitstream_candidate","claim":"A historical UART-wrapper bitstream candidate and post-route estimate exist.","boundary":"It was never programmed or measured and is not the current exact-top physical qualification.","source_ids":["preboard"]},
+    {"row_id":"HW-R14","response_state":"PHYSICAL_BOARD","topic":"all_null","claim":"The dedicated physical-board gate is blocked and every measured field is null.","boundary":"No board correctness, latency, jitter, deadline-miss, resource or power claim is available.","source_ids":["board_blocker"]},
+    {"row_id":"HW-R15","response_state":"QUANTUM_HARDWARE","topic":"qpu_absent","claim":"No cavity/transmon control chain, physical GKP syndrome dataset or active-displacement experiment is part of the current paper.","boundary":"The optional Phase 8 tasks remain Todo and cannot be anticipated as results.","source_ids":["task_board","experiment_plan"]},
+    {"row_id":"HW-R16","response_state":"NONTRANSFER","topic":"aqec_sivak","claim":"AQEC and Sivak physical lifetime/break-even evidence remains literature evidence owned by those systems.","boundary":"It cannot be transferred to the project simulator, decoder, RTL or FPGA board.","source_ids":["aqec","manuscript"]},
+    {"row_id":"HW-R17","response_state":"NONTRANSFER","topic":"rtl_to_qpu","claim":"Deterministic, atomic and fail-closed RTL properties do not prove GKP physical correction.","boundary":"The hardware contribution is a digital architecture qualification only.","source_ids":["formal","hardware","final_gate"]},
+    {"row_id":"HW-R18","response_state":"MANUSCRIPT_CHANGE","topic":"title_abstract","claim":"The canonical title and abstract avoid experimental-GKP wording and disclose pre-board/null boundaries.","boundary":"Do not reintroduce device-demonstration language during venue adaptation.","source_ids":["manuscript","manuscript_contract"]},
+    {"row_id":"HW-R19","response_state":"MANUSCRIPT_CHANGE","topic":"methods_results","claim":"Methods and Results label numerical simulation, CXXRTL, formal proof and P&R separately.","boundary":"No umbrella experimental label may collapse those modalities.","source_ids":["manuscript"]},
+    {"row_id":"HW-R20","response_state":"FUTURE_PROMOTION","topic":"board_promotion","claim":"Physical FPGA promotion requires non-null board identity, bitstream, cycles, errors, latency/jitter/deadline and power evidence.","boundary":"P&R estimates or mock HIL cannot fill missing measured fields.","source_ids":["board_blocker","experiment_plan"]},
+    {"row_id":"HW-R21","response_state":"FUTURE_PROMOTION","topic":"qpu_promotion","claim":"Quantum-hardware promotion requires licensed real syndrome data first, then offline decoding, shadow/frame update and authorized feedback.","boundary":"No real-data metric may be claimed before metadata, labels/tomography and permissions are established.","source_ids":["task_board","experiment_plan"]},
+    {"row_id":"HW-R22","response_state":"RESPONSE_WORDING","topic":"legitimate_contribution","claim":"The current contribution is experiment-facing because its interfaces, faults and deadlines are designed for future control-chain integration.","boundary":"Experiment-facing describes engineering relevance, not completion of an experiment.","source_ids":["manuscript","formal","long_rtl"]},
+    {"row_id":"HW-R23","response_state":"RISK_DISCLOSURE","topic":"remaining_gap","claim":"External validity to a physical GKP platform remains unresolved.","boundary":"The gap is a limitation and optional Phase 8 route, not a hidden positive result.","source_ids":["task_board","new_risks"]},
+    {"row_id":"HW-R24","response_state":"RESPONSE_WORDING","topic":"submission_readiness","claim":"The scientific answer is complete as a pre-emptive evidence-boundary response.","boundary":"The package remains draft_with_placeholders until actual reviewer wording is supplied.","source_ids":["task_board"]}
+  ]
+}
