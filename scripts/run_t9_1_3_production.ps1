@@ -1084,9 +1084,11 @@ function Start-HiddenChild {
     $startInfo.RedirectStandardOutput = $true
     $startInfo.RedirectStandardError = $true
 
-    $stdoutStream = New-Object System.IO.FileStream($StdoutPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::Read)
+    # A one-byte sink buffer is intentional: ready/consumed protocol records are
+    # sub-kilobyte JSON lines that must be visible while the child is still alive.
+    $stdoutStream = [IO.FileStream]::new($StdoutPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::Read, 1, $false)
     try {
-        $stderrStream = New-Object System.IO.FileStream($StderrPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::Read)
+        $stderrStream = [IO.FileStream]::new($StderrPath, [IO.FileMode]::CreateNew, [IO.FileAccess]::Write, [IO.FileShare]::Read, 1, $false)
     }
     catch {
         $stdoutStream.Dispose()
@@ -1444,7 +1446,7 @@ function Get-LogEvidenceMap {
 function Write-LaunchTransaction {
     param([Parameter(Mandatory = $true)][string]$State)
     $payload = [ordered]@{
-        schema_version = 't9.1.3-launch-transaction-v2'
+        schema_version = 't9.1.3-launch-transaction-v3'
         task_id = 'T9.1.3'
         transaction_id = $script:TransactionId
         state = $State
@@ -1585,7 +1587,12 @@ function Wait-NmfSerialReleaseReady {
     $expectedNonceHash = Get-StringSha256Hex -Text $ReleaseNonce
     $attestationExpiry = [DateTimeOffset]::Parse([string]$TrainingAttestation.expires_at_utc).UtcDateTime
     $transactionDeadline = [DateTimeOffset]::Parse($DeadlineUtc).UtcDateTime
-    $readyDeadline = $(if ($attestationExpiry -lt $transactionDeadline) { $attestationExpiry } else { $transactionDeadline })
+    $mfStartupReserveSeconds = 15.0
+    $attestationReadyDeadline = $attestationExpiry.AddSeconds(-$mfStartupReserveSeconds)
+    $readyDeadline = $(if ($attestationReadyDeadline -lt $transactionDeadline) { $attestationReadyDeadline } else { $transactionDeadline })
+    if ([DateTime]::UtcNow -ge $readyDeadline) {
+        throw 'NMF ready barrier has no fresh-attestation reserve left for the subsequent MF startup'
+    }
     while ([DateTime]::UtcNow -lt $readyDeadline) {
         if (Test-Path -LiteralPath $ReleasePath) {
             throw 'NMF release existed before a fully bound ready record was observed'
@@ -1626,9 +1633,14 @@ function Wait-NmfSerialReleaseReady {
             ) {
                 throw 'NMF serial-release ready record identity mismatch'
             }
+            $observedReadyAt = [DateTime]::UtcNow
+            if ($observedReadyAt -ge $readyDeadline) {
+                throw 'NMF ready record became visible after the MF-startup reserve/deadline boundary'
+            }
+            $attestationSecondsRemaining = ($attestationExpiry - $observedReadyAt).TotalSeconds
             return [ordered]@{
                 schema_version = 't9.1.3-supervisor-observed-nmf-ready-v1'
-                observed_at_utc = Get-UtcIso
+                observed_at_utc = $observedReadyAt.ToString('o')
                 waiter_pid = [int]$Process.Id
                 release_path = $ReleasePath
                 release_nonce_sha256 = $expectedNonceHash
@@ -1638,11 +1650,13 @@ function Wait-NmfSerialReleaseReady {
                 config_sha256 = [string]$candidate.config_sha256
                 implementation_sha256 = [string]$candidate.implementation_sha256
                 deadline_utc = [string]$candidate.deadline_utc
+                mf_startup_reserve_seconds = $mfStartupReserveSeconds
+                attestation_seconds_remaining_when_observed = $attestationSecondsRemaining
             }
         }
         Start-Sleep -Milliseconds 100
     }
-    throw 'NMF did not publish a fully bound ready record before attestation/deadline expiry'
+    throw 'NMF did not publish a fully bound ready record before the MF-startup reserve/deadline boundary'
 }
 
 function New-NmfSerialReleasePayload {
@@ -2044,6 +2058,7 @@ print(json.dumps(synthetic_attestation_self_test(), sort_keys=True))
     $supervisorReleaseSuccessPass = $false
     $supervisorReleaseConsumedPass = $false
     $supervisorMfFailureNoReleasePass = $false
+    $liveSmallJsonVisibleWhileAlive = $false
     try {
         $childStdout = Join-Path $temporaryRoot 'child stdout.log'
         $childStderr = Join-Path $temporaryRoot 'child stderr.log'
@@ -2064,6 +2079,58 @@ print(json.dumps(synthetic_attestation_self_test(), sort_keys=True))
         for ($index = 0; $index -lt $arguments.Count; $index += 1) {
             if ([string]$hiddenObserved[$index] -ne [string]$arguments[$index]) {
                 throw "hidden ProcessStartInfo argv self-test changed argument $index"
+            }
+        }
+
+        $liveStdout = Join-Path $temporaryRoot 'live-small-json.stdout.log'
+        $liveStderr = Join-Path $temporaryRoot 'live-small-json.stderr.log'
+        $liveChild = $null
+        try {
+            $liveCode = 'import json,time; print(json.dumps({"event":"t9_1_3_live_small_json","payload":"x"*512},separators=(",",":")),flush=True); time.sleep(4)'
+            $liveChild = Start-HiddenChild -FilePath $PythonPath -ArgumentList @('-c', $liveCode) -WorkingDirectory ([Environment]::CurrentDirectory) -StdoutPath $liveStdout -StderrPath $liveStderr
+            $visibilityDeadline = [DateTime]::UtcNow.AddSeconds(3)
+            while ([DateTime]::UtcNow -lt $visibilityDeadline -and -not $liveSmallJsonVisibleWhileAlive) {
+                if ($liveChild.HasExited) {
+                    throw 'live small-JSON child exited before the supervisor observed its record'
+                }
+                $liveText = Read-SharedUtf8Text -Path $liveStdout
+                foreach ($liveLine in @($liveText -split "`r?`n")) {
+                    if ([string]::IsNullOrWhiteSpace($liveLine)) { continue }
+                    try {
+                        $liveRecord = $liveLine | ConvertFrom-Json
+                    }
+                    catch {
+                        continue
+                    }
+                    if ([string]$liveRecord.event -eq 't9_1_3_live_small_json' -and ([string]$liveRecord.payload).Length -eq 512) {
+                        $liveSmallJsonVisibleWhileAlive = -not $liveChild.HasExited
+                        break
+                    }
+                }
+                if (-not $liveSmallJsonVisibleWhileAlive) {
+                    Start-Sleep -Milliseconds 50
+                }
+            }
+            if (-not $liveSmallJsonVisibleWhileAlive) {
+                throw 'sub-kilobyte child JSON was not visible before child exit'
+            }
+            if (-not $liveChild.WaitForExit(10000)) {
+                throw 'live small-JSON child did not exit after its visibility hold'
+            }
+            Close-HiddenChildIo -Process $liveChild
+            if ([int]$liveChild.ExitCode -ne 0) {
+                throw "live small-JSON child exited $($liveChild.ExitCode)"
+            }
+        }
+        finally {
+            if ($null -ne $liveChild) {
+                if (-not $liveChild.HasExited) {
+                    $liveChild.Kill()
+                    $liveChild.WaitForExit()
+                }
+                if (-not [bool]$liveChild.T913IoClosed) {
+                    Close-HiddenChildIo -Process $liveChild
+                }
             }
         }
 
@@ -2239,6 +2306,7 @@ print(json.dumps(synthetic_attestation_self_test(), sort_keys=True))
         nmf_serial_release_success_published = $supervisorReleaseSuccessPass
         nmf_serial_release_consumption_verified = $supervisorReleaseConsumedPass
         nmf_serial_release_mf_failure_absent = $supervisorMfFailureNoReleasePass
+        sub_kib_json_visible_before_child_exit = $liveSmallJsonVisibleWhileAlive
         strict_invalidated_crash_marker_pass_case = $strictCrashMarkerPass
         finalization_failed_marker_rejected = $failedMarkerRejected
         invalidated_crash_marker_extra_field_rejected = $extraMarkerRejected
@@ -2560,29 +2628,22 @@ try {
         }
         $mfArgs = $mfArgs + @('--gpu-attestation', $trainingAttestationPath)
         $nmfArgs = $nmfArgs + @('--gpu-attestation', $trainingAttestationPath)
-        Set-SupervisorPhase -State 'LAUNCHING_TRAINING_TRANSACTION' -Detail 'Training attestation was sealed; child launch follows without another probe or discretionary step.'
+        Set-SupervisorPhase -State 'LAUNCHING_SERIAL_TRAINING_TRANSACTION' -Detail 'The release-gated NMF waiter launches first so it can validate the fresh attestation without competing with MF CUDA training.'
+        $nmf = Start-JobBoundPythonChild -Role 'nmf' -PythonPath $Python -PayloadArgumentList $nmfArgs -WorkingDirectory $RepoRoot -StdoutPath $script:LogPaths.nmf_stdout -StderrPath $script:LogPaths.nmf_stderr -BarrierRoot $script:JobBarrierRoot
+        $script:Processes['nmf'] = $nmf
+        $script:ChildRecords['nmf'] = New-ChildRecord -Role 'nmf' -Process $nmf -ArgumentList $nmfArgs -StdoutPath $script:LogPaths.nmf_stdout -StderrPath $script:LogPaths.nmf_stderr -RunDirectory $RunDir
+        Write-LaunchTransaction -State 'NMF_RECORDED_MF_NOT_STARTED'
+        Set-SupervisorPhase -State 'NMF_POST_ATTESTATION_RELEASE_WAIT_STARTING' -Detail 'The Job-bound NMF child must prove it reached the pre-output release barrier while the MF child is still absent.'
+        $nmfReady = Wait-NmfSerialReleaseReady -Process $nmf -StdoutPath $script:LogPaths.nmf_stdout -ReleasePath $nmfReleasePath -ReleaseNonce $nmfReleaseNonce -TrainingAttestation $trainingAttestation -Probe $script:BaselineProbe -DeadlineUtc $trainingDeadlineUtc
+        $script:Supervisor['serial_training_gate']['ready_witness'] = $nmfReady
+        Write-LaunchTransaction -State 'NMF_READY_BLOCKED_MF_NOT_STARTED'
+        Set-SupervisorPhase -State 'NMF_READY_AND_BLOCKED_BEFORE_OUTPUT' -Detail 'The fully bound NMF ready JSON was observed with startup reserve remaining; no release file or MF process exists yet.'
 
         $mf = Start-JobBoundPythonChild -Role 'mf' -PythonPath $Python -PayloadArgumentList $mfArgs -WorkingDirectory $RepoRoot -StdoutPath $script:LogPaths.mf_stdout -StderrPath $script:LogPaths.mf_stderr -BarrierRoot $script:JobBarrierRoot
         $script:Processes['mf'] = $mf
         $script:ChildRecords['mf'] = New-ChildRecord -Role 'mf' -Process $mf -ArgumentList $mfArgs -StdoutPath $script:LogPaths.mf_stdout -StderrPath $script:LogPaths.mf_stderr -RunDirectory $RunDir
-        Write-LaunchTransaction -State 'MF_RECORDED_NMF_NOT_STARTED'
-        Set-SupervisorPhase -State 'MF_STARTED_AND_IDENTITY_RECORDED'
-        if ($mf.HasExited) {
-            Complete-ChildRecord -Role 'mf' -Process $mf -RunDirectory $RunDir
-            if ([int]$mf.ExitCode -ne 0) {
-                $script:FailureExitCode = [Math]::Max(1, [int]$mf.ExitCode)
-                throw "MF training child failed before the NMF child launch with exit code $($mf.ExitCode)"
-            }
-        }
-
-        $nmf = Start-JobBoundPythonChild -Role 'nmf' -PythonPath $Python -PayloadArgumentList $nmfArgs -WorkingDirectory $RepoRoot -StdoutPath $script:LogPaths.nmf_stdout -StderrPath $script:LogPaths.nmf_stderr -BarrierRoot $script:JobBarrierRoot
-        $script:Processes['nmf'] = $nmf
-        $script:ChildRecords['nmf'] = New-ChildRecord -Role 'nmf' -Process $nmf -ArgumentList $nmfArgs -StdoutPath $script:LogPaths.nmf_stdout -StderrPath $script:LogPaths.nmf_stderr -RunDirectory $RunDir
-        Write-LaunchTransaction -State 'BOTH_CHILDREN_RECORDED_NMF_AWAITING_MF_RELEASE'
-        Set-SupervisorPhase -State 'NMF_POST_ATTESTATION_RELEASE_WAIT_STARTING' -Detail 'Both Job-bound children share the same fresh training attestation; NMF must prove it reached the pre-output release barrier.'
-        $nmfReady = Wait-NmfSerialReleaseReady -Process $nmf -StdoutPath $script:LogPaths.nmf_stdout -ReleasePath $nmfReleasePath -ReleaseNonce $nmfReleaseNonce -TrainingAttestation $trainingAttestation -Probe $script:BaselineProbe -DeadlineUtc $trainingDeadlineUtc
-        $script:Supervisor['serial_training_gate']['ready_witness'] = $nmfReady
-        Set-SupervisorPhase -State 'NMF_READY_AND_BLOCKED_BEFORE_OUTPUT' -Detail 'The fully bound NMF ready JSON was observed; no release file exists.'
+        Write-LaunchTransaction -State 'SERIAL_CHILDREN_COMMITTED_MF_RUNNING_NMF_BLOCKED'
+        Set-SupervisorPhase -State 'MF_STARTED_AFTER_NMF_READY' -Detail 'MF and the blocked NMF waiter share the same training attestation; only MF may touch the production output namespace now.'
 
         Wait-MfWithBlockedNmf -MfProcess $mf -NmfProcess $nmf -ReleasePath $nmfReleasePath
         if ([int]$mf.ExitCode -ne 0) {

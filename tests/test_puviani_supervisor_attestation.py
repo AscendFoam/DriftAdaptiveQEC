@@ -539,6 +539,8 @@ def test_supervisor_contains_two_fresh_gates_job_binding_and_strict_crash_marker
     assert "$nmf = Start-JobBoundPythonChild -Role 'nmf'" in script
     assert "$finalize = Start-JobBoundPythonChild -Role 'finalize'" in script
     assert "Add-ProcessToKillOnCloseJob -Process $process -Role $Role" in script
+    assert script.count("[IO.FileShare]::Read, 1, $false") == 2
+    assert "sub_kib_json_visible_before_child_exit = $liveSmallJsonVisibleWhileAlive" in script
     assert "job_object_bound_before_python_payload_release" in script
     assert "JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE" in script
     assert "INVALIDATED_BEFORE_FINALIZATION_NO_VALID_SEAL" in script
@@ -552,11 +554,21 @@ def test_supervisor_contains_two_fresh_gates_job_binding_and_strict_crash_marker
     assert "Wait-NmfSerialReleaseReady" in script
     assert "Wait-MfWithBlockedNmf" in script
     assert "Wait-NmfSerialReleaseConsumed" in script
+    assert "$mfStartupReserveSeconds = 15.0" in script
+    assert "mf_startup_reserve_seconds = $mfStartupReserveSeconds" in script
+    assert "attestation_seconds_remaining_when_observed = $attestationSecondsRemaining" in script
+    assert "if ($observedReadyAt -ge $readyDeadline)" in script
     assert "$ioDrainedAfterExit = $false" in script
     assert "Close-HiddenChildIo -Process $Process" in script
     assert "NMF_WAITER_EXITED_BEFORE_RELEASE" in script
     assert "Publish-NmfSerialRelease" in script
+    assert script.index("$nmf = Start-JobBoundPythonChild -Role 'nmf'") < script.index(
+        "Wait-NmfSerialReleaseReady -Process $nmf"
+    )
     assert script.index("Wait-NmfSerialReleaseReady -Process $nmf") < script.index(
+        "$mf = Start-JobBoundPythonChild -Role 'mf'"
+    )
+    assert script.index("$mf = Start-JobBoundPythonChild -Role 'mf'") < script.index(
         "Wait-MfWithBlockedNmf -MfProcess $mf"
     )
     assert script.index("Wait-MfWithBlockedNmf -MfProcess $mf") < script.index(
@@ -573,6 +585,7 @@ def test_supervisor_contains_two_fresh_gates_job_binding_and_strict_crash_marker
     assert "nmf_serial_release_consumption_verified = $supervisorReleaseConsumedPass" in script
     assert "shared_training_attestation_sha256" in script
     assert "t9.1.3-production-supervisor-v3" in script
+    assert "t9.1.3-launch-transaction-v3" in script
     assert "t9.1.3-production-serialized-training-outcome-v3" in script
 
 
