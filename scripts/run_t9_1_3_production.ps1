@@ -6,7 +6,7 @@ param(
     [string]$TargetGpuUuid = '',
     [switch]$ArtifactResume,
     [ValidateRange(1, 336)]
-    [int]$TotalDeadlineHours = 20,
+    [int]$TotalDeadlineHours = 36,
     [ValidateRange(1, 60)]
     [int]$PollSeconds = 5,
     [switch]$StaticSelfTest
@@ -346,6 +346,18 @@ function Get-Sha256Hex {
     }
     finally {
         $stream.Dispose()
+    }
+    return (($digest | ForEach-Object { $_.ToString('x2') }) -join '')
+}
+
+function Get-StringSha256Hex {
+    param([AllowEmptyString()][Parameter(Mandatory = $true)][string]$Text)
+    $algorithm = [Security.Cryptography.SHA256]::Create()
+    try {
+        $digest = $algorithm.ComputeHash([Text.Encoding]::UTF8.GetBytes($Text))
+    }
+    finally {
+        $algorithm.Dispose()
     }
     return (($digest | ForEach-Object { $_.ToString('x2') }) -join '')
 }
@@ -1465,33 +1477,32 @@ function Set-SupervisorPhase {
     Write-JsonAtomic -Path (Join-Path $script:RunDirectory 'supervisor_state.json') -Value $script:Supervisor
 }
 
-function Wait-TrainingPair {
+function Wait-MfWithBlockedNmf {
     param(
         [Parameter(Mandatory = $true)][System.Diagnostics.Process]$MfProcess,
-        [Parameter(Mandatory = $true)][System.Diagnostics.Process]$NmfProcess
+        [Parameter(Mandatory = $true)][System.Diagnostics.Process]$NmfProcess,
+        [Parameter(Mandatory = $true)][string]$ReleasePath
     )
     while ($true) {
-        if ($MfProcess.HasExited -and $script:ChildRecords['mf'].state -ne 'EXITED') {
-            Complete-ChildRecord -Role 'mf' -Process $MfProcess -RunDirectory $script:RunDirectory
-        }
-        if ($NmfProcess.HasExited -and $script:ChildRecords['nmf'].state -ne 'EXITED') {
-            Complete-ChildRecord -Role 'nmf' -Process $NmfProcess -RunDirectory $script:RunDirectory
-        }
-        if ($MfProcess.HasExited -and [int]$MfProcess.ExitCode -ne 0) {
-            $script:FailureExitCode = [Math]::Max(1, [int]$MfProcess.ExitCode)
-            if (-not $NmfProcess.HasExited) {
-                Stop-OwnedChild -Role 'nmf' -Process $NmfProcess -RunDirectory $script:RunDirectory -Reason 'PEER_FAILED_EARLY'
+        if (Test-Path -LiteralPath $ReleasePath) {
+            if (-not $MfProcess.HasExited) {
+                Stop-OwnedChild -Role 'mf' -Process $MfProcess -RunDirectory $script:RunDirectory -Reason 'PREMATURE_NMF_RELEASE_DETECTED'
             }
-            throw "MF training child failed with exit code $($MfProcess.ExitCode); NMF was stopped early"
+            if (-not $NmfProcess.HasExited) {
+                Stop-OwnedChild -Role 'nmf' -Process $NmfProcess -RunDirectory $script:RunDirectory -Reason 'PREMATURE_NMF_RELEASE_DETECTED'
+            }
+            throw 'NMF release appeared before supervised MF success'
         }
-        if ($NmfProcess.HasExited -and [int]$NmfProcess.ExitCode -ne 0) {
+        if ($NmfProcess.HasExited) {
+            Complete-ChildRecord -Role 'nmf' -Process $NmfProcess -RunDirectory $script:RunDirectory
             $script:FailureExitCode = [Math]::Max(1, [int]$NmfProcess.ExitCode)
             if (-not $MfProcess.HasExited) {
-                Stop-OwnedChild -Role 'mf' -Process $MfProcess -RunDirectory $script:RunDirectory -Reason 'PEER_FAILED_EARLY'
+                Stop-OwnedChild -Role 'mf' -Process $MfProcess -RunDirectory $script:RunDirectory -Reason 'NMF_WAITER_EXITED_BEFORE_RELEASE'
             }
-            throw "NMF training child failed with exit code $($NmfProcess.ExitCode); MF was stopped early"
+            throw "NMF waiter exited before MF completed/released it (exit $($NmfProcess.ExitCode)); MF was stopped immediately"
         }
-        if ($MfProcess.HasExited -and $NmfProcess.HasExited) {
+        if ($MfProcess.HasExited) {
+            Complete-ChildRecord -Role 'mf' -Process $MfProcess -RunDirectory $script:RunDirectory
             return
         }
         $remaining = $script:DeadlineUtc - [DateTime]::UtcNow
@@ -1503,7 +1514,7 @@ function Wait-TrainingPair {
             if (-not $NmfProcess.HasExited) {
                 Stop-OwnedChild -Role 'nmf' -Process $NmfProcess -RunDirectory $script:RunDirectory -Reason 'TOTAL_DEADLINE_EXCEEDED'
             }
-            throw "total T9.1.3 deadline exceeded during training: $($script:DeadlineUtc.ToString('o'))"
+            throw "total T9.1.3 deadline exceeded while MF ran and NMF remained blocked: $($script:DeadlineUtc.ToString('o'))"
         }
         $sleepMs = [int][Math]::Min([double]($script:PollIntervalSeconds * 1000), [Math]::Max(100.0, $remaining.TotalMilliseconds))
         Start-Sleep -Milliseconds $sleepMs
@@ -1526,6 +1537,286 @@ function Wait-SingleChild {
         Start-Sleep -Milliseconds $sleepMs
     }
     Complete-ChildRecord -Role $Role -Process $Process -RunDirectory $script:RunDirectory
+}
+
+function Read-SharedUtf8Text {
+    param([Parameter(Mandatory = $true)][string]$Path)
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) {
+        return ''
+    }
+    $stream = New-Object System.IO.FileStream(
+        $Path,
+        [IO.FileMode]::Open,
+        [IO.FileAccess]::Read,
+        [IO.FileShare]::ReadWrite
+    )
+    try {
+        $length = [int]$stream.Length
+        $bytes = New-Object byte[] $length
+        $offset = 0
+        while ($offset -lt $length) {
+            $read = $stream.Read($bytes, $offset, $length - $offset)
+            if ($read -le 0) { break }
+            $offset += $read
+        }
+        return [Text.Encoding]::UTF8.GetString($bytes, 0, $offset)
+    }
+    finally {
+        $stream.Dispose()
+    }
+}
+
+function Wait-NmfSerialReleaseReady {
+    param(
+        [Parameter(Mandatory = $true)][System.Diagnostics.Process]$Process,
+        [Parameter(Mandatory = $true)][string]$StdoutPath,
+        [Parameter(Mandatory = $true)][string]$ReleasePath,
+        [Parameter(Mandatory = $true)][string]$ReleaseNonce,
+        [Parameter(Mandatory = $true)]$TrainingAttestation,
+        [Parameter(Mandatory = $true)]$Probe,
+        [Parameter(Mandatory = $true)][string]$DeadlineUtc
+    )
+    $expectedKeys = @(
+        'schema_version', 'event', 'task_id', 'family', 'waiter_pid',
+        'release_path', 'release_nonce_sha256', 'transaction_id',
+        'attestation_nonce', 'attestation_sha256', 'config_sha256',
+        'implementation_sha256', 'deadline_utc'
+    ) | Sort-Object
+    $expectedNonceHash = Get-StringSha256Hex -Text $ReleaseNonce
+    $attestationExpiry = [DateTimeOffset]::Parse([string]$TrainingAttestation.expires_at_utc).UtcDateTime
+    $transactionDeadline = [DateTimeOffset]::Parse($DeadlineUtc).UtcDateTime
+    $readyDeadline = $(if ($attestationExpiry -lt $transactionDeadline) { $attestationExpiry } else { $transactionDeadline })
+    while ([DateTime]::UtcNow -lt $readyDeadline) {
+        if (Test-Path -LiteralPath $ReleasePath) {
+            throw 'NMF release existed before a fully bound ready record was observed'
+        }
+        if ($Process.HasExited) {
+            throw "NMF child exited before serial-release readiness with code $($Process.ExitCode)"
+        }
+        $text = Read-SharedUtf8Text -Path $StdoutPath
+        foreach ($line in @($text -split "`r?`n")) {
+            if ([string]::IsNullOrWhiteSpace($line)) { continue }
+            try {
+                $candidate = $line | ConvertFrom-Json
+            }
+            catch {
+                continue
+            }
+            if ([string]$candidate.event -ne 't9_1_3_nmf_serial_release_wait_ready') {
+                continue
+            }
+            $actualKeys = @($candidate.PSObject.Properties.Name | Sort-Object)
+            if (($actualKeys -join "`n") -ne ($expectedKeys -join "`n")) {
+                throw 'NMF serial-release ready record schema drifted'
+            }
+            $observedReleasePath = Get-CanonicalPath -Path ([string]$candidate.release_path) -BasePath $script:RunDirectory
+            if (
+                [string]$candidate.schema_version -ne 't9.1.3-nmf-release-wait-ready-v1' -or
+                [string]$candidate.task_id -ne 'T9.1.3' -or
+                [string]$candidate.family -ne 'nmf' -or
+                [int]$candidate.waiter_pid -ne [int]$Process.Id -or
+                -not [string]::Equals($observedReleasePath, $ReleasePath, [StringComparison]::OrdinalIgnoreCase) -or
+                [string]$candidate.release_nonce_sha256 -ne $expectedNonceHash -or
+                [string]$candidate.transaction_id -ne [string]$TrainingAttestation.run_identity.transaction_id -or
+                [string]$candidate.attestation_nonce -ne [string]$TrainingAttestation.attestation_nonce -or
+                [string]$candidate.attestation_sha256 -ne [string]$TrainingAttestation.attestation_sha256 -or
+                [string]$candidate.config_sha256 -ne [string]$Probe.config_sha256 -or
+                [string]$candidate.implementation_sha256 -ne [string]$Probe.implementation_sha256 -or
+                [string]$candidate.deadline_utc -ne $DeadlineUtc
+            ) {
+                throw 'NMF serial-release ready record identity mismatch'
+            }
+            return [ordered]@{
+                schema_version = 't9.1.3-supervisor-observed-nmf-ready-v1'
+                observed_at_utc = Get-UtcIso
+                waiter_pid = [int]$Process.Id
+                release_path = $ReleasePath
+                release_nonce_sha256 = $expectedNonceHash
+                transaction_id = [string]$candidate.transaction_id
+                attestation_nonce = [string]$candidate.attestation_nonce
+                attestation_sha256 = [string]$candidate.attestation_sha256
+                config_sha256 = [string]$candidate.config_sha256
+                implementation_sha256 = [string]$candidate.implementation_sha256
+                deadline_utc = [string]$candidate.deadline_utc
+            }
+        }
+        Start-Sleep -Milliseconds 100
+    }
+    throw 'NMF did not publish a fully bound ready record before attestation/deadline expiry'
+}
+
+function New-NmfSerialReleasePayload {
+    param(
+        [Parameter(Mandatory = $true)][bool]$MfExited,
+        [Parameter(Mandatory = $true)][int]$MfExitCode,
+        [Parameter(Mandatory = $true)][int]$MfPid,
+        [Parameter(Mandatory = $true)][long]$MfProcessCreatedUnixNs,
+        [Parameter(Mandatory = $true)][bool]$NmfExited,
+        [Parameter(Mandatory = $true)][int]$NmfPid,
+        [Parameter(Mandatory = $true)][string]$ReleasePath,
+        [Parameter(Mandatory = $true)][string]$ReleaseNonce,
+        [Parameter(Mandatory = $true)]$TrainingAttestation,
+        [Parameter(Mandatory = $true)]$Probe,
+        [Parameter(Mandatory = $true)][string]$DeadlineUtc
+    )
+    if (-not $MfExited -or $MfExitCode -ne 0) {
+        throw 'NMF release refused because MF did not exit successfully'
+    }
+    if ($NmfExited) {
+        throw 'NMF release refused because its waiting child already exited'
+    }
+    if ($MfPid -le 0 -or $MfProcessCreatedUnixNs -le 0 -or $NmfPid -le 0) {
+        throw 'NMF release refused malformed process identities'
+    }
+    if (Test-Path -LiteralPath $ReleasePath) {
+        throw 'NMF release path unexpectedly pre-existed publication'
+    }
+    $attestedRunDir = Get-CanonicalPath -Path ([string]$TrainingAttestation.run_identity.run_dir) -BasePath ([Environment]::CurrentDirectory)
+    $expectedPath = Get-CanonicalPath -Path (Join-Path $attestedRunDir 'nmf_after_mf.release.json') -BasePath $attestedRunDir
+    if (-not [string]::Equals($expectedPath, $ReleasePath, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'NMF release path is not bound to attested run identity'
+    }
+    $parsedNonce = [Guid]::Empty
+    if (-not [Guid]::TryParse($ReleaseNonce, [ref]$parsedNonce) -or $parsedNonce.ToString('D') -ne $ReleaseNonce.ToLowerInvariant()) {
+        throw 'NMF release nonce is not canonical'
+    }
+    $deadline = [DateTimeOffset]::Parse($DeadlineUtc)
+    if ($deadline.Offset -ne [TimeSpan]::Zero -or $deadline.UtcDateTime -le [DateTime]::UtcNow) {
+        throw 'NMF release transaction deadline is invalid or expired'
+    }
+    return [ordered]@{
+        schema_version = 't9.1.3-nmf-after-mf-release-v1'
+        task_id = 'T9.1.3'
+        family = 'nmf'
+        prerequisite_family = 'mf'
+        prerequisite_exit_code = 0
+        transaction_id = [string]$TrainingAttestation.run_identity.transaction_id
+        run_dir = [string]$TrainingAttestation.run_identity.run_dir
+        attestation_nonce = [string]$TrainingAttestation.attestation_nonce
+        attestation_sha256 = [string]$TrainingAttestation.attestation_sha256
+        release_nonce = $ReleaseNonce
+        waiter_pid = $NmfPid
+        config_sha256 = [string]$Probe.config_sha256
+        implementation_sha256 = [string]$Probe.implementation_sha256
+        deadline_utc = $DeadlineUtc
+        mf_pid = $MfPid
+        mf_process_created_unix_ns = $MfProcessCreatedUnixNs
+        released_at_utc = Get-UtcIso
+    }
+}
+
+function Publish-NmfSerialRelease {
+    param(
+        [Parameter(Mandatory = $true)][System.Diagnostics.Process]$MfProcess,
+        [Parameter(Mandatory = $true)][System.Diagnostics.Process]$NmfProcess,
+        [Parameter(Mandatory = $true)][string]$ReleasePath,
+        [Parameter(Mandatory = $true)][string]$ReleaseNonce,
+        [Parameter(Mandatory = $true)]$TrainingAttestation,
+        [Parameter(Mandatory = $true)]$Probe,
+        [Parameter(Mandatory = $true)][string]$DeadlineUtc
+    )
+    $MfProcess.Refresh()
+    $NmfProcess.Refresh()
+    $mfStartUtc = $MfProcess.StartTime.ToUniversalTime()
+    $payload = New-NmfSerialReleasePayload -MfExited $MfProcess.HasExited -MfExitCode $(if ($MfProcess.HasExited) { [int]$MfProcess.ExitCode } else { -1 }) -MfPid $MfProcess.Id -MfProcessCreatedUnixNs (Get-ProcessUnixNanoseconds -StartTimeUtc $mfStartUtc) -NmfExited $NmfProcess.HasExited -NmfPid $NmfProcess.Id -ReleasePath $ReleasePath -ReleaseNonce $ReleaseNonce -TrainingAttestation $TrainingAttestation -Probe $Probe -DeadlineUtc $DeadlineUtc
+    Write-JsonAtomic -Path $ReleasePath -Value $payload
+    return [ordered]@{
+        payload = $payload
+        file_evidence = Get-FileEvidence -Path $ReleasePath
+    }
+}
+
+function Wait-NmfSerialReleaseConsumed {
+    param(
+        [Parameter(Mandatory = $true)][System.Diagnostics.Process]$Process,
+        [Parameter(Mandatory = $true)][string]$StdoutPath,
+        [Parameter(Mandatory = $true)][string]$ReleasePath,
+        [Parameter(Mandatory = $true)][string]$ReleaseNonce,
+        [Parameter(Mandatory = $true)]$ReleaseWitness,
+        [Parameter(Mandatory = $true)]$TrainingAttestation,
+        [Parameter(Mandatory = $true)][string]$DeadlineUtc
+    )
+    $expectedKeys = @(
+        'schema_version', 'event', 'release_path', 'release_sha256',
+        'transaction_id', 'attestation_sha256', 'release_nonce_sha256',
+        'mf_pid', 'mf_process_created_unix_ns', 'waiter_pid',
+        'released_at_utc', 'waited_seconds'
+    ) | Sort-Object
+    $expectedNonceHash = Get-StringSha256Hex -Text $ReleaseNonce
+    $expectedReleaseHash = [string]$ReleaseWitness.file_evidence.sha256
+    if (
+        -not (Test-Path -LiteralPath $ReleasePath -PathType Leaf) -or
+        [string]::IsNullOrWhiteSpace($expectedReleaseHash) -or
+        (Get-Sha256Hex -Path $ReleasePath) -ne $expectedReleaseHash
+    ) {
+        throw 'NMF serial-release file changed before the child consumption witness'
+    }
+    $transactionDeadline = [DateTimeOffset]::Parse($DeadlineUtc).UtcDateTime
+    $consumptionDeadline = [DateTime]::UtcNow.AddSeconds(30)
+    if ($transactionDeadline -lt $consumptionDeadline) {
+        $consumptionDeadline = $transactionDeadline
+    }
+    $ioDrainedAfterExit = $false
+    while ($true) {
+        $text = Read-SharedUtf8Text -Path $StdoutPath
+        foreach ($line in @($text -split "`r?`n")) {
+            if ([string]::IsNullOrWhiteSpace($line)) { continue }
+            try {
+                $candidate = $line | ConvertFrom-Json
+            }
+            catch {
+                continue
+            }
+            if ([string]$candidate.event -ne 't9_1_3_nmf_serial_release_consumed') {
+                continue
+            }
+            $actualKeys = @($candidate.PSObject.Properties.Name | Sort-Object)
+            if (($actualKeys -join "`n") -ne ($expectedKeys -join "`n")) {
+                throw 'NMF serial-release consumption witness schema drifted'
+            }
+            $observedReleasePath = Get-CanonicalPath -Path ([string]$candidate.release_path) -BasePath $script:RunDirectory
+            $waitedSeconds = [double]$candidate.waited_seconds
+            if (
+                [string]$candidate.schema_version -ne 't9.1.3-nmf-serial-release-witness-v1' -or
+                -not [string]::Equals($observedReleasePath, $ReleasePath, [StringComparison]::OrdinalIgnoreCase) -or
+                [string]$candidate.release_sha256 -ne $expectedReleaseHash -or
+                [string]$candidate.transaction_id -ne [string]$TrainingAttestation.run_identity.transaction_id -or
+                [string]$candidate.attestation_sha256 -ne [string]$TrainingAttestation.attestation_sha256 -or
+                [string]$candidate.release_nonce_sha256 -ne $expectedNonceHash -or
+                [long]$candidate.mf_pid -ne [long]$ReleaseWitness.payload.mf_pid -or
+                [long]$candidate.mf_process_created_unix_ns -ne [long]$ReleaseWitness.payload.mf_process_created_unix_ns -or
+                [int]$candidate.waiter_pid -ne [int]$Process.Id -or
+                [string]$candidate.released_at_utc -ne [string]$ReleaseWitness.payload.released_at_utc -or
+                [double]::IsNaN($waitedSeconds) -or
+                [double]::IsInfinity($waitedSeconds) -or
+                $waitedSeconds -lt 0.0 -or
+                (Get-Sha256Hex -Path $ReleasePath) -ne $expectedReleaseHash
+            ) {
+                throw 'NMF serial-release consumption witness identity mismatch'
+            }
+            if ([DateTime]::UtcNow -ge $consumptionDeadline -or [DateTime]::UtcNow -ge $transactionDeadline) {
+                throw 'NMF serial-release consumption witness was observed after its deadline'
+            }
+            return [ordered]@{
+                schema_version = 't9.1.3-supervisor-observed-nmf-consumption-v1'
+                observed_at_utc = Get-UtcIso
+                child_witness = $candidate
+            }
+        }
+        $Process.Refresh()
+        if ($Process.HasExited) {
+            if (-not $ioDrainedAfterExit) {
+                Close-HiddenChildIo -Process $Process
+                $ioDrainedAfterExit = $true
+                continue
+            }
+            throw "NMF child exited before a valid serial-release consumption witness was observed (exit $($Process.ExitCode))"
+        }
+        if ([DateTime]::UtcNow -ge $consumptionDeadline -or [DateTime]::UtcNow -ge $transactionDeadline) {
+            throw 'NMF did not publish a valid serial-release consumption witness within 30 seconds and before the total deadline'
+        }
+        Start-Sleep -Milliseconds 100
+    }
 }
 
 function Invoke-StaticSelfTest {
@@ -1750,6 +2041,9 @@ print(json.dumps(synthetic_attestation_self_test(), sort_keys=True))
     }
     $temporaryRoot = Join-Path ([IO.Path]::GetTempPath()) ('t9_1_3_supervisor_selftest_' + [Guid]::NewGuid().ToString('N'))
     [IO.Directory]::CreateDirectory($temporaryRoot) | Out-Null
+    $supervisorReleaseSuccessPass = $false
+    $supervisorReleaseConsumedPass = $false
+    $supervisorMfFailureNoReleasePass = $false
     try {
         $childStdout = Join-Path $temporaryRoot 'child stdout.log'
         $childStderr = Join-Path $temporaryRoot 'child stderr.log'
@@ -1771,6 +2065,67 @@ print(json.dumps(synthetic_attestation_self_test(), sort_keys=True))
             if ([string]$hiddenObserved[$index] -ne [string]$arguments[$index]) {
                 throw "hidden ProcessStartInfo argv self-test changed argument $index"
             }
+        }
+
+        $serialRunDir = Join-Path $temporaryRoot 'serial-run'
+        [IO.Directory]::CreateDirectory($serialRunDir) | Out-Null
+        $script:RunDirectory = $serialRunDir
+        $serialReleasePath = Join-Path $serialRunDir 'nmf_after_mf.release.json'
+        $serialNonce = [Guid]::NewGuid().ToString('D')
+        $serialDeadline = [DateTime]::UtcNow.AddMinutes(1).ToString('o')
+        $serialAttestation = [pscustomobject][ordered]@{
+            run_identity = [pscustomobject][ordered]@{
+                transaction_id = [Guid]::NewGuid().ToString('D')
+                run_dir = $serialRunDir
+            }
+            attestation_nonce = [Guid]::NewGuid().ToString('D')
+            attestation_sha256 = ('3' * 64)
+        }
+        $serialProbe = [pscustomobject][ordered]@{
+            config_sha256 = ('1' * 64)
+            implementation_sha256 = ('2' * 64)
+        }
+        $successRelease = New-NmfSerialReleasePayload -MfExited $true -MfExitCode 0 -MfPid 101 -MfProcessCreatedUnixNs 102 -NmfExited $false -NmfPid $PID -ReleasePath $serialReleasePath -ReleaseNonce $serialNonce -TrainingAttestation $serialAttestation -Probe $serialProbe -DeadlineUtc $serialDeadline
+        Write-JsonAtomic -Path $serialReleasePath -Value $successRelease
+        $successWitness = [ordered]@{
+            payload = $successRelease
+            file_evidence = Get-FileEvidence -Path $serialReleasePath
+        }
+        $supervisorReleaseSuccessPass = (
+            (Test-Path -LiteralPath $serialReleasePath -PathType Leaf) -and
+            [string]$successRelease.prerequisite_family -eq 'mf' -and
+            [int]$successRelease.prerequisite_exit_code -eq 0 -and
+            (Get-Sha256Hex -Path $serialReleasePath) -match '^[0-9a-f]{64}$'
+        )
+        $serialConsumptionLog = Join-Path $serialRunDir 'nmf-consumption.stdout.log'
+        $serialConsumption = [ordered]@{
+            schema_version = 't9.1.3-nmf-serial-release-witness-v1'
+            event = 't9_1_3_nmf_serial_release_consumed'
+            release_path = $serialReleasePath
+            release_sha256 = [string]$successWitness.file_evidence.sha256
+            transaction_id = [string]$serialAttestation.run_identity.transaction_id
+            attestation_sha256 = [string]$serialAttestation.attestation_sha256
+            release_nonce_sha256 = Get-StringSha256Hex -Text $serialNonce
+            mf_pid = 101
+            mf_process_created_unix_ns = 102
+            waiter_pid = $PID
+            released_at_utc = [string]$successRelease.released_at_utc
+            waited_seconds = 0.1
+        }
+        Write-Utf8NoBomAtomic -Path $serialConsumptionLog -Text (($serialConsumption | ConvertTo-Json -Compress) + [Environment]::NewLine)
+        $observedConsumption = Wait-NmfSerialReleaseConsumed -Process (Get-Process -Id $PID -ErrorAction Stop) -StdoutPath $serialConsumptionLog -ReleasePath $serialReleasePath -ReleaseNonce $serialNonce -ReleaseWitness $successWitness -TrainingAttestation $serialAttestation -DeadlineUtc $serialDeadline
+        $supervisorReleaseConsumedPass = [string]$observedConsumption.schema_version -eq 't9.1.3-supervisor-observed-nmf-consumption-v1'
+        Remove-Item -LiteralPath $serialReleasePath -Force
+        $mfFailureRejected = $false
+        try {
+            [void](New-NmfSerialReleasePayload -MfExited $true -MfExitCode 7 -MfPid 101 -MfProcessCreatedUnixNs 102 -NmfExited $false -NmfPid 103 -ReleasePath $serialReleasePath -ReleaseNonce $serialNonce -TrainingAttestation $serialAttestation -Probe $serialProbe -DeadlineUtc $serialDeadline)
+        }
+        catch {
+            $mfFailureRejected = $true
+        }
+        $supervisorMfFailureNoReleasePass = $mfFailureRejected -and -not (Test-Path -LiteralPath $serialReleasePath)
+        if (-not $supervisorReleaseSuccessPass -or -not $supervisorReleaseConsumedPass -or -not $supervisorMfFailureNoReleasePass) {
+            throw 'supervisor MF-success/MF-failure serial release self-test failed'
         }
 
         $lockOutput = Join-Path $temporaryRoot 'lock-audit-output'
@@ -1881,6 +2236,9 @@ print(json.dumps(synthetic_attestation_self_test(), sort_keys=True))
         gpu_attestation_uuid_mismatch_fail_case = [bool]$attestationSelfTest.uuid_mismatch_rejected
         gpu_attestation_purpose_swap_fail_case = [bool]$attestationSelfTest.purpose_swap_rejected
         gpu_attestation_real_gpu_queried = [bool]$attestationSelfTest.gpu_queried
+        nmf_serial_release_success_published = $supervisorReleaseSuccessPass
+        nmf_serial_release_consumption_verified = $supervisorReleaseConsumedPass
+        nmf_serial_release_mf_failure_absent = $supervisorMfFailureNoReleasePass
         strict_invalidated_crash_marker_pass_case = $strictCrashMarkerPass
         finalization_failed_marker_rejected = $failedMarkerRejected
         invalidated_crash_marker_extra_field_rejected = $extraMarkerRejected
@@ -1954,7 +2312,7 @@ $script:LogPaths = [ordered]@{
     finalize_stderr = Join-Path $RunDir 'finalize.stderr.log'
 }
 $script:Supervisor = [ordered]@{
-    schema_version = 't9.1.3-production-supervisor-v2'
+    schema_version = 't9.1.3-production-supervisor-v3'
     task_id = 'T9.1.3'
     transaction_id = $script:TransactionId
     state = 'CREATED'
@@ -1978,6 +2336,14 @@ $script:Supervisor = [ordered]@{
     gpu_load_attestations = [ordered]@{
         training_launch = $null
         finalizer_launch = $null
+    }
+    serial_training_gate = [ordered]@{
+        execution_order = 'MF_THEN_NMF'
+        release_path = Join-Path $RunDir 'nmf_after_mf.release.json'
+        ready_witness = $null
+        release_witness = $null
+        consumption_witness = $null
+        mf_failure_release_absent = $null
     }
     child_job_object = [ordered]@{
         policy = 'JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE'
@@ -2133,7 +2499,7 @@ try {
         final_target_states = @($targetStates)
         lock_audit = @($lockAudit)
         nvidia_load_gate = $gpuLoadGate
-        execution_plan = 'TRAIN_MF_AND_NMF_THEN_FINALIZE'
+        execution_plan = 'TRAIN_MF_THEN_ATOMIC_RELEASE_THEN_NMF_THEN_FINALIZE'
         no_child_started = ($script:Processes.Count -eq 0)
     }
     if (-not $preflight.no_child_started) {
@@ -2162,6 +2528,17 @@ try {
     )
     $mfArgs = $common + @('--family', 'mf', '--train-only')
     $nmfArgs = $common + @('--family', 'nmf', '--train-only')
+    $nmfReleasePath = Get-CanonicalPath -Path (Join-Path $RunDir 'nmf_after_mf.release.json') -BasePath $RunDir
+    $nmfReleaseNonce = [Guid]::NewGuid().ToString('D')
+    $trainingDeadlineUtc = $script:DeadlineUtc.ToString('o')
+    if (Test-Path -LiteralPath $nmfReleasePath) {
+        throw 'fresh supervisor unexpectedly found a pre-existing NMF serial-release gate'
+    }
+    $nmfArgs = $nmfArgs + @(
+        '--supervisor-nmf-release-gate', $nmfReleasePath,
+        '--supervisor-nmf-release-nonce', $nmfReleaseNonce,
+        '--supervisor-training-deadline-utc', $trainingDeadlineUtc
+    )
 
     Write-LaunchTransaction -State 'PREPARED_NO_CHILDREN'
     # Artifact resume still executes both family commands.  Valid retained
@@ -2201,19 +2578,49 @@ try {
         $nmf = Start-JobBoundPythonChild -Role 'nmf' -PythonPath $Python -PayloadArgumentList $nmfArgs -WorkingDirectory $RepoRoot -StdoutPath $script:LogPaths.nmf_stdout -StderrPath $script:LogPaths.nmf_stderr -BarrierRoot $script:JobBarrierRoot
         $script:Processes['nmf'] = $nmf
         $script:ChildRecords['nmf'] = New-ChildRecord -Role 'nmf' -Process $nmf -ArgumentList $nmfArgs -StdoutPath $script:LogPaths.nmf_stdout -StderrPath $script:LogPaths.nmf_stderr -RunDirectory $RunDir
-        Write-LaunchTransaction -State 'COMMITTED_BOTH_TRAINING_CHILDREN_RECORDED'
-        Set-SupervisorPhase -State 'TRAINING_RUNNING' -Detail 'MF and NMF PID plus creation identities are durably recorded.'
+        Write-LaunchTransaction -State 'BOTH_CHILDREN_RECORDED_NMF_AWAITING_MF_RELEASE'
+        Set-SupervisorPhase -State 'NMF_POST_ATTESTATION_RELEASE_WAIT_STARTING' -Detail 'Both Job-bound children share the same fresh training attestation; NMF must prove it reached the pre-output release barrier.'
+        $nmfReady = Wait-NmfSerialReleaseReady -Process $nmf -StdoutPath $script:LogPaths.nmf_stdout -ReleasePath $nmfReleasePath -ReleaseNonce $nmfReleaseNonce -TrainingAttestation $trainingAttestation -Probe $script:BaselineProbe -DeadlineUtc $trainingDeadlineUtc
+        $script:Supervisor['serial_training_gate']['ready_witness'] = $nmfReady
+        Set-SupervisorPhase -State 'NMF_READY_AND_BLOCKED_BEFORE_OUTPUT' -Detail 'The fully bound NMF ready JSON was observed; no release file exists.'
 
-        Wait-TrainingPair -MfProcess $mf -NmfProcess $nmf
-        Write-LaunchTransaction -State 'TRAINING_CHILDREN_EXITED_ZERO'
+        Wait-MfWithBlockedNmf -MfProcess $mf -NmfProcess $nmf -ReleasePath $nmfReleasePath
+        if ([int]$mf.ExitCode -ne 0) {
+            $script:FailureExitCode = [Math]::Max(1, [int]$mf.ExitCode)
+            $script:Supervisor['serial_training_gate']['mf_failure_release_absent'] = -not (Test-Path -LiteralPath $nmfReleasePath)
+            if (-not $nmf.HasExited) {
+                Stop-OwnedChild -Role 'nmf' -Process $nmf -RunDirectory $RunDir -Reason 'MF_FAILED_NO_SERIAL_RELEASE'
+            }
+            throw "MF training child failed with exit code $($mf.ExitCode); NMF was terminated without release"
+        }
+        Set-SupervisorPhase -State 'MF_EXITED_ZERO_NMF_RELEASE_PENDING' -Detail 'MF completed successfully; NMF remains blocked and the atomic release has not yet been written.'
+        $nmfRelease = Publish-NmfSerialRelease -MfProcess $mf -NmfProcess $nmf -ReleasePath $nmfReleasePath -ReleaseNonce $nmfReleaseNonce -TrainingAttestation $trainingAttestation -Probe $script:BaselineProbe -DeadlineUtc $trainingDeadlineUtc
+        $script:Supervisor['serial_training_gate']['release_witness'] = $nmfRelease
+        Write-LaunchTransaction -State 'MF_EXITED_ZERO_NMF_ATOMICALLY_RELEASED'
+        Set-SupervisorPhase -State 'NMF_ATOMICALLY_RELEASED_AFTER_MF_SUCCESS' -Detail 'The release payload binds MF exit zero, both PIDs, run identity, attestation nonce/hash, config, implementation, and total deadline.'
+
+        $nmfConsumed = Wait-NmfSerialReleaseConsumed -Process $nmf -StdoutPath $script:LogPaths.nmf_stdout -ReleasePath $nmfReleasePath -ReleaseNonce $nmfReleaseNonce -ReleaseWitness $nmfRelease -TrainingAttestation $trainingAttestation -DeadlineUtc $trainingDeadlineUtc
+        $script:Supervisor['serial_training_gate']['consumption_witness'] = $nmfConsumed
+        Set-SupervisorPhase -State 'NMF_RELEASE_CONSUMPTION_VERIFIED' -Detail 'The NMF child emitted a fully bound release-consumption witness before its output/training path continued.'
+
+        Wait-SingleChild -Role 'nmf' -Process $nmf
+        if ([int]$nmf.ExitCode -ne 0) {
+            $script:FailureExitCode = [Math]::Max(1, [int]$nmf.ExitCode)
+            throw "NMF training child failed after MF-success release with exit code $($nmf.ExitCode)"
+        }
+        Write-LaunchTransaction -State 'SERIAL_TRAINING_CHILDREN_EXITED_ZERO'
         $trainingOutcome = [ordered]@{
-            schema_version = 't9.1.3-production-training-outcome-v2'
+            schema_version = 't9.1.3-production-serialized-training-outcome-v3'
             task_id = 'T9.1.3'
             transaction_id = $script:TransactionId
             completed_at_utc = Get-UtcIso
-            execution_plan = 'TRAIN_MF_AND_NMF_THEN_FINALIZE'
+            execution_plan = 'TRAIN_MF_THEN_ATOMIC_RELEASE_THEN_NMF_THEN_FINALIZE'
             mf = $script:ChildRecords['mf']
             nmf = $script:ChildRecords['nmf']
+            nmf_serial_ready_witness = $nmfReady
+            nmf_serial_release_witness = $nmfRelease
+            nmf_serial_consumption_witness = $nmfConsumed
+            shared_training_attestation_sha256 = [string]$trainingAttestation.attestation_sha256
             log_evidence = Get-LogEvidenceMap
         }
         Write-JsonAtomic -Path (Join-Path $RunDir 'training_outcome.json') -Value $trainingOutcome

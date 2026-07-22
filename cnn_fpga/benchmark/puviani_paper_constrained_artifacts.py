@@ -22,7 +22,7 @@ from contextlib import contextmanager
 import copy
 import csv
 from dataclasses import asdict
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import hashlib
 import io
 import json
@@ -105,6 +105,30 @@ TASK_ID = "T9.1.3"
 SCHEMA_VERSION = "t9.1.3-puviani-paper-constrained-artifacts-v1"
 EVIDENCE_GRADE = "PAPER_CONSTRAINED_REIMPLEMENTATION"
 STATUS_PASS = "PASS_ARTIFACT_LANE_AND_EXECUTABLE_REIMPLEMENTATION"
+SERIAL_RELEASE_SCHEMA_VERSION = "t9.1.3-nmf-after-mf-release-v1"
+SERIAL_RELEASE_FILENAME = "nmf_after_mf.release.json"
+SERIAL_RELEASE_READY_SCHEMA_VERSION = "t9.1.3-nmf-release-wait-ready-v1"
+SERIAL_RELEASE_KEYS = frozenset(
+    {
+        "schema_version",
+        "task_id",
+        "family",
+        "prerequisite_family",
+        "prerequisite_exit_code",
+        "transaction_id",
+        "run_dir",
+        "attestation_nonce",
+        "attestation_sha256",
+        "release_nonce",
+        "waiter_pid",
+        "config_sha256",
+        "implementation_sha256",
+        "deadline_utc",
+        "mf_pid",
+        "mf_process_created_unix_ns",
+        "released_at_utc",
+    }
+)
 PAPER_NUMERIC_STATE = "INCOMPLETE_NULL"
 PAPER_NUMERIC_REASON = (
     "cutoff-100 and 1000-cycle six-state full-denominator evaluation has not "
@@ -4946,6 +4970,211 @@ def _train_or_resume_agent(
     return record, True
 
 
+def _serial_release_utc(value: Any, label: str) -> datetime:
+    if not isinstance(value, str) or not value:
+        raise ValueError(f"{label} must be an ISO-8601 UTC timestamp")
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as error:
+        raise ValueError(f"{label} is not ISO-8601") from error
+    if parsed.tzinfo is None or parsed.utcoffset() != timezone.utc.utcoffset(parsed):
+        raise ValueError(f"{label} must carry UTC offset zero")
+    return parsed.astimezone(timezone.utc)
+
+
+def _serial_release_expected_path(
+    gate_path: str | Path, gpu_attestation: Mapping[str, Any]
+) -> tuple[Path, Path]:
+    run_identity = gpu_attestation.get("run_identity")
+    if not isinstance(run_identity, Mapping):
+        raise ValueError("serial-release attestation run identity is missing")
+    run_dir_value = run_identity.get("run_dir")
+    if not isinstance(run_dir_value, str) or not Path(run_dir_value).is_absolute():
+        raise ValueError("serial-release attested run_dir must be absolute")
+    candidate = Path(gate_path)
+    if not candidate.is_absolute():
+        raise ValueError("serial-release gate path must be absolute")
+    run_dir = Path(run_dir_value).resolve(strict=False)
+    expected = (run_dir / SERIAL_RELEASE_FILENAME).resolve(strict=False)
+    observed = candidate.resolve(strict=False)
+    if os.path.normcase(str(observed)) != os.path.normcase(str(expected)):
+        raise ValueError(
+            "serial-release gate path is not the unique file bound to attested run_dir"
+        )
+    return observed, run_dir
+
+
+def _validate_nmf_serial_release_payload(
+    payload: Any,
+    *,
+    gate_path: Path,
+    run_dir: Path,
+    release_nonce: str,
+    deadline_utc: str,
+    wait_started_at: datetime,
+    config_sha256: str,
+    implementation_sha256: str,
+    gpu_attestation: Mapping[str, Any],
+    waiter_pid: int,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    if not isinstance(payload, Mapping) or set(payload) != SERIAL_RELEASE_KEYS:
+        raise ValueError("NMF serial-release payload schema drifted")
+    release = dict(payload)
+    run_identity = gpu_attestation["run_identity"]
+    observed_now = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    released_at = _serial_release_utc(release.get("released_at_utc"), "released_at_utc")
+    parsed_deadline = _serial_release_utc(deadline_utc, "serial-release deadline")
+    try:
+        canonical_nonce = str(uuid.UUID(release_nonce))
+    except (ValueError, AttributeError) as error:
+        raise ValueError("serial-release nonce must be a canonical UUID") from error
+    if canonical_nonce != release_nonce.lower():
+        raise ValueError("serial-release nonce must use canonical UUID spelling")
+    if (
+        release.get("schema_version") != SERIAL_RELEASE_SCHEMA_VERSION
+        or release.get("task_id") != TASK_ID
+        or release.get("family") != "nmf"
+        or release.get("prerequisite_family") != "mf"
+        or isinstance(release.get("prerequisite_exit_code"), bool)
+        or release.get("prerequisite_exit_code") != 0
+        or release.get("transaction_id") != run_identity.get("transaction_id")
+        or release.get("run_dir") != str(run_dir)
+        or release.get("attestation_nonce")
+        != gpu_attestation.get("attestation_nonce")
+        or release.get("attestation_sha256")
+        != gpu_attestation.get("attestation_sha256")
+        or release.get("release_nonce") != release_nonce
+        or isinstance(release.get("waiter_pid"), bool)
+        or release.get("waiter_pid") != waiter_pid
+        or release.get("config_sha256") != config_sha256
+        or release.get("implementation_sha256") != implementation_sha256
+        or release.get("deadline_utc") != deadline_utc
+        or isinstance(release.get("mf_pid"), bool)
+        or not isinstance(release.get("mf_pid"), int)
+        or release["mf_pid"] <= 0
+        or isinstance(release.get("mf_process_created_unix_ns"), bool)
+        or not isinstance(release.get("mf_process_created_unix_ns"), int)
+        or release["mf_process_created_unix_ns"] <= 0
+        or released_at < wait_started_at
+        or released_at > observed_now + timedelta(seconds=5)
+        or released_at > parsed_deadline
+        or os.path.normcase(str(gate_path.parent)) != os.path.normcase(str(run_dir))
+    ):
+        raise ValueError("NMF serial-release payload identity or timeline mismatch")
+    return release
+
+
+def _wait_for_nmf_serial_release(
+    *,
+    gate_path: str | Path,
+    release_nonce: str,
+    deadline_utc: str,
+    config_sha256: str,
+    implementation_sha256: str,
+    gpu_attestation: Mapping[str, Any],
+    poll_interval_seconds: float = 0.05,
+    emit_ready: bool = True,
+) -> dict[str, Any]:
+    """Wait before touching the output namespace for a supervisor MF-success seal."""
+
+    if not isinstance(release_nonce, str):
+        raise ValueError("serial-release nonce must be a string")
+    try:
+        if str(uuid.UUID(release_nonce)) != release_nonce.lower():
+            raise ValueError
+    except (ValueError, AttributeError) as error:
+        raise ValueError("serial-release nonce must be a canonical UUID") from error
+    if not isinstance(deadline_utc, str):
+        raise ValueError("serial-release deadline must be a string")
+    if not isinstance(poll_interval_seconds, (int, float)) or not (
+        0.001 <= float(poll_interval_seconds) <= 1.0
+    ):
+        raise ValueError("serial-release poll interval is outside the safe range")
+    if not isinstance(emit_ready, bool):
+        raise ValueError("serial-release ready emission flag must be boolean")
+    path, run_dir = _serial_release_expected_path(gate_path, gpu_attestation)
+    deadline = _serial_release_utc(deadline_utc, "serial-release deadline")
+    wait_started_at = datetime.now(timezone.utc)
+    if deadline <= wait_started_at:
+        raise TimeoutError("NMF serial-release deadline expired before waiting")
+    # lexists also rejects a broken symlink.  A release created before this
+    # process reaches the post-attestation barrier can never authorize work.
+    if os.path.lexists(path):
+        raise ValueError("NMF serial-release gate pre-existed the validated wait")
+    wait_started_monotonic = time.monotonic()
+    monotonic_deadline = wait_started_monotonic + (
+        deadline - wait_started_at
+    ).total_seconds()
+    ready = {
+        "schema_version": SERIAL_RELEASE_READY_SCHEMA_VERSION,
+        "event": "t9_1_3_nmf_serial_release_wait_ready",
+        "task_id": TASK_ID,
+        "family": "nmf",
+        "waiter_pid": os.getpid(),
+        "release_path": str(path),
+        "release_nonce_sha256": hashlib.sha256(
+            release_nonce.encode("utf-8")
+        ).hexdigest(),
+        "transaction_id": gpu_attestation["run_identity"]["transaction_id"],
+        "attestation_nonce": gpu_attestation["attestation_nonce"],
+        "attestation_sha256": gpu_attestation["attestation_sha256"],
+        "config_sha256": config_sha256,
+        "implementation_sha256": implementation_sha256,
+        "deadline_utc": deadline_utc,
+    }
+    if emit_ready:
+        print(_canonical_json(ready), flush=True)
+    while not os.path.lexists(path):
+        if time.monotonic() >= monotonic_deadline or datetime.now(timezone.utc) >= deadline:
+            raise TimeoutError("timed out waiting for the NMF serial-release gate")
+        time.sleep(float(poll_interval_seconds))
+    if time.monotonic() >= monotonic_deadline or datetime.now(timezone.utc) >= deadline:
+        raise TimeoutError("NMF serial-release gate arrived after the transaction deadline")
+    if path.is_symlink() or not path.is_file():
+        raise ValueError("NMF serial-release gate is not a regular file")
+    try:
+        raw_release = path.read_bytes()
+        if len(raw_release) > 65536:
+            raise ValueError("NMF serial-release gate exceeds the size bound")
+        payload = json.loads(raw_release.decode("utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        raise ValueError("NMF serial-release gate is unreadable") from error
+    release = _validate_nmf_serial_release_payload(
+        payload,
+        gate_path=path,
+        run_dir=run_dir,
+        release_nonce=release_nonce,
+        deadline_utc=deadline_utc,
+        wait_started_at=wait_started_at,
+        config_sha256=config_sha256,
+        implementation_sha256=implementation_sha256,
+        gpu_attestation=gpu_attestation,
+        waiter_pid=os.getpid(),
+    )
+    if time.monotonic() >= monotonic_deadline or datetime.now(timezone.utc) >= deadline:
+        raise TimeoutError("NMF serial-release validation crossed the transaction deadline")
+    witness = {
+        "schema_version": "t9.1.3-nmf-serial-release-witness-v1",
+        "event": "t9_1_3_nmf_serial_release_consumed",
+        "release_path": str(path),
+        "release_sha256": hashlib.sha256(raw_release).hexdigest(),
+        "transaction_id": release["transaction_id"],
+        "attestation_sha256": release["attestation_sha256"],
+        "release_nonce_sha256": hashlib.sha256(
+            release_nonce.encode("utf-8")
+        ).hexdigest(),
+        "mf_pid": release["mf_pid"],
+        "mf_process_created_unix_ns": release["mf_process_created_unix_ns"],
+        "waiter_pid": os.getpid(),
+        "released_at_utc": release["released_at_utc"],
+        "waited_seconds": time.monotonic() - wait_started_monotonic,
+    }
+    if emit_ready:
+        print(_canonical_json(witness), flush=True)
+    return witness
+
+
 def train_population(
     config: Mapping[str, Any],
     *,
@@ -4953,6 +5182,9 @@ def train_population(
     family: Literal["mf", "nmf", "all"] = "all",
     production: bool = True,
     gpu_attestation: Mapping[str, Any] | str | Path | None = None,
+    serial_release_gate: str | Path | None = None,
+    serial_release_nonce: str | None = None,
+    serial_release_deadline_utc: str | None = None,
 ) -> dict[str, Any]:
     """Train every requested agent and atomically publish one checkpoint per root."""
 
@@ -4961,6 +5193,28 @@ def train_population(
         _configure_production_determinism()
     _require_torch()
     _validate_config(config, production=production)
+    canonical_production = (
+        production and _canonical_sha256(config) == PRODUCTION_CONFIG_SHA256
+    )
+    release_arguments = (
+        serial_release_gate,
+        serial_release_nonce,
+        serial_release_deadline_utc,
+    )
+    if canonical_production and family == "all":
+        raise ValueError(
+            "canonical production family=all is forbidden; the supervisor must "
+            "own distinct MF and release-gated NMF children"
+        )
+    if (
+        canonical_production
+        and family == "nmf"
+        and not all(value is not None for value in release_arguments)
+    ):
+        raise ValueError(
+            "canonical production NMF requires the supervisor MF-success "
+            "serial-release gate"
+        )
     runtime_signature, _ = _validate_runtime_for_config(
         config, production=production
     )
@@ -4980,6 +5234,23 @@ def train_population(
         )
         gpu_attestation_binding = _gpu_attestation_binding(
             normalized_gpu_attestation
+        )
+    serial_release_witness: dict[str, Any] | None = None
+    if any(value is not None for value in release_arguments):
+        if not all(value is not None for value in release_arguments):
+            raise ValueError("the NMF serial-release gate requires all three fields")
+        if not production or family != "nmf" or normalized_gpu_attestation is None:
+            raise ValueError(
+                "the NMF serial-release gate is restricted to a supervised "
+                "production NMF-only launch"
+            )
+        serial_release_witness = _wait_for_nmf_serial_release(
+            gate_path=serial_release_gate,
+            release_nonce=serial_release_nonce,
+            deadline_utc=serial_release_deadline_utc,
+            config_sha256=_canonical_sha256(config),
+            implementation_sha256=implementation_hash,
+            gpu_attestation=normalized_gpu_attestation,
         )
     destination = Path(output_dir)
     if production:
@@ -5051,6 +5322,7 @@ def train_population(
         "resumed_agents": resumed,
         "agent_records": len(agents),
         "gpu_load_attestation_binding": gpu_attestation_binding,
+        "serial_release_witness": serial_release_witness,
         "wall_time_seconds": time.perf_counter() - started,
     }
 
@@ -10132,6 +10404,25 @@ def _parse_args() -> argparse.Namespace:
         default=None,
         help="fresh supervisor-sealed GPU load attestation (mandatory in production)",
     )
+    parser.add_argument(
+        "--supervisor-nmf-release-gate",
+        type=Path,
+        default=None,
+        help=(
+            "private production-supervisor gate: NMF validates and waits here "
+            "before touching the output namespace"
+        ),
+    )
+    parser.add_argument(
+        "--supervisor-nmf-release-nonce",
+        default=None,
+        help="private nonce binding the NMF waiter to its supervisor release",
+    )
+    parser.add_argument(
+        "--supervisor-training-deadline-utc",
+        default=None,
+        help="absolute UTC deadline shared by the serialized MF/NMF transaction",
+    )
     parser.add_argument("--family", choices=("mf", "nmf", "all"), default="all")
     parser.add_argument("--train-only", action="store_true")
     parser.add_argument("--finalize-only", action="store_true")
@@ -10153,6 +10444,36 @@ def main() -> int:
                 "pilot execution is train-only and cannot emit a production PASS seal"
             )
     production = not arguments.pilot
+    serial_values = (
+        arguments.supervisor_nmf_release_gate,
+        arguments.supervisor_nmf_release_nonce,
+        arguments.supervisor_training_deadline_utc,
+    )
+    serial_requested = any(value is not None for value in serial_values)
+    if serial_requested and not all(value is not None for value in serial_values):
+        raise SystemExit("all supervisor NMF serial-release arguments are required")
+    if serial_requested and (
+        not production
+        or arguments.family != "nmf"
+        or not arguments.train_only
+        or arguments.finalize_only
+        or arguments.gpu_attestation is None
+        or _canonical_sha256(config) != PRODUCTION_CONFIG_SHA256
+    ):
+        raise SystemExit(
+            "supervisor NMF serial-release arguments require the canonical "
+            "production NMF-only train-only launch with a live GPU attestation"
+        )
+    if (
+        production
+        and arguments.family == "nmf"
+        and arguments.train_only
+        and not serial_requested
+    ):
+        raise SystemExit(
+            "canonical production NMF-only training requires the supervisor "
+            "MF-success serial-release gate"
+        )
     result: dict[str, Any] | None = None
     if not arguments.finalize_only:
         result = train_population(
@@ -10161,6 +10482,9 @@ def main() -> int:
             family=arguments.family,
             production=production,
             gpu_attestation=arguments.gpu_attestation,
+            serial_release_gate=arguments.supervisor_nmf_release_gate,
+            serial_release_nonce=arguments.supervisor_nmf_release_nonce,
+            serial_release_deadline_utc=arguments.supervisor_training_deadline_utc,
         )
         print(json.dumps(result, indent=2), flush=True)
     if not arguments.train_only:

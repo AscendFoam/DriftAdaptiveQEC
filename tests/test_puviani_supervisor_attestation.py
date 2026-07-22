@@ -4,8 +4,11 @@ from contextlib import nullcontext
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
 import json
+import os
 from pathlib import Path
 import socket
+import threading
+import time
 
 import pytest
 
@@ -297,8 +300,239 @@ def test_production_train_and_finalize_api_require_attestation(monkeypatch: pyte
         )
 
 
+def test_canonical_production_api_rejects_nmf_without_gate_and_family_all(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    monkeypatch.setattr(subject, "_require_torch", lambda: object())
+    monkeypatch.setattr(subject, "_configure_production_determinism", lambda: None)
+    monkeypatch.setattr(subject, "_validate_config", lambda *_args, **_kwargs: None)
+    output = tmp_path / "must-not-exist"
+    with pytest.raises(ValueError, match="NMF requires"):
+        subject.train_population(
+            config, output_dir=output, family="nmf", production=True
+        )
+    with pytest.raises(ValueError, match="family=all is forbidden"):
+        subject.train_population(
+            config, output_dir=output, family="all", production=True
+        )
+    assert not output.exists()
+
+
+def test_nmf_wait_times_out_before_any_output_lock_attempt_or_training(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    run_dir = tmp_path / "run"
+    run_dir.mkdir()
+    gate = run_dir / subject.SERIAL_RELEASE_FILENAME
+    normalized_attestation = {
+        "run_identity": {
+            "transaction_id": "00000000-0000-0000-0000-000000000013",
+            "run_dir": str(run_dir.resolve()),
+        },
+        "attestation_nonce": "00000000-0000-0000-0000-000000000014",
+        "attestation_sha256": "3" * 64,
+    }
+    monkeypatch.setattr(subject, "_require_torch", lambda: object())
+    monkeypatch.setattr(subject, "_configure_production_determinism", lambda: None)
+    monkeypatch.setattr(subject, "_validate_config", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(subject, "_validate_runtime_for_config", lambda *_args, **_kwargs: ({}, "r" * 64))
+    monkeypatch.setattr(subject, "_verify_parent_protocol", lambda *_args, **_kwargs: {})
+    monkeypatch.setattr(subject, "implementation_sha256", lambda: "2" * 64)
+    monkeypatch.setattr(subject, "_validate_gpu_load_attestation", lambda *_args, **_kwargs: normalized_attestation)
+    monkeypatch.setattr(subject, "_gpu_attestation_binding", lambda *_args, **_kwargs: {"bound": True})
+
+    def forbidden(*_args: object, **_kwargs: object) -> object:
+        raise AssertionError("output namespace or training was reached before release")
+
+    monkeypatch.setattr(subject, "_assert_finalize_not_active", forbidden)
+    monkeypatch.setattr(subject, "_train_or_resume_agent", forbidden)
+    output = tmp_path / "output-must-not-exist"
+    with pytest.raises(TimeoutError, match="serial-release"):
+        subject.train_population(
+            config,
+            output_dir=output,
+            family="nmf",
+            production=True,
+            gpu_attestation={"synthetic": True},
+            serial_release_gate=gate,
+            serial_release_nonce="00000000-0000-0000-0000-000000000015",
+            serial_release_deadline_utc=(
+                datetime.now(timezone.utc) + timedelta(milliseconds=30)
+            ).isoformat(),
+        )
+    assert not output.exists()
+    assert not list(tmp_path.rglob("*.lock"))
+    assert not list(tmp_path.rglob("start.json"))
+
+
+def test_serial_release_contract_covers_success_forgery_preexist_path_timeout_and_mf_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    run_dir = tmp_path.resolve()
+    gate = run_dir / subject.SERIAL_RELEASE_FILENAME
+    release_nonce = "00000000-0000-0000-0000-000000000015"
+    gpu = {
+        "run_identity": {
+            "transaction_id": "00000000-0000-0000-0000-000000000013",
+            "run_dir": str(run_dir),
+        },
+        "attestation_nonce": "00000000-0000-0000-0000-000000000014",
+        "attestation_sha256": "3" * 64,
+    }
+
+    def deadline(seconds: float = 1.0) -> str:
+        return (datetime.now(timezone.utc) + timedelta(seconds=seconds)).isoformat()
+
+    def release(deadline_utc: str, **changes: object) -> dict[str, object]:
+        value: dict[str, object] = {
+            "schema_version": subject.SERIAL_RELEASE_SCHEMA_VERSION,
+            "task_id": subject.TASK_ID,
+            "family": "nmf",
+            "prerequisite_family": "mf",
+            "prerequisite_exit_code": 0,
+            "transaction_id": gpu["run_identity"]["transaction_id"],
+            "run_dir": str(run_dir),
+            "attestation_nonce": gpu["attestation_nonce"],
+            "attestation_sha256": gpu["attestation_sha256"],
+            "release_nonce": release_nonce,
+            "waiter_pid": os.getpid(),
+            "config_sha256": "1" * 64,
+            "implementation_sha256": "2" * 64,
+            "deadline_utc": deadline_utc,
+            "mf_pid": 11,
+            "mf_process_created_unix_ns": 12,
+            "released_at_utc": datetime.now(timezone.utc).isoformat(),
+        }
+        value.update(changes)
+        return value
+
+    def delayed_write(value: dict[str, object]) -> threading.Thread:
+        def writer() -> None:
+            time.sleep(0.02)
+            value["released_at_utc"] = datetime.now(timezone.utc).isoformat()
+            subject._atomic_json(value, gate)
+
+        worker = threading.Thread(target=writer)
+        worker.start()
+        return worker
+
+    success_deadline = deadline()
+    worker = delayed_write(release(success_deadline))
+    witness = subject._wait_for_nmf_serial_release(
+        gate_path=gate,
+        release_nonce=release_nonce,
+        deadline_utc=success_deadline,
+        config_sha256="1" * 64,
+        implementation_sha256="2" * 64,
+        gpu_attestation=gpu,
+        poll_interval_seconds=0.005,
+        emit_ready=False,
+    )
+    worker.join()
+    assert witness["mf_pid"] == 11
+    gate.unlink()
+
+    preexisting_deadline = deadline()
+    subject._atomic_json(release(preexisting_deadline), gate)
+    with pytest.raises(ValueError, match="pre-existed"):
+        subject._wait_for_nmf_serial_release(
+            gate_path=gate,
+            release_nonce=release_nonce,
+            deadline_utc=preexisting_deadline,
+            config_sha256="1" * 64,
+            implementation_sha256="2" * 64,
+            gpu_attestation=gpu,
+            emit_ready=False,
+        )
+    gate.unlink()
+
+    for changes in (
+        {"release_nonce": "00000000-0000-0000-0000-000000000099"},
+        {"prerequisite_exit_code": 7},
+    ):
+        forged_deadline = deadline()
+        worker = delayed_write(release(forged_deadline, **changes))
+        with pytest.raises(ValueError, match="identity or timeline"):
+            subject._wait_for_nmf_serial_release(
+                gate_path=gate,
+                release_nonce=release_nonce,
+                deadline_utc=forged_deadline,
+                config_sha256="1" * 64,
+                implementation_sha256="2" * 64,
+                gpu_attestation=gpu,
+                poll_interval_seconds=0.005,
+                emit_ready=False,
+            )
+        worker.join()
+        gate.unlink()
+
+    with pytest.raises(ValueError, match="unique file"):
+        subject._wait_for_nmf_serial_release(
+            gate_path=run_dir / "arbitrary.json",
+            release_nonce=release_nonce,
+            deadline_utc=deadline(),
+            config_sha256="1" * 64,
+            implementation_sha256="2" * 64,
+            gpu_attestation=gpu,
+            emit_ready=False,
+        )
+    with pytest.raises(TimeoutError, match="serial-release"):
+        subject._wait_for_nmf_serial_release(
+            gate_path=gate,
+            release_nonce=release_nonce,
+            deadline_utc=deadline(0.03),
+            config_sha256="1" * 64,
+            implementation_sha256="2" * 64,
+            gpu_attestation=gpu,
+            poll_interval_seconds=0.005,
+            emit_ready=False,
+        )
+
+    late_deadline = deadline(0.005)
+    worker = delayed_write(release(late_deadline))
+    with pytest.raises(TimeoutError, match="after the transaction deadline"):
+        subject._wait_for_nmf_serial_release(
+            gate_path=gate,
+            release_nonce=release_nonce,
+            deadline_utc=late_deadline,
+            config_sha256="1" * 64,
+            implementation_sha256="2" * 64,
+            gpu_attestation=gpu,
+            poll_interval_seconds=0.05,
+            emit_ready=False,
+        )
+    worker.join()
+    gate.unlink()
+
+    original_validator = subject._validate_nmf_serial_release_payload
+
+    def slow_validator(*args: object, **kwargs: object) -> dict[str, object]:
+        time.sleep(0.12)
+        return original_validator(*args, **kwargs)
+
+    monkeypatch.setattr(subject, "_validate_nmf_serial_release_payload", slow_validator)
+    validation_deadline = deadline(0.1)
+    worker = delayed_write(release(validation_deadline))
+    with pytest.raises(TimeoutError, match="validation crossed"):
+        subject._wait_for_nmf_serial_release(
+            gate_path=gate,
+            release_nonce=release_nonce,
+            deadline_utc=validation_deadline,
+            config_sha256="1" * 64,
+            implementation_sha256="2" * 64,
+            gpu_attestation=gpu,
+            poll_interval_seconds=0.005,
+            emit_ready=False,
+        )
+    worker.join()
+    gate.unlink()
+
+
 def test_supervisor_contains_two_fresh_gates_job_binding_and_strict_crash_marker() -> None:
     script = (ROOT / "scripts/run_t9_1_3_production.ps1").read_text(encoding="utf-8")
+    assert "[int]$TotalDeadlineHours = 36" in script
     assert script.count("New-GpuLoadAttestation -LoadGate") == 2
     assert "--gpu-attestation" in script
     assert "$mf = Start-JobBoundPythonChild -Role 'mf'" in script
@@ -314,6 +548,32 @@ def test_supervisor_contains_two_fresh_gates_job_binding_and_strict_crash_marker
     assert "finalizeRecoveryOnly" not in script
     assert "$env:CUBLAS_WORKSPACE_CONFIG = ':4096:8'" in script
     assert "$env:TORCH_ALLOW_TF32_CUBLAS_OVERRIDE = '0'" in script
+    assert "--supervisor-nmf-release-gate" in script
+    assert "Wait-NmfSerialReleaseReady" in script
+    assert "Wait-MfWithBlockedNmf" in script
+    assert "Wait-NmfSerialReleaseConsumed" in script
+    assert "$ioDrainedAfterExit = $false" in script
+    assert "Close-HiddenChildIo -Process $Process" in script
+    assert "NMF_WAITER_EXITED_BEFORE_RELEASE" in script
+    assert "Publish-NmfSerialRelease" in script
+    assert script.index("Wait-NmfSerialReleaseReady -Process $nmf") < script.index(
+        "Wait-MfWithBlockedNmf -MfProcess $mf"
+    )
+    assert script.index("Wait-MfWithBlockedNmf -MfProcess $mf") < script.index(
+        "Publish-NmfSerialRelease -MfProcess $mf"
+    )
+    assert script.index("Publish-NmfSerialRelease -MfProcess $mf") < script.index(
+        "Wait-NmfSerialReleaseConsumed -Process $nmf"
+    )
+    assert script.index("Wait-NmfSerialReleaseConsumed -Process $nmf") < script.index(
+        "Wait-SingleChild -Role 'nmf' -Process $nmf"
+    )
+    assert "nmf_serial_release_witness = $nmfRelease" in script
+    assert "nmf_serial_consumption_witness = $nmfConsumed" in script
+    assert "nmf_serial_release_consumption_verified = $supervisorReleaseConsumedPass" in script
+    assert "shared_training_attestation_sha256" in script
+    assert "t9.1.3-production-supervisor-v3" in script
+    assert "t9.1.3-production-serialized-training-outcome-v3" in script
 
 
 def test_static_attestation_self_test_has_two_gates_and_no_gpu_query() -> None:
