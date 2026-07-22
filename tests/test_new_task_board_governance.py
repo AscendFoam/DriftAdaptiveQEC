@@ -481,8 +481,8 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     statuses = _authoritative_task_statuses(board)
 
     expected_tasks = {
-        *(f"T9.1.{i}" for i in range(1, 5)),
-        *(f"T9.2.{i}" for i in range(1, 6)),
+        *(f"T9.1.{i}" for i in range(1, 6)),
+        *(f"T9.2.{i}" for i in range(1, 8)),
         *(f"T9.3.{i}" for i in range(1, 5)),
         *(f"T9.4.{i}" for i in range(1, 6)),
         *(f"T9.5.{i}" for i in range(1, 5)),
@@ -490,7 +490,9 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         *(f"T9.7.{i}" for i in range(1, 5)),
         *(f"T9.8.{i}" for i in range(1, 4)),
     }
-    assert len(expected_tasks) == 34
+    assert len(expected_tasks) == 37
+    actual_phase9_tasks = {task_id for task_id, _ in TASK_ROW.findall(phase9)}
+    assert actual_phase9_tasks == expected_tasks
     blocked = {"T9.1.2", "T9.7.3", "T9.7.4"}
     assert all(statuses[task] == "Blocked" for task in blocked)
     assert statuses["T9.1.1"] == "Done"
@@ -517,11 +519,17 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         "每 trajectory 至少运行到预注册 `10^4` cycles",
         "relative improvement point `>=15%`",
         "simultaneous paired 95% LCB `>=10%`",
-        "best among registered paper-constrained/project-native baselines",
+        "registered/project-native 状态",
         "raw/recorded IQ -> discriminator -> action -> trigger HIL",
+        "raw/recorded-IQ matched-filter + discriminator",
+        "conservative representative action probes",
+        "`6-cycle/II=1` 只绑定 `discriminator-out -> action`",
+        "GO_LER_REGISTERED_BEST/GO_LER_EXTERNAL_SOTA",
+        "GO_LIFETIME_PROJECT_NATIVE/GO_LIFETIME_EXTERNAL_SOTA/GO_PHYSICAL_LIFETIME",
+        "`Done` 或 terminal `Blocked/null` ledger",
         "GO_SINGLE_PAPER",
         "GO_SPLIT_ALGORITHM_HARDWARE",
-        "不得用三项胜场/加权总分",
+        "不得把 v1 legacy candidate label、三项胜场或加权总分写成 SOTA",
     ):
         assert required in phase9
 
@@ -530,6 +538,19 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert "CXXRTL/P&R/host loop 代替" in phase9
     assert "Phase 8 的真实 GKP/QPU 接入" in phase9
     assert "immutable `analysis_sha256`" in phase9
+
+    task_rows: dict[str, list[str]] = {}
+    for line in phase9.splitlines():
+        if not line.startswith("| T9."):
+            continue
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if len(cells) >= 5:
+            task_rows[cells[0]] = cells
+    assert "codebook actions" not in task_rows["T9.2.4"][3]
+    assert "conservative representative action probes" in task_rows["T9.2.4"][3]
+    assert "T6.9.2" not in task_rows["T9.7.3"][4]
+    assert "T6.9.2 仅可作为" in task_rows["T9.7.3"][3]
+    assert "terminal `Blocked/null` ledger" in task_rows["T9.8.1"][3]
 
     protocol_path = ROOT / "docs" / "t9_1_1_three_lane_protocol.json"
     protocol_source = ROOT / "docs" / "t9_1_1_three_lane_protocol_source_data.csv"
@@ -560,13 +581,21 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         assert required in section20
 
     risks = (ROOT / "docs" / "new_risks.md").read_text(encoding="utf-8")
-    for risk_number in range(162, 169):
+    for risk_number in range(162, 176):
         assert f"R-N{risk_number}" in risks
     assert "| R-N168 | Mitigated |" in risks
+    assert "| R-N170 | Open |" in risks
+    assert "| R-N171 | Open |" in risks
+    assert "| R-N172 | Mitigated |" in risks
+    assert "| R-N173 | Mitigated |" in risks
+    assert "| R-N174 | Open |" in risks
+    assert "| R-N175 | Mitigated |" in risks
 
     insertion = board.split("## 插入任务区", 1)[1].split("## 进度日志", 1)[0]
     assert "T-RISK-20260722-01" in insertion
     assert "Milestone 9.1—9.8 共 34 个 task" in insertion
+    assert "T-RISK-20260723-01" in insertion
+    assert "总计 37 个 Phase 9 task" in insertion
 
 
 def test_zotero_migration_bibliographies_retain_all_41_entries() -> None:

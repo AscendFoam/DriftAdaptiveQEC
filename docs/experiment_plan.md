@@ -1859,6 +1859,43 @@ formal 统计单位是独立 device/scenario/trajectory cluster，不把 cycle �
 
 最终不使用加权总分，而输出三项独立 verdict：`GO_LER_SOTA`、`GO_LIFETIME`、`GO_HIL_SPEED`。只有 LER 与 lifetime 均通过、集成 HIL 通过且至少一个外部同任务 SOTA 可辩护时，才开放 `GO_SINGLE_PAPER`；否则选择 `GO_SPLIT_ALGORITHM_HARDWARE`、`GO_ALGORITHM_ONLY`、`GO_HARDWARE_ONLY` 或 `NO_GO`。QPU/真实 GKP 数据、experimental break-even 与 official Puviani exact 均可后插升级，但在证据缺失时必须保持 null，不阻止仿真/预板论文或诚实负结果归档。
 
+## 20.8 Phase 9 深审补强：raw-IQ frontend、平台前置约束与 scoped claim amendment
+
+本节是 `T-RISK-20260723-01` 的增量修订，不回写 §20.1--§20.7，也不改变 T9.1.1 的 immutable `analysis_sha256=c88110375c358794339e72d672e4624871425fe480e5da091ddd1d6595255e18`。正在执行的 T9.1.3 继续绑定该 v1 parent；T9.1.5 只能在 T9.1.3/T9.1.4 后生成显式 child seal，记录 parent hash、字段迁移、撤销条件与 mutations。禁止把旧 artifact 静默重标成新协议结果。
+
+### 20.8.1 对外 claim 不再复用一个宽泛 SOTA 标签
+
+§20.6--§20.7 中的 `GO_LER_SOTA`、`GO_LIFETIME`、`GO_HIL_SPEED` 保留为 v1 冻结任务内部的 candidate gates，不自动等于对外 SOTA/physical/measured claim。T9.1.5 必须至少建立以下互斥或逐级状态：
+
+1. `GO_LER_REGISTERED_BEST` 与 `GO_LER_EXTERNAL_SOTA`；
+2. `GO_LIFETIME_PROJECT_NATIVE`、`GO_LIFETIME_EXTERNAL_SOTA` 与 `GO_PHYSICAL_LIFETIME`；
+3. `GO_HIL_INTEGRATED` 与 `GO_HIL_EXTERNAL_SPEED`。
+
+registered/project-native 状态只说明在冻结、实际执行且同权限的 registry 内过门。external SOTA 还必须绑定检索截止日、检索式、去重/排除 ledger、每个 credible stronger comparator 的 same-task eligibility、官方或可独立审计结果、未能运行时的 fail-closed null，以及不存在 unresolved eligible stronger comparator 的审计结论。Puviani 四类官方资产未资格化时，Puviani exact/surpass 保持 null；没有真实 QPU/板卡时，physical lifetime/measured speed 保持 null。任一较窄状态不得通过标题、摘要或图注缩写升级为较宽状态。
+
+### 20.8.2 raw-IQ source、数字前端与 decoder/action path 三层分离
+
+physics backend 生成连续或采样化 IQ emission，不等于可部署 discriminator。T9.2.6 在 codebook 前冻结 platform-independent frontend/interface envelope：sample-rate family、统一时间原点、integration window、I/Q sample/coeff/accumulator/LLR 位宽和 Q-format、rounding/saturation、matched filter、threshold/hysteresis、calibration update、timestamp/TVALID/TREADY/TLAST、CDC/backpressure/reset/error，以及候选平台共同满足的 clock、stream width、BRAM/DSP、trigger 上限。synthetic、recorded-device 与 live-raw 三种 domain 必须逐条标记；没有真实采集时 recorded/live 指标保持 null。
+
+T9.2.7 建立与 RTL 独立的 Python/NumPy golden 和 synthesizable matched-filter/discriminator RTL。资格必须覆盖量化边界与 ties、accumulator overflow、饱和、IQ imbalance/DC/gain/phase、阈值与滞回、系数版本、sample gap/duplicate/reorder、CDC/backpressure、reset、corrupt/stale package，并用 CXXRTL 逐 bit 对齐全部有效输出、confidence、timestamp、reason/error。按 held-out device/domain 报 ROC/AUC、NLL/Brier/ECE、confusion/abstain、float-to-fixed degradation 与 synthetic-to-device gap；真实 device recorded/live raw 缺失时这些栏保持 null，不得用 synthetic trace 填值。每个非平凡故障分支需要 targeted mutation；简单 passthrough、预构造 label、仅 normal-case demo 或用 simulator truth 直接生成 discriminator output 均失败。
+
+四种 latency boundary 始终分栏：core、`discriminator-out -> action`、`ADC-last-sample -> trigger`、`raw-IQ-source -> trigger`。既有 6-cycle/II=1 只属于第二栏，不能覆盖 ADC、DDC/matched filter、discriminator、CDC、transport 或 trigger。T9.7.1 的 integrated CXXRTL 从 raw/recorded IQ 开始并同时绑定 frontend 与 fast-path source/config/hash；T9.7.2 只能选择满足冻结 envelope 的具体 SKU，否则触发 NO-GO/显式 amendment，不能在看到资源或性能后静默改 codebook/frontend。
+
+### 20.8.3 顺序环和局部阻塞修复
+
+T9.2.4 只对 T9.2.1 预注册的 conservative representative action probes 做双后端干预资格；optimized codebook 尚未生成，不能在此提前声称 coverage。最终 codebook 的逐动作、插值、边界和 fallback 资格只由 T9.3.4 完成。
+
+增量 DAG 为：
+
+1. T9.1.3 完成 project-native artifacts，T9.1.4 冻结完整 baseline/search registry，T9.1.5 再发布 parent-bound scoped-claim amendment；
+2. T9.2.1 后可并行启动 T9.2.2--T9.2.4 与 T9.2.6；两者合格后执行 T9.2.7，T9.2.5 surrogate 仍只能在 T9.2.4 后开放；
+3. T9.3 必须消费 T9.2.6--T9.2.7 的硬件/前端 envelope，T9.4 的 deployable IQ/LLR 输入也必须来自同一 bit-accurate frontend；
+4. T9.5--T9.6 保持原顺序，但 T9.6.5 先输出 registered/project-native 状态，external/physical 状态由 T9.1.5 规则另行资格；
+5. T9.7.3 只依赖新高速平台、T9.2.7 和 T9.7.1--T9.7.2；旧 T6.9.2 仅是 Route-A/GW2AR transport 参考，不是 prerequisite；
+6. T9.8.1 对 T9.7.4 接受 `Done` 或 terminal `Blocked/null` ledger。无板不得开放 HIL/measured 字段，但不能阻塞 `GO_ALGORITHM_ONLY`、algorithm NO-GO 或 split 决策。
+
+上述补强使板卡缺失继续只阻塞真实 HIL，同时防止 software twin、codebook、模型 tournament、formal 和 pre-board IQ frontend 被无限等待；它也不允许 CXXRTL/P&R/host-loop 或 project-native 排名填补 official/external/physical 的空证据。
+
 [1]: https://arxiv.org/abs/quant-ph/0008040?utm_source=chatgpt.com "Encoding a qubit in an oscillator"
 [2]: https://arxiv.org/abs/2504.13383?utm_source=chatgpt.com "Logical channels in approximate Gottesman-Kitaev-Preskill error correction"
 [3]: https://arxiv.org/abs/1907.12487?utm_source=chatgpt.com "Quantum error correction of a qubit encoded in grid states ..."

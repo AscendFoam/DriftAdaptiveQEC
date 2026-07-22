@@ -20,7 +20,7 @@
 - 自 `2026-07-14` 起，用户指定的“按新任务板顺序完整推进”工作流另以以下文件为当前执行状态源：
   - `docs/new_task_board.md`：新任务顺序、状态和当前推荐任务；
   - `docs/rough_plan.md`：新任务序列的冻结原始规划，仅作历史/设计来源，不随日常任务改写；
-  - `docs/experiment_plan.md`：新任务序列的实验计划来源；第 14—16 节记录 v2—v2.2 的低频修订；
+  - `docs/experiment_plan.md`：新任务序列的实验计划来源；第 14—20.8 节记录 v2—Phase 9 的低频修订；
   - `docs/new_tasks/`：每个新 task 的输入、产物、验证、风险和同步记录；
   - `docs/new_risks.md`：新任务序列风险与插入任务判断。
   - 既有 `docs/02_experiment_plan.md`、`docs/04_task_board.md`、`docs/07_handoff.md` 和历史证据包继续作为可复用事实来源，但不能用旧日志替代新任务的当前产物与重新验证。
@@ -173,6 +173,7 @@
   - `docs/multimode_strong_baseline_registry.md`: Phase 6D multimode LER 主排名的一手文献/官方源码与 task-signature registry；分离 CPD/analog-MWPM/exact MLD/K-MWM、static-mixture 与 causal Window/SMC/BOCPD 等 adapted baselines、noisy-aux/circuit-level 边界，并冻结 prequential 权限、oracle 层级和 frozen-benchmark SOTA 门
   - `docs/dual_evidence_lane_contract.md` / `docs/t6_20_2_dual_evidence_lane_contract.json` / Source Data：Phase 6D 的双证据 lane 机器合同；固定 multimode software LER、single-mode production RTL 与依赖性 CNN/student 的 13-field task signature、5 条原子 claim、4 个 integration interfaces、9 类禁止证据迁移和 16/16 fail-closed semantic mutations
   - `docs/phase9_three_lane_protocol.md` / `docs/t9_1_1_three_lane_protocol.json` / Source Data / `configs/phase9/`：Phase 9 的单轮 LER、六态 lifetime、raw-IQ HIL 三条独立证据协议；冻结 24-field task signature、完整分母、matched baseline、compute/wall-clock、split、cluster multiplicity、missingness、scoped evidence grade 与 36/36 fail-closed mutations，协议通过时三项性能结果仍保持 null
+  - `docs/new_tasks/T-RISK-20260723-01_phase9_frontend_claim_dependency_strengthening.md`：Phase 9 深审增量合同；保持 T9.1.1/T9.1.3 parent lineage 不变，新增 scoped-claim child amendment、codebook 前 platform/raw-IQ interface freeze 与可综合 matched-filter/discriminator 资格，并修复可空真板终门、primitive-action probe 和新旧板依赖
   - `docs/phase6d_multimode_preregistration.md` / `docs/t6_20_3_phase6d_multimode_preregistration.json` / Source Data：Phase 6D multimode train/calibration/pilot/formal 前瞻 seal；60 个 formal seed-cluster、13 family、1612 个 immutable execution cells、3,194,880 rounds/method、0.9631 design power、全 factor/T6.18.3 隔离、missingness/stopping/amendment 与 20/20 独立重算 mutations
   - `docs/multimode_causal_headroom.md` / `docs/t6_20_4_multimode_causal_headroom.json` / Source Data：Phase 6D train-only causal-headroom 与五段 regret；79,872 轮、official BSV/T-join/alias/causality/indirect-privilege audit 全过，trusted-bank risk action 把未保护 PP 的 49.6% 退化拉回 static exact，但 relative headroom 为 `0% [0%,0%]`，因此 direct NO-GO，pilot/formal 未访问
   - `docs/phase6d_multimode_v1_cancellation_ledger.md`：T6.20.4 early-stop 后的状态与重开边界；T6.21--T6.24、T6.26.1--T6.26.2 均为未执行 Dropped，single-mode RTL lane 独立继续
