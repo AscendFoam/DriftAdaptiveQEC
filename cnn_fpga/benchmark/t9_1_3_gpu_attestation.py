@@ -595,7 +595,10 @@ def validate_gpu_load_attestation(
                 ) from error
         if abs(int(observed_parent_created_unix_ns) - supervisor_created) > 1_000_000:
             raise GpuLoadAttestationError("attested supervisor PID was reused or forged")
-        if identity["supervisor_hostname"] != socket.gethostname():
+        if (
+            identity["supervisor_hostname"].strip().rstrip(".").casefold()
+            != socket.gethostname().strip().rstrip(".").casefold()
+        ):
             raise GpuLoadAttestationError("attested supervisor host differs from child host")
 
     gate, derived_target = _validate_load_gate(payload.get("load_gate"))
@@ -612,7 +615,10 @@ def validate_gpu_load_attestation(
         key: derived_target[key] for key in ("index", "uuid", "name", "memory_total_mib")
     }:
         raise GpuLoadAttestationError("target_gpu is not derived from raw load samples")
-    if gate["sampled_at_host"] != identity["supervisor_hostname"]:
+    if (
+        gate["sampled_at_host"].strip().rstrip(".").casefold()
+        != identity["supervisor_hostname"].strip().rstrip(".").casefold()
+    ):
         raise GpuLoadAttestationError("load sample host differs from run identity")
     if current_runtime is not None:
         _runtime_matches_target(current_runtime, normalized_target)

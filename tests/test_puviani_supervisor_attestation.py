@@ -172,6 +172,24 @@ def test_canonical_training_and_finalizer_attestations_pass_and_bind() -> None:
     assert set(binding) == attestation.BINDING_KEYS
 
 
+def test_windows_hostname_case_variation_is_same_host_but_other_host_is_rejected() -> None:
+    payload = deepcopy(_attestation())
+    case_variant = socket.gethostname().swapcase()
+    payload["run_identity"]["supervisor_hostname"] = case_variant
+    payload["load_gate"]["sampled_at_host"] = case_variant
+    payload.pop("attestation_sha256")
+    payload = attestation.seal_gpu_load_attestation(payload)
+    assert _validate(payload) == payload
+
+    other = deepcopy(payload)
+    other["run_identity"]["supervisor_hostname"] = "definitely-another-host"
+    other["load_gate"]["sampled_at_host"] = "definitely-another-host"
+    other.pop("attestation_sha256")
+    other = attestation.seal_gpu_load_attestation(other)
+    with pytest.raises(attestation.GpuLoadAttestationError, match="host differs"):
+        _validate(other)
+
+
 @pytest.mark.parametrize("failure", ("missing", "stale", "tamper", "uuid", "parent", "purpose"))
 def test_missing_stale_tampered_uuid_parent_and_purpose_fail_closed(failure: str) -> None:
     payload: object = _attestation()
