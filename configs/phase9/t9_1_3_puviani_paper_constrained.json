@@ -1,0 +1,478 @@
+{
+  "schema_version": "t9.1.3-puviani-paper-constrained-artifact-lane-v1",
+  "task_id": "T9.1.3",
+  "frozen_date": "2026-07-22",
+  "seal_state": "SEALED_PRE_OUTCOME",
+  "evidence_grade": "PAPER_CONSTRAINED_REIMPLEMENTATION",
+  "ranking_eligibility": "INELIGIBLE_SIGNATURE_NONRANKING_HISTORICAL_BASELINE",
+  "deviation_ledger_path": "configs/phase9/t9_1_3_deviation_ledger.json",
+  "protocol_binding": {
+    "path": "docs/t9_1_1_three_lane_protocol.json",
+    "analysis_sha256": "c88110375c358794339e72d672e4624871425fe480e5da091ddd1d6595255e18",
+    "protocol_id": "PHASE9-THREE-INDEPENDENT-TASK-SIGNATURES-V1",
+    "required_lane_ids": [
+      "ROUND_LER_SINGLE_MODE",
+      "SIX_STATE_LOGICAL_LIFETIME"
+    ],
+    "amendment_policy": "REJECT_HASH_MISMATCH_AND_REQUIRE_EXPLICIT_RESEAL"
+  },
+  "source_binding": {
+    "paper_and_supplement": {
+      "path": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md",
+      "sha256": "5dcda2ee0fec3191ddaa44fb539764dbebc2d089c9a3818bb17c132ca28e7c22",
+      "doi": "10.1103/PhysRevLett.134.020601",
+      "arxiv": "2312.07391"
+    },
+    "official_repository": "https://github.com/Matteo-Puviani/GQF.git",
+    "gqf_commit": "c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d",
+    "gqf_tracked_tree_sha256": "64f849db145f3ae1653105ff7488e7c2b5315bfc81c3947a4f8861be4e7943fd",
+    "deviation_ledger": "configs/phase9/t9_1_3_deviation_ledger.json"
+  },
+  "source_registry": {
+    "paper_and_supplement": "source_binding.paper_and_supplement",
+    "official_gqf": "source_binding.official_repository@gqf_commit",
+    "prior_exact_attempt": "docs/t6_8_4_gqf_paper_exact_reproduction.json",
+    "prior_intake": "docs/t6_8_3_gqf_official_intake.json"
+  },
+  "protocol_transcription": {
+    "state": "single_mode_square_approximate_GKP_Delta_0.2_trained_from_plus_Z",
+    "observation": "binary_g_e_causal_prefix_only_GQF_policy_tokens_g_plus1_e_minus1_with_zero_sentinel",
+    "action": "15_bounded_residual_controls_with_fixed_layer4_displacement",
+    "timing": "layers_measure_then_2.3us_collapsed_branch_reset_current_outcome_VR_1us_next_layers_with_terminal_VR",
+    "noise": "high_Ts_245us_T1_50us_T2_60us",
+    "training": "MF_and_NMF_1000_epochs_10_full_cycles_lr_1e-4_batches_8_and_6",
+    "selection": "project_validation_only_not_paper_lifetime_postselection",
+    "evaluator": "six_state_short_horizon_qualification_only_paper_scale_null"
+  },
+  "scope": {
+    "purpose": "Generate a complete project-owned MF/NMF training, validation-selection, checkpoint and short-horizon six-state qualification artifact lane while official Puviani artifacts remain unavailable.",
+    "allowed_label": "PAPER_CONSTRAINED_REIMPLEMENTATION",
+    "official_exact_reproduction": false,
+    "puviani_surpass_claim_eligible": false,
+    "paper_scale_lifetime_claim_eligible": false,
+    "missing_official_assets_only_block": [
+      "OFFICIAL_EXACT_REPRODUCTION",
+      "PUVIANI_NMF_SURPASS"
+    ]
+  },
+  "controller_contract": {
+    "strategies": [
+      "standard",
+      "mf",
+      "nmf"
+    ],
+    "observation": {
+      "alphabet": {
+        "g": 0,
+        "e": 1
+      },
+      "policy_token_encoding": {
+        "initial_sentinel": 0,
+        "g": 1,
+        "e": -1
+      },
+      "mf_privilege": "latest_observed_ancilla_outcome_only",
+      "nmf_privilege": "causal_full_observed_outcome_prefix_via_recurrent_hidden_state",
+      "future_observations": "PROHIBITED",
+      "hidden_physics_state": "PROHIBITED"
+    },
+    "architectures": {
+      "mf": {
+        "layers": [
+          1,
+          256,
+          256,
+          15
+        ],
+        "activation": "tanh",
+        "memory": "none_latest_outcome_only"
+      },
+      "nmf": {
+        "layers": [
+          1,
+          10,
+          256,
+          256,
+          15
+        ],
+        "recurrent_cell": "GRUCell",
+        "activation": "tanh",
+        "memory": "state_reset_at_each_independent_trajectory_batch"
+      }
+    },
+    "action_order": [
+      "layer1_phi",
+      "layer1_theta",
+      "layer1_beta_real",
+      "layer1_beta_imag",
+      "layer2_phi",
+      "layer2_theta",
+      "layer2_beta_real",
+      "layer2_beta_imag",
+      "layer3_phi",
+      "layer3_theta",
+      "layer3_beta_real",
+      "layer3_beta_imag",
+      "layer4_phi",
+      "layer4_theta",
+      "virtual_rotation"
+    ],
+    "nominal_action": [
+      1.5707963267948966,
+      1.5707963267948966,
+      0.0,
+      0.2,
+      0.0,
+      -1.5707963267948966,
+      2.5066282746310002,
+      0.0,
+      0.0,
+      1.5707963267948966,
+      0.0,
+      0.2,
+      1.5707963267948966,
+      -1.5707963267948966,
+      1.5707963267948966
+    ],
+    "residual_bounds": {
+      "indices_0_through_13": [
+        -2.0,
+        2.0
+      ],
+      "virtual_rotation_index_14": [
+        -1.0,
+        1.0
+      ]
+    },
+    "fixed_layer4_displacement": {
+      "symbolic": "sqrt(pi/2)",
+      "numeric": 1.2533141373155001,
+      "trainable": false
+    }
+  },
+  "training": {
+    "epochs": 1000,
+    "epochs_by_strategy": {
+      "mf": 1000,
+      "nmf": 1000
+    },
+    "full_cycles": 10,
+    "half_measurements": 20,
+    "training_state": "+Z",
+    "reward": "final_state_fidelity_with_feedback_GRAPE_pathwise_and_score_terms",
+    "feedback_timeline": "measurement_to_next_interval_with_terminal_vr",
+    "observation_encoding": "gqf_g_plus1_e_minus1",
+    "consume_initial_zero_sentinel": true,
+    "learning_rate": 0.0001,
+    "score_baseline_decay": 0.95,
+    "gradient_clip_norm": 10.0,
+    "residual_l2_weight": 0.00001,
+    "slew_l2_weight": 0.00001,
+    "validation_interval": 40,
+    "projector_delta": 0.2,
+    "noise": "high",
+    "noise_parameters_us": {
+      "cavity_lifetime": 245.0,
+      "ancilla_t1": 50.0,
+      "ancilla_t2": 60.0
+    },
+    "timing": {
+      "profile_id": "PUVIANI-2024-TABLE-S1-FEEDBACK-GRAPE",
+      "half_cycle_us": 5.0,
+      "full_cycle_us": 10.0,
+      "phase_duration_us": {
+        "entering_cycle": 0.1,
+        "layer_1": 0.5,
+        "layer_2": 0.7,
+        "layer_3": 0.3,
+        "layer_4": 0.1,
+        "measurement_and_reset": 2.3,
+        "virtual_rotation_and_idle": 1.0
+      },
+      "evidence_scope": "literature_simulation_timing_not_hardware_latency"
+    },
+    "cutoff": 12,
+    "confirmation_cutoff": 16,
+    "real_dtype": "float64",
+    "complex_dtype": "complex128",
+    "device": "cuda",
+    "paired_root_seeds": [
+      910001,
+      910019,
+      910033,
+      910051,
+      910069,
+      910079,
+      910099,
+      910103,
+      910121,
+      910141,
+      910153,
+      910157,
+      910171,
+      910177,
+      910199,
+      910201,
+      910213,
+      910219,
+      910229,
+      910277
+    ],
+    "seed_derivation": {
+      "training_rollout_seed": "paired_root_seed*1000003+epoch",
+      "paired_across_mf_and_nmf": true,
+      "root_seed_count": 20,
+      "strategy_count": 2,
+      "independently_trained_agent_count": 40
+    },
+    "mf_batch_size": 8,
+    "nmf_batch_size": 6,
+    "validation_batch_size": 32,
+    "validation_seeds": [
+      920011,
+      920021
+    ],
+    "bootstrap_seed": 950003,
+    "bootstrap_repetitions": 50000,
+    "selection": {
+      "selection_data": "validation_only",
+      "formal_or_qualification_data_visible_during_selection": false,
+      "metric": "mean_validation_final_state_fidelity",
+      "tie_break_order": [
+        "higher_validation_score",
+        "earlier_epoch",
+        "lower_root_seed"
+      ],
+      "agent_level_best_of_twenty_on_test_or_lifetime": "PROHIBITED"
+    },
+    "checkpoint_contract": {
+      "required_per_agent": [
+        "validation_selected_model_state",
+        "terminal_model_state",
+        "optimizer_state_at_terminal_epoch",
+        "torch_and_numpy_rng_state_at_terminal_epoch",
+        "complete_epoch_metric_history",
+        "complete_validation_candidate_ledger",
+        "all_validation_candidate_model_states",
+        "per_seed_and_per_trajectory_validation_final_fidelity",
+        "training_runtime_signature_and_hash",
+        "configuration_hash",
+        "implementation_hash",
+        "checkpoint_sha256"
+      ],
+      "t9_1_3_published_checkpoint_scope": "one canonical validation-selected NPZ plus terminal model/optimizer/RNG restart payload per agent; the terminal payload also retains every validation-candidate model state, and the JSON ledger retains per-seed/per-trajectory validation final fidelity",
+      "retain_failed_agents_and_failure_reason": true,
+      "silent_restart_or_drop": "PROHIBITED",
+      "all_twenty_paired_roots_required_per_strategy": true
+    }
+  },
+  "six_state_qualification": {
+    "purpose": "Exercise state preparation, causal controller replay, no-postselection denominators and raw-record serialization at the validated short horizon; it is not a lifetime estimate.",
+    "states": [
+      "x_plus",
+      "x_minus",
+      "y_plus",
+      "y_minus",
+      "z_plus",
+      "z_minus"
+    ],
+    "paper_state_labels": {
+      "x_plus": "+X",
+      "x_minus": "-X",
+      "y_plus": "+Y",
+      "y_minus": "-Y",
+      "z_plus": "+Z",
+      "z_minus": "-Z"
+    },
+    "strategies": [
+      "standard",
+      "selected_mf",
+      "selected_nmf"
+    ],
+    "seeds": [
+      930011,
+      930019,
+      930031,
+      930043,
+      930053,
+      930067
+    ],
+    "confirmation_seeds": [
+      940011,
+      940019
+    ],
+    "batch_size": 8,
+    "confirmation_batch_size": 4,
+    "full_cycles": 10,
+    "primary_cutoff": 12,
+    "confirmation_cutoff": 16,
+    "paired_across_strategies": true,
+    "monte_carlo_design": "paired_common_random_numbers_across_states_and_strategies_clustered_by_stratum_and_evaluation_seed",
+    "state_definition_id": "LOWDIN_ORTHONORMALIZED_FINITE_CUTOFF_GRID_CODE_V1",
+    "logical_operator_definition_id": "PROJECTOR_DEFINED_CODE_PAULI_V1",
+    "development_only": true,
+    "postselection": "PROHIBITED",
+    "required_trajectory_fields": [
+      "trajectory_id",
+      "stratum",
+      "strategy",
+      "selected_agent_seed",
+      "initial_state",
+      "pauli_axis",
+      "expected_eigenvalue",
+      "evaluation_seed",
+      "evaluation_cluster_id",
+      "rng_stream_id",
+      "batch_member",
+      "state_definition_id",
+      "logical_operator_definition_id",
+      "raw_codeword_overlap_real",
+      "raw_codeword_overlap_imag",
+      "raw_logical_gram_condition_number",
+      "cutoff",
+      "full_cycles",
+      "half_cycles",
+      "timing_profile_id",
+      "simulated_time_us",
+      "projected_rho_00_real",
+      "projected_rho_00_imag",
+      "projected_rho_01_real",
+      "projected_rho_01_imag",
+      "projected_rho_10_real",
+      "projected_rho_10_imag",
+      "projected_rho_11_real",
+      "projected_rho_11_imag",
+      "joint_trace_error_max_for_batch",
+      "joint_hermiticity_error_max_for_batch",
+      "minimum_final_joint_eigenvalue_for_batch",
+      "projected_hermiticity_error_before_stabilization",
+      "code_weighted_I",
+      "code_weighted_X",
+      "code_weighted_Y",
+      "code_weighted_Z",
+      "signed_axis_signal",
+      "state_fidelity_unconditional",
+      "code_survival",
+      "postselected",
+      "included_in_denominator",
+      "development_only",
+      "censored",
+      "status"
+    ],
+    "required_event_fields": [
+      "trajectory_id",
+      "half_cycle",
+      "full_cycle_coordinate",
+      "layer_control_decision_prefix_length",
+      "physical_layer_application_half_cycle",
+      "measurement_outcome_half_cycle",
+      "post_measurement_control_decision_prefix_length",
+      "post_measurement_virtual_rotation_after_half_cycle",
+      "post_measurement_control_layer_application_half_cycle",
+      "uses_current_measurement_outcome_for_post_measurement_control",
+      "terminal_feedback_correction",
+      "outcome_g0_e1",
+      "selected_branch_probability",
+      "project_action_order_json",
+      "gqf_action_order_json",
+      "project_action_sha256",
+      "post_measurement_project_action_order_json",
+      "post_measurement_gqf_action_order_json",
+      "post_measurement_project_action_sha256",
+      "evaluation_cluster_id",
+      "rng_stream_id",
+      "postselected",
+      "included_in_denominator",
+      "development_only",
+      "status"
+    ],
+    "numeric_result_state": "QUALIFICATION_ONLY_NOT_LIFETIME"
+  },
+  "paper_scale_target": {
+    "status": "NOT_EVALUATED_NULL",
+    "numeric_values": {
+      "T_X": null,
+      "T_Y": null,
+      "T_Z": null,
+      "T_ch": null,
+      "average_channel_fidelity_curve": null,
+      "entanglement_infidelity": null
+    },
+    "logical_states": [
+      "+X",
+      "-X",
+      "+Y",
+      "-Y",
+      "+Z",
+      "-Z"
+    ],
+    "fock_cutoff": 100,
+    "full_cycles": 1000,
+    "evaluation_full_cycles": 1000,
+    "paper_reported_sampling_per_state": {
+      "nmf": {
+        "batch_size": 6,
+        "repetitions": 85,
+        "raw_trajectories": 510
+      },
+      "standard": {
+        "batch_size": 8,
+        "repetitions": 64,
+        "raw_trajectories": 512
+      },
+      "mf": null
+    },
+    "fit_model": "P_k(t)=P_k(0)*exp(-t/T_k)",
+    "channel_lifetime_formula": "3/(1/T_X+1/T_Y+1/T_Z)",
+    "project_promotion_minimum_cycles": 10000,
+    "null_reason": "The current T9.1.3 backend is validated only through 10 full cycles and has no independently qualified Phase-9 backend pair. T9.2.2--T9.2.5 and T9.6 must complete before any project-native long-sequence numeric result is populated.",
+    "null_is_not_zero": true
+  },
+  "paper_scale_result": {
+    "state": "INCOMPLETE_NULL",
+    "value": null,
+    "reason": "No independently qualified 1000-cycle six-state execution is part of T9.1.3."
+  },
+  "external_claim_slots": {
+    "official_exact": {
+      "state": "MISSING_EXTERNAL_ASSET",
+      "value": null
+    },
+    "surpass": {
+      "state": "MISSING_EXTERNAL_ASSET",
+      "value": null
+    }
+  },
+  "artifact_contract": {
+    "agent_manifest_rows_expected": 40,
+    "selected_agent_rows_expected": 2,
+    "raw_qualification_records_required": true,
+    "selection_ledger_required": true,
+    "all_agent_checkpoint_hashes_required": true,
+    "environment_and_runtime_ledger_required": true,
+    "runtime_manifest_scope": "direct imported dependency versions, Python executable/prefix, torch/CUDA/cuDNN flags, NVIDIA UUID/driver rows, thread settings and execution-semantic environment controls",
+    "source_data_must_retain_null_timeout_oom_numeric_failure_and_corrupt_shard_rows": true,
+    "resume_identity": [
+      "protocol_analysis_sha256",
+      "config_sha256",
+      "implementation_sha256",
+      "training_runtime_signature_sha256",
+      "strategy",
+      "paired_root_seed"
+    ]
+  },
+  "claim_boundary": {
+    "allowed": [
+      "project-owned paper-constrained MF/NMF artifact lane",
+      "validation-only selected project reimplementation",
+      "short-horizon six-state qualification"
+    ],
+    "prohibited": [
+      "official Puviani reproduction",
+      "paper-exact checkpoint or seed recovery",
+      "surpasses Puviani NMF",
+      "1000-cycle or 10000-cycle lifetime gain before downstream evaluation",
+      "hardware latency or physical break-even"
+    ]
+  }
+}
