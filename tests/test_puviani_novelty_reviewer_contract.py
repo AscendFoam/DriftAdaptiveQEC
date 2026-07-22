@@ -16,6 +16,21 @@ def test_report_passes_all_gates_and_targeted_mutations() -> None:
     assert report["semantic_mutation_audit"]["count"] == 24
 
 
+def test_phase9_paper_constrained_lifecycle_progress_does_not_rewrite_t7_evidence() -> None:
+    report = contract.build_report()
+    for status in ("Todo", "In Progress", "Done"):
+        candidate = copy.deepcopy(report)
+        candidate["future_program"]["paper_constrained_status"] = status
+        assert contract.evaluate_gates(candidate, check_live_sources=False)[
+            "G24_risk_and_future_program_are_complete"
+        ] is True
+    invalid = copy.deepcopy(report)
+    invalid["future_program"]["paper_constrained_status"] = "CancelledAndPromotedOfficial"
+    assert contract.evaluate_gates(invalid, check_live_sources=False)[
+        "G24_risk_and_future_program_are_complete"
+    ] is False
+
+
 def test_package_is_preemptive_and_does_not_invent_reviewer_wording() -> None:
     package = contract.build_report()["response_package"]
     assert package["package_readiness"] == "draft_with_placeholders"

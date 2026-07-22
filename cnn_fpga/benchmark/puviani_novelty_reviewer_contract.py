@@ -834,7 +834,8 @@ def evaluate_gates(report: Mapping[str, Any], *, check_live_sources: bool = Fals
         and all(report["plan_audit"]["markers"].values())
         and report["future_program"]["status"] == "PLANNED_NOT_CURRENT_EVIDENCE"
         and report["future_program"]["official_exact_status"] == "Blocked"
-        and report["future_program"]["paper_constrained_status"] == "Todo"
+        and report["future_program"]["paper_constrained_status"]
+        in {"Todo", "In Progress", "Done"}
         and report["future_program"]["surpass_puviani_nmf"] is None
         and len(report["future_program"]["requirements"]) == 6
         and len(response["manuscript_change_checklist"]) == 7,

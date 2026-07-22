@@ -9,7 +9,7 @@
 
 状态枚举：`Todo`、`In Progress`、`Blocked`、`Review`、`Done`、`Dropped`。
 
-当前推荐任务：`T9.1.1`（T7.3.5 已完成 Puviani/NMF 关系 pre-emptive reviewer package：official GQF exact qualification=`0/15`，20-agent ledger 与 Standard/MF/NMF exact lifetime 均全 null；cutoff8 reduced standard probe 只作 diagnostic，8/8 matched prerequisites 失败且13/13 comparison metrics null。project-native 十周期方向性结果与 cutoff16 history-reset 反例同屏，Phase6D strongest-static 仍为 `0% [0%,0%]` NO-GO；正贡献只限 exact single-mode 6-cycle/II=1 deterministic、atomic、fail-closed pre-board RTL。24-row Source Data、24/24 gates/mutations，真实 reviewer 原文保持 placeholder。按 v2.4 的显式切换约定，下一项启动 Phase9 三 task-signature/claim ladder 冻结）。
+当前推荐任务：`T9.1.3`（T9.1.1 已完成 Phase 9 三 lane pre-outcome seal：单轮 LER、六态 lifetime 与 raw-IQ HIL 分别使用 24-field task signature、scoped evidence grade、完整分母、matched baseline、compute/wall-clock、split、cluster multiplicity 与 fail-closed missingness。36/36 gates/mutations、66-row lossless Source Data 和 24 focused tests 已通过，analysis hash=`c88110375c358794339e72d672e4624871425fe480e5da091ddd1d6595255e18`；三项 performance result 仍分别为 `NOT_EVALUATED_NULL/null`、`NOT_EVALUATED_NULL/null`、`MISSING_BOARD/null`。T9.1.2 继续局部 Blocked，当前启动不依赖官方资产的 paper-constrained Puviani artifact lane）。
 
 ## 任务记录规则
 
@@ -58,7 +58,7 @@
 - **三条独立结果链：** 单轮无 postselection LER、六态长序列 logical-channel lifetime、真实数字链 HIL latency 各有自己的 task signature、强 baseline、统计门和失败分支；任何一条不能替另一条补门。
 - **两套物理后端：** 正式寿命结果必须由两个不共享演化/测量 likelihood/kernel/RNG 的 physics backend 对拍；学习控制器不得只在其训练所用的 learned surrogate 上自评。
 - **局部阻塞：** Phase 9 软件、codebook、模型 tournament、CXXRTL 和 formal 不依赖 Phase 8 或实物板卡；只有 official Puviani exact claim、真实高速板 HIL 和物理 QPU/break-even claim 保持局部 Blocked。
-- 本次插入不覆盖 Phase 6D/T7 的负结果或历史稿；`T7.3.5` 已完成 official/project-native/current-task 三层关系审计，当前指针现已显式切换到 Phase 9 的首个可执行任务 `T9.1.1`。
+- 本次插入不覆盖 Phase 6D/T7 的负结果或历史稿；`T7.3.5` 已完成 official/project-native/current-task 三层关系审计，`T9.1.1` 已完成三条独立协议冻结；`T9.1.2` 保持局部 Blocked，当前指针按顺序跳到可执行任务 `T9.1.3`。
 - 本次实质修订同步写入 `docs/experiment_plan.md` 第 20 节；`docs/rough_plan.md` 继续冻结。
 
 ## 暂定论文 claim contract
@@ -704,13 +704,15 @@ T6.9.3 是 V4 的历史 evidence snapshot，其实际结果 `NO_GO_FULL_HIGH_LEV
 
 Puviani official checkpoint、20-agent seeds、selection ledger 与 six-state evaluator 当前均不可得，因此 `T9.1.2` 局部 `Blocked`。`T9.1.3` 及其后续任务明确不依赖 `T9.1.2`：项目自行生成的 checkpoint/seeds/ledger/evaluator 必须完整发布并标记为 paper-constrained/project-native；在官方资产齐备前，Puviani-specific surpass 字段保持 `null`，但数字孪生、模型 tournament、project-native lifetime 与 HIL 工作继续。
 
+`T9.1.3` 及后续 Phase 9 machine contract 必须消费 `docs/t9_1_1_three_lane_protocol.json` 的 immutable `analysis_sha256`；只允许通过显式 protocol amendment 重新 seal，禁止复制字段后静默分叉。当前 cycle component 数值保持 null，不冒用单一文献常数；T9.2/T9.3 必须在 pilot 前按 action-conditioned ledger 不可变填充。
+
 ### Milestone 9.1：任务签名、Puviani 非阻塞双 lane 与确认性合同
 
 | ID | 状态 | 任务 | 产物 / 通过标准 | 来源 |
 | --- | --- | --- | --- | --- |
-| T9.1.1 | In Progress | 冻结单轮 LER、六态长时 lifetime 与数字链 latency 三个不可混排的 task signature、claim ladder 和失败分支。 | 机器可读 protocol 同时冻结 code/state family、IQ/syndrome observation、action set、cycle time、no-postselection denominator、baseline eligibility、compute/wall-clock、split、统计单位、multiple-comparison、missingness 和 evidence grade。三个结果门分别给 GO/NO-GO；禁止以 lifetime 补 LER、以 core cycles 补 raw-IQ latency、以 simulator gain 补 physical break-even。 | `T-RISK-20260722-01`, `R-N162`, `R-N168`, `experiment_plan.md §20.1--§20.2` |
+| T9.1.1 | Done | 冻结单轮 LER、六态长时 lifetime 与数字链 latency 三个不可混排的 task signature、claim ladder 和失败分支。 | 完成 `phase9_three_lane_protocol`：三条 24-field signature、三态 evidence state + future binary result gate、16级 claim ladder、15种 scoped evidence grade、4类 baseline、13项 forbidden transfer、action-conditioned cycle ledger、66-row Source Data 与 semantic/exact provenance。36/36 gates/mutations、24 focused tests；协议 verdict PASS，但 LER/lifetime/HIL performance 均保持 null，official Puviani/physical break-even/raw-IQ speed 也未补值。 | `T-RISK-20260722-01`, `R-N162`, `R-N168`, `experiment_plan.md §20.1--§20.2, §20.6--§20.7` |
 | T9.1.2 | Blocked | 接收并资格化 Puviani official checkpoint、20-agent seeds、selection ledger 和 six-state evaluator。 | 四类资产必须来自可验证上游，固定 commit/hash/license/environment，逐项重放论文 selection 与 six-state logical-channel 数值；任一缺失、不可运行或不一致均维持 `BLOCKED_OFFICIAL_EXACT_ASSETS`，且**只阻塞** `OFFICIAL_EXACT_REPRODUCTION`/“超过 Puviani”字段，不阻塞 T9.1.3 以后任务。 | `T6.8.4`, `T6.17.3`, `R-N162` |
-| T9.1.3 | Todo | 建立 paper-constrained Puviani MF/NMF 独立重实现与项目自有完整 artifact lane。 | 依据正文、补充与公开 GQF source 转录所有已明确的 state/action/timing/noise/training 条件；项目生成不少于 20 个独立 agent/seed、全部 checkpoint、validation-only selection ledger、`+/-X,+/-Y,+/-Z` evaluator 和逐 trajectory raw records。所有歧义、补丁和未复现量进入 deviation ledger；只能标记 `PAPER_CONSTRAINED_REIMPLEMENTATION`，不得写 official exact。 | `T9.1.1`, `R-N162`, `experiment_plan.md §20.2` |
+| T9.1.3 | In Progress | 建立 paper-constrained Puviani MF/NMF 独立重实现与项目自有完整 artifact lane。 | 依据正文、补充与公开 GQF source 转录所有已明确的 state/action/timing/noise/training 条件；项目生成不少于 20 个独立 agent/seed、全部 checkpoint、validation-only selection ledger、`+/-X,+/-Y,+/-Z` evaluator 和逐 trajectory raw records。所有歧义、补丁和未复现量进入 deviation ledger；只能标记 `PAPER_CONSTRAINED_REIMPLEMENTATION`，不得写 official exact。 | `T9.1.1`, `R-N162`, `experiment_plan.md §20.2` |
 | T9.1.4 | Todo | 冻结同输入、同样本、同 action、同 compute 的 controller/decoder baseline registry 与统计功效。 | 排名表至少含 standard sBs/no-feedback、static recovery、MF、paper-constrained NMF、Window/EWMA/Kalman、HMM/BOCPD、particle/Bayesian、GRU、TCN、SSM、causal Transformer；hidden-state oracle 只作上界。分成 matched-deployable 与 unbudgeted-ceiling 两榜，预注册 pilot/formal effect、cluster N、simultaneous CI 和失败/timeout 计数，禁止隐藏 best-of-N。 | `T9.1.1`, `T9.1.3`, `R-N164`, `experiment_plan.md §20.2` |
 
 ### Milestone 9.2：IQ/leakage/reset/action-conditioned 单模 GKP 双后端数字孪生
@@ -1173,3 +1175,4 @@ Puviani official checkpoint、20-agent seeds、selection ledger 与 six-state ev
 | 2026-07-22 | T-RISK-20260722-01 | User request -> In Progress | 开始把缺少 Puviani checkpoint/20-agent seeds/selection ledger/six-state evaluator 从全局阻塞改为 official-exact 局部阻塞，并设计性能优先的单模多速率双回路新阶段。 | 保留 Phase6D v1 NO-GO、T7 历史稿和当前 T7.3.5；不把项目自建 Puviani artifact 冒充官方复现，也不让真板缺失冻结数字孪生、模型、codebook、formal 或 CXXRTL。 |
 | 2026-07-22 | T-RISK-20260722-01 | In Progress -> Done | 插入 Phase 9 / Milestone 9.1—9.8 共 34 个 task，并同步 experiment plan、七项风险、双任务记录和治理测试。 | 冻结 official/paper-constrained 双 lane、双 physics backend、同权限模型 tournament、trusted codebook、observed-only posterior、A/B/CRC/LKG/6-cycle 集成、六态无 postselection lifetime、真实高速板 HIL 和五态论文 verdict；只有 T9.1.2/T9.7.3/T9.7.4 局部 Blocked。 |
 | 2026-07-22 | T7.3.5 / T9.1.1 | In Progress -> Done / Todo -> In Progress | 完成“是否只是复现 NMF PRL”pre-emptive reviewer contract，并按 v2.4 约定显式切换到 Phase9 首项。 | official exact `0/15`、20-agent与exact lifetime全null、reduced diagnostic、8/8 prerequisite/13/13 metric negative branch、project-native方向性与cutoff16反例、算法0% NO-GO、tail高fallback、learning Dropped及exact pre-board RTL同屏；24-row Source Data、24/24 gates/mutations。另将T7.2.6整任务板字节绑定修正为七项必要状态的semantic projection，正文科学结论不变。 |
+| 2026-07-22 | T9.1.1 / T9.1.3 | In Progress -> Done / Todo -> In Progress | 完成 Phase9 三条不可混排 task signature、claim ladder、缺证据状态机与未来二值结果门；跳过局部 Blocked T9.1.2 后启动 paper-constrained Puviani lane。 | 24-field signatures、15 scoped evidence grades、4 baseline classes、13 forbidden transfers、action-conditioned cycle ledger、66-row Source Data、36/36 gates/mutations；24 focused tests。协议 PASS 不等于性能 GO，LER/lifetime 为 `NOT_EVALUATED_NULL/null`，HIL 为 `MISSING_BOARD/null`，Puviani exact/surpass 与 physical break-even 保持 null。 |

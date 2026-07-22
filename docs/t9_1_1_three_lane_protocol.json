@@ -1,0 +1,1719 @@
+{
+  "task_id": "T9.1.1",
+  "schema_version": "t9.1.1-phase9-three-lane-protocol-report-v1",
+  "config_schema_version": "t9.1.1-phase9-three-lane-protocol-config-v1",
+  "protocol_id": "PHASE9-THREE-INDEPENDENT-TASK-SIGNATURES-V1",
+  "frozen_date": "2026-07-22",
+  "generated_at_utc": "2026-07-22T03:05:55.730272+00:00",
+  "seal_state": "SEALED_PRE_OUTCOME",
+  "task_signature_fields": [
+    "code_family",
+    "state_family",
+    "physical_backend_contract",
+    "decision_target",
+    "observation_schema",
+    "history_horizon",
+    "action_set",
+    "action_cost_contract",
+    "noise_drift_family",
+    "observability",
+    "online_privilege",
+    "cycle_time_contract",
+    "primary_estimand",
+    "denominator_contract",
+    "postselection_policy",
+    "baseline_eligibility_contract",
+    "compute_budget_contract",
+    "wall_clock_budget_contract",
+    "precision_contract",
+    "split_contract",
+    "statistical_unit",
+    "multiplicity_contract",
+    "missingness_contract",
+    "evidence_grade_contract"
+  ],
+  "ontology": {
+    "value_states": [
+      "NOT_EVALUATED_NULL",
+      "COMPLETE",
+      "TIMEOUT",
+      "OOM",
+      "NUMERIC_FAILURE",
+      "CORRUPT_SHARD",
+      "MISSING_TOOL",
+      "MISSING_EXTERNAL_ASSET",
+      "MISSING_BOARD",
+      "INELIGIBLE_SIGNATURE",
+      "REGISTERED_CENSORING"
+    ],
+    "evidence_grades": [
+      {
+        "grade_id": "PROTOCOL_ONLY",
+        "claim_scope": [
+          "protocol_frozen"
+        ]
+      },
+      {
+        "grade_id": "LITERATURE_ONLY",
+        "claim_scope": [
+          "external_context_only"
+        ]
+      },
+      {
+        "grade_id": "OFFICIAL_SOURCE_PINNED",
+        "claim_scope": [
+          "source_intake_only"
+        ]
+      },
+      {
+        "grade_id": "OFFICIAL_EXACT_REPRODUCTION",
+        "claim_scope": [
+          "official_exact_reproduction"
+        ]
+      },
+      {
+        "grade_id": "PAPER_CONSTRAINED_REIMPLEMENTATION",
+        "claim_scope": [
+          "registered_reimplementation_only"
+        ]
+      },
+      {
+        "grade_id": "PROJECT_NATIVE_DEVELOPMENT_SIMULATION",
+        "claim_scope": [
+          "development_diagnostic_only"
+        ]
+      },
+      {
+        "grade_id": "UNTOUCHED_FORMAL_SIMULATION",
+        "claim_scope": [
+          "task_local_formal_simulation"
+        ]
+      },
+      {
+        "grade_id": "INDEPENDENT_BACKEND_REEVALUATION",
+        "claim_scope": [
+          "task_local_cross_backend_formal"
+        ]
+      },
+      {
+        "grade_id": "FIXED_POINT_REFERENCE",
+        "claim_scope": [
+          "integer_reference_only"
+        ]
+      },
+      {
+        "grade_id": "CXXRTL_PREBOARD",
+        "claim_scope": [
+          "preboard_replay_only"
+        ]
+      },
+      {
+        "grade_id": "RTL_PROPERTY_PROOF",
+        "claim_scope": [
+          "rtl_property_only"
+        ]
+      },
+      {
+        "grade_id": "POST_ROUTE_ESTIMATE",
+        "claim_scope": [
+          "tool_device_specific_estimate_only"
+        ]
+      },
+      {
+        "grade_id": "RECORDED_IQ_HIL_MEASURED",
+        "claim_scope": [
+          "recorded_iq_board_hil"
+        ]
+      },
+      {
+        "grade_id": "RAW_IQ_HIL_MEASURED",
+        "claim_scope": [
+          "raw_iq_source_to_trigger_board_hil"
+        ]
+      },
+      {
+        "grade_id": "QPU_MEASURED",
+        "claim_scope": [
+          "physical_qec_and_break_even"
+        ]
+      }
+    ],
+    "baseline_classes": [
+      {
+        "class_id": "MATCHED_DEPLOYABLE_RANKED",
+        "ranked": true,
+        "may_support_sota": true
+      },
+      {
+        "class_id": "CAPACITY_CEILING_NONRANKING",
+        "ranked": false,
+        "may_support_sota": false
+      },
+      {
+        "class_id": "PRIVILEGED_UPPER_BOUND_NONRANKING",
+        "ranked": false,
+        "may_support_sota": false
+      },
+      {
+        "class_id": "PROTOCOL_ANCHOR_NONRANKING",
+        "ranked": false,
+        "may_support_sota": false
+      }
+    ],
+    "result_states": [
+      "NOT_EVALUATED_NULL",
+      "INCOMPLETE",
+      "GO",
+      "NO_GO"
+    ]
+  },
+  "shared_contracts": {
+    "split_contract": {
+      "ordered_splits": [
+        "train",
+        "calibration",
+        "pilot",
+        "formal"
+      ],
+      "formal_access_before_pilot_lock": "PROHIBITED",
+      "pilot_selection_passes": 1,
+      "formal_reselection": "PROHIBITED",
+      "outcome_directed_resize": "PROHIBITED",
+      "task_timing": "T9.1.4 and T9.6.1 may add immutable registry size and N without weakening this interface"
+    },
+    "observed_only_contract": {
+      "allowed_prefix": "o_<=t,a_<t with frozen timestamps and reset acknowledgements",
+      "future_suffix": "PROHIBITED",
+      "hidden_state": "PROHIBITED_DEPLOYABLE_ALLOWED_TEACHER_OR_UPPER_BOUND_ONLY",
+      "scenario_identity": "PROHIBITED_UNLESS_PHYSICALLY_OBSERVED_AND_PREREGISTERED"
+    },
+    "baseline_eligibility_contract": {
+      "ranked_class": "MATCHED_DEPLOYABLE_RANKED",
+      "all_required_equal": [
+        "task_signature",
+        "observation_tokens_and_history",
+        "formal_samples_and_traces",
+        "action_set_and_action_cost",
+        "observed_only_privilege",
+        "update_cadence",
+        "precision",
+        "memory_compute_cpu_gpu_budget",
+        "wall_clock_deadline",
+        "restart_checkpoint_selection_ledger",
+        "missingness_qualification"
+      ],
+      "mandatory_baseline_failure": "RETAIN_ROW_AND_CLOSE_SOTA_GATE",
+      "best_of_n_without_full_ledger": "INELIGIBLE_SIGNATURE"
+    },
+    "multiplicity_contract": {
+      "familywise_alpha": 0.05,
+      "method": "paired_cluster_maxT_bootstrap",
+      "minimum_resamples": 50000,
+      "resampling_unit": "device_scenario_trajectory_cluster",
+      "scope": "all promotion contrasts and promotion endpoints within each lane",
+      "posthoc_metric_subgroup_or_comparator_selection": "PROHIBITED",
+      "external_unpaired_point_only": "CONTEXT_ONLY_NOT_PROMOTION_ELIGIBLE"
+    },
+    "independent_backend_contract": {
+      "promotion_rule": "each_backend_must_independently_pass_all_registered_primary_gates",
+      "averaging_across_backends": "PROHIBITED",
+      "shared_kernel_likelihood_truth_or_rng": "PROHIBITED",
+      "disagreement": "INCOMPLETE_EVIDENCE_AND_STOP_FORMAL_PROMOTION"
+    },
+    "cycle_time_ledger_contract": {
+      "physical_cycle_formula": "t_sBs_base_plus_measurement_readout_plus_action_conditioned_reset_plus_control_plus_fallback_plus_idle",
+      "component_values": null,
+      "component_value_state": "MUST_BE_IMMUTABLY_FILLED_FROM_T9.2_T9.3_DEVICE_PROTOCOL_BEFORE_PILOT",
+      "per_action_per_trajectory_ledger": "REQUIRED",
+      "simulated_cycles_and_physical_wallclock": "REPORT_SEPARATELY",
+      "single_constant_cycle_assumption": "PROHIBITED_UNLESS_ALL_ACTION_COMPONENTS_ARE_EQUAL_AND_PROVEN",
+      "missing_numeric_mapping": "INCOMPLETE_PHYSICAL_TIME_CLAIM_NOT_ZERO"
+    },
+    "missingness_contract": {
+      "complete_case_deletion": "PROHIBITED",
+      "zero_imputation": "PROHIBITED",
+      "favourable_subset_only": "PROHIBITED",
+      "proposed_failure": "RETAIN_AND_APPLY_CONSERVATIVE_FAILURE_PLUS_INTEGRITY_NO_GO",
+      "mandatory_baseline_failure": "RETAIN_AND_CLOSE_SOTA_GATE",
+      "registered_lifetime_censoring": "VALID_ESTIMAND_OBSERVATION_NOT_MISSING",
+      "corrupt_shard_recovery": "ONLY_SAME_SEED_CONFIG_HASH_REBUILD",
+      "missing_board_or_external_asset": "NULL_OR_BLOCKED_NEVER_ZERO"
+    },
+    "nontransfer_contract": {
+      "aggregate_score": "PROHIBITED",
+      "winner_count": "PROHIBITED",
+      "cross_lane_substitution": "PROHIBITED",
+      "publication_topology_decision": "DEFER_TO_T9.8_TRUTH_TABLE"
+    }
+  },
+  "external_claim_slots": {
+    "OFFICIAL_PUVIANI_EXACT": {
+      "value": null,
+      "state": "MISSING_EXTERNAL_ASSET",
+      "only_blocks": [
+        "OFFICIAL_EXACT_REPRODUCTION",
+        "PUVIANI_NMF_SURPASS"
+      ]
+    },
+    "PUVIANI_NMF_SURPASS": {
+      "value": null,
+      "state": "MISSING_EXTERNAL_ASSET",
+      "required_grade": "OFFICIAL_EXACT_REPRODUCTION"
+    },
+    "PHYSICAL_BREAK_EVEN": {
+      "value": null,
+      "state": "NOT_EVALUATED_NULL",
+      "required_grade": "QPU_MEASURED"
+    },
+    "RAW_IQ_HIL_SPEED": {
+      "value": null,
+      "state": "MISSING_BOARD",
+      "required_grade": "RAW_IQ_HIL_MEASURED"
+    }
+  },
+  "lanes": [
+    {
+      "lane_id": "ROUND_LER_SINGLE_MODE",
+      "claim_namespace": "PHASE9_LER",
+      "signature": {
+        "code_family": "single_mode_square_approximate_gkp",
+        "state_family": "balanced_plus_minus_X_Y_Z_logical_eigenstates",
+        "physical_backend_contract": "same_registered_action_conditioned_twin_with_independent_backend_reevaluation",
+        "decision_target": "per_round_logical_Pauli_recovery_outcome",
+        "observation_schema": "frozen_same_representation_stratum_of_raw_or_recorded_IQ_LLR_confidence_timestamp_reset_ack_and_past_actions",
+        "history_horizon": "causal_prefix_o_<=t_a_<t_no_future_suffix",
+        "action_set": "trusted_codebook_id_bounded_residual_phase_frame_reset_leakage_FSM",
+        "action_cost_contract": "all_reset_control_fallback_and_idle_costs_retained",
+        "noise_drift_family": "preregistered_stationary_smooth_step_telegraph_burst_compound_action_conditioned_families",
+        "observability": "observed_only_hidden_truth_never_deployable",
+        "online_privilege": "same_update_cadence_state_memory_and_deadline",
+        "cycle_time_contract": "one_complete_sBs_round_including_measurement_readout_reset_control_and_idle",
+        "primary_estimand": "per_round_p_L_p_X_p_Y_p_Z_and_logical_PTM",
+        "denominator_contract": "all_registered_state_trajectory_round_opportunities_with_timeout_fallback_reset_leakage_and_control_retained",
+        "postselection_policy": "PROHIBITED_ZERO_REJECTION_PRIMARY",
+        "baseline_eligibility_contract": "MATCHED_DEPLOYABLE_RANKED_exact_signature_and_pre_pilot_registry",
+        "compute_budget_contract": "matched_tokens_samples_memory_MAC_FLOP_CPU_GPU_and_restart_ledger",
+        "wall_clock_budget_contract": "matched_inference_update_deadline_and_timeout_accounting",
+        "precision_contract": "same_frozen_IQ_LLR_parameter_and_action_precision_stratum",
+        "split_contract": "train_calibration_single_pass_pilot_untouched_formal",
+        "statistical_unit": "paired_independent_device_scenario_trajectory_cluster_not_round",
+        "multiplicity_contract": "paired_cluster_maxT_95pct_all_baselines_endpoints_families",
+        "missingness_contract": "no_silent_drop_mandatory_failure_closes_SOTA",
+        "evidence_grade_contract": "UNTOUCHED_FORMAL_SIMULATION_plus_INDEPENDENT_BACKEND_REEVALUATION"
+      },
+      "required_state_ensemble": [
+        "+X",
+        "-X",
+        "+Y",
+        "-Y",
+        "+Z",
+        "-Z"
+      ],
+      "primary_metrics": [
+        "p_L",
+        "p_X",
+        "p_Y",
+        "p_Z",
+        "logical_PTM"
+      ],
+      "result_gate": {
+        "go_verdict": "GO_LER_SOTA",
+        "no_go_verdict": "NO_GO_LER_SOTA",
+        "required_boolean_fields": [
+          "outcomes_opened",
+          "integrity_complete",
+          "all_mandatory_baselines_complete",
+          "all_signature_eligible",
+          "no_postselection",
+          "full_denominator",
+          "observed_only",
+          "dual_backend_pass",
+          "second_statistics_pass",
+          "six_state_complete",
+          "all_reset_control_costs_retained"
+        ],
+        "numeric_thresholds": {
+          "min_relative_improvement_point_each_baseline": {
+            "op": ">=",
+            "value": 0.15
+          },
+          "min_simultaneous_relative_lcb_each_baseline": {
+            "op": ">=",
+            "value": 0.1
+          },
+          "min_simultaneous_absolute_lcb_each_baseline": {
+            "op": ">",
+            "value": 0.0
+          },
+          "stationary_degradation_ucb": {
+            "op": "<=",
+            "value": 0.02
+          },
+          "max_ood_family_degradation_ucb": {
+            "op": "<=",
+            "value": 0.05
+          },
+          "calibration_worst_window_improvement_lcb": {
+            "op": ">",
+            "value": 0.0
+          },
+          "telegraph_cvar_improvement_lcb": {
+            "op": ">",
+            "value": 0.0
+          }
+        },
+        "failure_branches": [
+          "NOT_EVALUATED_NULL",
+          "INCOMPLETE_LER_INTEGRITY",
+          "INCOMPLETE_LER_BASELINE",
+          "INCOMPLETE_LER_EVIDENCE",
+          "NO_GO_LER_SOTA_TAIL_ONLY",
+          "NO_GO_LER_SOTA_ROBUSTNESS_ONLY",
+          "NO_GO_LER_SOTA_NONINFERIOR",
+          "NO_GO_LER_SOTA_NEGATIVE"
+        ]
+      },
+      "claim_ladder": [
+        {
+          "claim_id": "LER-C0-PROTOCOL",
+          "state": "SUPPORTED_PROTOCOL_ONLY",
+          "required_grades": [
+            "PROTOCOL_ONLY"
+          ],
+          "allowed_wording": [
+            "lane-local wording for LER-C0-PROTOCOL at its stated evidence grade"
+          ],
+          "forbidden_wording": [
+            "cross-lane or unqualified evidence promotion",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        },
+        {
+          "claim_id": "LER-C1-DEVELOPMENT",
+          "state": "CLOSED",
+          "required_grades": [
+            "PROJECT_NATIVE_DEVELOPMENT_SIMULATION"
+          ],
+          "allowed_wording": [
+            "lane-local wording for LER-C1-DEVELOPMENT at its stated evidence grade"
+          ],
+          "forbidden_wording": [
+            "cross-lane or unqualified evidence promotion",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        },
+        {
+          "claim_id": "LER-C2-TASK-LOCAL-FORMAL",
+          "state": "CLOSED",
+          "required_grades": [
+            "UNTOUCHED_FORMAL_SIMULATION",
+            "INDEPENDENT_BACKEND_REEVALUATION"
+          ],
+          "allowed_wording": [
+            "lane-local wording for LER-C2-TASK-LOCAL-FORMAL at its stated evidence grade"
+          ],
+          "forbidden_wording": [
+            "cross-lane or unqualified evidence promotion",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        },
+        {
+          "claim_id": "LER-C3-BEST-REGISTERED",
+          "state": "CLOSED",
+          "required_grades": [
+            "UNTOUCHED_FORMAL_SIMULATION",
+            "INDEPENDENT_BACKEND_REEVALUATION"
+          ],
+          "allowed_wording": [
+            "lane-local wording for LER-C3-BEST-REGISTERED at its stated evidence grade"
+          ],
+          "forbidden_wording": [
+            "cross-lane or unqualified evidence promotion",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        },
+        {
+          "claim_id": "LER-C4-SOTA",
+          "state": "CLOSED",
+          "required_grades": [
+            "UNTOUCHED_FORMAL_SIMULATION",
+            "INDEPENDENT_BACKEND_REEVALUATION"
+          ],
+          "allowed_wording": [
+            "SOTA on the frozen single-mode round-LER task after GO_LER_SOTA"
+          ],
+          "forbidden_wording": [
+            "lifetime, tail-only, safety, or RTL evidence as an LER substitute",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        }
+      ],
+      "current_result": {
+        "evaluation_state": "NOT_EVALUATED_NULL",
+        "result_verdict": null
+      },
+      "signature_sha256": "984a832fec0c9f423b594a057dc05af98c9876ec19fb026cd1d1bb972b2b0ac2"
+    },
+    {
+      "lane_id": "SIX_STATE_LOGICAL_LIFETIME",
+      "claim_namespace": "PHASE9_LIFETIME",
+      "inherits_from_lane": "ROUND_LER_SINGLE_MODE",
+      "inheritance_fields": [
+        "code_family",
+        "physical_backend_contract",
+        "observation_schema",
+        "action_set",
+        "action_cost_contract",
+        "noise_drift_family",
+        "observability",
+        "online_privilege",
+        "precision_contract"
+      ],
+      "signature": {
+        "code_family": "single_mode_square_approximate_gkp",
+        "state_family": "balanced_plus_minus_X_Y_Z_logical_eigenstates_long_sequence",
+        "physical_backend_contract": "same_registered_action_conditioned_twin_with_independent_backend_reevaluation",
+        "decision_target": "six_state_logical_channel_lifetime_over_at_least_1e4_cycles",
+        "observation_schema": "frozen_same_representation_stratum_of_raw_or_recorded_IQ_LLR_confidence_timestamp_reset_ack_and_past_actions",
+        "history_horizon": "causal_prefix_through_each_cycle_no_smoothing_or_future",
+        "action_set": "trusted_codebook_id_bounded_residual_phase_frame_reset_leakage_FSM",
+        "action_cost_contract": "all_reset_control_fallback_and_idle_costs_retained",
+        "noise_drift_family": "preregistered_stationary_smooth_step_telegraph_burst_compound_action_conditioned_families",
+        "observability": "observed_only_hidden_truth_never_deployable",
+        "online_privilege": "same_update_cadence_state_memory_and_deadline",
+        "cycle_time_contract": "physical_cycle_and_simulated_cycle_both_recorded_no_unmapped_physical_time_claim",
+        "primary_estimand": "T_X_T_Y_T_Z_T_ch_area_efolding_survival_and_fit_diagnostics",
+        "denominator_contract": "all_six_state_trajectories_from_t0_with_registered_censoring_and_no_accepted_only_subset",
+        "postselection_policy": "PROHIBITED_ZERO_REJECTION_PRIMARY",
+        "baseline_eligibility_contract": "same_task_same_cycle_action_reset_control_and_registered_matched_deployable",
+        "compute_budget_contract": "matched_controller_budget_and_complete_simulation_cost_ledger",
+        "wall_clock_budget_contract": "physical_protocol_time_separate_from_simulator_runtime_both_reported",
+        "precision_contract": "same_frozen_IQ_LLR_parameter_and_action_precision_stratum",
+        "split_contract": "same_untouched_formal_trajectories_or_preregistered_disjoint_lifetime_formal_split",
+        "statistical_unit": "paired_independent_device_scenario_trajectory_cluster_not_cycle",
+        "multiplicity_contract": "paired_cluster_maxT_95pct_all_six_states_lifetimes_baselines",
+        "missingness_contract": "registered_censoring_is_observation_other_failures_retained_and_close_gate",
+        "evidence_grade_contract": "UNTOUCHED_FORMAL_SIMULATION_plus_INDEPENDENT_BACKEND_REEVALUATION_simulated_only"
+      },
+      "required_state_ensemble": [
+        "+X",
+        "-X",
+        "+Y",
+        "-Y",
+        "+Z",
+        "-Z"
+      ],
+      "primary_metrics": [
+        "T_X",
+        "T_Y",
+        "T_Z",
+        "T_ch",
+        "area",
+        "e_folding",
+        "survival",
+        "fit_diagnostics"
+      ],
+      "minimum_sequence_cycles": 10000,
+      "six_state_aggregation_contract": {
+        "reporting_weights": "equal_one_sixth_with_all_state_specific_curves_retained",
+        "promotion_minimum_scope": "minimum_over_all_six_state_specific_registered_lifetime_contrasts_and_T_X_T_Y_T_Z_T_ch",
+        "average_only_promotion": "PROHIBITED"
+      },
+      "result_gate": {
+        "go_verdict": "GO_LIFETIME",
+        "no_go_verdict": "NO_GO_LIFETIME",
+        "required_boolean_fields": [
+          "outcomes_opened",
+          "integrity_complete",
+          "all_mandatory_baselines_complete",
+          "all_signature_eligible",
+          "no_postselection",
+          "full_six_state_trajectory_denominator",
+          "all_lifetime_metrics_complete",
+          "fit_diagnostics_pass",
+          "same_cycle_action_reset_control_cost",
+          "dual_backend_pass",
+          "second_statistics_pass"
+        ],
+        "numeric_thresholds": {
+          "minimum_sequence_cycles": {
+            "op": ">=",
+            "value": 10000
+          },
+          "min_six_state_relative_gain_point": {
+            "op": ">=",
+            "value": 0.15
+          },
+          "min_simultaneous_lifetime_gain_lcb": {
+            "op": ">",
+            "value": 0.0
+          },
+          "reset_control_burden_margin_ucb": {
+            "op": "<=",
+            "value": 0.0
+          }
+        },
+        "failure_branches": [
+          "NOT_EVALUATED_NULL",
+          "INCOMPLETE_LIFETIME_INTEGRITY",
+          "INCOMPLETE_LIFETIME_BASELINE",
+          "INCOMPLETE_LIFETIME_EVIDENCE",
+          "NO_GO_LIFETIME_FIT",
+          "NO_GO_LIFETIME_COST",
+          "NO_GO_LIFETIME_NONINFERIOR",
+          "NO_GO_LIFETIME_NEGATIVE"
+        ]
+      },
+      "claim_ladder": [
+        {
+          "claim_id": "LIFE-C0-PROTOCOL",
+          "state": "SUPPORTED_PROTOCOL_ONLY",
+          "required_grades": [
+            "PROTOCOL_ONLY"
+          ],
+          "allowed_wording": [
+            "lane-local wording for LIFE-C0-PROTOCOL at its stated evidence grade"
+          ],
+          "forbidden_wording": [
+            "cross-lane or unqualified evidence promotion",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        },
+        {
+          "claim_id": "LIFE-C1-DEVELOPMENT",
+          "state": "CLOSED",
+          "required_grades": [
+            "PROJECT_NATIVE_DEVELOPMENT_SIMULATION"
+          ],
+          "allowed_wording": [
+            "lane-local wording for LIFE-C1-DEVELOPMENT at its stated evidence grade"
+          ],
+          "forbidden_wording": [
+            "cross-lane or unqualified evidence promotion",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        },
+        {
+          "claim_id": "LIFE-C2-DUAL-BACKEND-SIMULATED",
+          "state": "CLOSED",
+          "required_grades": [
+            "UNTOUCHED_FORMAL_SIMULATION",
+            "INDEPENDENT_BACKEND_REEVALUATION"
+          ],
+          "allowed_wording": [
+            "lane-local wording for LIFE-C2-DUAL-BACKEND-SIMULATED at its stated evidence grade"
+          ],
+          "forbidden_wording": [
+            "cross-lane or unqualified evidence promotion",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        },
+        {
+          "claim_id": "LIFE-C3-BEST-REGISTERED",
+          "state": "CLOSED",
+          "required_grades": [
+            "PAPER_CONSTRAINED_REIMPLEMENTATION",
+            "UNTOUCHED_FORMAL_SIMULATION",
+            "INDEPENDENT_BACKEND_REEVALUATION"
+          ],
+          "allowed_wording": [
+            "lane-local wording for LIFE-C3-BEST-REGISTERED at its stated evidence grade"
+          ],
+          "forbidden_wording": [
+            "cross-lane or unqualified evidence promotion",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        },
+        {
+          "claim_id": "LIFE-C4-PUVIANI-SURPASS",
+          "state": "BLOCKED_NULL",
+          "required_grades": [
+            "OFFICIAL_EXACT_REPRODUCTION"
+          ],
+          "allowed_wording": [
+            "surpasses official Puviani NMF only after official-exact same-signature qualification"
+          ],
+          "forbidden_wording": [
+            "paper-constrained or project-native evidence described as official Puviani surpass",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        },
+        {
+          "claim_id": "LIFE-C5-PHYSICAL-BREAK-EVEN",
+          "state": "BLOCKED_NULL",
+          "required_grades": [
+            "QPU_MEASURED"
+          ],
+          "allowed_wording": [
+            "physical break-even measured on a protocol-matched QPU"
+          ],
+          "forbidden_wording": [
+            "simulator lifetime, matched-idle crossover, or accepted-only curve as physical break-even",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        }
+      ],
+      "current_result": {
+        "evaluation_state": "NOT_EVALUATED_NULL",
+        "result_verdict": null
+      },
+      "signature_sha256": "29003e03986be1cbc6e90ab216133e79e829dc2f7d921f9743846e72d36665ac"
+    },
+    {
+      "lane_id": "RAW_IQ_DIGITAL_HIL",
+      "claim_namespace": "PHASE9_HIL",
+      "signature": {
+        "code_family": "single_mode_square_gkp_integrated_digital_control_chain",
+        "state_family": "registered_raw_and_recorded_IQ_transaction_traces",
+        "physical_backend_contract": "real_board_same_source_bitstream_recorded_and_raw_IQ_HIL",
+        "decision_target": "trusted_action_and_trigger_from_raw_IQ_source",
+        "observation_schema": "raw_or_recorded_complex_IQ_through_discriminator_with_timestamp_queue_and_backpressure",
+        "history_horizon": "causal_stream_and_bounded_registered_controller_state",
+        "action_set": "same_trusted_codebook_residual_frame_reset_leakage_trigger_actions",
+        "action_cost_contract": "transport_CDC_queue_discriminator_action_trigger_and_backpressure_included",
+        "noise_drift_family": "registered_trace_families_and_fault_injection_not_simulator_gain",
+        "observability": "wire_observed_only_no_hidden_truth_in_action_path",
+        "online_privilege": "same_clock_precision_queue_deadline_and_resource_boundary",
+        "cycle_time_contract": "board_clock_plus_ADC_sample_window_and_all_four_timestamped_boundaries",
+        "primary_estimand": "raw_IQ_source_to_trigger_p50_p95_p99_max_WCET_II_deadline_miss",
+        "denominator_contract": "all_registered_source_transactions_including_queue_backpressure_after_frozen_warmup",
+        "postselection_policy": "PROHIBITED_NO_COMPLETED_ONLY_LATENCY_DENOMINATOR",
+        "baseline_eligibility_contract": "same_task_code_observation_action_precision_boundary_statistic_and_measured_grade",
+        "compute_budget_contract": "same_target_resource_clock_precision_and_queue_envelope",
+        "wall_clock_budget_contract": "measured_timestamp_boundary_with_frozen_deadline_and_no_host_only_substitution",
+        "precision_contract": "bit_exact_discriminator_fixed_point_action_and_trigger_formats",
+        "split_contract": "frozen_calibration_trace_then_disjoint_validation_and_formal_HIL_traces",
+        "statistical_unit": "implementation_seed_trace_seed_run_cluster_not_transaction",
+        "multiplicity_contract": "paired_build_run_cluster_simultaneous_95pct_primary_boundary_contrasts",
+        "missingness_contract": "all_dropped_timeout_corrupt_and_deadline_transactions_retained",
+        "evidence_grade_contract": "RECORDED_IQ_HIL_MEASURED_plus_RAW_IQ_HIL_MEASURED"
+      },
+      "timing_boundaries": [
+        "decoder_core",
+        "discriminator_output_to_action",
+        "adc_last_sample_to_trigger",
+        "raw_iq_source_to_trigger"
+      ],
+      "primary_timing_boundary": "raw_iq_source_to_trigger",
+      "primary_metrics": [
+        "p50",
+        "p95",
+        "p99",
+        "max",
+        "WCET",
+        "II",
+        "deadline_miss",
+        "mismatch",
+        "undefined_action",
+        "silent_overflow",
+        "resource",
+        "power"
+      ],
+      "result_gate": {
+        "go_verdict": "GO_HIL_SPEED",
+        "no_go_verdict": "NO_GO_HIL_SPEED",
+        "engineering_only_verdict": "GO_HIL_ENGINEERING_NONRANKING",
+        "required_boolean_fields": [
+          "outcomes_opened",
+          "integrity_complete",
+          "same_source_bitstream_hash",
+          "recorded_iq_board_measured",
+          "raw_iq_board_measured",
+          "all_four_boundaries_reported",
+          "latency_statistics_complete",
+          "resource_power_measured",
+          "same_task_measured_comparator_available",
+          "primary_speed_contrast_simultaneous_lcb_positive"
+        ],
+        "numeric_thresholds": {
+          "implementation_seed_count": {
+            "op": ">=",
+            "value": 3
+          },
+          "transaction_count": {
+            "op": ">=",
+            "value": 1000000
+          },
+          "mismatch_count": {
+            "op": "==",
+            "value": 0
+          },
+          "undefined_action_count": {
+            "op": "==",
+            "value": 0
+          },
+          "silent_overflow_count": {
+            "op": "==",
+            "value": 0
+          },
+          "deadline_miss_count": {
+            "op": "==",
+            "value": 0
+          },
+          "initiation_interval_cycles": {
+            "op": "==",
+            "value": 1
+          },
+          "wcet_minus_deadline_ns": {
+            "op": "<=",
+            "value": 0.0
+          },
+          "primary_speed_contrast_simultaneous_lcb_ns": {
+            "op": ">",
+            "value": 0.0
+          }
+        },
+        "failure_branches": [
+          "MISSING_BOARD_NULL",
+          "INCOMPLETE_HIL_SPEED_INTEGRITY",
+          "INCOMPLETE_HIL_SPEED_EVIDENCE",
+          "INCOMPLETE_HIL_SPEED_NO_COMPARATOR",
+          "NO_GO_HIL_SPEED_DEADLINE",
+          "NO_GO_HIL_SPEED_NEGATIVE",
+          "GO_HIL_ENGINEERING_NONRANKING"
+        ]
+      },
+      "claim_ladder": [
+        {
+          "claim_id": "HIL-C0-PROTOCOL",
+          "state": "SUPPORTED_PROTOCOL_ONLY",
+          "required_grades": [
+            "PROTOCOL_ONLY"
+          ],
+          "allowed_wording": [
+            "lane-local wording for HIL-C0-PROTOCOL at its stated evidence grade"
+          ],
+          "forbidden_wording": [
+            "cross-lane or unqualified evidence promotion",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        },
+        {
+          "claim_id": "HIL-C1-FIXED-POINT-CXXRTL",
+          "state": "PARENT_RESTRICTED_ONLY",
+          "required_grades": [
+            "FIXED_POINT_REFERENCE",
+            "CXXRTL_PREBOARD",
+            "RTL_PROPERTY_PROOF"
+          ],
+          "allowed_wording": [
+            "lane-local wording for HIL-C1-FIXED-POINT-CXXRTL at its stated evidence grade"
+          ],
+          "forbidden_wording": [
+            "cross-lane or unqualified evidence promotion",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        },
+        {
+          "claim_id": "HIL-C2-POST-ROUTE",
+          "state": "PARENT_RESTRICTED_ONLY",
+          "required_grades": [
+            "POST_ROUTE_ESTIMATE"
+          ],
+          "allowed_wording": [
+            "lane-local wording for HIL-C2-POST-ROUTE at its stated evidence grade"
+          ],
+          "forbidden_wording": [
+            "cross-lane or unqualified evidence promotion",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        },
+        {
+          "claim_id": "HIL-C3-MEASURED-INTEGRATED-CHAIN",
+          "state": "BLOCKED_NULL",
+          "required_grades": [
+            "RECORDED_IQ_HIL_MEASURED",
+            "RAW_IQ_HIL_MEASURED"
+          ],
+          "allowed_wording": [
+            "lane-local wording for HIL-C3-MEASURED-INTEGRATED-CHAIN at its stated evidence grade"
+          ],
+          "forbidden_wording": [
+            "cross-lane or unqualified evidence promotion",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        },
+        {
+          "claim_id": "HIL-C4-SAME-TASK-SPEED",
+          "state": "BLOCKED_NULL",
+          "required_grades": [
+            "RAW_IQ_HIL_MEASURED"
+          ],
+          "allowed_wording": [
+            "faster raw-IQ-source-to-trigger HIL under a same-task measured comparison"
+          ],
+          "forbidden_wording": [
+            "core cycles, CXXRTL, P&R, host timing, or cross-code nanoseconds as measured speed",
+            "weighted-score or winner-count rescue"
+          ],
+          "revocation_conditions": [
+            "task signature, denominator, baseline eligibility, split, evidence grade, or analysis hash changes",
+            "required gate or artifact provenance becomes incomplete"
+          ]
+        }
+      ],
+      "current_result": {
+        "evaluation_state": "MISSING_BOARD",
+        "result_verdict": null
+      },
+      "signature_sha256": "4965da60999451c61a4d5d6c4a0b67d722bb848ea012a4536eb9a29ba77a8756"
+    }
+  ],
+  "forbidden_transfers": [
+    {
+      "transfer_id": "FT-LIFETIME-TO-LER",
+      "from": "SIX_STATE_LOGICAL_LIFETIME",
+      "to": "GO_LER_SOTA",
+      "rejection": "CROSS_LANE_SUBSTITUTION"
+    },
+    {
+      "transfer_id": "FT-LER-TO-LIFETIME",
+      "from": "ROUND_LER_SINGLE_MODE",
+      "to": "GO_LIFETIME",
+      "rejection": "CROSS_LANE_SUBSTITUTION"
+    },
+    {
+      "transfer_id": "FT-CORE-TO-RAW-IQ",
+      "from": "decoder_core",
+      "to": "raw_iq_source_to_trigger",
+      "rejection": "TIMING_BOUNDARY_SUBSTITUTION"
+    },
+    {
+      "transfer_id": "FT-PREBOARD-TO-MEASURED",
+      "from": "CXXRTL_PREBOARD_or_POST_ROUTE_ESTIMATE",
+      "to": "RAW_IQ_HIL_MEASURED",
+      "rejection": "EVIDENCE_GRADE_PROMOTION"
+    },
+    {
+      "transfer_id": "FT-SIM-TO-PHYSICAL-BREAK-EVEN",
+      "from": "simulation_gain",
+      "to": "PHYSICAL_BREAK_EVEN",
+      "rejection": "PHYSICAL_EVIDENCE_MISSING"
+    },
+    {
+      "transfer_id": "FT-PAPER-CONSTRAINED-TO-OFFICIAL",
+      "from": "PAPER_CONSTRAINED_REIMPLEMENTATION",
+      "to": "OFFICIAL_EXACT_REPRODUCTION",
+      "rejection": "PROVENANCE_NAMESPACE_SUBSTITUTION"
+    },
+    {
+      "transfer_id": "FT-HIDDEN-TO-DEPLOYABLE",
+      "from": "hidden_teacher_or_oracle",
+      "to": "MATCHED_DEPLOYABLE_RANKED",
+      "rejection": "PRIVILEGE_SUBSTITUTION"
+    },
+    {
+      "transfer_id": "FT-CEILING-TO-RANKED",
+      "from": "CAPACITY_CEILING_NONRANKING",
+      "to": "MATCHED_DEPLOYABLE_RANKED",
+      "rejection": "BUDGET_SUBSTITUTION"
+    },
+    {
+      "transfer_id": "FT-CROSS-LANE-SCORE",
+      "from": "three_lane_outcomes",
+      "to": "weighted_score_or_win_count",
+      "rejection": "GLOBAL_SCORE_PROHIBITED"
+    },
+    {
+      "transfer_id": "FT-POSTSELECTED-TO-FULL",
+      "from": "accepted_only_or_postselected",
+      "to": "full_denominator",
+      "rejection": "DENOMINATOR_SUBSTITUTION"
+    },
+    {
+      "transfer_id": "FT-SAFETY-TO-PERFORMANCE",
+      "from": "deterministic_atomic_fail_closed",
+      "to": "LER_or_lifetime_SOTA",
+      "rejection": "SYSTEM_SAFETY_NOT_PERFORMANCE"
+    },
+    {
+      "transfer_id": "FT-CROSS-CODE-LATENCY",
+      "from": "different_code_family_or_problem",
+      "to": "same_task_speed_rank",
+      "rejection": "TASK_SIGNATURE_MISMATCH"
+    },
+    {
+      "transfer_id": "FT-MISSING-AS-ZERO",
+      "from": "MISSING_BOARD_or_MISSING_EXTERNAL_ASSET",
+      "to": "numeric_zero",
+      "rejection": "NULL_SEMANTICS_VIOLATION"
+    }
+  ],
+  "artifact_registry": {
+    "config": {
+      "path": "configs/phase9/t9_1_1_three_lane_protocol.json",
+      "selector": "STRICT_FILE_SHA256",
+      "sha256": "abcc1fbf94cb933b816c1d0c3076c3de6b313514aa9ed6975679a6f22b29ac09",
+      "bytes": 24172
+    },
+    "implementation": {
+      "path": "cnn_fpga/benchmark/phase9_three_lane_protocol.py",
+      "selector": "STRICT_FILE_SHA256",
+      "sha256": "3ebc7957065587337aeb347b807b9f8fa54a1051bf644a8b1113711e6b12d5e9",
+      "bytes": 51962
+    },
+    "experiment_plan": {
+      "path": "docs/experiment_plan.md",
+      "selector": "EXPERIMENT_PLAN_20_1_20_2_20_6_20_7",
+      "payload": {
+        "20.1": "## 20.1 Puviani 资产缺失的非阻塞证据合同\n\n缺少 official checkpoint、20-agent seeds、selection ledger 和 six-state evaluator 不阻止项目继续建立数字孪生、codebook、模型、project-native lifetime、RTL 或 HIL；它只关闭两句特定主张：`OFFICIAL_EXACT_REPRODUCTION` 和“超过 Puviani NMF”。后续必须并存以下两条 lane：\n\n- `OFFICIAL_EXACT_REPRODUCTION`：四类官方资产、上游 commit/hash/license/environment、selection 逻辑和论文 six-state 数值均通过后才可开放。任一项缺失就保持 null/blocked；不得拿论文曲线、项目 seed 或方向性复现补齐。\n- `PAPER_CONSTRAINED_REIMPLEMENTATION`：依据正文、补充材料和公开 GQF source，项目自行生成不少于 20 个独立 agent/seed、所有 checkpoint、validation-only selection ledger、六态 evaluator 和 raw trajectory。论文未规定或源码不一致之处逐项进入 deviation ledger。这条 lane 可参加“registered implementation”比较，但不能改名为 official/exact。\n\n两条 lane 使用不同 evidence grade 和 claim namespace。官方资产以后到位时，只新增 exact qualification；不得覆盖项目自建 ledger，也不得用看到的新结果重新选择已经打开的 formal candidate。",
+        "20.2": "## 20.2 三个 task signature、强 baseline 与结果门\n\n三个主问题分别冻结 code/state family、observation、action、cycle time、denominator、precision、compute、wall-clock、statistical unit 和 evidence grade：\n\n1. **round-LER signature**：单模 approximate GKP，输入 raw/derived IQ 与 history，动作来自同一 trusted recovery set；主指标为六态完整分母的 `p_L,p_X,p_Y,p_Z` 和 logical PTM。\n2. **lifetime signature**：相同物理后端、相同 cycle/action/reset cost，长序列传播六态；主指标为 `T_X,T_Y,T_Z,T_ch`、area/e-folding、survival/fit diagnostics。accepted-only、matched-idle crossover 和未计 reset/control 的曲线不可进入主表。\n3. **digital-HIL signature**：依次分开 core、discriminator-output-to-action、ADC-last-sample-to-trigger、raw-IQ-source-to-trigger；主指标为 p50/p95/p99/max/WCET、II、deadline miss、resource/power。不同 code family 或 boundary 的 ns 数值只作 context。\n\n最小 baseline registry 包含 standard sBs/no-feedback、static recovery、MF、paper-constrained NMF、Window/EWMA/Kalman、HMM/IMM/BOCPD、particle/SMC、Bayesian predictor，以及 GRU、TCN、SSM、causal Transformer。hidden-state teacher/oracle、unbudgeted model 和未来信息方法独立分栏。排名分为：\n\n- matched deployable：同 observation/action、同 samples、同 update cadence、同 precision、同 memory/compute/wall-clock/deadline；\n- capacity ceiling：允许更大模型，但不能用于 deployable/SOTA claim；\n- privileged upper bound：hidden truth/teacher/oracle 永不排名。\n\n正式结果前冻结 cluster-level paired CI、multiple comparisons、timeout/missingness、power/sample size 和一次性 pilot selection。不能让不同模型看到不同 IQ 表示、不同 history、不同 formal samples 或不同 action space。",
+        "20.6": "## 20.6 六态 formal 与高速板 HIL 门\n\nformal 统计单位是独立 device/scenario/trajectory cluster，不把 cycle 当独立样本。所有六态都保留完整 denominator、全部 timeout/fallback/reset/leakage/control cost和逐 trajectory raw data。长序列每 trajectory 至少运行至预注册 `10^4` cycles、survival endpoint 或显式 censor，并同时报告 non-exponential diagnostics；不能用单一指数拟合掩盖 tail 或 reset cost。\n\n性能门冻结为：\n\n1. LER SOTA candidate 相对**每个** eligible strongest deployable baseline，relative improvement point `>=15%`、simultaneous paired 95% LCB `>=10%` 且 absolute LCB `>0`；\n2. 六态 lifetime 的最小 relative gain point `>=15%`、simultaneous 95% LCB `>0`，且不以额外 postselection/reset/control burden换取；\n3. stationary paired degradation 95% UCB `<=2%`，任一 OOD family UCB `<=5%`，calibration/telegraph worst-window/CVaR improvement simultaneous LCB `>0`；\n4. 第二 physics backend 和第二统计实现只从 raw hashes 独立重算；\n5. official Puviani lane 未通过时，最强允许措辞为“best among registered paper-constrained/project-native baselines”，Puviani surpass 字段保持 null。\n\n失败分别降为 tail-only、robustness-only、non-inferior、compression/safety 或 negative，不允许通过删不利 state/family/baseline 或改 denominator 救援。\n\n板卡无关集成先在 CXXRTL 运行真实 update cadence、完整 package、host/policy race、fault/recovery 和 compound transport：每 family `>=1e5` cycles、aggregate `>=1e6`，全部公开 output/state 零 mismatch、零 undefined、零 silent overflow/version wrap、零 fast deadline miss，source-to-action 恰 6 cycles、II=1。\n\n实物 HIL 先冻结四个 latency boundary，再在高速 RFSoC/Zynq/等价平台使用同 source/hash bitstream运行 recorded IQ 和 raw IQ：`IQ -> discriminator -> action -> trigger`。至少三 implementation seeds，报告 p50/p95/p99/max/WCET、queue/backlog、clock/temperature、resource 与 idle/active power，并在 `>=1e6` cycles 中零 mismatch/undefined/silent overflow/deadline miss。没有板卡时只保持 `BLOCKED_NO_HIGH_SPEED_BOARD`；CXXRTL、P&R 或 host loop 不能升级 measured 字段。只有同 code/problem/action/precision/boundary 的真实 measured comparator 才允许“更快”。",
+        "20.7": "## 20.7 执行依赖、局部阻塞与论文拓扑\n\n执行顺序为：\n\n1. T9.1.1 冻结签名；T9.1.2 official exact 独立等待，T9.1.3 paper-constrained 不等待它；\n2. T9.2 双后端数字孪生与资格；\n3. T9.3 codebook；\n4. T9.4 matched tournament/observed posterior；\n5. T9.5 risk selector、bank compiler 和唯一 converged top；\n6. T9.6 六态 round/lifetime formal；\n7. T9.7.1 CXXRTL 可与 formal 后段并行，T9.7.3--T9.7.4 只在实物板可用时执行；\n8. T9.8 独立终门和论文决定。\n\n最终不使用加权总分，而输出三项独立 verdict：`GO_LER_SOTA`、`GO_LIFETIME`、`GO_HIL_SPEED`。只有 LER 与 lifetime 均通过、集成 HIL 通过且至少一个外部同任务 SOTA 可辩护时，才开放 `GO_SINGLE_PAPER`；否则选择 `GO_SPLIT_ALGORITHM_HARDWARE`、`GO_ALGORITHM_ONLY`、`GO_HARDWARE_ONLY` 或 `NO_GO`。QPU/真实 GKP 数据、experimental break-even 与 official Puviani exact 均可后插升级，但在证据缺失时必须保持 null，不阻止仿真/预板论文或诚实负结果归档。"
+      },
+      "sha256": "0d61ff40786734b8a14f7286b1af7cead6183b21805a099d4add5a9fd46fab43"
+    },
+    "task_board": {
+      "path": "docs/new_task_board.md",
+      "selector": "PHASE9_TASK_REQUIREMENTS_EXCLUDING_STATUS_AND_OUTPUT",
+      "payload": {
+        "T9.1.1": {
+          "task_id": "T9.1.1",
+          "task": "冻结单轮 LER、六态长时 lifetime 与数字链 latency 三个不可混排的 task signature、claim ladder 和失败分支。",
+          "source": "`T-RISK-20260722-01`, `R-N162`, `R-N168`, `experiment_plan.md §20.1--§20.2, §20.6--§20.7`"
+        },
+        "T9.1.2": {
+          "task_id": "T9.1.2",
+          "task": "接收并资格化 Puviani official checkpoint、20-agent seeds、selection ledger 和 six-state evaluator。",
+          "source": "`T6.8.4`, `T6.17.3`, `R-N162`"
+        },
+        "T9.1.3": {
+          "task_id": "T9.1.3",
+          "task": "建立 paper-constrained Puviani MF/NMF 独立重实现与项目自有完整 artifact lane。",
+          "source": "`T9.1.1`, `R-N162`, `experiment_plan.md §20.2`"
+        },
+        "T9.1.4": {
+          "task_id": "T9.1.4",
+          "task": "冻结同输入、同样本、同 action、同 compute 的 controller/decoder baseline registry 与统计功效。",
+          "source": "`T9.1.1`, `T9.1.3`, `R-N164`, `experiment_plan.md §20.2`"
+        },
+        "T9.6.1": {
+          "task_id": "T9.6.1",
+          "task": "在 outcome-blind 状态冻结 pilot/formal、样本量、estimand 与 promotion 门。",
+          "source": "`T9.1.1`, `T9.4.5`, `T9.5.4`, `R-N168`"
+        },
+        "T9.6.5": {
+          "task_id": "T9.6.5",
+          "task": "用第二 backend/第二统计实现独立重算并执行 LER/lifetime promotion。",
+          "source": "`T9.2.4`, `T9.6.2--T9.6.4`, `R-N162--R-N166`, `R-N168`"
+        },
+        "T9.7.2": {
+          "task_id": "T9.7.2",
+          "task": "刷新外部硬件一手来源，选择高速 RFSoC/Zynq/等价平台并冻结可比 latency boundary。",
+          "source": "`T9.1.1`, `T9.7.1`, `R-N167`"
+        },
+        "T9.7.4": {
+          "task_id": "T9.7.4",
+          "task": "完成多 seed build、板上正确性、真实 latency/jitter/deadline/resource/power 与同任务比较。",
+          "source": "`T9.7.3`, `R-N167--R-N168`"
+        },
+        "T9.8.1": {
+          "task_id": "T9.8.1",
+          "task": "建立 LER、lifetime、HIL 三门的 claim-evidence matrix 和 null/revocation ledger。",
+          "source": "`T9.6.5`, `T9.7.4`, `R-N168`"
+        },
+        "T9.8.2": {
+          "task_id": "T9.8.2",
+          "task": "按预注册真值表决定单篇、拆篇、单 lane 或 NO-GO。",
+          "source": "`T9.8.1`, `R-N168`, `experiment_plan.md §20.7`"
+        }
+      },
+      "sha256": "777e14a87eab0f48e8fa8b3fbc3e90d75dbe5951d92c1a9148ac9b27da9cd327"
+    },
+    "risk_registry": {
+      "path": "docs/new_risks.md",
+      "selector": "PHASE9_RISK_SEMANTICS_EXCLUDING_MUTABLE_STATUS",
+      "payload": {
+        "R-N162": {
+          "risk_id": "R-N162",
+          "risk": "Puviani official checkpoint、20-agent seeds、selection ledger 与 six-state evaluator 不可得时，项目自建 artifact 可能被误写成 official exact，或反过来让整个性能主线无限等待",
+          "evidence": "当前 official GQF source 可见不等于训练/选择/六态评估资产完整；强行 exact 会制造不可审计 surpass claim，而全局冻结又会阻止可独立完成的 physics/codebook/model/HIL",
+          "references": "T-RISK-20260722-01 / T9.1.2--T9.1.3"
+        },
+        "R-N167": {
+          "risk_id": "R-N167",
+          "risk": "高速板尚不可用且 FPGA 文献 latency boundary/code family 不一，CXXRTL/P&R 或 cross-code ns 数值可能被偷换为 raw-IQ-to-trigger measured speed SOTA",
+          "evidence": "当前 only pre-board whole-harness estimate，真实 ADC/discriminator/CDC/transport/trigger/power 全缺；surface-code 446/550 ns 等不能直接判定 single-mode GKP 胜负",
+          "references": "T-RISK-20260722-01 / T9.7"
+        },
+        "R-N168": {
+          "risk_id": "R-N168",
+          "risk": "同时追求单轮 LER、六态 lifetime 和 HIL latency 可能诱发事后择优、跨 lane 加权总分或以系统安全补算法 SOTA",
+          "evidence": "三者分母、time scale、baseline、物理/硬件 evidence grade 不同；“至少一个指标好”若不预注册，容易隐藏另两项失败并把单篇叙事当证据",
+          "references": "T-RISK-20260722-01 / T9.1.1 / T9.6.1 / T9.8"
+        }
+      },
+      "sha256": "4d2372d5ebc8510ebf4c982cb5cd5d89297f8e01911cb59c122f72506594dae4"
+    }
+  },
+  "verdict_fixtures": [
+    {
+      "fixture_id": "ROUND_LER_SINGLE_MODE:unopened",
+      "lane_id": "ROUND_LER_SINGLE_MODE",
+      "evidence": {
+        "outcomes_opened": false
+      },
+      "outcome": {
+        "evaluation_state": "NOT_EVALUATED_NULL",
+        "result_verdict": null,
+        "reason_code": "NOT_EVALUATED_NULL",
+        "supporting_statuses": []
+      },
+      "scientific_result": "SYNTHETIC_GATE_LOGIC_ONLY_NOT_EXPERIMENTAL_EVIDENCE"
+    },
+    {
+      "fixture_id": "ROUND_LER_SINGLE_MODE:incomplete",
+      "lane_id": "ROUND_LER_SINGLE_MODE",
+      "evidence": {
+        "outcomes_opened": true,
+        "all_mandatory_baselines_complete": true,
+        "all_signature_eligible": true,
+        "no_postselection": true,
+        "full_denominator": true,
+        "observed_only": true,
+        "dual_backend_pass": true,
+        "second_statistics_pass": true,
+        "six_state_complete": true,
+        "all_reset_control_costs_retained": true,
+        "min_relative_improvement_point_each_baseline": 0.16,
+        "min_simultaneous_relative_lcb_each_baseline": 0.11,
+        "min_simultaneous_absolute_lcb_each_baseline": 0.01,
+        "stationary_degradation_ucb": 0.02,
+        "max_ood_family_degradation_ucb": 0.05,
+        "calibration_worst_window_improvement_lcb": 0.01,
+        "telegraph_cvar_improvement_lcb": 0.01
+      },
+      "outcome": {
+        "evaluation_state": "INCOMPLETE",
+        "result_verdict": null,
+        "reason_code": "INCOMPLETE_REQUIRED_FIELDS",
+        "missing_fields": [
+          "integrity_complete"
+        ],
+        "supporting_statuses": []
+      },
+      "scientific_result": "SYNTHETIC_GATE_LOGIC_ONLY_NOT_EXPERIMENTAL_EVIDENCE"
+    },
+    {
+      "fixture_id": "ROUND_LER_SINGLE_MODE:complete_no_go",
+      "lane_id": "ROUND_LER_SINGLE_MODE",
+      "evidence": {
+        "outcomes_opened": true,
+        "integrity_complete": true,
+        "all_mandatory_baselines_complete": true,
+        "all_signature_eligible": true,
+        "no_postselection": true,
+        "full_denominator": true,
+        "observed_only": true,
+        "dual_backend_pass": true,
+        "second_statistics_pass": true,
+        "six_state_complete": true,
+        "all_reset_control_costs_retained": true,
+        "min_relative_improvement_point_each_baseline": 0.13999999999999999,
+        "min_simultaneous_relative_lcb_each_baseline": 0.11,
+        "min_simultaneous_absolute_lcb_each_baseline": 0.01,
+        "stationary_degradation_ucb": 0.02,
+        "max_ood_family_degradation_ucb": 0.05,
+        "calibration_worst_window_improvement_lcb": 0.01,
+        "telegraph_cvar_improvement_lcb": 0.01
+      },
+      "outcome": {
+        "evaluation_state": "COMPLETE",
+        "result_verdict": "NO_GO_LER_SOTA",
+        "reason_code": "COMPLETE_THRESHOLD_FAILURE",
+        "failed_thresholds": [
+          "min_relative_improvement_point_each_baseline"
+        ],
+        "supporting_statuses": []
+      },
+      "scientific_result": "SYNTHETIC_GATE_LOGIC_ONLY_NOT_EXPERIMENTAL_EVIDENCE"
+    },
+    {
+      "fixture_id": "ROUND_LER_SINGLE_MODE:complete_go",
+      "lane_id": "ROUND_LER_SINGLE_MODE",
+      "evidence": {
+        "outcomes_opened": true,
+        "integrity_complete": true,
+        "all_mandatory_baselines_complete": true,
+        "all_signature_eligible": true,
+        "no_postselection": true,
+        "full_denominator": true,
+        "observed_only": true,
+        "dual_backend_pass": true,
+        "second_statistics_pass": true,
+        "six_state_complete": true,
+        "all_reset_control_costs_retained": true,
+        "min_relative_improvement_point_each_baseline": 0.16,
+        "min_simultaneous_relative_lcb_each_baseline": 0.11,
+        "min_simultaneous_absolute_lcb_each_baseline": 0.01,
+        "stationary_degradation_ucb": 0.02,
+        "max_ood_family_degradation_ucb": 0.05,
+        "calibration_worst_window_improvement_lcb": 0.01,
+        "telegraph_cvar_improvement_lcb": 0.01
+      },
+      "outcome": {
+        "evaluation_state": "COMPLETE",
+        "result_verdict": "GO_LER_SOTA",
+        "reason_code": "ALL_REGISTERED_REQUIREMENTS_PASS",
+        "supporting_statuses": []
+      },
+      "scientific_result": "SYNTHETIC_GATE_LOGIC_ONLY_NOT_EXPERIMENTAL_EVIDENCE"
+    },
+    {
+      "fixture_id": "SIX_STATE_LOGICAL_LIFETIME:unopened",
+      "lane_id": "SIX_STATE_LOGICAL_LIFETIME",
+      "evidence": {
+        "outcomes_opened": false
+      },
+      "outcome": {
+        "evaluation_state": "NOT_EVALUATED_NULL",
+        "result_verdict": null,
+        "reason_code": "NOT_EVALUATED_NULL",
+        "supporting_statuses": []
+      },
+      "scientific_result": "SYNTHETIC_GATE_LOGIC_ONLY_NOT_EXPERIMENTAL_EVIDENCE"
+    },
+    {
+      "fixture_id": "SIX_STATE_LOGICAL_LIFETIME:incomplete",
+      "lane_id": "SIX_STATE_LOGICAL_LIFETIME",
+      "evidence": {
+        "outcomes_opened": true,
+        "all_mandatory_baselines_complete": true,
+        "all_signature_eligible": true,
+        "no_postselection": true,
+        "full_six_state_trajectory_denominator": true,
+        "all_lifetime_metrics_complete": true,
+        "fit_diagnostics_pass": true,
+        "same_cycle_action_reset_control_cost": true,
+        "dual_backend_pass": true,
+        "second_statistics_pass": true,
+        "minimum_sequence_cycles": 10001,
+        "min_six_state_relative_gain_point": 0.16,
+        "min_simultaneous_lifetime_gain_lcb": 0.01,
+        "reset_control_burden_margin_ucb": 0.0
+      },
+      "outcome": {
+        "evaluation_state": "INCOMPLETE",
+        "result_verdict": null,
+        "reason_code": "INCOMPLETE_REQUIRED_FIELDS",
+        "missing_fields": [
+          "integrity_complete"
+        ],
+        "supporting_statuses": []
+      },
+      "scientific_result": "SYNTHETIC_GATE_LOGIC_ONLY_NOT_EXPERIMENTAL_EVIDENCE"
+    },
+    {
+      "fixture_id": "SIX_STATE_LOGICAL_LIFETIME:complete_no_go",
+      "lane_id": "SIX_STATE_LOGICAL_LIFETIME",
+      "evidence": {
+        "outcomes_opened": true,
+        "integrity_complete": true,
+        "all_mandatory_baselines_complete": true,
+        "all_signature_eligible": true,
+        "no_postselection": true,
+        "full_six_state_trajectory_denominator": true,
+        "all_lifetime_metrics_complete": true,
+        "fit_diagnostics_pass": true,
+        "same_cycle_action_reset_control_cost": true,
+        "dual_backend_pass": true,
+        "second_statistics_pass": true,
+        "minimum_sequence_cycles": 9999,
+        "min_six_state_relative_gain_point": 0.16,
+        "min_simultaneous_lifetime_gain_lcb": 0.01,
+        "reset_control_burden_margin_ucb": 0.0
+      },
+      "outcome": {
+        "evaluation_state": "COMPLETE",
+        "result_verdict": "NO_GO_LIFETIME",
+        "reason_code": "COMPLETE_THRESHOLD_FAILURE",
+        "failed_thresholds": [
+          "minimum_sequence_cycles"
+        ],
+        "supporting_statuses": []
+      },
+      "scientific_result": "SYNTHETIC_GATE_LOGIC_ONLY_NOT_EXPERIMENTAL_EVIDENCE"
+    },
+    {
+      "fixture_id": "SIX_STATE_LOGICAL_LIFETIME:complete_go",
+      "lane_id": "SIX_STATE_LOGICAL_LIFETIME",
+      "evidence": {
+        "outcomes_opened": true,
+        "integrity_complete": true,
+        "all_mandatory_baselines_complete": true,
+        "all_signature_eligible": true,
+        "no_postselection": true,
+        "full_six_state_trajectory_denominator": true,
+        "all_lifetime_metrics_complete": true,
+        "fit_diagnostics_pass": true,
+        "same_cycle_action_reset_control_cost": true,
+        "dual_backend_pass": true,
+        "second_statistics_pass": true,
+        "minimum_sequence_cycles": 10001,
+        "min_six_state_relative_gain_point": 0.16,
+        "min_simultaneous_lifetime_gain_lcb": 0.01,
+        "reset_control_burden_margin_ucb": 0.0
+      },
+      "outcome": {
+        "evaluation_state": "COMPLETE",
+        "result_verdict": "GO_LIFETIME",
+        "reason_code": "ALL_REGISTERED_REQUIREMENTS_PASS",
+        "supporting_statuses": []
+      },
+      "scientific_result": "SYNTHETIC_GATE_LOGIC_ONLY_NOT_EXPERIMENTAL_EVIDENCE"
+    },
+    {
+      "fixture_id": "RAW_IQ_DIGITAL_HIL:unopened",
+      "lane_id": "RAW_IQ_DIGITAL_HIL",
+      "evidence": {
+        "outcomes_opened": false
+      },
+      "outcome": {
+        "evaluation_state": "NOT_EVALUATED_NULL",
+        "result_verdict": null,
+        "reason_code": "NOT_EVALUATED_NULL",
+        "supporting_statuses": []
+      },
+      "scientific_result": "SYNTHETIC_GATE_LOGIC_ONLY_NOT_EXPERIMENTAL_EVIDENCE"
+    },
+    {
+      "fixture_id": "RAW_IQ_DIGITAL_HIL:incomplete",
+      "lane_id": "RAW_IQ_DIGITAL_HIL",
+      "evidence": {
+        "outcomes_opened": true,
+        "same_source_bitstream_hash": true,
+        "recorded_iq_board_measured": true,
+        "raw_iq_board_measured": true,
+        "all_four_boundaries_reported": true,
+        "latency_statistics_complete": true,
+        "resource_power_measured": true,
+        "same_task_measured_comparator_available": true,
+        "primary_speed_contrast_simultaneous_lcb_positive": true,
+        "implementation_seed_count": 3.01,
+        "transaction_count": 1000001,
+        "mismatch_count": 0,
+        "undefined_action_count": 0,
+        "silent_overflow_count": 0,
+        "deadline_miss_count": 0,
+        "initiation_interval_cycles": 1,
+        "wcet_minus_deadline_ns": 0.0,
+        "primary_speed_contrast_simultaneous_lcb_ns": 0.01
+      },
+      "outcome": {
+        "evaluation_state": "INCOMPLETE",
+        "result_verdict": null,
+        "reason_code": "INCOMPLETE_REQUIRED_FIELDS",
+        "missing_fields": [
+          "integrity_complete"
+        ],
+        "supporting_statuses": []
+      },
+      "scientific_result": "SYNTHETIC_GATE_LOGIC_ONLY_NOT_EXPERIMENTAL_EVIDENCE"
+    },
+    {
+      "fixture_id": "RAW_IQ_DIGITAL_HIL:complete_no_go",
+      "lane_id": "RAW_IQ_DIGITAL_HIL",
+      "evidence": {
+        "outcomes_opened": true,
+        "integrity_complete": true,
+        "same_source_bitstream_hash": true,
+        "recorded_iq_board_measured": true,
+        "raw_iq_board_measured": true,
+        "all_four_boundaries_reported": true,
+        "latency_statistics_complete": true,
+        "resource_power_measured": true,
+        "same_task_measured_comparator_available": true,
+        "primary_speed_contrast_simultaneous_lcb_positive": true,
+        "implementation_seed_count": 2.99,
+        "transaction_count": 1000001,
+        "mismatch_count": 0,
+        "undefined_action_count": 0,
+        "silent_overflow_count": 0,
+        "deadline_miss_count": 0,
+        "initiation_interval_cycles": 1,
+        "wcet_minus_deadline_ns": 0.0,
+        "primary_speed_contrast_simultaneous_lcb_ns": 0.01
+      },
+      "outcome": {
+        "evaluation_state": "COMPLETE",
+        "result_verdict": "NO_GO_HIL_SPEED",
+        "reason_code": "COMPLETE_THRESHOLD_FAILURE",
+        "failed_thresholds": [
+          "implementation_seed_count"
+        ],
+        "supporting_statuses": []
+      },
+      "scientific_result": "SYNTHETIC_GATE_LOGIC_ONLY_NOT_EXPERIMENTAL_EVIDENCE"
+    },
+    {
+      "fixture_id": "RAW_IQ_DIGITAL_HIL:complete_go",
+      "lane_id": "RAW_IQ_DIGITAL_HIL",
+      "evidence": {
+        "outcomes_opened": true,
+        "integrity_complete": true,
+        "same_source_bitstream_hash": true,
+        "recorded_iq_board_measured": true,
+        "raw_iq_board_measured": true,
+        "all_four_boundaries_reported": true,
+        "latency_statistics_complete": true,
+        "resource_power_measured": true,
+        "same_task_measured_comparator_available": true,
+        "primary_speed_contrast_simultaneous_lcb_positive": true,
+        "implementation_seed_count": 3.01,
+        "transaction_count": 1000001,
+        "mismatch_count": 0,
+        "undefined_action_count": 0,
+        "silent_overflow_count": 0,
+        "deadline_miss_count": 0,
+        "initiation_interval_cycles": 1,
+        "wcet_minus_deadline_ns": 0.0,
+        "primary_speed_contrast_simultaneous_lcb_ns": 0.01
+      },
+      "outcome": {
+        "evaluation_state": "COMPLETE",
+        "result_verdict": "GO_HIL_SPEED",
+        "reason_code": "ALL_REGISTERED_REQUIREMENTS_PASS",
+        "supporting_statuses": []
+      },
+      "scientific_result": "SYNTHETIC_GATE_LOGIC_ONLY_NOT_EXPERIMENTAL_EVIDENCE"
+    },
+    {
+      "fixture_id": "RAW_IQ_DIGITAL_HIL:engineering_only_no_comparator",
+      "lane_id": "RAW_IQ_DIGITAL_HIL",
+      "evidence": {
+        "outcomes_opened": true,
+        "integrity_complete": true,
+        "same_source_bitstream_hash": true,
+        "recorded_iq_board_measured": true,
+        "raw_iq_board_measured": true,
+        "all_four_boundaries_reported": true,
+        "latency_statistics_complete": true,
+        "resource_power_measured": true,
+        "same_task_measured_comparator_available": false,
+        "primary_speed_contrast_simultaneous_lcb_positive": true,
+        "implementation_seed_count": 3.01,
+        "transaction_count": 1000001,
+        "mismatch_count": 0,
+        "undefined_action_count": 0,
+        "silent_overflow_count": 0,
+        "deadline_miss_count": 0,
+        "initiation_interval_cycles": 1,
+        "wcet_minus_deadline_ns": 0.0,
+        "primary_speed_contrast_simultaneous_lcb_ns": 0.01
+      },
+      "outcome": {
+        "evaluation_state": "INCOMPLETE",
+        "result_verdict": null,
+        "reason_code": "INCOMPLETE_BASELINE_OR_COMPARATOR",
+        "failed_boolean_fields": [
+          "same_task_measured_comparator_available"
+        ],
+        "supporting_statuses": [
+          "GO_HIL_ENGINEERING_NONRANKING"
+        ]
+      },
+      "scientific_result": "SYNTHETIC_GATE_LOGIC_ONLY_NOT_EXPERIMENTAL_EVIDENCE"
+    }
+  ],
+  "source_data": {
+    "path": "docs/t9_1_1_three_lane_protocol_source_data.csv",
+    "rows": 66,
+    "sha256": "9148034791002183f94795e2f66bc8971668ddf76664da86abb71cf950820970",
+    "bytes": 66455
+  },
+  "markdown": {
+    "path": "docs/phase9_three_lane_protocol.md",
+    "sha256": "8a4f23e867dc97ebffbe2b532697f837bf360c975fe1a61fe5de22f998fddc77",
+    "bytes": 21207
+  },
+  "semantic_mutation_audit": {
+    "count": 36,
+    "detected": 36,
+    "cases": [
+      {
+        "mutation_id": "M01_protocol_identity",
+        "target_gate": "G01_identity_and_preoutcome_seal",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M02_duplicate_lane",
+        "target_gate": "G02_exactly_three_independent_namespaces",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M03_drop_schema_field",
+        "target_gate": "G03_signature_schema_has_24_frozen_fields",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M04_drop_signature_field",
+        "target_gate": "G04_signatures_are_complete_nonempty_and_distinct",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M05_drop_sixth_ler_state",
+        "target_gate": "G05_ler_code_state_metrics_are_six_state_single_mode",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M06_hidden_truth_observation",
+        "target_gate": "G06_ler_observation_action_and_denominator_are_causal_full",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M07_drop_T_ch",
+        "target_gate": "G07_lifetime_metrics_horizon_and_six_state_aggregation_are_complete",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M08_lifetime_changes_action",
+        "target_gate": "G08_lifetime_inherits_ler_physics_observation_action_and_cost",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M09_accepted_only_ler",
+        "target_gate": "G09_algorithm_lanes_prohibit_postselection_and_accepted_only_denominators",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M10_core_as_primary_hil",
+        "target_gate": "G10_hil_has_four_boundaries_and_raw_iq_primary",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M11_drop_hil_wcet",
+        "target_gate": "G11_hil_statistics_denominator_and_hardware_cost_are_complete",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M12_rank_capacity_ceiling",
+        "target_gate": "G12_baseline_classes_keep_only_matched_deployable_ranked",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M13_remove_matched_budget_predicate",
+        "target_gate": "G13_matched_baseline_predicate_is_exact_and_fail_closed",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M14_allow_formal_reselection",
+        "target_gate": "G14_split_is_single_pass_pilot_then_untouched_formal",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M15_allow_future_suffix",
+        "target_gate": "G15_observed_only_contract_rejects_future_truth_and_scenario_privilege",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M16_blank_compute_budget",
+        "target_gate": "G16_compute_precision_wallclock_and_deadline_fields_are_nonempty",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M17_uncorrected_alpha",
+        "target_gate": "G17_multiplicity_is_cluster_level_simultaneous_and_closed_family",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M18_zero_impute_missing",
+        "target_gate": "G18_missingness_retains_failures_and_never_imputes_null_as_zero",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M19_global_grade_rank",
+        "target_gate": "G19_evidence_grades_are_scope_sets_not_a_global_rank",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M20_fill_puviani_from_project",
+        "target_gate": "G20_puviani_official_and_surpass_slots_remain_local_nulls",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M21_fill_physical_from_sim",
+        "target_gate": "G21_physical_break_even_and_raw_iq_speed_remain_null_without_grade",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M22_lower_ler_lcb",
+        "target_gate": "G22_ler_gate_freezes_each_baseline_and_tail_safety_thresholds",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M23_shorten_lifetime",
+        "target_gate": "G23_lifetime_gate_freezes_six_state_gain_cost_and_horizon",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M24_remove_raw_iq_measurement",
+        "target_gate": "G24_hil_gate_requires_board_chain_three_seeds_million_transactions_and_comparator",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M25_forge_go_fixture",
+        "target_gate": "G25_future_evaluator_fixtures_cover_go_no_go_incomplete_and_unopened",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M26_open_ler_sota_claim",
+        "target_gate": "G26_claim_ladders_have_wording_grades_and_revocation",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M27_remove_transfer",
+        "target_gate": "G27_forbidden_transfer_registry_is_complete",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M28_enable_weighted_score",
+        "target_gate": "G28_global_score_winner_count_and_cross_lane_rescue_are_prohibited",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M29_forge_semantic_binding",
+        "target_gate": "G29_source_contracts_are_semantically_or_exactly_live",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M30_fake_current_ler_go",
+        "target_gate": "G30_current_performance_results_are_null_not_fake_go_or_no_go",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M31_open_physical_lifetime",
+        "target_gate": "G31_lifetime_does_not_promote_puviani_or_physical_claims",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M32_open_preboard_as_measured",
+        "target_gate": "G32_preboard_rtl_does_not_promote_measured_hil_or_speed",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M33_average_backend_results",
+        "target_gate": "G33_independent_backends_each_pass_without_averaging",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M34_remove_incomplete_state",
+        "target_gate": "G34_result_state_machine_is_null_incomplete_then_binary_complete",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M35_drop_source_row",
+        "target_gate": "G35_source_data_and_human_contract_are_lossless_and_live",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M36_forge_mutation_count",
+        "target_gate": "G36_one_substantive_mutation_per_gate_fails_closed",
+        "rejected": true
+      }
+    ]
+  },
+  "gates": {
+    "G01_identity_and_preoutcome_seal": true,
+    "G02_exactly_three_independent_namespaces": true,
+    "G03_signature_schema_has_24_frozen_fields": true,
+    "G04_signatures_are_complete_nonempty_and_distinct": true,
+    "G05_ler_code_state_metrics_are_six_state_single_mode": true,
+    "G06_ler_observation_action_and_denominator_are_causal_full": true,
+    "G07_lifetime_metrics_horizon_and_six_state_aggregation_are_complete": true,
+    "G08_lifetime_inherits_ler_physics_observation_action_and_cost": true,
+    "G09_algorithm_lanes_prohibit_postselection_and_accepted_only_denominators": true,
+    "G10_hil_has_four_boundaries_and_raw_iq_primary": true,
+    "G11_hil_statistics_denominator_and_hardware_cost_are_complete": true,
+    "G12_baseline_classes_keep_only_matched_deployable_ranked": true,
+    "G13_matched_baseline_predicate_is_exact_and_fail_closed": true,
+    "G14_split_is_single_pass_pilot_then_untouched_formal": true,
+    "G15_observed_only_contract_rejects_future_truth_and_scenario_privilege": true,
+    "G16_compute_precision_wallclock_and_deadline_fields_are_nonempty": true,
+    "G17_multiplicity_is_cluster_level_simultaneous_and_closed_family": true,
+    "G18_missingness_retains_failures_and_never_imputes_null_as_zero": true,
+    "G19_evidence_grades_are_scope_sets_not_a_global_rank": true,
+    "G20_puviani_official_and_surpass_slots_remain_local_nulls": true,
+    "G21_physical_break_even_and_raw_iq_speed_remain_null_without_grade": true,
+    "G22_ler_gate_freezes_each_baseline_and_tail_safety_thresholds": true,
+    "G23_lifetime_gate_freezes_six_state_gain_cost_and_horizon": true,
+    "G24_hil_gate_requires_board_chain_three_seeds_million_transactions_and_comparator": true,
+    "G25_future_evaluator_fixtures_cover_go_no_go_incomplete_and_unopened": true,
+    "G26_claim_ladders_have_wording_grades_and_revocation": true,
+    "G27_forbidden_transfer_registry_is_complete": true,
+    "G28_global_score_winner_count_and_cross_lane_rescue_are_prohibited": true,
+    "G29_source_contracts_are_semantically_or_exactly_live": true,
+    "G30_current_performance_results_are_null_not_fake_go_or_no_go": true,
+    "G31_lifetime_does_not_promote_puviani_or_physical_claims": true,
+    "G32_preboard_rtl_does_not_promote_measured_hil_or_speed": true,
+    "G33_independent_backends_each_pass_without_averaging": true,
+    "G34_result_state_machine_is_null_incomplete_then_binary_complete": true,
+    "G35_source_data_and_human_contract_are_lossless_and_live": true,
+    "G36_one_substantive_mutation_per_gate_fails_closed": true
+  },
+  "gate_summary": {
+    "passed": 36,
+    "failed": []
+  },
+  "verdict": "PASS_PHASE9_THREE_INDEPENDENT_LANE_PROTOCOL_FROZEN",
+  "analysis_sha256": "c88110375c358794339e72d672e4624871425fe480e5da091ddd1d6595255e18"
+}

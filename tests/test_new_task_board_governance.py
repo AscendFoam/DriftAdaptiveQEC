@@ -493,9 +493,11 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert len(expected_tasks) == 34
     blocked = {"T9.1.2", "T9.7.3", "T9.7.4"}
     assert all(statuses[task] == "Blocked" for task in blocked)
-    assert statuses["T9.1.1"] == "In Progress"
-    assert all(statuses[task] == "Todo" for task in expected_tasks - blocked - {"T9.1.1"})
+    assert statuses["T9.1.1"] == "Done"
+    assert statuses["T9.1.3"] == "In Progress"
+    assert all(statuses[task] == "Todo" for task in expected_tasks - blocked - {"T9.1.1", "T9.1.3"})
     assert statuses["T7.3.5"] == "Done"
+    assert "当前推荐任务：`T9.1.3`" in board
 
     for milestone in ("9.1", "9.2", "9.3", "9.4", "9.5", "9.6", "9.7", "9.8"):
         assert f"### Milestone {milestone}" in phase9
@@ -527,6 +529,18 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert all(task in phase9 for task in ("T9.7.3", "T9.7.4"))
     assert "CXXRTL/P&R/host loop 代替" in phase9
     assert "Phase 8 的真实 GKP/QPU 接入" in phase9
+    assert "immutable `analysis_sha256`" in phase9
+
+    protocol_path = ROOT / "docs" / "t9_1_1_three_lane_protocol.json"
+    protocol_source = ROOT / "docs" / "t9_1_1_three_lane_protocol_source_data.csv"
+    protocol_markdown = ROOT / "docs" / "phase9_three_lane_protocol.md"
+    assert protocol_path.is_file() and protocol_source.is_file() and protocol_markdown.is_file()
+    protocol_report = json.loads(protocol_path.read_text(encoding="utf-8"))
+    assert protocol_report["verdict"] == "PASS_PHASE9_THREE_INDEPENDENT_LANE_PROTOCOL_FROZEN"
+    assert protocol_report["gate_summary"] == {"passed": 36, "failed": []}
+    assert all(row["current_result"]["result_verdict"] is None for row in protocol_report["lanes"])
+    assert protocol_report["external_claim_slots"]["PUVIANI_NMF_SURPASS"]["value"] is None
+    assert protocol_report["external_claim_slots"]["PHYSICAL_BREAK_EVEN"]["value"] is None
 
     experiment_plan = (ROOT / "docs" / "experiment_plan.md").read_text(
         encoding="utf-8"
@@ -548,6 +562,7 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     risks = (ROOT / "docs" / "new_risks.md").read_text(encoding="utf-8")
     for risk_number in range(162, 169):
         assert f"R-N{risk_number}" in risks
+    assert "| R-N168 | Mitigated |" in risks
 
     insertion = board.split("## 插入任务区", 1)[1].split("## 进度日志", 1)[0]
     assert "T-RISK-20260722-01" in insertion
