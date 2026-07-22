@@ -1,0 +1,1245 @@
+{
+  "task_id": "T7.3.5",
+  "schema_version": "t7.3.5-puviani-novelty-reviewer-contract-v1",
+  "generated_at_utc": "2026-07-22T02:20:14.501311+00:00",
+  "reviewer_context": {
+    "mode": "draft",
+    "decision_type": "unclear",
+    "comment_id": "PRQ-NMF-1",
+    "comment_origin": "preemptive task-board reviewer risk; no verbatim reviewer report supplied",
+    "reviewer_concern": "Is this work merely a reproduction of Puviani et al.'s non-Markovian-feedback PRL?",
+    "category": [
+      "novelty",
+      "reproduction_status",
+      "task_signature",
+      "evidence_interpretation"
+    ],
+    "severity": "major",
+    "actions": [
+      "CLARIFY_EXISTING",
+      "SOFTEN_CLAIM",
+      "PARTIAL"
+    ],
+    "package_readiness": "draft_with_placeholders",
+    "visible_placeholder": "ACTUAL_REVIEWER_ID_AND_VERBATIM_WORDING"
+  },
+  "lifecycle": {
+    "schema_version": "t7.3.5-board-projection-v1",
+    "self_done": true,
+    "phase9_started": true,
+    "official_asset_lane_blocked": true,
+    "phase9_present": true,
+    "official_and_paper_constrained_split": true
+  },
+  "official_source_intake": {
+    "verdict": "PASS_GQF_OFFICIAL_INTAKE_UNQUALIFIED_CUSOLVER_FATAL",
+    "repository": "https://github.com/Matteo-Puviani/GQF.git",
+    "commit": "c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d",
+    "tracked_files": 12,
+    "tracked_tree_sha256": "64f849db145f3ae1653105ff7488e7c2b5315bfc81c3947a4f8861be4e7943fd",
+    "tracked_status_clean": true,
+    "license": "MIT",
+    "pristine_syntax_failures": 1,
+    "isolated_patches": 4,
+    "cpu_smoke": "PASS_CPU_FULL",
+    "gpu_status": "UNQUALIFIED_CUSOLVER_FATAL",
+    "trained_checkpoints_present": false,
+    "paper_exact_reproduction": false,
+    "claim": "INTAKE_ONLY_NOT_PAPER_REPRODUCTION"
+  },
+  "official_exact_status": {
+    "verdict": "COMPLETE_GQF_PAPER_EXACT_ATTEMPT_NO_GO_SOURCE_INCOMPLETE",
+    "status": "NO_GO_SOURCE_INCOMPLETE",
+    "qualification": {
+      "gates": {
+        "E01_unambiguous_physical_and_training_configuration": false,
+        "E02_official_twenty_agent_checkpoints_available": false,
+        "E03_official_seed_distribution_available": false,
+        "E04_paper_network_architectures_match_official_source": false,
+        "E05_paper_training_horizon_matches_official_runner": false,
+        "E06_official_agent_selection_pipeline_available": false,
+        "E07_official_six_state_1000_cycle_evaluator_available": false,
+        "E08_official_raw_trajectory_data_available": false,
+        "E09_complete_numeric_TX_TY_TZ_Tch_targets_available": false,
+        "E10_current_full_GQF_accelerator_path_qualified": false,
+        "E11_paper_exact_standard_rerun_completed": false,
+        "E12_paper_exact_MF_rerun_completed": false,
+        "E13_paper_exact_NMF_rerun_completed": false,
+        "E14_absolute_value_tolerances_pass": false,
+        "E15_published_ordering_passes": false
+      },
+      "passed": 0,
+      "failed": 15
+    },
+    "discrepancies": 18,
+    "blocking_discrepancies": 18,
+    "missing_required_fields": [
+      "20 agent seeds",
+      "20 selected/unselected checkpoints",
+      "selection results",
+      "six-state raw 1000-cycle trajectories",
+      "complete TX/TY/TZ/Tch numeric table",
+      "fit range and weighting",
+      "paper-matching RNN/MF implementation",
+      "exact dependency versions"
+    ],
+    "guessed_fields": [],
+    "agent_rows": 20,
+    "agent_rows_all_null": true,
+    "paper_exact_outcomes": {
+      "standard": {
+        "T_X": null,
+        "T_Y": null,
+        "T_Z": null,
+        "T_ch": null,
+        "F_avg": null,
+        "status": "NOT_RUN_EXACT_PREREQUISITE_FAIL"
+      },
+      "MF": {
+        "T_X": null,
+        "T_Y": null,
+        "T_Z": null,
+        "T_ch": null,
+        "F_avg": null,
+        "status": "NOT_RUN_EXACT_PREREQUISITE_FAIL"
+      },
+      "NMF": {
+        "T_X": null,
+        "T_Y": null,
+        "T_Z": null,
+        "T_ch": null,
+        "F_avg": null,
+        "status": "NOT_RUN_EXACT_PREREQUISITE_FAIL"
+      }
+    },
+    "all_exact_outcomes_null": true,
+    "published_anchors": {
+      "low_noise_T_Z_standard_cycles": 700.0,
+      "low_noise_T_Z_NMF_cycles": 1500.0,
+      "low_noise_T_minus_Y_NMF_cycles": 770.0,
+      "low_noise_entanglement_infidelity_standard": 0.0015,
+      "low_noise_entanglement_infidelity_NMF": 0.00043,
+      "status_of_complete_TX_TY_TZ_Tch_table": "NOT_TABULATED_NUMERICALLY_IN_SOURCE"
+    },
+    "claim_boundary": {
+      "paper_exact_reproduction": "PROHIBITED",
+      "directional_MF_NMF_ordering": "NOT_ESTABLISHED",
+      "surpass_puviani_nmf": "PROHIBITED",
+      "reduced_official_standard_path": "ESTABLISHED_DIAGNOSTIC_ONLY"
+    }
+  },
+  "reduced_diagnostic": {
+    "scope": "REDUCED_STANDARD_PATH_DIAGNOSTIC_NOT_PAPER_REPRODUCTION",
+    "configuration": {
+      "cutoff": 8,
+      "Delta": 0.34,
+      "noise_level": "low",
+      "dynamics_type": "Sivak2023",
+      "max_steps": 21,
+      "paper_ten_cycle_prefix_half_steps": 20,
+      "official_terminal_half_steps": 21,
+      "official_terminal_cycle_coordinate": 10.5,
+      "batch_size": 2,
+      "seeds": [
+        68401,
+        68407,
+        68419
+      ],
+      "logical_states": [
+        "plus_z",
+        "minus_z",
+        "plus_x",
+        "minus_x",
+        "plus_y",
+        "minus_y"
+      ],
+      "strategy": "standard_sBs_TEST_true"
+    },
+    "coverage": {
+      "rows": 756,
+      "expected_rows": 756,
+      "trajectories": 36,
+      "environment_steps": 378
+    },
+    "status": "PASS_REDUCED_STANDARD_PATH_DIAGNOSTIC",
+    "elapsed_s": 218.58398780000002,
+    "contains_training": false,
+    "contains_mf_or_nmf": false,
+    "contains_lifetime_fit": false
+  },
+  "matched_comparison_status": {
+    "verdict": "COMPLETE_T6_8_5_INELIGIBLE_NEGATIVE_BRANCH",
+    "prerequisites": [
+      {
+        "prerequisite": "paper_exact_reproduction",
+        "passed": false,
+        "reason": "T6.8.4 is NO_GO_SOURCE_INCOMPLETE"
+      },
+      {
+        "prerequisite": "official_NMF_checkpoint",
+        "passed": false,
+        "reason": "no official checkpoint published"
+      },
+      {
+        "prerequisite": "official_MF_checkpoint",
+        "passed": false,
+        "reason": "no official checkpoint published"
+      },
+      {
+        "prerequisite": "official_agent_seeds",
+        "passed": false,
+        "reason": "20 seeds absent"
+      },
+      {
+        "prerequisite": "paper_matching_architecture",
+        "passed": false,
+        "reason": "paper/source architecture mismatch"
+      },
+      {
+        "prerequisite": "six_state_1000_cycle_evaluator",
+        "passed": false,
+        "reason": "official evaluator/fitter absent"
+      },
+      {
+        "prerequisite": "matched_training_search_budget",
+        "passed": false,
+        "reason": "official agent training/search ledger absent"
+      },
+      {
+        "prerequisite": "current_full_GQF_accelerator",
+        "passed": false,
+        "reason": "current GPU path unqualified cuSolver fatal"
+      }
+    ],
+    "failed_prerequisites": 8,
+    "execution_branch": "INELIGIBLE_NEGATIVE_BRANCH_NO_MATCHED_RUN",
+    "comparison_run_manifest": null,
+    "comparison_raw_data": null,
+    "metrics": {
+      "official_NMF_T_ch": null,
+      "route_a_T_ch": null,
+      "paired_lifetime_improvement": null,
+      "paired_lifetime_improvement_95pct_LCB": null,
+      "gain_retention": null,
+      "route_a_parameters": null,
+      "route_a_MACs": null,
+      "route_a_memory_bytes": null,
+      "official_NMF_parameters": null,
+      "official_NMF_MACs": null,
+      "official_NMF_memory_bytes": null,
+      "fallback_rate": null,
+      "unsafe_action_rate": null
+    },
+    "metric_count": 13,
+    "all_metrics_null": true,
+    "non_substitution": {
+      "project_T4_4_or_T2_3_7_used_as_official_NMF": false,
+      "reason": "Independent project teacher/student evidence uses a different simulator and cannot repair missing official GQF artifacts."
+    },
+    "claim_boundary": {
+      "same_GQF_lifetime_comparison": "NOT_RUN_INELIGIBLE",
+      "paired_lifetime_improvement": "UNDEFINED",
+      "surpass_puviani_NMF": "PROHIBITED",
+      "retention_compression_safety_extension": "NOT_ESTABLISHED_IN_OFFICIAL_GQF"
+    }
+  },
+  "project_native_directional": {
+    "status": "PASS",
+    "scope": "finite-cutoff joint cavity-two-level-ancilla directional ranking under Puviani high-noise Table-S1 timing; state-fidelity and projected-logical-Z 10-cycle effective lifetimes; not paper-exact 1000-cycle six-state channel lifetime, optimizer optimality, multilevel leakage, SPAM, pulse, device, or hardware evidence",
+    "simulator_scope": "finite-cutoff joint cavity-two-level-ancilla differentiable trajectory model; instantaneous paper-defined gates plus analytic idle CPTP channels; no pulse Hamiltonian, transmon leakage, SPAM, device calibration, or hardware timing claim",
+    "primary_logical_z_lifetime_cycles": {
+      "standard": 2.7476620716328606,
+      "mf": 6.534670655440108,
+      "nmf": 6.740784780540096,
+      "nmf_latest_only": 6.031675171829197
+    },
+    "confirmation_logical_z_lifetime_cycles": {
+      "standard": 5.144171945638508,
+      "mf": 7.245903084242199,
+      "nmf": 7.708350997751258,
+      "nmf_latest_only": 8.271987493616864
+    },
+    "nmf_minus_mf": {
+      "mean_difference": 0.2061141250999885,
+      "ci95_low": 0.08416109825708099,
+      "ci95_high": 0.32806715194289604,
+      "probability_positive": 1.0
+    },
+    "history_reset_primary_reduces_nmf": true,
+    "confirmation_reset_counterexample": true,
+    "checkpoint_sha256": "6f97ea59d91f955ea62494b701bbb54bf1abb69a6d104fb85d0fccb9cf4ca48a",
+    "claim_boundary": {
+      "allowed": "directional 10-cycle state-fidelity and projected-logical-Z finite-horizon area-equivalent lifetime ranking within the finite-cutoff two-level high-noise simulator",
+      "forbidden": "paper-exact 1000-cycle six-state channel lifetime, optimizer optimality, experimental/device/FPGA lifetime, or leakage/SPAM robustness",
+      "failure_branch": "if status is FAIL, NMF remains a literature baseline and teacher-distillation claims are disabled"
+    },
+    "used_as_official_replacement": false
+  },
+  "task_signatures": {
+    "axes": [
+      "observation",
+      "decision_object",
+      "action",
+      "environment",
+      "endpoint",
+      "horizon",
+      "training_selection_budget",
+      "online_compute_budget",
+      "evidence_level"
+    ],
+    "puviani_physical_controller": {
+      "observation": "logical-measurement history used by the paper/controller",
+      "decision_object": "physical recovery-protocol parameter optimization",
+      "action": "15 continuous sBs control parameters",
+      "environment": "single-mode finite-energy cavity GKP plus ancillary qubit",
+      "endpoint": "six-state logical-channel lifetime T_ch",
+      "horizon": "10-cycle training and 1000-cycle evaluation",
+      "training_selection_budget": "20 agents, 1000 epochs, best-agent selection",
+      "online_compute_budget": "paper controller lane; not matched to project RTL",
+      "evidence_level": "literature anchors; local paper-exact replay unqualified"
+    },
+    "project_multimode_decoder": {
+      "observation": "observed causal multimode syndrome history",
+      "decision_object": "logical-coset/Pauli decision under drift",
+      "action": "bounded logical action and trusted-bank fallback",
+      "environment": "synthetic multimode surface-square GKP drift suite",
+      "endpoint": "per-round no-postselection p_L and tail LER",
+      "horizon": "registered per-round development trajectories",
+      "training_selection_budget": "frozen split and strongest deployable denominator",
+      "online_compute_budget": "matched deployable software budget",
+      "evidence_level": "development-only NO-GO; formal not accessed"
+    },
+    "project_single_mode_rtl": {
+      "observation": "quantized event/syndrome plus integrity and version state",
+      "decision_object": "bounded MAP/event action and transactional publication",
+      "action": "two-state action, A/B commit, LKG rollback and reset/fallback",
+      "environment": "exact digital single-mode top; no cavity or analog transport",
+      "endpoint": "cycles, II, mismatch, formal safety and pre-board resources",
+      "horizon": "formal properties plus one-million-cycle replay",
+      "training_selection_budget": "not a learned-controller training task",
+      "online_compute_budget": "six-cycle II=1 digital fast path",
+      "evidence_level": "exact pre-board RTL; no board or physical lifetime"
+    },
+    "same_task": false,
+    "numeric_global_leaderboard_allowed": false
+  },
+  "current_phase6d": {
+    "families": 13,
+    "physical_rounds": 79872,
+    "strongest_baseline": "static_mixture_exact_mld",
+    "baseline_p_L": 0.11197916666666667,
+    "proposed_p_L": 0.11197916666666667,
+    "relative_improvement": 0.0,
+    "relative_improvement_lcb": 0.0,
+    "formal_or_pilot_accessed": false,
+    "verdict": "NO_GO_MULTIMODE_CAUSAL_HEADROOM",
+    "final_verdict": "GO_RTL_ONLY",
+    "learning_decision": "DROPPED_ABLATION_ONLY"
+  },
+  "tail_safety": {
+    "verdict": "PASS_VALID_FORMAL_RESULT_TAIL_SAFETY_GATE_PASSED",
+    "formal_seeds": 24,
+    "tail_gate_passes": true,
+    "calibration": {
+      "baseline_global_worst_error_count": 181,
+      "proposed_global_worst_error_count": 181,
+      "global_worst_proposed_not_greater": true,
+      "seed_worst_proposed_minus_baseline": {
+        "estimate": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0
+      },
+      "seed_worst_95_ucb_not_greater_than_zero": true,
+      "passes": true
+    },
+    "nominal": {
+      "average_proposed_minus_policy_off": {
+        "estimate": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0
+      },
+      "fallback_rate": 0.001193576388888889,
+      "unnecessary_fallback_rate": 0.001178317599826389,
+      "induced_minus_avoided_rate": {
+        "estimate": 0.0,
+        "ci95_low": 0.0,
+        "ci95_high": 0.0
+      },
+      "components": {
+        "average_ucb": true,
+        "fallback_rate": true,
+        "unnecessary_fallback_rate": true,
+        "induced_minus_avoided_ucb": true
+      },
+      "passes": true
+    },
+    "fallback_rates": {
+      "nominal_static": 0.001193576388888889,
+      "telegraph_drift": 0.5944959852430556,
+      "step_calibration_shift": 0.9585458260995371
+    },
+    "not_admitted": [
+      "physical-device tail guarantee",
+      "board deadline or measured latency",
+      "static GKP superiority",
+      "Puviani NMF lifetime superiority"
+    ]
+  },
+  "learning_extension": {
+    "candidate_families": 16,
+    "same_task_eligible": 0,
+    "teacher_parameters": 72853,
+    "student_state_dimension": 4,
+    "student_scalars": 95,
+    "student_mse": 6.083136156367311e-06,
+    "minimum_retention_point": 0.9814573586937879,
+    "minimum_retention_lcb": 0.9445014278749587,
+    "student_present_in_current_rtl": false,
+    "same_task": false,
+    "current_disposition": "DROPPED_ABLATION_ONLY"
+  },
+  "rtl_contribution": {
+    "formal_verdict": "PASS_CONVERGED_PRODUCTION_TOP_PROPERTY_COVER_MUTATION_CLOSED",
+    "formal_gates": {
+      "passed": 17,
+      "total": 17
+    },
+    "cover_witnesses": {
+      "reachable": 14,
+      "total": 14
+    },
+    "formal_mutations": {
+      "killed": 21,
+      "total": 21,
+      "minimum": 18
+    },
+    "long_verdict": "PASS_EXACT_CONVERGED_TOP_MILLION_CYCLE_CXXRTL_QUALIFICATION",
+    "cycles": 1000000,
+    "ii1_input_pairs": 998435,
+    "ii1_output_pairs": 998435,
+    "mismatch_count": 0,
+    "undefined_actions": 0,
+    "silent_overflow": 0,
+    "latency_cycles": 6,
+    "initiation_interval_cycles": 1,
+    "minimum_fmax_mhz": 36.79446792602539,
+    "resource_maximum": {
+      "LUT4": 6130,
+      "DFF": 2495,
+      "BSRAM": 8,
+      "MULT18X18": 1,
+      "MULT9X9": 1
+    },
+    "measured_fields": {
+      "board_latency_ns": null,
+      "board_jitter_ns": null,
+      "board_deadline_miss_rate": null,
+      "board_power_mw": null,
+      "physical_transfer_latency_us": null,
+      "physical_commit_latency_us": null
+    },
+    "evidence_boundary": {
+      "two_state_rtl": true,
+      "cxxrtl_parent_qualified": true,
+      "open_source_synthesis": true,
+      "open_source_place_route": true,
+      "vendor_timing_signoff": false,
+      "bitstream_generated": false,
+      "transport_or_cdc_implemented": false,
+      "board_measured": false,
+      "multimode_decoder_in_rtl": false,
+      "fastest_or_sota": false,
+      "allowed_claim": "deterministic atomic fail-closed pre-board architecture"
+    },
+    "student_drives_fast_action": false,
+    "claim_boundary": {
+      "board_measurement": null,
+      "fastest_or_speed_advantage": false,
+      "multimode_decoder_deployed_in_rtl": false,
+      "allowed_now": "same-top structural elaboration, compositional unbounded safety proof, 20-cycle reset-reachable BMC regression, reachable SAT witnesses, mutation closure, and actual-core six-cycle fail-closed proof",
+      "not_allowed_now": "unbounded liveness, board latency/power, multimode RTL execution, or cross-paper fastest claim"
+    }
+  },
+  "nontransfer_contract": {
+    "official_intake_to_exact_reproduction": false,
+    "reduced_diagnostic_to_nmf_lifetime": false,
+    "project_native_to_official_reproduction": false,
+    "per_round_ler_to_physical_lifetime": false,
+    "tail_safety_to_lifetime_superiority": false,
+    "teacher_student_to_current_rtl": false,
+    "rtl_cycles_to_board_latency": false,
+    "rtl_safety_to_algorithm_sota": false,
+    "cross_lane_global_score": false
+  },
+  "manuscript_audit": {
+    "required_markers": {
+      "Non-Markovian feedback and learned controllers can optimize a physical protocol": true,
+      "None of those results supplies a same-task numeric denominator": true,
+      "our per-round simulation does not estimate a physical lifetime": true,
+      "per-round simulated LER cannot be compared with the logical lifetime": true,
+      "Puviani NMF": true,
+      "cannot enter a numeric global leaderboard without an exact observation/action/environment/budget match": true,
+      "not multimode SOTA, physical lifetime gain or fastest-FPGA status": true
+    },
+    "forbidden_phrases": {
+      "we reproduce Puviani": false,
+      "we surpass Puviani NMF": false,
+      "our NMF controller": false
+    },
+    "contract_verdict": "PASS_PHASE6D_DUAL_LANE_MANUSCRIPT_DELTA_RTL_ONLY",
+    "contract_gates": {
+      "passed": 27,
+      "total": 27
+    }
+  },
+  "future_program": {
+    "status": "PLANNED_NOT_CURRENT_EVIDENCE",
+    "official_exact_task": "T9.1.2",
+    "official_exact_status": "Blocked",
+    "paper_constrained_task": "T9.1.3",
+    "paper_constrained_status": "Todo",
+    "requirements": [
+      "qualify official checkpoints, 20-agent seeds, selection ledger and six-state evaluator, or label the alternative PAPER_CONSTRAINED_REIMPLEMENTATION",
+      "freeze identical observation, action, environment, cycle-time, training-selection and online-compute budgets",
+      "evaluate all six logical states for the preregistered long horizon with no postselection and complete raw trajectories",
+      "report T_X, T_Y, T_Z, T_ch and fit-window/weighting uncertainty under paired seeds",
+      "require a positive simultaneous paired 95% lower confidence bound before any lifetime-superiority wording",
+      "keep official-exact, paper-constrained, project-native and pre-board RTL evidence in separate provenance lanes"
+    ],
+    "surpass_puviani_nmf": null
+  },
+  "response_package": {
+    "strategy": {
+      "overall_posture": "acknowledge conceptual overlap, disclose exact-reproduction failure, separate task signatures, state scoped contributions and promotion gates",
+      "major_risks": [
+        "official intake renamed exact reproduction",
+        "project-native directional evidence substituted for official NMF",
+        "per-round LER, physical lifetime and RTL cycles mixed",
+        "planned Phase 9 work reported as achieved"
+      ],
+      "suggested_order": [
+        "direct answer and overlap",
+        "official exact status",
+        "project-native evidence and counterexample",
+        "current negative and scoped positive results",
+        "future matched gate"
+      ]
+    },
+    "tracker": {
+      "comment_id": "PRQ-NMF-1",
+      "concern": "Is this work merely a reproduction of Puviani et al.'s non-Markovian-feedback PRL?",
+      "severity": "major",
+      "actions": [
+        "CLARIFY_EXISTING",
+        "SOFTEN_CLAIM",
+        "PARTIAL"
+      ],
+      "manuscript_locations": [
+        "Related Work: adaptation and physical lifetime",
+        "Results: independent lane outcomes",
+        "Limitations",
+        "Supplementary comparison boundary"
+      ],
+      "missing_author_input": "ACTUAL_REVIEWER_ID_AND_VERBATIM_WORDING"
+    },
+    "english_response": "No. More precisely, the manuscript neither presents an official reproduction of Puviani et al. nor claims to outperform their NMF controller. The conceptual overlap is the use of measurement history; the decision problems are different. Puviani et al. optimize fifteen physical sBs control parameters in a single-mode cavity protocol and evaluate six-state logical-channel lifetime. Our current multimode software lane maps observed syndromes to logical actions and evaluates per-round LER, while the independent single-mode RTL lane implements a bounded MAP/event transaction path.\n\nWe imported and audited the public GQF source at commit c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d. The paper-exact qualification passed 0/15 criteria: official checkpoints, twenty-agent seeds, the selection ledger and the six-state evaluator are unavailable, and all exact Standard/MF/NMF T_X, T_Y, T_Z, T_ch and F_avg fields remain null. The only official-code-derived execution is a patched, reduced Standard-path diagnostic at cutoff 8: six states, three seeds, 36 trajectories, 378 environment steps and 756 rows. It contains no MF/NMF training or lifetime comparison. The matched Route-A comparison therefore follows an ineligible negative branch and all thirteen result fields remain null.\n\nFor completeness, a separate project-native finite-horizon study found cutoff-12 logical-Z area-equivalent lifetimes of 2.747662, 6.534671 and 6.740785 cycles for Standard, MF and NMF, with NMF-minus-MF 0.206114 and paired 95% CI [0.084161, 0.328067]. This is not an official replay. Moreover, at cutoff 16 the latest-only history-reset ablation reaches 8.271987 cycles, above NMF's 7.708351, so we do not claim a universal memory mechanism.\n\nThe current primary evidence is deliberately more limited. The multimode method ties the strongest static-mixture exact MLD baseline at p_L=0.111979 over 79,872 development rounds, yielding 0% relative improvement and a NO-GO algorithm verdict. The tail policy establishes a scoped fail-closed safety contract, but calibration-step fallback is 0.958546 and its worst window ties the locked baseline at 181 errors. Historical teacher-to-student retention/compression remains an ablation: zero of sixteen learned families is same-task eligible and the student is absent from the current RTL.\n\nThe distinct positive result is an exact pre-board digital-system contribution: seventeen formal gates, twenty-one killed mutants, one million CXXRTL cycles with zero full-vector mismatch, six-cycle latency and initiation interval one, together with atomic A/B publication, CRC/version checking and last-known-good fail-closed recovery. It is not an NMF controller, a physical lifetime result, a board measurement or a fastest-FPGA claim. Any future Puviani-surpass statement requires a protocol-matched, six-state, no-postselection lifetime experiment with identical observation/action/environment and training, wall-clock and compute budgets, plus a positive simultaneous paired 95% lower confidence bound.",
+    "manuscript_change_checklist": [
+      "State conceptual overlap with Puviani without claiming official reproduction.",
+      "Report 0/15 exact qualification and keep all exact lifetime fields null.",
+      "Label T2.3.7 project-native and retain the cutoff-16 history-reset counterexample.",
+      "Keep Phase-6D 0% strongest-baseline headroom and high fallback costs visible.",
+      "Label teacher/student as historical ablation absent from current RTL.",
+      "Restrict the positive claim to deterministic atomic fail-closed pre-board RTL.",
+      "Keep Phase 9 planned and require a protocol-matched paired-CI gate for any surpass claim."
+    ],
+    "missing_information": [
+      "ACTUAL_REVIEWER_ID_AND_VERBATIM_WORDING"
+    ],
+    "package_readiness": "draft_with_placeholders"
+  },
+  "response_rows": [
+    {
+      "row_id": "NMF-R01",
+      "response_state": "REVIEWER_CONCERN",
+      "topic": "comment_origin",
+      "claim": "The question is a pre-emptive reviewer risk rather than supplied verbatim reviewer text.",
+      "boundary": "Reviewer identity and wording remain a visible placeholder.",
+      "source_ids": [
+        "task_board"
+      ]
+    },
+    {
+      "row_id": "NMF-R02",
+      "response_state": "DIRECT_ANSWER",
+      "topic": "relationship",
+      "claim": "The project shares the use of history but neither reports an official Puviani reproduction nor claims to surpass NMF.",
+      "boundary": "A shared non-Markovian motif is not a matched task signature.",
+      "source_ids": [
+        "manuscript",
+        "exact_reproduction",
+        "matched_gate"
+      ]
+    },
+    {
+      "row_id": "NMF-R03",
+      "response_state": "OFFICIAL_INTAKE",
+      "topic": "source_identity",
+      "claim": "The public GQF source is pinned at c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d with twelve tracked files and MIT licensing.",
+      "boundary": "Source intake establishes identity, not paper-exact execution.",
+      "source_ids": [
+        "official_intake",
+        "gqf_runner_manifest"
+      ]
+    },
+    {
+      "row_id": "NMF-R04",
+      "response_state": "OFFICIAL_INTAKE",
+      "topic": "patched_execution",
+      "claim": "The pristine source has a syntax failure; isolated patches enable a CPU minimum smoke while the GPU path remains unqualified.",
+      "boundary": "Any executable result is official-code-derived and patched, not a pristine official run.",
+      "source_ids": [
+        "official_intake"
+      ]
+    },
+    {
+      "row_id": "NMF-R05",
+      "response_state": "OFFICIAL_EXACT_STATUS",
+      "topic": "qualification",
+      "claim": "The paper-exact qualification passes zero of fifteen gates.",
+      "boundary": "Paper-exact reproduction and MF/NMF ordering remain prohibited.",
+      "source_ids": [
+        "exact_reproduction"
+      ]
+    },
+    {
+      "row_id": "NMF-R06",
+      "response_state": "OFFICIAL_EXACT_STATUS",
+      "topic": "source_gaps",
+      "claim": "The audit records eighteen blocking paper/source discrepancies and eight missing required fields, with no guessed fields.",
+      "boundary": "Missing protocol fields are not imputed from project-native artifacts.",
+      "source_ids": [
+        "exact_reproduction"
+      ]
+    },
+    {
+      "row_id": "NMF-R07",
+      "response_state": "OFFICIAL_EXACT_STATUS",
+      "topic": "agent_assets",
+      "claim": "All twenty official-agent ledger rows lack seeds, checkpoint hashes, selection metrics and lifetime outputs.",
+      "boundary": "The published best-of-twenty selection cannot be reconstructed from the available assets.",
+      "source_ids": [
+        "exact_reproduction",
+        "gqf_runner_manifest"
+      ]
+    },
+    {
+      "row_id": "NMF-R08",
+      "response_state": "OFFICIAL_EXACT_STATUS",
+      "topic": "exact_outcomes",
+      "claim": "Every exact Standard, MF and NMF T_X, T_Y, T_Z, T_ch and F_avg field is null.",
+      "boundary": "Null exact outcomes cannot support a ranking or a lifetime gain.",
+      "source_ids": [
+        "exact_reproduction"
+      ]
+    },
+    {
+      "row_id": "NMF-R09",
+      "response_state": "REDUCED_DIAGNOSTIC",
+      "topic": "scale",
+      "claim": "The reduced standard-only diagnostic contains six states, three seeds, thirty-six trajectories, 378 environment steps and 756 rows.",
+      "boundary": "Cutoff eight, Delta 0.34 and twenty-one steps do not reproduce the paper's trained 1000-cycle comparison.",
+      "source_ids": [
+        "exact_reproduction"
+      ]
+    },
+    {
+      "row_id": "NMF-R10",
+      "response_state": "MATCHED_COMPARISON",
+      "topic": "eligibility",
+      "claim": "All eight matched-comparison prerequisites fail and the execution follows the ineligible negative branch.",
+      "boundary": "No same-GQF Route-A-versus-NMF run was launched.",
+      "source_ids": [
+        "matched_gate"
+      ]
+    },
+    {
+      "row_id": "NMF-R11",
+      "response_state": "MATCHED_COMPARISON",
+      "topic": "null_metrics",
+      "claim": "The comparison manifest and raw data are null and all thirteen lifetime, paired-CI, compression and safety metrics are null.",
+      "boundary": "Surpassing Puviani NMF remains explicitly prohibited.",
+      "source_ids": [
+        "matched_gate"
+      ]
+    },
+    {
+      "row_id": "NMF-R12",
+      "response_state": "PROJECT_NATIVE_DIRECTIONAL",
+      "topic": "scope",
+      "claim": "A separate project-native finite-cutoff study evaluates ten-cycle area-equivalent logical-Z lifetime under its own simulator and checkpoints.",
+      "boundary": "It is directional evidence, not official or paper-constrained six-state reproduction.",
+      "source_ids": [
+        "project_nmf"
+      ]
+    },
+    {
+      "row_id": "NMF-R13",
+      "response_state": "PROJECT_NATIVE_DIRECTIONAL",
+      "topic": "primary_values",
+      "claim": "At cutoff twelve, Standard, MF and NMF means are 2.747662, 6.534671 and 6.740785 cycles; NMF-minus-MF is 0.206114 with paired 95% CI [0.084161, 0.328067].",
+      "boundary": "These values belong only to the project-native finite-horizon task.",
+      "source_ids": [
+        "project_nmf"
+      ]
+    },
+    {
+      "row_id": "NMF-R14",
+      "response_state": "COUNTEREVIDENCE",
+      "topic": "cutoff_sensitivity",
+      "claim": "At cutoff sixteen, Standard, MF and NMF means are 5.144172, 7.245903 and 7.708351, while the latest-only history-reset ablation reaches 8.271987.",
+      "boundary": "The reversal against NMF prevents a universal memory-mechanism interpretation.",
+      "source_ids": [
+        "project_nmf"
+      ]
+    },
+    {
+      "row_id": "NMF-R15",
+      "response_state": "TASK_SIGNATURE",
+      "topic": "non_equivalence",
+      "claim": "Puviani's physical controller, the multimode per-round decoder and the single-mode digital RTL differ on every decision-defining axis.",
+      "boundary": "Their lifetime, LER and latency values cannot share a denominator or global leaderboard.",
+      "source_ids": [
+        "exact_reproduction",
+        "headroom",
+        "rtl_hardware",
+        "manuscript"
+      ]
+    },
+    {
+      "row_id": "NMF-R16",
+      "response_state": "CURRENT_PRIMARY",
+      "topic": "algorithm_result",
+      "claim": "Across 79,872 development rounds, proposed and strongest static-mixture exact MLD both have p_L=0.111979 with zero relative improvement and zero lower bound.",
+      "boundary": "The current algorithm result is NO-GO and cannot establish novelty by performance.",
+      "source_ids": [
+        "headroom",
+        "final_gate"
+      ]
+    },
+    {
+      "row_id": "NMF-R17",
+      "response_state": "DISTINCT_CONTRIBUTION",
+      "topic": "tail_contract",
+      "claim": "The regime-aware policy passes its registered synthetic tail-safety and nominal non-inferiority gates against the locked policy baseline.",
+      "boundary": "The result is fail-closed non-catastrophic behavior, not Puviani lifetime superiority.",
+      "source_ids": [
+        "tail_matrix"
+      ]
+    },
+    {
+      "row_id": "NMF-R18",
+      "response_state": "LIMITATION",
+      "topic": "fallback_cost",
+      "claim": "Fallback is 0.001194 in nominal data but 0.594496 for telegraph drift and 0.958546 for calibration steps, with equal 181-error calibration worst windows.",
+      "boundary": "High intervention cost and a tie to the locked adaptive arm remain visible.",
+      "source_ids": [
+        "tail_matrix"
+      ]
+    },
+    {
+      "row_id": "NMF-R19",
+      "response_state": "DISTINCT_CONTRIBUTION",
+      "topic": "teacher_student",
+      "claim": "The historical 72,853-parameter teacher is approximated by a four-state, ninety-five-scalar student with evaluation MSE 6.083136e-6 and minimum retention point/lower bound 0.981457/0.944501.",
+      "boundary": "This is finite-model retention/compression, not an official NMF replay.",
+      "source_ids": [
+        "learning_response"
+      ]
+    },
+    {
+      "row_id": "NMF-R20",
+      "response_state": "LIMITATION",
+      "topic": "learning_status",
+      "claim": "Zero of sixteen learned families is same-task eligible; learning is dropped to ablation and the student is absent from the current RTL.",
+      "boundary": "Neither the teacher nor student votes in the current algorithm or RTL verdict.",
+      "source_ids": [
+        "learned_eligibility",
+        "learning_response",
+        "final_gate"
+      ]
+    },
+    {
+      "row_id": "NMF-R21",
+      "response_state": "DISTINCT_CONTRIBUTION",
+      "topic": "rtl_evidence",
+      "claim": "The exact converged digital top passes seventeen formal gates, kills twenty-one mutants, and replays one million cycles with zero mismatch at six-cycle latency and II=1.",
+      "boundary": "This establishes deterministic, atomic and fail-closed pre-board execution only.",
+      "source_ids": [
+        "rtl_formal",
+        "rtl_long",
+        "rtl_hardware"
+      ]
+    },
+    {
+      "row_id": "NMF-R22",
+      "response_state": "LIMITATION",
+      "topic": "rtl_scope",
+      "claim": "The RTL is a two-state MAP/event design; board latency, jitter, deadline misses, power and physical transfer remain null.",
+      "boundary": "It does not execute Puviani NMF, the student or multimode MLD and does not prove physical lifetime or fastest-FPGA status.",
+      "source_ids": [
+        "rtl_formal",
+        "rtl_long",
+        "rtl_hardware",
+        "final_gate"
+      ]
+    },
+    {
+      "row_id": "NMF-R23",
+      "response_state": "FUTURE_PROMOTION",
+      "topic": "surpass_gate",
+      "claim": "Future official-exact and paper-constrained lanes remain distinct and require matched protocol, full six-state no-postselection data and paired confidence intervals.",
+      "boundary": "Phase 9 is a future program and cannot be cited as an achieved result.",
+      "source_ids": [
+        "task_board",
+        "experiment_plan",
+        "new_risks"
+      ]
+    },
+    {
+      "row_id": "NMF-R24",
+      "response_state": "RESPONSE_WORDING",
+      "topic": "submission_readiness",
+      "claim": "The evidence-boundary answer is complete as a pre-emptive package.",
+      "boundary": "It remains draft_with_placeholders until actual reviewer wording is supplied.",
+      "source_ids": [
+        "task_board",
+        "new_risks"
+      ]
+    }
+  ],
+  "forbidden_response_phrases": [
+    "we reproduce Puviani",
+    "our NMF reproduces the PRL",
+    "we surpass Puviani NMF",
+    "we outperform Puviani NMF",
+    "same physical lifetime",
+    "the NMF controller runs on our FPGA",
+    "our official GQF extension",
+    "we demonstrate a physical lifetime gain",
+    "paper-exact reproduction is established",
+    "memory mechanism is universally confirmed"
+  ],
+  "artifact_registry": {
+    "implementation": {
+      "path": "cnn_fpga/benchmark/puviani_novelty_reviewer_contract.py",
+      "binding_kind": "file_sha256",
+      "sha256": "006983aa2cf38b4834c94d293295e38a333b9c2d9bcb6810b5a2c8176029b8a7",
+      "bytes": 54308
+    },
+    "config": {
+      "path": "configs/phase6d/t7_3_5_puviani_novelty_reviewer_contract.json",
+      "binding_kind": "file_sha256",
+      "sha256": "521a1a144c89a48c9ce59eb3edcac624f6a742c0bbc16c7b639854875b51fccd",
+      "bytes": 12615
+    },
+    "manuscript": {
+      "path": "docs/paper_notes/Phase6D_Dual_Lane_GKP_manuscript.tex",
+      "binding_kind": "file_sha256",
+      "sha256": "3aa68422512d568532d1eee01c3d7ee8120c6eb219ce334476c3ce1a8fb7c4ab",
+      "bytes": 35075
+    },
+    "gqf_runner_manifest": {
+      "path": "configs/gqf_official/runner_manifest.json",
+      "binding_kind": "file_sha256",
+      "sha256": "248a73bed9fc07db798088398a8309930d0574676f90b819de540f4134b79dfa",
+      "bytes": 3375
+    },
+    "official_intake": {
+      "path": "docs/t6_8_3_gqf_official_intake.json",
+      "binding_kind": "file_sha256",
+      "sha256": "f7f5f3f6ec8ab1e36230b11c6493d9323237c3b6b0abdeeef12d67f3876a5f51",
+      "bytes": 19904
+    },
+    "exact_reproduction": {
+      "path": "docs/t6_8_4_gqf_paper_exact_reproduction.json",
+      "binding_kind": "file_sha256",
+      "sha256": "8677917ad3c8bc6f60f6630dd757546a86c676781594d2c4ecd6f4e41c45ad29",
+      "bytes": 24539
+    },
+    "exact_source_data": {
+      "path": "docs/t6_8_4_gqf_reproduction_source_data.csv",
+      "binding_kind": "file_sha256",
+      "sha256": "674a0055202288706986e7da3af403f982cc2ad108cca0525acdb7ce1962a3cb",
+      "bytes": 106405
+    },
+    "matched_gate": {
+      "path": "docs/t6_8_5_gqf_route_a_matched_comparison_gate.json",
+      "binding_kind": "file_sha256",
+      "sha256": "0ca9ff294e508e46ee10c84f72cc2601be04b3ac7da029f847437fded9c99a5e",
+      "bytes": 6564
+    },
+    "matched_source_data": {
+      "path": "docs/t6_8_5_gqf_route_a_matched_comparison_gate_source_data.csv",
+      "binding_kind": "file_sha256",
+      "sha256": "cbc3a41b00d2a72f4885a167a6dfd682cff11a6e21299ebd5b32c717b57425bb",
+      "bytes": 922
+    },
+    "project_nmf": {
+      "path": "docs/t2_3_7_nmf_directional_ranking.json",
+      "binding_kind": "file_sha256",
+      "sha256": "c690afed5143135dc4099b54b60f7a60128ce9594922312ef23fd33f8f7466b5",
+      "bytes": 2137789
+    },
+    "project_nmf_csv": {
+      "path": "docs/t2_3_7_nmf_directional_ranking.csv",
+      "binding_kind": "file_sha256",
+      "sha256": "17d623b49d3b62d93b7bef915362864e4ea72a7e3939469fc7aeea25d13fb42b",
+      "bytes": 752003
+    },
+    "project_nmf_checkpoint": {
+      "path": "docs/t2_3_7_nmf_directional_ranking_checkpoints.pt",
+      "binding_kind": "file_sha256",
+      "sha256": "6f97ea59d91f955ea62494b701bbb54bf1abb69a6d104fb85d0fccb9cf4ca48a",
+      "bytes": 6157559
+    },
+    "puviani_paper": {
+      "path": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md",
+      "binding_kind": "file_sha256",
+      "sha256": "5dcda2ee0fec3191ddaa44fb539764dbebc2d089c9a3818bb17c132ca28e7c22",
+      "bytes": 109793
+    },
+    "learned_eligibility": {
+      "path": "docs/t6_17_3_learned_model_eligibility_replay.json",
+      "binding_kind": "file_sha256",
+      "sha256": "8b2cbaebc40075ef7cd0814699303b99f2f15bfaa362dc34d903279ea8469331",
+      "bytes": 188759
+    },
+    "headroom": {
+      "path": "docs/t6_20_4_multimode_causal_headroom.json",
+      "binding_kind": "file_sha256",
+      "sha256": "091e68bdd63f7245999e7506c9eda4fc37970d02792f5d82eb53583364098d93",
+      "bytes": 28011
+    },
+    "headroom_source_data": {
+      "path": "docs/t6_20_4_multimode_causal_headroom_source_data.csv",
+      "binding_kind": "file_sha256",
+      "sha256": "41d5dbe60186a2aae3a4b289357c341d83143951fddfd976658ce9c6330c1334",
+      "bytes": 12810
+    },
+    "tail_matrix": {
+      "path": "docs/t6_7_2_abrupt_ood_tail_formal_matrix.json",
+      "binding_kind": "file_sha256",
+      "sha256": "2ae43652593d66198f6f7114b3b2945da23c6596aa0c7adbfa10be78805d4957",
+      "bytes": 66941154
+    },
+    "tail_source_data": {
+      "path": "docs/t6_7_2_abrupt_ood_tail_formal_matrix_source_data.csv",
+      "binding_kind": "file_sha256",
+      "sha256": "0ebbf3eeca5bb6fedf3f714602ac2fbfea60e5c8c59d6230a5526df21b30eee1",
+      "bytes": 167572853
+    },
+    "rtl_formal": {
+      "path": "docs/t6_25_2_converged_rtl_formal.json",
+      "binding_kind": "file_sha256",
+      "sha256": "a8e8b8427cfa0557b77cfe0774dc50fb9300c832acc61cfc5ce5b622f2c4cab7",
+      "bytes": 102658
+    },
+    "rtl_formal_source_data": {
+      "path": "docs/t6_25_2_converged_rtl_formal_source_data.csv",
+      "binding_kind": "file_sha256",
+      "sha256": "3f5f816931431aaab2f70947954490125c2c831e31a67a5f24a693737052b54b",
+      "bytes": 7985
+    },
+    "rtl_long": {
+      "path": "docs/t6_25_3_converged_long_rtl.json",
+      "binding_kind": "file_sha256",
+      "sha256": "24f39dcad4677895d07b087793823f9054cc8d48ac4dd13fe4346cfa62fcadea",
+      "bytes": 40956
+    },
+    "rtl_long_source_data": {
+      "path": "docs/t6_25_3_converged_long_rtl_source_data.csv",
+      "binding_kind": "file_sha256",
+      "sha256": "d7050e84605cd066b75be4b4cbf24171d9bb4db7e5e40f85f6f97c548f5d2d2a",
+      "bytes": 6546
+    },
+    "rtl_hardware": {
+      "path": "docs/t6_25_4_converged_hardware.json",
+      "binding_kind": "file_sha256",
+      "sha256": "953162d728e887ec563c6a96d08395024345ea0ae12780fb3c85b2292d435104",
+      "bytes": 32395
+    },
+    "rtl_hardware_source_data": {
+      "path": "docs/t6_25_4_converged_hardware_source_data.csv",
+      "binding_kind": "file_sha256",
+      "sha256": "26c55466146625d9c360560609839128b7b0a83a5591f3715c3939d7b942e425",
+      "bytes": 1137
+    },
+    "final_gate": {
+      "path": "docs/t6_26_4_final_dual_lane_gate.json",
+      "binding_kind": "file_sha256",
+      "sha256": "d34298991b0aab0af0550a57afdcf63bb2a5f9f16fcb57706e625d973a015780",
+      "bytes": 41235
+    },
+    "task_board": {
+      "path": "docs/new_task_board.md",
+      "binding_kind": "semantic_projection",
+      "selector": "t7.3.5_board",
+      "projection": {
+        "schema_version": "t7.3.5-board-projection-v1",
+        "self_done": true,
+        "phase9_started": true,
+        "official_asset_lane_blocked": true,
+        "phase9_present": true,
+        "official_and_paper_constrained_split": true
+      },
+      "sha256": "b72552bdc32f9ba0b4154a2076d46e4e597b0f3aedd026bd1342cf10986e955c"
+    },
+    "new_risks": {
+      "path": "docs/new_risks.md",
+      "binding_kind": "semantic_projection",
+      "selector": "t7.3.5_risks",
+      "projection": {
+        "schema_version": "t7.3.5-risk-projection-v1",
+        "official_asset_risk_present": true,
+        "nmf_conflation_risk_present": true,
+        "task_audit_present": true
+      },
+      "sha256": "865d1ddcc58b7c3cc182f0a4f0d394a0a373cd6f50137ac3fc7217b5b1b8d13f"
+    },
+    "experiment_plan": {
+      "path": "docs/experiment_plan.md",
+      "binding_kind": "semantic_projection",
+      "selector": "t7.3.5_plan",
+      "projection": {
+        "schema_version": "t7.3.5-plan-projection-v1",
+        "markers": {
+          "Puviani 资产缺失的非阻塞证据合同": true,
+          "OFFICIAL_EXACT_REPRODUCTION": true,
+          "PAPER_CONSTRAINED_REIMPLEMENTATION": true,
+          "双后端、action-conditioned 数字孪生": true,
+          "六态 formal 与高速板 HIL 门": true
+        }
+      },
+      "sha256": "5b84a72607d11dab3780a7d5173dbf205cb4073b455eb4b68ed7235b2744030a"
+    },
+    "manuscript_contract": {
+      "path": "docs/t7_2_6_phase6d_manuscript_delta.json",
+      "binding_kind": "semantic_projection",
+      "selector": "t7.3.5_parent_contract",
+      "projection": {
+        "task_id": "T7.2.6",
+        "schema_version": "t7.2.6-phase6d-manuscript-delta-v1",
+        "verdict": "PASS_PHASE6D_DUAL_LANE_MANUSCRIPT_DELTA_RTL_ONLY",
+        "gate_summary": {
+          "passed": 27,
+          "total": 27
+        },
+        "analysis_sha256": "8f64f4c830556fbbcda6638b2fdbf5877ac565344695eb18795c2aea5d1bf69a"
+      },
+      "sha256": "3df0a0342030665a4cb17f25c397b52774c3224987e6235a2420d195f45927f6"
+    },
+    "learning_response": {
+      "path": "docs/t7_3_2_cnn_centric_reviewer_contract.json",
+      "binding_kind": "semantic_projection",
+      "selector": "t7.3.5_parent_contract",
+      "projection": {
+        "task_id": "T7.3.2",
+        "schema_version": "t7.3.2-cnn-centric-reviewer-contract-v1",
+        "verdict": "PASS_CNN_NONCENTRIC_REPLACEABLE_LEARNING_REVIEWER_RESPONSE",
+        "gate_summary": {
+          "passed": 23,
+          "total": 23
+        },
+        "analysis_sha256": "3433a6dcee4e7f49a49717c82486996dd3b6950fddeb7bf66cb1de059201ed28"
+      },
+      "sha256": "105ffafc98b4fc92a35b49c17b09ddf56c151fb83cbf334c9d5f74b33c596eb7"
+    }
+  },
+  "risk_audit": {
+    "schema_version": "t7.3.5-risk-projection-v1",
+    "official_asset_risk_present": true,
+    "nmf_conflation_risk_present": true,
+    "task_audit_present": true
+  },
+  "plan_audit": {
+    "schema_version": "t7.3.5-plan-projection-v1",
+    "markers": {
+      "Puviani 资产缺失的非阻塞证据合同": true,
+      "OFFICIAL_EXACT_REPRODUCTION": true,
+      "PAPER_CONSTRAINED_REIMPLEMENTATION": true,
+      "双后端、action-conditioned 数字孪生": true,
+      "六态 formal 与高速板 HIL 门": true
+    }
+  },
+  "gates": {
+    "G01_identity_and_lifecycle": true,
+    "G02_preemptive_placeholder_honest": true,
+    "G03_official_intake_is_pinned_but_not_exact": true,
+    "G04_exact_qualification_is_zero_of_fifteen": true,
+    "G05_all_source_gaps_visible_without_guessing": true,
+    "G06_all_twenty_agent_assets_are_null": true,
+    "G07_all_exact_lifetime_outcomes_remain_null": true,
+    "G08_reduced_probe_is_diagnostic_only": true,
+    "G09_matched_comparison_takes_ineligible_branch": true,
+    "G10_all_thirteen_matched_metrics_are_null": true,
+    "G11_project_native_directional_values_and_ci_exact": true,
+    "G12_cutoff_counterexample_blocks_universal_memory_claim": true,
+    "G13_task_signatures_are_complete_and_nonrankable": true,
+    "G14_current_algorithm_no_go_is_not_hidden": true,
+    "G15_tail_safety_is_scoped_not_lifetime_superiority": true,
+    "G16_high_fallback_cost_and_tie_are_visible": true,
+    "G17_teacher_student_retention_is_exact_and_scoped": true,
+    "G18_learning_is_ineligible_absent_ablation": true,
+    "G19_exact_rtl_evidence_is_recomputed": true,
+    "G20_rtl_and_all_evidence_transfers_fail_closed": true,
+    "G21_response_and_manuscript_are_direct_without_overclaim": true,
+    "G22_rows_are_unique_state_complete_and_lossless": true,
+    "G23_all_sources_are_registered_and_live": true,
+    "G24_risk_and_future_program_are_complete": true
+  },
+  "gate_summary": {
+    "passed": 24,
+    "total": 24
+  },
+  "verdict": "PASS_PUVIANI_RELATIONSHIP_SEPARATED_WITH_SURPASS_PROHIBITED",
+  "semantic_mutation_audit": {
+    "count": 24,
+    "detected": 24,
+    "cases": [
+      {
+        "mutation_id": "M01",
+        "target_gate": "G01_identity_and_lifecycle",
+        "detected": true
+      },
+      {
+        "mutation_id": "M02",
+        "target_gate": "G02_preemptive_placeholder_honest",
+        "detected": true
+      },
+      {
+        "mutation_id": "M03",
+        "target_gate": "G03_official_intake_is_pinned_but_not_exact",
+        "detected": true
+      },
+      {
+        "mutation_id": "M04",
+        "target_gate": "G04_exact_qualification_is_zero_of_fifteen",
+        "detected": true
+      },
+      {
+        "mutation_id": "M05",
+        "target_gate": "G05_all_source_gaps_visible_without_guessing",
+        "detected": true
+      },
+      {
+        "mutation_id": "M06",
+        "target_gate": "G06_all_twenty_agent_assets_are_null",
+        "detected": true
+      },
+      {
+        "mutation_id": "M07",
+        "target_gate": "G07_all_exact_lifetime_outcomes_remain_null",
+        "detected": true
+      },
+      {
+        "mutation_id": "M08",
+        "target_gate": "G08_reduced_probe_is_diagnostic_only",
+        "detected": true
+      },
+      {
+        "mutation_id": "M09",
+        "target_gate": "G09_matched_comparison_takes_ineligible_branch",
+        "detected": true
+      },
+      {
+        "mutation_id": "M10",
+        "target_gate": "G10_all_thirteen_matched_metrics_are_null",
+        "detected": true
+      },
+      {
+        "mutation_id": "M11",
+        "target_gate": "G11_project_native_directional_values_and_ci_exact",
+        "detected": true
+      },
+      {
+        "mutation_id": "M12",
+        "target_gate": "G12_cutoff_counterexample_blocks_universal_memory_claim",
+        "detected": true
+      },
+      {
+        "mutation_id": "M13",
+        "target_gate": "G13_task_signatures_are_complete_and_nonrankable",
+        "detected": true
+      },
+      {
+        "mutation_id": "M14",
+        "target_gate": "G14_current_algorithm_no_go_is_not_hidden",
+        "detected": true
+      },
+      {
+        "mutation_id": "M15",
+        "target_gate": "G15_tail_safety_is_scoped_not_lifetime_superiority",
+        "detected": true
+      },
+      {
+        "mutation_id": "M16",
+        "target_gate": "G16_high_fallback_cost_and_tie_are_visible",
+        "detected": true
+      },
+      {
+        "mutation_id": "M17",
+        "target_gate": "G17_teacher_student_retention_is_exact_and_scoped",
+        "detected": true
+      },
+      {
+        "mutation_id": "M18",
+        "target_gate": "G18_learning_is_ineligible_absent_ablation",
+        "detected": true
+      },
+      {
+        "mutation_id": "M19",
+        "target_gate": "G19_exact_rtl_evidence_is_recomputed",
+        "detected": true
+      },
+      {
+        "mutation_id": "M20",
+        "target_gate": "G20_rtl_and_all_evidence_transfers_fail_closed",
+        "detected": true
+      },
+      {
+        "mutation_id": "M21",
+        "target_gate": "G21_response_and_manuscript_are_direct_without_overclaim",
+        "detected": true
+      },
+      {
+        "mutation_id": "M22",
+        "target_gate": "G22_rows_are_unique_state_complete_and_lossless",
+        "detected": true
+      },
+      {
+        "mutation_id": "M23",
+        "target_gate": "G23_all_sources_are_registered_and_live",
+        "detected": true
+      },
+      {
+        "mutation_id": "M24",
+        "target_gate": "G24_risk_and_future_program_are_complete",
+        "detected": true
+      }
+    ]
+  },
+  "analysis_sha256": "2d0d6d39077afb03c6217a2c8021b20d05cefe6bcce20b6e2d927b6c82ac9c0d",
+  "source_data": {
+    "path": "docs/t7_3_5_puviani_novelty_reviewer_source_data.csv",
+    "binding_kind": "file_sha256",
+    "sha256": "198df8015f006d130f57ec701c234a1792baaac955bc712b73011f69bc4ce16b",
+    "bytes": 8428,
+    "rows": 24
+  },
+  "markdown": {
+    "path": "docs/puviani_novelty_reviewer_response.md",
+    "binding_kind": "file_sha256",
+    "sha256": "76a5066bd99c97504930a0ff508383aac03441b694fd5fbaaf2db42f43e82d27",
+    "bytes": 5122
+  }
+}

@@ -7,6 +7,21 @@ import json
 from cnn_fpga.benchmark import experiment_relevance_reviewer_contract as contract
 
 
+def test_governance_bindings_ignore_unrelated_append_but_detect_phase8_change() -> None:
+    board = contract.BOARD.read_text(encoding="utf-8")
+    projection = contract._governance_projection("t7.3.3_board", board)
+    assert contract._governance_projection("t7.3.3_board", board + "\nunrelated log\n") == projection
+    changed = board.replace("| T8.1.1 | Todo |", "| T8.1.1 | Done |", 1)
+    assert contract._governance_projection("t7.3.3_board", changed) != projection
+
+    payload = json.loads(contract.MANUSCRIPT_CONTRACT.read_text(encoding="utf-8"))
+    parent = contract._governance_projection("t7.3.3_manuscript_contract", json.dumps(payload))
+    payload["generated_at_utc"] = "timestamp-only-change"
+    assert contract._governance_projection("t7.3.3_manuscript_contract", json.dumps(payload)) == parent
+    payload["analysis_sha256"] = "0" * 64
+    assert contract._governance_projection("t7.3.3_manuscript_contract", json.dumps(payload)) != parent
+
+
 def test_report_passes_all_gates_and_mutations() -> None:
     report = contract.build_report()
     assert report["verdict"] == contract.VERDICT

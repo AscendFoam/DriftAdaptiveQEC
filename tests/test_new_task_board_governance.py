@@ -414,7 +414,7 @@ def test_phase6d_dual_evidence_lanes_are_strong_baseline_first_and_nontransferab
     assert statuses["T7.3.2"] == "Done"
     assert statuses["T7.3.3"] == "Done"
     assert statuses["T7.3.4"] == "Done"
-    assert statuses["T7.3.5"] == "In Progress"
+    assert statuses["T7.3.5"] == "Done"
 
     for milestone in ("6.20", "6.21", "6.22", "6.23", "6.24", "6.25", "6.26"):
         assert f"### Milestone {milestone}" in phase6d
@@ -493,8 +493,9 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert len(expected_tasks) == 34
     blocked = {"T9.1.2", "T9.7.3", "T9.7.4"}
     assert all(statuses[task] == "Blocked" for task in blocked)
-    assert all(statuses[task] == "Todo" for task in expected_tasks - blocked)
-    assert statuses["T7.3.5"] == "In Progress"
+    assert statuses["T9.1.1"] == "In Progress"
+    assert all(statuses[task] == "Todo" for task in expected_tasks - blocked - {"T9.1.1"})
+    assert statuses["T7.3.5"] == "Done"
 
     for milestone in ("9.1", "9.2", "9.3", "9.4", "9.5", "9.6", "9.7", "9.8"):
         assert f"### Milestone {milestone}" in phase9

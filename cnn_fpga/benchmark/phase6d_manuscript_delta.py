@@ -40,6 +40,17 @@ PARENT_PATHS = {
     "rtl_hardware": ROOT / "docs/t6_25_4_converged_hardware.json",
 }
 
+BOARD_PATH = ROOT / "docs/new_task_board.md"
+BOARD_PROJECTION_TASKS = (
+    "T6.20.4",
+    "T6.25.2",
+    "T6.25.3",
+    "T6.25.4",
+    "T6.26.4",
+    "T7.1.5",
+    "T7.2.6",
+)
+
 
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -64,6 +75,14 @@ def _binding(path: Path) -> dict[str, Any]:
 
 def _binding_live(binding: Mapping[str, Any]) -> bool:
     path = ROOT / str(binding["path"])
+    if binding.get("binding_kind") == "semantic_projection":
+        if not path.is_file() or binding.get("selector") != "authoritative_task_statuses":
+            return False
+        projection = _task_board_projection(path.read_text(encoding="utf-8"))
+        return (
+            projection == binding.get("projection")
+            and _canonical_sha256(projection) == str(binding["sha256"])
+        )
     return (
         path.is_file()
         and path.stat().st_size == int(binding["bytes"])
@@ -117,6 +136,37 @@ def _board_status(board: str, task_id: str) -> str | None:
     return match.group(1).strip() if match else None
 
 
+def _task_board_projection(board: str) -> dict[str, Any]:
+    """Bind only the task states consumed by this immutable manuscript delta.
+
+    The task board is an append-only project state source.  Hashing the whole file
+    made a completed manuscript artifact stale whenever an unrelated future phase
+    or progress-log row was added.  This projection remains fail-closed for every
+    status that the manuscript actually consumes while ignoring unrelated growth.
+    """
+
+    statuses = {task_id: _board_status(board, task_id) for task_id in BOARD_PROJECTION_TASKS}
+    if any(status is None for status in statuses.values()):
+        missing = [task_id for task_id, status in statuses.items() if status is None]
+        raise ValueError(f"missing task-board status rows: {missing}")
+    return {
+        "schema_version": "t7.2.6-task-board-semantic-projection-v1",
+        "selector": "authoritative_task_statuses",
+        "tasks": statuses,
+    }
+
+
+def _task_board_binding(path: Path = BOARD_PATH) -> dict[str, Any]:
+    projection = _task_board_projection(path.read_text(encoding="utf-8"))
+    return {
+        "path": _relative(path),
+        "binding_kind": "semantic_projection",
+        "selector": "authoritative_task_statuses",
+        "sha256": _canonical_sha256(projection),
+        "projection": projection,
+    }
+
+
 def _artifact_registry(config: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
     paths: dict[str, Path] = {
         "config": CONFIG_PATH,
@@ -128,14 +178,15 @@ def _artifact_registry(config: Mapping[str, Any]) -> dict[str, dict[str, Any]]:
         "bibliography": ROOT / "docs/paper_notes/CNN_FPGA_GKP_submission_refs.bib",
         "phase6d_bibliography": ROOT / "docs/paper_notes/Phase6D_Dual_Lane_GKP_refs.bib",
         "baseline_registry": ROOT / "docs/multimode_strong_baseline_registry.md",
-        "task_board": ROOT / "docs/new_task_board.md",
     }
     paths.update(PARENT_PATHS)
     for index, figure_path in enumerate(config["required_figures"].values(), start=1):
         paths[f"figure_{index}"] = ROOT / str(figure_path)
     for index, snapshot in enumerate(config["historical_snapshots"], start=1):
         paths[f"historical_snapshot_{index:02d}"] = ROOT / str(snapshot)
-    return {key: _binding(path) for key, path in paths.items()}
+    registry = {key: _binding(path) for key, path in paths.items()}
+    registry["task_board"] = _task_board_binding()
+    return registry
 
 
 def _visual_qa_snapshot(config: Mapping[str, Any]) -> dict[str, Any]:

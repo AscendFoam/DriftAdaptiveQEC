@@ -7,6 +7,21 @@ import json
 from cnn_fpga.benchmark import postselection_breakeven_reviewer_contract as contract
 
 
+def test_governance_bindings_ignore_unrelated_append_but_detect_task_change() -> None:
+    board = contract.BOARD.read_text(encoding="utf-8")
+    projection = contract._governance_projection("t7.3.4_board", board)
+    assert contract._governance_projection("t7.3.4_board", board + "\nunrelated log\n") == projection
+    changed = board.replace("| T7.3.4 | Done |", "| T7.3.4 | Blocked |", 1)
+    assert contract._governance_projection("t7.3.4_board", changed) != projection
+
+    payload = json.loads(contract.MANUSCRIPT_CONTRACT.read_text(encoding="utf-8"))
+    parent = contract._governance_projection("t7.3.4_manuscript_contract", json.dumps(payload))
+    payload["generated_at_utc"] = "timestamp-only-change"
+    assert contract._governance_projection("t7.3.4_manuscript_contract", json.dumps(payload)) == parent
+    payload["analysis_sha256"] = "0" * 64
+    assert contract._governance_projection("t7.3.4_manuscript_contract", json.dumps(payload)) != parent
+
+
 def test_report_passes_all_gates_and_mutations() -> None:
     report = contract.build_report()
     assert report["verdict"] == contract.VERDICT

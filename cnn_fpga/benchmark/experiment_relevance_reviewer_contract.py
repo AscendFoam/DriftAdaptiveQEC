@@ -86,6 +86,13 @@ def _binding(path: Path) -> dict[str, Any]:
 
 def _binding_live(binding: Mapping[str, Any]) -> bool:
     path = ROOT / str(binding["path"])
+    if binding.get("binding_kind") == "semantic_projection":
+        if not path.is_file():
+            return False
+        projection = _governance_projection(
+            binding["selector"], path.read_text(encoding="utf-8")
+        )
+        return projection == binding.get("projection") and _canonical_sha256(projection) == binding["sha256"]
     return path.exists() and path.stat().st_size == binding["bytes"] and _sha256(path) == binding["sha256"]
 
 
@@ -94,6 +101,42 @@ def _task_status(board: str, task_id: str) -> str:
     if not match:
         raise ValueError(f"task status not found: {task_id}")
     return match.group(1).strip()
+
+
+def _governance_projection(selector: str, text: str) -> dict[str, Any]:
+    if selector == "t7.3.3_board":
+        tasks = (
+            "T7.3.3", "T7.3.4", "T8.1.1", "T8.1.2", "T8.1.3",
+            "T8.2.1", "T8.2.2", "T8.2.3",
+        )
+        return {"statuses": {task: _task_status(text, task) for task in tasks}}
+    if selector == "t7.3.3_risks":
+        return {
+            "r_n160_present": "R-N160" in text,
+            "task_audit_present": "| 2026-07-21 | T7.3.3 |" in text,
+        }
+    if selector == "t7.3.3_plan":
+        return {
+            "offline_before_closed_loop": "优先做**离线 re-decoding**，再做闭环" in text,
+        }
+    if selector == "t7.3.3_manuscript_contract":
+        payload = json.loads(text)
+        return {
+            key: payload[key]
+            for key in ("task_id", "schema_version", "verdict", "gate_summary", "analysis_sha256")
+        }
+    raise ValueError(f"unknown governance selector: {selector}")
+
+
+def _semantic_binding(path: Path, selector: str, text: str) -> dict[str, Any]:
+    projection = _governance_projection(selector, text)
+    return {
+        "path": path.relative_to(ROOT).as_posix(),
+        "binding_kind": "semantic_projection",
+        "selector": selector,
+        "projection": projection,
+        "sha256": _canonical_sha256(projection),
+    }
 
 
 def _tex_title_and_abstract(text: str) -> tuple[str, str]:
@@ -176,11 +219,7 @@ def build_report(*, generated_at_utc: str | None = None) -> dict[str, Any]:
     artifact_paths = {
         "implementation": Path(__file__).resolve(),
         "config": CONFIG,
-        "task_board": BOARD,
-        "new_risks": RISKS,
-        "experiment_plan": EXPERIMENT_PLAN,
         "manuscript": MANUSCRIPT,
-        "manuscript_contract": MANUSCRIPT_CONTRACT,
         "atlas": ATLAS,
         "aqec": AQEC,
         "headroom": HEADROOM,
@@ -192,6 +231,17 @@ def build_report(*, generated_at_utc: str | None = None) -> dict[str, Any]:
         "hil_audit": HIL_AUDIT,
         "final_gate": FINAL_GATE,
     }
+    artifact_registry = {key: _binding(path) for key, path in artifact_paths.items()}
+    artifact_registry.update({
+        "task_board": _semantic_binding(BOARD, "t7.3.3_board", board_text),
+        "new_risks": _semantic_binding(RISKS, "t7.3.3_risks", risk_text),
+        "experiment_plan": _semantic_binding(EXPERIMENT_PLAN, "t7.3.3_plan", plan_text),
+        "manuscript_contract": _semantic_binding(
+            MANUSCRIPT_CONTRACT,
+            "t7.3.3_manuscript_contract",
+            MANUSCRIPT_CONTRACT.read_text(encoding="utf-8"),
+        ),
+    })
 
     ladder = [
         {"level":"LITERATURE_FACT","status":"AVAILABLE_CONTEXT_ONLY","allowed":"attribute reported values to the cited physical system","forbidden":"project measurement or reproduction","evidence":{"literature_value_cells":value_counts.get("LITERATURE_VALUE",0),"literature_only_cells":grade_counts.get("LITERATURE_ONLY",0),"null_not_reported_cells":value_counts.get("NULL_NOT_REPORTED",0)}},
@@ -264,7 +314,7 @@ def build_report(*, generated_at_utc: str | None = None) -> dict[str, Any]:
         },
         "response_rows": config["response_rows"],
         "forbidden_response_phrases": config["forbidden_response_phrases"],
-        "artifact_registry": {key:_binding(path) for key,path in artifact_paths.items()},
+        "artifact_registry": artifact_registry,
         "risk_audit": {"r_n160_present":"R-N160" in risk_text,"t7_3_3_audit_present":"| 2026-07-21 | T7.3.3 |" in risk_text},
         "final_gate_context": {
             "verdict": final_gate["verdict"],

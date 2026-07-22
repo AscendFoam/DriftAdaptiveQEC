@@ -85,6 +85,21 @@ def test_source_data_is_lossless_and_matches_report() -> None:
     assert rows == report["source_data"]
 
 
+def test_task_board_binding_uses_narrow_semantic_projection() -> None:
+    board = contract.BOARD_PATH.read_text(encoding="utf-8")
+    projection = contract._task_board_projection(board)
+    assert set(projection["tasks"]) == set(contract.BOARD_PROJECTION_TASKS)
+    assert projection["tasks"]["T7.2.6"] == "Done"
+    assert contract._task_board_projection(board + "\n| unrelated future log row |\n") == projection
+
+    mutated = board.replace(
+        "| T7.2.6 | Done |",
+        "| T7.2.6 | Blocked |",
+        1,
+    )
+    assert contract._task_board_projection(mutated) != projection
+
+
 def test_generated_outputs_verify() -> None:
     contract.write_outputs(contract.build_report())
     ok, checks = contract.verify_report()

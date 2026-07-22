@@ -87,6 +87,13 @@ def _binding(path: Path) -> dict[str, Any]:
 
 def _binding_live(binding: Mapping[str, Any]) -> bool:
     path = ROOT / str(binding["path"])
+    if binding.get("binding_kind") == "semantic_projection":
+        if not path.is_file():
+            return False
+        projection = _governance_projection(
+            binding["selector"], path.read_text(encoding="utf-8")
+        )
+        return projection == binding.get("projection") and _canonical_sha256(projection) == binding["sha256"]
     return path.exists() and path.stat().st_size == binding["bytes"] and _sha256(path) == binding["sha256"]
 
 
@@ -95,6 +102,39 @@ def _task_status(board: str, task_id: str) -> str:
     if not match:
         raise ValueError(f"task status not found: {task_id}")
     return match.group(1).strip()
+
+
+def _governance_projection(selector: str, text: str) -> dict[str, Any]:
+    if selector == "t7.3.2_board":
+        return {
+            "statuses": {
+                task: _task_status(text, task)
+                for task in ("T6.26.1", "T6.26.2", "T7.3.2", "T7.3.3")
+            }
+        }
+    if selector == "t7.3.2_risks":
+        return {
+            "r_n151_present": "R-N151" in text,
+            "task_audit_present": "| 2026-07-21 | T7.3.2 |" in text,
+        }
+    if selector == "t7.3.2_manuscript_contract":
+        payload = json.loads(text)
+        return {
+            key: payload[key]
+            for key in ("task_id", "schema_version", "verdict", "gate_summary", "analysis_sha256")
+        }
+    raise ValueError(f"unknown governance selector: {selector}")
+
+
+def _semantic_binding(path: Path, selector: str, text: str) -> dict[str, Any]:
+    projection = _governance_projection(selector, text)
+    return {
+        "path": path.relative_to(ROOT).as_posix(),
+        "binding_kind": "semantic_projection",
+        "selector": selector,
+        "projection": projection,
+        "sha256": _canonical_sha256(projection),
+    }
 
 
 def _student_candidate(hardware: Mapping[str, Any], candidate_id: str) -> Mapping[str, Any]:
@@ -179,6 +219,7 @@ def _manuscript_checks(text: str, markers: Sequence[str]) -> dict[str, Any]:
 def build_report(*, generated_at_utc: str | None = None) -> dict[str, Any]:
     config = _load(CONFIG)
     board_text = BOARD.read_text(encoding="utf-8")
+    risks_text = RISKS.read_text(encoding="utf-8")
     manuscript_text = MANUSCRIPT.read_text(encoding="utf-8")
     final_gate = _load(FINAL_GATE)
     matrix = _load(EVIDENCE_MATRIX)
@@ -199,10 +240,7 @@ def build_report(*, generated_at_utc: str | None = None) -> dict[str, Any]:
     artifact_paths = {
         "implementation": Path(__file__).resolve(),
         "config": CONFIG,
-        "task_board": BOARD,
-        "new_risks": RISKS,
         "manuscript": MANUSCRIPT,
-        "manuscript_contract": MANUSCRIPT_CONTRACT,
         "claim_figure_delta": CLAIM_FIGURE_DELTA,
         "dual_contract": DUAL_CONTRACT,
         "multimode_headroom": HEADROOM,
@@ -217,6 +255,16 @@ def build_report(*, generated_at_utc: str | None = None) -> dict[str, Any]:
         "legacy_cnn_ablation": LEGACY_CNN_ABLATION,
         "learned_eligibility": LEARNED_ELIGIBILITY,
     }
+    artifact_registry = {key: _binding(path) for key, path in artifact_paths.items()}
+    artifact_registry.update({
+        "task_board": _semantic_binding(BOARD, "t7.3.2_board", board_text),
+        "new_risks": _semantic_binding(RISKS, "t7.3.2_risks", risks_text),
+        "manuscript_contract": _semantic_binding(
+            MANUSCRIPT_CONTRACT,
+            "t7.3.2_manuscript_contract",
+            MANUSCRIPT_CONTRACT.read_text(encoding="utf-8"),
+        ),
+    })
 
     report: dict[str, Any] = {
         "task_id": TASK_ID,
@@ -354,7 +402,7 @@ def build_report(*, generated_at_utc: str | None = None) -> dict[str, Any]:
         },
         "response_rows": config["response_rows"],
         "forbidden_response_phrases": config["forbidden_response_phrases"],
-        "artifact_registry": {key: _binding(path) for key, path in artifact_paths.items()},
+        "artifact_registry": artifact_registry,
     }
     report["gates"] = evaluate_gates(report, check_live_sources=False)
     report["gate_summary"] = {"passed": sum(report["gates"].values()), "total": len(report["gates"])}
