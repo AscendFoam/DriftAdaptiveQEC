@@ -323,6 +323,31 @@ SOURCE_EVIDENCE_MUTATION_IDS = (
     "source_six_state_denominator_tamper",
     "source_failure_runtime_binding_tamper",
     "source_deviation_ledger_hash_tamper",
+    "source_tomography_norm_sign_tamper",
+    "source_tomography_norm_value_tamper",
+    "source_tomography_physicality_tamper",
+)
+
+TOMOGRAPHY_DIAGNOSTIC_KEYS = frozenset(
+    {
+        "ptm",
+        "choi_real",
+        "choi_imag",
+        "tni_effect_eigenvalues",
+        "pair_sum_linearity_residual",
+        "minimum_choi_eigenvalue",
+        "maximum_output_hermiticity_error",
+        "minimum_output_eigenvalue",
+        "minimum_survival",
+        "maximum_survival",
+        "mean_leakage",
+        "survival_spread",
+        "off_diagonal_pauli_norm",
+        "coherent_rotation_norm",
+        "nonunital_code_flow_norm",
+        "state_dependent_survival_norm",
+        "passed_physicality",
+    }
 )
 
 REPORT_TOP_LEVEL_KEYS = frozenset(
@@ -7638,6 +7663,8 @@ def _empirical_reconstruction_valid(reconstruction: Mapping[str, Any]) -> bool:
                 tomography = diagnostic[
                     "empirical_linear_inversion_subchannel_diagnostic"
                 ]
+                if set(tomography) != set(TOMOGRAPHY_DIAGNOSTIC_KEYS):
+                    return False
                 numeric_arrays = (
                     np.asarray(tomography["ptm"], dtype=np.float64),
                     np.asarray(tomography["choi_real"], dtype=np.float64),
@@ -7661,8 +7688,61 @@ def _empirical_reconstruction_valid(reconstruction: Mapping[str, Any]) -> bool:
                     "maximum_survival",
                     "mean_leakage",
                     "survival_spread",
+                    "off_diagonal_pauli_norm",
+                    "coherent_rotation_norm",
+                    "nonunital_code_flow_norm",
+                    "state_dependent_survival_norm",
                 )
                 if not all(np.isfinite(float(tomography[name])) for name in scalar_fields):
+                    return False
+                norm_fields = (
+                    "off_diagonal_pauli_norm",
+                    "coherent_rotation_norm",
+                    "nonunital_code_flow_norm",
+                    "state_dependent_survival_norm",
+                )
+                if any(float(tomography[name]) < 0.0 for name in norm_fields):
+                    return False
+                ptm = numeric_arrays[0]
+                pauli_block = ptm[1:, 1:]
+                off_diagonal = pauli_block - np.diag(np.diag(pauli_block))
+                coherent = 0.5 * (pauli_block - pauli_block.T)
+                expected_norms = {
+                    "off_diagonal_pauli_norm": float(
+                        np.linalg.norm(off_diagonal, ord="fro")
+                    ),
+                    "coherent_rotation_norm": float(
+                        np.linalg.norm(coherent, ord="fro")
+                    ),
+                    "nonunital_code_flow_norm": float(np.linalg.norm(ptm[1:, 0])),
+                    "state_dependent_survival_norm": float(
+                        np.linalg.norm(ptm[0, 1:])
+                    ),
+                }
+                if any(
+                    not np.isclose(
+                        float(tomography[name]),
+                        expected,
+                        rtol=1.0e-12,
+                        atol=1.0e-15,
+                    )
+                    for name, expected in expected_norms.items()
+                ):
+                    return False
+                expected_physicality = (
+                    float(tomography["pair_sum_linearity_residual"]) <= 2.0e-8
+                    and float(tomography["minimum_choi_eigenvalue"]) >= -2.0e-8
+                    and float(tomography["tni_effect_eigenvalues"][0]) >= -2.0e-8
+                    and float(tomography["tni_effect_eigenvalues"][1])
+                    <= 1.0 + 2.0e-8
+                    and float(tomography["maximum_output_hermiticity_error"])
+                    <= 2.0e-9
+                    and float(tomography["minimum_output_eigenvalue"]) >= -2.0e-9
+                )
+                if (
+                    type(tomography["passed_physicality"]) is not bool
+                    or tomography["passed_physicality"] is not expected_physicality
+                ):
                     return False
                 if (
                     diagnostic.get("empirical_cptni_passed_is_not_a_hard_gate")
@@ -8554,6 +8634,15 @@ def _mutation_audit(payload: Mapping[str, Any]) -> dict[str, Any]:
                 "detection_reason": reason,
             }
         )
+    def first_tomography(value: Mapping[str, Any]) -> dict[str, Any]:
+        return next(
+            iter(
+                next(
+                    iter(value["six_state_evaluator"]["reconstruction"].values())
+                ).values()
+            )
+        )["empirical_linear_inversion_subchannel_diagnostic"]
+
     source_mutations = {
         "source_runtime_signature_tamper": lambda value: value[
             "training_runtime_contract"
@@ -8585,6 +8674,28 @@ def _mutation_audit(payload: Mapping[str, Any]) -> dict[str, Any]:
         "source_deviation_ledger_hash_tamper": lambda value: value[
             "deviation_ledger"
         ].update({"sha256": "0" * 64}),
+        "source_tomography_norm_sign_tamper": lambda value: first_tomography(
+            value
+        ).update({"off_diagonal_pauli_norm": -1.0}),
+        "source_tomography_norm_value_tamper": lambda value: first_tomography(
+            value
+        ).update(
+            {
+                "off_diagonal_pauli_norm": float(
+                    first_tomography(value)["off_diagonal_pauli_norm"]
+                )
+                + 1.0
+            }
+        ),
+        "source_tomography_physicality_tamper": lambda value: first_tomography(
+            value
+        ).update(
+            {
+                "passed_physicality": not first_tomography(value)[
+                    "passed_physicality"
+                ]
+            }
+        ),
     }
     if tuple(source_mutations) != SOURCE_EVIDENCE_MUTATION_IDS:
         raise RuntimeError("source-evidence mutation registry drifted")
@@ -9498,17 +9609,15 @@ def _validate_report_exact_schema(
         "minimum_final_joint_eigenvalue", "paper_lifetime_value",
         "paper_lifetime_state",
     }
-    tomography_keys = {
-        "ptm", "choi_real", "choi_imag", "tni_effect_eigenvalues",
-        "pair_sum_linearity_residual", "minimum_choi_eigenvalue",
-        "maximum_output_hermiticity_error", "minimum_output_eigenvalue",
-        "minimum_survival", "maximum_survival", "mean_leakage", "survival_spread",
-    }
     for stratum, methods in reconstruction.items():
         method_map = _assert_exact_keys(methods, {"standard", "mf", "nmf"}, f"reconstruction.{stratum}")
         for method, diagnostic in method_map.items():
             row = _assert_exact_keys(diagnostic, diagnostic_keys, f"reconstruction.{stratum}.{method}")
-            _assert_exact_keys(row["empirical_linear_inversion_subchannel_diagnostic"], tomography_keys, f"reconstruction.{stratum}.{method}.tomography")
+            _assert_exact_keys(
+                row["empirical_linear_inversion_subchannel_diagnostic"],
+                TOMOGRAPHY_DIAGNOSTIC_KEYS,
+                f"reconstruction.{stratum}.{method}.tomography",
+            )
 
     _assert_exact_keys(
         payload["training_ledger"],
@@ -10529,6 +10638,7 @@ __all__ = [
     "PROJECT_ACTION_ORDER",
     "SCHEMA_VERSION",
     "STATUS_PASS",
+    "TOMOGRAPHY_DIAGNOSTIC_KEYS",
     "finalize_artifacts",
     "gqf_to_project_action",
     "implementation_sha256",

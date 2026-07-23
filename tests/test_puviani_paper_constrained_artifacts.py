@@ -155,6 +155,11 @@ def _minimal_valid_report() -> dict[str, object]:
         "maximum_survival": 1.0,
         "mean_leakage": 0.0,
         "survival_spread": 0.0,
+        "off_diagonal_pauli_norm": 0.0,
+        "coherent_rotation_norm": 0.0,
+        "nonunital_code_flow_norm": 0.0,
+        "state_dependent_survival_norm": 0.0,
+        "passed_physicality": True,
     }
     diagnostic = {
         "selected_agent_seed": None,
@@ -1864,6 +1869,57 @@ def test_mutation_audit_reseals_and_reaches_semantic_checks() -> None:
         and "analysis hash mismatch" not in row["detection_reason"]
         for row in audit["mutations"]
     )
+
+
+def test_tomography_exact_schema_matches_live_generator() -> None:
+    from physics.fock_logical_channel import (
+        STATE_LABELS,
+        logical_eigenstate_density,
+        reconstruct_code_subchannel,
+    )
+
+    generated = reconstruct_code_subchannel(
+        {label: logical_eigenstate_density(label) for label in STATE_LABELS}
+    ).to_dict()
+
+    assert set(generated) == set(subject.TOMOGRAPHY_DIAGNOSTIC_KEYS)
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    (
+        ("off_diagonal_pauli_norm", -1.0),
+        ("off_diagonal_pauli_norm", 1.0),
+        ("coherent_rotation_norm", -1.0),
+        ("coherent_rotation_norm", 1.0),
+        ("nonunital_code_flow_norm", -1.0),
+        ("nonunital_code_flow_norm", 1.0),
+        ("state_dependent_survival_norm", -1.0),
+        ("state_dependent_survival_norm", 1.0),
+        ("passed_physicality", False),
+        ("passed_physicality", 1),
+    ),
+)
+def test_empirical_reconstruction_rejects_invalid_derived_diagnostics(
+    field: str, value: object
+) -> None:
+    report = _minimal_valid_report()
+    reconstruction = deepcopy(report["six_state_evaluator"]["reconstruction"])
+    first = next(iter(next(iter(reconstruction.values())).values()))
+    first["empirical_linear_inversion_subchannel_diagnostic"][field] = value
+
+    assert subject._empirical_reconstruction_valid(reconstruction) is False
+
+
+def test_empirical_reconstruction_accepts_matching_false_physicality() -> None:
+    report = _minimal_valid_report()
+    reconstruction = deepcopy(report["six_state_evaluator"]["reconstruction"])
+    first = next(iter(next(iter(reconstruction.values())).values()))
+    tomography = first["empirical_linear_inversion_subchannel_diagnostic"]
+    tomography["pair_sum_linearity_residual"] = 1.0e-3
+    tomography["passed_physicality"] = False
+
+    assert subject._empirical_reconstruction_valid(reconstruction) is True
 
 
 @pytest.mark.parametrize(
