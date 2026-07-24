@@ -497,15 +497,16 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert all(statuses[task] == "Blocked" for task in blocked)
     assert statuses["T9.1.1"] == "Done"
     assert statuses["T9.1.3"] == "Done"
-    assert statuses["T9.1.4"] == "In Progress"
+    assert statuses["T9.1.4"] == "Done"
+    assert statuses["T9.1.5"] == "In Progress"
     assert all(
         statuses[task] == "Todo"
         for task in expected_tasks
         - blocked
-        - {"T9.1.1", "T9.1.3", "T9.1.4"}
+        - {"T9.1.1", "T9.1.3", "T9.1.4", "T9.1.5"}
     )
     assert statuses["T7.3.5"] == "Done"
-    assert "当前推荐任务：`T9.1.4`" in board
+    assert "当前推荐任务：`T9.1.5`" in board
 
     for milestone in ("9.1", "9.2", "9.3", "9.4", "9.5", "9.6", "9.7", "9.8"):
         assert f"### Milestone {milestone}" in phase9
@@ -523,7 +524,7 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         "不得复用 backend A 的 transition kernel",
         "未参与训练的 exact backend",
         "trusted recovery codebook",
-        "GRU、TCN、SSM、causal Transformer",
+        "CNN/GRU、TCN、SSM 与 causal Transformer candidates",
         "hidden-state teacher",
         "composite key",
         "action/next-state",
@@ -651,6 +652,7 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert "| R-N179 | Open |" in risks
     assert "| R-N180 | Open |" in risks
     assert "| 2026-07-24 | T9.1.3 完成与反简化复核 | 不插入 |" in risks
+    assert "| 2026-07-25 | T9.1.4 完成与反简化复核 | 不插入 |" in risks
 
     canonical_record = (
         ROOT
@@ -668,6 +670,39 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert "52/52 gates、81/81 mutations" in canonical_text
     assert "official exact、Puviani surpass" in canonical_text
     assert "保持 typed null" in canonical_text
+
+    t914_canonical = (
+        ROOT
+        / "docs"
+        / "new_tasks"
+        / "T9.1.4_phase9_baseline_search_power_registry.md"
+    )
+    t914_mirror = (
+        ROOT
+        / "docs"
+        / "tasks"
+        / "T9.1.4_phase9_baseline_search_power_registry.md"
+    )
+    assert t914_canonical.is_file()
+    assert t914_mirror.is_file()
+    t914_text = t914_canonical.read_text(encoding="utf-8")
+    for required in (
+        "31 个方法",
+        "18 个 mandatory",
+        "required `N=806`",
+        "planned `N=808/backend=8×101`",
+        "lifetime 功效",
+        "23 个 bibliographic raw hits",
+        "36/36",
+        "46 passed",
+        "external_sota",
+        "全部保持 null",
+    ):
+        assert required in t914_text
+
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "docs/phase9_baseline_search_power_registry.md" in readme
+    assert "required 806、planned 808 clusters/backend" in readme
 
     addendum_path = (
         ROOT / "docs" / "t9_1_3_post_outcome_governance_addendum.json"
