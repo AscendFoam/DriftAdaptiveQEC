@@ -498,15 +498,16 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert statuses["T9.1.1"] == "Done"
     assert statuses["T9.1.3"] == "Done"
     assert statuses["T9.1.4"] == "Done"
-    assert statuses["T9.1.5"] == "In Progress"
+    assert statuses["T9.1.5"] == "Done"
+    assert statuses["T9.2.1"] == "In Progress"
     assert all(
         statuses[task] == "Todo"
         for task in expected_tasks
         - blocked
-        - {"T9.1.1", "T9.1.3", "T9.1.4", "T9.1.5"}
+        - {"T9.1.1", "T9.1.3", "T9.1.4", "T9.1.5", "T9.2.1"}
     )
     assert statuses["T7.3.5"] == "Done"
-    assert "当前推荐任务：`T9.1.5`" in board
+    assert "当前推荐任务：`T9.2.1`" in board
 
     for milestone in ("9.1", "9.2", "9.3", "9.4", "9.5", "9.6", "9.7", "9.8"):
         assert f"### Milestone {milestone}" in phase9
@@ -641,7 +642,7 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         assert f"R-N{risk_number}" in risks
     assert "| R-N168 | Mitigated |" in risks
     assert "| R-N170 | Open |" in risks
-    assert "| R-N171 | Open |" in risks
+    assert "| R-N171 | Mitigated |" in risks
     assert "| R-N172 | Mitigated |" in risks
     assert "| R-N173 | Mitigated |" in risks
     assert "| R-N174 | Open |" in risks
@@ -653,6 +654,7 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert "| R-N180 | Open |" in risks
     assert "| 2026-07-24 | T9.1.3 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-25 | T9.1.4 完成与反简化复核 | 不插入 |" in risks
+    assert "| 2026-07-25 | T9.1.5 完成与反简化复核 | 不插入 |" in risks
 
     canonical_record = (
         ROOT
@@ -700,9 +702,100 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     ):
         assert required in t914_text
 
+    t915_canonical = (
+        ROOT
+        / "docs"
+        / "new_tasks"
+        / "T9.1.5_phase9_scoped_claim_amendment.md"
+    )
+    t915_mirror = (
+        ROOT
+        / "docs"
+        / "tasks"
+        / "T9.1.5_phase9_scoped_claim_amendment.md"
+    )
+    assert t915_canonical.is_file()
+    assert t915_mirror.is_file()
+    t915_text = t915_canonical.read_text(encoding="utf-8")
+    for required in (
+        "29 个 lane-qualified legacy outputs",
+        "9 个 scoped states",
+        "17 条 forbidden transfers",
+        "27 条 synthetic",
+        "127 rows",
+        "36/36 gates",
+        "36/36 targeted mutations",
+        "全部保持 typed null",
+    ):
+        assert required in t915_text
+
+    t915_report_path = (
+        ROOT / "docs" / "t9_1_5_scoped_claim_amendment.json"
+    )
+    t915_source_path = (
+        ROOT
+        / "docs"
+        / "t9_1_5_scoped_claim_amendment_source_data.csv"
+    )
+    t915_markdown_path = (
+        ROOT / "docs" / "phase9_scoped_claim_amendment.md"
+    )
+    t915_config_path = (
+        ROOT
+        / "configs"
+        / "phase9"
+        / "t9_1_5_scoped_claim_amendment.json"
+    )
+    t915_release_pin_path = (
+        ROOT
+        / "configs"
+        / "phase9"
+        / "t9_1_5_release_pin.json"
+    )
+    assert all(
+        path.is_file()
+        for path in (
+            t915_report_path,
+            t915_source_path,
+            t915_markdown_path,
+            t915_config_path,
+            t915_release_pin_path,
+        )
+    )
+    t915_report = json.loads(
+        t915_report_path.read_text(encoding="utf-8")
+    )
+    assert (
+        t915_report["verdict"]
+        == "PASS_T9_1_5_PARENT_BOUND_SCOPED_CLAIM_AMENDMENT"
+    )
+    assert t915_report["gate_summary"] == {
+        "passed": 36,
+        "total": 36,
+        "failed": [],
+    }
+    assert t915_report["semantic_mutation_audit"]["count"] == 36
+    assert t915_report["semantic_mutation_audit"]["detected"] == 36
+    assert len(t915_report["legacy_migration_table"]) == 29
+    assert len(t915_report["state_definitions"]) == 9
+    assert len(t915_report["forbidden_transfers"]) == 17
+    assert len(t915_report["predicate_fixtures"]) == 27
+    assert len(t915_report["revocation_fixtures"]) == 4
+    assert t915_report["source_data"]["rows"] == 127
+    t915_release_pin = json.loads(
+        t915_release_pin_path.read_text(encoding="utf-8")
+    )
+    assert t915_release_pin["analysis_sha256"] == t915_report[
+        "analysis_sha256"
+    ]
+    assert set(t915_report["current_claim_state"].values()) == {None}
+    assert t915_report["performance_state"]["protocol_only"] is True
+
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert "docs/phase9_baseline_search_power_registry.md" in readme
     assert "required 806、planned 808 clusters/backend" in readme
+    assert "docs/phase9_scoped_claim_amendment.md" in readme
+    assert "29 条 lane-qualified legacy migration" in readme
 
     addendum_path = (
         ROOT / "docs" / "t9_1_3_post_outcome_governance_addendum.json"
