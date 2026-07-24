@@ -1,0 +1,4504 @@
+{
+  "schema_version": "t9.1.3-puviani-paper-constrained-artifacts-v1",
+  "task_id": "T9.1.3",
+  "generated_at_utc": "2026-07-24T02:39:43.000252+00:00",
+  "status": "PASS_ARTIFACT_LANE_AND_EXECUTABLE_REIMPLEMENTATION",
+  "production_contract": true,
+  "evidence_grade": "PAPER_CONSTRAINED_REIMPLEMENTATION",
+  "namespace": {
+    "official_exact": {
+      "state": "MISSING_EXTERNAL_ASSET",
+      "value": null
+    },
+    "paper_constrained": "THIS_ARTIFACT",
+    "project_native_directional": "T2.3.7_SEPARATE_NONTRANSFERABLE"
+  },
+  "t9_1_1_binding": {
+    "path": "docs/t9_1_1_three_lane_protocol.json",
+    "analysis_sha256": "c88110375c358794339e72d672e4624871425fe480e5da091ddd1d6595255e18",
+    "file_sha256": "255c50ce677a1cae5475c2294177ceaab551bcbb5078ee2d49b358600a58f7a5",
+    "verification_checks": {
+      "identity": true,
+      "all_gates": true,
+      "gate_cache": true,
+      "verdict": true,
+      "analysis_hash": true,
+      "source_data": true,
+      "markdown_live": true,
+      "current_results_null": true
+    }
+  },
+  "implementation_sha256": "ef7c140bf1b895f0bc04c6445f1e5348bf4ff9ca4a01d59c54d6e27e83a7df1b",
+  "config": {
+    "schema_version": "t9.1.3-puviani-paper-constrained-artifact-lane-v1",
+    "task_id": "T9.1.3",
+    "frozen_date": "2026-07-22",
+    "seal_state": "SEALED_PRE_OUTCOME",
+    "evidence_grade": "PAPER_CONSTRAINED_REIMPLEMENTATION",
+    "ranking_eligibility": "INELIGIBLE_SIGNATURE_NONRANKING_HISTORICAL_BASELINE",
+    "deviation_ledger_path": "configs/phase9/t9_1_3_deviation_ledger.json",
+    "protocol_binding": {
+      "path": "docs/t9_1_1_three_lane_protocol.json",
+      "analysis_sha256": "c88110375c358794339e72d672e4624871425fe480e5da091ddd1d6595255e18",
+      "protocol_id": "PHASE9-THREE-INDEPENDENT-TASK-SIGNATURES-V1",
+      "required_lane_ids": [
+        "ROUND_LER_SINGLE_MODE",
+        "SIX_STATE_LOGICAL_LIFETIME"
+      ],
+      "amendment_policy": "REJECT_HASH_MISMATCH_AND_REQUIRE_EXPLICIT_RESEAL"
+    },
+    "source_binding": {
+      "paper_and_supplement": {
+        "path": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md",
+        "sha256": "5dcda2ee0fec3191ddaa44fb539764dbebc2d089c9a3818bb17c132ca28e7c22",
+        "doi": "10.1103/PhysRevLett.134.020601",
+        "arxiv": "2312.07391"
+      },
+      "official_repository": "https://github.com/Matteo-Puviani/GQF.git",
+      "gqf_commit": "c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d",
+      "gqf_tracked_tree_sha256": "64f849db145f3ae1653105ff7488e7c2b5315bfc81c3947a4f8861be4e7943fd",
+      "deviation_ledger": "configs/phase9/t9_1_3_deviation_ledger.json"
+    },
+    "source_registry": {
+      "paper_and_supplement": "source_binding.paper_and_supplement",
+      "official_gqf": "source_binding.official_repository@gqf_commit",
+      "prior_exact_attempt": "docs/t6_8_4_gqf_paper_exact_reproduction.json",
+      "prior_intake": "docs/t6_8_3_gqf_official_intake.json"
+    },
+    "protocol_transcription": {
+      "state": "single_mode_square_approximate_GKP_Delta_0.2_trained_from_plus_Z",
+      "observation": "binary_g_e_causal_prefix_only_GQF_policy_tokens_g_plus1_e_minus1_with_zero_sentinel",
+      "action": "15_bounded_residual_controls_with_fixed_layer4_displacement",
+      "timing": "layers_measure_then_2.3us_collapsed_branch_reset_current_outcome_VR_1us_next_layers_with_terminal_VR",
+      "noise": "high_Ts_245us_T1_50us_T2_60us",
+      "training": "MF_and_NMF_1000_epochs_10_full_cycles_lr_1e-4_batches_8_and_6",
+      "selection": "project_validation_only_not_paper_lifetime_postselection",
+      "evaluator": "six_state_short_horizon_qualification_only_paper_scale_null"
+    },
+    "scope": {
+      "purpose": "Generate a complete project-owned MF/NMF training, validation-selection, checkpoint and short-horizon six-state qualification artifact lane while official Puviani artifacts remain unavailable.",
+      "allowed_label": "PAPER_CONSTRAINED_REIMPLEMENTATION",
+      "official_exact_reproduction": false,
+      "puviani_surpass_claim_eligible": false,
+      "paper_scale_lifetime_claim_eligible": false,
+      "missing_official_assets_only_block": [
+        "OFFICIAL_EXACT_REPRODUCTION",
+        "PUVIANI_NMF_SURPASS"
+      ]
+    },
+    "controller_contract": {
+      "strategies": [
+        "standard",
+        "mf",
+        "nmf"
+      ],
+      "observation": {
+        "alphabet": {
+          "g": 0,
+          "e": 1
+        },
+        "policy_token_encoding": {
+          "initial_sentinel": 0,
+          "g": 1,
+          "e": -1
+        },
+        "mf_privilege": "latest_observed_ancilla_outcome_only",
+        "nmf_privilege": "causal_full_observed_outcome_prefix_via_recurrent_hidden_state",
+        "future_observations": "PROHIBITED",
+        "hidden_physics_state": "PROHIBITED"
+      },
+      "architectures": {
+        "mf": {
+          "layers": [
+            1,
+            256,
+            256,
+            15
+          ],
+          "activation": "tanh",
+          "memory": "none_latest_outcome_only"
+        },
+        "nmf": {
+          "layers": [
+            1,
+            10,
+            256,
+            256,
+            15
+          ],
+          "recurrent_cell": "GRUCell",
+          "activation": "tanh",
+          "memory": "state_reset_at_each_independent_trajectory_batch"
+        }
+      },
+      "action_order": [
+        "layer1_phi",
+        "layer1_theta",
+        "layer1_beta_real",
+        "layer1_beta_imag",
+        "layer2_phi",
+        "layer2_theta",
+        "layer2_beta_real",
+        "layer2_beta_imag",
+        "layer3_phi",
+        "layer3_theta",
+        "layer3_beta_real",
+        "layer3_beta_imag",
+        "layer4_phi",
+        "layer4_theta",
+        "virtual_rotation"
+      ],
+      "nominal_action": [
+        1.5707963267948966,
+        1.5707963267948966,
+        0.0,
+        0.2,
+        0.0,
+        -1.5707963267948966,
+        2.5066282746310002,
+        0.0,
+        0.0,
+        1.5707963267948966,
+        0.0,
+        0.2,
+        1.5707963267948966,
+        -1.5707963267948966,
+        1.5707963267948966
+      ],
+      "residual_bounds": {
+        "indices_0_through_13": [
+          -2.0,
+          2.0
+        ],
+        "virtual_rotation_index_14": [
+          -1.0,
+          1.0
+        ]
+      },
+      "fixed_layer4_displacement": {
+        "symbolic": "sqrt(pi/2)",
+        "numeric": 1.2533141373155001,
+        "trainable": false
+      }
+    },
+    "training": {
+      "epochs": 1000,
+      "epochs_by_strategy": {
+        "mf": 1000,
+        "nmf": 1000
+      },
+      "full_cycles": 10,
+      "half_measurements": 20,
+      "training_state": "+Z",
+      "reward": "final_state_fidelity_with_feedback_GRAPE_pathwise_and_score_terms",
+      "feedback_timeline": "measurement_to_next_interval_with_terminal_vr",
+      "observation_encoding": "gqf_g_plus1_e_minus1",
+      "consume_initial_zero_sentinel": true,
+      "learning_rate": 0.0001,
+      "score_baseline_decay": 0.95,
+      "gradient_clip_norm": 10.0,
+      "residual_l2_weight": 1e-05,
+      "slew_l2_weight": 1e-05,
+      "validation_interval": 40,
+      "projector_delta": 0.2,
+      "noise": "high",
+      "noise_parameters_us": {
+        "cavity_lifetime": 245.0,
+        "ancilla_t1": 50.0,
+        "ancilla_t2": 60.0
+      },
+      "timing": {
+        "profile_id": "PUVIANI-2024-TABLE-S1-FEEDBACK-GRAPE",
+        "half_cycle_us": 5.0,
+        "full_cycle_us": 10.0,
+        "phase_duration_us": {
+          "entering_cycle": 0.1,
+          "layer_1": 0.5,
+          "layer_2": 0.7,
+          "layer_3": 0.3,
+          "layer_4": 0.1,
+          "measurement_and_reset": 2.3,
+          "virtual_rotation_and_idle": 1.0
+        },
+        "evidence_scope": "literature_simulation_timing_not_hardware_latency"
+      },
+      "cutoff": 12,
+      "confirmation_cutoff": 16,
+      "real_dtype": "float64",
+      "complex_dtype": "complex128",
+      "device": "cuda",
+      "paired_root_seeds": [
+        910001,
+        910019,
+        910033,
+        910051,
+        910069,
+        910079,
+        910099,
+        910103,
+        910121,
+        910141,
+        910153,
+        910157,
+        910171,
+        910177,
+        910199,
+        910201,
+        910213,
+        910219,
+        910229,
+        910277
+      ],
+      "seed_derivation": {
+        "training_rollout_seed": "paired_root_seed*1000003+epoch",
+        "paired_across_mf_and_nmf": true,
+        "root_seed_count": 20,
+        "strategy_count": 2,
+        "independently_trained_agent_count": 40
+      },
+      "mf_batch_size": 8,
+      "nmf_batch_size": 6,
+      "validation_batch_size": 32,
+      "validation_seeds": [
+        920011,
+        920021
+      ],
+      "bootstrap_seed": 950003,
+      "bootstrap_repetitions": 50000,
+      "selection": {
+        "selection_data": "validation_only",
+        "formal_or_qualification_data_visible_during_selection": false,
+        "metric": "mean_validation_final_state_fidelity",
+        "tie_break_order": [
+          "higher_validation_score",
+          "earlier_epoch",
+          "lower_root_seed"
+        ],
+        "agent_level_best_of_twenty_on_test_or_lifetime": "PROHIBITED"
+      },
+      "checkpoint_contract": {
+        "required_per_agent": [
+          "validation_selected_model_state",
+          "terminal_model_state",
+          "optimizer_state_at_terminal_epoch",
+          "torch_and_numpy_rng_state_at_terminal_epoch",
+          "complete_epoch_metric_history",
+          "complete_validation_candidate_ledger",
+          "all_validation_candidate_model_states",
+          "per_seed_and_per_trajectory_validation_final_fidelity",
+          "training_runtime_signature_and_hash",
+          "configuration_hash",
+          "implementation_hash",
+          "checkpoint_sha256"
+        ],
+        "t9_1_3_published_checkpoint_scope": "one canonical validation-selected NPZ plus terminal model/optimizer/RNG restart payload per agent; the terminal payload also retains every validation-candidate model state, and the JSON ledger retains per-seed/per-trajectory validation final fidelity",
+        "retain_failed_agents_and_failure_reason": true,
+        "silent_restart_or_drop": "PROHIBITED",
+        "all_twenty_paired_roots_required_per_strategy": true
+      }
+    },
+    "six_state_qualification": {
+      "purpose": "Exercise state preparation, causal controller replay, no-postselection denominators and raw-record serialization at the validated short horizon; it is not a lifetime estimate.",
+      "states": [
+        "x_plus",
+        "x_minus",
+        "y_plus",
+        "y_minus",
+        "z_plus",
+        "z_minus"
+      ],
+      "paper_state_labels": {
+        "x_plus": "+X",
+        "x_minus": "-X",
+        "y_plus": "+Y",
+        "y_minus": "-Y",
+        "z_plus": "+Z",
+        "z_minus": "-Z"
+      },
+      "strategies": [
+        "standard",
+        "selected_mf",
+        "selected_nmf"
+      ],
+      "seeds": [
+        930011,
+        930019,
+        930031,
+        930043,
+        930053,
+        930067
+      ],
+      "confirmation_seeds": [
+        940011,
+        940019
+      ],
+      "batch_size": 8,
+      "confirmation_batch_size": 4,
+      "full_cycles": 10,
+      "primary_cutoff": 12,
+      "confirmation_cutoff": 16,
+      "paired_across_strategies": true,
+      "monte_carlo_design": "paired_common_random_numbers_across_states_and_strategies_clustered_by_stratum_and_evaluation_seed",
+      "state_definition_id": "LOWDIN_ORTHONORMALIZED_FINITE_CUTOFF_GRID_CODE_V1",
+      "logical_operator_definition_id": "PROJECTOR_DEFINED_CODE_PAULI_V1",
+      "development_only": true,
+      "postselection": "PROHIBITED",
+      "required_trajectory_fields": [
+        "trajectory_id",
+        "stratum",
+        "strategy",
+        "selected_agent_seed",
+        "initial_state",
+        "pauli_axis",
+        "expected_eigenvalue",
+        "evaluation_seed",
+        "evaluation_cluster_id",
+        "rng_stream_id",
+        "batch_member",
+        "state_definition_id",
+        "logical_operator_definition_id",
+        "raw_codeword_overlap_real",
+        "raw_codeword_overlap_imag",
+        "raw_logical_gram_condition_number",
+        "cutoff",
+        "full_cycles",
+        "half_cycles",
+        "timing_profile_id",
+        "simulated_time_us",
+        "projected_rho_00_real",
+        "projected_rho_00_imag",
+        "projected_rho_01_real",
+        "projected_rho_01_imag",
+        "projected_rho_10_real",
+        "projected_rho_10_imag",
+        "projected_rho_11_real",
+        "projected_rho_11_imag",
+        "joint_trace_error_max_for_batch",
+        "joint_hermiticity_error_max_for_batch",
+        "minimum_final_joint_eigenvalue_for_batch",
+        "projected_hermiticity_error_before_stabilization",
+        "code_weighted_I",
+        "code_weighted_X",
+        "code_weighted_Y",
+        "code_weighted_Z",
+        "signed_axis_signal",
+        "state_fidelity_unconditional",
+        "code_survival",
+        "postselected",
+        "included_in_denominator",
+        "development_only",
+        "censored",
+        "status"
+      ],
+      "required_event_fields": [
+        "trajectory_id",
+        "half_cycle",
+        "full_cycle_coordinate",
+        "layer_control_decision_prefix_length",
+        "physical_layer_application_half_cycle",
+        "measurement_outcome_half_cycle",
+        "post_measurement_control_decision_prefix_length",
+        "post_measurement_virtual_rotation_after_half_cycle",
+        "post_measurement_control_layer_application_half_cycle",
+        "uses_current_measurement_outcome_for_post_measurement_control",
+        "terminal_feedback_correction",
+        "outcome_g0_e1",
+        "selected_branch_probability",
+        "project_action_order_json",
+        "gqf_action_order_json",
+        "project_action_sha256",
+        "post_measurement_project_action_order_json",
+        "post_measurement_gqf_action_order_json",
+        "post_measurement_project_action_sha256",
+        "evaluation_cluster_id",
+        "rng_stream_id",
+        "postselected",
+        "included_in_denominator",
+        "development_only",
+        "status"
+      ],
+      "numeric_result_state": "QUALIFICATION_ONLY_NOT_LIFETIME"
+    },
+    "paper_scale_target": {
+      "status": "NOT_EVALUATED_NULL",
+      "numeric_values": {
+        "T_X": null,
+        "T_Y": null,
+        "T_Z": null,
+        "T_ch": null,
+        "average_channel_fidelity_curve": null,
+        "entanglement_infidelity": null
+      },
+      "logical_states": [
+        "+X",
+        "-X",
+        "+Y",
+        "-Y",
+        "+Z",
+        "-Z"
+      ],
+      "fock_cutoff": 100,
+      "full_cycles": 1000,
+      "evaluation_full_cycles": 1000,
+      "paper_reported_sampling_per_state": {
+        "nmf": {
+          "batch_size": 6,
+          "repetitions": 85,
+          "raw_trajectories": 510
+        },
+        "standard": {
+          "batch_size": 8,
+          "repetitions": 64,
+          "raw_trajectories": 512
+        },
+        "mf": null
+      },
+      "fit_model": "P_k(t)=P_k(0)*exp(-t/T_k)",
+      "channel_lifetime_formula": "3/(1/T_X+1/T_Y+1/T_Z)",
+      "project_promotion_minimum_cycles": 10000,
+      "null_reason": "The current T9.1.3 backend is validated only through 10 full cycles and has no independently qualified Phase-9 backend pair. T9.2.2--T9.2.5 and T9.6 must complete before any project-native long-sequence numeric result is populated.",
+      "null_is_not_zero": true
+    },
+    "paper_scale_result": {
+      "state": "INCOMPLETE_NULL",
+      "value": null,
+      "reason": "No independently qualified 1000-cycle six-state execution is part of T9.1.3."
+    },
+    "external_claim_slots": {
+      "official_exact": {
+        "state": "MISSING_EXTERNAL_ASSET",
+        "value": null
+      },
+      "surpass": {
+        "state": "MISSING_EXTERNAL_ASSET",
+        "value": null
+      }
+    },
+    "artifact_contract": {
+      "agent_manifest_rows_expected": 40,
+      "selected_agent_rows_expected": 2,
+      "raw_qualification_records_required": true,
+      "selection_ledger_required": true,
+      "all_agent_checkpoint_hashes_required": true,
+      "environment_and_runtime_ledger_required": true,
+      "runtime_manifest_scope": "direct imported dependency versions, Python executable/prefix, torch/CUDA/cuDNN flags, NVIDIA UUID/driver rows, thread settings and execution-semantic environment controls",
+      "source_data_must_retain_null_timeout_oom_numeric_failure_and_corrupt_shard_rows": true,
+      "resume_identity": [
+        "protocol_analysis_sha256",
+        "config_sha256",
+        "implementation_sha256",
+        "training_runtime_signature_sha256",
+        "strategy",
+        "paired_root_seed"
+      ]
+    },
+    "claim_boundary": {
+      "allowed": [
+        "project-owned paper-constrained MF/NMF artifact lane",
+        "validation-only selected project reimplementation",
+        "short-horizon six-state qualification"
+      ],
+      "prohibited": [
+        "official Puviani reproduction",
+        "paper-exact checkpoint or seed recovery",
+        "surpasses Puviani NMF",
+        "1000-cycle or 10000-cycle lifetime gain before downstream evaluation",
+        "hardware latency or physical break-even"
+      ]
+    }
+  },
+  "config_sha256": "2b708da81a16741b208e47ff3c55da646f7876ee4c743962b18945e66c5e76f0",
+  "source_registry": {
+    "paper": {
+      "doi": "10.1103/PhysRevLett.134.020601",
+      "arxiv": "2312.07391",
+      "local_path": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md",
+      "local_sha256": "5dcda2ee0fec3191ddaa44fb539764dbebc2d089c9a3818bb17c132ca28e7c22",
+      "preregistered_sha256": "5dcda2ee0fec3191ddaa44fb539764dbebc2d089c9a3818bb17c132ca28e7c22"
+    },
+    "official_gqf": {
+      "url": "https://github.com/Matteo-Puviani/GQF",
+      "required_commit": "c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d",
+      "live_commit": "c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d",
+      "live_commit_matches": true,
+      "tracked_tree_clean": true,
+      "license": "MIT"
+    },
+    "paper_exact_preregistration": {
+      "path": "configs/gqf_official/paper_exact_preregistration.json",
+      "sha256": "b1636d2d19f6565f559b33bb832b4ef1055068028984ba6699190f6491c92ff6"
+    },
+    "patch_manifest": {
+      "path": "configs/gqf_official/patch_manifest.json",
+      "sha256": "b28871424d408b726a768c00e45c0997237d8a879588c47085926105ac93aa4e"
+    },
+    "config_declared_source": {
+      "paper_and_supplement": "source_binding.paper_and_supplement",
+      "official_gqf": "source_binding.official_repository@gqf_commit",
+      "prior_exact_attempt": "docs/t6_8_4_gqf_paper_exact_reproduction.json",
+      "prior_intake": "docs/t6_8_3_gqf_official_intake.json"
+    }
+  },
+  "runtime_profile": {
+    "schema_version": "t9.1.3-finalization-runtime-profile-v1",
+    "role": "FINALIZATION_AND_LIVE_VALIDATION_RUNTIME",
+    "signature": {
+      "schema_version": "t9.1.3-training-runtime-signature-v1",
+      "python_executable": "C:\\ProgramData\\anaconda3\\envs\\DLEnv\\python.exe",
+      "python_version": "3.12.9 | packaged by Anaconda, Inc. | (main, Feb  6 2025, 18:49:16) [MSC v.1929 64 bit (AMD64)]",
+      "python_implementation": "CPython",
+      "sys_prefix": "C:\\ProgramData\\anaconda3\\envs\\DLEnv",
+      "conda_prefix": "C:\\ProgramData\\anaconda3",
+      "conda_default_env": "base",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "machine": "AMD64",
+      "numpy_version": "2.2.4",
+      "scipy_version": "1.13.1",
+      "pyarrow_version": "19.0.0",
+      "psutil_version": "7.0.0",
+      "torch_version": "2.8.0.dev20250405+cu128",
+      "torch_git_version": "51ba1b337c2bb6ed566e82c99745d930e89c151a",
+      "torch_cuda_version": "12.8",
+      "cudnn_version": 90701,
+      "cuda_available": true,
+      "cuda_device_count": 1,
+      "cuda_current_device": 0,
+      "cuda_device_names": [
+        "NVIDIA GeForce RTX 4070 Laptop GPU"
+      ],
+      "cuda_device_capabilities": [
+        [
+          8,
+          9
+        ]
+      ],
+      "cuda_total_memory_bytes": [
+        8585216000
+      ],
+      "nvidia_smi_devices": [
+        {
+          "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+          "driver_version": "596.21"
+        }
+      ],
+      "deterministic_algorithms_enabled": true,
+      "deterministic_debug_mode": 2,
+      "cudnn_enabled": true,
+      "cudnn_deterministic": true,
+      "cudnn_benchmark": false,
+      "cudnn_allow_tf32": false,
+      "cuda_matmul_allow_tf32": false,
+      "float32_matmul_precision": "highest",
+      "torch_default_dtype": "torch.float32",
+      "torch_num_threads": 16,
+      "torch_num_interop_threads": 16,
+      "environment_controls": {
+        "CUDA_VISIBLE_DEVICES": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+        "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+        "OMP_NUM_THREADS": null,
+        "MKL_NUM_THREADS": null,
+        "PYTORCH_CUDA_ALLOC_CONF": null,
+        "PYTHONHASHSEED": "0",
+        "KMP_DUPLICATE_LIB_OK": null,
+        "NVIDIA_TF32_OVERRIDE": "0",
+        "TORCH_ALLOW_TF32_CUBLAS_OVERRIDE": "0"
+      }
+    },
+    "signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+    "rng_contract": "explicit counter-derived simulator seeds; per-agent initialization seed; terminal torch CPU/CUDA and NumPy states retained"
+  },
+  "training_runtime_contract": {
+    "schema_version": "t9.1.3-training-runtime-contract-v1",
+    "signature": {
+      "schema_version": "t9.1.3-training-runtime-signature-v1",
+      "python_executable": "C:\\ProgramData\\anaconda3\\envs\\DLEnv\\python.exe",
+      "python_version": "3.12.9 | packaged by Anaconda, Inc. | (main, Feb  6 2025, 18:49:16) [MSC v.1929 64 bit (AMD64)]",
+      "python_implementation": "CPython",
+      "sys_prefix": "C:\\ProgramData\\anaconda3\\envs\\DLEnv",
+      "conda_prefix": "C:\\ProgramData\\anaconda3",
+      "conda_default_env": "base",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "machine": "AMD64",
+      "numpy_version": "2.2.4",
+      "scipy_version": "1.13.1",
+      "pyarrow_version": "19.0.0",
+      "psutil_version": "7.0.0",
+      "torch_version": "2.8.0.dev20250405+cu128",
+      "torch_git_version": "51ba1b337c2bb6ed566e82c99745d930e89c151a",
+      "torch_cuda_version": "12.8",
+      "cudnn_version": 90701,
+      "cuda_available": true,
+      "cuda_device_count": 1,
+      "cuda_current_device": 0,
+      "cuda_device_names": [
+        "NVIDIA GeForce RTX 4070 Laptop GPU"
+      ],
+      "cuda_device_capabilities": [
+        [
+          8,
+          9
+        ]
+      ],
+      "cuda_total_memory_bytes": [
+        8585216000
+      ],
+      "nvidia_smi_devices": [
+        {
+          "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+          "driver_version": "596.21"
+        }
+      ],
+      "deterministic_algorithms_enabled": true,
+      "deterministic_debug_mode": 2,
+      "cudnn_enabled": true,
+      "cudnn_deterministic": true,
+      "cudnn_benchmark": false,
+      "cudnn_allow_tf32": false,
+      "cuda_matmul_allow_tf32": false,
+      "float32_matmul_precision": "highest",
+      "torch_default_dtype": "torch.float32",
+      "torch_num_threads": 16,
+      "torch_num_interop_threads": 16,
+      "environment_controls": {
+        "CUDA_VISIBLE_DEVICES": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+        "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+        "OMP_NUM_THREADS": null,
+        "MKL_NUM_THREADS": null,
+        "PYTORCH_CUDA_ALLOC_CONF": null,
+        "PYTHONHASHSEED": "0",
+        "KMP_DUPLICATE_LIB_OK": null,
+        "NVIDIA_TF32_OVERRIDE": "0",
+        "TORCH_ALLOW_TF32_CUBLAS_OVERRIDE": "0"
+      }
+    },
+    "signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+    "agent_signature_count": 40,
+    "distinct_agent_signature_sha256": [
+      "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf"
+    ],
+    "all_agents_identical": true,
+    "finalizer_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+    "equals_finalizer_runtime_signature": true
+  },
+  "gpu_load_attestations": {
+    "schema_version": "t9.1.3-gpu-load-attestation-report-v1",
+    "training_launch_attestations": [
+      {
+        "schema_version": "t9.1.3-gpu-load-attestation-v1",
+        "task_id": "T9.1.3",
+        "purpose": "TRAINING_LAUNCH",
+        "config_sha256": "2b708da81a16741b208e47ff3c55da646f7876ee4c743962b18945e66c5e76f0",
+        "implementation_sha256": "ef7c140bf1b895f0bc04c6445f1e5348bf4ff9ca4a01d59c54d6e27e83a7df1b",
+        "run_identity": {
+          "transaction_id": "d3beb5a9-fecc-4609-ab33-f5772f38ea2b",
+          "run_dir": "D:\\Codes\\Quantum\\DriftAdaptiveQEC\\runs\\t9_1_3_production_20260723_200842",
+          "supervisor_pid": 3364,
+          "supervisor_process_created_unix_ns": 1784808522794549700,
+          "supervisor_hostname": "PC_QCY"
+        },
+        "attestation_nonce": "0fa1c3d3-7221-4342-8c36-198fb14ecfd5",
+        "sampling_started_at_utc": "2026-07-23T12:08:56.5803047Z",
+        "sampling_completed_at_utc": "2026-07-23T12:09:04.8794126Z",
+        "issued_at_utc": "2026-07-23T12:09:04.8924127Z",
+        "expires_at_utc": "2026-07-23T12:09:49.8924127Z",
+        "target_gpu": {
+          "index": 0,
+          "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+          "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+          "memory_total_mib": 8188
+        },
+        "load_gate": {
+          "schema_version": "t9.1.3-nvidia-load-gate-v1",
+          "passed": true,
+          "failure_reasons": [],
+          "sampled_at_host": "PC_QCY",
+          "cuda_visible_devices": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+          "requested_target_gpu_uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+          "sample_interval_seconds": 2,
+          "thresholds": {
+            "expected_sample_count": 5,
+            "minimum_free_memory_mib_every_sample": 4096,
+            "maximum_median_utilization_percent": 15,
+            "maximum_peak_utilization_percent": 30
+          },
+          "summary": {
+            "parsed_sample_count": 5,
+            "consistent_device_count": 1,
+            "device_identity_signature": "0|GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+            "target_selection_basis": "EXPLICIT_TARGET_GPU_UUID",
+            "target_index": 0,
+            "target_uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+            "target_name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+            "target_total_memory_mib": 8188,
+            "target_minimum_free_memory_mib": 6746,
+            "target_median_utilization_percent": 13,
+            "target_maximum_utilization_percent": 15,
+            "all_device_summaries": [
+              {
+                "index": 0,
+                "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+                "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+                "metric_sample_count": 5,
+                "minimum_free_memory_mib": 6746,
+                "median_utilization_percent": 13,
+                "maximum_utilization_percent": 15
+              }
+            ]
+          },
+          "parsed_samples": [
+            {
+              "sequence": 0,
+              "captured_at_utc": "2026-07-23T12:08:56.5803047Z",
+              "rows": [
+                {
+                  "index": 0,
+                  "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+                  "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+                  "memory_total_mib": 8188,
+                  "memory_used_mib": 1203,
+                  "memory_free_mib": 6746,
+                  "utilization_percent": 13
+                }
+              ]
+            },
+            {
+              "sequence": 1,
+              "captured_at_utc": "2026-07-23T12:08:58.6462517Z",
+              "rows": [
+                {
+                  "index": 0,
+                  "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+                  "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+                  "memory_total_mib": 8188,
+                  "memory_used_mib": 1203,
+                  "memory_free_mib": 6746,
+                  "utilization_percent": 13
+                }
+              ]
+            },
+            {
+              "sequence": 2,
+              "captured_at_utc": "2026-07-23T12:09:00.7082216Z",
+              "rows": [
+                {
+                  "index": 0,
+                  "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+                  "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+                  "memory_total_mib": 8188,
+                  "memory_used_mib": 1203,
+                  "memory_free_mib": 6746,
+                  "utilization_percent": 15
+                }
+              ]
+            },
+            {
+              "sequence": 3,
+              "captured_at_utc": "2026-07-23T12:09:02.7681752Z",
+              "rows": [
+                {
+                  "index": 0,
+                  "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+                  "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+                  "memory_total_mib": 8188,
+                  "memory_used_mib": 1203,
+                  "memory_free_mib": 6746,
+                  "utilization_percent": 13
+                }
+              ]
+            },
+            {
+              "sequence": 4,
+              "captured_at_utc": "2026-07-23T12:09:04.8244139Z",
+              "rows": [
+                {
+                  "index": 0,
+                  "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+                  "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+                  "memory_total_mib": 8188,
+                  "memory_used_mib": 1203,
+                  "memory_free_mib": 6746,
+                  "utilization_percent": 13
+                }
+              ]
+            }
+          ],
+          "raw_samples": [
+            {
+              "sequence": 0,
+              "captured_at_utc": "2026-07-23T12:08:56.5803047Z",
+              "completed_at_utc": "2026-07-23T12:08:56.6343944Z",
+              "command": "nvidia-smi.exe",
+              "arguments": [
+                "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,utilization.gpu",
+                "--format=csv,noheader,nounits"
+              ],
+              "exit_code": 0,
+              "stdout": "0, GPU-f4c0c19a-b5aa-1396-3391-77e905541a36, NVIDIA GeForce RTX 4070 Laptop GPU, 8188, 1203, 6746, 13\r\n",
+              "stderr": "",
+              "parse_error": null
+            },
+            {
+              "sequence": 1,
+              "captured_at_utc": "2026-07-23T12:08:58.6462517Z",
+              "completed_at_utc": "2026-07-23T12:08:58.7018793Z",
+              "command": "nvidia-smi.exe",
+              "arguments": [
+                "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,utilization.gpu",
+                "--format=csv,noheader,nounits"
+              ],
+              "exit_code": 0,
+              "stdout": "0, GPU-f4c0c19a-b5aa-1396-3391-77e905541a36, NVIDIA GeForce RTX 4070 Laptop GPU, 8188, 1203, 6746, 13\r\n",
+              "stderr": "",
+              "parse_error": null
+            },
+            {
+              "sequence": 2,
+              "captured_at_utc": "2026-07-23T12:09:00.7082216Z",
+              "completed_at_utc": "2026-07-23T12:09:00.7632593Z",
+              "command": "nvidia-smi.exe",
+              "arguments": [
+                "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,utilization.gpu",
+                "--format=csv,noheader,nounits"
+              ],
+              "exit_code": 0,
+              "stdout": "0, GPU-f4c0c19a-b5aa-1396-3391-77e905541a36, NVIDIA GeForce RTX 4070 Laptop GPU, 8188, 1203, 6746, 15\r\n",
+              "stderr": "",
+              "parse_error": null
+            },
+            {
+              "sequence": 3,
+              "captured_at_utc": "2026-07-23T12:09:02.7681752Z",
+              "completed_at_utc": "2026-07-23T12:09:02.8230613Z",
+              "command": "nvidia-smi.exe",
+              "arguments": [
+                "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,utilization.gpu",
+                "--format=csv,noheader,nounits"
+              ],
+              "exit_code": 0,
+              "stdout": "0, GPU-f4c0c19a-b5aa-1396-3391-77e905541a36, NVIDIA GeForce RTX 4070 Laptop GPU, 8188, 1203, 6746, 13\r\n",
+              "stderr": "",
+              "parse_error": null
+            },
+            {
+              "sequence": 4,
+              "captured_at_utc": "2026-07-23T12:09:04.8244139Z",
+              "completed_at_utc": "2026-07-23T12:09:04.8794126Z",
+              "command": "nvidia-smi.exe",
+              "arguments": [
+                "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,utilization.gpu",
+                "--format=csv,noheader,nounits"
+              ],
+              "exit_code": 0,
+              "stdout": "0, GPU-f4c0c19a-b5aa-1396-3391-77e905541a36, NVIDIA GeForce RTX 4070 Laptop GPU, 8188, 1203, 6746, 13\r\n",
+              "stderr": "",
+              "parse_error": null
+            }
+          ]
+        },
+        "attestation_sha256": "36a26f0c39e1d3c89c2bf59116443063cca90f159e268296e74f924e53a8b5aa"
+      }
+    ],
+    "training_launch_bindings": [
+      {
+        "schema_version": "t9.1.3-gpu-load-attestation-binding-v1",
+        "attestation_sha256": "36a26f0c39e1d3c89c2bf59116443063cca90f159e268296e74f924e53a8b5aa",
+        "purpose": "TRAINING_LAUNCH",
+        "transaction_id": "d3beb5a9-fecc-4609-ab33-f5772f38ea2b",
+        "run_dir": "D:\\Codes\\Quantum\\DriftAdaptiveQEC\\runs\\t9_1_3_production_20260723_200842",
+        "attestation_nonce": "0fa1c3d3-7221-4342-8c36-198fb14ecfd5",
+        "target_gpu_uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+        "target_gpu_name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "target_gpu_total_memory_mib": 8188,
+        "sampling_completed_at_utc": "2026-07-23T12:09:04.8794126Z",
+        "expires_at_utc": "2026-07-23T12:09:49.8924127Z"
+      }
+    ],
+    "distinct_training_attestation_sha256": [
+      "36a26f0c39e1d3c89c2bf59116443063cca90f159e268296e74f924e53a8b5aa"
+    ],
+    "finalizer_launch_attestation": {
+      "schema_version": "t9.1.3-gpu-load-attestation-v1",
+      "task_id": "T9.1.3",
+      "purpose": "FINALIZER_LAUNCH",
+      "config_sha256": "2b708da81a16741b208e47ff3c55da646f7876ee4c743962b18945e66c5e76f0",
+      "implementation_sha256": "ef7c140bf1b895f0bc04c6445f1e5348bf4ff9ca4a01d59c54d6e27e83a7df1b",
+      "run_identity": {
+        "transaction_id": "d3beb5a9-fecc-4609-ab33-f5772f38ea2b",
+        "run_dir": "D:\\Codes\\Quantum\\DriftAdaptiveQEC\\runs\\t9_1_3_production_20260723_200842",
+        "supervisor_pid": 3364,
+        "supervisor_process_created_unix_ns": 1784808522794549700,
+        "supervisor_hostname": "PC_QCY"
+      },
+      "attestation_nonce": "97fe3aa0-9d88-45ef-a309-9c76e7b3aa79",
+      "sampling_started_at_utc": "2026-07-24T01:37:30.0650743Z",
+      "sampling_completed_at_utc": "2026-07-24T01:37:38.2840607Z",
+      "issued_at_utc": "2026-07-24T01:37:38.3132798Z",
+      "expires_at_utc": "2026-07-24T01:38:23.3132798Z",
+      "target_gpu": {
+        "index": 0,
+        "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+        "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+        "memory_total_mib": 8188
+      },
+      "load_gate": {
+        "schema_version": "t9.1.3-nvidia-load-gate-v1",
+        "passed": true,
+        "failure_reasons": [],
+        "sampled_at_host": "PC_QCY",
+        "cuda_visible_devices": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+        "requested_target_gpu_uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+        "sample_interval_seconds": 2,
+        "thresholds": {
+          "expected_sample_count": 5,
+          "minimum_free_memory_mib_every_sample": 4096,
+          "maximum_median_utilization_percent": 15,
+          "maximum_peak_utilization_percent": 30
+        },
+        "summary": {
+          "parsed_sample_count": 5,
+          "consistent_device_count": 1,
+          "device_identity_signature": "0|GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+          "target_selection_basis": "EXPLICIT_TARGET_GPU_UUID",
+          "target_index": 0,
+          "target_uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+          "target_name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+          "target_total_memory_mib": 8188,
+          "target_minimum_free_memory_mib": 6160,
+          "target_median_utilization_percent": 15,
+          "target_maximum_utilization_percent": 18,
+          "all_device_summaries": [
+            {
+              "index": 0,
+              "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+              "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+              "metric_sample_count": 5,
+              "minimum_free_memory_mib": 6160,
+              "median_utilization_percent": 15,
+              "maximum_utilization_percent": 18
+            }
+          ]
+        },
+        "parsed_samples": [
+          {
+            "sequence": 0,
+            "captured_at_utc": "2026-07-24T01:37:30.0650743Z",
+            "rows": [
+              {
+                "index": 0,
+                "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+                "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+                "memory_total_mib": 8188,
+                "memory_used_mib": 1789,
+                "memory_free_mib": 6160,
+                "utilization_percent": 15
+              }
+            ]
+          },
+          {
+            "sequence": 1,
+            "captured_at_utc": "2026-07-24T01:37:32.1141134Z",
+            "rows": [
+              {
+                "index": 0,
+                "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+                "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+                "memory_total_mib": 8188,
+                "memory_used_mib": 1789,
+                "memory_free_mib": 6160,
+                "utilization_percent": 18
+              }
+            ]
+          },
+          {
+            "sequence": 2,
+            "captured_at_utc": "2026-07-24T01:37:34.1565096Z",
+            "rows": [
+              {
+                "index": 0,
+                "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+                "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+                "memory_total_mib": 8188,
+                "memory_used_mib": 1789,
+                "memory_free_mib": 6160,
+                "utilization_percent": 15
+              }
+            ]
+          },
+          {
+            "sequence": 3,
+            "captured_at_utc": "2026-07-24T01:37:36.1992498Z",
+            "rows": [
+              {
+                "index": 0,
+                "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+                "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+                "memory_total_mib": 8188,
+                "memory_used_mib": 1789,
+                "memory_free_mib": 6160,
+                "utilization_percent": 16
+              }
+            ]
+          },
+          {
+            "sequence": 4,
+            "captured_at_utc": "2026-07-24T01:37:38.2407734Z",
+            "rows": [
+              {
+                "index": 0,
+                "uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+                "name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+                "memory_total_mib": 8188,
+                "memory_used_mib": 1789,
+                "memory_free_mib": 6160,
+                "utilization_percent": 15
+              }
+            ]
+          }
+        ],
+        "raw_samples": [
+          {
+            "sequence": 0,
+            "captured_at_utc": "2026-07-24T01:37:30.0650743Z",
+            "completed_at_utc": "2026-07-24T01:37:30.1050881Z",
+            "command": "nvidia-smi.exe",
+            "arguments": [
+              "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,utilization.gpu",
+              "--format=csv,noheader,nounits"
+            ],
+            "exit_code": 0,
+            "stdout": "0, GPU-f4c0c19a-b5aa-1396-3391-77e905541a36, NVIDIA GeForce RTX 4070 Laptop GPU, 8188, 1789, 6160, 15\r\n",
+            "stderr": "",
+            "parse_error": null
+          },
+          {
+            "sequence": 1,
+            "captured_at_utc": "2026-07-24T01:37:32.1141134Z",
+            "completed_at_utc": "2026-07-24T01:37:32.1549379Z",
+            "command": "nvidia-smi.exe",
+            "arguments": [
+              "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,utilization.gpu",
+              "--format=csv,noheader,nounits"
+            ],
+            "exit_code": 0,
+            "stdout": "0, GPU-f4c0c19a-b5aa-1396-3391-77e905541a36, NVIDIA GeForce RTX 4070 Laptop GPU, 8188, 1789, 6160, 18\r\n",
+            "stderr": "",
+            "parse_error": null
+          },
+          {
+            "sequence": 2,
+            "captured_at_utc": "2026-07-24T01:37:34.1565096Z",
+            "completed_at_utc": "2026-07-24T01:37:34.1982025Z",
+            "command": "nvidia-smi.exe",
+            "arguments": [
+              "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,utilization.gpu",
+              "--format=csv,noheader,nounits"
+            ],
+            "exit_code": 0,
+            "stdout": "0, GPU-f4c0c19a-b5aa-1396-3391-77e905541a36, NVIDIA GeForce RTX 4070 Laptop GPU, 8188, 1789, 6160, 15\r\n",
+            "stderr": "",
+            "parse_error": null
+          },
+          {
+            "sequence": 3,
+            "captured_at_utc": "2026-07-24T01:37:36.1992498Z",
+            "completed_at_utc": "2026-07-24T01:37:36.2389278Z",
+            "command": "nvidia-smi.exe",
+            "arguments": [
+              "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,utilization.gpu",
+              "--format=csv,noheader,nounits"
+            ],
+            "exit_code": 0,
+            "stdout": "0, GPU-f4c0c19a-b5aa-1396-3391-77e905541a36, NVIDIA GeForce RTX 4070 Laptop GPU, 8188, 1789, 6160, 16\r\n",
+            "stderr": "",
+            "parse_error": null
+          },
+          {
+            "sequence": 4,
+            "captured_at_utc": "2026-07-24T01:37:38.2407734Z",
+            "completed_at_utc": "2026-07-24T01:37:38.2840607Z",
+            "command": "nvidia-smi.exe",
+            "arguments": [
+              "--query-gpu=index,uuid,name,memory.total,memory.used,memory.free,utilization.gpu",
+              "--format=csv,noheader,nounits"
+            ],
+            "exit_code": 0,
+            "stdout": "0, GPU-f4c0c19a-b5aa-1396-3391-77e905541a36, NVIDIA GeForce RTX 4070 Laptop GPU, 8188, 1789, 6160, 15\r\n",
+            "stderr": "",
+            "parse_error": null
+          }
+        ]
+      },
+      "attestation_sha256": "f42ca2964a5b92039467fe6c259ea85801616d1e4a2664ffd26ec50c1e544672"
+    },
+    "finalizer_launch_binding": {
+      "schema_version": "t9.1.3-gpu-load-attestation-binding-v1",
+      "attestation_sha256": "f42ca2964a5b92039467fe6c259ea85801616d1e4a2664ffd26ec50c1e544672",
+      "purpose": "FINALIZER_LAUNCH",
+      "transaction_id": "d3beb5a9-fecc-4609-ab33-f5772f38ea2b",
+      "run_dir": "D:\\Codes\\Quantum\\DriftAdaptiveQEC\\runs\\t9_1_3_production_20260723_200842",
+      "attestation_nonce": "97fe3aa0-9d88-45ef-a309-9c76e7b3aa79",
+      "target_gpu_uuid": "GPU-f4c0c19a-b5aa-1396-3391-77e905541a36",
+      "target_gpu_name": "NVIDIA GeForce RTX 4070 Laptop GPU",
+      "target_gpu_total_memory_mib": 8188,
+      "sampling_completed_at_utc": "2026-07-24T01:37:38.2840607Z",
+      "expires_at_utc": "2026-07-24T01:38:23.3132798Z"
+    },
+    "all_forty_agents_bound": true,
+    "same_target_gpu_uuid_name_and_total_memory": true,
+    "freshness_scope": "freshness and live supervisor-parent identity were enforced at each production process entry; report validation rechecks canonical/raw/device integrity without requiring historical attestations to remain unexpired"
+  },
+  "protocol_transcription": {
+    "state": "single_mode_square_approximate_GKP_Delta_0.2_trained_from_plus_Z",
+    "observation": "binary_g_e_causal_prefix_only_GQF_policy_tokens_g_plus1_e_minus1_with_zero_sentinel",
+    "action": "15_bounded_residual_controls_with_fixed_layer4_displacement",
+    "timing": "layers_measure_then_2.3us_collapsed_branch_reset_current_outcome_VR_1us_next_layers_with_terminal_VR",
+    "noise": "high_Ts_245us_T1_50us_T2_60us",
+    "training": "MF_and_NMF_1000_epochs_10_full_cycles_lr_1e-4_batches_8_and_6",
+    "selection": "project_validation_only_not_paper_lifetime_postselection",
+    "evaluator": "six_state_short_horizon_qualification_only_paper_scale_null"
+  },
+  "action_contract": {
+    "project_order": [
+      "layer1_phi",
+      "layer1_theta",
+      "layer1_beta_real",
+      "layer1_beta_imag",
+      "layer2_phi",
+      "layer2_theta",
+      "layer2_beta_real",
+      "layer2_beta_imag",
+      "layer3_phi",
+      "layer3_theta",
+      "layer3_beta_real",
+      "layer3_beta_imag",
+      "layer4_phi",
+      "layer4_theta",
+      "virtual_rotation"
+    ],
+    "gqf_order": [
+      "virtual_rotation",
+      "layer1_phi",
+      "layer2_phi",
+      "layer3_phi",
+      "layer4_phi",
+      "layer1_theta",
+      "layer2_theta",
+      "layer3_theta",
+      "layer4_theta",
+      "layer1_beta_real",
+      "layer2_beta_real",
+      "layer3_beta_real",
+      "layer1_beta_imag",
+      "layer2_beta_imag",
+      "layer3_beta_imag"
+    ],
+    "permutation_roundtrip": true,
+    "bounds": "14 residuals in [-2,2], virtual rotation in [-1,1] after tanh",
+    "ranking_eligibility": "INELIGIBLE_SIGNATURE_NONRANKING_HISTORICAL_BASELINE"
+  },
+  "population": {
+    "paired_root_count": 20,
+    "total_agent_count": 40,
+    "agents_per_family": {
+      "mf": 20,
+      "nmf": 20
+    },
+    "all_agents_published_not_only_winner": true,
+    "agent_registry": "docs/t9_1_3_puviani_agent_registry.csv"
+  },
+  "selection_contract": {
+    "within_agent": "max validation score; tie earlier epoch",
+    "across_agents": "max best-validation score; tie earlier epoch then lower root seed",
+    "formal_used_for_selection": false,
+    "test_used_for_selection": false,
+    "paper_best_of_20_test_selection_replaced": true,
+    "selection_lock_sha256": "4d93bdb87b484ca15df3f723e7e77a6d029e68be6ee101430eafe560ad1e231e",
+    "ledger_path": "docs/t9_1_3_puviani_selection_ledger.csv",
+    "selected": {
+      "mf": {
+        "selected_root_seed": 910141,
+        "selected_checkpoint_epoch": 920,
+        "selected_validation_score": 0.42054409073012256,
+        "checkpoint_sha256": "e051cf1ff7bbc97bfbf54de7be610e70182e9b333b489a9ae6f6be6a0f5655d4",
+        "agent_count": 20,
+        "validation_candidates_per_agent": 26,
+        "total_agent_checkpoint_candidates": 520,
+        "all_agent_best_validation_score_distribution": {
+          "values": [
+            0.4029293454082895,
+            0.41266497933620794,
+            0.40028865927138746,
+            0.41206837336512586,
+            0.40470279009159316,
+            0.4060346970426421,
+            0.40233131710789705,
+            0.4140613067457595,
+            0.4170156127329672,
+            0.42054409073012256,
+            0.41932260868571036,
+            0.41818260366425397,
+            0.3968062785388462,
+            0.4151924678646139,
+            0.3951653036515013,
+            0.4110046036878837,
+            0.41456605021811044,
+            0.4165544745235038,
+            0.3980441374119972,
+            0.40766789532720016
+          ],
+          "mean": 0.40925737977028065,
+          "median": 0.4115364885265048,
+          "q1": 0.4027798383331914,
+          "q3": 0.4155329695293364,
+          "minimum": 0.3951653036515013,
+          "maximum": 0.42054409073012256,
+          "worst_quartile_mean": 0.3985271391963258
+        },
+        "all_agent_initial_validation_score_distribution": {
+          "values": [
+            0.2198932218825318,
+            0.2200928185521948,
+            0.21852742564208205,
+            0.2103535004865604,
+            0.21149052535785848,
+            0.2100145457233828,
+            0.20992873633681852,
+            0.21965800991137419,
+            0.21834899629142018,
+            0.21606849969294656,
+            0.21052510196663443,
+            0.2181121265861774,
+            0.2194749594074593,
+            0.22037189242866373,
+            0.20917440959053532,
+            0.21840389946438446,
+            0.21810664218727824,
+            0.2170084789430916,
+            0.21170648395176966,
+            0.21213297560483846
+          ],
+          "mean": 0.2154696625004001,
+          "median": 0.21755756056518494,
+          "q1": 0.21124916951005246,
+          "q3": 0.21876430908342637,
+          "minimum": 0.20917440959053532,
+          "maximum": 0.22037189242866373,
+          "worst_quartile_mean": 0.20999925882078632
+        },
+        "all_agent_initial_to_best_gain_distribution": {
+          "values": [
+            0.1830361235257577,
+            0.19257216078401312,
+            0.1817612336293054,
+            0.20171487287856546,
+            0.19321226473373468,
+            0.19602015131925932,
+            0.19240258077107852,
+            0.19440329683438534,
+            0.19866661644154704,
+            0.204475591037176,
+            0.20879750671907593,
+            0.20007047707807657,
+            0.1773313191313869,
+            0.19482057543595016,
+            0.185990894060966,
+            0.19260070422349926,
+            0.1964594080308322,
+            0.1995459955804122,
+            0.18633765346022751,
+            0.1955349197223617
+          ],
+          "mean": 0.19378771726988056,
+          "median": 0.19461193613516775,
+          "q1": 0.19088634894336576,
+          "q3": 0.19888646122626333,
+          "minimum": 0.1773313191313869,
+          "maximum": 0.20879750671907593,
+          "worst_quartile_mean": 0.18289144476152872
+        },
+        "all_agent_selected_checkpoint_epoch_distribution": {
+          "values": [
+            840.0,
+            560.0,
+            800.0,
+            1000.0,
+            680.0,
+            840.0,
+            920.0,
+            800.0,
+            680.0,
+            920.0,
+            600.0,
+            760.0,
+            800.0,
+            760.0,
+            960.0,
+            600.0,
+            680.0,
+            600.0,
+            720.0,
+            1000.0
+          ],
+          "mean": 776.0,
+          "median": 780.0,
+          "q1": 680.0,
+          "q3": 860.0,
+          "minimum": 560.0,
+          "maximum": 1000.0,
+          "worst_quartile_mean": 608.0
+        },
+        "selection_optimism_warning": "best-of-20 agents and best-of-validation-checkpoints can be optimistic; these validation scores are selection diagnostics, not an unbiased performance estimate or a T9.1.3 performance gate; six-state qualification seeds are held out"
+      },
+      "nmf": {
+        "selected_root_seed": 910001,
+        "selected_checkpoint_epoch": 800,
+        "selected_validation_score": 0.43547025946736784,
+        "checkpoint_sha256": "9deaf6d7099e2b29db28bc49f6d69421572b0d480957f1de39873c1e45bb8d17",
+        "agent_count": 20,
+        "validation_candidates_per_agent": 26,
+        "total_agent_checkpoint_candidates": 520,
+        "all_agent_best_validation_score_distribution": {
+          "values": [
+            0.43547025946736784,
+            0.41984680950672315,
+            0.4250113411056865,
+            0.4279742612994679,
+            0.42832671311084114,
+            0.4217280954122107,
+            0.42255255341375675,
+            0.4297611159571403,
+            0.4271510106685107,
+            0.42992146912130075,
+            0.42724356713197964,
+            0.4284746745754017,
+            0.42607286726987126,
+            0.43012491313932955,
+            0.43212338400015027,
+            0.4287698541155355,
+            0.42753166782440316,
+            0.42831211711474243,
+            0.42001791379820097,
+            0.4346883045398198
+          ],
+          "mean": 0.42755514462862204,
+          "median": 0.42814318920710515,
+          "q1": 0.4258074857288251,
+          "q3": 0.4298012042481804,
+          "minimum": 0.41984680950672315,
+          "maximum": 0.43547025946736784,
+          "worst_quartile_mean": 0.4218313426473156
+        },
+        "all_agent_initial_validation_score_distribution": {
+          "values": [
+            0.21813107404107335,
+            0.21054000922420452,
+            0.21718862351113288,
+            0.22198426392963166,
+            0.21548647269864174,
+            0.21719886506252403,
+            0.21864449830314608,
+            0.21689044622535203,
+            0.21812155745057563,
+            0.2170399627276324,
+            0.21128648698557245,
+            0.21910559627346998,
+            0.2190740519163682,
+            0.2082835302951737,
+            0.21814577224511683,
+            0.21827729137564347,
+            0.2176870430989084,
+            0.2186194343490767,
+            0.21783683149182234,
+            0.22168947596634697
+          ],
+          "mean": 0.21706156435857066,
+          "median": 0.21797919447119898,
+          "q1": 0.21700258360206232,
+          "q3": 0.21862570033759404,
+          "minimum": 0.2082835302951737,
+          "maximum": 0.22198426392963166,
+          "worst_quartile_mean": 0.21249738908578886
+        },
+        "all_agent_initial_to_best_gain_distribution": {
+          "values": [
+            0.2173391854262945,
+            0.20930680028251863,
+            0.20782271759455362,
+            0.20598999736983625,
+            0.2128402404121994,
+            0.20452923034968665,
+            0.20390805511061066,
+            0.21287066973178825,
+            0.20902945321793506,
+            0.21288150639366835,
+            0.2159570801464072,
+            0.20936907830193174,
+            0.20699881535350306,
+            0.22184138284415583,
+            0.21397761175503344,
+            0.210492562739892,
+            0.20984462472549475,
+            0.20969268276566572,
+            0.20218108230637863,
+            0.21299882857347285
+          ],
+          "mean": 0.21049358027005133,
+          "median": 0.20976865374558024,
+          "q1": 0.20761674203429098,
+          "q3": 0.21291083693861948,
+          "minimum": 0.20218108230637863,
+          "maximum": 0.22184138284415583,
+          "worst_quartile_mean": 0.20472143609800303
+        },
+        "all_agent_selected_checkpoint_epoch_distribution": {
+          "values": [
+            800.0,
+            920.0,
+            800.0,
+            1000.0,
+            840.0,
+            800.0,
+            840.0,
+            920.0,
+            680.0,
+            1000.0,
+            800.0,
+            920.0,
+            880.0,
+            880.0,
+            1000.0,
+            960.0,
+            960.0,
+            840.0,
+            960.0,
+            920.0
+          ],
+          "mean": 886.0,
+          "median": 900.0,
+          "q1": 830.0,
+          "q3": 960.0,
+          "minimum": 680.0,
+          "maximum": 1000.0,
+          "worst_quartile_mean": 776.0
+        },
+        "selection_optimism_warning": "best-of-20 agents and best-of-validation-checkpoints can be optimistic; these validation scores are selection diagnostics, not an unbiased performance estimate or a T9.1.3 performance gate; six-state qualification seeds are held out"
+      }
+    }
+  },
+  "six_state_evaluator": {
+    "state_labels": [
+      "x_plus",
+      "x_minus",
+      "y_plus",
+      "y_minus",
+      "z_plus",
+      "z_minus"
+    ],
+    "methods": [
+      "standard",
+      "mf",
+      "nmf"
+    ],
+    "trajectory_rows": 1008,
+    "event_rows": 20160,
+    "trajectory_path": "docs/t9_1_3_puviani_six_state_trajectories.parquet",
+    "event_path": "docs/t9_1_3_puviani_six_state_events.parquet",
+    "postselection": false,
+    "all_trajectories_retained": true,
+    "development_only": true,
+    "state_definition_id": "LOWDIN_ORTHONORMALIZED_FINITE_CUTOFF_GRID_CODE_V1",
+    "logical_operator_definition_id": "PROJECTOR_DEFINED_CODE_PAULI_V1",
+    "monte_carlo_design": "paired_common_random_numbers_across_states_and_strategies_clustered_by_stratum_and_evaluation_seed",
+    "raw_replay_audit": {
+      "schema_version": "t9.1.3-six-state-same-backend-replay-v1",
+      "scope": "seeded same-runtime/same-backend replay of selected checkpoints, RNG, physics, actions and raw rows; not cross-runtime bitwise reproducibility and not an independent second physics backend",
+      "group_count": 144,
+      "trajectory_count": 1008,
+      "event_count": 20160,
+      "maximum_action_absolute_error": 0.0,
+      "maximum_branch_probability_absolute_error": 0.0,
+      "maximum_projected_rho_absolute_error": 0.0,
+      "all_rows_replayed": true
+    },
+    "reconstruction": {
+      "primary_cutoff12": {
+        "standard": {
+          "selected_agent_seed": null,
+          "trajectory_count": 288,
+          "empirical_linear_inversion_subchannel_diagnostic": {
+            "ptm": [
+              [
+                0.29773582820910865,
+                -0.025784061115790416,
+                -0.0018890577172089723,
+                -0.005629491457632772
+              ],
+              [
+                -0.01673996957180814,
+                0.08918232318601121,
+                0.012689603720686428,
+                0.0047935726943430365
+              ],
+              [
+                0.002227013016008561,
+                -0.005629699137994703,
+                0.0626516479069075,
+                -0.0049676133201108225
+              ],
+              [
+                0.02611640006053023,
+                -0.018568695890366235,
+                0.012893857495341457,
+                0.06731173682053418
+              ]
+            ],
+            "choi_real": [
+              [
+                0.19276723681627014,
+                -0.005973198438732551,
+                -0.022176378503078326,
+                0.07591698554645936
+              ],
+              [
+                -0.005973198438732551,
+                0.09933909993520573,
+                0.013265337639551858,
+                -0.0036076826127120903
+              ],
+              [
+                -0.022176378503078326,
+                0.013265337639551858,
+                0.13108499145336874,
+                -0.010766771133075588
+              ],
+              [
+                0.07591698554645936,
+                -0.0036076826127120903,
+                -0.010766771133075588,
+                0.1722803282133727
+              ]
+            ],
+            "choi_imag": [
+              [
+                0.0,
+                0.0013703001520511307,
+                0.005502399889066242,
+                0.009159651429340564
+              ],
+              [
+                -0.0013703001520511307,
+                0.0,
+                0.0035299522913458626,
+                -0.007391457606275215
+              ],
+              [
+                -0.005502399889066242,
+                -0.0035299522913458626,
+                0.0,
+                -0.0035973131680596916
+              ],
+              [
+                -0.009159651429340564,
+                0.007391457606275215,
+                0.0035973131680596916,
+                0.0
+              ]
+            ],
+            "pair_sum_linearity_residual": 0.009747059081907185,
+            "minimum_choi_eigenvalue": 0.09192292543683553,
+            "tni_effect_eigenvalues": [
+              0.27127685013448666,
+              0.32419480628373043
+            ],
+            "maximum_output_hermiticity_error": 0.0,
+            "minimum_output_eigenvalue": 0.10041839806727472,
+            "minimum_survival": 0.27293041484715586,
+            "maximum_survival": 0.32449853707873666,
+            "mean_leakage": 0.7022641717908913,
+            "survival_spread": 0.051568122231580804,
+            "off_diagonal_pauli_norm": 0.027412097774989198,
+            "coherent_rotation_norm": 0.02449923050162423,
+            "nonunital_code_flow_norm": 0.031100683599564135,
+            "state_dependent_survival_norm": 0.026458978074621903,
+            "passed_physicality": false
+          },
+          "monte_carlo_pair_sum_not_deterministic_tolerance": true,
+          "empirical_cptni_passed_is_not_a_hard_gate": true,
+          "state_definition_id": "LOWDIN_ORTHONORMALIZED_FINITE_CUTOFF_GRID_CODE_V1",
+          "logical_operator_definition_id": "PROJECTOR_DEFINED_CODE_PAULI_V1",
+          "monte_carlo_design": "paired_common_random_numbers_across_states_and_strategies_clustered_by_stratum_and_evaluation_seed",
+          "raw_codeword_overlap_real": 0.08246546807714794,
+          "raw_codeword_overlap_imag": 0.0,
+          "raw_logical_gram_condition_number": 1.1797544729010412,
+          "diagnostic_scope": "unconstrained linear inversion of paired-common-random-number six-state means clustered by stratum/evaluation seed; retain CP/TNI diagnostics but do not treat finite-sample violations as physical-channel proof",
+          "maximum_joint_trace_error": 4.440892098500626e-16,
+          "maximum_joint_hermiticity_error": 0.0,
+          "maximum_projected_hermiticity_error_before_stabilization": 1.006065880787545e-16,
+          "minimum_final_joint_eigenvalue": 0.0,
+          "paper_lifetime_value": null,
+          "paper_lifetime_state": "INCOMPLETE_NULL"
+        },
+        "mf": {
+          "selected_agent_seed": 910141,
+          "trajectory_count": 288,
+          "empirical_linear_inversion_subchannel_diagnostic": {
+            "ptm": [
+              [
+                0.5459569275342411,
+                -0.029081540519165616,
+                -0.00221758726889007,
+                -0.011892161785989175
+              ],
+              [
+                -0.002559148570302116,
+                0.26761007024378547,
+                0.04347695838247942,
+                0.027932862916538886
+              ],
+              [
+                -0.018275079548880108,
+                -0.05424252175700872,
+                0.22025221711174772,
+                0.02594997153265738
+              ],
+              [
+                0.028639894916895503,
+                0.025273403389984017,
+                -0.03024378014682058,
+                0.2736091004586323
+              ]
+            ],
+            "choi_real": [
+              [
+                0.4181568805618898,
+                0.012686857173118385,
+                -0.0019040685645907995,
+                0.24393114367776658
+              ],
+              [
+                0.012686857173118385,
+                0.11590788518636203,
+                0.023678926566018874,
+                -0.027177471954574817
+              ],
+              [
+                -0.0019040685645907995,
+                0.023678926566018874,
+                0.1564399418892467,
+                -0.0152460057434205
+              ],
+              [
+                0.24393114367776658,
+                -0.027177471954574817,
+                -0.0152460057434205,
+                0.4014091474309835
+              ]
+            ],
+            "choi_imag": [
+              [
+                0.0,
+                -0.0038374459918886356,
+                -0.016230683707855326,
+                0.04885974006974407
+              ],
+              [
+                0.0038374459918886356,
+                0.0,
+                -0.005382781687264651,
+                0.014013096438965256
+              ],
+              [
+                0.016230683707855326,
+                0.005382781687264651,
+                0.0,
+                0.022112525540768743
+              ],
+              [
+                -0.04885974006974407,
+                -0.014013096438965256,
+                -0.022112525540768743,
+                0.0
+              ]
+            ],
+            "pair_sum_linearity_residual": 0.025545039604178522,
+            "minimum_choi_eigenvalue": 0.09587887768983501,
+            "tni_effect_eigenvalues": [
+              0.5144596704440251,
+              0.5774541846244566
+            ],
+            "maximum_output_hermiticity_error": 0.0,
+            "minimum_output_eigenvalue": 0.12151498084460033,
+            "minimum_survival": 0.5160589040145172,
+            "maximum_survival": 0.5742219850528484,
+            "mean_leakage": 0.45404307246575903,
+            "survival_spread": 0.05816308103833123,
+            "off_diagonal_pauli_norm": 0.08854136935067905,
+            "coherent_rotation_norm": 0.07973050624296836,
+            "nonunital_code_flow_norm": 0.0340700947279809,
+            "state_dependent_survival_norm": 0.031497257090215905,
+            "passed_physicality": false
+          },
+          "monte_carlo_pair_sum_not_deterministic_tolerance": true,
+          "empirical_cptni_passed_is_not_a_hard_gate": true,
+          "state_definition_id": "LOWDIN_ORTHONORMALIZED_FINITE_CUTOFF_GRID_CODE_V1",
+          "logical_operator_definition_id": "PROJECTOR_DEFINED_CODE_PAULI_V1",
+          "monte_carlo_design": "paired_common_random_numbers_across_states_and_strategies_clustered_by_stratum_and_evaluation_seed",
+          "raw_codeword_overlap_real": 0.08246546807714794,
+          "raw_codeword_overlap_imag": 0.0,
+          "raw_logical_gram_condition_number": 1.1797544729010412,
+          "diagnostic_scope": "unconstrained linear inversion of paired-common-random-number six-state means clustered by stratum/evaluation seed; retain CP/TNI diagnostics but do not treat finite-sample violations as physical-channel proof",
+          "maximum_joint_trace_error": 4.440892098500626e-16,
+          "maximum_joint_hermiticity_error": 0.0,
+          "maximum_projected_hermiticity_error_before_stabilization": 1.5719856095035016e-16,
+          "minimum_final_joint_eigenvalue": 0.0,
+          "paper_lifetime_value": null,
+          "paper_lifetime_state": "INCOMPLETE_NULL"
+        },
+        "nmf": {
+          "selected_agent_seed": 910001,
+          "trajectory_count": 288,
+          "empirical_linear_inversion_subchannel_diagnostic": {
+            "ptm": [
+              [
+                0.5453714783776155,
+                -0.02073829915121138,
+                -0.007622957090233473,
+                -0.016561426736655366
+              ],
+              [
+                0.0025375672435373996,
+                0.28199273591973606,
+                0.04948569607307285,
+                0.026302158206800808
+              ],
+              [
+                -0.03061219539721119,
+                -0.032429936789590955,
+                0.22763653241329357,
+                0.021195630056695704
+              ],
+              [
+                0.026613175747817075,
+                0.00536142155765694,
+                -0.043732662108599996,
+                0.2923470610761676
+              ]
+            ],
+            "choi_real": [
+              [
+                0.42388514423247237,
+                0.014419862725169104,
+                -0.007688438796777219,
+                0.25481463416651484
+              ],
+              [
+                0.014419862725169104,
+                0.1049249074084877,
+                0.027178101753221245,
+                -0.013049860354434159
+              ],
+              [
+                -0.007688438796777219,
+                0.027178101753221245,
+                0.14809950989296014,
+                -0.011882295481631704
+              ],
+              [
+                0.25481463416651484,
+                -0.013049860354434159,
+                -0.011882295481631704,
+                0.4138333952213107
+              ]
+            ],
+            "choi_imag": [
+              [
+                0.0,
+                0.004708282670257743,
+                -0.025677809599416734,
+                0.0409578164313319
+              ],
+              [
+                -0.004708282670257743,
+                0.0,
+                0.008527879641740947,
+                0.01805485250918326
+              ],
+              [
+                0.025677809599416734,
+                -0.008527879641740947,
+                0.0,
+                0.025903912726953447
+              ],
+              [
+                -0.0409578164313319,
+                -0.01805485250918326,
+                -0.025903912726953447,
+                0.0
+              ]
+            ],
+            "pair_sum_linearity_residual": 0.02904022912773179,
+            "minimum_choi_eigenvalue": 0.08438527098402293,
+            "tni_effect_eigenvalues": [
+              0.5177586664592636,
+              0.5729842902959678
+            ],
+            "maximum_output_hermiticity_error": 0.0,
+            "minimum_output_eigenvalue": 0.11395062113765002,
+            "minimum_survival": 0.5246777071793075,
+            "maximum_survival": 0.5661543054817303,
+            "mean_leakage": 0.45462852162238454,
+            "survival_spread": 0.041476598302422785,
+            "off_diagonal_pauli_norm": 0.08113497243527706,
+            "coherent_rotation_norm": 0.07538026426791539,
+            "nonunital_code_flow_norm": 0.04064242706749575,
+            "state_dependent_survival_norm": 0.027612811918351934,
+            "passed_physicality": false
+          },
+          "monte_carlo_pair_sum_not_deterministic_tolerance": true,
+          "empirical_cptni_passed_is_not_a_hard_gate": true,
+          "state_definition_id": "LOWDIN_ORTHONORMALIZED_FINITE_CUTOFF_GRID_CODE_V1",
+          "logical_operator_definition_id": "PROJECTOR_DEFINED_CODE_PAULI_V1",
+          "monte_carlo_design": "paired_common_random_numbers_across_states_and_strategies_clustered_by_stratum_and_evaluation_seed",
+          "raw_codeword_overlap_real": 0.08246546807714794,
+          "raw_codeword_overlap_imag": 0.0,
+          "raw_logical_gram_condition_number": 1.1797544729010412,
+          "diagnostic_scope": "unconstrained linear inversion of paired-common-random-number six-state means clustered by stratum/evaluation seed; retain CP/TNI diagnostics but do not treat finite-sample violations as physical-channel proof",
+          "maximum_joint_trace_error": 4.440892098500626e-16,
+          "maximum_joint_hermiticity_error": 0.0,
+          "maximum_projected_hermiticity_error_before_stabilization": 1.5730324882494575e-16,
+          "minimum_final_joint_eigenvalue": 0.0,
+          "paper_lifetime_value": null,
+          "paper_lifetime_state": "INCOMPLETE_NULL"
+        }
+      },
+      "selected_confirmation_cutoff16": {
+        "standard": {
+          "selected_agent_seed": null,
+          "trajectory_count": 48,
+          "empirical_linear_inversion_subchannel_diagnostic": {
+            "ptm": [
+              [
+                0.43787018600075056,
+                -0.00021410889682212109,
+                0.006735660300743865,
+                0.011674956030697528
+              ],
+              [
+                0.047106996438867274,
+                0.1625132930504168,
+                -0.07229042290916682,
+                -0.0059159132983715584
+              ],
+              [
+                0.017271472099148893,
+                0.029814313806286692,
+                0.08477951660328259,
+                0.0036592371617369477
+              ],
+              [
+                0.033636746820082664,
+                -0.016433533994408653,
+                0.020158003606006628,
+                0.14225640133560008
+              ]
+            ],
+            "choi_real": [
+              [
+                0.3127191450935654,
+                0.020595541570247858,
+                -0.008323821445615387,
+                0.1236464048268497
+              ],
+              [
+                0.020595541570247858,
+                0.13682599693788267,
+                0.03886688822356711,
+                0.008109712548793266
+              ],
+              [
+                -0.008323821445615387,
+                0.03886688822356711,
+                0.15878778772726782,
+                0.026511454868619416
+              ],
+              [
+                0.1236464048268497,
+                0.008109712548793266,
+                0.026511454868619416,
+                0.26740744224278523
+              ]
+            ],
+            "choi_imag": [
+              [
+                0.0,
+                -0.01046535463044292,
+                0.013446831953375246,
+                -0.05105236835772675
+              ],
+              [
+                0.01046535463044292,
+                0.0,
+                -0.021238054551440063,
+                -0.006711171652631381
+              ],
+              [
+                -0.013446831953375246,
+                0.021238054551440063,
+                0.0,
+                -0.006806117468705973
+              ],
+              [
+                0.05105236835772675,
+                0.006711171652631381,
+                0.006806117468705973,
+                0.0
+              ]
+            ],
+            "pair_sum_linearity_residual": 0.02865532215189569,
+            "minimum_choi_eigenvalue": 0.09240150524008664,
+            "tni_effect_eigenvalues": [
+              0.42438984621922293,
+              0.4513505257822782
+            ],
+            "maximum_output_hermiticity_error": 0.0,
+            "minimum_output_eigenvalue": 0.11472932371249814,
+            "minimum_survival": 0.42693128575250266,
+            "maximum_survival": 0.45028119781389775,
+            "mean_leakage": 0.5621298139992494,
+            "survival_spread": 0.023349912061395084,
+            "off_diagonal_pauli_norm": 0.08270183037763297,
+            "coherent_rotation_norm": 0.07351260741879703,
+            "nonunital_code_flow_norm": 0.06040532756803388,
+            "state_dependent_survival_norm": 0.013480339781527613,
+            "passed_physicality": false
+          },
+          "monte_carlo_pair_sum_not_deterministic_tolerance": true,
+          "empirical_cptni_passed_is_not_a_hard_gate": true,
+          "state_definition_id": "LOWDIN_ORTHONORMALIZED_FINITE_CUTOFF_GRID_CODE_V1",
+          "logical_operator_definition_id": "PROJECTOR_DEFINED_CODE_PAULI_V1",
+          "monte_carlo_design": "paired_common_random_numbers_across_states_and_strategies_clustered_by_stratum_and_evaluation_seed",
+          "raw_codeword_overlap_real": -0.029627270854391152,
+          "raw_codeword_overlap_imag": 0.0,
+          "raw_logical_gram_condition_number": 1.0610636922586998,
+          "diagnostic_scope": "unconstrained linear inversion of paired-common-random-number six-state means clustered by stratum/evaluation seed; retain CP/TNI diagnostics but do not treat finite-sample violations as physical-channel proof",
+          "maximum_joint_trace_error": 4.440892098500626e-16,
+          "maximum_joint_hermiticity_error": 0.0,
+          "maximum_projected_hermiticity_error_before_stabilization": 1.5710233054731715e-16,
+          "minimum_final_joint_eigenvalue": 0.0,
+          "paper_lifetime_value": null,
+          "paper_lifetime_state": "INCOMPLETE_NULL"
+        },
+        "mf": {
+          "selected_agent_seed": 910141,
+          "trajectory_count": 48,
+          "empirical_linear_inversion_subchannel_diagnostic": {
+            "ptm": [
+              [
+                0.4817876416267821,
+                0.006324842112019696,
+                0.00011934753645652385,
+                0.004052875577043702
+              ],
+              [
+                -0.017331858031312222,
+                0.17395358494874472,
+                0.03101540555911479,
+                -0.008930700881810309
+              ],
+              [
+                0.003120028822203943,
+                -0.017062022501238897,
+                0.10320463207430922,
+                0.034809990007131836
+              ],
+              [
+                -0.04496668609407428,
+                0.016107313478464974,
+                -0.026772344824040853,
+                0.1867493747984621
+              ]
+            ],
+            "choi_real": [
+              [
+                0.3138116029541068,
+                -0.013131279456561265,
+                0.011216077795242335,
+                0.13857910851152697
+              ],
+              [
+                -0.013131279456561265,
+                0.172028914249719,
+                0.03537447643721775,
+                -0.004891235683222639
+              ],
+              [
+                0.011216077795242335,
+                0.03537447643721775,
+                0.12300935257860102,
+                -0.004200578574750957
+              ],
+              [
+                0.13857910851152697,
+                -0.004891235683222639,
+                -0.004200578574750957,
+                0.3547254134711374
+              ]
+            ],
+            "choi_imag": [
+              [
+                0.0,
+                -0.018965009414667888,
+                -0.013326498643792165,
+                0.024038714030176843
+              ],
+              [
+                0.018965009414667888,
+                0.0,
+                0.006976691528937946,
+                0.013445846180248688
+              ],
+              [
+                0.013326498643792165,
+                -0.006976691528937946,
+                0.0,
+                0.015844980592463948
+              ],
+              [
+                -0.024038714030176843,
+                -0.013445846180248688,
+                -0.015844980592463948,
+                0.0
+              ]
+            ],
+            "pair_sum_linearity_residual": 0.04677825363985534,
+            "minimum_choi_eigenvalue": 0.10192868065764764,
+            "tni_effect_eigenvalues": [
+              0.47427474125346214,
+              0.48930054200010226
+            ],
+            "maximum_output_hermiticity_error": 0.0,
+            "minimum_output_eigenvalue": 0.13314661273324982,
+            "minimum_survival": 0.47522926963944556,
+            "maximum_survival": 0.487878953863485,
+            "mean_leakage": 0.5182123583732179,
+            "survival_spread": 0.012649684224039448,
+            "off_diagonal_pauli_norm": 0.05933603299207846,
+            "coherent_rotation_norm": 0.058011745428242806,
+            "nonunital_code_flow_norm": 0.04829213953587021,
+            "state_dependent_survival_norm": 0.007512900373320103,
+            "passed_physicality": false
+          },
+          "monte_carlo_pair_sum_not_deterministic_tolerance": true,
+          "empirical_cptni_passed_is_not_a_hard_gate": true,
+          "state_definition_id": "LOWDIN_ORTHONORMALIZED_FINITE_CUTOFF_GRID_CODE_V1",
+          "logical_operator_definition_id": "PROJECTOR_DEFINED_CODE_PAULI_V1",
+          "monte_carlo_design": "paired_common_random_numbers_across_states_and_strategies_clustered_by_stratum_and_evaluation_seed",
+          "raw_codeword_overlap_real": -0.029627270854391152,
+          "raw_codeword_overlap_imag": 0.0,
+          "raw_logical_gram_condition_number": 1.0610636922586998,
+          "diagnostic_scope": "unconstrained linear inversion of paired-common-random-number six-state means clustered by stratum/evaluation seed; retain CP/TNI diagnostics but do not treat finite-sample violations as physical-channel proof",
+          "maximum_joint_trace_error": 4.440892098500626e-16,
+          "maximum_joint_hermiticity_error": 0.0,
+          "maximum_projected_hermiticity_error_before_stabilization": 1.5734968630942981e-16,
+          "minimum_final_joint_eigenvalue": 0.0,
+          "paper_lifetime_value": null,
+          "paper_lifetime_state": "INCOMPLETE_NULL"
+        },
+        "nmf": {
+          "selected_agent_seed": 910001,
+          "trajectory_count": 48,
+          "empirical_linear_inversion_subchannel_diagnostic": {
+            "ptm": [
+              [
+                0.4903217291711013,
+                0.003576803792127728,
+                -0.002556226361011299,
+                0.0031064357225202843
+              ],
+              [
+                0.005051510906145775,
+                0.21828401493195076,
+                0.0206686448538551,
+                0.01966734453849135
+              ],
+              [
+                -0.0021467918062113935,
+                -0.007830086287090886,
+                0.10363735100467954,
+                0.014165252334073938
+              ],
+              [
+                -0.016847448314270208,
+                0.008944993629830159,
+                -0.04134163604081237,
+                0.21533241276752896
+              ]
+            ],
+            "choi_real": [
+              [
+                0.34595656467344016,
+                0.012359427722318562,
+                0.006260898710978943,
+                0.16096068296831514
+              ],
+              [
+                0.012359427722318562,
+                0.1474716002201814,
+                0.057323331963635614,
+                -0.0026840949188512153
+              ],
+              [
+                0.006260898710978943,
+                0.057323331963635614,
+                0.12751771618339092,
+                -0.007307916816172787
+              ],
+              [
+                0.16096068296831514,
+                -0.0026840949188512153,
+                -0.007307916816172787,
+                0.3596975772651901
+              ]
+            ],
+            "choi_imag": [
+              [
+                0.0,
+                -0.006009230263931273,
+                -0.021948931200911834,
+                0.014249365570472993
+              ],
+              [
+                0.006009230263931273,
+                0.0,
+                0.006419279283382108,
+                0.019392704839900535
+              ],
+              [
+                0.021948931200911834,
+                -0.006419279283382108,
+                0.0,
+                0.008156022070142667
+              ],
+              [
+                -0.014249365570472993,
+                -0.019392704839900535,
+                -0.008156022070142667,
+                0.0
+              ]
+            ],
+            "pair_sum_linearity_residual": 0.053961111649903075,
+            "minimum_choi_eigenvalue": 0.07700545098441297,
+            "tni_effect_eigenvalues": [
+              0.48493862955524236,
+              0.49570482878696
+            ],
+            "maximum_output_hermiticity_error": 0.0,
+            "minimum_output_eigenvalue": 0.11790443951793252,
+            "minimum_survival": 0.4869728007850774,
+            "maximum_survival": 0.49428407408826014,
+            "mean_leakage": 0.5096782708288987,
+            "survival_spread": 0.007311273303182764,
+            "off_diagonal_pauli_norm": 0.05352668239121953,
+            "coherent_rotation_norm": 0.044766958477846584,
+            "nonunital_code_flow_norm": 0.017719000880301695,
+            "state_dependent_survival_norm": 0.005383099615858737,
+            "passed_physicality": false
+          },
+          "monte_carlo_pair_sum_not_deterministic_tolerance": true,
+          "empirical_cptni_passed_is_not_a_hard_gate": true,
+          "state_definition_id": "LOWDIN_ORTHONORMALIZED_FINITE_CUTOFF_GRID_CODE_V1",
+          "logical_operator_definition_id": "PROJECTOR_DEFINED_CODE_PAULI_V1",
+          "monte_carlo_design": "paired_common_random_numbers_across_states_and_strategies_clustered_by_stratum_and_evaluation_seed",
+          "raw_codeword_overlap_real": -0.029627270854391152,
+          "raw_codeword_overlap_imag": 0.0,
+          "raw_logical_gram_condition_number": 1.0610636922586998,
+          "diagnostic_scope": "unconstrained linear inversion of paired-common-random-number six-state means clustered by stratum/evaluation seed; retain CP/TNI diagnostics but do not treat finite-sample violations as physical-channel proof",
+          "maximum_joint_trace_error": 4.440892098500626e-16,
+          "maximum_joint_hermiticity_error": 0.0,
+          "maximum_projected_hermiticity_error_before_stabilization": 8.120764593187013e-17,
+          "minimum_final_joint_eigenvalue": 0.0,
+          "paper_lifetime_value": null,
+          "paper_lifetime_state": "INCOMPLETE_NULL"
+        }
+      }
+    },
+    "qualification_scope": "finite-cutoff ten-cycle executable/raw qualification only; not a paper lifetime and not Phase9 >=1e4-cycle formal evidence"
+  },
+  "training_ledger": {
+    "path": "docs/t9_1_3_puviani_training_ledger.parquet",
+    "rows": 40000,
+    "all_epochs_all_agents": true,
+    "family_sentinel_full_retrain": {
+      "schema_version": "t9.1.3-family-sentinel-retrain-v1",
+      "claim_scope": "two_of_forty_production_agents",
+      "sentinel_rule": "first_frozen_paired_root_per_family",
+      "execution_mode": "sequential_same_runtime_agent_local_rng_isolation",
+      "sentinel_agent_count": 2,
+      "population_agent_count": 40,
+      "families": [
+        {
+          "strategy": "mf",
+          "root_seed": 910001,
+          "epochs_retrained": 1000,
+          "validation_candidates_retrained": 26,
+          "training_evidence_sha256": "aa765d843cc1ec59969ff6d9025a5c912f294c1b1af4256fc1dcc16dbd0b21be",
+          "epoch_lineage_ledger_sha256": "d940e320759d5462deb9c57ac619fb78306f59078bb79e3d1372423e62460433",
+          "terminal_model_sha256": "d66cadfc0f7cb6ef3228eaf1508c51a35943fa7a2ecd75deb7bea674ff00d0fc",
+          "terminal_optimizer_sha256": "4906a18db6506e6a05fe233469eb45613c5c3d92ad75978dbca7e342be924c37",
+          "terminal_rng_sha256": "a5434bd4d9a7997ab88536b29ac7deabba41ae5c72523345c185afc746175de2",
+          "validation_selected_sha256": "408850c01aef4a61f77f34aa13652a0e11358fcda24f7fdc5c0d3a812058dd1b",
+          "maximum_numeric_absolute_error": 0.0,
+          "all_epoch_metrics_candidates_and_terminal_exact": true
+        },
+        {
+          "strategy": "nmf",
+          "root_seed": 910001,
+          "epochs_retrained": 1000,
+          "validation_candidates_retrained": 26,
+          "training_evidence_sha256": "bf1a7428098e577939b3eb8b3aea417a98b4b662169b20994a64bf7dd0710186",
+          "epoch_lineage_ledger_sha256": "22519c1695c76265f9021c7d25b04943e5e34ce799b11570e5fa4911fbd9e9ad",
+          "terminal_model_sha256": "28ca8b22727a692c564af8a82b1227d6eeb82cc9f995b4cf78320d3611bee76b",
+          "terminal_optimizer_sha256": "84792799e5bd67d6567711b182ebd760cfcabea2be1eb1bfe08abd3bd94c35a2",
+          "terminal_rng_sha256": "e6be4283a42313c620d7154ea71e18123a5f2c41cbf2c62431bcc7c3e46e2d7e",
+          "validation_selected_sha256": "9deaf6d7099e2b29db28bc49f6d69421572b0d480957f1de39873c1e45bb8d17",
+          "maximum_numeric_absolute_error": 0.0,
+          "all_epoch_metrics_candidates_and_terminal_exact": true
+        }
+      ],
+      "all_sentinels_exactly_reproduced": true,
+      "temporary_artifacts_deleted": true,
+      "replay_ledger_sha256": "abb31056b983e97e89b9acccbb43624f23456bd6981846806bdace10dbc55032"
+    }
+  },
+  "failure_attempt_ledger": {
+    "count": 0,
+    "attempts": [],
+    "distinct_runtime_signature_sha256": [],
+    "all_failure_runtime_signatures_self_bound": true,
+    "silent_drop": false,
+    "note": "A retained failed attempt does not replace the required completed agent; all 40 completed checkpoints remain mandatory."
+  },
+  "output_tree_audit": {
+    "root": "docs/t9_1_3_puviani_agents",
+    "output_file_count": 200,
+    "unknown_or_orphan_files": [],
+    "training_attempt_count": 40,
+    "training_attempts": [
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910001_20260723T120908908792Z_37204_1784808548908792700",
+        "strategy": "mf",
+        "root_seed": 910001,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910019_20260723T122812194749Z_37204_1784809692194749800",
+        "strategy": "mf",
+        "root_seed": 910019,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910033_20260723T124622554517Z_37204_1784810782554517000",
+        "strategy": "mf",
+        "root_seed": 910033,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910051_20260723T130616998094Z_37204_1784811976999087800",
+        "strategy": "mf",
+        "root_seed": 910051,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910069_20260723T132623635309Z_37204_1784813183635309100",
+        "strategy": "mf",
+        "root_seed": 910069,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910079_20260723T134650696012Z_37204_1784814410696012400",
+        "strategy": "mf",
+        "root_seed": 910079,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910099_20260723T140657708518Z_37204_1784815617708518100",
+        "strategy": "mf",
+        "root_seed": 910099,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910103_20260723T142704997409Z_37204_1784816824997409800",
+        "strategy": "mf",
+        "root_seed": 910103,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910121_20260723T144714731634Z_37204_1784818034731634500",
+        "strategy": "mf",
+        "root_seed": 910121,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910141_20260723T151420917920Z_37204_1784819660917920200",
+        "strategy": "mf",
+        "root_seed": 910141,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910153_20260723T153439943267Z_37204_1784820879943267800",
+        "strategy": "mf",
+        "root_seed": 910153,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910157_20260723T155452371822Z_37204_1784822092371822100",
+        "strategy": "mf",
+        "root_seed": 910157,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910171_20260723T161524793927Z_37204_1784823324793927800",
+        "strategy": "mf",
+        "root_seed": 910171,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910177_20260723T163716343170Z_37204_1784824636343170200",
+        "strategy": "mf",
+        "root_seed": 910177,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910199_20260723T170006564277Z_37204_1784826006564277600",
+        "strategy": "mf",
+        "root_seed": 910199,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910201_20260723T172306040175Z_37204_1784827386040175900",
+        "strategy": "mf",
+        "root_seed": 910201,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910213_20260723T174323034394Z_37204_1784828603034394000",
+        "strategy": "mf",
+        "root_seed": 910213,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910219_20260723T180759695785Z_37204_1784830079695785800",
+        "strategy": "mf",
+        "root_seed": 910219,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910229_20260723T182801572950Z_37204_1784831281572950100",
+        "strategy": "mf",
+        "root_seed": 910229,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910277_20260723T184815481904Z_37204_1784832495481904000",
+        "strategy": "mf",
+        "root_seed": 910277,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910001_20260723T190814431231Z_33316_1784833694431231200",
+        "strategy": "nmf",
+        "root_seed": 910001,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910019_20260723T192750621837Z_33316_1784834870621837600",
+        "strategy": "nmf",
+        "root_seed": 910019,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910033_20260723T194711881129Z_33316_1784836031881129600",
+        "strategy": "nmf",
+        "root_seed": 910033,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910051_20260723T200627833011Z_33316_1784837187833011000",
+        "strategy": "nmf",
+        "root_seed": 910051,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910069_20260723T202548767212Z_33316_1784838348767212200",
+        "strategy": "nmf",
+        "root_seed": 910069,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910079_20260723T204513938218Z_33316_1784839513939276600",
+        "strategy": "nmf",
+        "root_seed": 910079,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910099_20260723T210444170878Z_33316_1784840684170878800",
+        "strategy": "nmf",
+        "root_seed": 910099,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910103_20260723T212409654747Z_33316_1784841849654747600",
+        "strategy": "nmf",
+        "root_seed": 910103,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910121_20260723T214330370503Z_33316_1784843010370503900",
+        "strategy": "nmf",
+        "root_seed": 910121,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910141_20260723T220253741633Z_33316_1784844173741633000",
+        "strategy": "nmf",
+        "root_seed": 910141,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910153_20260723T222223978578Z_33316_1784845343978578900",
+        "strategy": "nmf",
+        "root_seed": 910153,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910157_20260723T224148786687Z_33316_1784846508786687700",
+        "strategy": "nmf",
+        "root_seed": 910157,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910171_20260723T230103297481Z_33316_1784847663297481800",
+        "strategy": "nmf",
+        "root_seed": 910171,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910177_20260723T232024188683Z_33316_1784848824188683700",
+        "strategy": "nmf",
+        "root_seed": 910177,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910199_20260723T233944570544Z_33316_1784849984570544700",
+        "strategy": "nmf",
+        "root_seed": 910199,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910201_20260723T235914734035Z_33316_1784851154734035300",
+        "strategy": "nmf",
+        "root_seed": 910201,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910213_20260724T001851961445Z_33316_1784852331961445100",
+        "strategy": "nmf",
+        "root_seed": 910213,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910219_20260724T003820588373Z_33316_1784853500588373600",
+        "strategy": "nmf",
+        "root_seed": 910219,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910229_20260724T005751946145Z_33316_1784854671946145200",
+        "strategy": "nmf",
+        "root_seed": 910229,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910277_20260724T011744249025Z_33316_1784855864249025400",
+        "strategy": "nmf",
+        "root_seed": 910277,
+        "valid_start": true,
+        "valid_outcome": true,
+        "runtime_signature_state": "CAPTURED_BEFORE_TRAINING",
+        "training_runtime_signature_sha256": "b61603515e00c19af1806db647cea45c9b4c08c345c71827a81aa9de93e9ebdf",
+        "terminal_marker_count": 1,
+        "state": "SUCCESS"
+      }
+    ],
+    "all_training_attempts_terminal_and_valid": true,
+    "every_agent_has_successful_attempt": true
+  },
+  "deviation_ledger": {
+    "path": "configs/phase9/t9_1_3_deviation_ledger.json",
+    "sha256": "69a75c07452b9dea3e445cf683394663e165a72db47986276cc65dd44078e8e0",
+    "entry_count": 42,
+    "critical_or_high_count": 39
+  },
+  "paper_scale_numerical_result": {
+    "state": "INCOMPLETE_NULL",
+    "value": null,
+    "reason": "cutoff-100 and 1000-cycle six-state full-denominator evaluation has not been executed; finite-cutoff ten-cycle qualification is non-promotional",
+    "required_cutoff": 100,
+    "required_cycles": 1000,
+    "current_qualification_cutoffs": [
+      12,
+      16
+    ],
+    "current_qualification_cycles": 10,
+    "published_anchor_comparison_eligible": false
+  },
+  "external_claim_slots": {
+    "official_exact": null,
+    "puviani_surpass": null,
+    "paper_T_X_T_Y_T_Z_T_ch": null
+  },
+  "artifact_manifest": {
+    "files": [
+      {
+        "path": "cnn_fpga/benchmark/phase9_three_lane_protocol.py",
+        "sha256": "3ebc7957065587337aeb347b807b9f8fa54a1051bf644a8b1113711e6b12d5e9",
+        "bytes": 51962
+      },
+      {
+        "path": "cnn_fpga/benchmark/puviani_paper_constrained_artifacts.py",
+        "sha256": "5c8039430cb335360a17ebb139888f37ffbfb7cd1c4524bf09f8a8c4e7bf92bf",
+        "bytes": 447075
+      },
+      {
+        "path": "cnn_fpga/benchmark/t9_1_3_gpu_attestation.py",
+        "sha256": "876d9f2bf3359b4f907ffebdf08c434f34a30095932ad3903ae7ba4977eb6ae7",
+        "bytes": 36934
+      },
+      {
+        "path": "configs/gqf_official/paper_exact_preregistration.json",
+        "sha256": "b1636d2d19f6565f559b33bb832b4ef1055068028984ba6699190f6491c92ff6",
+        "bytes": 4670
+      },
+      {
+        "path": "configs/gqf_official/patch_manifest.json",
+        "sha256": "b28871424d408b726a768c00e45c0997237d8a879588c47085926105ac93aa4e",
+        "bytes": 1683
+      },
+      {
+        "path": "configs/phase9/t9_1_3_deviation_ledger.json",
+        "sha256": "69a75c07452b9dea3e445cf683394663e165a72db47986276cc65dd44078e8e0",
+        "bytes": 48578
+      },
+      {
+        "path": "configs/phase9/t9_1_3_puviani_paper_constrained.json",
+        "sha256": "a93edf5cfbdfe22490a1d7cff967f61b0b0add38662eeaf546390dae32c3cbf9",
+        "bytes": 15145
+      },
+      {
+        "path": "docs/phase9_three_lane_protocol.md",
+        "sha256": "8a4f23e867dc97ebffbe2b532697f837bf360c975fe1a61fe5de22f998fddc77",
+        "bytes": 21207
+      },
+      {
+        "path": "docs/t9_1_1_three_lane_protocol.json",
+        "sha256": "255c50ce677a1cae5475c2294177ceaab551bcbb5078ee2d49b358600a58f7a5",
+        "bytes": 74510
+      },
+      {
+        "path": "docs/t9_1_1_three_lane_protocol_source_data.csv",
+        "sha256": "9148034791002183f94795e2f66bc8971668ddf76664da86abb71cf950820970",
+        "bytes": 66455
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agent_registry.csv",
+        "sha256": "5290d62c462ed71ae003f3f75a80da9dddd9951c7ed1b0dd587ace96a4a6c3cc",
+        "bytes": 57263
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910001_20260723T120908908792Z_37204_1784808548908792700/outcome.json",
+        "sha256": "04e8ba60dd556fcacca2718020012d7399e5d139d2d24f6e8888861b812b53fa",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910001_20260723T120908908792Z_37204_1784808548908792700/start.json",
+        "sha256": "6c81bb52feaed464ce566e39d70f22e1216d868bd63f25c735784f4f940e1a7b",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910019_20260723T122812194749Z_37204_1784809692194749800/outcome.json",
+        "sha256": "a16b80efb68bee1ab0edb7d557a95d178152cb6c638cc8b70e4dcf5d8355c3d4",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910019_20260723T122812194749Z_37204_1784809692194749800/start.json",
+        "sha256": "b7c5088fbd4e998d156fda3177ff868b0f99612b364e0839fc32b7c381e391bb",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910033_20260723T124622554517Z_37204_1784810782554517000/outcome.json",
+        "sha256": "4357e9bbc5f99826d321bec262a47c2a72cf7f4aab3eb4893c259e64c223a0c4",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910033_20260723T124622554517Z_37204_1784810782554517000/start.json",
+        "sha256": "957f87f1cabed0b86f5c90928484f1f847696f2909d7443cd6e75ebf9fa356c6",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910051_20260723T130616998094Z_37204_1784811976999087800/outcome.json",
+        "sha256": "f7d0afaa6fcfe2a0d8944bd3ae81010d8979265fad2c00b76b726d3065de33d8",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910051_20260723T130616998094Z_37204_1784811976999087800/start.json",
+        "sha256": "1709b92f073885d74d503703b237dd8da445b2ebf3dc74cbd9d9edf6f03d8cb2",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910069_20260723T132623635309Z_37204_1784813183635309100/outcome.json",
+        "sha256": "035c15a21c6dc1becf5fdaebf2f028af35ec2c671e2b8e7af931f4aec80d3f75",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910069_20260723T132623635309Z_37204_1784813183635309100/start.json",
+        "sha256": "ef4064d8b51c790c87edec333ca6923e2cb609f2f0db16302c74679383feb644",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910079_20260723T134650696012Z_37204_1784814410696012400/outcome.json",
+        "sha256": "a7a9c76bb007153bb364d9fb78f5024fb2f889c11f46d3d04620336ffb510cbb",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910079_20260723T134650696012Z_37204_1784814410696012400/start.json",
+        "sha256": "cbe88294c785263b9ac27580adb28986d3c428a2556118c0a26f0c74f3db4ceb",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910099_20260723T140657708518Z_37204_1784815617708518100/outcome.json",
+        "sha256": "a1f25751f180d75c516ab7945b2f7a20450fbdf7fffccf02ddde66affe15ce8a",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910099_20260723T140657708518Z_37204_1784815617708518100/start.json",
+        "sha256": "6dc62ffabc0ea40682c9fc634f753375ff1b2fa9abfbd70b1b73ff76e2ac01be",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910103_20260723T142704997409Z_37204_1784816824997409800/outcome.json",
+        "sha256": "acc871ea6db1c0c56742e5606816d199cee766488468d1783bd77136174a8586",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910103_20260723T142704997409Z_37204_1784816824997409800/start.json",
+        "sha256": "58d253826affafd9c4a64e9fa46ff33a9b32e1ecba9841c8da7da0844e6b4fa3",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910121_20260723T144714731634Z_37204_1784818034731634500/outcome.json",
+        "sha256": "ac05bd21b3c95e560afdfa5372617938d282ac4ac2475b13a543e69184c3bc02",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910121_20260723T144714731634Z_37204_1784818034731634500/start.json",
+        "sha256": "c4f56dd391505d62f8fac73c53667a9487df7f1977046e7249b3ee56d7ab5950",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910141_20260723T151420917920Z_37204_1784819660917920200/outcome.json",
+        "sha256": "3e0b48dce337159233a183684449fab335b10079e5a2ce7f2b65509a3218efc7",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910141_20260723T151420917920Z_37204_1784819660917920200/start.json",
+        "sha256": "e219b437aa87e3d314c283a28fb37b5433918c6f635e5f911bbd41112f76d647",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910153_20260723T153439943267Z_37204_1784820879943267800/outcome.json",
+        "sha256": "7042f83ca5e15de2df862bddad6acca593292d5b54ec1c1df5db07be04169d7c",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910153_20260723T153439943267Z_37204_1784820879943267800/start.json",
+        "sha256": "946b4feb5f23c68f92e0bbf4189b2d5fa44f3a7ef05cd9f295f6f71abccf04be",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910157_20260723T155452371822Z_37204_1784822092371822100/outcome.json",
+        "sha256": "2b9b8fe4d324d3b42d360dda9e34a850238708319e90969c906ba77b25add089",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910157_20260723T155452371822Z_37204_1784822092371822100/start.json",
+        "sha256": "b967751247eb51a1e7865adc337ec2ee1535925a5e80120a6367d8f62d4dea1c",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910171_20260723T161524793927Z_37204_1784823324793927800/outcome.json",
+        "sha256": "81adcd5d5982e5539d556b77df372e27147665ce010ab0ec262084733774570f",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910171_20260723T161524793927Z_37204_1784823324793927800/start.json",
+        "sha256": "343dda534ae4a335b40e8eab6eac9c07afe48fe3021cdff0df0f45cdcaae80bf",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910177_20260723T163716343170Z_37204_1784824636343170200/outcome.json",
+        "sha256": "b932b80a6a4a346c87fb936f79b841ae4c3ca7b8bf1bc3e46429e3b4f682e666",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910177_20260723T163716343170Z_37204_1784824636343170200/start.json",
+        "sha256": "6221b46549bfa504517144f02c4ee0ef7daa583cd275ea6cbecce49a2bd3573a",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910199_20260723T170006564277Z_37204_1784826006564277600/outcome.json",
+        "sha256": "c6c08165013c45926ac9f8805b76d0f841965de1702c819f7c0b743146184978",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910199_20260723T170006564277Z_37204_1784826006564277600/start.json",
+        "sha256": "823c4e422bbe49fb9d318e1d83c295260d2f71bb34ecc812977a0a708b7b7cd0",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910201_20260723T172306040175Z_37204_1784827386040175900/outcome.json",
+        "sha256": "0a3609b07d5a9b97d5ed8fb04d8b75789c2c66855dd63357d046b38b87490ede",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910201_20260723T172306040175Z_37204_1784827386040175900/start.json",
+        "sha256": "d007df5d5bbf5cfbd212229631170fd098943b58a12c33149ebeea8131772f15",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910213_20260723T174323034394Z_37204_1784828603034394000/outcome.json",
+        "sha256": "9bf1f249630cfe5b8f68006bff71c43b5cd4e9b6088c84327738827a7f3e6f4b",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910213_20260723T174323034394Z_37204_1784828603034394000/start.json",
+        "sha256": "7eff575a4b82b939b9736d774d6ba8b7f78a426925637a06c7f2e7ff663f90ef",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910219_20260723T180759695785Z_37204_1784830079695785800/outcome.json",
+        "sha256": "c18321af02ce303f70a075c74d37df62900bbaefb79c4d3bb90d7ca6445c346d",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910219_20260723T180759695785Z_37204_1784830079695785800/start.json",
+        "sha256": "6b92d196088c4c1989bab3f72838bcd387626421769d9de76e38614ec3f977d0",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910229_20260723T182801572950Z_37204_1784831281572950100/outcome.json",
+        "sha256": "1987ad9f78c1cc216519e9f155fea89d6a93a83aebff00ab112a884be1c9b5b3",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910229_20260723T182801572950Z_37204_1784831281572950100/start.json",
+        "sha256": "537073d64a44aed1b9273067155b3694a46ad99adf049d0cc6ab83945cf03494",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910277_20260723T184815481904Z_37204_1784832495481904000/outcome.json",
+        "sha256": "c05c948e554def4c8e07567500b4a3167243369b7c532a0c2ebd48cd5cbaf0f1",
+        "bytes": 1543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/mf_seed_910277_20260723T184815481904Z_37204_1784832495481904000/start.json",
+        "sha256": "cc40f1c835c044a8596158ea2b513d8a664951df5a1cfc392743cce058d5713b",
+        "bytes": 3843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910001_20260723T190814431231Z_33316_1784833694431231200/outcome.json",
+        "sha256": "19f9ad38307a364ef84d2e9198566c4fce0aacc41871e8975a9f5ddc4350c2ac",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910001_20260723T190814431231Z_33316_1784833694431231200/start.json",
+        "sha256": "b1d20c26408d3c3abde58adcc5f2e020a460f6b91817328d1cf99ced1e8b3ed3",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910019_20260723T192750621837Z_33316_1784834870621837600/outcome.json",
+        "sha256": "e7041b9aa2a3bf2d9bac12d84270933ee156d77937f787bb788a1c32c4e68e79",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910019_20260723T192750621837Z_33316_1784834870621837600/start.json",
+        "sha256": "2a153150ac350656cfd266b5d8a0a70ebe095da36063e0f352b2296f9b71053f",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910033_20260723T194711881129Z_33316_1784836031881129600/outcome.json",
+        "sha256": "2c457d5cc7a139288497d39f61c1f46349b9058df8fb12f14a3c221e2dbcb464",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910033_20260723T194711881129Z_33316_1784836031881129600/start.json",
+        "sha256": "50eb096c7129d8fccd57f6df1046465991b41e11edc8fb2364dd9ac84dee7733",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910051_20260723T200627833011Z_33316_1784837187833011000/outcome.json",
+        "sha256": "a573b8a3e3a9c3d717c7c389d896ba6b9aea54af9aef475426157e38e04fc1a1",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910051_20260723T200627833011Z_33316_1784837187833011000/start.json",
+        "sha256": "826640f5473a08f8fa476f4124814a0bf0024bc6de394a5e45cc78cd8cf8f505",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910069_20260723T202548767212Z_33316_1784838348767212200/outcome.json",
+        "sha256": "f265a833537f5fa580b3ea886e077f08ef648098d4e8c7547fc8a9f313db9e14",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910069_20260723T202548767212Z_33316_1784838348767212200/start.json",
+        "sha256": "91282ade235a0eb4d8b8edfc62fd19fe8b60f70a7aad6a1189a96d5629f72190",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910079_20260723T204513938218Z_33316_1784839513939276600/outcome.json",
+        "sha256": "2697ae28bcd2eaa0510d47da4cc17a88e45e75e608f2a4e1101fb860a336589d",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910079_20260723T204513938218Z_33316_1784839513939276600/start.json",
+        "sha256": "61bd49a5be914a55554b5949a29a5b740d95ea932dd7f76896b9ffd966989da0",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910099_20260723T210444170878Z_33316_1784840684170878800/outcome.json",
+        "sha256": "4c7294aca329e7b34b7400cb9771bc5e03f136a72a1fb796185813878bba497e",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910099_20260723T210444170878Z_33316_1784840684170878800/start.json",
+        "sha256": "d95241866776175a6c13fd04472c9e9160f5cee95d599735d520f81ffe13935a",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910103_20260723T212409654747Z_33316_1784841849654747600/outcome.json",
+        "sha256": "4dc9d0155cacca0384fbfb0cab3413a653975d976d1d6ae2caf67aabc5a81b15",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910103_20260723T212409654747Z_33316_1784841849654747600/start.json",
+        "sha256": "33effdcbe7c21b1e4281528ea82582fe2c47a6bbe606b62a64506464c642b56b",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910121_20260723T214330370503Z_33316_1784843010370503900/outcome.json",
+        "sha256": "78e5591d83608a0e2e4c2646a21bcd36bca69794d96999e692bd4ef28d4e659e",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910121_20260723T214330370503Z_33316_1784843010370503900/start.json",
+        "sha256": "9659b492d9cfef1c2d00588dbdacd9ac4e75b4cef4b64079dcba2cab6fc2762e",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910141_20260723T220253741633Z_33316_1784844173741633000/outcome.json",
+        "sha256": "f6b50ddf30230a1f12b3296273046b27008b895953bebfbe5f1c01b48c38e900",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910141_20260723T220253741633Z_33316_1784844173741633000/start.json",
+        "sha256": "77628a3978404749f90e5072456842669ec9d0d09394eea43b6b3ae21249c817",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910153_20260723T222223978578Z_33316_1784845343978578900/outcome.json",
+        "sha256": "958ef250153b7a77bdbe6b1fd9ec9ec7ecb52e741238b73c0444cbdeaefd047b",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910153_20260723T222223978578Z_33316_1784845343978578900/start.json",
+        "sha256": "8f7973ee062181697e306fd8eeae91f748d574065fd1ab24ec11773d0da4a2c0",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910157_20260723T224148786687Z_33316_1784846508786687700/outcome.json",
+        "sha256": "73e0450a120898f8596d90c98800c708fdae960b51cd9332e0a32554265dfbcf",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910157_20260723T224148786687Z_33316_1784846508786687700/start.json",
+        "sha256": "0125c0cca64825e83a2d7da4510202804e7fe30320e26f59591cd8e0e855eb17",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910171_20260723T230103297481Z_33316_1784847663297481800/outcome.json",
+        "sha256": "bf34166a439eaa509f5ecf874a375234be074825e95c257960e8e6833a099475",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910171_20260723T230103297481Z_33316_1784847663297481800/start.json",
+        "sha256": "9de296060c6a40a83a2bce7cf3d1de13ef34935033c6988c69e1dc747e3e19c9",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910177_20260723T232024188683Z_33316_1784848824188683700/outcome.json",
+        "sha256": "1c37a2c742b95a60115f4c6ae742c3432d67cc4cb7d62da9a35a66fabdebaea1",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910177_20260723T232024188683Z_33316_1784848824188683700/start.json",
+        "sha256": "a1486b83a70a34cb20816413970c44e85cd43029a947436c6d4cc4973d88ff4a",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910199_20260723T233944570544Z_33316_1784849984570544700/outcome.json",
+        "sha256": "97bdfae66ad017a1a506b2e8e30dbc020c5a5491a98bb48e54ca43d592a087a1",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910199_20260723T233944570544Z_33316_1784849984570544700/start.json",
+        "sha256": "e41f9eab87b8ad4f38a1a60d9a12fa69f993cc82a1514d3f636f3ec7900375eb",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910201_20260723T235914734035Z_33316_1784851154734035300/outcome.json",
+        "sha256": "582c2f00bd0319391fa6de85ad1d1beb65d08ea85cda8f3e1cc7a0f71a897825",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910201_20260723T235914734035Z_33316_1784851154734035300/start.json",
+        "sha256": "f0a27017005d876e4a23fbed71c34fc88fda60514360eebcae2415914ddac22a",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910213_20260724T001851961445Z_33316_1784852331961445100/outcome.json",
+        "sha256": "6420f621e402d576cab636a23094a994bb3b950304ae16f3fbefae08c7e65fe1",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910213_20260724T001851961445Z_33316_1784852331961445100/start.json",
+        "sha256": "a7754ca3c97938d6289c6670f36eeb15c4eadc9c64aea0980fbbc86e2a3056e8",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910219_20260724T003820588373Z_33316_1784853500588373600/outcome.json",
+        "sha256": "7d137f6443dff1b121fc316eb616b5793648f660b0592a39c082589c5453c400",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910219_20260724T003820588373Z_33316_1784853500588373600/start.json",
+        "sha256": "13e582632b60d89d61a7ffb167e5999478f3343e93216ac6a8ef6f7b06f1652e",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910229_20260724T005751946145Z_33316_1784854671946145200/outcome.json",
+        "sha256": "17fc768ef8566785f529b686b5d8ece95e02098972fefc5b5cad1b5ac2c1c499",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910229_20260724T005751946145Z_33316_1784854671946145200/start.json",
+        "sha256": "06b37386e55fa11faf95dbd6a7e8fa153a58fea85ad873c59d200f2d51f39d9d",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910277_20260724T011744249025Z_33316_1784855864249025400/outcome.json",
+        "sha256": "20948ddd9911008cb4e4916e516839a1759d51de85846301ecd054662b182fa9",
+        "bytes": 1545
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/_training_attempts/nmf_seed_910277_20260724T011744249025Z_33316_1784855864249025400/start.json",
+        "sha256": "72964e6143ae49abf17f60160455440561e864ce292f0cc3ceeead75f4fa7713",
+        "bytes": 3845
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910001.json",
+        "sha256": "f4a73206e437c0f82938d2f6e1105751c8204c2a36c5ca7149f07d06b8d30ed4",
+        "bytes": 1695900
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910001.npz",
+        "sha256": "3b8c17f594fb601cd78de2788cd946ea7e5bcf693705b8dd709ec0401d1ada60",
+        "bytes": 538778
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910001.terminal.pt",
+        "sha256": "b6c4ae240904fb3c6b8672bd874d62b773adc169f184b97d4422141493d423af",
+        "bytes": 16364543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910019.json",
+        "sha256": "e4afbee6bb33363eab561c3b64bdfd18a5ba2fb14793cde4042b88a957bed79f",
+        "bytes": 1695879
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910019.npz",
+        "sha256": "9272dae8fe41aec9cb964bd9ee9b3097e384f683c59911a97e0b275619375f30",
+        "bytes": 538798
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910019.terminal.pt",
+        "sha256": "8fd49b50a67f532ae0460345140f06f52cca7dbefca5988eb520fa03fe327506",
+        "bytes": 16364607
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910033.json",
+        "sha256": "e4b110279ef8f19bf7a6c0b5a048f524b6e4e0df32b31da596f574bba27810c7",
+        "bytes": 1696438
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910033.npz",
+        "sha256": "fd1835c5afafe325ce237c210d33f1dc945d2f103f47ac857821a13cc26bf72f",
+        "bytes": 538723
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910033.terminal.pt",
+        "sha256": "7cfbc702f4510a555d0bd3dd2897b93c5bc51d771db6e99cfeb106b9f7791328",
+        "bytes": 16364543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910051.json",
+        "sha256": "a65914bd3c64396a29008af01ab66d87425f6d2b555feabcc7bf7a5a8a6b262f",
+        "bytes": 1696292
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910051.npz",
+        "sha256": "e58604c09301df787e06d9ac00790706323e162e0b0771d940d76ce2bf785f8e",
+        "bytes": 538843
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910051.terminal.pt",
+        "sha256": "0a8c7007bd24f18c3b4a1c78a060368f317a5ad87ddfeae787ec1490ea050f8f",
+        "bytes": 16364543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910069.json",
+        "sha256": "00bdaed031ad296c7dd81f580f4692caae812758c74df55bd095575a7e59df41",
+        "bytes": 1696177
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910069.npz",
+        "sha256": "1b73947a6b1c8d99504af5c1a1fd9718fe33b62b0162397da1dab488d97f14e2",
+        "bytes": 538736
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910069.terminal.pt",
+        "sha256": "ad463e3690a2a6eb240f459df988fc4d7c392aa32bbf777f45f37f2dd1fe5a80",
+        "bytes": 16364543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910079.json",
+        "sha256": "f92f7bb9343fea655fa1d3a616e1ad32974f0e759ba0d43d74a718279ad91bf1",
+        "bytes": 1696244
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910079.npz",
+        "sha256": "3570481f8c6fca88c7d25a19caec9e6aca53d6368978da4588376260595f2977",
+        "bytes": 538787
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910079.terminal.pt",
+        "sha256": "0ac255af96ccf1a072c462ab2bc3b9aa859fc6f55e7ee76af327137e16451e30",
+        "bytes": 16364543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910099.json",
+        "sha256": "1ce7e738b0b269741ef809cb1faea1fc205c2519b117a54249969f209f8cd805",
+        "bytes": 1696380
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910099.npz",
+        "sha256": "b679f1fbb8e4d8265a8d8f6dbeb33e21dcf73ccf52b91d72f6f04f2f04da1835",
+        "bytes": 538831
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910099.terminal.pt",
+        "sha256": "154ad328ea71c323ab3747a220dbdddee0cbb476189657f9b61b792367c70477",
+        "bytes": 16364543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910103.json",
+        "sha256": "f4594f5c22f99913485455ee2ca77fb37d2c0bc9533d42e3c0939fa5ad7163f2",
+        "bytes": 1696191
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910103.npz",
+        "sha256": "f1b9dd212ab1a516e5d239d6670c1ca0e4938a9cfdca2940512efd383bfdcfb1",
+        "bytes": 538781
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910103.terminal.pt",
+        "sha256": "932b2d31a3e922a8a4c0b86a94179753e2e409ebbbc6620e5395199c0fb4f412",
+        "bytes": 16364543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910121.json",
+        "sha256": "204364e4b8d73a97c2fdce6677960c21ce19607db7e62561bd57f505f685974b",
+        "bytes": 1695802
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910121.npz",
+        "sha256": "d911351b1119cc41893bbf9b37d9270e59fb62d352edb63e654ce3bf05d46dbe",
+        "bytes": 538777
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910121.terminal.pt",
+        "sha256": "286cf5220ac1244b22687654a6f8bd1b3cb2b6e76093ee0ed7ea7d0c689aca93",
+        "bytes": 16364543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910141.json",
+        "sha256": "f3021655a292fba74899ef42822355a915bfec2ef9a38b360f375c7b0a5b7055",
+        "bytes": 1696354
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910141.npz",
+        "sha256": "91d07a8e842c0f82edbc28023b7b929984f3626302c2487001afd7908ad9fd6b",
+        "bytes": 538696
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910141.terminal.pt",
+        "sha256": "1a84af9e020f928d828d95a6e479ca06796778f59b56f391a9e5ee912640ef36",
+        "bytes": 16364479
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910153.json",
+        "sha256": "53351cb50ec93f095c3a727b5b3dc60e738d56f8bf8701d1743fd354b99f2720",
+        "bytes": 1696360
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910153.npz",
+        "sha256": "af569db7410231dcea7915af266d66976657c6b239f7e89072e28a172e4ce4a8",
+        "bytes": 538746
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910153.terminal.pt",
+        "sha256": "44dd8414ef30b5588eb8b21ec057a258381a0f5db6a970f269dd18c0343f965f",
+        "bytes": 16364543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910157.json",
+        "sha256": "d3ffb1866249062522896cc0fe2b0975ad9bef9d98cb6afdba90e939e56da4bd",
+        "bytes": 1696314
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910157.npz",
+        "sha256": "38de164836854019f60626ce74bcb30550a601b148c585bcc7f25237677d47f9",
+        "bytes": 538853
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910157.terminal.pt",
+        "sha256": "2d7c21ec13dc3360421b041dccf2fae5bcb2d0d7b732c6b2fcde1be4ffd054ff",
+        "bytes": 16364543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910171.json",
+        "sha256": "bc407c69cbedc8cbdaf2e46f9fbf52cdea08d50e97ea61ac259121e04899b424",
+        "bytes": 1696076
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910171.npz",
+        "sha256": "3940c6f5f9eab3c95cb29da0154b990ddf70f12ceb527631988347cf9cab78f8",
+        "bytes": 538779
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910171.terminal.pt",
+        "sha256": "249c0ae5487b8b84646a0d4c375a92d38cd7e9334e25e7e35e013ca793c9e080",
+        "bytes": 16364543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910177.json",
+        "sha256": "a48ff16b9cfa045e5c1fa4aec314b7db33ae832624c977cb05b33f86d63e6fab",
+        "bytes": 1696267
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910177.npz",
+        "sha256": "d4f9fc5db3507f5d648fca9730ca21d152a15e5b5c3c6262020044c90611eade",
+        "bytes": 538807
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910177.terminal.pt",
+        "sha256": "a1f32031349400cbeff93001cba45c8de8d31e88a16ea2cf883bcee40c0d3c56",
+        "bytes": 16364607
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910199.json",
+        "sha256": "ca4fe7fbc40fe8411f4a2a1c5ba732aa36755527d9dec2aa4296aff7ebef611b",
+        "bytes": 1695860
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910199.npz",
+        "sha256": "6965da2806fa54d62f972072c26e61c14f2a101988f4342ed3b950238077fb7e",
+        "bytes": 538703
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910199.terminal.pt",
+        "sha256": "b172c95e1c93555d3db0a10121c4b6da8932359d2aa3dc77004f7a2b6e0020d3",
+        "bytes": 16364607
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910201.json",
+        "sha256": "76b365f6eeee01303c835c1d857ddaab0c4a5ee7ae181dad8ce12ee322e2775b",
+        "bytes": 1695941
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910201.npz",
+        "sha256": "dfd8e0524058c4716862d696cb37c6e3e45868a660041a729fe3c6b8c4b40a22",
+        "bytes": 538719
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910201.terminal.pt",
+        "sha256": "c85850b4df2aa6c3123cca6339b8a989dfe34742894c468a3d1b531a0fc738d4",
+        "bytes": 16364543
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910213.json",
+        "sha256": "3a203e076d06fd40ded18467d8231b6e7ca50fff25cbb5458fc8e3d8767deaf0",
+        "bytes": 1695977
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910213.npz",
+        "sha256": "4ce83b8318ac9d8272b97380bbc18bc3d31950c4015a94ba7816167a11f91c17",
+        "bytes": 538835
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910213.terminal.pt",
+        "sha256": "3f4b25707df4f6a3f2cbeee7e5fa4323db966d7f2d62fc0ed1eebb0372a4c9d3",
+        "bytes": 16364607
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910219.json",
+        "sha256": "75b39b8d29b5833bbe2cd007b0510cb0b33b59d2df0b1601b7c32a7b985e76cf",
+        "bytes": 1696609
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910219.npz",
+        "sha256": "0b750d7de489cc0475ecc64978374a20f643d2e4489adced5f220376bee74fb0",
+        "bytes": 538745
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910219.terminal.pt",
+        "sha256": "c53568ef77706cbcdee8ad2cab342410e98a316bc361be2e6e0d86ba01c4812f",
+        "bytes": 16364607
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910229.json",
+        "sha256": "795d30d564997157044dacebf0f8c8dd080f023b3de51b84e0f54fee4e774fae",
+        "bytes": 1696113
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910229.npz",
+        "sha256": "062797460685c831b817d785631869b4b1be755566de85d0a948089c8fbbbcdf",
+        "bytes": 538720
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910229.terminal.pt",
+        "sha256": "1d3bf3488d18119c3f2a71050865007c197698373f2a0964e211da312d38aeb1",
+        "bytes": 16364607
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910277.json",
+        "sha256": "a7f221f6866562fc0f535c8d560e8448579f3c7650ed5912258c07cc1bbda537",
+        "bytes": 1696231
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910277.npz",
+        "sha256": "49679b03a061532cec734112b12b1cea3d1d66e4cb56ab74e2f4857f0016054f",
+        "bytes": 538668
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/mf/mf_seed_910277.terminal.pt",
+        "sha256": "5f98015c8a0e2974916789aae4d2fcc85236fb81dfb03aaf5969b2650f158008",
+        "bytes": 16364607
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910001.json",
+        "sha256": "db0f661421bae28150a7587d9ba905bc88269e8823d220214ec2d4be948401a0",
+        "bytes": 1700136
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910001.npz",
+        "sha256": "b458f2172d4628b2186858c83850afe04098bcc14ed4d6d612c618a4f960b5a3",
+        "bytes": 560355
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910001.terminal.pt",
+        "sha256": "416b047a7057a9a9cecdf3d6eca02aef25c2efd95f7987b3ac9651028dfdb389",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910019.json",
+        "sha256": "0c81580b28639f8ec84fa4830ea0e4e85974b1f5f47c58b56814a2aa0f5f9d75",
+        "bytes": 1700390
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910019.npz",
+        "sha256": "c7bb2363280109cd0d09c35c07e96d642bb5681bdc9c5a7a800bc247c94fd154",
+        "bytes": 560347
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910019.terminal.pt",
+        "sha256": "f021d8574f9670e5192b2469334acdcfde15ef75edf14cd680d65a88b642c703",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910033.json",
+        "sha256": "81c8ad9acff2f4639989e0d0004ce625c7ad12cecbee392e5a1a8ec4062bc622",
+        "bytes": 1700474
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910033.npz",
+        "sha256": "ad8c3f2604a31db499b0bb402f15dbc9cfcf4f5a965a2cd3427abdae52fd3130",
+        "bytes": 560417
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910033.terminal.pt",
+        "sha256": "4be7be8c8cea52e7aa33cf7997f6b98f6ee1f398826e8d11be405331c54efe3b",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910051.json",
+        "sha256": "85b53a3d17563fd355fb0e9619f967248a7477c810359ad06bdfbc9b1b30139d",
+        "bytes": 1699829
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910051.npz",
+        "sha256": "c8b85efa72df8331ea7690872b44c9cfc40ef8b2d3dca96f348cb20eebd43e7d",
+        "bytes": 560331
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910051.terminal.pt",
+        "sha256": "8b7f592baea9cd6a7a5de1b8be7c5ea12f36a58f09e2deb4d5645b3ee13524d8",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910069.json",
+        "sha256": "76ec236eebbfa65d832fce8900e2e9dfb2033eb86f25ee74b647a30441c6acf3",
+        "bytes": 1700463
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910069.npz",
+        "sha256": "8edde77b57240f0b084786f37d6fe9f7dfe6018beb2d11d0575366435ceaec4b",
+        "bytes": 560407
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910069.terminal.pt",
+        "sha256": "2336e65b744d90a3dc55373be39fcd14a073df422e8e5186d175aa392bbcb152",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910079.json",
+        "sha256": "548f2debad2e06910f2e57fdb843a17cf32b7ace181bd43dd574ebebb9e5f5de",
+        "bytes": 1700344
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910079.npz",
+        "sha256": "eb1a892ed9b6756f102bea1c579fd275b6aae4e69337533d1beb8ee4d9f05753",
+        "bytes": 560322
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910079.terminal.pt",
+        "sha256": "bf1de32083c1152ea525ccc29151dd56343c9e5eca550c7bdf4872b266cc13ba",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910099.json",
+        "sha256": "8dfe27efe01f0cc5ecb7d97f27de25670d42e5bced3f23ca7762b888e3788055",
+        "bytes": 1699715
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910099.npz",
+        "sha256": "19b78b789a1fced0e0a45c942d67d5452422bcc3a58dde17ca87bf12fc47db68",
+        "bytes": 560382
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910099.terminal.pt",
+        "sha256": "49b504602be1a0c4a2933cffd34f4150053436408ab686b0fb308e1643662765",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910103.json",
+        "sha256": "f527cdfb9ba2f5e22a720c3c04aed5d0ae5795ce3f6f5bec7d34710bfd4ad8d2",
+        "bytes": 1700339
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910103.npz",
+        "sha256": "cb0c56713db884bc23ff232565dde61041c31d904a4e12523d80a08f39eee1df",
+        "bytes": 560373
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910103.terminal.pt",
+        "sha256": "a7024bd77c030633f4b06793c9d4c30a2aa95a7ffde2b1d5d496af49b45528c5",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910121.json",
+        "sha256": "f27ce85b0a2729acc340e3504e1542d2ecdc9c2ac078d1f0970f429413601edc",
+        "bytes": 1700036
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910121.npz",
+        "sha256": "1fbf49c07761dd78f3c448394273fdfdb66e3ddb680d55131f57e9049f481f67",
+        "bytes": 560345
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910121.terminal.pt",
+        "sha256": "a3ff9c1694ba96a67788cd8ea7f60068f28331497bde6ce4a0dcba73e15271d6",
+        "bytes": 17032923
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910141.json",
+        "sha256": "b022ffc01bdcd8ff04e4989d65caacef0384ec2d6de4b1ccfe5ab6eb995dec9b",
+        "bytes": 1700253
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910141.npz",
+        "sha256": "7c0715ca1e7e61ff1a6f4df96f88ca97b444e8a60e6695a8cce40df8bc0cfe6b",
+        "bytes": 560458
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910141.terminal.pt",
+        "sha256": "67b5b292bb9be96e367f178b4a9852cdf327959941d9d39365981134933ff84b",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910153.json",
+        "sha256": "93d7b407cf4a6d3ee8cd8ddf85b1fee4f13707f7378b2df00d7991b109a57621",
+        "bytes": 1700344
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910153.npz",
+        "sha256": "46c155186a5f9ebc31a2e060376049dabb891f22bd0ce8990385de7be5ce66c0",
+        "bytes": 560285
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910153.terminal.pt",
+        "sha256": "5dd77d3ab9936c6bd818cb7594ca1bf042e2c09692b714aaacf3c3be4eb1d26e",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910157.json",
+        "sha256": "22b124428ea7c46b100b124b0d0a20347554c5db06330c30321958a2721adedb",
+        "bytes": 1700256
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910157.npz",
+        "sha256": "618e84ebc080b88d6c3d82eb87487d7e1c692d18f2cb032498f45a950af7ce7a",
+        "bytes": 560397
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910157.terminal.pt",
+        "sha256": "b86db495d5e0f52bc8b7930a9ef3b51cc4ad225687a164a81719ac4b380077e9",
+        "bytes": 17032923
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910171.json",
+        "sha256": "99c1cec279da2db94e7bf530d9e18e6248068fdaecad36fe8085c8dba2af63de",
+        "bytes": 1700366
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910171.npz",
+        "sha256": "c5ed29f88f8b505e10a111f8a3d1f7bd86152276739944644d6bdc57e02c56ff",
+        "bytes": 560387
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910171.terminal.pt",
+        "sha256": "6357ad81fe04adef483a0a5251c7eeaf1fc3d05e6382405c27b215d34d3fc8e6",
+        "bytes": 17032923
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910177.json",
+        "sha256": "19b8f04cba42aff4d3f0282f777258e71927332e61c8ac5c8f6606c85209b71e",
+        "bytes": 1700470
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910177.npz",
+        "sha256": "57873318c7f75a50913d55a60a2f713ef54902d3a38cb981d404df975a09d04f",
+        "bytes": 560343
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910177.terminal.pt",
+        "sha256": "fa8afc878d96f913b5a7a61e3f12f194dbf15404c7337d4c116d87627b6e9803",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910199.json",
+        "sha256": "9869433bda79c77d0ace99ec88aca0e20ff31e1e6a66b4ef34c903fe11a489e8",
+        "bytes": 1699911
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910199.npz",
+        "sha256": "1b270aa33343f6ffd711a6ae80aae652831a1df4fd343de15099963b6e233c4b",
+        "bytes": 560341
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910199.terminal.pt",
+        "sha256": "fd06e217eb19966b900eb6d9ae900ef19240cb09ab26d41f88496a3d58e41bf2",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910201.json",
+        "sha256": "79b987345a1df73e97425858c8f1e991a9ff6515f00a0d1b2884d273a3016be6",
+        "bytes": 1700393
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910201.npz",
+        "sha256": "d73eb356c7d5895e4b1991c39034394e2c884e4b2d7171e104fa54d20c3484f4",
+        "bytes": 560299
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910201.terminal.pt",
+        "sha256": "18eebae3fcc3074ad14be2e9cc29024353816ee09519152c3fadc753bf6397bb",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910213.json",
+        "sha256": "402a575fb3f2bca61322c100518224dc39c1926f11a33766f088c11782377f64",
+        "bytes": 1700555
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910213.npz",
+        "sha256": "9a5a6ecf45b110e536ed0289302a90666b31b3303d07d1c4c745d60cc1f77c3b",
+        "bytes": 560403
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910213.terminal.pt",
+        "sha256": "073450985926f154201f6e0c10316507fc1feca4c64654506a6d69d31349e350",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910219.json",
+        "sha256": "8bf35c150e34b3ab27064b0627925331313aea619280540b5658ef841fc82d4a",
+        "bytes": 1700190
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910219.npz",
+        "sha256": "126bb5774d8ed4997653c1e58d938e78b47ee7f0a6b33f48aeed98a124084c24",
+        "bytes": 560351
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910219.terminal.pt",
+        "sha256": "02c8d61b29a761e7e2a432fcde968350c466483b64cc2a35f546e7ded967994c",
+        "bytes": 17032795
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910229.json",
+        "sha256": "ad0a5a2a123c9d017257e7474410ab4a6ba5c51366410a2dad1c6ad8de2e9984",
+        "bytes": 1700523
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910229.npz",
+        "sha256": "ee641f07a8c267571ea2751f5df5ab498de8b34110903e20a889504aadbfa067",
+        "bytes": 560358
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910229.terminal.pt",
+        "sha256": "0198f95003d9047a1568f8bd1c5c84d4508b6565b1c546e59b62061c2818d025",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910277.json",
+        "sha256": "d3f412cf32636bc72c5334c10bc528bb2a20b799e753049ce60fb0385dc89c7e",
+        "bytes": 1700069
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910277.npz",
+        "sha256": "1d5fa4ee354890ca4be1496ef7043fcf9b287948f721984078514215e6e11364",
+        "bytes": 560252
+      },
+      {
+        "path": "docs/t9_1_3_puviani_agents/nmf/nmf_seed_910277.terminal.pt",
+        "sha256": "f077e859169247643946acb52190d778ecd2eadaf4e7f9146b097844e9ae950e",
+        "bytes": 17032859
+      },
+      {
+        "path": "docs/t9_1_3_puviani_selection_ledger.csv",
+        "sha256": "f346a188613ffc47a1708382a75c163f08e51ceeb503400a0b7d448058ab5171",
+        "bytes": 224569
+      },
+      {
+        "path": "docs/t9_1_3_puviani_six_state_events.parquet",
+        "sha256": "d5478dab1b938f3953ed8929de4d36adc199b99c152968e14df627bdf41622ca",
+        "bytes": 874687
+      },
+      {
+        "path": "docs/t9_1_3_puviani_six_state_trajectories.parquet",
+        "sha256": "227ba0efbafea6d7abb9a2de3048472a8f907ee28440c5ec4ec84c85a7072a6b",
+        "bytes": 136081
+      },
+      {
+        "path": "docs/t9_1_3_puviani_training_ledger.parquet",
+        "sha256": "cdf4d72816a54f4a32e59cbbbe704532a39462cdbbd6917025a6ec8101b3e10a",
+        "bytes": 12511484
+      },
+      {
+        "path": "physics/autonomous_sbs.py",
+        "sha256": "1f599cd47bdb15f539664b8bb975a3fa138f8ddbd8ff192299fa34314c813434",
+        "bytes": 24408
+      },
+      {
+        "path": "physics/constants.py",
+        "sha256": "a7c35f4abce18afc48881125570f6afa623734f66145a554efc128fc8c4f2206",
+        "bytes": 1231
+      },
+      {
+        "path": "physics/differentiable_sbs_trajectory.py",
+        "sha256": "4a11b7691cd47b12532d06f113aed6309173ba898a4fd72688757a73dc4bd796",
+        "bytes": 51699
+      },
+      {
+        "path": "physics/finite_energy_gkp.py",
+        "sha256": "5e4e8a6b1600e0702558463cb60c2d165dec5118589997afc4266d961ff5e396",
+        "bytes": 19179
+      },
+      {
+        "path": "physics/fock_density_model.py",
+        "sha256": "19e3a6dac43b3f89ef131bf66ac895c953ded6b4e079beff563d5c8d745428b6",
+        "bytes": 27119
+      },
+      {
+        "path": "physics/fock_logical_channel.py",
+        "sha256": "268550bedbd916b99d733e8af9c17cdb93d38fd951288be9e268d138e3dd950f",
+        "bytes": 24386
+      },
+      {
+        "path": "physics/nmf_directional_ranking.py",
+        "sha256": "077b2f25cfb6571c0cc6a75b5710ecfa122a20087bfe29c3765aae6cd60f2149",
+        "bytes": 60137
+      },
+      {
+        "path": "physics/puviani_paper_causal.py",
+        "sha256": "b309fbf969860cfdb620ad9d11dd50aba867c794f19e8b325c222103cf3a5339",
+        "bytes": 32679
+      },
+      {
+        "path": "physics/quadrature_conventions.py",
+        "sha256": "89194e5cec3bfdf34a8a0ca17ae59dc430fe2cf5c33133e0b1b78fd10ac420e9",
+        "bytes": 18483
+      },
+      {
+        "path": "physics/sbs_error_space.py",
+        "sha256": "16fc924aad47eff6062b2d1cf471183238632782ef982ce1834e166809177a99",
+        "bytes": 22985
+      },
+      {
+        "path": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md",
+        "sha256": "5dcda2ee0fec3191ddaa44fb539764dbebc2d089c9a3818bb17c132ca28e7c22",
+        "bytes": 109793
+      },
+      {
+        "path": "scripts/run_t9_1_3_production.ps1",
+        "sha256": "0730d3772a8282786b4ab58df16a370ca625c4e9afbc5e943e6b61b1bb5492d6",
+        "bytes": 141567
+      }
+    ],
+    "sorted_manifest_sha256": "f978f2a961ddee94780975d60b1eae834681bb0521b55e6c8387c1e578e8086d",
+    "file_count": 227,
+    "total_bytes": 773180980
+  },
+  "gates": {
+    "identity_and_schema_frozen": true,
+    "parent_protocol_hash_live": true,
+    "paper_constrained_namespace_only": true,
+    "official_commit_pinned": true,
+    "official_live_commit_matches_when_present": true,
+    "paper_bytes_match_preregistered_source": true,
+    "deviation_ledger_is_nontrivial": true,
+    "serious_deviations_revoke_numeric_anchor": true,
+    "twenty_unique_paired_roots": true,
+    "derived_training_and_evaluation_seed_domains_disjoint": true,
+    "both_families_have_twenty_agents": true,
+    "all_forty_training_units_accounted": true,
+    "all_agent_training_runtime_signatures_identical_and_bound": true,
+    "paper_scale_architectures": true,
+    "parameter_counts_match": true,
+    "all_agents_executed_1000_epochs": true,
+    "all_weights_hash_and_reload": true,
+    "all_gradients_and_training_metrics_finite": true,
+    "per_agent_epoch_census_exact": true,
+    "all_training_epochs_lineage_closed_and_endpoints_bound": true,
+    "frozen_family_sentinel_full_retrain_matches_epoch_lineage_and_terminal": true,
+    "validation_candidate_census_complete": true,
+    "all_validation_candidates_replayed_from_checkpoint_and_frozen_seeds": true,
+    "checkpoint_selection_validation_only": true,
+    "one_selected_snapshot_per_agent_and_family": true,
+    "one_selected_agent_per_family": true,
+    "deterministic_family_tie_break": true,
+    "six_states_exact_and_balanced": true,
+    "six_state_semantics_and_paired_clusters_disclosed": true,
+    "standard_mf_nmf_all_qualified": true,
+    "trajectory_census_complete": true,
+    "event_census_complete": true,
+    "raw_schema_matches_frozen_trajectory_and_event_contracts": true,
+    "no_postselection_full_denominator": true,
+    "all_trajectory_statuses_retained": true,
+    "branch_probabilities_valid": true,
+    "event_action_timing_is_causal_and_explicit": true,
+    "six_state_raw_rows_replay_selected_checkpoints_rng_and_physics": true,
+    "code_survival_and_fidelity_finite": true,
+    "six_state_fidelity_pauli_identity": true,
+    "normalized_conditional_joint_state_invariants": true,
+    "empirical_linear_inversion_diagnostics_finite_nonpromotional": true,
+    "action_permutation_roundtrip": true,
+    "action_order_nominal_and_bounds_match_live_backend": true,
+    "all_published_files_manifested_exactly_once": true,
+    "output_tree_has_no_unknown_or_orphan_bytes": true,
+    "training_attempt_ledger_is_terminal_and_complete": true,
+    "all_failure_attempts_are_retained_and_typed": true,
+    "paper_scale_numeric_is_null": true,
+    "official_exact_is_null": true,
+    "puviani_surpass_is_null": true,
+    "native_free_action_lane_not_ranked_phase9": true
+  },
+  "required_gates": [
+    "identity_and_schema_frozen",
+    "parent_protocol_hash_live",
+    "paper_constrained_namespace_only",
+    "official_commit_pinned",
+    "official_live_commit_matches_when_present",
+    "paper_bytes_match_preregistered_source",
+    "deviation_ledger_is_nontrivial",
+    "serious_deviations_revoke_numeric_anchor",
+    "twenty_unique_paired_roots",
+    "derived_training_and_evaluation_seed_domains_disjoint",
+    "both_families_have_twenty_agents",
+    "all_forty_training_units_accounted",
+    "all_agent_training_runtime_signatures_identical_and_bound",
+    "paper_scale_architectures",
+    "parameter_counts_match",
+    "all_agents_executed_1000_epochs",
+    "all_weights_hash_and_reload",
+    "all_gradients_and_training_metrics_finite",
+    "per_agent_epoch_census_exact",
+    "all_training_epochs_lineage_closed_and_endpoints_bound",
+    "frozen_family_sentinel_full_retrain_matches_epoch_lineage_and_terminal",
+    "validation_candidate_census_complete",
+    "all_validation_candidates_replayed_from_checkpoint_and_frozen_seeds",
+    "checkpoint_selection_validation_only",
+    "one_selected_snapshot_per_agent_and_family",
+    "one_selected_agent_per_family",
+    "deterministic_family_tie_break",
+    "six_states_exact_and_balanced",
+    "six_state_semantics_and_paired_clusters_disclosed",
+    "standard_mf_nmf_all_qualified",
+    "trajectory_census_complete",
+    "event_census_complete",
+    "raw_schema_matches_frozen_trajectory_and_event_contracts",
+    "no_postselection_full_denominator",
+    "all_trajectory_statuses_retained",
+    "branch_probabilities_valid",
+    "event_action_timing_is_causal_and_explicit",
+    "six_state_raw_rows_replay_selected_checkpoints_rng_and_physics",
+    "code_survival_and_fidelity_finite",
+    "six_state_fidelity_pauli_identity",
+    "normalized_conditional_joint_state_invariants",
+    "empirical_linear_inversion_diagnostics_finite_nonpromotional",
+    "action_permutation_roundtrip",
+    "action_order_nominal_and_bounds_match_live_backend",
+    "all_published_files_manifested_exactly_once",
+    "output_tree_has_no_unknown_or_orphan_bytes",
+    "training_attempt_ledger_is_terminal_and_complete",
+    "all_failure_attempts_are_retained_and_typed",
+    "paper_scale_numeric_is_null",
+    "official_exact_is_null",
+    "puviani_surpass_is_null",
+    "native_free_action_lane_not_ranked_phase9"
+  ],
+  "claim_boundary": {
+    "allowed": "complete project-owned 20-paired-root MF/NMF artifact population, validation-only selection, executable six-state raw qualification, trusted-supervisor GPU-load provenance/self-consistency, and exact retraining reproducibility for the frozen two-of-forty family sentinels",
+    "forbidden": "official exact reproduction, Puviani surpass, cutoff-100 convergence, 1000-cycle paper lifetime, Phase9 >=1e4-cycle formal lifetime, or matched Phase9 ranking before the IQ/trusted-codebook adapter; GPU-load attestations are not cryptographic authenticity/tamper-proof evidence, and two-of-forty sentinels are not proof against mutation of all 40 agents"
+  },
+  "wall_time_seconds_finalize": 3722.6956112000044,
+  "mutation_audit": {
+    "mutations": [
+      {
+        "mutation_id": "published_gate_false:identity_and_schema_frozen",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:parent_protocol_hash_live",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:paper_constrained_namespace_only",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:official_commit_pinned",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:official_live_commit_matches_when_present",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:paper_bytes_match_preregistered_source",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:deviation_ledger_is_nontrivial",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:serious_deviations_revoke_numeric_anchor",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:twenty_unique_paired_roots",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:derived_training_and_evaluation_seed_domains_disjoint",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:both_families_have_twenty_agents",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:all_forty_training_units_accounted",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:all_agent_training_runtime_signatures_identical_and_bound",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:paper_scale_architectures",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:parameter_counts_match",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:all_agents_executed_1000_epochs",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:all_weights_hash_and_reload",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:all_gradients_and_training_metrics_finite",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:per_agent_epoch_census_exact",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:all_training_epochs_lineage_closed_and_endpoints_bound",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:frozen_family_sentinel_full_retrain_matches_epoch_lineage_and_terminal",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:validation_candidate_census_complete",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:all_validation_candidates_replayed_from_checkpoint_and_frozen_seeds",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:checkpoint_selection_validation_only",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:one_selected_snapshot_per_agent_and_family",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:one_selected_agent_per_family",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:deterministic_family_tie_break",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:six_states_exact_and_balanced",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:six_state_semantics_and_paired_clusters_disclosed",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:standard_mf_nmf_all_qualified",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:trajectory_census_complete",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:event_census_complete",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:raw_schema_matches_frozen_trajectory_and_event_contracts",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:no_postselection_full_denominator",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:all_trajectory_statuses_retained",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:branch_probabilities_valid",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:event_action_timing_is_causal_and_explicit",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:six_state_raw_rows_replay_selected_checkpoints_rng_and_physics",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:code_survival_and_fidelity_finite",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:six_state_fidelity_pauli_identity",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:normalized_conditional_joint_state_invariants",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:empirical_linear_inversion_diagnostics_finite_nonpromotional",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:action_permutation_roundtrip",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:action_order_nominal_and_bounds_match_live_backend",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:all_published_files_manifested_exactly_once",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:output_tree_has_no_unknown_or_orphan_bytes",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:training_attempt_ledger_is_terminal_and_complete",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:all_failure_attempts_are_retained_and_typed",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:paper_scale_numeric_is_null",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:official_exact_is_null",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:puviani_surpass_is_null",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "published_gate_false:native_free_action_lane_not_ranked_phase9",
+        "target": "published_gate_boolean",
+        "detected": true,
+        "detection_reason": "one or more required T9.1.3 gates failed"
+      },
+      {
+        "mutation_id": "source_runtime_signature_tamper",
+        "target": "source_evidence",
+        "detected": true,
+        "detection_reason": "training/finalization runtime contract drifted"
+      },
+      {
+        "mutation_id": "source_raw_replay_witness_tamper",
+        "target": "source_evidence",
+        "detected": true,
+        "detection_reason": "six-state report semantics or census drifted"
+      },
+      {
+        "mutation_id": "source_output_tree_orphan_injection",
+        "target": "source_evidence",
+        "detected": true,
+        "detection_reason": "output-tree audit contract drifted"
+      },
+      {
+        "mutation_id": "source_training_epoch_census_tamper",
+        "target": "source_evidence",
+        "detected": true,
+        "detection_reason": "report training census drifted"
+      },
+      {
+        "mutation_id": "source_six_state_denominator_tamper",
+        "target": "source_evidence",
+        "detected": true,
+        "detection_reason": "six-state report semantics or census drifted"
+      },
+      {
+        "mutation_id": "source_failure_runtime_binding_tamper",
+        "target": "source_evidence",
+        "detected": true,
+        "detection_reason": "failure-attempt report contract drifted"
+      },
+      {
+        "mutation_id": "source_deviation_ledger_hash_tamper",
+        "target": "source_evidence",
+        "detected": true,
+        "detection_reason": "report deviation-ledger summary drifted"
+      },
+      {
+        "mutation_id": "source_tomography_norm_sign_tamper",
+        "target": "source_evidence",
+        "detected": true,
+        "detection_reason": "six-state report semantics or census drifted"
+      },
+      {
+        "mutation_id": "source_tomography_norm_value_tamper",
+        "target": "source_evidence",
+        "detected": true,
+        "detection_reason": "six-state report semantics or census drifted"
+      },
+      {
+        "mutation_id": "source_tomography_physicality_tamper",
+        "target": "source_evidence",
+        "detected": true,
+        "detection_reason": "six-state report semantics or census drifted"
+      },
+      {
+        "mutation_id": "evidence_grade_escalation",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "evidence grade escalation detected"
+      },
+      {
+        "mutation_id": "paper_numeric_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "paper-scale numerical boundary drifted"
+      },
+      {
+        "mutation_id": "puviani_surpass_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "external/Puviani claim slot was illegally populated"
+      },
+      {
+        "mutation_id": "nested_paper_target_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "embedded config hash mismatch"
+      },
+      {
+        "mutation_id": "nested_external_claim_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "embedded config hash mismatch"
+      },
+      {
+        "mutation_id": "selection_split_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "embedded config hash mismatch"
+      },
+      {
+        "mutation_id": "reconstruction_paper_lifetime_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "six-state report semantics or census drifted"
+      },
+      {
+        "mutation_id": "namespace_official_exact_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "report evidence namespace drifted"
+      },
+      {
+        "mutation_id": "published_anchor_eligibility_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "paper-scale numerical boundary drifted"
+      },
+      {
+        "mutation_id": "claim_boundary_deletion",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "report claim boundary was weakened"
+      },
+      {
+        "mutation_id": "formal_selection_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "report selection contract drifted"
+      },
+      {
+        "mutation_id": "production_contract_downgrade",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "a PASS report must carry the frozen production contract"
+      },
+      {
+        "mutation_id": "manifest_census_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "artifact manifest file count mismatch"
+      },
+      {
+        "mutation_id": "unknown_top_level_claim_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "report schema drifted: missing=[], extra=['claimed_paper_T_ch_cycles']"
+      },
+      {
+        "mutation_id": "unknown_nested_evaluator_claim_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "six_state_evaluator schema drifted: missing=[], extra=['paper_lifetime_sota_cycles']"
+      },
+      {
+        "mutation_id": "action_ranking_eligibility_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "report action contract drifted"
+      },
+      {
+        "mutation_id": "protocol_transcription_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "report protocol transcription drifted from the frozen config"
+      },
+      {
+        "mutation_id": "qualification_scope_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "six-state report semantics or census drifted"
+      },
+      {
+        "mutation_id": "selection_description_injection",
+        "target": "claim_boundary",
+        "detected": true,
+        "detection_reason": "report selection contract drifted"
+      }
+    ],
+    "mutation_count": 81,
+    "detected_count": 81,
+    "all_detected": true
+  },
+  "analysis_sha256": "35d52c4add5aae124da4127223fb14d08c59a375baaf8bf26146a60f7fc3a152"
+}

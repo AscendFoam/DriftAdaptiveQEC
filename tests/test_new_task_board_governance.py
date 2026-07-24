@@ -496,10 +496,16 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     blocked = {"T9.1.2", "T9.7.3", "T9.7.4"}
     assert all(statuses[task] == "Blocked" for task in blocked)
     assert statuses["T9.1.1"] == "Done"
-    assert statuses["T9.1.3"] == "In Progress"
-    assert all(statuses[task] == "Todo" for task in expected_tasks - blocked - {"T9.1.1", "T9.1.3"})
+    assert statuses["T9.1.3"] == "Done"
+    assert statuses["T9.1.4"] == "In Progress"
+    assert all(
+        statuses[task] == "Todo"
+        for task in expected_tasks
+        - blocked
+        - {"T9.1.1", "T9.1.3", "T9.1.4"}
+    )
     assert statuses["T7.3.5"] == "Done"
-    assert "当前推荐任务：`T9.1.3`" in board
+    assert "当前推荐任务：`T9.1.4`" in board
 
     for milestone in ("9.1", "9.2", "9.3", "9.4", "9.5", "9.6", "9.7", "9.8"):
         assert f"### Milestone {milestone}" in phase9
@@ -507,26 +513,46 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     for required in (
         "BLOCKED_OFFICIAL_EXACT_ASSETS",
         "PAPER_CONSTRAINED_REIMPLEMENTATION",
-        "不少于 20 个独立 agent/seed",
+        "20 个 paired roots / 40 agents",
         "不依赖 `T9.1.2`",
+        "QUALIFIED_PAPER_CONSTRAINED_BASELINE",
+        "NO_GO_PAPER_CONSTRAINED_REIMPLEMENTATION",
+        "52/52 gates",
+        "81/81 mutation",
         "complex raw/recorded IQ",
         "不得复用 backend A 的 transition kernel",
         "未参与训练的 exact backend",
         "trusted recovery codebook",
         "GRU、TCN、SSM、causal Transformer",
         "hidden-state teacher",
+        "composite key",
+        "action/next-state",
+        "base lane residual",
+        "TBPTT",
+        "跨 chunk carry",
+        "latent identifiability",
+        "predictive-risk representation",
+        "pinned CPU core/thread",
         "slow inference/transfer 永不进入逐周期 critical path",
         "每 trajectory 至少运行到预注册 `10^4` cycles",
         "relative improvement point `>=15%`",
         "simultaneous paired 95% LCB `>=10%`",
+        "information representation × history × architecture × selector/safety × codebook",
         "registered/project-native 状态",
         "raw/recorded IQ -> discriminator -> action -> trigger HIL",
         "raw/recorded-IQ matched-filter + discriminator",
         "conservative representative action probes",
         "`6-cycle/II=1` 只绑定 `discriminator-out -> action`",
+        "PREBOARD_SYNTHETIC_IQ",
+        "BOARD_RECORDED_IQ_REPLAY",
+        "BOARD_LIVE_RAW_IQ_HIL",
+        "EXTERNAL_SAME_TASK_MEASURED_SPEED",
         "GO_LER_REGISTERED_BEST/GO_LER_EXTERNAL_SOTA",
         "GO_LIFETIME_PROJECT_NATIVE/GO_LIFETIME_EXTERNAL_SOTA/GO_PHYSICAL_LIFETIME",
         "`Done` 或 terminal `Blocked/null` ledger",
+        "paper_scope_verdict",
+        "three_metric_sota_verdict",
+        "绝不自动蕴含",
         "GO_SINGLE_PAPER",
         "GO_SPLIT_ALGORITHM_HARDWARE",
         "不得把 v1 legacy candidate label、三项胜场或加权总分写成 SOTA",
@@ -548,6 +574,28 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
             task_rows[cells[0]] = cells
     assert "codebook actions" not in task_rows["T9.2.4"][3]
     assert "conservative representative action probes" in task_rows["T9.2.4"][3]
+    assert "T9.1.3" not in task_rows["T9.3.2"][4]
+    assert "T9.1.5" in task_rows["T9.4.5"][4]
+    assert "必须直接消费 T9.1.5" in task_rows["T9.6.1"][3]
+    assert "必须直接消费 T9.1.5" in task_rows["T9.6.5"][3]
+    assert "必须直接消费 T9.1.5" in task_rows["T9.8.1"][3]
+    assert "不是 hard prerequisite" in task_rows["T9.1.4"][3]
+    # These source cells are part of the immutable T9.1.1 semantic projection.
+    assert task_rows["T9.1.3"][4] == (
+        "`T9.1.1`, `R-N162`, `experiment_plan.md §20.2`"
+    )
+    assert task_rows["T9.1.4"][4] == (
+        "`T9.1.1`, `T9.1.3`, `R-N164`, `experiment_plan.md §20.2`"
+    )
+    assert task_rows["T9.6.1"][4] == (
+        "`T9.1.1`, `T9.4.5`, `T9.5.4`, `R-N168`"
+    )
+    assert task_rows["T9.6.5"][4] == (
+        "`T9.2.4`, `T9.6.2--T9.6.4`, `R-N162--R-N166`, `R-N168`"
+    )
+    assert task_rows["T9.8.1"][4] == "`T9.6.5`, `T9.7.4`, `R-N168`"
+    assert "Puviani official exact/surpass 保持 null" in task_rows["T9.6.5"][3]
+    assert "仅在独立 Phase 8 QPU/real-GKP 证据缺失时保持 null" in task_rows["T9.6.5"][3]
     assert "T6.9.2" not in task_rows["T9.7.3"][4]
     assert "T6.9.2 仅可作为" in task_rows["T9.7.3"][3]
     assert "terminal `Blocked/null` ledger" in task_rows["T9.8.1"][3]
@@ -577,11 +625,18 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         "GO_LER_SOTA",
         "GO_LIFETIME",
         "GO_HIL_SPEED",
+        "## 20.9",
+        "POST_OUTCOME_GOVERNANCE_ADDENDUM_NO_RETROACTIVE_RESEAL",
+        "有限 total recurrence",
+        "long-history、identifiability 与 matched compute",
+        "factorial benchmark 与四级 HIL",
+        "paper_scope_verdict",
+        "three_metric_sota_verdict",
     ):
         assert required in section20
 
     risks = (ROOT / "docs" / "new_risks.md").read_text(encoding="utf-8")
-    for risk_number in range(162, 176):
+    for risk_number in range(162, 181):
         assert f"R-N{risk_number}" in risks
     assert "| R-N168 | Mitigated |" in risks
     assert "| R-N170 | Open |" in risks
@@ -590,6 +645,119 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert "| R-N173 | Mitigated |" in risks
     assert "| R-N174 | Open |" in risks
     assert "| R-N175 | Mitigated |" in risks
+    assert "| R-N176 | Mitigated |" in risks
+    assert "| R-N177 | Open |" in risks
+    assert "| R-N178 | Open |" in risks
+    assert "| R-N179 | Open |" in risks
+    assert "| R-N180 | Open |" in risks
+    assert "| 2026-07-24 | T9.1.3 完成与反简化复核 | 不插入 |" in risks
+
+    canonical_record = (
+        ROOT
+        / "docs"
+        / "new_tasks"
+        / "T9.1.3_puviani_paper_constrained_artifacts.md"
+    )
+    mirror_record = (
+        ROOT / "docs" / "tasks" / "T9.1.3_puviani_paper_constrained_artifacts.md"
+    )
+    assert canonical_record.is_file()
+    assert mirror_record.is_file()
+    canonical_text = canonical_record.read_text(encoding="utf-8")
+    assert "QUALIFIED_PAPER_CONSTRAINED_BASELINE" in canonical_text
+    assert "52/52 gates、81/81 mutations" in canonical_text
+    assert "official exact、Puviani surpass" in canonical_text
+    assert "保持 typed null" in canonical_text
+
+    addendum_path = (
+        ROOT / "docs" / "t9_1_3_post_outcome_governance_addendum.json"
+    )
+    addendum_source = (
+        ROOT / "docs" / "t9_1_3_post_outcome_governance_source_data.csv"
+    )
+    input_contract_path = (
+        ROOT / "configs" / "phase9" / "t9_1_4_input_contract.json"
+    )
+    assert addendum_path.is_file()
+    assert addendum_source.is_file()
+    assert input_contract_path.is_file()
+    addendum = json.loads(addendum_path.read_text(encoding="utf-8"))
+    assert (
+        addendum["schema_version"]
+        == "t9.1.3-post-outcome-governance-addendum-v2"
+    )
+    assert (
+        addendum["status"]
+        == "POST_OUTCOME_GOVERNANCE_ADDENDUM_NO_RETROACTIVE_RESEAL"
+    )
+    assert (
+        addendum["analysis_sha256"]
+        == "27f8226e6658e0a5b2d4e9bd2d55798478deb590ac639d05cb4248a9cafe6e5c"
+    )
+    assert addendum["gate_summary"] == {
+        "passed": 16,
+        "total": 16,
+        "failed": [],
+    }
+    assert addendum["semantic_mutation_audit"]["count"] == 14
+    assert addendum["semantic_mutation_audit"]["detected"] == 14
+    assert addendum["semantic_mutation_audit"]["all_detected"] is True
+    assert addendum["terminal_branch"] == "QUALIFIED"
+    assert addendum["current_terminal_resolution"][
+        "resolved_terminal_state"
+    ] == "QUALIFIED_PAPER_CONSTRAINED_BASELINE"
+    assert addendum["current_terminal_resolution"]["releases_t9_1_4"] is True
+    assert addendum["current_terminal_resolution"][
+        "matched_phase9_ranking_eligible"
+    ] is False
+    assert set(addendum["claim_slots"].values()) == {None}
+    assert addendum["ranking_boundary"]["sota_claim_eligible"] is False
+    assert addendum["downstream_semantic_seal"][
+        "raw_addendum_hash_required_by_T9_1_4"
+    ] is False
+    assert (
+        addendum["downstream_semantic_seal"]["semantic_sha256"]
+        == "12ac54175ac13b0e2c4682d462a8da49dc367f9db0a67da76cc2347db6f7cb22"
+    )
+
+    input_contract = json.loads(
+        input_contract_path.read_text(encoding="utf-8")
+    )
+    assert (
+        input_contract["schema_version"]
+        == "t9.1.4-paper-constrained-input-contract-v2"
+    )
+    assert {
+        row["terminal_state"]
+        for row in input_contract["terminal_state_mapping"]
+    } == {
+        "QUALIFIED_PAPER_CONSTRAINED_BASELINE",
+        "NO_GO_PAPER_CONSTRAINED_REIMPLEMENTATION",
+    }
+    no_go_fixture = input_contract["no_go_failure_manifest_fixture"]
+    assert (
+        no_go_fixture["terminal_result"]
+        == "NO_GO_PAPER_CONSTRAINED_REIMPLEMENTATION"
+    )
+    assert set(no_go_fixture["typed_null_payload"].values()) == {None}
+    downstream_contract = input_contract[
+        "downstream_addendum_semantic_contract"
+    ]
+    assert downstream_contract["accepted_addendum_schema_versions"] == [
+        "t9.1.3-post-outcome-governance-addendum-v2"
+    ]
+    assert downstream_contract["accepted_terminal_branches"] == [
+        "QUALIFIED",
+        "NO_GO",
+    ]
+
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    assert "第 14—20.9 节" in readme
+    assert "40,000 training rows" in readme
+    assert "`official_exact`、`puviani_surpass`、`paper_scale_lifetime`" in readme
+    assert "physical/SOTA claim 不开放" in readme
+    assert "matched/SOTA eligibility=false" in readme
+    assert "三个实际 claim slot 保持 typed null" in readme
 
     insertion = board.split("## 插入任务区", 1)[1].split("## 进度日志", 1)[0]
     assert "T-RISK-20260722-01" in insertion

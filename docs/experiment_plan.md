@@ -1896,6 +1896,76 @@ T9.2.4 只对 T9.2.1 预注册的 conservative representative action probes 做�
 
 上述补强使板卡缺失继续只阻塞真实 HIL，同时防止 software twin、codebook、模型 tournament、formal 和 pre-board IQ frontend 被无限等待；它也不允许 CXXRTL/P&R/host-loop 或 project-native 排名填补 official/external/physical 的空证据。
 
+## 20.9 T9.1.3 完成后的增量治理：total fast map、long-history 资格与分层 verdict
+
+本节是 2026-07-24 的 additive child governance，不改写 §20.1--§20.8、T9.1.1 immutable parent 或 T9.1.3 的 report/config/42-entry deviation ledger。T9.1.1 绑定的 task/source projection 必须保持字节语义不变；新增状态、依赖与通过门只写入后续 task 的 output contract、本节和显式 child artifacts。T9.1.3 后验发现的 D43--D46 由 `docs/t9_1_3_post_outcome_governance_addendum.json` 与 `docs/t9_1_3_post_outcome_governance_source_data.csv` 独立承载，schema=`t9.1.3-post-outcome-governance-addendum-v2`、状态=`POST_OUTCOME_GOVERNANCE_ADDENDUM_NO_RETROACTIVE_RESEAL`；16/16 gates、14/14 branch-local mutations 与 T9.1.3→T9.1.4 单向 semantic seal 必须通过。该 addendum 不得用于重新 seal parent 或把已见结果伪装成预注册条件。
+
+### 20.9.1 T9.1.3 terminal outcome 与 typed-null handoff
+
+T9.1.3 的 artifact/executable gate 已完成，但 performance promotion 尚未发生。实际终态映射为 `QUALIFIED_PAPER_CONSTRAINED_BASELINE`；备选失败终态为 `NO_GO_PAPER_CONSTRAINED_REIMPLEMENTATION`。两者都释放 T9.1.4 以后工作：
+
+1. qualified 只允许把 project-native MF/NMF 作为受限候选输入，仍须在 T9.1.4/T9.4.5 的同输入、同样本、同 action、同 compute、同 wall-clock 规则下重新取得 matched eligibility；
+2. no-go 只写入带失败原因的 typed-null baseline row，不得以删行、静默替代或 best-of-N 规避；
+3. T9.1.4 来源列中的 T9.1.3 仅保留 immutable parent 的历史 provenance，不构成 hard dependency；
+4. 当前 addendum 中 `official_exact`、`puviani_surpass`、`paper_scale_lifetime` 三个实际 claim slot 继续为 null；paper-scale `T_X,T_Y,T_Z,T_ch` 也未执行。physical lifetime 与 SOTA claim 不开放，`matched_phase9_ranking_eligible=false`、`sota_claim_eligible=false`；T9.1.2 缺失只阻塞 Puviani official exact/surpass，未来 physical lifetime 只由独立 Phase 8 QPU/real-GKP evidence 解锁。
+
+T9.1.3 的反简化边界必须与 PASS 同屏：当前 primary/confirmation 仅为 cutoff 12/16、10 cycles、8 clusters/56 RNG streams；MF/NMF 参数与 compute budget 未匹配；六项 tomography physicality diagnostics 均为 false；Monte Carlo pair-sum residual 为 `0.00975--0.05396`，高于 `2e-8` 且只作为 non-hard diagnostic；cutoff 12→16 结果存在实质变化。D43--D46 进一步记录未触发的 `max_norm=10` gradient clipping、PyTorch persistent Adam 与 official per-episode TensorFlow Adam 的差异、26 candidates/agent 的 10-cycle validation selection 与论文 long-lifetime selection 不同，以及 train-only no-gradient warmup + EMA baseline。故 T9.1.3 只能关闭 artifact lane，不能投票给 Phase 9 performance 或论文 SOTA。
+
+### 20.9.2 六周期 fast path 必须是有限 total recurrence
+
+T9.2.1 在任何 codebook 优化前冻结有限 composite key
+
+`K_t = (bank_id, syndrome/discriminator word, phase-frame, event class, leakage/reset FSM state)`
+
+以及总递推
+
+`F(K_t) = (bounded action word, next phase-frame, next FSM state, reason/error)`。
+
+每个 legal key 必须有唯一、确定的输出和 next state；invalid key、stale/partial package、CRC/version/age 异常与 OOD 必须确定进入 LKG 或 reset FSM，不允许 undefined/don't-care action。T9.3.3 编译完整 bank image，T9.3.4 枚举全部 key 并用独立 backend 检验 coverage/recurrence，T9.5.3--T9.5.4 再证明 atomic old-or-new commit、逐周期 totality 与 fault recovery。slow model 只可低频提名预编译且完整的 trusted candidate bank/package，不能逐周期输出 action、生成 free-form pulse或修改单个 bank entry。
+
+base lane 的 bounded residual 固定为 bit-exact zero。未来若需要非零 residual，必须通过独立 amendment 重新冻结 safe envelope，并依次完成双 backend 物理资格、量化误差、matched baseline、CXXRTL/RTL 与 formal/mutation 资格；在此前不得将 residual 藏入 codebook、reason field 或 host callback。
+
+### 20.9.3 long-history、identifiability 与 matched compute
+
+T9.4.3 对 CNN/GRU/TCN/SSM/causal Transformer 使用同一 long-horizon curriculum 和 TBPTT；state 必须跨 chunk 显式 carry，只在真实 episode/device reset 时清零，并冻结 detach schedule、数值稳定、memory-growth gate。所有 family 接受相同的 latency jitter、drop/duplicate/reorder、queue/backpressure、timeout 与 missingness pattern，防止短序列或理想 transport 形成伪 history gain。
+
+T9.4.4 必须在观测等价类和 label permutation 下检查 latent identifiability、label-equivalence、posterior recovery 与 calibration error。若 latent state 不可辨识，即使 predictive NLL/Brier/ECE 良好，也只能把 deployable 输出称为 `predictive-risk representation` 或 `sufficient statistic`，不得声称恢复了 physical latent posterior。
+
+T9.4.5 的 matched-deployable 榜固定 pinned CPU core/thread 数、update cadence、batch=1、precision、state bytes/peak memory，并计入 preprocessing、state update、wall-clock/deadline、timeout/missingness；GPU 与额外参数/上下文只进入 capacity ceiling。T9.4.5 必须直接消费 T9.1.5 child seal，不能把项目自有 NMF artifact 的 qualification 当作 matched eligibility。
+
+### 20.9.4 factorial benchmark 与四级 HIL
+
+T9.6.1 outcome-blind 冻结并由 T9.6.5 独立重算以下 factorial：
+
+`information representation × history × architecture × selector/safety × codebook`。
+
+每个可比较 cell 使用相同六态 full denominator、trajectory/device/scenario clusters、control/reset cost、wall-clock、timeout 与 missingness；不得只做逐项 one-at-a-time 消融，也不得让某一 architecture 获得额外 IQ、history、codebook 或 fallback 权限。T9.6.1/T9.6.5 直接消费 T9.1.5 的 scoped child seal，但不修改 T9.1.1 已绑定的来源列。
+
+HIL 证据只使用四个精确 level：
+
+1. `PREBOARD_SYNTHETIC_IQ`；
+2. `BOARD_RECORDED_IQ_REPLAY`；
+3. `BOARD_LIVE_RAW_IQ_HIL`；
+4. `EXTERNAL_SAME_TASK_MEASURED_SPEED`。
+
+四级之间不存在证据迁移。T9.7.1/CXXRTL 最高只产生第一层；T9.7.3 必须分别建立 recorded replay 与 live raw 两层；T9.7.4 的 external speed 还要求 same task、same latency boundary 和真实 measured comparator。未执行或缺板层一律 typed null，不能用 synthetic、P&R、host loop、文献异任务 ns 数值或较低 HIL level 填充。
+
+### 20.9.5 双 verdict 与增量 DAG
+
+T9.8 必须分开输出：
+
+- `paper_scope_verdict`：`GO_SINGLE_PAPER`、`GO_SPLIT_ALGORITHM_HARDWARE`、`GO_ALGORITHM_ONLY`、`GO_HARDWARE_ONLY` 或 `NO_GO`；
+- `three_metric_sota_verdict`：分别审计 LER、lifetime 和 measured speed 的 external same-task SOTA。
+
+`GO_SINGLE_PAPER` 只表示一篇论文的证据范围和叙事可闭合，绝不自动蕴含三指标 SOTA。official/board/QPU/external evidence 缺失时，对应值保持 typed null，不能由 project-native、pre-board 或另一 lane 补齐。
+
+增量 DAG 语义为：
+
+1. T9.1.3 的 qualified/no-go 两个 terminal outcome 均释放 T9.1.4；T9.1.4 可选消费 terminal ledger，不硬等待 T9.1.3 性能成功；
+2. T9.3.2 不依赖 T9.1.3，codebook 由 T9.3.1 的 safe grid/action contract驱动；
+3. T9.4.5、T9.6.1、T9.6.5、T9.8.1 必须直接消费 T9.1.5 scoped child seal；对 T9.1.1 immutable projection 已绑定的 task，依赖写在 output contract 而不是改其来源列；
+4. T9.8.1 继续接受 T9.7.4 `Done` 或 terminal `Blocked/null` ledger；这只影响 HIL/measured 字段，不阻塞 algorithm-only、split 或 NO-GO。
+
 [1]: https://arxiv.org/abs/quant-ph/0008040?utm_source=chatgpt.com "Encoding a qubit in an oscillator"
 [2]: https://arxiv.org/abs/2504.13383?utm_source=chatgpt.com "Logical channels in approximate Gottesman-Kitaev-Preskill error correction"
 [3]: https://arxiv.org/abs/1907.12487?utm_source=chatgpt.com "Quantum error correction of a qubit encoded in grid states ..."
