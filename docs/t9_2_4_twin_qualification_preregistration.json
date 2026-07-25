@@ -1,0 +1,303 @@
+{
+  "task_id": "T9.2.4",
+  "schema_version": "PHASE9-DUAL-BACKEND-QUALIFICATION-PREREGISTRATION-V1",
+  "frozen_at": "2026-07-26",
+  "status": "PRE_FORMAL_IMMUTABLE_QUALIFICATION_SEAL",
+  "formal_result_accessed": false,
+  "config": {
+    "path": "configs/phase9/t9_2_4_twin_qualification.json",
+    "bytes": 7207,
+    "sha256": "b707cf392275921ee3a6217165033f07ad632227cddc6bc5ca6ce215134ac657",
+    "semantic_sha256": "0e6be6166ad281088df27e3184e9b30d7fa471b08423f8d085a6335abf402ba2"
+  },
+  "parents": {
+    "backend_a": {
+      "task_id": "T9.2.2",
+      "analysis_sha256": "95f11f0dc17a1799a97a69af6908765d1e00d75399ef3d07277d075ada74f624",
+      "release_pin": {
+        "path": "configs/phase9/t9_2_2_release_pin.json",
+        "bytes": 2969,
+        "sha256": "1e228b7c601b90e7a21d1a56c373481f2eab2218403f05cc8b115b6ab594063c"
+      },
+      "report": {
+        "path": "docs/t9_2_2_backend_a_qualification.json",
+        "bytes": 19238,
+        "sha256": "a277c18fd17115f55c8d1bf3518ca88631ce69bdce7d94acb572017bba02d312"
+      },
+      "all_outcome_claims_null": true
+    },
+    "backend_b": {
+      "task_id": "T9.2.3",
+      "analysis_sha256": "4e46a0c7bf88356c38874112bf26c7ddc0d60d989c024c539185b52b3bef80aa",
+      "release_pin": {
+        "path": "configs/phase9/t9_2_3_release_pin.json",
+        "bytes": 2516,
+        "sha256": "42771a7b866a9a33b479f08a96daa500044a66652fb5ae9a7f211a9219a1b6f2"
+      },
+      "report": {
+        "path": "docs/t9_2_3_backend_b_qualification.json",
+        "bytes": 21892,
+        "sha256": "cb4126aa8c169723d610d2f9ac04a8b383a7b45590f25bd4e29e515eec96c31a"
+      },
+      "all_outcome_claims_null": true
+    },
+    "action_contract": {
+      "task_id": "T9.2.1",
+      "analysis_sha256": "78775658b4c9fa3a768252e2d529e39a0a90924c28158de2e4a527ba3052fe34",
+      "release_pin": {
+        "path": "configs/phase9/t9_2_1_release_pin.json",
+        "bytes": 1494,
+        "sha256": "ec669ca8a7cf24408820c7c6e241ffc59d4cc7a50d35c70631772e6ac6cc1ab7"
+      },
+      "report": {
+        "path": "docs/t9_2_1_causal_twin_contract.json",
+        "bytes": 125451,
+        "sha256": "cdddbcbeceb0f4fdaded4c68d54f30f61966a588ff4c6824366f59d19b6ba507"
+      },
+      "all_outcome_claims_null": true
+    }
+  },
+  "implementation": {
+    "generator": {
+      "path": "cnn_fpga/benchmark/phase9_twin_qualification_contract.py",
+      "bytes": 25158,
+      "sha256": "41f69f9d009fe11cf864843c264e286f59cb23dfded87834927ab8c10234106a"
+    },
+    "tests": {
+      "path": "tests/test_phase9_twin_qualification_contract.py",
+      "bytes": 6432,
+      "sha256": "a8bb57dcba7334caf57e7c98758fd541ccb61803ee00e1c20e918e2dc6cc8307"
+    }
+  },
+  "seed_intervals": {
+    "formal_backend_a_seeds": {
+      "start": 920000,
+      "exclusive_stop": 920064
+    },
+    "formal_backend_b_seeds": {
+      "start": 930000,
+      "exclusive_stop": 930064
+    },
+    "trajectory_backend_a_seeds": {
+      "start": 940000,
+      "exclusive_stop": 940048
+    },
+    "trajectory_backend_b_seeds": {
+      "start": 950000,
+      "exclusive_stop": 950048
+    }
+  },
+  "seed_intervals_pairwise_disjoint": true,
+  "cell_accounting": {
+    "mapping_cells": 2,
+    "shared_state_action_rounds": 4480,
+    "representative_probe_rounds": 512,
+    "logical_state_action_rounds": 5376,
+    "fault_trajectories": 384,
+    "fault_trajectory_rounds": 4608,
+    "total_formal_backend_rounds": 14976
+  },
+  "comparison_layers": {
+    "shared_physical_state": "identical Fock/qutrit density; compare transition, IQ, reset, leakage and action causality",
+    "native_logical_channel": "six native Pauli eigenstates per backend; compare logical PTM only after principal-angle mapping gate",
+    "fault_trajectory": "independent backend seeds; fixed step/telegraph/burst/compound interventions and complete denominator"
+  },
+  "prefrozen_tolerances": {
+    "minimum_code_principal_singular_value": 0.95,
+    "maximum_code_projector_frobenius": 0.3,
+    "maximum_ensemble_density_trace_distance": 0.1,
+    "maximum_mean_photon_difference": 0.08,
+    "maximum_level_probability_l1": 0.1,
+    "maximum_integrated_iq_mean_difference": 0.12,
+    "maximum_integrated_iq_covariance_frobenius": 0.18,
+    "maximum_iq_two_sample_ks": 0.24,
+    "maximum_log_evidence_mean_difference": 0.3,
+    "maximum_posterior_mean_l1": 0.12,
+    "maximum_logical_ptm_entry_difference": 0.12,
+    "maximum_logical_survival_difference": 0.1,
+    "maximum_reset_success_rate_difference": 0.12,
+    "maximum_leakage_residence_rate_difference": 0.1,
+    "maximum_short_trajectory_terminal_trace_distance": 0.15,
+    "maximum_short_trajectory_observable_mean_difference": 0.15,
+    "minimum_conservation_pass_fraction": 1.0,
+    "familywise_alpha": 0.05
+  },
+  "failure_policy": {
+    "pass_verdict": "PASS_T9_2_4_DUAL_BACKEND_QUALIFIED",
+    "fail_verdict": "NO_GO_TWIN_QUALIFICATION",
+    "main_metric_failure": "prohibit T9.2.5 surrogate and all formal lifetime execution",
+    "no_retuning_after_formal_access": true,
+    "no_mean_only_rescue": true,
+    "no_cell_deletion": true,
+    "no_codebook_claim": true
+  },
+  "claim_boundary": {
+    "qualified_if_pass": [
+      "dual_backend_agreement_for_prefrozen_synthetic_task"
+    ],
+    "typed_null": [
+      "round_ler",
+      "six_state_lifetime",
+      "physical_break_even",
+      "official_puviani_exact",
+      "puviani_nmf_surpass",
+      "external_sota",
+      "hardware_measured",
+      "rank"
+    ]
+  },
+  "current_null_state": {
+    "round_ler": null,
+    "six_state_lifetime": null,
+    "physical_break_even": null,
+    "official_puviani_exact": null,
+    "puviani_nmf_surpass": null,
+    "external_sota": null,
+    "hardware_measured": null,
+    "rank": null
+  },
+  "artifact_paths": {
+    "preregistration_seal": "docs/t9_2_4_twin_qualification_preregistration.json",
+    "report": "docs/t9_2_4_dual_backend_qualification.json",
+    "cell_ledger": "docs/t9_2_4_dual_backend_cell_ledger.csv",
+    "source_data": "docs/t9_2_4_dual_backend_qualification_source_data.csv",
+    "markdown": "docs/phase9_dual_backend_qualification.md",
+    "release_pin": "configs/phase9/t9_2_4_release_pin.json"
+  },
+  "gates": {
+    "G01_preformal_identity": true,
+    "G02_config_live_bound": true,
+    "G03_backend_a_bound": true,
+    "G04_backend_b_bound": true,
+    "G05_action_contract_bound": true,
+    "G06_seed_intervals_disjoint": true,
+    "G07_matrix_not_demo_sized": true,
+    "G08_mapping_gate_frozen": true,
+    "G09_physical_channel_tolerances_frozen": true,
+    "G10_iq_tolerances_frozen": true,
+    "G11_logical_tolerances_frozen": true,
+    "G12_tail_tolerances_frozen": true,
+    "G13_simultaneous_error_control": true,
+    "G14_no_retuning": true,
+    "G15_no_mean_only_rescue": true,
+    "G16_no_cell_deletion": true,
+    "G17_no_codebook_claim": true,
+    "G18_fail_verdict_is_no_go": true,
+    "G19_claims_typed_null": true,
+    "G20_implementation_live_bound": true
+  },
+  "gate_summary": {
+    "passed": 20,
+    "total": 20,
+    "all_passed": true
+  },
+  "semantic_mutation_audit": [
+    {
+      "mutation_id": "M01",
+      "target_gate": "G01_preformal_identity",
+      "detected": true
+    },
+    {
+      "mutation_id": "M02",
+      "target_gate": "G02_config_live_bound",
+      "detected": true
+    },
+    {
+      "mutation_id": "M03",
+      "target_gate": "G03_backend_a_bound",
+      "detected": true
+    },
+    {
+      "mutation_id": "M04",
+      "target_gate": "G04_backend_b_bound",
+      "detected": true
+    },
+    {
+      "mutation_id": "M05",
+      "target_gate": "G05_action_contract_bound",
+      "detected": true
+    },
+    {
+      "mutation_id": "M06",
+      "target_gate": "G06_seed_intervals_disjoint",
+      "detected": true
+    },
+    {
+      "mutation_id": "M07",
+      "target_gate": "G07_matrix_not_demo_sized",
+      "detected": true
+    },
+    {
+      "mutation_id": "M08",
+      "target_gate": "G08_mapping_gate_frozen",
+      "detected": true
+    },
+    {
+      "mutation_id": "M09",
+      "target_gate": "G09_physical_channel_tolerances_frozen",
+      "detected": true
+    },
+    {
+      "mutation_id": "M10",
+      "target_gate": "G10_iq_tolerances_frozen",
+      "detected": true
+    },
+    {
+      "mutation_id": "M11",
+      "target_gate": "G11_logical_tolerances_frozen",
+      "detected": true
+    },
+    {
+      "mutation_id": "M12",
+      "target_gate": "G12_tail_tolerances_frozen",
+      "detected": true
+    },
+    {
+      "mutation_id": "M13",
+      "target_gate": "G13_simultaneous_error_control",
+      "detected": true
+    },
+    {
+      "mutation_id": "M14",
+      "target_gate": "G14_no_retuning",
+      "detected": true
+    },
+    {
+      "mutation_id": "M15",
+      "target_gate": "G15_no_mean_only_rescue",
+      "detected": true
+    },
+    {
+      "mutation_id": "M16",
+      "target_gate": "G16_no_cell_deletion",
+      "detected": true
+    },
+    {
+      "mutation_id": "M17",
+      "target_gate": "G17_no_codebook_claim",
+      "detected": true
+    },
+    {
+      "mutation_id": "M18",
+      "target_gate": "G18_fail_verdict_is_no_go",
+      "detected": true
+    },
+    {
+      "mutation_id": "M19",
+      "target_gate": "G19_claims_typed_null",
+      "detected": true
+    },
+    {
+      "mutation_id": "M20",
+      "target_gate": "G20_implementation_live_bound",
+      "detected": true
+    }
+  ],
+  "mutation_summary": {
+    "detected": 20,
+    "total": 20,
+    "all_detected": true
+  },
+  "verdict": "PASS_T9_2_4_PREREGISTRATION_FROZEN",
+  "analysis_sha256": "98e72c457dab941daab270b3bd63eec939564a6f1fedaad061eab59280988695"
+}

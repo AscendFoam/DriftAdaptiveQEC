@@ -9,7 +9,7 @@
 
 状态枚举：`Todo`、`In Progress`、`Blocked`、`Review`、`Done`、`Dropped`。
 
-当前推荐任务：`T9.2.4`（T9.2.3 已完成独立 backend B：dense midpoint Strang solver、解析 Kraus/Schur channels、BLAKE2b+Python Random+手写 Box–Muller RNG、独立 Gaussian IQ likelihood/Kraus backaction与独立 squeezed-comb 六态 projector。静态 AST/token 隔离、pure-loss/qutrit-relaxation 闭式公式、CP/TP/physicality、action/leakage/drift、reset/`f` persistence、seed replay、8/16/32 split 与8/12 cutoff 收敛均通过；22/22 gates、22/22 mutations、28/28 core checks、52项 focused tests及 canonical release pin 通过，analysis=`4e46a0c7...`。该 PASS 只资格化 synthetic backend B implementation；A/B agreement、frontend、codebook、LER/lifetime、physical/HIL、official/Puviani、external SOTA 与 rank 仍为 `null`。下一步在 formal 结果访问前冻结 tolerance，对 A/B 做六态、动作干预、故障、分布与截断收敛资格对拍）。
+当前推荐任务：`T9.2.4`（T9.2.3 独立 backend B 已以 analysis=`4e46a0c7...` 完成并推送。T9.2.4 的 pre-formal qualification seal 已在任何正式结果访问前冻结：六态×七动作、五个共同 Fock/qutrit 初态、全部16个 T9.2.1 conservative probes、step/telegraph/burst/compound、14,976 backend-round、384条故障轨迹、四段互斥正式 seed、18个 tolerance、familywise error control 与 `NO_GO_TWIN_QUALIFICATION` 分支；20/20 gates、20/20 mutations、16项 contract tests通过，prereg analysis=`98e72c45...`，所有性能/official/Puviani/SOTA/hardware/rank 字段仍为 `null`。下一步只允许消费该 seal 运行正式 A/B distributional qualification，禁止事后重调、删 cell 或均值救援）。
 
 ## 任务记录规则
 
