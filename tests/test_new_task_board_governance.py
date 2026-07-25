@@ -493,7 +493,17 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert len(expected_tasks) == 37
     actual_phase9_tasks = {task_id for task_id, _ in TASK_ROW.findall(phase9)}
     assert actual_phase9_tasks == expected_tasks
-    blocked = {"T9.1.2", "T9.7.3", "T9.7.4"}
+    blocked = {
+        "T9.1.2",
+        "T9.2.5",
+        "T9.2.7",
+        "T9.3.1",
+        "T9.3.4",
+        "T9.6.2",
+        "T9.6.5",
+        "T9.7.3",
+        "T9.7.4",
+    }
     assert all(statuses[task] == "Blocked" for task in blocked)
     assert statuses["T9.1.1"] == "Done"
     assert statuses["T9.1.3"] == "Done"
@@ -502,7 +512,8 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert statuses["T9.2.1"] == "Done"
     assert statuses["T9.2.2"] == "Done"
     assert statuses["T9.2.3"] == "Done"
-    assert statuses["T9.2.4"] == "In Progress"
+    assert statuses["T9.2.4"] == "Done"
+    assert statuses["T9.2.6"] == "In Progress"
     assert all(
         statuses[task] == "Todo"
         for task in expected_tasks
@@ -516,10 +527,14 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
             "T9.2.2",
             "T9.2.3",
             "T9.2.4",
+            "T9.2.6",
         }
     )
     assert statuses["T7.3.5"] == "Done"
-    assert "当前推荐任务：`T9.2.4`" in board
+    assert "当前推荐任务：`T9.2.6`" in board
+    assert statuses["T-RISK-20260726-01"] == "Todo"
+    assert "NO_GO_TWIN_QUALIFICATION" in phase9
+    assert "fresh twin qualification" in phase9
 
     for milestone in ("9.1", "9.2", "9.3", "9.4", "9.5", "9.6", "9.7", "9.8"):
         assert f"### Milestone {milestone}" in phase9
