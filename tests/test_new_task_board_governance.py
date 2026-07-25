@@ -500,7 +500,8 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert statuses["T9.1.4"] == "Done"
     assert statuses["T9.1.5"] == "Done"
     assert statuses["T9.2.1"] == "Done"
-    assert statuses["T9.2.2"] == "In Progress"
+    assert statuses["T9.2.2"] == "Done"
+    assert statuses["T9.2.3"] == "In Progress"
     assert all(
         statuses[task] == "Todo"
         for task in expected_tasks
@@ -512,10 +513,11 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
             "T9.1.5",
             "T9.2.1",
             "T9.2.2",
+            "T9.2.3",
         }
     )
     assert statuses["T7.3.5"] == "Done"
-    assert "当前推荐任务：`T9.2.2`" in board
+    assert "当前推荐任务：`T9.2.3`" in board
 
     for milestone in ("9.1", "9.2", "9.3", "9.4", "9.5", "9.6", "9.7", "9.8"):
         assert f"### Milestone {milestone}" in phase9
@@ -681,6 +683,7 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert "| 2026-07-25 | T9.1.4 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-25 | T9.1.5 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-26 | T9.2.1 完成与反简化复核 | 不插入 |" in risks
+    assert "| 2026-07-26 | T9.2.2 完成与反简化复核 | 不插入 |" in risks
 
     canonical_record = (
         ROOT
@@ -896,12 +899,90 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         for value in fields.values()
     )
 
+    t922_canonical = (
+        ROOT
+        / "docs"
+        / "new_tasks"
+        / "T9.2.2_phase9_backend_a.md"
+    )
+    t922_mirror = (
+        ROOT
+        / "docs"
+        / "tasks"
+        / "T9.2.2_phase9_backend_a.md"
+    )
+    assert t922_canonical.is_file() and t922_mirror.is_file()
+    assert t922_canonical.read_bytes() == t922_mirror.read_bytes()
+    t922_text = t922_canonical.read_text(encoding="utf-8")
+    for required in (
+        "PASS_T9_2_2_BACKEND_A_QUALIFIED",
+        "95f11f0dc17a1799a97a69af6908765d1e00d75399ef3d07277d075ada74f624",
+            "联合 oscillator–qutrit",
+        "20/20 machine gates",
+        "20/20 targeted semantic mutations",
+        "27/27 core qualification checks",
+        "63 passed",
+        "raw trace",
+        "typed `null`",
+    ):
+        assert required in t922_text
+
+    t922_report_path = (
+        ROOT / "docs" / "t9_2_2_backend_a_qualification.json"
+    )
+    t922_source_path = (
+        ROOT / "docs" / "t9_2_2_backend_a_qualification_source_data.csv"
+    )
+    t922_markdown_path = (
+        ROOT / "docs" / "phase9_backend_a_qualification.md"
+    )
+    t922_config_path = (
+        ROOT / "configs" / "phase9" / "t9_2_2_backend_a.json"
+    )
+    t922_release_pin_path = (
+        ROOT / "configs" / "phase9" / "t9_2_2_release_pin.json"
+    )
+    assert all(
+        path.is_file()
+        for path in (
+            t922_report_path,
+            t922_source_path,
+            t922_markdown_path,
+            t922_config_path,
+            t922_release_pin_path,
+        )
+    )
+    t922_report = json.loads(
+        t922_report_path.read_text(encoding="utf-8")
+    )
+    assert (
+        t922_report["verdict"]
+        == "PASS_T9_2_2_BACKEND_A_QUALIFIED"
+    )
+    assert t922_report["gate_summary"] == {
+        "passed": 20,
+        "total": 20,
+        "all_passed": True,
+    }
+    assert t922_report["mutation_summary"] == {
+        "detected": 20,
+        "total": 20,
+        "all_detected": True,
+    }
+    assert len(t922_report["qualification"]["checks"]) == 27
+    assert all(t922_report["qualification"]["checks"].values())
+    assert all(
+        value is None
+        for value in t922_report["qualification"]["claim_state"].values()
+    )
+
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert "docs/phase9_baseline_search_power_registry.md" in readme
     assert "required 806、planned 808 clusters/backend" in readme
     assert "docs/phase9_scoped_claim_amendment.md" in readme
     assert "29 条 lane-qualified legacy migration" in readme
     assert "docs/phase9_causal_twin_contract.md" in readme
+    assert "docs/phase9_backend_a_qualification.md" in readme
 
     addendum_path = (
         ROOT / "docs" / "t9_1_3_post_outcome_governance_addendum.json"

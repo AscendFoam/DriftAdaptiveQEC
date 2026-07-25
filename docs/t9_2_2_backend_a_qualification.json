@@ -1,0 +1,609 @@
+{
+  "task_id": "T9.2.2",
+  "schema_version": "PHASE9-BACKEND-A-QUALIFICATION-REPORT-V1",
+  "protocol_id": "PHASE9-BACKEND-A-JOINT-FOCK-QUTRIT-GKSL-V1",
+  "frozen_at": "2026-07-26",
+  "status": "BACKEND_A_IMPLEMENTATION_QUALIFICATION_ONLY",
+  "parent": {
+    "task_id": "T9.2.1",
+    "protocol_id": "PHASE9-CAUSAL-TWIN-CONTRACT-V1",
+    "analysis_sha256": "78775658b4c9fa3a768252e2d529e39a0a90924c28158de2e4a527ba3052fe34",
+    "release_pin": {
+      "path": "configs/phase9/t9_2_1_release_pin.json",
+      "bytes": 1494,
+      "sha256": "ec669ca8a7cf24408820c7c6e241ffc59d4cc7a50d35c70631772e6ac6cc1ab7"
+    },
+    "report": {
+      "path": "docs/t9_2_1_causal_twin_contract.json",
+      "bytes": 125451,
+      "sha256": "cdddbcbeceb0f4fdaded4c68d54f30f61966a588ff4c6824366f59d19b6ba507"
+    },
+    "all_parent_outcome_fields_null": true
+  },
+  "config": {
+    "path": "configs/phase9/t9_2_2_backend_a.json",
+    "bytes": 3625,
+    "sha256": "8e1d470d7716f1a55428b1cb17eb40a357c7714c26f77ba0ac30a3c5b6f69e00",
+    "semantic_sha256": "7fb3b7ba1530bd7ecb65f00b9cdcd5af9115873b72c6f1da31965babcf0a9531"
+  },
+  "implementation": {
+    "backend": {
+      "path": "physics/phase9_backend_a.py",
+      "bytes": 89800,
+      "sha256": "648664457996e6e9aa83c8189e92359d38077fa1fa47223329cb36424609fc69"
+    },
+    "fock_density_dependency": {
+      "path": "physics/fock_density_model.py",
+      "bytes": 27119,
+      "sha256": "19e3a6dac43b3f89ef131bf66ac895c953ded6b4e079beff563d5c8d745428b6"
+    },
+    "fock_sbs_dependency": {
+      "path": "physics/fock_sbs_cycle.py",
+      "bytes": 42229,
+      "sha256": "a298cb6a56d0cb7feb24b2eee2c1056f6bbeacde319b75cd9674b06a4b1ca425"
+    },
+    "finite_gkp_dependency": {
+      "path": "physics/finite_energy_gkp.py",
+      "bytes": 19179,
+      "sha256": "5e4e8a6b1600e0702558463cb60c2d165dec5118589997afc4266d961ff5e396"
+    },
+    "quadrature_dependency": {
+      "path": "physics/quadrature_conventions.py",
+      "bytes": 18483,
+      "sha256": "89194e5cec3bfdf34a8a0ca17ae59dc430fe2cf5c33133e0b1b78fd10ac420e9"
+    },
+    "sbs_error_space_dependency": {
+      "path": "physics/sbs_error_space.py",
+      "bytes": 22985,
+      "sha256": "16fc924aad47eff6062b2d1cf471183238632782ef982ce1834e166809177a99"
+    },
+    "parent_contract_runtime": {
+      "path": "physics/phase9_twin_contract.py",
+      "bytes": 97449,
+      "sha256": "05622cb5036ea9593b76b7d27ad161d70e65353e5fa9392becbe116d4591f9c1"
+    },
+    "generator": {
+      "path": "cnn_fpga/benchmark/phase9_backend_a_qualification.py",
+      "bytes": 38175,
+      "sha256": "7c5a3e22922c2d4427f7151f8deb6f1935dd942e930b9a83e93a503d1453765f"
+    },
+    "runtime_tests": {
+      "path": "tests/test_phase9_backend_a.py",
+      "bytes": 24455,
+      "sha256": "ac8f86ea90fd2c0e68d0b7e5dbcbdc5af30890bf298784041626216c69309dfa"
+    },
+    "artifact_tests": {
+      "path": "tests/test_phase9_backend_a_qualification.py",
+      "bytes": 9432,
+      "sha256": "1efde905ea650acf697ead1ec19060c9012c82d3ff47374d7a51db1522af539f"
+    }
+  },
+  "toolchain": {
+    "python": "3.12.7",
+    "numpy": "1.26.4",
+    "scipy": "1.13.1",
+    "solver": "scipy.sparse.linalg.expm_multiply for piecewise GKSL; scipy.linalg.expm for small-system Choi audit",
+    "vectorization": "column-major vec(A rho B)=(B^T kron A)vec(rho)"
+  },
+  "model_contract": {
+    "state": "joint density matrix on finite Fock oscillator x qutrit {g,e,f}",
+    "dynamics": "piecewise time-dependent Hamiltonian plus GKSL collapse operators; no logical-label transition kernel",
+    "measurement": "Ramsey-like qutrit interaction followed by continuous-IQ diagonal Kraus likelihood and conditional backaction",
+    "reset": "success/failure quantum instrument; failed branch preserves e/f population and success branch maps g/e/f to g",
+    "drift": "five-dimensional latent AR recurrence with action energy and Pauli primitive kicks plus addressable exogenous noise",
+    "logical_tracking": "partial trace and finite-GKP code projection in evaluator namespace only; evaluator cannot affect transition or IQ",
+    "action_source": "semantic+CRC-valid T9.2.1 ActionWord representative probes; pre-codebook/non-ranking",
+    "iq_boundary": "synthetic analog pre-frontend only; digitization/Q-format/stream semantics deferred to T9.2.6"
+  },
+  "namespace_contract": {
+    "transition_inputs": [
+      "BACKEND_LATENT.joint_density",
+      "BACKEND_LATENT.drift",
+      "BACKEND_LATENT.leakage_age",
+      "ACTION_WORD",
+      "addressable_exogenous_record"
+    ],
+    "observed_outputs": [
+      "analog IQ I/Q",
+      "integrated IQ",
+      "level posterior",
+      "leakage confidence",
+      "reset acknowledgement"
+    ],
+    "truth_outputs": [
+      "sampled emission component",
+      "hidden reset outcome",
+      "level populations",
+      "drift before/after",
+      "density diagnostics"
+    ],
+    "forbidden_transition_inputs": [
+      "logical_error",
+      "logical_state_label",
+      "future observation",
+      "backend truth label",
+      "controller-selected outcome"
+    ]
+  },
+  "backend_parameters": {
+    "cutoff": 8,
+    "substeps_per_segment": 2,
+    "action_duration": 0.06,
+    "ramsey_pulse_duration": 0.03,
+    "sense_duration": 0.08,
+    "ramsey_angle": 1.5707963267948966,
+    "action_displacement": 0.16,
+    "dispersive_chi": 0.32,
+    "self_kerr": 0.006,
+    "oscillator_loss_rate": 0.012,
+    "oscillator_dephasing_rate": 0.003,
+    "ancilla_ge_relax_rate": 0.01,
+    "ancilla_fe_relax_rate": 0.016,
+    "ancilla_ge_excitation_rate": 0.001,
+    "ancilla_dephasing_rate": 0.006,
+    "pulse_leakage_crosstalk": 0.035,
+    "measurement_leakage_coupling": 0.018,
+    "action_leakage_coupling": 0.012,
+    "iq_samples": 8,
+    "iq_sigma": 0.48,
+    "iq_centers": [
+      [
+        -0.85,
+        0.0
+      ],
+      [
+        0.85,
+        0.0
+      ],
+      [
+        0.0,
+        1.15
+      ]
+    ],
+    "reset_success_e": 0.985,
+    "reset_success_f": 0.82,
+    "reset_ack_error": 0.002,
+    "drift_retention": [
+      0.985,
+      0.985,
+      0.992,
+      0.992,
+      0.975
+    ],
+    "drift_noise_std": [
+      0.0015,
+      0.0015,
+      0.002,
+      0.002,
+      0.001
+    ],
+    "drift_action_kick": 0.0025,
+    "drift_readout_heating": 0.0018,
+    "drift_leakage_heating": 0.0012,
+    "reset_action_energy": 1.5,
+    "leakage_age_threshold": 0.05,
+    "logical_projector_delta": 0.34,
+    "logical_grid_points": 2049,
+    "parameter_provenance": "SYNTHETIC_DIMENSIONLESS_PHASE9_BACKEND_A_QUALIFICATION_NOT_DEVICE_CALIBRATED",
+    "backend_id": "PHASE9-BACKEND-A-JOINT-FOCK-QUTRIT-GKSL-V1",
+    "scope": "finite-cutoff oscillator x qutrit synthetic qualification backend; dimensionless Hamiltonian/GKSL/IQ/reset parameters; no device-calibrated, lifetime, break-even, hardware, official-Puviani, external-SOTA or rank claim"
+  },
+  "qualification_thresholds": {
+    "choi_minimum_eigenvalue": -2e-10,
+    "choi_tp_frobenius": 2e-10,
+    "choi_hermiticity_frobenius": 2e-10,
+    "density_trace_error": 5e-09,
+    "density_hermiticity_frobenius": 5e-09,
+    "density_minimum_eigenvalue": -5e-09,
+    "instrument_completeness_frobenius": 1e-12,
+    "probability_sum_error": 2e-10,
+    "zero_noise_idle_trace_distance": 5e-10,
+    "ideal_action_trace_distance": 2e-05,
+    "limit_population_minimum": 0.9999999998,
+    "measurement_coherence_ratio": 0.001,
+    "measurement_posterior_peak": 0.999,
+    "syndrome_state_dependence_minimum": 0.05,
+    "syndrome_backaction_trace_distance_minimum": 0.01,
+    "action_induced_f_population_minimum": 0.1,
+    "action_state_trace_distance_minimum": 0.001,
+    "action_drift_l2_minimum": 1e-05,
+    "different_seed_iq_difference_minimum": 1e-06,
+    "step_size_trace_distance": 0.00015,
+    "step_size_error_ratio": 0.3,
+    "fock_cutoff_trace_distance": 0.0002,
+    "six_state_initial_fidelity": 0.999999998
+  },
+  "qualification": {
+    "backend_id": "PHASE9-BACKEND-A-JOINT-FOCK-QUTRIT-GKSL-V1",
+    "scope": "finite-cutoff oscillator x qutrit synthetic qualification backend; dimensionless Hamiltonian/GKSL/IQ/reset parameters; no device-calibrated, lifetime, break-even, hardware, official-Puviani, external-SOTA or rank claim",
+    "config_sha256": "7fb3b7ba1530bd7ecb65f00b9cdcd5af9115873b72c6f1da31965babcf0a9531",
+    "metrics": {
+      "choi_dimension": 6,
+      "choi_minimum_eigenvalue": -2.512790289381488e-19,
+      "choi_trace": 6.0,
+      "choi_tp_frobenius": 0.0,
+      "choi_hermiticity_frobenius": 0.0,
+      "full_round_trace_error": 1.1102230246251565e-16,
+      "full_round_hermiticity_frobenius": 0.0,
+      "full_round_minimum_eigenvalue": -5.910709039511469e-17,
+      "measurement_completeness_frobenius": 0.0,
+      "reset_completeness_frobenius": 0.0,
+      "full_round_posterior_sum_error": 0.0,
+      "full_round_code_survival": 0.9933041874403618,
+      "zero_noise_idle_trace_distance": 0.0,
+      "ideal_action_trace_distance": 1.1359626789360622e-05,
+      "large_reset_g_probability": 1.0,
+      "failed_reset_f_probability": 1.0,
+      "no_reset_f_persistence_probability": 1.0,
+      "measurement_coherence_before": 0.5000000000000001,
+      "measurement_coherence_after": 4.800892238919265e-61,
+      "measurement_posterior_peak": 1.0,
+      "syndrome_fock0_vs_fock1_level_tv": 0.16485388000772538,
+      "syndrome_oscillator_backaction_trace_distance": 0.20950402581306124,
+      "action_induced_f_population_difference": 0.5149209876071686,
+      "action_intervention_state_trace_distance": 0.12514125204297571,
+      "action_intervention_drift_l2": 0.0034263683398023624,
+      "action_intervention_shared_exogenous": true,
+      "seed_repeat_density_max_error": 0.0,
+      "seed_repeat_iq_max_error": 0.0,
+      "different_seed_iq_max_difference": 1.4224970346068746,
+      "step_size_8_vs_16_trace_distance": 0.0005483024791109953,
+      "step_size_16_vs_32_trace_distance": 0.00013649778174586633,
+      "step_size_error_ratio": 0.24894613273895935,
+      "fock_cutoff_8_vs_12_trace_distance": 1.209910083970294e-10,
+      "six_state_initial_minimum_fidelity": 0.9999999999999998
+    },
+    "checks": {
+      "gksl_channel_cp": true,
+      "gksl_channel_tp": true,
+      "gksl_choi_hermitian": true,
+      "full_round_trace": true,
+      "full_round_hermiticity": true,
+      "full_round_positive": true,
+      "measurement_instrument_complete": true,
+      "reset_instrument_complete": true,
+      "probabilities_normalized": true,
+      "logical_tracking_finite": true,
+      "zero_noise_idle_limit": true,
+      "ideal_action_limit": true,
+      "large_reset_limit": true,
+      "reset_failure_preserves_f": true,
+      "f_state_persistence": true,
+      "iq_drives_measurement_backaction": true,
+      "ramsey_syndrome_state_dependence": true,
+      "syndrome_measurement_backacts_on_oscillator": true,
+      "action_induces_physical_f_population": true,
+      "action_changes_quantum_transition": true,
+      "action_changes_latent_drift": true,
+      "intervention_uses_common_randomness": true,
+      "seed_determinism": true,
+      "different_seed_changes_observation": true,
+      "step_size_convergence": true,
+      "fock_cutoff_convergence": true,
+      "six_state_logical_projection": true
+    },
+    "claim_state": {
+      "backend_b_qualified": null,
+      "dual_backend_agreement": null,
+      "round_ler": null,
+      "six_state_lifetime": null,
+      "physical_break_even": null,
+      "official_puviani_exact": null,
+      "puviani_nmf_surpass": null,
+      "external_sota": null,
+      "hardware_measured": null,
+      "rank": null
+    },
+    "verdict": "QUALIFIED_BACKEND_A_ONLY",
+    "passed": true
+  },
+  "claim_boundary": {
+    "qualified": [
+      "backend_a_implementation_only"
+    ],
+    "not_qualified": [
+      "backend B",
+      "dual-backend agreement",
+      "codebook",
+      "fixed-point frontend",
+      "LER/lifetime",
+      "physical break-even",
+      "hardware/HIL",
+      "official Puviani",
+      "external SOTA/rank"
+    ]
+  },
+  "artifact_paths": {
+    "report": "docs/t9_2_2_backend_a_qualification.json",
+    "source_data": "docs/t9_2_2_backend_a_qualification_source_data.csv",
+    "markdown": "docs/phase9_backend_a_qualification.md",
+    "release_pin": "configs/phase9/t9_2_2_release_pin.json"
+  },
+  "gate_definitions": [
+    {
+      "gate_id": "G01_identity",
+      "description": "task/protocol identity exact"
+    },
+    {
+      "gate_id": "G02_parent_live",
+      "description": "T9.2.1 live release binding"
+    },
+    {
+      "gate_id": "G03_config_live",
+      "description": "config bytes and semantic hash live"
+    },
+    {
+      "gate_id": "G04_source_live",
+      "description": "backend/generator/parent runtime hashes live"
+    },
+    {
+      "gate_id": "G05_backend_verdict",
+      "description": "backend-A-only PASS"
+    },
+    {
+      "gate_id": "G06_all_physics_checks",
+      "description": "all registered checks true"
+    },
+    {
+      "gate_id": "G07_cp_tp",
+      "description": "actual GKSL Choi CP/TP/Hermitian"
+    },
+    {
+      "gate_id": "G08_density_physical",
+      "description": "full-round density physicality"
+    },
+    {
+      "gate_id": "G09_instruments_complete",
+      "description": "IQ/reset instruments complete"
+    },
+    {
+      "gate_id": "G10_physical_limits",
+      "description": "zero/ideal/reset limits"
+    },
+    {
+      "gate_id": "G11_iq_backaction",
+      "description": "IQ likelihood changes density"
+    },
+    {
+      "gate_id": "G12_leakage_reset",
+      "description": "reset failure and f persistence"
+    },
+    {
+      "gate_id": "G13_action_quantum",
+      "description": "action changes joint quantum transition"
+    },
+    {
+      "gate_id": "G14_action_drift",
+      "description": "action changes latent drift"
+    },
+    {
+      "gate_id": "G15_rng_causal",
+      "description": "CRN, determinism and stochastic sensitivity"
+    },
+    {
+      "gate_id": "G16_convergence",
+      "description": "step-size and Fock-cutoff convergence"
+    },
+    {
+      "gate_id": "G17_logical_evaluator",
+      "description": "six-state evaluator projection"
+    },
+    {
+      "gate_id": "G18_analog_boundary",
+      "description": "IQ remains synthetic analog pre-frontend"
+    },
+    {
+      "gate_id": "G19_claims_null",
+      "description": "all downstream claim fields typed null"
+    },
+    {
+      "gate_id": "G20_backend_a_only",
+      "description": "no backend-B/dual-backend promotion"
+    }
+  ],
+  "gates": {
+    "G01_identity": true,
+    "G02_parent_live": true,
+    "G03_config_live": true,
+    "G04_source_live": true,
+    "G05_backend_verdict": true,
+    "G06_all_physics_checks": true,
+    "G07_cp_tp": true,
+    "G08_density_physical": true,
+    "G09_instruments_complete": true,
+    "G10_physical_limits": true,
+    "G11_iq_backaction": true,
+    "G12_leakage_reset": true,
+    "G13_action_quantum": true,
+    "G14_action_drift": true,
+    "G15_rng_causal": true,
+    "G16_convergence": true,
+    "G17_logical_evaluator": true,
+    "G18_analog_boundary": true,
+    "G19_claims_null": true,
+    "G20_backend_a_only": true
+  },
+  "gate_summary": {
+    "passed": 20,
+    "total": 20,
+    "all_passed": true
+  },
+  "semantic_mutation_audit": [
+    {
+      "mutation_id": "M01_identity",
+      "target_gate": "G01_identity",
+      "detected": true,
+      "failed_gates": [
+        "G01_identity"
+      ]
+    },
+    {
+      "mutation_id": "M02_parent_hash",
+      "target_gate": "G02_parent_live",
+      "detected": true,
+      "failed_gates": [
+        "G02_parent_live"
+      ]
+    },
+    {
+      "mutation_id": "M03_config_hash",
+      "target_gate": "G03_config_live",
+      "detected": true,
+      "failed_gates": [
+        "G03_config_live"
+      ]
+    },
+    {
+      "mutation_id": "M04_source_hash",
+      "target_gate": "G04_source_live",
+      "detected": true,
+      "failed_gates": [
+        "G04_source_live"
+      ]
+    },
+    {
+      "mutation_id": "M05_verdict",
+      "target_gate": "G05_backend_verdict",
+      "detected": true,
+      "failed_gates": [
+        "G05_backend_verdict"
+      ]
+    },
+    {
+      "mutation_id": "M06_check",
+      "target_gate": "G06_all_physics_checks",
+      "detected": true,
+      "failed_gates": [
+        "G06_all_physics_checks",
+        "G15_rng_causal"
+      ]
+    },
+    {
+      "mutation_id": "M07_cp",
+      "target_gate": "G07_cp_tp",
+      "detected": true,
+      "failed_gates": [
+        "G06_all_physics_checks",
+        "G07_cp_tp"
+      ]
+    },
+    {
+      "mutation_id": "M08_density",
+      "target_gate": "G08_density_physical",
+      "detected": true,
+      "failed_gates": [
+        "G06_all_physics_checks",
+        "G08_density_physical"
+      ]
+    },
+    {
+      "mutation_id": "M09_reset_complete",
+      "target_gate": "G09_instruments_complete",
+      "detected": true,
+      "failed_gates": [
+        "G06_all_physics_checks",
+        "G09_instruments_complete"
+      ]
+    },
+    {
+      "mutation_id": "M10_limit",
+      "target_gate": "G10_physical_limits",
+      "detected": true,
+      "failed_gates": [
+        "G06_all_physics_checks",
+        "G10_physical_limits"
+      ]
+    },
+    {
+      "mutation_id": "M11_iq_label_only",
+      "target_gate": "G11_iq_backaction",
+      "detected": true,
+      "failed_gates": [
+        "G06_all_physics_checks",
+        "G11_iq_backaction"
+      ]
+    },
+    {
+      "mutation_id": "M12_f_persistence",
+      "target_gate": "G12_leakage_reset",
+      "detected": true,
+      "failed_gates": [
+        "G06_all_physics_checks",
+        "G12_leakage_reset"
+      ]
+    },
+    {
+      "mutation_id": "M13_action_label_only",
+      "target_gate": "G13_action_quantum",
+      "detected": true,
+      "failed_gates": [
+        "G13_action_quantum"
+      ]
+    },
+    {
+      "mutation_id": "M14_action_no_drift",
+      "target_gate": "G14_action_drift",
+      "detected": true,
+      "failed_gates": [
+        "G14_action_drift"
+      ]
+    },
+    {
+      "mutation_id": "M15_no_crn",
+      "target_gate": "G15_rng_causal",
+      "detected": true,
+      "failed_gates": [
+        "G06_all_physics_checks",
+        "G15_rng_causal"
+      ]
+    },
+    {
+      "mutation_id": "M16_no_convergence",
+      "target_gate": "G16_convergence",
+      "detected": true,
+      "failed_gates": [
+        "G16_convergence"
+      ]
+    },
+    {
+      "mutation_id": "M17_no_six_state",
+      "target_gate": "G17_logical_evaluator",
+      "detected": true,
+      "failed_gates": [
+        "G06_all_physics_checks",
+        "G17_logical_evaluator"
+      ]
+    },
+    {
+      "mutation_id": "M18_relabel_live",
+      "target_gate": "G18_analog_boundary",
+      "detected": true,
+      "failed_gates": [
+        "G18_analog_boundary"
+      ]
+    },
+    {
+      "mutation_id": "M19_fill_claim",
+      "target_gate": "G19_claims_null",
+      "detected": true,
+      "failed_gates": [
+        "G19_claims_null"
+      ]
+    },
+    {
+      "mutation_id": "M20_dual_promote",
+      "target_gate": "G20_backend_a_only",
+      "detected": true,
+      "failed_gates": [
+        "G20_backend_a_only"
+      ]
+    }
+  ],
+  "mutation_summary": {
+    "detected": 20,
+    "total": 20,
+    "all_detected": true
+  },
+  "verdict": "PASS_T9_2_2_BACKEND_A_QUALIFIED",
+  "analysis_sha256": "95f11f0dc17a1799a97a69af6908765d1e00d75399ef3d07277d075ada74f624"
+}

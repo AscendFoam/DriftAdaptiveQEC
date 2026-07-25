@@ -202,4 +202,5 @@ corrector.update_decoder(opt_params.K, opt_params.b)
 ## Phase 9 因果数字孪生接口合同
 
 - [`phase9_twin_contract.py`](phase9_twin_contract.py) 实现 T9.2.1 的 pre-backend 有限接口：五个 namespace、observed+memory 唯一 deployable path、24-bit composite K、总 nominal/transition recurrence、80-bit semantic+CRC action、previous-K receipt 重算、fail-closed fault canonicalization、完整 trusted-package nomination validator 与16个 conservative interface probes。
-- 该模块只证明 schema/recurrence/serializer/package-nomination totality，不是高保真 oscillator/ancilla physics backend，不产生 LER、lifetime、codebook、RTL adapter、硬件或 SOTA 资格；T9.2.2 起才实现和验证物理演化。
+- [`phase9_backend_a.py`](phase9_backend_a.py) 实现 T9.2.2 的 backend A：有限 Fock oscillator × `g/e/f` qutrit joint density、time-dependent action/Ramsey Hamiltonian、GKSL channels、连续 IQ Kraus backaction、条件 reset instrument、`f` persistence、action-conditioned 五维 drift 与 evaluator-only 六态 logical projection。资格检查含完整小系统 Choi CP/TP、joint-state physicality、ideal/reset limits、真实 oscillator syndrome backaction、共同随机数 intervention、seed replay 与 step/cutoff convergence。
+- T9.2.2 PASS 只资格化 synthetic dimensionless backend A。IQ 仍是 analog pre-frontend，backend B/双后端对拍、LER/lifetime、physical break-even、codebook、硬件与 SOTA/rank 均未资格化。
