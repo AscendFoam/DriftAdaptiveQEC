@@ -501,7 +501,8 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert statuses["T9.1.5"] == "Done"
     assert statuses["T9.2.1"] == "Done"
     assert statuses["T9.2.2"] == "Done"
-    assert statuses["T9.2.3"] == "In Progress"
+    assert statuses["T9.2.3"] == "Done"
+    assert statuses["T9.2.4"] == "In Progress"
     assert all(
         statuses[task] == "Todo"
         for task in expected_tasks
@@ -514,10 +515,11 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
             "T9.2.1",
             "T9.2.2",
             "T9.2.3",
+            "T9.2.4",
         }
     )
     assert statuses["T7.3.5"] == "Done"
-    assert "当前推荐任务：`T9.2.3`" in board
+    assert "当前推荐任务：`T9.2.4`" in board
 
     for milestone in ("9.1", "9.2", "9.3", "9.4", "9.5", "9.6", "9.7", "9.8"):
         assert f"### Milestone {milestone}" in phase9
@@ -684,6 +686,7 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert "| 2026-07-25 | T9.1.5 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-26 | T9.2.1 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-26 | T9.2.2 完成与反简化复核 | 不插入 |" in risks
+    assert "| 2026-07-26 | T9.2.3 完成与反简化复核 | 不插入 |" in risks
 
     canonical_record = (
         ROOT
@@ -976,6 +979,86 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         for value in t922_report["qualification"]["claim_state"].values()
     )
 
+    t923_canonical = (
+        ROOT
+        / "docs"
+        / "new_tasks"
+        / "T9.2.3_phase9_backend_b.md"
+    )
+    t923_mirror = (
+        ROOT
+        / "docs"
+        / "tasks"
+        / "T9.2.3_phase9_backend_b.md"
+    )
+    assert t923_canonical.is_file() and t923_mirror.is_file()
+    assert t923_canonical.read_bytes() == t923_mirror.read_bytes()
+    t923_text = t923_canonical.read_text(encoding="utf-8")
+    for required in (
+        "PASS_T9_2_3_BACKEND_B_QUALIFIED",
+        "4e46a0c7bf88356c38874112bf26c7ddc0d60d989c024c539185b52b3bef80aa",
+        "dense split-channel",
+        "22/22 machine gates",
+        "22/22 targeted semantic mutations",
+        "28/28 core qualification checks",
+        "52 passed",
+        "maximum_channel_completeness_error",
+        "typed `null`",
+    ):
+        assert required in t923_text
+
+    t923_report_path = (
+        ROOT / "docs" / "t9_2_3_backend_b_qualification.json"
+    )
+    t923_source_path = (
+        ROOT / "docs" / "t9_2_3_backend_b_qualification_source_data.csv"
+    )
+    t923_markdown_path = (
+        ROOT / "docs" / "phase9_backend_b_qualification.md"
+    )
+    t923_config_path = (
+        ROOT / "configs" / "phase9" / "t9_2_3_backend_b.json"
+    )
+    t923_release_pin_path = (
+        ROOT / "configs" / "phase9" / "t9_2_3_release_pin.json"
+    )
+    assert all(
+        path.is_file()
+        for path in (
+            t923_report_path,
+            t923_source_path,
+            t923_markdown_path,
+            t923_config_path,
+            t923_release_pin_path,
+        )
+    )
+    t923_report = json.loads(
+        t923_report_path.read_text(encoding="utf-8")
+    )
+    assert (
+        t923_report["verdict"]
+        == "PASS_T9_2_3_BACKEND_B_QUALIFIED"
+    )
+    assert t923_report["gate_summary"] == {
+        "passed": 22,
+        "total": 22,
+        "all_passed": True,
+    }
+    assert t923_report["mutation_summary"] == {
+        "detected": 22,
+        "total": 22,
+        "all_detected": True,
+    }
+    assert len(t923_report["qualification"]["checks"]) == 28
+    assert all(t923_report["qualification"]["checks"].values())
+    assert t923_report["independence_manifest"][
+        "static_ast_isolation_passed"
+    ] is True
+    assert all(
+        value is None
+        for value in t923_report["qualification"]["claim_state"].values()
+    )
+
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert "docs/phase9_baseline_search_power_registry.md" in readme
     assert "required 806、planned 808 clusters/backend" in readme
@@ -983,6 +1066,7 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert "29 条 lane-qualified legacy migration" in readme
     assert "docs/phase9_causal_twin_contract.md" in readme
     assert "docs/phase9_backend_a_qualification.md" in readme
+    assert "docs/phase9_backend_b_qualification.md" in readme
 
     addendum_path = (
         ROOT / "docs" / "t9_1_3_post_outcome_governance_addendum.json"
