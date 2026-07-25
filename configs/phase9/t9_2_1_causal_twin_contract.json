@@ -1,0 +1,1324 @@
+{
+  "schema_version": "t9.2.1-causal-twin-contract-config-v1",
+  "task_id": "T9.2.1",
+  "protocol_id": "PHASE9-CAUSAL-TWIN-CONTRACT-V1",
+  "frozen_at": "2026-07-25T06:00:00+08:00",
+  "contract_status": "FROZEN_PRE_BACKEND_PRE_CODEBOOK_PROTOCOL_ONLY",
+  "parent_contract": {
+    "t9_1_1": {
+      "task_id": "T9.1.1",
+      "protocol_id": "PHASE9-THREE-INDEPENDENT-TASK-SIGNATURES-V1",
+      "verdict": "PASS_PHASE9_THREE_INDEPENDENT_LANE_PROTOCOL_FROZEN",
+      "analysis_sha256": "c88110375c358794339e72d672e4624871425fe480e5da091ddd1d6595255e18",
+      "report": {
+        "path": "docs/t9_1_1_three_lane_protocol.json",
+        "bytes": 74510,
+        "sha256": "255c50ce677a1cae5475c2294177ceaab551bcbb5078ee2d49b358600a58f7a5"
+      }
+    },
+    "t9_1_5": {
+      "task_id": "T9.1.5",
+      "protocol_id": "PHASE9-SCOPED-CLAIM-AMENDMENT-V2",
+      "verdict": "PASS_T9_1_5_PARENT_BOUND_SCOPED_CLAIM_AMENDMENT",
+      "analysis_sha256": "4623492481ca83cb4dddf571ffd934b940846c9fff87331bfb5b600500ac5941",
+      "release_pin": {
+        "path": "configs/phase9/t9_1_5_release_pin.json",
+        "bytes": 1136,
+        "sha256": "230bb93828015074e855abef7e7da46cbf1bd4c8d0f3af674939519ef73af268"
+      },
+      "release_pin_payload": {
+        "schema_version": "t9.1.5-release-pin-v1",
+        "task_id": "T9.1.5",
+        "protocol_id": "PHASE9-SCOPED-CLAIM-AMENDMENT-V2",
+        "analysis_sha256": "4623492481ca83cb4dddf571ffd934b940846c9fff87331bfb5b600500ac5941",
+        "config": {
+          "path": "configs/phase9/t9_1_5_scoped_claim_amendment.json",
+          "bytes": 37296,
+          "sha256": "61cf10d77682d0165059576f14545ba591031706df1ed707901ca0beb8b807d6"
+        },
+        "implementation": {
+          "path": "cnn_fpga/benchmark/phase9_scoped_claim_amendment.py",
+          "bytes": 92463,
+          "sha256": "f8ea11bd28c5ee7e2c77e4e1f95828961422b6b3c34e24a19bfff308cc365c99"
+        },
+        "report": {
+          "path": "docs/t9_1_5_scoped_claim_amendment.json",
+          "bytes": 113375,
+          "sha256": "ccf8daf1e69688c5e15eb8649ecba6104f768cb1ac9bcc8e80f9b7c16c561ea3"
+        },
+        "source_data": {
+          "path": "docs/t9_1_5_scoped_claim_amendment_source_data.csv",
+          "bytes": 181360,
+          "sha256": "17b38bae5a7e091eae4cd397ef37058a75697ecf163ae684ba0ad2a09bcce056"
+        },
+        "markdown": {
+          "path": "docs/phase9_scoped_claim_amendment.md",
+          "bytes": 11868,
+          "sha256": "f6619fa3a80516fc45b3af1c945157237340e61fbcf7a8e32b035757ad6e64f7"
+        }
+      },
+      "all_current_states_null": true
+    }
+  },
+  "model_scope": {
+    "kind": "EXECUTABLE_CAUSAL_INTERFACE_AND_TOTAL_RECURRENCE",
+    "physics_backend_qualified": false,
+    "codebook_released": false,
+    "frontend_released": false,
+    "rtl_adapter_qualified": false,
+    "performance_evaluated": false
+  },
+  "claim_boundary": {
+    "allowed": "finite observed-only interface contract; exhaustive factorised map totality; deterministic fail-closed semantics",
+    "forbidden": [
+      "high_fidelity_twin_qualified",
+      "final_recovery_codebook",
+      "current_rtl_wire_compatibility",
+      "measured_fpga_or_hil",
+      "logical_error_rate_or_lifetime_gain",
+      "official_or_puviani_surpass",
+      "external_sota_or_rank"
+    ]
+  },
+  "namespace_contract": {
+    "exact_ids": [
+      "BACKEND_LATENT",
+      "DEPLOYABLE_OBSERVED",
+      "CONTROLLER_MEMORY",
+      "EVALUATOR_TRUTH",
+      "PROVENANCE"
+    ],
+    "action_word_is_separate": true,
+    "schemas_sha256": "db81b43df81fc1952ee52e2486f46ef621e3889d99e7bc236a571aec06d053e6",
+    "deployable_input_namespaces": [
+      "DEPLOYABLE_OBSERVED",
+      "CONTROLLER_MEMORY"
+    ],
+    "forbidden_deployable_namespaces": [
+      "BACKEND_LATENT",
+      "EVALUATOR_TRUTH",
+      "PROVENANCE"
+    ],
+    "deployable_validation": "EXACT_ALLOWLIST_AND_RECURSIVE_DENYLIST",
+    "truth_provenance_denylist": [
+      "BACKEND_LATENT",
+      "EVALUATOR_TRUTH",
+      "PROVENANCE",
+      "logical_error",
+      "logical_state",
+      "hidden_trajectory",
+      "counterfactual",
+      "future",
+      "seed_id",
+      "trace_sha256",
+      "config_sha256"
+    ]
+  },
+  "causal_contract": {
+    "nodes": [
+      {
+        "node_id": "LATENT_T",
+        "namespace": "BACKEND_LATENT",
+        "time_index": "t",
+        "role": "hidden oscillator/ancilla/readout/reset/calibration/drift state"
+      },
+      {
+        "node_id": "PREVIOUS_ACTION_RECEIPT_T",
+        "namespace": "DEPLOYABLE_OBSERVED",
+        "time_index": "t",
+        "role": "causally aligned receipt for action a_(t-1)"
+      },
+      {
+        "node_id": "RAW_RECORDED_IQ_T",
+        "namespace": "DEPLOYABLE_OBSERVED",
+        "time_index": "t",
+        "role": "complex digitized synthetic/recorded/live IQ frame"
+      },
+      {
+        "node_id": "MATCHED_FILTER_LLR_T",
+        "namespace": "DEPLOYABLE_OBSERVED",
+        "time_index": "t",
+        "role": "causal matched-filter and fixed-point LLR"
+      },
+      {
+        "node_id": "DISCRIMINATOR_T",
+        "namespace": "DEPLOYABLE_OBSERVED",
+        "time_index": "t",
+        "role": "finite discriminator word and confidence"
+      },
+      {
+        "node_id": "RESET_ACK_T",
+        "namespace": "DEPLOYABLE_OBSERVED",
+        "time_index": "t",
+        "role": "observed physical reset outcome"
+      },
+      {
+        "node_id": "MEMORY_T",
+        "namespace": "CONTROLLER_MEMORY",
+        "time_index": "t",
+        "role": "bank/version/frame/event/FSM/integrity state"
+      },
+      {
+        "node_id": "COMPOSITE_KEY_T",
+        "namespace": "CONTROLLER_MEMORY",
+        "time_index": "t",
+        "role": "finite key assembled only from observed and memory"
+      },
+      {
+        "node_id": "ACTION_WORD_T",
+        "namespace": "ACTION_WORD",
+        "time_index": "t",
+        "role": "bounded 80-bit fast-path output"
+      },
+      {
+        "node_id": "LATENT_T_PLUS_1",
+        "namespace": "BACKEND_LATENT",
+        "time_index": "t+1",
+        "role": "action-conditioned next hidden state"
+      },
+      {
+        "node_id": "MEMORY_T_PLUS_1",
+        "namespace": "CONTROLLER_MEMORY",
+        "time_index": "t+1",
+        "role": "deterministic next frame/FSM/integrity state"
+      },
+      {
+        "node_id": "ACTION_RECEIPT_T_PLUS_1",
+        "namespace": "DEPLOYABLE_OBSERVED",
+        "time_index": "t+1",
+        "role": "next-round receipt of current action"
+      },
+      {
+        "node_id": "EVALUATOR_TRUTH_T",
+        "namespace": "EVALUATOR_TRUTH",
+        "time_index": "t",
+        "role": "evaluation-only six-state/logical/counterfactual truth"
+      },
+      {
+        "node_id": "PROVENANCE_AUDIT",
+        "namespace": "PROVENANCE",
+        "time_index": "audit-only",
+        "role": "offline immutable backend/seed/trace/config audit"
+      }
+    ],
+    "edges": [
+      {
+        "edge_id": "CE01_LATENT_TO_IQ",
+        "source": "LATENT_T",
+        "target": "RAW_RECORDED_IQ_T",
+        "semantics": "measurement emission and backaction boundary"
+      },
+      {
+        "edge_id": "CE02_IQ_TO_FILTER",
+        "source": "RAW_RECORDED_IQ_T",
+        "target": "MATCHED_FILTER_LLR_T",
+        "semantics": "causal frontend"
+      },
+      {
+        "edge_id": "CE03_FILTER_TO_DISCRIMINATOR",
+        "source": "MATCHED_FILTER_LLR_T",
+        "target": "DISCRIMINATOR_T",
+        "semantics": "finite quantization"
+      },
+      {
+        "edge_id": "CE04_PREVIOUS_ACTION_TO_MEMORY",
+        "source": "PREVIOUS_ACTION_RECEIPT_T",
+        "target": "MEMORY_T",
+        "semantics": "past action only"
+      },
+      {
+        "edge_id": "CE05_DISCRIMINATOR_TO_KEY",
+        "source": "DISCRIMINATOR_T",
+        "target": "COMPOSITE_KEY_T",
+        "semantics": "observed discriminator contribution"
+      },
+      {
+        "edge_id": "CE06_RESET_ACK_TO_KEY",
+        "source": "RESET_ACK_T",
+        "target": "COMPOSITE_KEY_T",
+        "semantics": "observed reset event contribution"
+      },
+      {
+        "edge_id": "CE07_MEMORY_TO_KEY",
+        "source": "MEMORY_T",
+        "target": "COMPOSITE_KEY_T",
+        "semantics": "bank/frame/event/FSM contribution"
+      },
+      {
+        "edge_id": "CE08_KEY_TO_ACTION",
+        "source": "COMPOSITE_KEY_T",
+        "target": "ACTION_WORD_T",
+        "semantics": "factorized total recurrence"
+      },
+      {
+        "edge_id": "CE09_ACTION_TO_NEXT_LATENT",
+        "source": "ACTION_WORD_T",
+        "target": "LATENT_T_PLUS_1",
+        "semantics": "physical action intervention"
+      },
+      {
+        "edge_id": "CE10_LATENT_TO_NEXT_LATENT",
+        "source": "LATENT_T",
+        "target": "LATENT_T_PLUS_1",
+        "semantics": "physical transition"
+      },
+      {
+        "edge_id": "CE11_ACTION_TO_NEXT_MEMORY",
+        "source": "ACTION_WORD_T",
+        "target": "MEMORY_T_PLUS_1",
+        "semantics": "next frame/FSM/reason recurrence"
+      },
+      {
+        "edge_id": "CE12_MEMORY_TO_NEXT_MEMORY",
+        "source": "MEMORY_T",
+        "target": "MEMORY_T_PLUS_1",
+        "semantics": "state carry"
+      },
+      {
+        "edge_id": "CE13_ACTION_TO_NEXT_RECEIPT",
+        "source": "ACTION_WORD_T",
+        "target": "ACTION_RECEIPT_T_PLUS_1",
+        "semantics": "causal action receipt"
+      },
+      {
+        "edge_id": "CE14_LATENT_TO_EVALUATOR",
+        "source": "LATENT_T",
+        "target": "EVALUATOR_TRUTH_T",
+        "semantics": "evaluation only"
+      },
+      {
+        "edge_id": "CE15_LATENT_TO_PROVENANCE",
+        "source": "LATENT_T",
+        "target": "PROVENANCE_AUDIT",
+        "semantics": "offline trace hash only"
+      },
+      {
+        "edge_id": "CE16_ACTION_TO_PROVENANCE",
+        "source": "ACTION_WORD_T",
+        "target": "PROVENANCE_AUDIT",
+        "semantics": "offline action trace hash only"
+      }
+    ],
+    "forbidden_edges": [
+      {
+        "edge_id": "CF01_FUTURE_TRUTH_TO_ACTION",
+        "source": "EVALUATOR_TRUTH_T_PLUS_1",
+        "target": "ACTION_WORD_T",
+        "allowed": false,
+        "failure": "STRUCTURAL_REJECT"
+      },
+      {
+        "edge_id": "CF02_CURRENT_TRUTH_TO_ACTION",
+        "source": "EVALUATOR_TRUTH_T",
+        "target": "ACTION_WORD_T",
+        "allowed": false,
+        "failure": "STRUCTURAL_REJECT"
+      },
+      {
+        "edge_id": "CF03_LATENT_TO_ACTION",
+        "source": "LATENT_T",
+        "target": "ACTION_WORD_T",
+        "allowed": false,
+        "failure": "STRUCTURAL_REJECT"
+      },
+      {
+        "edge_id": "CF04_PROVENANCE_TO_ACTION",
+        "source": "PROVENANCE_AUDIT",
+        "target": "ACTION_WORD_T",
+        "allowed": false,
+        "failure": "STRUCTURAL_REJECT"
+      },
+      {
+        "edge_id": "CF05_CURRENT_ACTION_TO_CURRENT_IQ",
+        "source": "ACTION_WORD_T",
+        "target": "RAW_RECORDED_IQ_T",
+        "allowed": false,
+        "failure": "STRUCTURAL_REJECT"
+      }
+    ],
+    "intervention_points": [
+      "ACTION_WORD_T_TO_LATENT_T_PLUS_1",
+      "RESET_REQUEST_TO_OBSERVED_RESET_ACK_T_PLUS_1",
+      "FAULT_INJECTION_BEFORE_FACTOR_N",
+      "FAULT_INJECTION_BEFORE_FACTOR_T"
+    ],
+    "future_suffix_policy": "DEPLOYABLE_PREFIX_OUTPUT_INVARIANT_TO_ANY_FUTURE_SUFFIX",
+    "timing": {
+      "discriminator_to_action_cycles": 6,
+      "initiation_interval_cycles": 1,
+      "inflight_bank_visibility": "EACH_ACCEPTED_REQUEST_OBSERVES_EXACTLY_OLD_OR_NEW_COMPLETE_IMAGE",
+      "raw_iq_frontend_in_six_cycle_boundary": false,
+      "action_to_trigger_in_six_cycle_boundary": false
+    },
+    "physics_semantics": {
+      "iq_emission_conditioned_on": [
+        "hidden_readout_state",
+        "calibration_state",
+        "measurement_backaction"
+      ],
+      "reset_ack_source": "OBSERVED_PHYSICAL_RESET_OUTCOME_NOT_TRUTH_LABEL",
+      "transition_accepts_current_action": true,
+      "crn_rule": "SHARE_EXOGENOUS_RANDOMNESS_ONLY_ACTIONS_MAY_DIVERGE_TRAJECTORIES"
+    }
+  },
+  "key_contract": {
+    "logical_composite_key_fields": [
+      "bank_id",
+      "discriminator_word",
+      "phase_frame",
+      "event_class",
+      "leakage_reset_fsm_state"
+    ],
+    "nominal_n_fields": [
+      "bank_id",
+      "discriminator_word"
+    ],
+    "transition_t_fields": [
+      "phase_frame",
+      "event_class",
+      "leakage_reset_fsm_state",
+      "nominal_action_index"
+    ],
+    "factorization": "F(K)=T(phase,event,fsm,N(bank,word))",
+    "phase_frame_semantics": {
+      "logical_bits": 2,
+      "states": {
+        "0": {
+          "q_byte": 0,
+          "p_byte": 0
+        },
+        "1": {
+          "q_byte": 128,
+          "p_byte": 0
+        },
+        "2": {
+          "q_byte": 0,
+          "p_byte": 128
+        },
+        "3": {
+          "q_byte": 128,
+          "p_byte": 128
+        }
+      },
+      "current_rtl_two_uint8_adapter_qualified": false
+    },
+    "fsm_encoding": {
+      "bits": 8,
+      "mode_bits": 3,
+      "active_dwell_counter_bits": 5,
+      "valid_modes": [
+        "NORMAL",
+        "HOLD",
+        "LEAKAGE",
+        "RESETTING",
+        "RECOVERING",
+        "FAULT"
+      ],
+      "reserved_mode_codes": [
+        6,
+        7
+      ],
+      "current_rtl_six_counter_adapter_qualified": false,
+      "interpretation": "new Markov safety-state proposal; not a claim of bit compatibility with the existing experimental_event_fsm"
+    },
+    "nominal_cell_count": 1024,
+    "transition_cell_count": 131072,
+    "legal_discriminator_count": 126,
+    "fsm_state_count": 256,
+    "valid_fsm_state_count": 192,
+    "reachable_fsm_state_count": 68,
+    "fsm_reachability_scope": "SYNTACTIC_T_DOMAIN_ALL_16_EVENTS_AND_8_NOMINAL_ACTIONS_NOT_DEPLOYABLE_CAUSAL_REACHABILITY",
+    "reset_witness_covered_state_count": 192,
+    "reset_witness_max_distance": 3,
+    "reset_witness_scope": "SYNTACTIC_SUCCESS_ACK_THEN_HYSTERESIS_NOT_PREVIOUS_RECEIPT_GATED",
+    "finite": true,
+    "reachable_state_invariants": [
+      "phase_frame_is_two_bits",
+      "fsm_state_is_eight_bits",
+      "event_class_is_four_bits"
+    ],
+    "partial_map_allowed": false,
+    "host_callback_allowed": false,
+    "dont_care_output_allowed": false
+  },
+  "fault_contract": {
+    "priority": [
+      {
+        "priority": 0,
+        "fault_id": "INVALID_KEY",
+        "terminal": "LKG_HOLD",
+        "reason_codes": [
+          "INVALID_BANK",
+          "INVALID_FSM"
+        ],
+        "undefined_action": false
+      },
+      {
+        "priority": 1,
+        "fault_id": "RESERVED_ACTION_OR_EVENT",
+        "terminal": "LKG_HOLD",
+        "reason_codes": [
+          "RESERVED_EVENT"
+        ],
+        "undefined_action": false
+      },
+      {
+        "priority": 2,
+        "fault_id": "INPUT_CRC",
+        "terminal": "LKG_HOLD",
+        "reason_codes": [
+          "INTEGRITY_FAULT"
+        ],
+        "undefined_action": false
+      },
+      {
+        "priority": 3,
+        "fault_id": "IMAGE_CRC",
+        "terminal": "LKG_HOLD",
+        "reason_codes": [
+          "INTEGRITY_FAULT"
+        ],
+        "undefined_action": false
+      },
+      {
+        "priority": 4,
+        "fault_id": "IMAGE_SHA",
+        "terminal": "LKG_HOLD",
+        "reason_codes": [
+          "INTEGRITY_FAULT"
+        ],
+        "undefined_action": false
+      },
+      {
+        "priority": 5,
+        "fault_id": "PARTIAL_PACKAGE",
+        "terminal": "LKG_HOLD",
+        "reason_codes": [
+          "INTEGRITY_FAULT"
+        ],
+        "undefined_action": false
+      },
+      {
+        "priority": 6,
+        "fault_id": "UNKNOWN_VERSION",
+        "terminal": "LKG_HOLD",
+        "reason_codes": [
+          "VERSION_FAULT"
+        ],
+        "undefined_action": false
+      },
+      {
+        "priority": 7,
+        "fault_id": "VERSION_MISMATCH",
+        "terminal": "LKG_HOLD",
+        "reason_codes": [
+          "VERSION_FAULT"
+        ],
+        "undefined_action": false
+      },
+      {
+        "priority": 8,
+        "fault_id": "ROLLBACK_VERSION",
+        "terminal": "LKG_HOLD",
+        "reason_codes": [
+          "VERSION_FAULT"
+        ],
+        "undefined_action": false
+      },
+      {
+        "priority": 9,
+        "fault_id": "STALE_PACKAGE",
+        "terminal": "LKG_HOLD",
+        "reason_codes": [
+          "VERSION_FAULT"
+        ],
+        "undefined_action": false
+      },
+      {
+        "priority": 10,
+        "fault_id": "DEADLINE_MISS",
+        "terminal": "LKG_HOLD",
+        "reason_codes": [
+          "DEADLINE_FAULT"
+        ],
+        "undefined_action": false
+      },
+      {
+        "priority": 11,
+        "fault_id": "OOD_WORD",
+        "terminal": "LKG_HOLD",
+        "reason_codes": [
+          "OOD_WORD"
+        ],
+        "undefined_action": false
+      },
+      {
+        "priority": 12,
+        "fault_id": "RESET_ACK_UNEXPECTED",
+        "terminal": "RESET",
+        "reason_codes": [
+          "RESET_FAILURE"
+        ],
+        "undefined_action": false
+      },
+      {
+        "priority": 13,
+        "fault_id": "PERSISTENT_LEAKAGE",
+        "terminal": "RESET",
+        "reason_codes": [
+          "PERSISTENT_LEAKAGE"
+        ],
+        "undefined_action": false
+      }
+    ],
+    "required_fault_ids": [
+      "INVALID_KEY",
+      "RESERVED_ACTION_OR_EVENT",
+      "INPUT_CRC",
+      "IMAGE_CRC",
+      "IMAGE_SHA",
+      "PARTIAL_PACKAGE",
+      "UNKNOWN_VERSION",
+      "VERSION_MISMATCH",
+      "ROLLBACK_VERSION",
+      "STALE_PACKAGE",
+      "DEADLINE_MISS",
+      "OOD_WORD",
+      "RESET_ACK_UNEXPECTED",
+      "PERSISTENT_LEAKAGE"
+    ],
+    "invalid_key_terminal": "LKG_HOLD",
+    "persistent_leakage_terminal": "RESET",
+    "lkg_semantics": {
+      "fast_path": "IMMEDIATE_HOLD_OR_RESET",
+      "republish": "ASYNC_COMPLETE_IMAGE_WITH_STRICTLY_HIGHER_VERSION",
+      "version_decrement_allowed": false
+    }
+  },
+  "action_word_contract": {
+    "total_bits": 80,
+    "layout": [
+      {
+        "field": "valid",
+        "bits": 1,
+        "lsb": 0
+      },
+      {
+        "field": "action_code",
+        "bits": 3,
+        "lsb": 1
+      },
+      {
+        "field": "correction_enable",
+        "bits": 1,
+        "lsb": 4
+      },
+      {
+        "field": "reset_request",
+        "bits": 1,
+        "lsb": 5
+      },
+      {
+        "field": "fallback",
+        "bits": 1,
+        "lsb": 6
+      },
+      {
+        "field": "hold",
+        "bits": 1,
+        "lsb": 7
+      },
+      {
+        "field": "pauli_dx",
+        "bits": 1,
+        "lsb": 8
+      },
+      {
+        "field": "pauli_dz",
+        "bits": 1,
+        "lsb": 9
+      },
+      {
+        "field": "next_phase_frame",
+        "bits": 2,
+        "lsb": 10
+      },
+      {
+        "field": "next_fsm_state",
+        "bits": 8,
+        "lsb": 12
+      },
+      {
+        "field": "catalog_action_id",
+        "bits": 6,
+        "lsb": 20
+      },
+      {
+        "field": "residual_q",
+        "bits": 1,
+        "lsb": 26
+      },
+      {
+        "field": "residual_p",
+        "bits": 1,
+        "lsb": 27
+      },
+      {
+        "field": "reason_code",
+        "bits": 6,
+        "lsb": 28
+      },
+      {
+        "field": "error_flags",
+        "bits": 8,
+        "lsb": 34
+      },
+      {
+        "field": "source_bank_id",
+        "bits": 2,
+        "lsb": 42
+      },
+      {
+        "field": "factor_tag",
+        "bits": 16,
+        "lsb": 44
+      },
+      {
+        "field": "reserved_zero",
+        "bits": 4,
+        "lsb": 60
+      },
+      {
+        "field": "crc16",
+        "bits": 16,
+        "lsb": 64
+      }
+    ],
+    "fields": [
+      {
+        "field": "valid",
+        "bits": 1,
+        "lsb": 0
+      },
+      {
+        "field": "action_code",
+        "bits": 3,
+        "lsb": 1
+      },
+      {
+        "field": "correction_enable",
+        "bits": 1,
+        "lsb": 4
+      },
+      {
+        "field": "reset_request",
+        "bits": 1,
+        "lsb": 5
+      },
+      {
+        "field": "fallback",
+        "bits": 1,
+        "lsb": 6
+      },
+      {
+        "field": "hold",
+        "bits": 1,
+        "lsb": 7
+      },
+      {
+        "field": "pauli_dx",
+        "bits": 1,
+        "lsb": 8
+      },
+      {
+        "field": "pauli_dz",
+        "bits": 1,
+        "lsb": 9
+      },
+      {
+        "field": "next_phase_frame",
+        "bits": 2,
+        "lsb": 10
+      },
+      {
+        "field": "next_fsm_state",
+        "bits": 8,
+        "lsb": 12
+      },
+      {
+        "field": "catalog_action_id",
+        "bits": 6,
+        "lsb": 20
+      },
+      {
+        "field": "residual_q",
+        "bits": 1,
+        "lsb": 26
+      },
+      {
+        "field": "residual_p",
+        "bits": 1,
+        "lsb": 27
+      },
+      {
+        "field": "reason_code",
+        "bits": 6,
+        "lsb": 28
+      },
+      {
+        "field": "error_flags",
+        "bits": 8,
+        "lsb": 34
+      },
+      {
+        "field": "source_bank_id",
+        "bits": 2,
+        "lsb": 42
+      },
+      {
+        "field": "factor_tag",
+        "bits": 16,
+        "lsb": 44
+      },
+      {
+        "field": "reserved_zero",
+        "bits": 4,
+        "lsb": 60
+      },
+      {
+        "field": "crc16",
+        "bits": 16,
+        "lsb": 64
+      }
+    ],
+    "bounded": true,
+    "undefined_output_allowed": false,
+    "reserved_code_terminal": "LKG_HOLD",
+    "base_lane_residual": {
+      "width_bits": 2,
+      "required_value": 0,
+      "nonzero_representable": false
+    },
+    "crc16_contract": {
+      "name": "CRC-16/CCITT-FALSE",
+      "polynomial": 4129,
+      "initial_value": 65535,
+      "xor_out": 0,
+      "reflect_input": false,
+      "reflect_output": false,
+      "payload_byte_order": "little",
+      "crc_field_position": "bits_64_through_79"
+    },
+    "sideband_contract": {
+      "logical_action_word_bits": 80,
+      "active_image_version_bits": 16,
+      "active_image_version_is_decision_input": false,
+      "active_image_version_is_nondecision_receipt_sideband": true,
+      "old_or_new_complete_image_latched_per_accepted_request": true,
+      "current_118bit_rtl_adapter_qualified": false
+    }
+  },
+  "slow_path_contract": {
+    "allowed_operation": "NOMINATE_COMPLETE_PRECOMPILED_TRUSTED_PACKAGE",
+    "per_cycle_action_authority": false,
+    "candidate_must_be_complete": true,
+    "single_entry_patch_allowed": false,
+    "freeform_waveform_allowed": false,
+    "host_callback_in_fast_path_allowed": false,
+    "partial_active_visibility_allowed": false,
+    "nonzero_residual_requires_amendment": true,
+    "package_required_fields": [
+      "schema_id",
+      "package_id",
+      "bank_target",
+      "version",
+      "activation_epoch",
+      "word_count",
+      "crc32",
+      "content_sha256",
+      "provenance_sha256",
+      "release_pin_sha256",
+      "entries"
+    ],
+    "commit_semantics": "ATOMIC_OLD_OR_NEW_COMPLETE_IMAGE",
+    "runtime_boundary": {
+      "validator_scope": "COMPLETE_TRUSTED_NOMINATION_ONLY",
+      "active_bank_write_authority": false,
+      "single_entry_patch_authority": false,
+      "per_cycle_action_authority": false,
+      "requires_trusted_schema_registry": true,
+      "requires_trusted_package_ledger": true,
+      "requires_trusted_provenance": true,
+      "requires_external_release_pin": true,
+      "requires_safe_activation_epoch": true,
+      "atomic_bank_integration_qualified": false,
+      "downstream_qualification": [
+        "T9.3.3",
+        "T9.5.1",
+        "T9.5.3"
+      ]
+    }
+  },
+  "isolation_contract": {
+    "teacher_scope": "TRAINING_AND_PRIVILEGED_UPPER_BOUND_ONLY",
+    "teacher_deployable": false,
+    "hidden_truth_deployable": false,
+    "hidden_or_future_token_policy": "RECURSIVE_REJECT",
+    "future_suffix_invariance_test_required": true,
+    "observed_only_validator": "TYPED_ALLOWLIST_PLUS_RECURSIVE_DENYLIST",
+    "field_name_blacklist_alone_is_sufficient": false,
+    "provenance_scope": "AUDIT_ONLY",
+    "provenance_policy_input": false,
+    "provenance_action_input": false,
+    "observation_envelope_boundary": {
+      "t9_2_1_transport_neutral_checks": {
+        "iq_nonempty": true,
+        "iq_lengths_equal": true,
+        "maximum_samples_per_frame": 65536,
+        "sample_container_bound": "signed_int64"
+      },
+      "sample_rate": null,
+      "integration_window_samples": null,
+      "adc_sample_bits": null,
+      "coefficient_bits": null,
+      "accumulator_bits": null,
+      "llr_bits": null,
+      "q_format": null,
+      "rounding": null,
+      "saturation": null,
+      "deferred_to": "T9.2.6"
+    },
+    "integrity_flag_layout": {
+      "INPUT_CRC": 0,
+      "IMAGE_CRC": 1,
+      "IMAGE_SHA": 2,
+      "UNKNOWN_VERSION": 3,
+      "VERSION_MISMATCH": 4,
+      "ROLLBACK_VERSION": 5,
+      "STALE_PACKAGE": 6,
+      "PARTIAL_PACKAGE": 7,
+      "DEADLINE_MISS": 8,
+      "RESET_ACK_UNEXPECTED": 9
+    }
+  },
+  "representative_probe_contract": {
+    "naming": "CONSERVATIVE_REPRESENTATIVE_ACTION_PROBE_NOT_CODEBOOK",
+    "required_coverage_tags": [
+      "idle",
+      "q_positive",
+      "q_negative",
+      "p_positive",
+      "p_negative",
+      "alternating_axes",
+      "boundary",
+      "phase_frame",
+      "leakage",
+      "reset_success",
+      "reset_failure",
+      "crc_version_stale_deadline",
+      "integrity_fault",
+      "version_fault",
+      "ood",
+      "low_confidence",
+      "transport_fault",
+      "lkg_recovery",
+      "persistent_leakage",
+      "pre_codebook_interface_probe"
+    ],
+    "probes_sha256": "cf27ce6cc516328a8700748a84382e9e93041da9e24843ab23a600b1e6165d75"
+  },
+  "current_null_state": {
+    "physics": {
+      "backend_a_qualified": null,
+      "backend_b_qualified": null,
+      "dual_backend_agreement": null,
+      "physical_lifetime": null,
+      "qpu_measurement": null
+    },
+    "performance": {
+      "round_ler": null,
+      "six_state_lifetime": null,
+      "worst_window_ler": null,
+      "latency_measured": null,
+      "power_measured": null
+    },
+    "codebook": {
+      "codebook_id": null,
+      "codebook_sha256": null,
+      "optimized_action_map": null,
+      "quantization_result": null,
+      "coverage_result": null
+    },
+    "frontend": {
+      "frontend_profile": null,
+      "raw_iq_qualification": null,
+      "recorded_iq_qualification": null,
+      "rtl_frontend_result": null,
+      "board_frontend_result": null
+    },
+    "claim": {
+      "registered_best": null,
+      "external_sota": null,
+      "official_puviani_exact": null,
+      "puviani_nmf_surpass": null,
+      "physical_break_even": null,
+      "hil_integrated": null,
+      "hil_external_speed": null
+    },
+    "rank": {
+      "registered_rank": null,
+      "external_rank": null,
+      "hardware_speed_rank": null,
+      "global_rank": null
+    }
+  },
+  "downstream_consumption_contract": {
+    "direct_consumers": [
+      "T9.2.2",
+      "T9.2.3",
+      "T9.2.4",
+      "T9.3.1",
+      "T9.3.3",
+      "T9.3.4",
+      "T9.4.4",
+      "T9.5.1",
+      "T9.5.3",
+      "T9.6.1"
+    ],
+    "release_pin_path": "configs/phase9/t9_2_1_release_pin.json",
+    "consumer_order": [
+      "load canonical release pin",
+      "verify canonical report and expected analysis sha256",
+      "verify immutable T9.1.1 parent",
+      "verify canonical T9.1.5 release pin",
+      "consume typed schema and factorized totality manifest"
+    ],
+    "report_selected_paths_allowed": false,
+    "seal_only_acceptance_allowed": false
+  },
+  "runtime_contract_expected_sha256": "74ec0d25563b2a392e5bc5880c068a235916ee81b40fbc93850e68bf5b3eb050",
+  "gate_definitions": [
+    {
+      "gate_id": "G01_identity_and_protocol_only_scope_are_exact",
+      "objective": "freeze identity, protocol-only scope and claim boundary"
+    },
+    {
+      "gate_id": "G02_t9_1_1_parent_is_live_semantic_and_byte_exact",
+      "objective": "bind immutable T9.1.1 analysis and bytes"
+    },
+    {
+      "gate_id": "G03_t9_1_5_release_pin_is_live_semantic_and_byte_exact",
+      "objective": "consume canonical T9.1.5 release pin and retain null claims"
+    },
+    {
+      "gate_id": "G04_config_generator_and_physics_implementations_are_live",
+      "objective": "bind all contract implementations"
+    },
+    {
+      "gate_id": "G05_exactly_five_namespaces_are_frozen_and_action_is_separate",
+      "objective": "freeze exact namespace IDs without treating output as input"
+    },
+    {
+      "gate_id": "G06_namespace_field_schemas_match_the_runtime_contract_exactly",
+      "objective": "freeze every typed namespace field"
+    },
+    {
+      "gate_id": "G07_deployable_input_uses_observed_and_memory_allowlists_only",
+      "objective": "restrict deployable inputs to exact allowlists"
+    },
+    {
+      "gate_id": "G08_latent_evaluator_future_and_provenance_are_recursively_denied",
+      "objective": "recursively reject hidden, future, truth and provenance"
+    },
+    {
+      "gate_id": "G09_causal_nodes_are_complete_namespace_bound_and_time_indexed",
+      "objective": "freeze typed causal nodes"
+    },
+    {
+      "gate_id": "G10_causal_edges_and_intervention_points_are_exact",
+      "objective": "freeze causal graph and interventions"
+    },
+    {
+      "gate_id": "G11_forbidden_future_truth_and_reverse_causal_edges_are_absent",
+      "objective": "reject reverse or privileged edges"
+    },
+    {
+      "gate_id": "G12_six_cycle_ii1_timing_and_old_or_new_sampling_are_frozen",
+      "objective": "freeze exact fast-path timing boundary"
+    },
+    {
+      "gate_id": "G13_composite_key_and_factorized_n_t_domains_are_exact",
+      "objective": "freeze logical K and factorized N/T domains"
+    },
+    {
+      "gate_id": "G14_finite_cardinalities_and_state_invariants_are_exact",
+      "objective": "prove finite domain sizes and state invariants"
+    },
+    {
+      "gate_id": "G15_nominal_n_map_is_total_deterministic_and_enumerated",
+      "objective": "exhaust nominal factor N"
+    },
+    {
+      "gate_id": "G16_transition_t_map_is_total_deterministic_and_enumerated",
+      "objective": "exhaust transition factor T"
+    },
+    {
+      "gate_id": "G17_totality_fingerprints_and_repeated_enumeration_are_stable",
+      "objective": "bind deterministic enumeration fingerprints"
+    },
+    {
+      "gate_id": "G18_factorized_recurrence_is_not_a_partial_or_host_callback_map",
+      "objective": "forbid partial maps, don't-care and host callbacks"
+    },
+    {
+      "gate_id": "G19_fault_priority_order_is_exact_unique_and_fail_closed",
+      "objective": "freeze unique fault precedence"
+    },
+    {
+      "gate_id": "G20_invalid_and_integrity_faults_close_to_lkg_hold_or_reset",
+      "objective": "close all faults to defined safe terminals"
+    },
+    {
+      "gate_id": "G21_crc_version_stale_partial_ood_deadline_faults_are_covered",
+      "objective": "cover complete integrity and OOD fault family"
+    },
+    {
+      "gate_id": "G22_lkg_republish_is_monotonic_and_never_version_decrement",
+      "objective": "separate fast hold from monotonic asynchronous republish"
+    },
+    {
+      "gate_id": "G23_action_word_is_exactly_80_bits_with_exact_layout",
+      "objective": "freeze exact serialized action layout"
+    },
+    {
+      "gate_id": "G24_reserved_codes_bounds_and_reason_error_outputs_are_total",
+      "objective": "forbid undefined output encodings"
+    },
+    {
+      "gate_id": "G25_base_lane_residual_is_structurally_bit_exact_zero",
+      "objective": "make nonzero residual structurally unavailable"
+    },
+    {
+      "gate_id": "G26_slow_path_can_nominate_complete_precompiled_packages_only",
+      "objective": "restrict slow path authority"
+    },
+    {
+      "gate_id": "G27_entry_patch_per_cycle_action_and_freeform_waveform_are_denied",
+      "objective": "reject slow-to-fast bypasses"
+    },
+    {
+      "gate_id": "G28_package_commit_is_complete_atomic_versioned_crc_bound",
+      "objective": "freeze atomic complete package contract"
+    },
+    {
+      "gate_id": "G29_hidden_teacher_is_training_only_and_not_deployable",
+      "objective": "isolate privileged teacher"
+    },
+    {
+      "gate_id": "G30_future_suffix_invariance_and_observed_only_validation_are_frozen",
+      "objective": "require structural observed-only and causal invariance tests"
+    },
+    {
+      "gate_id": "G31_provenance_is_audit_only_and_cannot_enter_policy_inputs",
+      "objective": "isolate provenance from decision inputs"
+    },
+    {
+      "gate_id": "G32_exactly_16_representative_probes_are_frozen_before_codebook",
+      "objective": "freeze exactly sixteen pre-codebook interventions"
+    },
+    {
+      "gate_id": "G33_representative_probes_are_noncodebook_nonranking_nonperformance",
+      "objective": "prevent probe promotion"
+    },
+    {
+      "gate_id": "G34_probes_cover_nominal_boundary_reset_leakage_and_fault_interventions",
+      "objective": "cover required intervention classes"
+    },
+    {
+      "gate_id": "G35_iq_reset_ack_and_action_conditioning_have_physical_causal_semantics",
+      "objective": "freeze real causal semantics rather than noisy labels"
+    },
+    {
+      "gate_id": "G36_all_physics_performance_codebook_frontend_claim_rank_fields_are_null",
+      "objective": "keep all unmeasured/unqualified result fields typed null"
+    },
+    {
+      "gate_id": "G37_factorized_totality_manifest_is_canonical_live_and_exact",
+      "objective": "bind canonical totality manifest"
+    },
+    {
+      "gate_id": "G38_source_data_reconstructs_the_full_analysis_losslessly",
+      "objective": "reconstruct every analysis field from Source Data"
+    },
+    {
+      "gate_id": "G39_markdown_is_canonical_exact_and_contains_all_atomic_ids",
+      "objective": "bind exact human-readable contract"
+    },
+    {
+      "gate_id": "G40_one_substantive_mutation_per_gate_is_replayed_and_rejected",
+      "objective": "replay one targeted semantic mutation per gate"
+    }
+  ],
+  "mutation_definitions": [
+    {
+      "mutation_id": "M01_change_protocol_id",
+      "target_gate": "G01_identity_and_protocol_only_scope_are_exact"
+    },
+    {
+      "mutation_id": "M02_change_t9_1_1_analysis",
+      "target_gate": "G02_t9_1_1_parent_is_live_semantic_and_byte_exact"
+    },
+    {
+      "mutation_id": "M03_change_t9_1_5_pin_payload",
+      "target_gate": "G03_t9_1_5_release_pin_is_live_semantic_and_byte_exact"
+    },
+    {
+      "mutation_id": "M04_change_physics_hash",
+      "target_gate": "G04_config_generator_and_physics_implementations_are_live"
+    },
+    {
+      "mutation_id": "M05_remove_namespace",
+      "target_gate": "G05_exactly_five_namespaces_are_frozen_and_action_is_separate"
+    },
+    {
+      "mutation_id": "M06_change_namespace_schema",
+      "target_gate": "G06_namespace_field_schemas_match_the_runtime_contract_exactly"
+    },
+    {
+      "mutation_id": "M07_allow_latent_deployable_input",
+      "target_gate": "G07_deployable_input_uses_observed_and_memory_allowlists_only"
+    },
+    {
+      "mutation_id": "M08_remove_truth_deny_token",
+      "target_gate": "G08_latent_evaluator_future_and_provenance_are_recursively_denied"
+    },
+    {
+      "mutation_id": "M09_remove_causal_node",
+      "target_gate": "G09_causal_nodes_are_complete_namespace_bound_and_time_indexed"
+    },
+    {
+      "mutation_id": "M10_reverse_causal_edge",
+      "target_gate": "G10_causal_edges_and_intervention_points_are_exact"
+    },
+    {
+      "mutation_id": "M11_allow_future_truth_edge",
+      "target_gate": "G11_forbidden_future_truth_and_reverse_causal_edges_are_absent"
+    },
+    {
+      "mutation_id": "M12_change_six_cycle_boundary",
+      "target_gate": "G12_six_cycle_ii1_timing_and_old_or_new_sampling_are_frozen"
+    },
+    {
+      "mutation_id": "M13_remove_key_field",
+      "target_gate": "G13_composite_key_and_factorized_n_t_domains_are_exact"
+    },
+    {
+      "mutation_id": "M14_reduce_nominal_cardinality",
+      "target_gate": "G14_finite_cardinalities_and_state_invariants_are_exact"
+    },
+    {
+      "mutation_id": "M15_mark_nominal_partial",
+      "target_gate": "G15_nominal_n_map_is_total_deterministic_and_enumerated"
+    },
+    {
+      "mutation_id": "M16_drop_transition_cell",
+      "target_gate": "G16_transition_t_map_is_total_deterministic_and_enumerated"
+    },
+    {
+      "mutation_id": "M17_forge_repeat_fingerprint",
+      "target_gate": "G17_totality_fingerprints_and_repeated_enumeration_are_stable"
+    },
+    {
+      "mutation_id": "M18_allow_host_callback",
+      "target_gate": "G18_factorized_recurrence_is_not_a_partial_or_host_callback_map"
+    },
+    {
+      "mutation_id": "M19_swap_fault_priority",
+      "target_gate": "G19_fault_priority_order_is_exact_unique_and_fail_closed"
+    },
+    {
+      "mutation_id": "M20_allow_undefined_fault_action",
+      "target_gate": "G20_invalid_and_integrity_faults_close_to_lkg_hold_or_reset"
+    },
+    {
+      "mutation_id": "M21_remove_crc_fault",
+      "target_gate": "G21_crc_version_stale_partial_ood_deadline_faults_are_covered"
+    },
+    {
+      "mutation_id": "M22_allow_version_decrement",
+      "target_gate": "G22_lkg_republish_is_monotonic_and_never_version_decrement"
+    },
+    {
+      "mutation_id": "M23_shorten_action_word",
+      "target_gate": "G23_action_word_is_exactly_80_bits_with_exact_layout"
+    },
+    {
+      "mutation_id": "M24_allow_reserved_output",
+      "target_gate": "G24_reserved_codes_bounds_and_reason_error_outputs_are_total"
+    },
+    {
+      "mutation_id": "M25_enable_nonzero_residual",
+      "target_gate": "G25_base_lane_residual_is_structurally_bit_exact_zero"
+    },
+    {
+      "mutation_id": "M26_give_slow_path_action_authority",
+      "target_gate": "G26_slow_path_can_nominate_complete_precompiled_packages_only"
+    },
+    {
+      "mutation_id": "M27_allow_entry_patch",
+      "target_gate": "G27_entry_patch_per_cycle_action_and_freeform_waveform_are_denied"
+    },
+    {
+      "mutation_id": "M28_allow_partial_visibility",
+      "target_gate": "G28_package_commit_is_complete_atomic_versioned_crc_bound"
+    },
+    {
+      "mutation_id": "M29_deploy_hidden_teacher",
+      "target_gate": "G29_hidden_teacher_is_training_only_and_not_deployable"
+    },
+    {
+      "mutation_id": "M30_drop_future_invariance",
+      "target_gate": "G30_future_suffix_invariance_and_observed_only_validation_are_frozen"
+    },
+    {
+      "mutation_id": "M31_feed_provenance_to_policy",
+      "target_gate": "G31_provenance_is_audit_only_and_cannot_enter_policy_inputs"
+    },
+    {
+      "mutation_id": "M32_remove_probe",
+      "target_gate": "G32_exactly_16_representative_probes_are_frozen_before_codebook"
+    },
+    {
+      "mutation_id": "M33_promote_probe_to_codebook",
+      "target_gate": "G33_representative_probes_are_noncodebook_nonranking_nonperformance"
+    },
+    {
+      "mutation_id": "M34_remove_fault_probe_coverage",
+      "target_gate": "G34_probes_cover_nominal_boundary_reset_leakage_and_fault_interventions"
+    },
+    {
+      "mutation_id": "M35_source_reset_ack_from_truth",
+      "target_gate": "G35_iq_reset_ack_and_action_conditioning_have_physical_causal_semantics"
+    },
+    {
+      "mutation_id": "M36_fill_claim_null",
+      "target_gate": "G36_all_physics_performance_codebook_frontend_claim_rank_fields_are_null"
+    },
+    {
+      "mutation_id": "M37_change_totality_manifest_path",
+      "target_gate": "G37_factorized_totality_manifest_is_canonical_live_and_exact"
+    },
+    {
+      "mutation_id": "M38_change_source_row_count",
+      "target_gate": "G38_source_data_reconstructs_the_full_analysis_losslessly"
+    },
+    {
+      "mutation_id": "M39_change_markdown_path",
+      "target_gate": "G39_markdown_is_canonical_exact_and_contains_all_atomic_ids"
+    },
+    {
+      "mutation_id": "M40_forge_mutation_count",
+      "target_gate": "G40_one_substantive_mutation_per_gate_is_replayed_and_rejected"
+    }
+  ]
+}

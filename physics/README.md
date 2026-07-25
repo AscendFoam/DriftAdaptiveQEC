@@ -199,3 +199,7 @@ corrector.update_decoder(opt_params.K, opt_params.b)
 
 - **必需**: NumPy, SciPy
 - **可选**: Strawberry Fields（精确量子态模拟，不可用时自动退化为解析近似）
+## Phase 9 因果数字孪生接口合同
+
+- [`phase9_twin_contract.py`](phase9_twin_contract.py) 实现 T9.2.1 的 pre-backend 有限接口：五个 namespace、observed+memory 唯一 deployable path、24-bit composite K、总 nominal/transition recurrence、80-bit semantic+CRC action、previous-K receipt 重算、fail-closed fault canonicalization、完整 trusted-package nomination validator 与16个 conservative interface probes。
+- 该模块只证明 schema/recurrence/serializer/package-nomination totality，不是高保真 oscillator/ancilla physics backend，不产生 LER、lifetime、codebook、RTL adapter、硬件或 SOTA 资格；T9.2.2 起才实现和验证物理演化。

@@ -499,15 +499,23 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert statuses["T9.1.3"] == "Done"
     assert statuses["T9.1.4"] == "Done"
     assert statuses["T9.1.5"] == "Done"
-    assert statuses["T9.2.1"] == "In Progress"
+    assert statuses["T9.2.1"] == "Done"
+    assert statuses["T9.2.2"] == "In Progress"
     assert all(
         statuses[task] == "Todo"
         for task in expected_tasks
         - blocked
-        - {"T9.1.1", "T9.1.3", "T9.1.4", "T9.1.5", "T9.2.1"}
+        - {
+            "T9.1.1",
+            "T9.1.3",
+            "T9.1.4",
+            "T9.1.5",
+            "T9.2.1",
+            "T9.2.2",
+        }
     )
     assert statuses["T7.3.5"] == "Done"
-    assert "当前推荐任务：`T9.2.1`" in board
+    assert "当前推荐任务：`T9.2.2`" in board
 
     for milestone in ("9.1", "9.2", "9.3", "9.4", "9.5", "9.6", "9.7", "9.8"):
         assert f"### Milestone {milestone}" in phase9
@@ -574,6 +582,23 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
         if len(cells) >= 5:
             task_rows[cells[0]] = cells
+    parent_protocol = json.loads(
+        (ROOT / "docs" / "t9_1_1_three_lane_protocol.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    frozen_projection = parent_protocol["artifact_registry"][
+        "task_board"
+    ]["payload"]
+    live_projection = {
+        task_id: {
+            "task_id": task_id,
+            "task": task_rows[task_id][2],
+            "source": task_rows[task_id][4],
+        }
+        for task_id in frozen_projection
+    }
+    assert live_projection == frozen_projection
     assert "codebook actions" not in task_rows["T9.2.4"][3]
     assert "conservative representative action probes" in task_rows["T9.2.4"][3]
     assert "T9.1.3" not in task_rows["T9.3.2"][4]
@@ -648,13 +673,14 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert "| R-N174 | Open |" in risks
     assert "| R-N175 | Mitigated |" in risks
     assert "| R-N176 | Mitigated |" in risks
-    assert "| R-N177 | Open |" in risks
+    assert "| R-N177 | Mitigated |" in risks
     assert "| R-N178 | Open |" in risks
     assert "| R-N179 | Open |" in risks
     assert "| R-N180 | Open |" in risks
     assert "| 2026-07-24 | T9.1.3 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-25 | T9.1.4 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-25 | T9.1.5 完成与反简化复核 | 不插入 |" in risks
+    assert "| 2026-07-26 | T9.2.1 完成与反简化复核 | 不插入 |" in risks
 
     canonical_record = (
         ROOT
@@ -791,11 +817,91 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert set(t915_report["current_claim_state"].values()) == {None}
     assert t915_report["performance_state"]["protocol_only"] is True
 
+    t921_canonical = (
+        ROOT
+        / "docs"
+        / "new_tasks"
+        / "T9.2.1_phase9_causal_twin_contract.md"
+    )
+    t921_mirror = (
+        ROOT
+        / "docs"
+        / "tasks"
+        / "T9.2.1_phase9_causal_twin_contract.md"
+    )
+    assert t921_canonical.is_file() and t921_mirror.is_file()
+    assert t921_canonical.read_bytes() == t921_mirror.read_bytes()
+    t921_text = t921_canonical.read_text(encoding="utf-8")
+    for required in (
+        "PASS_T9_2_1_CAUSAL_TWIN_CONTRACT_FROZEN",
+        "78775658b4c9fa3a768252e2d529e39a0a90924c28158de2e4a527ba3052fe34",
+        "1,024/1,024 nominal cells",
+        "131,072/131,072 transition cells",
+        "196,608/196,608 composition quotient cells",
+        "16,777,216",
+        "40/40 machine gates",
+        "40/40 one-gate-one-mutation",
+        "62 passed",
+        "previous_composite_key",
+        "typed `null`",
+    ):
+        assert required in t921_text
+
+    t921_report_path = (
+        ROOT / "docs" / "t9_2_1_causal_twin_contract.json"
+    )
+    t921_manifest_path = (
+        ROOT / "docs" / "t9_2_1_causal_twin_totality_manifest.json"
+    )
+    t921_source_path = (
+        ROOT / "docs" / "t9_2_1_causal_twin_contract_source_data.csv"
+    )
+    t921_markdown_path = (
+        ROOT / "docs" / "phase9_causal_twin_contract.md"
+    )
+    t921_config_path = (
+        ROOT / "configs" / "phase9" / "t9_2_1_causal_twin_contract.json"
+    )
+    t921_release_pin_path = (
+        ROOT / "configs" / "phase9" / "t9_2_1_release_pin.json"
+    )
+    assert all(
+        path.is_file()
+        for path in (
+            t921_report_path,
+            t921_manifest_path,
+            t921_source_path,
+            t921_markdown_path,
+            t921_config_path,
+            t921_release_pin_path,
+        )
+    )
+    t921_report = json.loads(
+        t921_report_path.read_text(encoding="utf-8")
+    )
+    assert (
+        t921_report["verdict"]
+        == "PASS_T9_2_1_CAUSAL_TWIN_CONTRACT_FROZEN"
+    )
+    assert t921_report["gate_summary"] == {
+        "passed": 40,
+        "total": 40,
+        "failed": [],
+    }
+    assert t921_report["semantic_mutation_audit"]["detected"] == 40
+    assert t921_report["source_data"]["rows"] == 246
+    assert all(
+        value is None
+        for fields in t921_report["current_null_state"].values()
+        for value in fields.values()
+    )
+
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert "docs/phase9_baseline_search_power_registry.md" in readme
     assert "required 806、planned 808 clusters/backend" in readme
     assert "docs/phase9_scoped_claim_amendment.md" in readme
     assert "29 条 lane-qualified legacy migration" in readme
+    assert "docs/phase9_causal_twin_contract.md" in readme
 
     addendum_path = (
         ROOT / "docs" / "t9_1_3_post_outcome_governance_addendum.json"

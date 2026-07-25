@@ -1,0 +1,350 @@
+{
+  "schema_version": "t9.2.1-factorized-totality-manifest-v1",
+  "task_id": "T9.2.1",
+  "protocol_id": "PHASE9-CAUSAL-TWIN-CONTRACT-V1",
+  "manifest_scope": "FACTORIZED_INTERFACE_TOTALITY_NOT_CODEBOOK_OR_PHYSICS_QUALIFICATION",
+  "frozen_at": "2026-07-25T06:00:00+08:00",
+  "parent_analyses": {
+    "t9_1_1": "c88110375c358794339e72d672e4624871425fe480e5da091ddd1d6595255e18",
+    "t9_1_5": "4623492481ca83cb4dddf571ffd934b940846c9fff87331bfb5b600500ac5941"
+  },
+  "domain_contract": {
+    "logical_composite_key_fields": [
+      "bank_id",
+      "discriminator_word",
+      "phase_frame",
+      "event_class",
+      "leakage_reset_fsm_state"
+    ],
+    "nominal_n_fields": [
+      "bank_id",
+      "discriminator_word"
+    ],
+    "transition_t_fields": [
+      "phase_frame",
+      "event_class",
+      "leakage_reset_fsm_state",
+      "nominal_action_index"
+    ],
+    "factorization": "F(K)=T(phase,event,fsm,N(bank,word))",
+    "phase_frame_semantics": {
+      "logical_bits": 2,
+      "states": {
+        "0": {
+          "q_byte": 0,
+          "p_byte": 0
+        },
+        "1": {
+          "q_byte": 128,
+          "p_byte": 0
+        },
+        "2": {
+          "q_byte": 0,
+          "p_byte": 128
+        },
+        "3": {
+          "q_byte": 128,
+          "p_byte": 128
+        }
+      },
+      "current_rtl_two_uint8_adapter_qualified": false
+    },
+    "fsm_encoding": {
+      "bits": 8,
+      "mode_bits": 3,
+      "active_dwell_counter_bits": 5,
+      "valid_modes": [
+        "NORMAL",
+        "HOLD",
+        "LEAKAGE",
+        "RESETTING",
+        "RECOVERING",
+        "FAULT"
+      ],
+      "reserved_mode_codes": [
+        6,
+        7
+      ],
+      "current_rtl_six_counter_adapter_qualified": false,
+      "interpretation": "new Markov safety-state proposal; not a claim of bit compatibility with the existing experimental_event_fsm"
+    },
+    "nominal_cell_count": 1024,
+    "transition_cell_count": 131072,
+    "legal_discriminator_count": 126,
+    "fsm_state_count": 256,
+    "valid_fsm_state_count": 192,
+    "reachable_fsm_state_count": 68,
+    "fsm_reachability_scope": "SYNTACTIC_T_DOMAIN_ALL_16_EVENTS_AND_8_NOMINAL_ACTIONS_NOT_DEPLOYABLE_CAUSAL_REACHABILITY",
+    "reset_witness_covered_state_count": 192,
+    "reset_witness_max_distance": 3,
+    "reset_witness_scope": "SYNTACTIC_SUCCESS_ACK_THEN_HYSTERESIS_NOT_PREVIOUS_RECEIPT_GATED",
+    "finite": true,
+    "reachable_state_invariants": [
+      "phase_frame_is_two_bits",
+      "fsm_state_is_eight_bits",
+      "event_class_is_four_bits"
+    ],
+    "partial_map_allowed": false,
+    "host_callback_allowed": false,
+    "dont_care_output_allowed": false
+  },
+  "runtime_factorized_map_manifest": {
+    "schema_id": "phase9-factorized-total-recurrence-v1",
+    "nominal": {
+      "expected_count": 1024,
+      "actual_count": 1024,
+      "unique_key_count": 1024,
+      "total": true,
+      "deterministic": true,
+      "fingerprint_sha256": "8a8a466d39e3be25c3f6b1b6acce7abbf1b629e65d429da9b2baee497fecd3f0",
+      "repeat_fingerprint_match": true
+    },
+    "transition": {
+      "expected_count": 131072,
+      "actual_count": 131072,
+      "unique_key_count": 131072,
+      "total": true,
+      "deterministic": true,
+      "fingerprint_sha256": "a8a4a4d055c269681f7e217129828256507cb06caac5888b0bc6ceaba3c68992",
+      "repeat_fingerprint_match": true
+    },
+    "composition": {
+      "expected_count": 196608,
+      "actual_count": 196608,
+      "unique_key_count": 196608,
+      "nominal_signature_count": 12,
+      "full_cartesian_key_count": 16777216,
+      "quotient_is_lossless": true,
+      "equivalence": "same bank/action/reason/error N signature implies identical T/action-pack behavior for every phase/event/FSM state",
+      "equivalence_witness": {
+        "all_signature_classes_nonempty": true,
+        "mapped_nominal_key_count": 1024,
+        "raw_key_to_signature_sha256": "fc2de1fddcccf569463f3c6e3e80b04a4d29e1e1cd99934789734d70aa14ee98",
+        "signature_class_size_sum": 1024,
+        "signature_class_sizes": [
+          18,
+          27,
+          27,
+          54,
+          130,
+          18,
+          27,
+          27,
+          54,
+          130,
+          256,
+          256
+        ],
+        "signature_count": 12,
+        "signatures": [
+          {
+            "bank_id": 0,
+            "class_size": 18,
+            "error_flags": 0,
+            "nominal_action_index": 0,
+            "reason_code": 0,
+            "representative_key": {
+              "bank_id": 0,
+              "discriminator_word": 0
+            },
+            "signature_index": 0
+          },
+          {
+            "bank_id": 0,
+            "class_size": 27,
+            "error_flags": 0,
+            "nominal_action_index": 1,
+            "reason_code": 0,
+            "representative_key": {
+              "bank_id": 0,
+              "discriminator_word": 18
+            },
+            "signature_index": 1
+          },
+          {
+            "bank_id": 0,
+            "class_size": 27,
+            "error_flags": 0,
+            "nominal_action_index": 2,
+            "reason_code": 0,
+            "representative_key": {
+              "bank_id": 0,
+              "discriminator_word": 146
+            },
+            "signature_index": 2
+          },
+          {
+            "bank_id": 0,
+            "class_size": 54,
+            "error_flags": 0,
+            "nominal_action_index": 3,
+            "reason_code": 0,
+            "representative_key": {
+              "bank_id": 0,
+              "discriminator_word": 72
+            },
+            "signature_index": 3
+          },
+          {
+            "bank_id": 0,
+            "class_size": 130,
+            "error_flags": 2,
+            "nominal_action_index": 6,
+            "reason_code": 5,
+            "representative_key": {
+              "bank_id": 0,
+              "discriminator_word": 1
+            },
+            "signature_index": 4
+          },
+          {
+            "bank_id": 1,
+            "class_size": 18,
+            "error_flags": 0,
+            "nominal_action_index": 0,
+            "reason_code": 0,
+            "representative_key": {
+              "bank_id": 1,
+              "discriminator_word": 0
+            },
+            "signature_index": 5
+          },
+          {
+            "bank_id": 1,
+            "class_size": 27,
+            "error_flags": 0,
+            "nominal_action_index": 1,
+            "reason_code": 0,
+            "representative_key": {
+              "bank_id": 1,
+              "discriminator_word": 18
+            },
+            "signature_index": 6
+          },
+          {
+            "bank_id": 1,
+            "class_size": 27,
+            "error_flags": 0,
+            "nominal_action_index": 2,
+            "reason_code": 0,
+            "representative_key": {
+              "bank_id": 1,
+              "discriminator_word": 146
+            },
+            "signature_index": 7
+          },
+          {
+            "bank_id": 1,
+            "class_size": 54,
+            "error_flags": 0,
+            "nominal_action_index": 3,
+            "reason_code": 0,
+            "representative_key": {
+              "bank_id": 1,
+              "discriminator_word": 72
+            },
+            "signature_index": 8
+          },
+          {
+            "bank_id": 1,
+            "class_size": 130,
+            "error_flags": 2,
+            "nominal_action_index": 6,
+            "reason_code": 5,
+            "representative_key": {
+              "bank_id": 1,
+              "discriminator_word": 1
+            },
+            "signature_index": 9
+          },
+          {
+            "bank_id": 2,
+            "class_size": 256,
+            "error_flags": 1,
+            "nominal_action_index": 6,
+            "reason_code": 13,
+            "representative_key": {
+              "bank_id": 2,
+              "discriminator_word": 0
+            },
+            "signature_index": 10
+          },
+          {
+            "bank_id": 3,
+            "class_size": 256,
+            "error_flags": 1,
+            "nominal_action_index": 7,
+            "reason_code": 9,
+            "representative_key": {
+              "bank_id": 3,
+              "discriminator_word": 0
+            },
+            "signature_index": 11
+          }
+        ],
+        "signatures_sha256": "8592f6e63210029693daa0b3b7c19e223c32188af66bdf51212ae3aa254b443b"
+      },
+      "fingerprint_sha256": "4e02c0456c8bcc9e2e415e79184a9c15e5aafbb79511cde31654450bc933509d"
+    },
+    "combined_sha256": "73a4e0209a7632c888bf313efe41ead8ebc96d653f79b52b6b74d18b06e863b4",
+    "coverage_complete": true,
+    "unique_complete": true,
+    "deterministic": true,
+    "base_residual_zero": true,
+    "legal_discriminator_count": 126,
+    "phase_state_count": 4,
+    "event_class_count": 16,
+    "valid_event_class_count": 13,
+    "fsm_state_count": 256,
+    "valid_fsm_state_count": 192,
+    "nominal_action_count": 8,
+    "reachable_fsm_count": 68,
+    "fsm_reachability_scope": "SYNTACTIC_T_DOMAIN_ALL_16_EVENTS_AND_8_NOMINAL_ACTIONS_NOT_DEPLOYABLE_CAUSAL_REACHABILITY",
+    "reset_bfs_covered_count": 192,
+    "reset_bfs_max_distance": 3,
+    "reset_bfs_scope": "SYNTACTIC_SUCCESS_ACK_THEN_HYSTERESIS_NOT_PREVIOUS_RECEIPT_GATED",
+    "factorized_not_materialized_cartesian": true
+  },
+  "runtime_audit": {
+    "checks": {
+      "exact_namespace_ids": true,
+      "deployable_namespaces_only_observed_and_memory": true,
+      "legal_discriminator_count_126": true,
+      "action_layout_exact_80": true,
+      "phase_semantics_exact_four_states": true,
+      "fsm_is_new_unqualified_adapter_contract": true,
+      "nominal_total_1024": true,
+      "transition_total_131072": true,
+      "composition_quotient_is_lossless_and_crc_enumerated": true,
+      "repeat_enumeration_stable": true,
+      "all_valid_fsm_have_reset_witness": true,
+      "future_truth_structurally_absent_from_decision_api": true,
+      "assembler_is_live_decision_path": true,
+      "same_key_same_packed_action": true,
+      "fault_priority_exact": true,
+      "all_fault_responses_are_executable_and_bounded": true,
+      "ood_deployable_path_reachable": true,
+      "persistent_leakage_deployable_path_reachable": true,
+      "nominal_roundtrip_crc": true,
+      "invalid_key_fail_closed": true,
+      "base_residual_zero": true,
+      "representative_probe_count_16": true,
+      "all_representative_probes_execute": true,
+      "probes_are_nonpromotional": true,
+      "package_nomination_is_registry_pin_and_epoch_bound": true,
+      "iq_physical_envelope_is_explicitly_deferred": true,
+      "version_is_nondecision_sideband": true
+    },
+    "all_passed": true,
+    "manifest_sha256": "7e48cc565cf0925144106583ee31787a8c5f5d641d466b9eeb6e7ef06f465939"
+  },
+  "nominal_cell_count": 1024,
+  "transition_cell_count": 131072,
+  "representative_probe_count": 16,
+  "performance_metrics": null,
+  "codebook_id": null,
+  "codebook_sha256": null,
+  "backend_a_qualification": null,
+  "backend_b_qualification": null,
+  "analysis_sha256": "f0426dbb45718bbd6ddd276f0334567d83d786c175dbdbd07d8530b8e62ac542"
+}
