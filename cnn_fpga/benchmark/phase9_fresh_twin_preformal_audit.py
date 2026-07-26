@@ -496,6 +496,28 @@ def audit_outcome_fixture(
     }
 
 
+def _all_source_bindings(root: Path) -> dict[str, dict[str, object]]:
+    """Bind direct sources and every repository-local runtime dependency.
+
+    Both the in-memory snapshot and the persisted audit must use this single
+    assembler.  Otherwise an audit can count transitive dependencies while
+    silently dropping them from the seal that the formal runner consumes.
+    """
+
+    bindings = {
+        name: _binding(root, relative)
+        for name, relative in SOURCE_PATHS.items()
+    }
+    for index, relative in enumerate(RUNTIME_DEPENDENCY_PATHS):
+        name = f"runtime_dependency_{index:02d}"
+        runtime_binding = _binding(root, relative)
+        existing = bindings.get(name)
+        if existing is not None and existing != runtime_binding:
+            raise ValueError(f"conflicting runtime dependency binding: {name}")
+        bindings[name] = runtime_binding
+    return bindings
+
+
 def build_snapshot(
     root: Path,
     *,
@@ -515,16 +537,13 @@ def build_snapshot(
     design = documents["design_power"]
 
     intervals = _split_intervals(config)
-    source_bindings = {
-        name: _binding(root, relative)
-        for name, relative in SOURCE_PATHS.items()
-    }
+    source_bindings = _all_source_bindings(root)
     runtime_spec = qualification_config.get("runtime_dependencies", {})
     runtime_bindings = {
-        f"runtime_dependency_{index:02d}": _binding(root, relative)
-        for index, relative in enumerate(RUNTIME_DEPENDENCY_PATHS)
+        name: binding
+        for name, binding in source_bindings.items()
+        if name.startswith("runtime_dependency_")
     }
-    source_bindings.update(runtime_bindings)
     test_bindings = {
         name: _binding(root, relative)
         for name, relative in TEST_PATHS.items()
@@ -1591,10 +1610,7 @@ def build_audit(
         name: _binding(root, relative)
         for name, relative in INPUT_PATHS.items()
     }
-    sources = {
-        name: _binding(root, relative)
-        for name, relative in SOURCE_PATHS.items()
-    }
+    sources = _all_source_bindings(root)
     tests = {
         name: _binding(root, relative)
         for name, relative in TEST_PATHS.items()

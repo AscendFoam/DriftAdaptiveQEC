@@ -1,0 +1,52 @@
+{
+  "task_id": "T-RISK-20260726-01",
+  "schema_version": "t-risk-20260726-01-preformal-launch-failure-v1",
+  "attempt": 1,
+  "classification": "INFRASTRUCTURE_INCOMPLETE_FAIL_CLOSED",
+  "scientific_verdict": null,
+  "formal_result_accessed": false,
+  "formal_seed_accessed": false,
+  "formal_cell_executed": false,
+  "formal_artifacts_created": false,
+  "preformal_implementation_commit": "3cee69f3b5905bf3a2ec6ef15bb23d0779802fab",
+  "preformal_seal_commit": "03e2273056bce54a0eeefab6650ae21421e4ec8d",
+  "runner_pid_recorded": 17288,
+  "failure_stage": "verify_preformal_seal_before_resume_state",
+  "exception_type": "RuntimeError",
+  "exception_message": "preformal seal omits a required runner input",
+  "root_cause": "build_snapshot counted and commit-bound eleven transitive runtime dependencies, but build_audit reconstructed a second direct-only source map; build_seal therefore emitted no runtime_dependency_* entries even though its audit gate reported the closure count.",
+  "repair_contract": [
+    "Use one shared source-binding assembler in build_snapshot and build_audit.",
+    "Persist all eleven runtime_dependency_* bindings into the audit and canonical seal.",
+    "Keep the runner fail-closed requirement unchanged.",
+    "Add a regression test that the persisted-audit binding assembler cannot omit transitive runtime dependencies.",
+    "Create a fresh exact-HEAD audit/seal before any second formal attempt."
+  ],
+  "evidence": {
+    "archived_audit": {
+      "path": "docs/t_risk_20260726_01_fresh_preformal_attempt1_audit.json",
+      "sha256": "f4792f584bdaa4892b7fde36587ea49de8c972dcab9006f8dae8cc9457509190"
+    },
+    "archived_seal": {
+      "path": "docs/t_risk_20260726_01_fresh_preformal_attempt1_seal.json",
+      "sha256": "87abb317071afe28de45dded2494b4c9027033ded24855d06b683317d39bdcd8"
+    },
+    "stdout_log": {
+      "path": "runs/t_risk_20260726_01_fresh_runner.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr_log": {
+      "path": "docs/t_risk_20260726_01_fresh_preformal_attempt1_runner.stderr.log",
+      "bytes": 1061,
+      "sha256": "06928e9a0f7f7a5b1f07535244c1ea95690a09956a3a4269562eae3c4a8d5216"
+    }
+  },
+  "prohibited_claim_state": {
+    "official_exact_reproduction": null,
+    "puviani_surpass": null,
+    "external_sota": null,
+    "physical_lifetime": null,
+    "measured_hardware_speed": null
+  }
+}

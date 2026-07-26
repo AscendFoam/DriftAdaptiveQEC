@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 import copy
 import hashlib
+import inspect
 import json
 from pathlib import Path
 import subprocess
@@ -384,6 +385,34 @@ def test_csv_audit_rejects_duplicate_nan_and_ragged_rows(
     ragged = tmp_path / "ragged.csv"
     ragged.write_text("id,value\n1\n", encoding="utf-8")
     assert audit._csv_shape(ragged) == (1, 2, False, True, True)
+
+
+def test_source_binding_assembler_cannot_drop_runtime_dependencies(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    direct = {"formal_runner": "runner.py", "formal_verifier": "verifier.py"}
+    runtime = ("runtime/a.py", "runtime/b.py")
+    monkeypatch.setattr(audit, "SOURCE_PATHS", direct)
+    monkeypatch.setattr(audit, "RUNTIME_DEPENDENCY_PATHS", runtime)
+    for relative in (*direct.values(), *runtime):
+        path = tmp_path / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(f"# {relative}\n", encoding="utf-8", newline="\n")
+
+    bindings = audit._all_source_bindings(tmp_path)
+    assert set(bindings) == {
+        "formal_runner",
+        "formal_verifier",
+        "runtime_dependency_00",
+        "runtime_dependency_01",
+    }
+    assert bindings["runtime_dependency_00"]["path"] == runtime[0]
+    assert bindings["runtime_dependency_01"]["path"] == runtime[1]
+
+    # The persisted audit is the source of the production seal.  This guards
+    # against reintroducing a second, direct-only assembler there.
+    assert "_all_source_bindings(root)" in inspect.getsource(audit.build_audit)
 
 
 def test_verify_seal_checks_self_hash_live_binding_and_one_shot_absence(
