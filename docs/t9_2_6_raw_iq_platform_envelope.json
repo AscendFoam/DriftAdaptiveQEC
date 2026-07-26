@@ -1,0 +1,1226 @@
+{
+  "task_id": "T9.2.6",
+  "protocol_id": "PHASE9-RAW-IQ-PLATFORM-ENVELOPE-V1",
+  "schema_version": "t9.2.6-raw-iq-platform-envelope-report-v1",
+  "generated_at_utc": "2026-07-25T23:53:12.007890+00:00",
+  "verdict": "PASS_T9_2_6_RAW_IQ_PLATFORM_ENVELOPE_FROZEN",
+  "parents": [
+    {
+      "task_id": "T9.1.1",
+      "path": "docs/t9_1_1_three_lane_protocol.json",
+      "analysis_sha256": "c88110375c358794339e72d672e4624871425fe480e5da091ddd1d6595255e18",
+      "artifact": {
+        "path": "docs/t9_1_1_three_lane_protocol.json",
+        "bytes": 74510,
+        "sha256": "255c50ce677a1cae5475c2294177ceaab551bcbb5078ee2d49b358600a58f7a5"
+      },
+      "live_verdict": "PASS_PHASE9_THREE_INDEPENDENT_LANE_PROTOCOL_FROZEN"
+    },
+    {
+      "task_id": "T9.2.1",
+      "path": "docs/t9_2_1_causal_twin_contract.json",
+      "analysis_sha256": "78775658b4c9fa3a768252e2d529e39a0a90924c28158de2e4a527ba3052fe34",
+      "artifact": {
+        "path": "docs/t9_2_1_causal_twin_contract.json",
+        "bytes": 125451,
+        "sha256": "cdddbcbeceb0f4fdaded4c68d54f30f61966a588ff4c6824366f59d19b6ba507"
+      },
+      "live_verdict": "PASS_T9_2_1_CAUSAL_TWIN_CONTRACT_FROZEN"
+    },
+    {
+      "task_id": "T9.2.4",
+      "path": "docs/t9_2_4_dual_backend_qualification.json",
+      "analysis_sha256": "d3f05e69db9c4799d55ce0813f8bd52cdb22384dbd5cfc68227715c44c53ec49",
+      "required_verdict": "NO_GO_TWIN_QUALIFICATION",
+      "artifact": {
+        "path": "docs/t9_2_4_dual_backend_qualification.json",
+        "bytes": 2995,
+        "sha256": "b81059cb685f76848f5fd978acf0cbdaf52c39a26588f975fa6e7c9b2378c1d1"
+      },
+      "live_verdict": "NO_GO_TWIN_QUALIFICATION"
+    },
+    {
+      "task_id": "T9.2.4-post-audit",
+      "path": "docs/t9_2_4_dual_backend_post_outcome_audit.json",
+      "analysis_sha256": "b9b0de857f8f345e653600091899f7d87f18d7706fc8909bc1f969d15bb6e6d3",
+      "required_verdict": "AUDIT_CONFIRMS_SCIENTIFIC_NO_GO",
+      "artifact": {
+        "path": "docs/t9_2_4_dual_backend_post_outcome_audit.json",
+        "bytes": 6697,
+        "sha256": "cc580481c440ccafeee92d2e9f7db51310ad55db85fc971b243d8a71eeedb953"
+      },
+      "live_verdict": "AUDIT_CONFIRMS_SCIENTIFIC_NO_GO"
+    }
+  ],
+  "implementation_bindings": {
+    "config": {
+      "path": "configs/phase9/t9_2_6_raw_iq_platform_envelope.json",
+      "bytes": 19525,
+      "sha256": "ee4f60bea72f9aa179bac3344e344e6d6db6943450e8d389c75521c5b6e1e00e"
+    },
+    "generator": {
+      "path": "cnn_fpga/benchmark/phase9_raw_iq_platform_envelope.py",
+      "bytes": 70593,
+      "sha256": "e0ecec0caf0668e2134e67a0fc6f5bd3a45303a98ae124370bb43a131be8c3fd"
+    },
+    "runtime": {
+      "path": "cnn_fpga/hwio/phase9_raw_iq_stream_contract.py",
+      "bytes": 45927,
+      "sha256": "e7327ba2dd387ccd00152ed9a0c45c2dc64210ac9c58e665f6602f53c1f81de7"
+    },
+    "core_rtl": {
+      "path": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "bytes": 25822,
+      "sha256": "7caad1ad0fd243f5e62c9ce079fd6def9c6d964bb8fe44e870e96b14a6239784"
+    },
+    "legacy_reference": {
+      "path": "cnn_fpga/runtime/bit_accurate_hardware_reference.py",
+      "bytes": 36582,
+      "sha256": "f7fb4232d495b67f3759596a3b9d235e029df5ec16d3c467c240a6203fc2e801"
+    },
+    "tests": {
+      "path": "tests/test_phase9_raw_iq_platform_envelope.py",
+      "bytes": 28429,
+      "sha256": "47b5425c362cc1de553e563bf9c08a968162f047874c7848b9bb6847acb0e9aa"
+    }
+  },
+  "contract": {
+    "scope": {
+      "allowed": [
+        "platform-independent raw-IQ project-boundary interface",
+        "fixed-point and packet semantics",
+        "candidate-platform intersection design target",
+        "executable fail-closed reference contract",
+        "legacy 58-bit discriminator-to-fast-path adapter binding"
+      ],
+      "forbidden": [
+        "matched-filter or discriminator performance qualification",
+        "threshold selection from T9.2.4 failed twin outcomes",
+        "synthetic, recorded, or live IQ ROC/LER claim",
+        "board timing, resource, power, jitter, or deadline measurement",
+        "six-cycle transfer to ADC/raw-IQ/trigger boundaries",
+        "official Puviani, physical lifetime, break-even, external SOTA, or rank claim"
+      ]
+    },
+    "project_boundary": {
+      "input_boundary": "after vendor RFDC DDC/decimation or bit-exact replay adapter, before project matched filter",
+      "output_boundary": "legacy 58-bit CRC input of gkp_fast_path_core",
+      "excluded_from_project_frontend": [
+        "analog aperture and RF analog chain",
+        "vendor ADC calibration",
+        "vendor RFDC mixer/DDC/decimation internal latency",
+        "host DMA and software transport"
+      ],
+      "clock_hz": 250000000,
+      "clock_status": "FROZEN_IMPLEMENTATION_TARGET_NOT_ACHIEVED_TIMING",
+      "single_channel_primary": true,
+      "multi_channel_expansion_requires_protocol_amendment": true
+    },
+    "rate_profiles": [
+      {
+        "rate_id": 0,
+        "name": "IQ_125_MSPS",
+        "sample_rate_hz": 125000000,
+        "axis_cycles_per_sample": 2,
+        "integration_samples": 64,
+        "integration_ns": 512
+      },
+      {
+        "rate_id": 1,
+        "name": "IQ_250_MSPS",
+        "sample_rate_hz": 250000000,
+        "axis_cycles_per_sample": 1,
+        "integration_samples": 128,
+        "integration_ns": 512
+      }
+    ],
+    "stream_contract": {
+      "protocol": "AXI4-Stream subset",
+      "tdata_bits": 32,
+      "tdata_layout": [
+        {
+          "field": "i_q1_15",
+          "lsb": 0,
+          "bits": 16,
+          "signed": true
+        },
+        {
+          "field": "q_q1_15",
+          "lsb": 16,
+          "bits": 16,
+          "signed": true
+        }
+      ],
+      "tuser_bits": 128,
+      "tuser_layout": [
+        {
+          "field": "timestamp",
+          "lsb": 0,
+          "bits": 48
+        },
+        {
+          "field": "window_id",
+          "lsb": 48,
+          "bits": 24
+        },
+        {
+          "field": "sample_index",
+          "lsb": 72,
+          "bits": 8
+        },
+        {
+          "field": "channel_id",
+          "lsb": 80,
+          "bits": 4
+        },
+        {
+          "field": "rate_id",
+          "lsb": 84,
+          "bits": 2
+        },
+        {
+          "field": "domain_id",
+          "lsb": 86,
+          "bits": 2
+        },
+        {
+          "field": "config_version",
+          "lsb": 88,
+          "bits": 16
+        },
+        {
+          "field": "error_flags",
+          "lsb": 104,
+          "bits": 16
+        },
+        {
+          "field": "reset_epoch",
+          "lsb": 120,
+          "bits": 8
+        }
+      ],
+      "timestamp_unit": "one 250 MHz project-boundary ACLK tick",
+      "timestamp_tick_ns": 4,
+      "channel_id_v1_required": 0,
+      "domain_ids": {
+        "0": "SYNTHETIC",
+        "1": "RECORDED_REPLAY",
+        "2": "LIVE_RAW",
+        "3": "INVALID_RESERVED"
+      },
+      "tvalid_tready": "transfer only when both high; TVALID and TDATA/TUSER/TLAST remain stable until accepted",
+      "tlast": "asserted on the only final sample of each exact-length window",
+      "packet_mode_required": true,
+      "tkeep": "all four TDATA bytes valid when TVALID=1",
+      "tstrb": "all four TDATA bytes are data when TVALID=1",
+      "tid": "omitted in v1 single-channel primary path",
+      "tdest": "omitted in v1",
+      "reset_epoch": "8-bit transport epoch; exact +1 on synchronized FIFO flush, no in-run wrap"
+    },
+    "fixed_point_contract": [
+      {
+        "stage": "input_iq",
+        "bits": 16,
+        "q_format": "Q1.15",
+        "signed": true
+      },
+      {
+        "stage": "complex_matched_filter_coefficient",
+        "bits": 18,
+        "q_format": "Q1.17",
+        "signed": true
+      },
+      {
+        "stage": "real_scalar_product",
+        "bits": 34,
+        "q_format": "Q2.32",
+        "signed": true
+      },
+      {
+        "stage": "complex_multiply_component_sum",
+        "bits": 35,
+        "q_format": "Q3.32",
+        "signed": true
+      },
+      {
+        "stage": "matched_filter_accumulator",
+        "bits": 48,
+        "q_format": "Q16.32",
+        "signed": true
+      },
+      {
+        "stage": "calibration_matrix",
+        "bits": 18,
+        "q_format": "Q2.16",
+        "signed": true
+      },
+      {
+        "stage": "calibration_product",
+        "bits": 66,
+        "q_format": "Q18.48",
+        "signed": true
+      },
+      {
+        "stage": "calibration_component_sum_with_aligned_offset",
+        "bits": 67,
+        "q_format": "Q19.48",
+        "signed": true
+      },
+      {
+        "stage": "calibration_offset",
+        "bits": 24,
+        "q_format": "Q8.16",
+        "signed": true
+      },
+      {
+        "stage": "calibrated_iq_llr_threshold_hysteresis",
+        "bits": 24,
+        "q_format": "Q8.16",
+        "signed": true
+      },
+      {
+        "stage": "ood_score",
+        "bits": 8,
+        "q_format": "UQ0.8",
+        "signed": false
+      },
+      {
+        "stage": "legacy_fast_path_map_llr",
+        "bits": 22,
+        "q_format": "implementation-defined inherited LUT code",
+        "signed": true
+      }
+    ],
+    "arithmetic_contract": {
+      "matched_filter_equation": "y=sum_n(conj(h[n])*x[n])",
+      "coefficient_energy": "sum_n(h_i[n]^2+h_q[n]^2) of the quantized Q1.17 codes must be within 2^-12 of one after quantization",
+      "rounding_on_every_narrowing": "round-to-nearest ties-to-even",
+      "overflow": "signed saturation plus sticky overflow; wraparound forbidden",
+      "sticky_overflow_effect": "poison whole window and emit observation_valid=0",
+      "complex_multiply": {
+        "real": "i*h_i + q*h_q",
+        "imag": "q*h_i - i*h_q"
+      },
+      "matched_filter_accumulator_proof": {
+        "maximum_legal_abs_code_upper_bound": 1099511627776,
+        "signed_48_positive_limit": 140737488355327,
+        "minimum_headroom_ratio": 127.99999999999909,
+        "legal_input_overflow_expected": false,
+        "sticky_overflow_still_required_for_fault_injection": true
+      },
+      "calibration": "2x2 affine transform plus offset, package-versioned",
+      "calibration_bit_path": {
+        "accumulator_times_matrix": "48-bit Q16.32 x 18-bit Q2.16 -> 66-bit Q18.48",
+        "two_products_plus_offset": "two 66-bit products + sign-extended (Q8.16 << 32) offset -> 67-bit Q19.48",
+        "narrowing": "arithmetic right shift 32 with ties-to-even, then signed saturation to 24-bit Q8.16",
+        "overflow": "narrowing saturation raises sticky overflow and poisons the complete window"
+      },
+      "discriminator": "four structural threshold/hysteresis registers in signed Q8.16",
+      "threshold_values": null,
+      "threshold_status": "BLOCKED_UNQUALIFIED_T9_2_4_NO_GO",
+      "threshold_selection_released_by": "fresh T-RISK-20260726-01 dual-backend qualification PASS only"
+    },
+    "package_and_update_contract": {
+      "bank_count": 2,
+      "update_unit": "complete coefficient+calibration+threshold package",
+      "package_crc": "CRC32/ISO-HDLC recomputed internally over the complete canonical little-endian payload; external crc_ok booleans are forbidden",
+      "version_bits": 16,
+      "version_rule": "exactly active_version+1, no wrap",
+      "activation": "atomic only between windows after exact package CRC, SHA256 qualification receipt, version, profile and activation_window validation",
+      "mixed_version_window": "invalid and fail closed",
+      "partial_entry_patch": "forbidden",
+      "last_known_good": "previous complete CRC-valid active package",
+      "rollback": "atomic only between windows",
+      "threshold_qualification_state": {
+        "0": "BLOCKED_UNQUALIFIED",
+        "1": "future QUALIFIED_FRESH_TWIN_PASS with exact allowlisted SHA256 receipt; syntax alone never grants trust",
+        "other": "forbidden"
+      },
+      "unqualified_activation": "always rejected",
+      "trusted_qualification_receipt_sha256": null,
+      "current_activation_count_required": 0,
+      "future_trust_amendment": "T-RISK-20260726-01 fresh PASS must explicitly replace the null module constant and bind the exact analysis/release receipt before any activation",
+      "lkg_identity": "exact complete-package SHA256 plus profile/version/bank"
+    },
+    "cdc_backpressure_reset_contract": {
+      "source_assumption": "RFDC/replay ingress can be nonstallable",
+      "elastic_buffer": {
+        "minimum_complete_windows": 2,
+        "minimum_beats": 256,
+        "storage_mode": "packet-aware asynchronous FIFO or equivalent",
+        "gray_pointer_or_vendor_proven_cdc_required": true
+      },
+      "backpressure": "downstream may deassert TREADY; accepted payload must not change",
+      "overflow": "abort and poison the entire affected window; silent sample drop forbidden",
+      "reset_assertion": "asynchronous assertion permitted at CDC primitive, all externally observed state fails closed",
+      "reset_deassertion": "synchronous in each clock domain; no transfer until both sides have exited reset",
+      "minimum_reset_cycles_slowest_clock": 16,
+      "window_reset": "reset before retired TLAST poisons the complete window",
+      "window_deadline_axis_cycles": 192,
+      "timeout_retirement": "at deadline emit exactly one poisoned observation_valid=0 record, quarantine until the affected TLAST/flush boundary, and never execute its candidate action",
+      "fifo_flush": "reset epoch increments exactly one only after both domains acknowledge flush; stale pre-reset beats with an older epoch are rejected",
+      "cross_window_freshness": "stateful last-retired window_id/final_timestamp/config_version/reset_epoch receipt; same-epoch window_id must increment exactly one, timestamps increase, config holds or advances one; epoch change restarts window_id=0 and forbids epoch wrap",
+      "error_priority": [
+        "AXIS_STABILITY_FAILURE",
+        "WINDOW_TIMEOUT_FAILURE",
+        "QUARANTINE_ACTIVE_FAILURE",
+        "RESET_MID_WINDOW",
+        "CDC_OVERFLOW",
+        "SOURCE_OR_RFDC_FAILURE",
+        "PACKAGE_INTEGRITY_FAILURE",
+        "CONFIG_VERSION_FAILURE",
+        "INVALID_METADATA",
+        "FRESHNESS_REPLAY_FAILURE",
+        "TIMESTAMP_FAILURE",
+        "SAMPLE_SEQUENCE_FAILURE",
+        "WINDOW_FRAMING_FAILURE",
+        "INPUT_QUALITY_FAILURE",
+        "ACCEPT"
+      ],
+      "axis_protocol_precondition": "TVALID and payload stability is checked before a transferred window can enter the error-priority parser",
+      "no_postselection": true
+    },
+    "legacy_fast_path_adapter": {
+      "word_bits": 58,
+      "crc": "CRC-16/CCITT-FALSE over little-endian zero-padded 42-bit payload",
+      "fields": [
+        {
+          "field": "syndrome_code",
+          "lsb": 0,
+          "bits": 10
+        },
+        {
+          "field": "syndrome_x_code",
+          "lsb": 10,
+          "bits": 2
+        },
+        {
+          "field": "syndrome_z_code",
+          "lsb": 12,
+          "bits": 2
+        },
+        {
+          "field": "quadrature_phase_bit",
+          "lsb": 14,
+          "bits": 1
+        },
+        {
+          "field": "ood_score_code",
+          "lsb": 15,
+          "bits": 8
+        },
+        {
+          "field": "parameter_age_code",
+          "lsb": 23,
+          "bits": 16
+        },
+        {
+          "field": "reset_ack",
+          "lsb": 39,
+          "bits": 1
+        },
+        {
+          "field": "observation_valid",
+          "lsb": 40,
+          "bits": 1
+        },
+        {
+          "field": "deadline_ok",
+          "lsb": 41,
+          "bits": 1
+        },
+        {
+          "field": "crc16",
+          "lsb": 42,
+          "bits": 16
+        }
+      ],
+      "frontend_fault_mapping": "any frontend fault sets observation_valid=0; no raw threshold or package trust bypass",
+      "adapter_latency_cycles": 0,
+      "adapter_latency_status": "combinational design contract, to be proven in T9.2.7/T9.7.1"
+    },
+    "latency_boundaries": [
+      {
+        "boundary_id": "FAST_PATH_CORE_INPUT_TO_ACTION",
+        "start": "accepted legacy 58-bit core input",
+        "end": "registered action valid",
+        "cycles": 6,
+        "ii_cycles": 1,
+        "status": "INHERITED_PREBOARD_RTL_CYCLE_CONTRACT",
+        "measured_ns": null
+      },
+      {
+        "boundary_id": "DISCRIMINATOR_OUT_TO_ACTION",
+        "start": "accepted discriminator output at combinational legacy adapter",
+        "end": "registered action valid",
+        "cycles": 6,
+        "ii_cycles": 1,
+        "status": "FROZEN_TARGET_REQUIRES_T9_2_7_AND_T9_7_1_REQUALIFICATION",
+        "nominal_ns_if_250mhz_target_met": 24,
+        "measured_ns": null
+      },
+      {
+        "boundary_id": "ADC_LAST_SAMPLE_TO_TRIGGER",
+        "start": "accepted final project-boundary IQ sample or future ADC-last-sample witness",
+        "end": "external trigger pulse",
+        "cycles": null,
+        "ii_cycles": null,
+        "status": "NOT_IMPLEMENTED_NOT_MEASURED_NULL",
+        "measured_ns": null
+      },
+      {
+        "boundary_id": "RAW_IQ_SOURCE_TO_TRIGGER",
+        "start": "raw analog aperture/source timestamp",
+        "end": "external trigger pulse",
+        "cycles": null,
+        "ii_cycles": null,
+        "status": "MISSING_HIGH_SPEED_BOARD_NULL",
+        "measured_ns": null
+      }
+    ],
+    "trigger_contract": {
+      "pulse": "one target-clock cycle, exactly once for each accepted action or explicit fail-closed action",
+      "debug_record_bits": 128,
+      "debug_fields": [
+        {
+          "field": "trigger_timestamp",
+          "lsb": 0,
+          "bits": 48
+        },
+        {
+          "field": "window_id",
+          "lsb": 48,
+          "bits": 24
+        },
+        {
+          "field": "action_code",
+          "lsb": 72,
+          "bits": 8
+        },
+        {
+          "field": "config_version",
+          "lsb": 80,
+          "bits": 16
+        },
+        {
+          "field": "fault_reason",
+          "lsb": 96,
+          "bits": 8
+        },
+        {
+          "field": "domain_id",
+          "lsb": 104,
+          "bits": 2
+        },
+        {
+          "field": "reserved_zero",
+          "lsb": 106,
+          "bits": 22
+        }
+      ],
+      "physical_pinout": null,
+      "electrical_standard": null,
+      "measured_latency": null
+    },
+    "platform_intersection": {
+      "candidate_classes": [
+        {
+          "platform_id": "AMD_ZCU111_XCZU28DR",
+          "role": "eligible direct-RFADC candidate",
+          "vendor_adc": "8 x 12-bit up to 4 GSPS",
+          "qualification_status": "SOURCE_CONFIRMED_NOT_SELECTED_NOT_BUILT"
+        },
+        {
+          "platform_id": "AMD_ZCU216_XCZU49DR",
+          "role": "eligible direct-RFADC candidate",
+          "vendor_adc": "16 x 14-bit 2.5 GSPS",
+          "qualification_status": "SOURCE_CONFIRMED_NOT_SELECTED_NOT_BUILT"
+        }
+      ],
+      "excluded_platforms": [
+        {
+          "platform_id": "Tang_Nano_20K_GW2AR",
+          "reason": "low-speed digital transport/RTL reference only; no direct raw-IQ ADC chain"
+        }
+      ],
+      "frozen_project_budget": {
+        "project_clock_target_mhz": 250,
+        "maximum_axis_tdata_bits": 32,
+        "maximum_axis_tuser_bits": 128,
+        "maximum_dsp_blocks": 32,
+        "maximum_bram36_equivalents": 12,
+        "maximum_luts": 25000,
+        "maximum_flip_flops": 30000,
+        "minimum_packet_fifo_beats": 256,
+        "trigger_outputs": 1
+      },
+      "budget_status": "DESIGN_ENVELOPE_NOT_SYNTHESIS_OR_PLACE_ROUTE_RESULT",
+      "selection_task": "T9.7.2",
+      "out_of_envelope_policy": "NO_GO_OR_EXPLICIT_PROTOCOL_AMENDMENT_BEFORE_FRONTEND_OR_CODEBOOK_RESEAL"
+    },
+    "source_registry": [
+      {
+        "source_id": "S01",
+        "title": "T9.1.1 three-lane protocol",
+        "url_or_path": "docs/t9_1_1_three_lane_protocol.json",
+        "kind": "local immutable evidence"
+      },
+      {
+        "source_id": "S02",
+        "title": "T9.2.1 causal twin contract",
+        "url_or_path": "docs/t9_2_1_causal_twin_contract.json",
+        "kind": "local immutable evidence"
+      },
+      {
+        "source_id": "S03",
+        "title": "T9.2.4 formal NO-GO and post-outcome audit",
+        "url_or_path": "docs/t9_2_4_dual_backend_qualification.json",
+        "kind": "local immutable evidence"
+      },
+      {
+        "source_id": "S04",
+        "title": "AMD ZCU111 Evaluation Board User Guide UG1271",
+        "url_or_path": "https://docs.amd.com/r/en-US/ug1271-zcu111-eval-bd/Overview",
+        "kind": "vendor primary",
+        "accessed": "2026-07-26"
+      },
+      {
+        "source_id": "S05",
+        "title": "AMD ZCU216 Evaluation Kit Product Brief",
+        "url_or_path": "https://www.amd.com/content/dam/amd/en/documents/products/adaptive-socs-and-fpgas/boards-kits/product-briefs/zcu216-product-brief.pdf",
+        "kind": "vendor primary",
+        "accessed": "2026-07-26"
+      },
+      {
+        "source_id": "S06",
+        "title": "AMD RF Data Converter Product Guide PG269 v2.6",
+        "url_or_path": "https://docs.amd.com/r/en-US/pg269-rf-data-converter/RF-ADC-Interface-Data-and-Clock-Rates",
+        "kind": "vendor primary",
+        "accessed": "2026-07-26"
+      },
+      {
+        "source_id": "S07",
+        "title": "AMD AXI4-Stream Infrastructure Product Guide PG085 v3.0",
+        "url_or_path": "https://docs.amd.com/r/en-US/pg085-axi4stream-infrastructure/Overview-of-Features",
+        "kind": "vendor primary",
+        "accessed": "2026-07-26"
+      },
+      {
+        "source_id": "S08",
+        "title": "Existing GKP fast-path RTL core",
+        "url_or_path": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+        "kind": "local implementation"
+      },
+      {
+        "source_id": "S09",
+        "title": "Existing bit-accurate hardware reference",
+        "url_or_path": "cnn_fpga/runtime/bit_accurate_hardware_reference.py",
+        "kind": "local implementation"
+      }
+    ]
+  },
+  "executable_audit": {
+    "iq_signed_code_roundtrips": 131072,
+    "tuser_boundary_roundtrips": 18,
+    "nominal_rate_domain_cases": [
+      {
+        "rate_id": 0,
+        "domain_id": 0,
+        "samples": 64,
+        "reason": "ACCEPT"
+      },
+      {
+        "rate_id": 0,
+        "domain_id": 1,
+        "samples": 64,
+        "reason": "ACCEPT"
+      },
+      {
+        "rate_id": 0,
+        "domain_id": 2,
+        "samples": 64,
+        "reason": "ACCEPT"
+      },
+      {
+        "rate_id": 1,
+        "domain_id": 0,
+        "samples": 128,
+        "reason": "ACCEPT"
+      },
+      {
+        "rate_id": 1,
+        "domain_id": 1,
+        "samples": 128,
+        "reason": "ACCEPT"
+      },
+      {
+        "rate_id": 1,
+        "domain_id": 2,
+        "samples": 128,
+        "reason": "ACCEPT"
+      }
+    ],
+    "fault_flag_cases": [
+      {
+        "fault": "adc_overrange",
+        "reason": "INPUT_QUALITY_FAILURE",
+        "accepted": false
+      },
+      {
+        "fault": "rfdc_overflow",
+        "reason": "SOURCE_OR_RFDC_FAILURE",
+        "accepted": false
+      },
+      {
+        "fault": "source_clock_unlock",
+        "reason": "SOURCE_OR_RFDC_FAILURE",
+        "accepted": false
+      },
+      {
+        "fault": "tlast_early",
+        "reason": "WINDOW_FRAMING_FAILURE",
+        "accepted": false
+      },
+      {
+        "fault": "tlast_missing",
+        "reason": "WINDOW_FRAMING_FAILURE",
+        "accepted": false
+      },
+      {
+        "fault": "length_mismatch",
+        "reason": "WINDOW_FRAMING_FAILURE",
+        "accepted": false
+      },
+      {
+        "fault": "index_gap",
+        "reason": "SAMPLE_SEQUENCE_FAILURE",
+        "accepted": false
+      },
+      {
+        "fault": "index_duplicate",
+        "reason": "SAMPLE_SEQUENCE_FAILURE",
+        "accepted": false
+      },
+      {
+        "fault": "index_reorder",
+        "reason": "SAMPLE_SEQUENCE_FAILURE",
+        "accepted": false
+      },
+      {
+        "fault": "timestamp_regression",
+        "reason": "TIMESTAMP_FAILURE",
+        "accepted": false
+      },
+      {
+        "fault": "config_version_stale",
+        "reason": "CONFIG_VERSION_FAILURE",
+        "accepted": false
+      },
+      {
+        "fault": "coefficient_crc_failure",
+        "reason": "PACKAGE_INTEGRITY_FAILURE",
+        "accepted": false
+      },
+      {
+        "fault": "calibration_crc_failure",
+        "reason": "PACKAGE_INTEGRITY_FAILURE",
+        "accepted": false
+      },
+      {
+        "fault": "cdc_overflow",
+        "reason": "CDC_OVERFLOW",
+        "accepted": false
+      },
+      {
+        "fault": "reset_mid_window",
+        "reason": "RESET_MID_WINDOW",
+        "accepted": false
+      },
+      {
+        "fault": "transport_poison",
+        "reason": "INPUT_QUALITY_FAILURE",
+        "accepted": false
+      }
+    ],
+    "fail_closed_adapter_cases": 16,
+    "structural_failure_cases": [
+      {
+        "case_id": "empty",
+        "reason": "WINDOW_FRAMING_FAILURE"
+      },
+      {
+        "case_id": "short",
+        "reason": "WINDOW_FRAMING_FAILURE"
+      },
+      {
+        "case_id": "early_tlast",
+        "reason": "WINDOW_FRAMING_FAILURE"
+      },
+      {
+        "case_id": "mixed_version",
+        "reason": "CONFIG_VERSION_FAILURE"
+      },
+      {
+        "case_id": "timestamp_gap",
+        "reason": "TIMESTAMP_FAILURE"
+      },
+      {
+        "case_id": "index_duplicate",
+        "reason": "SAMPLE_SEQUENCE_FAILURE"
+      },
+      {
+        "case_id": "invalid_domain",
+        "reason": "INVALID_METADATA"
+      },
+      {
+        "case_id": "nonzero_channel",
+        "reason": "INVALID_METADATA"
+      }
+    ],
+    "stable_backpressure_accepts": true,
+    "unstable_backpressure_rejected": true,
+    "window_timeout_rejected": true,
+    "timeout_quarantine_cases": 10,
+    "timeout_poison_count": 1,
+    "stateful_freshness_cases": 5,
+    "mixed_reset_epoch_rejected": true,
+    "rounding_exhaustive_cases": 262144,
+    "matched_filter_reference_cases": 516,
+    "calibration_reference_cases": 729,
+    "legacy_fast_path_roundtrips": 18,
+    "package_cases": [
+      {
+        "profile_id": 0,
+        "payload_bytes": 455,
+        "crc32": 3255316702,
+        "state": "BLOCKED_UNQUALIFIED_NOT_ACTIVATABLE"
+      },
+      {
+        "profile_id": 1,
+        "payload_bytes": 839,
+        "crc32": 1689479241,
+        "state": "BLOCKED_UNQUALIFIED_NOT_ACTIVATABLE"
+      }
+    ],
+    "unsafe_commit_cases_rejected": 9,
+    "successful_commit_count": 0,
+    "trusted_qualification_receipt_sha256": null,
+    "trusted_commit_fixture_scope": "CURRENT_ACTIVATION_CLOSED_PENDING_FRESH_TWIN_PASS",
+    "strict_bool_alias_cases_rejected": 16,
+    "all_passed": true
+  },
+  "claim_state": {
+    "frontend_performance": null,
+    "synthetic_iq_qualification": null,
+    "recorded_iq_qualification": null,
+    "live_raw_iq_qualification": null,
+    "board_measured_latency": null,
+    "board_resources": null,
+    "board_power": null,
+    "external_same_task_speed": null,
+    "round_ler": null,
+    "six_state_lifetime": null,
+    "physical_break_even": null,
+    "official_puviani_exact": null,
+    "puviani_nmf_surpass": null,
+    "external_sota": null,
+    "rank": null
+  },
+  "downstream_release": {
+    "T9.2.7": {
+      "released": false,
+      "reason": "interface is frozen but synthetic-IQ threshold qualification remains blocked by T9.2.4 NO-GO"
+    },
+    "T-RISK-20260726-01": {
+      "released": true,
+      "reason": "fresh twin semantic repair is the next task"
+    },
+    "T9.3.3": {
+      "released": false,
+      "reason": "may consume envelope only after codebook prerequisites recover"
+    },
+    "T9.7.2": {
+      "released": false,
+      "reason": "later platform selection task consumes this frozen envelope"
+    }
+  },
+  "source_data": {
+    "path": "docs/t9_2_6_raw_iq_platform_envelope_source_data.csv",
+    "bytes": 22229,
+    "sha256": "ae29fd6e3e7d2163c6ff1145fb816e191c2e0da37d1099996affdf305fc6cdb7"
+  },
+  "canonical_outputs": {
+    "report": "docs/t9_2_6_raw_iq_platform_envelope.json",
+    "source_data": "docs/t9_2_6_raw_iq_platform_envelope_source_data.csv",
+    "markdown": "docs/phase9_raw_iq_platform_envelope.md",
+    "release_pin": "configs/phase9/t9_2_6_release_pin.json"
+  },
+  "semantic_mutation_audit": {
+    "count": 36,
+    "detected": 36,
+    "all_detected": true,
+    "records": [
+      {
+        "target_gate": "G01_identity_scope_and_verdict_exact",
+        "failed_gates": [
+          "G01_identity_scope_and_verdict_exact"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G02_all_parent_analysis_hashes_are_live_and_exact",
+        "failed_gates": [
+          "G02_all_parent_analysis_hashes_are_live_and_exact",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G03_t9_2_4_scientific_no_go_and_only_t9_2_6_release_preserved",
+        "failed_gates": [
+          "G02_all_parent_analysis_hashes_are_live_and_exact",
+          "G03_t9_2_4_scientific_no_go_and_only_t9_2_6_release_preserved",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G04_config_generator_runtime_rtl_reference_and_tests_are_byte_bound",
+        "failed_gates": [
+          "G04_config_generator_runtime_rtl_reference_and_tests_are_byte_bound",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G05_project_boundary_excludes_vendor_rfdc_and_host_transport",
+        "failed_gates": [
+          "G05_project_boundary_excludes_vendor_rfdc_and_host_transport",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G06_exact_two_512ns_rate_profiles_match_runtime",
+        "failed_gates": [
+          "G06_exact_two_512ns_rate_profiles_match_runtime",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G07_tdata_is_exact_contiguous_i16_q16_q1_15",
+        "failed_gates": [
+          "G07_tdata_is_exact_contiguous_i16_q16_q1_15",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G08_tuser_is_exact_contiguous_128bit_metadata",
+        "failed_gates": [
+          "G08_tuser_is_exact_contiguous_128bit_metadata",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G09_domain_ids_are_typed_and_invalid_domain_is_reserved",
+        "failed_gates": [
+          "G09_domain_ids_are_typed_and_invalid_domain_is_reserved",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G10_axis_handshake_stability_tlast_and_packet_semantics_are_exact",
+        "failed_gates": [
+          "G10_axis_handshake_stability_tlast_and_packet_semantics_are_exact",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G11_fixed_point_widths_and_q_formats_are_exact",
+        "failed_gates": [
+          "G11_fixed_point_widths_and_q_formats_are_exact",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G12_ties_even_saturation_and_no_wrap_are_executable",
+        "failed_gates": [
+          "G12_ties_even_saturation_and_no_wrap_are_executable",
+          "G30_iq_tuser_and_rounding_boundary_enumerations_are_complete",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G13_matched_filter_calibration_and_sticky_overflow_semantics_are_frozen",
+        "failed_gates": [
+          "G13_matched_filter_calibration_and_sticky_overflow_semantics_are_frozen",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G14_threshold_values_are_typed_null_and_blocked_by_twin_no_go",
+        "failed_gates": [
+          "G14_threshold_values_are_typed_null_and_blocked_by_twin_no_go",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G15_complete_atomic_ab_package_version_crc_and_lkg_are_frozen",
+        "failed_gates": [
+          "G15_complete_atomic_ab_package_version_crc_and_lkg_are_frozen",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G16_cdc_fifo_depth_reset_and_whole_window_poison_are_frozen",
+        "failed_gates": [
+          "G16_cdc_fifo_depth_reset_and_whole_window_poison_are_frozen",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G17_error_priority_matches_executable_runtime_exactly",
+        "failed_gates": [
+          "G17_error_priority_matches_executable_runtime_exactly",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G18_no_postselection_or_silent_drop_is_allowed",
+        "failed_gates": [
+          "G18_no_postselection_or_silent_drop_is_allowed",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G19_legacy_58bit_layout_matches_live_core_and_python_schema",
+        "failed_gates": [
+          "G19_legacy_58bit_layout_matches_live_core_and_python_schema",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G20_legacy_adapter_crc_and_field_roundtrip_are_executable",
+        "failed_gates": [
+          "G20_legacy_adapter_crc_and_field_roundtrip_are_executable",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G21_exactly_four_latency_boundaries_are_noninterchangeable",
+        "failed_gates": [
+          "G01_identity_scope_and_verdict_exact",
+          "G02_all_parent_analysis_hashes_are_live_and_exact",
+          "G03_t9_2_4_scientific_no_go_and_only_t9_2_6_release_preserved",
+          "G04_config_generator_runtime_rtl_reference_and_tests_are_byte_bound",
+          "G05_project_boundary_excludes_vendor_rfdc_and_host_transport",
+          "G06_exact_two_512ns_rate_profiles_match_runtime",
+          "G07_tdata_is_exact_contiguous_i16_q16_q1_15",
+          "G08_tuser_is_exact_contiguous_128bit_metadata",
+          "G09_domain_ids_are_typed_and_invalid_domain_is_reserved",
+          "G10_axis_handshake_stability_tlast_and_packet_semantics_are_exact",
+          "G11_fixed_point_widths_and_q_formats_are_exact",
+          "G12_ties_even_saturation_and_no_wrap_are_executable",
+          "G13_matched_filter_calibration_and_sticky_overflow_semantics_are_frozen",
+          "G14_threshold_values_are_typed_null_and_blocked_by_twin_no_go",
+          "G15_complete_atomic_ab_package_version_crc_and_lkg_are_frozen",
+          "G16_cdc_fifo_depth_reset_and_whole_window_poison_are_frozen",
+          "G17_error_priority_matches_executable_runtime_exactly",
+          "G18_no_postselection_or_silent_drop_is_allowed",
+          "G19_legacy_58bit_layout_matches_live_core_and_python_schema",
+          "G20_legacy_adapter_crc_and_field_roundtrip_are_executable",
+          "G21_exactly_four_latency_boundaries_are_noninterchangeable",
+          "G22_six_cycle_ii1_is_limited_to_fast_and_discriminator_boundaries",
+          "G23_adc_and_raw_source_latency_values_remain_typed_null",
+          "G24_trigger_pin_electrical_and_measured_values_remain_null",
+          "G25_zcu111_and_zcu216_are_candidates_not_selected_or_built",
+          "G26_gw2ar_is_explicitly_excluded_from_raw_iq_platform_intersection",
+          "G27_platform_resource_numbers_are_design_budgets_not_results",
+          "G28_all_rate_domain_nominal_windows_execute_without_sampling",
+          "G29_adversarial_fault_and_protocol_matrix_fails_closed",
+          "G30_iq_tuser_and_rounding_boundary_enumerations_are_complete",
+          "G31_package_crc_commit_rollback_and_midwindow_rejection_are_executable",
+          "G32_all_performance_physical_hardware_puviani_sota_rank_fields_are_null",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot",
+          "G34_markdown_and_canonical_output_paths_are_exact",
+          "G35_one_targeted_mutation_per_gate_is_detected",
+          "G36_downstream_releases_only_fresh_twin_repair_next"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G22_six_cycle_ii1_is_limited_to_fast_and_discriminator_boundaries",
+        "failed_gates": [
+          "G22_six_cycle_ii1_is_limited_to_fast_and_discriminator_boundaries",
+          "G23_adc_and_raw_source_latency_values_remain_typed_null",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G23_adc_and_raw_source_latency_values_remain_typed_null",
+        "failed_gates": [
+          "G23_adc_and_raw_source_latency_values_remain_typed_null",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G24_trigger_pin_electrical_and_measured_values_remain_null",
+        "failed_gates": [
+          "G24_trigger_pin_electrical_and_measured_values_remain_null",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G25_zcu111_and_zcu216_are_candidates_not_selected_or_built",
+        "failed_gates": [
+          "G25_zcu111_and_zcu216_are_candidates_not_selected_or_built",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G26_gw2ar_is_explicitly_excluded_from_raw_iq_platform_intersection",
+        "failed_gates": [
+          "G26_gw2ar_is_explicitly_excluded_from_raw_iq_platform_intersection",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G27_platform_resource_numbers_are_design_budgets_not_results",
+        "failed_gates": [
+          "G27_platform_resource_numbers_are_design_budgets_not_results",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G28_all_rate_domain_nominal_windows_execute_without_sampling",
+        "failed_gates": [
+          "G28_all_rate_domain_nominal_windows_execute_without_sampling",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G29_adversarial_fault_and_protocol_matrix_fails_closed",
+        "failed_gates": [
+          "G29_adversarial_fault_and_protocol_matrix_fails_closed",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G30_iq_tuser_and_rounding_boundary_enumerations_are_complete",
+        "failed_gates": [
+          "G30_iq_tuser_and_rounding_boundary_enumerations_are_complete",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G31_package_crc_commit_rollback_and_midwindow_rejection_are_executable",
+        "failed_gates": [
+          "G15_complete_atomic_ab_package_version_crc_and_lkg_are_frozen",
+          "G31_package_crc_commit_rollback_and_midwindow_rejection_are_executable",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G32_all_performance_physical_hardware_puviani_sota_rank_fields_are_null",
+        "failed_gates": [
+          "G32_all_performance_physical_hardware_puviani_sota_rank_fields_are_null",
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G33_source_data_losslessly_reconstructs_frozen_snapshot",
+        "failed_gates": [
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G34_markdown_and_canonical_output_paths_are_exact",
+        "failed_gates": [
+          "G34_markdown_and_canonical_output_paths_are_exact"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G35_one_targeted_mutation_per_gate_is_detected",
+        "failed_gates": [
+          "G35_one_targeted_mutation_per_gate_is_detected"
+        ],
+        "target_detected": true
+      },
+      {
+        "target_gate": "G36_downstream_releases_only_fresh_twin_repair_next",
+        "failed_gates": [
+          "G33_source_data_losslessly_reconstructs_frozen_snapshot",
+          "G36_downstream_releases_only_fresh_twin_repair_next"
+        ],
+        "target_detected": true
+      }
+    ]
+  },
+  "gates": {
+    "G01_identity_scope_and_verdict_exact": true,
+    "G02_all_parent_analysis_hashes_are_live_and_exact": true,
+    "G03_t9_2_4_scientific_no_go_and_only_t9_2_6_release_preserved": true,
+    "G04_config_generator_runtime_rtl_reference_and_tests_are_byte_bound": true,
+    "G05_project_boundary_excludes_vendor_rfdc_and_host_transport": true,
+    "G06_exact_two_512ns_rate_profiles_match_runtime": true,
+    "G07_tdata_is_exact_contiguous_i16_q16_q1_15": true,
+    "G08_tuser_is_exact_contiguous_128bit_metadata": true,
+    "G09_domain_ids_are_typed_and_invalid_domain_is_reserved": true,
+    "G10_axis_handshake_stability_tlast_and_packet_semantics_are_exact": true,
+    "G11_fixed_point_widths_and_q_formats_are_exact": true,
+    "G12_ties_even_saturation_and_no_wrap_are_executable": true,
+    "G13_matched_filter_calibration_and_sticky_overflow_semantics_are_frozen": true,
+    "G14_threshold_values_are_typed_null_and_blocked_by_twin_no_go": true,
+    "G15_complete_atomic_ab_package_version_crc_and_lkg_are_frozen": true,
+    "G16_cdc_fifo_depth_reset_and_whole_window_poison_are_frozen": true,
+    "G17_error_priority_matches_executable_runtime_exactly": true,
+    "G18_no_postselection_or_silent_drop_is_allowed": true,
+    "G19_legacy_58bit_layout_matches_live_core_and_python_schema": true,
+    "G20_legacy_adapter_crc_and_field_roundtrip_are_executable": true,
+    "G21_exactly_four_latency_boundaries_are_noninterchangeable": true,
+    "G22_six_cycle_ii1_is_limited_to_fast_and_discriminator_boundaries": true,
+    "G23_adc_and_raw_source_latency_values_remain_typed_null": true,
+    "G24_trigger_pin_electrical_and_measured_values_remain_null": true,
+    "G25_zcu111_and_zcu216_are_candidates_not_selected_or_built": true,
+    "G26_gw2ar_is_explicitly_excluded_from_raw_iq_platform_intersection": true,
+    "G27_platform_resource_numbers_are_design_budgets_not_results": true,
+    "G28_all_rate_domain_nominal_windows_execute_without_sampling": true,
+    "G29_adversarial_fault_and_protocol_matrix_fails_closed": true,
+    "G30_iq_tuser_and_rounding_boundary_enumerations_are_complete": true,
+    "G31_package_crc_commit_rollback_and_midwindow_rejection_are_executable": true,
+    "G32_all_performance_physical_hardware_puviani_sota_rank_fields_are_null": true,
+    "G33_source_data_losslessly_reconstructs_frozen_snapshot": true,
+    "G34_markdown_and_canonical_output_paths_are_exact": true,
+    "G35_one_targeted_mutation_per_gate_is_detected": true,
+    "G36_downstream_releases_only_fresh_twin_repair_next": true
+  },
+  "analysis_sha256": "b10a035f8d5134a2699b3611d28dea184dd797917d0d510f899547103a233b8d"
+}

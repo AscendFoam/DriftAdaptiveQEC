@@ -513,7 +513,7 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert statuses["T9.2.2"] == "Done"
     assert statuses["T9.2.3"] == "Done"
     assert statuses["T9.2.4"] == "Done"
-    assert statuses["T9.2.6"] == "In Progress"
+    assert statuses["T9.2.6"] == "Done"
     assert all(
         statuses[task] == "Todo"
         for task in expected_tasks
@@ -531,8 +531,8 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         }
     )
     assert statuses["T7.3.5"] == "Done"
-    assert "当前推荐任务：`T9.2.6`" in board
-    assert statuses["T-RISK-20260726-01"] == "Todo"
+    assert "当前推荐任务：`T-RISK-20260726-01`" in board
+    assert statuses["T-RISK-20260726-01"] == "In Progress"
     assert "NO_GO_TWIN_QUALIFICATION" in phase9
     assert "fresh twin qualification" in phase9
 
@@ -682,26 +682,30 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         assert required in section20
 
     risks = (ROOT / "docs" / "new_risks.md").read_text(encoding="utf-8")
-    for risk_number in range(162, 181):
+    for risk_number in range(162, 184):
         assert f"R-N{risk_number}" in risks
     assert "| R-N168 | Mitigated |" in risks
-    assert "| R-N170 | Open |" in risks
+    assert "| R-N170 | Mitigated |" in risks
     assert "| R-N171 | Mitigated |" in risks
     assert "| R-N172 | Mitigated |" in risks
     assert "| R-N173 | Mitigated |" in risks
-    assert "| R-N174 | Open |" in risks
+    assert "| R-N174 | Mitigated |" in risks
     assert "| R-N175 | Mitigated |" in risks
     assert "| R-N176 | Mitigated |" in risks
     assert "| R-N177 | Mitigated |" in risks
     assert "| R-N178 | Open |" in risks
     assert "| R-N179 | Open |" in risks
     assert "| R-N180 | Open |" in risks
+    assert "| R-N181 | Mitigated |" in risks
+    assert "| R-N182 | Open |" in risks
+    assert "| R-N183 | Open |" in risks
     assert "| 2026-07-24 | T9.1.3 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-25 | T9.1.4 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-25 | T9.1.5 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-26 | T9.2.1 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-26 | T9.2.2 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-26 | T9.2.3 完成与反简化复核 | 不插入 |" in risks
+    assert "| 2026-07-26 | T9.2.6 完成与反简化复核 | 不继续插入 |" in risks
 
     canonical_record = (
         ROOT
