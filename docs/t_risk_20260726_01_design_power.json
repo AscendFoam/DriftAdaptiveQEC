@@ -1,0 +1,117 @@
+{
+  "analysis_sha256": "c073b65d34f24bb23b8c69867b29b34b5c764137389bd73b34e49c47b569b344",
+  "bindings": {
+    "config": {
+      "path": "configs/phase9/t_risk_20260726_01_design_power.json",
+      "sha256": "b702de16ef81915c6b4d49df79a75640bf7adacb23bbcf6d7b9eb2fc0e19f1e0"
+    },
+    "iq_diagnostic_analysis_sha256": "7bd63905e4d2d73146d9eb5006c9f597628f944610a740ee2c89f7368407344c",
+    "lineage_analysis_sha256": "afe4ab09a44e42ba399741fc00a7f5b18d5500cf6358f699a2635759e7ef1e7d",
+    "readout_power": {
+      "analysis_sha256": "f80ff63d10393c6730430e1b92f68c9a89069420d034e241acdb09984155bc05",
+      "config_sha256": "b702de16ef81915c6b4d49df79a75640bf7adacb23bbcf6d7b9eb2fc0e19f1e0",
+      "path": "docs/t_risk_20260726_01_readout_power.json"
+    }
+  },
+  "blueprint": {
+    "deterministic_gate_count": 6,
+    "family_counts": {
+      "cutoff_mapping": 88,
+      "fault_trajectory_tail": 108,
+      "iq_conditional_distribution": 484,
+      "likelihood_score_posterior": 363,
+      "logical_ptm_survival": 147,
+      "physical_state_channel": 363,
+      "reset_leakage": 36
+    },
+    "gate_count": 1589,
+    "sha256": "bf586a2f5ba6096ad4446f1c18b30eeff4d0cd13c9ef523ed482dd293d76e24b",
+    "stochastic_gate_count": 1583
+  },
+  "candidate_pair_count": 12,
+  "empirical_readout_selected_round_count": 128,
+  "final_selection_rule": "componentwise maximum of model selection, empirical readout selection, and the unmodeled-physics conservative floor",
+  "formal_seed_values_accessed": false,
+  "gate_summary": {
+    "passed": 22,
+    "total": 22
+  },
+  "gates": {
+    "G01_historical_lineage_live": true,
+    "G02_iq_semantics_diagnostic_live": true,
+    "G03_old_formal_cell_data_not_referenced": true,
+    "G04_seed_splits_pairwise_disjoint": true,
+    "G05_formal_pool_not_accessed": true,
+    "G06_pilot_only_selects_sample_count": true,
+    "G07_complete_seven_family_blueprint": true,
+    "G08_every_blueprint_id_unique": true,
+    "G09_all_blueprint_metrics_have_margin": true,
+    "G10_iut_tost_alpha_frozen": true,
+    "G11_raw_log_evidence_diagnostic_only": true,
+    "G12_mixed_unit_composite_removed": true,
+    "G13_two_tail_cutoff_increments_primary": true,
+    "G14_historical_cutoff_increment_retained_diagnostic": true,
+    "G15_same_backend_a_power_covered": true,
+    "G16_same_backend_b_power_covered": true,
+    "G17_ab_zero_effect_power_covered": true,
+    "G18_all_alternative_mutants_covered": true,
+    "G19_smallest_passing_candidate_selected": true,
+    "G20_selected_counts_fit_frozen_formal_pools": true,
+    "G21_empirical_readout_power_live_and_bound": true,
+    "G22_unmodeled_physics_floor_applied": true
+  },
+  "historical_formal_cell_data_accessed": false,
+  "model_selected_sample_counts": {
+    "round_sample_count": 256,
+    "trajectory_sample_count": 192
+  },
+  "model_selection_rule": "lexicographically smallest round/trajectory candidate satisfying every model power gate",
+  "old_outcome_used_to_choose_design": false,
+  "power_model": {
+    "ab_zero_effect_global_equivalence_power_lcb_minimum": 0.9,
+    "confidence_for_power_bounds": 0.95,
+    "family_shared_correlation": 0.75,
+    "final_selection_rule": "componentwise maximum of model selection, empirical readout selection, and the unmodeled-physics conservative floor",
+    "formal_pool_access": false,
+    "model_selection_rule": "lexicographically smallest round/trajectory candidate satisfying every model power gate",
+    "outside_margin_detection_power_lcb_minimum": 0.9,
+    "outside_margin_false_pass_ucb_maximum": 0.05,
+    "outside_margin_ratio": 1.25,
+    "pseudoexperiments": 4000,
+    "same_backend_global_equivalence_power_lcb_minimum": 0.9,
+    "unmodeled_physics_conservative_floor": {
+      "reason": "non-readout density, logical, fault and cutoff family variance is not empirically estimated before formal; use the maximum frozen candidate without consulting the historical outcome",
+      "round_sample_count": 768,
+      "trajectory_sample_count": 256
+    }
+  },
+  "procedure": {
+    "cell_confidence_interval": 0.9,
+    "cell_deletion": false,
+    "cell_test": "two_one_sided_tests",
+    "cluster_unit": "independent seed position; all rows sharing a seed remain together",
+    "global_test": "intersection_union_equivalence",
+    "global_type_i_error": 0.05,
+    "lower_mapping_rule": "point-1.6448536269514722*SE >= lower margin; equality passes",
+    "mean_only_rescue": false,
+    "missing_nonfinite_exception": "INCOMPLETE_FAIL_CLOSED",
+    "mixed_unit_vector_max": false,
+    "proof": "the global null is the union of cell-level non-equivalence nulls; rejecting every size-alpha cell null controls global type-I error at alpha without flattening cells into a max-T family",
+    "raw_log_evidence": "diagnostic only; never a cross-gain primary gate",
+    "standard_error": "seed-cluster bootstrap or analytic Rao-Blackwell standard error as preregistered per metric",
+    "upper_equivalence_rule": "abs(point)+1.6448536269514722*SE <= margin; equality passes"
+  },
+  "purpose": "design_only_power_not_scientific_outcome",
+  "schema_version": "1.0",
+  "selected_sample_counts": {
+    "round_sample_count": 768,
+    "trajectory_sample_count": 256
+  },
+  "task_id": "T-RISK-20260726-01",
+  "unmodeled_physics_conservative_floor": {
+    "reason": "non-readout density, logical, fault and cutoff family variance is not empirically estimated before formal; use the maximum frozen candidate without consulting the historical outcome",
+    "round_sample_count": 768,
+    "trajectory_sample_count": 256
+  },
+  "verdict": "PASS_FRESH_TWIN_DESIGN_POWER"
+}

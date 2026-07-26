@@ -1,0 +1,189 @@
+{
+  "task_id": "T-RISK-20260726-01",
+  "schema_version": "PHASE9-FRESH-TWIN-DESIGN-POWER-V1",
+  "frozen_at": "2026-07-26",
+  "purpose": "design-only sample-size selection before fresh formal access",
+  "historical_policy": {
+    "historical_no_go_rewritten": false,
+    "historical_formal_cell_data_access_allowed": false,
+    "old_outcome_may_choose_margin": false,
+    "old_outcome_may_choose_endpoint": false,
+    "old_outcome_may_choose_family": false,
+    "pilot_may_choose": ["round_sample_count", "trajectory_sample_count"]
+  },
+  "readout_convention": {
+    "raw_base_measure": "two_dimensional_lebesgue_per_complex_iq_sample",
+    "sigma": "per_real_axis_standard_deviation",
+    "integration": "arithmetic_mean_over_window",
+    "latent_conditioning": "one_ancilla_label_per_complete_window",
+    "iq_samples": 8,
+    "iq_sigma": 0.48,
+    "iq_centers": [[-0.85, 0.0], [0.85, 0.0], [0.0, 1.15]],
+    "raw_affine_gain": [[1.0, 0.0], [0.0, 1.0]],
+    "raw_affine_offset": [0.0, 0.0],
+    "gain_jacobian_rule": "-N*log(abs(det(G))) applied exactly once",
+    "proper_score_unit": "nats_per_complex_sample"
+  },
+  "splits": {
+    "train_backend_a": {"start": 1020000, "count": 512},
+    "train_backend_b": {"start": 1021000, "count": 512},
+    "calibration_backend_a": {"start": 1030000, "count": 512},
+    "calibration_backend_b": {"start": 1031000, "count": 512},
+    "null_backend_a_replica_1": {"start": 1040000, "count": 768},
+    "null_backend_a_replica_2": {"start": 1041000, "count": 768},
+    "null_backend_b_replica_1": {"start": 1042000, "count": 768},
+    "null_backend_b_replica_2": {"start": 1043000, "count": 768},
+    "ab_pilot_backend_a": {"start": 1044000, "count": 768},
+    "ab_pilot_backend_b": {"start": 1045000, "count": 768},
+    "formal_round_backend_a": {"start": 1070000, "count": 768},
+    "formal_round_backend_b": {"start": 1071000, "count": 768},
+    "formal_trajectory_backend_a": {"start": 1072000, "count": 256},
+    "formal_trajectory_backend_b": {"start": 1073000, "count": 256},
+    "power_rng": {"start": 1074000, "count": 1},
+    "mutation_rng": {"start": 1075000, "count": 1}
+  },
+  "candidate_sample_counts": {
+    "round": [128, 256, 512, 768],
+    "trajectory": [96, 192, 256]
+  },
+  "formal_matrix": {
+    "shared_fock_states": ["vacuum_g", "one_g", "zero_one_plus_g", "vacuum_e", "vacuum_f"],
+    "logical_labels": ["0", "1", "+", "-", "+i", "-i"],
+    "nominal_actions": ["IDLE", "X", "Z", "XZ", "RESET", "HOLD", "LKG_HOLD"],
+    "representative_probes": [
+      "P01_IDLE", "P02_Q_POS", "P03_Q_NEG", "P04_P_POS",
+      "P05_P_NEG", "P06_ALTERNATE", "P07_BOUNDARY", "P08_PHASE",
+      "P09_LEAK_RESET", "P10_RESET_OK", "P11_RESET_FAIL", "P12_BAD_CRC",
+      "P13_STALE", "P14_OOD", "P15_DEADLINE", "P16_LKG_RECOVERY"
+    ],
+    "fault_scenarios": ["step", "telegraph", "burst", "compound"],
+    "same_cutoff_ab": [8, 12, 16],
+    "cutoff_ladder": [8, 12, 16, 20],
+    "primary_cutoff_increments": [[12, 16], [16, 20]],
+    "historical_cutoff_increment_diagnostic_only": [8, 12],
+    "all_cells_required": true,
+    "no_postselection": true
+  },
+  "families": {
+    "physical_state_channel": {
+      "stage": "round",
+      "metrics": ["density_trace_distance", "mean_photon_difference", "level_probability_l1"],
+      "normalized_sd_envelope": 2.0
+    },
+    "iq_conditional_distribution": {
+      "stage": "round",
+      "metrics": ["predictive_mean_l2", "predictive_covariance_frobenius", "predictive_cdf_i_sup", "predictive_cdf_q_sup"],
+      "normalized_sd_envelope": 1.25
+    },
+    "likelihood_score_posterior": {
+      "stage": "round",
+      "metrics": ["paired_proper_score_per_sample", "pairwise_llr_per_sample", "posterior_mean_l1"],
+      "normalized_sd_envelope": 1.5
+    },
+    "reset_leakage": {
+      "stage": "round",
+      "metrics": ["rao_blackwell_reset_success", "leakage_residence_rate"],
+      "normalized_sd_envelope": 2.0
+    },
+    "logical_ptm_survival": {
+      "stage": "round",
+      "metrics": ["logical_ptm_entry", "logical_survival"],
+      "normalized_sd_envelope": 2.0
+    },
+    "fault_trajectory_tail": {
+      "stage": "trajectory",
+      "metrics": [
+        "terminal_density_trace_distance",
+        "terminal_mean_photon_difference",
+        "terminal_level_probability_l1",
+        "terminal_predictive_mean_l2",
+        "terminal_predictive_covariance_frobenius",
+        "terminal_paired_proper_score_per_sample",
+        "terminal_leakage_residence_rate",
+        "terminal_drift_normalized_l2",
+        "terminal_logical_survival"
+      ],
+      "normalized_sd_envelope": 1.75
+    },
+    "cutoff_mapping": {
+      "stage": "round",
+      "metrics": ["principal_singular", "projector_frobenius", "cutoff_density_trace_distance", "cutoff_logical_survival"],
+      "normalized_sd_envelope": 1.5
+    }
+  },
+  "margins": {
+    "density_trace_distance": {"value": 0.10, "source": "pre-outcome T9.2.4 frozen margin"},
+    "mean_photon_difference": {"value": 0.08, "source": "pre-outcome T9.2.4 frozen margin"},
+    "level_probability_l1": {"value": 0.10, "source": "pre-outcome T9.2.4 frozen margin"},
+    "predictive_mean_l2": {"value": 0.12, "source": "pre-outcome integrated-IQ mean margin, Rao-Blackwellized"},
+    "predictive_covariance_frobenius": {"value": 0.18, "source": "pre-outcome integrated-IQ covariance margin, Rao-Blackwellized"},
+    "predictive_cdf_i_sup": {"value": 0.24, "source": "pre-outcome IQ KS margin, analytic predictive CDF"},
+    "predictive_cdf_q_sup": {"value": 0.24, "source": "pre-outcome IQ KS margin, analytic predictive CDF"},
+    "paired_proper_score_per_sample": {"value": 0.0375, "source": "pre-outcome 0.30 raw-window margin divided by frozen N=8"},
+    "pairwise_llr_per_sample": {"value": 0.0375, "source": "pre-outcome 0.30 raw-window margin divided by frozen N=8"},
+    "posterior_mean_l1": {"value": 0.12, "source": "pre-outcome T9.2.4 frozen margin"},
+    "rao_blackwell_reset_success": {"value": 0.12, "source": "pre-outcome reset-success margin"},
+    "leakage_residence_rate": {"value": 0.10, "source": "pre-outcome leakage-residence margin"},
+    "logical_ptm_entry": {"value": 0.12, "source": "pre-outcome logical PTM margin"},
+    "logical_survival": {"value": 0.10, "source": "pre-outcome logical survival margin"},
+    "terminal_density_trace_distance": {"value": 0.15, "source": "pre-outcome terminal density margin"},
+    "terminal_mean_photon_difference": {"value": 0.08, "source": "same-unit mean-photon frozen margin"},
+    "terminal_level_probability_l1": {"value": 0.10, "source": "same-unit level-L1 frozen margin"},
+    "terminal_predictive_mean_l2": {"value": 0.12, "source": "same-unit predictive-mean frozen margin"},
+    "terminal_predictive_covariance_frobenius": {"value": 0.18, "source": "same-unit predictive-covariance frozen margin"},
+    "terminal_paired_proper_score_per_sample": {"value": 0.0375, "source": "same-unit proper-score frozen derivation"},
+    "terminal_leakage_residence_rate": {"value": 0.10, "source": "same-unit leakage frozen margin"},
+    "terminal_drift_normalized_l2": {"value": 0.15, "source": "pre-outcome terminal observable margin after explicit drift normalization"},
+    "terminal_logical_survival": {"value": 0.10, "source": "same-unit logical-survival frozen margin"},
+    "principal_singular": {"value": 0.95, "direction": "lower", "source": "pre-outcome mapping margin"},
+    "projector_frobenius": {"value": 0.30, "source": "pre-outcome mapping margin"},
+    "cutoff_density_trace_distance": {"value": 0.10, "source": "pre-outcome density/cutoff margin"},
+    "cutoff_logical_survival": {"value": 0.10, "source": "pre-outcome logical-survival/cutoff margin"}
+  },
+  "statistical_procedure": {
+    "global_test": "intersection_union_equivalence",
+    "cell_test": "two_one_sided_tests",
+    "cell_confidence_interval": 0.90,
+    "global_type_i_error": 0.05,
+    "proof": "the global null is the union of cell-level non-equivalence nulls; rejecting every size-alpha cell null controls global type-I error at alpha without flattening cells into a max-T family",
+    "cluster_unit": "independent seed position; all rows sharing a seed remain together",
+    "standard_error": "seed-cluster bootstrap or analytic Rao-Blackwell standard error as preregistered per metric",
+    "upper_equivalence_rule": "abs(point)+1.6448536269514722*SE <= margin; equality passes",
+    "lower_mapping_rule": "point-1.6448536269514722*SE >= lower margin; equality passes",
+    "raw_log_evidence": "diagnostic only; never a cross-gain primary gate",
+    "mixed_unit_vector_max": false,
+    "missing_nonfinite_exception": "INCOMPLETE_FAIL_CLOSED",
+    "mean_only_rescue": false,
+    "cell_deletion": false
+  },
+  "power_model": {
+    "pseudoexperiments": 4000,
+    "family_shared_correlation": 0.75,
+    "same_backend_global_equivalence_power_lcb_minimum": 0.90,
+    "ab_zero_effect_global_equivalence_power_lcb_minimum": 0.90,
+    "outside_margin_ratio": 1.25,
+    "outside_margin_false_pass_ucb_maximum": 0.05,
+    "outside_margin_detection_power_lcb_minimum": 0.90,
+    "confidence_for_power_bounds": 0.95,
+    "model_selection_rule": "lexicographically smallest round/trajectory candidate satisfying every model power gate",
+    "final_selection_rule": "componentwise maximum of model selection, empirical readout selection, and the unmodeled-physics conservative floor",
+    "unmodeled_physics_conservative_floor": {
+      "round_sample_count": 768,
+      "trajectory_sample_count": 256,
+      "reason": "non-readout density, logical, fault and cutoff family variance is not empirically estimated before formal; use the maximum frozen candidate without consulting the historical outcome"
+    },
+    "formal_pool_access": false
+  },
+  "alternative_mutants": {
+    "gain_jacobian_omitted": {"family": "likelihood_score_posterior", "effect_ratio": 1.50},
+    "sigma_as_variance": {"family": "iq_conditional_distribution", "effect_ratio": 1.50},
+    "normalization_missing_sample_count": {"family": "likelihood_score_posterior", "effect_ratio": 2.00},
+    "density_amplitude_factor_two": {"family": "likelihood_score_posterior", "effect_ratio": 2.00},
+    "per_sample_latent_redraw": {"family": "iq_conditional_distribution", "effect_ratio": 1.50},
+    "posterior_temperature": {"family": "likelihood_score_posterior", "effect_ratio": 1.25},
+    "ancilla_label_permutation": {"family": "reset_leakage", "effect_ratio": 1.50},
+    "readout_center_axis_swap": {"family": "iq_conditional_distribution", "effect_ratio": 1.50},
+    "terminal_unit_mixing": {"family": "fault_trajectory_tail", "effect_ratio": 1.50},
+    "cutoff_tail_not_converged": {"family": "cutoff_mapping", "effect_ratio": 1.25}
+  }
+}
