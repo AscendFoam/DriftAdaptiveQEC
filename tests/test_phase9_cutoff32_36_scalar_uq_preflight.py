@@ -5,6 +5,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+from threadpoolctl import threadpool_info, threadpool_limits
 
 from cnn_fpga.benchmark import (
     phase9_cutoff32_36_scalar_uq_preflight as subject,
@@ -39,6 +40,7 @@ def test_live_config_freezes_all_margins_counts_and_claim_nulls() -> None:
     assert config["cluster_counts"] == [12, 384]
     assert config["margins"] == [0.005, 0.01, 0.02, 0.05, 0.08, 0.1, 0.15, 0.25]
     assert config["multiplier_replicates"] == 199
+    assert config["numeric_execution"]["blas_threads_per_worker"] == 1
     assert set(config["claim_boundary"].values()) == {True, None}
 
 
@@ -83,6 +85,31 @@ def test_scalar_generator_is_finite_deterministic_and_margin_scaled(family) -> N
     assert first["true_difference"] == pytest.approx(0.0025)
     assert np.isfinite(first["upper_bound"])
     assert first["upper_bound"] >= first["estimate"] >= 0.0
+
+
+def test_single_blas_thread_policy_preserves_scalar_ucb() -> None:
+    cell = subject.Cell("rare_heavy_tail", 0.1, 384, 0.5)
+    kwargs = {
+        "trial_seed": 123,
+        "multiplier_seed": 456,
+        "confidence": 0.95,
+        "replicates": 199,
+        "factor": 1.0,
+    }
+    with threadpool_limits(limits=1, user_api="blas"):
+        one = subject._one_trial(cell, subject.FAMILIES[cell.family], **kwargs)
+        libraries = [
+            info
+            for info in threadpool_info()
+            if info.get("user_api") == "blas"
+        ]
+    with threadpool_limits(limits=4, user_api="blas"):
+        four = subject._one_trial(cell, subject.FAMILIES[cell.family], **kwargs)
+    assert libraries
+    assert all(int(info["num_threads"]) == 1 for info in libraries)
+    assert one["estimate"] == pytest.approx(four["estimate"], abs=1e-14)
+    assert one["raw_radius"] == pytest.approx(four["raw_radius"], abs=1e-14)
+    assert one["upper_bound"] == pytest.approx(four["upper_bound"], abs=1e-14)
 
 
 def test_global_iut_pass_and_claim_firewall() -> None:

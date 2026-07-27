@@ -19,6 +19,7 @@ from typing import Any, Mapping, Sequence
 
 import numpy as np
 import psutil
+from threadpoolctl import threadpool_info, threadpool_limits
 
 from cnn_fpga.benchmark.phase9_paired_cluster_uq import paired_vector_norm_ucb
 
@@ -29,6 +30,7 @@ CONFIG_SCHEMA = "PHASE9-CUTOFF32-36-SCALAR-UQ-PREFLIGHT-CONFIG-V1"
 REPORT_SCHEMA = "PHASE9-CUTOFF32-36-SCALAR-UQ-PREFLIGHT-V1"
 PASS_VERDICT = "PASS_CUTOFF32_36_SCALAR_UQ_PREFLIGHT"
 NO_GO_VERDICT = "INCOMPLETE_CUTOFF32_36_SCALAR_UQ_PREFLIGHT"
+WORKER_BLAS_THREADS = 1
 CLAIM_BOUNDARY = {
     "scalar_uq_preflight_only": True,
     "twin_qualification": None,
@@ -151,6 +153,15 @@ def load_config(root: Path) -> dict[str, Any]:
         or config.get("trial_seed_base") != 1560000
         or config.get("multiplier_seed_base") != 1570000
         or config.get("max_workers") != 4
+        or config.get("numeric_execution")
+        != {
+            "blas_threads_per_worker": 1,
+            "threading_policy": (
+                "one BLAS thread inside each ProcessPool worker; "
+                "process-level parallelism only"
+            ),
+            "scientific_design_unchanged": True,
+        }
         or config.get("gates") != GATES
         or config.get("design_outcomes_accessed") is not False
         or config.get("claim_boundary") != CLAIM_BOUNDARY
@@ -274,7 +285,7 @@ def _one_trial(
     }
 
 
-def _simulate_cell(
+def _simulate_cell_thread_limited(
     cell: Cell,
     config: Mapping[str, Any],
 ) -> list[dict[str, object]]:
@@ -298,6 +309,24 @@ def _simulate_cell(
     return rows
 
 
+def _simulate_cell(
+    cell: Cell,
+    config: Mapping[str, Any],
+) -> list[dict[str, object]]:
+    with threadpool_limits(limits=WORKER_BLAS_THREADS, user_api="blas"):
+        libraries = [
+            info
+            for info in threadpool_info()
+            if info.get("user_api") == "blas"
+        ]
+        if not libraries or any(
+            int(info.get("num_threads", 0)) != WORKER_BLAS_THREADS
+            for info in libraries
+        ):
+            raise RuntimeError("scalar UQ worker BLAS thread contract drift")
+        return _simulate_cell_thread_limited(cell, config)
+
+
 def _wilson(successes: int, total: int, config: Mapping[str, Any]) -> tuple[float, float]:
     alpha = (1.0 - float(config["simultaneous_wilson"]["confidence"])) / int(
         config["simultaneous_wilson"]["comparisons"]
@@ -319,28 +348,31 @@ def _resource_preflight(root: Path, config: Mapping[str, Any]) -> dict[str, Any]
     process = psutil.Process(os.getpid())
     baseline = int(process.memory_info().rss)
     timings = []
-    for family in config["families"]:
-        for count in config["cluster_counts"]:
-            cell = Cell(family, 0.1, count, 0.5)
-            started = time.perf_counter()
-            _one_trial(
-                cell,
-                config["families"][family],
-                trial_seed=_address(contract["trial_seed_base"], family, count),
-                multiplier_seed=_address(
-                    contract["multiplier_seed_base"], family, count
-                ),
-                confidence=config["confidence"],
-                replicates=config["multiplier_replicates"],
-                factor=config["frozen_calibration_factor"],
-            )
-            timings.append(
-                {
-                    "family": family,
-                    "cluster_count": count,
-                    "elapsed_seconds": time.perf_counter() - started,
-                }
-            )
+    with threadpool_limits(limits=WORKER_BLAS_THREADS, user_api="blas"):
+        for family in config["families"]:
+            for count in config["cluster_counts"]:
+                cell = Cell(family, 0.1, count, 0.5)
+                started = time.perf_counter()
+                _one_trial(
+                    cell,
+                    config["families"][family],
+                    trial_seed=_address(
+                        contract["trial_seed_base"], family, count
+                    ),
+                    multiplier_seed=_address(
+                        contract["multiplier_seed_base"], family, count
+                    ),
+                    confidence=config["confidence"],
+                    replicates=config["multiplier_replicates"],
+                    factor=config["frozen_calibration_factor"],
+                )
+                timings.append(
+                    {
+                        "family": family,
+                        "cluster_count": count,
+                        "elapsed_seconds": time.perf_counter() - started,
+                    }
+                )
     estimated_wall = (
         sum(row["elapsed_seconds"] for row in timings)
         * len(config["margins"])
@@ -359,6 +391,7 @@ def _resource_preflight(root: Path, config: Mapping[str, Any]) -> dict[str, Any]
         "estimated_rss_bytes": estimated_rss,
         "wall_limit_seconds": contract["maximum_estimated_wall_seconds"],
         "rss_limit_bytes": contract["maximum_estimated_rss_bytes"],
+        "blas_threads_per_worker": WORKER_BLAS_THREADS,
         "passed": (
             estimated_wall <= contract["maximum_estimated_wall_seconds"]
             and estimated_rss <= contract["maximum_estimated_rss_bytes"]
