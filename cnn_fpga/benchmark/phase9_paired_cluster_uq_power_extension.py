@@ -143,13 +143,23 @@ def _seed_firewall(
 def _coverage_passed(
     config: Mapping[str, Any],
     cells: Sequence[Mapping[str, object]],
+    *,
+    split_name: str,
 ) -> bool:
     gates = config["selection_gates"]
+    if split_name == "calibration":
+        rate_key = "calibration_min_cell_coverage"
+        lcb_key = "calibration_min_cell_wilson_lcb"
+    elif split_name == "validation":
+        rate_key = "validation_min_cell_coverage"
+        lcb_key = "validation_min_cell_wilson_lcb"
+    else:
+        raise ValueError("unknown UQ power-extension split")
     return all(
         float(row["coverage_rate"])
-        >= float(gates["validation_min_cell_coverage"])
+        >= float(gates[rate_key])
         and float(row["coverage_wilson_lcb"])
-        >= float(gates["validation_min_cell_wilson_lcb"])
+        >= float(gates[lcb_key])
         for row in cells
     )
 
@@ -175,8 +185,12 @@ def build_report(root: Path) -> tuple[dict[str, Any], list[dict[str, object]]]:
         factor=factor,
         margin=float(config["margin"]),
     )
-    calibration_coverage_passed = _coverage_passed(config, calibration_cells)
-    validation_coverage_passed = _coverage_passed(config, validation_cells)
+    calibration_coverage_passed = _coverage_passed(
+        config, calibration_cells, split_name="calibration"
+    )
+    validation_coverage_passed = _coverage_passed(
+        config, validation_cells, split_name="validation"
+    )
     selected_count, count_diagnostics = parent.select_cluster_count(
         config, validation_cells
     )

@@ -37,6 +37,32 @@ def test_seed_firewall_rejects_any_cross_namespace_collision() -> None:
         subject._seed_firewall(calibration, validation)
 
 
+def test_coverage_gates_remain_split_specific() -> None:
+    config = {
+        "selection_gates": {
+            "calibration_min_cell_coverage": 0.95,
+            "calibration_min_cell_wilson_lcb": 0.9,
+            "validation_min_cell_coverage": 0.94,
+            "validation_min_cell_wilson_lcb": 0.88,
+        }
+    }
+    cells = [{"coverage_rate": 0.945, "coverage_wilson_lcb": 0.89}]
+    assert (
+        subject._coverage_passed(
+            config, cells, split_name="calibration"
+        )
+        is False
+    )
+    assert (
+        subject._coverage_passed(
+            config, cells, split_name="validation"
+        )
+        is True
+    )
+    with pytest.raises(ValueError, match="unknown"):
+        subject._coverage_passed(config, cells, split_name="formal")
+
+
 def test_help_is_zero_write(monkeypatch) -> None:
     calls = []
     monkeypatch.setattr(subject, "write_artifacts", lambda: calls.append(True))
