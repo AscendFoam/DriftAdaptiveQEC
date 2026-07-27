@@ -145,24 +145,24 @@ EXTERNAL_LAUNCHER_SHA256 = (
     "e732eb9fec98ed5955f1864feeffde33a364fc79b011ac4b83ae48c872e97be6"
 )
 RELEASED_CHILD_PATH = (
-    "configs/phase9/" "t_risk_20260727_01_high_cutoff_design_pilot_fresh2_released.json"
+    "configs/phase9/" "t_risk_20260727_01_high_cutoff_design_pilot_fresh3_released.json"
 )
 RELEASED_CHILD_BYTES = 2821
 RELEASED_CHILD_SHA256 = (
-    "248e8cabe2f4e1264cd5256fc2d3e5f3b60c54bdfe2afb11e2880163ed6e6992"
+    "e8e301e0ac2f718b1a51839adb8ccf8de929af5c23a73d5883f6853e60f89a61"
 )
 PILOT_MODULE = "cnn_fpga.benchmark.phase9_high_cutoff_design_pilot"
 PILOT_PATH = "cnn_fpga/benchmark/phase9_high_cutoff_design_pilot.py"
-PILOT_SHA256 = "dacc0a3d693bd0f1441aae15876bdd20277b18a10470deacbcdfc8f078ede901"
+PILOT_SHA256 = "57e9fe8a9541aa76c577a5418423e96806b0ef883330a83628eb45e5649d01c4"
 DIAGNOSTIC_MODULE = "cnn_fpga.benchmark.phase9_high_cutoff_design_diagnostic"
 DIAGNOSTIC_PATH = "cnn_fpga/benchmark/phase9_high_cutoff_design_diagnostic.py"
-DIAGNOSTIC_SHA256 = "2a15716e7bac96ed1835f362d25717c346852640e8826f71962894bebfdd5376"
+DIAGNOSTIC_SHA256 = "94d35b1a3913b1ade3a41deb0a4fa4a046028aec212ecedea645325065e2b480"
 PILOT_LAUNCH_META_PATH = (
-    "runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh2/"
+    "runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3/"
     "verified_pilot_launch_meta.json"
 )
 DIAGNOSTIC_LAUNCH_META_PATH = (
-    "runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh2/"
+    "runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3/"
     "verified_diagnostic_launch_meta.json"
 )
 PROBE_LAUNCH_META_PATH = (

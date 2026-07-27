@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from contextlib import nullcontext
 from concurrent.futures import ProcessPoolExecutor
+import copy
 from dataclasses import asdict
 from hashlib import sha256
 import json
@@ -19,7 +20,7 @@ from cnn_fpga.benchmark import phase9_fresh_twin_qualification as runner
 
 ROOT = Path(__file__).resolve().parents[1]
 PREREGISTERED_BOOTSTRAP_SHA256 = (
-    "d60784051ee8258342cb22151a5405211028d2cf22f71bffbc228c145ef372db"
+    "a0a873b6328b05a5070da39b710f7c7e780fb12d4c1aad29ed3323fbdf3405ee"
 )
 PREREGISTERED_EXTERNAL_LAUNCHER_SHA256 = (
     "e732eb9fec98ed5955f1864feeffde33a364fc79b011ac4b83ae48c872e97be6"
@@ -152,9 +153,9 @@ def test_live_config_has_bound_sources_and_disjoint_pilot_matrix() -> None:
 
     first_a = next(cell for cell in cells if cell.backend == "A")
     first_b = next(cell for cell in cells if cell.backend == "B")
-    assert runner._seed_for(execution, first_a, 0) == 1410000
-    assert runner._seed_for(execution, first_b, 0) == 1411000
-    assert execution["formal_splits"]["heldout_common"]["start"] == 1412000
+    assert runner._seed_for(execution, first_a, 0) == 1430000
+    assert runner._seed_for(execution, first_b, 0) == 1431000
+    assert execution["formal_splits"]["heldout_common"]["start"] == 1432000
     assert pilot["claim_boundary"]["twin_qualification"] is None
     assert pilot["optional_cutoff_32"]["enabled"] is False
     assert pilot["diagnostic_contract"]["multiplier_replicates"] == 199
@@ -174,6 +175,70 @@ def test_live_config_has_bound_sources_and_disjoint_pilot_matrix() -> None:
         key.removeprefix("source/") for key in snapshot if key.startswith("source/")
     } == set(pilot["source_bindings"])
     subject._assert_input_snapshot(ROOT, snapshot)
+
+
+def test_live_high_cutoff_preflight_executes_production_paths_and_convergence() -> None:
+    pilot, base = subject.load_pilot_config(ROOT)
+    execution = subject.materialize_execution_config(pilot, base)
+
+    report = subject._run_high_cutoff_preflight(pilot, execution)
+
+    assert report["status"] == "PASS"
+    assert report["evaluated_cutoffs"] == [16, 20, 24, 28, 32]
+    assert report["production_segment_steps"] == 8
+    assert report["production_iq_samples"] == 8
+    assert len(report["checks"]) == 10
+    assert len(report["integration_convergence"]) == 4
+    assert all(
+        check["high_energy_actions_executed"] == (3 if check["cutoff"] >= 28 else 0)
+        for check in report["checks"]
+    )
+    assert all(
+        check["trace_distance_16_to_32"]
+        < check["trace_distance_8_to_16"]
+        and check["all_checks_passed"] is True
+        for check in report["integration_convergence"]
+    )
+    assert report["qualified_claim"] is None
+    assert all(
+        value is None
+        for key, value in report["claim_state"].items()
+        if key != "design_pilot_only"
+    )
+
+
+def test_high_cutoff_preflight_mutations_fail_closed(monkeypatch) -> None:
+    pilot, base = subject.load_pilot_config(ROOT)
+    execution = subject.materialize_execution_config(pilot, base)
+    report = subject._run_high_cutoff_preflight(pilot, execution)
+
+    for mutate, expected in (
+        (
+            lambda value: value.update(production_segment_steps=1),
+            "contract drift",
+        ),
+        (
+            lambda value: value["checks"].pop(),
+            "contract drift",
+        ),
+        (
+            lambda value: value["integration_convergence"][0].update(
+                trace_distance_16_to_32=0.01
+            ),
+            "convergence failed",
+        ),
+    ):
+        corrupted = copy.deepcopy(report)
+        mutate(corrupted)
+        corrupted.pop("analysis_sha256")
+        corrupted["analysis_sha256"] = subject._sha(corrupted)
+        with pytest.raises(RuntimeError, match=expected):
+            subject._validate_high_cutoff_preflight(pilot, execution, corrupted)
+
+    broken_execution = copy.deepcopy(execution)
+    broken_execution["common_physics"]["segment_steps"] = 1
+    with pytest.raises(RuntimeError, match="contract drift"):
+        subject._validate_high_cutoff_preflight(pilot, broken_execution, report)
 
 
 def test_materialization_does_not_mutate_bound_base_config() -> None:
@@ -556,6 +621,11 @@ def test_manifest_rejects_rehashed_claim_tamper(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(subject, "_validate_receipt_file", lambda *_a, **_k: None)
     monkeypatch.setattr(subject, "_chunk_health", lambda *_a, **_k: (0, 0))
     monkeypatch.setattr(subject, "_assert_input_snapshot", lambda *_a, **_k: None)
+    monkeypatch.setattr(
+        subject,
+        "_validate_high_cutoff_preflight",
+        lambda *_a, **_k: None,
+    )
     bindings = {
         "config": subject._binding(tmp_path / subject.CONFIG_PATH, tmp_path),
         "pending_config": dict(subject._release_lineage(pilot)["pending_parent"]),
@@ -595,6 +665,7 @@ def test_manifest_rejects_rehashed_claim_tamper(tmp_path, monkeypatch) -> None:
         "conservation_failure_rows": 0,
         "chunk_receipts": [{"cell": {"chunk_id": cell.chunk_id}}],
         "receipt_bindings": [{"path": "receipt.json"}],
+        "capability_preflight": {"fixture": True},
         "claim_state": dict(subject.CLAIM_BOUNDARY),
         "bindings": bindings,
         "runtime": {},
@@ -754,6 +825,16 @@ def _install_run_pilot_fixture(
         lambda *_a, **_k: run_identity["input_snapshot"],
     )
     monkeypatch.setattr(subject, "_assert_input_snapshot", lambda *_a, **_k: None)
+    monkeypatch.setattr(
+        subject,
+        "_run_high_cutoff_preflight",
+        lambda *_a, **_k: {"fixture": True},
+    )
+    monkeypatch.setattr(
+        subject,
+        "_validate_high_cutoff_preflight",
+        lambda *_a, **_k: None,
+    )
     monkeypatch.setattr(subject, "_require_verified_self_import", lambda: None)
     monkeypatch.setattr(
         subject,
@@ -803,6 +884,39 @@ def _assert_failed_heartbeat(
     assert heartbeat["analysis_sha256"] == subject._sha(
         {key: value for key, value in heartbeat.items() if key != "analysis_sha256"}
     )
+
+
+def test_preflight_failure_occurs_before_any_scientific_worker(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    _cells, manifest_path, heartbeat_path = _install_run_pilot_fixture(
+        tmp_path,
+        monkeypatch,
+    )
+    worker_pool_started = False
+
+    class ForbiddenPool:
+        def __init__(self, **_kwargs) -> None:
+            nonlocal worker_pool_started
+            worker_pool_started = True
+            raise AssertionError("scientific worker pool must remain unopened")
+
+    monkeypatch.setattr(subject, "ThreadPoolExecutor", ForbiddenPool)
+    monkeypatch.setattr(
+        subject,
+        "_run_high_cutoff_preflight",
+        lambda *_a, **_k: (_ for _ in ()).throw(
+            RuntimeError("capability preflight rejected")
+        ),
+    )
+
+    with pytest.raises(RuntimeError, match="capability preflight rejected"):
+        subject.run_pilot(tmp_path)
+
+    assert worker_pool_started is False
+    assert not manifest_path.exists()
+    _assert_failed_heartbeat(heartbeat_path, error_type="RuntimeError")
 
 
 def test_receipt_set_drift_finalization_fails_closed(tmp_path, monkeypatch) -> None:

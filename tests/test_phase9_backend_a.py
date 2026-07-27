@@ -11,6 +11,8 @@ from scipy.sparse import eye as sparse_eye
 from physics.phase9_backend_a import (
     BACKEND_A_ID,
     BACKEND_A_SCOPE,
+    MAX_EXACT_CHOI_CUTOFF,
+    MAX_SUPPORTED_CUTOFF,
     BackendAConfig,
     BackendADriftState,
     BackendAEvaluatorState,
@@ -117,6 +119,46 @@ def test_invalid_config_is_rejected(field, value):
         BackendAConfig(**{field: value})
 
 
+def test_high_cutoff_contract_accepts_28_and_caps_at_32():
+    assert MAX_SUPPORTED_CUTOFF == 32
+    assert BackendAConfig(cutoff=28).cutoff == 28
+    assert BackendAConfig(cutoff=MAX_SUPPORTED_CUTOFF).cutoff == 32
+    dimension = 3 * MAX_SUPPORTED_CUTOFF
+    state = BackendAState(
+        np.eye(dimension, dtype=np.complex128) / dimension,
+        MAX_SUPPORTED_CUTOFF,
+    )
+    assert state.cutoff == MAX_SUPPORTED_CUTOFF
+    with pytest.raises(ValueError, match=r"\[2, 32\]"):
+        BackendAConfig(cutoff=MAX_SUPPORTED_CUTOFF + 1)
+    with pytest.raises(ValueError, match=r"\[2, 32\]"):
+        BackendAState(
+            np.eye(dimension + 3, dtype=np.complex128) / (dimension + 3),
+            MAX_SUPPORTED_CUTOFF + 1,
+        )
+
+
+def test_cutoff_28_executes_full_backend_a_step():
+    config = BackendAConfig(
+        cutoff=28,
+        substeps_per_segment=1,
+        iq_samples=1,
+        logical_grid_points=1025,
+    )
+    simulator = Phase9BackendASimulator(config)
+    initial = simulator.initialize_fock()
+    result = simulator.step(
+        initial,
+        diagnostic_action_word("IDLE"),
+        zero_exogenous(config),
+    )
+    assert result.state.cutoff == 28
+    assert result.state.joint_density.shape == (84, 84)
+    assert np.isclose(np.trace(result.state.joint_density), 1.0, atol=5.0e-9)
+    assert np.all(np.isfinite(result.observation.iq_i))
+    assert np.all(np.isfinite(result.observation.iq_q))
+
+
 def test_backend_identity_and_scope_cannot_be_relabelled():
     with pytest.raises(ValueError):
         BackendAConfig(backend_id="device-calibrated")
@@ -210,6 +252,32 @@ def test_actual_gksl_channel_is_cp_tp_and_hermitian(compact_config):
     assert diagnostics.choi_minimum_eigenvalue >= -2.0e-10
     assert diagnostics.hermiticity_frobenius <= 2.0e-10
     assert diagnostics.choi_trace == pytest.approx(diagnostics.dimension)
+
+
+def test_high_cutoff_exact_choi_is_rejected_before_liouvillian_allocation(
+    monkeypatch,
+):
+    simulator = Phase9BackendASimulator(
+        BackendAConfig(
+            cutoff=MAX_EXACT_CHOI_CUTOFF + 1,
+            substeps_per_segment=1,
+            iq_samples=1,
+            logical_grid_points=1025,
+        )
+    )
+    monkeypatch.setattr(
+        simulator,
+        "liouvillian",
+        lambda _hamiltonian: pytest.fail("large Liouvillian must not be allocated"),
+    )
+    with pytest.raises(RuntimeError, match="exact Choi construction"):
+        simulator.channel_diagnostics(
+            np.zeros(
+                (simulator.dimension, simulator.dimension),
+                dtype=np.complex128,
+            ),
+            0.01,
+        )
 
 
 def test_nonhermitian_hamiltonian_is_rejected(compact_config):

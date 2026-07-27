@@ -55,6 +55,8 @@ ComplexMatrix = NDArray[np.complex128]
 RealVector = NDArray[np.float64]
 
 BACKEND_A_ID = "PHASE9-BACKEND-A-JOINT-FOCK-QUTRIT-GKSL-V1"
+MAX_SUPPORTED_CUTOFF = 32
+MAX_EXACT_CHOI_CUTOFF = 8
 BACKEND_A_SCOPE = (
     "finite-cutoff oscillator x qutrit synthetic qualification backend; "
     "dimensionless Hamiltonian/GKSL/IQ/reset parameters; no device-calibrated, "
@@ -259,7 +261,12 @@ class BackendAConfig:
         object.__setattr__(
             self,
             "cutoff",
-            _exact_int(self.cutoff, "cutoff", minimum=2, maximum=24),
+            _exact_int(
+                self.cutoff,
+                "cutoff",
+                minimum=2,
+                maximum=MAX_SUPPORTED_CUTOFF,
+            ),
         )
         object.__setattr__(
             self,
@@ -539,7 +546,12 @@ class BackendAState:
     round_index: int = 0
 
     def __post_init__(self) -> None:
-        cutoff = _exact_int(self.cutoff, "cutoff", minimum=2, maximum=24)
+        cutoff = _exact_int(
+            self.cutoff,
+            "cutoff",
+            minimum=2,
+            maximum=MAX_SUPPORTED_CUTOFF,
+        )
         object.__setattr__(
             self,
             "joint_density",
@@ -1746,6 +1758,12 @@ class Phase9BackendASimulator:
         not a statement that one successful output-state test proves CP.
         """
 
+        if self.config.cutoff > MAX_EXACT_CHOI_CUTOFF:
+            raise RuntimeError(
+                "exact Choi construction is restricted to cutoff "
+                f"<= {MAX_EXACT_CHOI_CUTOFF}; use scalable state/channel "
+                "diagnostics at high cutoff"
+            )
         time = _nonnegative(duration, "duration")
         generator = self.liouvillian(hamiltonian)
         superoperator = expm(generator.toarray() * time)
@@ -2527,6 +2545,8 @@ __all__ = [
     "BackendATruthRecord",
     "ChannelDiagnostics",
     "DEFAULT_PARAMETER_PROVENANCE",
+    "MAX_SUPPORTED_CUTOFF",
+    "MAX_EXACT_CHOI_CUTOFF",
     "Phase9BackendASimulator",
     "backend_a_exogenous",
     "diagnostic_action_word",

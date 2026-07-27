@@ -17,6 +17,8 @@ from physics.phase9_backend_b import (
     BACKEND_B_RNG_ID,
     BACKEND_B_SCOPE,
     BACKEND_B_SOLVER_ID,
+    MAX_EXACT_CHOI_CUTOFF,
+    MAX_SUPPORTED_CUTOFF,
     BackendBConfig,
     BackendBDrift,
     BackendBEvaluator,
@@ -136,6 +138,45 @@ def test_invalid_config_is_rejected(field, value):
         BackendBConfig(**{field: value})
 
 
+def test_high_cutoff_contract_accepts_28_and_caps_at_32():
+    assert MAX_SUPPORTED_CUTOFF == 32
+    assert BackendBConfig(cutoff=28).cutoff == 28
+    assert BackendBConfig(cutoff=MAX_SUPPORTED_CUTOFF).cutoff == 32
+    dimension = 3 * MAX_SUPPORTED_CUTOFF
+    state = BackendBState(
+        np.eye(dimension, dtype=np.complex128) / dimension,
+        MAX_SUPPORTED_CUTOFF,
+    )
+    assert state.cutoff == MAX_SUPPORTED_CUTOFF
+    with pytest.raises(ValueError, match=r"\[2,32\]"):
+        BackendBConfig(cutoff=MAX_SUPPORTED_CUTOFF + 1)
+    with pytest.raises(ValueError, match=r"\[2,32\]"):
+        BackendBState(
+            np.eye(dimension + 3, dtype=np.complex128) / (dimension + 3),
+            MAX_SUPPORTED_CUTOFF + 1,
+        )
+
+
+def test_cutoff_28_executes_full_backend_b_step():
+    config = BackendBConfig(
+        cutoff=28,
+        split_steps_per_segment=1,
+        iq_samples=1,
+    )
+    simulator = Phase9BackendBSimulator(config)
+    initial = simulator.initialize_fock()
+    result = simulator.step(
+        initial,
+        diagnostic_action_word_b("IDLE"),
+        zero_record(config),
+    )
+    assert result.state.cutoff == 28
+    assert result.state.joint_density.shape == (84, 84)
+    assert np.isclose(np.trace(result.state.joint_density), 1.0, atol=1.0e-8)
+    assert np.all(np.isfinite(result.observation.iq_i))
+    assert np.all(np.isfinite(result.observation.iq_q))
+
+
 def test_backend_identity_and_scope_cannot_be_relabelled():
     with pytest.raises(ValueError, match="immutable"):
         BackendBConfig(backend_id="device")
@@ -244,6 +285,28 @@ def test_split_channel_is_cp_tp_and_hermitian():
     assert minimum >= -3.0e-9
     assert tp_error <= 3.0e-9
     assert hermiticity <= 3.0e-9
+
+
+def test_high_cutoff_exact_choi_is_rejected_before_dense_expm(monkeypatch):
+    simulator = Phase9BackendBSimulator(
+        BackendBConfig(
+            cutoff=MAX_EXACT_CHOI_CUTOFF + 1,
+            split_steps_per_segment=1,
+            iq_samples=1,
+        )
+    )
+    monkeypatch.setattr(
+        "physics.phase9_backend_b.expm",
+        lambda _matrix: pytest.fail("large dense expm must not be allocated"),
+    )
+    with pytest.raises(RuntimeError, match="exact Choi construction"):
+        simulator.split_channel_choi(
+            np.zeros(
+                (simulator.dimension, simulator.dimension),
+                dtype=np.complex128,
+            ),
+            0.01,
+        )
 
 
 def test_nonhermitian_hamiltonian_is_rejected(compact_config):

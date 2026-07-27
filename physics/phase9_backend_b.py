@@ -42,6 +42,8 @@ ComplexMatrix = NDArray[np.complex128]
 RealVector = NDArray[np.float64]
 
 BACKEND_B_ID = "PHASE9-BACKEND-B-DENSE-STRANG-ANALYTIC-KRAUS-V1"
+MAX_SUPPORTED_CUTOFF = 32
+MAX_EXACT_CHOI_CUTOFF = 8
 BACKEND_B_SCOPE = (
     "independent dense-unitary/analytic-Kraus finite-Fock x qutrit synthetic "
     "qualification backend; no backend-A kernel, device calibration, lifetime, "
@@ -242,7 +244,12 @@ class BackendBConfig:
         object.__setattr__(
             self,
             "cutoff",
-            _integer(self.cutoff, "cutoff", 2, 24),
+            _integer(
+                self.cutoff,
+                "cutoff",
+                2,
+                MAX_SUPPORTED_CUTOFF,
+            ),
         )
         object.__setattr__(
             self,
@@ -474,7 +481,12 @@ class BackendBState:
     round_index: int = 0
 
     def __post_init__(self) -> None:
-        cutoff = _integer(self.cutoff, "cutoff", 2, 24)
+        cutoff = _integer(
+            self.cutoff,
+            "cutoff",
+            2,
+            MAX_SUPPORTED_CUTOFF,
+        )
         object.__setattr__(
             self,
             "joint_density",
@@ -1806,6 +1818,12 @@ class Phase9BackendBSimulator:
         hamiltonian: ComplexMatrix,
         duration: float,
     ) -> tuple[float, float, float]:
+        if self.config.cutoff > MAX_EXACT_CHOI_CUTOFF:
+            raise RuntimeError(
+                "exact Choi construction is restricted to cutoff "
+                f"<= {MAX_EXACT_CHOI_CUTOFF}; use scalable state/channel "
+                "diagnostics at high cutoff"
+            )
         dimension = self.dimension
         half = expm(-0.5j * duration * hamiltonian)
 
@@ -2409,6 +2427,8 @@ __all__ = [
     "BACKEND_B_RNG_ID",
     "BACKEND_B_SCOPE",
     "BACKEND_B_SOLVER_ID",
+    "MAX_SUPPORTED_CUTOFF",
+    "MAX_EXACT_CHOI_CUTOFF",
     "BackendBConfig",
     "BackendBDrift",
     "BackendBEvaluator",

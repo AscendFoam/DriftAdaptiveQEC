@@ -127,6 +127,11 @@ def _fixture():
                 "cutoff_terminal_mean_photon_difference": 0.08,
                 "cutoff_terminal_level_probability_l1": 0.1,
                 "cutoff_terminal_logical_survival_difference": 0.1,
+                "absolute_terminal_top1_fock_mass": 0.1,
+                "absolute_terminal_top2_fock_mass": 0.1,
+                "absolute_terminal_top4_fock_mass": 0.1,
+                "absolute_terminal_normalized_mean_photon": 0.25,
+                "absolute_terminal_commutator_defect": 0.1,
             },
         },
     }
@@ -138,8 +143,8 @@ def test_diagnostic_enforces_state_stage_backend_and_cutoff_iut(monkeypatch):
     monkeypatch.setattr(subject, "paired_density_trace_ucb", _fake_ucb)
     monkeypatch.setattr(subject, "paired_vector_norm_ucb", _fake_ucb)
     results = subject.evaluate_diagnostics(config, rows, densities)
-    assert len(results) == 96
-    assert len({row["gate_id"] for row in results}) == 96
+    assert len(results) == 216
+    assert len({row["gate_id"] for row in results}) == 216
     assert {row["logical_state"] for row in results} == {
         "0",
         "1",
@@ -151,6 +156,7 @@ def test_diagnostic_enforces_state_stage_backend_and_cutoff_iut(monkeypatch):
     assert {row["contrast"] for row in results} == {
         "same_cutoff_ab",
         "within_backend_cutoff",
+        "absolute_truncation_risk",
     }
     assert all(row["cluster_count"] == 12 for row in results)
     assert all(row["design_pilot_only"] is True for row in results)
@@ -229,6 +235,37 @@ def test_cutoff_embedding_preserves_trace_and_top_left_block() -> None:
     assert np.trace(embedded) == pytest.approx(1.0)
     assert np.array_equal(embedded[:6, :6], lower)
     assert np.count_nonzero(embedded[6:, :]) == 0
+
+
+def test_terminal_truncation_features_resolve_boundary_mass_and_commutator() -> None:
+    cutoff = 5
+    oscillator = np.diag([0.1, 0.2, 0.3, 0.15, 0.25]).astype(np.complex128)
+    ancilla = np.diag([0.6, 0.3, 0.1]).astype(np.complex128)
+    density = np.kron(oscillator, ancilla)
+    features = subject._terminal_truncation_features(
+        np.stack([density, density]),
+        cutoff=cutoff,
+    )
+
+    assert np.allclose(features["top1_fock_mass"], 0.25)
+    assert np.allclose(features["top2_fock_mass"], 0.40)
+    assert np.allclose(features["top4_fock_mass"], 0.90)
+    assert np.allclose(
+        features["normalized_mean_photon"],
+        (0.2 + 0.6 + 0.45 + 1.0) / 4.0,
+    )
+    assert np.allclose(features["commutator_defect"], 1.25)
+
+
+def test_terminal_truncation_features_reject_nonphysical_population() -> None:
+    density = np.eye(9, dtype=np.complex128) / 9.0
+    density[0, 0] = -0.1
+    density[1, 1] += 0.1
+    with pytest.raises(ValueError, match="population physicality"):
+        subject._terminal_truncation_features(
+            np.stack([density, density]),
+            cutoff=3,
+        )
 
 
 def test_multiplier_namespace_is_disjoint_and_stable() -> None:
@@ -465,6 +502,15 @@ def test_report_is_narrow_unpowered_nonranking_risk_signal(
         "hardened_confirmation_source": {
             "report": {"path": "hardened.json"},
             "source_data": {"path": "hardened.csv"},
+        },
+        "diagnostic_contract": {
+            "margins": {
+                "absolute_terminal_top1_fock_mass": 0.005,
+                "absolute_terminal_top2_fock_mass": 0.01,
+                "absolute_terminal_top4_fock_mass": 0.02,
+                "absolute_terminal_normalized_mean_photon": 0.25,
+                "absolute_terminal_commutator_defect": 0.05,
+            }
         },
     }
     diagnostics = [

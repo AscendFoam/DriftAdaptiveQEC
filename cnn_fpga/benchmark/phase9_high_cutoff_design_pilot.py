@@ -26,6 +26,7 @@ import platform
 import sys
 import tempfile
 import threading
+import time
 from typing import Any, Mapping, Sequence
 from uuid import UUID, uuid4
 
@@ -47,43 +48,44 @@ LAUNCHER_ASSURANCE = {
     "os_native_signed_launcher_receipt": None,
 }
 CONFIG_PATH = (
-    "configs/phase9/" "t_risk_20260727_01_high_cutoff_design_pilot_fresh2_released.json"
+    "configs/phase9/" "t_risk_20260727_01_high_cutoff_design_pilot_fresh3_released.json"
 )
 PENDING_CONFIG_PATH = (
-    "configs/phase9/t_risk_20260727_01_high_cutoff_design_pilot_fresh2.json"
+    "configs/phase9/t_risk_20260727_01_high_cutoff_design_pilot_fresh3.json"
 )
 RELEASE_RECEIPT_PATH = (
-    "docs/t_risk_20260727_01_high_cutoff_design_pilot_fresh2_release_receipt.json"
+    "docs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3_release_receipt.json"
 )
 OWNER_LOCK_PATH = (
-    "runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh2/" "supervisor.owner.lock"
+    "runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3/" "supervisor.owner.lock"
 )
 CONFIG_SCHEMA = "PHASE9-HIGH-CUTOFF-STATE-DESIGN-PILOT-CONFIG-V2"
 RELEASED_CHILD_SCHEMA = "PHASE9-HIGH-CUTOFF-DESIGN-PILOT-RELEASED-CHILD-V1"
 RELEASE_RECEIPT_SCHEMA = "PHASE9-HIGH-CUTOFF-DESIGN-PILOT-RELEASE-RECEIPT-V1"
-PENDING_CONFIG_BYTES = 5701
+PENDING_CONFIG_BYTES = 6101
 PENDING_CONFIG_SHA256 = (
-    "0e32c27a72f4105bf9ce51a65935586deaafde72bb520a961716965f9e8c6329"
+    "faa467d715ec05cbb27b172c0938f129006b25ff14c706c27d39913088b23501"
 )
 RELEASED_CHILD_BYTES = 2821
 RELEASED_CHILD_SHA256 = (
-    "248e8cabe2f4e1264cd5256fc2d3e5f3b60c54bdfe2afb11e2880163ed6e6992"
+    "e8e301e0ac2f718b1a51839adb8ccf8de929af5c23a73d5883f6853e60f89a61"
 )
 RELEASED_CHILD_ANALYSIS_SHA256 = (
-    "d2cc70dd7bbac1071dca2f23acb55c8804168dea84279f3fca962b2b8f6ee0b6"
+    "e6d20dc4e1de91c93e0dadf483f964cd3a204bbcfcabd7daffec818ef473f956"
 )
 RELEASE_RECEIPT_BYTES = 2092
 RELEASE_RECEIPT_SHA256 = (
-    "c286f3ab73bfcec2971f506e1182c337679d70dfa30c66dcd54835e4332a9ffa"
+    "e8d030b4c5ad3c4ea1d22ae7991ef4423f90e1af90bf6c7fe3c65810ab666275"
 )
 RELEASE_RECEIPT_ANALYSIS_SHA256 = (
-    "f2165c13d81e948d77a74033a6f6d13b06de88253ada4b4487e86239ba7ac301"
+    "10def5db800f287b1738049292ada2d714a3805772860bfce27b2e96d6da9b6c"
 )
 MANIFEST_SCHEMA = "PHASE9-HIGH-CUTOFF-STATE-DESIGN-PILOT-MANIFEST-V4"
 RECEIPT_SCHEMA = "PHASE9-HIGH-CUTOFF-PILOT-CHUNK-RECEIPT-V3"
 RUN_IDENTITY_SCHEMA = "PHASE9-HIGH-CUTOFF-PILOT-RUN-IDENTITY-V3"
 LOCK_SCHEMA = "PHASE9-HIGH-CUTOFF-PILOT-OWNER-LOCK-V2"
 HEARTBEAT_SCHEMA = "PHASE9-HIGH-CUTOFF-PILOT-HEARTBEAT-V2"
+PREFLIGHT_SCHEMA = "PHASE9-HIGH-CUTOFF-PILOT-CAPABILITY-PREFLIGHT-V1"
 HARDENED_CONFIRMATION_SCHEMA = "PHASE9-PAIRED-CLUSTER-UQ-HARDENED-CONFIRMATION-V2"
 HARDENED_CONFIRMATION_ANALYSIS_SHA256 = (
     "5a798e45c0306d4bf591c971e52c68e4faf0dce276eafc74cb69d66ef6abe5a5"
@@ -929,9 +931,23 @@ def load_pilot_config(
         diagnostic.get("confidence") != 0.95
         or diagnostic.get("multiplier_replicates") != 199
         or diagnostic.get("multiplier_seed_namespace") != 1420000
+        or diagnostic.get("absolute_truncation_diagnostics_are_localization_only")
+        is not True
         or diagnostic.get("formal_rescue_forbidden") is not True
     ):
         raise ValueError("high-cutoff pilot diagnostic contract drift")
+    expected_tail_margins = {
+        "absolute_terminal_top1_fock_mass": 0.005,
+        "absolute_terminal_top2_fock_mass": 0.01,
+        "absolute_terminal_top4_fock_mass": 0.02,
+        "absolute_terminal_normalized_mean_photon": 0.25,
+        "absolute_terminal_commutator_defect": 0.05,
+    }
+    margins = diagnostic.get("margins")
+    if not isinstance(margins, Mapping) or any(
+        margins.get(key) != value for key, value in expected_tail_margins.items()
+    ):
+        raise ValueError("high-cutoff absolute truncation contract drift")
     for scenario in config["scenario_names"]:
         partition = config.get("stage_partition", {}).get(scenario)
         if (
@@ -1350,6 +1366,329 @@ def _chunk_health(root: Path, receipt: Mapping[str, Any]) -> tuple[int, int]:
     return exception_rows, conservation_failures
 
 
+def _state_physicality(density: np.ndarray) -> dict[str, float]:
+    matrix = np.asarray(density, dtype=np.complex128)
+    if matrix.ndim != 2 or matrix.shape[0] != matrix.shape[1]:
+        raise RuntimeError("preflight state density shape drift")
+    hermitian = 0.5 * (matrix + matrix.conj().T)
+    result = {
+        "trace_error": abs(float(np.trace(matrix).real) - 1.0)
+        + abs(float(np.trace(matrix).imag)),
+        "hermiticity_frobenius": float(
+            np.linalg.norm(matrix - matrix.conj().T, ord="fro")
+        ),
+        "minimum_eigenvalue": float(np.linalg.eigvalsh(hermitian).min()),
+    }
+    if (
+        not all(np.isfinite(value) for value in result.values())
+        or result["trace_error"] > 5.0e-8
+        or result["hermiticity_frobenius"] > 5.0e-8
+        or result["minimum_eigenvalue"] < -5.0e-8
+    ):
+        raise RuntimeError("high-cutoff preflight state physicality failure")
+    return result
+
+
+def _half_trace_distance(left: np.ndarray, right: np.ndarray) -> float:
+    difference = np.asarray(left, dtype=np.complex128) - np.asarray(
+        right,
+        dtype=np.complex128,
+    )
+    if (
+        difference.ndim != 2
+        or difference.shape[0] != difference.shape[1]
+        or not np.all(np.isfinite(difference.real))
+        or not np.all(np.isfinite(difference.imag))
+    ):
+        raise RuntimeError("integration-convergence density shape drift")
+    hermitian = 0.5 * (difference + difference.conj().T)
+    return 0.5 * float(np.sum(np.abs(np.linalg.eigvalsh(hermitian))))
+
+
+def _validate_high_cutoff_preflight(
+    pilot: Mapping[str, Any],
+    execution: Mapping[str, Any],
+    report: Mapping[str, Any],
+) -> None:
+    _self_hash(report)
+    expected_cutoffs = sorted(
+        {
+            *[int(value) for value in pilot["cutoffs"]],
+            32,
+        }
+    )
+    checks = report.get("checks")
+    if (
+        set(report)
+        != {
+            "task_id",
+            "schema_version",
+            "status",
+            "evaluated_cutoffs",
+            "production_segment_steps",
+            "production_iq_samples",
+            "logical_labels",
+            "high_energy_cutoffs",
+            "high_energy_actions",
+            "checks",
+            "integration_convergence",
+            "integration_convergence_contract",
+            "configured_max_workers",
+            "elapsed_seconds",
+            "qualified_claim",
+            "claim_state",
+            "analysis_sha256",
+        }
+        or report.get("task_id") != TASK_ID
+        or report.get("schema_version") != PREFLIGHT_SCHEMA
+        or report.get("status") != "PASS"
+        or report.get("evaluated_cutoffs") != expected_cutoffs
+        or report.get("production_segment_steps")
+        != int(execution["common_physics"]["segment_steps"])
+        or report.get("production_segment_steps") != 8
+        or report.get("production_iq_samples")
+        != int(execution["common_physics"]["iq_samples"])
+        or report.get("production_iq_samples") != 8
+        or report.get("logical_labels") != ["0", "1", "+", "-", "+i", "-i"]
+        or report.get("high_energy_cutoffs") != [28, 32]
+        or report.get("high_energy_actions") != ["IDLE", "XZ", "RESET"]
+        or not isinstance(checks, list)
+        or len(checks) != 2 * len(expected_cutoffs)
+        or report.get("integration_convergence_contract")
+        != {
+            "segment_steps": [8, 16, 32],
+            "coarse_to_middle_max_trace_distance": 0.005,
+            "middle_to_fine_max_trace_distance": 0.0015,
+            "refinement_ratio_max": 0.5,
+            "state": "0",
+            "action": "XZ",
+        }
+        or report.get("configured_max_workers") != int(pilot["max_workers"])
+        or report.get("qualified_claim") is not None
+        or report.get("claim_state") != CLAIM_BOUNDARY
+        or isinstance(report.get("elapsed_seconds"), bool)
+        or not isinstance(report.get("elapsed_seconds"), (int, float))
+        or not np.isfinite(float(report["elapsed_seconds"]))
+        or float(report["elapsed_seconds"]) <= 0.0
+    ):
+        raise RuntimeError("high-cutoff capability preflight contract drift")
+    identities: set[tuple[int, str]] = set()
+    for check in checks:
+        if not isinstance(check, Mapping):
+            raise RuntimeError("high-cutoff preflight check type drift")
+        identity = (int(check.get("cutoff", -1)), str(check.get("backend", "")))
+        if identity in identities:
+            raise RuntimeError("duplicate high-cutoff preflight check")
+        identities.add(identity)
+        expected_actions = 3 if identity[0] in {28, 32} else 0
+        if (
+            identity[0] not in expected_cutoffs
+            or identity[1] not in {"A", "B"}
+            or check.get("dimension") != 3 * identity[0]
+            or check.get("logical_states_initialized") != 6
+            or check.get("high_energy_actions_executed") != expected_actions
+            or check.get("all_checks_passed") is not True
+            or float(check.get("maximum_trace_error", float("inf"))) > 5.0e-8
+            or float(
+                check.get("maximum_hermiticity_frobenius", float("inf"))
+            )
+            > 5.0e-8
+            or float(check.get("minimum_eigenvalue", float("-inf"))) < -5.0e-8
+        ):
+            raise RuntimeError("high-cutoff preflight check failed")
+    if identities != {
+        (cutoff, backend)
+        for cutoff in expected_cutoffs
+        for backend in ("A", "B")
+    }:
+        raise RuntimeError("high-cutoff preflight coverage drift")
+    convergence = report.get("integration_convergence")
+    if not isinstance(convergence, list) or len(convergence) != 4:
+        raise RuntimeError("high-cutoff convergence coverage drift")
+    convergence_identities: set[tuple[int, str]] = set()
+    for check in convergence:
+        if not isinstance(check, Mapping):
+            raise RuntimeError("high-cutoff convergence check type drift")
+        identity = (int(check.get("cutoff", -1)), str(check.get("backend", "")))
+        if identity in convergence_identities:
+            raise RuntimeError("duplicate high-cutoff convergence check")
+        convergence_identities.add(identity)
+        coarse = float(check.get("trace_distance_8_to_16", float("inf")))
+        fine = float(check.get("trace_distance_16_to_32", float("inf")))
+        ratio = float(check.get("refinement_ratio", float("inf")))
+        if (
+            identity[0] not in {28, 32}
+            or identity[1] not in {"A", "B"}
+            or check.get("state") != "0"
+            or check.get("action") != "XZ"
+            or check.get("all_checks_passed") is not True
+            or not all(np.isfinite(value) for value in (coarse, fine, ratio))
+            or coarse > 0.005
+            or fine > 0.0015
+            or ratio > 0.5
+        ):
+            raise RuntimeError("high-cutoff integration convergence failed")
+    if convergence_identities != {
+        (cutoff, backend) for cutoff in (28, 32) for backend in ("A", "B")
+    }:
+        raise RuntimeError("high-cutoff convergence identity drift")
+
+
+def _run_high_cutoff_preflight(
+    pilot: Mapping[str, Any],
+    execution: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Exercise the full production simulator factory before worker launch.
+
+    This preflight intentionally uses the frozen production integration depth
+    and IQ width.  It initializes all six logical states at every registered
+    cutoff and executes IDLE/XZ/RESET from a top-four-Fock superposition at
+    cutoff 28 and 32.  It therefore catches constructor-only support, bridge
+    limits, state validators, and action paths before a long transaction writes
+    any scientific chunk.
+    """
+
+    started = time.perf_counter()
+    labels = ["0", "1", "+", "-", "+i", "-i"]
+    actions = runner._action_words()
+    cutoffs = sorted({*[int(value) for value in pilot["cutoffs"]], 32})
+    checks: list[dict[str, Any]] = []
+    for cutoff in cutoffs:
+        simulators = runner.build_simulators(execution, cutoff)
+        if set(simulators) != {"A", "B"}:
+            raise RuntimeError("high-cutoff preflight simulator set drift")
+        for backend in ("A", "B"):
+            simulator = simulators[backend]
+            metrics: list[dict[str, float]] = []
+            for label in labels:
+                logical_state, _evaluator = simulator.initialize_logical(label)
+                if (
+                    logical_state.cutoff != cutoff
+                    or logical_state.joint_density.shape != (3 * cutoff, 3 * cutoff)
+                ):
+                    raise RuntimeError("high-cutoff logical initialization drift")
+                metrics.append(_state_physicality(logical_state.joint_density))
+            action_count = 0
+            if cutoff in {28, 32}:
+                high_energy = np.zeros(cutoff, dtype=np.complex128)
+                high_energy[-4:] = 0.5
+                state = simulator.initialize_fock(
+                    oscillator_ket=high_energy,
+                    ancilla_state="f",
+                )
+                for action_name in ("IDLE", "XZ", "RESET"):
+                    result = runner._one_step(
+                        backend=backend,
+                        simulator=simulator,
+                        state=state,
+                        evaluator=None,
+                        action=actions[action_name],
+                        seed=1_439_000 + 100 * cutoff + action_count,
+                    )
+                    metrics.append(_state_physicality(result.state.joint_density))
+                    if (
+                        result.state.cutoff != cutoff
+                        or result.state.joint_density.shape
+                        != (3 * cutoff, 3 * cutoff)
+                        or not np.all(np.isfinite(result.observation.iq_i))
+                        or not np.all(np.isfinite(result.observation.iq_q))
+                    ):
+                        raise RuntimeError("high-cutoff action preflight drift")
+                    state = result.state
+                    action_count += 1
+            checks.append(
+                {
+                    "cutoff": cutoff,
+                    "backend": backend,
+                    "dimension": 3 * cutoff,
+                    "logical_states_initialized": len(labels),
+                    "high_energy_actions_executed": action_count,
+                    "maximum_trace_error": max(
+                        value["trace_error"] for value in metrics
+                    ),
+                    "maximum_hermiticity_frobenius": max(
+                        value["hermiticity_frobenius"] for value in metrics
+                    ),
+                    "minimum_eigenvalue": min(
+                        value["minimum_eigenvalue"] for value in metrics
+                    ),
+                    "all_checks_passed": True,
+                }
+            )
+    integration_convergence: list[dict[str, Any]] = []
+    for cutoff in (28, 32):
+        for backend in ("A", "B"):
+            densities: dict[int, np.ndarray] = {}
+            for segment_steps in (8, 16, 32):
+                refined_execution = json.loads(json.dumps(execution))
+                refined_execution["common_physics"]["segment_steps"] = segment_steps
+                simulator = runner.build_simulators(refined_execution, cutoff)[backend]
+                logical_state, evaluator = simulator.initialize_logical("0")
+                result = runner._one_step(
+                    backend=backend,
+                    simulator=simulator,
+                    state=logical_state,
+                    evaluator=evaluator,
+                    action=actions["XZ"],
+                    seed=1_439_500 + 100 * cutoff,
+                )
+                _state_physicality(result.state.joint_density)
+                if (
+                    result.state.cutoff != cutoff
+                    or not np.all(np.isfinite(result.observation.iq_i))
+                    or not np.all(np.isfinite(result.observation.iq_q))
+                ):
+                    raise RuntimeError("high-cutoff convergence execution drift")
+                densities[segment_steps] = result.state.joint_density
+            coarse = _half_trace_distance(densities[8], densities[16])
+            fine = _half_trace_distance(densities[16], densities[32])
+            ratio = fine / max(coarse, np.finfo(np.float64).eps)
+            integration_convergence.append(
+                {
+                    "cutoff": cutoff,
+                    "backend": backend,
+                    "state": "0",
+                    "action": "XZ",
+                    "trace_distance_8_to_16": coarse,
+                    "trace_distance_16_to_32": fine,
+                    "refinement_ratio": ratio,
+                    "all_checks_passed": (
+                        coarse <= 0.005 and fine <= 0.0015 and ratio <= 0.5
+                    ),
+                }
+            )
+    report: dict[str, Any] = {
+        "task_id": TASK_ID,
+        "schema_version": PREFLIGHT_SCHEMA,
+        "status": "PASS",
+        "evaluated_cutoffs": cutoffs,
+        "production_segment_steps": int(
+            execution["common_physics"]["segment_steps"]
+        ),
+        "production_iq_samples": int(execution["common_physics"]["iq_samples"]),
+        "logical_labels": labels,
+        "high_energy_cutoffs": [28, 32],
+        "high_energy_actions": ["IDLE", "XZ", "RESET"],
+        "checks": checks,
+        "integration_convergence": integration_convergence,
+        "integration_convergence_contract": {
+            "segment_steps": [8, 16, 32],
+            "coarse_to_middle_max_trace_distance": 0.005,
+            "middle_to_fine_max_trace_distance": 0.0015,
+            "refinement_ratio_max": 0.5,
+            "state": "0",
+            "action": "XZ",
+        },
+        "configured_max_workers": int(pilot["max_workers"]),
+        "elapsed_seconds": time.perf_counter() - started,
+        "qualified_claim": None,
+        "claim_state": dict(CLAIM_BOUNDARY),
+    }
+    report["analysis_sha256"] = _sha(report)
+    _validate_high_cutoff_preflight(pilot, execution, report)
+    return report
+
+
 def _heartbeat(
     root: Path,
     pilot: Mapping[str, Any],
@@ -1481,6 +1820,7 @@ def _verify_manifest(
         "conservation_failure_rows",
         "chunk_receipts",
         "receipt_bindings",
+        "capability_preflight",
         "claim_state",
         "bindings",
         "runtime",
@@ -1517,6 +1857,10 @@ def _verify_manifest(
     if not isinstance(input_snapshot, Mapping):
         raise RuntimeError("run identity input snapshot missing")
     _assert_input_snapshot(root, input_snapshot)
+    preflight = manifest.get("capability_preflight")
+    if not isinstance(preflight, Mapping):
+        raise RuntimeError("existing pilot capability preflight missing")
+    _validate_high_cutoff_preflight(pilot, execution, preflight)
     receipts = manifest.get("chunk_receipts")
     receipt_bindings = manifest.get("receipt_bindings")
     if (
@@ -1652,6 +1996,9 @@ def run_pilot(root: Path) -> dict[str, Any]:
         )
         receipts: list[dict[str, Any]] = []
         try:
+            capability_preflight = _run_high_cutoff_preflight(pilot, execution)
+            _assert_owner_lock(root, pilot, owner_lock)
+            _assert_input_snapshot(root, input_snapshot)
             with ThreadPoolExecutor(max_workers=int(pilot["max_workers"])) as executor:
                 futures = {
                     executor.submit(
@@ -1728,6 +2075,7 @@ def run_pilot(root: Path) -> dict[str, Any]:
                 "conservation_failure_rows": conservation_failure_rows,
                 "chunk_receipts": ordered,
                 "receipt_bindings": receipt_bindings,
+                "capability_preflight": capability_preflight,
                 "claim_state": dict(pilot["claim_boundary"]),
                 "bindings": {
                     "config": _binding(root / CONFIG_PATH, root),

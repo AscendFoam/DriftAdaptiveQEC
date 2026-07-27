@@ -37,23 +37,23 @@ LAUNCHER_ASSURANCE = {
     "os_native_signed_launcher_receipt": None,
 }
 CONFIG_PATH = (
-    "configs/phase9/" "t_risk_20260727_01_high_cutoff_design_pilot_fresh2_released.json"
+    "configs/phase9/" "t_risk_20260727_01_high_cutoff_design_pilot_fresh3_released.json"
 )
 UQ_REPORT_PATH = "docs/t_risk_20260727_01_uq_calibration.json"
 UQ_EXTENSION_PATH = "docs/t_risk_20260727_01_uq_power_extension.json"
-REPORT_PATH = "docs/t_risk_20260727_01_high_cutoff_design_diagnostic_fresh2.json"
+REPORT_PATH = "docs/t_risk_20260727_01_high_cutoff_design_diagnostic_fresh3.json"
 SOURCE_PATH = (
-    "docs/t_risk_20260727_01_high_cutoff_design_diagnostic_fresh2_source_data.csv"
+    "docs/t_risk_20260727_01_high_cutoff_design_diagnostic_fresh3_source_data.csv"
 )
-SCHEMA = "PHASE9-HIGH-CUTOFF-STATE-DESIGN-DIAGNOSTIC-V4"
+SCHEMA = "PHASE9-HIGH-CUTOFF-STATE-DESIGN-DIAGNOSTIC-V5"
 STATUS = "HIGH_CUTOFF_STATE_STAGE_DESIGN_DIAGNOSTIC_COMPLETE"
 DIAGNOSTIC_LOCK_SCHEMA = "PHASE9-HIGH-CUTOFF-DIAGNOSTIC-OWNER-LOCK-V1"
 DIAGNOSTIC_COMPLETION_SCHEMA = "PHASE9-HIGH-CUTOFF-DIAGNOSTIC-COMPLETION-RECEIPT-V1"
 DIAGNOSTIC_LOCK_PATH = (
-    "runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh2/" "diagnostic.owner.lock"
+    "runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3/" "diagnostic.owner.lock"
 )
 COMPLETION_PATH = (
-    "docs/t_risk_20260727_01_high_cutoff_design_diagnostic_fresh2_completion.json"
+    "docs/t_risk_20260727_01_high_cutoff_design_diagnostic_fresh3_completion.json"
 )
 RISK_VERDICT = "EXPLORATORY_RISK_SIGNAL"
 INCONCLUSIVE_VERDICT = "NO_LARGE_SIGNAL_INCONCLUSIVE"
@@ -88,11 +88,11 @@ _DIAGNOSTIC_MODULE_NAMES = {
 }
 _PILOT_BOOTSTRAP_PATH = "cnn_fpga/benchmark/phase9_high_cutoff_design_pilot.py"
 _PILOT_BOOTSTRAP_SHA256 = (
-    "dacc0a3d693bd0f1441aae15876bdd20277b18a10470deacbcdfc8f078ede901"
+    "57e9fe8a9541aa76c577a5418423e96806b0ef883330a83628eb45e5649d01c4"
 )
 _RELEASED_CHILD_BYTES = 2821
 _RELEASED_CHILD_SHA256 = (
-    "248e8cabe2f4e1264cd5256fc2d3e5f3b60c54bdfe2afb11e2880163ed6e6992"
+    "e8e301e0ac2f718b1a51839adb8ccf8de929af5c23a73d5883f6853e60f89a61"
 )
 pilot_runner: Any = None
 NormUCB: Any = Any
@@ -886,6 +886,48 @@ def _terminal_density_stack(
     )
 
 
+def _terminal_truncation_features(
+    densities: np.ndarray,
+    *,
+    cutoff: int,
+) -> dict[str, np.ndarray]:
+    """Return state-weighted Fock-boundary diagnostics per trajectory cluster."""
+
+    stack = np.asarray(densities, dtype=np.complex128)
+    expected_dimension = 3 * int(cutoff)
+    if (
+        stack.ndim != 3
+        or stack.shape[0] < 2
+        or stack.shape[1:] != (expected_dimension, expected_dimension)
+    ):
+        raise ValueError("terminal truncation density shape drift")
+    joint = stack.reshape(len(stack), cutoff, 3, cutoff, 3)
+    oscillator = np.trace(joint, axis1=2, axis2=4)
+    diagonal = np.diagonal(oscillator, axis1=1, axis2=2)
+    if (
+        not np.all(np.isfinite(diagonal.real))
+        or not np.all(np.isfinite(diagonal.imag))
+        or float(np.max(np.abs(diagonal.imag))) > 5.0e-8
+    ):
+        raise ValueError("terminal oscillator population drift")
+    populations = diagonal.real
+    if (
+        float(np.min(populations)) < -5.0e-5
+        or float(np.max(np.abs(np.sum(populations, axis=1) - 1.0))) > 5.0e-5
+    ):
+        raise ValueError("terminal oscillator population physicality drift")
+    fock_index = np.arange(cutoff, dtype=np.float64)
+    top1 = np.sum(populations[:, -1:], axis=1)
+    return {
+        "top1_fock_mass": top1,
+        "top2_fock_mass": np.sum(populations[:, -min(2, cutoff) :], axis=1),
+        "top4_fock_mass": np.sum(populations[:, -min(4, cutoff) :], axis=1),
+        "normalized_mean_photon": populations @ fock_index / float(cutoff - 1),
+        # [a,a†] = I - cutoff |cutoff-1><cutoff-1| in the truncated basis.
+        "commutator_defect": float(cutoff) * top1,
+    }
+
+
 def _result_row(
     *,
     gate_id: str,
@@ -1039,6 +1081,58 @@ def evaluate_diagnostics(
             )
         )
 
+    def absolute_truncation_result(
+        *,
+        gate_id: str,
+        values: np.ndarray,
+        quantization_bounds: np.ndarray,
+        quantization_scale: float,
+        margin_key: str,
+        scenario: str,
+        state: str,
+        metric: str,
+        cutoff: int,
+        backend: str,
+    ) -> None:
+        base = paired_vector_norm_ucb(
+            values,
+            np.zeros_like(values),
+            ord_value=1,
+            confidence=confidence,
+            multiplier_replicates=replicates,
+            seed=_seed(namespace, gate_id),
+            calibration_factor=factor,
+        )
+        quantization_bound = float(
+            quantization_scale * np.mean(quantization_bounds)
+        )
+        ucb = NormUCB(
+            estimate=base.estimate,
+            raw_radius=base.raw_radius,
+            calibrated_radius=base.calibrated_radius,
+            quantization_bound=quantization_bound,
+            upper_bound=base.upper_bound + quantization_bound,
+            confidence=base.confidence,
+            multiplier_replicates=base.multiplier_replicates,
+            cluster_count=base.cluster_count,
+            calibration_factor=base.calibration_factor,
+            seed=base.seed,
+        )
+        results.append(
+            _result_row(
+                gate_id=gate_id,
+                contrast="absolute_truncation_risk",
+                scenario=scenario,
+                state=state,
+                stage="terminal",
+                metric=metric,
+                margin=float(margins[margin_key]),
+                ucb=ucb,
+                cutoff=str(cutoff),
+                backend=backend,
+            )
+        )
+
     for cutoff in config["cutoffs"]:
         for scenario in config["scenario_names"]:
             for state in states:
@@ -1084,6 +1178,56 @@ def evaluate_diagnostics(
                         backend="A/B",
                     )
                 )
+                for backend, density_stack, quantization in (
+                    ("A", density_a, quant_a),
+                    ("B", density_b, quant_b),
+                ):
+                    features = _terminal_truncation_features(
+                        density_stack,
+                        cutoff=int(cutoff),
+                    )
+                    for metric, margin_key, quantization_scale in (
+                        (
+                            "top1_fock_mass",
+                            "absolute_terminal_top1_fock_mass",
+                            1.0,
+                        ),
+                        (
+                            "top2_fock_mass",
+                            "absolute_terminal_top2_fock_mass",
+                            1.0,
+                        ),
+                        (
+                            "top4_fock_mass",
+                            "absolute_terminal_top4_fock_mass",
+                            1.0,
+                        ),
+                        (
+                            "normalized_mean_photon",
+                            "absolute_terminal_normalized_mean_photon",
+                            1.0,
+                        ),
+                        (
+                            "commutator_defect",
+                            "absolute_terminal_commutator_defect",
+                            float(cutoff),
+                        ),
+                    ):
+                        tail_gate = (
+                            f"tail/c{cutoff}/{backend}/{scenario}/{state}/{metric}"
+                        )
+                        absolute_truncation_result(
+                            gate_id=tail_gate,
+                            values=features[metric],
+                            quantization_bounds=quantization,
+                            quantization_scale=quantization_scale,
+                            margin_key=margin_key,
+                            scenario=scenario,
+                            state=state,
+                            metric=metric,
+                            cutoff=int(cutoff),
+                            backend=backend,
+                        )
                 for stage, stage_rounds in config["stage_partition"][scenario].items():
                     a_values, a_positions = _stage_matrix(
                         grouped,
@@ -1316,8 +1460,22 @@ def _build_report_core(
         and row["metric"] == "density_trace_distance"
         and row["cutoff_or_increment"] == "24->28"
     ]
+    cutoff_28_tail = [
+        row
+        for row in diagnostics
+        if row["contrast"] == "absolute_truncation_risk"
+        and row["cutoff_or_increment"] == "28"
+    ]
     trigger_threshold = 0.075
-    trigger_32 = any(float(row["estimate"]) > trigger_threshold for row in cutoff_24_28)
+    density_trigger = any(
+        float(row["estimate"]) > trigger_threshold for row in cutoff_24_28
+    )
+    tail_trigger_ids = [
+        str(row["gate_id"])
+        for row in cutoff_28_tail
+        if float(row["estimate"]) > float(row["margin"])
+    ]
+    trigger_32 = density_trigger or bool(tail_trigger_ids)
     aggregate_ledger: list[dict[str, Any]] = []
     for contrast, metric in sorted(
         {(str(row["contrast"]), str(row["metric"])) for row in diagnostics}
@@ -1404,12 +1562,29 @@ def _build_report_core(
         },
         "cutoff_32_exploratory_candidate": {
             "registered_trigger": (
-                "any state×scenario×backend 24->28 terminal-density point > 0.075"
+                "any state×scenario×backend 24->28 terminal-density point > "
+                "0.075 or any cutoff-28 absolute truncation-risk point exceeds "
+                "its preregistered margin"
             ),
-            "threshold": trigger_threshold,
-            "observed_maximum_point": max(
+            "density_threshold": trigger_threshold,
+            "observed_maximum_density_point": max(
                 float(row["estimate"]) for row in cutoff_24_28
             ),
+            "density_triggered": density_trigger,
+            "tail_margin_by_metric": {
+                metric: float(config["diagnostic_contract"]["margins"][margin_key])
+                for metric, margin_key in (
+                    ("top1_fock_mass", "absolute_terminal_top1_fock_mass"),
+                    ("top2_fock_mass", "absolute_terminal_top2_fock_mass"),
+                    ("top4_fock_mass", "absolute_terminal_top4_fock_mass"),
+                    (
+                        "normalized_mean_photon",
+                        "absolute_terminal_normalized_mean_photon",
+                    ),
+                    ("commutator_defect", "absolute_terminal_commutator_defect"),
+                )
+            },
+            "tail_trigger_gate_ids": tail_trigger_ids,
             "candidate_for_followup": trigger_32,
             "selected": None,
             "selection_effect": None,
