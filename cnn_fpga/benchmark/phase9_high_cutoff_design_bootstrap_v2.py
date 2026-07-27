@@ -163,7 +163,7 @@ PILOT_LAUNCH_META_PATH = (
 )
 DIAGNOSTIC_LAUNCH_META_PATH = (
     "runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3/"
-    "verified_diagnostic_v2_launch_meta.json"
+    "verified_diagnostic_v2b_launch_meta.json"
 )
 PROBE_LAUNCH_META_PATH = (
     "runs/t_risk_20260727_01_test_audit/" "verified_external_probe_launch_meta.json"
@@ -699,6 +699,12 @@ def _install_terminal_quantization_parser(diagnostic: object) -> None:
     diagnostic._parse_chunk = parse_chunk
 
 
+def _bind_v2_diagnostic_launcher_contract(diagnostic: object) -> None:
+    """Bind the immutable V1 diagnostic to this V2 launcher's verified hash."""
+
+    diagnostic.EXTERNAL_LAUNCHER_SHA256 = EXTERNAL_LAUNCHER_SHA256
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Verified entrypoint for the high-cutoff pilot or diagnostic."
@@ -729,6 +735,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     launch_binding, launch_payload = _commit_launch_meta("diagnostic")
     diagnostic.__verified_launch_meta_binding__ = launch_binding
     diagnostic.__verified_launch_meta_payload__ = launch_payload
+    _bind_v2_diagnostic_launcher_contract(diagnostic)
     diagnostic._require_verified_self_import()
     _install_terminal_quantization_parser(diagnostic)
     return int(diagnostic.main([]))

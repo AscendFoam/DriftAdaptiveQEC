@@ -4,6 +4,7 @@ import csv
 from hashlib import sha256
 import io
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -140,6 +141,12 @@ def test_v2_external_launcher_is_self_consistent() -> None:
         "phase9_high_cutoff_design_bootstrap_v2.py"
         in bootstrap.EXTERNAL_LAUNCHER_SOURCE
     )
+
+
+def test_v2_explicitly_rebinds_diagnostic_launcher_contract() -> None:
+    module = SimpleNamespace(EXTERNAL_LAUNCHER_SHA256="legacy")
+    bootstrap._bind_v2_diagnostic_launcher_contract(module)
+    assert module.EXTERNAL_LAUNCHER_SHA256 == bootstrap.EXTERNAL_LAUNCHER_SHA256
 
 
 def test_v2_accepts_terminal_only_quantization_certificate(
