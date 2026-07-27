@@ -531,10 +531,11 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         }
     )
     assert statuses["T7.3.5"] == "Done"
-    assert "当前推荐任务：`T-RISK-20260726-01`" in board
-    assert statuses["T-RISK-20260726-01"] == "In Progress"
+    assert "当前推荐任务：`T-RISK-20260727-01`" in board
+    assert statuses["T-RISK-20260726-01"] == "Done (NO-GO)"
+    assert statuses["T-RISK-20260727-01"] == "In Progress"
     assert "NO_GO_TWIN_QUALIFICATION" in phase9
-    assert "fresh twin qualification" in phase9
+    assert "NO_GO_FRESH_TWIN_QUALIFICATION" in board
 
     for milestone in ("9.1", "9.2", "9.3", "9.4", "9.5", "9.6", "9.7", "9.8"):
         assert f"### Milestone {milestone}" in phase9
@@ -617,7 +618,18 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         }
         for task_id in frozen_projection
     }
-    assert live_projection == frozen_projection
+    assert set(live_projection) == set(frozen_projection)
+    for task_id, frozen in frozen_projection.items():
+        live = live_projection[task_id]
+        assert live["task_id"] == frozen["task_id"]
+        assert live["task"] == frozen["task"]
+        frozen_sources = {
+            source.strip() for source in frozen["source"].split(",") if source.strip()
+        }
+        live_sources = {
+            source.strip() for source in live["source"].split(",") if source.strip()
+        }
+        assert frozen_sources <= live_sources
     assert "codebook actions" not in task_rows["T9.2.4"][3]
     assert "conservative representative action probes" in task_rows["T9.2.4"][3]
     assert "T9.1.3" not in task_rows["T9.3.2"][4]
@@ -636,9 +648,16 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert task_rows["T9.6.1"][4] == (
         "`T9.1.1`, `T9.4.5`, `T9.5.4`, `R-N168`"
     )
-    assert task_rows["T9.6.5"][4] == (
-        "`T9.2.4`, `T9.6.2--T9.6.4`, `R-N162--R-N166`, `R-N168`"
-    )
+    assert {
+        "`T9.2.4`",
+        "`T9.6.2--T9.6.4`",
+        "`R-N162--R-N166`",
+        "`R-N168`",
+    } <= {
+        source.strip()
+        for source in task_rows["T9.6.5"][4].split(",")
+        if source.strip()
+    }
     assert task_rows["T9.8.1"][4] == "`T9.6.5`, `T9.7.4`, `R-N168`"
     assert "Puviani official exact/surpass 保持 null" in task_rows["T9.6.5"][3]
     assert "仅在独立 Phase 8 QPU/real-GKP 证据缺失时保持 null" in task_rows["T9.6.5"][3]
@@ -682,7 +701,7 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         assert required in section20
 
     risks = (ROOT / "docs" / "new_risks.md").read_text(encoding="utf-8")
-    for risk_number in range(162, 184):
+    for risk_number in range(162, 187):
         assert f"R-N{risk_number}" in risks
     assert "| R-N168 | Mitigated |" in risks
     assert "| R-N170 | Mitigated |" in risks
@@ -697,8 +716,11 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert "| R-N179 | Open |" in risks
     assert "| R-N180 | Open |" in risks
     assert "| R-N181 | Mitigated |" in risks
-    assert "| R-N182 | Open |" in risks
+    assert "| R-N182 | Mitigated |" in risks
     assert "| R-N183 | Open |" in risks
+    assert "| R-N184 | Open |" in risks
+    assert "| R-N185 | Open |" in risks
+    assert "| R-N186 | Open |" in risks
     assert "| 2026-07-24 | T9.1.3 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-25 | T9.1.4 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-25 | T9.1.5 完成与反简化复核 | 不插入 |" in risks

@@ -1,0 +1,765 @@
+{
+  "analysis_sha256": "9383643278e38170a68ada95dea8b11e4cc9afd739b4981e7861d0f1e49cb31b",
+  "branch_mutations": [
+    {
+      "branch": "pass",
+      "detected": true,
+      "field": "qualified_claim",
+      "mutation_id": "B01_pass_claim_null"
+    },
+    {
+      "branch": "pass",
+      "detected": true,
+      "field": "released",
+      "mutation_id": "B02_pass_partial_release"
+    },
+    {
+      "branch": "pass",
+      "detected": true,
+      "field": "all_gates_passed",
+      "mutation_id": "B03_pass_gate_fail"
+    },
+    {
+      "branch": "pass",
+      "detected": true,
+      "field": "complete",
+      "mutation_id": "B04_pass_incomplete"
+    },
+    {
+      "branch": "no_go",
+      "detected": true,
+      "field": "qualified_claim",
+      "mutation_id": "B05_no_go_claim"
+    },
+    {
+      "branch": "no_go",
+      "detected": true,
+      "field": "released",
+      "mutation_id": "B06_no_go_release"
+    },
+    {
+      "branch": "no_go",
+      "detected": true,
+      "field": "all_gates_passed",
+      "mutation_id": "B07_no_go_all_pass"
+    },
+    {
+      "branch": "no_go",
+      "detected": true,
+      "field": "complete",
+      "mutation_id": "B08_no_go_incomplete"
+    },
+    {
+      "branch": "incomplete",
+      "detected": true,
+      "field": "qualified_claim",
+      "mutation_id": "B09_incomplete_claim"
+    },
+    {
+      "branch": "incomplete",
+      "detected": true,
+      "field": "released",
+      "mutation_id": "B10_incomplete_release"
+    },
+    {
+      "branch": "incomplete",
+      "detected": true,
+      "field": "complete",
+      "mutation_id": "B11_incomplete_complete"
+    },
+    {
+      "branch": "pass",
+      "detected": true,
+      "field": "verdict",
+      "mutation_id": "B12_unknown_verdict"
+    },
+    {
+      "branch": "pass",
+      "detected": true,
+      "field": "claim_state",
+      "mutation_id": "B13_claim_false"
+    },
+    {
+      "branch": "no_go",
+      "detected": true,
+      "field": "claim_state",
+      "mutation_id": "B14_claim_missing"
+    },
+    {
+      "branch": "incomplete",
+      "detected": true,
+      "field": "claim_state",
+      "mutation_id": "B15_claim_extra"
+    },
+    {
+      "branch": "pass",
+      "detected": true,
+      "field": "historical_no_go_preserved",
+      "mutation_id": "B16_rewrite_old"
+    },
+    {
+      "branch": "no_go",
+      "detected": true,
+      "field": "historical_no_go_preserved",
+      "mutation_id": "B17_no_go_rewrite_old"
+    },
+    {
+      "branch": "incomplete",
+      "detected": true,
+      "field": "historical_no_go_preserved",
+      "mutation_id": "B18_incomplete_rewrite_old"
+    }
+  ],
+  "claim_boundary": "The audit confirms a complete fresh synthetic-task scientific NO-GO. It qualifies no physical accuracy, LER, lifetime, break-even, Puviani, external-SOTA, hardware, or rank claim.",
+  "claim_state": {
+    "board_measured_latency": null,
+    "board_power": null,
+    "board_resources": null,
+    "external_same_task_speed": null,
+    "external_sota": null,
+    "frontend_performance": null,
+    "live_raw_iq_qualification": null,
+    "official_puviani_exact": null,
+    "physical_break_even": null,
+    "puviani_nmf_surpass": null,
+    "rank": null,
+    "recorded_iq_qualification": null,
+    "round_ler": null,
+    "six_state_lifetime": null,
+    "synthetic_iq_qualification": null
+  },
+  "evidence_bindings": {
+    "attempt_ledger": {
+      "bytes": 714948,
+      "path": "docs/t_risk_20260726_01_fresh_attempt_ledger.jsonl",
+      "sha256": "d16fe5df9cd6b8248fd8e0f2c46f4eb915336b67458188f8bcd17c5ea9be57c8"
+    },
+    "auditor": {
+      "bytes": 60987,
+      "path": "cnn_fpga/benchmark/phase9_fresh_twin_post_outcome_audit.py",
+      "sha256": "01da1f20d580cba3445fafda078006932db4fc456641606277756eaedb26e730"
+    },
+    "auditor_tests": {
+      "bytes": 9052,
+      "path": "tests/test_phase9_fresh_twin_post_outcome_audit.py",
+      "sha256": "29e9141598519cdb3cb2590c15793596cbcd407c3cc2f8fa4a4d483370e4d4e2"
+    },
+    "cell_ledger": {
+      "bytes": 707688383,
+      "path": "docs/t_risk_20260726_01_fresh_cell_ledger.csv",
+      "sha256": "d875f1225fae9f040f6befee70883cc6a68ad1ec9e8d7cb29403f9a76da51b0f"
+    },
+    "config": {
+      "bytes": 520598,
+      "path": "configs/phase9/t_risk_20260726_01_fresh_twin_qualification.json",
+      "sha256": "8573e670fefff78564ff9705dc93320e08df9f1dcf59e0aaf6be0eee1730c31e"
+    },
+    "design_config": {
+      "bytes": 10674,
+      "path": "configs/phase9/t_risk_20260726_01_design_power.json",
+      "sha256": "b702de16ef81915c6b4d49df79a75640bf7adacb23bbcf6d7b9eb2fc0e19f1e0"
+    },
+    "execution_manifest": {
+      "bytes": 2921,
+      "path": "docs/t_risk_20260726_01_fresh_execution_manifest.json",
+      "sha256": "d1acb9d05360f61e2dfc5096eb7eaf2c00be4c0d9d57d54d58059dddbb8cf791"
+    },
+    "gate_ledger": {
+      "bytes": 360785,
+      "path": "docs/t_risk_20260726_01_fresh_gate_ledger.csv",
+      "sha256": "a7e2957f3a9f59e73ddd14e66c22a0842f6b75a3a7b1f1b77aa41c4cce97a85c"
+    },
+    "gitattributes": {
+      "bytes": 1050,
+      "path": ".gitattributes",
+      "sha256": "e148c12c3ba462ad9143ba7158d213e637b6e8f5b927b160c7d5213e42323393"
+    },
+    "historical_lineage": {
+      "bytes": 4791,
+      "path": "docs/t_risk_20260726_01_historical_no_go_receipt.json",
+      "sha256": "8dd9365c3a85c4add359394650747c1004785f50c7b84edb022eef6524bf7d46"
+    },
+    "historical_report": {
+      "bytes": 2995,
+      "path": "docs/t9_2_4_dual_backend_qualification.json",
+      "sha256": "b81059cb685f76848f5fd978acf0cbdaf52c39a26588f975fa6e7c9b2378c1d1"
+    },
+    "preformal_audit": {
+      "bytes": 34270,
+      "path": "docs/t_risk_20260726_01_fresh_preformal_audit.json",
+      "sha256": "c20defe95587b4aa1346a14366396ef9115cac08f6ad1defc0d821ba991f8399"
+    },
+    "preformal_seal": {
+      "bytes": 37584,
+      "path": "docs/t_risk_20260726_01_fresh_preformal_seal.json",
+      "sha256": "7b412ee045631daa38b19a58f4d150f3a7c8c6043dd4a39d0b156929253e8fcb"
+    },
+    "qualification": {
+      "bytes": 5484,
+      "path": "docs/t_risk_20260726_01_fresh_qualification.json",
+      "sha256": "4d4c6479806c23f1eaa13e42331089f9ce956835984533446f4d883d79739b04"
+    },
+    "qualification_source": {
+      "bytes": 360785,
+      "path": "docs/t_risk_20260726_01_fresh_qualification_source_data.csv",
+      "sha256": "a7e2957f3a9f59e73ddd14e66c22a0842f6b75a3a7b1f1b77aa41c4cce97a85c"
+    },
+    "raw_archive": {
+      "bytes": 824505231,
+      "path": "docs/t_risk_20260726_01_fresh_raw_archive.zip",
+      "sha256": "b519bd4b141ef664054da819b0740c2019d86b1982c5e73632dc1aebe763a3c0"
+    },
+    "release": {
+      "bytes": 1498,
+      "path": "docs/t_risk_20260726_01_fresh_release.json",
+      "sha256": "e0d70ff735cb43af003c54b0784c343dc579c077d6ccf3b9bbf3e4d66d8572dd"
+    },
+    "release_pin": {
+      "bytes": 1498,
+      "path": "configs/phase9/t_risk_20260726_01_fresh_release_pin.json",
+      "sha256": "e0d70ff735cb43af003c54b0784c343dc579c077d6ccf3b9bbf3e4d66d8572dd"
+    },
+    "verification": {
+      "bytes": 2022,
+      "path": "docs/t_risk_20260726_01_fresh_verification.json",
+      "sha256": "d9f607ec6d1f7071f0a28d7d46aaf3054c5792d99fca4ed36173dca66f2bc3fe"
+    }
+  },
+  "execution_summary": {
+    "archive_members": 594,
+    "attempt_events": 594,
+    "chunks": 592,
+    "exception_rows": 0,
+    "rows": 528384
+  },
+  "formal_verdict": "NO_GO_FRESH_TWIN_QUALIFICATION",
+  "gate_outcome": {
+    "failed": 27,
+    "failed_family_counts": {
+      "cutoff_mapping": 8,
+      "fault_trajectory_tail": 16,
+      "physical_state_channel": 3
+    },
+    "failed_gate_ids": [
+      "ab/c8/shared/vacuum_f/RESET/density_trace_distance",
+      "ab/c12/shared/vacuum_f/RESET/density_trace_distance",
+      "ab/c12/fault/step/terminal_density_trace_distance",
+      "ab/c12/fault/step/terminal_mean_photon_difference",
+      "ab/c12/fault/telegraph/terminal_density_trace_distance",
+      "ab/c12/fault/telegraph/terminal_mean_photon_difference",
+      "ab/c12/fault/burst/terminal_density_trace_distance",
+      "ab/c12/fault/burst/terminal_mean_photon_difference",
+      "ab/c12/fault/burst/terminal_level_probability_l1",
+      "ab/c12/fault/compound/terminal_mean_photon_difference",
+      "ab/c16/shared/vacuum_f/RESET/density_trace_distance",
+      "ab/c16/fault/step/terminal_density_trace_distance",
+      "ab/c16/fault/step/terminal_mean_photon_difference",
+      "ab/c16/fault/step/terminal_level_probability_l1",
+      "ab/c16/fault/telegraph/terminal_density_trace_distance",
+      "ab/c16/fault/telegraph/terminal_mean_photon_difference",
+      "ab/c16/fault/burst/terminal_density_trace_distance",
+      "ab/c16/fault/burst/terminal_mean_photon_difference",
+      "ab/c16/fault/compound/terminal_mean_photon_difference",
+      "cutoff/12-16/fault/step/terminal_density",
+      "cutoff/12-16/fault/telegraph/terminal_density",
+      "cutoff/12-16/fault/burst/terminal_density",
+      "cutoff/12-16/fault/compound/terminal_density",
+      "cutoff/16-20/fault/step/terminal_density",
+      "cutoff/16-20/fault/telegraph/terminal_density",
+      "cutoff/16-20/fault/burst/terminal_density",
+      "cutoff/16-20/fault/compound/terminal_density"
+    ],
+    "family_totals": {
+      "cutoff_mapping": 88,
+      "fault_trajectory_tail": 108,
+      "iq_conditional_distribution": 484,
+      "likelihood_score_posterior": 363,
+      "logical_ptm_survival": 147,
+      "physical_state_channel": 363,
+      "reset_leakage": 36
+    },
+    "passed": 1562,
+    "total": 1589
+  },
+  "gate_summary": {
+    "all_passed": true,
+    "passed": 40,
+    "total": 40
+  },
+  "gates": {
+    "G01_task_and_schema_identity": true,
+    "G02_manifest_execution_self_hash": true,
+    "G03_report_verification_self_hash": true,
+    "G04_release_and_lineage_self_hash": true,
+    "G05_report_byte_bindings_live": true,
+    "G06_verification_byte_bindings_live": true,
+    "G07_manifest_input_bindings_live": true,
+    "G08_complete_row_denominator": true,
+    "G09_ledger_binding_recomputed": true,
+    "G10_zero_exception_rows": true,
+    "G11_all_rows_conserve_and_finite": true,
+    "G12_ledger_header_independently_bound": true,
+    "G13_attempt_hash_chain_complete": true,
+    "G14_attempt_chunks_complete": true,
+    "G15_attempt_prefix_manifest_binding": true,
+    "G16_final_event_binds_outputs": true,
+    "G17_archive_manifest_and_crc": true,
+    "G18_archive_chunk_and_row_accounting": true,
+    "G19_every_archived_chunk_hash_live": true,
+    "G20_gate_ledger_complete_unique": true,
+    "G21_gate_blueprint_exact": true,
+    "G22_gate_bound_and_direction_recomputed": true,
+    "G23_exact_gate_outcome": true,
+    "G24_family_totals_exact": true,
+    "G25_failure_family_counts_exact": true,
+    "G26_failed_gate_ids_exact": true,
+    "G27_no_postselection": true,
+    "G28_raw_log_evidence_diagnostic_only": true,
+    "G29_scientific_no_go_not_incomplete": true,
+    "G30_no_go_releases_nothing": true,
+    "G31_all_claims_literal_null": true,
+    "G32_qualified_claim_literal_null": true,
+    "G33_no_go_release_analysis_null": true,
+    "G34_verification_binds_qualification_analysis": true,
+    "G35_release_pin_byte_identical": true,
+    "G36_historical_no_go_preserved": true,
+    "G37_no_old_cell_or_runtime_import": true,
+    "G38_independent_semantic_receipt_complete": true,
+    "G39_gate_source_copy_byte_identical": true,
+    "G40_large_evidence_lfs_tracked": true
+  },
+  "historical_t9_2_4_no_go_preserved": true,
+  "mutation_summary": {
+    "all_detected": true,
+    "detected": 69,
+    "total": 69
+  },
+  "qualified_claim": null,
+  "release_state": {
+    "T9.2.5": false,
+    "T9.2.7": false,
+    "T9.3.1": false,
+    "T9.3.4": false,
+    "T9.6.2": false,
+    "T9.6.5": false
+  },
+  "schema_version": "PHASE9-FRESH-TWIN-POST-OUTCOME-AUDIT-V1",
+  "semantic_mutations": [
+    {
+      "detected": true,
+      "failed_gates": [
+        "G02_manifest_execution_self_hash"
+      ],
+      "field": "manifest_self_hash",
+      "mutation_id": "M01_manifest_hash"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G03_report_verification_self_hash"
+      ],
+      "field": "qualification_self_hash",
+      "mutation_id": "M02_report_hash"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G04_release_and_lineage_self_hash"
+      ],
+      "field": "release_self_hash",
+      "mutation_id": "M03_release_hash"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G05_report_byte_bindings_live"
+      ],
+      "field": "report_bindings_match",
+      "mutation_id": "M04_binding_tamper"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G08_complete_row_denominator"
+      ],
+      "field": "row_count",
+      "mutation_id": "M05_drop_row"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G08_complete_row_denominator"
+      ],
+      "field": "row_unique",
+      "mutation_id": "M06_duplicate_row"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G10_zero_exception_rows"
+      ],
+      "field": "ledger_exception_rows",
+      "mutation_id": "M07_hide_exception"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G11_all_rows_conserve_and_finite"
+      ],
+      "field": "ledger_conservation_rows",
+      "mutation_id": "M08_conservation_failure"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G11_all_rows_conserve_and_finite"
+      ],
+      "field": "ledger_mandatory_nonfinite",
+      "mutation_id": "M09_nan_row"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G12_ledger_header_independently_bound"
+      ],
+      "field": "ledger_header_sha256",
+      "mutation_id": "M10_header_drift"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G13_attempt_hash_chain_complete"
+      ],
+      "field": "attempt_chain_valid",
+      "mutation_id": "M11_attempt_chain"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G13_attempt_hash_chain_complete"
+      ],
+      "field": "attempt_indexes_valid",
+      "mutation_id": "M12_attempt_index"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G13_attempt_hash_chain_complete"
+      ],
+      "field": "attempt_run_errors",
+      "mutation_id": "M13_run_error"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G14_attempt_chunks_complete"
+      ],
+      "field": "attempt_chunk_count",
+      "mutation_id": "M14_drop_chunk"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G14_attempt_chunks_complete"
+      ],
+      "field": "attempt_chunk_rows",
+      "mutation_id": "M15_chunk_rows"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G15_attempt_prefix_manifest_binding"
+      ],
+      "field": "attempt_prefix_sha256",
+      "mutation_id": "M16_prefix_hash"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G16_final_event_binds_outputs"
+      ],
+      "field": "final_bindings_match",
+      "mutation_id": "M17_final_binding"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G17_archive_manifest_and_crc"
+      ],
+      "field": "archive_bad_crc_member",
+      "mutation_id": "M18_archive_crc"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G17_archive_manifest_and_crc"
+      ],
+      "field": "archive_duplicate_names",
+      "mutation_id": "M19_archive_duplicate"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G18_archive_chunk_and_row_accounting"
+      ],
+      "field": "archive_entry_count",
+      "mutation_id": "M20_archive_drop"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G18_archive_chunk_and_row_accounting"
+      ],
+      "field": "archive_entry_rows",
+      "mutation_id": "M21_archive_row"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G19_every_archived_chunk_hash_live"
+      ],
+      "field": "archive_member_hash_failures",
+      "mutation_id": "M22_archive_member_hash"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G19_every_archived_chunk_hash_live"
+      ],
+      "field": "archive_member_size_failures",
+      "mutation_id": "M23_archive_size"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G19_every_archived_chunk_hash_live"
+      ],
+      "field": "archive_attempt_binding_failures",
+      "mutation_id": "M24_archive_attempt"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G19_every_archived_chunk_hash_live"
+      ],
+      "field": "archive_mapping_hash_valid",
+      "mutation_id": "M25_archive_mapping"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G20_gate_ledger_complete_unique"
+      ],
+      "field": "gate_count",
+      "mutation_id": "M26_drop_gate"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G20_gate_ledger_complete_unique"
+      ],
+      "field": "gate_unique",
+      "mutation_id": "M27_duplicate_gate"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G21_gate_blueprint_exact"
+      ],
+      "field": "gate_blueprint_matches",
+      "mutation_id": "M28_blueprint_switch"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G21_gate_blueprint_exact"
+      ],
+      "field": "blueprint_hash_matches",
+      "mutation_id": "M29_blueprint_hash"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G22_gate_bound_and_direction_recomputed"
+      ],
+      "field": "gate_arithmetic_failures",
+      "mutation_id": "M30_bound_factor"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G22_gate_bound_and_direction_recomputed"
+      ],
+      "field": "gate_declared_pass_failures",
+      "mutation_id": "M31_bound_direction"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G22_gate_bound_and_direction_recomputed"
+      ],
+      "field": "gate_nonfinite_rows",
+      "mutation_id": "M32_nonfinite_gate"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G23_exact_gate_outcome"
+      ],
+      "field": "gate_failed",
+      "mutation_id": "M33_promote_gate"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G24_family_totals_exact"
+      ],
+      "field": "gate_family_totals",
+      "mutation_id": "M34_family_total"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G25_failure_family_counts_exact"
+      ],
+      "field": "gate_family_failures",
+      "mutation_id": "M35_failure_family"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G26_failed_gate_ids_exact"
+      ],
+      "field": "failed_ids_match",
+      "mutation_id": "M36_failed_id"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G27_no_postselection"
+      ],
+      "field": "config_no_postselection",
+      "mutation_id": "M37_postselection"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G28_raw_log_evidence_diagnostic_only"
+      ],
+      "field": "raw_log_evidence_primary",
+      "mutation_id": "M38_raw_score_primary"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G29_scientific_no_go_not_incomplete"
+      ],
+      "field": "qualification_verdict",
+      "mutation_id": "M39_promote_verdict"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G29_scientific_no_go_not_incomplete"
+      ],
+      "field": "verification_verdict",
+      "mutation_id": "M40_incomplete_verdict"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G30_no_go_releases_nothing"
+      ],
+      "field": "release_all_false",
+      "mutation_id": "M41_release_task"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G31_all_claims_literal_null"
+      ],
+      "field": "claims_all_null",
+      "mutation_id": "M42_promote_claim"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G32_qualified_claim_literal_null"
+      ],
+      "field": "qualified_claims",
+      "mutation_id": "M43_qualified_claim"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G33_no_go_release_analysis_null"
+      ],
+      "field": "release_qualification_analysis_null",
+      "mutation_id": "M44_release_analysis"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G35_release_pin_byte_identical"
+      ],
+      "field": "release_pin_byte_identical",
+      "mutation_id": "M45_release_pin"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G36_historical_no_go_preserved"
+      ],
+      "field": "historical_verdict",
+      "mutation_id": "M46_rewrite_old_no_go"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G37_no_old_cell_or_runtime_import"
+      ],
+      "field": "old_formal_cell_data_accessed",
+      "mutation_id": "M47_old_cell_access"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G37_no_old_cell_or_runtime_import"
+      ],
+      "field": "runner_or_physics_imported",
+      "mutation_id": "M48_import_physics"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G38_independent_semantic_receipt_complete"
+      ],
+      "field": "semantic_rows_checked",
+      "mutation_id": "M49_semantic_drop"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G39_gate_source_copy_byte_identical"
+      ],
+      "field": "source_gate_byte_identical",
+      "mutation_id": "M50_source_copy"
+    },
+    {
+      "detected": true,
+      "failed_gates": [
+        "G40_large_evidence_lfs_tracked"
+      ],
+      "field": "lfs_tracking",
+      "mutation_id": "M51_lfs_removed"
+    }
+  ],
+  "source_data": {
+    "bytes": 12221,
+    "path": "docs/t_risk_20260726_01_fresh_post_outcome_audit_source_data.csv",
+    "rows": 136,
+    "sha256": "8a817e2c49c88cd8bbd535e094308bc353243fe48023d9951b7f2de7cdec9766"
+  },
+  "task_id": "T-RISK-20260726-01",
+  "verdict": "AUDIT_CONFIRMS_FRESH_SCIENTIFIC_NO_GO"
+}
