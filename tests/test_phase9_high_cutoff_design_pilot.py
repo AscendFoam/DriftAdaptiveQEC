@@ -39,6 +39,8 @@ def test_live_config_has_bound_sources_and_disjoint_pilot_matrix() -> None:
     assert execution["formal_splits"]["heldout_common"]["start"] == 1312000
     assert pilot["claim_boundary"]["twin_qualification"] is None
     assert pilot["optional_cutoff_32"]["enabled"] is False
+    assert pilot["diagnostic_contract"]["multiplier_replicates"] == 1999
+    assert pilot["diagnostic_contract"]["formal_rescue_forbidden"] is True
     for partition in pilot["stage_partition"].values():
         rounds = [
             round_index

@@ -57,6 +57,29 @@
   },
   "trajectory_count": 72,
   "clusters_per_state": 12,
+  "diagnostic_contract": {
+    "confidence": 0.95,
+    "multiplier_replicates": 1999,
+    "multiplier_seed_namespace": 1320000,
+    "calibration_factor_source": {
+      "path": "docs/t_risk_20260727_01_uq_calibration.json",
+      "required_analysis_sha256": "546f808015c82b218664d99c1026cb9fc40af2362b076d479df10e98c7073446",
+      "required_factor": 1.0,
+      "required_coverage_all_passed": true
+    },
+    "margins": {
+      "ab_terminal_density_trace_distance": 0.15,
+      "ab_terminal_mean_photon_difference": 0.08,
+      "ab_terminal_level_probability_l1": 0.1,
+      "ab_terminal_logical_survival_difference": 0.1,
+      "cutoff_terminal_density_trace_distance": 0.1,
+      "cutoff_terminal_mean_photon_difference": 0.08,
+      "cutoff_terminal_level_probability_l1": 0.1,
+      "cutoff_terminal_logical_survival_difference": 0.1
+    },
+    "stage_cluster_reduction": "mean within each trajectory seed_position and registered stage before any A/B or cutoff contrast",
+    "formal_rescue_forbidden": true
+  },
   "seed_splits": {
     "trajectory_backend_a": {
       "start": 1310000,

@@ -103,6 +103,14 @@ def load_pilot_config(root: Path) -> tuple[dict[str, Any], dict[str, Any]]:
         != ["burst", "compound", "step", "telegraph"]
     ):
         raise ValueError("high-cutoff pilot matrix drift")
+    diagnostic = config.get("diagnostic_contract", {})
+    if (
+        diagnostic.get("confidence") != 0.95
+        or diagnostic.get("multiplier_replicates") != 1999
+        or diagnostic.get("multiplier_seed_namespace") != 1320000
+        or diagnostic.get("formal_rescue_forbidden") is not True
+    ):
+        raise ValueError("high-cutoff pilot diagnostic contract drift")
     for scenario in config["scenario_names"]:
         partition = config.get("stage_partition", {}).get(scenario)
         if (
