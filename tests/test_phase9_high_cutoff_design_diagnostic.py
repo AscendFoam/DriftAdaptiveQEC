@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -34,9 +37,7 @@ def _fixture():
             for position in range(72):
                 state = states[position % 6]
                 for round_index in range(12):
-                    row_id = (
-                        f"c{cutoff}-{backend}-p{position}-r{round_index}"
-                    )
+                    row_id = f"c{cutoff}-{backend}-p{position}-r{round_index}"
                     terminal = round_index == 11
                     rows.append(
                         {
@@ -132,3 +133,101 @@ def test_multiplier_namespace_is_disjoint_and_stable() -> None:
     assert first == repeat
     assert first != other
     assert first >> 64 == 1320000
+
+
+def test_load_inputs_rejects_rehashed_uq_claim_upgrade(tmp_path, monkeypatch) -> None:
+    config = {
+        "artifact_paths": {
+            "run_identity": "run_identity.json",
+            "execution_manifest": "manifest.json",
+        },
+        "diagnostic_contract": {
+            "calibration_factor_source": {
+                "required_analysis_sha256": "",
+                "required_factor": 1.0,
+                "required_coverage_all_passed": True,
+            }
+        },
+    }
+    run_identity = {"fixture": True}
+    run_identity["analysis_sha256"] = subject._sha(run_identity)
+    manifest = {
+        "task_id": subject.TASK_ID,
+        "schema_version": subject.pilot_runner.MANIFEST_SCHEMA,
+        "status": subject.pilot_runner.STATUS,
+        "scientific_verdict": None,
+        "qualified_claim": None,
+        "exception_rows": 0,
+        "conservation_failure_rows": 0,
+        "observed_cells": 32,
+        "observed_rows": 27648,
+        "claim_state": dict(subject.pilot_runner.CLAIM_BOUNDARY),
+    }
+    manifest["analysis_sha256"] = subject._sha(manifest)
+    uq = {
+        "selected_calibration_factor": 1.0,
+        "validation_coverage_summary": {"all_cells_passed": True},
+        "claim_state": {
+            **subject.UQ_CLAIM_BOUNDARY,
+            "external_sota": True,
+        },
+        "bindings": {"fixture": {"path": "fixture", "bytes": 0, "sha256": "x"}},
+    }
+    uq["analysis_sha256"] = subject._sha(uq)
+    config["diagnostic_contract"]["calibration_factor_source"][
+        "required_analysis_sha256"
+    ] = uq["analysis_sha256"]
+    extension = {
+        "verdict": "PASS_PAIRED_CLUSTER_UQ_POWER_EXTENSION",
+        "selected_formal_clusters_per_state": 384,
+        "parent_analysis_sha256": uq["analysis_sha256"],
+        "claim_state": dict(subject.EXTENSION_CLAIM_BOUNDARY),
+        "bindings": {"fixture": {"path": "fixture", "bytes": 0, "sha256": "x"}},
+    }
+    extension["analysis_sha256"] = subject._sha(extension)
+    (tmp_path / "run_identity.json").write_text(
+        json.dumps(run_identity), encoding="utf-8"
+    )
+    (tmp_path / "manifest.json").write_text(json.dumps(manifest), encoding="utf-8")
+    (tmp_path / "uq.json").write_text(json.dumps(uq), encoding="utf-8")
+    (tmp_path / "extension.json").write_text(json.dumps(extension), encoding="utf-8")
+    monkeypatch.setattr(subject, "CONFIG_PATH", "config.json")
+    monkeypatch.setattr(subject, "UQ_REPORT_PATH", "uq.json")
+    monkeypatch.setattr(subject, "UQ_EXTENSION_PATH", "extension.json")
+    monkeypatch.setattr(subject.pilot_runner, "CONFIG_PATH", "config.json")
+    monkeypatch.setattr(
+        subject.pilot_runner,
+        "load_pilot_config",
+        lambda _root, **_kwargs: (config, {}),
+    )
+    monkeypatch.setattr(
+        subject.pilot_runner,
+        "materialize_execution_config",
+        lambda *_args: {},
+    )
+    monkeypatch.setattr(subject.pilot_runner, "build_pilot_cells", lambda *_args: [])
+    monkeypatch.setattr(subject.pilot_runner, "_verify_manifest", lambda *_args: None)
+    monkeypatch.setattr(subject, "_verify_report_bindings", lambda *_args: None)
+
+    with pytest.raises(ValueError, match="factor binding drift"):
+        subject._load_inputs(tmp_path)
+
+
+def test_report_transaction_commits_source_before_report(tmp_path, monkeypatch) -> None:
+    report = {"bindings": {}}
+    rows = [{"gate_id": "g", "pilot_pass": True}]
+    monkeypatch.setattr(subject, "_build_report_core", lambda _root: (report, rows))
+    monkeypatch.setattr(subject, "SOURCE_PATH", "source.csv")
+    monkeypatch.setattr(subject, "REPORT_PATH", "report.json")
+    original_atomic = subject._atomic_text
+
+    def fail_report(path: Path, value: str) -> None:
+        if path.name == "report.json":
+            raise OSError("injected report commit failure")
+        original_atomic(path, value)
+
+    monkeypatch.setattr(subject, "_atomic_text", fail_report)
+    with pytest.raises(OSError, match="injected"):
+        subject.write_artifacts(tmp_path)
+    assert (tmp_path / "source.csv").is_file()
+    assert not (tmp_path / "report.json").exists()

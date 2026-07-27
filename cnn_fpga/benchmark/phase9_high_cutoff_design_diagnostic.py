@@ -14,6 +14,7 @@ from typing import Any, Mapping, Sequence
 
 import numpy as np
 
+from cnn_fpga.benchmark import phase9_high_cutoff_design_pilot as pilot_runner
 from cnn_fpga.benchmark.phase9_paired_cluster_uq import (
     NormUCB,
     paired_density_trace_ucb,
@@ -22,13 +23,37 @@ from cnn_fpga.benchmark.phase9_paired_cluster_uq import (
 
 
 TASK_ID = "T-RISK-20260727-01"
-CONFIG_PATH = "configs/phase9/t_risk_20260727_01_high_cutoff_design_pilot.json"
+CONFIG_PATH = "configs/phase9/t_risk_20260727_01_high_cutoff_design_pilot_fresh2.json"
 UQ_REPORT_PATH = "docs/t_risk_20260727_01_uq_calibration.json"
 UQ_EXTENSION_PATH = "docs/t_risk_20260727_01_uq_power_extension.json"
-REPORT_PATH = "docs/t_risk_20260727_01_high_cutoff_design_diagnostic.json"
-SOURCE_PATH = "docs/t_risk_20260727_01_high_cutoff_design_diagnostic_source_data.csv"
-SCHEMA = "PHASE9-HIGH-CUTOFF-STATE-DESIGN-DIAGNOSTIC-V1"
+REPORT_PATH = "docs/t_risk_20260727_01_high_cutoff_design_diagnostic_fresh2.json"
+SOURCE_PATH = (
+    "docs/t_risk_20260727_01_high_cutoff_design_diagnostic_fresh2_source_data.csv"
+)
+SCHEMA = "PHASE9-HIGH-CUTOFF-STATE-DESIGN-DIAGNOSTIC-V2"
 STATUS = "HIGH_CUTOFF_STATE_STAGE_DESIGN_DIAGNOSTIC_COMPLETE"
+UQ_CLAIM_BOUNDARY = {
+    "calibration_only": True,
+    "external_sota": None,
+    "hardware_measured": None,
+    "ler": None,
+    "lifetime": None,
+    "official_puviani_exact": None,
+    "physical_break_even": None,
+    "puviani_nmf_surpass": None,
+    "twin_qualification": None,
+}
+EXTENSION_CLAIM_BOUNDARY = {
+    "external_sota": None,
+    "hardware_measured": None,
+    "ler": None,
+    "lifetime": None,
+    "official_puviani_exact": None,
+    "physical_break_even": None,
+    "power_extension_only": True,
+    "puviani_nmf_surpass": None,
+    "twin_qualification": None,
+}
 
 
 def _root() -> Path:
@@ -58,6 +83,36 @@ def _binding(path: Path, root: Path) -> dict[str, object]:
     }
 
 
+def _verify_self_hash(payload: Mapping[str, Any], label: str) -> None:
+    unsigned = dict(payload)
+    analysis = unsigned.pop("analysis_sha256", None)
+    if not isinstance(analysis, str) or analysis != _sha(unsigned):
+        raise ValueError(f"{label} self-hash drift")
+
+
+def _verify_live_binding(root: Path, binding: Mapping[str, Any], label: str) -> Path:
+    if set(binding) != {"path", "bytes", "sha256"}:
+        raise ValueError(f"{label} binding schema drift")
+    path = (root / str(binding["path"])).resolve()
+    try:
+        path.relative_to(root.resolve())
+    except ValueError as exc:
+        raise ValueError(f"{label} binding escapes root") from exc
+    if dict(binding) != _binding(path, root):
+        raise ValueError(f"{label} live binding drift")
+    return path
+
+
+def _verify_report_bindings(root: Path, report: Mapping[str, Any], label: str) -> None:
+    bindings = report.get("bindings")
+    if not isinstance(bindings, Mapping) or not bindings:
+        raise ValueError(f"{label} bindings missing")
+    for name, binding in bindings.items():
+        if not isinstance(binding, Mapping):
+            raise ValueError(f"{label}/{name} binding type drift")
+        _verify_live_binding(root, binding, f"{label}/{name}")
+
+
 def _seed(namespace: int, gate_id: str) -> int:
     return (namespace << 64) | int.from_bytes(
         sha256(gate_id.encode("utf-8")).digest()[:8], "big"
@@ -81,31 +136,51 @@ def _load_inputs(
     dict[str, Any],
     dict[str, Any],
 ]:
-    config = json.loads((root / CONFIG_PATH).read_text(encoding="utf-8"))
+    config, base = pilot_runner.load_pilot_config(root, require_hardened=True)
+    if pilot_runner.CONFIG_PATH != CONFIG_PATH:
+        raise ValueError("diagnostic/pilot config path drift")
+    execution = pilot_runner.materialize_execution_config(config, base)
+    cells = pilot_runner.build_pilot_cells(config, execution)
+    run_identity_path = root / str(config["artifact_paths"]["run_identity"])
+    run_identity = json.loads(run_identity_path.read_text(encoding="utf-8"))
+    _verify_self_hash(run_identity, "pilot run identity")
     manifest_path = root / str(config["artifact_paths"]["execution_manifest"])
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    _verify_self_hash(manifest, "pilot manifest")
+    pilot_runner._verify_manifest(
+        root, config, execution, cells, run_identity, manifest
+    )
     if (
         manifest.get("task_id") != TASK_ID
-        or manifest.get("status") != "DESIGN_PILOT_RAW_EVIDENCE_COMPLETE"
+        or manifest.get("schema_version") != pilot_runner.MANIFEST_SCHEMA
+        or manifest.get("status") != pilot_runner.STATUS
         or manifest.get("scientific_verdict") is not None
+        or manifest.get("qualified_claim") is not None
         or manifest.get("exception_rows") != 0
+        or manifest.get("conservation_failure_rows") != 0
         or manifest.get("observed_cells") != 32
         or manifest.get("observed_rows") != 27648
+        or manifest.get("claim_state") != pilot_runner.CLAIM_BOUNDARY
     ):
         raise ValueError("high-cutoff pilot manifest incomplete or contaminated")
     uq = json.loads((root / UQ_REPORT_PATH).read_text(encoding="utf-8"))
+    _verify_self_hash(uq, "UQ calibration report")
+    _verify_report_bindings(root, uq, "UQ calibration report")
     required = config["diagnostic_contract"]["calibration_factor_source"]
     if (
         uq.get("analysis_sha256") != required["required_analysis_sha256"]
+        or uq.get("claim_state") != UQ_CLAIM_BOUNDARY
         or uq.get("selected_calibration_factor") != required["required_factor"]
         or uq.get("validation_coverage_summary", {}).get("all_cells_passed")
         is not required["required_coverage_all_passed"]
     ):
         raise ValueError("coverage-calibrated factor binding drift")
     extension = json.loads((root / UQ_EXTENSION_PATH).read_text(encoding="utf-8"))
+    _verify_self_hash(extension, "UQ power extension report")
+    _verify_report_bindings(root, extension, "UQ power extension report")
     if (
-        extension.get("verdict")
-        != "PASS_PAIRED_CLUSTER_UQ_POWER_EXTENSION"
+        extension.get("verdict") != "PASS_PAIRED_CLUSTER_UQ_POWER_EXTENSION"
+        or extension.get("claim_state") != EXTENSION_CLAIM_BOUNDARY
         or extension.get("selected_formal_clusters_per_state") is None
         or extension.get("parent_analysis_sha256") != uq["analysis_sha256"]
     ):
@@ -114,8 +189,43 @@ def _load_inputs(
 
 
 def _parse_chunk(
-    root: Path, receipt: Mapping[str, Any]
+    root: Path,
+    receipt: Mapping[str, Any],
+    receipt_binding: Mapping[str, Any],
+    *,
+    config: Mapping[str, Any],
+    manifest: Mapping[str, Any],
 ) -> tuple[list[dict[str, Any]], dict[str, np.ndarray]]:
+    _verify_self_hash(receipt, "pilot receipt")
+    cell_payload = receipt.get("cell")
+    if not isinstance(cell_payload, Mapping):
+        raise ValueError("pilot receipt cell missing")
+    chunk_id = str(cell_payload.get("chunk_id"))
+    expected_receipt_path = (
+        root / str(config["artifact_paths"]["receipt_directory"]) / f"{chunk_id}.json"
+    )
+    live_receipt_path = _verify_live_binding(
+        root, receipt_binding, "pilot receipt file"
+    )
+    if live_receipt_path != expected_receipt_path.resolve():
+        raise ValueError("pilot receipt path identity drift")
+    live_receipt = json.loads(live_receipt_path.read_text(encoding="utf-8"))
+    if live_receipt != receipt:
+        raise ValueError("pilot manifest/live receipt drift")
+    if (
+        receipt.get("task_id") != TASK_ID
+        or receipt.get("schema_version") != pilot_runner.RECEIPT_SCHEMA
+        or receipt.get("run_id") != manifest.get("run_id")
+        or receipt.get("run_identity_analysis_sha256")
+        != manifest.get("run_identity_analysis_sha256")
+        or receipt.get("config_analysis_sha256")
+        != manifest.get("config_analysis_sha256")
+        or receipt.get("execution_analysis_sha256")
+        != manifest.get("execution_analysis_sha256")
+        or receipt.get("pilot_source_sha256") != manifest.get("pilot_source_sha256")
+        or receipt.get("chunk_id") != chunk_id
+    ):
+        raise ValueError("pilot receipt identity drift")
     csv_binding = receipt["csv"]
     npz_binding = receipt["npz"]
     if _binding(root / str(csv_binding["path"]), root) != dict(csv_binding):
@@ -129,6 +239,8 @@ def _parse_chunk(
         for raw in csv.DictReader(stream):
             if raw["exception_type"]:
                 raise ValueError("pilot contains exception row")
+            if raw["conservation_pass"] != "True":
+                raise ValueError("pilot contains conservation failure")
             rows.append(
                 {
                     **raw,
@@ -151,25 +263,46 @@ def _parse_chunk(
         densities = np.asarray(archive["densities"], dtype=np.complex128)
     if len(density_ids) != len(densities):
         raise ValueError("pilot density row alignment drift")
+    if len(densities):
+        hermitian_error = float(
+            np.max(np.abs(densities - densities.conj().transpose(0, 2, 1)))
+        )
+        trace_error = float(np.max(np.abs(np.trace(densities, axis1=1, axis2=2) - 1.0)))
+        minimum_eigenvalue = min(
+            float(np.linalg.eigvalsh((matrix + matrix.conj().T) / 2).min())
+            for matrix in densities
+        )
+        if hermitian_error > 5e-5 or trace_error > 5e-5 or minimum_eigenvalue < -5e-5:
+            raise ValueError("pilot density physicality drift")
     return rows, dict(zip(density_ids, densities))
 
 
 def load_pilot_evidence(
-    root: Path, manifest: Mapping[str, Any]
+    root: Path,
+    config: Mapping[str, Any],
+    manifest: Mapping[str, Any],
 ) -> tuple[list[dict[str, Any]], dict[str, np.ndarray]]:
     rows: list[dict[str, Any]] = []
     densities: dict[str, np.ndarray] = {}
-    for receipt in manifest["chunk_receipts"]:
-        chunk_rows, chunk_densities = _parse_chunk(root, receipt)
+    receipts = manifest["chunk_receipts"]
+    receipt_bindings = manifest["receipt_bindings"]
+    if len(receipts) != len(receipt_bindings):
+        raise ValueError("pilot receipt binding denominator drift")
+    for receipt, receipt_binding in zip(receipts, receipt_bindings):
+        chunk_rows, chunk_densities = _parse_chunk(
+            root,
+            receipt,
+            receipt_binding,
+            config=config,
+            manifest=manifest,
+        )
         rows.extend(chunk_rows)
         if set(densities) & set(chunk_densities):
             raise ValueError("duplicate pilot density row id")
         densities.update(chunk_densities)
     if len(rows) != manifest["observed_rows"]:
         raise ValueError("pilot diagnostic row denominator drift")
-    terminal_ids = {
-        str(row["row_id"]) for row in rows if row["terminal_round"]
-    }
+    terminal_ids = {str(row["row_id"]) for row in rows if row["terminal_round"]}
     if set(densities) != terminal_ids:
         raise ValueError("pilot terminal density coverage drift")
     return rows, densities
@@ -178,9 +311,7 @@ def load_pilot_evidence(
 def _indexed_rows(
     rows: Sequence[Mapping[str, Any]],
 ) -> dict[tuple[int, str, str, str, int], list[dict[str, Any]]]:
-    grouped: dict[
-        tuple[int, str, str, str, int], list[dict[str, Any]]
-    ] = {}
+    grouped: dict[tuple[int, str, str, str, int], list[dict[str, Any]]] = {}
     for row in rows:
         key = (
             int(row["cutoff"]),
@@ -193,9 +324,8 @@ def _indexed_rows(
     for key, values in grouped.items():
         values.sort(key=lambda row: int(row["round_index"]))
         expected_label = ("0", "1", "+", "-", "+i", "-i")[key[4] % 6]
-        if (
-            key[3] != expected_label
-            or [row["round_index"] for row in values] != list(range(12))
+        if key[3] != expected_label or [row["round_index"] for row in values] != list(
+            range(12)
         ):
             raise ValueError("pilot state schedule or round coverage drift")
     return grouped
@@ -209,11 +339,12 @@ def _state_positions(
     state: str,
 ) -> list[int]:
     values = sorted(
-        key[4]
-        for key in grouped
-        if key[:4] == (cutoff, scenario, backend, state)
+        key[4] for key in grouped if key[:4] == (cutoff, scenario, backend, state)
     )
-    if len(values) != 12 or any(position % 6 != ("0", "1", "+", "-", "+i", "-i").index(state) for position in values):
+    if len(values) != 12 or any(
+        position % 6 != ("0", "1", "+", "-", "+i", "-i").index(state)
+        for position in values
+    ):
         raise ValueError("pilot per-state cluster denominator drift")
     return values
 
@@ -240,10 +371,7 @@ def _stage_matrix(
         if len(values) != len(selected):
             raise ValueError("pilot stage round denominator drift")
         matrix.append(
-            [
-                float(np.mean([float(row[field]) for row in values]))
-                for field in fields
-            ]
+            [float(np.mean([float(row[field]) for row in values])) for field in fields]
         )
     return np.asarray(matrix, dtype=np.float64), positions
 
@@ -318,9 +446,7 @@ def evaluate_diagnostics(
 ) -> list[dict[str, object]]:
     grouped = _indexed_rows(rows)
     contract = config["diagnostic_contract"]
-    factor = float(
-        contract["calibration_factor_source"]["required_factor"]
-    )
+    factor = float(contract["calibration_factor_source"]["required_factor"])
     confidence = float(contract["confidence"])
     replicates = int(contract["multiplier_replicates"])
     namespace = int(contract["multiplier_seed_namespace"])
@@ -406,17 +532,13 @@ def evaluate_diagnostics(
                         state=state,
                         stage="terminal",
                         metric="density_trace_distance",
-                        margin=float(
-                            margins["ab_terminal_density_trace_distance"]
-                        ),
+                        margin=float(margins["ab_terminal_density_trace_distance"]),
                         ucb=density_ucb,
                         cutoff=str(cutoff),
                         backend="A/B",
                     )
                 )
-                for stage, stage_rounds in config["stage_partition"][
-                    scenario
-                ].items():
+                for stage, stage_rounds in config["stage_partition"][scenario].items():
                     a_values, a_positions = _stage_matrix(
                         grouped,
                         cutoff=int(cutoff),
@@ -450,14 +572,30 @@ def evaluate_diagnostics(
                     if a_positions != b_positions:
                         raise ValueError("pilot A/B stage positions drift")
                     specs = (
-                        ("mean_photon", a_values[:, 0], b_values[:, 0], 1, "ab_terminal_mean_photon_difference"),
-                        ("level_probability_l1", a_values[:, 1:4], b_values[:, 1:4], 1, "ab_terminal_level_probability_l1"),
-                        ("logical_survival", a_values[:, 4], b_values[:, 4], 1, "ab_terminal_logical_survival_difference"),
+                        (
+                            "mean_photon",
+                            a_values[:, 0],
+                            b_values[:, 0],
+                            1,
+                            "ab_terminal_mean_photon_difference",
+                        ),
+                        (
+                            "level_probability_l1",
+                            a_values[:, 1:4],
+                            b_values[:, 1:4],
+                            1,
+                            "ab_terminal_level_probability_l1",
+                        ),
+                        (
+                            "logical_survival",
+                            a_values[:, 4],
+                            b_values[:, 4],
+                            1,
+                            "ab_terminal_logical_survival_difference",
+                        ),
                     )
                     for metric, left, right, ord_value, margin_key in specs:
-                        stage_gate = (
-                            f"ab/c{cutoff}/{scenario}/{state}/{stage}/{metric}"
-                        )
+                        stage_gate = f"ab/c{cutoff}/{scenario}/{state}/{stage}/{metric}"
                         vector_result(
                             gate_id=stage_gate,
                             left=left,
@@ -523,9 +661,7 @@ def evaluate_diagnostics(
                             stage="terminal",
                             metric="density_trace_distance",
                             margin=float(
-                                margins[
-                                    "cutoff_terminal_density_trace_distance"
-                                ]
+                                margins["cutoff_terminal_density_trace_distance"]
                             ),
                             ucb=density_ucb,
                             cutoff=f"{lower}->{upper}",
@@ -568,9 +704,27 @@ def evaluate_diagnostics(
                         if low_stage_positions != high_stage_positions:
                             raise ValueError("pilot cutoff stage positions drift")
                         specs = (
-                            ("mean_photon", low_values[:, 0], high_values[:, 0], 1, "cutoff_terminal_mean_photon_difference"),
-                            ("level_probability_l1", low_values[:, 1:4], high_values[:, 1:4], 1, "cutoff_terminal_level_probability_l1"),
-                            ("logical_survival", low_values[:, 4], high_values[:, 4], 1, "cutoff_terminal_logical_survival_difference"),
+                            (
+                                "mean_photon",
+                                low_values[:, 0],
+                                high_values[:, 0],
+                                1,
+                                "cutoff_terminal_mean_photon_difference",
+                            ),
+                            (
+                                "level_probability_l1",
+                                low_values[:, 1:4],
+                                high_values[:, 1:4],
+                                1,
+                                "cutoff_terminal_level_probability_l1",
+                            ),
+                            (
+                                "logical_survival",
+                                low_values[:, 4],
+                                high_values[:, 4],
+                                1,
+                                "cutoff_terminal_logical_survival_difference",
+                            ),
                         )
                         for metric, left, right, ord_value, margin_key in specs:
                             stage_gate = (
@@ -597,9 +751,11 @@ def evaluate_diagnostics(
     return results
 
 
-def build_report(root: Path) -> tuple[dict[str, Any], list[dict[str, object]]]:
+def _build_report_core(
+    root: Path,
+) -> tuple[dict[str, Any], list[dict[str, object]]]:
     config, manifest, uq, extension = _load_inputs(root)
-    rows, densities = load_pilot_evidence(root, manifest)
+    rows, densities = load_pilot_evidence(root, config, manifest)
     diagnostics = evaluate_diagnostics(config, rows, densities)
     cutoff_24_28 = [
         row
@@ -609,9 +765,34 @@ def build_report(root: Path) -> tuple[dict[str, Any], list[dict[str, object]]]:
         and row["cutoff_or_increment"] == "24->28"
     ]
     trigger_threshold = 0.075
-    trigger_32 = any(
-        float(row["estimate"]) > trigger_threshold for row in cutoff_24_28
-    )
+    trigger_32 = any(float(row["estimate"]) > trigger_threshold for row in cutoff_24_28)
+    aggregate_ledger: list[dict[str, Any]] = []
+    for contrast, metric in sorted(
+        {(str(row["contrast"]), str(row["metric"])) for row in diagnostics}
+    ):
+        strata = [
+            row
+            for row in diagnostics
+            if row["contrast"] == contrast and row["metric"] == metric
+        ]
+        worst = max(strata, key=lambda row: float(row["upper_bound"]))
+        failed = [str(row["gate_id"]) for row in strata if not bool(row["pilot_pass"])]
+        aggregate_ledger.append(
+            {
+                "contrast": contrast,
+                "metric": metric,
+                "stratum_count": len(strata),
+                "failed_stratum_count": len(failed),
+                "failed_gate_ids": failed,
+                "worst_gate_id": str(worst["gate_id"]),
+                "worst_upper_bound": float(worst["upper_bound"]),
+                "global_iut_pass": not failed,
+                "design_pilot_only": True,
+            }
+        )
+    global_failed = [
+        str(row["gate_id"]) for row in diagnostics if not bool(row["pilot_pass"])
+    ]
     report: dict[str, Any] = {
         "task_id": TASK_ID,
         "schema_version": SCHEMA,
@@ -622,12 +803,28 @@ def build_report(root: Path) -> tuple[dict[str, Any], list[dict[str, object]]]:
         "diagnostic_count": len(diagnostics),
         "pilot_pass_count": sum(bool(row["pilot_pass"]) for row in diagnostics),
         "pilot_fail_count": sum(not bool(row["pilot_pass"]) for row in diagnostics),
+        "design_iut": {
+            "aggregation": "state×scenario×backend IUT/max",
+            "stratum_count": len(diagnostics),
+            "failed_stratum_count": len(global_failed),
+            "failed_gate_ids": global_failed,
+            "global_iut_pass": not global_failed,
+            "aggregate_ledger": aggregate_ledger,
+            "formal_qualification_effect": None,
+        },
         "maxima": {
-            metric: max(
-                float(row["estimate"])
-                for row in diagnostics
-                if row["metric"] == metric
-            )
+            metric: {
+                "point_estimate": max(
+                    float(row["estimate"])
+                    for row in diagnostics
+                    if row["metric"] == metric
+                ),
+                "upper_bound": max(
+                    float(row["upper_bound"])
+                    for row in diagnostics
+                    if row["metric"] == metric
+                ),
+            }
             for metric in sorted({str(row["metric"]) for row in diagnostics})
         },
         "cutoff_32_decision": {
@@ -642,10 +839,9 @@ def build_report(root: Path) -> tuple[dict[str, Any], list[dict[str, object]]]:
         },
         "formal_design": {
             "calibration_factor": uq["selected_calibration_factor"],
-            "clusters_per_state": extension[
-                "selected_formal_clusters_per_state"
-            ],
-            "multiplier_replicates_minimum": 1999,
+            "clusters_per_state": extension["selected_formal_clusters_per_state"],
+            "design_multiplier_replicates": 199,
+            "formal_1999_replicate_recalibration_required": True,
             "aggregation": "state×scenario×backend IUT/max",
             "pilot_rows_never_promoted": True,
         },
@@ -657,11 +853,35 @@ def build_report(root: Path) -> tuple[dict[str, Any], list[dict[str, object]]]:
             ),
             "uq_calibration": _binding(root / UQ_REPORT_PATH, root),
             "uq_power_extension": _binding(root / UQ_EXTENSION_PATH, root),
+            "uq_hardened_confirmation": _binding(
+                root / str(config["hardened_confirmation_source"]["report"]["path"]),
+                root,
+            ),
+            "uq_hardened_confirmation_source_data": _binding(
+                root
+                / str(config["hardened_confirmation_source"]["source_data"]["path"]),
+                root,
+            ),
             "diagnostic_source": _binding(Path(__file__).resolve(), root),
             "paired_cluster_uq_source": _binding(
                 root / "cnn_fpga/benchmark/phase9_paired_cluster_uq.py", root
             ),
         },
+    }
+    return report, diagnostics
+
+
+def build_report(root: Path) -> tuple[dict[str, Any], list[dict[str, object]]]:
+    """Rebuild a finalized report and require its committed source-data file."""
+
+    report, diagnostics = _build_report_core(root)
+    source_path = root / SOURCE_PATH
+    if not source_path.is_file():
+        raise ValueError("diagnostic source data is absent")
+    report["bindings"]["source_data"] = _binding(source_path, root)
+    report["transaction"] = {
+        "write_order": ["source_data", "report"],
+        "source_committed_before_report": True,
     }
     report["analysis_sha256"] = _sha(report)
     return report, diagnostics
@@ -688,11 +908,7 @@ def _atomic_text(path: Path, value: str) -> None:
 
 def write_artifacts(root: Path | None = None) -> dict[str, Any]:
     base = (root or _root()).resolve()
-    report, rows = build_report(base)
-    _atomic_text(
-        base / REPORT_PATH,
-        json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-    )
+    report, rows = _build_report_core(base)
     fields = sorted({key for row in rows for key in row})
     with tempfile.TemporaryFile(mode="w+", encoding="utf-8", newline="") as stream:
         writer = csv.DictWriter(stream, fieldnames=fields, lineterminator="\n")
@@ -700,6 +916,19 @@ def write_artifacts(root: Path | None = None) -> dict[str, Any]:
         writer.writerows(rows)
         stream.seek(0)
         _atomic_text(base / SOURCE_PATH, stream.read())
+    report["bindings"]["source_data"] = _binding(base / SOURCE_PATH, base)
+    report["transaction"] = {
+        "write_order": ["source_data", "report"],
+        "source_committed_before_report": True,
+    }
+    report["analysis_sha256"] = _sha(report)
+    _atomic_text(
+        base / REPORT_PATH,
+        json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+    )
+    rebuilt, rebuilt_rows = build_report(base)
+    if rebuilt != report or rebuilt_rows != rows:
+        raise RuntimeError("finalized diagnostic live validation drift")
     return report
 
 
@@ -715,9 +944,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "status": report["status"],
                 "analysis_sha256": report["analysis_sha256"],
                 "diagnostic_count": report["diagnostic_count"],
-                "cutoff_32_triggered": report["cutoff_32_decision"][
-                    "triggered"
-                ],
+                "cutoff_32_triggered": report["cutoff_32_decision"]["triggered"],
             },
             sort_keys=True,
         )
