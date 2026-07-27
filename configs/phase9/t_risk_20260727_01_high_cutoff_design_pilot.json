@@ -1,0 +1,100 @@
+{
+  "task_id": "T-RISK-20260727-01",
+  "schema_version": "PHASE9-HIGH-CUTOFF-STATE-DESIGN-PILOT-CONFIG-V1",
+  "purpose": "Read-only design pilot for state-conditioned fault/cutoff localization; never a twin qualification result",
+  "base_config": {
+    "path": "configs/phase9/t_risk_20260726_01_fresh_twin_qualification.json",
+    "sha256": "8573e670fefff78564ff9705dc93320e08df9f1dcf59e0aaf6be0eee1730c31e"
+  },
+  "cutoffs": [
+    16,
+    20,
+    24,
+    28
+  ],
+  "optional_cutoff_32": {
+    "enabled": false,
+    "trigger": "enable in a new immutable child config if any state×scenario×backend 24->28 terminal-density point exceeds 0.075"
+  },
+  "logical_state_schedule": [
+    "0",
+    "1",
+    "+",
+    "-",
+    "+i",
+    "-i"
+  ],
+  "scenario_names": [
+    "step",
+    "telegraph",
+    "burst",
+    "compound"
+  ],
+  "trajectory_count": 72,
+  "clusters_per_state": 12,
+  "seed_splits": {
+    "trajectory_backend_a": {
+      "start": 1310000,
+      "count": 72
+    },
+    "trajectory_backend_b": {
+      "start": 1311000,
+      "count": 72
+    },
+    "heldout_common": {
+      "start": 1312000,
+      "count": 72
+    },
+    "all_intervals_disjoint": true,
+    "disjoint_from_20260726_formal": true
+  },
+  "max_workers": 6,
+  "source_bindings": {
+    "fresh_runner": {
+      "path": "cnn_fpga/benchmark/phase9_fresh_twin_qualification.py",
+      "sha256": "8b03c432b93d8e720a273d3d24781db07d4b0b92a6b8defa85c95d603012e116"
+    },
+    "dual_backend_kernel": {
+      "path": "cnn_fpga/benchmark/phase9_dual_backend_qualification.py",
+      "sha256": "468c500d0a4aa7a2655a24d9b02bb71632774a146857703dd3e1e199cc5d3561"
+    },
+    "backend_a": {
+      "path": "physics/phase9_backend_a.py",
+      "sha256": "648664457996e6e9aa83c8189e92359d38077fa1fa47223329cb36424609fc69"
+    },
+    "backend_b": {
+      "path": "physics/phase9_backend_b.py",
+      "sha256": "2863ba0f844ae4f332b0a000439f7e5dfb510925a5d192ec415b0cc8c1d0e73e"
+    },
+    "backend_b_bridge": {
+      "path": "physics/phase9_backend_b_logical_bridge.py",
+      "sha256": "104ea5691b4042f046db2d2622a4977b30f689ec9dd387fe1f555ec32e5f5c60"
+    },
+    "iq_reference": {
+      "path": "physics/phase9_iq_likelihood_reference.py",
+      "sha256": "0c7a693bf08a27083ed38eb79f8a2f4f50aff73d8c6905246698d8fb8bd793c4"
+    },
+    "twin_contract": {
+      "path": "physics/phase9_twin_contract.py",
+      "sha256": "05622cb5036ea9593b76b7d27ad161d70e65353e5fa9392becbe116d4591f9c1"
+    }
+  },
+  "artifact_paths": {
+    "run_directory": "runs/t_risk_20260727_01_high_cutoff_design_pilot",
+    "chunk_directory": "runs/t_risk_20260727_01_high_cutoff_design_pilot/chunks",
+    "receipt_directory": "runs/t_risk_20260727_01_high_cutoff_design_pilot/receipts",
+    "heartbeat": "runs/t_risk_20260727_01_high_cutoff_design_pilot/heartbeat.json",
+    "execution_manifest": "docs/t_risk_20260727_01_high_cutoff_design_pilot_manifest.json"
+  },
+  "claim_boundary": {
+    "design_pilot_only": true,
+    "twin_qualification": null,
+    "ler": null,
+    "lifetime": null,
+    "physical_break_even": null,
+    "official_puviani_exact": null,
+    "puviani_nmf_surpass": null,
+    "external_sota": null,
+    "hardware_measured": null
+  }
+}
