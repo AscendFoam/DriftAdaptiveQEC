@@ -104,5 +104,6 @@ def test_receipt_write_is_deterministic(tmp_path: Path) -> None:
 def test_cli_override_is_rejected() -> None:
     from cnn_fpga.benchmark.phase9_fresh_twin_lineage import main
 
-    with pytest.raises(SystemExit, match="no CLI overrides"):
+    with pytest.raises(SystemExit) as raised:
         main(["--root", "elsewhere"])
+    assert raised.value.code == 2

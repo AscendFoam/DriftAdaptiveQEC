@@ -8,6 +8,7 @@ zero-effect A/B qualification, and predeclared outside-margin mutants.
 
 from __future__ import annotations
 
+import argparse
 import csv
 import hashlib
 import json
@@ -865,8 +866,10 @@ def write_artifacts(root: Path | None = None) -> dict[str, Any]:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    if argv:
-        raise SystemExit("design power accepts no CLI overrides")
+    parser = argparse.ArgumentParser(
+        description="Write the preregistered fresh-twin design-power artifacts."
+    )
+    parser.parse_args(argv)
     report = write_artifacts()
     print(json.dumps({
         "verdict": report["verdict"],

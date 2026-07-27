@@ -10,6 +10,7 @@ checked separately as deterministic semantic identities under the null.
 
 from __future__ import annotations
 
+import argparse
 import csv
 import hashlib
 import json
@@ -608,8 +609,10 @@ def write_artifacts(root: Path | None = None) -> dict[str, Any]:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    if argv:
-        raise SystemExit("readout power accepts no CLI overrides")
+    parser = argparse.ArgumentParser(
+        description="Write the empirical fresh-twin readout-power artifacts."
+    )
+    parser.parse_args(argv)
     report = write_artifacts()
     print(json.dumps({
         "verdict": report["verdict"],

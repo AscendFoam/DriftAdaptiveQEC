@@ -82,5 +82,6 @@ def test_repeat_is_bit_deterministic(live_readout_power) -> None:
 
 
 def test_cli_overrides_fail_closed() -> None:
-    with pytest.raises(SystemExit, match="no CLI overrides"):
+    with pytest.raises(SystemExit) as raised:
         main(["--count", "8"])
+    assert raised.value.code == 2

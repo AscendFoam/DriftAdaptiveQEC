@@ -18,6 +18,7 @@ across units.
 
 from __future__ import annotations
 
+import argparse
 import csv
 from collections import OrderedDict
 from collections.abc import Iterator
@@ -2530,8 +2531,10 @@ def write_artifacts(root: Path | None = None) -> dict[str, Any]:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    if argv:
-        raise SystemExit("fresh verifier accepts no CLI overrides")
+    parser = argparse.ArgumentParser(
+        description="Verify the sealed fresh-twin formal evidence."
+    )
+    parser.parse_args(argv)
     report = write_artifacts()
     print(
         json.dumps(

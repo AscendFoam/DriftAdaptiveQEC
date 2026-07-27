@@ -840,6 +840,40 @@ def test_final_raw_zip_is_self_contained_and_hash_bound(tmp_path, config):
         assert "mapping/mapping_arrays.npz" in archive.namelist()
 
 
+def test_finalized_fast_path_revalidates_standalone_mapping_chunk(tmp_path):
+    cell_path = tmp_path / "cell.csv"
+    raw_path = tmp_path / "raw.zip"
+    mapping_path = tmp_path / "mapping.npz"
+    cell_path.write_bytes(b"cell-ledger")
+    raw_path.write_bytes(b"raw-archive")
+    mapping_path.write_bytes(b"mapping-chunk")
+
+    manifest_path = tmp_path / "execution_manifest.json"
+    manifest = {
+        "status": subject.FORMAL_STATUS,
+        "scientific_verdict": None,
+        "qualified_claim": None,
+        "claim_state": {f"claim_{index}": None for index in range(15)},
+        "cell_ledger": subject._binding(cell_path, tmp_path),
+        "raw_archive": subject._binding(raw_path, tmp_path),
+        "mapping_chunk": subject._binding(mapping_path, tmp_path),
+    }
+    subject._atomic_text(
+        manifest_path,
+        json.dumps(manifest, ensure_ascii=False, sort_keys=True) + "\n",
+    )
+    finalized = {
+        "event_kind": "FINALIZED",
+        "execution_manifest": subject._binding(manifest_path, tmp_path),
+    }
+
+    assert subject._verify_finalized(tmp_path, {}, [finalized]) == manifest
+
+    mapping_path.write_bytes(b"tampered-mapping-chunk")
+    with pytest.raises(RuntimeError, match="final mapping_chunk drift"):
+        subject._verify_finalized(tmp_path, {}, [finalized])
+
+
 def test_merged_ledger_is_complete_and_deterministic(tmp_path, config):
     local = deepcopy(config)
     local["artifact_paths"]["chunk_directory"] = "chunks"

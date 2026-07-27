@@ -131,5 +131,6 @@ def test_repeated_build_is_bit_deterministic(live_power) -> None:
 
 
 def test_cli_overrides_are_forbidden() -> None:
-    with pytest.raises(SystemExit, match="no CLI overrides"):
+    with pytest.raises(SystemExit) as raised:
         main(["--round-count", "1"])
+    assert raised.value.code == 2

@@ -8,6 +8,7 @@ source data, and state archives are outside its allowlist.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
@@ -260,8 +261,10 @@ def write_receipt(path: Path, root: Path | None = None) -> dict[str, Any]:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    if argv:
-        raise SystemExit("this transaction accepts no CLI overrides")
+    parser = argparse.ArgumentParser(
+        description="Write the immutable historical NO-GO lineage receipt."
+    )
+    parser.parse_args(argv)
     destination = _root() / "docs/t_risk_20260726_01_historical_no_go_receipt.json"
     report = write_receipt(destination)
     print(

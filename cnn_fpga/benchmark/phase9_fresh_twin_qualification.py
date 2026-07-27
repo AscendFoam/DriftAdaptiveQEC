@@ -1968,7 +1968,7 @@ def _verify_finalized(
         or any(value is not None for value in claims.values())
     ):
         raise RuntimeError("final manifest status/verdict invalid")
-    for name in ("cell_ledger", "raw_archive"):
+    for name in ("cell_ledger", "raw_archive", "mapping_chunk"):
         binding = manifest.get(name)
         if not isinstance(binding, Mapping):
             raise RuntimeError(f"final manifest lacks {name}")
