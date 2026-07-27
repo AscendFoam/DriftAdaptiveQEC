@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import sys
 
 import numpy as np
 import pytest
@@ -14,36 +15,66 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 @pytest.fixture(scope="module", autouse=True)
-def _activate_verified_diagnostic_dependencies() -> None:
-    subject.__verified_source_sha256__ = subject._DIAGNOSTIC_SOURCE_SHA256_AT_IMPORT
-    subject.__verified_bootstrap_contract__ = subject.VERIFIED_LOADER_CONTRACT
-    subject.__verified_external_launcher_sha256__ = subject.EXTERNAL_LAUNCHER_SHA256
-    subject.__verified_bootstrap_source_binding__ = {
-        "path": "bootstrap.py",
-        "bytes": 1,
-        "sha256": "b" * 64,
+def _activate_verified_diagnostic_dependencies():
+    module_names = tuple(subject._DIAGNOSTIC_MODULE_NAMES.values())
+    saved_modules = {name: sys.modules.get(name) for name in module_names}
+    saved_globals = {
+        name: getattr(subject, name)
+        for name in (
+            "pilot_runner",
+            "NormUCB",
+            "paired_density_trace_ucb",
+            "paired_vector_norm_ucb",
+        )
     }
-    subject.__verified_launch_meta_binding__ = {
-        "path": "launch.json",
-        "bytes": 1,
-        "sha256": "c" * 64,
-    }
-    launch_meta = {
-        "task_id": subject.TASK_ID,
-        "schema_version": subject.LAUNCH_META_SCHEMA,
-        "mode": "diagnostic",
-        "external_launcher_sha256": subject.EXTERNAL_LAUNCHER_SHA256,
-        "launcher_assurance": dict(subject.LAUNCHER_ASSURANCE),
-        "isolation_flags": ["-I", "-S"],
-        "bootstrap": dict(subject.__verified_bootstrap_source_binding__),
-        "bootstrap_load_protocol": "read_once_sha256_then_compile_exec",
-        "child_process_policy": "same_verified_process_thread_workers_only",
-        "qualified_claim": None,
-        "downstream_release": False,
-    }
-    launch_meta["analysis_sha256"] = subject._sha(launch_meta)
-    subject.__verified_launch_meta_payload__ = launch_meta
-    subject._activate_verified_diagnostic_modules(ROOT)
+    try:
+        subject.__verified_source_sha256__ = (
+            subject._DIAGNOSTIC_SOURCE_SHA256_AT_IMPORT
+        )
+        subject.__verified_bootstrap_contract__ = subject.VERIFIED_LOADER_CONTRACT
+        subject.__verified_external_launcher_sha256__ = (
+            subject.EXTERNAL_LAUNCHER_SHA256
+        )
+        subject.__verified_bootstrap_source_binding__ = {
+            "path": "bootstrap.py",
+            "bytes": 1,
+            "sha256": "b" * 64,
+        }
+        subject.__verified_launch_meta_binding__ = {
+            "path": "launch.json",
+            "bytes": 1,
+            "sha256": "c" * 64,
+        }
+        launch_meta = {
+            "task_id": subject.TASK_ID,
+            "schema_version": subject.LAUNCH_META_SCHEMA,
+            "mode": "diagnostic",
+            "external_launcher_sha256": subject.EXTERNAL_LAUNCHER_SHA256,
+            "launcher_assurance": dict(subject.LAUNCHER_ASSURANCE),
+            "isolation_flags": ["-I", "-S"],
+            "bootstrap": dict(subject.__verified_bootstrap_source_binding__),
+            "bootstrap_load_protocol": "read_once_sha256_then_compile_exec",
+            "child_process_policy": "same_verified_process_thread_workers_only",
+            "qualified_claim": None,
+            "downstream_release": False,
+        }
+        launch_meta["analysis_sha256"] = subject._sha(launch_meta)
+        subject.__verified_launch_meta_payload__ = launch_meta
+        subject._activate_verified_diagnostic_modules(ROOT)
+        yield
+    finally:
+        for name, module in saved_modules.items():
+            current = sys.modules.pop(name, None)
+            parent_name, attribute = name.rsplit(".", 1)
+            parent = sys.modules.get(parent_name)
+            if parent is not None and getattr(parent, attribute, None) is current:
+                delattr(parent, attribute)
+            if module is not None:
+                sys.modules[name] = module
+                if parent is not None:
+                    setattr(parent, attribute, module)
+        for name, value in saved_globals.items():
+            setattr(subject, name, value)
 
 
 def _fake_ucb(left, right, **kwargs) -> NormUCB:

@@ -531,9 +531,10 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         }
     )
     assert statuses["T7.3.5"] == "Done"
-    assert "当前推荐任务：`T-RISK-20260727-01`" in board
+    assert "当前推荐任务：`T-RISK-20260728-01`" in board
     assert statuses["T-RISK-20260726-01"] == "Done (NO-GO)"
-    assert statuses["T-RISK-20260727-01"] == "In Progress"
+    assert statuses["T-RISK-20260727-01"] == "Done (Risk Signal)"
+    assert statuses["T-RISK-20260728-01"] == "In Progress"
     assert "NO_GO_TWIN_QUALIFICATION" in phase9
     assert "NO_GO_FRESH_TWIN_QUALIFICATION" in board
 
@@ -701,7 +702,7 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         assert required in section20
 
     risks = (ROOT / "docs" / "new_risks.md").read_text(encoding="utf-8")
-    for risk_number in range(162, 187):
+    for risk_number in range(162, 188):
         assert f"R-N{risk_number}" in risks
     assert "| R-N168 | Mitigated |" in risks
     assert "| R-N170 | Mitigated |" in risks
@@ -719,8 +720,9 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert "| R-N182 | Mitigated |" in risks
     assert "| R-N183 | Open |" in risks
     assert "| R-N184 | Open |" in risks
-    assert "| R-N185 | Open |" in risks
-    assert "| R-N186 | Open |" in risks
+    assert "| R-N185 | Mitigated |" in risks
+    assert "| R-N186 | Mitigated |" in risks
+    assert "| R-N187 | Open |" in risks
     assert "| 2026-07-24 | T9.1.3 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-25 | T9.1.4 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-25 | T9.1.5 完成与反简化复核 | 不插入 |" in risks
@@ -1108,6 +1110,12 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert "docs/phase9_causal_twin_contract.md" in readme
     assert "docs/phase9_backend_a_qualification.md" in readme
     assert "docs/phase9_backend_b_qualification.md" in readme
+    assert (
+        "docs/new_tasks/T-RISK-20260727-01_high_cutoff_state_design_pilot.md"
+        in readme
+    )
+    assert "EXPLORATORY_RISK_SIGNAL" in readme
+    assert "0.091343>0.075" in readme
 
     addendum_path = (
         ROOT / "docs" / "t9_1_3_post_outcome_governance_addendum.json"
