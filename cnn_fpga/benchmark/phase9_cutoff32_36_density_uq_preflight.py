@@ -28,6 +28,7 @@ from uuid import UUID, uuid4
 
 import numpy as np
 import psutil
+from threadpoolctl import threadpool_info, threadpool_limits
 
 from cnn_fpga.benchmark.phase9_paired_cluster_uq import (
     NormUCB,
@@ -46,6 +47,7 @@ RUN_IDENTITY_SCHEMA = "PHASE9-CUTOFF32-36-DENSITY-UQ-PREFLIGHT-RUN-IDENTITY-V1"
 PREFLIGHT_SCHEMA = "PHASE9-CUTOFF32-36-DENSITY-UQ-RESOURCE-PREFLIGHT-V1"
 CONFIRMATION_SOURCE_SHA256_AT_IMPORT = sha256(Path(__file__).read_bytes()).hexdigest()
 PAIRED_UQ_SOURCE_PATH = "cnn_fpga/benchmark/phase9_paired_cluster_uq.py"
+WORKER_BLAS_THREADS = 1
 PAIRED_UQ_SOURCE_SHA256_AT_IMPORT = sha256(
     (Path(__file__).resolve().parents[2] / PAIRED_UQ_SOURCE_PATH).read_bytes()
 ).hexdigest()
@@ -253,6 +255,15 @@ def load_config(root: Path) -> tuple[dict[str, Any], dict[str, Any], dict[str, A
         or config.get("confidence") != 0.95
         or int(config.get("multiplier_replicates", 0)) != 199
         or int(config.get("max_workers", 0)) != 4
+        or config.get("numeric_execution")
+        != {
+            "blas_threads_per_worker": 1,
+            "threading_policy": (
+                "one BLAS thread inside each ProcessPool worker; "
+                "process-level parallelism only"
+            ),
+            "scientific_design_unchanged": True,
+        }
     ):
         raise ValueError("cutoff32/36 density-UQ config identity/claim/domain drift")
     if (
@@ -446,11 +457,46 @@ def _worker_source_attestation(
         or paired_sha != expected_bindings["paired_cluster_uq_source"].get("sha256")
     ):
         raise RuntimeError("hardened UQ worker loaded/live source attestation drift")
+    blas_libraries = [
+        {
+            "internal_api": str(info.get("internal_api")),
+            "prefix": str(info.get("prefix")),
+            "num_threads": int(info.get("num_threads", 0)),
+        }
+        for info in threadpool_info()
+        if info.get("user_api") == "blas"
+    ]
+    if not blas_libraries or any(
+        library["num_threads"] != WORKER_BLAS_THREADS
+        for library in blas_libraries
+    ):
+        raise RuntimeError("hardened UQ worker BLAS thread contract drift")
     return {
         "worker_pid": os.getpid(),
         "confirmation_source_sha256": confirmation_sha,
         "paired_cluster_uq_source_sha256": paired_sha,
+        "blas_threads_per_worker": WORKER_BLAS_THREADS,
+        "blas_libraries": blas_libraries,
     }
+
+
+def _valid_numeric_worker_attestation(attestation: Mapping[str, Any]) -> bool:
+    libraries = attestation.get("blas_libraries")
+    return bool(
+        int(attestation.get("blas_threads_per_worker", 0))
+        == WORKER_BLAS_THREADS
+        and isinstance(libraries, list)
+        and libraries
+        and all(
+            isinstance(library, Mapping)
+            and int(library.get("num_threads", 0)) == WORKER_BLAS_THREADS
+            and isinstance(library.get("internal_api"), str)
+            and bool(library["internal_api"])
+            and isinstance(library.get("prefix"), str)
+            and bool(library["prefix"])
+            for library in libraries
+        )
+    )
 
 
 def _verify_execution_identity_live(
@@ -643,7 +689,7 @@ def _cells(config: Mapping[str, Any]) -> list[CellSpec]:
     return cells
 
 
-def _measure_preflight_trial(
+def _measure_preflight_trial_thread_limited(
     config: Mapping[str, Any],
     expected_execution_bindings: Mapping[str, Mapping[str, Any]],
     *,
@@ -713,6 +759,26 @@ def _measure_preflight_trial(
         "ucb_upper_bound": ucb.upper_bound,
         "worker_attestation": attestation_at_end,
     }
+
+
+def _measure_preflight_trial(
+    config: Mapping[str, Any],
+    expected_execution_bindings: Mapping[str, Mapping[str, Any]],
+    *,
+    family_name: str,
+    dimension: int,
+    cluster_count: int,
+) -> dict[str, Any]:
+    """Run one resource probe without nested BLAS oversubscription."""
+
+    with threadpool_limits(limits=WORKER_BLAS_THREADS, user_api="blas"):
+        return _measure_preflight_trial_thread_limited(
+            config,
+            expected_execution_bindings,
+            family_name=family_name,
+            dimension=dimension,
+            cluster_count=cluster_count,
+        )
 
 
 def _wilson_feasibility(config: Mapping[str, Any]) -> dict[str, Any]:
@@ -836,6 +902,9 @@ def _validate_resource_preflight(
             or row.get("worker_attestation", {}).get("paired_cluster_uq_source_sha256")
             != paired_sha
             or int(row.get("worker_attestation", {}).get("worker_pid", 0)) <= 0
+            or not _valid_numeric_worker_attestation(
+                row.get("worker_attestation", {})
+            )
         ):
             raise RuntimeError("resource preflight record drift")
     workers = int(config["max_workers"])
@@ -1046,7 +1115,7 @@ def run_resource_preflight(
     return report
 
 
-def _simulate_cell(
+def _simulate_cell_thread_limited(
     config: Mapping[str, Any],
     cell_payload: Mapping[str, Any],
     expected_execution_bindings: Mapping[str, Mapping[str, Any]],
@@ -1114,6 +1183,21 @@ def _simulate_cell(
     }
 
 
+def _simulate_cell(
+    config: Mapping[str, Any],
+    cell_payload: Mapping[str, Any],
+    expected_execution_bindings: Mapping[str, Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Run one scientific cell under the frozen process-only parallel policy."""
+
+    with threadpool_limits(limits=WORKER_BLAS_THREADS, user_api="blas"):
+        return _simulate_cell_thread_limited(
+            config,
+            cell_payload,
+            expected_execution_bindings,
+        )
+
+
 def _chunk_path(root: Path, config: Mapping[str, Any], cell: CellSpec) -> Path:
     return (
         root / str(config["artifact_paths"]["chunk_directory"]) / f"{cell.cell_id}.json"
@@ -1177,6 +1261,9 @@ def _validate_chunk(
         or chunk.get("worker_attestation", {}).get("paired_cluster_uq_source_sha256")
         != run_identity["execution_bindings"]["paired_cluster_uq_source"]["sha256"]
         or int(chunk.get("worker_attestation", {}).get("worker_pid", 0)) <= 0
+        or not _valid_numeric_worker_attestation(
+            chunk.get("worker_attestation", {})
+        )
         or chunk.get("cell") != asdict(cell)
         or chunk.get("record_count") != expected_count
         or not isinstance(records, list)
@@ -1402,6 +1489,7 @@ def simulate_confirmation(
                         "sha256"
                     ]
                     or int(attestation.get("worker_pid", 0)) <= 0
+                    or not _valid_numeric_worker_attestation(attestation)
                 ):
                     raise RuntimeError("scientific worker source attestation drift")
                 records = worker_result.get("records")

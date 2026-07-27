@@ -8,6 +8,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+from threadpoolctl import threadpool_info, threadpool_limits
 
 from cnn_fpga.benchmark import (
     phase9_cutoff32_36_density_uq_preflight as subject,
@@ -40,6 +41,14 @@ def _worker_attestation(identity):
         "paired_cluster_uq_source_sha256": identity["execution_bindings"][
             "paired_cluster_uq_source"
         ]["sha256"],
+        "blas_threads_per_worker": 1,
+        "blas_libraries": [
+            {
+                "internal_api": "mkl",
+                "prefix": "mkl_rt",
+                "num_threads": 1,
+            }
+        ],
     }
 
 
@@ -133,6 +142,66 @@ def test_physical_ucb_rejects_non_psd_or_non_trace_one_input() -> None:
             seed=1,
             calibration_factor=1.0,
         )
+
+
+def test_single_blas_thread_policy_preserves_full_physical_ucb() -> None:
+    config, _, _ = subject.load_config(ROOT)
+    left, right, _ = subject._physical_density_trial(
+        dimension=12,
+        count=12,
+        true_distance=0.05,
+        family=config["families"]["heavy_tail_rare_coherent"],
+        seed=9876,
+    )
+    with threadpool_limits(limits=1, user_api="blas"):
+        one_thread = subject.paired_density_trace_ucb_physical(
+            left,
+            right,
+            confidence=0.95,
+            multiplier_replicates=199,
+            seed=6789,
+            calibration_factor=1.0,
+        )
+        libraries = [
+            info
+            for info in threadpool_info()
+            if info.get("user_api") == "blas"
+        ]
+    with threadpool_limits(limits=4, user_api="blas"):
+        four_threads = subject.paired_density_trace_ucb_physical(
+            left,
+            right,
+            confidence=0.95,
+            multiplier_replicates=199,
+            seed=6789,
+            calibration_factor=1.0,
+        )
+    assert libraries
+    assert all(int(info["num_threads"]) == 1 for info in libraries)
+    assert one_thread.estimate == pytest.approx(four_threads.estimate, abs=1e-14)
+    assert one_thread.raw_radius == pytest.approx(
+        four_threads.raw_radius, abs=1e-14
+    )
+    assert one_thread.upper_bound == pytest.approx(
+        four_threads.upper_bound, abs=1e-14
+    )
+
+
+def test_worker_attestation_requires_live_single_blas_thread_context() -> None:
+    config, _, _ = subject.load_config(ROOT)
+    identity = _live_identity(config)
+    with threadpool_limits(limits=1, user_api="blas"):
+        attestation = subject._worker_source_attestation(
+            identity["execution_bindings"]
+        )
+    assert subject._valid_numeric_worker_attestation(attestation)
+    tampered = json.loads(json.dumps(attestation))
+    tampered["blas_libraries"][0]["num_threads"] = 16
+    assert not subject._valid_numeric_worker_attestation(tampered)
+
+    with threadpool_limits(limits=4, user_api="blas"):
+        with pytest.raises(RuntimeError, match="BLAS thread contract"):
+            subject._worker_source_attestation(identity["execution_bindings"])
 
 
 def test_wilson_bounds_are_not_point_rates() -> None:
