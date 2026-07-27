@@ -39,6 +39,14 @@ def test_live_config_has_bound_sources_and_disjoint_pilot_matrix() -> None:
     assert execution["formal_splits"]["heldout_common"]["start"] == 1312000
     assert pilot["claim_boundary"]["twin_qualification"] is None
     assert pilot["optional_cutoff_32"]["enabled"] is False
+    for partition in pilot["stage_partition"].values():
+        rounds = [
+            round_index
+            for indices in partition.values()
+            for round_index in indices
+        ]
+        assert sorted(rounds) == list(range(12))
+        assert len(rounds) == len(set(rounds)) == 12
 
 
 def test_materialization_does_not_mutate_bound_base_config() -> None:

@@ -103,6 +103,19 @@ def load_pilot_config(root: Path) -> tuple[dict[str, Any], dict[str, Any]]:
         != ["burst", "compound", "step", "telegraph"]
     ):
         raise ValueError("high-cutoff pilot matrix drift")
+    for scenario in config["scenario_names"]:
+        partition = config.get("stage_partition", {}).get(scenario)
+        if (
+            not isinstance(partition, Mapping)
+            or sorted(
+                round_index
+                for indices in partition.values()
+                for round_index in indices
+            )
+            != list(range(12))
+            or sum(len(indices) for indices in partition.values()) != 12
+        ):
+            raise ValueError(f"high-cutoff stage partition drift: {scenario}")
     splits = config["seed_splits"]
     intervals = []
     for key in ("trajectory_backend_a", "trajectory_backend_b", "heldout_common"):
