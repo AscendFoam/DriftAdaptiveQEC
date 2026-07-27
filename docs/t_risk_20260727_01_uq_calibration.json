@@ -1,0 +1,167 @@
+{
+  "analysis_sha256": "546f808015c82b218664d99c1026cb9fc40af2362b076d479df10e98c7073446",
+  "bindings": {
+    "calibration_source": {
+      "bytes": 22404,
+      "path": "cnn_fpga/benchmark/phase9_paired_cluster_uq_calibration.py",
+      "sha256": "94f7354b4a241a093800973f437d899c08f93ae92dcc5efb05ad3e2afc6d5a38"
+    },
+    "config": {
+      "bytes": 2333,
+      "path": "configs/phase9/t_risk_20260727_01_uq_calibration.json",
+      "sha256": "107353f8656353f86d928de80369b3bd29ad7090b124bc908ce6ed883a882268"
+    },
+    "paired_cluster_uq_source": {
+      "bytes": 8997,
+      "path": "cnn_fpga/benchmark/phase9_paired_cluster_uq.py",
+      "sha256": "cafff753844889692c9e89c50bbaff85868cc409aa870e1decbe79b681bfaa41"
+    }
+  },
+  "claim_state": {
+    "calibration_only": true,
+    "external_sota": null,
+    "hardware_measured": null,
+    "ler": null,
+    "lifetime": null,
+    "official_puviani_exact": null,
+    "physical_break_even": null,
+    "puviani_nmf_surpass": null,
+    "twin_qualification": null
+  },
+  "cluster_count_diagnostics": [
+    {
+      "cluster_count_per_state": 64,
+      "passed": false,
+      "worst_primary_equivalence_rate_by_true_distance": {
+        "0.0": 0.0,
+        "0.05": 0.0,
+        "0.09": 0.0,
+        "0.1": 0.0,
+        "0.12": 0.0
+      }
+    },
+    {
+      "cluster_count_per_state": 128,
+      "passed": false,
+      "worst_primary_equivalence_rate_by_true_distance": {
+        "0.0": 0.8645833333333334,
+        "0.05": 0.0,
+        "0.09": 0.0,
+        "0.1": 0.0,
+        "0.12": 0.0
+      }
+    },
+    {
+      "cluster_count_per_state": 256,
+      "passed": false,
+      "worst_primary_equivalence_rate_by_true_distance": {
+        "0.0": 1.0,
+        "0.05": 0.6354166666666666,
+        "0.09": 0.0,
+        "0.1": 0.0,
+        "0.12": 0.0
+      }
+    }
+  ],
+  "density_validity": {
+    "analytic_population_distance": true,
+    "dimensions": [
+      16,
+      28
+    ],
+    "families": [
+      "balanced_phase_pure",
+      "heteroskedastic_coherent",
+      "high_variance_phase_pure",
+      "rare_coherent_pure"
+    ],
+    "psd_by_construction": true,
+    "trace_one_by_construction": true
+  },
+  "factor_diagnostics": [
+    {
+      "factor": 1.0,
+      "minimum_cell_coverage": 1.0,
+      "minimum_cell_wilson_lcb": 0.9433759402071946,
+      "passed": true
+    },
+    {
+      "factor": 1.05,
+      "minimum_cell_coverage": 1.0,
+      "minimum_cell_wilson_lcb": 0.9433759402071946,
+      "passed": true
+    },
+    {
+      "factor": 1.1,
+      "minimum_cell_coverage": 1.0,
+      "minimum_cell_wilson_lcb": 0.9433759402071946,
+      "passed": true
+    },
+    {
+      "factor": 1.15,
+      "minimum_cell_coverage": 1.0,
+      "minimum_cell_wilson_lcb": 0.9433759402071946,
+      "passed": true
+    },
+    {
+      "factor": 1.25,
+      "minimum_cell_coverage": 1.0,
+      "minimum_cell_wilson_lcb": 0.9433759402071946,
+      "passed": true
+    },
+    {
+      "factor": 1.4,
+      "minimum_cell_coverage": 1.0,
+      "minimum_cell_wilson_lcb": 0.9433759402071946,
+      "passed": true
+    },
+    {
+      "factor": 1.6,
+      "minimum_cell_coverage": 1.0,
+      "minimum_cell_wilson_lcb": 0.9433759402071946,
+      "passed": true
+    }
+  ],
+  "factor_selected_from_split": "calibration",
+  "factor_validated_on_split": "validation",
+  "formal_outcomes_accessed": false,
+  "generator_runtime": {
+    "numpy": "1.26.4",
+    "python": "3.12.7"
+  },
+  "schema_version": "PHASE9-PAIRED-CLUSTER-UQ-CALIBRATION-REPORT-V1",
+  "selected_calibration_factor": 1.0,
+  "selected_formal_clusters_per_state": null,
+  "split_firewall": {
+    "all_intervals_disjoint": true,
+    "calibration": {
+      "seed_base": 1270000,
+      "trial_count": 64
+    },
+    "materialized_calibration_trial_seed_count": 7680,
+    "materialized_collision_count": 0,
+    "materialized_multiplier_seed_count": 19200,
+    "materialized_validation_trial_seed_count": 11520,
+    "multiplier_seed_base": 1290000,
+    "validation": {
+      "seed_base": 1280000,
+      "trial_count": 96
+    }
+  },
+  "statistical_contract": {
+    "aggregation": "state×scenario×backend IUT/max; no state average rescue",
+    "confidence": 0.95,
+    "estimand": "0.5*trace_norm(E[rho_left-rho_right])",
+    "formal_replicates_minimum": 1999,
+    "multiplier_replicates_design": 199,
+    "radius": "Rademacher paired-cluster multiplier quantile of 0.5*trace_norm(centered matrix mean error)",
+    "ucb": "point + calibrated_radius + quantization_bound"
+  },
+  "task_id": "T-RISK-20260727-01",
+  "validation_coverage_summary": {
+    "all_cells_passed": true,
+    "minimum_cell_coverage": 1.0,
+    "minimum_cell_wilson_lcb": 0.9615244121423244
+  },
+  "verdict": "NO_GO_PAIRED_CLUSTER_UQ_CALIBRATION"
+}
