@@ -24,8 +24,9 @@ from pathlib import Path
 import tempfile
 import threading
 import time
+from statistics import NormalDist
 from typing import Any, Mapping, Sequence
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import numpy as np
 import psutil
@@ -39,10 +40,17 @@ from cnn_fpga.benchmark.phase9_paired_cluster_uq import (
 
 TASK_ID = "T-RISK-20260727-01"
 CONFIG_PATH = "configs/phase9/t_risk_20260727_01_uq_hardened_confirmation.json"
-CONFIG_SCHEMA = "PHASE9-PAIRED-CLUSTER-UQ-HARDENED-CONFIRMATION-CONFIG-V1"
-CHUNK_SCHEMA = "PHASE9-PAIRED-CLUSTER-UQ-HARDENED-CHUNK-V1"
-REPORT_SCHEMA = "PHASE9-PAIRED-CLUSTER-UQ-HARDENED-CONFIRMATION-V1"
+CONFIG_SCHEMA = "PHASE9-PAIRED-CLUSTER-UQ-HARDENED-CONFIRMATION-CONFIG-V3"
+CHUNK_SCHEMA = "PHASE9-PAIRED-CLUSTER-UQ-HARDENED-CHUNK-V2"
+REPORT_SCHEMA = "PHASE9-PAIRED-CLUSTER-UQ-HARDENED-CONFIRMATION-V2"
 LOCK_SCHEMA = "PHASE9-PAIRED-CLUSTER-UQ-HARDENED-OWNER-LOCK-V1"
+RUN_IDENTITY_SCHEMA = "PHASE9-PAIRED-CLUSTER-UQ-HARDENED-RUN-IDENTITY-V1"
+PREFLIGHT_SCHEMA = "PHASE9-PAIRED-CLUSTER-UQ-RESOURCE-PREFLIGHT-V2"
+CONFIRMATION_SOURCE_SHA256_AT_IMPORT = sha256(Path(__file__).read_bytes()).hexdigest()
+PAIRED_UQ_SOURCE_PATH = "cnn_fpga/benchmark/phase9_paired_cluster_uq.py"
+PAIRED_UQ_SOURCE_SHA256_AT_IMPORT = sha256(
+    (Path(__file__).resolve().parents[2] / PAIRED_UQ_SOURCE_PATH).read_bytes()
+).hexdigest()
 PASS_VERDICT = "PASS_PAIRED_CLUSTER_UQ_HARDENED_CONFIRMATION"
 NO_GO_VERDICT = "NO_GO_PAIRED_CLUSTER_UQ_HARDENED_CONFIRMATION"
 CLAIM_BOUNDARY = {
@@ -77,6 +85,40 @@ PARENT_EXTENSION_CLAIM_BOUNDARY = {
     "power_extension_only": True,
     "puviani_nmf_surpass": None,
     "twin_qualification": None,
+}
+EXPECTED_FAMILIES = {
+    "low_energy_balanced": {
+        "spectrum_profile": "low_energy",
+        "left_noise_weight": 0.4,
+        "right_noise_weight": 0.4,
+        "rare_probability": 1.0,
+        "coherent_unitary": False,
+        "power_primary": True,
+    },
+    "heavy_tail_rare_coherent": {
+        "spectrum_profile": "heavy_tail",
+        "left_noise_weight": 0.75,
+        "right_noise_weight": 0.75,
+        "rare_probability": 0.12,
+        "coherent_unitary": True,
+        "power_primary": True,
+    },
+    "heteroskedastic_coherent": {
+        "spectrum_profile": "low_energy",
+        "left_noise_weight": 0.25,
+        "right_noise_weight": 0.75,
+        "rare_probability": 1.0,
+        "coherent_unitary": True,
+        "power_primary": False,
+    },
+}
+EXPECTED_GATES = {
+    "minimum_cell_coverage_rate": 0.94,
+    "minimum_cell_coverage_wilson_lcb": 0.9,
+    "null_equivalence_wilson_lcb": 0.8,
+    "local_005_equivalence_wilson_lcb": 0.65,
+    "boundary_equivalence_wilson_ucb": 0.1,
+    "outside_equivalence_wilson_ucb": 0.05,
 }
 
 
@@ -169,10 +211,21 @@ def _seed(base: int, *parts: object) -> int:
 
 
 def _wilson_bounds(
-    successes: int, total: int, z: float = 1.959963984540054
+    successes: int,
+    total: int,
+    *,
+    confidence: float = 0.95,
+    comparisons: int = 1,
 ) -> tuple[float, float]:
-    if total <= 0 or not 0 <= successes <= total:
+    if (
+        total <= 0
+        or not 0 <= successes <= total
+        or not 0.5 < confidence < 1.0
+        or comparisons < 1
+    ):
         raise ValueError("invalid Wilson inputs")
+    alpha = 1.0 - confidence
+    z = NormalDist().inv_cdf(1.0 - alpha / (2.0 * comparisons))
     proportion = successes / total
     denominator = 1.0 + z * z / total
     center = proportion + z * z / (2.0 * total)
@@ -197,15 +250,22 @@ def load_config(root: Path) -> tuple[dict[str, Any], dict[str, Any], dict[str, A
         or config.get("pilot_clusters_per_state") != 12
         or config.get("frozen_formal_clusters_per_state") != 384
         or config.get("true_trace_distances") != [0.0, 0.05, 0.1, 0.12]
+        or config.get("margin") != 0.1
         or config.get("frozen_calibration_factor") != 1.0
         or config.get("confidence") != 0.95
-        or int(config.get("multiplier_replicates", 0)) < 199
+        or int(config.get("multiplier_replicates", 0)) != 199
+        or int(config.get("max_workers", 0)) != 4
     ):
         raise ValueError("hardened UQ config identity/claim/domain drift")
+    if (
+        config.get("families") != EXPECTED_FAMILIES
+        or config.get("gates") != EXPECTED_GATES
+    ):
+        raise ValueError("hardened UQ preregistered family/gate drift")
     split = config.get("confirmation_split", {})
     if (
         split.get("independent_of_parent_splits") is not True
-        or int(split.get("trial_count_per_cell", 0)) < 256
+        or int(split.get("trial_count_per_cell", 0)) != 256
         or int(split.get("trial_seed_base", 0)) != 1430000
         or int(split.get("multiplier_seed_base", 0)) != 1440000
     ):
@@ -253,9 +313,13 @@ def load_config(root: Path) -> tuple[dict[str, Any], dict[str, Any], dict[str, A
         or preflight.get("disjoint_from_scientific_and_parent_seeds") is not True
         or int(preflight.get("trial_seed_base", 0)) != 1450000
         or int(preflight.get("multiplier_seed_base", 0)) != 1460000
-        or float(preflight.get("eta_safety_factor", 0.0)) < 1.0
-        or int(preflight.get("maximum_estimated_wall_seconds", 0)) <= 0
-        or int(preflight.get("maximum_estimated_six_worker_rss_bytes", 0)) <= 0
+        or float(preflight.get("eta_safety_factor", 0.0)) != 2.0
+        or int(preflight.get("maximum_estimated_wall_seconds", 0)) != 7200
+        or int(preflight.get("maximum_estimated_worker_pool_rss_bytes", 0))
+        != 2147483648
+        or int(preflight.get("maximum_estimated_total_task_rss_bytes", 0)) != 2684354560
+        or preflight.get("rss_scope")
+        != "worker_pool and supervisor are gated separately and jointly"
         or int(preflight["trial_seed_base"])
         in {
             int(split["trial_seed_base"]),
@@ -269,6 +333,30 @@ def load_config(root: Path) -> tuple[dict[str, Any], dict[str, Any], dict[str, A
         }
     ):
         raise ValueError("hardened UQ resource-preflight contract drift")
+    simultaneous = config.get("simultaneous_wilson", {})
+    if (
+        simultaneous.get("confidence") != 0.95
+        or simultaneous.get("global_comparisons") != 128
+        or simultaneous.get("coverage_cell_comparisons") != 128
+        or simultaneous.get("power_stratum_comparisons") != 128
+        or simultaneous.get("method")
+        != (
+            "single-family Bonferroni-adjusted two-sided Wilson bounds "
+            "across all 96 coverage and 32 power intervals"
+        )
+    ):
+        raise ValueError("hardened UQ simultaneous-Wilson contract drift")
+    artifacts = config.get("artifact_paths", {})
+    if set(artifacts) != {
+        "run_directory",
+        "chunk_directory",
+        "owner_lock",
+        "run_identity",
+        "heartbeat",
+        "report",
+        "source_data",
+    }:
+        raise ValueError("hardened UQ artifact-path schema drift")
 
     parents = config.get("parent_artifacts", {})
     expected_parent_names = {
@@ -320,6 +408,111 @@ def load_config(root: Path) -> tuple[dict[str, Any], dict[str, Any], dict[str, A
     ):
         raise ValueError("hardened UQ parent semantic binding drift")
     return config, calibration, extension
+
+
+def _execution_bindings(
+    root: Path, config: Mapping[str, Any]
+) -> dict[str, dict[str, object]]:
+    live_confirmation_sha = sha256(Path(__file__).read_bytes()).hexdigest()
+    live_paired_sha = sha256((root / PAIRED_UQ_SOURCE_PATH).read_bytes()).hexdigest()
+    if (
+        live_confirmation_sha != CONFIRMATION_SOURCE_SHA256_AT_IMPORT
+        or live_paired_sha != PAIRED_UQ_SOURCE_SHA256_AT_IMPORT
+    ):
+        raise RuntimeError(
+            "hardened UQ loaded-source/live-file drift; fresh process required"
+        )
+    return {
+        "config": _binding(root / CONFIG_PATH, root),
+        "confirmation_source": _binding(Path(__file__).resolve(), root),
+        "paired_cluster_uq_source": _binding(root / PAIRED_UQ_SOURCE_PATH, root),
+        **{
+            f"parent_{name}": _binding(root / str(binding["path"]), root)
+            for name, binding in config["parent_artifacts"].items()
+        },
+    }
+
+
+def _worker_source_attestation(
+    expected_bindings: Mapping[str, Mapping[str, Any]],
+) -> dict[str, Any]:
+    confirmation_sha = sha256(Path(__file__).read_bytes()).hexdigest()
+    paired_sha = sha256(
+        (Path(__file__).resolve().parents[2] / PAIRED_UQ_SOURCE_PATH).read_bytes()
+    ).hexdigest()
+    if (
+        confirmation_sha != CONFIRMATION_SOURCE_SHA256_AT_IMPORT
+        or paired_sha != PAIRED_UQ_SOURCE_SHA256_AT_IMPORT
+        or confirmation_sha != expected_bindings["confirmation_source"].get("sha256")
+        or paired_sha != expected_bindings["paired_cluster_uq_source"].get("sha256")
+    ):
+        raise RuntimeError("hardened UQ worker loaded/live source attestation drift")
+    return {
+        "worker_pid": os.getpid(),
+        "confirmation_source_sha256": confirmation_sha,
+        "paired_cluster_uq_source_sha256": paired_sha,
+    }
+
+
+def _verify_execution_identity_live(
+    root: Path,
+    config: Mapping[str, Any],
+    identity: Mapping[str, Any],
+) -> None:
+    _verify_self_hash(identity, "hardened UQ run identity")
+    expected_keys = {
+        "task_id",
+        "schema_version",
+        "run_id",
+        "config_analysis_sha256",
+        "execution_bindings",
+        "claim_state",
+        "created_utc",
+        "analysis_sha256",
+    }
+    try:
+        UUID(str(identity.get("run_id")))
+    except ValueError as exc:
+        raise RuntimeError("hardened UQ run identity UUID drift") from exc
+    if (
+        set(identity) != expected_keys
+        or identity.get("task_id") != TASK_ID
+        or identity.get("schema_version") != RUN_IDENTITY_SCHEMA
+        or identity.get("config_analysis_sha256") != _sha(config)
+        or identity.get("execution_bindings") != _execution_bindings(root, config)
+        or identity.get("claim_state") != CLAIM_BOUNDARY
+        or not isinstance(identity.get("created_utc"), str)
+    ):
+        raise RuntimeError("hardened UQ execution identity/live byte drift")
+
+
+def _load_or_create_run_identity(
+    root: Path,
+    config: Mapping[str, Any],
+) -> dict[str, Any]:
+    path = root / str(config["artifact_paths"]["run_identity"])
+    if path.exists():
+        identity = json.loads(path.read_text(encoding="utf-8"))
+    else:
+        identity = {
+            "task_id": TASK_ID,
+            "schema_version": RUN_IDENTITY_SCHEMA,
+            "run_id": str(uuid4()),
+            "config_analysis_sha256": _sha(config),
+            "execution_bindings": _execution_bindings(root, config),
+            "claim_state": dict(config["claim_boundary"]),
+            "created_utc": datetime.now(timezone.utc).isoformat(),
+        }
+        identity["analysis_sha256"] = _sha(identity)
+        _atomic_text(
+            path,
+            json.dumps(identity, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        )
+    live = json.loads(path.read_text(encoding="utf-8"))
+    if live != identity:
+        raise RuntimeError("hardened UQ run identity atomic binding drift")
+    _verify_execution_identity_live(root, config, live)
+    return live
 
 
 def _center_probabilities(dimension: int, profile: str) -> np.ndarray:
@@ -453,11 +646,13 @@ def _cells(config: Mapping[str, Any]) -> list[CellSpec]:
 
 def _measure_preflight_trial(
     config: Mapping[str, Any],
+    expected_execution_bindings: Mapping[str, Mapping[str, Any]],
     *,
     family_name: str,
     dimension: int,
     cluster_count: int,
 ) -> dict[str, Any]:
+    attestation_at_start = _worker_source_attestation(expected_execution_bindings)
     contract = config["resource_preflight"]
     trial_seed = _seed(
         int(contract["trial_seed_base"]),
@@ -504,6 +699,9 @@ def _measure_preflight_trial(
         stop.set()
         sampler.join(timeout=1.0)
         peak[0] = max(peak[0], int(process.memory_info().rss))
+    attestation_at_end = _worker_source_attestation(expected_execution_bindings)
+    if attestation_at_end != attestation_at_start:
+        raise RuntimeError("resource-preflight worker source changed during trial")
     return {
         "family": family_name,
         "dimension": dimension,
@@ -514,26 +712,76 @@ def _measure_preflight_trial(
         "elapsed_seconds": time.perf_counter() - started,
         "peak_process_rss_bytes": peak[0],
         "ucb_upper_bound": ucb.upper_bound,
+        "worker_attestation": attestation_at_end,
+    }
+
+
+def _wilson_feasibility(config: Mapping[str, Any]) -> dict[str, Any]:
+    trials = int(config["confirmation_split"]["trial_count_per_cell"])
+    simultaneous = config["simultaneous_wilson"]
+    confidence = float(simultaneous["confidence"])
+    comparisons = int(simultaneous["global_comparisons"])
+    best_lcb, _ = _wilson_bounds(
+        trials,
+        trials,
+        confidence=confidence,
+        comparisons=comparisons,
+    )
+    _, zero_ucb = _wilson_bounds(
+        0,
+        trials,
+        confidence=confidence,
+        comparisons=comparisons,
+    )
+    gates = config["gates"]
+    required_lcb = max(
+        float(gates["minimum_cell_coverage_wilson_lcb"]),
+        float(gates["null_equivalence_wilson_lcb"]),
+        float(gates["local_005_equivalence_wilson_lcb"]),
+    )
+    required_ucb = min(
+        float(gates["boundary_equivalence_wilson_ucb"]),
+        float(gates["outside_equivalence_wilson_ucb"]),
+    )
+    return {
+        "trial_count": trials,
+        "confidence": confidence,
+        "global_comparisons": comparisons,
+        "all_successes_wilson_lcb": best_lcb,
+        "zero_successes_wilson_ucb": zero_ucb,
+        "maximum_required_lcb": required_lcb,
+        "minimum_required_ucb": required_ucb,
+        "attainable": best_lcb >= required_lcb and zero_ucb <= required_ucb,
     }
 
 
 def _validate_resource_preflight(
     root: Path,
     config: Mapping[str, Any],
+    run_identity: Mapping[str, Any],
     report: Mapping[str, Any],
 ) -> None:
+    _verify_execution_identity_live(root, config, run_identity)
     _verify_self_hash(report, "resource preflight")
     records = report.get("records")
+    contract = config["resource_preflight"]
+    feasibility = _wilson_feasibility(config)
     if (
         report.get("task_id") != TASK_ID
-        or report.get("schema_version")
-        != "PHASE9-PAIRED-CLUSTER-UQ-RESOURCE-PREFLIGHT-V1"
+        or report.get("schema_version") != PREFLIGHT_SCHEMA
         or report.get("config_analysis_sha256") != _sha(config)
-        or report.get("source_sha256")
-        != sha256(Path(__file__).read_bytes()).hexdigest()
+        or report.get("run_id") != run_identity["run_id"]
+        or report.get("run_identity_analysis_sha256") != run_identity["analysis_sha256"]
+        or report.get("execution_bindings") != run_identity["execution_bindings"]
         or report.get("scientific_outcomes_accessed") is not False
         or report.get("claim_state") != CLAIM_BOUNDARY
-        or report.get("passed") is not True
+        or report.get("wilson_feasibility") != feasibility
+        or report.get("eta_method")
+        != (
+            "max(serial-child-work/workers, observed ProcessPool wall throughput) "
+            "times full scientific trial ratio and safety factor"
+        )
+        or report.get("rss_scope") != contract["rss_scope"]
         or not isinstance(records, list)
         or len(records) != 24
     ):
@@ -557,7 +805,12 @@ def _validate_resource_preflight(
     }
     if identities != expected:
         raise RuntimeError("resource preflight cell coverage drift")
-    contract = config["resource_preflight"]
+    confirmation_sha = run_identity["execution_bindings"]["confirmation_source"][
+        "sha256"
+    ]
+    paired_sha = run_identity["execution_bindings"]["paired_cluster_uq_source"][
+        "sha256"
+    ]
     for row in records:
         expected_trial = _seed(
             int(contract["trial_seed_base"]),
@@ -579,24 +832,93 @@ def _validate_resource_preflight(
             or not math.isfinite(float(row["elapsed_seconds"]))
             or float(row["elapsed_seconds"]) <= 0.0
             or int(row["peak_process_rss_bytes"]) <= 0
+            or row.get("worker_attestation", {}).get("confirmation_source_sha256")
+            != confirmation_sha
+            or row.get("worker_attestation", {}).get("paired_cluster_uq_source_sha256")
+            != paired_sha
+            or int(row.get("worker_attestation", {}).get("worker_pid", 0)) <= 0
         ):
             raise RuntimeError("resource preflight record drift")
+    workers = int(config["max_workers"])
+    full_trial_ratio = len(config["true_trace_distances"]) * int(
+        config["confirmation_split"]["trial_count_per_cell"]
+    )
+    expected_serial_projection = (
+        sum(float(row["elapsed_seconds"]) for row in records)
+        * full_trial_ratio
+        / workers
+    )
+    observed_wall = float(report.get("observed_process_pool_wall_seconds", math.nan))
+    observed_supervisor_rss = int(report.get("observed_supervisor_peak_rss_bytes", -1))
+    if (
+        not math.isfinite(observed_wall)
+        or observed_wall <= 0.0
+        or observed_supervisor_rss <= 0
+    ):
+        raise RuntimeError("resource preflight observed resource drift")
+    expected_pool_projection = observed_wall * full_trial_ratio
+    expected_wall = max(expected_serial_projection, expected_pool_projection) * float(
+        contract["eta_safety_factor"]
+    )
+    expected_worker_pool_rss = (
+        max(int(row["peak_process_rss_bytes"]) for row in records) * workers
+    )
+    expected_total_task_rss = expected_worker_pool_rss + observed_supervisor_rss
+    expected_passed = (
+        expected_wall <= int(contract["maximum_estimated_wall_seconds"])
+        and expected_worker_pool_rss
+        <= int(contract["maximum_estimated_worker_pool_rss_bytes"])
+        and expected_total_task_rss
+        <= int(contract["maximum_estimated_total_task_rss_bytes"])
+        and feasibility["attainable"] is True
+    )
+    float_fields = {
+        "serial_child_work_projection_seconds": expected_serial_projection,
+        "observed_pool_projection_seconds": expected_pool_projection,
+        "estimated_wall_seconds_with_safety_factor": expected_wall,
+    }
+    if any(
+        not math.isclose(
+            float(report.get(name, math.nan)),
+            expected_value,
+            rel_tol=1e-12,
+            abs_tol=1e-12,
+        )
+        for name, expected_value in float_fields.items()
+    ) or (
+        int(report.get("estimated_worker_pool_rss_bytes", -1))
+        != expected_worker_pool_rss
+        or int(report.get("estimated_total_task_rss_bytes", -1))
+        != expected_total_task_rss
+        or report.get("wall_limit_seconds")
+        != int(contract["maximum_estimated_wall_seconds"])
+        or report.get("worker_pool_rss_limit_bytes")
+        != int(contract["maximum_estimated_worker_pool_rss_bytes"])
+        or report.get("total_task_rss_limit_bytes")
+        != int(contract["maximum_estimated_total_task_rss_bytes"])
+        or report.get("passed") is not expected_passed
+    ):
+        raise RuntimeError("resource preflight derived summary drift")
 
 
-def run_resource_preflight(root: Path, config: Mapping[str, Any]) -> dict[str, Any]:
+def run_resource_preflight(
+    root: Path,
+    config: Mapping[str, Any],
+    run_identity: Mapping[str, Any],
+    owner: Mapping[str, Any],
+) -> dict[str, Any]:
+    _validate_owner_lock(root, config, owner)
+    _verify_execution_identity_live(root, config, run_identity)
     contract = config["resource_preflight"]
     path = root / str(contract["artifact"])
     if path.exists():
         report = json.loads(path.read_text(encoding="utf-8"))
-        _validate_resource_preflight(root, config, report)
+        _validate_resource_preflight(root, config, run_identity, report)
+        if report["passed"] is not True:
+            raise RuntimeError("resource preflight ETA/RSS/feasibility gate failed")
         return report
-    records = [
-        _measure_preflight_trial(
-            config,
-            family_name=family,
-            dimension=int(dimension),
-            cluster_count=int(count),
-        )
+    jobs = [
+        (family, int(dimension), int(count))
         for family in config["families"]
         for dimension in config["dimensions"]
         for count in (
@@ -604,51 +926,133 @@ def run_resource_preflight(root: Path, config: Mapping[str, Any]) -> dict[str, A
             config["frozen_formal_clusters_per_state"],
         )
     ]
-    trial_count = int(config["confirmation_split"]["trial_count_per_cell"])
     workers = int(config["max_workers"])
-    safety_factor = float(contract["eta_safety_factor"])
-    estimated_wall = (
-        sum(float(row["elapsed_seconds"]) for row in records)
-        * len(config["true_trace_distances"])
-        * trial_count
-        / workers
-        * safety_factor
+    started = time.perf_counter()
+    records: list[dict[str, Any]] = []
+    supervisor = psutil.Process(os.getpid())
+    supervisor_peak = [int(supervisor.memory_info().rss)]
+    supervisor_stop = threading.Event()
+
+    def sample_supervisor_rss() -> None:
+        while not supervisor_stop.wait(0.01):
+            supervisor_peak[0] = max(
+                supervisor_peak[0], int(supervisor.memory_info().rss)
+            )
+
+    supervisor_sampler = threading.Thread(
+        target=sample_supervisor_rss,
+        daemon=True,
     )
-    estimated_rss = max(int(row["peak_process_rss_bytes"]) for row in records) * workers
-    passed = estimated_wall <= float(
-        contract["maximum_estimated_wall_seconds"]
-    ) and estimated_rss <= int(contract["maximum_estimated_six_worker_rss_bytes"])
+    supervisor_sampler.start()
+    try:
+        with ProcessPoolExecutor(max_workers=workers) as executor:
+            futures = {
+                executor.submit(
+                    _measure_preflight_trial,
+                    config,
+                    run_identity["execution_bindings"],
+                    family_name=family,
+                    dimension=dimension,
+                    cluster_count=count,
+                ): (family, dimension, count)
+                for family, dimension, count in jobs
+            }
+            for future in as_completed(futures):
+                records.append(future.result())
+    finally:
+        supervisor_stop.set()
+        supervisor_sampler.join(timeout=1.0)
+        supervisor_peak[0] = max(supervisor_peak[0], int(supervisor.memory_info().rss))
+    _validate_owner_lock(root, config, owner)
+    observed_pool_wall = time.perf_counter() - started
+    records.sort(
+        key=lambda row: (
+            str(row["family"]),
+            int(row["dimension"]),
+            int(row["cluster_count"]),
+        )
+    )
+    _verify_execution_identity_live(root, config, run_identity)
+    trial_count = int(config["confirmation_split"]["trial_count_per_cell"])
+    safety_factor = float(contract["eta_safety_factor"])
+    full_trial_ratio = len(config["true_trace_distances"]) * trial_count
+    serial_work_projection = (
+        sum(float(row["elapsed_seconds"]) for row in records)
+        * full_trial_ratio
+        / workers
+    )
+    observed_pool_projection = observed_pool_wall * full_trial_ratio
+    estimated_wall = (
+        max(serial_work_projection, observed_pool_projection) * safety_factor
+    )
+    estimated_worker_pool_rss = (
+        max(int(row["peak_process_rss_bytes"]) for row in records) * workers
+    )
+    supervisor_rss = supervisor_peak[0]
+    estimated_total_task_rss = estimated_worker_pool_rss + supervisor_rss
+    feasibility = _wilson_feasibility(config)
+    passed = (
+        estimated_wall <= float(contract["maximum_estimated_wall_seconds"])
+        and estimated_worker_pool_rss
+        <= int(contract["maximum_estimated_worker_pool_rss_bytes"])
+        and estimated_total_task_rss
+        <= int(contract["maximum_estimated_total_task_rss_bytes"])
+        and feasibility["attainable"] is True
+    )
     report: dict[str, Any] = {
         "task_id": TASK_ID,
-        "schema_version": "PHASE9-PAIRED-CLUSTER-UQ-RESOURCE-PREFLIGHT-V1",
+        "schema_version": PREFLIGHT_SCHEMA,
         "config_analysis_sha256": _sha(config),
-        "source_sha256": sha256(Path(__file__).read_bytes()).hexdigest(),
+        "run_id": run_identity["run_id"],
+        "run_identity_analysis_sha256": run_identity["analysis_sha256"],
+        "execution_bindings": run_identity["execution_bindings"],
         "scientific_outcomes_accessed": False,
         "claim_state": dict(config["claim_boundary"]),
         "records": records,
+        "observed_process_pool_wall_seconds": observed_pool_wall,
+        "serial_child_work_projection_seconds": serial_work_projection,
+        "observed_pool_projection_seconds": observed_pool_projection,
+        "eta_method": (
+            "max(serial-child-work/workers, observed ProcessPool wall throughput) "
+            "times full scientific trial ratio and safety factor"
+        ),
         "estimated_wall_seconds_with_safety_factor": estimated_wall,
-        "estimated_six_worker_rss_bytes": estimated_rss,
+        "estimated_worker_pool_rss_bytes": estimated_worker_pool_rss,
+        "observed_supervisor_peak_rss_bytes": supervisor_rss,
+        "estimated_total_task_rss_bytes": estimated_total_task_rss,
+        "rss_scope": contract["rss_scope"],
         "wall_limit_seconds": int(contract["maximum_estimated_wall_seconds"]),
-        "rss_limit_bytes": int(contract["maximum_estimated_six_worker_rss_bytes"]),
+        "worker_pool_rss_limit_bytes": int(
+            contract["maximum_estimated_worker_pool_rss_bytes"]
+        ),
+        "total_task_rss_limit_bytes": int(
+            contract["maximum_estimated_total_task_rss_bytes"]
+        ),
+        "wilson_feasibility": feasibility,
         "passed": passed,
     }
     report["analysis_sha256"] = _sha(report)
+    _validate_owner_lock(root, config, owner)
     _atomic_text(
         path,
         json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
     )
+    _validate_owner_lock(root, config, owner)
     live = json.loads(path.read_text(encoding="utf-8"))
     if live != report:
         raise RuntimeError("resource preflight atomic commit drift")
-    _validate_resource_preflight(root, config, live)
+    _validate_resource_preflight(root, config, run_identity, live)
     if not passed:
-        raise RuntimeError("resource preflight ETA/RSS gate failed")
+        raise RuntimeError("resource preflight ETA/RSS/feasibility gate failed")
     return report
 
 
 def _simulate_cell(
-    config: Mapping[str, Any], cell_payload: Mapping[str, Any]
-) -> list[dict[str, Any]]:
+    config: Mapping[str, Any],
+    cell_payload: Mapping[str, Any],
+    expected_execution_bindings: Mapping[str, Mapping[str, Any]],
+) -> dict[str, Any]:
+    attestation_at_start = _worker_source_attestation(expected_execution_bindings)
     cell = CellSpec(**cell_payload)
     split = config["confirmation_split"]
     family = config["families"][cell.family]
@@ -702,7 +1106,13 @@ def _simulate_cell(
                 "power_primary": bool(family["power_primary"]),
             }
         )
-    return records
+    attestation_at_end = _worker_source_attestation(expected_execution_bindings)
+    if attestation_at_end != attestation_at_start:
+        raise RuntimeError("scientific worker source changed during cell")
+    return {
+        "records": records,
+        "worker_attestation": attestation_at_end,
+    }
 
 
 def _chunk_path(root: Path, config: Mapping[str, Any], cell: CellSpec) -> Path:
@@ -715,12 +1125,16 @@ def _chunk_payload(
     config: Mapping[str, Any],
     cell: CellSpec,
     records: Sequence[Mapping[str, Any]],
+    run_identity: Mapping[str, Any],
+    worker_attestation: Mapping[str, Any],
 ) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "task_id": TASK_ID,
         "schema_version": CHUNK_SCHEMA,
         "config_analysis_sha256": _sha(config),
-        "source_sha256": sha256(Path(__file__).read_bytes()).hexdigest(),
+        "run_id": run_identity["run_id"],
+        "run_identity_analysis_sha256": run_identity["analysis_sha256"],
+        "worker_attestation": dict(worker_attestation),
         "cell": asdict(cell),
         "record_count": len(records),
         "records": list(records),
@@ -730,16 +1144,21 @@ def _chunk_payload(
 
 
 def _validate_chunk(
+    root: Path,
     config: Mapping[str, Any],
     cell: CellSpec,
     chunk: Mapping[str, Any],
+    run_identity: Mapping[str, Any],
 ) -> None:
+    _verify_execution_identity_live(root, config, run_identity)
     _verify_self_hash(chunk, f"chunk/{cell.cell_id}")
     expected_keys = {
         "task_id",
         "schema_version",
         "config_analysis_sha256",
-        "source_sha256",
+        "run_id",
+        "run_identity_analysis_sha256",
+        "worker_attestation",
         "cell",
         "record_count",
         "records",
@@ -752,7 +1171,13 @@ def _validate_chunk(
         or chunk.get("task_id") != TASK_ID
         or chunk.get("schema_version") != CHUNK_SCHEMA
         or chunk.get("config_analysis_sha256") != _sha(config)
-        or chunk.get("source_sha256") != sha256(Path(__file__).read_bytes()).hexdigest()
+        or chunk.get("run_id") != run_identity["run_id"]
+        or chunk.get("run_identity_analysis_sha256") != run_identity["analysis_sha256"]
+        or chunk.get("worker_attestation", {}).get("confirmation_source_sha256")
+        != run_identity["execution_bindings"]["confirmation_source"]["sha256"]
+        or chunk.get("worker_attestation", {}).get("paired_cluster_uq_source_sha256")
+        != run_identity["execution_bindings"]["paired_cluster_uq_source"]["sha256"]
+        or int(chunk.get("worker_attestation", {}).get("worker_pid", 0)) <= 0
         or chunk.get("cell") != asdict(cell)
         or chunk.get("record_count") != expected_count
         or not isinstance(records, list)
@@ -848,35 +1273,70 @@ def _owner_lock(root: Path, config: Mapping[str, Any]) -> Any:
             os.fsync(stream.fileno())
         yield payload
     finally:
-        if path.exists():
-            live = json.loads(path.read_text(encoding="utf-8"))
-            _verify_self_hash(live, "owner lock")
-            if live.get("owner_token") != token:
-                raise RuntimeError("hardened UQ owner lock ownership drift")
-            path.unlink()
+        if not path.exists():
+            raise RuntimeError("hardened UQ owner lock disappeared while active")
+        _validate_owner_lock(root, config, payload)
+        path.unlink()
+
+
+def _validate_owner_lock(
+    root: Path,
+    config: Mapping[str, Any],
+    owner: Mapping[str, Any],
+) -> None:
+    path = root / str(config["artifact_paths"]["owner_lock"])
+    if not path.exists():
+        raise RuntimeError("hardened UQ owner lock ownership lost")
+    live = json.loads(path.read_text(encoding="utf-8"))
+    _verify_self_hash(live, "owner lock")
+    if (
+        live != owner
+        or live.get("owner_token") != owner.get("owner_token")
+        or live.get("config_analysis_sha256") != _sha(config)
+        or live.get("pid") != os.getpid()
+    ):
+        raise RuntimeError("hardened UQ owner lock ownership drift")
 
 
 def _heartbeat(
     root: Path,
     config: Mapping[str, Any],
+    run_identity: Mapping[str, Any],
+    owner: Mapping[str, Any],
     *,
     completed: int,
     total: int,
     active: bool,
     state: str,
+    stage: str,
     error_type: str | None = None,
 ) -> None:
-    if state not in {"RUNNING", "PASS", "NO_GO", "FAILED"}:
+    if state not in {"RUNNING", "PREFLIGHT_PASS", "PASS", "NO_GO", "FAILED"}:
         raise ValueError("hardened UQ heartbeat state drift")
+    if stage not in {"PRECHECK", "PREFLIGHT", "SCIENCE", "FINALIZE", "COMPLETE"}:
+        raise ValueError("hardened UQ heartbeat stage drift")
+    owner_lock_valid = True
+    try:
+        _validate_owner_lock(root, config, owner)
+    except BaseException:
+        owner_lock_valid = False
+        if state != "FAILED":
+            raise
     payload = {
         "task_id": TASK_ID,
-        "schema_version": "PHASE9-PAIRED-CLUSTER-UQ-HARDENED-HEARTBEAT-V1",
+        "schema_version": "PHASE9-PAIRED-CLUSTER-UQ-HARDENED-HEARTBEAT-V2",
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "pid": os.getpid(),
+        "owner_token": owner["owner_token"],
+        "owner_lock_valid": owner_lock_valid,
+        "config_analysis_sha256": _sha(config),
+        "run_id": run_identity["run_id"],
+        "run_identity_analysis_sha256": run_identity["analysis_sha256"],
         "completed_cells": completed,
         "expected_cells": total,
         "active": active,
         "state": state,
+        "stage": stage,
         "error_type": error_type,
     }
     payload["analysis_sha256"] = _sha(payload)
@@ -887,8 +1347,13 @@ def _heartbeat(
 
 
 def simulate_confirmation(
-    root: Path, config: Mapping[str, Any]
+    root: Path,
+    config: Mapping[str, Any],
+    run_identity: Mapping[str, Any],
+    owner: Mapping[str, Any],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    _validate_owner_lock(root, config, owner)
+    _verify_execution_identity_live(root, config, run_identity)
     cells = _cells(config)
     chunks: dict[str, dict[str, Any]] = {}
     pending: list[CellSpec] = []
@@ -896,28 +1361,60 @@ def simulate_confirmation(
         path = _chunk_path(root, config, cell)
         if path.exists():
             chunk = json.loads(path.read_text(encoding="utf-8"))
-            _validate_chunk(config, cell, chunk)
+            _validate_chunk(root, config, cell, chunk, run_identity)
             chunks[cell.cell_id] = chunk
         else:
             pending.append(cell)
     _heartbeat(
         root,
         config,
+        run_identity,
+        owner,
         completed=len(chunks),
         total=len(cells),
         active=True,
         state="RUNNING",
+        stage="SCIENCE",
     )
     if pending:
         with ProcessPoolExecutor(max_workers=int(config["max_workers"])) as executor:
             futures = {
-                executor.submit(_simulate_cell, config, asdict(cell)): cell
+                executor.submit(
+                    _simulate_cell,
+                    config,
+                    asdict(cell),
+                    run_identity["execution_bindings"],
+                ): cell
                 for cell in pending
             }
             for future in as_completed(futures):
+                _validate_owner_lock(root, config, owner)
+                _verify_execution_identity_live(root, config, run_identity)
                 cell = futures[future]
-                records = future.result()
-                chunk = _chunk_payload(config, cell, records)
+                worker_result = future.result()
+                attestation = worker_result.get("worker_attestation", {})
+                if (
+                    attestation.get("confirmation_source_sha256")
+                    != run_identity["execution_bindings"]["confirmation_source"][
+                        "sha256"
+                    ]
+                    or attestation.get("paired_cluster_uq_source_sha256")
+                    != run_identity["execution_bindings"]["paired_cluster_uq_source"][
+                        "sha256"
+                    ]
+                    or int(attestation.get("worker_pid", 0)) <= 0
+                ):
+                    raise RuntimeError("scientific worker source attestation drift")
+                records = worker_result.get("records")
+                if not isinstance(records, list):
+                    raise RuntimeError("scientific worker record payload drift")
+                chunk = _chunk_payload(
+                    config,
+                    cell,
+                    records,
+                    run_identity,
+                    attestation,
+                )
                 path = _chunk_path(root, config, cell)
                 _atomic_text(
                     path,
@@ -925,15 +1422,18 @@ def simulate_confirmation(
                     + "\n",
                 )
                 live = json.loads(path.read_text(encoding="utf-8"))
-                _validate_chunk(config, cell, live)
+                _validate_chunk(root, config, cell, live, run_identity)
                 chunks[cell.cell_id] = live
                 _heartbeat(
                     root,
                     config,
+                    run_identity,
+                    owner,
                     completed=len(chunks),
                     total=len(cells),
                     active=True,
                     state="RUNNING",
+                    stage="SCIENCE",
                 )
     ordered = [chunks[cell.cell_id] for cell in cells]
     records = [dict(record) for chunk in ordered for record in chunk["records"]]
@@ -941,10 +1441,13 @@ def simulate_confirmation(
     _heartbeat(
         root,
         config,
+        run_identity,
+        owner,
         completed=len(cells),
         total=len(cells),
         active=True,
         state="RUNNING",
+        stage="SCIENCE",
     )
     return records, bindings
 
@@ -955,6 +1458,9 @@ def _coverage_cells(
     factor: float,
     margin: float,
     expected_trials: int,
+    confidence: float,
+    coverage_comparisons: int,
+    power_comparisons: int,
 ) -> list[dict[str, Any]]:
     grouped: dict[tuple[Any, ...], list[Mapping[str, Any]]] = {}
     for row in records:
@@ -975,8 +1481,18 @@ def _coverage_cells(
         truth = float(key[3])
         coverage = sum(bound + 1e-12 >= truth for bound in bounds)
         equivalence = sum(bound <= margin for bound in bounds)
-        coverage_lcb, coverage_ucb = _wilson_bounds(coverage, len(rows))
-        equivalence_lcb, equivalence_ucb = _wilson_bounds(equivalence, len(rows))
+        coverage_lcb, coverage_ucb = _wilson_bounds(
+            coverage,
+            len(rows),
+            confidence=confidence,
+            comparisons=coverage_comparisons,
+        )
+        equivalence_lcb, equivalence_ucb = _wilson_bounds(
+            equivalence,
+            len(rows),
+            confidence=confidence,
+            comparisons=power_comparisons,
+        )
         cells.append(
             {
                 "split": "confirmation",
@@ -1019,10 +1535,12 @@ def build_report(
     config: Mapping[str, Any],
     calibration: Mapping[str, Any],
     extension: Mapping[str, Any],
+    run_identity: Mapping[str, Any],
     resource_preflight: Mapping[str, Any],
     records: Sequence[Mapping[str, Any]],
     chunk_bindings: Sequence[Mapping[str, Any]],
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    _verify_execution_identity_live(root, config, run_identity)
     if len(chunk_bindings) != len(_cells(config)):
         raise ValueError("hardened UQ chunk-binding denominator drift")
     if resource_preflight.get("passed") is not True or not isinstance(
@@ -1041,6 +1559,13 @@ def build_report(
         factor=factor,
         margin=margin,
         expected_trials=int(config["confirmation_split"]["trial_count_per_cell"]),
+        confidence=float(config["simultaneous_wilson"]["confidence"]),
+        coverage_comparisons=int(
+            config["simultaneous_wilson"]["coverage_cell_comparisons"]
+        ),
+        power_comparisons=int(
+            config["simultaneous_wilson"]["power_stratum_comparisons"]
+        ),
     )
     if len(cells) != 96:
         raise ValueError("hardened UQ coverage-cell denominator drift")
@@ -1137,6 +1662,8 @@ def build_report(
         "schema_version": REPORT_SCHEMA,
         "verdict": PASS_VERDICT if passed else NO_GO_VERDICT,
         "qualified_claim": None,
+        "run_id": run_identity["run_id"],
+        "run_identity_analysis_sha256": run_identity["analysis_sha256"],
         "frozen_parent_calibration_factor": factor,
         "frozen_parent_selected_clusters_per_state": 384,
         "selected_formal_clusters_per_state": 384 if passed else None,
@@ -1146,6 +1673,7 @@ def build_report(
         "confirmation_split_role": (
             "independent third split; validates frozen factor/count only"
         ),
+        "simultaneous_wilson_contract": dict(config["simultaneous_wilson"]),
         "parent_calibration_analysis_sha256": calibration["analysis_sha256"],
         "parent_extension_analysis_sha256": extension["analysis_sha256"],
         "parent_outcomes_preserved": True,
@@ -1180,17 +1708,7 @@ def build_report(
         },
         "claim_state": dict(config["claim_boundary"]),
         "formal_outcomes_accessed": False,
-        "bindings": {
-            "config": _binding(root / CONFIG_PATH, root),
-            "confirmation_source": _binding(Path(__file__).resolve(), root),
-            "paired_cluster_uq_source": _binding(
-                root / "cnn_fpga/benchmark/phase9_paired_cluster_uq.py", root
-            ),
-            **{
-                f"parent_{name}": dict(binding)
-                for name, binding in config["parent_artifacts"].items()
-            },
-        },
+        "bindings": dict(run_identity["execution_bindings"]),
         "chunk_bindings": list(chunk_bindings),
     }
     return report, coverage_rows
@@ -1206,36 +1724,114 @@ def _serialize_csv(rows: Sequence[Mapping[str, Any]]) -> str:
         return stream.read()
 
 
+def _verify_finalized_report(
+    root: Path,
+    config: Mapping[str, Any],
+    run_identity: Mapping[str, Any],
+    report: Mapping[str, Any],
+    *,
+    report_path: Path,
+    source_path: Path,
+) -> None:
+    _verify_execution_identity_live(root, config, run_identity)
+    live = json.loads(report_path.read_text(encoding="utf-8"))
+    _verify_self_hash(live, "hardened UQ report")
+    if (
+        live != report
+        or live.get("run_id") != run_identity["run_id"]
+        or live.get("run_identity_analysis_sha256") != run_identity["analysis_sha256"]
+        or live.get("claim_state") != CLAIM_BOUNDARY
+        or live.get("formal_outcomes_accessed") is not False
+        or live.get("qualified_claim") is not None
+        or live.get("verdict") not in {PASS_VERDICT, NO_GO_VERDICT}
+    ):
+        raise RuntimeError("hardened UQ finalized report semantic drift")
+    bindings = live.get("bindings")
+    if not isinstance(bindings, Mapping):
+        raise RuntimeError("hardened UQ finalized bindings missing")
+    expected_binding_names = {
+        *run_identity["execution_bindings"],
+        "run_identity",
+        "source_data",
+        "resource_preflight",
+    }
+    if set(bindings) != expected_binding_names:
+        raise RuntimeError("hardened UQ finalized binding set drift")
+    for name, binding in bindings.items():
+        if not isinstance(binding, Mapping):
+            raise RuntimeError(f"hardened UQ finalized binding type drift: {name}")
+        _verify_binding(root, binding, label=f"final report/{name}")
+    if bindings["source_data"] != _binding(source_path, root):
+        raise RuntimeError("hardened UQ finalized source-data binding drift")
+    expected_chunks = [
+        _binding(_chunk_path(root, config, cell), root) for cell in _cells(config)
+    ]
+    if live.get("chunk_bindings") != expected_chunks:
+        raise RuntimeError("hardened UQ finalized chunk live-binding drift")
+
+
 def write_artifacts(root: Path | None = None) -> dict[str, Any]:
     base = (root or _root()).resolve()
-    config, calibration, extension = load_config(base)
-    with _owner_lock(base, config):
+    initial_config, _, _ = load_config(base)
+    with _owner_lock(base, initial_config) as owner:
+        config, calibration, extension = load_config(base)
+        if config != initial_config:
+            raise RuntimeError("hardened UQ config changed during lock acquisition")
+        run_identity = _load_or_create_run_identity(base, config)
+        stage = "PRECHECK"
+        _heartbeat(
+            base,
+            config,
+            run_identity,
+            owner,
+            completed=0,
+            total=len(_cells(config)),
+            active=True,
+            state="RUNNING",
+            stage=stage,
+        )
         try:
-            resource_preflight = run_resource_preflight(base, config)
-            records, chunk_bindings = simulate_confirmation(base, config)
-        except BaseException as exc:
-            chunk_directory = base / str(config["artifact_paths"]["chunk_directory"])
-            completed = (
-                len(list(chunk_directory.glob("*.json")))
-                if chunk_directory.exists()
-                else 0
-            )
+            _verify_execution_identity_live(base, config, run_identity)
+            stage = "PREFLIGHT"
             _heartbeat(
                 base,
                 config,
-                completed=completed,
+                run_identity,
+                owner,
+                completed=0,
                 total=len(_cells(config)),
-                active=False,
-                state="FAILED",
-                error_type=type(exc).__name__,
+                active=True,
+                state="RUNNING",
+                stage=stage,
             )
-            raise
-        try:
+            resource_preflight = run_resource_preflight(
+                base,
+                config,
+                run_identity,
+                owner,
+            )
+            stage = "SCIENCE"
+            records, chunk_bindings = simulate_confirmation(
+                base, config, run_identity, owner
+            )
+            stage = "FINALIZE"
+            _heartbeat(
+                base,
+                config,
+                run_identity,
+                owner,
+                completed=len(_cells(config)),
+                total=len(_cells(config)),
+                active=True,
+                state="RUNNING",
+                stage=stage,
+            )
             report, coverage_rows = build_report(
                 base,
                 config,
                 calibration,
                 extension,
+                run_identity,
                 resource_preflight,
                 records,
                 chunk_bindings,
@@ -1244,6 +1840,9 @@ def write_artifacts(root: Path | None = None) -> dict[str, Any]:
             report_path = base / str(config["artifact_paths"]["report"])
             _atomic_text(source_path, _serialize_csv(records))
             report["bindings"]["source_data"] = _binding(source_path, base)
+            report["bindings"]["run_identity"] = _binding(
+                base / str(config["artifact_paths"]["run_identity"]), base
+            )
             report["bindings"]["resource_preflight"] = _binding(
                 base / str(config["resource_preflight"]["artifact"]), base
             )
@@ -1257,31 +1856,48 @@ def write_artifacts(root: Path | None = None) -> dict[str, Any]:
                 report_path,
                 json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
             )
-            live = json.loads(report_path.read_text(encoding="utf-8"))
-            _verify_self_hash(live, "hardened UQ report")
-            if live != report or live["bindings"]["source_data"] != _binding(
-                source_path, base
-            ):
-                raise RuntimeError("hardened UQ finalized live validation drift")
-        except BaseException as exc:
+            _verify_finalized_report(
+                base,
+                config,
+                run_identity,
+                report,
+                report_path=report_path,
+                source_path=source_path,
+            )
+            stage = "COMPLETE"
             _heartbeat(
                 base,
                 config,
+                run_identity,
+                owner,
                 completed=len(_cells(config)),
                 total=len(_cells(config)),
                 active=False,
+                state="PASS" if report["verdict"] == PASS_VERDICT else "NO_GO",
+                stage=stage,
+            )
+        except BaseException as exc:
+            if "report_path" in locals():
+                report_path.unlink(missing_ok=True)
+            chunk_directory = base / str(config["artifact_paths"]["chunk_directory"])
+            completed = (
+                len(list(chunk_directory.glob("*.json")))
+                if chunk_directory.exists()
+                else 0
+            )
+            _heartbeat(
+                base,
+                config,
+                run_identity,
+                owner,
+                completed=completed,
+                total=len(_cells(config)),
+                active=False,
                 state="FAILED",
+                stage=stage,
                 error_type=type(exc).__name__,
             )
             raise
-        _heartbeat(
-            base,
-            config,
-            completed=len(_cells(config)),
-            total=len(_cells(config)),
-            active=False,
-            state="PASS" if report["verdict"] == PASS_VERDICT else "NO_GO",
-        )
         return report
 
 
@@ -1297,9 +1913,57 @@ def main(argv: Sequence[str] | None = None) -> int:
     arguments = parser.parse_args(argv)
     if arguments.preflight_only:
         base = _root().resolve()
-        config, _, _ = load_config(base)
-        with _owner_lock(base, config):
-            report = run_resource_preflight(base, config)
+        initial_config, _, _ = load_config(base)
+        with _owner_lock(base, initial_config) as owner:
+            config, _, _ = load_config(base)
+            if config != initial_config:
+                raise RuntimeError(
+                    "hardened UQ config changed during preflight lock acquisition"
+                )
+            run_identity = _load_or_create_run_identity(base, config)
+            _heartbeat(
+                base,
+                config,
+                run_identity,
+                owner,
+                completed=0,
+                total=len(_cells(config)),
+                active=True,
+                state="RUNNING",
+                stage="PREFLIGHT",
+            )
+            try:
+                report = run_resource_preflight(
+                    base,
+                    config,
+                    run_identity,
+                    owner,
+                )
+            except BaseException as exc:
+                _heartbeat(
+                    base,
+                    config,
+                    run_identity,
+                    owner,
+                    completed=0,
+                    total=len(_cells(config)),
+                    active=False,
+                    state="FAILED",
+                    stage="PREFLIGHT",
+                    error_type=type(exc).__name__,
+                )
+                raise
+            _heartbeat(
+                base,
+                config,
+                run_identity,
+                owner,
+                completed=0,
+                total=len(_cells(config)),
+                active=False,
+                state="PREFLIGHT_PASS",
+                stage="PREFLIGHT",
+            )
         print(
             json.dumps(
                 {
@@ -1308,8 +1972,11 @@ def main(argv: Sequence[str] | None = None) -> int:
                     "estimated_wall_seconds_with_safety_factor": report[
                         "estimated_wall_seconds_with_safety_factor"
                     ],
-                    "estimated_six_worker_rss_bytes": report[
-                        "estimated_six_worker_rss_bytes"
+                    "estimated_worker_pool_rss_bytes": report[
+                        "estimated_worker_pool_rss_bytes"
+                    ],
+                    "estimated_total_task_rss_bytes": report[
+                        "estimated_total_task_rss_bytes"
                     ],
                 },
                 sort_keys=True,

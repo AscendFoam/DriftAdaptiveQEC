@@ -135,6 +135,7 @@ def _load_inputs(
     dict[str, Any],
     dict[str, Any],
     dict[str, Any],
+    dict[str, Any],
 ]:
     config, base = pilot_runner.load_pilot_config(root, require_hardened=True)
     if pilot_runner.CONFIG_PATH != CONFIG_PATH:
@@ -185,7 +186,8 @@ def _load_inputs(
         or extension.get("parent_analysis_sha256") != uq["analysis_sha256"]
     ):
         raise ValueError("UQ power extension is not qualified")
-    return config, manifest, uq, extension
+    hardened = pilot_runner._validate_hardened_confirmation(root, config)
+    return config, manifest, uq, extension, hardened
 
 
 def _parse_chunk(
@@ -754,7 +756,7 @@ def evaluate_diagnostics(
 def _build_report_core(
     root: Path,
 ) -> tuple[dict[str, Any], list[dict[str, object]]]:
-    config, manifest, uq, extension = _load_inputs(root)
+    config, manifest, uq, extension, hardened = _load_inputs(root)
     rows, densities = load_pilot_evidence(root, config, manifest)
     diagnostics = evaluate_diagnostics(config, rows, densities)
     cutoff_24_28 = [
@@ -838,8 +840,9 @@ def _build_report_core(
             "triggered": trigger_32,
         },
         "formal_design": {
-            "calibration_factor": uq["selected_calibration_factor"],
-            "clusters_per_state": extension["selected_formal_clusters_per_state"],
+            "calibration_factor": hardened["frozen_parent_calibration_factor"],
+            "clusters_per_state": hardened["selected_formal_clusters_per_state"],
+            "hardened_confirmation_analysis_sha256": hardened["analysis_sha256"],
             "design_multiplier_replicates": 199,
             "formal_1999_replicate_recalibration_required": True,
             "aggregation": "state×scenario×backend IUT/max",

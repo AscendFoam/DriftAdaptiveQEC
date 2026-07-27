@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from contextlib import nullcontext
 from dataclasses import asdict
 from hashlib import sha256
 import json
@@ -265,3 +266,243 @@ def test_help_exits_before_runner(monkeypatch) -> None:
         subject.main(["--help"])
     assert raised.value.code == 0
     assert calls == []
+
+
+def _install_run_pilot_fixture(
+    tmp_path: Path,
+    monkeypatch,
+    *,
+    duplicate_receipt_set: bool = False,
+) -> tuple[list[runner.CellSpec], Path, Path]:
+    pilot = {
+        "max_workers": 2,
+        "base_config": {"path": "base.json"},
+        "source_bindings": {},
+        "artifact_paths": {
+            "execution_manifest": "run/manifest.json",
+            "heartbeat": "run/heartbeat.json",
+            "receipt_directory": "run/receipts",
+            "run_identity": "run/run_identity.json",
+        },
+        "hardened_confirmation_source": {
+            "report": {"path": "hardened.json"},
+            "source_data": {"path": "hardened.csv"},
+        },
+        "claim_boundary": dict(subject.CLAIM_BOUNDARY),
+    }
+    execution = {"fixture": True}
+    cells = [
+        runner.CellSpec(
+            chunk_id=f"chunk-{backend}",
+            layer="fault",
+            cell_base=f"fault|step|{backend}",
+            cutoff=16,
+            backend=backend,
+            sample_count=1,
+            convergence_role="pilot",
+            scenario="step",
+            horizon=1,
+        )
+        for backend in ("A", "B")
+    ]
+    run_identity = {
+        "run_id": "00000000-0000-0000-0000-000000000001",
+        "analysis_sha256": "identity-hash",
+    }
+
+    def receipt_for(cell: runner.CellSpec) -> dict:
+        selected = cells[0] if duplicate_receipt_set else cell
+        return {
+            "cell": asdict(selected),
+            "csv": {"path": f"run/{selected.chunk_id}.csv"},
+            "npz": {"path": f"run/{selected.chunk_id}.npz"},
+        }
+
+    class DoneFuture:
+        def __init__(self, receipt: dict) -> None:
+            self._receipt = receipt
+
+        def result(self) -> dict:
+            return self._receipt
+
+    class ImmediatePool:
+        def __init__(self, *, max_workers: int) -> None:
+            assert max_workers == 2
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args) -> None:
+            return None
+
+        def submit(self, _function, *args):
+            cell = runner.CellSpec(**args[3])
+            return DoneFuture(receipt_for(cell))
+
+    monkeypatch.setattr(
+        subject, "load_pilot_config", lambda *_a, **_k: (pilot, {"base": True})
+    )
+    monkeypatch.setattr(
+        subject, "materialize_execution_config", lambda *_a, **_k: execution
+    )
+    monkeypatch.setattr(subject, "build_pilot_cells", lambda *_a, **_k: cells)
+    monkeypatch.setattr(
+        subject, "_exclusive_owner_lock", lambda *_a, **_k: nullcontext()
+    )
+    monkeypatch.setattr(
+        subject, "_load_or_create_run_identity", lambda *_a, **_k: run_identity
+    )
+    monkeypatch.setattr(subject, "ProcessPoolExecutor", ImmediatePool)
+    monkeypatch.setattr(subject, "as_completed", lambda futures: list(futures))
+    monkeypatch.setattr(
+        subject,
+        "_binding",
+        lambda path, _root: {
+            "path": Path(path).name,
+            "bytes": 1,
+            "sha256": "bound",
+        },
+    )
+    monkeypatch.setattr(subject, "_validate_receipt_file", lambda *_a, **_k: None)
+    monkeypatch.setattr(subject, "_chunk_health", lambda *_a, **_k: (0, 0))
+    return (
+        cells,
+        tmp_path / pilot["artifact_paths"]["execution_manifest"],
+        tmp_path / pilot["artifact_paths"]["heartbeat"],
+    )
+
+
+def _assert_failed_heartbeat(
+    heartbeat_path: Path,
+    *,
+    error_type: str,
+) -> None:
+    heartbeat = json.loads(heartbeat_path.read_text(encoding="utf-8"))
+    assert heartbeat["active"] is False
+    assert heartbeat["state"] == "FAILED"
+    assert heartbeat["error_type"] == error_type
+    assert heartbeat["analysis_sha256"] == subject._sha(
+        {key: value for key, value in heartbeat.items() if key != "analysis_sha256"}
+    )
+
+
+def test_receipt_set_drift_finalization_fails_closed(tmp_path, monkeypatch) -> None:
+    _cells, manifest_path, heartbeat_path = _install_run_pilot_fixture(
+        tmp_path,
+        monkeypatch,
+        duplicate_receipt_set=True,
+    )
+
+    with pytest.raises(RuntimeError, match="receipt cell set drift"):
+        subject.run_pilot(tmp_path)
+
+    _assert_failed_heartbeat(heartbeat_path, error_type="RuntimeError")
+    assert not manifest_path.exists()
+
+
+def test_chunk_health_exception_finalization_fails_closed(
+    tmp_path, monkeypatch
+) -> None:
+    _cells, manifest_path, heartbeat_path = _install_run_pilot_fixture(
+        tmp_path, monkeypatch
+    )
+    monkeypatch.setattr(
+        subject,
+        "_chunk_health",
+        lambda *_a, **_k: (_ for _ in ()).throw(OSError("health fault")),
+    )
+
+    with pytest.raises(OSError, match="health fault"):
+        subject.run_pilot(tmp_path)
+
+    _assert_failed_heartbeat(heartbeat_path, error_type="OSError")
+    assert not manifest_path.exists()
+
+
+def test_manifest_write_exception_finalization_fails_closed(
+    tmp_path, monkeypatch
+) -> None:
+    _cells, manifest_path, heartbeat_path = _install_run_pilot_fixture(
+        tmp_path, monkeypatch
+    )
+    atomic_text = subject._atomic_text
+
+    def fail_manifest_write(path: Path, text: str) -> None:
+        if Path(path) == manifest_path:
+            raise PermissionError("manifest write fault")
+        atomic_text(path, text)
+
+    monkeypatch.setattr(subject, "_atomic_text", fail_manifest_write)
+
+    with pytest.raises(PermissionError, match="manifest write fault"):
+        subject.run_pilot(tmp_path)
+
+    _assert_failed_heartbeat(heartbeat_path, error_type="PermissionError")
+    assert not manifest_path.exists()
+
+
+def test_manifest_live_verify_exception_removes_pseudo_complete(
+    tmp_path, monkeypatch
+) -> None:
+    _cells, manifest_path, heartbeat_path = _install_run_pilot_fixture(
+        tmp_path, monkeypatch
+    )
+    verify_manifest = subject._verify_manifest
+    calls = 0
+
+    def fail_live_verify(*args, **kwargs) -> None:
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            raise RuntimeError("live manifest verify fault")
+        verify_manifest(*args, **kwargs)
+
+    monkeypatch.setattr(subject, "_verify_manifest", fail_live_verify)
+
+    with pytest.raises(RuntimeError, match="live manifest verify fault"):
+        subject.run_pilot(tmp_path)
+
+    assert calls == 2
+    _assert_failed_heartbeat(heartbeat_path, error_type="RuntimeError")
+    assert not manifest_path.exists()
+
+
+def test_complete_heartbeat_exception_finalization_fails_closed(
+    tmp_path, monkeypatch
+) -> None:
+    _cells, manifest_path, heartbeat_path = _install_run_pilot_fixture(
+        tmp_path, monkeypatch
+    )
+    heartbeat = subject._heartbeat
+
+    def fail_complete_heartbeat(*args, **kwargs) -> None:
+        if kwargs.get("state") == "COMPLETE":
+            raise OSError("complete heartbeat fault")
+        heartbeat(*args, **kwargs)
+
+    monkeypatch.setattr(subject, "_heartbeat", fail_complete_heartbeat)
+
+    with pytest.raises(OSError, match="complete heartbeat fault"):
+        subject.run_pilot(tmp_path)
+
+    _assert_failed_heartbeat(heartbeat_path, error_type="OSError")
+    assert not manifest_path.exists()
+
+
+def test_healthy_finalization_commits_manifest_before_complete(
+    tmp_path, monkeypatch
+) -> None:
+    cells, manifest_path, heartbeat_path = _install_run_pilot_fixture(
+        tmp_path, monkeypatch
+    )
+
+    report = subject.run_pilot(tmp_path)
+
+    assert report == json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert report["status"] == subject.STATUS
+    assert report["observed_cells"] == len(cells)
+    heartbeat = json.loads(heartbeat_path.read_text(encoding="utf-8"))
+    assert heartbeat["completed_cells"] == len(cells)
+    assert heartbeat["active"] is False
+    assert heartbeat["state"] == "COMPLETE"
+    assert heartbeat["error_type"] is None

@@ -1,6 +1,6 @@
 {
   "task_id": "T-RISK-20260727-01",
-  "schema_version": "PHASE9-PAIRED-CLUSTER-UQ-HARDENED-CONFIRMATION-CONFIG-V1",
+  "schema_version": "PHASE9-PAIRED-CLUSTER-UQ-HARDENED-CONFIRMATION-CONFIG-V3",
   "purpose": "Third-split confirmation of the frozen factor=1.0 and 384-cluster design over the actual c16/c20/c24/c28 joint-density dimensions; no formal outcome or paper claim is accessed",
   "parent_artifacts": {
     "calibration_report": {
@@ -88,21 +88,31 @@
     "boundary_equivalence_wilson_ucb": 0.1,
     "outside_equivalence_wilson_ucb": 0.05
   },
+  "simultaneous_wilson": {
+    "confidence": 0.95,
+    "global_comparisons": 128,
+    "coverage_cell_comparisons": 128,
+    "power_stratum_comparisons": 128,
+    "method": "single-family Bonferroni-adjusted two-sided Wilson bounds across all 96 coverage and 32 power intervals"
+  },
   "resource_preflight": {
     "required": true,
     "trial_seed_base": 1450000,
     "multiplier_seed_base": 1460000,
     "eta_safety_factor": 2.0,
     "maximum_estimated_wall_seconds": 7200,
-    "maximum_estimated_six_worker_rss_bytes": 2147483648,
-    "artifact": "runs/t_risk_20260727_01_uq_hardened_confirmation/resource_preflight.json",
+    "maximum_estimated_worker_pool_rss_bytes": 2147483648,
+    "maximum_estimated_total_task_rss_bytes": 2684354560,
+    "rss_scope": "worker_pool and supervisor are gated separately and jointly",
+    "artifact": "runs/t_risk_20260727_01_uq_hardened_confirmation/resource_preflight_fresh4.json",
     "disjoint_from_scientific_and_parent_seeds": true
   },
-  "max_workers": 6,
+  "max_workers": 4,
   "artifact_paths": {
     "run_directory": "runs/t_risk_20260727_01_uq_hardened_confirmation",
     "chunk_directory": "runs/t_risk_20260727_01_uq_hardened_confirmation/chunks",
     "owner_lock": "runs/t_risk_20260727_01_uq_hardened_confirmation/supervisor.owner.lock",
+    "run_identity": "runs/t_risk_20260727_01_uq_hardened_confirmation/run_identity.json",
     "heartbeat": "runs/t_risk_20260727_01_uq_hardened_confirmation/heartbeat.json",
     "report": "docs/t_risk_20260727_01_uq_hardened_confirmation.json",
     "source_data": "docs/t_risk_20260727_01_uq_hardened_confirmation_source_data.csv"

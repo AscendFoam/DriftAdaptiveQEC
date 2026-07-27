@@ -17,6 +17,32 @@ from cnn_fpga.benchmark import (
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def _live_identity(config):
+    identity = {
+        "task_id": subject.TASK_ID,
+        "schema_version": subject.RUN_IDENTITY_SCHEMA,
+        "run_id": "2e921c62-3d2e-43d8-a1bd-e62dc7069ddd",
+        "config_analysis_sha256": subject._sha(config),
+        "execution_bindings": subject._execution_bindings(ROOT, config),
+        "claim_state": dict(subject.CLAIM_BOUNDARY),
+        "created_utc": "2026-07-27T00:00:00+00:00",
+    }
+    identity["analysis_sha256"] = subject._sha(identity)
+    return identity
+
+
+def _worker_attestation(identity):
+    return {
+        "worker_pid": 1234,
+        "confirmation_source_sha256": identity["execution_bindings"][
+            "confirmation_source"
+        ]["sha256"],
+        "paired_cluster_uq_source_sha256": identity["execution_bindings"][
+            "paired_cluster_uq_source"
+        ]["sha256"],
+    }
+
+
 def _lock_contender(root_text, config, queue) -> None:
     try:
         with subject._owner_lock(Path(root_text), config):
@@ -41,6 +67,29 @@ def test_live_config_pins_parents_domain_and_claim_boundary() -> None:
     assert calibration["verdict"] == "NO_GO_PAIRED_CLUSTER_UQ_CALIBRATION"
     assert extension["verdict"] == "PASS_PAIRED_CLUSTER_UQ_POWER_EXTENSION"
     assert extension["selected_formal_clusters_per_state"] == 384
+
+
+@pytest.mark.parametrize(
+    ("path", "value"),
+    [
+        (("gates", "minimum_cell_coverage_wilson_lcb"), 0.89),
+        (("families", "heavy_tail_rare_coherent", "rare_probability"), 0.2),
+        (("margin",), 0.11),
+    ],
+)
+def test_preregistered_gate_and_family_drift_is_rejected(
+    tmp_path, monkeypatch, path, value
+) -> None:
+    config = json.loads((ROOT / subject.CONFIG_PATH).read_text(encoding="utf-8"))
+    target = config
+    for key in path[:-1]:
+        target = target[key]
+    target[path[-1]] = value
+    relative = "mutated_config.json"
+    (tmp_path / relative).write_text(json.dumps(config), encoding="utf-8")
+    monkeypatch.setattr(subject, "CONFIG_PATH", relative)
+    with pytest.raises(ValueError, match="identity/claim/domain|family/gate"):
+        subject.load_config(tmp_path)
 
 
 @pytest.mark.parametrize(
@@ -88,9 +137,26 @@ def test_physical_ucb_rejects_non_psd_or_non_trace_one_input() -> None:
 
 def test_wilson_bounds_are_not_point_rates() -> None:
     lower, upper = subject._wilson_bounds(167, 256)
+    simultaneous_lower, simultaneous_upper = subject._wilson_bounds(
+        167,
+        256,
+        confidence=0.95,
+        comparisons=128,
+    )
     assert 167 / 256 > 0.65
     assert lower < 0.65
     assert upper > 167 / 256
+    assert simultaneous_lower < lower
+    assert simultaneous_upper > upper
+
+
+def test_global_wilson_contract_is_analytically_attainable() -> None:
+    config, _, _ = subject.load_config(ROOT)
+    feasibility = subject._wilson_feasibility(config)
+    assert feasibility["global_comparisons"] == 128
+    assert feasibility["all_successes_wilson_lcb"] >= 0.90
+    assert feasibility["zero_successes_wilson_ucb"] <= 0.05
+    assert feasibility["attainable"] is True
 
 
 def _synthetic_records(config, *, local_successes: int):
@@ -150,6 +216,7 @@ def test_point_pass_but_wilson_lcb_fail_is_no_go() -> None:
         config,
         calibration,
         extension,
+        _live_identity(config),
         {"passed": True, "analysis_sha256": "fixture-preflight"},
         records,
         [{"cell": asdict(cell)} for cell in subject._cells(config)],
@@ -194,6 +261,14 @@ def test_owner_lock_cleans_after_exception(tmp_path) -> None:
     assert not lock_path.exists()
 
 
+def test_owner_lock_disappearance_is_terminal(tmp_path) -> None:
+    config = {"artifact_paths": {"owner_lock": "run/owner.lock"}}
+    lock_path = tmp_path / "run" / "owner.lock"
+    with pytest.raises(RuntimeError, match="disappeared"):
+        with subject._owner_lock(tmp_path, config):
+            lock_path.unlink()
+
+
 def test_hard_kill_leaves_stale_lock_for_read_only_diagnosis_and_manual_archive(
     tmp_path,
 ) -> None:
@@ -223,6 +298,7 @@ def test_hard_kill_leaves_stale_lock_for_read_only_diagnosis_and_manual_archive(
 
 def test_chunk_rejects_power_primary_flag_tamper() -> None:
     config, _, _ = subject.load_config(ROOT)
+    run_identity = _live_identity(config)
     cell = subject._cells(config)[0]
     record = {
         "split": "confirmation",
@@ -255,9 +331,53 @@ def test_chunk_rejects_power_primary_flag_tamper() -> None:
     }
     reduced = json.loads(json.dumps(config))
     reduced["confirmation_split"]["trial_count_per_cell"] = 1
-    chunk = subject._chunk_payload(reduced, cell, [record])
+    reduced_identity = _live_identity(reduced)
+    chunk = subject._chunk_payload(
+        reduced,
+        cell,
+        [record],
+        reduced_identity,
+        _worker_attestation(reduced_identity),
+    )
     with pytest.raises(ValueError, match="record drift"):
-        subject._validate_chunk(reduced, cell, chunk)
+        subject._validate_chunk(ROOT, reduced, cell, chunk, reduced_identity)
+
+
+def test_run_identity_rejects_live_binding_tamper(tmp_path, monkeypatch) -> None:
+    config = {
+        "artifact_paths": {"run_identity": "run/run_identity.json"},
+        "claim_boundary": dict(subject.CLAIM_BOUNDARY),
+    }
+    snapshot = {"config": {"path": "config.json", "bytes": 3, "sha256": "a" * 64}}
+    monkeypatch.setattr(subject, "_execution_bindings", lambda root, live: snapshot)
+    identity = subject._load_or_create_run_identity(tmp_path, config)
+    snapshot = {"config": {"path": "config.json", "bytes": 4, "sha256": "b" * 64}}
+    monkeypatch.setattr(subject, "_execution_bindings", lambda root, live: snapshot)
+    with pytest.raises(RuntimeError, match="execution identity"):
+        subject._verify_execution_identity_live(tmp_path, config, identity)
+
+
+def test_chunk_rejects_run_identity_tamper() -> None:
+    config, _, _ = subject.load_config(ROOT)
+    reduced = json.loads(json.dumps(config))
+    reduced["confirmation_split"]["trial_count_per_cell"] = 1
+    identity = _live_identity(reduced)
+    cell = subject._cells(reduced)[0]
+    record = _synthetic_records(reduced, local_successes=1)[0]
+    chunk = subject._chunk_payload(
+        reduced,
+        cell,
+        [record],
+        identity,
+        _worker_attestation(identity),
+    )
+    tampered = json.loads(json.dumps(identity))
+    tampered["run_id"] = "65b0ca65-d96e-46f8-b755-cf72be1f83f0"
+    tampered["analysis_sha256"] = subject._sha(
+        {key: value for key, value in tampered.items() if key != "analysis_sha256"}
+    )
+    with pytest.raises(ValueError, match="identity/accounting"):
+        subject._validate_chunk(ROOT, reduced, cell, chunk, tampered)
 
 
 def test_main_returns_nonzero_for_no_go(monkeypatch) -> None:

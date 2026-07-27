@@ -37,6 +37,7 @@ MANIFEST_SCHEMA = "PHASE9-HIGH-CUTOFF-STATE-DESIGN-PILOT-MANIFEST-V2"
 RECEIPT_SCHEMA = "PHASE9-HIGH-CUTOFF-PILOT-CHUNK-RECEIPT-V2"
 RUN_IDENTITY_SCHEMA = "PHASE9-HIGH-CUTOFF-PILOT-RUN-IDENTITY-V1"
 LOCK_SCHEMA = "PHASE9-HIGH-CUTOFF-PILOT-OWNER-LOCK-V1"
+HARDENED_CONFIRMATION_SCHEMA = "PHASE9-PAIRED-CLUSTER-UQ-HARDENED-CONFIRMATION-V2"
 STATUS = "DESIGN_PILOT_RAW_EVIDENCE_COMPLETE"
 REJECTED_STATUS = "DESIGN_PILOT_RAW_EVIDENCE_REJECTED"
 CLAIM_BOUNDARY = {
@@ -174,6 +175,7 @@ def _validate_hardened_confirmation(
     _self_hash(report)
     if (
         report.get("task_id") != TASK_ID
+        or report.get("schema_version") != HARDENED_CONFIRMATION_SCHEMA
         or report.get("analysis_sha256") != required_analysis
         or report.get("verdict") != contract["required_verdict"]
         or report.get("qualified_claim") is not None
@@ -794,7 +796,141 @@ def run_pilot(root: Path) -> dict[str, Any]:
                         active=True,
                         state="RUNNING",
                     )
+            by_id = {receipt["cell"]["chunk_id"]: receipt for receipt in receipts}
+            if (
+                len(receipts) != len(cells)
+                or len(by_id) != len(receipts)
+                or set(by_id) != {cell.chunk_id for cell in cells}
+            ):
+                raise RuntimeError("pilot receipt cell set drift")
+            ordered = [by_id[cell.chunk_id] for cell in cells]
+            receipt_bindings: list[dict[str, Any]] = []
+            exception_rows = 0
+            conservation_failure_rows = 0
+            for cell, receipt in zip(cells, ordered):
+                receipt_binding = _binding(_receipt_path(root, pilot, cell), root)
+                _validate_receipt_file(
+                    root,
+                    pilot,
+                    cell,
+                    receipt,
+                    receipt_binding,
+                    run_identity=run_identity,
+                    execution_analysis_sha256=execution_analysis_sha256,
+                )
+                receipt_bindings.append(receipt_binding)
+                exceptions, conservation_failures = _chunk_health(root, receipt)
+                exception_rows += exceptions
+                conservation_failure_rows += conservation_failures
+            healthy = exception_rows == 0 and conservation_failure_rows == 0
+            manifest: dict[str, Any] = {
+                "task_id": TASK_ID,
+                "schema_version": MANIFEST_SCHEMA,
+                "status": STATUS if healthy else REJECTED_STATUS,
+                "scientific_verdict": None,
+                "qualified_claim": None,
+                "run_id": run_identity["run_id"],
+                "run_identity_analysis_sha256": run_identity["analysis_sha256"],
+                "config_analysis_sha256": _sha(pilot),
+                "execution_analysis_sha256": execution_analysis_sha256,
+                "pilot_source_sha256": sha256(Path(__file__).read_bytes()).hexdigest(),
+                "observed_cells": len(ordered),
+                "observed_rows": sum(cell.expected_rows for cell in cells),
+                "exception_rows": exception_rows,
+                "conservation_failure_rows": conservation_failure_rows,
+                "chunk_receipts": ordered,
+                "receipt_bindings": receipt_bindings,
+                "claim_state": dict(pilot["claim_boundary"]),
+                "bindings": {
+                    "config": _binding(root / CONFIG_PATH, root),
+                    "base_config": _binding(
+                        root / str(pilot["base_config"]["path"]), root
+                    ),
+                    "pilot_source": _binding(Path(__file__).resolve(), root),
+                    "run_identity": _binding(
+                        root / str(pilot["artifact_paths"]["run_identity"]),
+                        root,
+                    ),
+                    "hardened_confirmation_report": _binding(
+                        root
+                        / str(pilot["hardened_confirmation_source"]["report"]["path"]),
+                        root,
+                    ),
+                    "hardened_confirmation_source_data": _binding(
+                        root
+                        / str(
+                            pilot["hardened_confirmation_source"]["source_data"]["path"]
+                        ),
+                        root,
+                    ),
+                    **{
+                        name: _binding(root / str(binding["path"]), root)
+                        for name, binding in pilot["source_bindings"].items()
+                    },
+                },
+                "runtime": {
+                    "python": platform.python_version(),
+                    "numpy": np.__version__,
+                    "scipy": scipy.__version__,
+                    "platform": platform.platform(),
+                },
+            }
+            manifest["analysis_sha256"] = _sha(manifest)
+            if not healthy:
+                _atomic_text(
+                    manifest_path,
+                    json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True)
+                    + "\n",
+                )
+                _heartbeat(
+                    root,
+                    pilot,
+                    completed=len(cells),
+                    total=len(cells),
+                    active=False,
+                    state="REJECTED",
+                )
+            else:
+                # Validate the complete in-memory document before publication,
+                # then re-read and validate the exact bytes that became
+                # visible.  A COMPLETE heartbeat is the final commit marker
+                # and is never emitted before both validations succeed.
+                _verify_manifest(
+                    root,
+                    pilot,
+                    execution,
+                    cells,
+                    run_identity,
+                    manifest,
+                )
+                _atomic_text(
+                    manifest_path,
+                    json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True)
+                    + "\n",
+                )
+                live_manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+                _verify_manifest(
+                    root,
+                    pilot,
+                    execution,
+                    cells,
+                    run_identity,
+                    live_manifest,
+                )
+                _heartbeat(
+                    root,
+                    pilot,
+                    completed=len(cells),
+                    total=len(cells),
+                    active=False,
+                    state="COMPLETE",
+                )
+                return live_manifest
         except BaseException as exc:
+            # The manifest is a commit artifact.  If any worker/finalization
+            # step fails, remove a potentially published-but-unverified copy
+            # before recording the terminal FAILED state.
+            manifest_path.unlink(missing_ok=True)
             _heartbeat(
                 root,
                 pilot,
@@ -805,102 +941,7 @@ def run_pilot(root: Path) -> dict[str, Any]:
                 error_type=type(exc).__name__,
             )
             raise
-        by_id = {receipt["cell"]["chunk_id"]: receipt for receipt in receipts}
-        if set(by_id) != {cell.chunk_id for cell in cells}:
-            raise RuntimeError("pilot receipt cell set drift")
-        ordered = [by_id[cell.chunk_id] for cell in cells]
-        receipt_bindings: list[dict[str, Any]] = []
-        exception_rows = 0
-        conservation_failure_rows = 0
-        for cell, receipt in zip(cells, ordered):
-            receipt_binding = _binding(_receipt_path(root, pilot, cell), root)
-            _validate_receipt_file(
-                root,
-                pilot,
-                cell,
-                receipt,
-                receipt_binding,
-                run_identity=run_identity,
-                execution_analysis_sha256=execution_analysis_sha256,
-            )
-            receipt_bindings.append(receipt_binding)
-            exceptions, conservation_failures = _chunk_health(root, receipt)
-            exception_rows += exceptions
-            conservation_failure_rows += conservation_failures
-        healthy = exception_rows == 0 and conservation_failure_rows == 0
-        manifest: dict[str, Any] = {
-            "task_id": TASK_ID,
-            "schema_version": MANIFEST_SCHEMA,
-            "status": STATUS if healthy else REJECTED_STATUS,
-            "scientific_verdict": None,
-            "qualified_claim": None,
-            "run_id": run_identity["run_id"],
-            "run_identity_analysis_sha256": run_identity["analysis_sha256"],
-            "config_analysis_sha256": _sha(pilot),
-            "execution_analysis_sha256": execution_analysis_sha256,
-            "pilot_source_sha256": sha256(Path(__file__).read_bytes()).hexdigest(),
-            "observed_cells": len(ordered),
-            "observed_rows": sum(cell.expected_rows for cell in cells),
-            "exception_rows": exception_rows,
-            "conservation_failure_rows": conservation_failure_rows,
-            "chunk_receipts": ordered,
-            "receipt_bindings": receipt_bindings,
-            "claim_state": dict(pilot["claim_boundary"]),
-            "bindings": {
-                "config": _binding(root / CONFIG_PATH, root),
-                "base_config": _binding(root / str(pilot["base_config"]["path"]), root),
-                "pilot_source": _binding(Path(__file__).resolve(), root),
-                "run_identity": _binding(
-                    root / str(pilot["artifact_paths"]["run_identity"]),
-                    root,
-                ),
-                "hardened_confirmation_report": _binding(
-                    root / str(pilot["hardened_confirmation_source"]["report"]["path"]),
-                    root,
-                ),
-                "hardened_confirmation_source_data": _binding(
-                    root
-                    / str(pilot["hardened_confirmation_source"]["source_data"]["path"]),
-                    root,
-                ),
-                **{
-                    name: _binding(root / str(binding["path"]), root)
-                    for name, binding in pilot["source_bindings"].items()
-                },
-            },
-            "runtime": {
-                "python": platform.python_version(),
-                "numpy": np.__version__,
-                "scipy": scipy.__version__,
-                "platform": platform.platform(),
-            },
-        }
-        manifest["analysis_sha256"] = _sha(manifest)
-        _atomic_text(
-            manifest_path,
-            json.dumps(manifest, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        )
-        _heartbeat(
-            root,
-            pilot,
-            completed=len(cells),
-            total=len(cells),
-            active=False,
-            state="COMPLETE" if healthy else "REJECTED",
-        )
-        if not healthy:
-            raise RuntimeError(
-                "pilot evidence rejected: exception or conservation failure"
-            )
-        _verify_manifest(
-            root,
-            pilot,
-            execution,
-            cells,
-            run_identity,
-            manifest,
-        )
-        return manifest
+        raise RuntimeError("pilot evidence rejected: exception or conservation failure")
 
 
 def main(argv: Sequence[str] | None = None) -> int:
