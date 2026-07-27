@@ -76,6 +76,9 @@ def test_live_config_pins_parents_domain_and_claim_boundary() -> None:
     assert calibration["verdict"] == "NO_GO_PAIRED_CLUSTER_UQ_CALIBRATION"
     assert extension["verdict"] == "PASS_PAIRED_CLUSTER_UQ_POWER_EXTENSION"
     assert extension["selected_formal_clusters_per_state"] == 384
+    resource_jobs = subject._resource_preflight_jobs(config)
+    assert len(resource_jobs) == 18
+    assert len(set(resource_jobs)) == 18
 
 
 @pytest.mark.parametrize(

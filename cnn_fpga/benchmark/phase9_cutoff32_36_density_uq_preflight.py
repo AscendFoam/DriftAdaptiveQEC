@@ -689,6 +689,26 @@ def _cells(config: Mapping[str, Any]) -> list[CellSpec]:
     return cells
 
 
+def _resource_preflight_jobs(
+    config: Mapping[str, Any],
+) -> list[tuple[str, int, int]]:
+    jobs = [
+        (family, int(dimension), int(count))
+        for family in config["families"]
+        for dimension in config["dimensions"]
+        for count in (
+            int(config["pilot_clusters_per_state"]),
+            int(config["frozen_formal_clusters_per_state"]),
+        )
+    ]
+    expected_count = (
+        len(config["families"]) * len(config["dimensions"]) * 2
+    )
+    if len(jobs) != expected_count or len(set(jobs)) != expected_count:
+        raise RuntimeError("resource preflight job accounting drift")
+    return jobs
+
+
 def _measure_preflight_trial_thread_limited(
     config: Mapping[str, Any],
     expected_execution_bindings: Mapping[str, Mapping[str, Any]],
@@ -831,6 +851,7 @@ def _validate_resource_preflight(
     records = report.get("records")
     contract = config["resource_preflight"]
     feasibility = _wilson_feasibility(config)
+    expected_resource_jobs = set(_resource_preflight_jobs(config))
     if (
         report.get("task_id") != TASK_ID
         or report.get("schema_version") != PREFLIGHT_SCHEMA
@@ -848,7 +869,7 @@ def _validate_resource_preflight(
         )
         or report.get("rss_scope") != contract["rss_scope"]
         or not isinstance(records, list)
-        or len(records) != 24
+        or len(records) != len(expected_resource_jobs)
     ):
         raise RuntimeError("resource preflight identity/gate drift")
     identities = {
@@ -859,16 +880,7 @@ def _validate_resource_preflight(
         )
         for row in records
     }
-    expected = {
-        (family, int(dimension), int(count))
-        for family in config["families"]
-        for dimension in config["dimensions"]
-        for count in (
-            config["pilot_clusters_per_state"],
-            config["frozen_formal_clusters_per_state"],
-        )
-    }
-    if identities != expected:
+    if identities != expected_resource_jobs:
         raise RuntimeError("resource preflight cell coverage drift")
     confirmation_sha = run_identity["execution_bindings"]["confirmation_source"][
         "sha256"
@@ -985,15 +997,7 @@ def run_resource_preflight(
         if report["passed"] is not True:
             raise RuntimeError("resource preflight ETA/RSS/feasibility gate failed")
         return report
-    jobs = [
-        (family, int(dimension), int(count))
-        for family in config["families"]
-        for dimension in config["dimensions"]
-        for count in (
-            config["pilot_clusters_per_state"],
-            config["frozen_formal_clusters_per_state"],
-        )
-    ]
+    jobs = _resource_preflight_jobs(config)
     workers = int(config["max_workers"])
     started = time.perf_counter()
     records: list[dict[str, Any]] = []
