@@ -160,6 +160,7 @@ def test_byte_attested_paths_have_cross_platform_git_attributes() -> None:
         assert f"{path}: filter: unspecified" in attributes
 
     binary_paths = {
+        "docs/t_risk_20260728_01_scalar_uq_preflight_source_data.csv": "lfs",
         "docs/t_risk_20260728_02_scalar_uq_selection_a.csv": "lfs",
         (
             "runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3/"
