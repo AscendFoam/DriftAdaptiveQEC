@@ -8,6 +8,7 @@ the project paired-cluster UQ helper.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ProcessPoolExecutor
 import csv
 import hashlib
 import io
@@ -24,7 +25,8 @@ import numpy as np
 
 TASK_ID = "T-RISK-20260728-05"
 CONFIG_PATH = "configs/phase9/t_risk_20260728_05_highdim_joint_maxt_preflight.json"
-PASS = "PASS_INDEPENDENT_T04_STATISTICAL_PREREGISTRATION_VERIFICATION"
+PASS_RELEASE = "PASS_INDEPENDENT_T04_STATISTICAL_PREREGISTRATION_VERIFICATION"
+PASS_NO_GO = "PASS_INDEPENDENT_T04_STATISTICAL_NO_GO_VERIFICATION"
 FAIL = "FAIL_INDEPENDENT_T04_STATISTICAL_PREREGISTRATION_VERIFICATION"
 
 
@@ -81,6 +83,82 @@ def _verify_binding(root: Path, binding: Mapping[str, Any]) -> Path:
     if len(payload) != int(binding["bytes"]) or _sha_bytes(payload) != binding["sha256"]:
         raise ValueError(f"binding mismatch: {binding['path']}")
     return path
+
+
+def _binding(path: Path, root: Path) -> dict[str, Any]:
+    payload = path.read_bytes()
+    return {
+        "path": path.resolve().relative_to(root).as_posix(),
+        "bytes": len(payload),
+        "sha256": _sha_bytes(payload),
+    }
+
+
+def _validate_config_contract(config: Mapping[str, Any]) -> None:
+    if config.get("task_id") != TASK_ID:
+        raise ValueError("task ID drift")
+    access = config["formal_outcome_access"]
+    if (
+        access["t04_run_exists"] is not False
+        or access["t04_formal_outcomes_accessed"] is not False
+        or access["outcomes_may_change_factor_margin_family_seed_count_or_quantile"]
+        is not False
+    ):
+        raise ValueError("formal-outcome firewall drift")
+    density = config["density_uq"]
+    if (
+        density["dimensions"] != [120, 132]
+        or density["clusters_per_state"] != 384
+        or density["multiplier_replicates"] != 199
+        or density["calibration_factor"] != 1.0
+        or density["quantile_method"] != "higher"
+        or density["trial_count_per_cell"] != 256
+    ):
+        raise ValueError("density UQ contract drift")
+    trial_start = int(density["trial_seed_base"])
+    multiplier_start = int(density["multiplier_seed_base"])
+    width = 24 * int(density["trial_count_per_cell"])
+    if (
+        trial_start == multiplier_start
+        or max(trial_start, multiplier_start)
+        < min(trial_start, multiplier_start) + width
+    ):
+        raise ValueError("density seed ranges collide")
+    maxt = config["joint_maxt"]
+    if (
+        maxt["multiplier_replicates"] != 199
+        or maxt["calibration_factor"] != 1.0
+        or maxt["quantile_method"] != "higher"
+        or maxt["aggregate_rescue"] is not False
+        or maxt["gate_deletion"] is not False
+        or maxt["cross_state_averaging"] is not False
+        or maxt["pointwise_z_substitution"] is not False
+    ):
+        raise ValueError("joint maxT contract drift")
+    if len({
+        int(maxt["rademacher_seed_base"]),
+        int(maxt["influence_seed_base"]),
+        int(maxt["power_seed_base"]),
+        trial_start,
+        multiplier_start,
+    }) != 5:
+        raise ValueError("maxT/density seed namespaces collide")
+    if config["formal_matrix"]["cell_accounting"] != {
+        "shared_chunks": 210,
+        "logical_chunks": 252,
+        "fault_chunks": 24,
+        "probe_chunks": 32,
+        "total_chunks": 518,
+        "primary_rows": 1042944,
+    }:
+        raise ValueError("formal matrix accounting drift")
+    for name in (
+        "twin_qualification", "ler", "lifetime", "physical_break_even",
+        "official_puviani_exact", "puviani_nmf_surpass", "external_sota",
+        "hardware_measured",
+    ):
+        if config["claim_boundary"].get(name) is not None:
+            raise ValueError(f"prohibited config claim populated: {name}")
 
 
 def _wilson(
@@ -397,6 +475,29 @@ def _density_ucb(
     return estimate, radius, estimate + radius
 
 
+def _recompute_density_row(
+    payload: tuple[dict[str, str], dict[str, Any], dict[str, Any]],
+) -> tuple[float, float, float, bool, bool]:
+    """Pure top-level worker used by the independent process pool."""
+
+    row, family, design = payload
+    left, right = _density_trial(
+        int(row["dimension"]), int(row["cluster_count"]),
+        float(row["true_distance"]), family, int(row["trial_seed"]),
+    )
+    estimate, radius, upper = _density_ucb(
+        left, right, confidence=float(design["confidence"]),
+        b=int(design["multiplier_replicates"]), seed=int(row["multiplier_seed"]),
+    )
+    return (
+        estimate,
+        radius,
+        upper,
+        upper + 1e-15 >= float(row["true_distance"]),
+        upper <= float(design["equivalence_margin"]),
+    )
+
+
 def _influences(
     gates: Sequence[Mapping[str, Any]], count: int,
     family_rho: float, scope_rho: float, seed: int,
@@ -496,15 +597,25 @@ def _read_source(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
-def verify(root: Path | None = None, *, write: bool = True) -> dict[str, Any]:
+def verify(
+    root: Path | None = None, *, write: bool = True, workers: int = 4
+) -> dict[str, Any]:
     base = (root or _root()).resolve()
     config = _load(base / CONFIG_PATH)
+    _validate_config_contract(config)
     paths = config["artifact_paths"]
     report = _load(base / paths["report"])
     blueprint_file = _load(base / paths["blueprint"])
     resource = _load(base / paths["resource_preflight"])
     if report.get("analysis_sha256") != _self_hash(report):
         raise ValueError("report self hash mismatch")
+    for name in (
+        "twin_qualification", "ler", "lifetime", "physical_break_even",
+        "official_puviani_exact", "puviani_nmf_surpass", "external_sota",
+        "hardware_measured",
+    ):
+        if report["claim_boundary"].get(name) is not None:
+            raise ValueError(f"prohibited report claim populated: {name}")
     if blueprint_file.get("analysis_sha256") != _self_hash(blueprint_file):
         raise ValueError("blueprint self hash mismatch")
     if resource.get("analysis_sha256") != _self_hash(resource):
@@ -525,32 +636,81 @@ def verify(root: Path | None = None, *, write: bool = True) -> dict[str, Any]:
         raise ValueError("density raw denominator mismatch")
     d = config["density_uq"]
     density_mismatch = 0
+    max_density_delta = 0.0
     covered_by_cell: dict[str, list[bool]] = {}
     eq_by_cell: dict[str, list[bool]] = {}
-    for row in density_rows:
-        family = d["families"][row["family"]]
-        left, right = _density_trial(
-            int(row["dimension"]), int(row["cluster_count"]),
-            float(row["true_distance"]), family, int(row["trial_seed"]),
+    if workers not in (1, 2, 3, 4):
+        raise ValueError("independent verifier workers must be in 1..4")
+    payloads = [
+        (row, dict(d["families"][row["family"]]), dict(d))
+        for row in density_rows
+    ]
+    with ProcessPoolExecutor(max_workers=workers) as pool:
+        recomputed = pool.map(
+            _recompute_density_row, payloads, chunksize=1
         )
-        estimate, radius, upper = _density_ucb(
-            left, right, confidence=float(d["confidence"]),
-            b=int(d["multiplier_replicates"]), seed=int(row["multiplier_seed"]),
-        )
-        values = (estimate, radius, upper)
-        recorded = (
-            float(row["estimate"]), float(row["raw_radius"]), float(row["upper_bound"])
-        )
-        if max(abs(a - b) for a, b in zip(values, recorded)) > 2e-12:
-            density_mismatch += 1
-        covered = upper + 1e-15 >= float(row["true_distance"])
-        equivalent = upper <= float(d["equivalence_margin"])
-        if str(covered) != row["covered"] or str(equivalent) != row["equivalence_pass"]:
-            density_mismatch += 1
-        covered_by_cell.setdefault(row["cell_id"], []).append(covered)
-        eq_by_cell.setdefault(row["cell_id"], []).append(equivalent)
+        for row, values in zip(density_rows, recomputed):
+            estimate, radius, upper, covered, equivalent = values
+            recorded = (
+                float(row["estimate"]), float(row["raw_radius"]),
+                float(row["upper_bound"]),
+            )
+            row_delta = max(abs(a - b) for a, b in zip(
+                (estimate, radius, upper), recorded
+            ))
+            max_density_delta = max(max_density_delta, row_delta)
+            if row_delta > 2e-12:
+                density_mismatch += 1
+            if (
+                str(covered) != row["covered"]
+                or str(equivalent) != row["equivalence_pass"]
+            ):
+                density_mismatch += 1
+            covered_by_cell.setdefault(row["cell_id"], []).append(covered)
+            eq_by_cell.setdefault(row["cell_id"], []).append(equivalent)
     if density_mismatch:
         raise ValueError(f"density independent recomputation mismatches={density_mismatch}")
+    recorded_density_summary = {
+        row["cell_id"]: row for row in report["density_uq"]["cell_summaries"]
+    }
+    comparisons = int(d["simultaneous_wilson"]["comparisons"])
+    summary_mismatches = 0
+    for cell_id in sorted(covered_by_cell):
+        coverage = sum(covered_by_cell[cell_id])
+        equivalent = sum(eq_by_cell[cell_id])
+        trials = len(covered_by_cell[cell_id])
+        coverage_bounds = _wilson(
+            coverage, trials,
+            confidence=float(d["simultaneous_wilson"]["confidence"]),
+            comparisons=comparisons,
+        )
+        equivalence_bounds = _wilson(
+            equivalent, trials,
+            confidence=float(d["simultaneous_wilson"]["confidence"]),
+            comparisons=comparisons,
+        )
+        observed = recorded_density_summary.get(cell_id)
+        if observed is None:
+            summary_mismatches += 1
+            continue
+        expected_values = (
+            coverage, coverage / trials, *coverage_bounds,
+            equivalent, equivalent / trials, *equivalence_bounds,
+        )
+        recorded_values = (
+            observed["coverage_successes"], observed["coverage_rate"],
+            observed["coverage_wilson_lcb"], observed["coverage_wilson_ucb"],
+            observed["equivalence_successes"], observed["equivalence_rate"],
+            observed["equivalence_wilson_lcb"], observed["equivalence_wilson_ucb"],
+        )
+        if max(abs(float(a) - float(b)) for a, b in zip(
+            expected_values, recorded_values
+        )) > 2e-12:
+            summary_mismatches += 1
+    if summary_mismatches:
+        raise ValueError(
+            f"density independent summary mismatches={summary_mismatches}"
+        )
 
     critical, maxima, power_rows = _recompute_maxt(config, expected)
     raw_max = [row for row in rows if row["row_type"] == "maxt_replicate"]
@@ -655,28 +815,50 @@ def verify(root: Path | None = None, *, write: bool = True) -> dict[str, Any]:
                 "hardware_measured",
             )
         ),
-        "V20_writer_report_all_gates_pass": (
-            report["gate_summary"]["passed"] == report["gate_summary"]["total"]
-            and report["verdict"] == "PASS_T04_STATISTICAL_PREREGISTRATION_RELEASED"
+        "V20_writer_decision_is_internally_consistent": (
+            (
+                report["gate_summary"]["passed"] == report["gate_summary"]["total"]
+                and report["verdict"]
+                == "PASS_T04_STATISTICAL_PREREGISTRATION_RELEASED"
+                and report["release"]["t04_preregistration_released"] is True
+            )
+            or (
+                report["gate_summary"]["passed"] < report["gate_summary"]["total"]
+                and report["verdict"]
+                == "FAIL_T04_STATISTICAL_PREREGISTRATION_BLOCKED"
+                and report["release"]["t04_preregistration_released"] is False
+            )
         ),
     }
+    verification_valid = all(gates.values())
+    writer_released = report["release"]["t04_preregistration_released"] is True
     verification: dict[str, Any] = {
         "task_id": TASK_ID,
         "schema_version": "PHASE9-HIGHDIM-JOINT-MAXT-INDEPENDENT-VERIFY-V1",
         "physics_imported": False,
         "writer_imported": False,
         "prior_evaluator_imported": False,
+        "bindings": {
+            "config": _binding(base / CONFIG_PATH, base),
+            "writer_report": _binding(base / paths["report"], base),
+            "source_data": _binding(source_path, base),
+            "blueprint": _binding(base / paths["blueprint"], base),
+            "resource_forecast": _binding(
+                base / paths["resource_preflight"], base
+            ),
+            "verifier_source": _binding(Path(__file__), base),
+        },
         "density_rows_recomputed": len(density_rows),
         "blueprint_gates_rebuilt": len(expected),
         "maxt_replicates_recomputed": len(raw_max),
         "maxt_power_cases_recomputed": len(power_rows),
-        "max_raw_gate_delta": 0.0,
+        "max_raw_gate_delta": max_density_delta,
         "gates": gates,
         "gate_summary": {
             "passed": sum(value is True for value in gates.values()),
             "total": len(gates),
         },
-        "t04_preregistration_released": all(gates.values()),
+        "t04_preregistration_released": verification_valid and writer_released,
         "t04_scientific_execution_released": False,
         "qualified_claim": None,
         "claim_boundary": {
@@ -685,7 +867,11 @@ def verify(root: Path | None = None, *, write: bool = True) -> dict[str, Any]:
             "puviani_nmf_surpass": None, "external_sota": None,
             "hardware_measured": None,
         },
-        "verdict": PASS if all(gates.values()) else FAIL,
+        "verdict": (
+            PASS_RELEASE if verification_valid and writer_released
+            else PASS_NO_GO if verification_valid
+            else FAIL
+        ),
     }
     verification["analysis_sha256"] = _self_hash(verification)
     if write:
@@ -695,10 +881,11 @@ def verify(root: Path | None = None, *, write: bool = True) -> dict[str, Any]:
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.parse_args(argv)
-    result = verify()
+    parser.add_argument("--workers", type=int, default=4)
+    args = parser.parse_args(argv)
+    result = verify(workers=args.workers)
     print(json.dumps(result, ensure_ascii=False, indent=2))
-    return 0 if result["verdict"] == PASS else 2
+    return 0 if result["verdict"] in (PASS_RELEASE, PASS_NO_GO) else 2
 
 
 if __name__ == "__main__":

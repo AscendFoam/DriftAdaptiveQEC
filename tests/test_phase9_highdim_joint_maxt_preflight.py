@@ -45,6 +45,31 @@ def test_exact_blueprint_is_independently_reproducible():
 
 
 @pytest.mark.parametrize(
+    "mutation",
+    ["delete_gate", "duplicate_gate", "cross_state_average", "margin_change"],
+)
+def test_blueprint_mutations_are_detected_by_independent_rebuild(mutation):
+    config, old, repair = _inputs()
+    observed = [
+        writer.asdict(gate) for gate in writer.build_blueprint(config, old, repair)
+    ]
+    expected = verifier.expected_blueprint(config, old, repair)
+    if mutation == "delete_gate":
+        observed.pop()
+    elif mutation == "duplicate_gate":
+        observed.append(dict(observed[-1]))
+    elif mutation == "cross_state_average":
+        target = next(
+            row for row in observed if row["source_contract"] == "t03_bounded_repair"
+        )
+        target["cluster_scope"] = "trajectory/all_states_averaged"
+        target["cluster_count"] *= 6
+    elif mutation == "margin_change":
+        observed[0]["margin"] *= 1.01
+    assert observed != expected
+
+
+@pytest.mark.parametrize(
     ("path", "value"),
     [
         (("density_uq", "dimensions"), [120]),
@@ -64,6 +89,25 @@ def test_frozen_contract_mutations_fail_closed(path, value):
     config[path[0]][path[1]] = value
     with pytest.raises(ValueError):
         writer._validate_config(config)
+
+
+@pytest.mark.parametrize(
+    ("path", "value"),
+    [
+        (("density_uq", "multiplier_replicates"), 99),
+        (("density_uq", "trial_seed_base"), 192000000),
+        (("joint_maxt", "quantile_method"), "linear"),
+        (("joint_maxt", "rademacher_seed_base"), 195000000),
+        (("joint_maxt", "pointwise_z_substitution"), True),
+        (("joint_maxt", "cross_state_averaging"), True),
+        (("claim_boundary", "official_puviani_exact"), True),
+    ],
+)
+def test_independent_verifier_rejects_contract_mutations_early(path, value):
+    config, _, _ = _inputs()
+    config[path[0]][path[1]] = value
+    with pytest.raises(ValueError):
+        verifier._validate_config_contract(config)
 
 
 def test_seed_address_is_injective_and_ranges_are_disjoint():
