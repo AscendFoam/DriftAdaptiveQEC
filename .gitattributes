@@ -50,3 +50,19 @@ configs/phase9/t_risk_20260727_01_high_cutoff_design_pilot_fresh3_released.json 
 docs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3_release_receipt.json text eol=lf
 tests/test_phase9_high_cutoff_design_diagnostic.py text eol=lf
 tests/test_phase9_high_cutoff_design_pilot.py text eol=lf
+
+# T-RISK cutoff32/36 release bindings attest raw bytes, not logical text.
+# These final rules deliberately override the text defaults and older eol
+# rules above so existing LF and CRLF evidence are both reproduced exactly.
+cnn_fpga/benchmark/phase9_cutoff32_36_*.py -text
+cnn_fpga/benchmark/phase9_paired_cluster_uq*.py -text
+cnn_fpga/benchmark/phase9_scalar_uq*.py -text
+cnn_fpga/benchmark/phase9_fresh_twin_qualification.py -text
+cnn_fpga/benchmark/phase9_dual_backend_qualification.py -text
+physics/phase9_*.py -text
+configs/phase9/t_risk_2026072*.json -text
+docs/t_risk_2026072* -text
+runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3/** -text
+runs/t_risk_20260727_01_uq_hardened_confirmation/** -text
+runs/t_risk_20260728_01_density_uq_preflight/** -text
+runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3/chunks/*.npz filter=lfs diff=lfs merge=lfs -text

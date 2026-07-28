@@ -129,7 +129,7 @@ def test_verified_bootstrap_binds_exact_release_runner_and_diagnostic() -> None:
 
 
 def test_byte_attested_paths_have_cross_platform_git_attributes() -> None:
-    lf_paths = [
+    raw_paths = [
         "cnn_fpga/benchmark/phase9_cutoff32_36_design_bootstrap.py",
         "cnn_fpga/benchmark/phase9_cutoff32_36_design_extension.py",
         "cnn_fpga/benchmark/phase9_cutoff32_36_design_diagnostic.py",
@@ -149,15 +149,14 @@ def test_byte_attested_paths_have_cross_platform_git_attributes() -> None:
             "chunks/pilot_c28_fault_burst_A__1403be227f3fd32b.csv"
         ),
     ]
-    for path in lf_paths:
+    for path in raw_paths:
         attributes = subprocess.check_output(
             ["git", "check-attr", "text", "eol", "filter", "--", path],
             cwd=ROOT,
             text=True,
             encoding="utf-8",
         )
-        assert f"{path}: text: set" in attributes
-        assert f"{path}: eol: lf" in attributes
+        assert f"{path}: text: unset" in attributes
         assert f"{path}: filter: unspecified" in attributes
 
     binary_paths = {
@@ -165,7 +164,7 @@ def test_byte_attested_paths_have_cross_platform_git_attributes() -> None:
         (
             "runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3/"
             "chunks/pilot_c28_fault_burst_A__1403be227f3fd32b.npz"
-        ): "unspecified",
+        ): "lfs",
     }
     for path, expected_filter in binary_paths.items():
         attributes = subprocess.check_output(
