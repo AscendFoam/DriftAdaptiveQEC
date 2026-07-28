@@ -1,0 +1,181 @@
+{
+  "task_id": "T-RISK-20260728-05",
+  "schema_version": "PHASE9-HIGHDIM-JOINT-MAXT-PREFLIGHT-CONFIG-V1",
+  "frozen_at": "2026-07-28",
+  "purpose": "Outcome-free qualification of d120/d132 paired-density UQ, a closed-family joint maxT procedure, the exact T04 gate blueprint, and a conservative full-matrix resource forecast",
+  "formal_outcome_access": {
+    "t04_run_exists": false,
+    "t04_formal_outcomes_accessed": false,
+    "t03_design_outcomes_may_define_gate_structure_only": true,
+    "old_powered_design_may_define_gate_structure_and_sd_envelopes_only": true,
+    "outcomes_may_change_factor_margin_family_seed_count_or_quantile": false
+  },
+  "parent_contracts": {
+    "old_seven_family_design": "configs/phase9/t_risk_20260726_01_design_power.json",
+    "bounded_repair": "configs/phase9/t_risk_20260728_03_cutoff36_44_repair.json",
+    "density_uq_84_108": "configs/phase9/t_risk_20260728_01_density_uq_preflight.json",
+    "factor_confirmation": "configs/phase9/t_risk_20260727_01_uq_hardened_confirmation.json",
+    "t03_resource_evidence": "runs/t_risk_20260728_03_cutoff36_44_repair_fresh1/resource_preflight.json"
+  },
+  "formal_matrix": {
+    "cutoffs": [36, 40, 44],
+    "cutoff_dimensions": {"36": 108, "40": 120, "44": 132},
+    "primary_cutoff_increments": [[36, 40], [40, 44]],
+    "shared_fock_states": ["vacuum_g", "one_g", "zero_one_plus_g", "vacuum_e", "vacuum_f"],
+    "logical_labels": ["0", "1", "+", "-", "+i", "-i"],
+    "actions": ["IDLE", "X", "Z", "XZ", "RESET", "HOLD", "LKG_HOLD"],
+    "cutoff_actions": ["IDLE", "XZ", "RESET"],
+    "fault_scenarios": ["step", "telegraph", "burst", "compound"],
+    "representative_probes": [
+      "P01_IDLE", "P02_Q_POS", "P03_Q_NEG", "P04_P_POS",
+      "P05_P_NEG", "P06_ALTERNATE", "P07_BOUNDARY", "P08_PHASE",
+      "P09_LEAK_RESET", "P10_RESET_OK", "P11_RESET_FAIL", "P12_BAD_CRC",
+      "P13_STALE", "P14_OOD", "P15_DEADLINE", "P16_LKG_RECOVERY"
+    ],
+    "probe_cutoff": 36,
+    "round_clusters_per_cell": 768,
+    "fault_clusters_per_state": 384,
+    "fault_states_per_cell": 6,
+    "fault_horizon": 12,
+    "cell_accounting": {
+      "shared_chunks": 210,
+      "logical_chunks": 252,
+      "fault_chunks": 24,
+      "probe_chunks": 32,
+      "total_chunks": 518,
+      "primary_rows": 1042944
+    },
+    "all_cells_required": true,
+    "no_postselection": true
+  },
+  "density_uq": {
+    "dimensions": [120, 132],
+    "clusters_per_state": 384,
+    "confidence": 0.95,
+    "multiplier_replicates": 199,
+    "calibration_factor": 1.0,
+    "quantile_method": "higher",
+    "true_trace_distances": [0.0, 0.05, 0.1, 0.12],
+    "equivalence_margin": 0.1,
+    "trial_count_per_cell": 256,
+    "trial_seed_base": 191000000,
+    "multiplier_seed_base": 192000000,
+    "seed_address": "base + cell_index*trial_count_per_cell + trial; injective and no modulo",
+    "families": {
+      "low_energy_balanced": {
+        "spectrum_profile": "low_energy",
+        "left_noise_weight": 0.4,
+        "right_noise_weight": 0.4,
+        "rare_probability": 1.0,
+        "coherent_unitary": false,
+        "power_primary": true
+      },
+      "heavy_tail_rare_coherent": {
+        "spectrum_profile": "heavy_tail",
+        "left_noise_weight": 0.75,
+        "right_noise_weight": 0.75,
+        "rare_probability": 0.12,
+        "coherent_unitary": true,
+        "power_primary": true
+      },
+      "heteroskedastic_coherent": {
+        "spectrum_profile": "low_energy",
+        "left_noise_weight": 0.25,
+        "right_noise_weight": 0.75,
+        "rare_probability": 1.0,
+        "coherent_unitary": true,
+        "power_primary": false
+      }
+    },
+    "simultaneous_wilson": {
+      "confidence": 0.95,
+      "comparisons": 24,
+      "method": "Bonferroni-adjusted two-sided Wilson over every family-by-dimension-by-effect cell"
+    },
+    "gates": {
+      "minimum_cell_coverage_rate": 0.94,
+      "minimum_cell_coverage_wilson_lcb": 0.9,
+      "null_equivalence_wilson_lcb": 0.8,
+      "local_005_equivalence_wilson_lcb": 0.65,
+      "boundary_equivalence_wilson_ucb": 0.1,
+      "outside_equivalence_wilson_ucb": 0.05
+    }
+  },
+  "joint_maxt": {
+    "closed_family": "all stochastic gates in the exact old-seven-family plus T03-repair union; deterministic cutoff mappings are exact nonstochastic gates",
+    "global_test": "intersection_union_equivalence",
+    "cell_test": "two_one_sided_tests",
+    "global_type_i_error": 0.05,
+    "confidence": 0.95,
+    "multiplier_replicates": 199,
+    "quantile_method": "higher",
+    "calibration_factor": 1.0,
+    "radius_only_factor": true,
+    "absolute_or_upper_gate_rule": "abs(point)+joint_maxT_critical*SE+quantization <= margin",
+    "lower_gate_rule": "point-joint_maxT_critical*SE-quantization >= lower_margin",
+    "aggregate_rescue": false,
+    "gate_deletion": false,
+    "cross_state_averaging": false,
+    "pointwise_z_substitution": false,
+    "studentization_floor": 1e-12,
+    "rademacher_seed_base": 193000000,
+    "influence_seed_base": 194000000,
+    "power_seed_base": 195000000,
+    "rademacher_namespace": "same replicate and registered seed_position are reused across every gate observing that cluster; namespaces are disjoint by stage/count and injective",
+    "correlation_model": {
+      "family_shared": 0.55,
+      "scope_shared": 0.25,
+      "idiosyncratic": 0.2
+    },
+    "power": {
+      "pseudoexperiments": 4000,
+      "null_global_equivalence_lcb_minimum": 0.9,
+      "local_effect_ratio": 0.5,
+      "local_single_gate_equivalence_lcb_minimum": 0.6,
+      "boundary_effect_ratio": 1.0,
+      "boundary_false_equivalence_ucb_maximum": 0.05,
+      "outside_effect_ratio": 1.25,
+      "outside_false_equivalence_ucb_maximum": 0.01,
+      "confidence_for_bounds": 0.95,
+      "injection_rule": "one preregistered least-powered stochastic gate per family; no post-result gate choice"
+    }
+  },
+  "resource_forecast": {
+    "full_t04_rows": 1042944,
+    "full_t04_chunks": 518,
+    "max_workers_candidates": [1, 2, 3, 4],
+    "blas_threads_per_worker": 1,
+    "wall_safety_factor": 2.0,
+    "artifact_safety_factor": 2.0,
+    "rss_safety_factor": 2.0,
+    "minimum_free_disk_bytes": 17179869184,
+    "maximum_estimated_artifact_bytes": 68719476736,
+    "maximum_estimated_total_rss_bytes": 34359738368,
+    "maximum_estimated_wall_seconds": 1209600,
+    "t04_must_run_fresh_resource_benchmarks": true,
+    "forecast_does_not_authorize_scientific_chunk": true
+  },
+  "artifact_paths": {
+    "run_directory": "runs/t_risk_20260728_05_highdim_joint_maxt_preflight",
+    "chunk_directory": "runs/t_risk_20260728_05_highdim_joint_maxt_preflight/chunks",
+    "heartbeat": "runs/t_risk_20260728_05_highdim_joint_maxt_preflight/heartbeat.json",
+    "resource_preflight": "runs/t_risk_20260728_05_highdim_joint_maxt_preflight/resource_preflight.json",
+    "report": "docs/t_risk_20260728_05_highdim_joint_maxt_preflight.json",
+    "source_data": "docs/t_risk_20260728_05_highdim_joint_maxt_source_data.csv",
+    "blueprint": "docs/t_risk_20260728_05_full_gate_blueprint.json",
+    "verification": "docs/t_risk_20260728_05_highdim_joint_maxt_verification.json"
+  },
+  "release_rule": "Only a live independent-verifier PASS over the immutable config, exact blueprint, all density raw rows, joint-maxT raw rows and resource forecast may release T04 preregistration; no T04 scientific outcome is authorized by this task",
+  "claim_boundary": {
+    "statistical_preregistration_only": true,
+    "t04_preregistration_released": false,
+    "twin_qualification": null,
+    "ler": null,
+    "lifetime": null,
+    "physical_break_even": null,
+    "official_puviani_exact": null,
+    "puviani_nmf_surpass": null,
+    "external_sota": null,
+    "hardware_measured": null
+  }
+}
