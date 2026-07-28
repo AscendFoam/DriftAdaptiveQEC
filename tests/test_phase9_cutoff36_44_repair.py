@@ -13,6 +13,9 @@ from cnn_fpga.benchmark import phase9_cutoff36_44_repair as subject
 from cnn_fpga.benchmark import (
     phase9_cutoff36_44_repair_diagnostic as diagnostic,
 )
+from cnn_fpga.benchmark import (
+    phase9_cutoff36_44_repair_verify as verifier,
+)
 from cnn_fpga.benchmark import phase9_fresh_twin_qualification as fresh
 from physics import phase9_reset_rao_blackwell as rb
 
@@ -211,6 +214,20 @@ def test_diagnostic_enumerates_only_two_fresh_increments_and_cutoff44(
         "_tail_quantization_bound",
         lambda *args: 0.0,
     )
+    monkeypatch.setattr(verifier, "_density_point", lambda *args: 0.0)
+    monkeypatch.setattr(verifier, "_trace_distance", lambda *args: 0.0)
+    monkeypatch.setattr(
+        verifier,
+        "_tail_features",
+        lambda stack, cutoff: {
+            "top1_fock_mass": np.zeros(len(stack)),
+            "top2_fock_mass": np.zeros(len(stack)),
+            "top4_fock_mass": np.zeros(len(stack)),
+            "normalized_mean_photon": np.zeros(len(stack)),
+            "commutator_defect": np.zeros(len(stack)),
+        },
+    )
+    monkeypatch.setattr(verifier, "_tail_quantization", lambda *args: 0.0)
     rows: list[dict[str, object]] = []
     densities: dict[str, np.ndarray] = {}
     matrices: dict[int, np.ndarray] = {}
@@ -278,8 +295,11 @@ def test_diagnostic_enumerates_only_two_fresh_increments_and_cutoff44(
                 )
                 densities[row_id] = matrices[cutoff]
     gates = diagnostic.evaluate(config, rows, densities)
+    independently_recomputed = verifier._recompute(config, rows, densities)
     gate_ids = {str(gate["gate_id"]) for gate in gates}
     assert len(gates) == 1_454
+    assert set(independently_recomputed) == gate_ids
+    assert all(independently_recomputed[gate_id]["passed"] for gate_id in gate_ids)
     assert all(gate["passed"] for gate in gates)
     assert any("36->40" in gate_id for gate_id in gate_ids)
     assert any("40->44" in gate_id for gate_id in gate_ids)
