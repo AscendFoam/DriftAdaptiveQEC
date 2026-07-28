@@ -1,0 +1,156 @@
+{
+  "analysis_sha256": "567696e14f869301c189a472b66e9e65f1ce390ddf2c8b7a0609150c1b4e4bcd",
+  "bindings": {
+    "diagnosis_source": {
+      "bytes": 10276,
+      "path": "cnn_fpga/benchmark/phase9_cutoff32_36_no_go_diagnosis.py",
+      "sha256": "7dbe5e6b5b943ac9ee90b0d93066c97af0aa2a749ebfaa1f6a2042a3d8c7c59f"
+    },
+    "manifest": {
+      "bytes": 120461,
+      "path": "docs/t_risk_20260728_01_cutoff32_36_design_extension_fresh2_manifest.json",
+      "sha256": "9c1584421d4786ab4b47c6590bdd120314de73dd11e599ba030577ccba1f0424"
+    },
+    "report": {
+      "bytes": 992924,
+      "path": "docs/t_risk_20260728_01_cutoff32_36_design_diagnostic_fresh2.json",
+      "sha256": "ee2c6d4da99789523a1a1a16e714c4e3352fd5f3d40c6a2d1088152bbd8deb08"
+    },
+    "verified_no_go": {
+      "bytes": 3882,
+      "path": "docs/t_risk_20260728_01_cutoff32_36_design_diagnostic_fresh2_verification.json",
+      "sha256": "111d36245c3e1be86387585f9543c1731ddafa70b7f017d7dec32ca3559b23ea"
+    }
+  },
+  "bounded_repair_preregistration": {
+    "absolute_tail_cutoff": 44,
+    "adapter_cap": 44,
+    "automatic_cutoff_extension_beyond_44": false,
+    "fresh_cutoffs": [
+      36,
+      40,
+      44
+    ],
+    "new_task_id": "T-RISK-20260728-03",
+    "powered_formal_release": false,
+    "required_consecutive_increments": [
+      [
+        36,
+        40
+      ],
+      [
+        40,
+        44
+      ]
+    ],
+    "resource_preflight_before_scientific_rows": true,
+    "reuse_old_passing_gates": false,
+    "reuse_old_raw_rows_for_new_decision": false,
+    "shared_reset_primary_estimand": "RAO_BLACKWELLIZED_EXPECTED_POST_RESET_DENSITY_AND_LEVELS",
+    "stochastic_reset_role": "stress_only_nonvoting",
+    "terminal_if_cutoff44_fails": true
+  },
+  "claim_state": {
+    "design_extension_only": true,
+    "external_sota": null,
+    "hardware_measured": null,
+    "ler": null,
+    "lifetime": null,
+    "official_puviani_exact": null,
+    "physical_break_even": null,
+    "puviani_nmf_surpass": null,
+    "twin_qualification": null
+  },
+  "diagnosis_verdict": "PHYSICS_AND_ESTIMAND_REPAIR_REQUIRED",
+  "failure_decomposition": {
+    "cutoff36_fault_absolute_tail_failed_gate_ids": [
+      "fault/tail/commutator_defect/c36/step/A/+",
+      "fault/tail/commutator_defect/c36/step/A/+i"
+    ],
+    "cutoff_28_to_32_failed_gates": 56,
+    "cutoff_32_to_36_failed_gates": 0,
+    "cutoff_32_to_36_passed_gates": 596,
+    "maximum_margin_ratio": 12.618937059221963,
+    "shared_reset_failed_gate_ids": [
+      "shared/scalar/level_probability_l1/ab/c28",
+      "shared/scalar/level_probability_l1/ab/c32",
+      "shared/scalar/level_probability_l1/ab/c36"
+    ],
+    "total_failed_gates": 61
+  },
+  "qualified_claim": null,
+  "root_causes": {
+    "cutoff28": "PHYSICAL_TRUNCATION_NOT_CONVERGED; seed extension and logical-survival-only checks cannot repair it",
+    "cutoff36": "RESIDUAL_STATE_CONDITIONED_BOUNDARY_TAIL; two step/A logical states violate the commutator-defect gate",
+    "shared_reset": "QUALIFICATION_ESTIMAND_USES_STOCHASTIC_POST_RESET_BRANCH; independent backend Bernoulli draws dominate the A/B point"
+  },
+  "schema_version": "PHASE9-CUTOFF32-36-NO-GO-DIAGNOSIS-V1",
+  "scientific_verdict_unchanged": "NO_GO_HIGH_CUTOFF_DESIGN",
+  "shared_reset_audit": {
+    "28": {
+      "backends": {
+        "A": {
+          "post_reset_level_g_mean": 0.8194444444444444,
+          "rao_blackwell_success_mean": 0.8222917151974863,
+          "sample_count": 72,
+          "sampled_success_count": 59,
+          "sampled_success_rate": 0.8194444444444444
+        },
+        "B": {
+          "post_reset_level_g_mean": 0.75,
+          "rao_blackwell_success_mean": 0.8200000027354956,
+          "sample_count": 72,
+          "sampled_success_count": 54,
+          "sampled_success_rate": 0.75
+        }
+      },
+      "classification": "INDEPENDENT_BERNOULLI_BRANCH_NOISE_CONTAMINATES_QUALIFICATION_ESTIMAND",
+      "rao_blackwell_success_absolute_difference": 0.0022917124619907803,
+      "sampled_post_reset_level_l1": 0.13888888888888884
+    },
+    "32": {
+      "backends": {
+        "A": {
+          "post_reset_level_g_mean": 0.8194444444444444,
+          "rao_blackwell_success_mean": 0.8222917151974863,
+          "sample_count": 72,
+          "sampled_success_count": 59,
+          "sampled_success_rate": 0.8194444444444444
+        },
+        "B": {
+          "post_reset_level_g_mean": 0.75,
+          "rao_blackwell_success_mean": 0.8200000027354956,
+          "sample_count": 72,
+          "sampled_success_count": 54,
+          "sampled_success_rate": 0.75
+        }
+      },
+      "classification": "INDEPENDENT_BERNOULLI_BRANCH_NOISE_CONTAMINATES_QUALIFICATION_ESTIMAND",
+      "rao_blackwell_success_absolute_difference": 0.0022917124619907803,
+      "sampled_post_reset_level_l1": 0.13888888888888884
+    },
+    "36": {
+      "backends": {
+        "A": {
+          "post_reset_level_g_mean": 0.8194444444444444,
+          "rao_blackwell_success_mean": 0.8222917151974863,
+          "sample_count": 72,
+          "sampled_success_count": 59,
+          "sampled_success_rate": 0.8194444444444444
+        },
+        "B": {
+          "post_reset_level_g_mean": 0.75,
+          "rao_blackwell_success_mean": 0.8200000027354956,
+          "sample_count": 72,
+          "sampled_success_count": 54,
+          "sampled_success_rate": 0.75
+        }
+      },
+      "classification": "INDEPENDENT_BERNOULLI_BRANCH_NOISE_CONTAMINATES_QUALIFICATION_ESTIMAND",
+      "rao_blackwell_success_absolute_difference": 0.0022917124619907803,
+      "sampled_post_reset_level_l1": 0.13888888888888884
+    }
+  },
+  "status": "COMPLETE",
+  "task_id": "T-RISK-20260728-01"
+}

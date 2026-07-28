@@ -11,6 +11,10 @@ import pytest
 from cnn_fpga.benchmark import phase9_cutoff32_36_design_diagnostic as v1
 from cnn_fpga.benchmark import phase9_cutoff32_36_design_bootstrap_v2 as b2
 from cnn_fpga.benchmark import phase9_cutoff32_36_design_diagnostic_v2 as v2
+from cnn_fpga.benchmark import (
+    phase9_cutoff32_36_design_diagnostic_v2_verify as verifier,
+)
+from cnn_fpga.benchmark import phase9_cutoff32_36_no_go_diagnosis as diagnosis
 from cnn_fpga.benchmark import phase9_cutoff32_36_design_extension as runner
 
 
@@ -209,3 +213,49 @@ def test_live_load_evidence_covers_all_30_receipts(
     ]
     assert density_derived
     assert all(float(gate["quantization_bound"]) > 0.0 for gate in density_derived)
+
+
+def test_independent_verifier_recomputes_live_no_go() -> None:
+    result = verifier.verify(ROOT)
+    assert result["verification_verdict"] == verifier.VERIFIED_VERDICT
+    assert result["powered_formal_release"] is False
+    assert result["gate_audit"]["gate_count"] == 1_454
+    assert result["gate_audit"]["failed_gate_count"] == 61
+    assert result["raw_audit"] == {
+        "receipt_count": 30,
+        "raw_row_count": 21_168,
+        "density_count": 2_160,
+        "fault_terminal_count": 1_728,
+        "shared_terminal_count": 432,
+    }
+    assert result["claim_state"] == verifier.CLAIM_BOUNDARY
+
+
+def test_independent_verifier_rejects_source_decision_mutation() -> None:
+    report = json.loads((ROOT / verifier.REPORT_PATH).read_text(encoding="utf-8"))
+    source = (ROOT / verifier.SOURCE_PATH).read_text(encoding="utf-8")
+    header, first, *rest = source.splitlines()
+    fields = first.split(",")
+    conservative_index = verifier.SOURCE_FIELDS.index("conservative_point")
+    fields[conservative_index] = str(float(fields[conservative_index]) + 1e-3)
+    mutated = "\n".join([header, ",".join(fields), *rest]) + "\n"
+    with pytest.raises(RuntimeError, match="arithmetic drift"):
+        verifier._verify_gates(report, mutated.encode("utf-8"))
+
+
+def test_no_go_diagnosis_freezes_bounded_physics_repair() -> None:
+    result = diagnosis.diagnose(ROOT)
+    assert result["diagnosis_verdict"] == diagnosis.DIAGNOSIS_VERDICT
+    assert result["scientific_verdict_unchanged"] == verifier.NO_GO_VERDICT
+    decomposition = result["failure_decomposition"]
+    assert decomposition["total_failed_gates"] == 61
+    assert decomposition["cutoff_28_to_32_failed_gates"] == 56
+    assert decomposition["cutoff_32_to_36_passed_gates"] == 596
+    assert decomposition["cutoff_32_to_36_failed_gates"] == 0
+    repair = result["bounded_repair_preregistration"]
+    assert repair["fresh_cutoffs"] == [36, 40, 44]
+    assert repair["required_consecutive_increments"] == [[36, 40], [40, 44]]
+    assert repair["terminal_if_cutoff44_fails"] is True
+    assert repair["automatic_cutoff_extension_beyond_44"] is False
+    assert repair["powered_formal_release"] is False
+    assert result["claim_state"] == diagnosis.CLAIM_BOUNDARY
