@@ -1,0 +1,144 @@
+{
+  "task_id": "T-RISK-20260728-06",
+  "schema_version": "PHASE9-COUNT-SELECTION-CONFIRMATION-CONFIG-V1",
+  "frozen_at": "2026-07-28",
+  "purpose": "Finite outcome-free count selection and untouched confirmation after the independently verified T05 base-count statistical NO-GO",
+  "parent_artifacts": {
+    "t05_report": "docs/t_risk_20260728_05_highdim_joint_maxt_preflight.json",
+    "t05_verification": "docs/t_risk_20260728_05_highdim_joint_maxt_verification.json",
+    "t05_blueprint": "docs/t_risk_20260728_05_full_gate_blueprint.json",
+    "t05_config": "configs/phase9/t_risk_20260728_05_highdim_joint_maxt_preflight.json"
+  },
+  "outcome_firewall": {
+    "t04_run_exists": false,
+    "t04_formal_outcomes_accessed": false,
+    "t05_no_go_rewritten": false,
+    "selection_may_choose": ["linked_cluster_count"],
+    "selection_may_not_choose": [
+      "factor", "B", "quantile", "margin", "family", "gate", "correlation",
+      "effect", "confidence", "confirmation_seed", "cutoff"
+    ],
+    "confirmation_may_choose_nothing": true,
+    "candidate_exhaustion": "TERMINAL_NO_GO_NO_FURTHER_COUNT_LADDER"
+  },
+  "linked_count_grid": [
+    {"scale": 1.5, "state_clusters": 576, "round_clusters": 1152, "aggregate_fault_clusters": 3456},
+    {"scale": 2.0, "state_clusters": 768, "round_clusters": 1536, "aggregate_fault_clusters": 4608},
+    {"scale": 2.5, "state_clusters": 960, "round_clusters": 1920, "aggregate_fault_clusters": 5760},
+    {"scale": 3.0, "state_clusters": 1152, "round_clusters": 2304, "aggregate_fault_clusters": 6912}
+  ],
+  "selection_rule": "lexicographically smallest linked_count_grid row passing every density-selection and full-blueprint joint-maxT selection gate; no skipped candidate",
+  "density": {
+    "dimensions": [120, 132],
+    "selection_family": "heteroskedastic_coherent",
+    "selection_effect": 0.05,
+    "confirmation_families": [
+      "heavy_tail_rare_coherent",
+      "heteroskedastic_coherent",
+      "low_energy_balanced"
+    ],
+    "confirmation_effects": [0.0, 0.05, 0.1, 0.12],
+    "margin": 0.1,
+    "confidence": 0.95,
+    "factor": 1.0,
+    "multiplier_replicates": 199,
+    "quantile": "higher",
+    "selection_trials_per_cell": 128,
+    "confirmation_trials_per_cell": 256,
+    "selection_trial_seed_base": 201000000,
+    "selection_multiplier_seed_base": 202000000,
+    "confirmation_trial_seed_base": 203000000,
+    "confirmation_multiplier_seed_base": 204000000,
+    "seed_address": "base + cell_index*trials + trial; injective, disjoint, no modulo",
+    "selection_wilson": {
+      "confidence": 0.95,
+      "comparisons": 8,
+      "coverage_lcb_minimum": 0.9,
+      "local_equivalence_lcb_minimum": 0.65
+    },
+    "confirmation_wilson": {
+      "confidence": 0.95,
+      "comparisons": 24,
+      "coverage_rate_minimum": 0.94,
+      "coverage_lcb_minimum": 0.9,
+      "null_equivalence_lcb_minimum": 0.8,
+      "local_equivalence_lcb_minimum": 0.65,
+      "boundary_equivalence_ucb_maximum": 0.1,
+      "outside_equivalence_ucb_maximum": 0.05
+    }
+  },
+  "joint_maxt": {
+    "stochastic_gate_count": 3037,
+    "deterministic_gate_count": 6,
+    "closed_gate_count": 3043,
+    "confidence": 0.95,
+    "factor": 1.0,
+    "multiplier_replicates": 199,
+    "quantile": "higher",
+    "global_test": "intersection_union_equivalence",
+    "aggregate_rescue": false,
+    "gate_deletion": false,
+    "cross_state_averaging": false,
+    "pointwise_z_substitution": false,
+    "correlation_model": {
+      "family_shared": 0.55,
+      "scope_shared": 0.25,
+      "idiosyncratic": 0.2
+    },
+    "power": {
+      "pseudoexperiments": 4000,
+      "null_global_equivalence_lcb_minimum": 0.9,
+      "local_effect_ratio": 0.5,
+      "local_single_gate_equivalence_lcb_minimum": 0.6,
+      "boundary_effect_ratio": 1.0,
+      "boundary_false_equivalence_ucb_maximum": 0.05,
+      "outside_effect_ratio": 1.25,
+      "outside_false_equivalence_ucb_maximum": 0.01,
+      "confidence_for_bounds": 0.95
+    },
+    "selection_influence_seed_base": 205000000,
+    "selection_rademacher_seed_base": 206000000,
+    "selection_power_seed_base": 207000000,
+    "confirmation_influence_seed_base": 208000000,
+    "confirmation_rademacher_seed_base": 209000000,
+    "confirmation_power_seed_base": 210000000
+  },
+  "resource": {
+    "base_t04_rows": 1042944,
+    "base_wall_seconds_4_workers": 230440.09880259438,
+    "base_artifact_bytes": 58513386935,
+    "base_rss_bytes": 8564244480,
+    "workers": 4,
+    "blas_threads_per_worker": 1,
+    "maximum_wall_seconds": 1209600,
+    "maximum_artifact_bytes": 171798691840,
+    "maximum_rss_bytes": 34359738368,
+    "minimum_free_disk_after_estimate_bytes": 34359738368,
+    "t04_fresh_layer_benchmark_required": true,
+    "forecast_only": true
+  },
+  "artifact_paths": {
+    "run_directory": "runs/t_risk_20260728_06_count_selection_confirmation",
+    "selection_chunks": "runs/t_risk_20260728_06_count_selection_confirmation/selection_chunks",
+    "confirmation_chunks": "runs/t_risk_20260728_06_count_selection_confirmation/confirmation_chunks",
+    "heartbeat": "runs/t_risk_20260728_06_count_selection_confirmation/heartbeat.json",
+    "report": "docs/t_risk_20260728_06_count_selection_confirmation.json",
+    "source_data": "docs/t_risk_20260728_06_count_selection_confirmation_source_data.csv",
+    "selected_blueprint": "docs/t_risk_20260728_06_selected_gate_blueprint.json",
+    "verification": "docs/t_risk_20260728_06_count_selection_confirmation_verification.json"
+  },
+  "release_rule": "Only untouched full-density and full-blueprint confirmation plus independent verifier and resource gates may release T04 preregistration; T04 scientific execution still requires its own fresh resource/capability preflight",
+  "claim_boundary": {
+    "count_design_only": true,
+    "t04_preregistration_released": false,
+    "t04_scientific_execution_released": false,
+    "twin_qualification": null,
+    "ler": null,
+    "lifetime": null,
+    "physical_break_even": null,
+    "official_puviani_exact": null,
+    "puviani_nmf_surpass": null,
+    "external_sota": null,
+    "hardware_measured": null
+  }
+}
