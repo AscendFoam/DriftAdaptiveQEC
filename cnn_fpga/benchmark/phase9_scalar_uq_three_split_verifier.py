@@ -23,8 +23,8 @@ TASK_ID = "T-RISK-20260728-02"
 CONFIG_PATH = "configs/phase9/t_risk_20260728_02_scalar_uq_calibration.json"
 REPORT_PATH = "docs/t_risk_20260728_02_scalar_uq_calibration.json"
 OUTPUT_PATH = "docs/t_risk_20260728_02_scalar_uq_calibration_verification.json"
-CONFIG_SCHEMA = "PHASE9-SCALAR-UQ-THREE-SPLIT-CALIBRATION-CONFIG-V1"
-REPORT_SCHEMA = "PHASE9-SCALAR-UQ-THREE-SPLIT-CALIBRATION-REPORT-V1"
+CONFIG_SCHEMA = "PHASE9-SCALAR-UQ-THREE-SPLIT-CALIBRATION-CONFIG-V2"
+REPORT_SCHEMA = "PHASE9-SCALAR-UQ-THREE-SPLIT-CALIBRATION-REPORT-V2"
 VERIFIER_SCHEMA = "PHASE9-SCALAR-UQ-THREE-SPLIT-INDEPENDENT-VERIFIER-V1"
 PASS_VERDICT = "PASS_SCALAR_UQ_THREE_SPLIT_CALIBRATION"
 VERIFIED_PASS = "VERIFIED_PASS_SCALAR_UQ_THREE_SPLIT_CALIBRATION"
@@ -163,9 +163,17 @@ def _cells() -> list[tuple[str, float, int, float, str]]:
     return cells
 
 
-def _address(base: int, *parts: object) -> int:
-    digest = sha256("|".join(map(str, parts)).encode("utf-8")).digest()
-    return int(base) + int.from_bytes(digest[:8], "big") % 1_000_000_000
+def _split_seed(
+    base: int, cell_index: int, trial_index: int, trial_count: int
+) -> int:
+    if (
+        base < 0
+        or not 0 <= cell_index < 192
+        or not 0 <= trial_index < trial_count
+        or trial_count < 1
+    ):
+        raise ValueError("independent verifier seed address outside frozen domain")
+    return int(base) + cell_index * trial_count + trial_index
 
 
 def _wilson(successes: int, total: int) -> tuple[float, float]:
@@ -267,7 +275,13 @@ def _recompute_split(
         reader = csv.DictReader(stream)
         if reader.fieldnames != RAW_FIELDS:
             raise RuntimeError(f"{split} raw field drift")
-        for family, margin, count, ratio, cell_id in _cells():
+        for cell_index, (
+            family,
+            margin,
+            count,
+            ratio,
+            cell_id,
+        ) in enumerate(_cells()):
             counters = {
                 factor: {"coverage": 0, "equivalence": 0} for factor in factors
             }
@@ -278,11 +292,17 @@ def _recompute_split(
                     raise RuntimeError(f"{split} raw denominator underflow") from exc
                 if set(row) != set(RAW_FIELDS):
                     raise RuntimeError(f"{split} raw row schema drift")
-                expected_trial_seed = _address(
-                    int(split_spec["trial_seed_base"]), split, cell_id, trial
+                expected_trial_seed = _split_seed(
+                    int(split_spec["trial_seed_base"]),
+                    cell_index,
+                    trial,
+                    trial_count,
                 )
-                expected_multiplier_seed = _address(
-                    int(split_spec["multiplier_seed_base"]), split, cell_id, trial
+                expected_multiplier_seed = _split_seed(
+                    int(split_spec["multiplier_seed_base"]),
+                    cell_index,
+                    trial,
+                    trial_count,
                 )
                 estimate = float(row["estimate"])
                 radius = float(row["raw_radius"])
@@ -369,11 +389,46 @@ def verify(root: Path | None = None) -> dict[str, Any]:
         or config.get("trial_count_per_cell") != 2048
         or config.get("gates") != GATES
         or config.get("claim_boundary") != CLAIM_BOUNDARY
+        or config.get("splits")
+        != {
+            "selection_a": {
+                "role": "factor_selection",
+                "trial_seed_base": 2000000,
+                "multiplier_seed_base": 3000000,
+            },
+            "selection_b": {
+                "role": "factor_selection",
+                "trial_seed_base": 4000000,
+                "multiplier_seed_base": 5000000,
+            },
+            "confirmation": {
+                "role": "untouched_confirmation",
+                "trial_seed_base": 6000000,
+                "multiplier_seed_base": 7000000,
+            },
+        }
+        or config.get("seed_addressing")
+        != {
+            "scheme": "injective_cell_major_v2",
+            "formula": (
+                "base + cell_index * trial_count_per_cell + trial_index"
+            ),
+            "cell_count": 192,
+            "trial_count_per_cell": 2048,
+            "maximum_offset": 393215,
+            "all_six_scientific_ranges_pairwise_disjoint": True,
+            "v1_hash_modulo_addressing_forbidden": True,
+        }
         or report.get("schema_version") != REPORT_SCHEMA
         or report.get("claim_state") != CLAIM_BOUNDARY
         or report.get("design_outcomes_accessed") is not False
         or report.get("diagnostic_parent_used_as_selection_or_confirmation_evidence")
         is not False
+        or report.get(
+            "v1_failure_used_as_v2_selection_or_confirmation_evidence"
+        )
+        is not False
+        or report.get("seed_addressing") != config.get("seed_addressing")
     ):
         raise RuntimeError("independent verifier contract drift")
     bindings = report.get("bindings")

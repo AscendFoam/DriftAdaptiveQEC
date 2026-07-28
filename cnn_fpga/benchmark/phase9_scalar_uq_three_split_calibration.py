@@ -33,10 +33,10 @@ from cnn_fpga.benchmark.phase9_paired_cluster_uq import paired_vector_norm_ucb
 
 TASK_ID = "T-RISK-20260728-02"
 CONFIG_PATH = "configs/phase9/t_risk_20260728_02_scalar_uq_calibration.json"
-CONFIG_SCHEMA = "PHASE9-SCALAR-UQ-THREE-SPLIT-CALIBRATION-CONFIG-V1"
-REPORT_SCHEMA = "PHASE9-SCALAR-UQ-THREE-SPLIT-CALIBRATION-REPORT-V1"
-RUN_IDENTITY_SCHEMA = "PHASE9-SCALAR-UQ-THREE-SPLIT-RUN-IDENTITY-V1"
-SELECTION_RECEIPT_SCHEMA = "PHASE9-SCALAR-UQ-SELECTION-RECEIPT-V1"
+CONFIG_SCHEMA = "PHASE9-SCALAR-UQ-THREE-SPLIT-CALIBRATION-CONFIG-V2"
+REPORT_SCHEMA = "PHASE9-SCALAR-UQ-THREE-SPLIT-CALIBRATION-REPORT-V2"
+RUN_IDENTITY_SCHEMA = "PHASE9-SCALAR-UQ-THREE-SPLIT-RUN-IDENTITY-V2"
+SELECTION_RECEIPT_SCHEMA = "PHASE9-SCALAR-UQ-SELECTION-RECEIPT-V2"
 PASS_VERDICT = "PASS_SCALAR_UQ_THREE_SPLIT_CALIBRATION"
 NO_GO_SELECTION = "NO_GO_SCALAR_UQ_FACTOR_SELECTION"
 NO_GO_CONFIRMATION = "NO_GO_SCALAR_UQ_UNTOUCHED_CONFIRMATION"
@@ -208,9 +208,23 @@ def _cells(config: Mapping[str, Any]) -> list[Cell]:
     return cells
 
 
-def _address(base: int, *parts: object) -> int:
-    digest = sha256("|".join(map(str, parts)).encode("utf-8")).digest()
-    return int(base) + int.from_bytes(digest[:8], "big") % 1_000_000_000
+def _split_seed(
+    base: int, cell_index: int, trial_index: int, trial_count: int
+) -> int:
+    if (
+        base < 0
+        or not 0 <= cell_index < 192
+        or not 0 <= trial_index < trial_count
+        or trial_count < 1
+    ):
+        raise ValueError("three-split scalar UQ seed address outside frozen domain")
+    return int(base) + cell_index * trial_count + trial_index
+
+
+def _resource_seed(base: int, family_index: int, count_index: int) -> int:
+    if base < 0 or not 0 <= family_index < 3 or not 0 <= count_index < 2:
+        raise ValueError("three-split scalar UQ resource seed outside frozen domain")
+    return int(base) + family_index * 2 + count_index
 
 
 def _validate_parent_diagnostic(root: Path, config: Mapping[str, Any]) -> None:
@@ -260,6 +274,54 @@ def _validate_parent_diagnostic(root: Path, config: Mapping[str, Any]) -> None:
             raise ValueError("diagnostic-only parent raw denominator drift")
 
 
+def _validate_infrastructure_failure_parent(
+    root: Path, config: Mapping[str, Any]
+) -> None:
+    parent = config.get("infrastructure_failure_parent")
+    if (
+        not isinstance(parent, Mapping)
+        or parent.get("terminal_state")
+        != "FAILED_INFRASTRUCTURE_SEED_COLLISION_BEFORE_SELECTION_SEAL"
+        or parent.get(
+            "v1_outcomes_used_as_v2_selection_or_confirmation_evidence"
+        )
+        is not False
+    ):
+        raise ValueError("v1 seed-collision parent contract drift")
+    names = {
+        "failure_report",
+        "selection_a_source_data",
+        "resource_preflight",
+        "run_identity",
+    }
+    if not names.issubset(parent):
+        raise ValueError("v1 seed-collision parent bindings missing")
+    for name in names:
+        binding = parent[name]
+        if not isinstance(binding, Mapping):
+            raise ValueError(f"v1 seed-collision parent binding invalid: {name}")
+        _verify_binding(root, binding, f"v1 seed-collision parent/{name}")
+    failure = _read_json(root / str(parent["failure_report"]["path"]))
+    if (
+        failure.get("terminal_state") != parent["terminal_state"]
+        or failure.get("selection_receipt_published") is not False
+        or failure.get("confirmation_outcomes_accessed") is not False
+        or failure.get("final_report_published") is not False
+        or failure.get(
+            "v1_outcomes_used_as_v2_selection_or_confirmation_evidence"
+        )
+        is not False
+        or failure.get("claim_state") != CLAIM_BOUNDARY
+        or failure.get("bindings", {}).get("selection_a_source_data")
+        != parent["selection_a_source_data"]
+        or failure.get("bindings", {}).get("resource_preflight")
+        != parent["resource_preflight"]
+        or failure.get("bindings", {}).get("run_identity")
+        != parent["run_identity"]
+    ):
+        raise ValueError("v1 seed-collision parent semantic drift")
+
+
 def load_config(root: Path) -> dict[str, Any]:
     config = _read_json(root / CONFIG_PATH)
     expected_numeric = {
@@ -298,18 +360,18 @@ def load_config(root: Path) -> dict[str, Any]:
     expected_splits = {
         "selection_a": {
             "role": "factor_selection",
-            "trial_seed_base": 1610000,
-            "multiplier_seed_base": 1620000,
+            "trial_seed_base": 2000000,
+            "multiplier_seed_base": 3000000,
         },
         "selection_b": {
             "role": "factor_selection",
-            "trial_seed_base": 1630000,
-            "multiplier_seed_base": 1640000,
+            "trial_seed_base": 4000000,
+            "multiplier_seed_base": 5000000,
         },
         "confirmation": {
             "role": "untouched_confirmation",
-            "trial_seed_base": 1650000,
-            "multiplier_seed_base": 1660000,
+            "trial_seed_base": 6000000,
+            "multiplier_seed_base": 7000000,
         },
     }
     if splits != expected_splits:
@@ -326,8 +388,8 @@ def load_config(root: Path) -> dict[str, Any]:
         raise ValueError("three-split scalar UQ simultaneous-Wilson drift")
     resource = config.get("resource_preflight", {})
     if (
-        resource.get("trial_seed_base") != 1670000
-        or resource.get("multiplier_seed_base") != 1680000
+        resource.get("trial_seed_base") != 8000000
+        or resource.get("multiplier_seed_base") != 9000000
         or resource.get("safety_factor") != 2.0
         or resource.get("maximum_estimated_wall_seconds") != 14400
         or resource.get("maximum_estimated_rss_bytes") != 4294967296
@@ -340,6 +402,30 @@ def load_config(root: Path) -> dict[str, Any]:
     ] + [resource["trial_seed_base"], resource["multiplier_seed_base"]]
     if len(all_seed_bases) != len(set(all_seed_bases)):
         raise ValueError("three-split scalar UQ seed firewall drift")
+    addressing = config.get("seed_addressing")
+    if addressing != {
+        "scheme": "injective_cell_major_v2",
+        "formula": "base + cell_index * trial_count_per_cell + trial_index",
+        "cell_count": 192,
+        "trial_count_per_cell": 2048,
+        "maximum_offset": 393215,
+        "all_six_scientific_ranges_pairwise_disjoint": True,
+        "v1_hash_modulo_addressing_forbidden": True,
+    }:
+        raise ValueError("three-split scalar UQ seed-addressing drift")
+    scientific_ranges = sorted(
+        (
+            int(value[key]),
+            int(value[key]) + int(addressing["maximum_offset"]),
+        )
+        for value in splits.values()
+        for key in ("trial_seed_base", "multiplier_seed_base")
+    )
+    if any(
+        left[1] >= right[0]
+        for left, right in zip(scientific_ranges, scientific_ranges[1:])
+    ):
+        raise ValueError("three-split scalar UQ scientific seed ranges overlap")
     if set(config.get("artifact_paths", {})) != {
         "run_directory",
         "owner_lock",
@@ -352,6 +438,7 @@ def load_config(root: Path) -> dict[str, Any]:
     }:
         raise ValueError("three-split scalar UQ artifact path drift")
     _validate_parent_diagnostic(root, config)
+    _validate_infrastructure_failure_parent(root, config)
     _cells(config)
     return config
 
@@ -426,6 +513,7 @@ def _simulate_cell_thread_limited(
     split: str, cell: Cell, config: Mapping[str, Any]
 ) -> list[dict[str, object]]:
     spec = config["splits"][split]
+    cell_index = _cells(config).index(cell)
     rows = []
     for trial in range(int(config["trial_count_per_cell"])):
         rows.append(
@@ -434,11 +522,17 @@ def _simulate_cell_thread_limited(
                 cell,
                 config["families"][cell.family],
                 trial_index=trial,
-                trial_seed=_address(
-                    int(spec["trial_seed_base"]), split, cell.cell_id, trial
+                trial_seed=_split_seed(
+                    int(spec["trial_seed_base"]),
+                    cell_index,
+                    trial,
+                    int(config["trial_count_per_cell"]),
                 ),
-                multiplier_seed=_address(
-                    int(spec["multiplier_seed_base"]), split, cell.cell_id, trial
+                multiplier_seed=_split_seed(
+                    int(spec["multiplier_seed_base"]),
+                    cell_index,
+                    trial,
+                    int(config["trial_count_per_cell"]),
                 ),
                 confidence=float(config["confidence"]),
                 replicates=int(config["multiplier_replicates"]),
@@ -738,8 +832,8 @@ def _resource_preflight(root: Path, config: Mapping[str, Any]) -> dict[str, Any]
     baseline = int(process.memory_info().rss)
     timings = []
     with threadpool_limits(limits=WORKER_BLAS_THREADS, user_api="blas"):
-        for family in config["families"]:
-            for count in config["cluster_counts"]:
+        for family_index, family in enumerate(config["families"]):
+            for count_index, count in enumerate(config["cluster_counts"]):
                 cell = Cell(family, 0.1, count, 0.5)
                 started = time.perf_counter()
                 _one_trial_raw(
@@ -747,11 +841,13 @@ def _resource_preflight(root: Path, config: Mapping[str, Any]) -> dict[str, Any]
                     cell,
                     config["families"][family],
                     trial_index=0,
-                    trial_seed=_address(
-                        contract["trial_seed_base"], family, count
+                    trial_seed=_resource_seed(
+                        contract["trial_seed_base"], family_index, count_index
                     ),
-                    multiplier_seed=_address(
-                        contract["multiplier_seed_base"], family, count
+                    multiplier_seed=_resource_seed(
+                        contract["multiplier_seed_base"],
+                        family_index,
+                        count_index,
                     ),
                     confidence=config["confidence"],
                     replicates=config["multiplier_replicates"],
@@ -851,6 +947,7 @@ def _run_identity(
             "created_utc": time.time(),
             "factor_grid": list(config["factor_grid"]),
             "splits": json.loads(json.dumps(config["splits"])),
+            "seed_addressing": dict(config["seed_addressing"]),
             "trial_count_per_cell": config["trial_count_per_cell"],
             "design_outcomes_accessed": False,
             "claim_state": dict(CLAIM_BOUNDARY),
@@ -974,6 +1071,13 @@ def _build_final_report(
     for name, binding in config["diagnostic_only_parent"].items():
         if isinstance(binding, Mapping) and set(binding) == {"path", "bytes", "sha256"}:
             bindings[f"diagnostic_parent_{name}"] = dict(binding)
+    for name, binding in config["infrastructure_failure_parent"].items():
+        if isinstance(binding, Mapping) and set(binding) == {
+            "path",
+            "bytes",
+            "sha256",
+        }:
+            bindings[f"infrastructure_failure_parent_{name}"] = dict(binding)
     if confirmation is not None:
         bindings["confirmation_source_data"] = confirmation["source_data_binding"]
     report = _with_self_hash(
@@ -1008,6 +1112,8 @@ def _build_final_report(
             "confirmation": confirmation,
             "diagnostic_parent_used_as_selection_or_confirmation_evidence": False,
             "repair_contract_frozen_after_diagnostic": True,
+            "v1_failure_used_as_v2_selection_or_confirmation_evidence": False,
+            "seed_addressing": dict(config["seed_addressing"]),
             "design_outcomes_accessed": False,
             "claim_state": dict(CLAIM_BOUNDARY),
             "bindings": bindings,
@@ -1028,6 +1134,11 @@ def _verify_finalized_report(
         or report.get("diagnostic_parent_used_as_selection_or_confirmation_evidence")
         is not False
         or report.get("repair_contract_frozen_after_diagnostic") is not True
+        or report.get(
+            "v1_failure_used_as_v2_selection_or_confirmation_evidence"
+        )
+        is not False
+        or report.get("seed_addressing") != config["seed_addressing"]
         or report.get("claim_state") != CLAIM_BOUNDARY
         or report.get("expected_cells_per_split") != 192
         or report.get("trial_count_per_cell_per_split") != 2048
@@ -1061,6 +1172,10 @@ def _verify_finalized_report(
         "selection_b_source_data",
         "diagnostic_parent_report",
         "diagnostic_parent_source_data",
+        "infrastructure_failure_parent_failure_report",
+        "infrastructure_failure_parent_selection_a_source_data",
+        "infrastructure_failure_parent_resource_preflight",
+        "infrastructure_failure_parent_run_identity",
     }
     if report.get("confirmation") is not None:
         expected_binding_names.add("confirmation_source_data")
@@ -1109,6 +1224,16 @@ def _verify_finalized_report(
                 raise RuntimeError(
                     f"scalar UQ diagnostic parent binding drift: {name}"
                 )
+    for name, parent_binding in config["infrastructure_failure_parent"].items():
+        if isinstance(parent_binding, Mapping) and set(parent_binding) == {
+            "path",
+            "bytes",
+            "sha256",
+        }:
+            if bindings.get(f"infrastructure_failure_parent_{name}") != parent_binding:
+                raise RuntimeError(
+                    f"scalar UQ infrastructure failure binding drift: {name}"
+                )
     identity = _read_json(root / config["artifact_paths"]["run_identity"])
     _verify_self_hash(identity, "scalar UQ run identity")
     if (
@@ -1119,6 +1244,7 @@ def _verify_finalized_report(
         or identity.get("release_commit") != report.get("release_commit")
         or identity.get("design_outcomes_accessed") is not False
         or identity.get("claim_state") != CLAIM_BOUNDARY
+        or identity.get("seed_addressing") != config["seed_addressing"]
         or identity.get("input_bindings")
         != {
             "config": expected_direct_bindings["config"],

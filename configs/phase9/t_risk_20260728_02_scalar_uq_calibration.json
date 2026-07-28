@@ -1,6 +1,6 @@
 {
   "task_id": "T-RISK-20260728-02",
-  "schema_version": "PHASE9-SCALAR-UQ-THREE-SPLIT-CALIBRATION-CONFIG-V1",
+  "schema_version": "PHASE9-SCALAR-UQ-THREE-SPLIT-CALIBRATION-CONFIG-V2",
   "purpose": "Fresh two-fold selection plus untouched confirmation of a coverage-calibrated scalar/vector-norm UCB factor after the immutable factor=1 diagnostic failed closed",
   "diagnostic_only_parent": {
     "verdict": "INCOMPLETE_CUTOFF32_36_SCALAR_UQ_PREFLIGHT",
@@ -15,6 +15,30 @@
       "sha256": "ebf5d6bc21e6e7f38018fc2d1402372943937afb13db9606fb91fd2087654689"
     },
     "may_inform_repair_design_but_not_enter_selection_or_confirmation_evidence": true
+  },
+  "infrastructure_failure_parent": {
+    "terminal_state": "FAILED_INFRASTRUCTURE_SEED_COLLISION_BEFORE_SELECTION_SEAL",
+    "failure_report": {
+      "path": "docs/t_risk_20260728_02_scalar_uq_failed_seed_collision_v1.json",
+      "bytes": 2350,
+      "sha256": "7c461d9447a19469a3f0c794684f64e59db15d097b898465b568082417db6cf6"
+    },
+    "selection_a_source_data": {
+      "path": "docs/t_risk_20260728_02_scalar_uq_selection_a_failed_seed_collision_v1.csv",
+      "bytes": 60340294,
+      "sha256": "8b929b30f21e8949e46b4bc61211a17249280254ea23713ea3d967091c1aecc5"
+    },
+    "resource_preflight": {
+      "path": "docs/t_risk_20260728_02_scalar_uq_resource_preflight_failed_seed_collision_v1.json",
+      "bytes": 1202,
+      "sha256": "929a71c108bd296a88d5614f43e6defe0156f641e9936c46264d798dd01b6163"
+    },
+    "run_identity": {
+      "path": "docs/t_risk_20260728_02_scalar_uq_run_identity_failed_seed_collision_v1.json",
+      "bytes": 1856,
+      "sha256": "61721c1e4c81aabc00c9e684aa32af5aea8918d903cf9d17976e90eca61ffadc"
+    },
+    "v1_outcomes_used_as_v2_selection_or_confirmation_evidence": false
   },
   "margins": [0.005, 0.01, 0.02, 0.05, 0.08, 0.1, 0.15, 0.25],
   "cluster_counts": [12, 384],
@@ -50,19 +74,28 @@
   "splits": {
     "selection_a": {
       "role": "factor_selection",
-      "trial_seed_base": 1610000,
-      "multiplier_seed_base": 1620000
+      "trial_seed_base": 2000000,
+      "multiplier_seed_base": 3000000
     },
     "selection_b": {
       "role": "factor_selection",
-      "trial_seed_base": 1630000,
-      "multiplier_seed_base": 1640000
+      "trial_seed_base": 4000000,
+      "multiplier_seed_base": 5000000
     },
     "confirmation": {
       "role": "untouched_confirmation",
-      "trial_seed_base": 1650000,
-      "multiplier_seed_base": 1660000
+      "trial_seed_base": 6000000,
+      "multiplier_seed_base": 7000000
     }
+  },
+  "seed_addressing": {
+    "scheme": "injective_cell_major_v2",
+    "formula": "base + cell_index * trial_count_per_cell + trial_index",
+    "cell_count": 192,
+    "trial_count_per_cell": 2048,
+    "maximum_offset": 393215,
+    "all_six_scientific_ranges_pairwise_disjoint": true,
+    "v1_hash_modulo_addressing_forbidden": true
   },
   "simultaneous_wilson": {
     "confidence": 0.95,
@@ -78,8 +111,8 @@
     "outside_equivalence_wilson_ucb": 0.05
   },
   "resource_preflight": {
-    "trial_seed_base": 1670000,
-    "multiplier_seed_base": 1680000,
+    "trial_seed_base": 8000000,
+    "multiplier_seed_base": 9000000,
     "safety_factor": 2.0,
     "maximum_estimated_wall_seconds": 14400,
     "maximum_estimated_rss_bytes": 4294967296,

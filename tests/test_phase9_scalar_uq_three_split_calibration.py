@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import ast
+from hashlib import sha256
 from pathlib import Path
 
 import numpy as np
@@ -105,6 +106,15 @@ def test_live_contract_has_three_disjoint_splits_and_immutable_parent() -> None:
     parent = config["diagnostic_only_parent"]
     assert parent["report"]["sha256"] == "d8930ca946a8e0cf83c37af905a7dc85e60ae5e37462a77cb32f8dce880ffc60"
     assert parent["source_data"]["sha256"] == "ebf5d6bc21e6e7f38018fc2d1402372943937afb13db9606fb91fd2087654689"
+    failure = config["infrastructure_failure_parent"]
+    assert (
+        failure["terminal_state"]
+        == "FAILED_INFRASTRUCTURE_SEED_COLLISION_BEFORE_SELECTION_SEAL"
+    )
+    assert (
+        failure["v1_outcomes_used_as_v2_selection_or_confirmation_evidence"]
+        is False
+    )
 
 
 @pytest.mark.parametrize(
@@ -112,7 +122,7 @@ def test_live_contract_has_three_disjoint_splits_and_immutable_parent() -> None:
     [
         (("factor_grid",), [1.0]),
         (("trial_count_per_cell",), 288),
-        (("splits", "confirmation", "trial_seed_base"), 1610000),
+        (("splits", "confirmation", "trial_seed_base"), 2000000),
         (("simultaneous_wilson", "comparisons_per_split"), 192),
         (("gates", "minimum_cell_coverage_wilson_lcb"), 0.8),
         (("design_outcomes_accessed",), True),
@@ -141,6 +151,41 @@ def test_2048_trial_simultaneous_wilson_gate_is_mathematically_feasible() -> Non
     assert lcb > subject.GATES["minimum_cell_coverage_wilson_lcb"]
     old_lcb, _ = subject._wilson(round(0.95 * 288), 288, config)
     assert old_lcb < subject.GATES["minimum_cell_coverage_wilson_lcb"]
+
+
+def test_v2_seed_map_is_injective_and_regresses_the_observed_v1_collision() -> None:
+    config = subject.load_config(ROOT)
+    trial_count = config["trial_count_per_cell"]
+    intervals = sorted(
+        (
+            value[key],
+            value[key] + config["seed_addressing"]["maximum_offset"],
+        )
+        for value in config["splits"].values()
+        for key in ("trial_seed_base", "multiplier_seed_base")
+    )
+    assert all(
+        left[1] < right[0]
+        for left, right in zip(intervals, intervals[1:])
+    )
+    seeds = {
+        subject._split_seed(2_000_000, cell, trial, trial_count)
+        for cell in range(192)
+        for trial in range(trial_count)
+    }
+    assert len(seeds) == 192 * trial_count
+
+    def old_address(base: int, *parts: object) -> int:
+        digest = sha256("|".join(map(str, parts)).encode()).digest()
+        return base + int.from_bytes(digest[:8], "big") % 1_000_000_000
+
+    cell_id = "rare_heavy_tail__m0p005000__n384__r0p500"
+    assert old_address(1_630_000, "selection_b", cell_id, 358) == old_address(
+        1_630_000, "selection_b", cell_id, 908
+    )
+    assert subject._split_seed(4_000_000, 105, 358, trial_count) != (
+        subject._split_seed(4_000_000, 105, 908, trial_count)
+    )
 
 
 def test_factor_gate_covers_all_192_cells_and_64_primary_power_strata() -> None:
@@ -297,6 +342,10 @@ def test_pass_report_keeps_all_external_claims_null(monkeypatch) -> None:
     assert report["verdict"] == subject.PASS_VERDICT
     assert report["diagnostic_parent_used_as_selection_or_confirmation_evidence"] is False
     assert report["repair_contract_frozen_after_diagnostic"] is True
+    assert (
+        report["v1_failure_used_as_v2_selection_or_confirmation_evidence"]
+        is False
+    )
     assert report["claim_state"]["scalar_uq_calibration_only"] is True
     assert all(
         value is None
@@ -369,9 +418,9 @@ def test_independent_verifier_does_not_import_production_runner() -> None:
 
 def test_independent_verifier_seed_and_wilson_recompute_match() -> None:
     config = subject.load_config(ROOT)
-    assert verifier._address(
-        1610000, "selection_a", "cell", 17
-    ) == subject._address(1610000, "selection_a", "cell", 17)
+    assert verifier._split_seed(
+        2_000_000, 17, 23, 2048
+    ) == subject._split_seed(2_000_000, 17, 23, 2048)
     assert verifier._wilson(1946, 2048) == pytest.approx(
         subject._wilson(1946, 2048, config), abs=1e-15
     )
