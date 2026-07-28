@@ -128,6 +128,56 @@ def test_verified_bootstrap_binds_exact_release_runner_and_diagnostic() -> None:
     )
 
 
+def test_byte_attested_paths_have_cross_platform_git_attributes() -> None:
+    lf_paths = [
+        "cnn_fpga/benchmark/phase9_cutoff32_36_design_bootstrap.py",
+        "cnn_fpga/benchmark/phase9_cutoff32_36_design_extension.py",
+        "cnn_fpga/benchmark/phase9_cutoff32_36_design_diagnostic.py",
+        "physics/phase9_high_cutoff_runtime_adapter.py",
+        subject.PENDING_CONFIG_PATH,
+        subject.CONFIG_PATH,
+        subject.RELEASE_RECEIPT_PATH,
+        "docs/t_risk_20260727_01_uq_hardened_confirmation.json",
+        "docs/t_risk_20260728_01_density_uq_preflight.json",
+        "docs/t_risk_20260728_02_scalar_uq_calibration.json",
+        (
+            "runs/t_risk_20260728_01_density_uq_preflight/chunks/"
+            "heavy_tail_rare_coherent__d84__n12__delta0p0.json"
+        ),
+        (
+            "runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3/"
+            "chunks/pilot_c28_fault_burst_A__1403be227f3fd32b.csv"
+        ),
+    ]
+    for path in lf_paths:
+        attributes = subprocess.check_output(
+            ["git", "check-attr", "text", "eol", "filter", "--", path],
+            cwd=ROOT,
+            text=True,
+            encoding="utf-8",
+        )
+        assert f"{path}: text: set" in attributes
+        assert f"{path}: eol: lf" in attributes
+        assert f"{path}: filter: unspecified" in attributes
+
+    binary_paths = {
+        "docs/t_risk_20260728_02_scalar_uq_selection_a.csv": "lfs",
+        (
+            "runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3/"
+            "chunks/pilot_c28_fault_burst_A__1403be227f3fd32b.npz"
+        ): "unspecified",
+    }
+    for path, expected_filter in binary_paths.items():
+        attributes = subprocess.check_output(
+            ["git", "check-attr", "text", "filter", "--", path],
+            cwd=ROOT,
+            text=True,
+            encoding="utf-8",
+        )
+        assert f"{path}: text: unset" in attributes
+        assert f"{path}: filter: {expected_filter}" in attributes
+
+
 def test_direct_runner_and_diagnostic_imports_are_not_executable() -> None:
     with pytest.raises(RuntimeError, match="trusted-operator bootstrap"):
         subject._require_verified_self_import()

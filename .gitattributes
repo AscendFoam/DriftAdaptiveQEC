@@ -1,3 +1,21 @@
+# Cross-platform byte-attestation requires Git-managed text to have the same
+# bytes on every checkout.  Keep these defaults before the LFS rules below:
+# the later ``-text`` entries continue to take precedence for LFS payloads.
+.gitattributes text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.csv text eol=lf
+*.md text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+*.sv text eol=lf
+*.cc text eol=lf
+*.npz -text
+*.pt -text
+*.zip -text
+*.parquet -text
+
 docs/t5_4_2_uncertainty_gated_fallback.json filter=lfs diff=lfs merge=lfs -text
 docs/t6_7_1_smooth_formal_matrix.json filter=lfs diff=lfs merge=lfs -text
 docs/t6_7_1_smooth_formal_matrix_source_data.csv filter=lfs diff=lfs merge=lfs -text
