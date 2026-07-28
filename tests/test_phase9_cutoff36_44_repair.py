@@ -10,6 +10,9 @@ import numpy as np
 import pytest
 
 from cnn_fpga.benchmark import phase9_cutoff36_44_repair as subject
+from cnn_fpga.benchmark import (
+    phase9_cutoff36_44_repair_diagnostic as diagnostic,
+)
 from cnn_fpga.benchmark import phase9_fresh_twin_qualification as fresh
 from physics import phase9_reset_rao_blackwell as rb
 
@@ -184,3 +187,102 @@ def test_help_is_zero_write() -> None:
     }
     assert "--preflight-only" in completed.stdout
     assert before == after
+
+
+def test_diagnostic_enumerates_only_two_fresh_increments_and_cutoff44(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config, _base = subject.load_config(ROOT)
+    monkeypatch.setattr(diagnostic.legacy, "_density_point", lambda *args: 0.0)
+    monkeypatch.setattr(diagnostic.legacy, "_trace_distance", lambda *args: 0.0)
+    monkeypatch.setattr(
+        diagnostic.legacy,
+        "_tail_features",
+        lambda stack, cutoff: {
+            "top1_fock_mass": np.zeros(len(stack)),
+            "top2_fock_mass": np.zeros(len(stack)),
+            "top4_fock_mass": np.zeros(len(stack)),
+            "normalized_mean_photon": np.zeros(len(stack)),
+            "commutator_defect": np.zeros(len(stack)),
+        },
+    )
+    monkeypatch.setattr(
+        diagnostic.legacy,
+        "_tail_quantization_bound",
+        lambda *args: 0.0,
+    )
+    rows: list[dict[str, object]] = []
+    densities: dict[str, np.ndarray] = {}
+    matrices: dict[int, np.ndarray] = {}
+    for cutoff in config["cutoffs"]:
+        matrix = np.zeros((3 * cutoff, 3 * cutoff), dtype=np.complex128)
+        matrix[0, 0] = 1.0
+        matrices[cutoff] = matrix
+        for scenario in config["scenario_names"]:
+            for backend in ("A", "B"):
+                for position in range(72):
+                    state = config["logical_state_schedule"][position % 6]
+                    for round_index in range(12):
+                        row_id = (
+                            f"synthetic|fault|c{cutoff}|{scenario}|{backend}|"
+                            f"p{position}|r{round_index}"
+                        )
+                        terminal = round_index == 11
+                        rows.append(
+                            {
+                                "row_id": row_id,
+                                "layer": "fault",
+                                "cutoff": cutoff,
+                                "scenario": scenario,
+                                "backend": backend,
+                                "logical_label": state,
+                                "seed_position": position,
+                                "round_index": round_index,
+                                "terminal_round": terminal,
+                                "mean_photon": 0.0,
+                                "level_g": 1.0,
+                                "level_e": 0.0,
+                                "level_f": 0.0,
+                                "logical_survival": 1.0,
+                                "density_quantization_trace_distance_bound": (
+                                    0.0 if terminal else None
+                                ),
+                            }
+                        )
+                        if terminal:
+                            densities[row_id] = matrix
+        for backend in ("A", "B"):
+            for position in range(72):
+                row_id = f"synthetic|shared|c{cutoff}|{backend}|p{position}"
+                rows.append(
+                    {
+                        "row_id": row_id,
+                        "layer": "shared",
+                        "cutoff": cutoff,
+                        "scenario": "",
+                        "backend": backend,
+                        "logical_label": "",
+                        "seed_position": position,
+                        "round_index": 0,
+                        "terminal_round": True,
+                        "mean_photon": 0.0,
+                        "level_g": 1.0,
+                        "level_e": 0.0,
+                        "level_f": 0.0,
+                        "logical_survival": 1.0,
+                        "density_quantization_trace_distance_bound": 0.0,
+                        "initial_state": "vacuum_f",
+                        "action": "RESET",
+                        "convergence_role": ("rao_blackwell_expected_reset_repair"),
+                    }
+                )
+                densities[row_id] = matrices[cutoff]
+    gates = diagnostic.evaluate(config, rows, densities)
+    gate_ids = {str(gate["gate_id"]) for gate in gates}
+    assert len(gates) == 1_454
+    assert all(gate["passed"] for gate in gates)
+    assert any("36->40" in gate_id for gate_id in gate_ids)
+    assert any("40->44" in gate_id for gate_id in gate_ids)
+    assert any("/c44/" in gate_id for gate_id in gate_ids)
+    assert not any("28->" in gate_id or "32->" in gate_id for gate_id in gate_ids)
+    assert not any("/c36/" in gate_id and "/tail/" in gate_id for gate_id in gate_ids)
