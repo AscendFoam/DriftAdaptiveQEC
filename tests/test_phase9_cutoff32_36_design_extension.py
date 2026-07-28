@@ -8,6 +8,7 @@ import subprocess
 import sys
 from tempfile import TemporaryDirectory
 
+import numpy as np
 import pytest
 
 from cnn_fpga.benchmark import phase9_cutoff32_36_design_extension as subject
@@ -333,6 +334,61 @@ def test_resource_preflight_requires_exact_22_cell_identity_set() -> None:
     )
     with pytest.raises(RuntimeError, match="duplicate resource preflight identity"):
         subject._validate_resource_preflight(config, duplicate)
+
+
+def test_live_resource_preflight_translates_cellspec_empty_sentinels_to_null(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Exercise the producer, not only a hand-built validator fixture.
+
+    CellSpec represents non-applicable fields with ``""`` while the frozen
+    JSON identity schema requires ``null``.  This live-path regression test
+    prevents an in-memory report from passing unit tests but failing after its
+    atomic JSON round trip.
+    """
+
+    config = _pending()
+
+    def fake_build_simulators(execution: dict, cutoff: int) -> dict:
+        del execution, cutoff
+        return {"A": object(), "B": object()}
+
+    def fake_execute_cell(
+        execution: dict,
+        cell: runner.CellSpec,
+        simulator: object,
+        action_words: object,
+    ) -> runner.ChunkEvidence:
+        del execution, simulator, action_words
+        density = np.zeros((cell.cutoff, cell.cutoff), dtype=np.complex128)
+        density[0, 0] = 1.0
+        row = {"exception_type": "", "conservation_pass": True}
+        return runner.ChunkEvidence(
+            rows=[dict(row) for _ in range(cell.expected_rows)],
+            densities=[density.copy() for _ in range(cell.sample_count)],
+            density_row_ids=[f"row-{index}" for index in range(cell.sample_count)],
+            raw_iq=np.zeros((cell.sample_count, 2), dtype=np.float64),
+            heldout_iq=np.zeros((cell.sample_count, 2), dtype=np.float64),
+        )
+
+    monkeypatch.setattr(subject, "runner", runner)
+    monkeypatch.setattr(runner, "build_simulators", fake_build_simulators)
+    monkeypatch.setattr(runner, "execute_cell", fake_execute_cell)
+    execution = json.loads(
+        (ROOT / config["base_config"]["path"]).read_text(encoding="utf-8")
+    )
+    report = subject._run_resource_preflight(config, execution)
+
+    subject._validate_resource_preflight(config, report)
+    fault_records = [
+        record for record in report["benchmark_records"] if record["layer"] == "fault"
+    ]
+    shared_records = [
+        record for record in report["benchmark_records"] if record["layer"] == "shared"
+    ]
+    assert all(record["initial_state"] is None for record in fault_records)
+    assert all(record["action"] is None for record in fault_records)
+    assert all(record["scenario"] is None for record in shared_records)
 
 
 def test_resource_preflight_is_published_before_design_chunks() -> None:

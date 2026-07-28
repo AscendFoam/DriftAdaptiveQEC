@@ -59,29 +59,29 @@ RELEASE_RECEIPT_PATH = (
     "docs/t_risk_20260728_01_cutoff32_36_design_extension_release_receipt.json"
 )
 OWNER_LOCK_PATH = (
-    "runs/t_risk_20260728_01_cutoff32_36_design_extension/"
+    "runs/t_risk_20260728_01_cutoff32_36_design_extension_fresh2/"
     "supervisor.owner.lock"
 )
 CONFIG_SCHEMA = "PHASE9-CUTOFF32-36-DESIGN-EXTENSION-CONFIG-V1"
 RELEASED_CHILD_SCHEMA = "PHASE9-CUTOFF32-36-DESIGN-EXTENSION-RELEASED-CHILD-V1"
 RELEASE_RECEIPT_SCHEMA = "PHASE9-CUTOFF32-36-DESIGN-EXTENSION-RELEASE-RECEIPT-V1"
-PENDING_CONFIG_BYTES = 15879
+PENDING_CONFIG_BYTES = 15956
 PENDING_CONFIG_SHA256 = (
-    "1f47a4fc8a12e823967a146fdd55eef6254f9397196218fe717feb685f89ecdd"
+    "66534f7361346759f4cb11183f2eba07e6ff40304f9cf7d5fae877a3643ba8d3"
 )
 RELEASED_CHILD_BYTES = 4907
 RELEASED_CHILD_SHA256 = (
-    "486d75a15f629de7aac63221c4cbdcc485b90e1e5bb51cb39a69f8d5e30cd400"
+    "a84e91a771116d1ee21072796fc4fd72613118ef90416a7c38ee91a08fd372f0"
 )
 RELEASED_CHILD_ANALYSIS_SHA256 = (
-    "924d67a7286c0499cb46552e3c9b8ec4036d4f3aac02281222f2e80695a2bf23"
+    "5c79a1be36c1e14b288882dcf54da0b958000257ef7b02a027d3cfa3cc0bbb14"
 )
 RELEASE_RECEIPT_BYTES = 4511
 RELEASE_RECEIPT_SHA256 = (
-    "310aca1bf9bd9fdec55b5844870c74b3cedd9de49fca0e9bb02fd3466101066a"
+    "e4491d6b93d650ad403104d78c33d04a998781f6a972d801ec7a113324e54bcd"
 )
 RELEASE_RECEIPT_ANALYSIS_SHA256 = (
-    "e5bc5b41ed1651e5197622074f7fb88cf64f591e6e96781f49dc628b3068b2da"
+    "9a758724d38fb3620bb414d80cb8e44800635820772173b984e64d73f20bc8f0"
 )
 MANIFEST_SCHEMA = "PHASE9-CUTOFF32-36-DESIGN-EXTENSION-MANIFEST-V1"
 RECEIPT_SCHEMA = "PHASE9-CUTOFF32-36-DESIGN-EXTENSION-CHUNK-RECEIPT-V1"
@@ -2598,9 +2598,13 @@ def _run_resource_preflight(
                 "cutoff": cell.cutoff,
                 "backend": cell.backend,
                 "layer": cell.layer,
-                "scenario": cell.scenario,
-                "initial_state": cell.initial_state,
-                "action": cell.action,
+                # CellSpec uses the empty string as its internal sentinel for
+                # a dimension that does not apply.  The externally frozen
+                # resource identity contract uses JSON null instead; emit the
+                # contract representation before the atomic round trip.
+                "scenario": cell.scenario or None,
+                "initial_state": cell.initial_state or None,
+                "action": cell.action or None,
                 "sample_count": sample_count,
                 "observed_rows": len(evidence.rows),
                 "terminal_density_count": len(evidence.densities),
