@@ -1,0 +1,384 @@
+{
+  "task_id": "T-RISK-20260728-01",
+  "schema_version": "PHASE9-CUTOFF32-36-DESIGN-EXTENSION-CONFIG-V1",
+  "purpose": "Immutable unpowered same-seed cutoff32/36 extension of the sealed fresh3 cutoff28 reference; may only authorize the separately frozen powered formal",
+  "base_config": {
+    "path": "configs/phase9/t_risk_20260726_01_fresh_twin_qualification.json",
+    "sha256": "8573e670fefff78564ff9705dc93320e08df9f1dcf59e0aaf6be0eee1730c31e"
+  },
+  "reference_cutoff": 28,
+  "cutoffs": [
+    32,
+    36
+  ],
+  "shared_repair_cells": [
+    {
+      "initial_state": "vacuum_f",
+      "action": "RESET",
+      "cutoffs": [28, 32, 36],
+      "backends": ["A", "B"],
+      "reason": "replace the three preregistered shared-vacuum_f RESET density failures without deleting or rewriting them"
+    }
+  ],
+  "reference_cutoff_28_evidence": {
+    "manifest": {
+      "path": "docs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3_manifest.json",
+      "bytes": 85625,
+      "sha256": "37e7606d2d8ad1d06b46dfec9b21580a2f325eae7a0b552a4109dd85f5dfef91",
+      "analysis_sha256": "8e48faad8cc5f94204a52e9f96c8c42850f7f8e0f937dfb8d188d925f91c4904"
+    },
+    "diagnostic": {
+      "path": "docs/t_risk_20260727_01_high_cutoff_design_diagnostic_fresh3.json",
+      "bytes": 190977,
+      "sha256": "7f5e542e8734249bed5580ba7e648200965c59f64c609d9599325755fea127fb",
+      "analysis_sha256": "c4ddfba3b060775000521dfd4a9c233ec3958acd12df36462dbfa3aef8b9a0ac"
+    },
+    "diagnostic_source_data": {
+      "path": "docs/t_risk_20260727_01_high_cutoff_design_diagnostic_fresh3_source_data.csv",
+      "bytes": 1161786,
+      "sha256": "69cea45f7439bb7efeab6beb63f24b2944bc558838cf929895f38f338f32fee0"
+    },
+    "diagnostic_completion": {
+      "path": "docs/t_risk_20260727_01_high_cutoff_design_diagnostic_fresh3_completion.json",
+      "bytes": 1423,
+      "sha256": "89aed9983dd2a1978030f9da64b86bc773b662464667c63105a7da2c18639985",
+      "analysis_sha256": "b2e3232434ddbb6f749e47aa6ecbcc340beac5c4beeb7a95fcd9c7272b85d1a1"
+    }
+  },
+  "logical_state_schedule": [
+    "0",
+    "1",
+    "+",
+    "-",
+    "+i",
+    "-i"
+  ],
+  "scenario_names": [
+    "step",
+    "telegraph",
+    "burst",
+    "compound"
+  ],
+  "stage_partition": {
+    "step": {
+      "pre_change": [0, 1, 2, 3],
+      "early_post_change": [4, 5, 6, 7],
+      "late_post_change": [8, 9, 10, 11]
+    },
+    "telegraph": {
+      "phase_0": [0, 1, 2],
+      "phase_1": [3, 4, 5],
+      "phase_2": [6, 7, 8],
+      "phase_3": [9, 10, 11]
+    },
+    "burst": {
+      "pre_burst": [0, 1, 2, 3],
+      "burst_active": [4, 5, 6],
+      "recovery": [7, 8, 9, 10],
+      "terminal": [11]
+    },
+    "compound": {
+      "pre_shift": [0, 1, 2],
+      "shifted": [3, 4, 5],
+      "burst_active": [6, 7, 8],
+      "recovery": [9, 10, 11]
+    }
+  },
+  "trajectory_count": 72,
+  "clusters_per_state": 12,
+  "diagnostic_contract": {
+    "confidence": 0.95,
+    "multiplier_replicates": 199,
+    "multiplier_seed_namespace": 1480000,
+    "calibration_factor_source": {
+      "path": "docs/t_risk_20260727_01_uq_calibration.json",
+      "required_analysis_sha256": "546f808015c82b218664d99c1026cb9fc40af2362b076d479df10e98c7073446",
+      "required_factor": 1.0,
+      "required_coverage_all_passed": true
+    },
+    "design_density_point_threshold": 0.075,
+    "required_consecutive_increments": [
+      [28, 32],
+      [32, 36]
+    ],
+    "expected_gate_count": 1454,
+    "gate_accounting": {
+      "fault_density": 96,
+      "fault_scalar": 1080,
+      "fault_absolute_tail": 240,
+      "shared_density": 7,
+      "shared_scalar": 21,
+      "shared_absolute_tail": 10
+    },
+    "decision_statistic": "conservative unpowered point estimate including archived density quantization bound; no confidence or equivalence claim",
+    "design_pass_authorizes_only_powered_formal": true,
+    "margins": {
+      "ab_terminal_density_trace_distance": 0.15,
+      "ab_terminal_mean_photon_difference": 0.08,
+      "ab_terminal_level_probability_l1": 0.1,
+      "ab_terminal_logical_survival_difference": 0.1,
+      "cutoff_terminal_density_trace_distance": 0.1,
+      "cutoff_terminal_mean_photon_difference": 0.08,
+      "cutoff_terminal_level_probability_l1": 0.1,
+      "cutoff_terminal_logical_survival_difference": 0.1,
+      "absolute_terminal_top1_fock_mass": 0.005,
+      "absolute_terminal_top2_fock_mass": 0.01,
+      "absolute_terminal_top4_fock_mass": 0.02,
+      "absolute_terminal_normalized_mean_photon": 0.25,
+      "absolute_terminal_commutator_defect": 0.05
+    },
+    "absolute_truncation_diagnostics_are_localization_only": true,
+    "stage_cluster_reduction": "mean within each trajectory seed_position and registered stage before any A/B or cutoff contrast",
+    "formal_rescue_forbidden": true
+  },
+  "hardened_confirmation_source": {
+    "report": {
+      "path": "docs/t_risk_20260727_01_uq_hardened_confirmation.json",
+      "bytes": 29338,
+      "sha256": "6f0cab2fa2e3fc0b1975b69f14c4e2916d9e6281df50cf61a622011937dc6252"
+    },
+    "source_data": {
+      "path": "docs/t_risk_20260727_01_uq_hardened_confirmation_source_data.csv",
+      "bytes": 3878908,
+      "sha256": "b00b61cd93ea1e0a08302418146fbdd4faef31026e067bdecc61dc3ac5da685f"
+    },
+    "source_task_id": "T-RISK-20260727-01",
+    "required_analysis_sha256": "5a798e45c0306d4bf591c971e52c68e4faf0dce276eafc74cb69d66ef6abe5a5",
+    "required_verdict": "PASS_PAIRED_CLUSTER_UQ_HARDENED_CONFIRMATION",
+    "required_selected_formal_clusters_per_state": 384,
+    "required_pilot_domain_factor_coverage_calibrated": true,
+    "required_formal_domain_factor_coverage_calibrated": true,
+    "required_confirmation_power_passed": true
+  },
+  "seed_splits": {
+    "round_backend_a": {
+      "start": 1433000,
+      "count": 72
+    },
+    "round_backend_b": {
+      "start": 1434000,
+      "count": 72
+    },
+    "trajectory_backend_a": {
+      "start": 1430000,
+      "count": 72
+    },
+    "trajectory_backend_b": {
+      "start": 1431000,
+      "count": 72
+    },
+    "heldout_common": {
+      "start": 1432000,
+      "count": 72
+    },
+    "all_intervals_disjoint": true,
+    "disjoint_from_20260726_formal": true,
+    "fault_trajectory_intervals_identical_to_fresh3_for_cutoff_pairing": true,
+    "shared_repair_round_intervals_are_fresh": true
+  },
+  "resource_preflight": {
+    "required": true,
+    "benchmark_cutoffs": [32, 36],
+    "benchmark_backends": ["A", "B"],
+    "benchmark_scenarios": ["step", "telegraph", "burst", "compound"],
+    "benchmark_trajectories_per_state": 1,
+    "seed_splits": {
+      "trajectory_backend_a": {"start": 1600000, "count": 6},
+      "trajectory_backend_b": {"start": 1601000, "count": 6},
+      "heldout_common": {"start": 1602000, "count": 6},
+      "round_backend_a": {"start": 1603000, "count": 6},
+      "round_backend_b": {"start": 1604000, "count": 6},
+      "disjoint_from_design_and_powered_formal": true
+    },
+    "wall_safety_factor": 2.0,
+    "rss_delta_safety_factor": 2.0,
+    "artifact_safety_factor": 2.0,
+    "minimum_per_worker_delta_bytes": 67108864,
+    "maximum_estimated_wall_seconds": 43200,
+    "maximum_estimated_total_rss_bytes": 17179869184,
+    "maximum_estimated_artifact_bytes": 2147483648,
+    "thread_pool_accounting": "baseline_rss + max_single_benchmark_delta * max_workers",
+    "fail_before_scientific_chunk": true
+  },
+  "uq_preflight_sources": {
+    "density": {
+      "report": {
+        "path": "docs/t_risk_20260728_01_density_uq_preflight.json",
+        "bytes": 23228,
+        "sha256": "e41adf7eef654f41ce01c4f71bf4469b57028ed5b96d95f329fd50e61600b187"
+      },
+      "source_data": {
+        "path": "docs/t_risk_20260728_01_density_uq_preflight_source_data.csv",
+        "bytes": 2915342,
+        "sha256": "e4812018a533754ade824680ce84c370a3c0b7220e3853a4e0f4a24817ae7546"
+      },
+      "required_analysis_sha256": "dc2ab86fff96d1295f2ab181b86952782020867f4b7f8c42d80505a6dd6d2663",
+      "required_verdict": "PASS_CUTOFF32_36_DENSITY_UQ_PREFLIGHT"
+    },
+    "scalar": {
+      "report": {
+        "path": "docs/t_risk_20260728_02_scalar_uq_calibration.json",
+        "bytes": 23978,
+        "sha256": "376f26e0dde73517cca4dc4155b2b7fd2f48a283b248f6b45de8207e4a5e02fb"
+      },
+      "independent_verification": {
+        "path": "docs/t_risk_20260728_02_scalar_uq_calibration_verification.json",
+        "bytes": 2241,
+        "sha256": "b04381f1ad6cecbbe74c52c61ed533600fc17087903ce425d3e4d615cabdf110"
+      },
+      "source_data": {
+        "selection_a": {
+          "path": "docs/t_risk_20260728_02_scalar_uq_selection_a.csv",
+          "bytes": 58849852,
+          "sha256": "a7a1be4f193da261289646e77f82b6e6ef5665cab8b257d2300ed6d1b2b8bbeb"
+        },
+        "selection_b": {
+          "path": "docs/t_risk_20260728_02_scalar_uq_selection_b.csv",
+          "bytes": 58849714,
+          "sha256": "30c6877681666c014ad2ca2c9ee7bc6cd74a4b1cde81f9abcbcda125b4201285"
+        },
+        "confirmation": {
+          "path": "docs/t_risk_20260728_02_scalar_uq_confirmation.csv",
+          "bytes": 59243137,
+          "sha256": "ee645cfd23e9d6c7ffcf75a05922b816748f54fea0915bf9af7c524ec32b793e"
+        }
+      },
+      "required_analysis_sha256": "de82db4d12459e3b54174d6cf738953ed242b153d32de329c1094cae9ef80db4",
+      "required_verdict": "PASS_SCALAR_UQ_THREE_SPLIT_CALIBRATION",
+      "required_verification_analysis_sha256": "9dfe4506e8dffd7bd5a8d4e9e19e5bf02e0abab27fba521c3b3c449237878dd9",
+      "required_verification_verdict": "VERIFIED_PASS_SCALAR_UQ_THREE_SPLIT_CALIBRATION",
+      "required_qualified_claim": "COVERAGE_CALIBRATED_SCALAR_UQ_FACTOR_FOR_T_RISK_20260728_01"
+    },
+    "required_dimensions": [84, 96, 108],
+    "required_cluster_counts": [12, 384],
+    "required_factor": 1.0,
+    "required_multiplier_replicates": 199,
+    "failure_effect": "INCOMPLETE_UQ_NO_SCIENTIFIC_RUN"
+  },
+  "powered_formal_preregistration": {
+    "release_condition": "DESIGN_GATE_PASS_AUTHORIZES_POWERED_FORMAL",
+    "cutoffs": [28, 32, 36],
+    "fresh_rerun_all_cutoffs": true,
+    "clusters_per_state": 384,
+    "trajectory_count": 2304,
+    "logical_state_schedule": ["0", "1", "+", "-", "+i", "-i"],
+    "scenario_names": ["step", "telegraph", "burst", "compound"],
+    "seed_splits": {
+      "trajectory_backend_a": {"start": 1500000, "count": 2304},
+      "trajectory_backend_b": {"start": 1503000, "count": 2304},
+      "heldout_common": {"start": 1506000, "count": 2304},
+      "round_backend_a": {"start": 1510000, "count": 2304},
+      "round_backend_b": {"start": 1513000, "count": 2304}
+    },
+    "multiplier_seed_namespace": 1516000,
+    "calibration_factor": 1.0,
+    "multiplier_replicates": 199,
+    "density_point_threshold": 0.075,
+    "equivalence_margins_source": "diagnostic_contract.margins",
+    "absolute_tail_gate": "primary one-sided coverage-calibrated UCB at cutoff36; localization-only semantics do not carry into formal",
+    "decision_rule": "six-state x scenario x backend IUT/max; every powered UCB must be within its frozen margin and every density point must be <=0.075",
+    "prior_passing_gate_composition": {
+      "allowed": false,
+      "reason": "the verified runtime validation-cap adapter is new execution source; old partial gates remain historical evidence but cannot vote in the new terminal qualification",
+      "qualification": {
+        "path": "docs/t_risk_20260726_01_fresh_qualification.json",
+        "bytes": 5484,
+        "sha256": "4d4c6479806c23f1eaa13e42331089f9ce956835984533446f4d883d79739b04",
+        "analysis_sha256": "e15397357374073a31b66edbc3417f799eb974db5d7789fed4e57850b94485c9"
+      },
+      "qualification_source_data": {
+        "path": "docs/t_risk_20260726_01_fresh_qualification_source_data.csv",
+        "bytes": 360785,
+        "sha256": "a7e2957f3a9f59e73ddd14e66c22a0842f6b75a3a7b1f1b77aa41c4cce97a85c"
+      },
+      "independent_verification": {
+        "path": "docs/t_risk_20260726_01_fresh_verification.json",
+        "bytes": 2022,
+        "sha256": "d9f607ec6d1f7071f0a28d7d46aaf3054c5792d99fca4ed36173dca66f2bc3fe",
+        "analysis_sha256": "7783d887900a62b8a393e2db3fc7133df44ccd5a4b608735d756b5dff3391cbc"
+      },
+      "expected_prior_gate_counts": {
+        "total": 1589,
+        "passed": 1562,
+        "failed_replaced_only_by_fresh_high_cutoff_formal": 27
+      },
+      "physics_repair_invalidates_composition": true,
+      "composite_pass_scope": null
+    },
+    "full_fresh_qualification_required": {
+      "required": true,
+      "same_runtime_source_set_for_every_gate": true,
+      "all_previous_gate_families_rerun": true,
+      "all_high_cutoff_design_gates_rerun_powered": true,
+      "old_1562_passing_gates_vote": false,
+      "old_27_failing_gates_vote": false,
+      "independent_final_verifier_required": true,
+      "failure_effect": "NO_GO_TWIN_QUALIFICATION_NO_SEED_EXTENSION"
+    },
+    "design_outcome_may_not_change_contract": true,
+    "official_puviani_sota_claims": null
+  },
+  "max_workers": 6,
+  "source_bindings": {
+    "fresh_runner": {
+      "path": "cnn_fpga/benchmark/phase9_fresh_twin_qualification.py",
+      "sha256": "8b03c432b93d8e720a273d3d24781db07d4b0b92a6b8defa85c95d603012e116"
+    },
+    "dual_backend_kernel": {
+      "path": "cnn_fpga/benchmark/phase9_dual_backend_qualification.py",
+      "sha256": "468c500d0a4aa7a2655a24d9b02bb71632774a146857703dd3e1e199cc5d3561"
+    },
+    "backend_a": {
+      "path": "physics/phase9_backend_a.py",
+      "sha256": "5dc88f953167d46ab6cd828fd5d87f022a114dbf2324a05f4479af1e53f18558"
+    },
+    "backend_b": {
+      "path": "physics/phase9_backend_b.py",
+      "sha256": "0b7f7e3f2bf9b485bf5eb753602b5d2029e1e4d39d726037309f12abc926c03c"
+    },
+    "high_cutoff_adapter": {
+      "path": "physics/phase9_high_cutoff_runtime_adapter.py",
+      "sha256": "3a77d706d592c1717273e0dede972b3aee20109413bf4e89a107a7ad2e741c90"
+    },
+    "design_diagnostic": {
+      "path": "cnn_fpga/benchmark/phase9_cutoff32_36_design_diagnostic.py",
+      "sha256": "616d87b18b2ff33471af54e104ad4b54c27d06846b2b9bb8f911ee0f25e22ebe"
+    },
+    "backend_b_bridge": {
+      "path": "physics/phase9_backend_b_logical_bridge.py",
+      "sha256": "104ea5691b4042f046db2d2622a4977b30f689ec9dd387fe1f555ec32e5f5c60"
+    },
+    "iq_reference": {
+      "path": "physics/phase9_iq_likelihood_reference.py",
+      "sha256": "0c7a693bf08a27083ed38eb79f8a2f4f50aff73d8c6905246698d8fb8bd793c4"
+    },
+    "twin_contract": {
+      "path": "physics/phase9_twin_contract.py",
+      "sha256": "05622cb5036ea9593b76b7d27ad161d70e65353e5fa9392becbe116d4591f9c1"
+    }
+  },
+  "artifact_paths": {
+    "run_directory": "runs/t_risk_20260728_01_cutoff32_36_design_extension",
+    "chunk_directory": "runs/t_risk_20260728_01_cutoff32_36_design_extension/chunks",
+    "receipt_directory": "runs/t_risk_20260728_01_cutoff32_36_design_extension/receipts",
+    "heartbeat": "runs/t_risk_20260728_01_cutoff32_36_design_extension/heartbeat.json",
+    "owner_lock": "runs/t_risk_20260728_01_cutoff32_36_design_extension/supervisor.owner.lock",
+    "run_identity": "runs/t_risk_20260728_01_cutoff32_36_design_extension/run_identity.json",
+    "execution_manifest": "docs/t_risk_20260728_01_cutoff32_36_design_extension_manifest.json",
+    "diagnostic_report": "docs/t_risk_20260728_01_cutoff32_36_design_diagnostic.json",
+    "diagnostic_source_data": "docs/t_risk_20260728_01_cutoff32_36_design_diagnostic_source_data.csv",
+    "diagnostic_completion": "docs/t_risk_20260728_01_cutoff32_36_design_diagnostic_completion.json",
+    "diagnostic_owner_lock": "runs/t_risk_20260728_01_cutoff32_36_design_extension/diagnostic.owner.lock"
+  },
+  "claim_boundary": {
+    "design_extension_only": true,
+    "twin_qualification": null,
+    "ler": null,
+    "lifetime": null,
+    "physical_break_even": null,
+    "official_puviani_exact": null,
+    "puviani_nmf_surpass": null,
+    "external_sota": null,
+    "hardware_measured": null
+  }
+}
