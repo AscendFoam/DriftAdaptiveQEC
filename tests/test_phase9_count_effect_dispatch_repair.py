@@ -56,6 +56,18 @@ def test_runtime_contract_mutation_fails_closed():
         subject.validate_config(config, ROOT)
 
 
+def test_failed_verifier_archive_contract_is_self_sealed_and_fail_closed():
+    config, _ = _load()
+    subject.validate_config(config, ROOT)
+
+    mutated = copy.deepcopy(config)
+    mutated["failed_verifier_attempt_v1"][
+        "verification_artifact_written"
+    ] = True
+    with pytest.raises(ValueError, match="failed verifier archive contract"):
+        subject.validate_config(mutated, ROOT)
+
+
 def test_runtime_environment_mismatch_fails_before_writer(monkeypatch):
     config, _ = _load()
     required = config["runtime_contract"][

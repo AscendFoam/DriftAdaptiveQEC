@@ -622,7 +622,11 @@ def _density_worker(
     left, right, truth = _density_trial(
         dimension=int(row["dimension"]),
         count=int(row["cluster_count"]),
-        truth=float(row["true_distance"]),
+        # The source value is a recomputed physical quantity and may be a few
+        # ulps away from the categorical design point.  Generate from the
+        # independently reconstructed canonical spec; _validate_density_rows
+        # separately checks that the saved value agrees with that spec.
+        truth=float(design["effect"]),
         family=family,
         seed=int(row["trial_seed"]),
     )
@@ -1512,7 +1516,11 @@ def verify(
         "margin": config["density"]["margin"],
     }
     payloads = [
-        (row, dict(families[spec["family"]]), dict(density_design))
+        (
+            row,
+            dict(families[spec["family"]]),
+            {**density_design, "effect": float(spec["effect"])},
+        )
         for row, spec in selection_pairs
     ]
     selection_recomputed: list[
@@ -1668,7 +1676,11 @@ def verify(
         if selection_seed_set & confirmation_seed_set:
             raise ValueError("selection/confirmation density seed reuse")
         payloads = [
-            (row, dict(families[spec["family"]]), dict(density_design))
+            (
+                row,
+                dict(families[spec["family"]]),
+                {**density_design, "effect": float(spec["effect"])},
+            )
             for row, spec in confirmation_pairs
         ]
         confirmation_recomputed = []

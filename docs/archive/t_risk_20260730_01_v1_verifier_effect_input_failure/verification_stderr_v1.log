@@ -1,0 +1,46 @@
+concurrent.futures.process._RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "C:\ProgramData\anaconda3\Lib\concurrent\futures\process.py", line 263, in _process_worker
+    r = call_item.fn(*call_item.args, **call_item.kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\ProgramData\anaconda3\Lib\concurrent\futures\process.py", line 212, in _process_chunk
+    return [fn(*args) for args in chunk]
+            ^^^^^^^^^
+  File "D:\Codes\Quantum\DriftAdaptiveQEC\cnn_fpga\benchmark\phase9_count_selection_confirmation_verify.py", line 622, in _density_worker
+    left, right, truth = _density_trial(
+                         ^^^^^^^^^^^^^^^
+  File "D:\Codes\Quantum\DriftAdaptiveQEC\cnn_fpga\benchmark\phase9_count_selection_confirmation_verify.py", line 513, in _density_trial
+    raise ValueError("density trial design drift")
+ValueError: density trial design drift
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "D:\Codes\Quantum\DriftAdaptiveQEC\cnn_fpga\benchmark\phase9_count_selection_confirmation_verify.py", line 1968, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "D:\Codes\Quantum\DriftAdaptiveQEC\cnn_fpga\benchmark\phase9_count_selection_confirmation_verify.py", line 1962, in main
+    result = verify(workers=arguments.workers)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Codes\Quantum\DriftAdaptiveQEC\cnn_fpga\benchmark\phase9_count_selection_confirmation_verify.py", line 1523, in verify
+    for (row, spec), values in zip(
+                               ^^^^
+  File "C:\ProgramData\anaconda3\Lib\concurrent\futures\process.py", line 642, in _chain_from_iterable_of_lists
+    for element in iterable:
+                   ^^^^^^^^
+  File "C:\ProgramData\anaconda3\Lib\concurrent\futures\_base.py", line 619, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\ProgramData\anaconda3\Lib\concurrent\futures\_base.py", line 317, in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\ProgramData\anaconda3\Lib\concurrent\futures\_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\ProgramData\anaconda3\Lib\concurrent\futures\_base.py", line 401, in __get_result
+    raise self._exception
+ValueError: density trial design drift

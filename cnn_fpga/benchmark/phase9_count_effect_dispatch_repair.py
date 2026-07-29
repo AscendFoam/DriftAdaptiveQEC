@@ -252,6 +252,31 @@ def validate_config(config: Mapping[str, Any], root: Path) -> None:
     ):
         raise ValueError("failed reanalysis manifest self-seal drift")
 
+    verifier_failure = config["failed_verifier_attempt_v1"]
+    if (
+        verifier_failure["classification"]
+        != "independent-verifier implementation failure before any "
+        "verification artifact; no scientific vote"
+        or verifier_failure["parent_runtime_seal_commit"] != "c700826"
+        or verifier_failure["verification_artifact_written"] is not False
+        or verifier_failure["long_recompute_started"] is not False
+        or verifier_failure["raw_chunk_rewrite"] is not False
+        or verifier_failure["new_random_trials"] is not False
+        or verifier_failure["live_v1_restored"] is not True
+    ):
+        raise ValueError("failed verifier archive contract drift")
+    _assert_file_binding(root, verifier_failure["manifest"])
+    verifier_failure_manifest = _load_json(
+        root / verifier_failure["manifest"]["path"]
+    )
+    if (
+        verifier_failure_manifest.get("schema_version")
+        != "PHASE9-T06-VERIFIER-EFFECT-INPUT-FAILURE-MANIFEST-V1"
+        or verifier_failure_manifest.get("analysis_sha256")
+        != _self_hash(verifier_failure_manifest)
+    ):
+        raise ValueError("failed verifier manifest self-seal drift")
+
     archive = root / config["v1_archive"]["local_run_archive"]
     entries, manifest_sha = _full_archive_manifest(archive)
     if (
@@ -303,6 +328,8 @@ def validate_config(config: Mapping[str, Any], root: Path) -> None:
         != source["t05_algorithm_sha256"]
         or _file_sha(root / paths["t06_verifier"])
         != source["independent_verifier_sha256"]
+        or _file_sha(root / paths["t06_verifier_test"])
+        != source["repaired_verifier_test_sha256"]
     ):
         raise ValueError("sealed T06 source drift")
 
@@ -790,8 +817,13 @@ def repair(root: Path | None = None, *, workers: int = 4) -> dict[str, Any]:
             "repaired_writer_source": _binding(
                 base / paths["t06_writer"], base
             ),
-            "unchanged_independent_verifier": _binding(
+            "repaired_independent_verifier": _binding(
                 base / paths["t06_verifier"], base
+            ),
+            "failed_verifier_attempt_manifest": _binding(
+                base
+                / config["failed_verifier_attempt_v1"]["manifest"]["path"],
+                base,
             ),
             "v2_writer_report": _binding(
                 base / paths["live_report"], base

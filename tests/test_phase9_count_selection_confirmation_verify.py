@@ -50,6 +50,9 @@ def test_live_config_and_verifier_import_independence() -> None:
         (("joint_maxt", "quantile"), "linear"),
         (("joint_maxt", "pointwise_z_substitution"), True),
         (("joint_maxt", "gate_deletion"), True),
+        (("density", "selection_effect"), 0.1),
+        (("density", "confirmation_effects"), [0.0, 0.05, 0.1]),
+        (("density", "confirmation_effects"), [0.0, 0.051, 0.1, 0.12]),
         (("outcome_firewall", "t04_formal_outcomes_accessed"), True),
         (("claim_boundary", "official_puviani_exact"), "PASS"),
     ],
@@ -144,6 +147,86 @@ def test_density_trial_is_complex_psd_and_b199_higher_is_reproducible() -> None:
     )
     assert first == second
     assert first[2] == pytest.approx(first[0] + first[1])
+
+
+def test_density_worker_uses_canonical_spec_effect_not_derived_source_float() -> None:
+    family = {
+        "spectrum_profile": "low_energy",
+        "left_noise_weight": 0.25,
+        "right_noise_weight": 0.75,
+        "rare_probability": 1.0,
+        "coherent_unitary": True,
+    }
+    row = {
+        "dimension": "8",
+        "cluster_count": "6",
+        "true_distance": "0.05000000000000002",
+        "trial_seed": "123",
+        "multiplier_seed": "456",
+    }
+    design = {
+        "confidence": 0.95,
+        "multiplier_replicates": 199,
+        "margin": 0.1,
+        "effect": 0.05,
+    }
+    derived = subject._density_worker((row, family, design))
+    exact_row = {**row, "true_distance": "0.05"}
+    exact = subject._density_worker((exact_row, family, design))
+    assert derived == exact
+    unrelated_source_row = {**row, "true_distance": "0.12"}
+    assert subject._density_worker((unrelated_source_row, family, design)) == exact
+
+    with pytest.raises(ValueError, match="density trial design drift"):
+        subject._density_worker((
+            row,
+            family,
+            {**design, "effect": 0.051},
+        ))
+    with pytest.raises(KeyError, match="effect"):
+        subject._density_worker((row, family, {
+            key: value for key, value in design.items() if key != "effect"
+        }))
+
+
+def test_density_source_observation_is_checked_but_not_used_as_design_input() -> None:
+    spec = {
+        "cell_id": "confirmation__n6__d8__x__effect_0.050",
+        "trials": 1,
+        "trial_seed_base": 123,
+        "multiplier_seed_base": 456,
+        "cell_index": 0,
+        "split": "confirmation",
+        "family": "x",
+        "candidate_scale": 2.0,
+        "cluster_count": 6,
+        "dimension": 8,
+        "effect": 0.05,
+    }
+    row = {
+        "cell_id": spec["cell_id"],
+        "trial": "0",
+        "split": "confirmation",
+        "family": "x",
+        "candidate_scale": "2.0",
+        "cluster_count": "6",
+        "dimension": "8",
+        "true_distance": "0.05000000000000002",
+        "trial_seed": "123",
+        "multiplier_seed": "456",
+    }
+    validated = subject._validate_density_rows([row], [spec])
+    assert validated[0][0] == row
+    assert validated[0][1]["effect"] == 0.05
+    assert validated[0][1]["trial_seed"] == 123
+    assert validated[0][1]["multiplier_seed"] == 456
+
+    for observed in ("0.050000000000002", "0.12"):
+        drifted = {**row, "true_distance": observed}
+        with pytest.raises(
+            ValueError, match="density row design/seed field drift"
+        ):
+            subject._validate_density_rows([drifted], [spec])
 
 
 def test_non_psd_density_is_rejected() -> None:

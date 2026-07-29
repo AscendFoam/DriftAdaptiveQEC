@@ -1,0 +1,66 @@
+{
+  "task_id": "T-RISK-20260730-01",
+  "schema_version": "PHASE9-T06-VERIFIER-EFFECT-INPUT-FAILURE-MANIFEST-V1",
+  "failed_at": "2026-07-30",
+  "classification": "independent-verifier implementation failure before any verification artifact; not a scientific outcome",
+  "parent_runtime_seal_commit": "c700826",
+  "repair_transaction_v1": {
+    "verdict": "PASS_ANALYSIS_ONLY_EFFECT_DISPATCH_REPAIR",
+    "analysis_sha256": "6d6f015b8bff34bc2ae1b9f5e0029a2ab6947442792da134440a69153ab0f645",
+    "raw_chunks_identical": true,
+    "raw_records_identical": true,
+    "source_changed_cells": 6,
+    "writer_gates": "15/15",
+    "final_t04_release": false
+  },
+  "verifier_failure": {
+    "exception": "ValueError: density trial design drift",
+    "location": "phase9_count_selection_confirmation_verify.py:_density_trial",
+    "verification_artifact_written": false,
+    "long_recompute_started": false,
+    "root_cause": "the verifier validated source true_distance against canonical spec within 1e-15, but then reused that derived source float as the discrete generator input; 0.05000000000000002 is a valid saved physical value but fails the generator's exact registered-design membership check"
+  },
+  "repair_rule": {
+    "independent_generator_input": "canonical spec.effect reconstructed from frozen config and cell grid",
+    "source_true_distance_role": "observed value checked independently against spec, never a design input",
+    "source_tolerance_change": false,
+    "density_numeric_tolerance_change": false,
+    "statistical_gate_change": false,
+    "new_random_trials": false,
+    "full_repair_transaction_must_be_rerun": true,
+    "full_independent_verifier_must_be_rerun": true
+  },
+  "files": [
+    {
+      "path": "docs/archive/t_risk_20260730_01_v1_verifier_effect_input_failure/repair_report_v1.json",
+      "bytes": 7405,
+      "sha256": "c4397a72e838acf524156ab9ea9f49fd0e36f4488ea06d9f16298a4be433ecc5"
+    },
+    {
+      "path": "docs/archive/t_risk_20260730_01_v1_verifier_effect_input_failure/selected_blueprint_v2.json",
+      "bytes": 1290746,
+      "sha256": "9bd9ed23fb30737390bacc69f2730755add80257a3814475e12b7f13c7d1409b"
+    },
+    {
+      "path": "docs/archive/t_risk_20260730_01_v1_verifier_effect_input_failure/source_data_v2.csv",
+      "bytes": 1985525,
+      "sha256": "0ebeb19ed98dc91059c46814bdc68c0b666692d2b9d34b93de8d52831a29f8be"
+    },
+    {
+      "path": "docs/archive/t_risk_20260730_01_v1_verifier_effect_input_failure/verification_stderr_v1.log",
+      "bytes": 2588,
+      "sha256": "43254394ddc8e53c8f62aeb0cf7fd0d3267b836d455f0b84cb09ef5a22ca5f49"
+    },
+    {
+      "path": "docs/archive/t_risk_20260730_01_v1_verifier_effect_input_failure/verification_stdout_v1.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/archive/t_risk_20260730_01_v1_verifier_effect_input_failure/writer_report_v2.json",
+      "bytes": 44716,
+      "sha256": "56ebf58fe54e52c986580f7f37c619a40f6eb17c1db06f09cd89ce278790edf5"
+    }
+  ],
+  "analysis_sha256": "75ce175508f997d798d5163d03cd63a2873d06bd3bac29f07213dba4d055d77c"
+}

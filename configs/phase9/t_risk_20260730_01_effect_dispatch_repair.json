@@ -70,6 +70,21 @@
     "repair_report_written": false,
     "live_v1_restored": true
   },
+  "failed_verifier_attempt_v1": {
+    "classification": "independent-verifier implementation failure before any verification artifact; no scientific vote",
+    "parent_runtime_seal_commit": "c700826",
+    "root_cause": "The verifier checked saved true_distance against canonical spec.effect but then incorrectly reused the derived saved float as the exact categorical density-generator input",
+    "manifest": {
+      "path": "docs/archive/t_risk_20260730_01_v1_verifier_effect_input_failure/manifest.json",
+      "bytes": 3146,
+      "sha256": "1de6c33d10364806ecf99ee59a9e80b0e9b7b4abaf2ef7dcf4998d5fadd88c5e"
+    },
+    "verification_artifact_written": false,
+    "long_recompute_started": false,
+    "raw_chunk_rewrite": false,
+    "new_random_trials": false,
+    "live_v1_restored": true
+  },
   "v1_archive": {
     "tracked_directory": "docs/archive/t_risk_20260728_06_v1_fp_effect_dispatch",
     "local_run_archive": "runs/archive/t_risk_20260728_06_v1_fp_effect_dispatch_20260730",
@@ -98,12 +113,14 @@
     "v1_writer_sha256": "04657f7d04d3a1596d790213b80e1b4f27e7e9e8a3e139eb0f972535389aeb6b",
     "repaired_writer_sha256": "6f9debe2b6add4d46bf0f0ad7ea7fd7127fe24ff1616d35ffe131d1d457b24a4",
     "repaired_writer_test_sha256": "4917f9db03c91c2ab4e9281c765d06483539be2d9c0d6add7265f0a50fa818f2",
-    "repair_runner_sha256": "83cc4074321c9860abf114101dff7bcd7e4e10f90583cd9c43cd6f28d4132475",
-    "repair_test_sha256": "0f978b1551ff589e18b918bccc861d52a62e5149cb0c361d94da189c9efe353e",
+    "repair_runner_sha256": "f4ed2e6f8e967ffd025f0fa8635a06a3f12a9fa2eeae85961e3f2bda44330482",
+    "repair_test_sha256": "09c227ad9a68f134508873e94897076c59c915b727243c4fd9d126c0ef6923c5",
     "t05_algorithm_sha256": "907aa36464f05caba13f0290f5fc58bfe572f1c7a2692c6591439cbba85013c5",
-    "independent_verifier_sha256": "f69e0ee90e984306664677175e871a04bc6e6dcbaed0753176edc94817b8c00b",
+    "original_independent_verifier_sha256": "f69e0ee90e984306664677175e871a04bc6e6dcbaed0753176edc94817b8c00b",
+    "independent_verifier_sha256": "2a9bdec6f81b2365babb38179b764703172081d9aeb007491e4aff941e9db467",
     "v1_writer_test_sha256": "8a8c73711b84cd5fc326fc856dffea1d5109c54fe3d8d7570183e82d7d1ec81c",
-    "v1_verifier_test_sha256": "1f4413b984cec66c65149302e5c46f1847a77ba85ae4151ac0e6b45542af1c3a"
+    "v1_verifier_test_sha256": "1f4413b984cec66c65149302e5c46f1847a77ba85ae4151ac0e6b45542af1c3a",
+    "repaired_verifier_test_sha256": "958e22d454bbdc6d3ab0b3b573eafe23c06fb39339e9be4b8238692d2952ae0a"
   },
   "expected_invariants": {
     "selection_chunk_count": 8,
@@ -141,6 +158,7 @@
     "repair_test": "tests/test_phase9_count_effect_dispatch_repair.py",
     "t05_algorithm": "cnn_fpga/benchmark/phase9_highdim_joint_maxt_preflight.py",
     "t06_verifier": "cnn_fpga/benchmark/phase9_count_selection_confirmation_verify.py",
+    "t06_verifier_test": "tests/test_phase9_count_selection_confirmation_verify.py",
     "live_report": "docs/t_risk_20260728_06_count_selection_confirmation.json",
     "live_source_data": "docs/t_risk_20260728_06_count_selection_confirmation_source_data.csv",
     "live_selected_blueprint": "docs/t_risk_20260728_06_selected_gate_blueprint.json",
