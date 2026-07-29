@@ -16,6 +16,7 @@ from cnn_fpga.benchmark.phase9_powered_twin_contract import (
     load_config,
     physical_seed,
     plan_payload,
+    runtime_source_snapshot,
     seed_registry_payload,
     validate_config,
 )
@@ -46,6 +47,23 @@ def test_live_config_parent_bindings_and_plan_fingerprint() -> None:
         plan["canonical_plan_sha256"]
         == config["plan_contract"]["canonical_plan_sha256"]
     )
+
+
+def test_live_runtime_source_registry_is_complete_and_regular() -> None:
+    config = _config()
+    snapshot = runtime_source_snapshot(ROOT, config)
+    bindings = {item["path"]: item for item in snapshot["bindings"]}
+    expected_runtime = set(config["runtime_sources"]["paths"])
+    expected_validation = set(config["runtime_sources"]["validation_paths"])
+    assert snapshot["runtime_source_count"] == len(expected_runtime) == 22
+    assert snapshot["validation_source_count"] == len(expected_validation) == 9
+    assert set(bindings) == expected_runtime | expected_validation
+    assert (
+        bindings["physics/phase9_cutoff44_runtime_adapter.py"]["role"]
+        == "runtime"
+    )
+    assert all(item["bytes"] > 0 for item in bindings.values())
+    assert all(len(item["sha256"]) == 64 for item in bindings.values())
 
 
 def test_exact_layer_cutoff_backend_and_row_accounting() -> None:

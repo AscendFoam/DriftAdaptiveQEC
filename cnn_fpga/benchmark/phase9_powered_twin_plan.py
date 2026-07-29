@@ -23,11 +23,12 @@ from cnn_fpga.benchmark.phase9_powered_twin_contract import (
     TASK_ID,
     load_config,
     plan_payload,
+    runtime_source_snapshot,
     seed_registry_payload,
 )
 
 
-REPORT_SCHEMA = "PHASE9-POWERED-TWIN-CONTRACT-PREFLIGHT-V2"
+REPORT_SCHEMA = "PHASE9-POWERED-TWIN-CONTRACT-PREFLIGHT-V3"
 HISTORICAL_SCAN_SCHEMA = "PHASE9-HISTORICAL-SEED-SCAN-V1"
 
 
@@ -320,6 +321,7 @@ def materialize(root: Path) -> dict[str, Any]:
         raise RuntimeError("historical seed inventory drifted after preregistration")
     plan = plan_payload(config)
     registry = seed_registry_payload(config)
+    source_snapshot = runtime_source_snapshot(root, config)
     paths = config["artifact_paths"]
     scan_path = root / str(paths["historical_seed_scan"])
     plan_path = root / str(paths["plan"])
@@ -349,6 +351,12 @@ def materialize(root: Path) -> dict[str, Any]:
             "heldout_unique": registry["actual_unique_heldout_addresses"],
             "registry_sha256": registry["registry_sha256"],
         },
+        "source_registry_summary": {
+            "runtime_source_count": source_snapshot["runtime_source_count"],
+            "validation_source_count": source_snapshot["validation_source_count"],
+            "source_snapshot_sha256": source_snapshot["source_snapshot_sha256"],
+            "all_registered_sources_live_and_regular": True,
+        },
         "bindings": {
             "config": config_binding,
             "historical_seed_scan": _binding(scan_path, root),
@@ -375,6 +383,26 @@ def materialize(root: Path) -> dict[str, Any]:
                 ),
             }.items()
         },
+        "superseded_preseal_v2": {
+            name: _binding(root / relative, root)
+            for name, relative in {
+                "contract_preflight": (
+                    "docs/t_risk_20260728_04_powered_twin_contract_preflight_v2.json"
+                ),
+                "historical_seed_scan": (
+                    "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/"
+                    "historical_seed_scan_v2.json"
+                ),
+                "plan": (
+                    "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/"
+                    "plan_v2.json"
+                ),
+                "seed_registry": (
+                    "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/"
+                    "seed_registry_v2.json"
+                ),
+            }.items()
+        },
         "gates": {
             "C01_all_parent_bytes_verified": True,
             "C02_t03_t05_t06_semantic_chain_verified": True,
@@ -391,6 +419,12 @@ def materialize(root: Path) -> dict[str, Any]:
             "C08_actual_seed_addresses_injective": True,
             "C09_content_addressed_no_zip_contract_frozen": True,
             "C10_all_claims_null_and_scientific_execution_blocked": True,
+            "C11_all_runtime_and_validation_sources_live_regular": (
+                source_snapshot["runtime_source_count"]
+                == len(config["runtime_sources"]["paths"])
+                and source_snapshot["validation_source_count"]
+                == len(config["runtime_sources"]["validation_paths"])
+            ),
         },
         "claim_boundary": claims,
         "qualified_claim": None,
