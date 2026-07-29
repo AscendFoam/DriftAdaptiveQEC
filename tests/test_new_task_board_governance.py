@@ -531,10 +531,33 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         }
     )
     assert statuses["T7.3.5"] == "Done"
-    assert "当前推荐任务：`T-RISK-20260728-01`" in board
+    assert "当前推荐任务：`T-RISK-20260728-04`" in board
     assert statuses["T-RISK-20260726-01"] == "Done (NO-GO)"
     assert statuses["T-RISK-20260727-01"] == "Done (Risk Signal)"
-    assert statuses["T-RISK-20260728-01"] == "In Progress"
+    assert statuses["T-RISK-20260728-01"] == "Blocked (Scientific NO-GO)"
+    assert statuses["T-RISK-20260728-03"] == "Done (Design Repair PASS)"
+    assert statuses["T-RISK-20260728-04"] == "In Progress"
+    assert statuses["T-RISK-20260728-05"] == "Done (Verified Statistical NO-GO)"
+    assert statuses["T-RISK-20260728-06"] == "Done (Independent PASS)"
+    assert statuses["T-RISK-20260730-01"] == "Done"
+    count_verification = json.loads(
+        (
+            ROOT
+            / "docs"
+            / "t_risk_20260728_06_count_selection_confirmation_verification.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert (
+        count_verification["verdict"]
+        == "PASS_INDEPENDENT_COUNT_SELECTION_AND_CONFIRMATION"
+    )
+    assert count_verification["gate_summary"] == {"passed": 21, "total": 21}
+    assert count_verification["t04_preregistration_released"] is True
+    assert count_verification["t04_scientific_execution_released"] is False
+    assert count_verification["qualified_claim"] is None
+    assert all(
+        value is None for value in count_verification["claim_boundary"].values()
+    )
     assert "NO_GO_TWIN_QUALIFICATION" in phase9
     assert "NO_GO_FRESH_TWIN_QUALIFICATION" in board
 
@@ -719,10 +742,20 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert "| R-N181 | Mitigated |" in risks
     assert "| R-N182 | Mitigated |" in risks
     assert "| R-N183 | Open |" in risks
-    assert "| R-N184 | Open |" in risks
+    assert "| R-N184 | Mitigated |" in risks
     assert "| R-N185 | Mitigated |" in risks
     assert "| R-N186 | Mitigated |" in risks
-    assert "| R-N187 | Open |" in risks
+    assert "| R-N187 | Mitigated |" in risks
+    assert "| R-N188 | Mitigated |" in risks
+    assert "| R-N189 | Closed |" in risks
+    assert "| R-N190 | Mitigated |" in risks
+    assert "| R-N191 | Open |" in risks
+    assert "| R-N192 | Mitigated |" in risks
+    assert "| R-N193 | Open |" in risks
+    assert "| R-N194 | Mitigated |" in risks
+    assert "| R-N195 | Mitigated |" in risks
+    assert "| R-N196 | Mitigated |" in risks
+    assert "| R-N197 | Mitigated |" in risks
     assert "| 2026-07-24 | T9.1.3 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-25 | T9.1.4 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-25 | T9.1.5 完成与反简化复核 | 不插入 |" in risks
@@ -730,6 +763,11 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
     assert "| 2026-07-26 | T9.2.2 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-26 | T9.2.3 完成与反简化复核 | 不插入 |" in risks
     assert "| 2026-07-26 | T9.2.6 完成与反简化复核 | 不继续插入 |" in risks
+    assert (
+        "| 2026-07-30 | T-RISK-20260730-01 / "
+        "T-RISK-20260728-06终态复核 | 不插入，恢复T-RISK-20260728-04 |"
+        in risks
+    )
 
     canonical_record = (
         ROOT
