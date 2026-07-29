@@ -108,6 +108,127 @@ def test_confirmation_cannot_run_without_selected_count():
         subject._density_specs(config, t05_config, split="confirmation")
 
 
+@pytest.mark.parametrize(
+    ("computed", "expected"),
+    [
+        (0.0, 0.0),
+        (0.04999999999999993, 0.05),
+        (0.05000000000000002, 0.05),
+        (0.10000000000000003, 0.1),
+        (0.11999999999999997, 0.12),
+    ],
+)
+def test_registered_effect_maps_roundoff_to_frozen_label(computed, expected):
+    assert subject._registered_effect(
+        computed, [0.0, 0.05, 0.1, 0.12]
+    ) == expected
+
+
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), 0.051, -0.01])
+def test_registered_effect_rejects_nonfinite_or_unregistered_value(value):
+    with pytest.raises(ValueError):
+        subject._registered_effect(value, [0.0, 0.05, 0.1, 0.12])
+
+
+def _confirmation_rows(effect, computed, *, equivalent):
+    cell_id = (
+        "confirmation__n768__d120__heteroskedastic_coherent__"
+        f"effect_{effect:.3f}"
+    )
+    return [
+        {
+            "cell_id": cell_id,
+            "split": "confirmation",
+            "candidate_scale": 2.0,
+            "family": "heteroskedastic_coherent",
+            "dimension": 120,
+            "true_distance": computed,
+            "cluster_count": 768,
+            "trial": trial,
+            "covered": True,
+            "equivalence_pass": equivalent,
+        }
+        for trial in range(256)
+    ]
+
+
+@pytest.mark.parametrize(
+    ("effect", "computed", "equivalent"),
+    [
+        (0.0, 0.0, True),
+        (0.05, 0.05000000000000002, True),
+        (0.1, 0.10000000000000003, False),
+        (0.12, 0.11999999999999997, False),
+    ],
+)
+def test_confirmation_dispatches_all_four_registered_power_rules(
+    effect, computed, equivalent
+):
+    config, _, _ = _load()
+    summaries, passed = subject._summarize_confirmation(
+        config,
+        _confirmation_rows(effect, computed, equivalent=equivalent),
+        require_complete=False,
+    )
+    assert passed is True
+    assert len(summaries) == 1
+    assert summaries[0]["true_distance"] == computed
+    assert summaries[0]["coverage_gate_pass"] is True
+    assert summaries[0]["power_gate_pass"] is True
+    assert summaries[0]["gate_pass"] is True
+
+
+def test_confirmation_rejects_frozen_label_and_computed_effect_disagreement():
+    config, _, _ = _load()
+    rows = _confirmation_rows(0.05, 0.1, equivalent=True)
+    with pytest.raises(ValueError, match="disagrees with frozen label"):
+        subject._summarize_confirmation(config, rows, require_complete=False)
+
+
+def test_confirmation_rejects_unregistered_or_ambiguous_cell_label():
+    config, _, _ = _load()
+    rows = _confirmation_rows(0.05, 0.05, equivalent=True)
+    for row in rows:
+        row["cell_id"] = (
+            "confirmation__n768__d120__heteroskedastic_coherent__effect_0.051"
+        )
+    with pytest.raises(ValueError, match="no unique registered effect label"):
+        subject._summarize_confirmation(config, rows, require_complete=False)
+
+
+def test_confirmation_rejects_mixed_computed_effects_within_cell():
+    config, _, _ = _load()
+    rows = _confirmation_rows(0.05, 0.05, equivalent=True)
+    rows[-1]["true_distance"] = 0.1
+    with pytest.raises(ValueError, match="disagrees with frozen label"):
+        subject._summarize_confirmation(config, rows, require_complete=False)
+
+
+def test_confirmation_requires_complete_frozen_cartesian_product():
+    config, _, _ = _load()
+    rows = _confirmation_rows(0.05, 0.05, equivalent=True)
+    with pytest.raises(ValueError, match="Cartesian product drift"):
+        subject._summarize_confirmation(config, rows)
+
+
+def test_reuse_only_rejects_missing_chunks_without_creating_directory():
+    config, t05_config, _ = _load()
+    with tempfile.TemporaryDirectory(dir=ROOT / "runs") as directory:
+        target = Path(directory)
+        with pytest.raises(RuntimeError, match="reuse-only chunk directory"):
+            subject._run_density(
+                target,
+                config,
+                t05_config,
+                split="selection",
+                workers=4,
+                reuse_only=True,
+            )
+        assert not (
+            target / config["artifact_paths"]["selection_chunks"]
+        ).exists()
+
+
 def test_help_path_writes_nothing(monkeypatch):
     with tempfile.TemporaryDirectory(dir=ROOT / "runs") as directory:
         target = Path(directory)

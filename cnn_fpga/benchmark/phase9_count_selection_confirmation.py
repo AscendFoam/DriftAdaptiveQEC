@@ -235,10 +235,15 @@ def _density_specs(
 def _run_density(
     root: Path, config: Mapping[str, Any], t05_config: Mapping[str, Any],
     *, split: str, workers: int, selected: Mapping[str, Any] | None = None,
+    reuse_only: bool = False,
 ) -> list[dict[str, Any]]:
     specs = _density_specs(config, t05_config, split=split, selected=selected)
     directory = root / config["artifact_paths"][f"{split}_chunks"]
-    directory.mkdir(parents=True, exist_ok=True)
+    if reuse_only:
+        if not directory.is_dir():
+            raise RuntimeError(f"{split} reuse-only chunk directory is missing")
+    else:
+        directory.mkdir(parents=True, exist_ok=True)
     rows: list[dict[str, Any]] = []
     pending = []
     config_sha = _sha(config)
@@ -255,6 +260,10 @@ def _run_density(
                 rows.extend(chunk["records"])
                 continue
         pending.append(spec)
+    if reuse_only and pending:
+        raise RuntimeError(
+            f"{split} reuse-only transaction has {len(pending)} unusable chunks"
+        )
     with ProcessPoolExecutor(max_workers=workers) as pool:
         futures = {
             pool.submit(_density_worker, {
@@ -328,13 +337,159 @@ def _summarize_selection(
     return output, decisions
 
 
+def _registered_effect(
+    value: float,
+    registered: Sequence[float],
+    *,
+    absolute_tolerance: float = 1e-12,
+) -> float:
+    """Map a computed trace distance back to its preregistered design label.
+
+    ``_physical_density_trial`` recomputes the analytic trace distance after
+    matrix arithmetic.  Its binary floating-point value can therefore be one
+    or two ulps away from the categorical design value (for example,
+    ``0.05000000000000002``).  Statistical gate dispatch must use the frozen
+    design identity, not exact equality on that derived float.
+    """
+
+    numeric = float(value)
+    if not math.isfinite(numeric):
+        raise ValueError("confirmation effect is not finite")
+    if (
+        not math.isfinite(absolute_tolerance)
+        or absolute_tolerance <= 0.0
+    ):
+        raise ValueError("confirmation effect tolerance is invalid")
+    candidates = [
+        float(effect)
+        for effect in registered
+        if math.isclose(
+            numeric,
+            float(effect),
+            rel_tol=0.0,
+            abs_tol=absolute_tolerance,
+        )
+    ]
+    if len(candidates) != 1:
+        raise ValueError(
+            "confirmation effect does not map uniquely to a registered label"
+        )
+    return candidates[0]
+
+
+def _registered_effect_for_cell(
+    config: Mapping[str, Any],
+    cell_id: str,
+    values: Sequence[Mapping[str, Any]],
+) -> float:
+    """Recover and validate the frozen design effect for one confirmation cell."""
+
+    if not values:
+        raise ValueError(f"confirmation cell is empty: {cell_id}")
+    registered = [
+        float(effect) for effect in config["density"]["confirmation_effects"]
+    ]
+    label_matches = [
+        effect
+        for effect in registered
+        if cell_id.endswith(f"__effect_{effect:.3f}")
+    ]
+    if len(label_matches) != 1:
+        raise ValueError(
+            f"confirmation cell has no unique registered effect label: {cell_id}"
+        )
+    design_effect = label_matches[0]
+    first = values[0]
+    family = str(first["family"])
+    dimension = int(first["dimension"])
+    cluster_count = int(first["cluster_count"])
+    candidate_scale = float(first["candidate_scale"])
+    candidates = [
+        candidate
+        for candidate in config["linked_count_grid"]
+        if (
+            float(candidate["scale"]) == candidate_scale
+            and int(candidate["state_clusters"]) == cluster_count
+        )
+    ]
+    if (
+        len(candidates) != 1
+        or family not in config["density"]["confirmation_families"]
+        or dimension not in config["density"]["dimensions"]
+    ):
+        raise ValueError(f"confirmation cell metadata is unregistered: {cell_id}")
+    expected_id = (
+        f"confirmation__n{cluster_count}__d{dimension}__{family}__"
+        f"effect_{design_effect:.3f}"
+    )
+    if cell_id != expected_id:
+        raise ValueError(f"confirmation cell ID is not canonical: {cell_id}")
+    trials = int(config["density"]["confirmation_trials_per_cell"])
+    if (
+        len(values) != trials
+        or {int(row["trial"]) for row in values} != set(range(trials))
+        or any(
+            row["cell_id"] != cell_id
+            or row["split"] != "confirmation"
+            or str(row["family"]) != family
+            or int(row["dimension"]) != dimension
+            or int(row["cluster_count"]) != cluster_count
+            or float(row["candidate_scale"]) != candidate_scale
+            for row in values
+        )
+    ):
+        raise ValueError(
+            f"confirmation cell row identity or denominator drift: {cell_id}"
+        )
+    computed_effects = {
+        _registered_effect(
+            float(row["true_distance"]),
+            registered,
+        )
+        for row in values
+    }
+    if computed_effects != {design_effect}:
+        raise ValueError(
+            f"confirmation cell effect disagrees with frozen label: {cell_id}"
+        )
+    return design_effect
+
+
 def _summarize_confirmation(
-    config: Mapping[str, Any], rows: Sequence[Mapping[str, Any]]
+    config: Mapping[str, Any],
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    require_complete: bool = True,
 ) -> tuple[list[dict[str, Any]], bool]:
     c = config["density"]["confirmation_wilson"]
     grouped: dict[str, list[Mapping[str, Any]]] = {}
     for row in rows:
         grouped.setdefault(str(row["cell_id"]), []).append(row)
+    if require_complete:
+        candidate_pairs = {
+            (float(row["candidate_scale"]), int(row["cluster_count"]))
+            for row in rows
+        }
+        if len(candidate_pairs) != 1:
+            raise ValueError("confirmation rows mix selected candidates")
+        candidate_scale, cluster_count = candidate_pairs.pop()
+        if not any(
+            float(candidate["scale"]) == candidate_scale
+            and int(candidate["state_clusters"]) == cluster_count
+            for candidate in config["linked_count_grid"]
+        ):
+            raise ValueError("confirmation selected candidate is unregistered")
+        expected_ids = {
+            (
+                f"confirmation__n{cluster_count}__d{dimension}__{family}__"
+                f"effect_{float(effect):.3f}"
+            )
+            for family in config["density"]["confirmation_families"]
+            for dimension in config["density"]["dimensions"]
+            for effect in config["density"]["confirmation_effects"]
+        }
+        if set(grouped) != expected_ids:
+            raise ValueError("confirmation cell Cartesian product drift")
     output, all_pass = [], True
     for cell_id, values in sorted(grouped.items()):
         coverage = sum(row["covered"] for row in values)
@@ -347,22 +502,29 @@ def _summarize_confirmation(
             equivalent, len(values), confidence=c["confidence"],
             comparisons=c["comparisons"],
         )
-        effect = float(values[0]["true_distance"])
+        effect = _registered_effect_for_cell(config, cell_id, values)
         coverage_pass = (
             coverage / len(values) >= c["coverage_rate_minimum"]
             and cov[0] >= c["coverage_lcb_minimum"]
         )
-        power_pass = (
-            eq[0] >= c["null_equivalence_lcb_minimum"] if effect == 0.0
-            else eq[0] >= c["local_equivalence_lcb_minimum"] if effect == 0.05
-            else eq[1] <= c["boundary_equivalence_ucb_maximum"] if effect == 0.1
-            else eq[1] <= c["outside_equivalence_ucb_maximum"]
-        )
+        if effect == 0.0:
+            power_pass = eq[0] >= c["null_equivalence_lcb_minimum"]
+        elif effect == 0.05:
+            power_pass = eq[0] >= c["local_equivalence_lcb_minimum"]
+        elif effect == 0.1:
+            power_pass = eq[1] <= c["boundary_equivalence_ucb_maximum"]
+        elif effect == 0.12:
+            power_pass = eq[1] <= c["outside_equivalence_ucb_maximum"]
+        else:  # pragma: no cover - validate_config freezes the four labels.
+            raise ValueError("unregistered confirmation effect")
         passed = coverage_pass and power_pass
         all_pass &= passed
         output.append({
             "cell_id": cell_id, "family": values[0]["family"],
-            "dimension": values[0]["dimension"], "true_distance": effect,
+            "dimension": values[0]["dimension"],
+            # Preserve the recomputed physical value in the evidence table.
+            # ``effect`` is only the frozen categorical identity used above.
+            "true_distance": float(values[0]["true_distance"]),
             "cluster_count": values[0]["cluster_count"], "trials": len(values),
             "coverage_successes": coverage, "coverage_rate": coverage / len(values),
             "coverage_lcb": cov[0], "coverage_ucb": cov[1],
@@ -445,7 +607,12 @@ def _serialize(rows: Sequence[Mapping[str, Any]]) -> bytes:
     return buffer.getvalue().encode("utf-8")
 
 
-def write_artifacts(root: Path | None = None, *, workers: int = 4) -> dict[str, Any]:
+def write_artifacts(
+    root: Path | None = None,
+    *,
+    workers: int = 4,
+    reuse_only: bool = False,
+) -> dict[str, Any]:
     base = (root or _root()).resolve()
     config = _load(base / CONFIG_PATH)
     validate_config(config)
@@ -479,7 +646,8 @@ def write_artifacts(root: Path | None = None, *, workers: int = 4) -> dict[str, 
             raise ValueError("T05 blueprint denominator drift")
 
         selection_density = _run_density(
-            base, config, t05_config, split="selection", workers=workers
+            base, config, t05_config, split="selection", workers=workers,
+            reuse_only=reuse_only,
         )
         selection_summary, density_decisions = _summarize_selection(
             config, selection_density
@@ -500,7 +668,7 @@ def write_artifacts(root: Path | None = None, *, workers: int = 4) -> dict[str, 
         else:
             confirmation_density = _run_density(
                 base, config, t05_config, split="confirmation",
-                workers=workers, selected=selected,
+                workers=workers, selected=selected, reuse_only=reuse_only,
             )
             confirmation_summary, confirmation_density_pass = (
                 _summarize_confirmation(config, confirmation_density)
@@ -683,8 +851,11 @@ def write_artifacts(root: Path | None = None, *, workers: int = 4) -> dict[str, 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--reuse-only", action="store_true")
     args = parser.parse_args(argv)
-    report = write_artifacts(workers=args.workers)
+    report = write_artifacts(
+        workers=args.workers, reuse_only=args.reuse_only
+    )
     print(json.dumps({
         "verdict": report["verdict"], "selected": report["selection"]["selected"],
         "gate_summary": report["gate_summary"],

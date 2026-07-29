@@ -1,0 +1,135 @@
+{
+  "task_id": "T-RISK-20260730-01",
+  "schema_version": "PHASE9-T06-EFFECT-DISPATCH-REPAIR-CONFIG-V1",
+  "frozen_at": "2026-07-30",
+  "parent_task": "T-RISK-20260728-06",
+  "purpose": "Post-outcome analysis-only repair of categorical confirmation-effect dispatch; reuse exactly the archived 7168 density trials and all frozen maxT seeds",
+  "failure_classification": {
+    "kind": "implementation_failure_before_independent_verification",
+    "root_cause": "The V1 writer dispatched power rules by exact equality on a recomputed binary floating-point trace distance instead of the preregistered categorical effect",
+    "affected_registered_effect": 0.05,
+    "observed_binary_values": [
+      0.04999999999999993,
+      0.04999999999999999,
+      0.05000000000000002
+    ],
+    "affected_confirmation_cells": 6,
+    "affected_raw_trials": 1536,
+    "v1_failed_gate": "G10_density_confirmation_all_pass",
+    "v1_other_gates_passed": 14,
+    "v1_gate_total": 15
+  },
+  "repair_contract": {
+    "registered_effects": [0.0, 0.05, 0.1, 0.12],
+    "absolute_tolerance": 1e-12,
+    "identity_source": "frozen cell_id suffix",
+    "computed_value_check": "every row in a cell must map uniquely to the same frozen label",
+    "dispatch": {
+      "0.000": "null_equivalence_lcb_minimum",
+      "0.050": "local_equivalence_lcb_minimum",
+      "0.100": "boundary_equivalence_ucb_maximum",
+      "0.120": "outside_equivalence_ucb_maximum"
+    },
+    "new_random_trials": false,
+    "raw_chunk_rewrite": false,
+    "seed_change": false,
+    "count_change": false,
+    "factor_change": false,
+    "multiplier_replicate_change": false,
+    "quantile_change": false,
+    "margin_change": false,
+    "gate_change": false,
+    "correlation_change": false,
+    "candidate_change": false,
+    "threshold_change": false
+  },
+  "v1_archive": {
+    "tracked_directory": "docs/archive/t_risk_20260728_06_v1_fp_effect_dispatch",
+    "local_run_archive": "runs/archive/t_risk_20260728_06_v1_fp_effect_dispatch_20260730",
+    "local_archive_file_count": 38,
+    "local_archive_bytes": 7548008,
+    "local_archive_manifest_sha256": "b92a8fe4b3e0d589e3642d4dee315edad341c3b09267dbc11db5c6c20cf09b57",
+    "writer_report": {
+      "path": "docs/archive/t_risk_20260728_06_v1_fp_effect_dispatch/writer_report_v1.json",
+      "bytes": 44734,
+      "sha256": "3ba99df440dc9a26a4e4c1868fa73d7f88c8e0689ffb33e29ba710f1437369b2"
+    },
+    "source_data": {
+      "path": "docs/archive/t_risk_20260728_06_v1_fp_effect_dispatch/source_data_v1.csv",
+      "bytes": 1985537,
+      "sha256": "d8b7114219fdbd45bad8bce6b0d44d83ffd966344a7d25d6f13da5f5f2d38ee1"
+    },
+    "selected_blueprint": {
+      "path": "docs/archive/t_risk_20260728_06_v1_fp_effect_dispatch/selected_gate_blueprint_v1.json",
+      "bytes": 1290746,
+      "sha256": "9bd9ed23fb30737390bacc69f2730755add80257a3814475e12b7f13c7d1409b"
+    }
+  },
+  "source_seal": {
+    "pre_repair_commit": "8f191eed40d7d76ee980aaa00b75aca18b861539",
+    "t06_config_sha256": "ee26868c3ff14abb2ff50026a42220a12b6eee3a65cd9269e531d1fdd91e574d",
+    "v1_writer_sha256": "04657f7d04d3a1596d790213b80e1b4f27e7e9e8a3e139eb0f972535389aeb6b",
+    "repaired_writer_sha256": "6f9debe2b6add4d46bf0f0ad7ea7fd7127fe24ff1616d35ffe131d1d457b24a4",
+    "repaired_writer_test_sha256": "4917f9db03c91c2ab4e9281c765d06483539be2d9c0d6add7265f0a50fa818f2",
+    "repair_runner_sha256": "59ae1c3781965be6b3c91427251c1b853695564a8ccf2dd85e87d673d8655b0e",
+    "repair_test_sha256": "3a04ca06a9e37ff3a8c851b636f7dbde6292fe03c2a4efab90d92a584f355913",
+    "t05_algorithm_sha256": "907aa36464f05caba13f0290f5fc58bfe572f1c7a2692c6591439cbba85013c5",
+    "independent_verifier_sha256": "f69e0ee90e984306664677175e871a04bc6e6dcbaed0753176edc94817b8c00b",
+    "v1_writer_test_sha256": "8a8c73711b84cd5fc326fc856dffea1d5109c54fe3d8d7570183e82d7d1ec81c",
+    "v1_verifier_test_sha256": "1f4413b984cec66c65149302e5c46f1847a77ba85ae4151ac0e6b45542af1c3a"
+  },
+  "expected_invariants": {
+    "selection_chunk_count": 8,
+    "confirmation_chunk_count": 24,
+    "selection_density_trials": 1024,
+    "confirmation_density_trials": 6144,
+    "total_density_trials": 7168,
+    "source_row_count": 8404,
+    "selected_scale": 2.0,
+    "selected_state_clusters": 768,
+    "selected_round_clusters": 1536,
+    "selected_aggregate_fault_clusters": 4608,
+    "selected_blueprint_byte_identical": true,
+    "raw_source_rows_byte_semantic_identical": true,
+    "permitted_changed_summary_cells": 6,
+    "permitted_changed_cell_ids": [
+      "confirmation__n768__d120__heavy_tail_rare_coherent__effect_0.050",
+      "confirmation__n768__d120__heteroskedastic_coherent__effect_0.050",
+      "confirmation__n768__d120__low_energy_balanced__effect_0.050",
+      "confirmation__n768__d132__heavy_tail_rare_coherent__effect_0.050",
+      "confirmation__n768__d132__heteroskedastic_coherent__effect_0.050",
+      "confirmation__n768__d132__low_energy_balanced__effect_0.050"
+    ],
+    "permitted_changed_summary_fields": [
+      "power_gate_pass",
+      "gate_pass"
+    ],
+    "independent_full_verifier_required_after_reanalysis": true
+  },
+  "artifact_paths": {
+    "t06_config": "configs/phase9/t_risk_20260728_06_count_selection_confirmation.json",
+    "t06_writer": "cnn_fpga/benchmark/phase9_count_selection_confirmation.py",
+    "t06_writer_test": "tests/test_phase9_count_selection_confirmation.py",
+    "repair_runner": "cnn_fpga/benchmark/phase9_count_effect_dispatch_repair.py",
+    "repair_test": "tests/test_phase9_count_effect_dispatch_repair.py",
+    "t05_algorithm": "cnn_fpga/benchmark/phase9_highdim_joint_maxt_preflight.py",
+    "t06_verifier": "cnn_fpga/benchmark/phase9_count_selection_confirmation_verify.py",
+    "live_report": "docs/t_risk_20260728_06_count_selection_confirmation.json",
+    "live_source_data": "docs/t_risk_20260728_06_count_selection_confirmation_source_data.csv",
+    "live_selected_blueprint": "docs/t_risk_20260728_06_selected_gate_blueprint.json",
+    "repair_report": "docs/t_risk_20260730_01_effect_dispatch_repair.json"
+  },
+  "claim_boundary": {
+    "repair_is_scientific_confirmation": false,
+    "t04_preregistration_final_release": false,
+    "t04_scientific_execution_released": false,
+    "twin_qualification": null,
+    "ler": null,
+    "lifetime": null,
+    "physical_break_even": null,
+    "official_puviani_exact": null,
+    "puviani_nmf_surpass": null,
+    "external_sota": null,
+    "hardware_measured": null
+  }
+}
