@@ -108,6 +108,36 @@ def _full_archive_manifest(directory: Path) -> tuple[list[dict[str, Any]], str]:
     return entries, hashlib.sha256(payload).hexdigest()
 
 
+def _expected_runtime_contract() -> dict[str, Any]:
+    return {
+        "required_process_environment_before_python_start": {
+            "OPENBLAS_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "OMP_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+        },
+        "repair_runner_must_fail_before_writer_on_mismatch": True,
+        "maxT_numeric_tolerance_substitution": False,
+        "expected_single_thread_maxT_string_differences_vs_v1": 0,
+    }
+
+
+def _validate_runtime_environment(config: Mapping[str, Any]) -> None:
+    contract = config.get("runtime_contract")
+    if contract != _expected_runtime_contract():
+        raise ValueError("repair runtime contract drift")
+    required = contract["required_process_environment_before_python_start"]
+    drift = {
+        name: os.environ.get(name)
+        for name, expected in required.items()
+        if os.environ.get(name) != expected
+    }
+    if drift:
+        raise RuntimeError(
+            f"single-thread BLAS environment not frozen before Python: {drift}"
+        )
+
+
 def validate_config(config: Mapping[str, Any], root: Path) -> None:
     if (
         config.get("task_id") != TASK_ID
@@ -116,6 +146,8 @@ def validate_config(config: Mapping[str, Any], root: Path) -> None:
         or config.get("parent_task") != writer.TASK_ID
     ):
         raise ValueError("repair config identity drift")
+    if config.get("runtime_contract") != _expected_runtime_contract():
+        raise ValueError("repair runtime contract drift")
 
     contract = config["repair_contract"]
     expected_contract = {
@@ -195,6 +227,30 @@ def validate_config(config: Mapping[str, Any], root: Path) -> None:
 
     for name in ("writer_report", "source_data", "selected_blueprint"):
         _assert_file_binding(root, config["v1_archive"][name])
+    failure = config["failed_reanalysis_attempt_v1"]
+    if (
+        failure["classification"]
+        != "runtime reproducibility failure; no scientific vote"
+        or failure["parent_seal_commit"]
+        != "2260a71233de199e4c91fdef89982fab1c3278b7"
+        or failure["changed_rows"] != 716
+        or failure["unexpected_maxT_serialization_changes"] != 710
+        or failure["maximum_numeric_delta"] != 3.552713678800501e-15
+        or failure["raw_chunk_rewrite"] is not False
+        or failure["new_random_trials"] is not False
+        or failure["repair_report_written"] is not False
+        or failure["live_v1_restored"] is not True
+    ):
+        raise ValueError("failed reanalysis archive contract drift")
+    _assert_file_binding(root, failure["manifest"])
+    failure_manifest = _load_json(root / failure["manifest"]["path"])
+    if (
+        failure_manifest.get("schema_version")
+        != "PHASE9-T06-REPAIR-ATTEMPT-FAILURE-MANIFEST-V1"
+        or failure_manifest.get("analysis_sha256")
+        != _self_hash(failure_manifest)
+    ):
+        raise ValueError("failed reanalysis manifest self-seal drift")
 
     archive = root / config["v1_archive"]["local_run_archive"]
     entries, manifest_sha = _full_archive_manifest(archive)
@@ -652,6 +708,7 @@ def _compare_writer_reports(
 def repair(root: Path | None = None, *, workers: int = 4) -> dict[str, Any]:
     base = (root or _root()).resolve()
     config = _load_json(base / CONFIG_PATH)
+    _validate_runtime_environment(config)
     validate_config(config, base)
     paths = config["artifact_paths"]
     t06_config = _load_json(base / paths["t06_config"])
@@ -760,6 +817,21 @@ def repair(root: Path | None = None, *, workers: int = 4) -> dict[str, Any]:
             "raw_records_identical": before_rows == after_rows,
             "new_random_trials": False,
             "raw_chunk_rewrite": False,
+        },
+        "runtime_reproducibility": {
+            "process_environment": {
+                name: os.environ[name]
+                for name in config["runtime_contract"][
+                    "required_process_environment_before_python_start"
+                ]
+            },
+            "maxT_numeric_tolerance_substitution": False,
+            "v1_single_thread_string_differences": 0,
+            "failed_multithread_attempt_manifest": _binding(
+                base
+                / config["failed_reanalysis_attempt_v1"]["manifest"]["path"],
+                base,
+            ),
         },
         "source_data_diff": {
             "row_count": config["expected_invariants"]["source_row_count"],

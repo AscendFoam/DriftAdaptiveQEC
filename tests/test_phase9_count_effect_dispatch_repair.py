@@ -47,6 +47,38 @@ def test_repair_scope_mutations_fail_closed(section, key, value):
         subject.validate_config(config, ROOT)
 
 
+def test_runtime_contract_mutation_fails_closed():
+    config, _ = _load()
+    config["runtime_contract"][
+        "expected_single_thread_maxT_string_differences_vs_v1"
+    ] = 1
+    with pytest.raises(ValueError, match="runtime contract drift"):
+        subject.validate_config(config, ROOT)
+
+
+def test_runtime_environment_mismatch_fails_before_writer(monkeypatch):
+    config, _ = _load()
+    required = config["runtime_contract"][
+        "required_process_environment_before_python_start"
+    ]
+    for name, value in required.items():
+        monkeypatch.setenv(name, value)
+    subject._validate_runtime_environment(config)
+
+    monkeypatch.setenv("OPENBLAS_NUM_THREADS", "2")
+    called = False
+
+    def forbidden_writer(*args, **kwargs):
+        nonlocal called
+        called = True
+        raise AssertionError("writer must not be called")
+
+    monkeypatch.setattr(subject.writer, "write_artifacts", forbidden_writer)
+    with pytest.raises(RuntimeError, match="environment not frozen"):
+        subject.repair(ROOT)
+    assert called is False
+
+
 def test_full_v1_archive_manifest_and_chunk_inventory_are_exact():
     config, t06_config = _load()
     archive = ROOT / config["v1_archive"]["local_run_archive"]

@@ -1,0 +1,75 @@
+{
+  "task_id": "T-RISK-20260730-01",
+  "schema_version": "PHASE9-T06-REPAIR-ATTEMPT-FAILURE-MANIFEST-V1",
+  "attempted_at": "2026-07-30",
+  "parent_seal_commit": "2260a71233de199e4c91fdef89982fab1c3278b7",
+  "classification": "fail-closed runtime reproducibility failure; not a scientific outcome",
+  "root_cause": "T06 config declared one BLAS thread per worker, but the repair process inherited a multithreaded BLAS environment before NumPy import; deterministic seeds therefore reproduced equal statistics only within floating tolerance, not the frozen byte-level maxT serialization",
+  "transaction_state": {
+    "v1_archive_preserved": true,
+    "raw_chunk_rewrite": false,
+    "new_random_trials": false,
+    "repair_report_written": false,
+    "writer_v2_top_level_artifacts_archived": true,
+    "live_top_level_artifacts_restored_to_v1": true,
+    "owner_lock_leaked": false
+  },
+  "source_diff": {
+    "row_count_before": 8404,
+    "row_count_after": 8404,
+    "changed_rows": 716,
+    "changed_rows_by_type": {
+      "maxt_replicate": 707,
+      "maxt_selection_summary": 1,
+      "maxt_meta": 2,
+      "confirmation_summary": 6
+    },
+    "changed_fields": {
+      "max_statistic": 707,
+      "critical": 1,
+      "point": 2,
+      "gate_pass": 6,
+      "power_gate_pass": 6
+    },
+    "maximum_maxT_numeric_delta": 3.552713678800501e-15,
+    "expected_scientific_boolean_changes_present": 6,
+    "unexpected_maxT_serialization_changes_present": 710
+  },
+  "diagnosis": {
+    "single_thread_environment": {
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "single_thread_read_only_recompute_rows": 1204,
+    "single_thread_string_differences_vs_v1": 0,
+    "confirmation_critical_recomputed": 3.9747482707508826,
+    "conclusion": "the V1 maxT ledger is exactly reproducible when the frozen single-thread runtime contract is applied before process start"
+  },
+  "files": [
+    {
+      "path": "docs/archive/t_risk_20260730_01_v1_multithread_reanalysis_failure/selected_blueprint_attempt_v1.json",
+      "bytes": 1290746,
+      "sha256": "9bd9ed23fb30737390bacc69f2730755add80257a3814475e12b7f13c7d1409b"
+    },
+    {
+      "path": "docs/archive/t_risk_20260730_01_v1_multithread_reanalysis_failure/source_data_attempt_v1.csv",
+      "bytes": 1985521,
+      "sha256": "60abe4df7f8dba2d6fef03454e2e9e6d3759cab1220721e6a7646c457c6ad6bd"
+    },
+    {
+      "path": "docs/archive/t_risk_20260730_01_v1_multithread_reanalysis_failure/writer_report_attempt_v1.json",
+      "bytes": 44716,
+      "sha256": "0a2804ac881d5ba0898c17e6449af16e026b80730b6c90bac7acc7a8062d17cf"
+    }
+  ],
+  "repair_requirement": {
+    "runtime_environment_checked_before_writer_call": true,
+    "all_four_thread_variables_must_equal_string_one": true,
+    "numeric_tolerance_whitelist_for_maxT": false,
+    "fresh_random_data": false,
+    "rerun_requires_additive_commit_and_push": true
+  },
+  "analysis_sha256": "3db7ee93db0a74799b29c144a2dbeb36c3d81ec3e6546cd672189ef7900405fb"
+}
