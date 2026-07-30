@@ -1,8 +1,9 @@
 """Fail-closed resource preflight for the T04 powered-twin transaction.
 
 The preflight deliberately has a different run, seed and artifact namespace
-from formal evidence.  It executes the five full-denominator resource profile
-cells frozen in the T04 config, measures four-worker concurrency continuously,
+from formal evidence.  It executes eight full-denominator resource profile
+cells frozen in the T04 config, including the exact formal LPT four-cell
+prefix, measures four-worker concurrency continuously,
 exercises a 3,037-by-199 streaming statistics kernel, and inventories the
 content-addressed worker objects without copying them into an archive.
 
@@ -13,13 +14,17 @@ literal ``null`` and none of its receipts are accepted by the formal run.
 from __future__ import annotations
 
 import argparse
+import csv
 from dataclasses import asdict, dataclass
 from hashlib import sha256
+from importlib.metadata import version as package_version
+import io
 import json
 import math
 import multiprocessing as mp
 import os
 from pathlib import Path
+import platform
 import queue
 import shutil
 import sys
@@ -39,6 +44,7 @@ from cnn_fpga.benchmark.phase9_powered_twin_contract import (
     EXPECTED_CLAIM_FIELDS,
     T04CellSpec,
     build_cell_plan,
+    cluster_root_id,
     plan_payload,
     runtime_source_snapshot,
     validate_config,
@@ -53,7 +59,9 @@ PREFLIGHT_SCHEMA = "PHASE9-POWERED-TWIN-RESOURCE-PREFLIGHT-V1"
 SAMPLING_SCHEMA = "PHASE9-POWERED-TWIN-RESOURCE-SAMPLING-V1"
 PROJECTION_SCHEMA = "PHASE9-POWERED-TWIN-STRATIFIED-PROJECTION-V1"
 STATS_DRY_RUN_SCHEMA = "PHASE9-POWERED-TWIN-STATS-DRY-RUN-V1"
+RAW_SEED_AUDIT_SCHEMA = "PHASE9-POWERED-TWIN-RESOURCE-RAW-SEED-AUDIT-V1"
 RUNNER_ID = "phase9_powered_twin_resource_preflight_v1"
+RAW_RUNNER_ID = "PHASE9-POWERED-TWIN-RAW-RUNNER-V1"
 PASS_VERDICT = "PASS_RESOURCE_PREFLIGHT"
 FAIL_VERDICT = "INCOMPLETE_RESOURCE_FAIL_CLOSED"
 
@@ -321,39 +329,813 @@ def assert_seed_firewall(config: Mapping[str, Any]) -> dict[str, Any]:
 def profile_cells(
     config: Mapping[str, Any],
     cells: Sequence[T04CellSpec],
-) -> tuple[list[T04CellSpec], T04CellSpec]:
+) -> tuple[list[T04CellSpec], list[T04CellSpec]]:
     profile = config["resource_contract"]["profile_plan"]
-    concurrent_profile = profile["four_worker_concurrent_peak"]
-    singleton_profile = profile["backend_a_representative"]
+    peak_profile = profile["formal_lpt_four_worker_peak"]
+    representative_profile = profile[
+        "representative_four_worker_profiles"
+    ]
     if (
-        concurrent_profile.get("full_frozen_denominator") is not True
-        or singleton_profile.get("full_frozen_denominator") is not True
+        peak_profile.get("full_frozen_denominator") is not True
+        or peak_profile.get("matches_formal_lpt_prefix") is not True
+        or representative_profile.get("full_frozen_denominator") is not True
     ):
         raise RuntimeError("resource profiles must use the full frozen denominator")
-    concurrent_indices = list(concurrent_profile["plan_indices"])
-    singleton_indices = list(singleton_profile["plan_indices"])
-    if len(concurrent_indices) != 4 or len(singleton_indices) != 1:
-        raise RuntimeError("resource profile must contain exactly four concurrent and one A cell")
-    indices = concurrent_indices + singleton_indices
+    peak_indices = list(peak_profile["plan_indices"])
+    representative_indices = list(representative_profile["plan_indices"])
+    if len(peak_indices) != 4 or len(representative_indices) != 4:
+        raise RuntimeError(
+            "resource profile must contain exact four LPT and four "
+            "representative cells"
+        )
+    indices = peak_indices + representative_indices
     if len(indices) != len(set(indices)) or any(
         isinstance(index, bool) or not isinstance(index, int) or not 0 <= index < len(cells)
         for index in indices
     ):
         raise RuntimeError("invalid or duplicate resource profile plan index")
-    selected = [cells[index] for index in concurrent_indices]
-    singleton = cells[singleton_indices[0]]
-    expected_counts = list(concurrent_profile["sample_counts"])
-    if [cell.sample_count for cell in selected] != expected_counts:
-        raise RuntimeError("four-worker profile denominator drift")
-    if [singleton.sample_count] != list(
-        singleton_profile["sample_counts"]
+    peak = [cells[index] for index in peak_indices]
+    representatives = [cells[index] for index in representative_indices]
+    if [cell.sample_count for cell in peak] != list(
+        peak_profile["sample_counts"]
     ):
-        raise RuntimeError("backend-A profile denominator drift")
-    if [cell.plan_index for cell in selected] != [389, 403, 507, 485]:
-        raise RuntimeError("frozen four-worker profile identity drift")
-    if singleton.plan_index != 388 or singleton.backend != "A":
-        raise RuntimeError("frozen backend-A profile identity drift")
-    return selected, singleton
+        raise RuntimeError("formal-LPT profile denominator drift")
+    if [cell.sample_count for cell in representatives] != list(
+        representative_profile["sample_counts"]
+    ):
+        raise RuntimeError("representative profile denominator drift")
+    if [cell.plan_index for cell in peak] != [478, 480, 482, 484]:
+        raise RuntimeError("frozen formal-LPT profile identity drift")
+    if [cell.plan_index for cell in representatives] != [388, 389, 403, 507]:
+        raise RuntimeError("frozen representative profile identity drift")
+    return peak, representatives
+
+
+def _strict_csv_integer(
+    row: Mapping[str | None, Any],
+    field: str,
+    *,
+    expected: int,
+    row_number: int,
+) -> None:
+    value = row.get(field)
+    canonical = str(expected)
+    if not isinstance(value, str) or value != canonical:
+        raise RuntimeError(
+            f"resource ledger {field} drift at row {row_number}: "
+            f"expected={canonical!r} observed={value!r}"
+        )
+
+
+def _resource_seed_addresses(
+    config: Mapping[str, Any],
+    cell: T04CellSpec,
+    *,
+    position: int,
+    round_index: int,
+) -> tuple[int, int]:
+    registry = config["seed_registry"]
+    namespace = registry["resource_preflight"]
+    maximum = int(registry["maximum_cluster_positions"])
+    maximum_horizon = int(registry["maximum_horizon"])
+    backend_index = 0 if cell.backend == "A" else 1
+    physical = (
+        int(namespace["start"])
+        + int(namespace["physical_offset"])
+        + backend_index * 97 * maximum
+        + cell.pair_group_index * maximum
+        + position
+    )
+    heldout = (
+        int(namespace["start"])
+        + int(namespace["heldout_offset"])
+        + cell.pair_group_index * maximum * maximum_horizon
+        + position * maximum_horizon
+        + round_index
+    )
+    return physical, heldout
+
+
+def _audit_resource_seed_ledger(
+    path: Path,
+    *,
+    config: Mapping[str, Any],
+    cell: T04CellSpec,
+    expected_header: Sequence[str],
+    heldout_iq: Any | None = None,
+    global_row_ids: set[str] | None = None,
+) -> dict[str, Any]:
+    """Stream one raw CSV and prove every physical/heldout seed address.
+
+    The receipt fingerprint is only a declaration.  This audit recomputes the
+    address for every archived row from the frozen cell identity, position,
+    round and resource namespace.  It therefore catches a coordinated
+    object/receipt/inventory/report rehash that substitutes formal seeds.
+    """
+
+    namespace = config["seed_registry"]["resource_preflight"]
+    resource_start = int(namespace["start"])
+    resource_stop = resource_start + int(namespace["count"])
+    formal_intervals = [
+        (
+            str(name),
+            int(config["seed_registry"][name]["start"]),
+            int(config["seed_registry"][name]["start"])
+            + int(config["seed_registry"][name]["count"]),
+        )
+        for name in ("physical", "heldout", "joint_maxt_rademacher")
+    ]
+    observed = 0
+    physical_min: int | None = None
+    physical_max: int | None = None
+    heldout_min: int | None = None
+    heldout_max: int | None = None
+    row_ids: set[str] = set()
+    row_id_digest = sha256()
+    hex_characters = frozenset("0123456789abcdef")
+    hash_fields = {
+        name
+        for name in expected_header
+        if name.endswith("_sha256")
+    }
+    finite_if_present = {
+        "pre_readout_i",
+        "pre_readout_q",
+        "pre_measurement_g",
+        "pre_measurement_e",
+        "pre_measurement_f",
+        "pre_reset_g",
+        "pre_reset_e",
+        "pre_reset_f",
+        "integrated_i",
+        "integrated_q",
+        "raw_log_evidence",
+        "raw_reference_log_evidence",
+        "raw_within_window_residual",
+        "posterior_g",
+        "posterior_e",
+        "posterior_f",
+        "level_g",
+        "level_e",
+        "level_f",
+        "mean_photon",
+        "leakage_residence_probability",
+        "predictive_mean_i",
+        "predictive_mean_q",
+        "predictive_cov_ii",
+        "predictive_cov_iq",
+        "predictive_cov_qq",
+        "heldout_reference_log_evidence",
+        "heldout_proper_score_per_sample",
+        "heldout_llr_ge_per_sample",
+        "heldout_llr_gf_per_sample",
+        "heldout_llr_ef_per_sample",
+        "logical_survival",
+        "density_trace_error",
+        "density_hermiticity_frobenius",
+        "density_minimum_eigenvalue",
+        "density_quantization_frobenius_error",
+        "density_quantization_certified_frobenius_bound",
+        "density_quantization_trace_distance_bound",
+        "posterior_normalization_error",
+        "level_normalization_error",
+        "reference_posterior_l1_error",
+        "reference_log_evidence_error",
+        *{f"drift_{index}" for index in range(5)},
+        *{f"pre_intervention_drift_{index}" for index in range(5)},
+        *{f"input_intervention_drift_{index}" for index in range(5)},
+        *{
+            f"logical_block_{row}{column}_{part}"
+            for row in range(2)
+            for column in range(2)
+            for part in ("real", "imag")
+        },
+    }
+    with path.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        if reader.fieldnames != list(expected_header):
+            raise RuntimeError("resource ledger exact header drift")
+        for observed, row in enumerate(reader, start=1):
+            row_index = observed - 1
+            if None in row:
+                raise RuntimeError(
+                    f"resource ledger has excess columns at row {row_index}"
+                )
+            if any(value is None for value in row.values()):
+                raise RuntimeError(
+                    f"resource ledger has missing columns at row {row_index}"
+                )
+            position = row_index // cell.horizon
+            round_index = row_index % cell.horizon
+            if position >= cell.sample_count:
+                raise RuntimeError("resource ledger exceeds frozen denominator")
+            physical, heldout = _resource_seed_addresses(
+                config,
+                cell,
+                position=position,
+                round_index=round_index,
+            )
+            for field, expected in (
+                ("seed", physical),
+                ("physical_seed_address", physical),
+                ("heldout_seed_address", heldout),
+                ("seed_position", position),
+                ("round_index", round_index),
+                ("archive_row_index", row_index),
+                ("raw_iq_index", row_index),
+                ("heldout_iq_index", row_index),
+                ("cutoff", cell.cutoff),
+            ):
+                _strict_csv_integer(
+                    row,
+                    field,
+                    expected=expected,
+                    row_number=row_index,
+                )
+            expected_action = (
+                config["formal_matrix"]["fault_action_sequences"][
+                    cell.scenario
+                ][
+                    round_index
+                    % len(
+                        config["formal_matrix"]["fault_action_sequences"][
+                            cell.scenario
+                        ]
+                    )
+                ]
+                if cell.layer == "fault"
+                else cell.action
+            )
+            trajectory_id = (
+                f"{cell.cell_base}|c{cell.cutoff}|{cell.backend}|"
+                f"p{position:04d}"
+                if cell.layer == "fault"
+                else ""
+            )
+            expected_row_id = (
+                f"{trajectory_id}|r{round_index:03d}"
+                if trajectory_id
+                else (
+                    f"{cell.layer}|c{cell.cutoff}|{cell.cell_base}|"
+                    f"{cell.backend}|p{position:04d}"
+                )
+            )
+            if cell.layer == "shared":
+                expected_cell_id = (
+                    f"ab/c{cell.cutoff}/shared/{cell.initial_state}/"
+                    f"{cell.action}"
+                )
+            elif cell.layer == "probe":
+                expected_cell_id = (
+                    f"ab/c{cell.cutoff}/probe/{cell.probe_id}"
+                )
+            elif cell.layer == "logical":
+                expected_cell_id = (
+                    f"ab/c{cell.cutoff}/logical/{cell.logical_label}/"
+                    f"{cell.action}"
+                )
+            else:
+                expected_cell_id = (
+                    f"ab/c{cell.cutoff}/fault/{cell.scenario}"
+                )
+            terminal = round_index == cell.horizon - 1
+            expected_density_index = (
+                position
+                if cell.density_retention != "none"
+                and (cell.layer != "fault" or terminal)
+                else -1
+            )
+            expected_strings = {
+                "row_id": expected_row_id,
+                "row_schema": (
+                    "PHASE9-POWERED-TWIN-ROUND-LEDGER-V1"
+                ),
+                "layer": cell.layer,
+                "cell_base": cell.cell_base,
+                "cell_id": expected_cell_id,
+                "backend": cell.backend,
+                "backend_id": (
+                    "PHASE9-BACKEND-A-JOINT-FOCK-QUTRIT-GKSL-V1"
+                    if cell.backend == "A"
+                    else "PHASE9-BACKEND-B-DENSE-STRANG-ANALYTIC-KRAUS-V1"
+                ),
+                "convergence_role": cell.convergence_role,
+                "trajectory_id": trajectory_id,
+                "action": expected_action,
+                "probe_id": cell.probe_id,
+                "scenario": cell.scenario,
+                "initial_state": cell.initial_state,
+                "logical_label": (
+                    config["formal_matrix"]["logical_labels"][
+                        position
+                        // int(
+                            config["formal_matrix"][
+                                "fault_clusters_per_state"
+                            ]
+                        )
+                    ]
+                    if cell.layer == "fault"
+                    else cell.logical_label
+                ),
+                "archive_chunk": cell.chunk_id,
+                "rng_namespace": (
+                    "NUMPY_SEEDSEQUENCE_ADDRESSED"
+                    if cell.backend == "A"
+                    else "BLAKE2B_ADDRESS_PYTHON_RANDOM_BOX_MULLER"
+                ),
+                "cluster_root_id": cluster_root_id(
+                    config, cell, position
+                ),
+                "terminal_round": str(terminal),
+                "fault_state_index": (
+                    str(
+                        position
+                        // int(
+                            config["formal_matrix"][
+                                "fault_clusters_per_state"
+                            ]
+                        )
+                    )
+                    if cell.layer == "fault"
+                    else ""
+                ),
+                "fault_within_state_index": (
+                    str(
+                        position
+                        % int(
+                            config["formal_matrix"][
+                                "fault_clusters_per_state"
+                            ]
+                        )
+                    )
+                    if cell.layer == "fault"
+                    else ""
+                ),
+            }
+            for field, expected in expected_strings.items():
+                if row.get(field) != expected:
+                    raise RuntimeError(
+                        f"resource ledger {field} drift at row {row_index}"
+                    )
+            if (
+                row.get("conservation_pass") != "True"
+                or row.get("exception_type") != ""
+                or row.get("exception_message") != ""
+            ):
+                raise RuntimeError(
+                    f"resource ledger terminal row status drift at {row_index}"
+                )
+            _strict_csv_integer(
+                row,
+                "density_index",
+                expected=expected_density_index,
+                row_number=row_index,
+            )
+            for field in finite_if_present:
+                value = row.get(field)
+                if value not in (None, ""):
+                    try:
+                        numeric = float(str(value))
+                    except ValueError as exc:
+                        raise RuntimeError(
+                            f"resource ledger nonnumeric {field} at "
+                            f"{row_index}"
+                        ) from exc
+                    if not math.isfinite(numeric):
+                        raise RuntimeError(
+                            f"resource ledger nonfinite {field} at "
+                            f"{row_index}"
+                        )
+            for field in hash_fields:
+                value = row.get(field)
+                if value not in (None, "") and (
+                    not isinstance(value, str)
+                    or len(value) != 64
+                    or any(character not in hex_characters for character in value)
+                ):
+                    raise RuntimeError(
+                        f"resource ledger hash {field} drift at {row_index}"
+                    )
+            if heldout_iq is not None:
+                import numpy as np
+
+                expected_heldout_hash = sha256(
+                    np.asarray(
+                        heldout_iq[row_index],
+                        dtype="<f8",
+                    ).tobytes(order="C")
+                ).hexdigest()
+                if row.get("heldout_window_sha256") != expected_heldout_hash:
+                    raise RuntimeError(
+                        "resource ledger heldout-IQ hash drift at "
+                        f"{row_index}"
+                    )
+            row_id = row.get("row_id")
+            if not isinstance(row_id, str) or not row_id or row_id in row_ids:
+                raise RuntimeError(
+                    f"resource ledger row_id coverage drift at row {row_index}"
+                )
+            row_ids.add(row_id)
+            if global_row_ids is not None:
+                if row_id in global_row_ids:
+                    raise RuntimeError(
+                        "resource ledger global row_id collision at "
+                        f"{row_index}"
+                    )
+                global_row_ids.add(row_id)
+            row_id_digest.update(row_id.encode("utf-8") + b"\0")
+            if not (
+                resource_start <= physical < resource_stop
+                and resource_start <= heldout < resource_stop
+            ):
+                raise RuntimeError("resource ledger seed escaped resource interval")
+            for name, start, stop in formal_intervals:
+                if start <= physical < stop or start <= heldout < stop:
+                    raise RuntimeError(
+                        f"resource ledger accessed formal {name} seed interval"
+                    )
+            physical_min = (
+                physical
+                if physical_min is None
+                else min(physical_min, physical)
+            )
+            physical_max = (
+                physical
+                if physical_max is None
+                else max(physical_max, physical)
+            )
+            heldout_min = (
+                heldout if heldout_min is None else min(heldout_min, heldout)
+            )
+            heldout_max = (
+                heldout if heldout_max is None else max(heldout_max, heldout)
+            )
+    if observed != cell.expected_rows or len(row_ids) != cell.expected_rows:
+        raise RuntimeError(
+            "resource ledger frozen denominator/identity coverage drift"
+        )
+    return {
+        "plan_index": cell.plan_index,
+        "chunk_id": cell.chunk_id,
+        "expected_rows": cell.expected_rows,
+        "observed_rows": observed,
+        "physical_seed_min": physical_min,
+        "physical_seed_max": physical_max,
+        "heldout_seed_min": heldout_min,
+        "heldout_seed_max": heldout_max,
+        "row_id_sequence_sha256": row_id_digest.hexdigest(),
+        "formal_seed_addresses_accessed": False,
+    }
+
+
+def _validate_npy_payload(
+    root: Path,
+    binding: Mapping[str, Any],
+    *,
+    shape: tuple[int, ...],
+    dtype: str,
+) -> None:
+    import numpy as np
+
+    path = (root / str(binding["path"])).resolve()
+    value = np.load(path, allow_pickle=False, mmap_mode="r")
+    try:
+        if value.shape != shape or value.dtype != np.dtype(dtype):
+            raise RuntimeError(
+                f"resource NPY shape/dtype drift for {binding['role']}"
+            )
+        expected_file_bytes = int(value.offset) + int(value.nbytes)
+        if path.stat().st_size != expected_file_bytes:
+            raise RuntimeError(
+                f"resource NPY trailing/truncated bytes for {binding['role']}"
+            )
+        role = str(binding["role"])
+        if value.dtype.kind in {"f", "c"}:
+            block = max(1, min(64, value.shape[0] if value.ndim else 1))
+            if value.ndim == 0:
+                finite = bool(np.isfinite(value))
+            else:
+                finite = all(
+                    bool(np.all(np.isfinite(value[start:start + block])))
+                    for start in range(0, value.shape[0], block)
+                )
+            if not finite:
+                raise RuntimeError(
+                    f"resource NPY nonfinite payload for {role}"
+                )
+        if role == "rb_success_probability_npy" and (
+            bool(np.any(value < 0.0)) or bool(np.any(value > 1.0))
+        ):
+            raise RuntimeError("resource RB probability outside [0,1]")
+        if role in {
+            "rb_branch_trace_distance_npy",
+            "rb_sampled_match_trace_distance_npy",
+        } and bool(np.any(value < 0.0)):
+            raise RuntimeError("resource RB distance is negative")
+        if role == "rb_sampled_hidden_outcome_npy" and not bool(
+            np.all((value == 0) | (value == 1))
+        ):
+            raise RuntimeError("resource RB hidden outcome domain drift")
+        if role == "rb_sampled_reset_ack_npy" and not set(
+            np.asarray(value).tolist()
+        ).issubset({b"success", b"failure"}):
+            raise RuntimeError("resource RB reset ack domain drift")
+    finally:
+        mapping = getattr(value, "_mmap", None)
+        if mapping is not None:
+            mapping.close()
+
+
+def _expected_resource_object_specs(
+    config: Mapping[str, Any],
+    cell: T04CellSpec,
+) -> dict[str, tuple[tuple[int, ...], str] | None]:
+    rows = cell.expected_rows
+    samples = cell.sample_count
+    dimension = 3 * cell.cutoff
+    iq_samples = int(config["resource_contract"]["expected_iq_samples"])
+    reset_rows = _reset_events(config, cell)
+    specifications: dict[
+        str, tuple[tuple[int, ...], str] | None
+    ] = {
+        "round_ledger_csv": None,
+        "raw_iq_npy": ((rows, iq_samples, 2), "<f8"),
+        "heldout_iq_npy": ((rows, iq_samples, 2), "<f8"),
+    }
+    if cell.density_retention != "none":
+        specifications["primary_density_npy"] = (
+            (samples, dimension, dimension),
+            "<c8",
+        )
+    if reset_rows:
+        specifications.update(
+            {
+                "rb_valid_npy": ((reset_rows,), "?"),
+                "rb_row_index_npy": ((reset_rows,), "<i8"),
+                "rb_success_probability_npy": ((reset_rows,), "<f8"),
+                "rb_success_present_npy": ((reset_rows,), "?"),
+                "rb_failure_present_npy": ((reset_rows,), "?"),
+                "rb_expected_density_npy": (
+                    (reset_rows, dimension, dimension),
+                    "<c8",
+                ),
+                "rb_conditional_success_density_npy": (
+                    (reset_rows, dimension, dimension),
+                    "<c8",
+                ),
+                "rb_conditional_failure_density_npy": (
+                    (reset_rows, dimension, dimension),
+                    "<c8",
+                ),
+                "rb_sampled_stress_density_npy": (
+                    (reset_rows, dimension, dimension),
+                    "<c8",
+                ),
+                "rb_sampled_hidden_outcome_npy": ((reset_rows,), "u1"),
+                "rb_sampled_reset_ack_npy": ((reset_rows,), "S16"),
+                "rb_branch_trace_distance_npy": ((reset_rows,), "<f8"),
+                "rb_sampled_match_trace_distance_npy": (
+                    (reset_rows,),
+                    "<f8",
+                ),
+                "rb_pre_reset_receipt_npy": ((reset_rows,), "S64"),
+            }
+        )
+    return specifications
+
+
+def audit_resource_profile_receipts(
+    root: Path,
+    config: Mapping[str, Any],
+    store: ImmutableObjectStore,
+    cells: Sequence[T04CellSpec],
+) -> dict[str, Any]:
+    """Reopen all eight receipts and every one of 227,328 seed rows."""
+
+    from cnn_fpga.benchmark.phase9_fresh_twin_qualification import (
+        LEDGER_FIELDS,
+    )
+    from cnn_fpga.benchmark.phase9_powered_twin_qualification import (
+        EXTRA_FIELDS,
+        RUNNER_ID as QUALIFICATION_RUNNER_ID,
+    )
+    import numpy as np
+
+    if QUALIFICATION_RUNNER_ID != RAW_RUNNER_ID:
+        raise RuntimeError("resource/qualification raw runner identity drift")
+    if [cell.plan_index for cell in cells] != [
+        478, 480, 482, 484, 388, 389, 403, 507
+    ]:
+        raise RuntimeError("resource raw audit profile identity drift")
+    expected_header = tuple(LEDGER_FIELDS) + tuple(EXTRA_FIELDS)
+    receipt_evidence: list[dict[str, Any]] = []
+    referenced_objects: set[Path] = set()
+    total_rows = 0
+    total_reset_rows = 0
+    runtime_platform: str | None = None
+    global_row_ids: set[str] = set()
+    for cell in cells:
+        receipt = store.verify_receipt(
+            store.receipt_path(cell.chunk_id),
+            expected_cell=asdict(cell),
+        )
+        fingerprint = receipt["runtime_fingerprint"]
+        if (
+            fingerprint["python"]
+            != config["runtime_environment"]["python"]
+            or fingerprint["numpy"]
+            != config["runtime_environment"]["numpy"]
+            or fingerprint["scipy"]
+            != config["runtime_environment"]["scipy"]
+            or fingerprint["psutil"]
+            != config["runtime_environment"]["psutil"]
+            or fingerprint["thread_environment"]
+            != config["runtime_contract"]["preimport_thread_environment"]
+            or fingerprint["python"] != list(sys.version_info[:3])
+            or fingerprint["numpy"] != np.__version__
+            or fingerprint["scipy"] != package_version("scipy")
+            or fingerprint["psutil"] != package_version("psutil")
+            or fingerprint["platform"] != platform.platform()
+        ):
+            raise RuntimeError(
+                f"resource receipt numerical runtime drift for {cell.chunk_id}"
+            )
+        if runtime_platform is None:
+            runtime_platform = str(fingerprint["platform"])
+        elif fingerprint["platform"] != runtime_platform:
+            raise RuntimeError("resource receipt platform drift across profiles")
+        objects = receipt["objects"]
+        by_role = {str(item["role"]): item for item in objects}
+        expected_specs = _expected_resource_object_specs(config, cell)
+        expected_reset = _reset_events(config, cell)
+        if set(by_role) != set(expected_specs):
+            raise RuntimeError(
+                f"resource object role coverage drift for {cell.chunk_id}"
+            )
+        if cell.layer in {"shared", "probe"}:
+            primary_binding = by_role.get("primary_density_npy")
+            expected_binding = by_role.get("rb_expected_density_npy")
+            if (
+                primary_binding is None
+                or expected_binding is None
+                or primary_binding["path"] != expected_binding["path"]
+                or primary_binding["sha256"]
+                != expected_binding["sha256"]
+                or primary_binding["bytes"] != expected_binding["bytes"]
+            ):
+                raise RuntimeError(
+                    f"resource explicit expected-density alias drift for "
+                    f"{cell.chunk_id}"
+                )
+        for role, specification in expected_specs.items():
+            binding = by_role[role]
+            expected_media = (
+                "text/csv"
+                if role == "round_ledger_csv"
+                else "application/x-npy"
+            )
+            if binding.get("media_type") != expected_media:
+                raise RuntimeError(
+                    f"resource object media type drift for {role}"
+                )
+            referenced_objects.add(
+                (root / str(binding["path"])).resolve()
+            )
+            if specification is not None:
+                shape, dtype = specification
+                _validate_npy_payload(
+                    root,
+                    binding,
+                    shape=shape,
+                    dtype=dtype,
+                )
+        if expected_reset:
+            import numpy as np
+
+            row_index_array = np.load(
+                root / str(by_role["rb_row_index_npy"]["path"]),
+                allow_pickle=False,
+                mmap_mode="r",
+            )
+            valid_array = np.load(
+                root / str(by_role["rb_valid_npy"]["path"]),
+                allow_pickle=False,
+                mmap_mode="r",
+            )
+            try:
+                expected_reset_indices = [
+                    position * cell.horizon + round_index
+                    for position in range(cell.sample_count)
+                    for round_index in range(cell.horizon)
+                    if (
+                        (
+                            config["formal_matrix"][
+                                "fault_action_sequences"
+                            ][cell.scenario][
+                                round_index
+                                % len(
+                                    config["formal_matrix"][
+                                        "fault_action_sequences"
+                                    ][cell.scenario]
+                                )
+                            ]
+                            if cell.layer == "fault"
+                            else cell.action
+                        )
+                        == "RESET"
+                    )
+                ]
+                if (
+                    not np.array_equal(
+                        np.asarray(row_index_array, dtype=np.int64),
+                        np.asarray(expected_reset_indices, dtype=np.int64),
+                    )
+                    or not bool(np.all(valid_array))
+                ):
+                    raise RuntimeError(
+                        f"resource RB row-index/valid coverage drift for "
+                        f"{cell.chunk_id}"
+                    )
+            finally:
+                for array in (row_index_array, valid_array):
+                    mapping = getattr(array, "_mmap", None)
+                    if mapping is not None:
+                        mapping.close()
+        heldout_array = np.load(
+            root / str(by_role["heldout_iq_npy"]["path"]),
+            allow_pickle=False,
+            mmap_mode="r",
+        )
+        try:
+            ledger = _audit_resource_seed_ledger(
+                root / str(by_role["round_ledger_csv"]["path"]),
+                config=config,
+                cell=cell,
+                expected_header=expected_header,
+                heldout_iq=heldout_array,
+                global_row_ids=global_row_ids,
+            )
+        finally:
+            mapping = getattr(heldout_array, "_mmap", None)
+            if mapping is not None:
+                mapping.close()
+        diagnostics = receipt["diagnostics"]
+        if (
+            diagnostics["expected_rows"] != cell.expected_rows
+            or diagnostics["observed_rows"] != cell.expected_rows
+            or diagnostics["exception_rows"] != 0
+            or diagnostics["missing_rows"] != 0
+            or diagnostics["conservation_failures"] != 0
+            or diagnostics["reset_rows"] != expected_reset
+            or diagnostics["reset_sidecar_rows"] != expected_reset
+        ):
+            raise RuntimeError(
+                f"resource receipt denominator drift for {cell.chunk_id}"
+            )
+        total_rows += cell.expected_rows
+        total_reset_rows += expected_reset
+        receipt_evidence.append(
+            {
+                **ledger,
+                "reset_rows": expected_reset,
+                "receipt_sha256": receipt["receipt_sha256"],
+                "object_role_count": len(objects),
+                "object_roles": sorted(by_role),
+            }
+        )
+    live_objects = {
+        path.resolve()
+        for path in store.object_root.rglob("*")
+        if path.is_file()
+    }
+    if live_objects != referenced_objects:
+        raise RuntimeError("resource object tree has orphan or unreferenced bytes")
+    if any(path.is_file() for path in store.staging_root.rglob("*")):
+        raise RuntimeError("resource staging is not empty after receipt commit")
+    if total_rows != 227_328 or total_reset_rows != 15_360:
+        raise RuntimeError("resource profile aggregate denominator drift")
+    if len(global_row_ids) != total_rows:
+        raise RuntimeError("resource profile global row identity drift")
+    evidence: dict[str, Any] = {
+        "schema_version": RAW_SEED_AUDIT_SCHEMA,
+        "profile_plan_indices": [cell.plan_index for cell in cells],
+        "ledger_column_count": len(expected_header),
+        "ledger_header_sha256": _sha(list(expected_header)),
+        "expected_rows": 227_328,
+        "observed_rows": total_rows,
+        "expected_reset_rows": 15_360,
+        "observed_reset_rows": total_reset_rows,
+        "receipt_count": len(receipt_evidence),
+        "receipts": receipt_evidence,
+        "runtime_platform": runtime_platform,
+        "object_tree_exactly_receipt_referenced": True,
+        "staging_empty": True,
+        "formal_seed_addresses_accessed": False,
+        "qualified_claim": None,
+        "scientific_verdict": None,
+    }
+    evidence["analysis_sha256"] = _sha(evidence)
+    return evidence
 
 
 class ResourcePreflightFailure(RuntimeError):
@@ -474,7 +1256,6 @@ class ResourceSampler:
 
     def _run(self) -> None:
         try:
-            self.sample_once()
             while not self._stop.wait(self.interval_seconds):
                 self.sample_once()
         except BaseException as exc:
@@ -488,6 +1269,10 @@ class ResourceSampler:
             raise RuntimeError(
                 "resource sampling evidence already exists; fresh run_id required"
             )
+        # Publish the initial stage synchronously.  A daemon thread may not be
+        # scheduled before the supervisor advances state, which would make a
+        # genuine run nondeterministically lose its ``starting`` witness.
+        self.sample_once()
         self._thread = Thread(target=self._run, name="t04-resource-sampler", daemon=True)
         self._thread.start()
 
@@ -578,12 +1363,31 @@ def _receipt_metrics(result: Mapping[str, Any]) -> dict[str, Any]:
     receipt = result["receipt"]
     objects = receipt["objects"]
     unique = {str(binding["sha256"]): int(binding["bytes"]) for binding in objects}
+    by_role = {str(binding["role"]): binding for binding in objects}
+    explicit_alias_bytes = 0
+    primary = by_role.get("primary_density_npy")
+    expected = by_role.get("rb_expected_density_npy")
+    if (
+        receipt["cell"].get("layer") in {"shared", "probe"}
+        and primary is not None
+        and expected is not None
+        and primary["path"] == expected["path"]
+        and primary["sha256"] == expected["sha256"]
+        and primary["bytes"] == expected["bytes"]
+    ):
+        explicit_alias_bytes = int(expected["bytes"])
+    conservative_payload_bytes = (
+        sum(int(binding["bytes"]) for binding in objects)
+        - explicit_alias_bytes
+    )
     return {
         "chunk_id": receipt["cell"]["chunk_id"],
         "plan_index": int(receipt["cell"]["plan_index"]),
         "pid": int(result["pid"]),
         "wall_seconds": float(result["wall_seconds"]),
         "object_bytes_unique": sum(unique.values()),
+        "explicit_alias_bytes": explicit_alias_bytes,
+        "conservative_payload_bytes": conservative_payload_bytes,
         "object_bytes_by_role": {
             str(binding["role"]): int(binding["bytes"]) for binding in objects
         },
@@ -1034,7 +1838,7 @@ def _retained_density_physicality_dry_run(
     resource_seed: int,
     sample_callback: Callable[[], object] | None,
 ) -> dict[str, Any]:
-    """Measure the verifier's full retained-density audit without raw data."""
+    """Time a frozen fixture and conservatively project the formal full audit."""
 
     import numpy as np
 
@@ -1054,8 +1858,10 @@ def _retained_density_physicality_dry_run(
         raise RuntimeError("retained density resource profile shape drift")
     if (
         int(specification["largest_dimension"]) != dimension
-        or specification["full_coverage_required"] is not True
-        or specification["sampled"] is not False
+        or specification["coverage_mode"]
+        != "fixture_timed_conservative_projection"
+        or specification["resource_profile_is_full_coverage"] is not False
+        or specification["formal_full_coverage_required"] is not True
         or full_count
         != int(config["plan_contract"]["primary_density_count"])
         or block_size != 8
@@ -1223,6 +2029,9 @@ def _retained_density_physicality_dry_run(
         "projected_full_retained_count": full_count,
         "projected_full_serial_wall_seconds": projected,
         "full_fixture_generated": False,
+        "coverage_mode": "fixture_timed_conservative_projection",
+        "resource_profile_is_full_coverage": False,
+        "formal_full_coverage_required": True,
         "complex64_to_complex128_exercised": True,
         "trace_recomputed": True,
         "hermiticity_frobenius_recomputed": True,
@@ -1439,6 +2248,11 @@ def validate_statistics_profile(
                     abs_tol=1e-9,
                 )
                 and physicality.get("full_fixture_generated") is False
+                and physicality.get("coverage_mode")
+                == "fixture_timed_conservative_projection"
+                and physicality.get("resource_profile_is_full_coverage")
+                is False
+                and physicality.get("formal_full_coverage_required") is True
                 and physicality.get(
                     "complex64_to_complex128_exercised"
                 )
@@ -1560,13 +2374,19 @@ def stratified_projection(
     *,
     stats_wall_seconds: float,
     retained_density_physicality_wall_seconds: float,
+    inventory_finalize_wall_seconds: float,
+    inventory_profile_object_bytes: int,
+    inventory_profile_receipt_count: int,
 ) -> dict[str, Any]:
     """Project by layer/backend and structural components, never one row ratio."""
 
     measured = {int(item["plan_index"]): item for item in measurements}
-    required = {388, 389, 403, 485, 507}
-    if set(measured) != required:
-        raise RuntimeError("projection requires all five frozen resource profiles")
+    expected_measured = {388, 389, 403, 478, 480, 482, 484, 507}
+    required = {388, 389, 403, 484, 507}
+    if set(measured) != expected_measured:
+        raise RuntimeError(
+            "projection requires all eight frozen resource profiles"
+        )
     backend_a_wall_factor = max(
         1.0,
         float(measured[388]["wall_seconds"])
@@ -1574,13 +2394,16 @@ def stratified_projection(
     )
     backend_a_byte_factor = max(
         1.0,
-        float(measured[388]["object_bytes_unique"])
-        / max(1.0, float(measured[389]["object_bytes_unique"])),
+        float(measured[388]["conservative_payload_bytes"])
+        / max(
+            1.0,
+            float(measured[389]["conservative_payload_bytes"]),
+        ),
     )
 
     def representative(cell: T04CellSpec) -> int:
         if cell.layer == "fault":
-            return 485
+            return 484
         if cell.layer == "logical":
             return 403
         if cell.layer == "probe":
@@ -1593,19 +2416,52 @@ def stratified_projection(
     cell_projections: list[dict[str, Any]] = []
     row_roles = {"round_ledger_csv", "raw_iq_npy", "heldout_iq_npy"}
 
-    def component_bytes(rep: Mapping[str, Any]) -> tuple[int, int, int, int, int]:
+    def mapping_anchor_bytes(cell: T04CellSpec) -> int:
+        anchors = config["formal_matrix"]["mapping_anchor_plan_indices"]
+        if anchors.get(str(cell.cutoff)) != cell.plan_index:
+            return 0
+        import numpy as np
+
+        total = 0
+        for shape in (
+            (cell.cutoff, 2),
+            (cell.cutoff, 2),
+            (cell.cutoff, cell.cutoff),
+            (cell.cutoff, cell.cutoff),
+        ):
+            buffer = io.BytesIO()
+            np.save(
+                buffer,
+                np.zeros(shape, dtype=np.complex128),
+                allow_pickle=False,
+            )
+            total += len(buffer.getbuffer())
+        return total
+
+    def component_bytes(
+        rep: Mapping[str, Any],
+        rep_cell: T04CellSpec,
+    ) -> tuple[int, int, int, int, int]:
         bindings = rep.get("object_bindings")
         if isinstance(bindings, list) and bindings:
-            by_digest: dict[str, dict[str, Any]] = {}
+            by_role: dict[str, Mapping[str, Any]] = {}
             for binding in bindings:
-                digest = str(binding["sha256"])
-                entry = by_digest.setdefault(
-                    digest,
-                    {"bytes": int(binding["bytes"]), "roles": set()},
-                )
-                if entry["bytes"] != int(binding["bytes"]):
-                    raise RuntimeError("measured digest size drift")
-                entry["roles"].add(str(binding["role"]))
+                role = str(binding["role"])
+                if role in by_role:
+                    raise RuntimeError("measured duplicate object role")
+                by_role[role] = binding
+            alias_roles: set[str] = set()
+            primary_binding = by_role.get("primary_density_npy")
+            expected_binding = by_role.get("rb_expected_density_npy")
+            if (
+                rep_cell.layer in {"shared", "probe"}
+                and primary_binding is not None
+                and expected_binding is not None
+                and primary_binding["sha256"] == expected_binding["sha256"]
+                and int(primary_binding["bytes"])
+                == int(expected_binding["bytes"])
+            ):
+                alias_roles.add("rb_expected_density_npy")
             totals = {
                 "row": 0,
                 "primary": 0,
@@ -1613,25 +2469,26 @@ def stratified_projection(
                 "reset_density": 0,
                 "other": 0,
             }
-            for entry in by_digest.values():
-                roles_for_digest = entry["roles"]
+            for role, entry in by_role.items():
+                if role in alias_roles:
+                    continue
                 size = int(entry["bytes"])
-                if roles_for_digest & row_roles:
+                if role in row_roles:
                     totals["row"] += size
-                elif "primary_density_npy" in roles_for_digest:
-                    # rb_expected_density may alias the primary object.
+                elif role == "primary_density_npy":
                     totals["primary"] += size
-                elif any(
-                    role.startswith("rb_") and "density" in role
-                    for role in roles_for_digest
-                ):
+                elif role.startswith("rb_") and "density" in role:
                     totals["reset_density"] += size
-                elif any(role.startswith("rb_") for role in roles_for_digest):
+                elif role.startswith("rb_"):
                     totals["reset_scalar"] += size
                 else:
                     totals["other"] += size
-            if sum(totals.values()) != int(rep["object_bytes_unique"]):
-                raise RuntimeError("component projection double-counted an object")
+            if sum(totals.values()) != int(
+                rep["conservative_payload_bytes"]
+            ):
+                raise RuntimeError(
+                    "component projection conservative byte accounting drift"
+                )
             return (
                 totals["row"],
                 totals["primary"],
@@ -1652,9 +2509,18 @@ def stratified_projection(
             for role, size in roles.items()
             if str(role).startswith("rb_") and "density" in str(role)
         )
+        explicit_alias_bytes = int(rep.get("explicit_alias_bytes", 0))
+        reset_density = max(0, reset_density - explicit_alias_bytes)
+        conservative_payload_bytes = int(
+            rep.get(
+                "conservative_payload_bytes",
+                sum(int(size) for size in roles.values())
+                - explicit_alias_bytes,
+            )
+        )
         other = max(
             0,
-            int(rep["object_bytes_unique"])
+            conservative_payload_bytes
             - row
             - primary
             - reset_scalar
@@ -1674,7 +2540,7 @@ def stratified_projection(
             reset_scalar,
             reset_density,
             other_bytes,
-        ) = component_bytes(rep)
+        ) = component_bytes(rep, rep_cell)
         row_ratio = target_components["round_steps"] / max(
             1.0, rep_components["round_steps"]
         )
@@ -1691,7 +2557,9 @@ def stratified_projection(
             + reset_density * reset_ratio
             + other_bytes
         )
-        if cell.backend == "A" and rep_index != 388:
+        anchor_bytes = mapping_anchor_bytes(cell)
+        cell_bytes += anchor_bytes
+        if cell.backend == "A" and rep_cell.backend != "A":
             cell_bytes *= backend_a_byte_factor
         # Wall uses two distinct structural terms.  This intentionally avoids
         # applying a single observed seconds/row ratio to unlike cells.
@@ -1706,8 +2574,9 @@ def stratified_projection(
         )
         wall_ratio = max(trajectory_ratio, reset_work_ratio)
         cell_wall = float(rep["wall_seconds"]) * wall_ratio
-        if cell.backend == "A" and rep_index != 388:
+        if cell.backend == "A" and rep_cell.backend != "A":
             cell_wall *= backend_a_wall_factor
+        projected_cell_bytes = int(math.ceil(cell_bytes))
         projected_bytes += cell_bytes
         projected_worker_wall += cell_wall
         cell_projections.append(
@@ -1715,7 +2584,14 @@ def stratified_projection(
                 "plan_index": cell.plan_index,
                 "chunk_id": cell.chunk_id,
                 "representative_plan_index": rep_index,
-                "projected_object_bytes": int(cell_bytes + 0.999999),
+                "projected_mapping_anchor_bytes": anchor_bytes,
+                "projected_object_bytes": projected_cell_bytes,
+                # Every object is first written below staging before atomic
+                # adoption.  At cell granularity the conservative payload is
+                # therefore also the transient disk requirement.  Keeping a
+                # distinct field prevents persistent bytes from being
+                # silently substituted for concurrent staging admission.
+                "projected_transient_bytes": projected_cell_bytes,
                 "projected_wall_seconds": cell_wall,
             }
         )
@@ -1749,10 +2625,48 @@ def stratified_projection(
         raise RuntimeError(
             "retained density physicality wall projection invalid"
         )
+    # Formal production schedules the frozen cells by descending projected
+    # cost.  Replay that exact deterministic LPT policy instead of the
+    # impossible ``sum/max_workers`` lower bound: heterogeneous cells can
+    # never finish before the longest assigned worker load.
+    worker_loads = [0.0] * max_workers
+    for item in sorted(
+        cell_projections,
+        key=lambda value: (
+            -float(value["projected_wall_seconds"]),
+            int(value["plan_index"]),
+        ),
+    ):
+        worker = min(
+            range(max_workers),
+            key=lambda index: (worker_loads[index], index),
+        )
+        worker_loads[worker] += float(item["projected_wall_seconds"])
+    projected_raw_lpt_wall = max(worker_loads, default=0.0)
+    projected_artifact_bytes = sum(
+        int(item["projected_object_bytes"])
+        for item in cell_projections
+    )
+    inventory_wall = float(inventory_finalize_wall_seconds)
+    inventory_bytes = int(inventory_profile_object_bytes)
+    inventory_receipts = int(inventory_profile_receipt_count)
+    if (
+        not math.isfinite(inventory_wall)
+        or inventory_wall <= 0.0
+        or inventory_bytes <= 0
+        or inventory_receipts != 8
+    ):
+        raise RuntimeError("inventory finalize wall projection invalid")
+    inventory_scale = max(
+        projected_artifact_bytes / inventory_bytes,
+        len(cells) / inventory_receipts,
+    )
+    projected_inventory_wall = inventory_wall * inventory_scale
     projected_wall = (
-        projected_worker_wall / max_workers
+        projected_raw_lpt_wall
         + float(stats_wall_seconds)
         + physicality_wall
+        + projected_inventory_wall
     )
     report: dict[str, Any] = {
         "schema_version": PROJECTION_SCHEMA,
@@ -1766,13 +2680,22 @@ def stratified_projection(
         "backend_a_conservative_byte_factor": backend_a_byte_factor,
         "cell_projections": cell_projections,
         "layers": layer_rows,
-        "projected_formal_artifact_bytes": int(projected_bytes + 0.999999),
+        "projected_formal_artifact_bytes": projected_artifact_bytes,
         "projected_formal_worker_wall_seconds": projected_worker_wall,
+        "projected_raw_lpt_worker_load_seconds": worker_loads,
+        "projected_raw_lpt_wall_seconds": projected_raw_lpt_wall,
         "projected_formal_wall_seconds_at_frozen_concurrency": projected_wall,
         "frozen_concurrency": max_workers,
         "statistics_wall_seconds": float(stats_wall_seconds),
         "retained_density_physicality_serial_wall_seconds": (
             physicality_wall
+        ),
+        "inventory_profile_finalize_wall_seconds": inventory_wall,
+        "inventory_profile_object_bytes": inventory_bytes,
+        "inventory_profile_receipt_count": inventory_receipts,
+        "inventory_finalize_projection_scale": inventory_scale,
+        "projected_inventory_finalize_wall_seconds": (
+            projected_inventory_wall
         ),
     }
     report["projection_sha256"] = _sha(report)
@@ -1839,11 +2762,22 @@ def resource_gate_decision(
     projection: Mapping[str, Any],
     inventory: Mapping[str, Any],
     run_directory: Path,
+    maximum_inflight_temp_bytes: int = 0,
+    analysis_scratch_bytes: int = 0,
 ) -> dict[str, Any]:
     contract = config["resource_contract"]
     free = int(shutil.disk_usage(run_directory).free)
     projected_bytes = int(projection["projected_formal_artifact_bytes"])
-    post_projection_free = free - projected_bytes
+    maximum_inflight_temp_bytes = int(maximum_inflight_temp_bytes)
+    analysis_scratch_bytes = int(analysis_scratch_bytes)
+    if maximum_inflight_temp_bytes < 0 or analysis_scratch_bytes < 0:
+        raise ValueError("resource scratch/inflight bytes must be nonnegative")
+    post_projection_free = (
+        free
+        - projected_bytes
+        - maximum_inflight_temp_bytes
+        - analysis_scratch_bytes
+    )
     checks = {
         "rss": int(sampling["peak_aggregate_rss_bytes"])
         <= int(contract["maximum_peak_rss_bytes"]),
@@ -1855,7 +2789,7 @@ def resource_gate_decision(
         "inventory": (
             inventory["raw_status"]
             == "RAW_EVIDENCE_COMPLETE_NO_SCIENTIFIC_VERDICT"
-            and int(inventory["receipt_count"]) == 5
+            and int(inventory["receipt_count"]) == 8
             and int(inventory["totals"]["observed_rows"])
             == int(inventory["totals"]["expected_rows"])
             and int(inventory["totals"]["exception_rows"]) == 0
@@ -1870,6 +2804,8 @@ def resource_gate_decision(
         "passed": all(checks.values()),
         "disk_free_bytes": free,
         "projected_post_formal_free_bytes": post_projection_free,
+        "maximum_inflight_temp_bytes": maximum_inflight_temp_bytes,
+        "analysis_scratch_bytes": analysis_scratch_bytes,
         "limits": {
             "maximum_peak_rss_bytes": int(contract["maximum_peak_rss_bytes"]),
             "maximum_artifact_bytes": int(contract["maximum_artifact_bytes"]),
@@ -1899,9 +2835,13 @@ class ResourcePreflightSupervisor:
 
     def run(self) -> dict[str, Any]:
         root = self.root.resolve()
+        if self.sample_interval_seconds != float(
+            self.config["resource_contract"]["sample_interval_seconds"]
+        ):
+            raise RuntimeError("resource sampling interval contract drift")
         cells = build_cell_plan(self.config)
-        concurrent, singleton = profile_cells(self.config, cells)
-        selected = concurrent + [singleton]
+        formal_peak, representatives = profile_cells(self.config, cells)
+        selected = formal_peak + representatives
         preflight_root, artifact_paths = isolated_preflight_paths(
             root, self.config, run_id=self.run_id
         )
@@ -1920,7 +2860,7 @@ class ResourcePreflightSupervisor:
             config_sha256=self.config_sha256,
             plan_sha256=self.plan_sha256,
         )
-        owner.acquire()
+        owner_identity = owner.acquire()
         attempt_path = preflight_root / "attempts.jsonl"
         active_pids: set[int] = set()
         active_lock = Lock()
@@ -1965,6 +2905,11 @@ class ResourcePreflightSupervisor:
                 payload={
                     "formal_seed_addresses_accessed": False,
                     "artifact_namespace": artifact_paths,
+                    "owner_token": owner_identity.owner_token,
+                    "owner_pid": owner_identity.pid,
+                    "process_creation_time": (
+                        owner_identity.process_creation_time
+                    ),
                 },
             )
             sampler.start()
@@ -1987,44 +2932,54 @@ class ResourcePreflightSupervisor:
                     "artifact_paths_override": artifact_paths,
                 }
 
-            state["stage"] = "four_worker_concurrent_peak"
+            state["stage"] = "formal_lpt_four_worker_peak"
+            sampler.sample_once()
             measurements = self.process_group_runner(
-                [kwargs_for(cell) for cell in concurrent],
+                [kwargs_for(cell) for cell in formal_peak],
                 active_pids=active_pids,
                 active_lock=active_lock,
                 sample_callback=sampler.sample_once,
             )
+            sampler.sample_once()
             concurrent_peak = sampler.summary()[
                 "stage_peak_aggregate_rss_bytes"
-            ].get("four_worker_concurrent_peak", 0)
+            ].get("formal_lpt_four_worker_peak", 0)
             for measurement in measurements:
                 measurement["profile_peak_aggregate_rss_bytes"] = concurrent_peak
             state["profiles_completed"] = len(measurements)
-            state["stage"] = "backend_a_representative"
+            state["stage"] = "representative_four_worker_profiles"
+            sampler.sample_once()
             measurements.extend(
                 self.process_group_runner(
-                    [kwargs_for(singleton)],
+                    [kwargs_for(cell) for cell in representatives],
                     active_pids=active_pids,
                     active_lock=active_lock,
                     sample_callback=sampler.sample_once,
                 )
             )
+            sampler.sample_once()
             singleton_peak = sampler.summary()[
                 "stage_peak_aggregate_rss_bytes"
-            ].get("backend_a_representative", 0)
+            ].get("representative_four_worker_profiles", 0)
             for measurement in measurements:
-                if int(measurement["plan_index"]) == singleton.plan_index:
+                if int(measurement["plan_index"]) in {
+                    cell.plan_index for cell in representatives
+                }:
                     measurement["profile_peak_aggregate_rss_bytes"] = singleton_peak
             state["profiles_completed"] = len(measurements)
             state["stage"] = "joint_maxt_3037x199"
+            sampler.sample_once()
             stats = self.stats_runner(
                 self.config,
                 sample_callback=sampler.sample_once,
             )
+            sampler.sample_once()
             validate_statistics_profile(self.config, stats)
             stats["profile_peak_aggregate_rss_bytes"] = sampler.summary()[
                 "stage_peak_aggregate_rss_bytes"
             ].get("joint_maxt_3037x199", 0)
+            stats.pop("analysis_sha256", None)
+            stats["analysis_sha256"] = _sha(stats)
             state["stage"] = "inventory_finalize_no_copy"
             store = ImmutableObjectStore(
                 repository_root=root,
@@ -2035,6 +2990,15 @@ class ResourcePreflightSupervisor:
                 run_id=self.run_id,
                 config_sha256=self.config_sha256,
                 plan_sha256=self.plan_sha256,
+                source_snapshot_sha256=self.source_snapshot_sha256,
+                seed_namespace="resource_preflight",
+                runner_id=RAW_RUNNER_ID,
+            )
+            raw_seed_audit = audit_resource_profile_receipts(
+                root,
+                self.config,
+                store,
+                selected,
             )
             inventory, inventory_evidence = no_copy_inventory(store, selected)
             inventory_path = preflight_root / "inventory.json"
@@ -2042,6 +3006,10 @@ class ResourcePreflightSupervisor:
             inventory_binding = _json_binding(root, inventory_path)
             # Ensure at least one final sample sees the post-finalize parent.
             sampler.sample_once()
+            # Likewise freeze a final heartbeat at the exact finalize stage;
+            # a periodic heartbeat alone may still describe the preceding
+            # statistics stage when finalize completes in under one period.
+            heartbeat.write_once()
             heartbeat.stop()
             heartbeat_started = False
             sampler.stop()
@@ -2056,18 +3024,12 @@ class ResourcePreflightSupervisor:
             physicality_profile = stats[
                 "retained_density_physicality_profile"
             ]
-            statistics_wall = (
-                float(stats["wall_seconds"])
-                - float(
-                    physicality_profile[
-                        "measured_total_wall_seconds"
-                    ]
-                )
-            )
+            # ``streaming_statistics_dry_run.wall_seconds`` starts after the
+            # retained-density timing fixture completes.  Subtracting the
+            # fixture again would understate the statistics stage.
+            statistics_wall = float(stats["wall_seconds"])
             if statistics_wall <= 0.0:
-                raise RuntimeError(
-                    "statistics wall does not exceed physicality sample"
-                )
+                raise RuntimeError("statistics wall is not positive")
             projection = stratified_projection(
                 self.config,
                 cells,
@@ -2078,6 +3040,27 @@ class ResourcePreflightSupervisor:
                         "projected_full_serial_wall_seconds"
                     ]
                 ),
+                inventory_finalize_wall_seconds=float(
+                    inventory_evidence["finalize_wall_seconds"]
+                ),
+                inventory_profile_object_bytes=int(
+                    inventory["totals"]["object_bytes_unique"]
+                ),
+                inventory_profile_receipt_count=int(
+                    inventory["receipt_count"]
+                ),
+            )
+            maximum_inflight_temp_bytes = sum(
+                sorted(
+                    (
+                        int(item["projected_transient_bytes"])
+                        for item in projection["cell_projections"]
+                    ),
+                    reverse=True,
+                )[: int(self.config["runtime_contract"]["max_workers"])]
+            )
+            analysis_scratch_bytes = int(
+                stats["peak_analysis_scratch_bytes"]
             )
             decision = resource_gate_decision(
                 self.config,
@@ -2085,6 +3068,10 @@ class ResourcePreflightSupervisor:
                 projection=projection,
                 inventory=inventory,
                 run_directory=preflight_root,
+                maximum_inflight_temp_bytes=(
+                    maximum_inflight_temp_bytes
+                ),
+                analysis_scratch_bytes=analysis_scratch_bytes,
             )
             if not decision["passed"]:
                 raise RuntimeError(
@@ -2134,6 +3121,7 @@ class ResourcePreflightSupervisor:
                     "maximum_observed_live_children"
                 ],
                 "resource_sample_count": sampling["sample_count"],
+                "sample_interval_seconds": self.sample_interval_seconds,
                 "sampling": sampling,
                 "heartbeat": {
                     "path": _relative(root, preflight_root / "heartbeat.json"),
@@ -2148,20 +3136,13 @@ class ResourcePreflightSupervisor:
                 },
                 "streaming_statistics_dry_run": stats,
                 "joint_maxt_profile": stats,
+                "raw_seed_audit": raw_seed_audit,
                 "projection": projection,
                 "cell_projections": projection["cell_projections"],
-                "maximum_inflight_temp_bytes": sum(
-                    sorted(
-                        (
-                            int(item["object_bytes_unique"])
-                            for item in measurements
-                        ),
-                        reverse=True,
-                    )[: int(self.config["runtime_contract"]["max_workers"])]
+                "maximum_inflight_temp_bytes": (
+                    maximum_inflight_temp_bytes
                 ),
-                "analysis_scratch_bytes": int(
-                    stats["peak_analysis_scratch_bytes"]
-                ),
+                "analysis_scratch_bytes": analysis_scratch_bytes,
                 "formal_projected_object_bytes": projection[
                     "projected_formal_artifact_bytes"
                 ],
@@ -2343,10 +3324,13 @@ __all__ = [
     "FAIL_VERDICT",
     "PASS_VERDICT",
     "PREFLIGHT_SCHEMA",
+    "RAW_RUNNER_ID",
+    "RAW_SEED_AUDIT_SCHEMA",
     "ResourcePreflightFailure",
     "ResourcePreflightSupervisor",
     "ResourceSampler",
     "assert_seed_firewall",
+    "audit_resource_profile_receipts",
     "execute_process_group",
     "isolated_preflight_paths",
     "main",

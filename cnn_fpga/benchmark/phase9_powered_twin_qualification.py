@@ -19,6 +19,7 @@ from dataclasses import asdict, fields, is_dataclass, replace
 from enum import Enum
 from hashlib import sha256
 import importlib
+from importlib.metadata import version as package_version
 import json
 import os
 from pathlib import Path
@@ -91,6 +92,68 @@ EXTRA_FIELDS = (
     "expected_reset_ancestor_receipt_sha256",
 )
 PRODUCTION_SUPERVISOR_ID = "PHASE9-POWERED-TWIN-PRODUCTION-SUPERVISOR-V1"
+PREFORMAL_SEAL_SCHEMA = "PHASE9-POWERED-TWIN-PREFORMAL-SEAL-V2"
+PREFORMAL_SEAL_FIELDS = frozenset(
+    {
+        "schema_version",
+        "task_id",
+        "verdict",
+        "raw_execution_released",
+        "scientific_verdict_released",
+        "formal_outcomes_accessed",
+        "config_sha256",
+        "plan_sha256",
+        "source_snapshot_sha256",
+        "source_snapshot",
+        "bindings",
+        "resource_run_id",
+        "resource_consumption",
+        "gates",
+        "claim_boundary",
+        "scientific_verdict",
+        "qualified_claim",
+        "official_puviani_surpass",
+        "analysis_sha256",
+    }
+)
+PREFORMAL_BINDING_FIELDS = frozenset(
+    {
+        "contract_preflight",
+        "resource_preflight",
+        "resource_attempt_ledger",
+        "resource_start_witness",
+        "resource_pass_witness",
+        "preformal_validation",
+    }
+)
+RESOURCE_CONSUMPTION_FIELDS = frozenset(
+    {
+        "schema_version",
+        "resource_report",
+        "run_id",
+        "config_sha256",
+        "plan_sha256",
+        "source_snapshot_sha256",
+        "receipt_count",
+        "ledger_rows_verified",
+        "reset_rows_verified",
+        "formal_seed_addresses_accessed",
+        "live_object_count",
+        "live_object_bytes",
+        "sampling_records_verified",
+        "maximum_observed_worker_overlap",
+        "heartbeat_sequence",
+        "projection_cells_verified",
+        "joint_maxt_gate_count",
+        "joint_maxt_replicates",
+        "attempt_chain",
+        "live_resource_admission_passed",
+        "scientific_verdict",
+        "qualified_claim",
+        "claim_boundary",
+        "analysis_sha256",
+    }
+)
 
 
 def _root() -> Path:
@@ -988,8 +1051,10 @@ def _validate_preformal_seal(
     _canonical_json_sha(seal, "analysis_sha256")
     live_snapshot = runtime_source_snapshot(root, config)
     if (
+        set(seal) != PREFORMAL_SEAL_FIELDS
+        or
         seal.get("schema_version")
-        != "PHASE9-POWERED-TWIN-PREFORMAL-SEAL-V1"
+        != PREFORMAL_SEAL_SCHEMA
         or seal.get("task_id") != config.get("task_id")
         or seal.get("verdict") != "PASS_PREFORMAL_RELEASE"
         or seal.get("raw_execution_released") is not True
@@ -1005,16 +1070,17 @@ def _validate_preformal_seal(
     ):
         raise RuntimeError("formal source/config/plan seal mismatch")
     bindings = seal.get("bindings")
-    expected_bindings = {
+    expected_fixed_bindings = {
         "contract_preflight": config["artifact_paths"]["contract_preflight"],
         "resource_preflight": config["artifact_paths"]["resource_preflight"],
         "preformal_validation": config["artifact_paths"]["preformal_validation"],
     }
-    if not isinstance(bindings, Mapping) or set(bindings) != set(
-        expected_bindings
+    if (
+        not isinstance(bindings, Mapping)
+        or set(bindings) != PREFORMAL_BINDING_FIELDS
     ):
         raise RuntimeError("preformal seal binding family mismatch")
-    for name, relative in expected_bindings.items():
+    for name, relative in expected_fixed_bindings.items():
         registered = bindings[name]
         if (
             not isinstance(registered, Mapping)
@@ -1022,6 +1088,70 @@ def _validate_preformal_seal(
             != _live_binding(root / str(relative), root)
         ):
             raise RuntimeError(f"preformal seal live binding drift: {name}")
+    for name in PREFORMAL_BINDING_FIELDS - set(expected_fixed_bindings):
+        registered = bindings[name]
+        if (
+            not isinstance(registered, Mapping)
+            or set(registered) != {"path", "bytes", "sha256"}
+            or dict(registered)
+            != _live_binding(root / str(registered.get("path", "")), root)
+        ):
+            raise RuntimeError(f"preformal seal live binding drift: {name}")
+    consumption = seal.get("resource_consumption")
+    if (
+        not isinstance(consumption, Mapping)
+        or set(consumption) != RESOURCE_CONSUMPTION_FIELDS
+    ):
+        raise RuntimeError("preformal resource-consumption schema drift")
+    _canonical_json_sha(consumption, "analysis_sha256")
+    attempt = consumption.get("attempt_chain")
+    if (
+        consumption.get("schema_version")
+        != "PHASE9-POWERED-TWIN-RESOURCE-CONSUMPTION-V1"
+        or consumption.get("run_id") != seal.get("resource_run_id")
+        or consumption.get("config_sha256") != config_sha256
+        or consumption.get("plan_sha256") != plan_sha256
+        or consumption.get("source_snapshot_sha256")
+        != source_snapshot_sha256
+        or consumption.get("receipt_count") != 8
+        or consumption.get("ledger_rows_verified") != 227_328
+        or consumption.get("reset_rows_verified") != 15_360
+        or consumption.get("formal_seed_addresses_accessed") is not False
+        or consumption.get("maximum_observed_worker_overlap") != 4
+        or consumption.get("projection_cells_verified") != 518
+        or consumption.get("joint_maxt_gate_count") != 3037
+        or consumption.get("joint_maxt_replicates") != 199
+        or consumption.get("live_resource_admission_passed") is not True
+        or consumption.get("scientific_verdict") is not None
+        or consumption.get("qualified_claim") is not None
+        or not isinstance(attempt, Mapping)
+        or set(attempt)
+        != {
+            "path",
+            "binding",
+            "event_count",
+            "chain_tip_sha256",
+            "start_witness",
+            "pass_witness",
+        }
+        or attempt.get("event_count") != 2
+        or bindings["resource_attempt_ledger"] != attempt.get("binding")
+        or bindings["resource_start_witness"] != attempt.get("start_witness")
+        or bindings["resource_pass_witness"] != attempt.get("pass_witness")
+        or bindings["resource_preflight"]
+        != consumption.get("resource_report")
+    ):
+        raise RuntimeError("preformal resource-consumption lineage drift")
+    consumption_claims = consumption.get("claim_boundary")
+    if (
+        not isinstance(consumption_claims, Mapping)
+        or set(consumption_claims) != set(EXPECTED_CLAIM_FIELDS)
+        or any(
+            consumption_claims.get(name) is not None
+            for name in EXPECTED_CLAIM_FIELDS
+        )
+    ):
+        raise RuntimeError("preformal resource-consumption claim drift")
     claims = seal.get("claim_boundary")
     if (
         not isinstance(claims, Mapping)
@@ -1119,6 +1249,9 @@ def _execute_cell_to_store_impl(
         run_id=run_id,
         config_sha256=config_sha256,
         plan_sha256=plan_sha256,
+        source_snapshot_sha256=source_snapshot_sha256,
+        seed_namespace=seed_namespace,
+        runner_id=RUNNER_ID,
     )
     if sample_count_override is not None:
         if seed_namespace == "formal":
@@ -1653,6 +1786,8 @@ def _execute_cell_to_store_impl(
             "runner_id": RUNNER_ID,
             "python": list(sys.version_info[:3]),
             "numpy": np.__version__,
+            "scipy": package_version("scipy"),
+            "psutil": package_version("psutil"),
             "platform": platform.platform(),
             "thread_environment": {
                 key: os.environ.get(key)
@@ -2060,18 +2195,32 @@ def run_production(root: Path) -> dict[str, Any]:
                         )
                         for cell in remaining
                     )
-                    wall_values = [
+                    active_loads = [
                         float(
                             projection_by_index[cell.plan_index][
                                 "projected_wall_seconds"
                             ]
                         )
-                        for cell in remaining
+                        for cell in active.values()
                     ]
-                    projected_wall = max(
-                        max(wall_values, default=0.0),
-                        sum(wall_values) / maximum_workers,
-                    )
+                    worker_loads = [
+                        *active_loads,
+                        *([0.0] * (maximum_workers - len(active_loads))),
+                    ]
+                    for pending in queue:
+                        worker = min(
+                            range(maximum_workers),
+                            key=lambda index: (
+                                worker_loads[index],
+                                index,
+                            ),
+                        )
+                        worker_loads[worker] += float(
+                            projection_by_index[pending.plan_index][
+                                "projected_wall_seconds"
+                            ]
+                        )
+                    projected_wall = max(worker_loads, default=0.0)
                     watchdog.check(
                         committed_bytes=_formal_object_bytes(
                             root, object_root
@@ -2179,6 +2328,17 @@ def run_production(root: Path) -> dict[str, Any]:
                 stop_reason
                 or "INCOMPLETE_FAIL_CLOSED_RECEIPT_COVERAGE"
             )
+        watchdog.check(
+            committed_bytes=_formal_object_bytes(root, object_root),
+            projected_remaining_bytes=0,
+            maximum_inflight_temp_bytes=0,
+            analysis_scratch_bytes=0,
+            projected_remaining_wall_seconds=float(
+                resource["projection"][
+                    "projected_inventory_finalize_wall_seconds"
+                ]
+            ),
+        )
         store = ImmutableObjectStore(
             repository_root=root,
             object_root=object_root,
@@ -2188,6 +2348,11 @@ def run_production(root: Path) -> dict[str, Any]:
             run_id=run_id,
             config_sha256=str(binding["sha256"]),
             plan_sha256=plan_sha,
+            source_snapshot_sha256=str(
+                snapshot["source_snapshot_sha256"]
+            ),
+            seed_namespace="formal",
+            runner_id=RUNNER_ID,
         )
         inventory = store.inventory([asdict(cell) for cell in plan])
         if inventory["raw_status"] != "RAW_EVIDENCE_COMPLETE_NO_SCIENTIFIC_VERDICT":
@@ -2198,6 +2363,13 @@ def run_production(root: Path) -> dict[str, Any]:
             manifest_path=root / str(paths["execution_manifest"]),
             inventory=inventory,
             claim_fields=EXPECTED_CLAIM_FIELDS,
+        )
+        watchdog.check(
+            committed_bytes=_formal_object_bytes(root, object_root),
+            projected_remaining_bytes=0,
+            maximum_inflight_temp_bytes=0,
+            analysis_scratch_bytes=0,
+            projected_remaining_wall_seconds=0.0,
         )
         append_attempt_event(
             attempt_path,

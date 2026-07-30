@@ -808,6 +808,172 @@ def test_formal_override_and_zero_source_are_rejected(tmp_path: Path) -> None:
         )
 
 
+def test_v2_preformal_seal_is_consumed_and_v1_downgrade_is_rejected(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def digest(value: dict[str, object]) -> str:
+        return sha256(
+            json.dumps(
+                value,
+                sort_keys=True,
+                separators=(",", ":"),
+                ensure_ascii=False,
+                allow_nan=False,
+            ).encode("utf-8")
+        ).hexdigest()
+
+    artifact_names = {
+        "contract_preflight": "contract.json",
+        "resource_preflight": "resource.json",
+        "preformal_validation": "validation.json",
+        "preformal_seal": "seal.json",
+    }
+    artifact_paths = {
+        name: _relative(tmp_path / filename)
+        for name, filename in artifact_names.items()
+    }
+    extra_paths = {
+        "resource_attempt_ledger": tmp_path / "resource_attempts.jsonl",
+        "resource_start_witness": tmp_path / "start.json",
+        "resource_pass_witness": tmp_path / "pass.json",
+    }
+    for name in (
+        "contract_preflight",
+        "resource_preflight",
+        "preformal_validation",
+    ):
+        (ROOT / artifact_paths[name]).write_text(
+            json.dumps({"fixture": name}) + "\n",
+            encoding="utf-8",
+        )
+    for name, path in extra_paths.items():
+        path.write_text(json.dumps({"fixture": name}) + "\n", encoding="utf-8")
+
+    claims = {
+        field: None for field in subject.EXPECTED_CLAIM_FIELDS
+    }
+    config_sha = "1" * 64
+    plan_sha = "2" * 64
+    source_sha = "3" * 64
+    snapshot = {"source_snapshot_sha256": source_sha}
+    monkeypatch.setattr(
+        subject,
+        "runtime_source_snapshot",
+        lambda root, config: dict(snapshot),
+    )
+    bindings = {
+        name: subject._live_binding(ROOT / path, ROOT)
+        for name, path in artifact_paths.items()
+        if name != "preformal_seal"
+    }
+    bindings.update(
+        {
+            name: subject._live_binding(path, ROOT)
+            for name, path in extra_paths.items()
+        }
+    )
+    attempt = {
+        "path": bindings["resource_attempt_ledger"]["path"],
+        "binding": bindings["resource_attempt_ledger"],
+        "event_count": 2,
+        "chain_tip_sha256": "4" * 64,
+        "start_witness": bindings["resource_start_witness"],
+        "pass_witness": bindings["resource_pass_witness"],
+    }
+    consumption: dict[str, object] = {
+        field: None for field in subject.RESOURCE_CONSUMPTION_FIELDS
+    }
+    consumption.update(
+        {
+            "schema_version": (
+                "PHASE9-POWERED-TWIN-RESOURCE-CONSUMPTION-V1"
+            ),
+            "resource_report": bindings["resource_preflight"],
+            "run_id": "resource-v5-fixture",
+            "config_sha256": config_sha,
+            "plan_sha256": plan_sha,
+            "source_snapshot_sha256": source_sha,
+            "receipt_count": 8,
+            "ledger_rows_verified": 227_328,
+            "reset_rows_verified": 15_360,
+            "formal_seed_addresses_accessed": False,
+            "live_object_count": 64,
+            "live_object_bytes": 1024,
+            "sampling_records_verified": 9,
+            "maximum_observed_worker_overlap": 4,
+            "heartbeat_sequence": 2,
+            "projection_cells_verified": 518,
+            "joint_maxt_gate_count": 3037,
+            "joint_maxt_replicates": 199,
+            "attempt_chain": attempt,
+            "live_resource_admission_passed": True,
+            "scientific_verdict": None,
+            "qualified_claim": None,
+            "claim_boundary": claims,
+        }
+    )
+    consumption.pop("analysis_sha256")
+    consumption["analysis_sha256"] = digest(consumption)
+    seal: dict[str, object] = {
+        "schema_version": subject.PREFORMAL_SEAL_SCHEMA,
+        "task_id": "T-RISK-20260728-04",
+        "verdict": "PASS_PREFORMAL_RELEASE",
+        "raw_execution_released": True,
+        "scientific_verdict_released": False,
+        "formal_outcomes_accessed": False,
+        "config_sha256": config_sha,
+        "plan_sha256": plan_sha,
+        "source_snapshot_sha256": source_sha,
+        "source_snapshot": snapshot,
+        "bindings": bindings,
+        "resource_run_id": "resource-v5-fixture",
+        "resource_consumption": consumption,
+        "gates": {"fixture": True},
+        "claim_boundary": claims,
+        "scientific_verdict": None,
+        "qualified_claim": None,
+        "official_puviani_surpass": None,
+    }
+    seal["analysis_sha256"] = digest(seal)
+    seal_path = ROOT / artifact_paths["preformal_seal"]
+    seal_path.write_text(
+        json.dumps(seal, sort_keys=True, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    config = {
+        "task_id": "T-RISK-20260728-04",
+        "artifact_paths": artifact_paths,
+    }
+    observed, observed_file_sha = subject._validate_preformal_seal(
+        root=ROOT,
+        config=config,
+        config_sha256=config_sha,
+        plan_sha256=plan_sha,
+        source_snapshot_sha256=source_sha,
+        expected_file_sha256=subject._sha_bytes(seal_path.read_bytes()),
+    )
+    assert observed["schema_version"] == subject.PREFORMAL_SEAL_SCHEMA
+    assert observed_file_sha == subject._sha_bytes(seal_path.read_bytes())
+
+    seal["schema_version"] = "PHASE9-POWERED-TWIN-PREFORMAL-SEAL-V1"
+    seal.pop("analysis_sha256")
+    seal["analysis_sha256"] = digest(seal)
+    seal_path.write_text(
+        json.dumps(seal, sort_keys=True, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(RuntimeError, match="formal source/config/plan"):
+        subject._validate_preformal_seal(
+            root=ROOT,
+            config=config,
+            config_sha256=config_sha,
+            plan_sha256=plan_sha,
+            source_snapshot_sha256=source_sha,
+            expected_file_sha256=subject._sha_bytes(seal_path.read_bytes()),
+        )
+
+
 def test_failed_reset_sidecar_slot_is_explicit_and_nonvoting(
     tmp_path: Path,
 ) -> None:

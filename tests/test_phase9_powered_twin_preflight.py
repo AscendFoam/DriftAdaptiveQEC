@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
 import copy
+import csv
 from dataclasses import asdict, replace
 import json
 from pathlib import Path
@@ -18,8 +19,12 @@ from cnn_fpga.benchmark.phase9_powered_twin_preflight import (
     FAIL_VERDICT,
     ResourcePreflightFailure,
     ResourcePreflightSupervisor,
+    _audit_resource_seed_ledger,
+    _receipt_metrics,
+    _resource_seed_addresses,
     _sha,
     _immutable_json,
+    _validate_npy_payload,
     assert_seed_firewall,
     isolated_preflight_paths,
     no_copy_inventory,
@@ -113,27 +118,231 @@ def test_seed_full_address_range_and_overlap_mutations_fail() -> None:
         assert_seed_firewall(overlapping)
 
 
-def test_frozen_full_profile_is_four_b_workers_plus_one_a() -> None:
+def test_frozen_full_profile_matches_formal_lpt_and_representatives() -> None:
     config = _config()
     cells = build_cell_plan(config)
-    concurrent, singleton = profile_cells(config, cells)
-    assert [cell.plan_index for cell in concurrent] == [389, 403, 507, 485]
-    assert [cell.sample_count for cell in concurrent] == [1536, 1536, 1536, 4608]
-    assert [cell.layer for cell in concurrent] == [
+    formal_peak, representatives = profile_cells(config, cells)
+    assert [cell.plan_index for cell in formal_peak] == [478, 480, 482, 484]
+    assert [cell.sample_count for cell in formal_peak] == [4608] * 4
+    assert [cell.layer for cell in formal_peak] == ["fault"] * 4
+    assert [cell.backend for cell in formal_peak] == ["A"] * 4
+    assert [cell.plan_index for cell in representatives] == [
+        388, 389, 403, 507
+    ]
+    assert [cell.layer for cell in representatives] == [
+        "shared",
         "shared",
         "logical",
         "probe",
-        "fault",
     ]
-    assert singleton.plan_index == 388
-    assert singleton.backend == "A"
-    assert singleton.sample_count == 1536
     mutated = copy.deepcopy(config)
-    mutated["resource_contract"]["profile_plan"]["four_worker_concurrent_peak"][
+    mutated["resource_contract"]["profile_plan"]["formal_lpt_four_worker_peak"][
         "full_frozen_denominator"
     ] = False
     with pytest.raises(RuntimeError, match="full frozen denominator"):
         profile_cells(mutated, cells)
+
+
+def _write_seed_ledger(
+    path: Path,
+    config: dict,
+    cell: T04CellSpec,
+    *,
+    mutation: str | None = None,
+) -> tuple[str, ...]:
+    from cnn_fpga.benchmark.phase9_fresh_twin_qualification import (
+        LEDGER_FIELDS,
+    )
+    from cnn_fpga.benchmark.phase9_powered_twin_qualification import (
+        EXTRA_FIELDS,
+    )
+    from cnn_fpga.benchmark.phase9_powered_twin_contract import (
+        cluster_root_id,
+    )
+
+    header = tuple(LEDGER_FIELDS) + tuple(EXTRA_FIELDS)
+    rows: list[dict[str, object]] = []
+    for row_index in range(cell.expected_rows):
+        position = row_index // cell.horizon
+        round_index = row_index % cell.horizon
+        physical, heldout = _resource_seed_addresses(
+            config,
+            cell,
+            position=position,
+            round_index=round_index,
+        )
+        row: dict[str, object] = {field: "" for field in header}
+        trajectory_id = (
+            f"{cell.cell_base}|c{cell.cutoff}|{cell.backend}|p{position:04d}"
+            if cell.layer == "fault"
+            else ""
+        )
+        row_id = (
+            f"{trajectory_id}|r{round_index:03d}"
+            if trajectory_id
+            else (
+                f"{cell.layer}|c{cell.cutoff}|{cell.cell_base}|"
+                f"{cell.backend}|p{position:04d}"
+            )
+        )
+        if cell.layer == "shared":
+            cell_id = (
+                f"ab/c{cell.cutoff}/shared/{cell.initial_state}/{cell.action}"
+            )
+        elif cell.layer == "logical":
+            cell_id = (
+                f"ab/c{cell.cutoff}/logical/{cell.logical_label}/{cell.action}"
+            )
+        elif cell.layer == "probe":
+            cell_id = f"ab/c{cell.cutoff}/probe/{cell.probe_id}"
+        else:
+            cell_id = f"ab/c{cell.cutoff}/fault/{cell.scenario}"
+        row.update(
+            {
+                "row_id": row_id,
+                "row_schema": "PHASE9-POWERED-TWIN-ROUND-LEDGER-V1",
+                "layer": cell.layer,
+                "cell_base": cell.cell_base,
+                "cell_id": cell_id,
+                "backend": cell.backend,
+                "backend_id": (
+                    "PHASE9-BACKEND-A-JOINT-FOCK-QUTRIT-GKSL-V1"
+                    if cell.backend == "A"
+                    else "PHASE9-BACKEND-B-DENSE-STRANG-ANALYTIC-KRAUS-V1"
+                ),
+                "cutoff": cell.cutoff,
+                "convergence_role": cell.convergence_role,
+                "seed": physical,
+                "seed_position": position,
+                "trajectory_id": trajectory_id,
+                "round_index": round_index,
+                "terminal_round": str(
+                    round_index == cell.horizon - 1
+                ),
+                "action": cell.action,
+                "probe_id": cell.probe_id,
+                "scenario": cell.scenario,
+                "initial_state": cell.initial_state,
+                "logical_label": cell.logical_label,
+                "rng_namespace": (
+                    "NUMPY_SEEDSEQUENCE_ADDRESSED"
+                    if cell.backend == "A"
+                    else "BLAKE2B_ADDRESS_PYTHON_RANDOM_BOX_MULLER"
+                ),
+                "archive_chunk": cell.chunk_id,
+                "archive_row_index": row_index,
+                "density_index": (
+                    position
+                    if cell.density_retention != "none"
+                    and (
+                        cell.layer != "fault"
+                        or round_index == cell.horizon - 1
+                    )
+                    else -1
+                ),
+                "raw_iq_index": row_index,
+                "heldout_iq_index": row_index,
+                "conservation_pass": "True",
+                "cluster_root_id": cluster_root_id(
+                    config, cell, position
+                ),
+                "physical_seed_address": physical,
+                "heldout_seed_address": heldout,
+                "fault_state_index": (
+                    position
+                    // int(
+                        config["formal_matrix"]["fault_clusters_per_state"]
+                    )
+                    if cell.layer == "fault"
+                    else ""
+                ),
+                "fault_within_state_index": (
+                    position
+                    % int(
+                        config["formal_matrix"]["fault_clusters_per_state"]
+                    )
+                    if cell.layer == "fault"
+                    else ""
+                ),
+            }
+        )
+        rows.append(row)
+    if mutation == "formal_physical":
+        formal = int(config["seed_registry"]["physical"]["start"])
+        rows[0]["seed"] = formal
+        rows[0]["physical_seed_address"] = formal
+    elif mutation == "wrong_resource_physical":
+        rows[0]["seed"] = int(rows[0]["seed"]) + 1
+        rows[0]["physical_seed_address"] = (
+            int(rows[0]["physical_seed_address"]) + 1
+        )
+    elif mutation == "swapped_heldout":
+        rows[0]["heldout_seed_address"], rows[1][
+            "heldout_seed_address"
+        ] = (
+            rows[1]["heldout_seed_address"],
+            rows[0]["heldout_seed_address"],
+        )
+    elif mutation == "duplicate_row_id":
+        rows[1]["row_id"] = rows[0]["row_id"]
+    elif mutation == "unique_but_wrong_row_id":
+        rows[0]["row_id"] = "coordinated-but-unique-row-id"
+    elif mutation == "wrong_cell_id":
+        rows[0]["cell_id"] = "ab/c44/shared/forged"
+    elif mutation == "short_denominator":
+        rows.pop()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle, fieldnames=header, lineterminator="\n"
+        )
+        writer.writeheader()
+        writer.writerows(rows)
+    return header
+
+
+@pytest.mark.parametrize(
+    "mutation",
+    (
+        "formal_physical",
+        "wrong_resource_physical",
+        "swapped_heldout",
+        "duplicate_row_id",
+        "unique_but_wrong_row_id",
+        "wrong_cell_id",
+        "short_denominator",
+    ),
+)
+def test_live_seed_ledger_semantics_reject_coordinated_rehash_mutations(
+    tmp_path: Path,
+    mutation: str,
+) -> None:
+    config = _config()
+    original = build_cell_plan(config)[389]
+    cell = replace(original, sample_count=2, expected_rows=2)
+    path = tmp_path / "ledger.csv"
+    header = _write_seed_ledger(path, config, cell)
+    evidence = _audit_resource_seed_ledger(
+        path,
+        config=config,
+        cell=cell,
+        expected_header=header,
+    )
+    assert evidence["observed_rows"] == 2
+    assert evidence["formal_seed_addresses_accessed"] is False
+    _write_seed_ledger(
+        path,
+        config,
+        cell,
+        mutation=mutation,
+    )
+    with pytest.raises(RuntimeError, match="resource ledger"):
+        _audit_resource_seed_ledger(
+            path,
+            config=config,
+            cell=cell,
+            expected_header=header,
+        )
 
 
 def test_endpoint_only_and_insufficient_concurrency_fail_closed() -> None:
@@ -143,6 +352,45 @@ def test_endpoint_only_and_insufficient_concurrency_fail_closed() -> None:
         validate_continuous_sampling(_sampling(count=3, active=1))
     with pytest.raises(RuntimeError, match="concurrency"):
         validate_continuous_sampling(_sampling(overlap=3))
+
+
+def test_npy_payload_rejects_trailing_bytes_and_nonfinite_values(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "payload.npy"
+    np.save(path, np.ones((2, 2), dtype="<f8"), allow_pickle=False)
+    binding = {
+        "path": path.relative_to(tmp_path).as_posix(),
+        "role": "heldout_iq_npy",
+    }
+    _validate_npy_payload(
+        tmp_path,
+        binding,
+        shape=(2, 2),
+        dtype="<f8",
+    )
+    with path.open("ab") as handle:
+        handle.write(b"coordinated-trailer")
+    with pytest.raises(RuntimeError, match="trailing"):
+        _validate_npy_payload(
+            tmp_path,
+            binding,
+            shape=(2, 2),
+            dtype="<f8",
+        )
+
+    np.save(
+        path,
+        np.asarray([[1.0, np.nan], [2.0, 3.0]], dtype="<f8"),
+        allow_pickle=False,
+    )
+    with pytest.raises(RuntimeError, match="nonfinite"):
+        _validate_npy_payload(
+            tmp_path,
+            binding,
+            shape=(2, 2),
+            dtype="<f8",
+        )
     validate_continuous_sampling(_sampling())
 
 
@@ -190,7 +438,7 @@ def test_mock_worker_failure_records_attempt_and_cannot_pollute_formal(
         plan_sha256=config["plan_contract"]["canonical_plan_sha256"],
         run_id="worker_failure",
         source_snapshot_sha256="3" * 64,
-        sample_interval_seconds=0.01,
+        sample_interval_seconds=5.0,
         heartbeat_period_seconds=0.01,
         process_group_runner=fail_group,
         lineage_validator=lambda *args: {"passed": True},
@@ -259,6 +507,9 @@ def _tiny_store(tmp_path: Path) -> tuple[ImmutableObjectStore, list[T04CellSpec]
         run_id="inventory-fixture",
         config_sha256="1" * 64,
         plan_sha256="2" * 64,
+        source_snapshot_sha256="3" * 64,
+        seed_namespace="resource_preflight",
+        runner_id="PHASE9-POWERED-TWIN-RAW-RUNNER-V1",
     )
     cells = _tiny_cells()
     for cell in cells:
@@ -275,7 +526,21 @@ def _tiny_store(tmp_path: Path) -> tuple[ImmutableObjectStore, list[T04CellSpec]
             missing_rows=0,
             conservation_failures=0,
             source_snapshot_sha256="3" * 64,
-            runtime_fingerprint={"fixture": True},
+            runtime_fingerprint={
+                "runner_id": "PHASE9-POWERED-TWIN-RAW-RUNNER-V1",
+                "python": [3, 12, 7],
+                "numpy": "1.26.4",
+                "scipy": "1.13.1",
+                "psutil": "5.9.0",
+                "platform": "test-platform",
+                "thread_environment": {
+                    "OMP_NUM_THREADS": "1",
+                    "OPENBLAS_NUM_THREADS": "1",
+                    "MKL_NUM_THREADS": "1",
+                    "NUMEXPR_NUM_THREADS": "1",
+                },
+                "seed_namespace": "resource_preflight",
+            },
             reset_rows=0,
             reset_sidecar_rows=0,
         )
@@ -307,6 +572,63 @@ def test_inventory_revalidates_content_without_zip_or_raw_copy(
     forbidden.write_bytes(b"not an archive, but a forbidden container name")
     with pytest.raises(RuntimeError, match="monolithic"):
         no_copy_inventory(store, cells)
+
+
+def test_resource_byte_projection_only_deduplicates_explicit_alias() -> None:
+    def binding(role: str, digest: str, size: int, path: str) -> dict:
+        return {
+            "role": role,
+            "sha256": digest,
+            "bytes": size,
+            "path": path,
+        }
+
+    receipt = {
+        "cell": {
+            "chunk_id": "fixture",
+            "plan_index": 389,
+            "layer": "shared",
+        },
+        "diagnostics": {"expected_rows": 2, "reset_rows": 2},
+        "receipt_sha256": "f" * 64,
+        "objects": [
+            binding("round_ledger_csv", "1" * 64, 50, "objects/1"),
+            binding("primary_density_npy", "2" * 64, 100, "objects/2"),
+            binding("rb_expected_density_npy", "2" * 64, 100, "objects/2"),
+            binding(
+                "rb_conditional_success_density_npy",
+                "3" * 64,
+                200,
+                "objects/3",
+            ),
+            binding(
+                "rb_sampled_stress_density_npy",
+                "3" * 64,
+                200,
+                "objects/3",
+            ),
+        ],
+    }
+    metrics = _receipt_metrics(
+        {
+            "receipt": receipt,
+            "pid": 1,
+            "wall_seconds": 1.0,
+        }
+    )
+    assert metrics["object_bytes_unique"] == 350
+    assert metrics["explicit_alias_bytes"] == 100
+    assert metrics["conservative_payload_bytes"] == 550
+    receipt["cell"]["layer"] = "fault"
+    fault_metrics = _receipt_metrics(
+        {
+            "receipt": receipt,
+            "pid": 1,
+            "wall_seconds": 1.0,
+        }
+    )
+    assert fault_metrics["explicit_alias_bytes"] == 0
+    assert fault_metrics["conservative_payload_bytes"] == 650
 
 
 def test_immutable_json_is_atomic_fail_if_exists_under_race(
@@ -532,7 +854,7 @@ def test_resource_gate_rejects_incomplete_inventory(tmp_path: Path) -> None:
     config = _config()
     inventory = {
         "raw_status": "INCOMPLETE_FAIL_CLOSED",
-        "receipt_count": 5,
+        "receipt_count": 8,
         "totals": {
             "expected_rows": 5,
             "observed_rows": 4,
@@ -565,7 +887,7 @@ def test_resource_gate_rejects_physicality_inclusive_wall(
     config = _config()
     inventory = {
         "raw_status": "RAW_EVIDENCE_COMPLETE_NO_SCIENTIFIC_VERDICT",
-        "receipt_count": 5,
+        "receipt_count": 8,
         "totals": {
             "expected_rows": 5,
             "observed_rows": 5,
@@ -595,11 +917,64 @@ def test_resource_gate_rejects_physicality_inclusive_wall(
     assert decision["passed"] is False
 
 
+def test_resource_disk_gate_includes_inflight_and_analysis_scratch(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from cnn_fpga.benchmark import phase9_powered_twin_preflight as preflight
+
+    config = _config()
+    reserve = int(
+        config["resource_contract"]["minimum_post_projection_free_bytes"]
+    )
+    monkeypatch.setattr(
+        preflight.shutil,
+        "disk_usage",
+        lambda path: type(
+            "Usage",
+            (),
+            {
+                "total": reserve + 10_000,
+                "used": 0,
+                "free": reserve + 599,
+            },
+        )(),
+    )
+    inventory = {
+        "raw_status": "RAW_EVIDENCE_COMPLETE_NO_SCIENTIFIC_VERDICT",
+        "receipt_count": 8,
+        "totals": {
+            "expected_rows": 227_328,
+            "observed_rows": 227_328,
+            "exception_rows": 0,
+            "missing_rows": 0,
+            "conservation_failures": 0,
+        },
+        "monolithic_archive": None,
+        "merged_full_csv": None,
+    }
+    decision = resource_gate_decision(
+        config,
+        sampling={"peak_aggregate_rss_bytes": 1},
+        projection={
+            "projected_formal_artifact_bytes": 100,
+            "projected_formal_wall_seconds_at_frozen_concurrency": 1.0,
+        },
+        inventory=inventory,
+        run_directory=tmp_path,
+        maximum_inflight_temp_bytes=200,
+        analysis_scratch_bytes=300,
+    )
+    assert decision["projected_post_formal_free_bytes"] == reserve - 1
+    assert decision["checks"]["disk"] is False
+    assert decision["passed"] is False
+
+
 def test_projection_is_518_cell_component_stratified_not_uniform() -> None:
     config = _config()
     cells = build_cell_plan(config)
     measurements = []
-    for plan_index in (388, 389, 403, 485, 507):
+    for plan_index in (388, 389, 403, 478, 480, 482, 484, 507):
         cell = cells[plan_index]
         measurements.append(
             {
@@ -622,12 +997,19 @@ def test_projection_is_518_cell_component_stratified_not_uniform() -> None:
                 },
             }
         )
+        measurements[-1]["explicit_alias_bytes"] = 0
+        measurements[-1]["conservative_payload_bytes"] = sum(
+            measurements[-1]["object_bytes_by_role"].values()
+        )
     result = stratified_projection(
         config,
         cells,
         measurements,
         stats_wall_seconds=2.0,
         retained_density_physicality_wall_seconds=123.0,
+        inventory_finalize_wall_seconds=1.0,
+        inventory_profile_object_bytes=1_000,
+        inventory_profile_receipt_count=8,
     )
     assert result["uniform_row_ratio_used"] is False
     assert len(result["cell_projections"]) == 518
@@ -636,6 +1018,30 @@ def test_projection_is_518_cell_component_stratified_not_uniform() -> None:
     )
     assert set(result["layers"]) == {"shared", "logical", "probe", "fault"}
     assert result["projected_formal_artifact_bytes"] > 0
+    assert result["projected_formal_artifact_bytes"] == sum(
+        row["projected_object_bytes"]
+        for row in result["cell_projections"]
+    )
+    assert all(
+        row["projected_transient_bytes"] == row["projected_object_bytes"]
+        for row in result["cell_projections"]
+    )
+    mapping_rows = {
+        row["plan_index"]: row["projected_mapping_anchor_bytes"]
+        for row in result["cell_projections"]
+    }
+    assert {index for index, size in mapping_rows.items() if size > 0} == {
+        0, 162, 324
+    }
+    raw_walls = [
+        row["projected_wall_seconds"]
+        for row in result["cell_projections"]
+    ]
+    assert result["projected_raw_lpt_wall_seconds"] >= max(raw_walls)
+    assert result["projected_raw_lpt_wall_seconds"] >= (
+        sum(raw_walls) / 4.0
+    )
+    assert result["projected_inventory_finalize_wall_seconds"] > 0.0
     assert result[
         "retained_density_physicality_serial_wall_seconds"
     ] == 123.0
@@ -647,4 +1053,7 @@ def test_projection_is_518_cell_component_stratified_not_uniform() -> None:
             measurements,
             stats_wall_seconds=2.0,
             retained_density_physicality_wall_seconds=0.0,
+            inventory_finalize_wall_seconds=1.0,
+            inventory_profile_object_bytes=1_000,
+            inventory_profile_receipt_count=8,
         )

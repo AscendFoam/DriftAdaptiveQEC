@@ -10,9 +10,34 @@ import pytest
 
 from cnn_fpga.benchmark.phase9_immutable_object_store import (
     ImmutableObjectStore,
+    _sha,
     append_attempt_event,
     publish_inventory_and_manifest,
 )
+
+SOURCE_SHA = "3" * 64
+SEED_NAMESPACE = "fixture"
+RUNNER_ID = "fixture_runner"
+
+
+def _fingerprint(**extra: object) -> dict[str, object]:
+    fingerprint: dict[str, object] = {
+        "runner_id": RUNNER_ID,
+        "python": [3, 12, 7],
+        "numpy": "1.26.4",
+        "scipy": "1.13.1",
+        "psutil": "5.9.0",
+        "platform": "test-platform",
+        "thread_environment": {
+            "OMP_NUM_THREADS": "1",
+            "OPENBLAS_NUM_THREADS": "1",
+            "MKL_NUM_THREADS": "1",
+            "NUMEXPR_NUM_THREADS": "1",
+        },
+        "seed_namespace": SEED_NAMESPACE,
+    }
+    fingerprint.update(extra)
+    return fingerprint
 
 
 def _store(tmp_path: Path) -> ImmutableObjectStore:
@@ -25,6 +50,9 @@ def _store(tmp_path: Path) -> ImmutableObjectStore:
         run_id="fresh-test-run",
         config_sha256="1" * 64,
         plan_sha256="2" * 64,
+        source_snapshot_sha256=SOURCE_SHA,
+        seed_namespace=SEED_NAMESPACE,
+        runner_id=RUNNER_ID,
     )
 
 
@@ -57,8 +85,8 @@ def _receipt(
         exception_rows=0,
         missing_rows=0,
         conservation_failures=0,
-        source_snapshot_sha256="3" * 64,
-        runtime_fingerprint={"python": "test", "threads": 1},
+        source_snapshot_sha256=SOURCE_SHA,
+        runtime_fingerprint=_fingerprint(),
         reset_rows=0,
         reset_sidecar_rows=0,
     )
@@ -98,8 +126,8 @@ def test_receipt_is_idempotent_but_conflicting_replay_fails(tmp_path: Path) -> N
         exception_rows=0,
         missing_rows=0,
         conservation_failures=0,
-        source_snapshot_sha256="3" * 64,
-        runtime_fingerprint={"python": "test", "threads": 1},
+        source_snapshot_sha256=SOURCE_SHA,
+        runtime_fingerprint=_fingerprint(),
         reset_rows=0,
         reset_sidecar_rows=0,
     )
@@ -114,8 +142,8 @@ def test_receipt_is_idempotent_but_conflicting_replay_fails(tmp_path: Path) -> N
             exception_rows=0,
             missing_rows=0,
             conservation_failures=0,
-            source_snapshot_sha256="3" * 64,
-            runtime_fingerprint={"python": "test", "threads": 1},
+            source_snapshot_sha256=SOURCE_SHA,
+            runtime_fingerprint=_fingerprint(),
             reset_rows=0,
             reset_sidecar_rows=0,
         )
@@ -149,8 +177,8 @@ def test_concurrent_object_and_conflicting_receipt_publication_is_exclusive(
             exception_rows=0,
             missing_rows=0,
             conservation_failures=0,
-            source_snapshot_sha256="3" * 64,
-            runtime_fingerprint={"race": True},
+            source_snapshot_sha256=SOURCE_SHA,
+            runtime_fingerprint=_fingerprint(),
             reset_rows=0,
             reset_sidecar_rows=0,
         )
@@ -185,7 +213,7 @@ def test_receipt_denominator_and_reset_invariants_are_enforced(
             exception_rows=0,
             missing_rows=0,
             conservation_failures=0,
-            source_snapshot_sha256="3" * 64,
+            source_snapshot_sha256=SOURCE_SHA,
             runtime_fingerprint={},
             reset_rows=0,
             reset_sidecar_rows=0,
@@ -199,7 +227,7 @@ def test_receipt_denominator_and_reset_invariants_are_enforced(
             exception_rows=0,
             missing_rows=0,
             conservation_failures=0,
-            source_snapshot_sha256="3" * 64,
+            source_snapshot_sha256=SOURCE_SHA,
             runtime_fingerprint={},
             reset_rows=1,
             reset_sidecar_rows=0,
@@ -214,6 +242,212 @@ def test_live_object_corruption_invalidates_receipt(tmp_path: Path) -> None:
     object_path.write_bytes(b"tampered")
     with pytest.raises(RuntimeError, match="live bytes"):
         store.verify_receipt(store.receipt_path("cell0"), expected_cell=cell)
+
+
+@pytest.mark.parametrize(
+    ("mutation", "message"),
+    (
+        ("source", "receipt lineage mismatch"),
+        ("namespace", "runtime fingerprint lineage mismatch"),
+        ("runner", "runtime fingerprint lineage mismatch"),
+    ),
+)
+def test_coordinated_receipt_lineage_rehash_is_rejected(
+    tmp_path: Path,
+    mutation: str,
+    message: str,
+) -> None:
+    store = _store(tmp_path)
+    cell = _cell("cell0")
+    _receipt(store, cell, b"rows")
+    path = store.receipt_path("cell0")
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    if mutation == "source":
+        receipt["source_snapshot_sha256"] = "4" * 64
+    elif mutation == "namespace":
+        receipt["runtime_fingerprint"]["seed_namespace"] = "formal"
+    else:
+        receipt["runtime_fingerprint"]["runner_id"] = "other_runner"
+    receipt.pop("receipt_sha256")
+    receipt["receipt_sha256"] = _sha(receipt)
+    path.write_text(
+        json.dumps(receipt, sort_keys=True, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(RuntimeError, match=message):
+        store.verify_receipt(path, expected_cell=cell)
+
+
+@pytest.mark.parametrize("mutation", ("extra", "missing"))
+def test_receipt_requires_exact_top_level_schema_after_rehash(
+    tmp_path: Path,
+    mutation: str,
+) -> None:
+    store = _store(tmp_path)
+    cell = _cell("cell0")
+    _receipt(store, cell, b"rows")
+    path = store.receipt_path("cell0")
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    receipt.pop("receipt_sha256")
+    if mutation == "extra":
+        receipt["unregistered"] = True
+    else:
+        receipt.pop("source_snapshot_sha256")
+    receipt["receipt_sha256"] = _sha(receipt)
+    path.write_text(
+        json.dumps(receipt, sort_keys=True, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(RuntimeError, match="top-level schema drift"):
+        store.verify_receipt(path, expected_cell=cell)
+
+
+def test_receipt_duplicate_json_key_is_rejected(tmp_path: Path) -> None:
+    store = _store(tmp_path)
+    cell = _cell("cell0")
+    _receipt(store, cell, b"rows")
+    path = store.receipt_path("cell0")
+    payload = path.read_text(encoding="utf-8")
+    path.write_text(
+        payload.replace(
+            '"task_id":"T-RISK-20260728-04"',
+            '"task_id":"WRONG","task_id":"T-RISK-20260728-04"',
+            1,
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="duplicate JSON key"):
+        store.verify_receipt(path, expected_cell=cell)
+
+
+@pytest.mark.parametrize(
+    ("source", "fingerprint"),
+    (
+        ("4" * 64, _fingerprint()),
+        (SOURCE_SHA, _fingerprint(seed_namespace="formal")),
+        (SOURCE_SHA, _fingerprint(runner_id="other_runner")),
+    ),
+)
+def test_commit_rejects_source_namespace_or_runner_outside_store_lineage(
+    tmp_path: Path,
+    source: str,
+    fingerprint: dict[str, object],
+) -> None:
+    store = _store(tmp_path)
+    binding = store.put_bytes(b"rows", role="round_ledger_csv")
+    with pytest.raises(ValueError, match="store lineage"):
+        store.commit_receipt(
+            cell=_cell("cell0"),
+            objects=[binding],
+            expected_rows=2,
+            observed_rows=2,
+            exception_rows=0,
+            missing_rows=0,
+            conservation_failures=0,
+            source_snapshot_sha256=source,
+            runtime_fingerprint=fingerprint,
+            reset_rows=0,
+            reset_sidecar_rows=0,
+        )
+    assert not store.receipt_path("cell0").exists()
+
+
+@pytest.mark.parametrize(
+    "fingerprint",
+    (
+        _fingerprint(hidden=True),
+        {
+            key: value
+            for key, value in _fingerprint().items()
+            if key != "numpy"
+        },
+        _fingerprint(
+            thread_environment={
+                "OMP_NUM_THREADS": "2",
+                "OPENBLAS_NUM_THREADS": "1",
+                "MKL_NUM_THREADS": "1",
+                "NUMEXPR_NUM_THREADS": "1",
+            }
+        ),
+        {"runner_id": RUNNER_ID, "seed_namespace": SEED_NAMESPACE},
+    ),
+)
+def test_commit_rejects_noncanonical_runtime_fingerprint_before_publication(
+    tmp_path: Path,
+    fingerprint: dict[str, object],
+) -> None:
+    store = _store(tmp_path)
+    binding = store.put_bytes(b"rows", role="round_ledger_csv")
+    with pytest.raises(ValueError, match="runtime fingerprint"):
+        store.commit_receipt(
+            cell=_cell("cell0"),
+            objects=[binding],
+            expected_rows=2,
+            observed_rows=2,
+            exception_rows=0,
+            missing_rows=0,
+            conservation_failures=0,
+            source_snapshot_sha256=SOURCE_SHA,
+            runtime_fingerprint=fingerprint,
+            reset_rows=0,
+            reset_sidecar_rows=0,
+        )
+    assert not store.receipt_path("cell0").exists()
+
+
+def test_coordinated_nested_runtime_extra_rehash_is_rejected(
+    tmp_path: Path,
+) -> None:
+    store = _store(tmp_path)
+    cell = _cell("cell0")
+    _receipt(store, cell, b"rows")
+    path = store.receipt_path("cell0")
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    receipt["runtime_fingerprint"]["hidden"] = True
+    receipt.pop("receipt_sha256")
+    receipt["receipt_sha256"] = _sha(receipt)
+    path.write_text(
+        json.dumps(receipt, sort_keys=True, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(RuntimeError, match="runtime fingerprint"):
+        store.verify_receipt(path, expected_cell=cell)
+
+
+def test_receipt_cell_identity_rejects_bool_integer_type_alias(
+    tmp_path: Path,
+) -> None:
+    store = _store(tmp_path)
+    cell = _cell("cell0")
+    _receipt(store, cell, b"rows")
+    path = store.receipt_path("cell0")
+    receipt = json.loads(path.read_text(encoding="utf-8"))
+    receipt["cell"]["plan_index"] = False
+    receipt.pop("receipt_sha256")
+    receipt["receipt_sha256"] = _sha(receipt)
+    path.write_text(
+        json.dumps(receipt, sort_keys=True, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(RuntimeError, match="cell identity"):
+        store.verify_receipt(path, expected_cell=cell)
+
+
+def test_store_rejects_zero_lineage_digest(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="nonzero lowercase"):
+        ImmutableObjectStore(
+            repository_root=tmp_path,
+            object_root=tmp_path / "objects",
+            staging_root=tmp_path / "staging",
+            receipt_root=tmp_path / "receipts",
+            task_id="T-RISK-20260728-04",
+            run_id="fixture",
+            config_sha256="0" * 64,
+            plan_sha256="2" * 64,
+            source_snapshot_sha256="3" * 64,
+            seed_namespace=SEED_NAMESPACE,
+            runner_id=RUNNER_ID,
+        )
 
 
 def test_unknown_extra_and_missing_receipts_fail_closed(tmp_path: Path) -> None:
@@ -257,8 +491,8 @@ def test_exception_rows_are_retained_but_terminal_is_incomplete(tmp_path: Path) 
         exception_rows=1,
         missing_rows=0,
         conservation_failures=0,
-        source_snapshot_sha256="3" * 64,
-        runtime_fingerprint={"threads": 1},
+        source_snapshot_sha256=SOURCE_SHA,
+        runtime_fingerprint=_fingerprint(),
         reset_rows=0,
         reset_sidecar_rows=0,
     )

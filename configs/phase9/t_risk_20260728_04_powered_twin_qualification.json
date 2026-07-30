@@ -522,38 +522,47 @@
   },
   "resource_contract": {
     "fresh_full_size_preflight_required": true,
+    "sample_interval_seconds": 5.0,
+    "expected_iq_samples": 8,
     "required_profiles": [
       "shared_c44_b_reset_1536",
       "logical_c44_b_reset_1536",
       "probe_c36_b_reset_1536",
-      "fault_c44_b_compound_4608x12",
-      "backend_a_representative",
-      "four_worker_concurrent_peak",
+      "fault_c44_a_compound_4608x12",
+      "formal_lpt_four_worker_peak",
+      "representative_four_worker_profiles",
       "joint_maxt_3037x199",
       "retained_density_physicality_full_482304",
       "inventory_finalize_no_copy"
     ],
     "profile_plan": {
-      "four_worker_concurrent_peak": {
+      "formal_lpt_four_worker_peak": {
         "plan_indices": [
-          389,
-          403,
-          507,
-          485
+          478,
+          480,
+          482,
+          484
         ],
         "sample_counts": [
-          1536,
-          1536,
-          1536,
+          4608,
+          4608,
+          4608,
           4608
         ],
-        "full_frozen_denominator": true
+        "full_frozen_denominator": true,
+        "matches_formal_lpt_prefix": true
       },
-      "backend_a_representative": {
+      "representative_four_worker_profiles": {
         "plan_indices": [
-          388
+          388,
+          389,
+          403,
+          507
         ],
         "sample_counts": [
+          1536,
+          1536,
+          1536,
           1536
         ],
         "full_frozen_denominator": true
@@ -571,11 +580,12 @@
         "block_size": 8,
         "fixture_matrix_count": 256,
         "timed_repeats": 3,
-        "full_coverage_required": true,
-        "sampled": false
+        "coverage_mode": "fixture_timed_conservative_projection",
+        "resource_profile_is_full_coverage": false,
+        "formal_full_coverage_required": true
       },
       "inventory_finalize_no_copy": {
-        "receipt_count": 5,
+        "receipt_count": 8,
         "monolithic_archive_forbidden": true
       }
     },
@@ -596,10 +606,10 @@
     "attempt_ledger": "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/attempts.jsonl",
     "owner_lock": "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/owner.lock",
     "heartbeat": "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/heartbeat.json",
-    "plan": "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/plan_v4.json",
-    "seed_registry": "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/seed_registry_v4.json",
-    "historical_seed_scan": "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/historical_seed_scan_v4.json",
-    "contract_preflight": "docs/t_risk_20260728_04_powered_twin_contract_preflight_v4.json",
+    "plan": "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/plan_v5.json",
+    "seed_registry": "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/seed_registry_v5.json",
+    "historical_seed_scan": "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/historical_seed_scan_v5.json",
+    "contract_preflight": "docs/t_risk_20260728_04_powered_twin_contract_preflight_v5.json",
     "resource_preflight": "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/resource_preflight.json",
     "preformal_validation": "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/preformal_validation.json",
     "preformal_seal": "docs/t_risk_20260728_04_powered_twin_preformal_seal.json",

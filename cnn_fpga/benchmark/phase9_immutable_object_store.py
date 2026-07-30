@@ -29,6 +29,41 @@ INVENTORY_SCHEMA = "PHASE9-POWERED-TWIN-OBJECT-INVENTORY-V1"
 MANIFEST_SCHEMA = "PHASE9-POWERED-TWIN-EXECUTION-MANIFEST-V1"
 ATTEMPT_SCHEMA = "PHASE9-POWERED-TWIN-ATTEMPT-EVENT-V1"
 BUFFER_BYTES = 8 * 1024 * 1024
+RECEIPT_FIELDS = frozenset(
+    {
+        "schema_version",
+        "task_id",
+        "run_id",
+        "config_sha256",
+        "plan_sha256",
+        "source_snapshot_sha256",
+        "cell",
+        "diagnostics",
+        "runtime_fingerprint",
+        "objects",
+        "receipt_sha256",
+    }
+)
+RUNTIME_FINGERPRINT_FIELDS = frozenset(
+    {
+        "runner_id",
+        "python",
+        "numpy",
+        "scipy",
+        "psutil",
+        "platform",
+        "thread_environment",
+        "seed_namespace",
+    }
+)
+THREAD_ENVIRONMENT_FIELDS = frozenset(
+    {
+        "OMP_NUM_THREADS",
+        "OPENBLAS_NUM_THREADS",
+        "MKL_NUM_THREADS",
+        "NUMEXPR_NUM_THREADS",
+    }
+)
 
 
 def _canonical(value: object) -> bytes:
@@ -56,6 +91,65 @@ def _sha_file(path: Path) -> tuple[int, str]:
             digest.update(block)
             size += len(block)
     return size, digest.hexdigest()
+
+
+def _strict_json_object(path: Path, *, label: str) -> dict[str, Any]:
+    def reject_duplicate(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f"duplicate JSON key {key!r} in {label}")
+            result[key] = value
+        return result
+
+    value = json.loads(
+        path.read_text(encoding="utf-8"),
+        object_pairs_hook=reject_duplicate,
+        parse_constant=lambda token: (_ for _ in ()).throw(
+            ValueError(f"non-finite JSON token {token} in {label}")
+        ),
+    )
+    if not isinstance(value, dict):
+        raise ValueError(f"{label} must be an object")
+    return value
+
+
+def _validate_runtime_fingerprint(
+    fingerprint: object,
+    *,
+    runner_id: str,
+    seed_namespace: str,
+) -> Mapping[str, Any]:
+    if not isinstance(fingerprint, Mapping):
+        raise RuntimeError("receipt runtime fingerprint lineage mismatch")
+    thread_environment = fingerprint.get("thread_environment")
+    python_version = fingerprint.get("python")
+    if (
+        set(fingerprint) != RUNTIME_FINGERPRINT_FIELDS
+        or fingerprint.get("runner_id") != runner_id
+        or fingerprint.get("seed_namespace") != seed_namespace
+        or not isinstance(python_version, list)
+        or len(python_version) != 3
+        or any(
+            isinstance(value, bool)
+            or not isinstance(value, int)
+            or value < 0
+            for value in python_version
+        )
+        or not isinstance(fingerprint.get("numpy"), str)
+        or not fingerprint.get("numpy")
+        or not isinstance(fingerprint.get("scipy"), str)
+        or not fingerprint.get("scipy")
+        or not isinstance(fingerprint.get("psutil"), str)
+        or not fingerprint.get("psutil")
+        or not isinstance(fingerprint.get("platform"), str)
+        or not fingerprint.get("platform")
+        or not isinstance(thread_environment, Mapping)
+        or set(thread_environment) != THREAD_ENVIRONMENT_FIELDS
+        or any(value != "1" for value in thread_environment.values())
+    ):
+        raise RuntimeError("receipt runtime fingerprint lineage mismatch")
+    return fingerprint
 
 
 def _inside(path: Path, parent: Path, name: str) -> Path:
@@ -161,6 +255,9 @@ class ImmutableObjectStore:
         run_id: str,
         config_sha256: str,
         plan_sha256: str,
+        source_snapshot_sha256: str,
+        seed_namespace: str,
+        runner_id: str,
     ) -> None:
         self.repository_root = repository_root.resolve()
         self.object_root = _inside(
@@ -183,17 +280,36 @@ class ImmutableObjectStore:
         for name, value in (
             ("config_sha256", config_sha256),
             ("plan_sha256", plan_sha256),
+            ("source_snapshot_sha256", source_snapshot_sha256),
         ):
             if (
                 not isinstance(value, str)
                 or len(value) != 64
+                or value == "0" * 64
                 or any(character not in "0123456789abcdef" for character in value)
             ):
-                raise ValueError(f"{name} must be a lowercase SHA-256")
+                raise ValueError(f"{name} must be a nonzero lowercase SHA-256")
+        for name, value in (
+            ("seed_namespace", seed_namespace),
+            ("runner_id", runner_id),
+        ):
+            if (
+                not isinstance(value, str)
+                or not value
+                or any(
+                    character not in
+                    "-_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+                    for character in value
+                )
+            ):
+                raise ValueError(f"{name} must be one safe non-empty identifier")
         self.task_id = task_id
         self.run_id = run_id
         self.config_sha256 = config_sha256
         self.plan_sha256 = plan_sha256
+        self.source_snapshot_sha256 = source_snapshot_sha256
+        self.seed_namespace = seed_namespace
+        self.runner_id = runner_id
 
     def new_staging_path(self, *, suffix: str = ".bin") -> Path:
         if (
@@ -395,6 +511,18 @@ class ImmutableObjectStore:
         roles = [binding.role for binding in objects]
         if len(roles) != len(set(roles)) or not roles:
             raise ValueError("object roles must be non-empty and unique")
+        if source_snapshot_sha256 != self.source_snapshot_sha256:
+            raise ValueError("receipt source snapshot differs from store lineage")
+        try:
+            _validate_runtime_fingerprint(
+                runtime_fingerprint,
+                runner_id=self.runner_id,
+                seed_namespace=self.seed_namespace,
+            )
+        except RuntimeError as exc:
+            raise ValueError(
+                "receipt runtime fingerprint differs from store lineage"
+            ) from exc
         verified = [
             asdict(self.verify_object(asdict(binding))) for binding in objects
         ]
@@ -417,7 +545,7 @@ class ImmutableObjectStore:
             existing = path.read_bytes()
             if existing != payload:
                 raise RuntimeError("conflicting immutable receipt replay")
-            return receipt
+            return self.verify_receipt(path, expected_cell=cell)
         _immutable_bytes(path, payload)
         return self.verify_receipt(path, expected_cell=cell)
 
@@ -429,14 +557,9 @@ class ImmutableObjectStore:
     ) -> dict[str, Any]:
         path = _inside(path, self.receipt_root, "receipt")
         _regular_nonsymlink(path, "receipt")
-        receipt = json.loads(
-            path.read_text(encoding="utf-8"),
-            parse_constant=lambda token: (_ for _ in ()).throw(
-                ValueError(f"non-finite receipt token {token}")
-            ),
-        )
-        if not isinstance(receipt, dict):
-            raise ValueError("receipt must be an object")
+        receipt = _strict_json_object(path, label="receipt")
+        if set(receipt) != RECEIPT_FIELDS:
+            raise RuntimeError("receipt top-level schema drift")
         claimed = receipt.get("receipt_sha256")
         unsigned = dict(receipt)
         unsigned.pop("receipt_sha256", None)
@@ -448,11 +571,19 @@ class ImmutableObjectStore:
             or receipt.get("run_id") != self.run_id
             or receipt.get("config_sha256") != self.config_sha256
             or receipt.get("plan_sha256") != self.plan_sha256
+            or receipt.get("source_snapshot_sha256")
+            != self.source_snapshot_sha256
         ):
             raise RuntimeError("receipt lineage mismatch")
+        _validate_runtime_fingerprint(
+            receipt.get("runtime_fingerprint"),
+            runner_id=self.runner_id,
+            seed_namespace=self.seed_namespace,
+        )
         cell = receipt.get("cell")
         if not isinstance(cell, Mapping) or (
-            expected_cell is not None and dict(cell) != dict(expected_cell)
+            expected_cell is not None
+            and _canonical(cell) != _canonical(expected_cell)
         ):
             raise RuntimeError("receipt cell identity mismatch")
         if path != self.receipt_path(str(cell.get("chunk_id"))).resolve():
@@ -499,6 +630,12 @@ class ImmutableObjectStore:
             != diagnostics["reset_sidecar_rows"]
         ):
             raise RuntimeError("receipt denominator/sidecar invariant drift")
+        if (
+            isinstance(cell.get("expected_rows"), bool)
+            or not isinstance(cell.get("expected_rows"), int)
+            or diagnostics["expected_rows"] != cell["expected_rows"]
+        ):
+            raise RuntimeError("receipt diagnostic/cell denominator drift")
         return receipt
 
     def inventory(

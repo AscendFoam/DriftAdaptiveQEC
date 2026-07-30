@@ -28,7 +28,7 @@ from cnn_fpga.benchmark.phase9_powered_twin_contract import (
 )
 
 
-REPORT_SCHEMA = "PHASE9-POWERED-TWIN-CONTRACT-PREFLIGHT-V4"
+REPORT_SCHEMA = "PHASE9-POWERED-TWIN-CONTRACT-PREFLIGHT-V5"
 HISTORICAL_SCAN_SCHEMA = "PHASE9-HISTORICAL-SEED-SCAN-V1"
 
 
@@ -420,6 +420,27 @@ def materialize(root: Path) -> dict[str, Any]:
                 "seed_registry": (
                     "runs/t_risk_20260728_04_powered_twin_qualification_fresh1/"
                     "seed_registry_v3.json"
+                ),
+            }.items()
+        },
+        "superseded_preseal_v4": {
+            name: _binding(root / relative, root)
+            for name, relative in {
+                "contract_preflight": (
+                    "docs/t_risk_20260728_04_powered_twin_"
+                    "contract_preflight_v4.json"
+                ),
+                "historical_seed_scan": (
+                    "runs/t_risk_20260728_04_powered_twin_"
+                    "qualification_fresh1/historical_seed_scan_v4.json"
+                ),
+                "plan": (
+                    "runs/t_risk_20260728_04_powered_twin_"
+                    "qualification_fresh1/plan_v4.json"
+                ),
+                "seed_registry": (
+                    "runs/t_risk_20260728_04_powered_twin_"
+                    "qualification_fresh1/seed_registry_v4.json"
                 ),
             }.items()
         },

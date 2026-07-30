@@ -53,6 +53,39 @@ CLAIM_FIELDS = (
     "rank",
     "hardware_measured",
 )
+PREFORMAL_SEAL_SCHEMA = "PHASE9-POWERED-TWIN-PREFORMAL-SEAL-V2"
+PREFORMAL_SEAL_FIELDS = frozenset(
+    {
+        "schema_version", "task_id", "verdict",
+        "raw_execution_released", "scientific_verdict_released",
+        "formal_outcomes_accessed", "config_sha256", "plan_sha256",
+        "source_snapshot_sha256", "source_snapshot", "bindings",
+        "resource_run_id", "resource_consumption", "gates",
+        "claim_boundary", "scientific_verdict", "qualified_claim",
+        "official_puviani_surpass", "analysis_sha256",
+    }
+)
+PREFORMAL_BINDING_FIELDS = frozenset(
+    {
+        "contract_preflight", "resource_preflight",
+        "resource_attempt_ledger", "resource_start_witness",
+        "resource_pass_witness", "preformal_validation",
+    }
+)
+RESOURCE_CONSUMPTION_FIELDS = frozenset(
+    {
+        "schema_version", "resource_report", "run_id",
+        "config_sha256", "plan_sha256", "source_snapshot_sha256",
+        "receipt_count", "ledger_rows_verified", "reset_rows_verified",
+        "formal_seed_addresses_accessed", "live_object_count",
+        "live_object_bytes", "sampling_records_verified",
+        "maximum_observed_worker_overlap", "heartbeat_sequence",
+        "projection_cells_verified", "joint_maxt_gate_count",
+        "joint_maxt_replicates", "attempt_chain",
+        "live_resource_admission_passed", "scientific_verdict",
+        "qualified_claim", "claim_boundary", "analysis_sha256",
+    }
+)
 HEX = frozenset("0123456789abcdef")
 LABELS = ("0", "1", "+", "-", "+i", "-i")
 # Frozen independently from the powered producer.  CSV column membership and
@@ -609,7 +642,10 @@ def _verify_release_chain(
     seal = _strict_json(_safe_inside(root, paths["preformal_seal"], "preformal seal"))
     _verify_self_hash(seal, "analysis_sha256", "preformal seal")
     if (
-        seal.get("verdict") != "PASS_PREFORMAL_RELEASE"
+        set(seal) != PREFORMAL_SEAL_FIELDS
+        or seal.get("schema_version") != PREFORMAL_SEAL_SCHEMA
+        or seal.get("task_id") != TASK_ID
+        or seal.get("verdict") != "PASS_PREFORMAL_RELEASE"
         or seal.get("raw_execution_released") is not True
         or seal.get("scientific_verdict_released") is not False
         or seal.get("formal_outcomes_accessed") is not False
@@ -617,9 +653,88 @@ def _verify_release_chain(
         or seal.get("plan_sha256") != plan.get("canonical_plan_sha256")
         or seal.get("scientific_verdict") is not None
         or seal.get("qualified_claim") is not None
-        or set(seal.get("claim_boundary", {}).values()) != {None}
+        or seal.get("official_puviani_surpass") is not None
+        or not isinstance(seal.get("claim_boundary"), dict)
+        or set(seal["claim_boundary"]) != set(CLAIM_FIELDS)
+        or any(seal["claim_boundary"][field] is not None for field in CLAIM_FIELDS)
     ):
         raise EvidenceIncomplete("preformal seal release/lineage drift")
+    seal_bindings = seal.get("bindings")
+    consumption = seal.get("resource_consumption")
+    if (
+        not isinstance(seal_bindings, dict)
+        or set(seal_bindings) != PREFORMAL_BINDING_FIELDS
+        or not isinstance(consumption, dict)
+        or set(consumption) != RESOURCE_CONSUMPTION_FIELDS
+    ):
+        raise EvidenceIncomplete("preformal V2 resource binding schema drift")
+    _verify_self_hash(
+        consumption, "analysis_sha256", "resource consumption"
+    )
+    attempt = consumption.get("attempt_chain")
+    if (
+        consumption.get("schema_version")
+        != "PHASE9-POWERED-TWIN-RESOURCE-CONSUMPTION-V1"
+        or consumption.get("run_id") != seal.get("resource_run_id")
+        or consumption.get("config_sha256") != config_sha
+        or consumption.get("plan_sha256")
+        != plan.get("canonical_plan_sha256")
+        or consumption.get("source_snapshot_sha256")
+        != seal.get("source_snapshot_sha256")
+        or consumption.get("receipt_count") != 8
+        or consumption.get("ledger_rows_verified") != 227_328
+        or consumption.get("reset_rows_verified") != 15_360
+        or consumption.get("formal_seed_addresses_accessed") is not False
+        or consumption.get("maximum_observed_worker_overlap") != 4
+        or consumption.get("projection_cells_verified") != 518
+        or consumption.get("joint_maxt_gate_count") != 3037
+        or consumption.get("joint_maxt_replicates") != 199
+        or consumption.get("live_resource_admission_passed") is not True
+        or consumption.get("scientific_verdict") is not None
+        or consumption.get("qualified_claim") is not None
+        or not isinstance(consumption.get("claim_boundary"), dict)
+        or set(consumption["claim_boundary"]) != set(CLAIM_FIELDS)
+        or any(
+            consumption["claim_boundary"][field] is not None
+            for field in CLAIM_FIELDS
+        )
+        or not isinstance(attempt, dict)
+        or set(attempt)
+        != {
+            "path", "binding", "event_count", "chain_tip_sha256",
+            "start_witness", "pass_witness",
+        }
+        or attempt.get("event_count") != 2
+        or seal_bindings["resource_preflight"]
+        != consumption.get("resource_report")
+        or seal_bindings["resource_attempt_ledger"]
+        != attempt.get("binding")
+        or seal_bindings["resource_start_witness"]
+        != attempt.get("start_witness")
+        or seal_bindings["resource_pass_witness"]
+        != attempt.get("pass_witness")
+    ):
+        raise EvidenceIncomplete("preformal V2 resource lineage drift")
+    expected_fixed = {
+        "contract_preflight": paths["contract_preflight"],
+        "resource_preflight": paths["resource_preflight"],
+        "preformal_validation": paths["preformal_validation"],
+    }
+    for name, binding in seal_bindings.items():
+        if not isinstance(binding, dict) or set(binding) != {
+            "path", "bytes", "sha256"
+        }:
+            raise EvidenceIncomplete("preformal V2 live binding schema drift")
+        if name in expected_fixed and binding["path"] != expected_fixed[name]:
+            raise EvidenceIncomplete("preformal V2 fixed binding path drift")
+        bound_path = _safe_inside(root, binding["path"], f"seal binding {name}")
+        size, digest = _file_sha(bound_path)
+        if binding != {
+            "path": bound_path.relative_to(root).as_posix(),
+            "bytes": size,
+            "sha256": digest,
+        }:
+            raise EvidenceIncomplete("preformal V2 live binding drift")
     snapshot = seal.get("source_snapshot")
     if not isinstance(snapshot, dict):
         raise EvidenceIncomplete("seal source snapshot missing")

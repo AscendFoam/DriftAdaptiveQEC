@@ -305,6 +305,15 @@ class HeartbeatService:
         )
         self._thread.start()
 
+    def write_once(self) -> None:
+        """Atomically publish a caller-requested stage-boundary heartbeat."""
+
+        if self._thread is None:
+            raise RuntimeError("heartbeat has not started")
+        if self.error is not None:
+            raise RuntimeError("heartbeat service failed") from self.error
+        self._write()
+
     def stop(self) -> None:
         self._stop.set()
         if self._thread is not None:

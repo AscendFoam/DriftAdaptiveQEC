@@ -817,13 +817,18 @@ def validate_config(
             raise ValueError(f"resource_contract.{key} drifted")
     if resources.get("fresh_full_size_preflight_required") is not True:
         raise ValueError("fresh full-size resource preflight is mandatory")
+    if (
+        resources.get("sample_interval_seconds") != 5.0
+        or resources.get("expected_iq_samples") != 8
+    ):
+        raise ValueError("resource sampling/IQ payload contract drifted")
     expected_profiles = {
         "shared_c44_b_reset_1536",
         "logical_c44_b_reset_1536",
         "probe_c36_b_reset_1536",
-        "fault_c44_b_compound_4608x12",
-        "backend_a_representative",
-        "four_worker_concurrent_peak",
+        "fault_c44_a_compound_4608x12",
+        "formal_lpt_four_worker_peak",
+        "representative_four_worker_profiles",
         "joint_maxt_3037x199",
         "retained_density_physicality_full_482304",
         "inventory_finalize_no_copy",
@@ -831,22 +836,23 @@ def validate_config(
     if set(resources.get("required_profiles", ())) != expected_profiles:
         raise ValueError("resource preflight profile family drifted")
     profile_plan = resources.get("profile_plan")
-    expected_concurrent = {
-        "plan_indices": [389, 403, 507, 485],
-        "sample_counts": [1536, 1536, 1536, 4608],
+    expected_lpt_peak = {
+        "plan_indices": [478, 480, 482, 484],
+        "sample_counts": [4608, 4608, 4608, 4608],
         "full_frozen_denominator": True,
+        "matches_formal_lpt_prefix": True,
     }
-    expected_backend_a = {
-        "plan_indices": [388],
-        "sample_counts": [1536],
+    expected_representatives = {
+        "plan_indices": [388, 389, 403, 507],
+        "sample_counts": [1536, 1536, 1536, 1536],
         "full_frozen_denominator": True,
     }
     if (
         not isinstance(profile_plan, Mapping)
-        or profile_plan.get("four_worker_concurrent_peak")
-        != expected_concurrent
-        or profile_plan.get("backend_a_representative")
-        != expected_backend_a
+        or profile_plan.get("formal_lpt_four_worker_peak")
+        != expected_lpt_peak
+        or profile_plan.get("representative_four_worker_profiles")
+        != expected_representatives
         or profile_plan.get("joint_maxt_3037x199")
         != {
             "gate_count": 3037,
@@ -864,12 +870,13 @@ def validate_config(
             "block_size": 8,
             "fixture_matrix_count": 256,
             "timed_repeats": 3,
-            "full_coverage_required": True,
-            "sampled": False,
+            "coverage_mode": "fixture_timed_conservative_projection",
+            "resource_profile_is_full_coverage": False,
+            "formal_full_coverage_required": True,
         }
         or profile_plan.get("inventory_finalize_no_copy")
         != {
-            "receipt_count": 5,
+            "receipt_count": 8,
             "monolithic_archive_forbidden": True,
         }
     ):
@@ -880,7 +887,10 @@ def validate_config(
             388: ("shared", "A", 44, "RESET", "", 1536, 1536),
             389: ("shared", "B", 44, "RESET", "", 1536, 1536),
             403: ("logical", "B", 44, "RESET", "", 1536, 1536),
-            485: ("fault", "B", 44, "", "compound", 4608, 55_296),
+            478: ("fault", "A", 44, "", "step", 4608, 55_296),
+            480: ("fault", "A", 44, "", "telegraph", 4608, 55_296),
+            482: ("fault", "A", 44, "", "burst", 4608, 55_296),
+            484: ("fault", "A", 44, "", "compound", 4608, 55_296),
             507: ("probe", "B", 36, "RESET", "", 1536, 1536),
         }
         for index, expected in expected_cell_signatures.items():
