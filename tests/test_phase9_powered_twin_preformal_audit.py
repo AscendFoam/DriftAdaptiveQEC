@@ -25,6 +25,9 @@ def _isolated_release_fixture(
         "object_store": "runs/formal/objects/sha256",
         "staging_directory": "runs/formal/staging",
         "receipt_directory": "runs/formal/receipts",
+        "plan": "runs/plan.json",
+        "seed_registry": "runs/seed_registry.json",
+        "historical_seed_scan": "runs/historical_seed_scan.json",
         "contract_preflight": "docs/contract.json",
         "resource_preflight": "runs/resource.json",
         "preformal_validation": "runs/validation.json",
@@ -47,14 +50,75 @@ def _isolated_release_fixture(
         "runtime_sources": {"validation_paths": []},
     }
     config_sha = "1" * 64
+    config_binding = {
+        "path": "configs/config.json",
+        "bytes": 123,
+        "sha256": config_sha,
+    }
     plan_sha = "2" * 64
     source_sha = "3" * 64
+    plan = {
+        "canonical_plan_sha256": plan_sha,
+        "cell_count": 518,
+        "row_count": 2_085_888,
+        "primary_density_count": 482_304,
+    }
+    seed_registry = {"registry_sha256": "4" * 64}
+    historical_scan = {"scan_manifest_sha256": "5" * 64}
     contract = {
-        "schema_version": "PHASE9-POWERED-TWIN-CONTRACT-PREFLIGHT-V2",
+        "task_id": audit.TASK_ID,
+        "schema_version": "PHASE9-POWERED-TWIN-CONTRACT-PREFLIGHT-V4",
         "status": "PASS_OUTCOME_FREE_CONTRACT_PREFLIGHT",
         "plan_summary": {"plan_sha256": plan_sha},
+        "formal_outcomes_accessed": False,
         "scientific_execution_released": False,
+        "qualified_claim": None,
+        "claim_boundary": {
+            field: None for field in audit.EXPECTED_CLAIM_FIELDS
+        },
+        "source_registry_summary": {
+            "source_snapshot_sha256": source_sha,
+            "runtime_source_count": 22,
+            "validation_source_count": 9,
+            "all_registered_sources_live_and_regular": True,
+        },
+        "gates": {
+            "C01_all_parent_bytes_verified": True,
+            "C02_t03_t05_t06_semantic_chain_verified": True,
+            "C03_exact_518_cell_plan": True,
+            "C04_exact_2085888_row_denominator": True,
+            "C05_exact_482304_primary_densities": True,
+            "C06_fault_state_major_6x768": True,
+            "C07_historical_seed_scan_recomputed": True,
+            "C08_actual_seed_addresses_injective": True,
+            "C09_content_addressed_no_zip_contract_frozen": True,
+            "C10_all_claims_null_and_scientific_execution_blocked": True,
+            "C11_all_runtime_and_validation_sources_live_regular": True,
+        },
+        "parent_semantic_checks": {
+            "P01_t03_design_repair_independent_pass": True,
+            "P02_t05_statistical_no_go_preserved": True,
+            "P03_t06_independent_count_pass": True,
+            "P04_selected_count_exact": True,
+            "P05_selected_blueprint_exact": True,
+            "P06_blueprint_counts_consume_selected_count": True,
+            "P07_parent_claims_remain_null": True,
+        },
+        "bindings": {},
     }
+    for name, relative, value in (
+        ("plan", paths["plan"], plan),
+        ("seed_registry", paths["seed_registry"], seed_registry),
+        (
+            "historical_seed_scan",
+            paths["historical_seed_scan"],
+            historical_scan,
+        ),
+    ):
+        target = tmp_path / relative
+        audit._immutable_json(target, value)
+        contract["bindings"][name] = audit._binding(target, tmp_path)
+    contract["bindings"]["config"] = config_binding
     _write_self_hashed(tmp_path / paths["contract_preflight"], contract)
     resource: dict[str, object] = {
         "verdict": "PASS_RESOURCE_PREFLIGHT",
@@ -84,19 +148,25 @@ def _isolated_release_fixture(
         "runtime_source_count": 22,
         "validation_source_count": 9,
     }
-    plan = {
-        "canonical_plan_sha256": plan_sha,
-        "cell_count": 518,
-        "row_count": 2_085_888,
-        "primary_density_count": 482_304,
-    }
-
     monkeypatch.setattr(
         audit,
         "load_config",
-        lambda root: (copy.deepcopy(config), {"sha256": config_sha}),
+        lambda root: (
+            copy.deepcopy(config),
+            copy.deepcopy(config_binding),
+        ),
     )
     monkeypatch.setattr(audit, "plan_payload", lambda current: dict(plan))
+    monkeypatch.setattr(
+        audit,
+        "seed_registry_payload",
+        lambda current: dict(seed_registry),
+    )
+    monkeypatch.setattr(
+        audit,
+        "historical_seed_scan",
+        lambda root, config_path: dict(historical_scan),
+    )
     monkeypatch.setattr(
         audit,
         "runtime_source_snapshot",
@@ -185,4 +255,105 @@ def test_preformal_seal_rejects_nonnull_resource_claim(
         resource_mutation=("qualified_claim", "surpass"),
     )
     with pytest.raises(RuntimeError, match="resource preflight"):
+        audit.create_preformal_seal(tmp_path)
+
+
+@pytest.mark.parametrize("version", ("V1", "V2", "V3"))
+def test_preformal_seal_rejects_superseded_contract(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    version: str,
+) -> None:
+    config = _isolated_release_fixture(tmp_path, monkeypatch)
+    path = tmp_path / config["artifact_paths"]["contract_preflight"]
+    contract = audit._strict_json(path)
+    contract.pop("analysis_sha256")
+    contract["schema_version"] = (
+        f"PHASE9-POWERED-TWIN-CONTRACT-PREFLIGHT-{version}"
+    )
+    path.unlink()
+    _write_self_hashed(path, contract)
+    with pytest.raises(RuntimeError, match="V4 outcome-free"):
+        audit.create_preformal_seal(tmp_path)
+
+
+def test_preformal_seal_rejects_stale_contract_source_snapshot(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = _isolated_release_fixture(tmp_path, monkeypatch)
+    path = tmp_path / config["artifact_paths"]["contract_preflight"]
+    contract = audit._strict_json(path)
+    contract.pop("analysis_sha256")
+    contract["source_registry_summary"]["source_snapshot_sha256"] = "4" * 64
+    path.unlink()
+    _write_self_hashed(path, contract)
+    with pytest.raises(RuntimeError, match="live bindings"):
+        audit.create_preformal_seal(tmp_path)
+
+
+def test_preformal_seal_rejects_stale_contract_plan_bytes(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config = _isolated_release_fixture(tmp_path, monkeypatch)
+    plan_path = tmp_path / config["artifact_paths"]["plan"]
+    plan_path.unlink()
+    audit._immutable_json(plan_path, {"mutated": True})
+    with pytest.raises(RuntimeError, match="live bindings"):
+        audit.create_preformal_seal(tmp_path)
+
+
+@pytest.mark.parametrize(
+    ("artifact_name", "replacement"),
+    (
+        ("plan", {"mutated": "plan"}),
+        ("seed_registry", {"mutated": "registry"}),
+        ("historical_seed_scan", {"mutated": "scan"}),
+    ),
+)
+def test_preformal_seal_rejects_semantic_artifact_and_rebound_contract(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    artifact_name: str,
+    replacement: dict[str, str],
+) -> None:
+    config = _isolated_release_fixture(tmp_path, monkeypatch)
+    paths = config["artifact_paths"]
+    artifact_path = tmp_path / paths[artifact_name]
+    artifact_path.unlink()
+    audit._immutable_json(artifact_path, replacement)
+    contract_path = tmp_path / paths["contract_preflight"]
+    contract = audit._strict_json(contract_path)
+    contract.pop("analysis_sha256")
+    contract["bindings"][artifact_name] = audit._binding(
+        artifact_path, tmp_path
+    )
+    contract_path.unlink()
+    _write_self_hashed(contract_path, contract)
+    with pytest.raises(RuntimeError, match="live bindings"):
+        audit.create_preformal_seal(tmp_path)
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    (
+        ("task_id", "WRONG-TASK"),
+        ("parent_semantic_checks", {}),
+    ),
+)
+def test_preformal_seal_rejects_contract_identity_or_parent_gate_drift(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    field: str,
+    value: object,
+) -> None:
+    config = _isolated_release_fixture(tmp_path, monkeypatch)
+    path = tmp_path / config["artifact_paths"]["contract_preflight"]
+    contract = audit._strict_json(path)
+    contract.pop("analysis_sha256")
+    contract[field] = value
+    path.unlink()
+    _write_self_hashed(path, contract)
+    with pytest.raises(RuntimeError, match="live bindings"):
         audit.create_preformal_seal(tmp_path)

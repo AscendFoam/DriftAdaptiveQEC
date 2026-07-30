@@ -28,11 +28,12 @@ import argparse
 import csv
 from collections import OrderedDict
 from dataclasses import dataclass
-from hashlib import sha256
+from hashlib import blake2b, sha256
 import json
 import math
 import os
 from pathlib import Path
+import random
 import tempfile
 from typing import Any, Callable, Iterable, Iterator, Mapping, Sequence
 
@@ -717,6 +718,49 @@ def _decode_fixed_ascii(array: np.ndarray) -> list[str]:
     return [bytes(value).rstrip(b"\0").decode("ascii") for value in np.asarray(array)]
 
 
+def _independent_reset_uniforms(
+    backend: str,
+    *,
+    seed: int,
+    round_index: int,
+    iq_samples: int,
+) -> tuple[float, float]:
+    """Replay only the frozen RESET/ack uniforms without importing a backend."""
+
+    if (
+        seed < 0
+        or round_index < 0
+        or not 1 <= iq_samples <= 4096
+    ):
+        raise EvidenceIncomplete("RESET RNG address is outside its contract")
+    if backend == "A":
+        generator = np.random.default_rng(
+            np.random.SeedSequence([seed, round_index, 0xA921])
+        )
+        generator.random()
+        generator.standard_normal(iq_samples)
+        generator.standard_normal(iq_samples)
+        return float(generator.random()), float(generator.random())
+    if backend == "B":
+        rng_id = "BLAKE2B_ADDRESS_PYTHON_RANDOM_BOX_MULLER"
+        address = f"{rng_id}|{seed}|{round_index}".encode("ascii")
+        derived = int.from_bytes(
+            blake2b(address, digest_size=16).digest(), "big"
+        )
+        generator = random.Random(derived)
+        # The producer's manual Box--Muller loop consumes two uniforms for
+        # every pair and intentionally generates one surplus normal when the
+        # requested total (2*iq_samples+5) is odd.
+        normal_count = 0
+        while normal_count < 2 * iq_samples + 5:
+            generator.random()
+            generator.random()
+            normal_count += 2
+        generator.random()  # measurement-component uniform
+        return generator.random(), generator.random()
+    raise EvidenceIncomplete("RESET RNG backend is not A or B")
+
+
 def _validate_reset_sidecar(
     evidence: CellEvidence, physics: Mapping[str, Any] | None = None,
 ) -> None:
@@ -814,13 +858,66 @@ def _validate_reset_sidecar(
             np.any((hidden != 0) & (hidden != 1))
             or np.any((hidden == 1) & ~success_present)
             or np.any((hidden == 0) & ~failure_present)
-            or any(
-                acknowledgement
-                != ("success" if hidden[index] == 1 else "failure")
-                for index, acknowledgement in enumerate(acknowledgements)
-            )
         ):
             raise EvidenceIncomplete("RESET sampled branch presence drift")
+        if any(
+            acknowledgement not in {"success", "failure"}
+            for acknowledgement in acknowledgements
+        ):
+            raise EvidenceIncomplete(
+                "RESET sampled acknowledgement is not canonical"
+            )
+        # The hidden RESET branch selects the quantum output density.  The
+        # acknowledgement is a distinct noisy observation and may be flipped
+        # with ``reset_ack_error``; equating the two would reject valid native
+        # backend evidence.  Replay the two frozen RNG streams instead.
+        if physics is not None:
+            acknowledgement_error = float(physics["reset_ack_error"])
+            if (
+                not np.isfinite(acknowledgement_error)
+                or acknowledgement_error < 0.0
+                or acknowledgement_error > 1.0
+            ):
+                raise EvidenceIncomplete(
+                    "RESET acknowledgement-error contract drift"
+                )
+            iq_samples = int(physics["iq_samples"])
+            replayed_hidden = np.empty(expected, dtype=np.uint8)
+            replayed_acknowledgements: list[str] = []
+            for sidecar_index, row_index in enumerate(reset_indices):
+                reset_uniform, acknowledgement_uniform = (
+                    _independent_reset_uniforms(
+                        str(evidence.cell["backend"]),
+                        seed=_int(
+                            rows["physical_seed_address"][row_index],
+                            "physical seed",
+                        ),
+                        round_index=_int(
+                            rows["round_index"][row_index], "round index"
+                        ),
+                        iq_samples=iq_samples,
+                    )
+                )
+                sampled_success = (
+                    reset_uniform < probability[sidecar_index]
+                )
+                replayed_hidden[sidecar_index] = (
+                    1 if sampled_success else 0
+                )
+                observed = "success" if sampled_success else "failure"
+                if acknowledgement_uniform < acknowledgement_error:
+                    observed = (
+                        "failure" if observed == "success" else "success"
+                    )
+                replayed_acknowledgements.append(observed)
+            if not np.array_equal(hidden, replayed_hidden):
+                raise EvidenceIncomplete(
+                    "RESET hidden branch differs from independent RNG replay"
+                )
+            if acknowledgements != replayed_acknowledgements:
+                raise EvidenceIncomplete(
+                    "RESET acknowledgement differs from independent RNG replay"
+                )
         branch_distance = np.asarray(
             arrays["rb_branch_trace_distance_npy"], dtype=np.float64
         )

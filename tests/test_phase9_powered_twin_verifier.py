@@ -373,6 +373,11 @@ def _reset_evidence(tmp_path: Path) -> verifier.CellEvidence:
     rows = {
         "reset_requested": np.asarray(["True", "True"]),
         "rao_blackwell_reset_success": np.asarray(["0.25", "0.75"]),
+        "pre_reset_g": np.asarray(["0.25", "0.75"]),
+        "pre_reset_e": np.asarray(["0.0", "0.0"]),
+        "pre_reset_f": np.asarray(["0.0", "0.0"]),
+        "physical_seed_address": np.asarray(["131", "2"]),
+        "round_index": np.asarray(["0", "0"]),
         "pre_reset_causal_receipt_sha256": np.asarray(["a" * 64, "b" * 64]),
         "reset_hidden_success": np.asarray(["", ""]),
         "reset_ack": np.asarray(["marginalized", "marginalized"]),
@@ -385,7 +390,10 @@ def _reset_evidence(tmp_path: Path) -> verifier.CellEvidence:
         }
     }
     return verifier.CellEvidence(
-        {"expected_rows": n, "cutoff": 1}, receipt, roles, rows
+        {"expected_rows": n, "cutoff": 1, "backend": "A"},
+        receipt,
+        roles,
+        rows,
     )
 
 
@@ -395,6 +403,198 @@ def test_reset_sidecar_mixture_and_hidden_branch_firewall(tmp_path):
     evidence.rows["reset_ack"][0] = "success"
     with pytest.raises(verifier.EvidenceIncomplete, match="contaminated"):
         verifier._validate_reset_sidecar(evidence)
+
+
+def test_reset_sidecar_acknowledgement_is_independent_noisy_observation(
+    tmp_path,
+):
+    evidence = _reset_evidence(tmp_path)
+    acknowledgements = np.load(
+        evidence.roles["rb_sampled_reset_ack_npy"]
+    )
+    acknowledgements[0] = b"failure"
+    np.save(
+        evidence.roles["rb_sampled_reset_ack_npy"],
+        acknowledgements,
+    )
+    verifier._validate_reset_sidecar(
+        evidence,
+        {
+            "reset_success_e": 0.985,
+            "reset_success_f": 0.82,
+            "reset_ack_error": 0.002,
+            "iq_samples": 8,
+        },
+    )
+    with pytest.raises(
+        verifier.EvidenceIncomplete,
+        match="independent RNG replay",
+    ):
+        verifier._validate_reset_sidecar(
+            evidence,
+            {
+                "reset_success_e": 0.985,
+                "reset_success_f": 0.82,
+                "reset_ack_error": 0.0,
+                "iq_samples": 8,
+            },
+        )
+
+
+def test_reset_sidecar_rejects_noncanonical_acknowledgement(tmp_path):
+    evidence = _reset_evidence(tmp_path)
+    acknowledgements = np.load(
+        evidence.roles["rb_sampled_reset_ack_npy"]
+    )
+    acknowledgements[0] = b"none"
+    np.save(
+        evidence.roles["rb_sampled_reset_ack_npy"],
+        acknowledgements,
+    )
+    with pytest.raises(
+        verifier.EvidenceIncomplete,
+        match="acknowledgement is not canonical",
+    ):
+        verifier._validate_reset_sidecar(
+            evidence,
+            {
+                "reset_success_e": 0.985,
+                "reset_success_f": 0.82,
+                "reset_ack_error": 0.002,
+                "iq_samples": 8,
+            },
+        )
+
+
+def test_reset_sidecar_rejects_canonical_ack_tamper(tmp_path):
+    evidence = _reset_evidence(tmp_path)
+    acknowledgements = np.load(
+        evidence.roles["rb_sampled_reset_ack_npy"]
+    )
+    acknowledgements[:] = b"failure"
+    np.save(
+        evidence.roles["rb_sampled_reset_ack_npy"],
+        acknowledgements,
+    )
+    with pytest.raises(
+        verifier.EvidenceIncomplete,
+        match="independent RNG replay",
+    ):
+        verifier._validate_reset_sidecar(
+            evidence,
+            {
+                "reset_success_e": 0.985,
+                "reset_success_f": 0.82,
+                "reset_ack_error": 0.002,
+                "iq_samples": 8,
+            },
+        )
+
+
+def test_reset_sidecar_rejects_coordinated_hidden_density_tamper(
+    tmp_path,
+):
+    evidence = _reset_evidence(tmp_path)
+    hidden = np.load(
+        evidence.roles["rb_sampled_hidden_outcome_npy"]
+    )
+    sampled = np.load(
+        evidence.roles["rb_sampled_stress_density_npy"]
+    )
+    failure = np.load(
+        evidence.roles["rb_conditional_failure_density_npy"]
+    )
+    acknowledgements = np.load(
+        evidence.roles["rb_sampled_reset_ack_npy"]
+    )
+    hidden[0] = 0
+    sampled[0] = failure[0]
+    acknowledgements[0] = b"failure"
+    np.save(evidence.roles["rb_sampled_hidden_outcome_npy"], hidden)
+    np.save(evidence.roles["rb_sampled_stress_density_npy"], sampled)
+    np.save(
+        evidence.roles["rb_sampled_reset_ack_npy"],
+        acknowledgements,
+    )
+    with pytest.raises(
+        verifier.EvidenceIncomplete,
+        match="hidden branch differs from independent RNG replay",
+    ):
+        verifier._validate_reset_sidecar(
+            evidence,
+            {
+                "reset_success_e": 0.985,
+                "reset_success_f": 0.82,
+                "reset_ack_error": 0.002,
+                "iq_samples": 8,
+            },
+        )
+
+
+def test_reset_sidecar_rejects_branch_presence_tamper(tmp_path):
+    evidence = _reset_evidence(tmp_path)
+    success_present = np.load(
+        evidence.roles["rb_success_present_npy"]
+    )
+    success_present[0] = False
+    np.save(
+        evidence.roles["rb_success_present_npy"],
+        success_present,
+    )
+    with pytest.raises(
+        verifier.EvidenceIncomplete,
+        match="branch presence/probability mismatch",
+    ):
+        verifier._validate_reset_sidecar(evidence)
+
+
+@pytest.mark.parametrize(
+    (
+        "backend", "seed", "round_index", "iq_samples",
+        "expected_reset", "expected_ack",
+    ),
+    (
+        ("A", 131, 0, 8, 0.12511117319240106, 0.0014364828400432739),
+        ("B", 92, 0, 8, 0.5901892147012385, 0.0017623383793792247),
+        ("A", 131, 7, 8, 0.6261723754111191, 0.9123490828046964),
+        ("B", 92, 7, 8, 0.2875355616913171, 0.38928520187666327),
+        ("A", 9, 3, 17, 0.4239830725091327, 0.462286300907661),
+        ("B", 9, 3, 17, 0.07130136011332511, 0.5074308875018521),
+    ),
+)
+def test_independent_reset_rng_replay_matches_frozen_vectors(
+    backend,
+    seed,
+    round_index,
+    iq_samples,
+    expected_reset,
+    expected_ack,
+):
+    reset, acknowledgement = verifier._independent_reset_uniforms(
+        backend, seed=seed, round_index=round_index, iq_samples=iq_samples
+    )
+    assert reset == expected_reset
+    assert acknowledgement == expected_ack
+
+
+@pytest.mark.parametrize("error", (float("nan"), -0.1, 1.1))
+def test_reset_sidecar_rejects_invalid_acknowledgement_error(
+    tmp_path, error,
+):
+    evidence = _reset_evidence(tmp_path)
+    with pytest.raises(
+        verifier.EvidenceIncomplete,
+        match="acknowledgement-error contract drift",
+    ):
+        verifier._validate_reset_sidecar(
+            evidence,
+            {
+                "reset_success_e": 0.985,
+                "reset_success_f": 0.82,
+                "reset_ack_error": error,
+                "iq_samples": 8,
+            },
+        )
 
 
 def test_reset_sidecar_nan_probability_and_density_fail_closed(tmp_path):

@@ -22,10 +22,13 @@ from uuid import uuid4
 
 from cnn_fpga.benchmark.phase9_powered_twin_contract import (
     EXPECTED_CLAIM_FIELDS,
+    TASK_ID,
     load_config,
     plan_payload,
     runtime_source_snapshot,
+    seed_registry_payload,
 )
+from cnn_fpga.benchmark.phase9_powered_twin_plan import historical_seed_scan
 
 
 SEAL_SCHEMA = "PHASE9-POWERED-TWIN-PREFORMAL-SEAL-V1"
@@ -237,19 +240,103 @@ def create_preformal_seal(root: Path) -> dict[str, Any]:
     _assert_no_formal_outcome(root, config)
     plan = plan_payload(config)
     plan_sha = str(plan["canonical_plan_sha256"])
+    seed_registry = seed_registry_payload(config)
     snapshot = runtime_source_snapshot(root, config)
     paths = config["artifact_paths"]
+    historical_scan = historical_seed_scan(
+        root, root / str(config_binding["path"])
+    )
+    live_plan = _strict_json(root / str(paths["plan"]))
+    live_seed_registry = _strict_json(root / str(paths["seed_registry"]))
+    live_historical_scan = _strict_json(
+        root / str(paths["historical_seed_scan"])
+    )
     contract_path = root / str(paths["contract_preflight"])
     contract = _strict_json(contract_path)
     _verify_self_hash(contract)
+    contract_claims = contract.get("claim_boundary")
+    contract_gates = contract.get("gates")
+    contract_bindings = contract.get("bindings")
+    expected_contract_gates = {
+        "C01_all_parent_bytes_verified",
+        "C02_t03_t05_t06_semantic_chain_verified",
+        "C03_exact_518_cell_plan",
+        "C04_exact_2085888_row_denominator",
+        "C05_exact_482304_primary_densities",
+        "C06_fault_state_major_6x768",
+        "C07_historical_seed_scan_recomputed",
+        "C08_actual_seed_addresses_injective",
+        "C09_content_addressed_no_zip_contract_frozen",
+        "C10_all_claims_null_and_scientific_execution_blocked",
+        "C11_all_runtime_and_validation_sources_live_regular",
+    }
+    expected_parent_checks = {
+        "P01_t03_design_repair_independent_pass",
+        "P02_t05_statistical_no_go_preserved",
+        "P03_t06_independent_count_pass",
+        "P04_selected_count_exact",
+        "P05_selected_blueprint_exact",
+        "P06_blueprint_counts_consume_selected_count",
+        "P07_parent_claims_remain_null",
+    }
+    parent_checks = contract.get("parent_semantic_checks")
+    expected_contract_bindings = {
+        "config": config_binding,
+        "plan": _binding(root / str(paths["plan"]), root),
+        "seed_registry": _binding(
+            root / str(paths["seed_registry"]), root
+        ),
+        "historical_seed_scan": _binding(
+            root / str(paths["historical_seed_scan"]), root
+        ),
+    }
     if (
         contract.get("schema_version")
-        != "PHASE9-POWERED-TWIN-CONTRACT-PREFLIGHT-V2"
+        != "PHASE9-POWERED-TWIN-CONTRACT-PREFLIGHT-V4"
+        or contract.get("task_id") != TASK_ID
         or contract.get("status") != "PASS_OUTCOME_FREE_CONTRACT_PREFLIGHT"
         or contract.get("plan_summary", {}).get("plan_sha256") != plan_sha
+        or contract.get("formal_outcomes_accessed") is not False
         or contract.get("scientific_execution_released") is not False
+        or contract.get("qualified_claim") is not None
+        or not isinstance(contract_claims, Mapping)
+        or set(contract_claims) != set(EXPECTED_CLAIM_FIELDS)
+        or any(value is not None for value in contract_claims.values())
+        or not isinstance(contract_gates, Mapping)
+        or set(contract_gates) != expected_contract_gates
+        or any(value is not True for value in contract_gates.values())
+        or not isinstance(parent_checks, Mapping)
+        or set(parent_checks) != expected_parent_checks
+        or any(value is not True for value in parent_checks.values())
+        or not isinstance(contract_bindings, Mapping)
+        or set(contract_bindings) != set(expected_contract_bindings)
+        or any(
+            contract_bindings.get(name) != binding
+            for name, binding in expected_contract_bindings.items()
+        )
+        or contract.get("source_registry_summary", {}).get(
+            "source_snapshot_sha256"
+        )
+        != snapshot["source_snapshot_sha256"]
+        or contract.get("source_registry_summary", {}).get(
+            "runtime_source_count"
+        )
+        != snapshot["runtime_source_count"]
+        or contract.get("source_registry_summary", {}).get(
+            "validation_source_count"
+        )
+        != snapshot["validation_source_count"]
+        or contract.get("source_registry_summary", {}).get(
+            "all_registered_sources_live_and_regular"
+        )
+        is not True
+        or live_plan != plan
+        or live_seed_registry != seed_registry
+        or live_historical_scan != historical_scan
     ):
-        raise RuntimeError("V2 outcome-free contract preflight is not valid")
+        raise RuntimeError(
+            "V4 outcome-free contract preflight/live bindings are not valid"
+        )
     resource_path = root / str(paths["resource_preflight"])
     resource = _strict_json(resource_path)
     _verify_self_hash(resource)
@@ -262,13 +349,18 @@ def create_preformal_seal(root: Path) -> dict[str, Any]:
         or resource.get("full_size_receipt_count") != 5
         or resource.get("scientific_verdict") is not None
         or resource.get("qualified_claim") is not None
-        or set(resource.get("claim_boundary", {}).values()) != {None}
+        or not isinstance(resource.get("claim_boundary"), Mapping)
+        or set(resource["claim_boundary"]) != set(EXPECTED_CLAIM_FIELDS)
+        or any(
+            value is not None
+            for value in resource["claim_boundary"].values()
+        )
     ):
         raise RuntimeError("full-size resource preflight is not valid")
     validation = run_focused_validation(root, config, snapshot)
     claims = {field: None for field in EXPECTED_CLAIM_FIELDS}
     gates = {
-        "P01_v2_contract_pass": True,
+        "P01_v4_contract_and_live_bindings_pass": True,
         "P02_exact_518_cell_plan": plan["cell_count"] == 518,
         "P03_exact_2085888_rows": plan["row_count"] == 2_085_888,
         "P04_exact_482304_densities": (
