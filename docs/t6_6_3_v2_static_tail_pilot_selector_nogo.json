@@ -1,0 +1,45 @@
+{
+  "schema_version": "t6.6.3-v2-static-tail-pilot-selector-nogo-v1",
+  "task_id": "T6.6.3",
+  "recorded_date": "2026-07-17",
+  "protocol_id": "ROUTE-A-POSTERIOR-THRESHOLD-LOCK-V2",
+  "verdict": "NO_GO_BEFORE_FORMAL",
+  "formal_evaluation_accessed": false,
+  "architecture": {
+    "adaptive_candidate_method_id": "ewma_adaptive_map",
+    "tail_trusted_source": "initial_static_joint_map_bank",
+    "policy_action": "replace adaptive output by static output in each non-open posterior window"
+  },
+  "inputs": {
+    "posterior_only_lock_sha256": "326e2bdaf263653c0df138d35f03038adf505aeccd441e12475336f6417d8838",
+    "baseline_selection_sha256": "456ba72d4de7ff5f4f5b003330c36f7e5fce18a263752aeeeb6eacfcbbe60b4e",
+    "posterior_safe_candidate_count": 38,
+    "pilot_trajectories": 492,
+    "paired_seed_clusters": 12,
+    "bootstrap_replicates": 20000,
+    "bootstrap_seed": 202607176999
+  },
+  "selector_result": {
+    "pilot_ler_safe_candidate_count": 0,
+    "closest_candidate_index": 1316,
+    "closest_threshold_tuple": {
+      "regime_posterior_enter_min": 0.9,
+      "regime_posterior_exit_max": 0.2,
+      "uncertainty_fallback_min": 0.25,
+      "ood_score_min_code": 192,
+      "enter_hysteresis_windows": 2,
+      "recovery_hysteresis_windows": 8
+    },
+    "closest_minimum_safety_slack": -0.037109375,
+    "failed_gates": [
+      "step_calibration_shift:single_window",
+      "telegraph_drift:p95",
+      "compound_ood:average",
+      "compound_ood:p95",
+      "compound_ood:single_window"
+    ]
+  },
+  "interpretation": "Posterior screening alone was insufficient. Switching to the initial static bank can be worse than retaining the already adapted EWMA state, so V2 is prohibited from formal evaluation.",
+  "superseded_by": "ROUTE-A-POSTERIOR-THRESHOLD-LOCK-V3",
+  "v3_change": "Keep the last committed adaptive EWMA image active and suppress future commits while policy is non-open; rerun the same frozen pilot selector without weakening any gate."
+}

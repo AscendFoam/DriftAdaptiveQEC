@@ -10,6 +10,8 @@
 | [atomic_parameter_bank.py](atomic_parameter_bank.py) | 完整 MAP-LUT image 的 version/CRC/SHA/timestamp/CAS 双 bank 事务、hysteresis、atomic commit 与 readback |
 | [three_timescale_cadence.py](three_timescale_cadence.py) | fast/event/window/slow/commit/recalibration exact cadence 与 adaptation-lag 定义 |
 | [closed_loop_fault_recovery.py](closed_loop_fault_recovery.py) | atomic bank、ack/readback、post-commit guard、host timeout、monotonic LKG republish 与 bit-accurate fallback 闭环 |
+| [bit_accurate_hardware_reference.py](bit_accurate_hardware_reference.py) | 58/118/232-bit CRC words、真实 5+1-cycle pipeline、binary parameter image、A/B commit 与 hash-chained Python RTL golden trace |
+| [fast_production_core_reference.py](fast_production_core_reference.py) | 与 legacy golden/RTL 解耦的高吞吐整数 reference；用于百万周期 production 参数、全 output/state、fault/recovery 与 extreme-LUT CXXRTL qualification |
 | [latency_injector.py](latency_injector.py) | 随机延迟采样（DMA / 推理 / 写回等阶段） |
 | [scheduler.py](scheduler.py) | 双环路周期调度器，协调窗口发射与慢环任务 |
 | [fast_loop_emulator.py](fast_loop_emulator.py) | 快环仿真器：采样噪声→综合征→解码→校正→直方图聚合 |
@@ -27,6 +29,7 @@ param_bank.py          (legacy 兼容叶节点)
 atomic_parameter_bank.py → parametric_map_lut
 three_timescale_cadence.py (叶节点)
 closed_loop_fault_recovery.py → atomic_parameter_bank, fast_path_fixed_point
+bit_accurate_hardware_reference.py → atomic_parameter_bank, parametric_map_lut, conservative_fallback
 latency_injector.py    (叶节点)
 noise_bridge.py        (叶节点)
     ↓
@@ -78,6 +81,14 @@ T4.3.2 production candidate 以完整 parametric MAP-LUT image 为事务单位�
 - `readback()` / `verify_commit_ack_readback(...)`：以 bank/version/epoch/image CRC/SHA 关闭 host 确认链。
 
 它尚未替换 legacy scheduler 的 `ParamBank`，也不包含自动回滚、真实 transport、CDC/RTL 或板测。
+
+### Packed-word RTL golden — `bit_accurate_hardware_reference.py`
+
+T5.5.1 reference 的 online `step_word` 只消费 CRC-protected integer word 和内部 safe-boundary signal；
+在 S0 锁存 active image/version，真实推进 5-stage MAP，再经 1-cycle event/output register 发布 action。
+固定 input/output/state 为 58/118/232 bits；binary parameter image 为 1,706 bytes，8-image bundle 为
+13,724 bytes。A/B commit 复用 `AtomicParameterImageBank`，in-flight request 保持旧 image。它是 RTL
+bit-for-bit golden，不是 RTL、CDC、综合、Fmax、resource packing、transport 或 board evidence。
 
 ### 闭环故障恢复 — `closed_loop_fault_recovery.py`
 
@@ -204,3 +215,10 @@ service, model_path, inf_config = build_inference_service(config)
 prediction = service.predict(histogram)
 service.close()
 ```
+
+### Route-A 统一执行合同
+
+`unified_execution_contract.py` 冻结 T6.5.2 observed-only packet、隔离 oracle truth schema、
+Q9.12 phase-conditioned MAP-LUT、CRC/CAS A/B bank、32/4000-cycle 更新 cadence、matched
+resource ceilings 与 6-cycle/deadline accounting。validator 会拒绝 hidden truth、schema 漂移、
+预算溢出和真板前伪 deadline 字段；full 2D joint MAP 当前不冒充 phase-LUT RTL compatible。

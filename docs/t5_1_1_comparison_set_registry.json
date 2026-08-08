@@ -1,0 +1,1002 @@
+{
+  "schema_version": 1,
+  "task_id": "T5.1.1",
+  "protocol_id": "T511-LANE-AWARE-COMPLETE-COMPARISON-SET-V1",
+  "status": "PASS",
+  "generated_at_utc": "2026-07-16T00:45:31.490433+00:00",
+  "pass_semantics": "registry completeness, executable bindings and nonmixing gates pass; this is not a claim that one global cross-lane ranking has been executed",
+  "full_matrix_status": "PREREGISTERED_NOT_EXECUTED_T5_1_2",
+  "comparators": [
+    {
+      "comparator_id": "no_correction_idle_memory",
+      "label": "No correction (idle memory)",
+      "family": "protocol_anchor",
+      "task_owner": "T5.1.1",
+      "decision_target": "memory preservation without QEC action",
+      "information_set": [
+        "elapsed physical time"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "identity control with cavity idle-noise propagation",
+      "protocol_scope": "finite-cutoff cavity memory; no sBs gates or ancilla events",
+      "metric_scope": "fidelity, code survival and logical-Z curve",
+      "time_basis": "10 us reporting intervals",
+      "compute_budget": "zero active operations",
+      "deployability": "deployable_sanity_anchor",
+      "ranking_status": "anchor_only",
+      "eligible_lanes": [
+        "protocol_wallclock"
+      ],
+      "implementation_path": "physics/autonomous_sbs.py",
+      "expected_fragment": "class IdleMemorySimulator",
+      "artifact_paths": [],
+      "claim_boundary": "model-level idle-memory anchor only; not an experimental T1/T2 measurement"
+    },
+    {
+      "comparator_id": "standard_binning",
+      "label": "Standard binning",
+      "family": "decoder",
+      "task_owner": "T3.1.1",
+      "decision_target": "current syndrome to logical coset",
+      "information_set": [
+        "current centered q/p syndrome"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "fixed central even-even logical-coset decision",
+      "protocol_scope": "ideal square-GKP syndrome-level decoder",
+      "metric_scope": "paired logical decision error",
+      "time_basis": "per observation",
+      "compute_budget": "no fitted parameters",
+      "deployability": "deployable_software",
+      "ranking_status": "main_anchor",
+      "eligible_lanes": [
+        "decoder_current_syndrome",
+        "decoder_continuous_drift",
+        "decoder_episode_memory",
+        "finite_energy_effective"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/standard_binning_baseline.py",
+      "expected_fragment": "STANDARD_BINNING_DESCRIPTOR =",
+      "artifact_paths": [
+        "docs/t3_1_1_standard_binning_validation.json"
+      ],
+      "claim_boundary": "not legacy static_linear and not finite-energy or hardware performance"
+    },
+    {
+      "comparator_id": "standard_measurement_feedback_sbs",
+      "label": "Standard measurement-feedback sBs",
+      "family": "control_protocol",
+      "task_owner": "T3.2.8/T4.4.4",
+      "decision_target": "nominal repeated sBs memory control",
+      "information_set": [
+        "current protocol phase",
+        "nonselective measurement expectation"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "fixed nominal 15-parameter sBs controls",
+      "protocol_scope": "finite-cutoff nominal-control measurement-feedback sBs",
+      "metric_scope": "fidelity, logical-Z lifetime, p(g), event burden",
+      "time_basis": "10 us literature full cycle",
+      "compute_budget": "15 fixed controls; no online learning",
+      "deployability": "software_model_anchor",
+      "ranking_status": "main_anchor",
+      "eligible_lanes": [
+        "protocol_wallclock",
+        "control_matched_model",
+        "control_oracle_short_horizon"
+      ],
+      "implementation_path": "physics/autonomous_sbs.py",
+      "expected_fragment": "class NonselectiveSBSSimulator",
+      "artifact_paths": [
+        "docs/t3_2_8_autonomous_sbs_wallclock_validation.json",
+        "docs/t4_4_4_teacher_student_gain_retention.json"
+      ],
+      "claim_boundary": "literature timing is not target-board timing and nominal control is not an optimum"
+    },
+    {
+      "comparator_id": "autonomous_sbs",
+      "label": "Autonomous sBs",
+      "family": "control_protocol",
+      "task_owner": "T3.2.8",
+      "decision_target": "nominal autonomous memory control",
+      "information_set": [
+        "current protocol phase"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "fixed nominal nonselective autonomous sBs channel",
+      "protocol_scope": "finite-cutoff autonomous protocol with reset and no measurement",
+      "metric_scope": "fidelity/logical lifetime and event burden",
+      "time_basis": "7 us literature full cycle",
+      "compute_budget": "fixed controls; protocol-native gate/reset count",
+      "deployability": "software_model_baseline",
+      "ranking_status": "separate_protocol_lane",
+      "eligible_lanes": [
+        "protocol_wallclock"
+      ],
+      "implementation_path": "physics/autonomous_sbs.py",
+      "expected_fragment": "AUTONOMOUS_TIMING =",
+      "artifact_paths": [
+        "docs/t3_2_8_autonomous_sbs_wallclock_validation.json"
+      ],
+      "claim_boundary": "not a trained autonomous optimum or target-device timing result"
+    },
+    {
+      "comparator_id": "static_periodic_map",
+      "label": "Static training-average periodic MAP",
+      "family": "decoder",
+      "task_owner": "T3.1.2",
+      "decision_target": "current syndrome to logical coset",
+      "information_set": [
+        "current syndrome",
+        "training-only frozen noise parameters"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "periodic-Gaussian MAP logical coset",
+      "protocol_scope": "single-mode ideal syndrome decoder",
+      "metric_scope": "paired LER and proper scores",
+      "time_basis": "per observation",
+      "compute_budget": "frozen static parameter table",
+      "deployability": "deployable_software",
+      "ranking_status": "main_candidate",
+      "eligible_lanes": [
+        "decoder_current_syndrome",
+        "decoder_continuous_drift",
+        "decoder_episode_memory"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/static_map_baseline.py",
+      "expected_fragment": "def build_static_map_validation",
+      "artifact_paths": [
+        "docs/t3_1_2_static_map_validation.json"
+      ],
+      "claim_boundary": "model/scenario-specific static MAP, not oracle MAP"
+    },
+    {
+      "comparator_id": "topk_periodic_map",
+      "label": "Top-K periodic MAP",
+      "family": "decoder_approximation",
+      "task_owner": "T3.1.5",
+      "decision_target": "current syndrome to logical coset",
+      "information_set": [
+        "current syndrome",
+        "same frozen static parameters"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "per-coset top-K alias likelihood",
+      "protocol_scope": "same single-mode periodic-Gaussian candidate rectangle as full MAP",
+      "metric_scope": "agreement/LER/cost versus full MAP",
+      "time_basis": "per observation",
+      "compute_budget": "explicit K-dependent comparisons and accumulations",
+      "deployability": "deployable_candidate",
+      "ranking_status": "implementation_sensitivity",
+      "eligible_lanes": [
+        "decoder_current_syndrome"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/topk_lattice_coset_map.py",
+      "expected_fragment": "def build_topk_validation",
+      "artifact_paths": [
+        "docs/t3_1_5_topk_map_validation.json"
+      ],
+      "claim_boundary": "not surface K-MWM, universal K or an independent oracle"
+    },
+    {
+      "comparator_id": "decoder_oracle_map",
+      "label": "Hidden-state decoder oracle MAP",
+      "family": "decoder_bound",
+      "task_owner": "T3.1.3",
+      "decision_target": "current syndrome to logical coset",
+      "information_set": [
+        "current syndrome",
+        "true DriftState mean/covariance/mixture/regime"
+      ],
+      "hidden_truth_access": true,
+      "output_contract": "Bayes/MAP logical coset and posterior",
+      "protocol_scope": "frozen assumed periodic-mixture decoder model",
+      "metric_scope": "paired LER and decoder-oracle gap",
+      "time_basis": "time-aligned per observation",
+      "compute_budget": "unrestricted hidden-state model evaluation",
+      "deployability": "nondeployable",
+      "ranking_status": "nondeployable_reference",
+      "eligible_lanes": [
+        "decoder_current_syndrome",
+        "decoder_continuous_drift",
+        "decoder_episode_memory"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/oracle_baseline.py",
+      "expected_fragment": "def build_oracle_validation",
+      "artifact_paths": [
+        "docs/t3_1_3_oracle_validation.json"
+      ],
+      "claim_boundary": "not control oracle, channel optimum or actual deployable decoder"
+    },
+    {
+      "comparator_id": "finite_energy_static_shrinkage",
+      "label": "Finite-energy static shrinkage",
+      "family": "decoder",
+      "task_owner": "T1.2.3",
+      "decision_target": "finite-energy noisy syndrome to bounded analog correction",
+      "information_set": [
+        "current syndrome",
+        "training-fitted frozen gain"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "c=g*s with one static gain per frozen finite-energy setting",
+      "protocol_scope": "syndrome-level effective finite-energy-noise model",
+      "metric_scope": "held-out residual MSE and paired parity error",
+      "time_basis": "per observation",
+      "compute_budget": "one frozen scalar gain",
+      "deployability": "deployable_effective_model",
+      "ranking_status": "separate_fidelity_lane",
+      "eligible_lanes": [
+        "finite_energy_effective"
+      ],
+      "implementation_path": "physics/finite_energy_trends.py",
+      "expected_fragment": "def run_finite_energy_shrinkage_trend",
+      "artifact_paths": [],
+      "claim_boundary": "not full approximate-GKP recovery, Fock channel optimum or device-calibrated decoder"
+    },
+    {
+      "comparator_id": "memory_bayesian",
+      "label": "Memory-assisted Bayesian decoder",
+      "family": "decoder",
+      "task_owner": "T3.2.1",
+      "decision_target": "bounded syndrome episode to logical decision",
+      "information_set": [
+        "causal episode syndrome history",
+        "registered prior"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "periodic Bayesian posterior and logical decision",
+      "protocol_scope": "bounded no-intermediate-correction syndrome episodes",
+      "metric_scope": "paired episode logical error",
+      "time_basis": "per registered episode",
+      "compute_budget": "explicit history-state and grid budget",
+      "deployability": "software_candidate",
+      "ranking_status": "main_candidate_same_episode_only",
+      "eligible_lanes": [
+        "decoder_episode_memory"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/memory_assisted_bayesian_decoder.py",
+      "expected_fragment": "def build_memory_bayesian_validation",
+      "artifact_paths": [
+        "docs/t3_2_1_memory_bayesian_validation.json"
+      ],
+      "claim_boundary": "episode result cannot be pooled with continuous per-round decoding"
+    },
+    {
+      "comparator_id": "ewma_adaptive_map",
+      "label": "EWMA adaptive periodic MAP",
+      "family": "decoder_estimator",
+      "task_owner": "T3.2.2",
+      "decision_target": "drifting syndrome to logical coset",
+      "information_set": [
+        "causal periodic moments",
+        "training-frozen alpha"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "EWMA state estimate followed by periodic MAP",
+      "protocol_scope": "continuous wrapped-Gaussian drift",
+      "metric_scope": "paired LER, NLL, Brier and tracking RMSE",
+      "time_basis": "one-window delayed",
+      "compute_budget": "four complex EWMA state values",
+      "deployability": "deployable_software",
+      "ranking_status": "main_candidate",
+      "eligible_lanes": [
+        "decoder_continuous_drift"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/continuous_adaptive_map.py",
+      "expected_fragment": "def build_continuous_adaptive_validation",
+      "artifact_paths": [
+        "docs/t3_2_2_continuous_adaptive_map_validation.json"
+      ],
+      "claim_boundary": "training-frozen model; no hidden state or universal drift advantage claim"
+    },
+    {
+      "comparator_id": "kalman_adaptive_map",
+      "label": "Kalman adaptive periodic MAP",
+      "family": "decoder_estimator",
+      "task_owner": "T3.2.2",
+      "decision_target": "drifting syndrome to logical coset",
+      "information_set": [
+        "causal periodic moments",
+        "training-frozen process/measurement scales"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "constant-velocity Kalman estimate followed by periodic MAP",
+      "protocol_scope": "continuous wrapped-Gaussian drift",
+      "metric_scope": "paired LER, NLL, Brier and tracking RMSE",
+      "time_basis": "one-window delayed",
+      "compute_budget": "10-state/100-covariance-value analytic profile",
+      "deployability": "host_deployable_software",
+      "ranking_status": "main_candidate",
+      "eligible_lanes": [
+        "decoder_continuous_drift"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/continuous_adaptive_map.py",
+      "expected_fragment": "def build_continuous_adaptive_validation",
+      "artifact_paths": [
+        "docs/t3_2_2_continuous_adaptive_map_validation.json"
+      ],
+      "claim_boundary": "constant-velocity assumed model, not a general nonlinear oracle"
+    },
+    {
+      "comparator_id": "sliding_window_map",
+      "label": "Training-selected sliding-window MAP",
+      "family": "decoder_estimator",
+      "task_owner": "T3.2.3",
+      "decision_target": "drifting syndrome to logical coset",
+      "information_set": [
+        "causal bounded syndrome window",
+        "training-selected length"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "window moment estimate followed by periodic MAP",
+      "protocol_scope": "continuous wrapped-Gaussian drift",
+      "metric_scope": "paired LER and proper scores",
+      "time_basis": "one-window delayed",
+      "compute_budget": "bounded selected history window",
+      "deployability": "host_deployable_software",
+      "ranking_status": "main_candidate",
+      "eligible_lanes": [
+        "decoder_continuous_drift"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/sliding_window_syndrome_estimator.py",
+      "expected_fragment": "def build_sliding_window_validation",
+      "artifact_paths": [
+        "docs/t3_2_3_sliding_window_validation.json"
+      ],
+      "claim_boundary": "training-selected history only; no evaluation-length selection"
+    },
+    {
+      "comparator_id": "run_length_event_controller",
+      "label": "Run-length event controller",
+      "family": "event_controller",
+      "task_owner": "T3.2.5",
+      "decision_target": "observed g/e/leakage events to bounded event action",
+      "information_set": [
+        "current event",
+        "saturated causal run counters"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "finite-state event/fallback action",
+      "protocol_scope": "observed-event control component",
+      "metric_scope": "event sensitivity, delay, false trigger and cost",
+      "time_basis": "per event",
+      "compute_budget": "finite counters and transition table",
+      "deployability": "deployable_component_candidate",
+      "ranking_status": "component_only",
+      "eligible_lanes": [
+        "event_and_regime_components"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/run_length_fsm_baseline.py",
+      "expected_fragment": "def build_run_length_validation",
+      "artifact_paths": [
+        "docs/t3_2_5_run_length_fsm_validation.json"
+      ],
+      "claim_boundary": "component evidence is not direct logical-lifetime superiority"
+    },
+    {
+      "comparator_id": "regime_hmm_estimator",
+      "label": "Causal regime HMM",
+      "family": "host_estimator",
+      "task_owner": "T3.2.6",
+      "decision_target": "observed windows to regime posterior",
+      "information_set": [
+        "causal window summaries",
+        "frozen HMM parameters"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "regime posterior and state estimate",
+      "protocol_scope": "host slow-loop regime component",
+      "metric_scope": "regime calibration/detection/cost",
+      "time_basis": "per validated window",
+      "compute_budget": "bounded HMM state/history budget",
+      "deployability": "host_deployable_component",
+      "ranking_status": "component_only",
+      "eligible_lanes": [
+        "event_and_regime_components"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/regime_hmm_baseline.py",
+      "expected_fragment": "def build_regime_hmm_validation",
+      "artifact_paths": [
+        "docs/t3_2_6_regime_hmm_validation.json"
+      ],
+      "claim_boundary": "not a per-cycle decoder or direct lifetime row without an adapter"
+    },
+    {
+      "comparator_id": "latest_outcome_mf_fnn",
+      "label": "Exact-budget latest-outcome MF/FNN",
+      "family": "control_policy",
+      "task_owner": "T3.2.7",
+      "decision_target": "latest observed g/e/leakage token to bounded sBs residual",
+      "information_set": [
+        "latest outcome only"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "15-dimensional nominal-plus-bounded residual",
+      "protocol_scope": "matched finite-cutoff sBs control model",
+      "metric_scope": "paired fidelity/logical lifetime and memory contrast",
+      "time_basis": "10-cycle matched-model horizon",
+      "compute_budget": "72,853 parameters / 72,266 dense MACs",
+      "deployability": "software_control_baseline",
+      "ranking_status": "main_candidate_when_budget_matched",
+      "eligible_lanes": [
+        "control_matched_model"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/latest_outcome_markovian_baseline.py",
+      "expected_fragment": "def run_benchmark",
+      "artifact_paths": [
+        "docs/t3_2_7_latest_outcome_markovian_validation.json"
+      ],
+      "claim_boundary": "signed result and cutoff reversal must be retained; FNN is not a decoder oracle"
+    },
+    {
+      "comparator_id": "exponential_recurrence_controller",
+      "label": "Handcrafted exponential recurrence",
+      "family": "control_policy",
+      "task_owner": "T3.2.10",
+      "decision_target": "causal event history to bounded sBs residual",
+      "information_set": [
+        "current event",
+        "small exponential state"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "15-dimensional bounded residual via explicit recurrence",
+      "protocol_scope": "matched finite-cutoff sBs control model",
+      "metric_scope": "paired fidelity/logical lifetime, p(g) and resource profile",
+      "time_basis": "registered finite horizon",
+      "compute_budget": "small analytic state/MAC budget",
+      "deployability": "deployable_control_candidate",
+      "ranking_status": "main_candidate_when_same_trace",
+      "eligible_lanes": [
+        "control_matched_model"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/exponential_recurrence_baseline.py",
+      "expected_fragment": "def run_exponential_recurrence_baseline",
+      "artifact_paths": [
+        "docs/t3_2_10_exponential_recurrence_validation.json"
+      ],
+      "claim_boundary": "handcrafted recurrence is not the distilled student and high p(g) burden must remain visible"
+    },
+    {
+      "comparator_id": "bounded_residual_rnn_teacher",
+      "label": "Bounded-residual RNN teacher",
+      "family": "controller_teacher",
+      "task_owner": "T4.4.1",
+      "decision_target": "causal history to bounded sBs residual",
+      "information_set": [
+        "causal g/e history",
+        "recurrent hidden state"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "15-dimensional nominal-plus-tanh-bounded residual",
+      "protocol_scope": "matched two-level finite-cutoff sBs model",
+      "metric_scope": "paired fidelity/logical lifetime and burden",
+      "time_basis": "trained/evaluated finite horizon",
+      "compute_budget": "72,853-parameter GRU teacher",
+      "deployability": "offline_teacher",
+      "ranking_status": "offline_reference_not_deployable",
+      "eligible_lanes": [
+        "control_matched_model"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/bounded_residual_rnn_teacher.py",
+      "expected_fragment": "def run_bounded_residual_teacher_training",
+      "artifact_paths": [
+        "docs/t4_4_1_bounded_residual_rnn_teacher_validation.json"
+      ],
+      "claim_boundary": "not global optimum, mechanism proof, long-horizon/OOD or deployed controller"
+    },
+    {
+      "comparator_id": "distilled_low_dimensional_student",
+      "label": "Distilled low-dimensional student",
+      "family": "controller_student",
+      "task_owner": "T4.4.3/T4.4.4/T4.4.5",
+      "decision_target": "causal event history to bounded sBs residual",
+      "information_set": [
+        "current g/e/leakage event",
+        "four-state recurrence"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "15-dimensional bounded residual with fail-closed leakage action",
+      "protocol_scope": "matched two-level finite-cutoff sBs model",
+      "metric_scope": "teacher gain retention, fidelity/lifetime/burden/cost",
+      "time_basis": "10-cycle matched-model horizon",
+      "compute_budget": "95 scalars / 87 analytic MACs",
+      "deployability": "deployable_candidate_before_quantized_hardware_gates",
+      "ranking_status": "qualified_main_candidate",
+      "eligible_lanes": [
+        "control_matched_model"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/low_dimensional_student_distillation.py",
+      "expected_fragment": "def run_low_dimensional_student_distillation",
+      "artifact_paths": [
+        "docs/t4_4_4_teacher_student_gain_retention.json",
+        "docs/t4_4_5_teacher_student_branch_freeze.json"
+      ],
+      "claim_boundary": "qualified retention only; no universal NMF, OOD, leakage, RTL or board claim"
+    },
+    {
+      "comparator_id": "finite_horizon_control_oracle",
+      "label": "Finite-horizon control oracle",
+      "family": "control_bound",
+      "task_owner": "T3.2.9",
+      "decision_target": "causal measurement-tree prefix to optimized sBs action",
+      "information_set": [
+        "offline full model tree",
+        "online realized prefix only"
+      ],
+      "hidden_truth_access": false,
+      "output_contract": "history-indexed optimized 15-parameter action",
+      "protocol_scope": "fixed ansatz and exact short control tree",
+      "metric_scope": "exact terminal fidelity/value",
+      "time_basis": "two-cycle horizon only",
+      "compute_budget": "exponential lookup / multistart offline optimization",
+      "deployability": "nondeployable",
+      "ranking_status": "nondeployable_short_horizon_reference",
+      "eligible_lanes": [
+        "control_oracle_short_horizon"
+      ],
+      "implementation_path": "cnn_fpga/benchmark/trajectory_lookup_control_oracle.py",
+      "expected_fragment": "def run_trajectory_lookup_control_oracle",
+      "artifact_paths": [
+        "docs/t3_2_9_trajectory_lookup_control_oracle.json"
+      ],
+      "claim_boundary": "two-cycle reference only; not decoder oracle, global control optimum or ten-cycle bound"
+    }
+  ],
+  "comparison_lanes": {
+    "decoder_current_syndrome": {
+      "members": [
+        "standard_binning",
+        "static_periodic_map",
+        "topk_periodic_map",
+        "decoder_oracle_map"
+      ],
+      "target": "current periodic syndrome to logical coset",
+      "metric_contract": "paired logical decision error on identical syndrome traces",
+      "ranking_rule": "top-K is an implementation sensitivity; decoder oracle is a nondeployable reference"
+    },
+    "decoder_continuous_drift": {
+      "members": [
+        "standard_binning",
+        "static_periodic_map",
+        "ewma_adaptive_map",
+        "kalman_adaptive_map",
+        "sliding_window_map",
+        "decoder_oracle_map"
+      ],
+      "target": "causal drifting periodic-syndrome decoding",
+      "metric_contract": "paired LER/proper score with training-only calibration and one-window delay",
+      "ranking_rule": "T5.1.2 must rebuild a shared scenario adapter; old task-local numbers are not pooled"
+    },
+    "decoder_episode_memory": {
+      "members": [
+        "standard_binning",
+        "static_periodic_map",
+        "memory_bayesian",
+        "decoder_oracle_map"
+      ],
+      "target": "bounded modular-syndrome episode decision",
+      "metric_contract": "paired episode logical error under the registered history budget",
+      "ranking_rule": "episode and continuous-drift results remain separate"
+    },
+    "finite_energy_effective": {
+      "members": [
+        "standard_binning",
+        "finite_energy_static_shrinkage"
+      ],
+      "target": "finite-energy syndrome-level correction",
+      "metric_contract": "paired residual MSE and cell-parity error on held-out samples",
+      "ranking_rule": "effective-model result is not full finite-Fock recovery or channel optimum"
+    },
+    "protocol_wallclock": {
+      "members": [
+        "no_correction_idle_memory",
+        "standard_measurement_feedback_sbs",
+        "autonomous_sbs"
+      ],
+      "target": "finite-cutoff memory preservation at common physical time",
+      "metric_contract": "fidelity/code survival/logical-Z lifetime plus protocol-native event counts",
+      "ranking_rule": "per-cycle and wall-clock results must both be shown; no desired ordering is required"
+    },
+    "control_matched_model": {
+      "members": [
+        "standard_measurement_feedback_sbs",
+        "latest_outcome_mf_fnn",
+        "exponential_recurrence_controller",
+        "bounded_residual_rnn_teacher",
+        "distilled_low_dimensional_student"
+      ],
+      "target": "causal nominal-plus-bounded-residual sBs control",
+      "metric_contract": "same-model paired lifetime/fidelity/burden/cost with frozen seeds and horizon",
+      "ranking_rule": "exact budget and cutoff must be matched; universal NMF-over-MF is prohibited"
+    },
+    "event_and_regime_components": {
+      "members": [
+        "run_length_event_controller",
+        "regime_hmm_estimator"
+      ],
+      "target": "event/regime component diagnostics",
+      "metric_contract": "component detection/calibration/cost metrics, not logical-policy ranking",
+      "ranking_rule": "component rows cannot be inserted into the main LER leaderboard without an explicit adapter"
+    },
+    "control_oracle_short_horizon": {
+      "members": [
+        "standard_measurement_feedback_sbs",
+        "finite_horizon_control_oracle"
+      ],
+      "target": "fixed-ansatz exact causal control tree",
+      "metric_contract": "exact short-horizon terminal objective on identical branches",
+      "ranking_rule": "the two-cycle oracle cannot be extrapolated into the ten-cycle controller table"
+    }
+  },
+  "secondary_exclusions": [
+    {
+      "protocol_id": "secondary_knill_qunaught",
+      "status": "REFERENCE_ONLY_NOT_MAIN_RANKING",
+      "reason": "different protocol/resources and no approved common sBs execution lane",
+      "evidence": "docs/t5_0_1_literature_trend_reproduction.json"
+    },
+    {
+      "protocol_id": "secondary_psteane",
+      "status": "ANALYTIC_PASS_NOT_MAIN_RANKING",
+      "reason": "small-noise analytic preprocessing result, not sBs controller or physical squeezing implementation",
+      "evidence": "docs/t5_0_2_independent_cross_fidelity_holdout.json"
+    }
+  ],
+  "artifact_bindings": [
+    {
+      "path": "docs/t3_1_1_standard_binning_validation.json",
+      "task_id": "T3.1.1",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "5911b302ec4bcb19264f8ee6e8301078ba5f104470c4f22d2e92be7a109c0bd2"
+    },
+    {
+      "path": "docs/t3_1_2_static_map_validation.json",
+      "task_id": "T3.1.2",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "5c5135800d4fbbc36436979b86698e5378dee45d8dcbdc387076ebb164fa8585"
+    },
+    {
+      "path": "docs/t3_1_3_oracle_validation.json",
+      "task_id": "T3.1.3",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "d539acf3beb2b06e4329a1140b9d80efec630905c7d50d9aa5055deb008324a9"
+    },
+    {
+      "path": "docs/t3_1_5_topk_map_validation.json",
+      "task_id": "T3.1.5",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "aac5cb70cf63cb238b2abd8f75d52b96dcda72c86a4e0e899cb9e30e05aec2ec"
+    },
+    {
+      "path": "docs/t3_2_10_exponential_recurrence_validation.json",
+      "task_id": "T3.2.10",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "120171277b57267cd68f492e5a804b5ce5b5c54aa3ee7bc8517ed2f3a52fb8d7"
+    },
+    {
+      "path": "docs/t3_2_1_memory_bayesian_validation.json",
+      "task_id": "T3.2.1",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "cd4be868e90210180ad8790432b7da1f6b4463bb3f69f4c2c254c9e0dd8da9c9"
+    },
+    {
+      "path": "docs/t3_2_2_continuous_adaptive_map_validation.json",
+      "task_id": "T3.2.2",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "d5899267c7479d333df6d05b2dd8d69e907d2884023d7900448f1baf626d9e13"
+    },
+    {
+      "path": "docs/t3_2_3_sliding_window_validation.json",
+      "task_id": "T3.2.3",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "04c4f8f304542dca10fb4889c5571b2c9742767a19c6a6f362162cbb2bdd69fb"
+    },
+    {
+      "path": "docs/t3_2_5_run_length_fsm_validation.json",
+      "task_id": "T3.2.5",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "15112a68970b184788a9a37002b1026a8268250767782b15fc0ee478cfbb8988"
+    },
+    {
+      "path": "docs/t3_2_6_regime_hmm_validation.json",
+      "task_id": "T3.2.6",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "846885105ffdb3ea8499750da30d5966d8ebe31b33127bd120e0fe272e37cf61"
+    },
+    {
+      "path": "docs/t3_2_7_latest_outcome_markovian_validation.json",
+      "task_id": "T3.2.7",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "3213b988cef743551a229cfeecfb4e588a959f12d32e4a8cf70d2361b152278d"
+    },
+    {
+      "path": "docs/t3_2_8_autonomous_sbs_wallclock_validation.json",
+      "task_id": "T3.2.8",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "0e82244bec0e71b30ccc79a0e1a49e30f89cc7a94c63c0e4beeefbae31da6441"
+    },
+    {
+      "path": "docs/t3_2_9_trajectory_lookup_control_oracle.json",
+      "task_id": "T3.2.9",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "604df4fb818a4ffd4c7c91d913742cee979f1021467f999af6a16c2a60734d7a"
+    },
+    {
+      "path": "docs/t4_4_1_bounded_residual_rnn_teacher_validation.json",
+      "task_id": "T4.4.1",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "c71094493a63f7a3b1287d28c0a1b71d3ce7a03e16a281a27967a87a65669d53"
+    },
+    {
+      "path": "docs/t4_4_4_teacher_student_gain_retention.json",
+      "task_id": "T4.4.4",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "5cd1478de22ecd998aaf678bc6f14873134e57bc8ae2fc4408df215544b86dfc"
+    },
+    {
+      "path": "docs/t4_4_5_teacher_student_branch_freeze.json",
+      "task_id": "T4.4.5",
+      "status": "PASS",
+      "machine_pass": true,
+      "sha256": "15abd3e94c69e0fa85bc871ca9967eacbf3af8e948741f0b53986cbacd8ad612"
+    }
+  ],
+  "implementation_bindings": [
+    {
+      "comparator_id": "no_correction_idle_memory",
+      "path": "physics/autonomous_sbs.py",
+      "expected_fragment": "class IdleMemorySimulator",
+      "sha256": "1f599cd47bdb15f539664b8bb975a3fa138f8ddbd8ff192299fa34314c813434"
+    },
+    {
+      "comparator_id": "standard_binning",
+      "path": "cnn_fpga/benchmark/standard_binning_baseline.py",
+      "expected_fragment": "STANDARD_BINNING_DESCRIPTOR =",
+      "sha256": "c79e52cd319a14f389cdd1e5baced884d786c4ec033b88d3cb5b1f4be2ec51db"
+    },
+    {
+      "comparator_id": "standard_measurement_feedback_sbs",
+      "path": "physics/autonomous_sbs.py",
+      "expected_fragment": "class NonselectiveSBSSimulator",
+      "sha256": "1f599cd47bdb15f539664b8bb975a3fa138f8ddbd8ff192299fa34314c813434"
+    },
+    {
+      "comparator_id": "autonomous_sbs",
+      "path": "physics/autonomous_sbs.py",
+      "expected_fragment": "AUTONOMOUS_TIMING =",
+      "sha256": "1f599cd47bdb15f539664b8bb975a3fa138f8ddbd8ff192299fa34314c813434"
+    },
+    {
+      "comparator_id": "static_periodic_map",
+      "path": "cnn_fpga/benchmark/static_map_baseline.py",
+      "expected_fragment": "def build_static_map_validation",
+      "sha256": "6bb4c1705907476adbbe8487111b5f5123e6d984e9c0ec6620609ad335d7d3af"
+    },
+    {
+      "comparator_id": "topk_periodic_map",
+      "path": "cnn_fpga/benchmark/topk_lattice_coset_map.py",
+      "expected_fragment": "def build_topk_validation",
+      "sha256": "448dc05ad4c86b9b74d2b37a8e077546d09a676f4f4aeca665a8035e4ff17ead"
+    },
+    {
+      "comparator_id": "decoder_oracle_map",
+      "path": "cnn_fpga/benchmark/oracle_baseline.py",
+      "expected_fragment": "def build_oracle_validation",
+      "sha256": "72f40b4fe9d1cbea6a33ab55c75b24f240e071611e8a98feef0a7058b0ca2f19"
+    },
+    {
+      "comparator_id": "finite_energy_static_shrinkage",
+      "path": "physics/finite_energy_trends.py",
+      "expected_fragment": "def run_finite_energy_shrinkage_trend",
+      "sha256": "b3943ba9308cf2a7c329d5191c84c9a8852c6a0116ce60105d24a42c35f350fd"
+    },
+    {
+      "comparator_id": "memory_bayesian",
+      "path": "cnn_fpga/benchmark/memory_assisted_bayesian_decoder.py",
+      "expected_fragment": "def build_memory_bayesian_validation",
+      "sha256": "3078fb39e219a8e77de12c0e6da49fda30ece2131a33768a63b6d0ca2fa18279"
+    },
+    {
+      "comparator_id": "ewma_adaptive_map",
+      "path": "cnn_fpga/benchmark/continuous_adaptive_map.py",
+      "expected_fragment": "def build_continuous_adaptive_validation",
+      "sha256": "979e71606b7928689de5726cbba69535d8d89527582e2883f23b480706f244ef"
+    },
+    {
+      "comparator_id": "kalman_adaptive_map",
+      "path": "cnn_fpga/benchmark/continuous_adaptive_map.py",
+      "expected_fragment": "def build_continuous_adaptive_validation",
+      "sha256": "979e71606b7928689de5726cbba69535d8d89527582e2883f23b480706f244ef"
+    },
+    {
+      "comparator_id": "sliding_window_map",
+      "path": "cnn_fpga/benchmark/sliding_window_syndrome_estimator.py",
+      "expected_fragment": "def build_sliding_window_validation",
+      "sha256": "3a172d3f909b5cd347ba9f17ff89bfb1a16934887cd5e596dbb54e381de436a7"
+    },
+    {
+      "comparator_id": "run_length_event_controller",
+      "path": "cnn_fpga/benchmark/run_length_fsm_baseline.py",
+      "expected_fragment": "def build_run_length_validation",
+      "sha256": "643b9f70df14ba3ac1132b68a12b068da0f4105fa4594931caec52c277513ba8"
+    },
+    {
+      "comparator_id": "regime_hmm_estimator",
+      "path": "cnn_fpga/benchmark/regime_hmm_baseline.py",
+      "expected_fragment": "def build_regime_hmm_validation",
+      "sha256": "29702d8e641a46c22a6bccf12f37ac5c1984c1be6eee8ac84cb8d6b3146bbbdc"
+    },
+    {
+      "comparator_id": "latest_outcome_mf_fnn",
+      "path": "cnn_fpga/benchmark/latest_outcome_markovian_baseline.py",
+      "expected_fragment": "def run_benchmark",
+      "sha256": "799378876d5d4d35945a682f4bde905455f0fd044a0dee00e68825a513124492"
+    },
+    {
+      "comparator_id": "exponential_recurrence_controller",
+      "path": "cnn_fpga/benchmark/exponential_recurrence_baseline.py",
+      "expected_fragment": "def run_exponential_recurrence_baseline",
+      "sha256": "c652145865938b797e00f6847d1e2b544a80f5822d0d753d9e48d5ce207fe8b2"
+    },
+    {
+      "comparator_id": "bounded_residual_rnn_teacher",
+      "path": "cnn_fpga/benchmark/bounded_residual_rnn_teacher.py",
+      "expected_fragment": "def run_bounded_residual_teacher_training",
+      "sha256": "948f411bc80148c97db994a1da26a4281b2ec34bc252a3e064647f1c81e27243"
+    },
+    {
+      "comparator_id": "distilled_low_dimensional_student",
+      "path": "cnn_fpga/benchmark/low_dimensional_student_distillation.py",
+      "expected_fragment": "def run_low_dimensional_student_distillation",
+      "sha256": "6f72ac2b1ec68013e06e6a9960f3a6ccee13c71e584a68362588430f0dde65de"
+    },
+    {
+      "comparator_id": "finite_horizon_control_oracle",
+      "path": "cnn_fpga/benchmark/trajectory_lookup_control_oracle.py",
+      "expected_fragment": "def run_trajectory_lookup_control_oracle",
+      "sha256": "fd6fed6e69bd66d1dc2543ba2fc54cc23208e7b61f63710ac5d7edf6131a8924"
+    }
+  ],
+  "no_correction_probe": {
+    "time_us": [
+      0.0,
+      10.0,
+      20.0,
+      30.0
+    ],
+    "fidelity": [
+      1.0,
+      0.9526016523105998,
+      0.9111297285996744,
+      0.874737033942017
+    ],
+    "logical_z_signal": [
+      0.9995000866499826,
+      0.951120503496645,
+      0.9064916938885832,
+      0.8656044560183825
+    ],
+    "event_accounting": {
+      "full_cycles": 3,
+      "total_physical_time_us": 30.0,
+      "measurement_events": 0,
+      "reset_events": 0,
+      "active_gate_applications": 0,
+      "frame_updates": 0,
+      "outcome_dependent_parameter_updates": 0,
+      "cycles_per_100us": 10.0,
+      "measurements_per_100us": 0.0,
+      "resets_per_100us": 0.0,
+      "active_gates_per_100us": 0.0
+    },
+    "maximum_trace_error": 0.0,
+    "maximum_hermiticity_error": 0.0,
+    "minimum_final_eigenvalue": -4.865456014908258e-18,
+    "standard_sbs_density_max_difference": 0.3429272722854374,
+    "ten_us_vs_two_five_us_semigroup_error": 1.1102230246251565e-16,
+    "gates": {
+      "all_control_and_ancilla_event_counts_are_zero": true,
+      "same_wallclock_grid_as_standard_sbs": true,
+      "not_a_renamed_standard_sbs_curve": true,
+      "idle_channel_obeys_time_semigroup": true,
+      "density_is_trace_hermitian_psd": true
+    }
+  },
+  "finite_energy_static_probe": {
+    "scope": "syndrome_level_effective_model",
+    "train_samples": 120000,
+    "eval_samples": 300000,
+    "points": [
+      {
+        "delta": 0.6,
+        "fitted_gain": 0.1753323392205639,
+        "standard_logical_error": 0.08017,
+        "shrinkage_logical_error": 0.008023333333333334,
+        "gain_ci_low": 0.07121072189319466
+      },
+      {
+        "delta": 0.5,
+        "fitted_gain": 0.26416421309475563,
+        "standard_logical_error": 0.05850333333333333,
+        "shrinkage_logical_error": 0.01133,
+        "gain_ci_low": 0.046409227988133454
+      },
+      {
+        "delta": 0.4,
+        "fitted_gain": 0.3880628967686191,
+        "standard_logical_error": 0.03685666666666667,
+        "shrinkage_logical_error": 0.017643333333333334,
+        "gain_ci_low": 0.018720801747494936
+      },
+      {
+        "delta": 0.3,
+        "fitted_gain": 0.5519184579037921,
+        "standard_logical_error": 0.02063,
+        "shrinkage_logical_error": 0.018676666666666668,
+        "gain_ci_low": 0.0017953323562249872
+      },
+      {
+        "delta": 0.22,
+        "fitted_gain": 0.6933279912905911,
+        "standard_logical_error": 0.01242,
+        "shrinkage_logical_error": 0.012403333333333334,
+        "gain_ci_low": 2.0577866075003536e-06
+      }
+    ],
+    "gates": {
+      "five_point_sweep": true,
+      "train_eval_are_disjoint_by_protocol": true,
+      "fitted_gain_moves_toward_one": true,
+      "logical_advantage_shrinks": true,
+      "mse_advantage_shrinks": true,
+      "all_shrinkage_mse_not_worse": true
+    }
+  },
+  "gates": {
+    "required_comparator_set_is_exact_and_unique": true,
+    "all_implementation_anchors_are_live": true,
+    "all_parent_artifacts_pass": true,
+    "all_rows_define_information_protocol_metric_time_compute_and_claim_scope": true,
+    "only_decoder_oracle_reads_hidden_truth_online": true,
+    "hidden_truth_oracles_are_nondeployable": true,
+    "no_correction_is_executable_zero_action_and_not_standard_sbs_alias": true,
+    "finite_energy_static_is_executed_not_narrative_only": true,
+    "lane_membership_is_reciprocal_and_no_global_leaderboard_exists": true,
+    "run_length_and_hmm_remain_component_only": true,
+    "control_oracle_is_short_horizon_nondeployable_only": true,
+    "student_claim_remains_qualified_not_hardware": true,
+    "knill_and_psteane_are_explicitly_excluded_from_main_ranking": true,
+    "t5_1_2_matrix_is_preregistered_not_falsely_executed": true
+  },
+  "gate_summary": {
+    "passed": 14,
+    "total": 14,
+    "failed": []
+  },
+  "claim_boundary": {
+    "allowed": "the complete required comparison catalog, each comparator's current evidence/readiness, and only lane-local future comparisons under frozen shared inputs",
+    "forbidden": "a single global ranking, pooling old task-local metrics, oracle deployability, universal NMF superiority, or Knill/P-Steane insertion into the sBs main table"
+  },
+  "contract_sha256": "b5ec7a0cb51e6db9c766ef64daea8e2bb2912aea5a83372569f6819f83ce2dfe",
+  "source_data": {
+    "path": "docs\\t5_1_1_comparison_set_registry_source_data.csv",
+    "row_count": 100,
+    "sha256": "00646a9418b215c79e8d63a7cf719bee71f39d90722a6b906331d467c2af0ff3"
+  }
+}

@@ -1,0 +1,952 @@
+{
+  "schema_version": "t9.1.3-puviani-deviation-ledger-v1",
+  "task_id": "T9.1.3",
+  "frozen_date": "2026-07-22",
+  "protocol_binding": {
+    "path": "docs/t9_1_1_three_lane_protocol.json",
+    "analysis_sha256": "c88110375c358794339e72d672e4624871425fe480e5da091ddd1d6595255e18"
+  },
+  "configuration_binding": "configs/phase9/t9_1_3_puviani_paper_constrained.json",
+  "source_binding": {
+    "paper_path": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md",
+    "paper_sha256": "5dcda2ee0fec3191ddaa44fb539764dbebc2d089c9a3818bb17c132ca28e7c22",
+    "official_repository": "https://github.com/Matteo-Puviani/GQF.git",
+    "gqf_commit": "c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d",
+    "inherited_discrepancy_source": "docs/t6_8_4_gqf_paper_exact_reproduction.json"
+  },
+  "field_contract": {
+    "required_per_entry": [
+      "id",
+      "topic",
+      "locator",
+      "value",
+      "chosen",
+      "rationale",
+      "severity",
+      "comparability",
+      "paper_numeric_anchor_eligible",
+      "claim_effect"
+    ],
+    "severity_order": [
+      "Low",
+      "Medium",
+      "High",
+      "Critical"
+    ],
+    "missing_value_semantics": "null means unavailable or unspecified; it never means zero or agreement",
+    "allowed_evidence_label": "PAPER_CONSTRAINED_REIMPLEMENTATION"
+  },
+  "deviations": [
+    {
+      "id": "D01",
+      "topic": "official HEAD syntax",
+      "inherited_from": "T6.8.4:D01",
+      "locator": {
+        "paper": "paper and supplement assume an executable implementation",
+        "official": "third_party/GQF/GQF/mesolve.py:13",
+        "project": "configs/gqf_official/patch_manifest.json"
+      },
+      "value": {
+        "paper": "runnable implementation",
+        "official": "IndentationError at the MESolve class docstring",
+        "project": "isolated patch 0001 fixes parsing only"
+      },
+      "chosen": "Use the project-native PyTorch reimplementation; retain the isolated upstream syntax patch solely for intake diagnostics.",
+      "rationale": "A syntax repair cannot recover missing scientific assets or establish equivalence.",
+      "severity": "High",
+      "comparability": "OFFICIAL_EXACT_BLOCKED_PAPER_CONSTRAINED_ONLY",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "No official-exact or Puviani-surpass wording is allowed."
+    },
+    {
+      "id": "D02",
+      "topic": "trained checkpoints",
+      "inherited_from": "T6.8.4:D02",
+      "locator": {
+        "paper": "Supplement S3C, best-performing agent discussion",
+        "official": "GQF repository tree at pinned commit",
+        "project": "T9.1.3 checkpoint contract"
+      },
+      "value": {
+        "paper": "best of multiple agents",
+        "official": null,
+        "project": "40 project-owned validation-selected agent packages, 20 paired roots for each of MF and NMF"
+      },
+      "chosen": "Generate and hash one canonical validation-selected checkpoint for every project agent, retain a separate terminal model/Adam/RNG restart payload, and publish complete epoch/validation ledgers.",
+      "rationale": "Complete local artifacts permit downstream engineering while preserving provenance.",
+      "severity": "Critical",
+      "comparability": "NO_CHECKPOINT_IDENTITY_COMPARISON",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "The lane can establish project reproducibility only, not official reproduction."
+    },
+    {
+      "id": "D03",
+      "topic": "agent seeds",
+      "inherited_from": "T6.8.4:D03",
+      "locator": {
+        "paper": "Supplement S3C states multiple agents; manuscript reports 20 agents",
+        "official": "no seed manifest in pinned repository",
+        "project": "training.paired_root_seeds in the T9.1.3 configuration"
+      },
+      "value": {
+        "paper": "20 agents, seed values unspecified",
+        "official": null,
+        "project": "20 immutable paired root seeds in the 910001--910277 namespace"
+      },
+      "chosen": "Use the frozen project seed ledger and a deterministic root*1000003+epoch rollout derivation.",
+      "rationale": "Invented seeds must be visibly project-owned and reproducible rather than presented as recovered seeds.",
+      "severity": "Critical",
+      "comparability": "DISTRIBUTIONAL_ONLY_NOT_SEED_EXACT",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Best-of-agent numerical equality with the paper cannot be claimed."
+    },
+    {
+      "id": "D04",
+      "topic": "NMF architecture",
+      "inherited_from": "T6.8.4:D04",
+      "locator": {
+        "paper": "Supplement Table S2 and S3C",
+        "official": "third_party/GQF/GQF/feedback_GRAPE.py:181-186",
+        "project": "physics/nmf_directional_ranking.py:PaperScaleNMFPolicy"
+      },
+      "value": {
+        "paper": [
+          10,
+          256,
+          256,
+          15
+        ],
+        "official": [
+          30,
+          30,
+          30,
+          15
+        ],
+        "project": [
+          10,
+          256,
+          256,
+          15
+        ]
+      },
+      "chosen": "Follow the paper GRU10-Dense256-Dense256-Out15 architecture.",
+      "rationale": "The paper specification is the explicit constraint for this independent reimplementation.",
+      "severity": "Critical",
+      "comparability": "PAPER_MATCH_SOURCE_DIVERGENCE_DISCLOSED",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Architecture is paper-constrained but not official-source-exact."
+    },
+    {
+      "id": "D05",
+      "topic": "MF architecture",
+      "inherited_from": "T6.8.4:D05",
+      "locator": {
+        "paper": "Supplement Table S3",
+        "official": "third_party/GQF/GQF/feedback_GRAPE.py:187-192",
+        "project": "physics/nmf_directional_ranking.py:PaperScaleMFPolicy"
+      },
+      "value": {
+        "paper": [
+          256,
+          256,
+          15
+        ],
+        "official": [
+          30,
+          30,
+          15
+        ],
+        "project": [
+          256,
+          256,
+          15
+        ]
+      },
+      "chosen": "Follow the paper Dense256-Dense256-Out15 latest-outcome MF architecture.",
+      "rationale": "This provides the intended memoryless comparator under the same project backend.",
+      "severity": "Critical",
+      "comparability": "PAPER_MATCH_SOURCE_DIVERGENCE_DISCLOSED",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "MF is a project paper-constrained comparator, not an official rerun."
+    },
+    {
+      "id": "D06",
+      "topic": "training epochs",
+      "inherited_from": "T6.8.4:D06",
+      "locator": {
+        "paper": "Supplement S3C and Fig. S3",
+        "official": "third_party/GQF/GQF/runner.py and feedback_GRAPE.py defaults",
+        "project": "training.epochs"
+      },
+      "value": {
+        "paper": 1000,
+        "official_runner": 101,
+        "official_class_default": 500,
+        "project_mf": 1000,
+        "project_nmf": 1000
+      },
+      "chosen": "Train every MF and NMF project agent for exactly 1000 epochs.",
+      "rationale": "Epoch count is explicit in the paper and materially affects convergence.",
+      "severity": "Critical",
+      "comparability": "PAPER_MATCH_SOURCE_DIVERGENCE_DISCLOSED",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Epoch count supports paper-constrained labeling but does not repair other exactness blockers."
+    },
+    {
+      "id": "D07",
+      "topic": "finite-energy Delta",
+      "inherited_from": "T6.8.4:D07",
+      "locator": {
+        "paper": "main Results, Supplement S3D and finite-energy discussion",
+        "official": "third_party/GQF/GQF/runner.py",
+        "project": "training.projector_delta"
+      },
+      "value": {
+        "paper_training_and_selected_agent": 0.2,
+        "paper_other_or_generalization_section": 0.34,
+        "official_runner": 0.34,
+        "project": 0.2
+      },
+      "chosen": "Use Delta=0.2 for training and short-horizon qualification; treat Delta=0.34 as a later preregistered generalization cell.",
+      "rationale": "The selected NMF agent described by the paper was trained at Delta=0.2, but the source and other paper passages are inconsistent.",
+      "severity": "Critical",
+      "comparability": "AMBIGUOUS_PAPER_CELL_FIXED_AND_DISCLOSED",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Claims are confined to the frozen Delta=0.2 project cell."
+    },
+    {
+      "id": "D08",
+      "topic": "initializer and bias",
+      "inherited_from": "T6.8.4:D08",
+      "locator": {
+        "paper": "Supplement Tables S2-S3 and S3C prose",
+        "official": "third_party/GQF/GQF/feedback_GRAPE.py:177-192",
+        "project": "physics/nmf_directional_ranking.py:POLICY_INITIALIZATION"
+      },
+      "value": {
+        "paper_table": "RandomUniform, initial bias 0.01",
+        "paper_text": "all biases randomly initialized in [-0.1,0.1]",
+        "official": "only output-layer bias RandomUniform[-0.01,0.01]; other Keras defaults",
+        "project": "orthogonal GRU, Xavier dense, hidden biases Uniform[-0.01,0.01], zero output bias with documented gains"
+      },
+      "chosen": "Use the frozen project nominal-residual initializer and record its identifier in every checkpoint.",
+      "rationale": "The primary sources are mutually inconsistent, so a fully specified stable project initializer is safer than an untraceable guess.",
+      "severity": "High",
+      "comparability": "INITIALIZER_DEVIATION_MAY_CHANGE_OPTIMIZATION_DISTRIBUTION",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Cross-paper best-agent values are contextual only; within-project MF/NMF comparisons remain paired."
+    },
+    {
+      "id": "D09",
+      "topic": "model token",
+      "inherited_from": "T6.8.4:D09",
+      "locator": {
+        "paper": "RNN/GRU terminology",
+        "official": "runner.py uses RNN while feedback_GRAPE.py accepts rNN",
+        "project": "strategy identifier nmf"
+      },
+      "value": {
+        "paper": "RNN/GRU",
+        "official_runner": "RNN",
+        "official_dispatch": "rNN",
+        "project": "nmf"
+      },
+      "chosen": "Use typed project strategy identifiers and never infer scientific equivalence from a token patch.",
+      "rationale": "The upstream capitalization error is operational, while the project class explicitly fixes architecture and semantics.",
+      "severity": "Medium",
+      "comparability": "SOURCE_DISPATCH_PATCH_NOT_SCIENTIFIC_EQUIVALENCE",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "No direct official execution claim follows from token normalization."
+    },
+    {
+      "id": "D10",
+      "topic": "best-agent saving",
+      "inherited_from": "T6.8.4:D10",
+      "locator": {
+        "paper": "Supplement S3C post-selection statement",
+        "official": "third_party/GQF/GQF/feedback_GRAPE.py:106,223-233",
+        "project": "T9.1.3 validation selection contract"
+      },
+      "value": {
+        "paper": "post-select longest lifetime",
+        "official": "previous_reward remains 0, so best-model logic does not track the prior best",
+        "project": "validation-only checkpoint selection with complete candidate ledger"
+      },
+      "chosen": "Select and retain one checkpoint per agent only by the frozen validation metric, together with the complete epoch and validation-candidate ledger.",
+      "rationale": "A correct auditable selection procedure is required even though it intentionally differs from paper post-selection.",
+      "severity": "Critical",
+      "comparability": "SELECTION_PROTOCOL_DIFFERENT",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Paper best-agent lifetime numbers cannot be used as a paired ranking target."
+    },
+    {
+      "id": "D11",
+      "topic": "twenty-agent orchestration and ledger",
+      "inherited_from": "T6.8.4:D11",
+      "locator": {
+        "paper": "training of 20 agents reported in manuscript context",
+        "official": "no orchestration or selection ledger",
+        "project": "training.paired_root_seeds and artifact_contract"
+      },
+      "value": {
+        "paper": "train/evaluate/post-select 20 NMF agents",
+        "official": null,
+        "project": "20 paired roots per strategy; 40 agents total; failures retained"
+      },
+      "chosen": "Run all frozen roots for both MF and NMF and publish non-winner rows and failures.",
+      "rationale": "Matched roots eliminate hidden restart advantages and make the project tournament auditable.",
+      "severity": "Critical",
+      "comparability": "PROJECT_COMPLETE_LEDGER_NOT_OFFICIAL_LEDGER",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Only best among registered project implementations may be stated."
+    },
+    {
+      "id": "D12",
+      "topic": "six-state 1000-cycle evaluator",
+      "inherited_from": "T6.8.4:D12",
+      "locator": {
+        "paper": "main Results and Supplement S4B",
+        "official": "no six-state orchestration or lifetime fitter",
+        "project": "six_state_qualification and paper_scale_target"
+      },
+      "value": {
+        "paper": "six Pauli eigenstates for 1000 full cycles",
+        "official": null,
+        "project": "six-state 10-cycle qualification now; 1000-cycle numeric target null"
+      },
+      "chosen": "Qualify serialization and six-state semantics at 10 cycles; reject any lifetime output until independently qualified long-horizon backends exist.",
+      "rationale": "The current differentiable backend is explicitly validated only through 10 cycles.",
+      "severity": "Critical",
+      "comparability": "QUALIFICATION_ONLY_NOT_PAPER_LIFETIME",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "T_X, T_Y, T_Z and T_ch remain null in T9.1.3."
+    },
+    {
+      "id": "D13",
+      "topic": "raw trajectories",
+      "inherited_from": "T6.8.4:D13",
+      "locator": {
+        "paper": "Supplement S4B reports 6x85 and 8x64 sampling",
+        "official": "no published raw trajectory data",
+        "project": "six_state_qualification.required_trajectory_fields and required_event_fields"
+      },
+      "value": {
+        "paper": "510 NMF and 512 standard raw trajectories per evaluated logical state",
+        "official": null,
+        "project": "all short-horizon project qualification trajectories and half-cycle records retained"
+      },
+      "chosen": "Publish project-owned raw qualification records and keep paper-scale raw-record status null.",
+      "rationale": "Short-horizon raw records establish pipeline integrity but cannot substitute for missing paper trajectories.",
+      "severity": "Critical",
+      "comparability": "RAW_RECORD_SCOPE_MISMATCH",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "No paper-curve digitization or exact trajectory replay claim is allowed."
+    },
+    {
+      "id": "D14",
+      "topic": "complete numeric targets",
+      "inherited_from": "T6.8.4:D14",
+      "locator": {
+        "paper": "figures and selected values in main text and S4B",
+        "official": "no numeric result table",
+        "project": "paper_scale_target.numeric_values"
+      },
+      "value": {
+        "paper": "selected T_Z, T_-Y and entanglement-infidelity anchors; no complete T_X/T_Y/T_Z/T_ch table",
+        "official": null,
+        "project": "all paper-scale metric values null"
+      },
+      "chosen": "Treat published anchors as literature context only and never fill missing targets by figure inference in the primary lane.",
+      "rationale": "Incomplete targets prevent an absolute-value exactness test.",
+      "severity": "Critical",
+      "comparability": "EXTERNAL_POINT_CONTEXT_ONLY",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Official exact and Puviani-surpass gates remain closed."
+    },
+    {
+      "id": "D15",
+      "topic": "lifetime fit window and weighting",
+      "inherited_from": "T6.8.4:D15",
+      "locator": {
+        "paper": "Supplement S4B gives the single-exponential equation",
+        "official": "no fitter implementation",
+        "project": "paper_scale_target.fit_model"
+      },
+      "value": {
+        "paper": "single exponential; fit window, weights, intercept policy and failure criteria unspecified",
+        "official": null,
+        "project": "formula recorded, numeric fit deliberately not executed in T9.1.3"
+      },
+      "chosen": "Pre-register fit window, weighting, censoring and diagnostics in T9.6 before opening long-sequence outcomes.",
+      "rationale": "Post-hoc fit choices can materially change lifetime estimates.",
+      "severity": "Critical",
+      "comparability": "FIT_METHOD_NOT_IDENTIFIED",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "No lifetime ranking is eligible from this artifact task."
+    },
+    {
+      "id": "D16",
+      "topic": "20 versus 21 half-cycle semantics",
+      "inherited_from": "T6.8.4:D16",
+      "locator": {
+        "paper": "Supplement S3C and Fig. S3 specify 10 full cycles with two measurements each",
+        "official": "GKP_environment.py done at max_steps=21; runner max_steps=21",
+        "project": "training.full_cycles and training.half_measurements"
+      },
+      "value": {
+        "paper": "20 half cycles / 10 full cycles",
+        "official": "21 env.step calls / 10.5 cycle coordinate",
+        "project": "exactly 20 half cycles / 10 full cycles"
+      },
+      "chosen": "Execute exactly 20 measured half-cycles, then stop after the outcome-conditioned 2.3 us/reset/VR/1 us terminal correction; do not execute or score a 21st layer/measurement.",
+      "rationale": "This preserves the paper's 20 measurements and 100 us horizon while retaining the terminal-corrected state that the upstream runner obtains at the start of step 21. The upstream subsequently executes an extra half-cycle whose state is not used by its final reward but whose branch probability enters its loss, so exact source-step equivalence is intentionally rejected.",
+      "severity": "Critical",
+      "comparability": "PAPER_MATCH_SOURCE_DIVERGENCE_DISCLOSED",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "The project run is not step-for-step identical to the pinned runner."
+    },
+    {
+      "id": "D17",
+      "topic": "accelerator execution",
+      "inherited_from": "T6.8.4:D17",
+      "locator": {
+        "paper": "Supplement S3B describes TensorFlow GPU execution",
+        "official": "docs/t6_8_3_gqf_official_intake.json GPU probe",
+        "project": "training.device and artifact runtime ledger"
+      },
+      "value": {
+        "paper": "GPU used, device model not specified",
+        "official_environment": "UNQUALIFIED_CUSOLVER_FATAL on current host",
+        "project": "PyTorch CUDA requested; runtime qualification and failures must be recorded"
+      },
+      "chosen": "Use the qualified project PyTorch CUDA path with no silent CPU fallback.",
+      "rationale": "A different framework path is necessary for executable progress and must remain provenance-separated.",
+      "severity": "High",
+      "comparability": "FRAMEWORK_AND_KERNEL_DIFFERENCE",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Wall-clock and numerical reproducibility claims apply only to the project environment."
+    },
+    {
+      "id": "D18",
+      "topic": "dependency versions",
+      "inherited_from": "T6.8.4:D18",
+      "locator": {
+        "paper": "no complete environment specification",
+        "official": "requirements.txt lists four unpinned top-level dependencies",
+        "project": "artifact environment/runtime ledger"
+      },
+      "value": {
+        "paper": null,
+        "official": "numpy, matplotlib, tensorflow and gym unpinned",
+        "project": "full interpreter, PyTorch, CUDA, driver and package versions required"
+      },
+      "chosen": "Hash a complete project runtime manifest with every produced checkpoint bundle.",
+      "rationale": "Environment identity is necessary for replay but cannot reconstruct the authors' environment.",
+      "severity": "High",
+      "comparability": "ENVIRONMENT_EXACTNESS_UNAVAILABLE",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Bitwise equality with official numerical results is not claimed."
+    },
+    {
+      "id": "D19",
+      "topic": "MF/NMF batch-size assignment",
+      "locator": {
+        "paper": "Supplement Tables S2-S3 and S3C",
+        "official": "feedback_GRAPE.py default batch_size=5; runner.py batch_size=8",
+        "project": "training.mf_batch_size and training.nmf_batch_size"
+      },
+      "value": {
+        "paper": "RNN/NMF batch 6 and FNN/MF batch 8",
+        "official": "single configurable batch, default 5 or runner 8",
+        "project": {
+          "mf": 8,
+          "nmf": 6
+        }
+      },
+      "chosen": "Assign batch 8 to MF and batch 6 to NMF exactly as the architecture tables specify.",
+      "rationale": "The tables provide the most specific mapping, while the upstream source does not encode separate strategies.",
+      "severity": "High",
+      "comparability": "PAPER_MATCH_SOURCE_DIVERGENCE_DISCLOSED",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Training compute is not matched across MF/NMF; later tournament ranking must budget-match separately."
+    },
+    {
+      "id": "D20",
+      "topic": "physics backend and integrator",
+      "locator": {
+        "paper": "Supplement S3B specifies custom TensorFlow RK4 Lindblad integration",
+        "official": "mesolve.py and GKP_environment.py",
+        "project": "physics/differentiable_sbs_trajectory.py"
+      },
+      "value": {
+        "paper": "custom TensorFlow RK4 Lindblad solver",
+        "official": "finite-step RK4 with source-specific step counts",
+        "project": "PyTorch explicit R/ECD/D/VR gates with analytic idle CPTP channels"
+      },
+      "chosen": "Use the project differentiable trajectory backend for artifact generation and require independent Phase-9 backends for performance promotion.",
+      "rationale": "The source backend cannot currently support qualified training, and backend differences can alter gradients and trajectories.",
+      "severity": "Critical",
+      "comparability": "PHYSICS_BACKEND_NONIDENTICAL",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Short-horizon outcomes are project-native diagnostics only."
+    },
+    {
+      "id": "D21",
+      "topic": "numeric precision and framework dtype",
+      "locator": {
+        "paper": "precision not specified",
+        "official": "operators.py and environment use TensorFlow float32/complex64",
+        "project": "training.real_dtype and training.complex_dtype"
+      },
+      "value": {
+        "paper": null,
+        "official": "float32/complex64",
+        "project": "float64/complex128"
+      },
+      "chosen": "Use float64/complex128 physics and record precision in all artifacts.",
+      "rationale": "Higher precision reduces long autograd trajectory drift but changes numerical kernels.",
+      "severity": "High",
+      "comparability": "PRECISION_STRATUM_DIFFERENT",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Numerical differences cannot be attributed solely to controller quality."
+    },
+    {
+      "id": "D22",
+      "topic": "Fock cutoff",
+      "locator": {
+        "paper": "Supplement numerical implementation uses N=100",
+        "official": "GKPEnv default N=100",
+        "project": "training.cutoff and training.confirmation_cutoff"
+      },
+      "value": {
+        "paper": 100,
+        "official": 100,
+        "project_primary": 12,
+        "project_selected_confirmation": 16
+      },
+      "chosen": "Train at cutoff 12 and re-evaluate selected agents at cutoff 16; do not extrapolate these results to cutoff 100.",
+      "rationale": "Full cutoff-100 differentiable 40-agent training is not currently computationally qualified. The cutoff-16 stratum supplies raw confirmation data, but T9.1.3 has no preregistered cutoff-12-to-16 ranking/non-inferiority gate and therefore does not establish that a major truncation reversal is absent.",
+      "severity": "Critical",
+      "comparability": "CUTOFF_MISMATCH_DIRECTIONAL_ONLY",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "No paper-scale lifetime or absolute Puviani comparison is eligible."
+    },
+    {
+      "id": "D23",
+      "topic": "evaluation horizon",
+      "locator": {
+        "paper": "main Results specifies evaluation for 1000 full cycles",
+        "official": "no 1000-cycle evaluator",
+        "project": "six_state_qualification.full_cycles and paper_scale_target"
+      },
+      "value": {
+        "paper": 1000,
+        "official": null,
+        "project_qualification": 10,
+        "project_promotion_target": 10000
+      },
+      "chosen": "Populate only 10-cycle qualification records now; leave all 1000-cycle quantities null and defer >=10000-cycle promotion to T9.6.",
+      "rationale": "A short-horizon controller artifact is not a logical-lifetime measurement.",
+      "severity": "Critical",
+      "comparability": "HORIZON_MISMATCH_NO_LIFETIME_RANKING",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Lifetime SOTA, Puviani-surpass and break-even claims remain closed."
+    },
+    {
+      "id": "D24",
+      "topic": "ancilla T1 collapse operator orientation",
+      "locator": {
+        "paper": "noise table specifies ancilla T1 relaxation but not matrix convention",
+        "official": "mesolve.py:59-61 uses operators.sigmap; operators.py:80-83 defines [[0,0],[1,0]]",
+        "project": "physics/differentiable_sbs_trajectory.py amplitude-damping Kraus pair"
+      },
+      "value": {
+        "paper": "energy relaxation",
+        "official": "collapse operator maps basis |0> to |1> under the visible ground/reset convention",
+        "project": "K1 maps |1> to |0>"
+      },
+      "chosen": "Implement physical |e> to |g> amplitude damping and add limit tests; disclose the upstream orientation mismatch.",
+      "rationale": "Using a raising operator for T1 would invert thermal relaxation and materially change controller gradients.",
+      "severity": "Critical",
+      "comparability": "SCIENTIFIC_SOURCE_SEMANTICS_DIVERGENCE",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "The project intentionally does not reproduce this apparent upstream defect, so official code equality is impossible."
+    },
+    {
+      "id": "D25",
+      "topic": "Adam state recreation",
+      "locator": {
+        "paper": "Supplement S3C gives learning rate but not optimizer-state reset semantics",
+        "official": "feedback_GRAPE.py:196-212 constructs Adam inside every epoch",
+        "project": "cnn_fpga/benchmark/puviani_paper_constrained_artifacts.py:_train_paper_agent constructs Adam once per agent"
+      },
+      "value": {
+        "paper": "gradient-based optimization, lr=1e-4; optimizer-state lifetime unspecified",
+        "official": "new Adam optimizer each epoch",
+        "project": "persistent Adam moments for all 1000 epochs"
+      },
+      "chosen": "Use one persistent Adam instance per agent, record the uninterrupted epoch ledger, and retain terminal optimizer/model/CPU-CUDA-NumPy RNG state in a separately hashed restart payload.",
+      "rationale": "Persistent moments are standard Adam semantics and provide deterministic resumability, but change the optimization path.",
+      "severity": "Critical",
+      "comparability": "OPTIMIZER_TRAJECTORY_DIFFERENT",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Convergence or best-agent distributions are not directly comparable to the pinned source."
+    },
+    {
+      "id": "D26",
+      "topic": "measurement RNG and seed control",
+      "locator": {
+        "paper": "Born-rule trajectory sampling stated; RNG algorithm and seeds absent",
+        "official": "operators.py:141 uses unseeded tf.random.uniform(...).numpy()",
+        "project": "torch.Generator seeded by frozen rollout derivation"
+      },
+      "value": {
+        "paper": "categorical quantum measurement sampling",
+        "official": "unseeded TensorFlow uniform draw with no stream ledger",
+        "project": "deterministic per-rollout uniform draw compared with state-conditioned Born probability"
+      },
+      "chosen": "Use explicit independent seeded RNG streams and persist seed, outcome and Born probability per trajectory.",
+      "rationale": "Auditable stochastic experiments require replayable streams without replacing physics-conditioned probabilities.",
+      "severity": "High",
+      "comparability": "RNG_STREAMS_NOT_REPRODUCIBLE_ACROSS_IMPLEMENTATIONS",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Only distributional, not trajectory-by-trajectory, source comparison is meaningful."
+    },
+    {
+      "id": "D27",
+      "topic": "15-action vector order",
+      "locator": {
+        "paper": "Supplement S3B lists the action set but not tensor order",
+        "official": "GKP_environment.py:300-365 uses [VR, phi1..4, theta1..4, Re beta1..3, Im beta1..3]",
+        "project": "physics/differentiable_sbs_trajectory.py:PARAMETER_NAMES"
+      },
+      "value": {
+        "paper": "8 rotation angles, 6 displacement components and 1 virtual rotation",
+        "official": "VR-first grouped order",
+        "project": "layer-interleaved phi/theta/Re-beta/Im-beta for layers 1-3, layer4 phi/theta, VR-last"
+      },
+      "chosen": "Freeze the project layer-interleaved order and store action names, not bare positions, in every raw record and checkpoint manifest.",
+      "rationale": "Both layouts represent the same named controls only if the mapping is explicit; silent tensor reuse would be catastrophic.",
+      "severity": "Critical",
+      "comparability": "SEMANTIC_ACTION_MAP_REQUIRED_NO_RAW_WEIGHT_TRANSFER",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Official weights, if later obtained, cannot be loaded without a verified permutation adapter."
+    },
+    {
+      "id": "D28",
+      "topic": "IQ observation model",
+      "locator": {
+        "paper": "ideal projective g/e measurement outcomes",
+        "official": "operators.POVM returns binary outcome; no analog IQ path",
+        "project": "T9.1.3 observation remains binary; Phase 9.2 will add IQ"
+      },
+      "value": {
+        "paper": "binary g/e",
+        "official": "binary g/e",
+        "project_current": "binary g/e",
+        "phase9_target": "complex IQ, LLR, confidence and timestamps"
+      },
+      "chosen": "Keep the T9.1.3 comparator binary and prohibit transferring its result to the future IQ task signature.",
+      "rationale": "Adding analog observations would no longer be a paper-constrained MF/NMF comparison.",
+      "severity": "High",
+      "comparability": "MATCHED_FOR_BINARY_LANE_ONLY",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "T9.1.3 provides no drift-adaptive raw-IQ evidence."
+    },
+    {
+      "id": "D29",
+      "topic": "ancilla leakage",
+      "locator": {
+        "paper": "two-level ancilla model",
+        "official": "two-dimensional ancilla operators",
+        "project": "T9.1.3 differentiable backend; T9.2 multilevel target"
+      },
+      "value": {
+        "paper": "g/e only",
+        "official": "g/e only",
+        "project_current": "g/e only; no f state",
+        "phase9_target": "g/e/f leakage residence and intervention"
+      },
+      "chosen": "Declare leakage absent in this artifact lane and require later independent multilevel backend evaluation.",
+      "rationale": "Binary outcome noise cannot stand in for persistent f-state dynamics.",
+      "severity": "High",
+      "comparability": "MATCHED_PAPER_OMISSION_NOT_REALISTIC_TWIN",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "No leakage robustness or device-readiness claim is allowed."
+    },
+    {
+      "id": "D30",
+      "topic": "reset failure and acknowledgement",
+      "locator": {
+        "paper": "measurement/reset occupies 2.3 us but reset is idealized",
+        "official": "qutils.reset_ancilla replaces ancilla with target state",
+        "project": "T9.1.3 ideal reset; T9.2 reset-failure target"
+      },
+      "value": {
+        "paper": "reset timing included, failures unspecified",
+        "official": "deterministic perfect reset",
+        "project_current": "deterministic perfect reset with timing cost",
+        "phase9_target": "stochastic reset failure plus observed acknowledgement"
+      },
+      "chosen": "Retain the paper ideal-reset model only for this comparator and do not synthesize reset acknowledgements.",
+      "rationale": "Inventing a fault rate would break the paper constraint; omitting it prevents realistic-tail claims.",
+      "severity": "High",
+      "comparability": "PAPER_MODEL_ONLY_NOT_RESET_ROBUSTNESS",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "No reset-fault, fail-closed or worst-window advantage follows from T9.1.3."
+    },
+    {
+      "id": "D31",
+      "topic": "action-conditioned drift",
+      "locator": {
+        "paper": "fixed low/medium/high Markovian noise and biased-gate tests",
+        "official": "noise level fixed by environment configuration",
+        "project": "T9.1.3 fixed high-noise training; T9.2 action-conditioned drift target"
+      },
+      "value": {
+        "paper": "no online action-conditioned latent drift process",
+        "official": "no such process",
+        "project_current": "no such process",
+        "phase9_target": "action-dependent transition and timing uncertainty"
+      },
+      "chosen": "Do not add drift to the paper-constrained artifact lane; evaluate drift only in separately signed project-native tasks.",
+      "rationale": "A changed environment would confound reproduction provenance with the proposed innovation.",
+      "severity": "High",
+      "comparability": "PAPER_COMPARATOR_ONLY_NO_DRIFT_ADAPTATION",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "T9.1.3 cannot support calibration, telegraph or compound-drift claims."
+    },
+    {
+      "id": "D32",
+      "topic": "controller inference latency",
+      "locator": {
+        "paper": "gate and measurement durations are simulated; neural inference duration is not modeled",
+        "official": "no controller timing instrumentation",
+        "project": "T9.1.3 literature timing profile; T9.7 HIL lane"
+      },
+      "value": {
+        "paper": null,
+        "official": null,
+        "project_current": "simulator runtime only, not physical inference latency"
+      },
+      "chosen": "Keep inference and source-to-action latency numeric fields null until measured HIL.",
+      "rationale": "Simulation wall-clock cannot substitute for deterministic board latency.",
+      "severity": "Critical",
+      "comparability": "NO_HARDWARE_TIMING_COMPARISON",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "No faster-decoder or real-time hardware claim is allowed."
+    },
+    {
+      "id": "D33",
+      "topic": "project loss regularization and score baseline",
+      "locator": {
+        "paper": "Eq. 1 / Supplement Eq. S5 gives pathwise plus score term",
+        "official": "feedback_GRAPE.py:209 uses raw score term without a documented moving baseline or control penalties",
+        "project": "cnn_fpga/benchmark/puviani_paper_constrained_artifacts.py:_train_paper_agent"
+      },
+      "value": {
+        "paper": "final-fidelity pathwise and log-probability score gradients",
+        "official": "same two terms, no residual/slew penalties",
+        "project": "EMA score baseline 0.95 plus residual and slew L2 weights 1e-5; the regularizer contribution uses its pathwise derivative only and does not add a likelihood-ratio term for the policy-dependent action-history distribution"
+      },
+      "chosen": "Retain the frozen variance-reduction baseline and bounded-control regularizers as an explicitly project-specific training heuristic, and disclose both their weights and the missing regularizer score-function contribution in every evidence package.",
+      "rationale": "They stabilize training and enforce deployable action behavior but alter the objective beyond the stated paper loss. Because residual/slew penalties depend on stochastic policy history, the implemented gradient is not claimed to be an unbiased gradient of an expected regularized objective.",
+      "severity": "High",
+      "comparability": "TRAINING_OBJECTIVE_DEVIATION",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Absolute controller quality cannot be attributed to the paper algorithm alone, and no paper-exact or unbiased expected-regularized-objective claim is allowed."
+    },
+    {
+      "id": "D34",
+      "topic": "observation encoding and recurrent initialization",
+      "locator": {
+        "paper": "m_i in {g,e}; GRU hidden initialization not specified",
+        "official": "operators.POVM emits g=+1/e=-1 and env.reset supplies a zero sentinel before the first stateful GRU call",
+        "project": "controller_contract.observation and NMF reset_rollout"
+      },
+      "value": {
+        "paper": "categorical g/e, numeric mapping and h0 unspecified",
+        "official": "zero sentinel, then g=+1/e=-1; h0 reset by framework",
+        "project": "raw events retain g=0/e=1, policy adapter maps them to g=+1/e=-1, consumes a zero sentinel, and starts h0=zeros"
+      },
+      "chosen": "Match the visible GQF token orientation and initial zero-sentinel GRU update while retaining 0/1 only in raw evaluator storage.",
+      "rationale": "Token sign and the sentinel update both change the recurrent state over the short 20-observation training horizon and are directly recoverable from the pinned source.",
+      "severity": "High",
+      "comparability": "OFFICIAL_SOURCE_SEMANTICS_MATCHED_PAPER_ENCODING_UNSPECIFIED",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "No hidden-state equivalence with an unavailable official checkpoint is claimed."
+    },
+    {
+      "id": "D35",
+      "topic": "action timing and virtual-rotation placement",
+      "locator": {
+        "paper": "Fig. 2 and Table S1 show measurement/reset followed by virtual rotation and idle",
+        "official": "GKP_environment.py applies VR at the entry of the next step from prior sign/action",
+        "project": "the versioned physics/puviani_paper_causal.py adapter computes d_0...d_H without changing the historical T2.3.7 backend"
+      },
+      "value": {
+        "paper": "causal feedback based on past observations; exact action timestamp not fully formalized",
+        "official": "previous-step sign drives entering-cycle VR",
+        "project": "d_k layers -> m_k -> collapsed-branch 2.3 us -> reset -> VR from d_(k+1)(m_0..m_k) -> 1 us -> d_(k+1) next layers, with terminal VR after m_19"
+      },
+      "chosen": "Implement and record separate pre-measurement layer action d_k and post-measurement pending action d_(k+1); reuse the latter without a second stateful-policy call and terminate after its VR/idle boundary correction.",
+      "rationale": "This is the only indexing that simultaneously makes the current outcome affect subsequent gates, reproduces the visible GQF ordering, retains 20 measurements, and accounts for exactly 20*5 us.",
+      "severity": "Critical",
+      "comparability": "PAPER_CAUSAL_TIMELINE_MATCHED_SOURCE_TERMINAL_EXECUTION_DISCLOSED",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "The former same-action/post-measurement VR implementation is revoked; timing-sensitive results require the new causal event ledger and remain paper-constrained, not official exact."
+    },
+    {
+      "id": "D36",
+      "topic": "agent-level selection leakage",
+      "locator": {
+        "paper": "Supplement S3C selects the best performing agent by longer lifetime",
+        "official": "no disjoint train/validation/test selection implementation",
+        "project": "training.selection"
+      },
+      "value": {
+        "paper": "best lifetime among trained agents",
+        "official": null,
+        "project": "within-agent checkpoint and across-agent decisions use validation only; qualification data remain unseen"
+      },
+      "chosen": "Forbid best-of-20 selection on test or six-state lifetime and retain all agent rows.",
+      "rationale": "Selecting on the reported endpoint induces optimism and conflicts with the Phase-9 split contract.",
+      "severity": "Critical",
+      "comparability": "SELECTION_ESTIMAND_DIFFERENT_BUT_LEAKAGE_CONTROLLED",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "A lower project result cannot refute the paper, and a higher one cannot establish surpass."
+    },
+    {
+      "id": "D37",
+      "topic": "six-state symmetry and channel aggregation",
+      "locator": {
+        "paper": "Supplement S4B uses T=3/(1/T_-X+1/T_-Y+1/T_Z) after a symmetry check",
+        "official": "no evaluator",
+        "project": "T9.1.1 SIX_STATE_LOGICAL_LIFETIME signature"
+      },
+      "value": {
+        "paper": "uses three selected state lifetimes after observed +/- symmetry",
+        "official": null,
+        "project": "retain all six state-specific curves and gate on the minimum registered contrast"
+      },
+      "chosen": "Compute all six states without substituting symmetry; any three-axis summary is secondary and derived after diagnostics.",
+      "rationale": "Drift, reset and leakage extensions can break the symmetry assumed in the paper model.",
+      "severity": "High",
+      "comparability": "AGGREGATION_CONTRACT_DIFFERENT",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Future Phase-9 lifetime claims use the stricter six-state contract, not the paper's reduced summary alone."
+    },
+    {
+      "id": "D38",
+      "topic": "postselection and deterministic measurement mode",
+      "locator": {
+        "paper": "lifetime curves use raw sampled trajectories; Fig. 4 uses one fixed sequence only for interpretation",
+        "official": "GKPEnv exposes deterministic mu mode",
+        "project": "six_state_qualification.postselection"
+      },
+      "value": {
+        "paper": "no postselection for lifetime; one explicitly fixed illustrative path",
+        "official": "both sampled and forced-outcome modes exist",
+        "project": "forced outcomes allowed only for unit tests; zero rejection in qualification"
+      },
+      "chosen": "Retain every sampled trajectory in the denominator and tag any forced branch as non-performance test data.",
+      "rationale": "An illustrative fixed path cannot support lifetime or LER performance.",
+      "severity": "Critical",
+      "comparability": "FULL_DENOMINATOR_REQUIRED",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Any accepted-only or forced-path metric is ineligible for ranking."
+    },
+    {
+      "id": "D39",
+      "topic": "RK4 step size and convergence",
+      "locator": {
+        "paper": "Supplement S3B names RK4 but gives no universal time step or convergence tolerance",
+        "official": "GKP_environment.py uses phase-specific low step counts such as 2, 3, 4 and 20",
+        "project": "analytic idle channels, cutoff-12/16 confirmation"
+      },
+      "value": {
+        "paper": null,
+        "official": "phase-specific hard-coded time_steps",
+        "project": "no RK4 time-step parameter; truncation confirmation only"
+      },
+      "chosen": "Record solver family as a material deviation and require step-size/cutoff convergence in the two-backend T9.2 qualification.",
+      "rationale": "Integrator discretization error is inseparable from controller performance without convergence evidence.",
+      "severity": "High",
+      "comparability": "SOLVER_CONVERGENCE_NOT_CROSS_QUALIFIED",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "T9.1.3 physics results remain diagnostic and cannot enter a formal SOTA gate."
+    },
+    {
+      "id": "D40",
+      "topic": "six-state codeword and logical-operator semantics",
+      "locator": {
+        "paper": "Supplement S1 and S4 use finite-energy coherent-grid codewords and displacement-defined logical Pauli operators",
+        "official": "GKP_environment.py constructs finite-energy logical_zero/logical_one and operators.gkp_Pauli_X/Y/Z",
+        "project": "PaperCausalSBSTrajectorySimulator finite-cutoff basis diagnostics and T9.1.3 _set_logical_state"
+      },
+      "value": {
+        "paper": "nonorthogonal finite-energy grid states with displacement logical operators",
+        "official": "source-style finite-energy codewords and displacement operators",
+        "project": "Lowdin-orthonormalized finite-cutoff isometry with projector-defined code-space Pauli operators; raw overlap and Gram condition number recorded"
+      },
+      "chosen": "Retain the numerically stable orthonormalized projector evaluator as a named non-promotional diagnostic and expose its state/operator IDs plus raw codeword overlap in every stratum.",
+      "rationale": "At finite cutoff, orthonormalization changes the prepared states and observables; hiding that difference would make a six-state number look source-equivalent when it is not.",
+      "severity": "High",
+      "comparability": "STATE_AND_OPERATOR_SEMANTICS_DIFFERENT_NONPROMOTIONAL",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "No source-style six-state lifetime or absolute Puviani comparison may be inferred from this evaluator."
+    },
+    {
+      "id": "D41",
+      "topic": "paired common-random-number six-state sampling",
+      "locator": {
+        "paper": "Supplement S4B reports raw trajectory counts but not cross-state or cross-method RNG coupling",
+        "official": "no six-state evaluator or seed ledger",
+        "project": "six_state_qualification.monte_carlo_design and raw evaluation_cluster_id/rng_stream_id"
+      },
+      "value": {
+        "paper": null,
+        "official": null,
+        "project": "the same evaluation seed namespace is paired across state/method cells; inference clusters by stratum and evaluation seed"
+      },
+      "chosen": "Use paired common random numbers for lower-variance contrasts, disclose the coupling, and forbid treating trajectory rows as independent replicates.",
+      "rationale": "Pairing is valid only when the cluster structure is preserved in confidence intervals and multiplicity calculations.",
+      "severity": "Medium",
+      "comparability": "MONTE_CARLO_COUPLING_DISCLOSED_CLUSTERED_INFERENCE_REQUIRED",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Qualification rows support paired diagnostics only; naive unpaired confidence intervals are invalid."
+    },
+    {
+      "id": "D42",
+      "topic": "version-isolated paper-causal backend",
+      "locator": {
+        "paper": "no software-version compatibility contract",
+        "official": "pinned GQF commit c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d",
+        "project": "physics/puviani_paper_causal.py plus the immutable historical T2.3.7 source hash"
+      },
+      "value": {
+        "paper": null,
+        "official": "one source snapshot",
+        "project": "Phase-9 timing/token extensions are isolated in a new module; the earlier simulator/ranking bytes and their production artifact hash remain unchanged"
+      },
+      "chosen": "Version the paper-causal adapter instead of retroactively changing the executable source bound to T2.3.7 evidence.",
+      "rationale": "A shared-source modification made the older production artifact fail its live hash audit even though the Phase-9 defaults were intended to be compatible. Isolation preserves both evidence namespaces and prevents an unrecorded migration.",
+      "severity": "Medium",
+      "comparability": "VERSIONED_BACKEND_ISOLATION_WITH_SHARED_PHYSICS_PRIMITIVES",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "T9.1.3 results bind the new adapter hash; T2.3.7 remains historical project-native evidence and neither namespace is silently re-sealed."
+    }
+  ],
+  "summary": {
+    "entry_count": 42,
+    "inherited_D01_through_D18_present": true,
+    "critical_count": 23,
+    "high_count": 16,
+    "medium_count": 3,
+    "low_count": 0,
+    "official_exact_reproduction": "BLOCKED",
+    "paper_constrained_artifact_generation": "ALLOWED_WITH_ALL_DEVIATIONS_ATTACHED",
+    "paper_scale_numeric_results": "NOT_EVALUATED_NULL",
+    "permitted_claim": "PAPER_CONSTRAINED_REIMPLEMENTATION"
+  }
+}

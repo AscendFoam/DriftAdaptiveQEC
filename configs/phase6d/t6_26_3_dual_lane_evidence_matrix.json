@@ -1,0 +1,67 @@
+{
+  "task_id": "T6.26.3",
+  "schema_version": "t6.26.3-dual-lane-evidence-matrix-config-v1",
+  "panels": [
+    {
+      "panel_id": "MULTIMODE_SOFTWARE",
+      "lane_id": "MULTIMODE_SOFTWARE_ALGORITHM",
+      "allowed_metric_namespaces": ["LER", "TAIL", "SCALING", "COMPUTE", "EVIDENCE_STATE"]
+    },
+    {
+      "panel_id": "SINGLE_MODE_RTL",
+      "lane_id": "SINGLE_MODE_DETERMINISTIC_RTL",
+      "allowed_metric_namespaces": ["LATENCY_CYCLES", "INITIATION_INTERVAL", "PROPERTY", "CXXRTL", "POST_ROUTE", "RESOURCE", "BOARD_NULL", "EVIDENCE_STATE"]
+    },
+    {
+      "panel_id": "LEARNING_EXTENSION",
+      "lane_id": "LEARNED_APPROXIMATION_EXTENSION",
+      "allowed_metric_namespaces": ["STATUS", "EVIDENCE_STATE"]
+    }
+  ],
+  "claim_ids": [
+    "MM_OPENED_TASK_LOCAL_GAIN",
+    "MM_V1_CAUSAL_HEADROOM_NO_GO",
+    "MM_FROZEN_BENCHMARK_SOTA_BLOCKED",
+    "RTL_DETERMINISTIC_SIX_CYCLE_II1",
+    "RTL_ATOMIC_FAIL_CLOSED",
+    "RTL_POST_ROUTE_ESTIMATE",
+    "RTL_BOARD_MEASUREMENT_BLOCKED",
+    "RTL_SPEED_ADVANTAGE_PROHIBITED",
+    "LEARNING_APPROXIMATION_DROPPED",
+    "DUAL_LANE_NONTRANSFERABILITY"
+  ],
+  "required_task_statuses": {
+    "T6.20.4": "Done",
+    "T6.24.5": "Dropped",
+    "T6.25.2": "Done",
+    "T6.25.3": "Done",
+    "T6.25.4": "Done",
+    "T6.26.1": "Dropped",
+    "T6.26.2": "Dropped",
+    "T6.26.3": "ACTIVE_OR_DONE"
+  },
+  "required_parent_verdicts": {
+    "dual_contract": "PASS_DUAL_LANE_CONTRACT_FROZEN",
+    "opened_multimode": "GO_POSTERIOR_WEIGHTED_CPD_DRIFT_GAIN",
+    "multimode_headroom": "NO_GO_MULTIMODE_CAUSAL_HEADROOM",
+    "rtl_formal": "PASS_CONVERGED_PRODUCTION_TOP_PROPERTY_COVER_MUTATION_CLOSED",
+    "rtl_long": "PASS_EXACT_CONVERGED_TOP_MILLION_CYCLE_CXXRTL_QUALIFICATION",
+    "rtl_hardware": "PASS_EXACT_CONVERGED_TOP_THREE_SEED_PREBOARD_HARDWARE_LANE"
+  },
+  "forbidden_transfer_ids": [
+    "MM_LER_TO_RTL",
+    "RTL_LATENCY_TO_MM",
+    "MM_POSITIVE_TO_MM_SOTA",
+    "MM_NEGATIVE_RESOLVED_BY_RTL",
+    "RTL_SAFETY_RESOLVED_BY_MM",
+    "LEARNING_TO_MM_PROMOTION",
+    "LEARNING_TO_RTL_PROMOTION",
+    "PREBOARD_TO_BOARD",
+    "HARNESS_FMAX_TO_BARE_CORE",
+    "CROSS_LANE_WEIGHTED_SCORE"
+  ],
+  "global_weighted_score": "PROHIBITED",
+  "one_lane_cannot_satisfy_another_lane_gate": true,
+  "board_measured_fields_must_be_null": true,
+  "semantic_mutation_count": 21
+}

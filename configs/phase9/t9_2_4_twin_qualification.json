@@ -1,0 +1,211 @@
+{
+  "task_id": "T9.2.4",
+  "schema_version": "PHASE9-DUAL-BACKEND-QUALIFICATION-CONFIG-V1",
+  "frozen_at": "2026-07-26",
+  "formal_result_accessed_before_freeze": false,
+  "parent_a": {
+    "task_id": "T9.2.2",
+    "release_pin": "configs/phase9/t9_2_2_release_pin.json",
+    "report": "docs/t9_2_2_backend_a_qualification.json",
+    "analysis_sha256": "95f11f0dc17a1799a97a69af6908765d1e00d75399ef3d07277d075ada74f624"
+  },
+  "parent_b": {
+    "task_id": "T9.2.3",
+    "release_pin": "configs/phase9/t9_2_3_release_pin.json",
+    "report": "docs/t9_2_3_backend_b_qualification.json",
+    "analysis_sha256": "4e46a0c7bf88356c38874112bf26c7ddc0d60d989c024c539185b52b3bef80aa"
+  },
+  "action_contract": {
+    "task_id": "T9.2.1",
+    "release_pin": "configs/phase9/t9_2_1_release_pin.json",
+    "report": "docs/t9_2_1_causal_twin_contract.json",
+    "analysis_sha256": "78775658b4c9fa3a768252e2d529e39a0a90924c28158de2e4a527ba3052fe34",
+    "probe_ids": [
+      "P01_IDLE",
+      "P02_Q_POS",
+      "P03_Q_NEG",
+      "P04_P_POS",
+      "P05_P_NEG",
+      "P06_ALTERNATE",
+      "P07_BOUNDARY",
+      "P08_PHASE",
+      "P09_LEAK_RESET",
+      "P10_RESET_OK",
+      "P11_RESET_FAIL",
+      "P12_BAD_CRC",
+      "P13_STALE",
+      "P14_OOD",
+      "P15_DEADLINE",
+      "P16_LKG_RECOVERY"
+    ],
+    "probe_scope": "conservative representative probes only; not optimized codebook coverage"
+  },
+  "common_physics": {
+    "cutoff": 8,
+    "segment_steps": 8,
+    "action_duration": 0.06,
+    "ramsey_pulse_duration": 0.03,
+    "sense_duration": 0.08,
+    "ramsey_angle": 1.5707963267948966,
+    "action_displacement": 0.16,
+    "dispersive_chi": 0.32,
+    "self_kerr": 0.006,
+    "oscillator_loss_rate": 0.012,
+    "oscillator_dephasing_rate": 0.003,
+    "ancilla_ge_relax_rate": 0.01,
+    "ancilla_fe_relax_rate": 0.016,
+    "ancilla_ge_excitation_rate": 0.001,
+    "ancilla_dephasing_rate": 0.006,
+    "pulse_leakage_crosstalk": 0.035,
+    "measurement_leakage_coupling": 0.018,
+    "action_leakage_coupling": 0.012,
+    "iq_samples": 8,
+    "iq_sigma": 0.48,
+    "iq_centers": [
+      [-0.85, 0.0],
+      [0.85, 0.0],
+      [0.0, 1.15]
+    ],
+    "reset_success_e": 0.985,
+    "reset_success_f": 0.82,
+    "reset_ack_error": 0.002,
+    "drift_retention": [0.985, 0.985, 0.992, 0.992, 0.975],
+    "drift_noise_std": [0.0015, 0.0015, 0.002, 0.002, 0.001],
+    "drift_action_kick": 0.0025,
+    "drift_readout_heating": 0.0018,
+    "drift_leakage_heating": 0.0012,
+    "reset_action_energy": 1.5,
+    "leakage_age_threshold": 0.05
+  },
+  "native_logical_mappings": {
+    "backend_a": {
+      "projector_delta": 0.34,
+      "grid_points": 2049,
+      "source": "released T9.2.2 damped-projector finite-GKP basis"
+    },
+    "backend_b": {
+      "comb_squeezing": 0.9,
+      "comb_envelope": 0.11,
+      "comb_half_width": 2,
+      "source": "released T9.2.3 independent squeezed coherent-comb basis"
+    },
+    "comparison_rule": "native PTMs are compared only after an explicit principal-angle mapping gate; shared-state physical channels use identical Fock/qutrit densities"
+  },
+  "splits": {
+    "mapping_pilot": {
+      "kind": "deterministic projector-only development diagnostic",
+      "cutoffs": [8, 12],
+      "may_select_formal_tolerance": true,
+      "may_access_formal_seeds": false
+    },
+    "formal_backend_a_seeds": {
+      "start": 920000,
+      "count": 64
+    },
+    "formal_backend_b_seeds": {
+      "start": 930000,
+      "count": 64
+    },
+    "trajectory_backend_a_seeds": {
+      "start": 940000,
+      "count": 48
+    },
+    "trajectory_backend_b_seeds": {
+      "start": 950000,
+      "count": 48
+    },
+    "bootstrap_seed": 960000,
+    "mutation_seed": 970000,
+    "disjointness_required": true
+  },
+  "formal_matrix": {
+    "logical_labels": ["0", "1", "+", "-", "+i", "-i"],
+    "shared_fock_states": ["vacuum_g", "one_g", "zero_one_plus_g", "vacuum_e", "vacuum_f"],
+    "unique_nominal_actions": ["IDLE", "X", "Z", "XZ", "RESET", "HOLD", "LKG_HOLD"],
+    "all_representative_probes_required": true,
+    "samples_per_shared_state_action_backend": 64,
+    "samples_per_representative_probe_backend": 16,
+    "samples_per_logical_state_action_backend": 64,
+    "trajectories_per_fault_backend": 48,
+    "fault_scenarios": {
+      "step": {
+        "horizon": 12,
+        "change_round": 4,
+        "drift_delta": [0.07, -0.04, 0.10, -0.06, 0.04]
+      },
+      "telegraph": {
+        "horizon": 12,
+        "period": 3,
+        "drift_delta": [0.05, 0.03, -0.08, 0.05, 0.03]
+      },
+      "burst": {
+        "horizon": 12,
+        "start_round": 4,
+        "duration": 3,
+        "drift_delta": [0.12, -0.10, 0.16, 0.12, 0.09]
+      },
+      "compound": {
+        "horizon": 12,
+        "change_round": 3,
+        "burst_start": 6,
+        "burst_duration": 3,
+        "drift_delta": [0.10, 0.08, 0.18, -0.14, 0.12],
+        "action_sequence": ["X", "Z", "IDLE", "XZ", "RESET", "HOLD"]
+      }
+    },
+    "bootstrap_resamples": 2000,
+    "confidence": 0.95,
+    "simultaneous_family": "maximum standardized deviation over all predeclared cells",
+    "missingness": "any missing/nonfinite/exception cell is an automatic main-gate failure"
+  },
+  "prefrozen_tolerances": {
+    "minimum_code_principal_singular_value": 0.95,
+    "maximum_code_projector_frobenius": 0.30,
+    "maximum_ensemble_density_trace_distance": 0.10,
+    "maximum_mean_photon_difference": 0.08,
+    "maximum_level_probability_l1": 0.10,
+    "maximum_integrated_iq_mean_difference": 0.12,
+    "maximum_integrated_iq_covariance_frobenius": 0.18,
+    "maximum_iq_two_sample_ks": 0.24,
+    "maximum_log_evidence_mean_difference": 0.30,
+    "maximum_posterior_mean_l1": 0.12,
+    "maximum_logical_ptm_entry_difference": 0.12,
+    "maximum_logical_survival_difference": 0.10,
+    "maximum_reset_success_rate_difference": 0.12,
+    "maximum_leakage_residence_rate_difference": 0.10,
+    "maximum_short_trajectory_terminal_trace_distance": 0.15,
+    "maximum_short_trajectory_observable_mean_difference": 0.15,
+    "minimum_conservation_pass_fraction": 1.0,
+    "familywise_alpha": 0.05
+  },
+  "failure_policy": {
+    "pass_verdict": "PASS_T9_2_4_DUAL_BACKEND_QUALIFIED",
+    "fail_verdict": "NO_GO_TWIN_QUALIFICATION",
+    "main_metric_failure": "prohibit T9.2.5 surrogate and all formal lifetime execution",
+    "no_retuning_after_formal_access": true,
+    "no_mean_only_rescue": true,
+    "no_cell_deletion": true,
+    "no_codebook_claim": true
+  },
+  "artifact_paths": {
+    "preregistration_seal": "docs/t9_2_4_twin_qualification_preregistration.json",
+    "report": "docs/t9_2_4_dual_backend_qualification.json",
+    "cell_ledger": "docs/t9_2_4_dual_backend_cell_ledger.csv",
+    "source_data": "docs/t9_2_4_dual_backend_qualification_source_data.csv",
+    "markdown": "docs/phase9_dual_backend_qualification.md",
+    "release_pin": "configs/phase9/t9_2_4_release_pin.json"
+  },
+  "claim_boundary": {
+    "qualified_if_pass": ["dual_backend_agreement_for_prefrozen_synthetic_task"],
+    "typed_null": [
+      "round_ler",
+      "six_state_lifetime",
+      "physical_break_even",
+      "official_puviani_exact",
+      "puviani_nmf_surpass",
+      "external_sota",
+      "hardware_measured",
+      "rank"
+    ]
+  }
+}

@@ -1,0 +1,730 @@
+{
+  "task_id": "T6.17.1",
+  "schema_version": "t6.17.1-single-mode-cpd-ci-equivalence-v1",
+  "generated_at_utc": "2026-07-20T06:21:41.522386+00:00",
+  "scope": "single-mode square/isotropic Euclidean closest point only; project-native mathematical/correctness evidence",
+  "preregistration": {
+    "experiment_id": "E6171_SINGLE_MODE_CPD_CI_EQUIVALENCE",
+    "record_sha256": "59f0cbcbc3a1dfbc8721dbf9f08dec9f51e330f5baad50771bc3da46afd06e45",
+    "seed": 61710001,
+    "exact_domain_points": 1048576,
+    "boundary_samples": 1000000,
+    "counterexample_families": [
+      "biased",
+      "correlated",
+      "finite_energy_likelihood"
+    ],
+    "sources": [
+      "NOH2022_SURFACE_GKP",
+      "LIN2023_CPD"
+    ],
+    "runtime_budget_seconds": 7200,
+    "memory_budget_gib": 8
+  },
+  "proof_contract": {
+    "lattice": "Lambda=lambda*Z^2",
+    "metric": "isotropic Euclidean squared norm",
+    "objective": "argmin_k in Z^2 ||x-lambda*k||_2^2 = argmin_(kq,kp) [(xq/lambda-kq)^2+(xp/lambda-kp)^2]",
+    "separability": "the sum contains no cross term, so each integer coordinate minimizes independently",
+    "decision_region": "R_k=product_i [(k_i-1/2)lambda,(k_i+1/2)lambda)",
+    "tie_rule": "positive half boundary belongs to the larger integer in each axis",
+    "conclusion": "CPD_lambdaZ2_Euclidean(x)=lambda*CI(x/lambda)",
+    "excluded": [
+      "biased mean/prior",
+      "correlated Mahalanobis cross term",
+      "periodic alias/coset summation",
+      "finite-energy state likelihood",
+      "outer code",
+      "multimode structured lattice"
+    ]
+  },
+  "source_scope": [
+    {
+      "source_id": "NOH2022_SURFACE_GKP",
+      "record_sha256": "179cc555c9240fea48e79da4e178dcd103d3cff516519f2c8cebd8b8c5ff3aa9",
+      "title": "Low-overhead fault-tolerant quantum error correction with the surface-GKP code",
+      "version": "PRX Quantum 3, 010315 / arXiv:2103.06994",
+      "formal_identifier": "doi:10.1103/PRXQuantum.3.010315",
+      "interpretation": "closest-integer terminology/context only; no CNOT or 9.9 dB result is reproduced here"
+    },
+    {
+      "source_id": "LIN2023_CPD",
+      "record_sha256": "375288e867fae42591dfee26101182b24d161e24d771983c88f184689d76ca89",
+      "title": "Closest-point decoding for multimode Gottesman-Kitaev-Preskill codes",
+      "version": "PRX Quantum 4, 040334 / arXiv:2303.04702v3",
+      "formal_identifier": "doi:10.1103/PRXQuantum.4.040334",
+      "interpretation": "closest-point terminology and square-lattice specialization only; no multimode threshold is reproduced here"
+    }
+  ],
+  "production_domain": {
+    "adc_bits_per_axis": 10,
+    "levels_per_axis": 1024,
+    "points": 1048576,
+    "input_is_canonical_centered_cell": true,
+    "canonical_cell_action_is_all_zero": true,
+    "nontrivial_alias_boundary_evidence_is_separate": true,
+    "half_open_cell_endpoints": [
+      -0.5,
+      0.5
+    ],
+    "positive_endpoint_excluded": true,
+    "maximum_axis_decode_error_lattice_units": 1.1102230246251565e-16,
+    "standard_binning_axis_mismatches_from_zero": 0,
+    "cpd_ci_mismatches": 0,
+    "decision_mismatch_rate": 0.0,
+    "zero_mismatch_one_sided_95_upper_bound": 2.85694884705201e-06,
+    "ci_action_sha256": "30e14955ebf1352266dc2ff8067e68104607e750abb9d3b36582b8af909fcb58",
+    "cpd_action_sha256": "30e14955ebf1352266dc2ff8067e68104607e750abb9d3b36582b8af909fcb58",
+    "maximum_squared_distance_gap": 0.0,
+    "runtime_seconds": 0.606157499976689,
+    "memory_bytes": 27941246,
+    "memory_boundary": "Python tracemalloc peak during chunked complete-domain audit",
+    "chunks": [
+      {
+        "q_start": 0,
+        "q_stop": 32,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 32,
+        "q_stop": 64,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 64,
+        "q_stop": 96,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 96,
+        "q_stop": 128,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 128,
+        "q_stop": 160,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 160,
+        "q_stop": 192,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 192,
+        "q_stop": 224,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 224,
+        "q_stop": 256,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 256,
+        "q_stop": 288,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 288,
+        "q_stop": 320,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 320,
+        "q_stop": 352,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 352,
+        "q_stop": 384,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 384,
+        "q_stop": 416,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 416,
+        "q_stop": 448,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 448,
+        "q_stop": 480,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 480,
+        "q_stop": 512,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 512,
+        "q_stop": 544,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 544,
+        "q_stop": 576,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 576,
+        "q_stop": 608,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 608,
+        "q_stop": 640,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 640,
+        "q_stop": 672,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 672,
+        "q_stop": 704,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 704,
+        "q_stop": 736,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 736,
+        "q_stop": 768,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 768,
+        "q_stop": 800,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 800,
+        "q_stop": 832,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 832,
+        "q_stop": 864,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 864,
+        "q_stop": 896,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 896,
+        "q_stop": 928,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 928,
+        "q_stop": 960,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 960,
+        "q_stop": 992,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      },
+      {
+        "q_start": 992,
+        "q_stop": 1024,
+        "points": 32768,
+        "mismatches": 0,
+        "ci_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479",
+        "cpd_action_sha256": "c35020473aed1b4642cd726cad727b63fff2824ad68cedd7ffb73c7cbd890479"
+      }
+    ]
+  },
+  "boundary_audit": {
+    "seed": 61710001,
+    "points": 1000000,
+    "coordinates": 2000000,
+    "alias_cell_range_inclusive": [
+      -2048,
+      2048
+    ],
+    "construction_modes": [
+      "exact_half",
+      "sixteen_ulp_lower",
+      "sixteen_ulp_upper",
+      "epsilon_lower",
+      "epsilon_upper",
+      "random_epsilon_side"
+    ],
+    "mode_coordinate_counts": [
+      332386,
+      333474,
+      333726,
+      333765,
+      332738,
+      333911
+    ],
+    "exact_tie_coordinates": 332386,
+    "cpd_ci_mismatches": 0,
+    "decision_mismatch_rate": 0.0,
+    "zero_mismatch_one_sided_95_upper_bound": 2.9957277863923437e-06,
+    "ci_action_sha256": "19d4a81af3a5cd602b07c7970da5ef4678ae4c5c56ad5eb1b6c5af20c0810967",
+    "cpd_action_sha256": "19d4a81af3a5cd602b07c7970da5ef4678ae4c5c56ad5eb1b6c5af20c0810967",
+    "maximum_squared_distance_gap": 0.0,
+    "runtime_seconds": 0.7369421999901533,
+    "memory_bytes": 85271164,
+    "memory_boundary": "Python tracemalloc peak during deterministic chunked boundary audit",
+    "chunks": [
+      {
+        "start": 0,
+        "stop": 100000,
+        "points": 100000,
+        "mismatches": 0,
+        "exact_tie_coordinates": 33408
+      },
+      {
+        "start": 100000,
+        "stop": 200000,
+        "points": 100000,
+        "mismatches": 0,
+        "exact_tie_coordinates": 33194
+      },
+      {
+        "start": 200000,
+        "stop": 300000,
+        "points": 100000,
+        "mismatches": 0,
+        "exact_tie_coordinates": 33340
+      },
+      {
+        "start": 300000,
+        "stop": 400000,
+        "points": 100000,
+        "mismatches": 0,
+        "exact_tie_coordinates": 33198
+      },
+      {
+        "start": 400000,
+        "stop": 500000,
+        "points": 100000,
+        "mismatches": 0,
+        "exact_tie_coordinates": 33110
+      },
+      {
+        "start": 500000,
+        "stop": 600000,
+        "points": 100000,
+        "mismatches": 0,
+        "exact_tie_coordinates": 33236
+      },
+      {
+        "start": 600000,
+        "stop": 700000,
+        "points": 100000,
+        "mismatches": 0,
+        "exact_tie_coordinates": 33166
+      },
+      {
+        "start": 700000,
+        "stop": 800000,
+        "points": 100000,
+        "mismatches": 0,
+        "exact_tie_coordinates": 33220
+      },
+      {
+        "start": 800000,
+        "stop": 900000,
+        "points": 100000,
+        "mismatches": 0,
+        "exact_tie_coordinates": 33146
+      },
+      {
+        "start": 900000,
+        "stop": 1000000,
+        "points": 100000,
+        "mismatches": 0,
+        "exact_tie_coordinates": 33368
+      }
+    ]
+  },
+  "counterexamples": [
+    {
+      "family": "biased",
+      "selection_rule": "canonical one-lattice mean shift; not outcome-tuned",
+      "syndrome_over_lattice": 0.0,
+      "mean_over_lattice": 1.0,
+      "sigma_over_lattice": 0.2,
+      "ci_class": 0,
+      "likelihood_map_class": 1,
+      "project_posterior_even": 7.453250792795924e-06,
+      "independent_brute": {
+        "class": 1,
+        "weighted_even": 2.965576367627061e-06,
+        "weighted_odd": 0.39788735772973843,
+        "radius": 32
+      },
+      "is_counterexample": true
+    },
+    {
+      "family": "correlated",
+      "selection_rule": "first lexicographic mismatch on fixed 101x101 canonical midpoint grid",
+      "searched_points": 10201,
+      "mismatch_points": 2424,
+      "syndrome_over_lattice": [
+        -0.4950495049504951,
+        0.00990099009900991
+      ],
+      "sigma_q_over_lattice": 0.42,
+      "sigma_p_over_lattice": 0.42,
+      "rho": 0.9,
+      "ci_class": 0,
+      "likelihood_map_class": 2,
+      "project_posterior": [
+        [
+          0.38031294613643035,
+          0.10529878155081258
+        ],
+        [
+          0.42802505718298406,
+          0.08636321512977292
+        ]
+      ],
+      "independent_brute": {
+        "class": 2,
+        "posterior": [
+          [
+            0.3803129461364301,
+            0.10529878155081275
+          ],
+          [
+            0.4280250571829843,
+            0.0863632151297729
+          ]
+        ],
+        "radius": 20
+      },
+      "is_counterexample": true
+    },
+    {
+      "family": "finite_energy_likelihood",
+      "selection_rule": "first mismatch on fixed 2001-point canonical midpoint grid",
+      "searched_points": 2001,
+      "mismatch_points": 192,
+      "model": "normalized damped-projector logical-state likelihoods with equal prior",
+      "projector_delta": 1.0,
+      "syndrome_over_lattice": -0.49975012493753124,
+      "ci_class": 0,
+      "likelihood_map_class": 1,
+      "logical_state_densities": [
+        0.16341832403181464,
+        0.2027388836562924
+      ],
+      "independent_peak_table_densities": [
+        0.16341832403181464,
+        0.20273888365629233
+      ],
+      "maximum_relative_reconstruction_error": 2.7380614034240755e-16,
+      "component_counts": [
+        7,
+        8
+      ],
+      "is_counterexample": true
+    }
+  ],
+  "execution_budget_audit": {
+    "measured_sections_runtime_seconds": 1.4954299999808427,
+    "counterexample_search_runtime_seconds": 0.15233030001400039,
+    "runtime_budget_seconds": 7200,
+    "peak_tracemalloc_bytes": 85271164,
+    "memory_budget_bytes": 8589934592,
+    "within_runtime_budget": true,
+    "within_memory_budget": true,
+    "boundary_note": "measured Python correctness workload only; not decoder or FPGA latency"
+  },
+  "comparator_registry": [
+    {
+      "method_id": "closest_integer",
+      "equivalence_class": "square_isotropic_euclidean_nearest_lattice",
+      "ranking_weight": 1,
+      "decision_object": "nearest point in lambda Z^2"
+    },
+    {
+      "method_id": "square_euclidean_cpd",
+      "equivalence_class": "square_isotropic_euclidean_nearest_lattice",
+      "ranking_weight": 0,
+      "decision_object": "nearest point in lambda Z^2"
+    },
+    {
+      "method_id": "periodic_coset_map",
+      "equivalence_class": "likelihood_coset_sum",
+      "ranking_weight": 1,
+      "decision_object": "most likely logical coset under named likelihood/prior"
+    }
+  ],
+  "claim_registry": {
+    "EUCLIDEAN_CPD_EQUALS_CI": "ESTABLISHED_PROJECT_NATIVE_MATCHED",
+    "CPD_IS_ADDITIONAL_WIN": "PROHIBITED_DUPLICATE",
+    "CPD_EQUALS_COSET_MAP": "FALSIFIED_BY_THREE_FAMILIES",
+    "SURFACE_GKP_THRESHOLD": "NOT_EVALUATED",
+    "MULTIMODE_CPD": "NOT_EVALUATED"
+  },
+  "allowed_wording": [
+    "For a single-mode square lattice with an isotropic Euclidean metric, closest-point decoding is exactly componentwise closest-integer decoding under the stated tie rule.",
+    "Biased, correlated and finite-energy likelihood examples show that this geometric equivalence does not collapse likelihood/coset MAP into CI."
+  ],
+  "forbidden_wording": [
+    "CPD is an additional decoder win over CI in the single-mode Euclidean row.",
+    "The complete q10 audit reproduces a surface-GKP threshold or multimode CPD result.",
+    "CI is equivalent to analog/weighted/coset MAP under arbitrary noise."
+  ],
+  "source_data": {
+    "path": "docs/t6_17_1_single_mode_cpd_equivalence_source_data.csv",
+    "sha256": "dc1a8aa7f37def32f89c7510debb60f17cc3655053b019c3918e594d41d2739a",
+    "rows": 58
+  },
+  "ontology_semantic_sha256": "5a84aee5bb6fec96886fc105b745634567d979edb5fcdb4a19493a5881c24ddd",
+  "source_audit_semantic_sha256": "8e47f094fd35e66fa0ab4f93d523a66d6b870cad6a90a3fa0e5cb7c92b21754d",
+  "bindings": {
+    "implementation": {
+      "path": "cnn_fpga/benchmark/single_mode_cpd_equivalence.py",
+      "sha256": "08f182df806c4f2050b51c135790027024aa75422bd8adbe2d9e8e0c4bed751f",
+      "bytes": 45281
+    },
+    "preregistration_config": {
+      "path": "configs/literature/t6_16_3_secondary_preregistration.json",
+      "sha256": "eca700725aac3d2b0d0fb312339323645a03c4089b2d1932cf757816a11585c4",
+      "bytes": 22974
+    },
+    "ontology_initial": {
+      "path": "docs/t6_16_2_comparison_ontology.json",
+      "sha256": "c3d1138466993c6685b1ec4a75feb857c436cc3c15ca9eedd18aab225a81b21c",
+      "bytes": 61056
+    },
+    "source_audit_initial": {
+      "path": "docs/t6_16_1_secondary_method_source_audit.json",
+      "sha256": "7fc750c2bb8905f4f6a57ed269df7172fcc0663cd593af8d83ef32385e40c88a",
+      "bytes": 69626
+    },
+    "ideal_decoder": {
+      "path": "physics/ideal_gkp_decoder.py",
+      "sha256": "b60d529aaa337c3a3d6104f1790e178e4108de5be2eea12ee7d28ac21b17c53a",
+      "bytes": 30992
+    },
+    "finite_energy": {
+      "path": "physics/finite_energy_gkp.py",
+      "sha256": "5e4e8a6b1600e0702558463cb60c2d165dec5118589997afc4266d961ff5e396",
+      "bytes": 19179
+    },
+    "runtime_lut": {
+      "path": "cnn_fpga/runtime/parametric_map_lut.py",
+      "sha256": "468728aeeedef6b7569163417440bbf309284c21eb6cebdc4fbf604594d7ab8a",
+      "bytes": 17010
+    },
+    "source_data": {
+      "path": "docs/t6_17_1_single_mode_cpd_equivalence_source_data.csv",
+      "sha256": "dc1a8aa7f37def32f89c7510debb60f17cc3655053b019c3918e594d41d2739a",
+      "bytes": 17427
+    }
+  },
+  "semantic_mutation_audit": {
+    "count": 15,
+    "detected": 15,
+    "cases": [
+      {
+        "case": "change_preregistered_seed",
+        "target_gate": "G01_frozen_preregistration_is_consumed_exactly",
+        "rejected": true
+      },
+      {
+        "case": "add_cross_term_to_proof",
+        "target_gate": "G02_analytic_equivalence_scope_region_and_tie_are_explicit",
+        "rejected": true
+      },
+      {
+        "case": "drop_production_chunk",
+        "target_gate": "G03_complete_production_q10_pair_domain_is_exhausted",
+        "rejected": true
+      },
+      {
+        "case": "inject_production_mismatch",
+        "target_gate": "G04_production_cpd_ci_has_zero_mismatch_and_equal_hash",
+        "rejected": true
+      },
+      {
+        "case": "hide_canonical_cell_triviality",
+        "target_gate": "G05_production_encoding_is_live_half_open_and_not_oversold",
+        "rejected": true
+      },
+      {
+        "case": "shrink_boundary_set",
+        "target_gate": "G06_one_million_boundary_points_cover_ties_and_both_sides",
+        "rejected": true
+      },
+      {
+        "case": "inject_boundary_mismatch",
+        "target_gate": "G07_boundary_cpd_ci_has_zero_mismatch_and_equal_hash",
+        "rejected": true
+      },
+      {
+        "case": "erase_biased_counterexample",
+        "target_gate": "G08_biased_likelihood_is_a_validated_ci_counterexample",
+        "rejected": true
+      },
+      {
+        "case": "forge_correlated_agreement",
+        "target_gate": "G09_correlated_joint_likelihood_is_a_validated_ci_counterexample",
+        "rejected": true
+      },
+      {
+        "case": "break_finite_energy_reference",
+        "target_gate": "G10_finite_energy_likelihood_is_a_validated_ci_counterexample",
+        "rejected": true
+      },
+      {
+        "case": "select_best_margin_after_scan",
+        "target_gate": "G11_counterexample_selection_is_fixed_grid_or_canonical_not_best_margin",
+        "rejected": true
+      },
+      {
+        "case": "double_count_cpd",
+        "target_gate": "G12_equivalent_cpd_ci_counts_once_and_map_remains_distinct",
+        "rejected": true
+      },
+      {
+        "case": "invent_surface_threshold",
+        "target_gate": "G13_claims_forbid_renamed_advantage_threshold_and_multimode_scope",
+        "rejected": true
+      },
+      {
+        "case": "truncate_source_hash",
+        "target_gate": "G14_runtime_memory_source_data_and_exact_bindings_are_present",
+        "rejected": true
+      },
+      {
+        "case": "forge_mutation_count",
+        "target_gate": "G15_targeted_semantic_mutations_are_all_detected",
+        "rejected": true
+      }
+    ]
+  },
+  "gates": {
+    "G01_frozen_preregistration_is_consumed_exactly": true,
+    "G02_analytic_equivalence_scope_region_and_tie_are_explicit": true,
+    "G03_complete_production_q10_pair_domain_is_exhausted": true,
+    "G04_production_cpd_ci_has_zero_mismatch_and_equal_hash": true,
+    "G05_production_encoding_is_live_half_open_and_not_oversold": true,
+    "G06_one_million_boundary_points_cover_ties_and_both_sides": true,
+    "G07_boundary_cpd_ci_has_zero_mismatch_and_equal_hash": true,
+    "G08_biased_likelihood_is_a_validated_ci_counterexample": true,
+    "G09_correlated_joint_likelihood_is_a_validated_ci_counterexample": true,
+    "G10_finite_energy_likelihood_is_a_validated_ci_counterexample": true,
+    "G11_counterexample_selection_is_fixed_grid_or_canonical_not_best_margin": true,
+    "G12_equivalent_cpd_ci_counts_once_and_map_remains_distinct": true,
+    "G13_claims_forbid_renamed_advantage_threshold_and_multimode_scope": true,
+    "G14_runtime_memory_source_data_and_exact_bindings_are_present": true,
+    "G15_targeted_semantic_mutations_are_all_detected": true
+  },
+  "gate_summary": {
+    "passed": 15,
+    "failed": []
+  },
+  "verdict": "PASS_SINGLE_MODE_EUCLIDEAN_CPD_EQUALS_CI_WITH_MAP_BOUNDARIES"
+}

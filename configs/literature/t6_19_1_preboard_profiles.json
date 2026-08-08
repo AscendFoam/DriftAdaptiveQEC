@@ -1,0 +1,36 @@
+{
+  "task_id": "T6.19.1",
+  "experiment_id": "E6191_PROJECT_PREBOARD_PROFILES",
+  "seed": 61910001,
+  "host_runtime_repeats": 1000,
+  "warmup_repeats": 32,
+  "residual_samples_per_update": 256,
+  "transaction_chunk_bytes": 512,
+  "target": {
+    "board_class": "Sipeed Tang Nano 20K",
+    "device": "GW2AR-LV18QN88C8/I7",
+    "clock_mhz": 27.0,
+    "place_route_seeds": [1, 7, 19]
+  },
+  "hardware_methods": [
+    "CI_if_rtl",
+    "static_map_lut_if_rtl",
+    "v5_fast_path_if_rtl",
+    "eligible_direct_nn_if_rtl"
+  ],
+  "host_methods": ["Window", "EWMA", "Kalman", "V5_if_exists"],
+  "measurement_boundary": {
+    "host_timing": "current-host Python wall-clock diagnostic",
+    "transfer": "in-memory transactional software-bank transfer and integrity verification",
+    "commit": "software atomic-bank commit/readback only",
+    "hardware": "CXXRTL equivalence plus target-device post-route estimate; not board measured"
+  },
+  "must_remain_null_until_t6_9_2": [
+    "power_w",
+    "jitter_ns",
+    "deadline_miss_rate",
+    "board_measured_latency_ns",
+    "physical_transfer_latency_us",
+    "physical_commit_latency_us"
+  ]
+}

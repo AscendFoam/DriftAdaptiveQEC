@@ -1,0 +1,75 @@
+# Cross-platform byte-attestation requires Git-managed text to have the same
+# bytes on every checkout.  Keep these defaults before the LFS rules below:
+# the later ``-text`` entries continue to take precedence for LFS payloads.
+.gitattributes text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.csv text eol=lf
+*.md text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.toml text eol=lf
+*.sv text eol=lf
+*.cc text eol=lf
+*.npz -text
+*.pt -text
+*.zip -text
+*.parquet -text
+
+docs/t5_4_2_uncertainty_gated_fallback.json filter=lfs diff=lfs merge=lfs -text
+docs/t6_7_1_smooth_formal_matrix.json filter=lfs diff=lfs merge=lfs -text
+docs/t6_7_1_smooth_formal_matrix_source_data.csv filter=lfs diff=lfs merge=lfs -text
+docs/t6_7_2_abrupt_ood_tail_formal_matrix.json filter=lfs diff=lfs merge=lfs -text
+docs/t6_7_2_abrupt_ood_tail_formal_matrix_source_data.csv filter=lfs diff=lfs merge=lfs -text
+docs/t9_1_3_puviani_agents/**/*.npz filter=lfs diff=lfs merge=lfs -text
+docs/t9_1_3_puviani_agents/**/*.pt filter=lfs diff=lfs merge=lfs -text
+docs/t9_1_3_puviani_training_ledger.parquet filter=lfs diff=lfs merge=lfs -text
+docs/t9_1_3_puviani_six_state_trajectories.parquet filter=lfs diff=lfs merge=lfs -text
+docs/t9_1_3_puviani_six_state_events.parquet filter=lfs diff=lfs merge=lfs -text
+docs/t9_2_4_dual_backend_state_archive.npz filter=lfs diff=lfs merge=lfs -text
+docs/t_risk_20260726_01_fresh_cell_ledger.csv filter=lfs diff=lfs merge=lfs -text
+docs/t_risk_20260726_01_fresh_raw_archive.zip filter=lfs diff=lfs merge=lfs -text
+docs/t_risk_20260728_02_scalar_uq_selection_a.csv filter=lfs diff=lfs merge=lfs -text
+docs/t_risk_20260728_02_scalar_uq_selection_b.csv filter=lfs diff=lfs merge=lfs -text
+docs/t_risk_20260728_02_scalar_uq_confirmation.csv filter=lfs diff=lfs merge=lfs -text
+docs/t_risk_20260728_02_scalar_uq_selection_a_failed_seed_collision_v1.csv filter=lfs diff=lfs merge=lfs -text
+cnn_fpga/benchmark/phase9_high_cutoff_design_bootstrap.py text eol=lf
+cnn_fpga/benchmark/phase9_high_cutoff_design_diagnostic.py text eol=lf
+cnn_fpga/benchmark/phase9_high_cutoff_design_pilot.py text eol=lf
+cnn_fpga/benchmark/phase9_dual_backend_qualification.py text eol=lf
+cnn_fpga/benchmark/phase9_fresh_twin_qualification.py text eol=lf
+physics/phase9_backend_a.py text eol=lf
+physics/phase9_backend_b.py text eol=lf
+physics/phase9_backend_b_logical_bridge.py text eol=lf
+physics/phase9_iq_likelihood_reference.py text eol=lf
+physics/phase9_twin_contract.py text eol=lf
+configs/phase9/t_risk_20260727_01_high_cutoff_design_pilot_fresh2_released.json text eol=lf
+docs/t_risk_20260727_01_high_cutoff_design_pilot_fresh2_release_receipt.json text eol=lf
+configs/phase9/t_risk_20260727_01_high_cutoff_design_pilot_fresh3.json text eol=lf
+configs/phase9/t_risk_20260727_01_high_cutoff_design_pilot_fresh3_released.json text eol=lf
+docs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3_release_receipt.json text eol=lf
+tests/test_phase9_high_cutoff_design_diagnostic.py text eol=lf
+tests/test_phase9_high_cutoff_design_pilot.py text eol=lf
+
+# T-RISK cutoff32/36 release bindings attest raw bytes, not logical text.
+# These final rules deliberately override the text defaults and older eol
+# rules above so existing LF and CRLF evidence are both reproduced exactly.
+cnn_fpga/benchmark/phase9_cutoff32_36_*.py -text
+cnn_fpga/benchmark/phase9_paired_cluster_uq*.py -text
+cnn_fpga/benchmark/phase9_scalar_uq*.py -text
+cnn_fpga/benchmark/phase9_fresh_twin_qualification.py -text
+cnn_fpga/benchmark/phase9_dual_backend_qualification.py -text
+physics/phase9_*.py -text
+configs/phase9/t_risk_2026072*.json -text
+docs/t_risk_2026072* -text
+runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3/** -text
+runs/t_risk_20260727_01_uq_hardened_confirmation/** -text
+runs/t_risk_20260728_01_density_uq_preflight/** -text
+runs/t_risk_20260727_01_high_cutoff_design_pilot_fresh3/chunks/*.npz filter=lfs diff=lfs merge=lfs -text
+docs/t_risk_20260728_01_scalar_uq_preflight_source_data.csv filter=lfs diff=lfs merge=lfs -text
+
+# T-RISK-20260728-03 is a manifest-addressed production transaction.  Preserve
+# every archived byte; route dense NPZ chunks through LFS while keeping the
+# smaller CSV/JSON/receipt/log files directly inspectable in Git.
+runs/t_risk_20260728_03_cutoff36_44_repair_fresh1/** -text
+runs/t_risk_20260728_03_cutoff36_44_repair_fresh1/chunks/*.npz filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,673 @@
+{
+  "task_id": "T6.19.1",
+  "schema_version": "t6.19.1-project-preboard-profiles-v1",
+  "generated_at_utc": "2026-07-22T03:32:08.835311+00:00",
+  "status": "PASS",
+  "verdict": "PASS_STATIC_MAP_LUT_PREBOARD_PROFILE_OTHERS_NA_HOST_STAGES_SEPARATE",
+  "scope": "matched existing-RTL pre-board estimates plus separately reported current-host software slow-path profiles",
+  "preregistration": {
+    "experiment_id": "E6191_PROJECT_PREBOARD_PROFILES",
+    "record_sha256": "c5957897ab665daf2186c4ac3a19e47693ef0b5ad8a7794409b72b9c4e65d7c5",
+    "execution_type": "PROJECT_NATIVE_MATCHED",
+    "forbidden_actions": [
+      "write demo RTL to fill table",
+      "call Python runtime FPGA latency",
+      "fill power/jitter/deadline/measured values"
+    ]
+  },
+  "config": {
+    "task_id": "T6.19.1",
+    "experiment_id": "E6191_PROJECT_PREBOARD_PROFILES",
+    "seed": 61910001,
+    "host_runtime_repeats": 1000,
+    "warmup_repeats": 32,
+    "residual_samples_per_update": 256,
+    "transaction_chunk_bytes": 512,
+    "target": {
+      "board_class": "Sipeed Tang Nano 20K",
+      "device": "GW2AR-LV18QN88C8/I7",
+      "clock_mhz": 27.0,
+      "place_route_seeds": [
+        1,
+        7,
+        19
+      ]
+    },
+    "hardware_methods": [
+      "CI_if_rtl",
+      "static_map_lut_if_rtl",
+      "v5_fast_path_if_rtl",
+      "eligible_direct_nn_if_rtl"
+    ],
+    "host_methods": [
+      "Window",
+      "EWMA",
+      "Kalman",
+      "V5_if_exists"
+    ],
+    "measurement_boundary": {
+      "host_timing": "current-host Python wall-clock diagnostic",
+      "transfer": "in-memory transactional software-bank transfer and integrity verification",
+      "commit": "software atomic-bank commit/readback only",
+      "hardware": "CXXRTL equivalence plus target-device post-route estimate; not board measured"
+    },
+    "must_remain_null_until_t6_9_2": [
+      "power_w",
+      "jitter_ns",
+      "deadline_miss_rate",
+      "board_measured_latency_ns",
+      "physical_transfer_latency_us",
+      "physical_commit_latency_us"
+    ]
+  },
+  "hardware_profiles": [
+    {
+      "method_id": "CI_if_rtl",
+      "eligibility_state": "N_A_NO_INDEPENDENT_CI_RTL",
+      "ranking_eligible_project_preboard": false,
+      "rtl_path": null,
+      "integer_reference_path": null,
+      "cxxrtl_action_mismatch_count": null,
+      "decision_mismatch_rate": null,
+      "core_cycles": null,
+      "initiation_interval_cycles": null,
+      "clock_mhz": null,
+      "source_to_action_ns": null,
+      "initiation_interval_ns": null,
+      "place_route": null,
+      "power_w": null,
+      "jitter_ns": null,
+      "deadline_miss_rate": null,
+      "board_measured_latency_ns": null,
+      "physical_transfer_latency_us": null,
+      "physical_commit_latency_us": null,
+      "evidence_boundary": "N_A_NO_ELIGIBLE_SYNTHESIZABLE_RTL"
+    },
+    {
+      "method_id": "static_map_lut_if_rtl",
+      "eligibility_state": "ELIGIBLE_EXISTING_SOURCE_BOUND_RTL",
+      "ranking_eligible_project_preboard": true,
+      "rtl_path": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "integer_reference_path": "cnn_fpga/runtime/parametric_map_lut.py",
+      "cxxrtl_action_mismatch_count": 0,
+      "decision_mismatch_rate": 0.0,
+      "equivalence_scenarios": [
+        {
+          "name": "fault_and_commit",
+          "cycles": 226,
+          "map_valid_rows": 220,
+          "runtime_seconds": 0.9393379999964964,
+          "mismatch_count": 0,
+          "exact": true,
+          "first_mismatches": []
+        },
+        {
+          "name": "exhaustive_v0_v1",
+          "cycles": 4102,
+          "map_valid_rows": 4096,
+          "runtime_seconds": 8.174461099988548,
+          "mismatch_count": 0,
+          "exact": true,
+          "first_mismatches": []
+        }
+      ],
+      "equivalence_map_valid_rows": 4316,
+      "core_cycles": 6,
+      "initiation_interval_cycles": 1,
+      "clock_mhz": 27.0,
+      "source_to_action_ns": 222.22222222222223,
+      "initiation_interval_ns": 37.03703703703704,
+      "place_route": [
+        {
+          "seed": 1,
+          "target_mhz": 27.0,
+          "achieved_fmax_mhz": 41.08294677734375,
+          "timing_pass": true,
+          "route_status": "PASS",
+          "lut4_count": 3377,
+          "ff_count": 865,
+          "bram_count": 8,
+          "dsp_count": 2,
+          "dsp_breakdown": {
+            "MULT18X18": 1,
+            "MULT9X9": 1
+          },
+          "critical_path": {
+            "period_ns": 24.341000098735094,
+            "logic_ns": 10.065000265836716,
+            "routing_ns": 14.009999826550484,
+            "start_cell": "core.leakage_clean_run_DFFRE_Q",
+            "end_cell": "fold5_DFFR_Q_5",
+            "segment_count": 73
+          },
+          "report_artifact": {
+            "path": "docs/t5_5_2_nextpnr_seed01_report.json",
+            "sha256": "8cf9399f21a3d000e8912053b510674c77ae1907821c8bfadff11da2316d32ea",
+            "bytes": 132844
+          },
+          "log_artifact": {
+            "path": "docs/t5_5_2_nextpnr_seed01_place_route.log",
+            "sha256": "5ae0d2d6792c731f839eb24c1c10af7e8cf984145fe657501f938337f47ec1e0",
+            "bytes": 43073
+          }
+        },
+        {
+          "seed": 7,
+          "target_mhz": 27.0,
+          "achieved_fmax_mhz": 42.2119026184082,
+          "timing_pass": true,
+          "route_status": "PASS",
+          "lut4_count": 3379,
+          "ff_count": 865,
+          "bram_count": 8,
+          "dsp_count": 2,
+          "dsp_breakdown": {
+            "MULT18X18": 1,
+            "MULT9X9": 1
+          },
+          "critical_path": {
+            "period_ns": 23.690000373870134,
+            "logic_ns": 10.532000243663788,
+            "routing_ns": 12.892000123858452,
+            "start_cell": "core.reset_wait_run_DFFRE_Q_1",
+            "end_cell": "fold5_DFFR_Q_5",
+            "segment_count": 75
+          },
+          "report_artifact": {
+            "path": "docs/t5_5_2_nextpnr_seed07_report.json",
+            "sha256": "3c96a6572bdea70e77c4bdea0fff86c2a1313325877f79d7c0f2f9a1c3f64c40",
+            "bytes": 138947
+          },
+          "log_artifact": {
+            "path": "docs/t5_5_2_nextpnr_seed07_place_route.log",
+            "sha256": "156277f5d3394f32386a3eb196e733b19191618c21eb0fc1cac9ca60a8c93826",
+            "bytes": 46806
+          }
+        },
+        {
+          "seed": 19,
+          "target_mhz": 27.0,
+          "achieved_fmax_mhz": 41.02396011352539,
+          "timing_pass": true,
+          "route_status": "PASS",
+          "lut4_count": 3387,
+          "ff_count": 865,
+          "bram_count": 8,
+          "dsp_count": 2,
+          "dsp_breakdown": {
+            "MULT18X18": 1,
+            "MULT9X9": 1
+          },
+          "critical_path": {
+            "period_ns": 24.376000199466944,
+            "logic_ns": 10.542000234127045,
+            "routing_ns": 13.567999958992004,
+            "start_cell": "core.leakage_clean_run_DFFRE_Q_2",
+            "end_cell": "fold5_DFFR_Q_5",
+            "segment_count": 75
+          },
+          "report_artifact": {
+            "path": "docs/t5_5_2_nextpnr_seed19_report.json",
+            "sha256": "6c232bf09377e2bd15b733bcae9e9e1291b83db56105662505dbe66d1724277b",
+            "bytes": 137806
+          },
+          "log_artifact": {
+            "path": "docs/t5_5_2_nextpnr_seed19_place_route.log",
+            "sha256": "227f7a22f47203f1eb12dcdd1250feaba4d280f26120677bceb596d2da5d460e",
+            "bytes": 47248
+          }
+        }
+      ],
+      "fmax_summary_mhz": {
+        "minimum": 41.02396011352539,
+        "median": 41.08294677734375,
+        "maximum": 42.2119026184082,
+        "spread": 1.1879425048828125
+      },
+      "power_w": null,
+      "jitter_ns": null,
+      "deadline_miss_rate": null,
+      "board_measured_latency_ns": null,
+      "physical_transfer_latency_us": null,
+      "physical_commit_latency_us": null,
+      "evidence_boundary": "CXXRTL_EQUIVALENCE_AND_TARGET_DEVICE_POST_ROUTE_ESTIMATE_NOT_BOARD_MEASURED",
+      "resource_scope": "complete gkp_fast_path_synth_top including MAP-LUT, event/fault/state logic and small-pin activity/observability harness; excludes transport and is not map-ROM-only area"
+    },
+    {
+      "method_id": "v5_fast_path_if_rtl",
+      "eligibility_state": "N_A_NO_V5_RTL_EARLY_STOP_AT_T6_10_1",
+      "ranking_eligible_project_preboard": false,
+      "rtl_path": null,
+      "integer_reference_path": null,
+      "cxxrtl_action_mismatch_count": null,
+      "decision_mismatch_rate": null,
+      "core_cycles": null,
+      "initiation_interval_cycles": null,
+      "clock_mhz": null,
+      "source_to_action_ns": null,
+      "initiation_interval_ns": null,
+      "place_route": null,
+      "power_w": null,
+      "jitter_ns": null,
+      "deadline_miss_rate": null,
+      "board_measured_latency_ns": null,
+      "physical_transfer_latency_us": null,
+      "physical_commit_latency_us": null,
+      "evidence_boundary": "N_A_NO_ELIGIBLE_SYNTHESIZABLE_RTL"
+    },
+    {
+      "method_id": "eligible_direct_nn_if_rtl",
+      "eligibility_state": "N_A_NO_SAME_TASK_ELIGIBLE_DIRECT_NN_RTL",
+      "ranking_eligible_project_preboard": false,
+      "rtl_path": null,
+      "integer_reference_path": null,
+      "cxxrtl_action_mismatch_count": null,
+      "decision_mismatch_rate": null,
+      "core_cycles": null,
+      "initiation_interval_cycles": null,
+      "clock_mhz": null,
+      "source_to_action_ns": null,
+      "initiation_interval_ns": null,
+      "place_route": null,
+      "power_w": null,
+      "jitter_ns": null,
+      "deadline_miss_rate": null,
+      "board_measured_latency_ns": null,
+      "physical_transfer_latency_us": null,
+      "physical_commit_latency_us": null,
+      "evidence_boundary": "N_A_NO_ELIGIBLE_SYNTHESIZABLE_RTL"
+    }
+  ],
+  "host_profiles": [
+    {
+      "method_id": "Window",
+      "eligibility_state": "EXECUTED_REAL_PROJECT_IMPLEMENTATION",
+      "repeats": 1000,
+      "warmup_repeats": 32,
+      "residual_samples_per_update": 256,
+      "update": {
+        "p50_us": 98.7,
+        "p95_us": 131.92999999999998,
+        "p99_us": 197.61399999999998,
+        "worst_us": 512.6,
+        "minimum_us": 91.0,
+        "mean_us": 104.24680000000001
+      },
+      "compiler": {
+        "p50_us": 1007.9,
+        "p95_us": 1533.0849999999998,
+        "p99_us": 1813.3529999999998,
+        "worst_us": 2997.1,
+        "minimum_us": 812.3,
+        "mean_us": 1074.0303999999999
+      },
+      "software_transactional_transfer": {
+        "p50_us": 1424.6,
+        "p95_us": 2497.95,
+        "p99_us": 2859.7439999999997,
+        "worst_us": 3336.3,
+        "minimum_us": 1199.0,
+        "mean_us": 1580.7732999999998
+      },
+      "software_commit_readback": {
+        "p50_us": 15.8,
+        "p95_us": 38.7,
+        "p99_us": 56.935999999999964,
+        "worst_us": 161.4,
+        "minimum_us": 10.6,
+        "mean_us": 19.7575
+      },
+      "update_macs": 128,
+      "update_macs_scope": "method-private real MAC ledger after the shared periodic-characteristic frontend; not a count of NumPy exp/reduction operations",
+      "private_model_state_bytes": 32,
+      "transient_workspace_bytes": 512,
+      "cost_derivation": "four complex moments plus postprocess",
+      "payload_bytes": {
+        "minimum": 3712,
+        "maximum": 3870
+      },
+      "host_precision": "NumPy float64 estimator/compiler; software-bank canonical integer image",
+      "physical_transfer_latency_us": null,
+      "physical_commit_latency_us": null,
+      "board_measured_latency_ns": null,
+      "power_w": null,
+      "jitter_ns": null,
+      "deadline_miss_rate": null
+    },
+    {
+      "method_id": "EWMA",
+      "eligibility_state": "EXECUTED_REAL_PROJECT_IMPLEMENTATION",
+      "repeats": 1000,
+      "warmup_repeats": 32,
+      "residual_samples_per_update": 256,
+      "update": {
+        "p50_us": 108.35,
+        "p95_us": 319.115,
+        "p99_us": 418.625,
+        "worst_us": 585.3,
+        "minimum_us": 98.6,
+        "mean_us": 146.50809999999998
+      },
+      "compiler": {
+        "p50_us": 1063.25,
+        "p95_us": 2471.7949999999996,
+        "p99_us": 2901.63,
+        "worst_us": 3654.6,
+        "minimum_us": 788.0,
+        "mean_us": 1276.2594
+      },
+      "software_transactional_transfer": {
+        "p50_us": 1606.0500000000002,
+        "p95_us": 2808.6099999999997,
+        "p99_us": 3182.245,
+        "worst_us": 4045.6,
+        "minimum_us": 1203.3,
+        "mean_us": 1799.2740999999999
+      },
+      "software_commit_readback": {
+        "p50_us": 21.6,
+        "p95_us": 44.605,
+        "p99_us": 78.31599999999999,
+        "worst_us": 162.8,
+        "minimum_us": 11.1,
+        "mean_us": 24.976300000000002
+      },
+      "update_macs": 136,
+      "update_macs_scope": "method-private real MAC ledger after the shared periodic-characteristic frontend; not a count of NumPy exp/reduction operations",
+      "private_model_state_bytes": 80,
+      "transient_workspace_bytes": 512,
+      "cost_derivation": "window postprocess plus four complex blends",
+      "payload_bytes": {
+        "minimum": 3719,
+        "maximum": 3811
+      },
+      "host_precision": "NumPy float64 estimator/compiler; software-bank canonical integer image",
+      "physical_transfer_latency_us": null,
+      "physical_commit_latency_us": null,
+      "board_measured_latency_ns": null,
+      "power_w": null,
+      "jitter_ns": null,
+      "deadline_miss_rate": null
+    },
+    {
+      "method_id": "Kalman",
+      "eligibility_state": "EXECUTED_REAL_PROJECT_IMPLEMENTATION",
+      "repeats": 1000,
+      "warmup_repeats": 32,
+      "residual_samples_per_update": 256,
+      "update": {
+        "p50_us": 301.15,
+        "p95_us": 995.7949999999998,
+        "p99_us": 1362.0109999999995,
+        "worst_us": 1758.8,
+        "minimum_us": 223.3,
+        "mean_us": 434.24449999999996
+      },
+      "compiler": {
+        "p50_us": 1253.45,
+        "p95_us": 2610.79,
+        "p99_us": 2966.5039999999995,
+        "worst_us": 3760.6,
+        "minimum_us": 808.1,
+        "mean_us": 1469.4888
+      },
+      "software_transactional_transfer": {
+        "p50_us": 1461.85,
+        "p95_us": 2687.97,
+        "p99_us": 2958.2929999999997,
+        "worst_us": 3427.9,
+        "minimum_us": 1197.7,
+        "mean_us": 1669.8564
+      },
+      "software_commit_readback": {
+        "p50_us": 17.7,
+        "p95_us": 42.6,
+        "p99_us": 65.51699999999998,
+        "worst_us": 162.9,
+        "minimum_us": 10.8,
+        "mean_us": 22.092700000000004
+      },
+      "update_macs": 7121,
+      "update_macs_scope": "method-private real MAC ledger after the shared periodic-characteristic frontend; not a count of NumPy exp/reduction operations",
+      "private_model_state_bytes": 1740,
+      "transient_workspace_bytes": 2048,
+      "cost_derivation": "dense 10-state Joseph-form NumPy path including 5x5 solve",
+      "payload_bytes": {
+        "minimum": 3718,
+        "maximum": 3831
+      },
+      "host_precision": "NumPy float64 estimator/compiler; software-bank canonical integer image",
+      "physical_transfer_latency_us": null,
+      "physical_commit_latency_us": null,
+      "board_measured_latency_ns": null,
+      "power_w": null,
+      "jitter_ns": null,
+      "deadline_miss_rate": null
+    },
+    {
+      "method_id": "V5_if_exists",
+      "eligibility_state": "N_A_NO_V5_IMPLEMENTATION_EARLY_STOP",
+      "repeats": 0,
+      "warmup_repeats": 0,
+      "residual_samples_per_update": null,
+      "update": null,
+      "compiler": null,
+      "software_transactional_transfer": null,
+      "software_commit_readback": null,
+      "update_macs": null,
+      "update_macs_scope": null,
+      "private_model_state_bytes": null,
+      "transient_workspace_bytes": null,
+      "cost_derivation": null,
+      "payload_bytes": null,
+      "host_precision": null,
+      "physical_transfer_latency_us": null,
+      "physical_commit_latency_us": null,
+      "board_measured_latency_ns": null,
+      "power_w": null,
+      "jitter_ns": null,
+      "deadline_miss_rate": null
+    }
+  ],
+  "host_environment": {
+    "python": "3.12.7 | packaged by Anaconda, Inc. | (main, Oct  4 2024, 13:17:27) [MSC v.1929 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 151 Stepping 2, GenuineIntel",
+    "logical_cpu_count": 24,
+    "numpy": "1.26.4",
+    "perf_counter": {
+      "implementation": "QueryPerformanceCounter()",
+      "monotonic": true,
+      "adjustable": false,
+      "resolution_seconds": 1e-07
+    },
+    "input_trace_sha256": "863edf0320a7c804ba40d9942649c458c3560508547f6107e8cf5ab12266800f",
+    "timing_boundary": "single-process current-host Python wall-clock diagnostic; not FPGA latency"
+  },
+  "board_measurement_state": "BLOCKED_UNTIL_T6.9.2",
+  "cross_table_ranking": null,
+  "global_fastest_claim": null,
+  "phase6b_effect": "READ_ONLY_UNCHANGED",
+  "source_data": {
+    "path": "docs/t6_19_1_project_preboard_profiles_source_data.csv",
+    "sha256": "d5cbd69cd77b31ecf6733631501332a999f4d8208f960b06e1d02fca9713c7e6",
+    "rows": 3003,
+    "hardware_seed_rows": 3,
+    "host_repeat_rows": 3000
+  },
+  "bindings": {
+    "implementation": {
+      "path": "cnn_fpga/benchmark/phase6c_preboard_profiles.py",
+      "sha256": "24a5c13dd1a03aee2dd774a537c1b4d7831943d3dd79e4ba0a14c32d8f4763d3",
+      "bytes": 46002
+    },
+    "config": {
+      "path": "configs/literature/t6_19_1_preboard_profiles.json",
+      "sha256": "e05a659b7d56278d7afe69f4bd2503a0092a1f3e0eaea89ea47bb52c502fc9f5",
+      "bytes": 1132
+    },
+    "preregistration": {
+      "path": "configs/literature/t6_16_3_secondary_preregistration.json",
+      "sha256": "eca700725aac3d2b0d0fb312339323645a03c4089b2d1932cf757816a11585c4",
+      "bytes": 22974
+    },
+    "synthesis_report": {
+      "path": "docs/t5_5_2_target_device_synthesis.json",
+      "sha256": "1df1bd4572f70fbc9f63cc191c3dccfce508d29476ecf0e17aa17fbc2e458faa",
+      "bytes": 26490
+    },
+    "equivalence_report": {
+      "path": "docs/t_risk_20260716_01_rtl_equivalence.json",
+      "sha256": "dd1873791ae2b1b10fb3c63f89b8492188f1c714dcda061a6d5bae19c8cc43e6",
+      "bytes": 5441
+    },
+    "learned_eligibility": {
+      "path": "docs/t6_17_3_learned_model_eligibility_replay.json",
+      "sha256": "d4f944b1a9dc66638725987a00de95d5b7341dd824b3d59aa9a2cb9bc5acc075",
+      "bytes": 188761
+    },
+    "phase6b_terminal": {
+      "path": "docs/t6_15_5_route_a_v5_final_evidence_gate.json",
+      "sha256": "537029824f305e001920e61cf03be457074655ee6112fd2db6ab9f0241607670",
+      "bytes": 6659
+    },
+    "periodic_estimators": {
+      "path": "cnn_fpga/decoder/periodic_adaptive_map.py",
+      "sha256": "ccd8b5811e9275114d7de5957d4551a3864f874d9af2ad1582fb88e5b8c43b37",
+      "bytes": 24028
+    },
+    "map_lut_compiler": {
+      "path": "cnn_fpga/decoder/parametric_map_lut.py",
+      "sha256": "2a09d35dfd318794a5255d79ec382666182cb525f772087875b5e286fad4a2df",
+      "bytes": 7656
+    },
+    "atomic_parameter_bank": {
+      "path": "cnn_fpga/runtime/atomic_parameter_bank.py",
+      "sha256": "17f64ae9a6bd102a57fdc0bfeae79072b210ff70ced9629b1cf807c9a9fcd256",
+      "bytes": 30376
+    },
+    "atomic_parameter_bank_validation": {
+      "path": "docs/t4_3_2_atomic_parameter_bank_validation.json",
+      "sha256": "7495bb3546522447572f68a7d93054fc8e83f1082278f467840ebfd3858065b3",
+      "bytes": 12524
+    },
+    "unified_cost_ledger": {
+      "path": "cnn_fpga/benchmark/unified_comparator_runner.py",
+      "sha256": "557334c60b4b0bb11db173445d2d17b140de7e3021a62fbd2d7558bc16a1afac",
+      "bytes": 75906
+    },
+    "source_data": {
+      "path": "docs/t6_19_1_project_preboard_profiles_source_data.csv",
+      "sha256": "d5cbd69cd77b31ecf6733631501332a999f4d8208f960b06e1d02fca9713c7e6",
+      "bytes": 788447
+    }
+  },
+  "claim_boundary": {
+    "allowed": [
+      "static MAP-LUT has exact source-bound integer/CXXRTL action equivalence and three-seed 27 MHz target-device P&R estimates",
+      "Window/EWMA/Kalman host stages use real project implementations and are reported as current-host diagnostics"
+    ],
+    "forbidden": [
+      "CI, V5 or Direct NN hardware ranking without eligible RTL",
+      "Python timing as FPGA latency",
+      "post-route estimate as vendor signoff or board measurement",
+      "non-null power, jitter, deadline or physical transfer/commit before T6.9.2"
+    ]
+  },
+  "runtime_budget": {
+    "wall_clock_seconds": 10.6563638,
+    "limit_seconds": 14400,
+    "memory_limit_gib": 12,
+    "within_wall_clock_budget": true
+  },
+  "gates": {
+    "G01_frozen_preregistration_and_config_are_exact": true,
+    "G02_only_existing_static_map_rtl_enters_hardware_table": true,
+    "G03_integer_cxxrtl_equivalence_is_exact_and_source_bound": true,
+    "G04_three_seed_target_device_place_route_is_complete": true,
+    "G05_six_cycle_ii_one_clock_arithmetic_is_exact": true,
+    "G06_window_ewma_kalman_execute_1000_real_updates_per_stage": true,
+    "G07_host_operation_state_and_workspace_ledgers_match_implemented_methods": true,
+    "G08_v5_and_direct_nn_remain_na_without_rescue_implementation": true,
+    "G09_host_and_hardware_boundaries_are_separate_and_board_fields_null": true,
+    "G10_raw_rows_hash_and_count_are_current": true,
+    "G11_all_live_source_bindings_and_phase6b_readonly_hash_are_current": true,
+    "G12_execution_respects_frozen_wallclock_budget": true
+  },
+  "semantic_mutation_audit": {
+    "count": 13,
+    "detected": 13,
+    "cases": [
+      {
+        "case": "promote_ci_without_rtl",
+        "target_gate": "G02_only_existing_static_map_rtl_enters_hardware_table",
+        "rejected": true
+      },
+      {
+        "case": "fill_ci_latency",
+        "target_gate": "G02_only_existing_static_map_rtl_enters_hardware_table",
+        "rejected": true
+      },
+      {
+        "case": "forge_cxxrtl_mismatch",
+        "target_gate": "G03_integer_cxxrtl_equivalence_is_exact_and_source_bound",
+        "rejected": true
+      },
+      {
+        "case": "drop_place_route_seed",
+        "target_gate": "G04_three_seed_target_device_place_route_is_complete",
+        "rejected": true
+      },
+      {
+        "case": "break_latency_arithmetic",
+        "target_gate": "G05_six_cycle_ii_one_clock_arithmetic_is_exact",
+        "rejected": true
+      },
+      {
+        "case": "reduce_host_repeats",
+        "target_gate": "G06_window_ewma_kalman_execute_1000_real_updates_per_stage",
+        "rejected": true
+      },
+      {
+        "case": "forge_kalman_macs",
+        "target_gate": "G07_host_operation_state_and_workspace_ledgers_match_implemented_methods",
+        "rejected": true
+      },
+      {
+        "case": "invent_v5_host_result",
+        "target_gate": "G08_v5_and_direct_nn_remain_na_without_rescue_implementation",
+        "rejected": true
+      },
+      {
+        "case": "invent_board_power",
+        "target_gate": "G09_host_and_hardware_boundaries_are_separate_and_board_fields_null",
+        "rejected": true
+      },
+      {
+        "case": "create_cross_table_ranking",
+        "target_gate": "G09_host_and_hardware_boundaries_are_separate_and_board_fields_null",
+        "rejected": true
+      },
+      {
+        "case": "forge_source_row_count",
+        "target_gate": "G10_raw_rows_hash_and_count_are_current",
+        "rejected": true
+      },
+      {
+        "case": "claim_phase6b_upgrade",
+        "target_gate": "G11_all_live_source_bindings_and_phase6b_readonly_hash_are_current",
+        "rejected": true
+      },
+      {
+        "case": "exceed_wallclock_budget",
+        "target_gate": "G12_execution_respects_frozen_wallclock_budget",
+        "rejected": true
+      }
+    ]
+  },
+  "gate_summary": {
+    "passed": 12,
+    "total": 12,
+    "failed": []
+  }
+}

@@ -561,6 +561,430 @@ Eqs. 40/41，并在 3 个 ancilla noise、3 个全新 data/ancilla variance rati
 `m=1` 即 `2a=b` 为唯一 argmin，ME-Steane 与 teleportation special cases 也通过。该 family 为 `PASS`，
 但仍是 secondary small-noise analytic evidence，不进入 sBs 主排名，不代表 FPGA 实现 physical squeezing。
 
+### 3.45 Lane-aware complete comparison set
+
+T5.1.1 冻结 19 个 comparator 和 8 个公平 lanes，不建立全局排行榜。current-syndrome、continuous-drift、
+episode-memory、finite-energy-effective、protocol-wallclock、matched-control、event/regime component 和
+short-horizon control-oracle 各自保存 decision target、information set、metric/time/compute contract 与
+deployability。只有 decoder oracle 可在 evaluator 读取 hidden DriftState，且保持 nondeployable；control
+oracle 只限 exact two-cycle tree，不能外推 10-cycle。
+
+此前缺失的 no-correction anchor 已实现为同 finite-cutoff 初态上的 pure idle-loss channel：10 us 网格上
+gate/measurement/reset/frame/update 计数全为 0，且 10 us 与 2×5 us semigroup 最大差 `1.11e-16`，不是
+standard sBs 曲线改名。finite-energy static 也实际运行 120k train/300k held-out 的五点 shrinkage sweep，
+而不是 contract-only 标签。16 个 parent artifacts、19 个代码锚、100-row Source Data 和 14 gates 均通过。
+T5.1.1 冻结时该 artifact 的 matrix 状态为 `PREREGISTERED_NOT_EXECUTED_T5_1_2`；随后 T5.1.2 已按 3.46
+另建并执行 lane-local matrix，没有回写或伪造 T5.1.1 历史状态。run-length/HMM 未接 logical-policy adapter
+前只作 component，Knill/P-Steane 不进入 sBs 主排名，MF cutoff reversal 与禁止 universal NMF claim 保留。
+
+### 3.46 Lane-local mixed scenario matrix
+
+T5.1.2 已执行 static Gaussian、mean/variance/correlation drift、loss、readout/ancilla drift、burst/outlier、
+large-error recovery、leakage 和 calibration shift 共 10 类场景。六个 decoder 场景共 36 个 seed-cluster、
+589,824 个 paired decisions；standard/static/latest-window/EWMA/Kalman/oracle 在同一 scenario-seed-window
+消费同一 trace，predictor 只在当前窗解码完成后更新，训练与评估 seeds 严格分离。
+
+loss 使用原生 noise-transfer bias/covariance/alias 指标，readout/ancilla 使用 protocol-native fault overlay，
+large-error 与 leakage 保持 `component-only` native gates；四类结果不得与 syndrome LER 混成一个分数。
+15/15 gates 只证明覆盖、因果、物理/统计自检和 provenance，不代表任一 comparator 全局胜出。相关轴下
+joint jump 只允许 Fréchet bounds；本次 loss isolation 使用 diagonal axes 才报告 exact joint probability。
+theory-only Steane、Knill/P-Steane 均保持不可执行且不进入 sBs 主排名。正式 average/tail、双 oracle-gap、
+bootstrap 和多重比较在 T5.1.3 单独执行。
+
+### 3.47 Paired-seed tail 与双 oracle-gap
+
+T5.1.3 按 T5.1.2 相同 RNG 顺序重放 36 个 scenario-seed clusters，保存 1,152 个 windows；所有 trace hash
+与 seed rates 精确一致。6 个 seeds 是独立 cluster，20,000-repeat bootstrap 重采样整条 seed trajectory，
+报告 syndrome-level `P_L`、window p95、observed worst 和 decoder-oracle gap。24 个 challenger-vs-static
+hypotheses 用 `2^6` exact sign flips 和 Holm-Bonferroni；当前最小 raw/adjusted p 为 `0.03125/0.75`，正式
+discovery 为 0。该结果进入 T5.1.4 证否门，不得把正 bootstrap effect CI 单独升级成主张。
+
+calibration shift 中 Kalman average/p95 低于 static，但 worst 为 `55/512`，高于 static 的 `37/512`；该
+causal transient 必须保留。control lane 只消费 cutoff12/16、exact two-cycle、16-branch expectation，不造
+sampling CI。注册的 control oracle 是 finite-multistart matched-model reference，不是全局定理上界：不同
+metric 与 frozen cutoff transfer 可产生负 gap，且不能外推 10 cycles。decoder/control metrics 始终分 lane。
+
+### 3.48 Fail-closed 算法成功/证否分支
+
+T5.1.4 只读绑定 T5.1.1--T5.1.3、T2.4.3、T4.2.1、T4.2.3、T4.3.2 与 T4.4.5，
+不新增 evaluation 或重选场景/方法/指标。强分支要求 matched learned decoder、同轨 strong baseline、static
+average/p95/worst 不退化、独立 seed-cluster advantage、Holm-adjusted discovery、无 transient tail violation
+及 observed-only/deployment scope 全部成立。
+
+当前 decoder lane 没有 learned candidate，24-test Holm family 为 0 discovery，且 calibration-shift Kalman
+worst `55/512` 高于 static `37/512`。因此唯一激活分支为
+`event_aware_adaptive_map_fpga_codesign`；CNN/TCN/GRU performance claim 被删除。该名称表示后续论文与
+工程方向，不能被解读为 run-length/HMM 已接入统一 finite-energy closed loop 或 FPGA/board 已测。
+
+T4.4.5 qualified student-retention 仍只属于 matched two-level controller lane，历史 T24 只属于 frozen-set
+scope；两者均不能升级为 T5.1 decoder confirmation。未来重开 strong branch 必须在访问新数据前预注册
+independent seed clusters，并同时通过 same-trace、static/tail、Holm、causality 和 deployment gates；现有
+1,152 windows 禁止改名为独立 seeds。
+
+### 3.49 物理时间与控制成本公平 lanes
+
+T5.1.5 将时间与成本证据固定为三条不可混排 lanes。protocol lane 在 cutoff12/16×三噪声下使用共同
+700 μs：measurement-feedback 为 10 μs/cycle、70 cycles、140 measurements/140 resets/1260 active gates；
+autonomous 为 7 μs/cycle、100 cycles、0 measurements/200 resets/1800 active gates。6/6 场景按 protocol
+cycle 的 autonomous ratio `>1`，按共同 μs 的 ratio `<1`；两种口径必须同报。
+
+matched controller lane 在 cutoff12/16 下统一 10 cycles/100 μs，并为 standard、exact-budget MF、teacher、
+handcrafted recurrence、student 同报 cycles/μs、20 measurements、20 resets、180 active gates、`e` outcome
+burden、scalars/MAC 和 latency availability。`e` events 不是 reset；two-cycle finite-horizon reference 不进入
+ten-cycle table。
+
+host estimator lane 只保留 T4.1.1 development-host batch medians，physical lifetime/events 为 null，不能转移
+给 T4.4.4 controller 或 FPGA。项目配置的 `1.0/995 μs` 是 assumption；target-board core/transport/end-to-end
+与 measurement/ADC/AWG/physical-action latency 共 7 项仍为 null。不得构造跨 lane aggregate latency 或总分。
+
+### 3.50 实验可行性约束与非混合门
+
+T5.1.6 只读绑定 T4.4.4、T5.1.5、T4.3.3、T4.2.3、T4.4.3 与 T5.1.4。matched-controller
+lane 的 `p(g)/p(e)` 只属于 two-level simulator；每行 20 resets 与 e outcomes 分列，multilevel leakage、
+parameter saturation rate 和 matched latency 保持 null。cutoff12/16 峰值 lifetime 均携带完整 scalars/MAC、
+reset 与 latency-null，不能支撑 deployment claim。
+
+fault lane 保留 8×4 software campaigns、767,872-cycle denominator、11,552 fallback、4 reset requests 与
+0 observed unsafe/undefined actions。该定向 campaign 是 software coverage evidence，不是 device-fault population
+抽样，因此不构造总体置信上界。component fallback taxonomy 和 student fail-closed contract 仍是独立证据层。
+
+controller multilevel leakage、saturation、matched/board/frontend latency、device reset fidelity 与同一
+finite-energy closed-loop 的 lifetime/fault-rate 联合证据共七项保持 `MISSING`；总体 deployment readiness 为
+`NOT_ESTABLISHED`。
+
+### 3.51 Displacement / large-distance 独立因果 lane
+
+T5.2.1 不复用 T2.0.5 的单 seed 结果作为正式结论，而是在冻结 recovery/readout/reset kernel 后执行
+17 幅度×8 evaluation seed clusters×4,096 shots。每个 seed 内用 common random numbers，只改变 nominal
+displacement amplitude；CI 按 whole-seed cluster bootstrap，不把 shots 当独立实验。initial depth 与 observed
+same-quadrature e-run 均在 `epsilon/l_S=0.25` 达峰，midpoint mean 为 `6.00000/4.84512`。
+
+logical assay 再分成两个不可互换的 estimand：nearest-operation-relative misclassification 在 midpoint 约 0.5、
+两端接近 0；identity-reference flip 从 0 单调升到 1，明确保留 `epsilon/l_S=0.5` logical operation。actual
+parity 与 nominal target 只供 evaluator；logical failure 不是 recovery censoring，也不是 repeated physical-memory
+LER。两个冻结 jitter profiles 与 Gaussian boundary formula 的最大绝对差 `<0.005`。
+
+该 lane 仍使用 coarse error-space 与 project-assumption recovery/readout/jitter，不是 coherent Fock injection、
+Fig. 4(c) 定量拟合、device calibration、QPU 或 target-board fault injection。
+
+### 3.52 Ancilla bit/phase 与 readout 独立因果 lanes
+
+T5.2.2 不把 T2.2.2/T5.1.2 的 mixed aggregate 改名为单通道因果证据，而是对 bit-only、phase-only 和
+readout-only 分别执行 6 个 rate×8 个新 seed clusters×4,096 cycles。每个 family/seed 内跨 rate 使用 common
+random numbers，20,000-repeat CI 重采样整条 seed cluster；balanced `K_gg/K_ge/K_eg/K_ee` schedule 同时覆盖
+g/e 与 X/Z。每行保存 11 个主/交叉 estimands，所有未注入通道必须精确为 0。
+
+bit-only 只改变 X big-CD bit probability，event/toggle/logical backaction 随 rate 增长；phase-only 只改变同一
+位置 phase probability，连续小回作用增长，但 Z-basis toggle、logical backaction 和 ideal-label change 精确为 0；
+readout-only 只改变 hidden g/e classifier confusion，misclassification 与 virtual rotation 增长，但不产生 ancilla
+fault event 或 logical truth。readout 误判导致错误 registered reset action 是其下游因果结果，不是额外注入
+reset-failure channel；后者留给 T5.2.3。
+
+三族不合并 global sensitivity score。0.5 bit-to-logical conditional、0.01 phase scale、symmetric confusion 和
+0.6 rad range 均为 project assumptions；Sivak S4I 的 65× 只作定性机制锚，不是数值复现目标。truth 只供
+evaluator，产物不是 cavity--transmon master equation、physical-memory LER、device calibration、QPU 或板测。
+
+### 3.53 Leakage 与 reset-failure 独立因果 lanes
+
+T5.2.3 不把 T2.0.6 的 occupancy/post-selection component 或 T5.1.2 aggregate lane 改名为在线闭环证据，
+而是分开执行 leakage-injection-only 与 reset-failure-only 两族，每族 6 个 rate×8 个独立 seed clusters×
+256 trajectories×512 evaluation cycles；另有 128-cycle burn-in。每个 family/seed 内跨 rate 使用 common
+random numbers，20,000-repeat CI 只重采样整条 seed cluster。leakage lane 固定 reset failure，reset lane
+固定 leakage injection，并用 empirical intervention/fixed-channel rate gate 防止双通道静默变化。
+
+检测器只消费 observed `g/e/leakage`，hidden leakage truth 只供 evaluator。无真实 leakage episode 时，
+detection fraction 与 delay 保持 `null`，而 false-alarm rate、declared/safe availability 仍可定义；不以伪造的
+零延迟填补空集合。raw reset request、attempt、success、failure、occupancy/run length 以及 lag 1/2/4/8/16/32
+correlation/covariance 分列，任何 intervention 均不通过 post-selection 丢弃 trajectory。
+
+0.95 detector sensitivity、`2e-4` false-leak alarm 和两条 intervention law 都是 project assumptions。有限
+formal sample 中 detection fraction 为 1 不构成总体保证，safe availability 也不是 board uptime。产物不是
+multilevel master equation、physical-memory LER、device calibration、QPU 或 hardware fault injection。
+
+### 3.54 六态 CPTNI logical-channel reconstruction
+
+T5.3.1 不把 T1.2.2 parity-twirl、T4.4 learned trajectories 或 T5.2 component fault estimands 拼成
+logical channel。唯一 channel lane 复用 T3.2.8 的 finite-cutoff nominal sBs map；QEC-on/off 使用同一
+orthonormal code isometry、cavity/ancilla noise、初态、cutoff 与 `10 us` reporting interval，只有
+`qec_on` nominal sBs 对 `qec_off` matched idle 的 intervention 不同。
+
+每条 lane 输入 `X+/X-/Y+/Y-/Z+/Z-`，逐 cycle 保存 unnormalized `2x2` code outputs，并重构线性
+CPTNI PTM、Choi/TNI、non-Pauli、non-unital、state-dependent survival 与 missing-trace leakage。
+conditional Bloch 只作诊断，不进入 PTM；lifetime 使用 raw code-weighted Pauli contrast 的 finite-horizon
+signed area 与真实 e-fold crossing/censoring，不做单指数拟合或 postselection。
+
+formal matrix 为 4 cutoffs×3 noise profiles×on/off×30 cycles。低 cutoff 12 的性能方向与高 cutoff 相反，
+因此保留完整 12/24/36/40 scan，并要求 terminal 36→40 的 PTM/leakage 数值稳定；该 repeat 不是
+infinite-cutoff theorem。所有 raw 六态 outputs 必须能重算 survival、PTM/Choi、lifetime、matched comparison
+和 cutoff tables。结果不是 experimental tomography、multilevel leakage、physical-memory LER、break-even、
+device calibration、QPU 或 FPGA timing。
+
+### 3.55 CPTNI fidelity 与 short-time rate
+
+T5.3.2 只消费 T5.3.1 同一组 24 条六态 raw channel lanes，不从 parity-twirl、conditional Bloch 或历史
+lifetime 表拼装 fidelity。对 trace-nonincreasing code subchannel 使用 `F_e=Tr(R)/4` 与
+`F_avg=(2F_e+R_II)/3`；常见 TP 公式的高估量 `(1-R_II)/3`、六态 direct overlap、mean survival 和
+conditional normalized diagnostic 必须分列。conditional 指标不作为线性 channel fidelity。
+
+短时率定义为 `Gamma=-2 dF_avg/dt|0`，primary 是 10 us grid 的三点二阶 forward difference；一/四点
+只构成离散化敏感度，不做单指数拟合。只有前 3 点非增且多阶 rate 相对 spread 不超过 25% 才报告
+qualified inverse-rate lifetime。正式 qec-on lanes 因 cycle-scale recovery transient 全部不合格，raw rate
+保留而 lifetime 为 null；qec-off qualified proxy 不得跨口径升级为 active break-even。
+
+formal exact propagation 没有 sampling clusters，因此 standard error/CI 保持 null。36/40 cutoff interval 与
+1/3/4-point envelope 都是 deterministic systematic sensitivity，不是统计 CI 或 infinite-cutoff theorem。
+cutoff12 的 on/off 方向反转必须保留；matched differences 不转成 ratio/gain。结果不是 experimental
+tomography、physical-memory LER、simulated break-even、device calibration、QPU 或 FPGA 结果。
+
+### 3.56 full-curve wall-clock operational boundary
+
+T5.3.3 同时绑定 T5.3.1 channel 与 T5.3.2 fidelity artifacts，只比较相同 code basis、cutoff、noise、初态、
+10 us grid 和 300 us horizon 下的 fixed nominal sBs 与 matched idle。qec-off 的角色固定为
+`matched_uncorrected_grid_code`，不是论文中的 best passive physical qubit。
+
+primary sampled boundary 是最后一个 `F_on-F_off<0` 样本之后的首个样本，且 active 必须在所有后续样本
+持续非劣；cumulative payback boundary 还要求 `integral(F_on-F_off)dt` 偿还早期 deficit 并持续非负。
+两者都消费完整 31 点 leakage-inclusive `F_avg` curve，不以单终点、area ratio、单指数或不合格短时率替代。
+线性零点只作相邻采样诊断，不提供 sub-grid validation。
+
+formal scan 保留 12/24/36/40×3 noise。cutoff12 无边界是必要反例；36/40 terminal repeat 才允许写
+`simulation-derived wall-clock operational boundary`。由于 active rate 不合格、best-passive reference 缺失且
+active pulse/reset/classical/latency 尚未统一计价，paper-defined coherence gain、full-cost boundary 与
+experimental/physical-memory break-even 均保持 `NOT_ESTABLISHED`。
+
+### 3.57 online QEC 与 post-selection 成本隔离
+
+T5.3.4 直接读取 T5.3.1 qec-on native `event_accounting`：300 us/30 full cycles 含 60 measurements、
+60 resets、540 active gate applications；qec-off 三项为 0。T5.1.5 standard protocol 只作独立计数复核，
+不把 cutoff12/16 controller performance 转移到 cutoff36/40 channel。`Delta=0.34` 按项目约定报告
+`-10 log10(2 Delta^2)=6.360122 dB`；15 scalars/0 online policy MAC 是 fixed nominal analytic resource，
+不是 RTL/board/pulse-energy 证据。
+
+online channel 无 post-selection，trajectory acceptance 固定 1；CPTNI code-space survival 仍小于 1，两者
+不得混名。online achieved metric 只用 parent `F_avg`/survival/boundary，physical-memory LER 保持 null。
+
+T3.2.4 的 post-selection 独立报告 acceptance、rejection、conditional decision error、accepted failures 和
+`accepted failures + lambda*rejection` 四档成本。它属于 synthetic decoder diagnostic，不填 `F_avg`、LER、
+event count 或 latency，不与 online channel 拼 total。truth upper 只供 evaluator；conditional improvement 不
+进入在线主增益。T5.1.6 safety burden 也保留为另一条 deterministic software campaign。
+
+matched/board/frontend latency、pulse duration/energy、device reset、best-passive reference 和 matched LER 等
+12 项缺失字段保持 null。没有跨 lane global score；full-cost operational boundary、paper coherence gain 与
+postselected/experimental break-even 均保持 `NOT_ESTABLISHED`。
+
+### 3.58 QEC-matrix/Petz arbitrary-recovery bound
+
+T5.3.5 的对象是 isometric finite-cutoff GKP encoding 经过单个 `10 us` exact cavity pure-loss channel 后，
+允许任意 CPTP terminal recovery 所能达到的 channel/entanglement fidelity；它不是 per-shot decoder、
+history controller、sBs pulse sequence 或 FPGA runtime。QEC matrix 使用
+`M[mu,l;nu,k]=<mu|A_l^dagger A_k|nu>`，Petz fidelity 为
+`F_tilde=||Tr_L sqrt(M)||_F^2/d_L^2`，解析区间固定为
+`F_tilde <= F_opt <= (1+F_tilde)/2`。
+
+small-cutoff formal matrix 为 cutoff 4/6/8/10/12×high/medium/low。每条 lane 独立求 recovery-Choi
+primal 与 dual SDP；raw solver 状态、残差和 duality gap 原样保留，再把 primal 投影为 PSD 并以 partial-trace
+inverse square root 归一成 CPTP 可行点，把 dual 乘积 slack 的负最小特征值用 identity shift 修复。因此只在
+repaired primal lower 与 shifted dual upper 相交时通过，不用启发式搜索冒充 optimal recovery。
+
+无需 SDP 的 Petz/QEC-matrix scan 扩展到 cutoff 12/24/36/40/48，并在 cutoff 24/36/48 对
+`Delta=0.44/0.34/0.28` 做能量敏感度。高 cutoff 的 noise-output support inverse square root 会病态，
+因此同时保存 QEC-vs-direct Petz fidelity residual、support TP residual 与 cutoff difference；cutoff 48 不是
+无限维或无限能收敛证明。
+
+actual nominal sBs 在两次 half-cycle 中交错 gate/reset、cavity 与 ancilla noise，不是“先纯损耗、再单次任意
+recovery”。其 CPTNI `F_e` 只在补上 maximally-mixed leakage completion 后，与 bound 报一个
+`SCHEDULE_MISMATCHED_DIAGNOSTIC_ONLY` 差值，不声称 certified ordering。T4.4.4 teacher/student 只有
+10-cycle two-level trajectory lifetime/score，没有 matched six-state one-cycle Choi；二者 gap 必须为
+`null/INCOMPARABLE`，禁止 lifetime 减 `F_e`。结果不是 deployable recovery、large-cutoff SDP optimum、
+physical-memory LER、device calibration、QPU、RTL 或 hardware result。
+
+### 3.59 Held-out/OOD lane-local contract
+
+T5.4.1 不把 T5.1.2 的 mixed matrix、T5.2.2/T5.2.3 的正式 rate grid 或 T2.4.2 的旧通信场景改名为
+OOD。访问结果前冻结 32 个全新且两两互斥的 seed clusters，并与 parent artifacts 中递归提取的
+train/validation/evaluation/bootstrap seeds 做集合隔离；T5.1.2 的 static MAP 与 EWMA/Kalman 参数按 parent
+hash 恢复，OOD 数据不参与 refit、threshold 或 method selection。
+
+四条原生 lane 分别是：unseen joint-sinusoidal/telegraph family 与 compound range extrapolation 的 paired
+syndrome-decoder replay；3 张新 4×3 row-stochastic sBs confusion matrix；`0.003/0.006/0.012` persistent
+leakage-rate replay；以及 micro-outage/increasing-flap/communication+jitter+burst scheduler stress。每条 lane
+只报告自己的 decision/proper-score、confusion、leakage burden 或 LER/availability/event observable。
+
+telegraph 下 adaptive 点估计反转但 cluster CI 跨 0；periodic micro-outage 被检测但对当前 metric 为 null；
+increasing/compound communication faults 显著退化。这些负结果必须保留，不能用 expected-direction gate
+删除。20/20 gate 的 `PASS` 只表示 104 个 seed cells、280-row Source Data、provenance、数值和 fail-closed
+integrity 完整；`system_robustness_status` 与 `device_robustness_status` 保持 `NOT_ESTABLISHED`。T5.4.2 才能在
+matched fault population 上比较 uncertainty-gated fallback 与 no-fallback。
+
+### 3.60 Matched uncertainty-gated fallback contract
+
+T5.4.2 的 no-fallback 是 T5.1.2 frozen EWMA periodic MAP，last-known-good fallback 是同一 parent 的
+frozen static MAP；两者消费同一 residual 和同一 hidden evaluator truth。score 只由当前 modular-syndrome
+posteriors、past-only one-window-delayed Window/EWMA/Kalman states 构成，在本窗 predictor update 前决定动作；
+truth 只作离线计分。catastrophic failure 是 decoded logical class 错误，不是 OOD/health/uncertainty proxy。
+
+41 点 threshold grid 只用 T5.4.1 的 8 个 development seed clusters 选择，再冻结 `0.45` 并运行 12 个
+parent-disjoint confirmation clusters。36 个 OOD cells/1,179,648 decisions 上，primary/gated error 为
+`0.04718865/0.04611376`，absolute reduction 为 `0.00107490 [0.00001950,0.00227615]`；同时报告
+17,788 fallback、6,170 avoided、4,902 induced、7,093 unnecessary 和 11,618 selected-without-benefit。
+
+逐场景结果不合并成普适 claim：telegraph reduction 的 CI 全正，compound reduction
+`-0.00488536 [-0.00557454,-0.00418854]` 全负，sinusoidal CI 跨 0；nominal negative control 也有
+`-0.00001272` 点估计代价。21 gates 和 517-row Source Data 只证明当前 matched synthetic
+syndrome-decision mixture 的聚合效果与成本可追溯；不证明 physical-memory LER、universal OOD safety、
+controller/RTL/board 或 device fallback。
+
+### 3.61 Native-lane causal ablation and negative-result contract
+
+T5.4.3 先验证六项 requested switches 是否共存于一个已验证端到端 stack。答案是否定的：history 使用
+T3.2.11 finite-cutoff control lifetime，CNN residual 使用 preserved legacy parameter-prediction split，regime
+state 使用 T3.2.6 proper score，run-length/parameter update 使用 T3.2.5 software event cost，fallback 使用
+T5.4.2 syndrome logical-class failure。因此每个 mechanism-off 只在自己的 native matched lane 内成立，
+`cross_lane_aggregate` 和 `global_ranking` 必须为 null。
+
+history 的 full-minus-latest-only lifetime 在 cutoff12 为
+`0.709110 [0.568837,0.894025]`，cutoff16 为 `-0.563636 [-0.665556,-0.461717]`；run-length
+相对 memoryless 的 cost benefit 为 `-0.179911 [-0.180782,-0.179041]`。两项负结果不得删除。
+CNN residual 的 active/off MSE 为 `2.41445e-6/8.03405e-6`，但只有一个 legacy test split、无独立
+seed-cluster CI，T5.1.4 撤销决定不变。regime NLL benefit 与 detection-delay cost 分别为
+`0.401514 [0.366352,0.436676]` 和 `1.228754 [1.111948,1.345561]`；parameter update 只允许作为
+event-actuation component result；fallback 保留 aggregate 正向及 compound/nominal 负向。
+
+18 gates 与 338-row Source Data 只证明六项原生 intervention、provenance、符号、代价和 claim 降级完整；
+不证明六机制联合归因、普遍收益、physical-memory LER、device calibration、RTL/FPGA/board 或实验结果。
+
+### 3.62 Validation-only all-agent/seed selection audit contract
+
+T5.4.4 只读重构 T2.3.7、T4.1.1、T4.1.5、T4.4.1、T4.4.3 与 T4.4.4 的 selection。
+candidate 只允许由 validation 决定；独立 test 只能评估或计算不参与重选的 hindsight optimism。对越大
+越好的 metric，worst quartile 取最低 `ceil(n/4)`；对越小越好的 metric 取最高 `ceil(n/4)`；全部
+distribution 同报线性 Q1/median/Q3/IQR。
+
+NMF-minus-MF logical-Z lifetime 的五 agent primary median/IQR 为 `0.257219/0.242015`，confirmation
+为 `0.386384/0.175685`；若违规只选 test-best agent，相对 median 会分别夸大 `0.133006/0.394202`
+cycles。T4.4.4 仍保留全部五个 MF agents。fresh teacher validation 选择 restart 0，但 primary/confirmation
+test-best 均为 restart 2，潜在 optimism `0.004127/0.001445`；candidate 不因此改变。slow-loop HMM 与
+4-state student 的 validation/test 排名一致。
+
+旧 T4.1.5 只保存 selected restart 的 evaluation，nonselected test counterfactual 不可复算；该 predecessor
+标为 superseded warning，不伪造完整性。23 gates、255 evaluation units、39 distributions 与 420-row
+Source Data 支持 `PASS_WITH_WARNINGS`：证明 selection discipline 和全体报告完整，不证明无 selection-bias
+风险、optimizer optimality、universal memory gain、physical-memory、device 或 hardware 结果。
+
+### 3.63 Training-horizon and real long-recurrence contract
+
+T5.4.5 用同一 frozen GRU teacher 与 split-specific 64-half-cycle histories，把 2/5/10-cycle students 各重新
+拟合三个 restarts；只由 validation 选择。32-cycle production student 直接绑定 T4.4.3，不用本任务 evaluation
+重选。2-cycle candidate 在短 validation 很低，却在独立 32-cycle evaluation 达 `9.9540e-5`，其 all-e long
+worst 达 `8.1423e-4`；该 horizon failure 必须保留。
+
+部署矩阵为 stationary/persistent/range-shift 各两 seeds 加 all-g/all-e，共 8 条 streams；每条真实消费
+2,000,000 half-cycle tokens。GRU-10 与四个 student models 在 float64/float32 下均全步递推；dense action
+只在 13,631 个冻结 checkpoints 计算。teacher hidden 最大 `0.382517<1`；student actual state 不超过初态与
+两 outcome saturation 的解析凸包；float32 最大动作差 `1.2630e-6`。终点前 256-half-cycle 强制 state reset
+形成 120 个 matched counterfactual，最慢恢复 20 half-cycles。
+
+10/32-cycle models 在 `1e3/1e5/1e6` cycles 的 sampled teacher-action mean 与 worst-stream MSE 均低于
+`5e-5`，但这只是 observed `g/e` recurrence/action imitation。没有执行百万-cycle Fock logical channel；
+T4.4.4 的 10-cycle physical retention 不得由 action MSE 外推。physical-memory LER、long-horizon physical
+gain、leakage/model-mismatch、device、RTL/FPGA/board 与实验 claim 继续关闭。
+
+### 3.64 Randomized multi-factor mismatch contract
+
+T5.4.6 将异构 mismatch 保持在四条不可拼榜的 native lanes。finite-cutoff physical control 使用 cutoff12、
+10 cycles、batch16、float64；32 个 cells 分为 full 15-vector gate bias、cavity phase diffusion、固定
+`5000 ns` 总时长的 phase allocation/lifetime dynamics 与 compound 四族。每个 cell 对
+standard/teacher/student 执行 nominal/mismatch 配对；branch 必须从 raw strategy scores 重新计算，不能读取
+stored PASS。另有 8 个完整 4×3 readout matrices、16 个 persistent leakage/reset cells 与 8 个
+parent-frozen random-drift cells；readout 的 f/higher 行通过独立 categorical calibration 实际访问，但不冒充
+multilevel master-equation trajectory。
+
+全部 64 个 vectors 与 1,351 个 parent seeds 无重叠；19 gates 和 273-row Source Data 通过。32/32 teacher
+gain qualifying；student retention median/Q1/min 为 `0.998101/0.990413/0.897630`，compound median
+`0.995598`，所以 qualified student branch 保留。该 relative retention 不掩盖 absolute degradation：
+gate-bias/compound teacher worst nominal-minus-mismatch score degradation 为 `0.424155/0.395654`。
+
+随机分布不是 device posterior；physical lane 只是 10-cycle finite-cutoff evidence；readout categorical、
+effective leakage kernel 与 syndrome drift 不形成 integrated score。long-horizon physical channel/LER、
+device calibration、multilevel leakage/SPAM、RTL/FPGA/board 和实验 claim 继续关闭。
+
+### 3.65 Packed-word bit-accurate RTL-golden contract
+
+T5.5.1 把 T4.2/T4.3 的整数组件组合成真实逐周期 Python golden，而不是继续用预构造的
+`input_cycle=cycle-5` decision。online input/output/state 分别为 58/118/232-bit CRC words；每周期先发布
+上周期 output，再 atomic commit、S0 锁存 input+image+version、推进五级 MAP/FSM，并把 action 注册到下一
+周期。因此 source-to-output 恰为 6 cycles、II=1。4,110 个连续 inputs 的 source 0--4109 均唯一输出，
+没有 warm-up 后丢失或重复。
+
+parameter image 使用 128-byte header、两个 257×signed-24-bit containers（logical Q9.12 为 signed
+22 bit）与 CRC32+SHA256 trailer；8 images/bundle 全 exact roundtrip。cycle 4000 unsafe defer、4001
+commit v1；source4000 保持锁存 v0，source4001 锁存 v1。16,384 个 code 的 LLR/action 与独立整数
+ties-to-even 重构完全一致；4,116-row trace 有 output/state CRC 和逐行 SHA256 chain。
+
+该 contract 从 ADC code 开始；raw IQ/ADC、CDC、transport 与 physical action 不在内。24-bit container 是
+表示选择，不是 BRAM packing 结果。RTL、synthesis/post-route、Fmax、LUT/FF/BRAM/DSP、board 和 device
+evidence 仍为 null/false，必须由 T5.5.2/T6 独立升级。
+
+### 3.66 Synthesizable RTL and target-device post-route contract
+
+T-RISK-20260716-01 把 T5.5.1 packed words 映射为可综合 RTL。core 保留 58/118/232-bit CRC words、
+exact ties-to-even interpolation、5+1-cycle pipeline、双 bank atomic switch、event/fallback/frame/counter
+state。四个逻辑 257×22-bit 2R1W tables 用八个 mirrored 1R1W BSRAM 实现；动态写入广播到读镜像。
+CXXRTL fault/commit 与 exhaustive v0/v1 traces 共 4,316 个 valid MAP rows，map/output/state/version/ack
+逐周期 0 mismatch。该等价性不含 raw IQ/ADC、CDC、transport 或 physical action。
+
+T5.5.2 在固定 YoWASP Yosys/nextpnr/Apycula 上，以 Tang Nano 20K 的
+`GW2AR-LV18QN88C8/I7`、`GW2A-18C`、27 MHz SDC 和 QN88 small-pin CST 运行真实 synthesis/P&R。
+复核把 harness 配置地址严格约简到 0--256 后，seed 1/7/19 Fmax 为
+`40.4318/39.8661/39.7456 MHz`；报告必须使用最差 seed，不能挑选最佳值。三 seed最大
+LUT4/DFF/BSRAM 为 `3362/865/8`，MULT18X18/MULT9X9 各 1；最差 critical period
+`25.1600 ns`，从 core state register 到 activity harness `fold5` 观测寄存器。core latency 为 6 cycles，
+在 27 MHz 是 `222.222 ns`，II=1 是 `37.037 ns`。
+
+activity harness 只保持全部输出和配置路径可观测，不是 T6 transport。当前 evidence 可升级为
+target-device open-source post-route estimate；vendor timing signoff、bitstream、board、transport、板上
+latency/throughput/power 和 quantum hardware measurement 仍必须为 false。
+
+### 3.67 Precision-resource-performance deployment-point contract
+
+T5.5.3 不把 T4.2.4 precision proxy、T3.1.5 top-K operation count 与 T4.4.3 float student cost 直接
+相加。它先保留 4×3×3×3=108 个联合 candidates，再要求父 quality gate 与实际 integrated P&R 同时
+存在。precision 门选满足 action disagreement `<=1e-4` 的最小 p10/a8/Q9.12；top-K 门选六场景最小
+收敛 K=4，但后者仅为 off-device reference，`online_topk_rtl=false`；student dimension 只保留父任务
+evaluation-blind 选择的 4-state。
+
+4-state student 用 signed Q3.14、one-multiplier serial recurrence/head；CXXRTL 对 512 operations、7,680
+outputs、完整 72-bit state 与 5 forced resets 逐码一致，fixed-vs-float 最大输出差 `1.46038e-4`。集成
+共享 harness 地址修复后重新综合/P&R 的 core+student seed 1/7/19 Fmax 为
+`40.5351/40.3226/39.5726 MHz`；最大 LUT4/DFF/BSRAM 为 `3802/1022/8`，
+MULT18X18/MULT9X9 为 `2/1`。student 64 cycles=`2.37037 us`@27MHz，低于
+5 us project-model slot；core 仍并行保持 6 cycles。
+
+只有 p10/K4-reference/state4/P1 带 actual three-seed post-route evidence；P2/P4 和其余组合是明确的
+estimate。terminal `bias_mem[15]` 组合越界已由 CXXRTL 暴露并修复为地址钳位。该 contract 不建立
+online top-K、full/quantized GRU、vendor signoff、bitstream、transport、board 或量子硬件证据。
+
+### 3.68 Full/quantized-GRU versus distilled-student feasibility contract
+
+T5.5.4 对同一个 selected `GRU10-DENSE256-DENSE256-OUT15` checkpoint 重算 72,853 parameters、
+72,266 weight MACs 和 587 biases。float32/float64 parameter storage alone 分别需 127/253 个 BSRAM，
+加 8-block core 后是 135/261，均超过 target 的 46；因此完整 GRU 保持 offline teacher，不用删层或
+空壳 top 伪造 target synthesis。
+
+量化分支保存全部 588,694 parameter bits。functional fake-quantized shadow 先以 manual gate equation
+对 PyTorch `GRUCell` 达到 `5.55e-17`，再覆盖全部 256 个 length-8 histories/all-prefixes 与
+128×256 long random sequences；最大 action error `5.5199e-4`，但这不是 physical gain retention。
+被综合的 workload 只用于乐观下界：它真实消费 72,266 weights/587 biases，却明确省略 gate dependency、
+activation buffer 和 nonlinearities。独立 bit-vector signature 复核发现并修复 bias0 重复、terminal bias
+漏读与地址 587 越界；修复后 CXXRTL/reference signature 均为 `730990968`。重新执行的三 seed P&R
+共享 harness 修复后再次重跑的 Fmax 为 `40.2625/39.1527/40.6835 MHz`，最大
+LUT4/DFF/BSRAM 为 `3904/1011/41`。即使用 min Fmax，下界仍 `1860.76 us`，远超 5 us；当前
+inputs/netlist/route artifacts 另由 provenance 绑定。
+
+因此 optional quantized-GRU enhanced route 为 Dropped，唯一通过 functional、capacity、deadline、matched
+physical gain 四门的是 4-state Q3.14 student。lower-bound P&R 不能被改写为 functional GRU 或 worst-case
+latency；vendor signoff、bitstream、transport、board、power/throughput 与 quantum hardware 仍关闭。
+
 ## 4. 交叉验证协议边界
 
 2020 sharpen–trim 以 `+y/-y` 读出控制 feedback shift，按两个 sharpen 加两个 trim 循环。T2.2.2 已实现其协议原生 ancilla/readout/reset effective flow，可用于 fault-information-flow 交叉验证；它仍不能与 sBs 共享 cycle、syndrome alphabet、timing 或主排名。原文给出 conditional-displacement/readout 等组件叙述，却没有足以冻结完整一轮/四轮 wall-clock 的单一数值，所以这里保持 `null`，不做组件加和推断。
@@ -585,8 +1009,8 @@ Eqs. 40/41，并在 3 个 ancilla noise、3 个全新 data/ancilla variance rati
 
 一手锚来自本地 Sivak 2023、Campagne-Ibarcq 2020 与 Puviani 2024 正文/补充材料；secondary 只来自 `docs/任务版改进记录/6篇实用论文.md` 与 Zotero 阅读卡。机器 JSON 保存逐条行锚和 expected fragment，测试会直接回读源文件。
 
-主协议已通过 T2.0.2 grouped CPTP/error hierarchy、T2.0.3 hidden/observed/reset、T2.0.4 Table S3 timeline、T2.0.5 displacement trend、T2.0.6 occupancy/correlation、T2.1.1 stream、T2.1.2 memory、T2.1.3 million-cycle/rare-stratum、T2.2.1 finite-squeezing、T2.2.2 protocol-native ancilla fault、T2.2.3 control-imperfection、T2.3.1 generic finite-Fock、T2.3.2 completed analytic SBS one-round、T2.3.8 noise-transfer surrogate、T2.3.3 axis-resolved cross-fidelity、T-RISK-20260714-01 quadrature contract、T2.3.4 differentiable trajectory、T2.3.5 Feedback-GRAPE gradient、T2.3.6 resource envelope、T2.3.7 strict-split directional ranking，以及 T4.4.1--T4.4.5 的 fresh teacher、hidden/control、student、paired physical retention 和 fail-closed branch freeze。memory-specific/long-horizon robustness 继续走 T5.4.5；T5.2/T5.4/T5.5/T6 保留 qualified branch 撤销权，真实 board timing 继续走 T6 evidence gate；secondary 若要升级，还需一手全文、协议原生测试和任务板明确批准。
+主协议已通过 T2.0.2 grouped CPTP/error hierarchy、T2.0.3 hidden/observed/reset、T2.0.4 Table S3 timeline、T2.0.5 displacement trend、T2.0.6 occupancy/correlation、T2.1.1 stream、T2.1.2 memory、T2.1.3 million-cycle/rare-stratum、T2.2.1 finite-squeezing、T2.2.2 protocol-native ancilla fault、T2.2.3 control-imperfection、T2.3.1 generic finite-Fock、T2.3.2 completed analytic SBS one-round、T2.3.8 noise-transfer surrogate、T2.3.3 axis-resolved cross-fidelity、T-RISK-20260714-01 quadrature contract、T2.3.4 differentiable trajectory、T2.3.5 Feedback-GRAPE gradient、T2.3.6 resource envelope、T2.3.7 strict-split directional ranking，以及 T4.4.1--T4.4.5 的 fresh teacher、hidden/control、student、paired physical retention 和 fail-closed branch freeze。T5.4.5 已建立 observed-stream real long recurrence、state bound、float32 与 reset 证据；T5.4.6 已建立四条 native randomized mismatch lanes 与 fail-closed relative student retention。百万-cycle physical channel/gain 与 T5.5/T6 hardware gates 仍关闭；真实 board timing 继续走 T6 evidence gate；secondary 若要升级，还需一手全文、协议原生测试和任务板明确批准。
 
 ## 8. 非 demo 审计结论
 
-T2.0.1 没有用占位类或 demo simulator 冒充协议实现；后续只升级直接验证过的 layers。fast MC 通过 1e6-cycle execution、200k analytic calibration、multi-round recovery ablation、cluster CI、known-mixture weighting 和 negative paths；finite squeezing 通过 component covariance、independent LER、ablation 与六点 ideal-limit；ancilla fault 通过 stage cases、schema negatives、persistence 和 2×80k production；control imperfection 通过 code-level quantizers、两种 noncommuting order、2×80k exact moments、bit/latency sweeps、Q4.20 integration 和 100k production；generic finite-Fock reference 通过四点 cutoff、grid/coordinate convergence、Kraus-vs-Lindblad、POVM backaction 与组合 PSD；analytic SBS one-round 又通过独立公式重构、raw/completed 双轨、六逻辑态、photon-error 回泵、100k branch MC 与五点 cutoff；noise-transfer surrogate 通过 independent cell quadrature、解析 propagation endpoint、40万单轴/20万二维 MC、四逻辑态 state/Fock alignment 和低 squeezing 证否；cross-fidelity 再以四个独立 lane、200k/点、六态 protocol metrics、五 cutoff、canonical q/p 与 legacy negative audit 验证；quadrature contract 另有 15 个 machine gates；differentiable trajectory 又以显式 joint gates、SciPy independent reconstruction、21 CPTP groups、四分支 tree、3000-shot sampling、causal history-policy、CPU/CUDA 和 37 direct tests 封住 open-loop/dummy-gradient 简化；Feedback-GRAPE gradient 则用四/十六分支 exact tree、reward/score 分项差分、四步长 sweep、baseline normalization identity、12,288 条 repeated Monte Carlo、CPU/CUDA parity 与 32 direct tests 排除漏 score path、误差相消和单 batch 假通过；resource envelope 再用 65 个隔离点、真实 72,913-parameter causal recurrent policy、reward/score backward、Adam update、CPU RSS、CUDA peak、2--10 cycle full matrix 和两类 frontier 排除单点/forward-only/未触边界假包络；directional ranking 又用 strict train/validation/test/confirmation split、5+5 全 agent、train-only baseline、schema-v3 source-bound checkpoint、512 test trajectories/agent、cutoff-16 confirmation、history-reset 反证保留和 31 项 focused tests 排除 validation leakage、best-agent post-selection、单 seed 与只报标量的 demo；fresh teacher 再用三个新 restart、960 个真实训练 epochs、parent state/seed non-reuse、validation-only selection、双 cutoff held-out、1,074-row Source Data、full-gradient/causality/reload tests 排除旧 checkpoint 换名、单 restart 和隐藏失败。cycle-slip detector、long-horizon/OOD memory robustness、teacher hidden-state/student gain retention、device-calibrated fault/control rates、multilevel leakage/SPAM、experimental raw data、online leakage control 和 board timing 继续 fail closed。
+T2.0.1 没有用占位类或 demo simulator 冒充协议实现；后续只升级直接验证过的 layers。fast MC 通过 1e6-cycle execution、200k analytic calibration、multi-round recovery ablation、cluster CI、known-mixture weighting 和 negative paths；finite squeezing 通过 component covariance、independent LER、ablation 与六点 ideal-limit；ancilla fault 通过 stage cases、schema negatives、persistence 和 2×80k production；control imperfection 通过 code-level quantizers、两种 noncommuting order、2×80k exact moments、bit/latency sweeps、Q4.20 integration 和 100k production；generic finite-Fock reference 通过四点 cutoff、grid/coordinate convergence、Kraus-vs-Lindblad、POVM backaction 与组合 PSD；analytic SBS one-round 又通过独立公式重构、raw/completed 双轨、六逻辑态、photon-error 回泵、100k branch MC 与五点 cutoff；noise-transfer surrogate 通过 independent cell quadrature、解析 propagation endpoint、40万单轴/20万二维 MC、四逻辑态 state/Fock alignment 和低 squeezing 证否；cross-fidelity 再以四个独立 lane、200k/点、六态 protocol metrics、五 cutoff、canonical q/p 与 legacy negative audit 验证；quadrature contract 另有 15 个 machine gates；differentiable trajectory 又以显式 joint gates、SciPy independent reconstruction、21 CPTP groups、四分支 tree、3000-shot sampling、causal history-policy、CPU/CUDA 和 37 direct tests 封住 open-loop/dummy-gradient 简化；Feedback-GRAPE gradient 则用四/十六分支 exact tree、reward/score 分项差分、四步长 sweep、baseline normalization identity、12,288 条 repeated Monte Carlo、CPU/CUDA parity 与 32 direct tests 排除漏 score path、误差相消和单 batch 假通过；resource envelope 再用 65 个隔离点、真实 72,913-parameter causal recurrent policy、reward/score backward、Adam update、CPU RSS、CUDA peak、2--10 cycle full matrix 和两类 frontier 排除单点/forward-only/未触边界假包络；directional ranking 又用 strict train/validation/test/confirmation split、5+5 全 agent、train-only baseline、schema-v3 source-bound checkpoint、512 test trajectories/agent、cutoff-16 confirmation、history-reset 反证保留和 31 项 focused tests 排除 validation leakage、best-agent post-selection、单 seed 与只报标量的 demo；fresh teacher 再用三个新 restart、960 个真实训练 epochs、parent state/seed non-reuse、validation-only selection、双 cutoff held-out、1,074-row Source Data、full-gradient/causality/reload tests 排除旧 checkpoint 换名、单 restart 和隐藏失败；long recurrence 再用四 training horizons、8 条两百万-step streams、双精度 shadow、解析 state bound、最坏流与 120 reset interventions 排除短 smoke、finite-only、短序列重复和均值掩盖；randomized mismatch 再以 64 个 parent-disjoint cells、四条 native lanes、完整 readout hidden-row audit、raw-score branch 重算和 10 类 mutation 排除单 bias vector、stored PASS 与跨 lane 拼榜。cycle-slip detector、长时 physical-channel gain、device-calibrated fault/control rates、multilevel leakage/SPAM、experimental raw data、online leakage control 和 board timing 继续 fail closed。

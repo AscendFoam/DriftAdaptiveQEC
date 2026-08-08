@@ -1,0 +1,72 @@
+{
+  "analysis_sha256": "ac29ccaf6a0a86175378c8d9789cb4361598e71e756f0a2238aa01ecb33f6420",
+  "claim_state": {
+    "external_sota": null,
+    "hardware_measured": null,
+    "ler": null,
+    "lifetime": null,
+    "official_puviani_exact": null,
+    "physical_break_even": null,
+    "puviani_nmf_surpass": null,
+    "scalar_uq_calibration_only": true,
+    "twin_qualification": null
+  },
+  "created_utc": 1785201796.1888478,
+  "design_outcomes_accessed": false,
+  "factor_grid": [
+    1.0,
+    1.1,
+    1.2,
+    1.3,
+    1.4,
+    1.5
+  ],
+  "input_bindings": {
+    "config": {
+      "bytes": 5819,
+      "path": "configs/phase9/t_risk_20260728_02_scalar_uq_calibration.json",
+      "sha256": "15cb9b3806f36dfc04d0cedd2c67e52f0d382cdf044bfa32a485fca45492cceb"
+    },
+    "implementation": {
+      "bytes": 52273,
+      "path": "cnn_fpga/benchmark/phase9_scalar_uq_three_split_calibration.py",
+      "sha256": "2962569e44c89a5c392f362ccb92876f8b3956663b581f907239016eea37edbf"
+    },
+    "paired_uq": {
+      "bytes": 8997,
+      "path": "cnn_fpga/benchmark/phase9_paired_cluster_uq.py",
+      "sha256": "cafff753844889692c9e89c50bbaff85868cc409aa870e1decbe79b681bfaa41"
+    }
+  },
+  "release_commit": "4e9336dc525d0d27549443cdeec4395129e59ef5",
+  "run_id": "250d6089-9dc0-4f7d-9257-3ba4338303a5",
+  "schema_version": "PHASE9-SCALAR-UQ-THREE-SPLIT-RUN-IDENTITY-V2",
+  "seed_addressing": {
+    "all_six_scientific_ranges_pairwise_disjoint": true,
+    "cell_count": 192,
+    "formula": "base + cell_index * trial_count_per_cell + trial_index",
+    "maximum_offset": 393215,
+    "scheme": "injective_cell_major_v2",
+    "trial_count_per_cell": 2048,
+    "v1_hash_modulo_addressing_forbidden": true
+  },
+  "splits": {
+    "confirmation": {
+      "multiplier_seed_base": 7000000,
+      "role": "untouched_confirmation",
+      "trial_seed_base": 6000000
+    },
+    "selection_a": {
+      "multiplier_seed_base": 3000000,
+      "role": "factor_selection",
+      "trial_seed_base": 2000000
+    },
+    "selection_b": {
+      "multiplier_seed_base": 5000000,
+      "role": "factor_selection",
+      "trial_seed_base": 4000000
+    }
+  },
+  "task_id": "T-RISK-20260728-02",
+  "trial_count_per_cell": 2048
+}

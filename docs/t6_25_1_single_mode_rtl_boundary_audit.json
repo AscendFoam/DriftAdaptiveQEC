@@ -1,0 +1,660 @@
+{
+  "task_id": "T6.25.1",
+  "schema_version": "t6.25.1-single-mode-rtl-boundary-audit-v1",
+  "generated_at_utc": "2026-07-20T22:01:52.892307+00:00",
+  "evidence_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+  "required_converged_capabilities": [
+    "single_mode_map_lut",
+    "six_cycle_ii1",
+    "event_action_fail_closed",
+    "complete_image_crc32",
+    "versioned_compare_and_swap",
+    "inactive_bank_write_isolation",
+    "cancel_drain_snapshot",
+    "regime_policy_overlay",
+    "lkg_bank_selection",
+    "no_raw_trust_or_cfg_bypass",
+    "actual_target_synthesis_surface"
+  ],
+  "module_audit": [
+    {
+      "module": "gkp_fast_path_production_top",
+      "path": "cnn_fpga/rtl/gkp_fast_path_production_top.sv",
+      "children": [
+        "gkp_fast_path_core"
+      ],
+      "role": "production management plus single-mode core",
+      "capabilities": [
+        "single_mode_map_lut",
+        "six_cycle_ii1",
+        "event_action_fail_closed",
+        "complete_image_crc32",
+        "versioned_compare_and_swap",
+        "inactive_bank_write_isolation",
+        "cancel_drain_snapshot",
+        "no_raw_trust_or_cfg_bypass"
+      ],
+      "source": {
+        "path": "cnn_fpga/rtl/gkp_fast_path_production_top.sv",
+        "sha256": "a81989f6e642210e3e582872a44f1fdf1d886b233d036120fdc9d8ebda7a7e8a",
+        "bytes": 23726
+      },
+      "module_declaration_count": 1,
+      "child_instantiation_hits": {
+        "gkp_fast_path_core": 1
+      },
+      "children_present": true,
+      "missing_converged_capabilities": [
+        "actual_target_synthesis_surface",
+        "lkg_bank_selection",
+        "regime_policy_overlay"
+      ],
+      "is_converged_production_top": false
+    },
+    {
+      "module": "gkp_fast_path_qualification_top",
+      "path": "cnn_fpga/rtl/gkp_fast_path_qualification_top.sv",
+      "children": [
+        "gkp_fast_path_core"
+      ],
+      "role": "long-run raw-pin core qualification wrapper",
+      "capabilities": [
+        "single_mode_map_lut",
+        "six_cycle_ii1",
+        "event_action_fail_closed"
+      ],
+      "source": {
+        "path": "cnn_fpga/rtl/gkp_fast_path_qualification_top.sv",
+        "sha256": "e0ee343fe0b787bd06df2a6229fc85e2b327a921d4de89d84e78f01813646818",
+        "bytes": 2139
+      },
+      "module_declaration_count": 1,
+      "child_instantiation_hits": {
+        "gkp_fast_path_core": 1
+      },
+      "children_present": true,
+      "missing_converged_capabilities": [
+        "actual_target_synthesis_surface",
+        "cancel_drain_snapshot",
+        "complete_image_crc32",
+        "inactive_bank_write_isolation",
+        "lkg_bank_selection",
+        "no_raw_trust_or_cfg_bypass",
+        "regime_policy_overlay",
+        "versioned_compare_and_swap"
+      ],
+      "is_converged_production_top": false
+    },
+    {
+      "module": "route_a_integrated_qualification_top",
+      "path": "cnn_fpga/rtl/route_a_integrated_qualification_top.sv",
+      "children": [
+        "gkp_fast_path_core",
+        "route_a_policy_overlay"
+      ],
+      "role": "single-mode policy plus raw-pin core qualification wrapper",
+      "capabilities": [
+        "single_mode_map_lut",
+        "six_cycle_ii1",
+        "event_action_fail_closed",
+        "regime_policy_overlay",
+        "lkg_bank_selection"
+      ],
+      "source": {
+        "path": "cnn_fpga/rtl/route_a_integrated_qualification_top.sv",
+        "sha256": "e977102d86f013d1fc25f940c8844789db7a2d1fbe162b8c75968df5f8325d70",
+        "bytes": 5144
+      },
+      "module_declaration_count": 1,
+      "child_instantiation_hits": {
+        "gkp_fast_path_core": 1,
+        "route_a_policy_overlay": 1
+      },
+      "children_present": true,
+      "missing_converged_capabilities": [
+        "actual_target_synthesis_surface",
+        "cancel_drain_snapshot",
+        "complete_image_crc32",
+        "inactive_bank_write_isolation",
+        "no_raw_trust_or_cfg_bypass",
+        "versioned_compare_and_swap"
+      ],
+      "is_converged_production_top": false
+    },
+    {
+      "module": "route_a_hardware_pareto_synth_top",
+      "path": "cnn_fpga/rtl/route_a_hardware_pareto_synth_top.sv",
+      "children": [
+        "route_a_integrated_qualification_top",
+        "low_dimensional_student_kernel"
+      ],
+      "role": "small-pin synthesis activity harness, no-student profile is primary",
+      "capabilities": [
+        "single_mode_map_lut",
+        "six_cycle_ii1",
+        "event_action_fail_closed",
+        "regime_policy_overlay",
+        "lkg_bank_selection",
+        "actual_target_synthesis_surface"
+      ],
+      "source": {
+        "path": "cnn_fpga/rtl/route_a_hardware_pareto_synth_top.sv",
+        "sha256": "cd46e8188fa52c52e4606f39019b4bbc198051e395dde13efb73760dff7d2847",
+        "bytes": 8525
+      },
+      "module_declaration_count": 1,
+      "child_instantiation_hits": {
+        "route_a_integrated_qualification_top": 1,
+        "low_dimensional_student_kernel": 1
+      },
+      "children_present": true,
+      "missing_converged_capabilities": [
+        "cancel_drain_snapshot",
+        "complete_image_crc32",
+        "inactive_bank_write_isolation",
+        "no_raw_trust_or_cfg_bypass",
+        "versioned_compare_and_swap"
+      ],
+      "is_converged_production_top": false
+    },
+    {
+      "module": "gkp_fast_path_synth_top",
+      "path": "cnn_fpga/rtl/gkp_fast_path_synth_top.sv",
+      "children": [
+        "gkp_fast_path_core"
+      ],
+      "role": "static single-mode core synthesis activity harness",
+      "capabilities": [
+        "single_mode_map_lut",
+        "six_cycle_ii1",
+        "event_action_fail_closed",
+        "actual_target_synthesis_surface"
+      ],
+      "source": {
+        "path": "cnn_fpga/rtl/gkp_fast_path_synth_top.sv",
+        "sha256": "c0fb58acc208406aba6fcb98dd6cc1dfaa02040e5e074b05cdfba8f92e545260",
+        "bytes": 5340
+      },
+      "module_declaration_count": 1,
+      "child_instantiation_hits": {
+        "gkp_fast_path_core": 1
+      },
+      "children_present": true,
+      "missing_converged_capabilities": [
+        "cancel_drain_snapshot",
+        "complete_image_crc32",
+        "inactive_bank_write_isolation",
+        "lkg_bank_selection",
+        "no_raw_trust_or_cfg_bypass",
+        "regime_policy_overlay",
+        "versioned_compare_and_swap"
+      ],
+      "is_converged_production_top": false
+    }
+  ],
+  "required_token_audit": [
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "required_tokens": [
+        "reg v0, v1, v2, v3, v4;",
+        "bank0_x_y0",
+        "bank1_z_y1",
+        "event_fault_mask",
+        "selected_commit"
+      ],
+      "missing_tokens": [],
+      "passed": true
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_production_top.sv",
+      "required_tokens": [
+        "crc32_word22",
+        "cfg_expected_active_version",
+        "commit_expected_active_version",
+        "RETIRED_BANK_DRAIN_CYCLES",
+        "management_snapshot_crc"
+      ],
+      "missing_tokens": [],
+      "passed": true
+    },
+    {
+      "path": "cnn_fpga/rtl/route_a_integrated_qualification_top.sv",
+      "required_tokens": [
+        "gkp_fast_path_core",
+        "route_a_policy_overlay",
+        "cfg_we",
+        "bank0_trusted",
+        "bank1_trusted"
+      ],
+      "missing_tokens": [],
+      "passed": true
+    },
+    {
+      "path": "cnn_fpga/rtl/route_a_hardware_pareto_synth_top.sv",
+      "required_tokens": [
+        "route_a_integrated_qualification_top",
+        "not a transport implementation or a board measurement"
+      ],
+      "missing_tokens": [],
+      "passed": true
+    }
+  ],
+  "transitive_rtl_scope": {
+    "module_names": [
+      "gkp_fast_path_core",
+      "gkp_fast_path_production_top",
+      "gkp_fast_path_qualification_top",
+      "gkp_fast_path_synth_top",
+      "low_dimensional_student_kernel",
+      "route_a_hardware_pareto_synth_top",
+      "route_a_integrated_qualification_top",
+      "route_a_policy_overlay"
+    ],
+    "all_children_accounted": true,
+    "forbidden_multimode_module_hits": [],
+    "forbidden_multimode_source_hits": [],
+    "contains_multimode_graph_or_exact_mld": false
+  },
+  "structural_findings": {
+    "production_instantiates_core": true,
+    "production_does_not_instantiate_policy": true,
+    "qualification_instantiates_core_not_production": true,
+    "integrated_instantiates_core_and_policy_not_production": true,
+    "integrated_exposes_raw_cfg_and_trust": true,
+    "pareto_wraps_integrated_not_production": true
+  },
+  "parent_evidence": {
+    "T6.2.1": {
+      "artifact": {
+        "path": "docs/t6_2_1_production_rtl_audit.json",
+        "sha256": "b8f7d0a1e694e32749c6c585b19a2e1ef962c080152fdb236221e33cf2b89602",
+        "bytes": 3813
+      },
+      "verdict": "PASS_PRODUCTION_RTL_SHELL_READY_FOR_T6_2_2_LONG_TRACE",
+      "expected_verdict": "PASS_PRODUCTION_RTL_SHELL_READY_FOR_T6_2_2_LONG_TRACE",
+      "verdict_matches": true,
+      "reported_gates_pass": true,
+      "direct_source_bindings": 0,
+      "direct_sources_live": null,
+      "source_binding_gap": "legacy report records source paths and generated model hash but not input source hashes"
+    },
+    "T6.2.2": {
+      "artifact": {
+        "path": "docs/t6_2_2_long_rtl_qualification.json",
+        "sha256": "207b4e82b65a286e5ee23f16f387730a783ea34101d8cf7b9f80ae6e39d2b2cd",
+        "bytes": 28673
+      },
+      "verdict": "PASS_BOARD_INDEPENDENT_LONG_RTL_QUALIFICATION_READY_FOR_ROUTE_A",
+      "expected_verdict": "PASS_BOARD_INDEPENDENT_LONG_RTL_QUALIFICATION_READY_FOR_ROUTE_A",
+      "verdict_matches": true,
+      "reported_gates_pass": true,
+      "direct_source_bindings": 0,
+      "direct_sources_live": null,
+      "trace_live": true,
+      "source_binding_gap": "legacy report binds generated CXXRTL model/trace but not the input source files"
+    },
+    "T6.7.3": {
+      "artifact": {
+        "path": "docs/t6_7_3_route_a_integrated_rtl_qualification.json",
+        "sha256": "76a00242af2a61900c1151eb77c64aec070b59fb7525fdb1bded73d6eb6c508c",
+        "bytes": 47777
+      },
+      "verdict": "PASS_ROUTE_A_INTEGRATED_LONG_RTL_QUALIFICATION",
+      "expected_verdict": "PASS_ROUTE_A_INTEGRATED_LONG_RTL_QUALIFICATION",
+      "verdict_matches": true,
+      "reported_gates_pass": true,
+      "direct_source_bindings": 9,
+      "direct_sources_live": true,
+      "stale_sources": [],
+      "parent_anchor_live": true
+    },
+    "T6.9.1": {
+      "artifact": {
+        "path": "docs/t6_9_1_route_a_hardware_pareto.json",
+        "sha256": "fa0182f238976531dfb01c5fbd18fe3ee31c418ab006b1fcbf68d76c549b0887",
+        "bytes": 62338
+      },
+      "verdict": "PASS_ROUTE_A_INTEGRATED_THREE_SEED_PR_ESTIMATE_NOT_BOARD_MEASURED",
+      "expected_verdict": "PASS_ROUTE_A_INTEGRATED_THREE_SEED_PR_ESTIMATE_NOT_BOARD_MEASURED",
+      "verdict_matches": true,
+      "reported_gates_pass": true,
+      "direct_source_bindings": 12,
+      "direct_sources_live": true,
+      "stale_sources": []
+    },
+    "T6.19.1": {
+      "artifact": {
+        "path": "docs/t6_19_1_project_preboard_profiles.json",
+        "sha256": "cbab97d1057bf67249b2e8f97efc04433f4d3240b0407ae4a352e5845c21c07b",
+        "bytes": 24285
+      },
+      "verdict": "PASS_STATIC_MAP_LUT_PREBOARD_PROFILE_OTHERS_NA_HOST_STAGES_SEPARATE",
+      "expected_verdict": "PASS_STATIC_MAP_LUT_PREBOARD_PROFILE_OTHERS_NA_HOST_STAGES_SEPARATE",
+      "verdict_matches": true,
+      "reported_gates_pass": true,
+      "direct_source_bindings": 13,
+      "direct_sources_live": true,
+      "stale_sources": []
+    },
+    "T6.20.2": {
+      "artifact": {
+        "path": "docs/t6_20_2_dual_evidence_lane_contract.json",
+        "sha256": "33433227b6c6ec32c25d530f33502f17fbdf307dbb04a5960fe5117e5984dad6",
+        "bytes": 23824
+      },
+      "verdict": "PASS_DUAL_LANE_CONTRACT_FROZEN",
+      "expected_verdict": "PASS_DUAL_LANE_CONTRACT_FROZEN",
+      "verdict_matches": true,
+      "reported_gates_pass": true,
+      "direct_source_bindings": 10,
+      "direct_sources_live": true,
+      "stale_sources": []
+    }
+  },
+  "reuse_decisions": [
+    {
+      "task_id": "T6.2.1",
+      "decision": "REFERENCE_ONLY_NOT_REUSABLE_FOR_CONVERGED_TOP",
+      "reason": "production management was exercised for 1,681 cycles without a policy overlay and the legacy report lacks direct source hashes",
+      "required_action": "T6.25.2 must prove the converged top"
+    },
+    {
+      "task_id": "T6.2.2",
+      "decision": "CORE_LONG_RUN_REGRESSION_ONLY",
+      "reason": "the million-cycle wrapper drives raw cfg/trust/commit pins and does not instantiate gkp_fast_path_production_top",
+      "required_action": "T6.25.3 must rerun one million or more cycles on the converged top"
+    },
+    {
+      "task_id": "T6.7.3",
+      "decision": "POLICY_CORE_LONG_RUN_REGRESSION_ONLY",
+      "reason": "the live policy+core top bypasses production CRC staging and trust ownership",
+      "required_action": "retain as regression; do not transfer its PASS to atomic production management"
+    },
+    {
+      "task_id": "T6.9.1",
+      "decision": "OLD_HARNESS_PR_REFERENCE_ONLY",
+      "reason": "three-seed P&R is live for route_a_hardware_pareto_synth_top, which wraps the raw-pin qualification top",
+      "required_action": "T6.25.4 must rerun three seeds on the converged top"
+    },
+    {
+      "task_id": "T6.19.1",
+      "decision": "STATIC_CORE_PROFILE_REFERENCE_ONLY",
+      "reason": "the only eligible hardware row profiles gkp_fast_path_synth_top, not production management plus policy",
+      "required_action": "preserve as scoped baseline; never label it the converged Route-A top"
+    }
+  ],
+  "allowed_contract_bridges": [
+    {
+      "bridge_id": "BRIDGE-CANDIDATE-IMAGE",
+      "payload": "single-mode X/Z MAP image: 514 ordered 22-bit words plus schema/CRC32/version",
+      "deployment_implication": "contract reuse only; a multimode decoder needs a separately proven schema adapter"
+    },
+    {
+      "bridge_id": "BRIDGE-ATOMIC-ACTIVE-VIEW",
+      "payload": "latched active bank and version with old-or-new transaction semantics",
+      "deployment_implication": "single-mode RTL only"
+    },
+    {
+      "bridge_id": "BRIDGE-REGIME-COMMAND",
+      "payload": "quantized four-state regime posterior, event flags, boundary and LKG selector",
+      "deployment_implication": "single-mode policy command; not multimode posterior integration"
+    },
+    {
+      "bridge_id": "BRIDGE-EVENT-ACTION",
+      "payload": "action/reason/version/state words",
+      "deployment_implication": "single-mode event/action contract only"
+    }
+  ],
+  "forbidden_rtl_implementations": [
+    "multimode syndrome graph",
+    "surface-square logical-coset summation",
+    "posterior-predictive integration",
+    "MWPM or K-MWM matching",
+    "multimode learned decoder"
+  ],
+  "convergence_gap": {
+    "present": true,
+    "missing_top": "single top combining production CRC/staging/CAS/drain ownership with Route-A policy/LKG and a target synthesis surface",
+    "next_task": "T6.25.2",
+    "required_sequence": [
+      "construct one converged synthesizable production top",
+      "prove atomic/fail-closed properties with reachable covers and mutation kills",
+      "rerun >=1e6-cycle independent-golden/CXXRTL on that exact top",
+      "rerun three-seed synthesis/P&R on that exact top"
+    ]
+  },
+  "claim_boundary": {
+    "board_measurement": null,
+    "fastest_or_speed_advantage": false,
+    "multimode_decoder_deployed_in_rtl": false,
+    "allowed_now": "audited separation and live legacy evidence only",
+    "required_next": "one converged production top must be qualified by property/cover/mutation, million-cycle CXXRTL and fresh three-seed P&R"
+  },
+  "bindings": [
+    {
+      "path": "configs/phase6d/t6_25_1_single_mode_rtl_boundary.json",
+      "sha256": "7d7ec3bf93729d4fa4692e2b0be84638f92aad4b1daf9721e1f6d9e82a1cecad",
+      "bytes": 5526
+    },
+    {
+      "path": "cnn_fpga/benchmark/single_mode_rtl_boundary_audit.py",
+      "sha256": "6483cee26b8cbfbb97e615b43f1e965e85e81f35bc4b88ed5c0722d281670d6f",
+      "bytes": 29158
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_production_top.sv",
+      "sha256": "a81989f6e642210e3e582872a44f1fdf1d886b233d036120fdc9d8ebda7a7e8a",
+      "bytes": 23726
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_qualification_top.sv",
+      "sha256": "e0ee343fe0b787bd06df2a6229fc85e2b327a921d4de89d84e78f01813646818",
+      "bytes": 2139
+    },
+    {
+      "path": "cnn_fpga/rtl/route_a_integrated_qualification_top.sv",
+      "sha256": "e977102d86f013d1fc25f940c8844789db7a2d1fbe162b8c75968df5f8325d70",
+      "bytes": 5144
+    },
+    {
+      "path": "cnn_fpga/rtl/route_a_hardware_pareto_synth_top.sv",
+      "sha256": "cd46e8188fa52c52e4606f39019b4bbc198051e395dde13efb73760dff7d2847",
+      "bytes": 8525
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_synth_top.sv",
+      "sha256": "c0fb58acc208406aba6fcb98dd6cc1dfaa02040e5e074b05cdfba8f92e545260",
+      "bytes": 5340
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "sha256": "7caad1ad0fd243f5e62c9ce079fd6def9c6d964bb8fe44e870e96b14a6239784",
+      "bytes": 25822
+    },
+    {
+      "path": "cnn_fpga/rtl/route_a_policy_overlay.sv",
+      "sha256": "741df9dcf1d9afcab2730b10ee17def016e3a1c7655c5c28249cb60933c2a369",
+      "bytes": 14392
+    },
+    {
+      "path": "docs/t6_2_1_production_rtl_audit.json",
+      "sha256": "b8f7d0a1e694e32749c6c585b19a2e1ef962c080152fdb236221e33cf2b89602",
+      "bytes": 3813
+    },
+    {
+      "path": "docs/t6_2_2_long_rtl_qualification.json",
+      "sha256": "207b4e82b65a286e5ee23f16f387730a783ea34101d8cf7b9f80ae6e39d2b2cd",
+      "bytes": 28673
+    },
+    {
+      "path": "docs/t6_7_3_route_a_integrated_rtl_qualification.json",
+      "sha256": "76a00242af2a61900c1151eb77c64aec070b59fb7525fdb1bded73d6eb6c508c",
+      "bytes": 47777
+    },
+    {
+      "path": "docs/t6_9_1_route_a_hardware_pareto.json",
+      "sha256": "fa0182f238976531dfb01c5fbd18fe3ee31c418ab006b1fcbf68d76c549b0887",
+      "bytes": 62338
+    },
+    {
+      "path": "docs/t6_19_1_project_preboard_profiles.json",
+      "sha256": "cbab97d1057bf67249b2e8f97efc04433f4d3240b0407ae4a352e5845c21c07b",
+      "bytes": 24285
+    },
+    {
+      "path": "docs/t6_20_2_dual_evidence_lane_contract.json",
+      "sha256": "33433227b6c6ec32c25d530f33502f17fbdf307dbb04a5960fe5117e5984dad6",
+      "bytes": 23824
+    }
+  ],
+  "verdict": "PASS_BOUNDARY_FROZEN_CONVERGED_PRODUCTION_TOP_REQUIRED",
+  "semantic_mutation_audit": [
+    {
+      "mutation": "promote_existing_top",
+      "caught": true
+    },
+    {
+      "mutation": "forge_capability_gap",
+      "caught": true
+    },
+    {
+      "mutation": "erase_gap",
+      "caught": true
+    },
+    {
+      "mutation": "reroute_gap",
+      "caught": true
+    },
+    {
+      "mutation": "inject_multimode",
+      "caught": true
+    },
+    {
+      "mutation": "unknown_child",
+      "caught": true
+    },
+    {
+      "mutation": "hide_multimode_source",
+      "caught": true
+    },
+    {
+      "mutation": "drop_module",
+      "caught": true
+    },
+    {
+      "mutation": "duplicate_declaration",
+      "caught": true
+    },
+    {
+      "mutation": "remove_child",
+      "caught": true
+    },
+    {
+      "mutation": "token_failure",
+      "caught": true
+    },
+    {
+      "mutation": "merge_tops_without_rerun",
+      "caught": true
+    },
+    {
+      "mutation": "stale_parent",
+      "caught": true
+    },
+    {
+      "mutation": "fabricate_legacy_binding",
+      "caught": true
+    },
+    {
+      "mutation": "erase_trace",
+      "caught": true
+    },
+    {
+      "mutation": "promote_old_long_run",
+      "caught": true
+    },
+    {
+      "mutation": "promote_old_pr",
+      "caught": true
+    },
+    {
+      "mutation": "fabricate_board",
+      "caught": true
+    },
+    {
+      "mutation": "claim_fastest",
+      "caught": true
+    },
+    {
+      "mutation": "claim_multimode_deployed",
+      "caught": true
+    }
+  ],
+  "gates": [
+    {
+      "gate": "all_parent_verdicts_and_reported_gates_live",
+      "passed": true
+    },
+    {
+      "gate": "t6_7_3_direct_sources_live",
+      "passed": true
+    },
+    {
+      "gate": "t6_9_1_direct_sources_live",
+      "passed": true
+    },
+    {
+      "gate": "t6_19_1_and_t6_20_2_direct_sources_live",
+      "passed": true
+    },
+    {
+      "gate": "legacy_unbound_sources_not_fabricated",
+      "passed": true
+    },
+    {
+      "gate": "t6_2_2_raw_trace_live",
+      "passed": true
+    },
+    {
+      "gate": "module_graph_and_tokens_match",
+      "passed": true
+    },
+    {
+      "gate": "production_policy_top_separation_detected",
+      "passed": true
+    },
+    {
+      "gate": "multimode_implementation_absent",
+      "passed": true
+    },
+    {
+      "gate": "converged_top_gap_detected",
+      "passed": true
+    },
+    {
+      "gate": "old_top_evidence_not_promoted",
+      "passed": true
+    },
+    {
+      "gate": "four_contract_bridges_only",
+      "passed": true
+    },
+    {
+      "gate": "board_and_fastest_claims_closed",
+      "passed": true
+    },
+    {
+      "gate": "all_live_bindings_match",
+      "passed": true
+    },
+    {
+      "gate": "semantic_mutations_caught",
+      "passed": true
+    }
+  ],
+  "gate_summary": {
+    "passed": 15,
+    "total": 15
+  },
+  "analysis_sha256": "6b564d89b36f5e770ebf27c458fb2ddba40d097b35f0deefe54d542ecd5962e9"
+}

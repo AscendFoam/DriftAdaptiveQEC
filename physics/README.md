@@ -199,3 +199,9 @@ corrector.update_decoder(opt_params.K, opt_params.b)
 
 - **必需**: NumPy, SciPy
 - **可选**: Strawberry Fields（精确量子态模拟，不可用时自动退化为解析近似）
+## Phase 9 因果数字孪生接口合同
+
+- [`phase9_twin_contract.py`](phase9_twin_contract.py) 实现 T9.2.1 的 pre-backend 有限接口：五个 namespace、observed+memory 唯一 deployable path、24-bit composite K、总 nominal/transition recurrence、80-bit semantic+CRC action、previous-K receipt 重算、fail-closed fault canonicalization、完整 trusted-package nomination validator 与16个 conservative interface probes。
+- [`phase9_backend_a.py`](phase9_backend_a.py) 实现 T9.2.2 的 backend A：有限 Fock oscillator × `g/e/f` qutrit joint density、time-dependent action/Ramsey Hamiltonian、GKSL channels、连续 IQ Kraus backaction、条件 reset instrument、`f` persistence、action-conditioned 五维 drift 与 evaluator-only 六态 logical projection。资格检查含完整小系统 Choi CP/TP、joint-state physicality、ideal/reset limits、真实 oscillator syndrome backaction、共同随机数 intervention、seed replay 与 step/cutoff convergence。
+- [`phase9_backend_b.py`](phase9_backend_b.py) 实现 T9.2.3 的独立 backend B：dense midpoint Strang unitary、解析 pure-loss/qutrit amplitude/dephasing channels、BLAKE2b+Python Random+手写 Box–Muller、独立 IQ Gaussian likelihood/Kraus backaction、reset/f persistence、action-conditioned leakage/drift 与独立 squeezed-comb 六态 evaluator。静态 AST/token 隔离、闭式 loss/relaxation、Choi/full physicality、non-TP mutation、seed 与 split/cutoff convergence 均纳入资格门。
+- T9.2.2/T9.2.3 PASS 分别只资格化 synthetic dimensionless backend A/B 的实现。IQ 仍是 analog pre-frontend，双后端 distributional agreement、LER/lifetime、physical break-even、codebook、硬件与 SOTA/rank 均未资格化。

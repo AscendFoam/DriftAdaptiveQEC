@@ -1,0 +1,657 @@
+{
+  "schema_version": "t9.1.3-post-outcome-governance-addendum-v2",
+  "task_id": "T9.1.3",
+  "status": "POST_OUTCOME_GOVERNANCE_ADDENDUM_NO_RETROACTIVE_RESEAL",
+  "terminal_branch": "QUALIFIED",
+  "generated_from_parent_at_utc": "2026-07-24T02:39:43.000252+00:00",
+  "input_contract": {
+    "path": "configs/phase9/t9_1_4_input_contract.json",
+    "bytes": 8444,
+    "sha256": "508372f69fc2e53d53e32bd7e2232f0e375a3aee3454d678318b569edf4bd496"
+  },
+  "implementation": {
+    "path": "cnn_fpga/benchmark/t9_1_3_post_outcome_governance_addendum.py",
+    "bytes": 77804,
+    "sha256": "c33cf51d69d7d2155a5d215fd71363ca5e15a82df1ea98aa0adaad6e36255954"
+  },
+  "parent_bindings": {
+    "parent_report": {
+      "path": "docs/t9_1_3_puviani_paper_constrained.json",
+      "bytes": 187866,
+      "sha256": "f3e458765ed684d69be3011e532a4334de872d2b39d1f07da7c5aaec61816ffd"
+    },
+    "production_config": {
+      "path": "configs/phase9/t9_1_3_puviani_paper_constrained.json",
+      "bytes": 15145,
+      "sha256": "a93edf5cfbdfe22490a1d7cff967f61b0b0add38662eeaf546390dae32c3cbf9",
+      "canonical_sha256": "2b708da81a16741b208e47ff3c55da646f7876ee4c743962b18945e66c5e76f0"
+    },
+    "deviation_ledger": {
+      "path": "configs/phase9/t9_1_3_deviation_ledger.json",
+      "bytes": 48578,
+      "sha256": "69a75c07452b9dea3e445cf683394663e165a72db47986276cc65dd44078e8e0",
+      "rows": 42
+    },
+    "training_ledger": {
+      "path": "docs/t9_1_3_puviani_training_ledger.parquet",
+      "bytes": 12511484,
+      "sha256": "cdf4d72816a54f4a32e59cbbbe704532a39462cdbbd6917025a6ec8101b3e10a",
+      "rows": 40000
+    },
+    "selection_ledger": {
+      "path": "docs/t9_1_3_puviani_selection_ledger.csv",
+      "bytes": 224569,
+      "sha256": "f346a188613ffc47a1708382a75c163f08e51ceeb503400a0b7d448058ab5171",
+      "rows": 1040
+    },
+    "agent_registry": {
+      "path": "docs/t9_1_3_puviani_agent_registry.csv",
+      "bytes": 57263,
+      "sha256": "5290d62c462ed71ae003f3f75a80da9dddd9951c7ed1b0dd587ace96a4a6c3cc",
+      "rows": 40
+    },
+    "six_state_trajectories": {
+      "path": "docs/t9_1_3_puviani_six_state_trajectories.parquet",
+      "bytes": 136081,
+      "sha256": "227ba0efbafea6d7abb9a2de3048472a8f907ee28440c5ec4ec84c85a7072a6b",
+      "rows": 1008
+    },
+    "six_state_events": {
+      "path": "docs/t9_1_3_puviani_six_state_events.parquet",
+      "bytes": 874687,
+      "sha256": "d5478dab1b938f3953ed8929de4d36adc199b99c152968e14df627bdf41622ca",
+      "rows": 20160
+    }
+  },
+  "parent_snapshot": {
+    "schema_version": "t9.1.3-puviani-paper-constrained-artifacts-v1",
+    "status": "PASS_ARTIFACT_LANE_AND_EXECUTABLE_REIMPLEMENTATION",
+    "evidence_grade": "PAPER_CONSTRAINED_REIMPLEMENTATION",
+    "analysis_sha256": "35d52c4add5aae124da4127223fb14d08c59a375baaf8bf26146a60f7fc3a152",
+    "production_contract": true,
+    "config_sha256": "2b708da81a16741b208e47ff3c55da646f7876ee4c743962b18945e66c5e76f0",
+    "deviation_ledger_sha256": "69a75c07452b9dea3e445cf683394663e165a72db47986276cc65dd44078e8e0",
+    "required_gate_count": 52,
+    "published_gate_count": 52,
+    "all_published_gates_pass": true,
+    "required_mutation_count": 81,
+    "detected_mutation_count": 81,
+    "all_parent_mutations_detected": true,
+    "official_exact": null,
+    "puviani_surpass": null,
+    "paper_scale_lifetime": null,
+    "paper_scale_result_state": "INCOMPLETE_NULL",
+    "paper_scale_result_value": null,
+    "matches_frozen_parent_semantic_seal": true
+  },
+  "failure_manifest": null,
+  "governance_policy": {
+    "mode": "POST_OUTCOME_GOVERNANCE_ADDENDUM_NO_RETROACTIVE_RESEAL",
+    "parent_report_reseal": false,
+    "parent_deviation_ledger_edit": false,
+    "parent_artifact_tree_edit": false,
+    "addendum_only_ids": [
+      "D43",
+      "D44",
+      "D45",
+      "D46"
+    ],
+    "effect_on_parent_analysis_sha256": "NONE",
+    "effect_on_parent_verdict": "NONE"
+  },
+  "gradient_clipping_reanalysis": {
+    "source_path": "docs/t9_1_3_puviani_training_ledger.parquet",
+    "column": "gradient_norm_before_clip",
+    "clip_rule": "torch.nn.utils.clip_grad_norm_; scale coefficient is max_norm/(total_norm+1e-6), clamped above at 1.0",
+    "pytorch_clip_epsilon": 1e-06,
+    "max_norm": 10.0,
+    "row_census": {
+      "total_rows": 40000,
+      "agent_count": 40,
+      "agents_per_family": {
+        "mf": 20,
+        "nmf": 20
+      },
+      "epochs_per_agent": 1000,
+      "all_agent_epoch_sets_exact": true
+    },
+    "scopes": {
+      "all": {
+        "rows": 40000,
+        "nonfinite_rows": 0,
+        "nonpositive_rows": 0,
+        "rows_strictly_gt_max_norm": 0,
+        "rows_scaled_by_pytorch_clip_rule": 0,
+        "scaled_fraction": 0.0,
+        "minimum_unclamped_scale_coefficient": 1.4863740451959409,
+        "minimum": 0.40790079910396815,
+        "maximum": 6.72778063230222,
+        "mean": 1.8519511703104548,
+        "p50_linear": 1.7543094099084993,
+        "p95_linear": 3.059010276892404,
+        "p99_linear": 3.8834577768728757
+      },
+      "mf": {
+        "rows": 20000,
+        "nonfinite_rows": 0,
+        "nonpositive_rows": 0,
+        "rows_strictly_gt_max_norm": 0,
+        "rows_scaled_by_pytorch_clip_rule": 0,
+        "scaled_fraction": 0.0,
+        "minimum_unclamped_scale_coefficient": 1.9229520892561742,
+        "minimum": 0.40790079910396815,
+        "maximum": 5.200336572564351,
+        "mean": 1.7312823702008162,
+        "p50_linear": 1.651620242691266,
+        "p95_linear": 2.7752964393520245,
+        "p99_linear": 3.4012840823955224
+      },
+      "nmf": {
+        "rows": 20000,
+        "nonfinite_rows": 0,
+        "nonpositive_rows": 0,
+        "rows_strictly_gt_max_norm": 0,
+        "rows_scaled_by_pytorch_clip_rule": 0,
+        "scaled_fraction": 0.0,
+        "minimum_unclamped_scale_coefficient": 1.4863740451959409,
+        "minimum": 0.43767890047212066,
+        "maximum": 6.72778063230222,
+        "mean": 1.972619970420094,
+        "p50_linear": 1.8686673079033993,
+        "p95_linear": 3.2904251488005367,
+        "p99_linear": 4.1399141889429165
+      }
+    },
+    "observed_run_conclusion": "The max_norm=10 rule was present but inactive on all 40,000 recorded updates; this does not establish counterfactual equivalence on other seeds or configurations."
+  },
+  "addendum_deviations": [
+    {
+      "id": "D43",
+      "topic": "gradient clipping max_norm=10",
+      "discovery_stage": "POST_OUTCOME_ANTI_SIMPLIFICATION_AUDIT",
+      "locator": {
+        "paper": "Supplement S3C specifies gradient optimization but no clipping rule",
+        "official": "feedback_GRAPE.py contains no frozen max-norm clipping contract",
+        "project": "training.gradient_clip_norm and docs/t9_1_3_puviani_training_ledger.parquet:gradient_norm_before_clip"
+      },
+      "value": {
+        "paper": null,
+        "official": "no qualified clipping threshold",
+        "project": {
+          "max_norm": 10.0,
+          "total_updates": 40000,
+          "scaled_updates_under_pytorch_rule": 0,
+          "updates_strictly_above_max_norm": 0,
+          "maximum_gradient_norm_before_clip": 6.72778063230222,
+          "family_breakdown": {
+            "mf": {
+              "rows": 20000,
+              "scaled_updates_under_pytorch_rule": 0,
+              "maximum": 5.200336572564351
+            },
+            "nmf": {
+              "rows": 20000,
+              "scaled_updates_under_pytorch_rule": 0,
+              "maximum": 6.72778063230222
+            }
+          }
+        }
+      },
+      "chosen": "Retain the frozen safety rule and disclose its empirical inactivity; do not infer equivalence outside this sealed run.",
+      "rationale": "No recorded update was altered by clipping, but the algorithm contains a counterfactual branch absent from the paper contract.",
+      "severity": "High",
+      "comparability": "TRAINING_STABILIZATION_RULE_DIFFERENT_EMPIRICALLY_INACTIVE_ON_THIS_RUN",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "The run remains paper-constrained; clipping inactivity cannot upgrade it to official exact or support a Puviani-surpass claim."
+    },
+    {
+      "id": "D44",
+      "topic": "persistent PyTorch Adam versus per-epoch TensorFlow Adam",
+      "discovery_stage": "POST_OUTCOME_ANTI_SIMPLIFICATION_AUDIT",
+      "locator": {
+        "paper": "Supplement S3B-S3C describes TensorFlow GPU optimization but does not freeze the complete Adam state/default contract",
+        "official": "feedback_GRAPE.py:196-212 constructs TensorFlow Adam inside every epoch",
+        "project": "puviani_paper_constrained_artifacts.py:_train_paper_agent constructs torch.optim.Adam once per agent"
+      },
+      "value": {
+        "paper": "learning rate 1e-4; optimizer-state lifetime and complete framework defaults unspecified",
+        "official": "unversioned TensorFlow Adam defaults with state recreated per epoch",
+        "project": "persistent PyTorch Adam state for 1000 epochs using the sealed runtime's framework defaults"
+      },
+      "chosen": "Keep persistent PyTorch Adam for restartable project training, while separating both framework-default and state-lifetime semantics from the paper/official path.",
+      "rationale": "Even when learning rate and nominal beta values agree, framework epsilon/kernel details and moment lifetime can change the optimization trajectory.",
+      "severity": "High",
+      "comparability": "FRAMEWORK_DEFAULTS_AND_OPTIMIZER_STATE_LIFETIME_DIFFER",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Optimizer convergence and selected-agent quality are project results, not paper-exact numerical reproduction."
+    },
+    {
+      "id": "D45",
+      "topic": "validation cadence, budget, and selection endpoint",
+      "discovery_stage": "POST_OUTCOME_ANTI_SIMPLIFICATION_AUDIT",
+      "locator": {
+        "paper": "Supplement S3C selects the best-performing agent by longer lifetime",
+        "official": "no disjoint six-state validation evaluator or frozen candidate budget is published",
+        "project": "training.validation_interval, validation_seeds, validation_batch_size, and validation-only selection ledger"
+      },
+      "value": {
+        "paper": "best-agent selection by long-lifetime performance",
+        "official": null,
+        "project": {
+          "validation_interval_epochs": 40,
+          "candidate_count_per_agent_including_epoch_zero": 26,
+          "validation_trajectories_per_candidate": 64,
+          "selection_metric": "mean_validation_final_state_fidelity",
+          "selection_horizon_cycles": 10,
+          "selection_ledger_rows": 1040
+        }
+      },
+      "chosen": "Use disjoint validation-only short-horizon checkpoint and agent selection, retain all candidates, and prohibit lifetime/test selection.",
+      "rationale": "This controls leakage but changes the selected estimand and selection budget relative to the paper's long-lifetime rule.",
+      "severity": "Critical",
+      "comparability": "SELECTION_ENDPOINT_AND_BUDGET_MATERIALLY_DIFFER",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "The selected controllers cannot validate or refute the paper's best-agent lifetime and cannot establish Puviani surpass."
+    },
+    {
+      "id": "D46",
+      "topic": "train-only score-baseline warmup and EMA decay",
+      "discovery_stage": "POST_OUTCOME_ANTI_SIMPLIFICATION_AUDIT",
+      "locator": {
+        "paper": "Eq. 1 and Supplement S3C do not specify a warmup rollout or moving score baseline",
+        "official": "feedback_GRAPE.py uses the raw score term without a frozen train-only EMA baseline",
+        "project": "puviani_paper_constrained_artifacts.py:_train_paper_agent warmup_seed and score_baseline update"
+      },
+      "value": {
+        "paper": null,
+        "official": "no qualified warmup/EMA contract",
+        "project": {
+          "warmup_seed_domain": "training_trajectory_seed(root_seed, epoch=0)",
+          "warmup_trajectories_per_mf_agent": 8,
+          "warmup_trajectories_per_nmf_agent": 6,
+          "warmup_trajectories_population_total": 280,
+          "score_baseline_decay": 0.95,
+          "validation_or_qualification_data_used": false
+        }
+      },
+      "chosen": "Retain the train-only warmup and EMA variance-reduction rule, publish its seed/budget, and forbid treating it as paper-exact.",
+      "rationale": "The rule is causally train-only and leakage-safe, but it changes the score-function gradient estimator and its early trajectory.",
+      "severity": "High",
+      "comparability": "SCORE_GRADIENT_ESTIMATOR_AND_WARMUP_DIFFER",
+      "paper_numeric_anchor_eligible": false,
+      "claim_effect": "Training stability is attributable to a disclosed project heuristic; official-exact and paper-lifetime claims stay null."
+    }
+  ],
+  "deviation_summary": {
+    "parent_entry_count": 42,
+    "parent_severity_counts": {
+      "Critical": 23,
+      "High": 16,
+      "Medium": 3,
+      "Low": 0
+    },
+    "addendum_entry_count": 4,
+    "addendum_severity_counts": {
+      "Critical": 1,
+      "High": 3,
+      "Medium": 0,
+      "Low": 0
+    },
+    "combined_entry_count": 46,
+    "combined_severity_counts": {
+      "Critical": 24,
+      "High": 19,
+      "Medium": 3,
+      "Low": 0
+    },
+    "combined_ids": [
+      "D01",
+      "D02",
+      "D03",
+      "D04",
+      "D05",
+      "D06",
+      "D07",
+      "D08",
+      "D09",
+      "D10",
+      "D11",
+      "D12",
+      "D13",
+      "D14",
+      "D15",
+      "D16",
+      "D17",
+      "D18",
+      "D19",
+      "D20",
+      "D21",
+      "D22",
+      "D23",
+      "D24",
+      "D25",
+      "D26",
+      "D27",
+      "D28",
+      "D29",
+      "D30",
+      "D31",
+      "D32",
+      "D33",
+      "D34",
+      "D35",
+      "D36",
+      "D37",
+      "D38",
+      "D39",
+      "D40",
+      "D41",
+      "D42",
+      "D43",
+      "D44",
+      "D45",
+      "D46"
+    ],
+    "source_of_truth": "original D01-D42 plus this non-retroactive D43-D46 addendum"
+  },
+  "terminal_state_mapping": [
+    {
+      "match": "PASS_ARTIFACT_LANE_AND_EXECUTABLE_REIMPLEMENTATION",
+      "terminal_state": "QUALIFIED_PAPER_CONSTRAINED_BASELINE",
+      "releases_t9_1_4": true,
+      "registry_entry_eligible": true,
+      "matched_phase9_ranking_eligible": false,
+      "typed_payload": {
+        "parent_report_sha256": "f3e458765ed684d69be3011e532a4334de872d2b39d1f07da7c5aaec61816ffd",
+        "evidence_grade": "PAPER_CONSTRAINED_REIMPLEMENTATION",
+        "numeric_scope": "SHORT_HORIZON_QUALIFICATION_NONPROMOTIONAL",
+        "official_exact": null,
+        "puviani_surpass": null,
+        "paper_scale_lifetime": null
+      }
+    },
+    {
+      "match": "TERMINAL_NONPASS_WITH_VALID_FAILURE_MANIFEST",
+      "supported_terminal_states": [
+        "FAILED_FAIL_CLOSED"
+      ],
+      "terminal_state": "NO_GO_PAPER_CONSTRAINED_REIMPLEMENTATION",
+      "releases_t9_1_4": true,
+      "registry_entry_eligible": true,
+      "matched_phase9_ranking_eligible": false,
+      "typed_payload": {
+        "parent_report_sha256": null,
+        "evidence_grade": "PAPER_CONSTRAINED_REIMPLEMENTATION",
+        "numeric_scope": null,
+        "selected_controller": null,
+        "numeric_metrics": null,
+        "rank": null,
+        "official_exact": null,
+        "puviani_surpass": null,
+        "paper_scale_lifetime": null
+      }
+    }
+  ],
+  "current_terminal_resolution": {
+    "parent_status": "PASS_ARTIFACT_LANE_AND_EXECUTABLE_REIMPLEMENTATION",
+    "resolved_terminal_state": "QUALIFIED_PAPER_CONSTRAINED_BASELINE",
+    "releases_t9_1_4": true,
+    "registry_entry_eligible": true,
+    "matched_phase9_ranking_eligible": false,
+    "typed_payload": {
+      "parent_report_sha256": "f3e458765ed684d69be3011e532a4334de872d2b39d1f07da7c5aaec61816ffd",
+      "evidence_grade": "PAPER_CONSTRAINED_REIMPLEMENTATION",
+      "numeric_scope": "SHORT_HORIZON_QUALIFICATION_NONPROMOTIONAL",
+      "official_exact": null,
+      "puviani_surpass": null,
+      "paper_scale_lifetime": null
+    }
+  },
+  "claim_slots": {
+    "official_exact": null,
+    "puviani_surpass": null,
+    "paper_scale_lifetime": null
+  },
+  "ranking_boundary": {
+    "t9_1_3_registry_role": "PROVENANCE_BOUND_PAPER_CONSTRAINED_CONTEXT_BASELINE",
+    "matched_phase9_ranking_eligible": false,
+    "sota_claim_eligible": false,
+    "reason": "The parent uses binary observations and a ten-cycle finite-cutoff qualification, not the frozen Phase-9 IQ/trusted-codebook/long-horizon matched signature."
+  },
+  "downstream_semantic_seal": {
+    "schema_version": "t9.1.3-to-t9.1.4-semantic-seal-v1",
+    "payload": {
+      "addendum_schema_version": "t9.1.3-post-outcome-governance-addendum-v2",
+      "task_id": "T9.1.3",
+      "terminal_branch": "QUALIFIED",
+      "terminal_evidence_semantic_sha256": "35d52c4add5aae124da4127223fb14d08c59a375baaf8bf26146a60f7fc3a152",
+      "governance_status": "POST_OUTCOME_GOVERNANCE_ADDENDUM_NO_RETROACTIVE_RESEAL",
+      "deviation_state": {
+        "state": "EVALUATED_ADDENDUM",
+        "combined_entry_count": 46,
+        "combined_severity_counts": {
+          "Critical": 24,
+          "High": 19,
+          "Medium": 3,
+          "Low": 0
+        },
+        "addendum_ids": [
+          "D43",
+          "D44",
+          "D45",
+          "D46"
+        ]
+      },
+      "claim_slots": {
+        "official_exact": null,
+        "puviani_surpass": null,
+        "paper_scale_lifetime": null
+      },
+      "terminal_resolution": {
+        "parent_status": "PASS_ARTIFACT_LANE_AND_EXECUTABLE_REIMPLEMENTATION",
+        "resolved_terminal_state": "QUALIFIED_PAPER_CONSTRAINED_BASELINE",
+        "releases_t9_1_4": true,
+        "registry_entry_eligible": true,
+        "matched_phase9_ranking_eligible": false,
+        "typed_payload": {
+          "parent_report_sha256": "f3e458765ed684d69be3011e532a4334de872d2b39d1f07da7c5aaec61816ffd",
+          "evidence_grade": "PAPER_CONSTRAINED_REIMPLEMENTATION",
+          "numeric_scope": "SHORT_HORIZON_QUALIFICATION_NONPROMOTIONAL",
+          "official_exact": null,
+          "puviani_surpass": null,
+          "paper_scale_lifetime": null
+        }
+      },
+      "ranking_boundary": {
+        "t9_1_3_registry_role": "PROVENANCE_BOUND_PAPER_CONSTRAINED_CONTEXT_BASELINE",
+        "matched_phase9_ranking_eligible": false,
+        "sota_claim_eligible": false,
+        "reason": "The parent uses binary observations and a ten-cycle finite-cutoff qualification, not the frozen Phase-9 IQ/trusted-codebook/long-horizon matched signature."
+      }
+    },
+    "semantic_sha256": "12ac54175ac13b0e2c4682d462a8da49dc367f9db0a67da76cc2347db6f7cb22",
+    "raw_addendum_hash_required_by_T9_1_4": false,
+    "consumer_rule": {
+      "ordered_steps": [
+        {
+          "step": 1,
+          "action": "validate_report",
+          "verify_live_files": true,
+          "purpose": "VERIFY_BRANCH_LOCAL_EVIDENCE_AND_REPORT"
+        },
+        {
+          "step": 2,
+          "action": "reconstruct_downstream_semantic_seal",
+          "purpose": "RECOMPUTE_CANONICAL_PAYLOAD_AND_SHA256"
+        },
+        {
+          "step": 3,
+          "action": "compare_semantic_seal",
+          "purpose": "REQUIRE_EXACT_MATCH_BEFORE_T9_1_4_CONSUMPTION"
+        }
+      ],
+      "acceptance": "ALL_STEPS_MUST_PASS",
+      "on_failure": "FAIL_CLOSED_DO_NOT_CONSUME",
+      "seal_only_acceptance": "PROHIBITED"
+    }
+  },
+  "source_data": {
+    "path": "docs/t9_1_3_post_outcome_governance_source_data.csv",
+    "bytes": 63057,
+    "sha256": "81ca256a42c09f1f4fae3cef824c59e9ab011f219ff00c6bf74c6ff9bf83998a",
+    "rows": 67,
+    "columns": [
+      "section",
+      "record_id",
+      "payload_json",
+      "payload_sha256"
+    ],
+    "payload_encoding": "canonical-json-utf8-sha256; every nested field retained"
+  },
+  "semantic_mutation_audit": {
+    "count": 14,
+    "detected": 14,
+    "all_detected": true,
+    "terminal_branch": "QUALIFIED",
+    "branch_case_count": 14,
+    "cases": [
+      {
+        "mutation_id": "fill_official_exact_claim",
+        "terminal_branch": "QUALIFIED",
+        "target_gate": "G09_official_surpass_and_paper_lifetime_claims_stay_null",
+        "mutation_applied": true,
+        "rejection_mode": "TARGET_GATE_FALSE",
+        "rejected": true
+      },
+      {
+        "mutation_id": "fill_paper_scale_lifetime_claim",
+        "terminal_branch": "QUALIFIED",
+        "target_gate": "G09_official_surpass_and_paper_lifetime_claims_stay_null",
+        "mutation_applied": true,
+        "rejection_mode": "TARGET_GATE_FALSE",
+        "rejected": true
+      },
+      {
+        "mutation_id": "change_terminal_evidence_hash",
+        "terminal_branch": "QUALIFIED",
+        "target_gate": "G03_terminal_evidence_is_branch_local_hash_bound_and_live",
+        "mutation_applied": true,
+        "rejection_mode": "TARGET_GATE_FALSE",
+        "rejected": true
+      },
+      {
+        "mutation_id": "change_terminal_semantic_evidence",
+        "terminal_branch": "QUALIFIED",
+        "target_gate": "G04_terminal_semantic_evidence_matches_selected_branch",
+        "mutation_applied": true,
+        "rejection_mode": "TARGET_GATE_FALSE",
+        "rejected": true
+      },
+      {
+        "mutation_id": "make_no_go_block_T9_1_4",
+        "terminal_branch": "QUALIFIED",
+        "target_gate": "G10_qualified_and_typed_no_go_both_release_T9_1_4",
+        "mutation_applied": true,
+        "rejection_mode": "TARGET_GATE_FALSE",
+        "rejected": true
+      },
+      {
+        "mutation_id": "fill_no_go_numeric_payload",
+        "terminal_branch": "QUALIFIED",
+        "target_gate": "G10_qualified_and_typed_no_go_both_release_T9_1_4",
+        "mutation_applied": true,
+        "rejection_mode": "TARGET_GATE_FALSE",
+        "rejected": true
+      },
+      {
+        "mutation_id": "promote_to_matched_rank",
+        "terminal_branch": "QUALIFIED",
+        "target_gate": "G12_registry_context_cannot_be_promoted_to_matched_or_SOTA_rank",
+        "mutation_applied": true,
+        "rejection_mode": "TARGET_GATE_FALSE",
+        "rejected": true
+      },
+      {
+        "mutation_id": "drift_combined_deviation_count",
+        "terminal_branch": "QUALIFIED",
+        "target_gate": "G08_deviation_census_is_exact_or_typed_null_by_branch",
+        "mutation_applied": true,
+        "rejection_mode": "TARGET_GATE_FALSE",
+        "rejected": true
+      },
+      {
+        "mutation_id": "forge_clipped_update",
+        "terminal_branch": "QUALIFIED",
+        "target_gate": "G06_gradient_evidence_is_complete_or_typed_null_by_branch",
+        "mutation_applied": true,
+        "rejection_mode": "TARGET_GATE_FALSE",
+        "rejected": true
+      },
+      {
+        "mutation_id": "mutate_branch_deviation_payload",
+        "terminal_branch": "QUALIFIED",
+        "target_gate": "G07_D43_D46_are_exact_or_typed_null_by_branch",
+        "mutation_applied": true,
+        "rejection_mode": "TARGET_GATE_FALSE",
+        "rejected": true
+      },
+      {
+        "mutation_id": "retroactively_reseal_parent",
+        "terminal_branch": "QUALIFIED",
+        "target_gate": "G05_addendum_is_nonretroactive_and_parent_reseal_is_prohibited",
+        "mutation_applied": true,
+        "rejection_mode": "TARGET_GATE_FALSE",
+        "rejected": true
+      },
+      {
+        "mutation_id": "forge_source_row_count",
+        "terminal_branch": "QUALIFIED",
+        "target_gate": "G13_source_csv_is_lossless_unique_and_hash_bound",
+        "mutation_applied": true,
+        "rejection_mode": "TARGET_GATE_FALSE",
+        "rejected": true
+      },
+      {
+        "mutation_id": "forge_downstream_semantic_seal",
+        "terminal_branch": "QUALIFIED",
+        "target_gate": "G16_T9_1_4_consumes_one_way_versioned_semantic_seal",
+        "mutation_applied": true,
+        "rejection_mode": "TARGET_GATE_FALSE",
+        "rejected": true
+      },
+      {
+        "mutation_id": "forge_mutation_count",
+        "terminal_branch": "QUALIFIED",
+        "target_gate": "G15_targeted_semantic_mutations_all_fail_closed",
+        "mutation_applied": true,
+        "rejection_mode": "TARGET_GATE_FALSE",
+        "rejected": true
+      }
+    ]
+  },
+  "gates": {
+    "G01_identity_status_and_closed_schema": true,
+    "G02_input_contract_is_frozen_hash_bound_and_live": true,
+    "G03_terminal_evidence_is_branch_local_hash_bound_and_live": true,
+    "G04_terminal_semantic_evidence_matches_selected_branch": true,
+    "G05_addendum_is_nonretroactive_and_parent_reseal_is_prohibited": true,
+    "G06_gradient_evidence_is_complete_or_typed_null_by_branch": true,
+    "G07_D43_D46_are_exact_or_typed_null_by_branch": true,
+    "G08_deviation_census_is_exact_or_typed_null_by_branch": true,
+    "G09_official_surpass_and_paper_lifetime_claims_stay_null": true,
+    "G10_qualified_and_typed_no_go_both_release_T9_1_4": true,
+    "G11_current_terminal_resolution_matches_executable_branch": true,
+    "G12_registry_context_cannot_be_promoted_to_matched_or_SOTA_rank": true,
+    "G13_source_csv_is_lossless_unique_and_hash_bound": true,
+    "G14_generator_implementation_is_hash_bound": true,
+    "G15_targeted_semantic_mutations_all_fail_closed": true,
+    "G16_T9_1_4_consumes_one_way_versioned_semantic_seal": true
+  },
+  "gate_summary": {
+    "passed": 16,
+    "total": 16,
+    "failed": []
+  },
+  "verdict": "PASS_POST_OUTCOME_GOVERNANCE_ADDENDUM",
+  "analysis_sha256": "27f8226e6658e0a5b2d4e9bd2d55798478deb590ac639d05cb4248a9cafe6e5c"
+}

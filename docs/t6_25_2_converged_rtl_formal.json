@@ -1,0 +1,869 @@
+{
+  "task_id": "T6.25.2",
+  "schema_version": "t6.25.2-converged-rtl-formal-report-v1",
+  "generated_at_utc": "2026-07-21T00:11:54.755720+00:00",
+  "evidence_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+  "tool": {
+    "path": "C:\\ProgramData\\anaconda3\\envs\\DLEnv\\Scripts\\yowasp-yosys.exe",
+    "version": "Yosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)"
+  },
+  "top_module": "gkp_route_a_converged_production_top",
+  "structural_audit": {
+    "module_declaration_count": 1,
+    "child_instantiation_counts": {
+      "route_a_commit_admission": 1,
+      "gkp_parameter_bank_manager": 1,
+      "gkp_fast_path_core": 1,
+      "route_a_policy_overlay": 1
+    },
+    "all_required_children_exactly_once": true,
+    "forbidden_external_port_hits": {
+      "cfg_we": false,
+      "bank0_trusted": false,
+      "bank1_trusted": false,
+      "core_commit_valid": false
+    },
+    "no_raw_config_or_trust_bypass": true,
+    "manager_is_sole_core_cfg_and_trust_driver": true,
+    "image_and_activation_versions_separated": true,
+    "production_words_per_phase": 257,
+    "formal_words_per_phase": 2,
+    "formal_depth_reduction_scope": "reachability only; all present-state guards are proved with arbitrary state bits"
+  },
+  "proof_scope": {
+    "all_state_present_state_guards": [
+      "prop_all_state_management_guards",
+      "prop_all_state_admission_guards",
+      "prop_all_state_policy_output_guards"
+    ],
+    "inductive_invariant_assertion_count": 19,
+    "all_state_transition_assertion_count": 37,
+    "compositional_unbounded_safety_closed": true,
+    "compositional_proof": "k-induction closes reset-reachable invariants/present guards; every transition assertion is then proved for an arbitrary predecessor state satisfying those proved invariants",
+    "reset_reachable_transition_bound_cycles": 20,
+    "actual_core_fail_closed_bound_cycles": 10,
+    "actual_core_atomic_commit_arbitrary_state_steps": 3,
+    "monolithic_induction_attempt_promoted": false,
+    "induction_boundary": "unbounded safety is compositionally closed; unbounded liveness/fairness is not claimed, and 20-cycle BMC remains a separate regression",
+    "property_families": [
+      "inactive-bank ordered image writes",
+      "complete-image CRC32 trust admission",
+      "image-version monotonicity separated from activation epoch",
+      "CAS plus-one activation and near-wrap refusal",
+      "trusted-target atomic old-or-new commit",
+      "commit cancel and retired-bank drain guard",
+      "lossless depth-zero backpressure with explicit ack/reject",
+      "policy-priority host admission",
+      "integrity-triggered LKG rollback",
+      "no undefined Route-A action",
+      "six-cycle II=1 deadline fail-closed",
+      "six-cycle II=1 parameter-age fail-closed",
+      "no raw configuration or trust bypass"
+    ]
+  },
+  "formal_results": {
+    "top_elaboration": {
+      "label": "top_elaboration",
+      "command": "read_verilog -sv cnn_fpga/rtl/gkp_fast_path_core.sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_production_top.sv; hierarchy -check -top gkp_route_a_converged_production_top; proc; check; stat",
+      "returncode": 0,
+      "elapsed_seconds": 2.666,
+      "output_sha256": "5c833e905636d134b15c82ddba7d1faa01352efd033b3926def3776386d1a48e",
+      "output_tail": "        4   $sub\n       89   $xor\n        4 submodules\n        1   $paramod$662168ef8dc684cc224e325e8e865f08c16e819c\\gkp_parameter_bank_manager\n        1   $paramod$eaa48f48e07aebfb0f585a0c661a7c0dc45e929e\\gkp_fast_path_core\n        1   route_a_commit_admission\n        1   route_a_policy_overlay\n\nWarnings: 7 unique messages, 8 total\nEnd of script. Logfile hash: fcbee9789f, time: 2.25s, user: 2.25s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 34% 1x proc_mux (0 sec), 25% 6x read_verilog (0 sec), ...",
+      "proof_failed": false,
+      "model_found": false,
+      "error": false
+    },
+    "all_state_guards": {
+      "label": "all_state_guards",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; chformal -assert -remove; chformal -assume -remove; sat -verify -seq 1 -prove prop_all_state_management_guards 1 -prove prop_all_state_admission_guards 1 -prove prop_all_state_policy_output_guards 1",
+      "returncode": 0,
+      "elapsed_seconds": 2.581,
+      "output_sha256": "1bd49abce440367166a3c2628b88188cc9ab51194dac7fdf3bf76786f0fd2b03",
+      "output_tail": "                | $$  \\ $$    | $$          | $$  \\ $$   \n                | $$  | $$    | $$$$$       | $$  | $$   \n                | $$  | $$    | $$__/       | $$  | $$   \n                | $$/$$ $$    | $$          | $$  | $$   \n                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$\n                 \\____ $$$|__/|________/|__/|_______/|__/\n                       \\__/                              \n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: 06856faf98, time: 2.17s, user: 2.17s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 29% 1x proc_mux (0 sec), 16% 1x sat (0 sec), ...",
+      "proof_failed": false,
+      "model_found": false,
+      "error": false
+    },
+    "inductive_invariants": {
+      "label": "inductive_invariants",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; select */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:425* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:426* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:427* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:429* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:435* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:437* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:438* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:442* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:443* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:447* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:448* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:450* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:451* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:452* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:457* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:458* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:459* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:462* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:463* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:464* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:468* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:469* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:470* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:472* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:474* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:478* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:480* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:484* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:485* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:489* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:491* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:493* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:496* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:497* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:500* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:501* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:504*; chformal -assert -remove; select -clear; select gkp_route_a_converged_formal; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -tempinduct -seq 2 -maxsteps 10",
+      "returncode": 0,
+      "elapsed_seconds": 4.233,
+      "output_sha256": "ed693c34ef863e8b729e6c7c9f0255241090573d066f7a22c570623ab4cde4f1",
+      "output_tail": "                | $$  \\ $$    | $$          | $$  \\ $$   \n                | $$  | $$    | $$$$$       | $$  | $$   \n                | $$  | $$    | $$__/       | $$  | $$   \n                | $$/$$ $$    | $$          | $$  | $$   \n                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$\n                 \\____ $$$|__/|________/|__/|_______/|__/\n                       \\__/                              \n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: d9aa6079d4, time: 3.79s, user: 3.80s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 50% 1x sat (1 sec), 17% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": false,
+      "error": false
+    },
+    "all_state_transitions": {
+      "label": "all_state_transitions",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; chformal -assume -remove; select */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:350* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:351* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:352* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:353* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:354* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:356* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:359* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:360* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:361* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:363* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:366* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:368* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:370* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:372* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:375* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:376* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:387* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:388* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:389*; chformal -assert2assume; select */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:392* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:393* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:394* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:395* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:396* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:397* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:398* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:399* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:400* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:402* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:404* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:405* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:406* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:408* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:410* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:412* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:413* */$assert$cnn_fpga/rtl/gkp_route_a_converged_formal.sv:415*; chformal -assert -remove; select -clear; select gkp_route_a_converged_formal; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -seq 2 -set reset_n 1",
+      "returncode": 0,
+      "elapsed_seconds": 2.689,
+      "output_sha256": "65098d2cfdf27d9d5a7ffa7024b8580bb0aaa4e62b80798d251b6404f3f5934a",
+      "output_tail": "                | $$  \\ $$    | $$          | $$  \\ $$   \n                | $$  | $$    | $$$$$       | $$  | $$   \n                | $$  | $$    | $$__/       | $$  | $$   \n                | $$/$$ $$    | $$          | $$  | $$   \n                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$\n                 \\____ $$$|__/|________/|__/|_______/|__/\n                       \\__/                              \n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: def9669028, time: 2.28s, user: 2.28s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 28% 1x proc_mux (0 sec), 17% 1x sat (0 sec), ...",
+      "proof_failed": false,
+      "model_found": false,
+      "error": false
+    },
+    "reachable_transitions": {
+      "label": "reachable_transitions",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -seq 20",
+      "returncode": 0,
+      "elapsed_seconds": 177.914,
+      "output_sha256": "ec8ed7940781de9152ed005efc270a5f219a79bf4c9861763332521f1aa9959d",
+      "output_tail": "                | $$  \\ $$    | $$          | $$  \\ $$   \n                | $$  | $$    | $$$$$       | $$  | $$   \n                | $$  | $$    | $$__/       | $$  | $$   \n                | $$/$$ $$    | $$          | $$  | $$   \n                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$\n                 \\____ $$$|__/|________/|__/|_______/|__/\n                       \\__/                              \n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: 4dade03b48, time: 177.44s, user: 177.44s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 98% 1x sat (175 sec), 0% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": false,
+      "error": false
+    },
+    "actual_core_fail_closed": {
+      "label": "actual_core_fail_closed",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/gkp_fast_path_core.sv cnn_fpga/rtl/gkp_fast_path_fail_closed_formal.sv; prep -top gkp_fast_path_fail_closed_formal -flatten; memory_map; opt; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -seq 10",
+      "returncode": 0,
+      "elapsed_seconds": 3.432,
+      "output_sha256": "56eee5000634e1a8795cc45d2ef94e3b149afef4f78bec9d6bb96683595d5bd3",
+      "output_tail": "                | $$  \\ $$    | $$          | $$  \\ $$   \n                | $$  | $$    | $$$$$       | $$  | $$   \n                | $$  | $$    | $$__/       | $$  | $$   \n                | $$/$$ $$    | $$          | $$  | $$   \n                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$\n                 \\____ $$$|__/|________/|__/|_______/|__/\n                       \\__/                              \n\nWarnings: 1 unique messages, 2 total\nEnd of script. Logfile hash: 84abef6cff, time: 3.08s, user: 3.08s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 25% 11x opt_dff (0 sec), 13% 18x opt_clean (0 sec), ...",
+      "proof_failed": false,
+      "model_found": false,
+      "error": false
+    },
+    "actual_core_atomic_commit": {
+      "label": "actual_core_atomic_commit",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/gkp_fast_path_core.sv cnn_fpga/rtl/gkp_fast_path_atomic_commit_formal.sv; prep -top gkp_fast_path_atomic_commit_formal -flatten; memory_map; opt; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -seq 3 -set reset_n 1",
+      "returncode": 0,
+      "elapsed_seconds": 1.433,
+      "output_sha256": "9110b267c0d804a1300e576054f62392404b52f7f1fcb728e4e05e7682ce08cb",
+      "output_tail": "                | $$  \\ $$    | $$          | $$  \\ $$   \n                | $$  | $$    | $$$$$       | $$  | $$   \n                | $$  | $$    | $$__/       | $$  | $$   \n                | $$/$$ $$    | $$          | $$  | $$   \n                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$\n                 \\____ $$$|__/|________/|__/|_______/|__/\n                       \\__/                              \n\nWarnings: 1 unique messages, 2 total\nEnd of script. Logfile hash: c87b977d6b, time: 1.11s, user: 1.11s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 32% 1x hierarchy (0 sec), 28% 3x read_verilog (0 sec), ...",
+      "proof_failed": false,
+      "model_found": false,
+      "error": false
+    },
+    "actual_core_fail_closed_cover": {
+      "label": "actual_core_fail_closed_cover",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/gkp_fast_path_core.sv cnn_fpga/rtl/gkp_fast_path_fail_closed_formal.sv; prep -top gkp_fast_path_fail_closed_formal -flatten; memory_map; opt; async2sync; chformal -lower; dffunmap; opt_clean; sat -set-assumes -seq 10 -set-at 10 cover_two_adjacent_fault_outputs 1 -show cover_two_adjacent_fault_outputs",
+      "returncode": 0,
+      "elapsed_seconds": 3.452,
+      "output_sha256": "74ce23413039b91a43c5252d7f2ddd806d2b5d45c6704f8e01c0152d72c5a487",
+      "output_tail": "     7 \\cover_two_adjacent_fault_outputs                   0         0                             0\n  ---- ----------------------------------------- ----------- --------- -----------------------------\n     8 \\cover_two_adjacent_fault_outputs                   0         0                             0\n  ---- ----------------------------------------- ----------- --------- -----------------------------\n     9 \\cover_two_adjacent_fault_outputs                   0         0                             0\n  ---- ----------------------------------------- ----------- --------- -----------------------------\n    10 \\cover_two_adjacent_fault_outputs                   1         1                             1\n\nWarnings: 1 unique messages, 2 total\nEnd of script. Logfile hash: 564d89191e, time: 2.96s, user: 2.96s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 24% 11x opt_dff (0 sec), 12% 18x opt_clean (0 sec), ...",
+      "proof_failed": false,
+      "model_found": true,
+      "error": false
+    },
+    "cover_cfg_write": {
+      "label": "cover_cfg_write",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -set-assumes -seq 5 -set-at 5 cover_cfg_write 1 -show cover_cfg_write",
+      "returncode": 0,
+      "elapsed_seconds": 4.121,
+      "output_sha256": "beb18e467cf0732360d76dd574911fb7af1433676981a66652ebac7ffda2e2ad",
+      "output_tail": "     2 \\cover_cfg_write                                                             0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     3 \\cover_cfg_write                                                             0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     4 \\cover_cfg_write                                                             0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     5 \\cover_cfg_write                                                             1         1                                   1\n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: 4c7449df9b, time: 3.74s, user: 3.74s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 50% 1x sat (1 sec), 17% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": true,
+      "error": false
+    },
+    "cover_cfg_finalize_success": {
+      "label": "cover_cfg_finalize_success",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -set-assumes -seq 9 -set-at 9 cover_cfg_finalize_success 1 -show cover_cfg_finalize_success",
+      "returncode": 0,
+      "elapsed_seconds": 6.088,
+      "output_sha256": "c02825e9090235fd95daf846626d247cd1353547c2356d985744fbf0df1f38ce",
+      "output_tail": "     6 \\cover_cfg_finalize_success                                                  0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     7 \\cover_cfg_finalize_success                                                  0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     8 \\cover_cfg_finalize_success                                                  0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     9 \\cover_cfg_finalize_success                                                  1         1                                   1\n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: f17e0de191, time: 5.71s, user: 5.71s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 69% 1x sat (3 sec), 9% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": true,
+      "error": false
+    },
+    "cover_crc_reject": {
+      "label": "cover_crc_reject",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -set-assumes -seq 9 -set-at 9 cover_crc_reject 1 -show cover_crc_reject",
+      "returncode": 0,
+      "elapsed_seconds": 6.503,
+      "output_sha256": "7c3764b1747008dabc991d1e76f871a42e44f1f8a6001d05e220637c1ebe784e",
+      "output_tail": "     6 \\cover_crc_reject                                                            0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     7 \\cover_crc_reject                                                            0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     8 \\cover_crc_reject                                                            0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     9 \\cover_crc_reject                                                            1         1                                   1\n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: 9a0f713a52, time: 6.00s, user: 6.01s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 70% 1x sat (4 sec), 9% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": true,
+      "error": false
+    },
+    "cover_commit_admitted": {
+      "label": "cover_commit_admitted",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -set-assumes -seq 6 -set-at 6 cover_commit_admitted 1 -show cover_commit_admitted",
+      "returncode": 0,
+      "elapsed_seconds": 4.715,
+      "output_sha256": "21cef44a35092c232defcfe44ecc0937a6c058c28ca0a1509044195042bc84bd",
+      "output_tail": "     3 \\cover_commit_admitted                                                       0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     4 \\cover_commit_admitted                                                       1         1                                   1\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     5 \\cover_commit_admitted                                                       1         1                                   1\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     6 \\cover_commit_admitted                                                       1         1                                   1\n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: add2982015, time: 4.29s, user: 4.30s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 58% 1x sat (2 sec), 14% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": true,
+      "error": false
+    },
+    "cover_active_switch": {
+      "label": "cover_active_switch",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -set-assumes -seq 7 -set-at 7 cover_active_switch 1 -show cover_active_switch",
+      "returncode": 0,
+      "elapsed_seconds": 4.997,
+      "output_sha256": "455059e4e09f5817b861d03545f347af131dec1f8ba4ea47cb18290b8f5f737c",
+      "output_tail": "     4 \\cover_active_switch                                                         1         1                                   1\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     5 \\cover_active_switch                                                         1         1                                   1\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     6 \\cover_active_switch                                                         1         1                                   1\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     7 \\cover_active_switch                                                         1         1                                   1\n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: 2784377541, time: 4.58s, user: 4.58s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 60% 1x sat (2 sec), 13% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": true,
+      "error": false
+    },
+    "cover_lkg_reactivation": {
+      "label": "cover_lkg_reactivation",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -set-assumes -seq 18 -set-at 18 cover_lkg_reactivation 1 -show cover_lkg_reactivation",
+      "returncode": 0,
+      "elapsed_seconds": 15.21,
+      "output_sha256": "0e47a37e5eb2f9a618fd913eff6b4f1f5745eee995cd5c8086eab7878ea61d95",
+      "output_tail": "    15 \\cover_lkg_reactivation                                                      0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n    16 \\cover_lkg_reactivation                                                      0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n    17 \\cover_lkg_reactivation                                                      0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n    18 \\cover_lkg_reactivation                                                      1         1                                   1\n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: 5a910197d9, time: 14.67s, user: 14.67s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 87% 1x sat (12 sec), 3% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": true,
+      "error": false
+    },
+    "cover_cancel": {
+      "label": "cover_cancel",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -set-assumes -seq 6 -set-at 6 cover_cancel 1 -show cover_cancel",
+      "returncode": 0,
+      "elapsed_seconds": 4.67,
+      "output_sha256": "e16380cf7f6b31fee84d7e3abac7159ec2a18be706e3703ad1ced28f60f80964",
+      "output_tail": "     3 \\cover_cancel                                                                0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     4 \\cover_cancel                                                                0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     5 \\cover_cancel                                                                1         1                                   1\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     6 \\cover_cancel                                                                1         1                                   1\n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: 7869eb00e7, time: 4.31s, user: 4.31s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 58% 1x sat (2 sec), 14% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": true,
+      "error": false
+    },
+    "cover_drain_reject": {
+      "label": "cover_drain_reject",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -set-assumes -seq 12 -set-at 12 cover_drain_reject 1 -show cover_drain_reject",
+      "returncode": 0,
+      "elapsed_seconds": 8.538,
+      "output_sha256": "142d5ae903c954436a18ec4ed963b05a73f2468f425fc90dd75569afd2bc6c16",
+      "output_tail": "     9 \\cover_drain_reject                                                          0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n    10 \\cover_drain_reject                                                          1         1                                   1\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n    11 \\cover_drain_reject                                                          1         1                                   1\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n    12 \\cover_drain_reject                                                          1         1                                   1\n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: 8df932b8e9, time: 7.98s, user: 7.98s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 77% 1x sat (6 sec), 7% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": true,
+      "error": false
+    },
+    "cover_near_wrap_reject": {
+      "label": "cover_near_wrap_reject",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; chparam -set CORE_INITIAL_VERSION 65534 gkp_route_a_converged_formal; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -set-assumes -seq 18 -set-at 18 cover_near_wrap_reject 1 -show cover_near_wrap_reject",
+      "returncode": 0,
+      "elapsed_seconds": 13.061,
+      "output_sha256": "8139bda3a50a20faa06fa44373605521ec47c8f9313d382164fbf50da413fd2c",
+      "output_tail": "    15 \\cover_near_wrap_reject                                                      0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n    16 \\cover_near_wrap_reject                                                      0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n    17 \\cover_near_wrap_reject                                                      0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n    18 \\cover_near_wrap_reject                                                      1         1                                   1\n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: 879d0f850a, time: 12.47s, user: 12.47s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 85% 1x sat (10 sec), 4% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": true,
+      "error": false
+    },
+    "cover_host_blocked": {
+      "label": "cover_host_blocked",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -set-assumes -seq 5 -set-at 5 cover_host_blocked 1 -show cover_host_blocked",
+      "returncode": 0,
+      "elapsed_seconds": 4.47,
+      "output_sha256": "b3395f0e9cead6c8157d3fa6ffa5a19e03f390312b20226e57d9d4989d870628",
+      "output_tail": "     2 \\cover_host_blocked                                                          0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     3 \\cover_host_blocked                                                          0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     4 \\cover_host_blocked                                                          0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     5 \\cover_host_blocked                                                          1         1                                   1\n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: 7996a5ffec, time: 3.79s, user: 3.79s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 50% 1x sat (1 sec), 16% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": true,
+      "error": false
+    },
+    "cover_policy_priority": {
+      "label": "cover_policy_priority",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -set-assumes -seq 8 -set-at 8 cover_policy_priority 1 -show cover_policy_priority",
+      "returncode": 0,
+      "elapsed_seconds": 5.494,
+      "output_sha256": "39958b29ce9b1359c7563b0715ec594fca135a6bf704302f6dbd69e915d4e95e",
+      "output_tail": "     5 \\cover_policy_priority                                                       1         1                                   1\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     6 \\cover_policy_priority                                                       1         1                                   1\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     7 \\cover_policy_priority                                                       1         1                                   1\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     8 \\cover_policy_priority                                                       1         1                                   1\n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: a0400c85e2, time: 5.02s, user: 5.02s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 66% 1x sat (3 sec), 11% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": true,
+      "error": false
+    },
+    "cover_integrity_rollback": {
+      "label": "cover_integrity_rollback",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -set-assumes -seq 6 -set-at 6 cover_integrity_rollback 1 -show cover_integrity_rollback",
+      "returncode": 0,
+      "elapsed_seconds": 4.395,
+      "output_sha256": "7635edb81826672d038c16e455f3a335f413315c97c01eaf3aa9a0bbcc214c68",
+      "output_tail": "     3 \\cover_integrity_rollback                                                    0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     4 \\cover_integrity_rollback                                                    1         1                                   1\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     5 \\cover_integrity_rollback                                                    1         1                                   1\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     6 \\cover_integrity_rollback                                                    1         1                                   1\n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: acb0e70597, time: 4.04s, user: 4.05s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 57% 1x sat (2 sec), 14% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": true,
+      "error": false
+    },
+    "cover_conflict_reject": {
+      "label": "cover_conflict_reject",
+      "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -set-assumes -seq 5 -set-at 5 cover_conflict_reject 1 -show cover_conflict_reject",
+      "returncode": 0,
+      "elapsed_seconds": 3.718,
+      "output_sha256": "629e8548ce896488fb27f3bb252fffbf78bf6b0297fcd3879647f6eff1d4583d",
+      "output_tail": "     2 \\cover_conflict_reject                                                       0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     3 \\cover_conflict_reject                                                       0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     4 \\cover_conflict_reject                                                       0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     5 \\cover_conflict_reject                                                       1         1                                   1\n\nWarnings: 6 unique messages, 6 total\nEnd of script. Logfile hash: 7563401d56, time: 3.34s, user: 3.34s, system: 0.00s\nYosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)\nTime spent: 49% 1x sat (1 sec), 16% 1x proc_mux (0 sec), ...",
+      "proof_failed": false,
+      "model_found": true,
+      "error": false
+    }
+  },
+  "cover_summary": {
+    "reachable": 14,
+    "total": 14
+  },
+  "mutation_results": [
+    {
+      "mutation": "drop_core_safe_boundary",
+      "property_check": "all_state",
+      "source": "cnn_fpga/rtl/gkp_parameter_bank_manager.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "b3d89542c4710ac3e6d133767e8803d4439b2862515526b930500f527e4310fc",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "drop_core_safe_boundary",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/drop_core_safe_boundary/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; chformal -assert -remove; chformal -assume -remove; sat -verify -seq 1 -prove prop_all_state_management_guards 1 -prove prop_all_state_admission_guards 1 -prove prop_all_state_policy_output_guards 1",
+        "returncode": 1,
+        "elapsed_seconds": 2.937,
+        "output_sha256": "c72ba7d02721ea5a890253fb769f4f8ea11adb526c3bfa899085855479e7aa33",
+        "output_tail": "  init \\policy.enter_run                                                            0         0                                  00\n  init \\policy.integrity_latched                                                    0         0                                   0\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         1         1                                   1\n  init \\policy.recovery_run                                                         0         0                                0000\n  init \\policy.selected_bank                                                        0         0                                   0\n  init \\policy.tail_latched                                                         0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     1 \\prop_all_state_admission_guards                                             1         1                                   1\n     1 \\prop_all_state_management_guards                                            0         0                                   0\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "drop_core_target_bank_guard",
+      "property_check": "all_state",
+      "source": "cnn_fpga/rtl/gkp_parameter_bank_manager.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "2f2f53665387735a7a1a334d31996295e048776dcf1b3decfc63e764237851c7",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "drop_core_target_bank_guard",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/drop_core_target_bank_guard/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; chformal -assert -remove; chformal -assume -remove; sat -verify -seq 1 -prove prop_all_state_management_guards 1 -prove prop_all_state_admission_guards 1 -prove prop_all_state_policy_output_guards 1",
+        "returncode": 1,
+        "elapsed_seconds": 2.978,
+        "output_sha256": "38d49834052749c5842342bf0c316916d01092ff8cf90f1bb24032154f02b600",
+        "output_tail": "  init \\policy.enter_run                                                            0         0                                  00\n  init \\policy.integrity_latched                                                    0         0                                   0\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         0         0                                   0\n  init \\policy.recovery_run                                                         0         0                                0000\n  init \\policy.selected_bank                                                        0         0                                   0\n  init \\policy.tail_latched                                                         0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     1 \\prop_all_state_admission_guards                                             1         1                                   1\n     1 \\prop_all_state_management_guards                                            0         0                                   0\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "drop_core_plus_one_guard",
+      "property_check": "all_state",
+      "source": "cnn_fpga/rtl/gkp_parameter_bank_manager.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "af45878748f0c6847eb35ef76fdab8472ed95919b3d7d9541c21f51fa3e4b65f",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "drop_core_plus_one_guard",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/drop_core_plus_one_guard/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; chformal -assert -remove; chformal -assume -remove; sat -verify -seq 1 -prove prop_all_state_management_guards 1 -prove prop_all_state_admission_guards 1 -prove prop_all_state_policy_output_guards 1",
+        "returncode": 1,
+        "elapsed_seconds": 2.881,
+        "output_sha256": "dc957a7badd145b581d53f5ad934640849b7e7e0f1e533c02bc652bb18f2097b",
+        "output_tail": "  init \\policy.enter_run                                                            0         0                                  00\n  init \\policy.integrity_latched                                                    0         0                                   0\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         0         0                                   0\n  init \\policy.recovery_run                                                         0         0                                0000\n  init \\policy.selected_bank                                                        0         0                                   0\n  init \\policy.tail_latched                                                         0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     1 \\prop_all_state_admission_guards                                             1         1                                   1\n     1 \\prop_all_state_management_guards                                            0         0                                   0\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "drop_core_trust_guard",
+      "property_check": "all_state",
+      "source": "cnn_fpga/rtl/gkp_parameter_bank_manager.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "e294e136d6c84e163e15fb72b60dfccf03cc8a1f102a14504d51202cfb151e95",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "drop_core_trust_guard",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/drop_core_trust_guard/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; chformal -assert -remove; chformal -assume -remove; sat -verify -seq 1 -prove prop_all_state_management_guards 1 -prove prop_all_state_admission_guards 1 -prove prop_all_state_policy_output_guards 1",
+        "returncode": 1,
+        "elapsed_seconds": 2.905,
+        "output_sha256": "7526fd7f1c4763c9f1371c4a9174cbb08075a007e40cfeb55240788df383278f",
+        "output_tail": "  init \\policy.enter_run                                                            0         0                                  00\n  init \\policy.integrity_latched                                                    0         0                                   0\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         1         1                                   1\n  init \\policy.recovery_run                                                         0         0                                0000\n  init \\policy.selected_bank                                                        0         0                                   0\n  init \\policy.tail_latched                                                         0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     1 \\prop_all_state_admission_guards                                             1         1                                   1\n     1 \\prop_all_state_management_guards                                            0         0                                   0\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "allow_active_bank_write",
+      "property_check": "all_state",
+      "source": "cnn_fpga/rtl/gkp_parameter_bank_manager.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "a22c55b2f0a0865eee7cc8e5ddbc50e7fbbe3ca90c71899d49b2879fa17063fe",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "allow_active_bank_write",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/allow_active_bank_write/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; chformal -assert -remove; chformal -assume -remove; sat -verify -seq 1 -prove prop_all_state_management_guards 1 -prove prop_all_state_admission_guards 1 -prove prop_all_state_policy_output_guards 1",
+        "returncode": 1,
+        "elapsed_seconds": 2.682,
+        "output_sha256": "ccb25062a676cf6bec09d33c43fc7b6e3c94abcc108979861c1781cbdef8345c",
+        "output_tail": "  init \\policy.enter_run                                                            0         0                                  00\n  init \\policy.integrity_latched                                                    0         0                                   0\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         1         1                                   1\n  init \\policy.recovery_run                                                         0         0                                0000\n  init \\policy.selected_bank                                                        0         0                                   0\n  init \\policy.tail_latched                                                         0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     1 \\prop_all_state_admission_guards                                             1         1                                   1\n     1 \\prop_all_state_management_guards                                            0         0                                   0\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "accept_bad_crc32",
+      "property_check": "transition",
+      "source": "cnn_fpga/rtl/gkp_parameter_bank_manager.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "e86590bea26ff21e0ab7a7a3497217b4dd0025173f024c60e097946ab65e1600",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "accept_bad_crc32",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/accept_bad_crc32/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -seq 20",
+        "returncode": 1,
+        "elapsed_seconds": 19.889,
+        "output_sha256": "f131ceca4d92279c95f18748eb41971433c13c067c876a3c18ab8a6cd1680c9b",
+        "output_tail": "  init \\manager.retired_bank_drain_count                                            0         0                                0000\n  init \\policy.action                                                               5         5                                 101\n  init \\policy.commit_pending                                                       1         1                                   1\n  init \\policy.enter_run                                                            0         0                                  00\n  init \\policy.integrity_latched                                                    0         0                                   0\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         0         0                                   0\n  init \\policy.recovery_run                                                         1         1                                0001\n  init \\policy.selected_bank                                                        1         1                                   1\n  init \\policy.tail_latched                                                         0         0                                   0\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "drop_commit_cas_expected",
+      "property_check": "transition",
+      "source": "cnn_fpga/rtl/gkp_parameter_bank_manager.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "8a6e8c97c26f056cf1fbc583f14fb4627ee5c72034564ca435c0a94538a09bb1",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "drop_commit_cas_expected",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/drop_commit_cas_expected/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -seq 20",
+        "returncode": 1,
+        "elapsed_seconds": 15.805,
+        "output_sha256": "5c4bcb7dadac399a9f297c2b1363609174ff482df2422d0d8509f2f949c0472d",
+        "output_tail": "  init \\manager.retired_bank_drain_count                                            7         7                                0111\n  init \\policy.action                                                               0         0                                 000\n  init \\policy.commit_pending                                                       1         1                                   1\n  init \\policy.enter_run                                                            0         0                                  00\n  init \\policy.integrity_latched                                                    1         1                                   1\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         0         0                                   0\n  init \\policy.recovery_run                                                         0         0                                0000\n  init \\policy.selected_bank                                                        0         0                                   0\n  init \\policy.tail_latched                                                         0         0                                   0\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "drop_image_version_monotonicity",
+      "property_check": "transition",
+      "source": "cnn_fpga/rtl/gkp_parameter_bank_manager.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "9257b1abe394f86cb332b5ae55e06727c613158622604d9009b452ed2b398df0",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "drop_image_version_monotonicity",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/drop_image_version_monotonicity/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -seq 20",
+        "returncode": 1,
+        "elapsed_seconds": 14.869,
+        "output_sha256": "d6d1f73ddb06bcbd2d391cc373be71b960d5143da61543e594c3a86998eea9c4",
+        "output_tail": "  init \\manager.retired_bank_drain_count                                            4         4                                0100\n  init \\policy.action                                                               5         5                                 101\n  init \\policy.commit_pending                                                       1         1                                   1\n  init \\policy.enter_run                                                            0         0                                  00\n  init \\policy.integrity_latched                                                    0         0                                   0\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         0         0                                   0\n  init \\policy.recovery_run                                                         0         0                                0000\n  init \\policy.selected_bank                                                        0         0                                   0\n  init \\policy.tail_latched                                                         0         0                                   0\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "drop_both_drain_guards",
+      "property_check": "transition",
+      "source": "cnn_fpga/rtl/gkp_parameter_bank_manager.sv",
+      "replacement_count": 2,
+      "mutated_source_sha256": "20497ac2efc11b57ebaa2ead2f6079a18dcf8436fa74c3ce6cfdba17028775b4",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "drop_both_drain_guards",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/drop_both_drain_guards/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -seq 20",
+        "returncode": 1,
+        "elapsed_seconds": 13.938,
+        "output_sha256": "d20027192c192f4b68cb4ba24c4e69ea13e5e1c13fe69e3d1236e565d1f023b3",
+        "output_tail": "  init \\manager.retired_bank_drain_count                                            1         1                                0001\n  init \\policy.action                                                               4         4                                 100\n  init \\policy.commit_pending                                                       0         0                                   0\n  init \\policy.enter_run                                                            0         0                                  00\n  init \\policy.integrity_latched                                                    0         0                                   0\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         0         0                                   0\n  init \\policy.recovery_run                                                         0         0                                0000\n  init \\policy.selected_bank                                                        0         0                                   0\n  init \\policy.tail_latched                                                         0         0                                   0\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "cancel_keeps_commit_pending",
+      "property_check": "transition",
+      "source": "cnn_fpga/rtl/gkp_parameter_bank_manager.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "3b60df6608f95ab74d4fb1f66afa3757613f38d0833abd2e053c41a9c3090aa5",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "cancel_keeps_commit_pending",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/cancel_keeps_commit_pending/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -seq 20",
+        "returncode": 1,
+        "elapsed_seconds": 17.613,
+        "output_sha256": "d7496284ea54dd99a1466d3ee88ec95026bbb6472db7bede5c866b7940e8d1f5",
+        "output_tail": "  init \\manager.retired_bank_drain_count                                            0         0                                0000\n  init \\policy.action                                                               0         0                                 000\n  init \\policy.commit_pending                                                       0         0                                   0\n  init \\policy.enter_run                                                            0         0                                  00\n  init \\policy.integrity_latched                                                    0         0                                   0\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         0         0                                   0\n  init \\policy.recovery_run                                                         8         8                                1000\n  init \\policy.selected_bank                                                        0         0                                   0\n  init \\policy.tail_latched                                                         0         0                                   0\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "allow_two_request_conflict",
+      "property_check": "transition",
+      "source": "cnn_fpga/rtl/gkp_parameter_bank_manager.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "0a55cc6b5d5cce597a534130814bda0efe31dd210e8d983fe9843eb7f2f4d51f",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "allow_two_request_conflict",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/allow_two_request_conflict/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -seq 20",
+        "returncode": 1,
+        "elapsed_seconds": 14.638,
+        "output_sha256": "20bc0b5282b14f6805a7ebab08af8f0e8f5413c409486fde52ceb1099a4b3f0f",
+        "output_tail": "  init \\manager.retired_bank_drain_count                                            0         0                                0000\n  init \\policy.action                                                               0         0                                 000\n  init \\policy.commit_pending                                                       1         1                                   1\n  init \\policy.enter_run                                                            1         1                                  01\n  init \\policy.integrity_latched                                                    0         0                                   0\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         1         1                                   1\n  init \\policy.recovery_run                                                         3         3                                0011\n  init \\policy.selected_bank                                                        0         0                                   0\n  init \\policy.tail_latched                                                         0         0                                   0\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "erase_policy_priority_provenance",
+      "property_check": "all_state",
+      "source": "cnn_fpga/rtl/route_a_commit_admission.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "9d5cffdeaacba73c0e980dad7dc9b3fac23851e1299db6010222f83867b78588",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "erase_policy_priority_provenance",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/erase_policy_priority_provenance/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; chformal -assert -remove; chformal -assume -remove; sat -verify -seq 1 -prove prop_all_state_management_guards 1 -prove prop_all_state_admission_guards 1 -prove prop_all_state_policy_output_guards 1",
+        "returncode": 1,
+        "elapsed_seconds": 2.445,
+        "output_sha256": "a2a38e81655bb8180f648cca32b99ac011bb09f09e4de2cbaed53504c2fc27a2",
+        "output_tail": "  init \\policy.enter_run                                                            0         0                                  00\n  init \\policy.integrity_latched                                                    1         1                                   1\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         1         1                                   1\n  init \\policy.recovery_run                                                         0         0                                0000\n  init \\policy.selected_bank                                                        0         0                                   0\n  init \\policy.tail_latched                                                         0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     1 \\prop_all_state_admission_guards                                             0         0                                   0\n     1 \\prop_all_state_management_guards                                            1         1                                   1\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "allow_host_outside_open",
+      "property_check": "all_state",
+      "source": "cnn_fpga/rtl/route_a_commit_admission.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "8263b71f49d6320e2b506c397e8e2c98735c26c94c490f636648754316b65fdb",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "allow_host_outside_open",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/allow_host_outside_open/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; chformal -assert -remove; chformal -assume -remove; sat -verify -seq 1 -prove prop_all_state_management_guards 1 -prove prop_all_state_admission_guards 1 -prove prop_all_state_policy_output_guards 1",
+        "returncode": 1,
+        "elapsed_seconds": 2.51,
+        "output_sha256": "ed634e207e294c97a3d49bc0f0e3adec3e0899f3abb71e566baf1d2514f3d5cd",
+        "output_tail": "  init \\policy.enter_run                                                            0         0                                  00\n  init \\policy.integrity_latched                                                    0         0                                   0\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         1         1                                   1\n  init \\policy.recovery_run                                                         0         0                                0000\n  init \\policy.selected_bank                                                        0         0                                   0\n  init \\policy.tail_latched                                                         0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     1 \\prop_all_state_admission_guards                                             0         0                                   0\n     1 \\prop_all_state_management_guards                                            1         1                                   1\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "allow_host_during_policy_pending",
+      "property_check": "all_state",
+      "source": "cnn_fpga/rtl/route_a_commit_admission.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "4d8b9bd7ab6814f1fe32101a9929ce28ae5029d120d02ce038d8934cb066cb48",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "allow_host_during_policy_pending",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/route_a_policy_overlay.sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/allow_host_during_policy_pending/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; chformal -assert -remove; chformal -assume -remove; sat -verify -seq 1 -prove prop_all_state_management_guards 1 -prove prop_all_state_admission_guards 1 -prove prop_all_state_policy_output_guards 1",
+        "returncode": 1,
+        "elapsed_seconds": 2.598,
+        "output_sha256": "3716b57662cb71a939b20c844e42f480d9241590f51e8bdefdb035ac758f6e20",
+        "output_tail": "  init \\policy.enter_run                                                            0         0                                  00\n  init \\policy.integrity_latched                                                    0         0                                   0\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         1         1                                   1\n  init \\policy.recovery_run                                                         0         0                                0000\n  init \\policy.selected_bank                                                        0         0                                   0\n  init \\policy.tail_latched                                                         0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     1 \\prop_all_state_admission_guards                                             0         0                                   0\n     1 \\prop_all_state_management_guards                                            1         1                                   1\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "invert_lkg_rollback_target",
+      "property_check": "transition",
+      "source": "cnn_fpga/rtl/route_a_policy_overlay.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "985aaa76ebd62bfa5f217a50e659e6af5d2779aa585ebc8507ebfae2c396fdaa",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "invert_lkg_rollback_target",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/invert_lkg_rollback_target/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -seq 20",
+        "returncode": 1,
+        "elapsed_seconds": 14.272,
+        "output_sha256": "f7edada2abb75a550e7fc2eacb2e3f8fa3e8bfff9aa18c01687688254c2570bf",
+        "output_tail": "  init \\manager.retired_bank_drain_count                                           12         c                                1100\n  init \\policy.action                                                               2         2                                 010\n  init \\policy.commit_pending                                                       1         1                                   1\n  init \\policy.enter_run                                                            0         0                                  00\n  init \\policy.integrity_latched                                                    0         0                                   0\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         1         1                                   1\n  init \\policy.recovery_run                                                         0         0                                0000\n  init \\policy.selected_bank                                                        1         1                                   1\n  init \\policy.tail_latched                                                         0         0                                   0\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "allow_policy_version_wrap",
+      "property_check": "all_state",
+      "source": "cnn_fpga/rtl/route_a_policy_overlay.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "c6457e5ff831c99d32e63a555d9fa21359c114e87d8c639d1eac9ab306b94b2b",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "allow_policy_version_wrap",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/allow_policy_version_wrap/route_a_policy_overlay.sv cnn_fpga/rtl/route_a_commit_admission.sv cnn_fpga/rtl/gkp_parameter_bank_manager.sv cnn_fpga/rtl/gkp_route_a_converged_formal.sv; prep -top gkp_route_a_converged_formal -flatten; async2sync; chformal -lower; dffunmap; opt_clean; chformal -assert -remove; chformal -assume -remove; sat -verify -seq 1 -prove prop_all_state_management_guards 1 -prove prop_all_state_admission_guards 1 -prove prop_all_state_policy_output_guards 1",
+        "returncode": 1,
+        "elapsed_seconds": 2.682,
+        "output_sha256": "f62779cfd07f7e2ecbf19d9bd42795a4de086b404dd9fa872ef5d2bf21313e92",
+        "output_tail": "  init \\policy.integrity_latched                                                    0         0                                   0\n  init \\policy.leakage_latched                                                      0         0                                   0\n  init \\policy.pending_bank                                                         0         0                                   0\n  init \\policy.recovery_run                                                         0         0                                0000\n  init \\policy.selected_bank                                                        0         0                                   0\n  init \\policy.tail_latched                                                         0         0                                   0\n  ---- ------------------------------------------------------------------ ----------- --------- -----------------------------------\n     1 \\prop_all_state_admission_guards                                             1         1                                   1\n     1 \\prop_all_state_management_guards                                            1         1                                   1\n     1 \\prop_all_state_policy_output_guards                                         0         0                                   0\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "erase_deadline_fault",
+      "property_check": "core",
+      "source": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "8485b3b49b261c95e5ce329c8082ad16e28fc491bb6cfaab2bedf829afeef774",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "erase_deadline_fault",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/erase_deadline_fault/gkp_fast_path_core.sv cnn_fpga/rtl/gkp_fast_path_fail_closed_formal.sv; prep -top gkp_fast_path_fail_closed_formal -flatten; memory_map; opt; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -seq 10",
+        "returncode": 1,
+        "elapsed_seconds": 3.521,
+        "output_sha256": "0f48df11e4a05892e857d72fce8345290f9f9a14b0d980556cee4c693b483ae7",
+        "output_tail": "  init \\core.reset_wait_run                                0         0                           000\n  init \\core.v0                                            0         0                             0\n  init \\core.v1                                            0         0                             0\n  init \\core.v2                                            0         0                             0\n  init \\core.v3                                            0         0                             0\n  init \\core.v4                                            0         0                             0\n  init \\cover_two_adjacent_fault_outputs                   0         0                             0\n  init \\deadline_pipe                                     64        40                       1000000\n  init \\f_past_valid                                       0         0                             0\n  init \\issue_count                                        2         2                            10\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "erase_age_fault",
+      "property_check": "core",
+      "source": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "97f1d5db530737507dfb318a7248accb92871bc0c70cc7332c4e2a5352c000cf",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "erase_age_fault",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/erase_age_fault/gkp_fast_path_core.sv cnn_fpga/rtl/gkp_fast_path_fail_closed_formal.sv; prep -top gkp_fast_path_fail_closed_formal -flatten; memory_map; opt; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -seq 10",
+        "returncode": 1,
+        "elapsed_seconds": 3.139,
+        "output_sha256": "38c3962fd96a5949a4b3b81efe617081d55dca2794b9ee0736addaaf22bde5f1",
+        "output_tail": "  init \\core.reset_wait_run                                0         0                           000\n  init \\core.v0                                            0         0                             0\n  init \\core.v1                                            0         0                             0\n  init \\core.v2                                            0         0                             0\n  init \\core.v3                                            0         0                             0\n  init \\core.v4                                            1         1                             1\n  init \\cover_two_adjacent_fault_outputs                   0         0                             0\n  init \\deadline_pipe                                     64        40                       1000000\n  init \\f_past_valid                                       0         0                             0\n  init \\issue_count                                        0         0                            00\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "allow_fallback_action",
+      "property_check": "core",
+      "source": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "72f8ed96ad5eee801eeb4e97eacce927e757df789928a3cbe0b81de82a120ad1",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "allow_fallback_action",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/allow_fallback_action/gkp_fast_path_core.sv cnn_fpga/rtl/gkp_fast_path_fail_closed_formal.sv; prep -top gkp_fast_path_fail_closed_formal -flatten; memory_map; opt; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -seq 10",
+        "returncode": 1,
+        "elapsed_seconds": 3.247,
+        "output_sha256": "6d8cf2b3cf890242cdd12811229dfb054a39df1e82f70696da368c75463e41e3",
+        "output_tail": "  init \\core.reset_wait_run                                0         0                           000\n  init \\core.v0                                            0         0                             0\n  init \\core.v1                                            0         0                             0\n  init \\core.v2                                            0         0                             0\n  init \\core.v3                                            0         0                             0\n  init \\core.v4                                            1         1                             1\n  init \\cover_two_adjacent_fault_outputs                   0         0                             0\n  init \\deadline_pipe                                     64        40                       1000000\n  init \\f_past_valid                                       0         0                             0\n  init \\issue_count                                        0         0                            00\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "erase_registered_output",
+      "property_check": "core",
+      "source": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "7091809ddd2b91d4d6a6de87190e808bc80c11829774da1295a89039631eed31",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "erase_registered_output",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/erase_registered_output/gkp_fast_path_core.sv cnn_fpga/rtl/gkp_fast_path_fail_closed_formal.sv; prep -top gkp_fast_path_fail_closed_formal -flatten; memory_map; opt; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -set-assumes -seq 10",
+        "returncode": 1,
+        "elapsed_seconds": 1.538,
+        "output_sha256": "ab0699df4388ef0afc1cac58e36ae1e03abe4b6f9e0b8dbb7c26ae47bce47251",
+        "output_tail": "  |_|   |_|   \\___/ \\___/ |_|       |_|  \\_____|_|\\_)_____)\\____|_|\n\n\n  Time Signal Name                                    Dec       Hex           Bin\n  ---- -------------------------------------- ----------- --------- -------------\n  init \\age_pipe                                        0         0       0000000\n  init \\cover_two_adjacent_fault_outputs                0         0             0\n  init \\deadline_pipe                                   0         0       0000000\n  init \\f_past_valid                                    0         0             0\n  init \\issue_count                                     2         2            10\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    },
+    {
+      "mutation": "core_accepts_wrong_activation_version",
+      "property_check": "core_commit",
+      "source": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "replacement_count": 1,
+      "mutated_source_sha256": "7b0c80d3fd8ae1c6f97f144eb9add99cb6f7278848eb6a200b819a5800aa3a75",
+      "kill_mechanism": "independent_formal_counterexample",
+      "killed": true,
+      "tool_result": {
+        "label": "core_accepts_wrong_activation_version",
+        "command": "read_verilog -formal -sv cnn_fpga/rtl/.t6_25_2_formal_tmp/mutations/core_accepts_wrong_activation_version/gkp_fast_path_core.sv cnn_fpga/rtl/gkp_fast_path_atomic_commit_formal.sv; prep -top gkp_fast_path_atomic_commit_formal -flatten; memory_map; opt; async2sync; chformal -lower; dffunmap; opt_clean; sat -verify -prove-asserts -seq 3 -set reset_n 1",
+        "returncode": 1,
+        "elapsed_seconds": 1.435,
+        "output_sha256": "158e4e9dc8d95e56119a18c2035d590b501433ab80b1563869b768a7f474f375",
+        "output_tail": "  init \\core.active_bank                                                                 0         0                   0\n  init \\core.active_version                                                           8192      2000    0010000000000000\n  init \\core.commit_ack                                                                  1         1                   1\n  init \\f_past_valid                                                                     0         0                   0\n  ---- ----------------------------------------------------------------------- ----------- --------- -------------------\n     1 \\core.reset_n                                                                     1         1                   1\n  ---- ----------------------------------------------------------------------- ----------- --------- -------------------\n     2 \\core.reset_n                                                                     1         1                   1\n  ---- ----------------------------------------------------------------------- ----------- --------- -------------------\n     3 \\core.reset_n                                                                     1         1                   1\n\nERROR: Called with -verify and proof did fail!",
+        "proof_failed": true,
+        "model_found": false,
+        "error": true
+      }
+    }
+  ],
+  "mutation_summary": {
+    "killed": 21,
+    "total": 21,
+    "minimum": 18
+  },
+  "implementation_correction": {
+    "found_by_formal": true,
+    "problem": "a registered core acknowledgement left core_commit_valid re-presented for one cycle after the active bank/version advanced",
+    "correction": "the manager now re-checks safe boundary, different target bank, plus-one activation version, no-wrap, and target trust at its core-facing commit output",
+    "regression_property": "prop_all_state_management_guards"
+  },
+  "claim_boundary": {
+    "board_measurement": null,
+    "fastest_or_speed_advantage": false,
+    "multimode_decoder_deployed_in_rtl": false,
+    "allowed_now": "same-top structural elaboration, compositional unbounded safety proof, 20-cycle reset-reachable BMC regression, reachable SAT witnesses, mutation closure, and actual-core six-cycle fail-closed proof",
+    "not_allowed_now": "unbounded liveness, board latency/power, multimode RTL execution, or cross-paper fastest claim"
+  },
+  "bindings": [
+    {
+      "path": "configs/phase6d/t6_25_2_converged_rtl_formal.json",
+      "sha256": "dad88961619f782c033376f72a9897ba5872803447eab97eb401dc62a9ccb077",
+      "bytes": 2970
+    },
+    {
+      "path": "cnn_fpga/benchmark/converged_rtl_formal.py",
+      "sha256": "7ca58c14dcfb28bced2fe653f18e0a54ed47ffb9d6bd1dc0fd36ec55fa09e707",
+      "bytes": 33350
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "sha256": "7caad1ad0fd243f5e62c9ce079fd6def9c6d964bb8fe44e870e96b14a6239784",
+      "bytes": 25822
+    },
+    {
+      "path": "cnn_fpga/rtl/route_a_policy_overlay.sv",
+      "sha256": "741df9dcf1d9afcab2730b10ee17def016e3a1c7655c5c28249cb60933c2a369",
+      "bytes": 14392
+    },
+    {
+      "path": "cnn_fpga/rtl/route_a_commit_admission.sv",
+      "sha256": "63389a55908d307b19f97c24e17aaee0f03422351a2a04706a6e57b53895d2bb",
+      "bytes": 2316
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_parameter_bank_manager.sv",
+      "sha256": "6952e16a0dee4026b5535fbcb9a659d161ac7f52231b8f5b25061b818545dec7",
+      "bytes": 25829
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_route_a_converged_production_top.sv",
+      "sha256": "67bd18122a60d9107e048b2f97f49d52d39be784835ffcff85d404f105618269",
+      "bytes": 13007
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_route_a_converged_formal.sv",
+      "sha256": "32247dbf47ac011a9818ad7a79ad48b8dbf292f517c7d7e62ae475773e11bcdb",
+      "bytes": 26348
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_fail_closed_formal.sv",
+      "sha256": "0b72be57df56f8b50afb9839dc14f90d3aa45065594779a4488817f2e89e35db",
+      "bytes": 4644
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_atomic_commit_formal.sv",
+      "sha256": "f11387aafc1941e54bc37dd49e5af1a5d08d66292f2d696b94ea11e7d17fde4d",
+      "bytes": 2603
+    }
+  ],
+  "gates": [
+    {
+      "gate": "unique_converged_top_elaborates",
+      "passed": true
+    },
+    {
+      "gate": "all_required_children_exactly_once",
+      "passed": true
+    },
+    {
+      "gate": "no_raw_config_or_trust_bypass",
+      "passed": true
+    },
+    {
+      "gate": "image_and_activation_versions_separated",
+      "passed": true
+    },
+    {
+      "gate": "all_state_present_state_guards_proved",
+      "passed": true
+    },
+    {
+      "gate": "reset_reachable_invariants_k_inductive",
+      "passed": true
+    },
+    {
+      "gate": "all_transition_assertions_hold_under_proved_invariants",
+      "passed": true
+    },
+    {
+      "gate": "twenty_cycle_reachable_transition_properties_proved",
+      "passed": true
+    },
+    {
+      "gate": "actual_core_deadline_and_age_fail_closed_proved",
+      "passed": true
+    },
+    {
+      "gate": "actual_core_atomic_commit_refines_abstract_contract",
+      "passed": true
+    },
+    {
+      "gate": "all_reachable_witnesses_found",
+      "passed": true
+    },
+    {
+      "gate": "all_targeted_mutations_killed",
+      "passed": true
+    },
+    {
+      "gate": "formal_found_and_closed_duplicate_present_bug",
+      "passed": true
+    },
+    {
+      "gate": "proof_scope_does_not_overclaim_monolithic_induction_or_liveness",
+      "passed": true
+    },
+    {
+      "gate": "board_fastest_multimode_claims_closed",
+      "passed": true
+    },
+    {
+      "gate": "all_positive_tool_runs_clean",
+      "passed": true
+    },
+    {
+      "gate": "all_bindings_live",
+      "passed": true
+    }
+  ],
+  "gate_summary": {
+    "passed": 17,
+    "total": 17
+  },
+  "verdict": "PASS_CONVERGED_PRODUCTION_TOP_PROPERTY_COVER_MUTATION_CLOSED",
+  "analysis_sha256": "4d73bca7bf2dd17ccd0aa93c51362542c5e89e198d13c16a8f580dbfbc79f2f7"
+}

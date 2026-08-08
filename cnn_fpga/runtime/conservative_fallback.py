@@ -270,6 +270,33 @@ class ConservativeFallbackController:
     def event_config(self) -> ExperimentalEventFSMConfig:
         return self._fsm.config
 
+    def register_trusted_image(self, image: TrustedParameterImage) -> None:
+        """Append one verified image identity without weakening version ordering.
+
+        The slow path may compile an image only after an observed parameter
+        window closes.  Requiring that image to have been present at controller
+        construction time would make causal replay unnecessarily ambiguous, so
+        registration is append-only and strictly contiguous.  Existing digest
+        identities can never be overwritten.
+        """
+
+        if not isinstance(image, TrustedParameterImage):
+            raise TypeError("image must be TrustedParameterImage")
+        next_version = max(self._trusted_images) + 1
+        if image.active_bank_version != next_version:
+            raise ValueError("trusted image version must be the next contiguous version")
+        self._trusted_images[image.active_bank_version] = image
+
+    def unregister_unactivated_image(self, version: int) -> None:
+        """Remove only the newest identity if it has never become active."""
+
+        actual = _integer(version, "version")
+        if actual != max(self._trusted_images):
+            raise ValueError("only the newest trusted identity can be removed")
+        if actual <= self._state.trusted_active_bank_version:
+            raise ValueError("an active or retired image identity cannot be removed")
+        del self._trusted_images[actual]
+
     def reset(self) -> ConservativeFallbackState:
         self._fsm.reset()
         self._state = self._initial_state

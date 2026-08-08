@@ -1,0 +1,151 @@
+{
+  "schema_version": "t5.5.4-selected-gru-power2-int8-v1",
+  "checkpoint": {
+    "path": "docs/t4_4_1_bounded_residual_rnn_teacher_checkpoints.pt",
+    "sha256": "7c4e004cfb4e04e2ac4848242fbfe63217ef6b89f8780bbce723422be098711e"
+  },
+  "validation": {
+    "path": "docs/t4_4_1_bounded_residual_rnn_teacher_validation.json",
+    "sha256": "c71094493a63f7a3b1287d28c0a1b71d3ce7a03e16a281a27967a87a65669d53"
+  },
+  "selected_restart_index": 0,
+  "training_seed": 601,
+  "selected_state_sha256": "aee37f0ca66257cda39ae5143305a583504e6068b837b04cdaca8c94a67ea076",
+  "architecture": "GRU10-DENSE256-DENSE256-OUT15",
+  "weight_quantization": "per-tensor signed int8 symmetric power-of-two scale ties-to-even saturation",
+  "bias_quantization": "signed Q3.14 ties-to-even saturation",
+  "weight_tensors": [
+    {
+      "name": "gru.weight_ih",
+      "shape": [
+        30,
+        1
+      ],
+      "offset": 0,
+      "entries": 30,
+      "fractional_bits": 8,
+      "maximum_absolute_value": 0.4142574938096444,
+      "maximum_absolute_quantization_error": 0.0017788227782780663
+    },
+    {
+      "name": "gru.weight_hh",
+      "shape": [
+        30,
+        10
+      ],
+      "offset": 30,
+      "entries": 300,
+      "fractional_bits": 8,
+      "maximum_absolute_value": 0.46444461885433247,
+      "maximum_absolute_quantization_error": 0.0019530920479366998
+    },
+    {
+      "name": "dense1.weight",
+      "shape": [
+        256,
+        10
+      ],
+      "offset": 330,
+      "entries": 2560,
+      "fractional_bits": 10,
+      "maximum_absolute_value": 0.08845400823226421,
+      "maximum_absolute_quantization_error": 0.0004881180455744011
+    },
+    {
+      "name": "dense2.weight",
+      "shape": [
+        256,
+        256
+      ],
+      "offset": 2890,
+      "entries": 65536,
+      "fractional_bits": 10,
+      "maximum_absolute_value": 0.07163793729107151,
+      "maximum_absolute_quantization_error": 0.0004882737859149139
+    },
+    {
+      "name": "output.weight",
+      "shape": [
+        15,
+        256
+      ],
+      "offset": 68426,
+      "entries": 3840,
+      "fractional_bits": 12,
+      "maximum_absolute_value": 0.02152352129160225,
+      "maximum_absolute_quantization_error": 0.00012204093961741156
+    }
+  ],
+  "bias_tensors": [
+    {
+      "name": "gru.bias_ih",
+      "shape": [
+        30
+      ],
+      "offset": 0,
+      "entries": 30,
+      "fractional_bits": 14,
+      "maximum_absolute_quantization_error": 2.9249744446298298e-05
+    },
+    {
+      "name": "gru.bias_hh",
+      "shape": [
+        30
+      ],
+      "offset": 30,
+      "entries": 30,
+      "fractional_bits": 14,
+      "maximum_absolute_quantization_error": 3.0460880047024352e-05
+    },
+    {
+      "name": "dense1.bias",
+      "shape": [
+        256
+      ],
+      "offset": 60,
+      "entries": 256,
+      "fractional_bits": 14,
+      "maximum_absolute_quantization_error": 3.0434603771646584e-05
+    },
+    {
+      "name": "dense2.bias",
+      "shape": [
+        256
+      ],
+      "offset": 316,
+      "entries": 256,
+      "fractional_bits": 14,
+      "maximum_absolute_quantization_error": 3.0177362565572338e-05
+    },
+    {
+      "name": "output.bias",
+      "shape": [
+        15
+      ],
+      "offset": 572,
+      "entries": 15,
+      "fractional_bits": 14,
+      "maximum_absolute_quantization_error": 3.03374431580173e-05
+    }
+  ],
+  "weight_file": {
+    "path": "cnn_fpga/rtl/generated/t5_5_4_quantized_gru_weights.mem",
+    "entries": 72266,
+    "bits": 8,
+    "sha256": "108813f658145bea907c0a4e4caa84da2f8628c26e730de1331b435e2eea1a5c"
+  },
+  "bias_file": {
+    "path": "cnn_fpga/rtl/generated/t5_5_4_quantized_gru_biases.mem",
+    "entries": 587,
+    "bits": 18,
+    "sha256": "d412d1f32a3810f9f49d5dccec20de54feef5e82c5a70fe8e437e4864bdfbca5"
+  },
+  "counts": {
+    "weight_macs": 72266,
+    "bias_scalars": 587,
+    "total_parameters": 72853,
+    "weight_storage_bits": 578128,
+    "bias_storage_bits": 10566,
+    "total_quantized_parameter_bits": 588694
+  }
+}

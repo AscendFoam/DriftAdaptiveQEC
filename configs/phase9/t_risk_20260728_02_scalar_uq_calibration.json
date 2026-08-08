@@ -1,0 +1,149 @@
+{
+  "task_id": "T-RISK-20260728-02",
+  "schema_version": "PHASE9-SCALAR-UQ-THREE-SPLIT-CALIBRATION-CONFIG-V2",
+  "purpose": "Fresh two-fold selection plus untouched confirmation of a coverage-calibrated scalar/vector-norm UCB factor after the immutable factor=1 diagnostic failed closed",
+  "diagnostic_only_parent": {
+    "verdict": "INCOMPLETE_CUTOFF32_36_SCALAR_UQ_PREFLIGHT",
+    "report": {
+      "path": "docs/t_risk_20260728_01_scalar_uq_preflight.json",
+      "bytes": 2838,
+      "sha256": "d8930ca946a8e0cf83c37af905a7dc85e60ae5e37462a77cb32f8dce880ffc60"
+    },
+    "source_data": {
+      "path": "docs/t_risk_20260728_01_scalar_uq_preflight_source_data.csv",
+      "bytes": 9638057,
+      "sha256": "ebf5d6bc21e6e7f38018fc2d1402372943937afb13db9606fb91fd2087654689"
+    },
+    "may_inform_repair_design_but_not_enter_selection_or_confirmation_evidence": true
+  },
+  "infrastructure_failure_parent": {
+    "terminal_state": "FAILED_INFRASTRUCTURE_SEED_COLLISION_BEFORE_SELECTION_SEAL",
+    "failure_report": {
+      "path": "docs/t_risk_20260728_02_scalar_uq_failed_seed_collision_v1.json",
+      "bytes": 2350,
+      "sha256": "7c461d9447a19469a3f0c794684f64e59db15d097b898465b568082417db6cf6"
+    },
+    "selection_a_source_data": {
+      "path": "docs/t_risk_20260728_02_scalar_uq_selection_a_failed_seed_collision_v1.csv",
+      "bytes": 60340294,
+      "sha256": "8b929b30f21e8949e46b4bc61211a17249280254ea23713ea3d967091c1aecc5"
+    },
+    "resource_preflight": {
+      "path": "docs/t_risk_20260728_02_scalar_uq_resource_preflight_failed_seed_collision_v1.json",
+      "bytes": 1202,
+      "sha256": "929a71c108bd296a88d5614f43e6defe0156f641e9936c46264d798dd01b6163"
+    },
+    "run_identity": {
+      "path": "docs/t_risk_20260728_02_scalar_uq_run_identity_failed_seed_collision_v1.json",
+      "bytes": 1856,
+      "sha256": "61721c1e4c81aabc00c9e684aa32af5aea8918d903cf9d17976e90eca61ffadc"
+    },
+    "v1_outcomes_used_as_v2_selection_or_confirmation_evidence": false
+  },
+  "margins": [0.005, 0.01, 0.02, 0.05, 0.08, 0.1, 0.15, 0.25],
+  "cluster_counts": [12, 384],
+  "effect_ratios": [0.0, 0.5, 1.0, 1.2],
+  "families": {
+    "gaussian_balanced": {
+      "left_scale_ratio": 0.25,
+      "right_scale_ratio": 0.25,
+      "rare_probability": 0.0,
+      "rare_scale_ratio": 0.0,
+      "power_primary": true
+    },
+    "rare_heavy_tail": {
+      "left_scale_ratio": 0.2,
+      "right_scale_ratio": 0.2,
+      "rare_probability": 0.12,
+      "rare_scale_ratio": 1.25,
+      "power_primary": true
+    },
+    "heteroskedastic": {
+      "left_scale_ratio": 0.15,
+      "right_scale_ratio": 0.45,
+      "rare_probability": 0.0,
+      "rare_scale_ratio": 0.0,
+      "power_primary": false
+    }
+  },
+  "factor_grid": [1.0, 1.1, 1.2, 1.3, 1.4, 1.5],
+  "selection_rule": "choose the smallest factor that passes every coverage and primary-power gate in both selection_a and selection_b; never inspect confirmation before selection is atomically sealed",
+  "confidence": 0.95,
+  "multiplier_replicates": 199,
+  "trial_count_per_cell": 2048,
+  "splits": {
+    "selection_a": {
+      "role": "factor_selection",
+      "trial_seed_base": 2000000,
+      "multiplier_seed_base": 3000000
+    },
+    "selection_b": {
+      "role": "factor_selection",
+      "trial_seed_base": 4000000,
+      "multiplier_seed_base": 5000000
+    },
+    "confirmation": {
+      "role": "untouched_confirmation",
+      "trial_seed_base": 6000000,
+      "multiplier_seed_base": 7000000
+    }
+  },
+  "seed_addressing": {
+    "scheme": "injective_cell_major_v2",
+    "formula": "base + cell_index * trial_count_per_cell + trial_index",
+    "cell_count": 192,
+    "trial_count_per_cell": 2048,
+    "maximum_offset": 393215,
+    "all_six_scientific_ranges_pairwise_disjoint": true,
+    "v1_hash_modulo_addressing_forbidden": true
+  },
+  "simultaneous_wilson": {
+    "confidence": 0.95,
+    "comparisons_per_split": 256,
+    "method": "per-split Bonferroni-adjusted two-sided Wilson bounds across 192 coverage and 64 primary-power strata"
+  },
+  "gates": {
+    "minimum_cell_coverage_rate": 0.94,
+    "minimum_cell_coverage_wilson_lcb": 0.9,
+    "null_equivalence_wilson_lcb": 0.8,
+    "local_half_margin_equivalence_wilson_lcb": 0.65,
+    "boundary_equivalence_wilson_ucb": 0.1,
+    "outside_equivalence_wilson_ucb": 0.05
+  },
+  "resource_preflight": {
+    "trial_seed_base": 8000000,
+    "multiplier_seed_base": 9000000,
+    "safety_factor": 2.0,
+    "maximum_estimated_wall_seconds": 14400,
+    "maximum_estimated_rss_bytes": 4294967296,
+    "artifact": "docs/t_risk_20260728_02_scalar_uq_resource_preflight.json"
+  },
+  "max_workers": 4,
+  "numeric_execution": {
+    "blas_threads_per_worker": 1,
+    "threading_policy": "one BLAS thread inside each ProcessPool worker; process-level parallelism only",
+    "scientific_design_unchanged": true
+  },
+  "artifact_paths": {
+    "run_directory": "runs/t_risk_20260728_02_scalar_uq_calibration",
+    "owner_lock": "runs/t_risk_20260728_02_scalar_uq_calibration/owner.lock",
+    "run_identity": "docs/t_risk_20260728_02_scalar_uq_run_identity.json",
+    "selection_receipt": "docs/t_risk_20260728_02_scalar_uq_selection_receipt.json",
+    "report": "docs/t_risk_20260728_02_scalar_uq_calibration.json",
+    "selection_a_source_data": "docs/t_risk_20260728_02_scalar_uq_selection_a.csv",
+    "selection_b_source_data": "docs/t_risk_20260728_02_scalar_uq_selection_b.csv",
+    "confirmation_source_data": "docs/t_risk_20260728_02_scalar_uq_confirmation.csv"
+  },
+  "design_outcomes_accessed": false,
+  "claim_boundary": {
+    "scalar_uq_calibration_only": true,
+    "twin_qualification": null,
+    "ler": null,
+    "lifetime": null,
+    "physical_break_even": null,
+    "official_puviani_exact": null,
+    "puviani_nmf_surpass": null,
+    "external_sota": null,
+    "hardware_measured": null
+  }
+}

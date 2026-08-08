@@ -1,0 +1,984 @@
+{
+  "task_id": "T7.2.3",
+  "schema_version": "t7.2.3-results-evidence-contract-v1",
+  "generated_at_utc": "2026-07-21T07:25:26.215428+00:00",
+  "manuscript": {
+    "section_title": "Results",
+    "section_order": [
+      "Introduction",
+      "Scope, argument, and evidence cutoff",
+      "Related Work",
+      "Contract-centric dual-loop method",
+      "Results",
+      "Where the current data show an advantage",
+      "Negative results that define the design",
+      "Terminal verdicts and remaining gates",
+      "Discussion",
+      "Reproducibility and evidence availability",
+      "Conclusion",
+      "Evidence-bounded supplementary figure suite",
+      "Mathematical and decision definitions",
+      "Frozen parameters and execution contract",
+      "Complete comparators and statistical protocol",
+      "Ablations, failure modes, and negative selection",
+      "RTL, toolchain, long-sequence, and reproduction procedure",
+      "Phase 6C source locator and non-mixing ledger",
+      "Primary repository evidence map",
+      "Claim wording guardrails"
+    ],
+    "subsections": [
+      "Result-state and ranking convention",
+      "Untouched smooth formal comparison",
+      "Action and update diagnostics",
+      "Abrupt/OOD and nominal non-inferiority",
+      "Deterministic execution and pre-board hardware evidence",
+      "Causal-headroom audit and V5 early stop",
+      "Independent Phase 6C decoder and comparison lanes",
+      "Legacy CNN+FPGA evidence retained as an extension lane",
+      "Teacher--student extension evidence",
+      "Supplementary validation and failure-domain audit"
+    ],
+    "characters": 27998,
+    "sha256": "7570d358194983cc88882a1bca2b51296d60afe76acf2113f48d26f7f3d3f472",
+    "checks": {
+      "section_order": true,
+      "required_subsections": true,
+      "ordered_v4_v5_phase6c_extensions": true,
+      "state_convention": true,
+      "smooth_complete": true,
+      "external_bocd_budget_pair": true,
+      "action_cost_and_failed_families": true,
+      "tail_complete": true,
+      "v4_preboard_and_attempts": true,
+      "v5_diagnostic_and_absence": true,
+      "phase6c_eligible_table": true,
+      "phase6c_nonranking_ledger": true,
+      "multimode_scope": true,
+      "historical_extension_scope": true,
+      "selection_multiplicity": true,
+      "no_assertive_overclaim": true
+    },
+    "prohibited_hits": []
+  },
+  "result_rows": [
+    {
+      "row_id": "RES-001",
+      "result_id": "v4_locked_ewma",
+      "lane": "V4 single-mode",
+      "result_state": "PRIMARY_RESTRICTED",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "polarity": "POSITIVE",
+      "boundary": "Locked EWMA aggregate only; periodic is the sole Holm-confirmed family",
+      "source_ids": "T6.7.1/T6.7.4"
+    },
+    {
+      "row_id": "RES-002",
+      "result_id": "v4_static_ordering",
+      "lane": "V4 single-mode",
+      "result_state": "MANDATORY_NEGATIVE",
+      "evidence_grade": "NEGATIVE",
+      "polarity": "NEGATIVE",
+      "boundary": "Static joint MAP has lower average and calibration worst-window LER",
+      "source_ids": "T6.7.1/T6.7.2/T6.9.3"
+    },
+    {
+      "row_id": "RES-003",
+      "result_id": "v4_window_ordering",
+      "lane": "V4 single-mode",
+      "result_state": "MANDATORY_NEGATIVE",
+      "evidence_grade": "NEGATIVE",
+      "polarity": "NEGATIVE",
+      "boundary": "Window MAP is the strongest deployable smooth comparator",
+      "source_ids": "T6.7.1/T6.7.4"
+    },
+    {
+      "row_id": "RES-004",
+      "result_id": "v4_oracle_gap",
+      "lane": "V4 single-mode",
+      "result_state": "MANDATORY_NEGATIVE",
+      "evidence_grade": "NEGATIVE",
+      "polarity": "NEGATIVE",
+      "boundary": "Static-to-oracle gap closure is negative",
+      "source_ids": "T6.7.1/T6.9.3"
+    },
+    {
+      "row_id": "RES-005",
+      "result_id": "v4_tail_noninferiority",
+      "lane": "V4 abrupt/OOD",
+      "result_state": "MANDATORY_NEGATIVE",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "polarity": "NEUTRAL",
+      "boundary": "Five families are exactly equal to EWMA; no broad tail improvement",
+      "source_ids": "T6.7.2/T6.7.4"
+    },
+    {
+      "row_id": "RES-006",
+      "result_id": "v4_fallback_cost",
+      "lane": "V4 abrupt/OOD",
+      "result_state": "MANDATORY_NEGATIVE",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "polarity": "NEGATIVE",
+      "boundary": "High fallback and unnecessary-fallback rates remain visible",
+      "source_ids": "T6.7.2/T6.7.4"
+    },
+    {
+      "row_id": "RES-007",
+      "result_id": "v4_false_updates",
+      "lane": "V4 abrupt/OOD",
+      "result_state": "MANDATORY_NEGATIVE",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "polarity": "NEGATIVE",
+      "boundary": "All family-specific false-update counts remain visible",
+      "source_ids": "T6.7.2/T6.7.4"
+    },
+    {
+      "row_id": "RES-008",
+      "result_id": "v4_failed_policy_families",
+      "lane": "V4 pilot",
+      "result_state": "MANDATORY_NEGATIVE",
+      "evidence_grade": "NEGATIVE",
+      "polarity": "NEGATIVE",
+      "boundary": "Static-switch and freeze-all each failed all 38 safe tuples",
+      "source_ids": "T6.6.3"
+    },
+    {
+      "row_id": "RES-009",
+      "result_id": "external_bocd_budget",
+      "lane": "V4 external drift",
+      "result_state": "MANDATORY_NEGATIVE",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "polarity": "MIXED",
+      "boundary": "Paired LER outcome is inseparable from the 13,004.1-us budget failure",
+      "source_ids": "T6.8.3/T6.8.7/T6.9.3"
+    },
+    {
+      "row_id": "RES-010",
+      "result_id": "v4_cxxrtl",
+      "lane": "V4 pre-board",
+      "result_state": "PRIMARY_RESTRICTED",
+      "evidence_grade": "CXXRTL_PREBOARD",
+      "polarity": "POSITIVE",
+      "boundary": "One million cycles and failure branches; no board inference",
+      "source_ids": "T6.7.3/T6.7.4"
+    },
+    {
+      "row_id": "RES-011",
+      "result_id": "v4_commit_rollback_attempts",
+      "lane": "V4 pre-board",
+      "result_state": "PRIMARY_RESTRICTED",
+      "evidence_grade": "CXXRTL_PREBOARD",
+      "polarity": "NEUTRAL",
+      "boundary": "All 75 commit and 25 rollback attempts stay in the denominator",
+      "source_ids": "T6.7.3"
+    },
+    {
+      "row_id": "RES-012",
+      "result_id": "v4_post_route",
+      "lane": "V4 pre-board",
+      "result_state": "PRIMARY_RESTRICTED",
+      "evidence_grade": "POST_ROUTE_ESTIMATE",
+      "polarity": "POSITIVE",
+      "boundary": "Six-cycle II=1 and three-seed P&R are estimates",
+      "source_ids": "T6.9.1/T6.9.3"
+    },
+    {
+      "row_id": "RES-013",
+      "result_id": "physical_board_null",
+      "lane": "Physical board",
+      "result_state": "NULL_OR_CONTEXTUAL",
+      "evidence_grade": "BLOCKED",
+      "polarity": "NULL",
+      "boundary": "All 42 measured fields remain null",
+      "source_ids": "T6.9.2/T6.9.3"
+    },
+    {
+      "row_id": "RES-014",
+      "result_id": "v5_causal_selector",
+      "lane": "V5 entry diagnostic",
+      "result_state": "DIAGNOSTIC_STOP",
+      "evidence_grade": "DIAGNOSTIC_ONLY",
+      "polarity": "NEGATIVE",
+      "boundary": "Strict causal selector headroom is negative",
+      "source_ids": "T6.10.1/T6.15.5"
+    },
+    {
+      "row_id": "RES-015",
+      "result_id": "v5_action_headroom",
+      "lane": "V5 entry diagnostic",
+      "result_state": "DIAGNOSTIC_STOP",
+      "evidence_grade": "DIAGNOSTIC_ONLY",
+      "polarity": "NEGATIVE",
+      "boundary": "Expanded action-space headroom is 0.02549%, below 12%",
+      "source_ids": "T6.10.1/T6.15.5"
+    },
+    {
+      "row_id": "RES-016",
+      "result_id": "v5_downstream_absence",
+      "lane": "V5 stopped branch",
+      "result_state": "NULL_OR_CONTEXTUAL",
+      "evidence_grade": "BLOCKED",
+      "polarity": "NULL",
+      "boundary": "No untouched LER/tail, quantized, formal, CXXRTL, or P&R output exists",
+      "source_ids": "T6.15.5"
+    },
+    {
+      "row_id": "RES-017",
+      "result_id": "p6c_single_cpd",
+      "lane": "Phase 6C single-mode",
+      "result_state": "SECONDARY_ELIGIBLE",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "polarity": "EQUIVALENCE",
+      "boundary": "CI equals Euclidean CPD only in the frozen square/isotropic domain",
+      "source_ids": "T6.17.1/T6.19.3"
+    },
+    {
+      "row_id": "RES-018",
+      "result_id": "p6c_noh_cnot",
+      "lane": "Phase 6C CNOT",
+      "result_state": "SECONDARY_ELIGIBLE",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "polarity": "POSITIVE",
+      "boundary": "ML lowers failure relative to CI on the matched two-GKP CNOT task",
+      "source_ids": "T6.17.2/T6.19.3"
+    },
+    {
+      "row_id": "RES-019",
+      "result_id": "p6c_official_cpd",
+      "lane": "Phase 6C structured CPD",
+      "result_state": "SECONDARY_ELIGIBLE",
+      "evidence_grade": "OFFICIAL_CODE_REPRODUCTION",
+      "polarity": "POSITIVE",
+      "boundary": "Official data plus partial small-distance CPD reproduction",
+      "source_ids": "T6.18.2/T6.19.3"
+    },
+    {
+      "row_id": "RES-020",
+      "result_id": "p6c_multimode_adaptive",
+      "lane": "Phase 6C multimode CPD",
+      "result_state": "SECONDARY_ELIGIBLE",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "polarity": "POSITIVE",
+      "boundary": "Observed-only adaptive weighting improves aggregate and tail metrics",
+      "source_ids": "T6.18.3/T6.19.3"
+    },
+    {
+      "row_id": "RES-021",
+      "result_id": "p6c_aqec_project",
+      "lane": "Phase 6C AQEC",
+      "result_state": "SECONDARY_ELIGIBLE",
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "polarity": "NEGATIVE",
+      "boundary": "Project-native active/autonomous control fails to beat idle; official protocol blocked",
+      "source_ids": "T6.18.1/T6.19.3"
+    },
+    {
+      "row_id": "RES-022",
+      "result_id": "p6c_learned_zero",
+      "lane": "Phase 6C learned",
+      "result_state": "MANDATORY_NEGATIVE",
+      "evidence_grade": "INELIGIBLE",
+      "polarity": "NULL",
+      "boundary": "Zero of 16 candidate families is same-task eligible",
+      "source_ids": "T6.17.3/T6.19.3"
+    },
+    {
+      "row_id": "RES-023",
+      "result_id": "p6c_gqf_blocked",
+      "lane": "Phase 6C GQF/NMF",
+      "result_state": "NULL_OR_CONTEXTUAL",
+      "evidence_grade": "BLOCKED",
+      "polarity": "NULL",
+      "boundary": "Zero of 15 exact checks and all 13 matched metrics null",
+      "source_ids": "T6.8.4/T6.8.5/T6.19.3"
+    },
+    {
+      "row_id": "RES-024",
+      "result_id": "p6c_external_fpga",
+      "lane": "Phase 6C FPGA",
+      "result_state": "NULL_OR_CONTEXTUAL",
+      "evidence_grade": "LITERATURE_ONLY",
+      "polarity": "NULL",
+      "boundary": "18 normalized rows but zero exact same-task comparator",
+      "source_ids": "T6.19.2/T6.19.3"
+    },
+    {
+      "row_id": "RES-025",
+      "result_id": "legacy_cnn",
+      "lane": "Historical T24",
+      "result_state": "HISTORICAL_EXTENSION",
+      "evidence_grade": "PROJECT_NATIVE_HISTORICAL",
+      "polarity": "POSITIVE",
+      "boundary": "Four-scenario frozen software-HIL result is outside the Route-A ranking",
+      "source_ids": "T24/T7.1.1"
+    },
+    {
+      "row_id": "RES-026",
+      "result_id": "teacher_student_retention",
+      "lane": "Teacher/student",
+      "result_state": "HISTORICAL_EXTENSION",
+      "evidence_grade": "PROJECT_NATIVE_SIMULATION",
+      "polarity": "POSITIVE",
+      "boundary": "Finite-model gain retention and compression only",
+      "source_ids": "T4.4.4/T4.4.5"
+    },
+    {
+      "row_id": "RES-027",
+      "result_id": "teacher_student_selection",
+      "lane": "Teacher/student",
+      "result_state": "MANDATORY_NEGATIVE",
+      "evidence_grade": "SELECTION_AUDIT",
+      "polarity": "NEGATIVE",
+      "boundary": "All restarts, cap hits, and test-hindsight reversals remain disclosed",
+      "source_ids": "T4.4.1/T4.4.3/T5.4.4"
+    }
+  ],
+  "parent_state": {
+    "verdicts": {
+      "promotion": "GO_ROUTE_A_CONTRACT_SYSTEM_RESTRICTED_SIMULATOR_AND_PREBOARD_CLAIMS",
+      "integrated_rtl": "PASS_ROUTE_A_INTEGRATED_LONG_RTL_QUALIFICATION",
+      "hardware": "PASS_ROUTE_A_INTEGRATED_THREE_SEED_PR_ESTIMATE_NOT_BOARD_MEASURED",
+      "headroom": "NO_GO_V5_INSUFFICIENT_ACTION_SPACE_HEADROOM",
+      "v5": "NO_GO_V5_EARLY_HEADROOM_STOP",
+      "board": "BLOCKED_T6_9_2_NO_PHYSICAL_BOARD_EVIDENCE_ALL_MEASURED_FIELDS_NULL",
+      "phase6c": "PASS_AUX_COMPARISON_INTEGRITY"
+    },
+    "smooth": {
+      "primary_estimate": 2.1687260380497668e-05,
+      "primary_ci_low": 1.9002843786168966e-05,
+      "holm_families": [
+        "periodic_drift"
+      ],
+      "strongest_deployable": "window_map",
+      "route_a_beats_static": false,
+      "route_a_beats_window": false,
+      "gap_closure": -0.030462415077799714
+    },
+    "tail": {
+      "broad_improvement": false,
+      "confirmed_improvement_families": [],
+      "exact_equal_families": [
+        "step_calibration_shift",
+        "telegraph_drift",
+        "readout_reset_fault",
+        "leakage_persistence",
+        "compound_ood"
+      ],
+      "minimum_fallback": 0.5944959852430556,
+      "maximum_fallback": 0.9585458260995371,
+      "minimum_false_updates": 2044,
+      "maximum_false_updates": 3365
+    },
+    "failed_policy_families": {
+      "static_switch": "all 38 posterior-safe tuples failed the full preregistered pilot LER/safety selector when fallback switched to the initial static joint-MAP bank; closest minimum safety slack was -0.037109375",
+      "freeze_all": "all 38 posterior-safe tuples failed because freeze-all made EWMA stale during persistent calibration/telegraph transitions; closest minimum safety slack was -0.044921875"
+    },
+    "external_bocd": {
+      "external_minus_route_a": {
+        "contrast": "external_bocd_window_ewma_router_LER_minus_proposed_route_a_LER",
+        "estimate": 1.0018396859217312e-05,
+        "ci95_low": 7.667926826863132e-06,
+        "ci95_high": 1.2368866891571562e-05,
+        "left_worse_if_lcb_gt_zero": true,
+        "right_worse_if_ucb_lt_zero": false,
+        "clusters": 24,
+        "replicates": 20000
+      },
+      "route_a_equal_family_ler": 0.011959075927734375,
+      "external_equal_family_ler": 0.011969094324593593,
+      "external_update_worst_us": 13004.1,
+      "wallclock_cap_us": 5000.0,
+      "deadline_miss_count": 1
+    },
+    "rtl": {
+      "cycles": 1000000,
+      "mismatches": 0,
+      "undefined_actions": 0,
+      "silent_overflow": 0,
+      "host_commit_attempts": 75,
+      "rollback_attempts": 25,
+      "measured_board_latency": false
+    },
+    "hardware": {
+      "profile_count": 2,
+      "seed_counts": [
+        3,
+        3
+      ],
+      "evidence_boundary": {
+        "cxxrtl_qualified": true,
+        "open_source_synthesis": true,
+        "open_source_place_route": true,
+        "vendor_timing_signoff": false,
+        "bitstream_generated": false,
+        "transport_implemented": false,
+        "board_measured": false,
+        "board_deadline_miss": null,
+        "measured_source_to_action_ns": null,
+        "measured_power_mw": null,
+        "speed_advantage": "PROHIBITED_PENDING_T6.9.2"
+      }
+    },
+    "board": {
+      "field_count": 42,
+      "nonnull_count": 0
+    },
+    "v5": {
+      "formal_decisions": 71958528,
+      "development_trajectories": 186,
+      "development_decisions": 4571136,
+      "strict_causal_headroom": -0.0023220252591040383,
+      "incremental_action_headroom": 0.0002548564308772725,
+      "dropped_tasks": 20,
+      "downstream_outputs": 0,
+      "formal_manifest": false,
+      "formal_output": false
+    },
+    "phase6c": {
+      "eligible_result_ids": [
+        "P6C-AQEC-WALLCLOCK",
+        "P6C-MULTIMODE-POSTERIOR-WEIGHTED",
+        "P6C-SINGLE-CI-CPD-EQUIVALENCE",
+        "P6C-STRUCTURED-OFFICIAL-CPD",
+        "P6C-SURFACE-NOH-CI-ML"
+      ],
+      "literature_result_ids": [],
+      "global_score": false,
+      "global_winner": null,
+      "cells": 206,
+      "gates_passed": 24,
+      "parent_bindings_live": true,
+      "recomputations": {
+        "single_static": {
+          "standard_binning": 0.0009786111337167244,
+          "static_joint_map": 0.0009681913587782118,
+          "topk_k4_static_map": 0.0009681913587782118,
+          "proposed_route_a": 0.000992739642107928,
+          "hidden_state_oracle": 0.00016233656141493053
+        },
+        "surface_cnot": {
+          "9.0": {
+            "trials": 65536,
+            "ci_failures": 6563,
+            "ml_failures": 4518,
+            "ci_probability": 0.1001434326171875,
+            "ml_probability": 0.068939208984375,
+            "ci_wilson_95": [
+              0.09786852085214232,
+              0.10246521762768446
+            ],
+            "ml_wilson_95": [
+              0.0670246859497323,
+              0.0709042631842157
+            ]
+          },
+          "12.0": {
+            "trials": 589824,
+            "ci_failures": 5146,
+            "ml_failures": 2158,
+            "ci_probability": 0.008724636501736112,
+            "ml_probability": 0.003658718532986111,
+            "ci_wilson_95": [
+              0.008490482544732503,
+              0.008965189661848998
+            ],
+            "ml_wilson_95": [
+              0.003507834473123042,
+              0.003816067783061463
+            ]
+          },
+          "13.0": {
+            "trials": 2424832,
+            "ci_failures": 6362,
+            "ml_failures": 2037,
+            "ci_probability": 0.002623686919341216,
+            "ml_probability": 0.0008400581978462838,
+            "ci_wilson_95": [
+              0.002560083899697848,
+              0.002688865839993982
+            ],
+            "ml_wilson_95": [
+              0.0008043751575664749,
+              0.0008773227904345736
+            ]
+          }
+        },
+        "structured_cpd": {
+          "official_cpd_threshold": 0.6024563484296794,
+          "official_analog_threshold": 0.5995937637028759,
+          "independent_cpd_threshold": 0.5992981200978975,
+          "independent_analog_threshold": 0.6002453380890981,
+          "independent_total_paired_trials": 1728000
+        },
+        "multimode": {
+          "static_euclidean": {
+            "errors": 2274522,
+            "cycles": 9600000,
+            "p_L": 0.236929375,
+            "worst_window_ler": 0.3203125,
+            "seed_clusters": 96
+          },
+          "weighted_static": {
+            "errors": 2512114,
+            "cycles": 9600000,
+            "p_L": 0.26167854166666665,
+            "worst_window_ler": 0.4609375,
+            "seed_clusters": 96
+          },
+          "observed_only_posterior_predictive_weighted": {
+            "errors": 1653705,
+            "cycles": 9600000,
+            "p_L": 0.1722609375,
+            "worst_window_ler": 0.291015625,
+            "seed_clusters": 96
+          },
+          "oracle_metric_upper_bound": {
+            "errors": 1650523,
+            "cycles": 9600000,
+            "p_L": 0.17192947916666668,
+            "worst_window_ler": 0.29296875,
+            "seed_clusters": 96
+          }
+        },
+        "aqec": {
+          "cutoff12_high": {
+            "measurement_feedback": {
+              "n_seed_clusters": 24,
+              "mean": 0.26043829289388487,
+              "median": 0.259846849956338,
+              "minimum": 0.2509599772680786,
+              "maximum": 0.26728987290175477,
+              "ci95": [
+                0.2589288202723626,
+                0.26190693473914595
+              ],
+              "bootstrap_reps": 20000,
+              "bootstrap_seed": 61819000
+            },
+            "autonomous": {
+              "n_seed_clusters": 24,
+              "mean": 0.24578455202481556,
+              "median": 0.24556105408685708,
+              "minimum": 0.2397547769552416,
+              "maximum": 0.24929316432520832,
+              "ci95": [
+                0.2448765577534393,
+                0.2466468748227582
+              ],
+              "bootstrap_reps": 20000,
+              "bootstrap_seed": 61819000
+            }
+          },
+          "cutoff12_medium": {
+            "measurement_feedback": {
+              "n_seed_clusters": 24,
+              "mean": 0.23973964663235656,
+              "median": 0.23949041682183797,
+              "minimum": 0.2322920065597953,
+              "maximum": 0.24859350531673305,
+              "ci95": [
+                0.23789299235476374,
+                0.24160569297616688
+              ],
+              "bootstrap_reps": 20000,
+              "bootstrap_seed": 61819001
+            },
+            "autonomous": {
+              "n_seed_clusters": 24,
+              "mean": 0.21699387976923057,
+              "median": 0.21672269023408616,
+              "minimum": 0.20972447512130452,
+              "maximum": 0.2257519697635838,
+              "ci95": [
+                0.21518100726180558,
+                0.21882675538580676
+              ],
+              "bootstrap_reps": 20000,
+              "bootstrap_seed": 61819001
+            }
+          },
+          "cutoff12_low": {
+            "measurement_feedback": {
+              "n_seed_clusters": 24,
+              "mean": 0.21805008120733635,
+              "median": 0.21906939841837786,
+              "minimum": 0.20360569922641938,
+              "maximum": 0.23189639789518313,
+              "ci95": [
+                0.21554015884489852,
+                0.22052857676399
+              ],
+              "bootstrap_reps": 20000,
+              "bootstrap_seed": 61819002
+            },
+            "autonomous": {
+              "n_seed_clusters": 24,
+              "mean": 0.1960750446994853,
+              "median": 0.19702026117189267,
+              "minimum": 0.1824668600213129,
+              "maximum": 0.20928399545760007,
+              "ci95": [
+                0.19369871505242536,
+                0.19842748268145619
+              ],
+              "bootstrap_reps": 20000,
+              "bootstrap_seed": 61819002
+            }
+          },
+          "cutoff16_high": {
+            "measurement_feedback": {
+              "n_seed_clusters": 24,
+              "mean": 0.47656073245125147,
+              "median": 0.4768526492304744,
+              "minimum": 0.45782758388464867,
+              "maximum": 0.485941786165962,
+              "ci95": [
+                0.47379340334656145,
+                0.4791533403831338
+              ],
+              "bootstrap_reps": 20000,
+              "bootstrap_seed": 61819003
+            },
+            "autonomous": {
+              "n_seed_clusters": 24,
+              "mean": 0.40722267470714885,
+              "median": 0.40755900042564336,
+              "minimum": 0.39691184583775246,
+              "maximum": 0.4113519235895835,
+              "ci95": [
+                0.4058261176138699,
+                0.4084856383215386
+              ],
+              "bootstrap_reps": 20000,
+              "bootstrap_seed": 61819003
+            }
+          },
+          "cutoff16_medium": {
+            "measurement_feedback": {
+              "n_seed_clusters": 24,
+              "mean": 0.44651679379602144,
+              "median": 0.449156105448425,
+              "minimum": 0.41816405013650115,
+              "maximum": 0.46193228964683575,
+              "ci95": [
+                0.4426458739091488,
+                0.4500232339886487
+              ],
+              "bootstrap_reps": 20000,
+              "bootstrap_seed": 61819004
+            },
+            "autonomous": {
+              "n_seed_clusters": 24,
+              "mean": 0.3630663177473095,
+              "median": 0.3654176826521803,
+              "minimum": 0.33775167602218886,
+              "maximum": 0.37717545840250677,
+              "ci95": [
+                0.3595759139341894,
+                0.3662391807259897
+              ],
+              "bootstrap_reps": 20000,
+              "bootstrap_seed": 61819004
+            }
+          },
+          "cutoff16_low": {
+            "measurement_feedback": {
+              "n_seed_clusters": 24,
+              "mean": 0.408619773929844,
+              "median": 0.40806370933086555,
+              "minimum": 0.39199658693542183,
+              "maximum": 0.42835170971001013,
+              "ci95": [
+                0.40460659583098696,
+                0.4126810021033458
+              ],
+              "bootstrap_reps": 20000,
+              "bootstrap_seed": 61819005
+            },
+            "autonomous": {
+              "n_seed_clusters": 24,
+              "mean": 0.3293920784917859,
+              "median": 0.3288760218567144,
+              "minimum": 0.3150081649455797,
+              "maximum": 0.3466347962824762,
+              "ci95": [
+                0.32590857414243257,
+                0.33292468710412026
+              ],
+              "bootstrap_reps": 20000,
+              "bootstrap_seed": 61819005
+            }
+          }
+        },
+        "hardware": {
+          "seed_count": 3,
+          "minimum_fmax_mhz": 41.02396011352539,
+          "median_fmax_mhz": 41.08294677734375,
+          "maximum_fmax_mhz": 42.2119026184082,
+          "lut4_counts": [
+            3377,
+            3379,
+            3387
+          ],
+          "ff_counts": [
+            865,
+            865,
+            865
+          ],
+          "bram_counts": [
+            8,
+            8,
+            8
+          ],
+          "dsp_counts": [
+            2,
+            2,
+            2
+          ],
+          "source_to_action_ns_at_27mhz": 222.2222222222222,
+          "initiation_interval_ns_at_27mhz": 37.03703703703704
+        },
+        "external_fpga": {
+          "row_count": 18,
+          "direct_nn_count": 5,
+          "same_task_comparable_count": 0,
+          "physical_board_count": 10
+        }
+      }
+    },
+    "selection": {
+      "episodes": 6,
+      "active_evaluation_selection": 0,
+      "hindsight_disagreements": 2,
+      "teacher_restart_seeds": [
+        601,
+        709,
+        811
+      ],
+      "teacher_cap_indices": [
+        0,
+        2
+      ],
+      "teacher_failed_restarts": [],
+      "student_training_records": 9,
+      "student_cap_count": 6
+    },
+    "claim_matrix_parent_verification": true
+  },
+  "source_bindings": {
+    "manuscript": {
+      "path": "docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex",
+      "sha256": "12d085b0dc099ac0a9d6b64ee61581868802fc0f29aac976bfcc8741583baf08",
+      "bytes": 134834
+    },
+    "claim_matrix": {
+      "path": "docs/t7_1_1_claim_evidence_boundary_matrix.json",
+      "sha256": "d3126d0c7b3a8991a23b1b4281558020e5c76f8b00a071717c30a491d546253c",
+      "bytes": 80985
+    },
+    "posterior_lock": {
+      "path": "docs/t6_6_3_route_a_posterior_threshold_lock.json",
+      "sha256": "29989f311cbe1306690439bd6ea0303fd4587fb5d69d744b8e915c97ccf29bec",
+      "bytes": 584201
+    },
+    "promotion_gate": {
+      "path": "docs/t6_7_4_route_a_promotion_gate.json",
+      "sha256": "58f7bd09c1c9982b5be9656cc7404d399567e165b140dc2f76ab0f3c129c5d22",
+      "bytes": 20293
+    },
+    "integrated_rtl": {
+      "path": "docs/t6_7_3_route_a_integrated_rtl_qualification.json",
+      "sha256": "76a00242af2a61900c1151eb77c64aec070b59fb7525fdb1bded73d6eb6c508c",
+      "bytes": 47777
+    },
+    "hardware_pareto": {
+      "path": "docs/t6_9_1_route_a_hardware_pareto.json",
+      "sha256": "fa0182f238976531dfb01c5fbd18fe3ee31c418ab006b1fcbf68d76c549b0887",
+      "bytes": 62338
+    },
+    "board_blocker": {
+      "path": "docs/t6_9_2_route_a_board_measurement_blocker.json",
+      "sha256": "3ba6b5fbaf88049b62a6bb8fe32d3a1ccb2c4e234c7b4f96e7401e3f598bf8c8",
+      "bytes": 9311
+    },
+    "causal_headroom": {
+      "path": "docs/t6_10_1_causal_headroom.json",
+      "sha256": "e1f9eac68cd6d27b6ffe4b71b8dbe37957c81481f448f8ad7b96a8adb56fbe38",
+      "bytes": 42556
+    },
+    "v5_final_gate": {
+      "path": "docs/t6_15_5_route_a_v5_final_evidence_gate.json",
+      "sha256": "537029824f305e001920e61cf03be457074655ee6112fd2db6ab9f0241607670",
+      "bytes": 6659
+    },
+    "phase6c_integrity": {
+      "path": "docs/t6_19_3_secondary_evidence_integrity.json",
+      "sha256": "9402e7e33076b314b050788a9a657e7a47a245d55c6da289b2b6227f2d7e1027",
+      "bytes": 384096
+    },
+    "selection_audit": {
+      "path": "docs/t5_4_4_multi_agent_seed_selection_audit.json",
+      "sha256": "738afd18775f20ff440548bd4aa5d7322c211b2c3312da8868c0dc075ef66551",
+      "bytes": 122890
+    },
+    "teacher_validation": {
+      "path": "docs/t4_4_1_bounded_residual_rnn_teacher_validation.json",
+      "sha256": "c71094493a63f7a3b1287d28c0a1b71d3ce7a03e16a281a27967a87a65669d53",
+      "bytes": 612076
+    },
+    "student_validation": {
+      "path": "docs/t4_4_3_low_dimensional_student_validation.json",
+      "sha256": "1bb56e2d4c8839c4f25e91ece8f404427a1917114bc5e9c69249e92cd7ada26a",
+      "bytes": 2314106
+    },
+    "gain_retention": {
+      "path": "docs/t4_4_4_teacher_student_gain_retention.json",
+      "sha256": "5cd1478de22ecd998aaf678bc6f14873134e57bc8ae2fc4408df215544b86dfc",
+      "bytes": 502663
+    },
+    "task_board": {
+      "path": "docs/new_task_board.md",
+      "sha256": "c3d6ea95bd01be2ef52c9ed9ea13bea4a469ec74300b1c5cfed7bdd0bf89ecda",
+      "bytes": 279794
+    },
+    "implementation": {
+      "path": "cnn_fpga/benchmark/results_evidence_contract.py",
+      "sha256": "981a0803f585b2f468a80f14d8412f7d9c220785e7170fdc61314cdc40868ed4",
+      "bytes": 37545
+    }
+  },
+  "source_integrity_declared": true,
+  "gates": {
+    "G01_identity": true,
+    "G02_results_order_and_complete_subsections": true,
+    "G03_result_state_ontology": true,
+    "G04_v4_smooth_positive_and_stronger_negatives": true,
+    "G05_external_bocd_outcome_with_budget_failure": true,
+    "G06_action_cost_and_failed_policy_families": true,
+    "G07_tail_noninferiority_not_improvement": true,
+    "G08_tail_fallback_and_false_update_costs": true,
+    "G09_v4_preboard_execution_and_attempt_denominator": true,
+    "G10_post_route_estimate_and_board_null": true,
+    "G11_v5_diagnostic_values": true,
+    "G12_v5_early_stop_absence": true,
+    "G13_phase6c_exact_secondary_eligibility": true,
+    "G14_phase6c_integrity_and_no_global_rank": true,
+    "G15_phase6c_negative_null_ledger": true,
+    "G16_multimode_positive_is_task_local": true,
+    "G17_historical_extensions_remain_bounded": true,
+    "G18_restart_cap_and_hindsight_disclosure": true,
+    "G19_no_assertive_overclaim": true,
+    "G20_parent_verdicts_and_live_sources": true
+  },
+  "gate_summary": {
+    "passed": 20,
+    "total": 20
+  },
+  "verdict": "PASS_RESULTS_COMPLETE_NEGATIVE_AND_SECONDARY_BOUNDARIES",
+  "semantic_mutation_audit": {
+    "count": 20,
+    "detected": 20,
+    "cases": [
+      {
+        "mutation_id": "M01",
+        "target_gate": "G01_identity",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M02",
+        "target_gate": "G02_results_order_and_complete_subsections",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M03",
+        "target_gate": "G03_result_state_ontology",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M04",
+        "target_gate": "G04_v4_smooth_positive_and_stronger_negatives",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M05",
+        "target_gate": "G05_external_bocd_outcome_with_budget_failure",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M06",
+        "target_gate": "G06_action_cost_and_failed_policy_families",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M07",
+        "target_gate": "G07_tail_noninferiority_not_improvement",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M08",
+        "target_gate": "G08_tail_fallback_and_false_update_costs",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M09",
+        "target_gate": "G09_v4_preboard_execution_and_attempt_denominator",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M10",
+        "target_gate": "G10_post_route_estimate_and_board_null",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M11",
+        "target_gate": "G11_v5_diagnostic_values",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M12",
+        "target_gate": "G12_v5_early_stop_absence",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M13",
+        "target_gate": "G13_phase6c_exact_secondary_eligibility",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M14",
+        "target_gate": "G14_phase6c_integrity_and_no_global_rank",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M15",
+        "target_gate": "G15_phase6c_negative_null_ledger",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M16",
+        "target_gate": "G16_multimode_positive_is_task_local",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M17",
+        "target_gate": "G17_historical_extensions_remain_bounded",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M18",
+        "target_gate": "G18_restart_cap_and_hindsight_disclosure",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M19",
+        "target_gate": "G19_no_assertive_overclaim",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M20",
+        "target_gate": "G20_parent_verdicts_and_live_sources",
+        "rejected": true
+      }
+    ]
+  },
+  "analysis_sha256": "56c1faa4de67d7055c65766ccfa5073fdca17c35ebb77ee3d4d0c607d6b51de5"
+}

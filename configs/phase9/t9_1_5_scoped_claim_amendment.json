@@ -1,0 +1,966 @@
+{
+  "schema_version": "t9.1.5-scoped-claim-amendment-config-v1",
+  "task_id": "T9.1.5",
+  "protocol_id": "PHASE9-SCOPED-CLAIM-AMENDMENT-V2",
+  "amendment_status": "SEALED_PARENT_BOUND_PRE_OUTCOME_V2",
+  "frozen_at": "2026-07-25T03:42:21+08:00",
+  "parent_contract": {
+    "parent_task_id": "T9.1.1",
+    "parent_protocol_id": "PHASE9-THREE-INDEPENDENT-TASK-SIGNATURES-V1",
+    "parent_analysis_sha256": "c88110375c358794339e72d672e4624871425fe480e5da091ddd1d6595255e18",
+    "parent_report": {
+      "path": "docs/t9_1_1_three_lane_protocol.json",
+      "bytes": 74510,
+      "sha256": "255c50ce677a1cae5475c2294177ceaab551bcbb5078ee2d49b358600a58f7a5"
+    },
+    "parent_config": {
+      "path": "configs/phase9/t9_1_1_three_lane_protocol.json",
+      "bytes": 24172,
+      "sha256": "abcc1fbf94cb933b816c1d0c3076c3de6b313514aa9ed6975679a6f22b29ac09"
+    },
+    "parent_implementation": {
+      "path": "cnn_fpga/benchmark/phase9_three_lane_protocol.py",
+      "bytes": 51962,
+      "sha256": "3ebc7957065587337aeb347b807b9f8fa54a1051bf644a8b1113711e6b12d5e9"
+    },
+    "parent_source_data": {
+      "path": "docs/t9_1_1_three_lane_protocol_source_data.csv",
+      "bytes": 66455,
+      "sha256": "9148034791002183f94795e2f66bc8971668ddf76664da86abb71cf950820970"
+    },
+    "parent_human_markdown": {
+      "path": "docs/phase9_three_lane_protocol.md",
+      "bytes": 21207,
+      "sha256": "8a4f23e867dc97ebffbe2b532697f837bf360c975fe1a61fe5de22f998fddc77"
+    },
+    "immutability_rule": "T9.1.1 v1 report/config/implementation and its analysis_sha256 remain byte-for-byte immutable; this child may only narrow or split downstream wording",
+    "parent_precedence": "v1 task signatures, denominators, thresholds and evidence grades remain authoritative; v2 cannot weaken them"
+  },
+  "registry_parent_contract": {
+    "parent_task_id": "T9.1.4",
+    "parent_protocol_id": "PHASE9-COMMON-HARNESS-BASELINE-REGISTRY-V1",
+    "parent_analysis_sha256": "d6c5ac4fd9587854cd6fec7d390c1fd2ddd5300bbe069ff2db1e16950aa21b7d",
+    "parent_verdict": "PASS_T9_1_4_BASELINE_SEARCH_POWER_REGISTRY_FROZEN",
+    "literature_cutoff_inclusive": "2026-07-25T01:37:24+08:00",
+    "parent_report": {
+      "path": "docs/t9_1_4_baseline_search_power_registry.json",
+      "bytes": 160112,
+      "sha256": "887c628febc4d533cbc8bc8875cde3b4a633a1c70b407723ce744e8cadf6a911"
+    },
+    "parent_config": {
+      "path": "configs/phase9/t9_1_4_baseline_registry.json",
+      "bytes": 51712,
+      "sha256": "f2a9f914eaaae9bd6891f7c47e76da224d75f5ed78c2390a637b71a6e2483759"
+    },
+    "input_contract": {
+      "path": "configs/phase9/t9_1_4_input_contract.json",
+      "bytes": 8444,
+      "sha256": "508372f69fc2e53d53e32bd7e2232f0e375a3aee3454d678318b569edf4bd496"
+    },
+    "literature_ledger": {
+      "path": "docs/t9_1_4_literature_search_ledger.csv",
+      "bytes": 9083,
+      "sha256": "316442b5382b18ce26f53e8ded795184db2b0af78202a68090bb5ab25dfb25ac",
+      "canonical_work_count": 12,
+      "external_same_task_eligible_count": 0
+    },
+    "implementation": {
+      "path": "cnn_fpga/benchmark/phase9_baseline_search_power_registry.py",
+      "bytes": 102321,
+      "sha256": "70b2b2c9eedb2a873ebf5075764cf5a45dce029922158ca9646bacae54e0b000"
+    },
+    "parent_source_data": {
+      "path": "docs/t9_1_4_baseline_search_power_registry_source_data.csv",
+      "bytes": 116752,
+      "sha256": "0d851fcac0df2d88c2c554ee901f914dbe2f1c2c3a2869766782ae6f2995ca75"
+    },
+    "parent_human_markdown": {
+      "path": "docs/phase9_baseline_search_power_registry.md",
+      "bytes": 18034,
+      "sha256": "7bc66d55c08a8b913dc82325faf50ad8102b01967ed6f00f8cefe72798e6dd3b"
+    }
+  },
+  "legacy_migration_table": [
+    {
+      "migration_id": "MIG-LER-GO-SPLIT",
+      "legacy_label": "GO_LER_SOTA",
+      "legacy_lane": "ROUND_LER_SINGLE_MODE",
+      "candidate_destinations": [
+        "GO_LER_REGISTERED_BEST"
+      ],
+      "prohibited_destinations": [
+        "GO_LER_EXTERNAL_SOTA"
+      ],
+      "action": "SPLIT_REQUIRES_FRESH_REEVALUATION",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "v1 label did not distinguish a frozen project registry from independently audited external same-task SOTA"
+    },
+    {
+      "migration_id": "MIG-LER-NOGO-LOCAL",
+      "legacy_label": "NO_GO_LER_SOTA",
+      "legacy_lane": "ROUND_LER_SINGLE_MODE",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_NEGATIVE_ONLY",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "a v1 negative cannot establish any positive or global external ordering"
+    },
+    {
+      "migration_id": "MIG-LIFETIME-GO-SPLIT",
+      "legacy_label": "GO_LIFETIME",
+      "legacy_lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "candidate_destinations": [
+        "GO_LIFETIME_PROJECT_NATIVE"
+      ],
+      "prohibited_destinations": [
+        "GO_LIFETIME_EXTERNAL_SOTA",
+        "GO_PHYSICAL_LIFETIME",
+        "OFFICIAL_PUVIANI_EXACT",
+        "GO_PUVIANI_NMF_SURPASS"
+      ],
+      "action": "SPLIT_REQUIRES_FRESH_REEVALUATION",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "simulation-native, external same-task and QPU-measured lifetime are different estimands and evidence grades"
+    },
+    {
+      "migration_id": "MIG-LIFETIME-NOGO-LOCAL",
+      "legacy_label": "NO_GO_LIFETIME",
+      "legacy_lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_NEGATIVE_ONLY",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "a project-native negative does not evaluate an external or physical task"
+    },
+    {
+      "migration_id": "MIG-HIL-GO-SPLIT",
+      "legacy_label": "GO_HIL_SPEED",
+      "legacy_lane": "RAW_IQ_DIGITAL_HIL",
+      "candidate_destinations": [
+        "GO_HIL_INTEGRATED"
+      ],
+      "prohibited_destinations": [
+        "GO_HIL_EXTERNAL_SPEED"
+      ],
+      "action": "SPLIT_REQUIRES_FRESH_REEVALUATION",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "an integrated measured chain and an external same-boundary speed comparison are separate claims"
+    },
+    {
+      "migration_id": "MIG-HIL-NOGO-LOCAL",
+      "legacy_label": "NO_GO_HIL_SPEED",
+      "legacy_lane": "RAW_IQ_DIGITAL_HIL",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_NEGATIVE_ONLY",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "a missing or failed board result cannot be transferred into an algorithm result"
+    },
+    {
+      "migration_id": "MIG-LER-NULL",
+      "legacy_label": "NOT_EVALUATED_NULL",
+      "legacy_lane": "ROUND_LER_SINGLE_MODE",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TYPED_NULL",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "not evaluated remains null in both scoped LER states"
+    },
+    {
+      "migration_id": "MIG-LER-INCOMPLETE-INTEGRITY",
+      "legacy_label": "INCOMPLETE_LER_INTEGRITY",
+      "legacy_lane": "ROUND_LER_SINGLE_MODE",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_INCOMPLETE",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "integrity failure opens no v2 GO state"
+    },
+    {
+      "migration_id": "MIG-LER-INCOMPLETE-BASELINE",
+      "legacy_label": "INCOMPLETE_LER_BASELINE",
+      "legacy_lane": "ROUND_LER_SINGLE_MODE",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_INCOMPLETE",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "baseline failure opens no v2 GO state"
+    },
+    {
+      "migration_id": "MIG-LER-INCOMPLETE-EVIDENCE",
+      "legacy_label": "INCOMPLETE_LER_EVIDENCE",
+      "legacy_lane": "ROUND_LER_SINGLE_MODE",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_INCOMPLETE",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "evidence failure opens no v2 GO state"
+    },
+    {
+      "migration_id": "MIG-LER-NOGO-TAIL",
+      "legacy_label": "NO_GO_LER_SOTA_TAIL_ONLY",
+      "legacy_lane": "ROUND_LER_SINGLE_MODE",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_NEGATIVE_ONLY",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "tail-only wording is not any v2 GO state"
+    },
+    {
+      "migration_id": "MIG-LER-NOGO-ROBUSTNESS",
+      "legacy_label": "NO_GO_LER_SOTA_ROBUSTNESS_ONLY",
+      "legacy_lane": "ROUND_LER_SINGLE_MODE",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_NEGATIVE_ONLY",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "robustness-only wording is not any v2 GO state"
+    },
+    {
+      "migration_id": "MIG-LER-NOGO-NONINFERIOR",
+      "legacy_label": "NO_GO_LER_SOTA_NONINFERIOR",
+      "legacy_lane": "ROUND_LER_SINGLE_MODE",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_NEGATIVE_ONLY",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "non-inferiority is not superiority"
+    },
+    {
+      "migration_id": "MIG-LER-NOGO-NEGATIVE",
+      "legacy_label": "NO_GO_LER_SOTA_NEGATIVE",
+      "legacy_lane": "ROUND_LER_SINGLE_MODE",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_NEGATIVE_ONLY",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "negative outcome opens no v2 GO state"
+    },
+    {
+      "migration_id": "MIG-LIFETIME-NULL",
+      "legacy_label": "NOT_EVALUATED_NULL",
+      "legacy_lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TYPED_NULL",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "not evaluated remains null in all scoped lifetime states"
+    },
+    {
+      "migration_id": "MIG-LIFETIME-INCOMPLETE-INTEGRITY",
+      "legacy_label": "INCOMPLETE_LIFETIME_INTEGRITY",
+      "legacy_lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_INCOMPLETE",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "integrity failure opens no v2 GO state"
+    },
+    {
+      "migration_id": "MIG-LIFETIME-INCOMPLETE-BASELINE",
+      "legacy_label": "INCOMPLETE_LIFETIME_BASELINE",
+      "legacy_lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_INCOMPLETE",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "baseline failure opens no v2 GO state"
+    },
+    {
+      "migration_id": "MIG-LIFETIME-INCOMPLETE-EVIDENCE",
+      "legacy_label": "INCOMPLETE_LIFETIME_EVIDENCE",
+      "legacy_lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_INCOMPLETE",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "evidence failure opens no v2 GO state"
+    },
+    {
+      "migration_id": "MIG-LIFETIME-NOGO-FIT",
+      "legacy_label": "NO_GO_LIFETIME_FIT",
+      "legacy_lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_NEGATIVE_ONLY",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "failed lifetime fit opens no v2 GO state"
+    },
+    {
+      "migration_id": "MIG-LIFETIME-NOGO-COST",
+      "legacy_label": "NO_GO_LIFETIME_COST",
+      "legacy_lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_NEGATIVE_ONLY",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "cost failure opens no v2 GO state"
+    },
+    {
+      "migration_id": "MIG-LIFETIME-NOGO-NONINFERIOR",
+      "legacy_label": "NO_GO_LIFETIME_NONINFERIOR",
+      "legacy_lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_NEGATIVE_ONLY",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "non-inferiority is not lifetime superiority"
+    },
+    {
+      "migration_id": "MIG-LIFETIME-NOGO-NEGATIVE",
+      "legacy_label": "NO_GO_LIFETIME_NEGATIVE",
+      "legacy_lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_NEGATIVE_ONLY",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "negative outcome opens no v2 GO state"
+    },
+    {
+      "migration_id": "MIG-HIL-MISSING-BOARD",
+      "legacy_label": "MISSING_BOARD_NULL",
+      "legacy_lane": "RAW_IQ_DIGITAL_HIL",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TYPED_NULL",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "missing board leaves both measured HIL states null"
+    },
+    {
+      "migration_id": "MIG-HIL-INCOMPLETE-INTEGRITY",
+      "legacy_label": "INCOMPLETE_HIL_SPEED_INTEGRITY",
+      "legacy_lane": "RAW_IQ_DIGITAL_HIL",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_INCOMPLETE",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "integrity failure opens no v2 GO state"
+    },
+    {
+      "migration_id": "MIG-HIL-INCOMPLETE-EVIDENCE",
+      "legacy_label": "INCOMPLETE_HIL_SPEED_EVIDENCE",
+      "legacy_lane": "RAW_IQ_DIGITAL_HIL",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_INCOMPLETE",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "HIL evidence failure opens no v2 GO state"
+    },
+    {
+      "migration_id": "MIG-HIL-INCOMPLETE-COMPARATOR",
+      "legacy_label": "INCOMPLETE_HIL_SPEED_NO_COMPARATOR",
+      "legacy_lane": "RAW_IQ_DIGITAL_HIL",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_INCOMPLETE",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "missing comparator specifically closes external speed"
+    },
+    {
+      "migration_id": "MIG-HIL-NOGO-DEADLINE",
+      "legacy_label": "NO_GO_HIL_SPEED_DEADLINE",
+      "legacy_lane": "RAW_IQ_DIGITAL_HIL",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_NEGATIVE_ONLY",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "deadline failure opens no v2 GO state"
+    },
+    {
+      "migration_id": "MIG-HIL-NOGO-NEGATIVE",
+      "legacy_label": "NO_GO_HIL_SPEED_NEGATIVE",
+      "legacy_lane": "RAW_IQ_DIGITAL_HIL",
+      "candidate_destinations": [],
+      "action": "PRESERVE_TASK_LOCAL_NEGATIVE_ONLY",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "negative outcome opens no v2 GO state"
+    },
+    {
+      "migration_id": "MIG-HIL-ENGINEERING-NONRANKING",
+      "legacy_label": "GO_HIL_ENGINEERING_NONRANKING",
+      "legacy_lane": "RAW_IQ_DIGITAL_HIL",
+      "candidate_destinations": [],
+      "action": "PRESERVE_SUPPORTING_ONLY",
+      "automatic_mapping": false,
+      "current_mapped_value": null,
+      "reason": "preboard engineering evidence is neither integrated HIL nor external speed"
+    }
+  ],
+  "external_same_task_contract": {
+    "cutoff_source": "T9.1.4 literature_cutoff_inclusive",
+    "cutoff_inclusive": "2026-07-25T01:37:24+08:00",
+    "comparator_ledger_source": "docs/t9_1_4_literature_search_ledger.csv",
+    "canonical_work_count": 12,
+    "current_external_same_task_eligible_count": 0,
+    "required_signature_fields": [
+      "input",
+      "history",
+      "action",
+      "physics",
+      "online_timing",
+      "postselection",
+      "denominator",
+      "metric",
+      "compute"
+    ],
+    "promotion_requirements": [
+      "cutoff_is_non_null_and_preoutcome",
+      "complete_deduplicated_comparator_ledger",
+      "all_credible_in_window_records_screened",
+      "at_least_one_external_same_task_eligible_comparator",
+      "zero_unresolved_eligible_stronger_comparators",
+      "same_task_result_for_every_eligible_comparator",
+      "independent_source_and_evaluation_audit",
+      "source_config_data_and_result_hashes"
+    ],
+    "point_estimate_only": "CONTEXT_ONLY_NOT_PROMOTION_ELIGIBLE",
+    "cross_task_normalisation": "PROHIBITED",
+    "registry_best_auto_promotes_external_sota": false,
+    "current_external_claim_value": null
+  },
+  "predicate_type_contract": {
+    "true": "exact JSON boolean true",
+    "non_null": "64-character lowercase hexadecimal SHA-256 string",
+    "positive": "finite non-boolean positive integer count",
+    "zero": "finite non-boolean integer exactly zero",
+    "minimum": "finite non-boolean integer greater than or equal to the frozen threshold",
+    "generic_mapping_evaluator_may_open_claim": false,
+    "schema_complete_result": "SCHEMA_COMPLETE_NONPROMOTIONAL_NULL",
+    "fixture_result": "FIXTURE_ONLY_NULL",
+    "promotion_authority": "only a downstream task-specific verifier that live-binds source/config/data/result hashes and the T9.1.5 release pin may write a GO state"
+  },
+  "state_definitions": [
+    {
+      "state_id": "GO_LER_REGISTERED_BEST",
+      "lane": "ROUND_LER_SINGLE_MODE",
+      "evidence_scope": "PROJECT_NATIVE_REGISTERED_MATCHED_DEPLOYABLE",
+      "allowed_wording": "best result among all fully qualified methods in the frozen Phase-9 matched deployable registry",
+      "forbidden_wording": [
+        "external SOTA",
+        "world best",
+        "Puviani surpass",
+        "physical break-even"
+      ],
+      "predicate": {
+        "true": [
+          "formal_phase9_complete",
+          "parent_v1_live_verified",
+          "t9_1_4_registry_live_verified",
+          "all_mandatory_baselines_complete",
+          "every_eligible_matched_baseline_beaten_with_registered_thresholds",
+          "same_task_signature",
+          "simultaneous_ci_gate_passed",
+          "both_independent_backends_passed",
+          "zero_postselection",
+          "complete_missingness_ledger",
+          "independent_recompute_passed"
+        ],
+        "non_null": [
+          "formal_manifest_sha256",
+          "source_data_sha256",
+          "analysis_sha256"
+        ]
+      },
+      "revocation_triggers": [
+        "parent or registry binding mismatch",
+        "mandatory baseline removed or ineligible after promotion",
+        "denominator/task signature/observation/action/compute contract changed",
+        "simultaneous CI or independent backend/recompute gate fails",
+        "missingness, timeout, control cost or postselection omitted"
+      ],
+      "current_value": null,
+      "current_reason": "NO_PHASE9_FORMAL_OUTCOME"
+    },
+    {
+      "state_id": "GO_LER_EXTERNAL_SOTA",
+      "lane": "ROUND_LER_SINGLE_MODE",
+      "evidence_scope": "EXTERNAL_SAME_TASK_LITERATURE_CUTOFF_BOUND",
+      "allowed_wording": "external same-task LER SOTA as of the bound literature cutoff",
+      "forbidden_wording": [
+        "unqualified global SOTA",
+        "cross-code SOTA",
+        "physical break-even",
+        "registered-best-only evidence"
+      ],
+      "predicate": {
+        "true": [
+          "go_ler_registered_best",
+          "literature_cutoff_bound",
+          "complete_deduplicated_comparator_ledger",
+          "all_credible_in_window_records_screened",
+          "all_external_same_task_results_complete",
+          "every_external_same_task_comparator_beaten_with_simultaneous_ci",
+          "independent_external_audit_passed"
+        ],
+        "positive": [
+          "external_same_task_eligible_count"
+        ],
+        "zero": [
+          "unresolved_eligible_stronger_comparator_count"
+        ],
+        "non_null": [
+          "comparator_ledger_sha256",
+          "external_evaluation_manifest_sha256",
+          "independent_audit_sha256"
+        ]
+      },
+      "revocation_triggers": [
+        "cutoff or query/ledger provenance is lost",
+        "eligible in-window comparator is added or becomes unresolved",
+        "same-task signature or external evaluator mismatch",
+        "registered-best prerequisite is revoked",
+        "independent audit or evidence hash fails"
+      ],
+      "current_value": null,
+      "current_reason": "ZERO_EXTERNAL_SAME_TASK_ELIGIBLE_AND_NO_FORMAL_OUTCOME"
+    },
+    {
+      "state_id": "GO_LIFETIME_PROJECT_NATIVE",
+      "lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "evidence_scope": "PROJECT_NATIVE_SIX_STATE_SIMULATION",
+      "allowed_wording": "project-native six-state simulated logical-lifetime advantage under the frozen task",
+      "forbidden_wording": [
+        "physical lifetime",
+        "experimental break-even",
+        "external SOTA",
+        "Puviani surpass"
+      ],
+      "predicate": {
+        "true": [
+          "lifetime_power_and_estimand_frozen_preoutcome",
+          "formal_phase9_complete",
+          "six_state_full_denominator",
+          "no_postselection",
+          "control_reset_fallback_cost_included",
+          "survival_and_logical_channel_fit_qualified",
+          "minimum_over_six_states_gain_gate_passed",
+          "simultaneous_ci_gate_passed",
+          "both_independent_backends_passed",
+          "independent_recompute_passed"
+        ],
+        "non_null": [
+          "lifetime_manifest_sha256",
+          "source_data_sha256",
+          "analysis_sha256"
+        ]
+      },
+      "revocation_triggers": [
+        "lifetime estimand or power frozen after outcome access",
+        "six-state denominator, censoring, reset/control cost or failure rows omitted",
+        "fit/convergence/simultaneous CI/backend/recompute gate fails",
+        "postselection or simulation-to-QPU wording transfer occurs"
+      ],
+      "current_value": null,
+      "current_reason": "LIFETIME_POWER_AND_FORMAL_OUTCOME_NOT_YET_FROZEN"
+    },
+    {
+      "state_id": "GO_LIFETIME_EXTERNAL_SOTA",
+      "lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "evidence_scope": "EXTERNAL_SAME_TASK_LIFETIME_CUTOFF_BOUND",
+      "allowed_wording": "external same-task six-state logical-lifetime SOTA as of the bound literature cutoff",
+      "forbidden_wording": [
+        "physical lifetime",
+        "experimental break-even",
+        "cross-protocol SOTA",
+        "project-native-only evidence"
+      ],
+      "predicate": {
+        "true": [
+          "go_lifetime_project_native",
+          "literature_cutoff_bound",
+          "complete_deduplicated_comparator_ledger",
+          "all_credible_in_window_records_screened",
+          "all_external_same_task_results_complete",
+          "every_external_same_task_comparator_beaten_with_simultaneous_ci",
+          "independent_external_audit_passed"
+        ],
+        "positive": [
+          "external_same_task_eligible_count"
+        ],
+        "zero": [
+          "unresolved_eligible_stronger_comparator_count"
+        ],
+        "non_null": [
+          "comparator_ledger_sha256",
+          "external_lifetime_manifest_sha256",
+          "independent_audit_sha256"
+        ]
+      },
+      "revocation_triggers": [
+        "project-native prerequisite is revoked",
+        "cutoff, ledger, same-task or independent-audit evidence is incomplete",
+        "eligible stronger comparator is unresolved",
+        "external denominator/cost/metric differs from the frozen task"
+      ],
+      "current_value": null,
+      "current_reason": "ZERO_EXTERNAL_SAME_TASK_ELIGIBLE_AND_NO_PROJECT_NATIVE_LIFETIME"
+    },
+    {
+      "state_id": "OFFICIAL_PUVIANI_EXACT",
+      "lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "evidence_scope": "OFFICIAL_SOURCE_EXACT_REPRODUCTION",
+      "allowed_wording": "official-source exact Puviani NMF reproduction under the separately frozen evaluator",
+      "forbidden_wording": [
+        "Puviani surpass",
+        "paper-constrained reimplementation equals official",
+        "external SOTA",
+        "physical lifetime"
+      ],
+      "predicate": {
+        "true": [
+          "official_repository_provenance_verified",
+          "official_checkpoint_available",
+          "official_twenty_agent_seed_set_available",
+          "official_selection_ledger_available",
+          "official_six_state_evaluator_available",
+          "exact_environment_and_preprocessing_reproduced",
+          "independent_reproduction_audit_passed"
+        ],
+        "non_null": [
+          "official_asset_manifest_sha256",
+          "official_evaluation_source_data_sha256",
+          "independent_audit_sha256"
+        ]
+      },
+      "revocation_triggers": [
+        "official checkpoint/seeds/selection/evaluator provenance is incomplete",
+        "paper-constrained or inferred assets substitute for official assets",
+        "environment, preprocessing or evaluator mismatch is found",
+        "independent reproduction audit fails"
+      ],
+      "current_value": null,
+      "current_reason": "OFFICIAL_CHECKPOINT_SEEDS_SELECTION_LEDGER_AND_SIX_STATE_EVALUATOR_MISSING"
+    },
+    {
+      "state_id": "GO_PUVIANI_NMF_SURPASS",
+      "lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "evidence_scope": "OFFICIAL_EXACT_SAME_TASK_SURPASS",
+      "allowed_wording": "surpasses the independently reproduced official Puviani NMF on the same frozen six-state task",
+      "forbidden_wording": [
+        "surpass from paper-constrained proxy",
+        "surpass from short horizon",
+        "physical lifetime",
+        "global external SOTA"
+      ],
+      "predicate": {
+        "true": [
+          "official_puviani_exact",
+          "go_lifetime_project_native",
+          "same_task_signature",
+          "same_six_state_denominator_and_horizon",
+          "same_control_reset_postselection_accounting",
+          "simultaneous_ci_gate_passed",
+          "independent_recompute_passed"
+        ],
+        "non_null": [
+          "paired_comparison_manifest_sha256",
+          "source_data_sha256",
+          "analysis_sha256"
+        ]
+      },
+      "revocation_triggers": [
+        "official exact or project-native prerequisite is revoked",
+        "task/denominator/horizon/control accounting mismatch",
+        "paired simultaneous CI or independent recompute fails",
+        "paper-constrained evidence is relabelled official"
+      ],
+      "current_value": null,
+      "current_reason": "OFFICIAL_PUVIANI_EXACT_IS_NULL"
+    },
+    {
+      "state_id": "GO_PHYSICAL_LIFETIME",
+      "lane": "SIX_STATE_LOGICAL_LIFETIME",
+      "evidence_scope": "QPU_REAL_GKP_MEASURED",
+      "allowed_wording": "measured physical logical-lifetime advantage on a real-GKP QPU under the stated physical break-even definition",
+      "forbidden_wording": [
+        "physical claim from simulation",
+        "hardware-aware estimate",
+        "synthesis result",
+        "paper-constrained lifetime"
+      ],
+      "predicate": {
+        "true": [
+          "qpu_measured",
+          "real_gkp_state",
+          "physical_break_even_definition_frozen",
+          "physical_time_axis_measured",
+          "matched_idle_memory_baseline_measured",
+          "physical_break_even_gate_passed",
+          "six_state_full_denominator",
+          "no_postselection",
+          "control_reset_fallback_cost_included",
+          "measurement_calibration_and_uncertainty_complete",
+          "independent_physical_audit_passed"
+        ],
+        "positive": [
+          "independent_qpu_run_count",
+          "measured_physical_event_count"
+        ],
+        "non_null": [
+          "qpu_run_manifest_sha256",
+          "raw_measurement_data_sha256",
+          "analysis_sha256"
+        ]
+      },
+      "revocation_triggers": [
+        "QPU/real-GKP provenance or raw measurement data is unavailable",
+        "postselection, denominator, calibration or control cost is omitted",
+        "break-even definition changes after outcome access",
+        "simulation or estimate substitutes for QPU measurement",
+        "independent physical audit fails"
+      ],
+      "current_value": null,
+      "current_reason": "NO_QPU_OR_REAL_GKP_MEASUREMENT"
+    },
+    {
+      "state_id": "GO_HIL_INTEGRATED",
+      "lane": "RAW_IQ_DIGITAL_HIL",
+      "evidence_scope": "REAL_BOARD_END_TO_END_INTEGRATION",
+      "allowed_wording": "integrated measured raw/recorded-IQ to trigger HIL operation on the identified board and bitstream",
+      "forbidden_wording": [
+        "external speed SOTA",
+        "six-cycle end-to-end",
+        "CXXRTL as measured board",
+        "synthesis estimate as HIL"
+      ],
+      "predicate": {
+        "true": [
+          "real_board_present",
+          "board_recorded_iq_replay_qualified",
+          "board_live_raw_iq_hil_qualified",
+          "recorded_replay_to_discriminator_measured",
+          "live_adc_to_discriminator_measured",
+          "discriminator_to_action_measured",
+          "action_to_trigger_measured",
+          "transport_and_backpressure_measured",
+          "bitstream_platform_clock_provenance_complete",
+          "deadline_missingness_failure_ledger_complete",
+          "independent_hil_audit_passed"
+        ],
+        "positive": [
+          "measured_event_count"
+        ],
+        "minimum": {
+          "independent_build_seed_count": 3,
+          "measured_transaction_count": 1000000
+        },
+        "zero": [
+          "bit_mismatch_count",
+          "undefined_action_count",
+          "silent_overflow_count",
+          "deadline_miss_count"
+        ],
+        "non_null": [
+          "board_manifest_sha256",
+          "bitstream_sha256",
+          "raw_trace_sha256",
+          "latency_source_data_sha256"
+        ]
+      },
+      "revocation_triggers": [
+        "board/bitstream/clock/raw trace provenance is incomplete",
+        "any latency boundary or deadline/failure row is omitted",
+        "CXXRTL, P-and-R or host timing substitutes for board measurement",
+        "six-cycle fast-path boundary is relabelled end-to-end",
+        "independent HIL audit fails"
+      ],
+      "current_value": null,
+      "current_reason": "HIGH_SPEED_BOARD_NOT_AVAILABLE"
+    },
+    {
+      "state_id": "GO_HIL_EXTERNAL_SPEED",
+      "lane": "RAW_IQ_DIGITAL_HIL",
+      "evidence_scope": "EXTERNAL_SAME_BOUNDARY_MEASURED_SPEED",
+      "allowed_wording": "faster measured HIL latency than every eligible external decoder on the same frozen boundary/task/platform contract",
+      "forbidden_wording": [
+        "global FPGA decoder SOTA",
+        "cross-code latency comparison",
+        "clock-cycle-only comparison",
+        "integrated-only evidence"
+      ],
+      "predicate": {
+        "true": [
+          "go_hil_integrated",
+          "literature_cutoff_bound",
+          "complete_external_hardware_comparator_ledger",
+          "same_code_problem_input_precision_and_latency_boundary",
+          "all_external_same_task_results_complete",
+          "resource_power_deadline_context_complete",
+          "paired_speed_superiority_simultaneous_ci_passed",
+          "independent_external_audit_passed"
+        ],
+        "positive": [
+          "external_same_boundary_eligible_count"
+        ],
+        "zero": [
+          "unresolved_eligible_stronger_comparator_count"
+        ],
+        "non_null": [
+          "hardware_comparator_ledger_sha256",
+          "external_speed_manifest_sha256",
+          "independent_audit_sha256"
+        ]
+      },
+      "revocation_triggers": [
+        "integrated HIL prerequisite is revoked",
+        "latency boundary, code/problem, input, precision, clock or platform contract differs",
+        "resource/power/deadline context or eligible comparator is missing",
+        "cycle count or synthesis estimate substitutes for measured latency",
+        "independent external audit fails"
+      ],
+      "current_value": null,
+      "current_reason": "HIL_INTEGRATED_AND_EXTERNAL_SAME_BOUNDARY_COMPARATOR_ARE_NULL"
+    }
+  ],
+  "forbidden_transfers": [
+    {
+      "transfer_id": "FT-V2-REGISTERED-TO-EXTERNAL-LER",
+      "from": "GO_LER_REGISTERED_BEST",
+      "to": "GO_LER_EXTERNAL_SOTA",
+      "rejection": "MISSING_EXTERNAL_SAME_TASK_LEDGER_AND_AUDIT"
+    },
+    {
+      "transfer_id": "FT-V2-PROJECT-TO-EXTERNAL-LIFETIME",
+      "from": "GO_LIFETIME_PROJECT_NATIVE",
+      "to": "GO_LIFETIME_EXTERNAL_SOTA",
+      "rejection": "MISSING_EXTERNAL_SAME_TASK_LEDGER_AND_AUDIT"
+    },
+    {
+      "transfer_id": "FT-V2-PROJECT-TO-PHYSICAL",
+      "from": "GO_LIFETIME_PROJECT_NATIVE",
+      "to": "GO_PHYSICAL_LIFETIME",
+      "rejection": "SIMULATION_IS_NOT_QPU_MEASUREMENT"
+    },
+    {
+      "transfer_id": "FT-V2-INTEGRATED-TO-EXTERNAL-SPEED",
+      "from": "GO_HIL_INTEGRATED",
+      "to": "GO_HIL_EXTERNAL_SPEED",
+      "rejection": "MISSING_EXTERNAL_SAME_BOUNDARY_COMPARATOR"
+    },
+    {
+      "transfer_id": "FT-V2-RECORDED-TO-LIVE-HIL",
+      "from": "BOARD_RECORDED_IQ_REPLAY",
+      "to": "BOARD_LIVE_RAW_IQ_HIL",
+      "rejection": "RECORDED_REPLAY_IS_NOT_LIVE_ADC_RAW_IQ"
+    },
+    {
+      "transfer_id": "FT-V2-PREBOARD-TO-INTEGRATED",
+      "from": "CXXRTL_OR_SYNTHESIS",
+      "to": "GO_HIL_INTEGRATED",
+      "rejection": "ESTIMATE_IS_NOT_REAL_BOARD_HIL"
+    },
+    {
+      "transfer_id": "FT-V2-SIX-CYCLE-TO-END-TO-END",
+      "from": "DISCRIMINATOR_OUT_TO_ACTION_6_CYCLES",
+      "to": "ADC_OR_REPLAY_TO_TRIGGER_LATENCY",
+      "rejection": "LATENCY_BOUNDARY_MISMATCH"
+    },
+    {
+      "transfer_id": "FT-V2-PAPER-CONSTRAINED-TO-OFFICIAL",
+      "from": "PAPER_CONSTRAINED_REIMPLEMENTATION",
+      "to": "OFFICIAL_PUVIANI_EXACT",
+      "rejection": "MISSING_OFFICIAL_ASSETS"
+    },
+    {
+      "transfer_id": "FT-V2-PAPER-CONSTRAINED-TO-SURPASS",
+      "from": "T9.1.3_SHORT_HORIZON_RESULT",
+      "to": "GO_PUVIANI_NMF_SURPASS",
+      "rejection": "OFFICIAL_EXACT_AND_SAME_TASK_REQUIRED"
+    },
+    {
+      "transfer_id": "FT-V2-LIFETIME-TO-LER",
+      "from": "SIX_STATE_LOGICAL_LIFETIME",
+      "to": "GO_LER_REGISTERED_BEST",
+      "rejection": "CROSS_LANE_SUBSTITUTION"
+    },
+    {
+      "transfer_id": "FT-V2-LER-TO-LIFETIME",
+      "from": "ROUND_LER_SINGLE_MODE",
+      "to": "GO_LIFETIME_PROJECT_NATIVE",
+      "rejection": "CROSS_LANE_SUBSTITUTION"
+    },
+    {
+      "transfer_id": "FT-V2-HIL-TO-ALGORITHM",
+      "from": "RAW_IQ_DIGITAL_HIL",
+      "to": "GO_LER_REGISTERED_BEST",
+      "rejection": "HARDWARE_SAFETY_OR_SPEED_IS_NOT_LER"
+    },
+    {
+      "transfer_id": "FT-V2-CROSS-TASK-EXTERNAL",
+      "from": "CROSS_CODE_OR_CROSS_BOUNDARY_RESULT",
+      "to": "ANY_EXTERNAL_SOTA",
+      "rejection": "SAME_TASK_ELIGIBILITY_REQUIRED"
+    },
+    {
+      "transfer_id": "FT-V2-MISSING-TO-ZERO",
+      "from": "MISSING_OR_UNAVAILABLE_EVIDENCE",
+      "to": "ZERO_OR_PASS",
+      "rejection": "TYPED_NULL_REQUIRED"
+    },
+    {
+      "transfer_id": "FT-V2-LEGACY-AUTO-MAP",
+      "from": "GO_LER_SOTA_OR_GO_LIFETIME_OR_GO_HIL_SPEED",
+      "to": "ANY_V2_GO_STATE",
+      "rejection": "FRESH_SCOPED_REEVALUATION_REQUIRED"
+    },
+    {
+      "transfer_id": "FT-V2-POINT-TO-PROMOTION",
+      "from": "POINT_ESTIMATE_ONLY",
+      "to": "ANY_V2_GO_STATE",
+      "rejection": "SIMULTANEOUS_CI_AND_INDEPENDENT_AUDIT_REQUIRED"
+    },
+    {
+      "transfer_id": "FT-V2-NULLABLE-HIL-BLOCKS-ALGORITHM",
+      "from": "T9.7.4_TERMINAL_BLOCKED_NULL",
+      "to": "BLOCK_ALGORITHM_ONLY_OR_SPLIT_DECISION",
+      "rejection": "NULLABLE_HIL_DEPENDENCY_MUST_NOT_BLOCK_SOFTWARE_VERDICTS"
+    }
+  ],
+  "downstream_consumption_contract": {
+    "direct_consumers": [
+      "T9.4.5",
+      "T9.6.1",
+      "T9.6.5",
+      "T9.8.1"
+    ],
+    "required_checks": [
+      "verify child report live",
+      "reconstruct child analysis_sha256",
+      "match immutable T9.1.1 parent analysis_sha256",
+      "match T9.1.4 registry analysis_sha256 and literature cutoff",
+      "match canonical T9.1.5 release-pin analysis/config/implementation hashes",
+      "select exactly one scoped state and satisfy every predicate",
+      "re-run revocation and forbidden-transfer checks"
+    ],
+    "release_pin_path": "configs/phase9/t9_1_5_release_pin.json",
+    "release_pin_rule": "consumer must receive the expected child analysis SHA from the canonical release pin; report-selected config/output paths and seal-only acceptance are prohibited",
+    "generic_mapping_evaluator_rule": "evaluate_claim_candidate is nonpromotional and never emits a non-null value or verdict",
+    "source_column_rule": "do not modify T9.1.1-semantic-bound task/source cells; child dependency remains in downstream output contract text",
+    "t9_7_4_nullable_terminal_rule": "Done or terminal Blocked/null ledger satisfies dependency resolution; only HIL states remain null",
+    "t9_1_2_local_block_rule": "missing official assets blocks only OFFICIAL_PUVIANI_EXACT and GO_PUVIANI_NMF_SURPASS",
+    "qpu_local_block_rule": "missing Phase-8 QPU/real-GKP evidence blocks only GO_PHYSICAL_LIFETIME"
+  },
+  "current_claim_state": {
+    "GO_LER_REGISTERED_BEST": null,
+    "GO_LER_EXTERNAL_SOTA": null,
+    "GO_LIFETIME_PROJECT_NATIVE": null,
+    "GO_LIFETIME_EXTERNAL_SOTA": null,
+    "OFFICIAL_PUVIANI_EXACT": null,
+    "GO_PUVIANI_NMF_SURPASS": null,
+    "GO_PHYSICAL_LIFETIME": null,
+    "GO_HIL_INTEGRATED": null,
+    "GO_HIL_EXTERNAL_SPEED": null
+  },
+  "performance_state": {
+    "round_ler": null,
+    "six_state_lifetime": null,
+    "physical_lifetime": null,
+    "measured_hil_latency": null,
+    "external_rank": null,
+    "protocol_only": true
+  }
+}

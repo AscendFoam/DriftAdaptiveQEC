@@ -5,16 +5,22 @@
 \usepackage{array}
 \usepackage{booktabs}
 \usepackage{caption}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{xcolor}
 \usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue!55!black,urlcolor=blue!55!black,citecolor=blue!55!black}
 \emergencystretch=2em
 \captionsetup{font=small,skip=3pt}
 \setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
 \setlength{\floatsep}{8pt plus 2pt minus 2pt}
 \setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\newcommand{\RouteA}{\textsc{Route-A}}
 
-\title{A Dual-Loop Teacher-Anchored Residual Calibration Framework for Drift-Adaptive GKP Decoding}
+\title{A Dual-Loop Teacher-Anchored Residual Calibration Framework for Drift-Adaptive GKP Decoding\\
+\large Historical Architecture Note with Contract-Centric Evidence Update}
 \author{}
-\date{}
+\date{Evidence synchronized through T7.2.5, 21 July 2026}
 
 \begin{document}
 \maketitle
@@ -23,48 +29,258 @@
 Approximate Gottesman--Kitaev--Preskill (GKP) quantum error correction uses
 continuous modular syndromes to infer displacement errors, but finite-energy
 states and drifting operating conditions make a fixed correction law brittle.
-We study a dual-loop decoding framework that preserves a deterministic affine
-fast path, \(\Delta_t=K_t s_t+b_t\), while using recent syndrome histograms to
-update the runtime parameters at a slower cadence.  The design keeps the
-per-shot computation compatible with quantized fixed-point execution and makes
-the adaptation target explicit: learning or calibration acts only on a
-low-dimensional parameter surface, not on the full decoding decision.
+This historical note studies a dual-loop framework that preserves a
+deterministic affine fast path, \(\Delta_t=K_t s_t+b_t\), while recent syndrome
+histograms update runtime parameters at a slower cadence.  The original
+teacher-anchored residual CNN remains useful as a bounded learning extension,
+but subsequent matched experiments do not support CNN-centric superiority in
+LER, tail safety, and latency simultaneously.  The current interpretation is
+therefore contract-centric: static/adaptive MAP owns the LER decision,
+HMM/event/fallback logic owns tail-safe publication, the fixed-point fast path
+owns deterministic execution, and learned estimators are replaceable modules.
 
 A classical teacher estimator provides an interpretable anchor for the affine
-parameters, and a lightweight CNN predicts only a bounded residual calibration
-term, currently focused on the bias \(b_t\).  This differs from end-to-end
-neural decoders and from outer-code soft-information decoders: the learned
-module updates a physical-layer calibration surface, whereas the per-shot path
-remains a deterministic affine rule.  The intended systems advantage is to
-reduce logical failures under drift while keeping the fast boundary close to a
-small fixed-point controller.
+parameters, and a lightweight CNN predicts a bounded residual calibration term,
+currently focused on the bias \(b_t\).  The durable contribution is the common
+low-dimensional parameter surface and stage-and-commit interface, not the
+identity of the estimator that populates it.
 
-Under the controlled four-scenario simulation protocol, the
-teacher-anchored hybrid residual branch is the winner in all four
-scenarios, with UKF as the runner-up throughout; the UKF-relative mean
-reductions are \(1.75\%\), \(2.89\%\), \(2.80\%\) and \(1.85\%\) across
-the four reference rows, giving a \(2.32\%\) average reduction.  The newer
-paired-interval source data strengthen two scenario rows: for
-\texttt{static\_bias\_theta} and \texttt{linear\_ramp}, 12 paired repeats give
-positive UKF-minus-hybrid intervals, while the all-scenario, pooled, holdout,
-and hardware validations remain incomplete.  Bounded ablation and multi-seed materials
-support only a descriptive reading of this result: histogram-delta features
-matter, the instability pattern repeats across seeds, and the tested
-lower-clip intervention is mixed and mostly harmful, so the current mechanism
-story remains non-causal.  A supplementary statistical-calibration analysis
-further shows that a
-simple non-neural estimator can be strong under the same affine runtime
-contract, but the reported evidence does not select a unique promoted
-threshold.  Controlled oracle-affine, wrapped-Gaussian, residual-channel
-surrogate, finite-squeezing toy-channel, holdout-stress, operation-count,
-fixed-point and runtime-counter checks add theory-facing diagnostics, not a
-new benchmark closure.  The strongest current claim is therefore not that one
-CNN architecture closes the decoding problem, but that drift-adaptive affine
-calibration is a credible and hardware-bounded organizing principle for GKP
-fast-path decoding.
+The original four-scenario software-HIL result is preserved as historical
+extension evidence: Hybrid Residual-B reduced final LER by 1.75--2.89\%
+relative to UKF.  The current paper-level claim is narrower.  In the later V4
+matrix, the \RouteA{} contract system lowered aggregate paired LER by 2.14\%
+relative to the locked EWMA baseline, with periodic drift the only
+Holm-confirmed family.  Its integrated pre-board stack passed one million
+CXXRTL cycles with zero visible mismatches, and the selected no-student profile
+preserved a six-cycle, II=1 architecture through three-seed placement and
+routing at 27 MHz.  Timing, resource, and power values remain post-route
+estimates rather than board measurements.  These statements support a
+restricted simulator/pre-board contract paper, not a universal CNN, adaptive,
+or FPGA ranking.
 \end{abstract}
 
 \tableofcontents
+
+\section{Contract-Centric Evidence Status (2026 Update)}
+
+This section governs the interpretation of all historical material that follows.
+The original CNN+FPGA experiments, ablations and implementation studies are
+retained because they document a reusable affine calibration surface and
+teacher--student extension.  They are not the current main-system ranking.  The
+authoritative current conclusion is:
+
+\begin{quote}
+The V4 safe adaptive dual loop is restricted simulator/pre-board evidence, not
+a broadly superior decoder; V5 was stopped at the causal-headroom gate; positive
+Phase~6C decoder and teacher--student results are independent extension lanes;
+and no measured-board or external-fastest claim is active.
+\end{quote}
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{Current evidence status used to read the historical note.}
+\label{tab:current-contract-status}
+\begin{tabularx}{\textwidth}{@{}l X X@{}}
+\toprule
+Layer & Terminal evidence & Consequence \\
+\midrule
+V4 algorithm & $+2.14\%$ versus locked EWMA, but worse than static and Window MAP; tail tests give EWMA non-inferiority with high intervention & No general LER, static-MAP, or tail advantage \\
+V4 pre-board & One million CXXRTL cycles with zero visible mismatch; six-cycle integrated path; post-route Fmax at least 39.137 MHz & Deterministic pre-board qualification, not measured FPGA latency \\
+V5 & Held-out deployable headroom $0.4587\%$; incremental action-space headroom $0.02549\%$ versus 12\% entry gate & Early stop; no V5 formal/RTL/P\&R evidence \\
+Independent decoder lanes & Multimode adaptive CPD gain 0.064668 with 32/32 positive clusters; CNOT analog-ML reductions 31.16--67.98\% & Positive task-local algorithm evidence; cannot rescue V5 \\
+Auxiliary evidence integrity & 206 cells; 24/24 gates and mutations; 162 joint regressions; explicit null/negative states & Within-lane reporting only; no global score or verdict promotion \\
+Paper claim contract & 29 atomic claims; 45 live artifacts; 19/19 gates and mutations; abstract limited to three restricted claims & Only a restricted pre-board contract paper is open; negative and blocked rows remain mandatory \\
+Frozen Main Figures 1--2 & 38 evidence-bound elements; 16/16 gates and mutations; V5 Dropped and board-null shown on the figure face & Current system/safety schematic, not new performance evidence \\
+Frozen Main Figures 3--4 & 55 evidence-bound rows; 16/16 gates and mutations; mandatory Window/static/oracle-gap negatives and 42 board-null fields shown on the figure face & Current V4 result/pre-board boundary; no global decoder or measured-hardware promotion \\
+Supplement Figures S1--S5 & 792 evidence-bound rows; 17/17 gates and mutations; 13/13 live parents; 210 regressions & Component validation and failure-domain audit only; no global rank, device robustness, V5 revival, or board result \\
+Complete manuscript contract (T7.2.1--T7.2.5) & Five live paper contracts with 14 introduction/related-work, 18 methods, 27 results, 27 discussion/conclusion, and 46 supplementary evidence states; 18/18, 18/18, 20/20, 22/22, and 24/24 gates and mutations & Reproducibility and audit structure only; no additional experiment, decoder rank, board result, or V5 revival \\
+Learning extension & Historical residual-CNN reductions 1.75--2.89\%; four-state student preserves most finite-model teacher gain with 95 scalars & Reusable extension/ablation, not universal learned superiority \\
+Physical board / external speed & Board latency, jitter and power null; 18 external implementations contain zero exact same-task comparator & No hardware-measured, fastest, or SOTA claim \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Current claim-placement overlay}
+
+T7.1.1 is the interpretation layer for the historical sections below.  It
+freezes 29 atomic claims against 45 live report, Source Data, and code
+artifacts: four are allowed only with restrictions, seven are Results-only,
+two are mandatory negative findings, thirteen are blocked or prohibited as
+positive claims, and three are meta/Related-Work boundaries.  The only current
+abstract-level performance statements are the locked-EWMA smooth contrast and
+the deterministic pre-board architecture; the third abstract claim is the
+integrated contract system itself.  Historical CNN/teacher/student numbers and
+independent Phase~6C results remain in their original result or extension
+sections and do not upgrade those three claims.
+
+The canonical terminology is now \RouteA{} contract system, \emph{static joint
+MAP}, \emph{legacy CNN residual}, \emph{secondary evidence lane},
+\emph{post-route estimate}, and \emph{board measurement}.  In particular,
+post-route timing is not board measurement, HMM inference is a software slow
+loop, and the no-student MAP/FSM profile owns the deployable pre-board claim.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/t7_1_2_main_figures/figure1_contract_system.pdf}
+  \caption{Current evidence-bounded \RouteA{} contract overview.  The
+  per-round MAP-LUT/event fast path is separated from the observed-only host
+  update loop, trusted A/B publication, and LKG recovery.  The evidence ladder
+  stops at a three-seed post-route estimate; physical-board measurement remains
+  blocked with 42 null fields.  The six-cycle, II=1 timing is a pre-board clock
+  contract, and CNN/teacher/student remain optional ablations.}
+  \label{fig:oldnote-current-contract-system}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/ppt_summary_20260716/drift_adaptive_architecture_cn.pdf}
+  \caption{Reused presentation architecture.  The durable content is the
+  observed-syndrome interface, bounded slow-loop proposal, atomic A/B bank,
+  quantized fast path, event FSM, and Pauli-frame update.  Under the current
+  contract-centric reading, the displayed four-state student is optional and
+  the maturity badges are a 16 July archival snapshot; real-board validation
+  remains incomplete.}
+  \label{fig:oldnote-contract-architecture}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/t7_1_3_main_figures/figure3_v4_results.pdf}
+  \caption{Current V4 result boundary.  The seven-method untouched smooth
+  comparison identifies Window as the strongest deployable method and shows
+  negative static and oracle-gap contrasts.  Across six abrupt/OOD families,
+  \RouteA{} matches locked EWMA in the worst window rather than improving it,
+  while fallback and recovery costs remain visible.  Positive Phase~6C results
+  remain Supplement-only.  This 55-row evidence-frozen figure supersedes any
+  broad CNN/FPGA performance reading of the older sections.}
+  \label{fig:oldnote-v4-boundary}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/t7_1_3_main_figures/figure4_preboard_evidence.pdf}
+  \caption{Current deterministic pre-board boundary.  The integrated integer
+  path completed one million CXXRTL cycles with zero mismatch, undefined
+  action, or silent overflow; the selected profile retains a six-cycle,
+  II=1 clock-model path and clears 27~MHz in three open-source P\&R seeds.
+  Resource bars describe complete core and optional-student profiles.  The
+  222.222-ns conversion is not board latency, all 42 board fields remain null,
+  and the stopped V5 branch has no quantized, formal, CXXRTL, or P\&R result.}
+  \label{fig:oldnote-preboard-boundary}
+\end{figure}
+
+\subsection{Current Supplement contract overlay}
+
+T7.1.4 adds a deliberately non-ranking supplement around the historical
+architecture.  Its 792 Source Data rows passed 17/17 contract gates and
+mutations, all 13 live parent verifiers, and 210 parent-chain regressions.  The
+five figure roles remain separate:
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{@{}l X X@{}}
+\toprule
+Supplement & Reused evidence & Historical-note boundary \\
+\midrule
+S1 & Gradient, host cutoff/resource envelope, noise-transfer validity & The surrogate is valid only in its localized regime; no physical or timing convergence \\
+S2 & Petz/SDP, top-$K$, six Pauli states & Nondeployable bound, unsynthesized cost proxy, and finite-cutoff channel evidence \\
+S3 & 24 seeds $\times$ 7 methods and all registered OOD lanes & Exposes dispersion and degradation; does not establish system/device robustness \\
+S4 & Fixed-point OAT, four production profiles, failure ledger & Representation retention with V5 Dropped and 42 board fields null \\
+S5 & Existing six-lane Phase~6C atlas & Within-lane evidence only; no global winner or rescue of the V5 stop \\
+\bottomrule
+\end{tabularx}
+\caption{T7.1.4 Supplement overlay for reading the historical note.}
+\label{tab:oldnote-supplement-overlay}
+\end{table}
+
+The most relevant visual overlay for the original FPGA-facing sections is S4.
+It shows that the selected integer profile retained float LER within its
+registered interval, while several OAT settings degrade sharply and the
+failure ledger keeps unsynthesized, incomparable, dropped, and board-null states
+visible.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/t7_1_4_supplement_figures/supplement_s4_fixed_point_and_failures.pdf}
+  \caption{Current Supplement S4 boundary applied to the historical
+  architecture.  Fixed-point sensitivity and four production integer profiles
+  are software/representation evidence.  The right-hand ledger prevents these
+  results from being promoted to synthesized top-$K$, broad OOD/tail,
+  resurrected V5, or measured-board speed/power claims.}
+  \label{fig:oldnote-supplement-s4}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/ppt_summary_20260716/effective_fidelity_lifetime_cn.pdf}
+  \caption{Reused teacher--student presentation result.  The four-state student
+  achieved 2.36$\times$ and 1.58$\times$ the fixed-parameter effective-fidelity
+  lifetime at cutoffs 12 and 16 and used 95 scalars versus 72,853 for the
+  teacher.  This is a ten-cycle finite-model extension metric, not LER,
+  wall-clock lifetime, official GQF reproduction, or board timing.}
+  \label{fig:oldnote-teacher-student}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{../figures/route_a_manuscript_20260720/auxiliary_matched_evidence.pdf}
+  \caption{Independent evidence that remains useful after the V5 stop: matched
+  CNOT CI/ML reproduction, multimode posterior-weighted CPD gain, all-cluster
+  consistency, and source-bound static-MAP post-route estimates.  Panel (d)
+  explicitly preserves measured board latency, jitter and power as null.}
+  \label{fig:oldnote-auxiliary-evidence}
+\end{figure}
+
+\clearpage
+\subsection{Formal-paper overlay through T7.2.5}
+
+The current \RouteA{} note now has a complete paper spine rather than a sequence
+of engineering updates: a six-paragraph Introduction, mechanism-grouped Related
+Work, eleven Methods sections with three statistical subsections, ten ordered
+Results sections, and eight evidence-bounded Discussion sections.  Four
+machine-readable prose contracts keep that structure tied to the live project
+artifacts, while a fifth contract makes the Supplementary definitions,
+parameters, statistics, failures, RTL provenance, and source locators auditable.
+The resulting formal note is 51 pages.  This historical note remains the detailed record of the original
+CNN, affine-calibration, teacher--student, and FPGA-facing design; the newer
+note is authoritative when the two texts differ in ranking or maturity.
+
+\begin{table}[htbp]
+\centering
+\small
+\begin{tabularx}{\textwidth}{@{}p{0.18\textwidth} X X@{}}
+\toprule
+Formal section & Reused contribution & Boundary inherited by this note \\
+\midrule
+Introduction / Related Work & Evidence-gated integration and falsification across MAP, safety control, fast-path execution, and optional learning modules & No cross-protocol leaderboard and no requirement that a learned module win \\
+Methods & Observed-only packets, atomic A/B publication, last-known-good rollback, registered baselines, and evidence-state labels & V5 components remain diagnostic or dropped; host HMM/update work is outside the six-cycle fast path \\
+Results & A narrow $+2.14\%$ locked-EWMA contrast, deterministic pre-board execution, and task-local extension lanes & Static and Window MAP remain stronger on the primary benchmark; BOCD exceeded its 5,000-$\mu$s budget; V5 and board fields remain absent \\
+Discussion / Conclusion & Explicit intervention, compute, resource, external-validity, and physical-transition accounting & No calibrated cavity/transmon, physical lifetime, beyond-break-even, on-board training, or measured-board speed/power claim \\
+Supplementary & Mathematical and decision definitions, frozen parameters, complete comparator/statistics registry, ablations and negative ledger, RTL/toolchain provenance, and Phase~6C source locators & Reproduces existing evidence without adding a performance rank; missing, failed, negative, blocked, and ineligible states are not interchangeable \\
+\bottomrule
+\end{tabularx}
+\caption{Conservative T7.2.1--T7.2.5 overlay on the historical architecture.
+The rows organize existing evidence; they do not add a performance result.}
+\label{tab:oldnote-formal-paper-overlay}
+\end{table}
+
+In particular, T7.2.4 does not repair an unfavorable LER comparison.  It makes
+the cost and extrapolation limits auditable: safety intervention can occupy
+roughly 59--96\% of several registered tail intervals, the slow loop retains a
+4,000-cycle host cadence, and the physical path is a prospective sequence from
+real-data intake and shadow mode through named-board HIL, guarded QPU feedback,
+matched physical effectiveness, and only then a break-even test.
+
+T7.2.5 likewise does not repair the unfavorable primary LER ranking.  It makes
+the reproduction package independently auditable: 46 evidence rows preserve
+all registered comparators, denominators, failures, and null fields; two
+different one-million-cycle RTL campaigns remain separate because one is a
+generic fault-qualification run and the other combines 995,802 frozen-trace
+replay cycles with 4,198 directed cycles.  The 206-cell Phase~6C atlas remains
+a source locator rather than a leaderboard, and no Supplementary row is allowed
+to promote V5, board measurement, or physical break-even.
 
 \section{Introduction}
 
@@ -136,14 +352,13 @@ stack while keeping the fast boundary as a small fixed-point affine
 displacement.
 
 The current note keeps the evidence hierarchy explicit.  The controlled
-software-HIL benchmark is the main result layer.  Feature and teacher
-ablations, six-seed mechanism materials, and the separately labeled
-statistical-calibration extension lane are supporting layers that help explain
-or contextualize the benchmark but do not replace it.  Training/material
-regeneration, isolated true \texttt{.tflite} execution, and hardware-readiness
-artifacts remain boundary evidence rather than coequal performance results.
+software-HIL benchmark is a historical learning-extension layer, not the
+current main-system ranking.  The current status is governed by the V4/V5
+contract gates and independent Phase~6C lanes summarized above.  Feature and
+teacher ablations, \texttt{.tflite} execution, and hardware-readiness artifacts
+remain bounded supporting evidence.
 
-\section{Summary of Contributions}
+\section{Historical Contributions and Reusable Components}
 
 The work can be organized around six bounded contributions.
 
@@ -172,15 +387,15 @@ Learning is therefore used to recalibrate a low-dimensional control surface,
 not to replace GKP decoding end-to-end or to move a neural network onto the
 per-shot critical path.
 
-\paragraph{3. A controlled reference evidence layer.}
-The strongest performance evidence remains the controlled
-four-scenario software-HIL benchmark that serves as the reference comparison
-for the paper.  Within that fixed set, the
+\paragraph{3. A historical controlled evidence layer.}
+The original controlled four-scenario software-HIL benchmark remains valid in
+its frozen scope.  Within that fixed set, the
 teacher-anchored hybrid residual branch is the winner in all four scenarios
 and UKF is the runner-up throughout; the scenario-wise UKF-relative reductions
-are \(1.75\%\), \(2.89\%\), \(2.80\%\) and \(1.85\%\).  This is the primary
-ranking result; it is not an expanded benchmark claim, not a deployment-closure
-result, and not a real-board result.  The later paired-interval source data add
+are \(1.75\%\), \(2.89\%\), \(2.80\%\) and \(1.85\%\).  This is historical
+extension evidence; it is not the current primary ranking, an expanded
+benchmark claim, a deployment-closure result, or a real-board result.  The
+later paired-interval source data add
 scenario-level support for the direction of the UKF-vs-hybrid gap in
 \texttt{static\_bias\_theta} and \texttt{linear\_ramp}, but they still do not
 complete the all-scenario repeat-expanded validation set.
@@ -211,10 +426,11 @@ execution.  These are useful supporting boundaries for the
 manuscript, but they remain layered evidence rather than coequal benchmark
 results or completed deployment claims.
 
-\subsection{Metric-level advantages}
+\subsection{Metric-level advantages and current boundaries}
 
-For reviewer-facing comparison, the advantages should be stated by metric and
-evidence layer rather than by architecture alone.
+For reviewer-facing comparison, both the surviving advantages and the newer
+counterevidence must be stated by metric and evidence layer rather than by
+architecture alone.
 Table~\ref{tab:metric-advantages} separates what is already supported by the
 controlled software-HIL stack from what remains architecture-level reasoning or
 future hardware measurement.
@@ -227,57 +443,54 @@ future hardware measurement.
 \toprule
 Metric & Advantage & Architectural reason & Supported scope \\
 \midrule
-Logical-error proxy &
-Lower error on the controlled software-HIL benchmark than the five reference
-baselines; the separately labeled statistical-calibration extension lane can
-also outperform the reference anchors under its bounded protocol. &
-Both learned and statistical branches update the same physical-layer affine
-surface, so adaptation acts directly on the displacement rule used by the GKP
-fast loop. &
-Supported for the controlled reference ranking and the supplementary
-statistical-calibration analysis; not a paper-grade expanded benchmark and not a promoted
-comparator. \\
+Logical error &
+Historical Hybrid Residual-B is 1.75--2.89\% below UKF on four frozen rows;
+independent multimode adaptive CPD improves absolute LER by 0.064668. &
+Both learned and analytical branches can populate bounded physical-layer
+parameter surfaces. &
+Historical software-HIL and independent multimode tasks only; V4 is worse than
+static/Window MAP and V5 is stopped. \\
 \addlinespace
 Per-shot latency &
-Low latency by design on the correction path. &
+Six-cycle source-to-action contract with initiation interval one. &
 The fast loop evaluates only a \(2\times2\) affine map, bias addition,
 clipping, quantization, and parameter-bank selection; CNN or statistical
 estimation is kept off the per-shot critical path. &
-Architectural claim; board timing and worst-case latency remain a hardware
-measurement target. \\
+Pre-board CXXRTL/P\&R evidence; 222.222 ns at 27 MHz is an estimate and board
+timing remains null. \\
 \addlinespace
 FPGA resource and cost &
-Expected small fast-path resource footprint and lower verification burden than
-placing a neural or graph decoder in the real-time path. &
+Source-bound static core uses at most 3,387 LUT4, 865 FF, 8 BRAM and 2 DSP in
+three open-tool P\&R seeds. &
 The real-time datapath needs only fixed-point multiply-adds, saturation logic,
 and a compact parameter bank; the slow estimator can run less frequently on a
 host, embedded processor, or offline update service. &
-Resource use and energy/cost are not yet measured on a real device. \\
+Resource feasibility is an estimate; real-device utilization, power, and cost
+are not measured. \\
 \addlinespace
 Engineering implementation &
 The control boundary is simple to integrate, test, and fail safely. &
 Quantized \((K,b)\), clipping limits, stale-parameter handling, saturation
 counters, and double-buffered stage-and-commit updates form explicit runtime
 contracts. &
-Software-HIL validates the interface shape; board execution, source-vs-board
-agreement and hardware timing remain unavailable in the present evidence. \\
+One million integrated CXXRTL cycles validate visible-field equivalence and
+fault recovery; board execution and transport remain unavailable. \\
 \addlinespace
 Drift robustness &
-Adaptation can track mean, variance, and orientation changes in the effective
-GKP noise state. &
+V4 has a Holm-corrected periodic-drift gain over locked EWMA; multimode adaptive
+CPD improves all 32 seed clusters. &
 Histogram windows and teacher/statistical summaries update the affine
 parameters over time instead of freezing one calibration point. &
-Supported for the current four-scenario effective-drift suite; broader drift
-families and holdout protocols remain benchmark-expansion targets. \\
+V4 does not generalize to the other smooth families and loses to static/Window;
+the CPD result is a separate task. \\
 \addlinespace
 Modularity &
 The best slow-loop estimator can change without changing the fast path. &
 Teacher residual CNN, statistical calibration, temporal models, and
 gain-scheduled parameter banks all map to the same committed \((K,b)\)
 interface. &
-Current evidence supports this mainly through the teacher-anchored hybrid path
-and the supplement-side statistical-calibration extension lane; other
-slow-loop variants remain candidates for later validation. \\
+Teacher/student compression and legacy CNN replay support replaceability, but
+0 of 16 current learned families are eligible for same-task ranking. \\
 \addlinespace
 Compatibility with larger QEC stacks &
 The method can serve as a GKP physical-layer calibration module before an
@@ -287,11 +500,9 @@ statistics instead of replacing the outer-code decoder decision rule. &
 System-level concatenated-code gains remain unmeasured. \\
 \bottomrule
 \end{tabular}
-\caption{Metric-level advantage summary.  The strongest reported evidence is
-logical-error reduction in software-HIL, with `statcalib' retained only as a
-separately labeled extension-lane supplement.  Latency, resource, and cost
-advantages are architecture-level consequences of the affine fast path and
-should be measured on hardware before being written as deployment results.}
+\caption{Metric-level status after the contract-centric update.  Positive rows
+retain their task and evidence layer; V4/V5 counterevidence and unmeasured board
+fields cannot be offset by a result from another lane.}
 \label{tab:metric-advantages}
 \end{table}
 
@@ -813,6 +1024,12 @@ indicate fewer logical failures under the fixed software-HIL protocol.
 
 \section{Numerical Results}
 
+\noindent\textbf{Current-scope notice.}  The numerical sections below preserve
+the original CNN/affine investigation and its terminology.  They must be read
+as historical extension and mechanism evidence under
+Table~\ref{tab:current-contract-status}; they do not override the later V4
+NO-GO, V5 early stop, or board-null boundary.
+
 The synchronized results are organized as an evidence ladder.  The first rung
 is the predeclared software-HIL ranking in
 Table~\ref{tab:five-mode-benchmark}.  The second rung adds descriptive margins
@@ -835,9 +1052,10 @@ also underlies any later paper-facing visual summary.  In this note, the table
 is kept as the primary representation because it is the authoritative numeric
 surface.  Under the controlled reference protocol, the hybrid residual branch
 is the winner in all four scenarios, with UKF as the runner-up throughout.
-This remains the authoritative primary result layer of the current note.  It supports a
-controlled-simulation ranking only, and it should not be retold as
-an expanded benchmark, a \texttt{.tflite} ranking, or a board-level ranking.
+This remains the authoritative result for the historical frozen benchmark.  It
+supports that controlled-simulation ranking only and should not be retold as
+the current unified ranking, an expanded benchmark, a \texttt{.tflite} ranking,
+or a board-level ranking.
 
 \begin{table}[ht]
 \centering
@@ -1724,83 +1942,110 @@ hardware claims can be made; they are not results of the present note.}
 
 \section{Discussion}
 
-The results and architecture support a narrower claim than ``a CNN is a
-universal GKP decoder''.  The defensible claim is that drift-adaptive GKP
-correction can be organized as low-dimensional affine calibration: recent
-syndrome statistics update \((K,b)\), while the per-shot correction remains a
-deterministic fixed-point rule.  This makes the teacher-anchored CNN branch,
-the statistical-calibration branch and the filtering baselines different
-answers to the same runtime question, not unrelated decoder families.  It also
-separates the work from binary FPGA surface-code decoders, outer-code GKP
-soft-information decoders and end-to-end neural QEC models: the learned or
-statistical module updates a physical displacement surface, but it is not
-placed on the latency-critical correction path.
+The original architecture supports a narrower and more durable claim than ``a
+CNN is a universal GKP decoder''.  Drift-adaptive correction can be organized
+around a low-dimensional, versioned parameter surface: recent syndrome
+statistics propose updates, while the per-shot path remains a deterministic
+fixed-point rule.  Teacher-anchored CNN, statistical calibration, Window/EWMA,
+and future estimators are therefore candidate publishers to a common contract,
+not coequal evidence that learning must win.
 
-The advantage should be interpreted at two levels.  At the primary benchmark
-level, the strongest result is still the controlled four-scenario
-software-HIL ranking: the teacher-anchored hybrid branch beats the filtering
-baselines across all reference scenarios.  At the model-comparison level, the
-reported evidence does not require claiming that the CNN is always the best
-estimator.  A separately labeled calibration-extension supplement is instead
-useful because it shows that the same runtime contract can host a strong
-non-neural alternative; however, the evidence keeps that analysis
-supplement-side because the default and high-threshold settings remain
-persistently tied.  The learned branch therefore remains
-valuable as a replaceable slow-loop module rather than as a uniquely validated
-final comparator.
+The later unified experiments change the algorithmic interpretation.  V4 has a
+positive preregistered contrast against locked EWMA, concentrated in periodic
+drift, but static and Window MAP are better in aggregate and static MAP is far
+better in the calibration tail.  V5 then fails before implementation because
+truth-privileged oracle gaps do not translate into causal deployable headroom;
+the new action family contributes only 0.02549\%.  This identifies
+estimation/activation, rather than action capacity, as the dominant bottleneck
+and prevents an unproductive RTL continuation.
 
-The systems-level advantage is modularity under real-time constraints.  A
-future device could replace the slow estimator, teacher policy or fallback
-logic while preserving the affine fast path, or tighten the fast-path timing
-without retraining the estimator.  The architecture therefore trades estimator
-sophistication against update cadence without putting neural inference or a
-graph decoder on the per-shot critical path.
+The historical CNN result remains useful within this update.  It shows that a
+bounded residual can improve a particular frozen affine software-HIL benchmark,
+and the four-state student shows that most finite-model teacher gain can be
+compressed.  It does not establish current same-task superiority: none of 16
+learned candidate families met the Phase~6C eligibility contract.  The learned
+branch is therefore an extension and ablation, consistent with the old design
+intent but no longer the identity of the system.
 
-The synchronized result layer should still be read in tiers.  The reference
-ranking and two completed paired-interval scenarios are the strongest
-performance evidence.  The ablation, statistical-calibration, controlled
-oracle/wrapped, channel-surrogate, holdout, fixed-point and runtime-counter
-rows explain where the affine contract works, where it fails and what remains
-measurable.  They do not convert the study into a hardware result.  Any claim
-about board latency, resources, power, deployment portability or
-source-vs-board agreement still requires a future \texttt{Linux + FPGA}
-measurement path.
+Positive independent decoder results should be retained without cross-lane
+promotion.  Observed-only posterior weighting substantially improves the
+multimode CPD task, and analog ML improves the matched CNOT task.  Conversely,
+the project-native AQEC wall-clock replay is negative, official GQF reproduction
+is blocked, and the external FPGA table has no exact same-task row.  Reporting
+positive, negative and null cells together is more informative than a global
+score across incompatible tasks.
+
+The T7.1.4 supplement strengthens this reading without changing the old
+architecture's main claim.  At 3~dB the noise-transfer proxy has 0.560 relative
+error against the direct/Fock calculation, whereas at 10 and 12~dB it falls to
+$7.48\times10^{-3}$ and $1.35\times10^{-4}$; the validity boundary is therefore
+regime specific.  The selected fixed-point profile has
+$\Delta\mathrm{LER}=3.05\times10^{-5}$ with an interval crossing zero, and the
+dense profile is bit-identical in the registered replay.  These results support
+component validation and representation retention, not a new CNN, system, or
+hardware advantage.
+
+The formal T7.2.4 cost and external-validity audit narrows the systems reading
+further.  A 4,000-cycle host update cadence and software HMM inference are not
+part of the six-cycle fast path, and fallback or unnecessary-fallback occupancy
+can dominate several registered tail intervals.  The simulator remains a
+single-mode square-lattice syndrome/effective stack rather than a calibrated
+cavity--transmon experiment.  Real-data intake, prospective shadow operation,
+named-board HIL, guarded QPU feedback, matched physical effectiveness, and a
+confidence-bounded break-even test are separate promotion gates; success at an
+earlier gate cannot be promoted to a later claim.
+
+The T7.2.5 Supplementary audit further distinguishes not applicable, not
+reported, execution failure, negative result, blocked reproduction, and
+ineligible comparison.  These states encode different scientific facts and
+therefore cannot be replaced by zero or combined into a global score.  It also
+keeps the generic and integrated million-cycle RTL campaigns as separate
+qualifications, rather than relabelling them as a million independent physical
+or board-level traces.
+
+The systems-level advantage is modularity and deterministic pre-board
+execution.  The integrated V4 stack has a six-cycle path and million-cycle
+visible-field equivalence, and compact static/student profiles fit the selected
+open-tool target.  These are stronger than a software-only latency sketch but
+remain below a measured control plane.  Board latency, jitter, power, transport
+and source-to-board agreement require a future \texttt{Linux + FPGA} path.
 
 \section{Conclusion}
 
-This work frames drift-adaptive GKP correction as a dual-loop affine
-calibration problem.  The fast loop remains a bounded fixed-point rule,
-\(\Delta_t=K_t s_t+b_t\), while a slower loop updates the affine parameters
-from recent syndrome statistics.  The formulation creates a practical middle
-ground between fixed decoders and full neural decoders on a deterministic
-per-shot path.
+This work retains the original framing of drift-adaptive GKP correction as a
+dual-loop affine calibration problem.  The fast path remains bounded and
+deterministic, while slow estimators populate a common parameter contract.  The
+historical residual-CNN and teacher--student results support that modular design,
+but no longer support a CNN-centric primary claim.
 
-The numerical results support two main conclusions.  First, under the controlled
-four-scenario software-HIL suite, adaptive affine decoding with a
-teacher-anchored residual branch improves over filtering baselines, with
-UKF-relative mean reductions of \(1.75\%\)--\(2.89\%\) in the four reference
-rows and two completed \(12/12\)-positive interval checks, while
-bounded ablations and multi-seed mechanism materials show that histogram-delta
-features carry useful information and that teacher-side inputs do not admit a
-simple necessity story.  Second, a supplementary statistical-calibration
-analysis shows that simple non-neural estimators can also be strong under the
-same runtime contract, but the reported evidence does not select a unique
-promoted threshold.  Together, these results suggest
-that the strongest scientific story is not that one CNN architecture has
-closed the comparison, but that low-dimensional histogram-driven calibration
-of an affine GKP fast path is a promising structure for drift-adaptive
-decoding.
+The current evidence gives a sharper conclusion.  V4 is a restricted
+simulator/pre-board result: it improves over locked EWMA in one preregistered
+smooth contrast, but not over static or Window MAP, and it provides tail
+non-inferiority rather than tail advantage.  Its deterministic six-cycle path
+and one-million-cycle CXXRTL agreement support a pre-board contract, while the
+post-route values remain estimates.  V5 is a principled early stop, not an
+unfinished success.  Multimode posterior-weighted CPD, matched CNOT analog ML,
+and finite-model teacher--student compression remain explicitly secondary
+lanes whose task boundaries prevent a universal decoder or hardware claim.
 
-The note now synchronizes the submission draft's main experimental hierarchy:
-four-scenario ranking, two completed paired-interval rows, controlled oracle
-and wrapped-Gaussian diagnostics, residual-boundary channel surrogates,
-holdout and lag stress tests, operation counts, fixed-point emulation and
-runtime counters.  The remaining gaps are equally explicit: all-scenario
-repeat-expanded intervals, stronger sequence-level baselines,
-default-environment \texttt{.tflite} portability and board-level timing or
-resource claims still require separate validation.  The conclusion is
-therefore an evidence-synchronized theory note with clear hardware and
-portability limits, not deployment validation.
+T7.1.1 freezes that interpretation as 29 placement-controlled claims bound to
+45 live artifacts; T7.1.2--T7.1.3 map those states into four evidence-frozen
+main figures, and T7.1.4 adds five non-ranking supplementary figures.
+T7.2.1--T7.2.5 then organize the same evidence into a formal 51-page manuscript
+spine with five live Introduction, Methods, Results, Discussion/Conclusion, and
+Supplementary contracts.  This
+writing layer adds no new experiment: static-MAP superiority, zero eligible
+same-task learned checkpoints, the V5 revocations, GQF/NMF blockage, lack of an
+exact external FPGA comparator, and 42 null board-measured fields remain
+mandatory parts of the conclusion.  The open manuscript is therefore a
+restricted pre-board contract paper rather than a broad CNN+FPGA performance
+paper.
+
+Accordingly, this remains a useful historical theory and architecture note,
+now synchronized to the contract-centric evidence state.  It supports reuse of
+the affine interfaces and bounded learning modules, while measured FPGA speed,
+official GQF superiority, physical lifetime improvement, and external SOTA
+remain unestablished.
 
 \begin{thebibliography}{99}
 

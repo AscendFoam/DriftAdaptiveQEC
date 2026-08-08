@@ -1,0 +1,142 @@
+{
+  "schema_version": "t6.8.4-gqf-paper-exact-preregistration-v1",
+  "task_id": "T6.8.4",
+  "materialized_at_utc": "2026-07-17T17:25:45.078615+00:00",
+  "primary_sources": {
+    "paper_and_supplement": {
+      "path": "relative_papers/Non-Markovian_feedback_for_optimized_quantum_error_correction/Non-Markovian_feedback_for_optimized_quantum_error_correction.md",
+      "sha256": "5dcda2ee0fec3191ddaa44fb539764dbebc2d089c9a3818bb17c132ca28e7c22",
+      "doi": "10.1103/PhysRevLett.134.020601",
+      "arxiv": "2312.07391"
+    },
+    "official_repository": "https://github.com/Matteo-Puviani/GQF.git",
+    "official_commit": "c9ab1ef2b3ff6fa6d6d24cd95fbd06e2872e016d"
+  },
+  "paper_protocol": {
+    "fock_cutoff": 100,
+    "training_Delta": 0.2,
+    "evaluation_Delta": {
+      "status": "AMBIGUOUS",
+      "paper_finite_energy_section": 0.34,
+      "best_agent_training_section": 0.2
+    },
+    "training_noise": "high",
+    "evaluation_noise_levels": [
+      "low",
+      "medium",
+      "high"
+    ],
+    "dynamics": "Sivak2023 / Fig.S2 timing",
+    "full_cycle_us": 10.0,
+    "training_full_cycles": 10,
+    "training_half_measurements": 20,
+    "training_epochs": 1000,
+    "agents": 20,
+    "batch_sizes_reported": [
+      6,
+      8
+    ],
+    "learning_rate": 0.0001,
+    "controls": 15,
+    "rnn_architecture": [
+      10,
+      256,
+      256,
+      15
+    ],
+    "rnn_cell": "GRU",
+    "mf_architecture": [
+      256,
+      256,
+      15
+    ],
+    "training_state": "+Z_L",
+    "reward": "final state fidelity",
+    "evaluation_full_cycles": 1000,
+    "evaluation_logical_states": [
+      "+X",
+      "-X",
+      "+Y",
+      "-Y",
+      "+Z",
+      "-Z"
+    ],
+    "reported_sampling": {
+      "NMF": "6x85=510",
+      "standard": "8x64=512"
+    },
+    "lifetime_fit": "<P_k>(t)=<P_k>(0) exp(-t/T_k)",
+    "channel_lifetime": "3/(1/T_X+1/T_Y+1/T_Z)"
+  },
+  "published_numeric_anchors": {
+    "low_noise_T_Z_standard_cycles": 700.0,
+    "low_noise_T_Z_NMF_cycles": 1500.0,
+    "low_noise_T_minus_Y_NMF_cycles": 770.0,
+    "low_noise_entanglement_infidelity_standard": 0.0015,
+    "low_noise_entanglement_infidelity_NMF": 0.00043,
+    "status_of_complete_TX_TY_TZ_Tch_table": "NOT_TABULATED_NUMERICALLY_IN_SOURCE"
+  },
+  "frozen_acceptance": {
+    "categorical_and_integer_configuration": "exact match required",
+    "published_two_significant_digit_scalar_relative_tolerance": 0.1,
+    "ordering": [
+      "NMF > standard",
+      "NMF > MF",
+      "MF approximately standard"
+    ],
+    "all_agents_reported": true,
+    "all_seed_and_checkpoint_hashes_reported": true,
+    "six_state_1000_cycle_raw_trajectories_required": true,
+    "absolute_and_ordering_must_both_pass": true,
+    "any_source_sufficiency_blocker": "STOP_EXACT_RUN_AND_REPORT_NO_GO"
+  },
+  "executable_diagnostic_freeze": {
+    "probe_script": "scripts/gqf_paper_reproduction_probe.py",
+    "probe_script_sha256": "2aab24393ee45acb3008cc9e14940e3b704d97af16a9a751ae633e6b2a5b5087",
+    "probe_started_at_utc": "2026-07-17T17:18:54.346846+00:00",
+    "configuration_enforced_by_script": {
+      "cutoff": 8,
+      "Delta": 0.34,
+      "noise_level": "low",
+      "dynamics_type": "Sivak2023",
+      "max_steps": 21,
+      "paper_ten_cycle_prefix_half_steps": 20,
+      "official_terminal_half_steps": 21,
+      "official_terminal_cycle_coordinate": 10.5,
+      "batch_size": 2,
+      "seeds": [
+        68401,
+        68407,
+        68419
+      ],
+      "logical_states": [
+        "plus_z",
+        "minus_z",
+        "plus_x",
+        "minus_x",
+        "plus_y",
+        "minus_y"
+      ],
+      "strategy": "standard_sBs_TEST_true"
+    },
+    "manifest_materialized_after_probe": true,
+    "disclosure": "The executable diagnostic configuration was enforced in code before execution; this standalone manifest was materialized afterward. The first run expected 20 steps and failed on the official 21-step behavior; v2 preserves both the 20-step paper prefix and official step 21.",
+    "revision_history": [
+      {
+        "revision": "probe-v1",
+        "outcome": "REJECTED_756_ROWS_VS_720_EXPECTED",
+        "interpretation": "paper says 20 half-cycles but official max_steps=21 executes 21 env steps"
+      },
+      {
+        "revision": "probe-v2",
+        "outcome": "PRESERVE_ALL_21_STEPS",
+        "changed_scientific_thresholds": false
+      }
+    ]
+  },
+  "scope": {
+    "full_exact_run_authorized_only_if_source_sufficient": true,
+    "reduced_probe_is_exact_evidence": false,
+    "project_T2_3_7_may_substitute_official": false
+  }
+}

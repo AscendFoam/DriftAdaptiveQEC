@@ -1,0 +1,99 @@
+{
+  "task_id": "T-RISK-20260727-01",
+  "schema_version": "PHASE9-PAIRED-CLUSTER-UQ-CALIBRATION-CONFIG-V1",
+  "frozen_at": "2026-07-27",
+  "formal_outcomes_used_for_factor_selection": false,
+  "confidence": 0.95,
+  "multiplier_replicates": 199,
+  "candidate_calibration_factors": [
+    1.0,
+    1.05,
+    1.1,
+    1.15,
+    1.25,
+    1.4,
+    1.6
+  ],
+  "dimensions": [
+    16,
+    28
+  ],
+  "cluster_counts_per_state": [
+    64,
+    128,
+    256
+  ],
+  "true_trace_distances": [
+    0.0,
+    0.05,
+    0.09,
+    0.1,
+    0.12
+  ],
+  "margin": 0.1,
+  "families": {
+    "balanced_phase_pure": {
+      "left_noise_weight": 0.4,
+      "right_noise_weight": 0.4,
+      "rare_probability": 1.0,
+      "coherent_unitary": false,
+      "power_primary": true
+    },
+    "high_variance_phase_pure": {
+      "left_noise_weight": 0.75,
+      "right_noise_weight": 0.75,
+      "rare_probability": 1.0,
+      "coherent_unitary": false,
+      "power_primary": false
+    },
+    "rare_coherent_pure": {
+      "left_noise_weight": 0.85,
+      "right_noise_weight": 0.85,
+      "rare_probability": 0.12,
+      "coherent_unitary": true,
+      "power_primary": true
+    },
+    "heteroskedastic_coherent": {
+      "left_noise_weight": 0.25,
+      "right_noise_weight": 0.75,
+      "rare_probability": 1.0,
+      "coherent_unitary": true,
+      "power_primary": false
+    }
+  },
+  "splits": {
+    "calibration": {
+      "seed_base": 1270000,
+      "trial_count": 64
+    },
+    "validation": {
+      "seed_base": 1280000,
+      "trial_count": 96
+    },
+    "multiplier_seed_base": 1290000,
+    "all_intervals_disjoint": true
+  },
+  "selection_gates": {
+    "calibration_min_cell_coverage": 0.95,
+    "calibration_min_cell_wilson_lcb": 0.9,
+    "validation_min_cell_coverage": 0.94,
+    "validation_min_cell_wilson_lcb": 0.88,
+    "boundary_max_equivalence_rate": 0.1,
+    "outside_max_equivalence_rate": 0.05,
+    "null_min_equivalence_rate": 0.8,
+    "local_005_min_equivalence_rate": 0.65
+  },
+  "selected_factor": null,
+  "selected_formal_clusters_per_state": null,
+  "claim_boundary": {
+    "calibration_only": true,
+    "twin_qualification": null,
+    "ler": null,
+    "lifetime": null,
+    "physical_break_even": null,
+    "official_puviani_exact": null,
+    "puviani_nmf_surpass": null,
+    "external_sota": null,
+    "hardware_measured": null
+  }
+}

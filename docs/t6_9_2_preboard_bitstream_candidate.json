@@ -1,0 +1,260 @@
+{
+  "schema_version": "t6.9.2-route-a-preboard-candidate-v1",
+  "task_id": "T6.9.2-PREBOARD",
+  "generated_at": "2026-07-17T21:33:01.968571+00:00",
+  "verdict": "PASS_PREBOARD_CANDIDATE_NOT_PHYSICAL_QUALIFICATION",
+  "candidate_is_physical_evidence": false,
+  "board_programmed": false,
+  "physical_measurements_collected": false,
+  "physical_qualification_blocked": true,
+  "target": {
+    "reference_board": "Sipeed Tang Nano 20K",
+    "device": "GW2AR-LV18QN88C8/I7",
+    "family": "GW2A-18C",
+    "clock_mhz": 27.0,
+    "uart_baud": 3000000,
+    "pinout_status": "candidate_unverified_against_physical_unit_revision"
+  },
+  "post_route": {
+    "clock_name": "integrated.clk",
+    "fmax_mhz": 83.97010040283203,
+    "constraint_mhz": 27.0,
+    "utilization": {
+      "LUT4": {
+        "available": 20736,
+        "used": 6532
+      },
+      "DFF": {
+        "available": 15552,
+        "used": 2969
+      },
+      "BSRAM": {
+        "available": 46,
+        "used": 8
+      },
+      "MULT18X18": {
+        "available": 48,
+        "used": 1
+      },
+      "MULT9X9": {
+        "available": 96,
+        "used": 1
+      },
+      "IOB": {
+        "available": 384,
+        "used": 6
+      }
+    }
+  },
+  "toolchain": {
+    "package_versions": {
+      "yowasp-yosys": null,
+      "yowasp-nextpnr-himbaechel-gowin": null,
+      "apycula": null,
+      "yowasp-runtime": null
+    },
+    "commands": {
+      "cxxrtl_fast_model": "yowasp-yosys -Q -p 'read_verilog -sv <five RTL sources>; chparam -set UART_BAUD 9000000 route_a_uart_board_top; hierarchy -check -top route_a_uart_board_top; proc; check; stat; write_cxxrtl -O0 -g0 route_a_uart_board_fast3_model.cc'",
+      "cxxrtl_fast_compile": "g++ -std=c++17 -O2 -DUART_CLKS_PER_BIT=3 route_a_uart_board_cxxrtl_driver.cc -o route_a_uart_board_fast3.exe",
+      "synthesis": "yowasp-yosys -Q -p 'read_verilog -sv <five RTL sources>; hierarchy -check -top route_a_uart_board_top; proc; check; synth_gowin -family gw2a -no-rw-check -top route_a_uart_board_top -json route_a_uart_board_synth.json; stat'",
+      "place_route": "yowasp-nextpnr-himbaechel-gowin --device GW2AR-LV18QN88C8/I7 -o family=GW2A-18C -o cst=tang_nano_20k_route_a_uart.cst --freq 27 --seed 1 --router router1 --sdc tang_nano_20k_27mhz.sdc",
+      "pack": "gowin_pack -d GW2A-18C -o route_a_uart_board_preboard_candidate.fs route_a_uart_board_routed.json"
+    }
+  },
+  "protocol": {
+    "request_bytes": 40,
+    "response_bytes": 96,
+    "execute_latency_cycles": 7,
+    "duplicate_semantics": "explicit_status_no_reexecution_no_sequence_consumption",
+    "event_controls_single_pulse_gated": true,
+    "accelerated_full_stack_uart_clocks_per_bit": 3,
+    "physical_candidate_uart_clocks_per_bit": 9,
+    "cxxrtl_stdout": "responses=6,execute_latency_cycles=7,duplicate_idempotent=1,crc_errors=1,sequence_errors=1,framing_errors=1,response_crc_errors=0",
+    "phy_stdout": "received=5,framing_errors=1"
+  },
+  "gates": [
+    {
+      "gate": "all_sources_and_constraints_bound",
+      "pass": true
+    },
+    {
+      "gate": "request_codec_roundtrip",
+      "pass": true
+    },
+    {
+      "gate": "full_stack_cxxrtl_protocol",
+      "pass": true
+    },
+    {
+      "gate": "actual_3mbaud_ratio_phy_cxxrtl",
+      "pass": true
+    },
+    {
+      "gate": "post_route_27mhz_timing",
+      "pass": true
+    },
+    {
+      "gate": "post_route_resources_fit",
+      "pass": true
+    },
+    {
+      "gate": "nonempty_packed_bitstream",
+      "pass": true
+    }
+  ],
+  "physical_prerequisites": [
+    {
+      "path": "configs/hardware/t6_1_1_actual_board.json",
+      "present": false
+    },
+    {
+      "path": "docs/t6_1_2_transport_adapter_qualification.json",
+      "present": false
+    },
+    {
+      "path": "docs/t6_1_3_board_timestamp_method.json",
+      "present": false
+    },
+    {
+      "path": "docs/t6_2_3_board_correctness_smoke.json",
+      "present": false
+    },
+    {
+      "path": "docs/t6_4_route_a_board_hil_qualification.json",
+      "present": false
+    },
+    {
+      "path": "docs/t6_9_2_bitstream_manifest.json",
+      "present": false
+    }
+  ],
+  "source_manifest": [
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "bytes": 25822,
+      "sha256": "7caad1ad0fd243f5e62c9ce079fd6def9c6d964bb8fe44e870e96b14a6239784"
+    },
+    {
+      "path": "cnn_fpga/rtl/route_a_policy_overlay.sv",
+      "bytes": 14392,
+      "sha256": "741df9dcf1d9afcab2730b10ee17def016e3a1c7655c5c28249cb60933c2a369"
+    },
+    {
+      "path": "cnn_fpga/rtl/route_a_integrated_qualification_top.sv",
+      "bytes": 5144,
+      "sha256": "e977102d86f013d1fc25f940c8844789db7a2d1fbe162b8c75968df5f8325d70"
+    },
+    {
+      "path": "cnn_fpga/rtl/route_a_uart_phy.sv",
+      "bytes": 5981,
+      "sha256": "311fe0bb398620109df21f68fa3b8bdf369338ea310c197b2e2598798094b30a"
+    },
+    {
+      "path": "cnn_fpga/rtl/route_a_uart_board_top.sv",
+      "bytes": 22001,
+      "sha256": "bdd052da3f403266405ac0b4596f99217081ef436598d9005ce2358af626b793"
+    },
+    {
+      "path": "cnn_fpga/hwio/route_a_uart_protocol.py",
+      "bytes": 9767,
+      "sha256": "e73f72c065819e777ded24bc137cf874b9213f6260da6a901b9573b7c88eee4a"
+    },
+    {
+      "path": "cnn_fpga/rtl/route_a_uart_board_cxxrtl_driver.cc",
+      "bytes": 11552,
+      "sha256": "25af69ae610edf0b820f7d4c77aacde09f125fe1695fcc86464af5ad4629c17f"
+    },
+    {
+      "path": "cnn_fpga/rtl/route_a_uart_phy_cxxrtl_driver.cc",
+      "bytes": 2133,
+      "sha256": "597a380dfe1d396c776f2e2073bdb8ae7b6cfca976e77bccc512dc4e9537676d"
+    },
+    {
+      "path": "cnn_fpga/benchmark/route_a_board_ready_preflight.py",
+      "bytes": 14496,
+      "sha256": "1238362122ad8a9361fc0360d2bab5f174f75d8ab774c4564c1d4f668517ae8d"
+    },
+    {
+      "path": "scripts/route_a_board_uart_smoke.py",
+      "bytes": 6261,
+      "sha256": "79478914337af032d6815c80ee7ab04106c41e2bd7a9c7bd5aa5d0d601247b93"
+    },
+    {
+      "path": "cnn_fpga/rtl/tang_nano_20k_route_a_uart.cst",
+      "bytes": 719,
+      "sha256": "a6fa3f27d05af633bc7b1ca3d8324f012c1f32b08b2f8b9543bd769b8e650b91"
+    },
+    {
+      "path": "cnn_fpga/rtl/tang_nano_20k_27mhz.sdc",
+      "bytes": 57,
+      "sha256": "75cf6f2866062f7286fa58ccd45d95be42f2d2ebe7b5b3b173ab2c5e85ba62e8"
+    }
+  ],
+  "build_manifest": [
+    {
+      "path": "build/t6_9_2_board_ready_uart/route_a_uart_board_synth.json",
+      "bytes": 10538903,
+      "sha256": "e4fa3b182cabc8a1594ab8b245599b1c8380b329429352f9109ddeac2c5384d9"
+    },
+    {
+      "path": "build/t6_9_2_board_ready_uart/route_a_uart_board_routed.json",
+      "bytes": 15704258,
+      "sha256": "865db8343020ad3dfdfd321b88326f2f3d7d9b19de42a217602619fb16d5919d"
+    },
+    {
+      "path": "build/t6_9_2_board_ready_uart/route_a_uart_board_route_report.json",
+      "bytes": 346093,
+      "sha256": "03a726f51b2dd07935956c80a705eb97a9a04da680985d9d673b260bfbce563b"
+    },
+    {
+      "path": "build/t6_9_2_board_ready_uart/route_a_uart_board_synth.log",
+      "bytes": 1406522,
+      "sha256": "ca025d6eeaa732030f2df262621d32169debd61b0114b861ba30aefe64171b09"
+    },
+    {
+      "path": "build/t6_9_2_board_ready_uart/route_a_uart_board_route.log",
+      "bytes": 36415,
+      "sha256": "814395286b819873e7f2f90659ee2981e7ec71ec15d93309d93a63eb3638b3ff"
+    },
+    {
+      "path": "build/t6_9_2_board_ready_uart/route_a_uart_board_preboard_candidate.fs",
+      "bytes": 7263596,
+      "sha256": "f68525164abf9e19f230a1710d198c7c362747ef71ef2059f928b07f71d924a9"
+    },
+    {
+      "path": "build/t6_9_2_board_ready_uart/route_a_uart_board_fast3_model.cc",
+      "bytes": 6219828,
+      "sha256": "f9fd933d7c9875293ea5ff6ab561f867d905d2db64fa2ead8fc7b76b1584def8"
+    },
+    {
+      "path": "build/t6_9_2_board_ready_uart/route_a_uart_board_fast3.exe",
+      "bytes": 917802,
+      "sha256": "f36150e5cdd62649cba0898fa1ded22a42ed1418380afb355d539fddb4ce84f0"
+    },
+    {
+      "path": "build/t6_9_2_board_ready_uart/route_a_uart_rx_model.cc",
+      "bytes": 49769,
+      "sha256": "f2a1d4141d700fdf6c9ffd1f2484d23c690d0e74709e7c8bb1dc420019a6b88c"
+    },
+    {
+      "path": "build/t6_9_2_board_ready_uart/route_a_uart_phy_test.exe",
+      "bytes": 139753,
+      "sha256": "dd02281250e60e6d62cb0712916c462d74e7b927fbcb32f7f119c9fc0fa2f5fe"
+    }
+  ],
+  "claim_boundary": {
+    "allowed": [
+      "hardware-aware UART wrapper simulation passed",
+      "target-device post-route timing estimate passed",
+      "packed preboard bitstream candidate exists"
+    ],
+    "forbidden": [
+      "real-board correctness",
+      "real source-to-action latency",
+      "zero real deadline miss",
+      "measured board power",
+      "physical transport qualification"
+    ],
+    "long_sequence_limitation": "Per-frame UART execute inserts host/link gaps and is not a full-cadence 1e6-cycle HIL substitute; T6.4 still requires a board-qualified streaming or autonomous trace mode."
+  }
+}

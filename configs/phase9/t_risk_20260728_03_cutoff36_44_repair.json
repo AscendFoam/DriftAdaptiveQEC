@@ -1,0 +1,298 @@
+{
+  "task_id": "T-RISK-20260728-03",
+  "schema_version": "PHASE9-CUTOFF36-44-BOUNDED-REPAIR-CONFIG-V1",
+  "purpose": "One-time unpowered fresh cutoff 36/40/44 convergence repair with two consecutive increments, terminal cutoff-44 tails, and Rao-Blackwellized expected shared RESET outputs",
+  "analysis_sha256": "0c4e7a0069edf23947780a41117261cbc3ad2e5557c615a704b7e58e96da4b14",
+  "base_config": {
+    "path": "configs/phase9/t_risk_20260726_01_fresh_twin_qualification.json",
+    "bytes": 520598,
+    "sha256": "8573e670fefff78564ff9705dc93320e08df9f1dcf59e0aaf6be0eee1730c31e"
+  },
+  "repair_trigger": {
+    "diagnosis": {
+      "path": "docs/t_risk_20260728_01_cutoff32_36_no_go_diagnosis.json",
+      "bytes": 5655,
+      "sha256": "08d9bb86116ac2c68e6c8b05e4876854591a115aa14372615cff17ceb49f3973",
+      "analysis_sha256": "567696e14f869301c189a472b66e9e65f1ce390ddf2c8b7a0609150c1b4e4bcd"
+    },
+    "independent_no_go_verification": {
+      "path": "docs/t_risk_20260728_01_cutoff32_36_design_diagnostic_fresh2_verification.json",
+      "bytes": 3882,
+      "sha256": "111d36245c3e1be86387585f9543c1731ddafa70b7f017d7dec32ca3559b23ea",
+      "analysis_sha256": "1f444046a0acef4335a3e0e88fdb91cdfa42eaef336d5ee56154c207206bea98"
+    },
+    "required_diagnosis_verdict": "PHYSICS_AND_ESTIMAND_REPAIR_REQUIRED",
+    "required_scientific_verdict": "NO_GO_HIGH_CUTOFF_DESIGN",
+    "old_raw_rows_vote": false,
+    "old_passing_gates_vote": false
+  },
+  "cutoffs": [
+    36,
+    40,
+    44
+  ],
+  "required_consecutive_increments": [
+    [
+      36,
+      40
+    ],
+    [
+      40,
+      44
+    ]
+  ],
+  "absolute_tail_cutoff": 44,
+  "automatic_cutoff_extension_beyond_44": false,
+  "terminal_if_cutoff44_fails": true,
+  "logical_state_schedule": [
+    "0",
+    "1",
+    "+",
+    "-",
+    "+i",
+    "-i"
+  ],
+  "scenario_names": [
+    "step",
+    "telegraph",
+    "burst",
+    "compound"
+  ],
+  "stage_partition": {
+    "step": {
+      "pre_change": [0, 1, 2, 3],
+      "early_post_change": [4, 5, 6, 7],
+      "late_post_change": [8, 9, 10, 11]
+    },
+    "telegraph": {
+      "phase_0": [0, 1, 2],
+      "phase_1": [3, 4, 5],
+      "phase_2": [6, 7, 8],
+      "phase_3": [9, 10, 11]
+    },
+    "burst": {
+      "pre_burst": [0, 1, 2, 3],
+      "burst_active": [4, 5, 6],
+      "recovery": [7, 8, 9, 10],
+      "terminal": [11]
+    },
+    "compound": {
+      "pre_shift": [0, 1, 2],
+      "shifted": [3, 4, 5],
+      "burst_active": [6, 7, 8],
+      "recovery": [9, 10, 11]
+    }
+  },
+  "trajectory_count": 72,
+  "clusters_per_state": 12,
+  "shared_reset": {
+    "initial_state": "vacuum_f",
+    "action": "RESET",
+    "primary_estimand": "RAO_BLACKWELLIZED_EXPECTED_POST_RESET_DENSITY_AND_LEVELS_V1",
+    "sampled_branch_role": "SAMPLED_NATIVE_RESET_BRANCH_NONVOTING_STRESS_ONLY",
+    "same_native_record_for_counterfactual_branches": true,
+    "success_probability_source": "native pre-reset level probabilities and native reset-success parameters",
+    "conditional_branch_density_archive_required": true,
+    "sampled_branch_density_archive_required": true,
+    "nondegenerate_success_probability_required": true,
+    "expected_density_and_level_linearity_tolerance": 5e-12,
+    "sampled_to_forced_branch_trace_distance_max": 2e-10,
+    "backend_shared_transition_or_rng": false
+  },
+  "seed_splits": {
+    "trajectory_backend_a": {
+      "start": 1800000,
+      "count": 72
+    },
+    "trajectory_backend_b": {
+      "start": 1801000,
+      "count": 72
+    },
+    "heldout_common": {
+      "start": 1802000,
+      "count": 72
+    },
+    "round_backend_a": {
+      "start": 1803000,
+      "count": 72
+    },
+    "round_backend_b": {
+      "start": 1804000,
+      "count": 72
+    },
+    "all_intervals_disjoint": true,
+    "fresh_from_prior_design_and_uq": true
+  },
+  "matrix_accounting": {
+    "fault_cells": 24,
+    "shared_reset_cells": 6,
+    "total_cells": 30,
+    "fault_rows": 20736,
+    "shared_rows": 432,
+    "total_rows": 21168,
+    "fault_terminal_densities": 1728,
+    "shared_expected_densities": 432,
+    "total_primary_densities": 2160,
+    "shared_conditional_success_densities": 432,
+    "shared_conditional_failure_densities": 432,
+    "shared_sampled_stress_densities": 432
+  },
+  "diagnostic_contract": {
+    "decision_statistic": "conservative unpowered point estimate plus archived complex64 quantization bound; no confidence, equivalence, twin-qualification, or performance claim",
+    "design_density_point_threshold": 0.075,
+    "required_consecutive_increments": [
+      [36, 40],
+      [40, 44]
+    ],
+    "absolute_tail_cutoff": 44,
+    "expected_gate_count": 1454,
+    "gate_accounting": {
+      "fault_density": 96,
+      "fault_scalar": 1080,
+      "fault_absolute_tail": 240,
+      "shared_density": 7,
+      "shared_scalar": 21,
+      "shared_absolute_tail": 10
+    },
+    "margins": {
+      "ab_terminal_density_trace_distance": 0.15,
+      "ab_terminal_mean_photon_difference": 0.08,
+      "ab_terminal_level_probability_l1": 0.1,
+      "ab_terminal_logical_survival_difference": 0.1,
+      "cutoff_terminal_density_trace_distance": 0.1,
+      "cutoff_terminal_mean_photon_difference": 0.08,
+      "cutoff_terminal_level_probability_l1": 0.1,
+      "cutoff_terminal_logical_survival_difference": 0.1,
+      "absolute_terminal_top1_fock_mass": 0.005,
+      "absolute_terminal_top2_fock_mass": 0.01,
+      "absolute_terminal_top4_fock_mass": 0.02,
+      "absolute_terminal_normalized_mean_photon": 0.25,
+      "absolute_terminal_commutator_defect": 0.05
+    },
+    "stage_cluster_reduction": "mean within each trajectory seed_position and registered stage before any cutoff contrast",
+    "all_1454_gates_must_pass": true,
+    "failure_verdict": "TERMINAL_NO_GO_CUTOFF44_REPAIR",
+    "pass_verdict": "DESIGN_REPAIR_PASS_MAY_PREREGISTER_SEPARATE_POWERED_FORMAL",
+    "powered_formal_release": false,
+    "old_gate_or_raw_composition_forbidden": true
+  },
+  "resource_preflight": {
+    "required_before_scientific_chunk": true,
+    "benchmark_cutoffs": [40, 44],
+    "benchmark_backends": ["A", "B"],
+    "benchmark_scenarios": ["step", "telegraph", "burst", "compound"],
+    "benchmark_trajectories_per_state": 1,
+    "include_rao_blackwell_shared_reset": true,
+    "seed_splits": {
+      "trajectory_backend_a": {"start": 1790000, "count": 6},
+      "trajectory_backend_b": {"start": 1791000, "count": 6},
+      "heldout_common": {"start": 1792000, "count": 6},
+      "round_backend_a": {"start": 1793000, "count": 6},
+      "round_backend_b": {"start": 1794000, "count": 6},
+      "disjoint_from_scientific_and_future_formal": true
+    },
+    "wall_safety_factor": 2.0,
+    "rss_delta_safety_factor": 2.0,
+    "artifact_safety_factor": 2.0,
+    "minimum_per_worker_delta_bytes": 67108864,
+    "maximum_estimated_wall_seconds": 86400,
+    "maximum_estimated_total_rss_bytes": 25769803776,
+    "maximum_estimated_artifact_bytes": 4294967296,
+    "minimum_free_disk_bytes": 8589934592,
+    "thread_pool_accounting": "baseline_rss + max_single_benchmark_delta * max_workers",
+    "design_outcomes_accessed": false
+  },
+  "capability_preflight": {
+    "required_before_scientific_chunk": true,
+    "cutoffs": [40, 44],
+    "backends": ["A", "B"],
+    "logical_states": ["0", "1", "+", "-", "+i", "-i"],
+    "actions": ["IDLE", "X", "Z", "XZ", "HOLD", "RESET"],
+    "integration_segment_steps": [8, 16, 32],
+    "coarse_to_middle_max_trace_distance": 0.005,
+    "middle_to_fine_max_trace_distance": 0.0015,
+    "refinement_ratio_max": 0.5,
+    "cutoff45_rejected_before_allocation": true
+  },
+  "future_powered_formal": {
+    "released": false,
+    "may_be_preregistered_only_after_independent_all_gate_pass": true,
+    "fresh_all_cutoffs_and_all_gate_families_required": true,
+    "old_design_rows_vote": false,
+    "automatic_execution_from_this_task": false,
+    "official_puviani_sota_claims": null
+  },
+  "max_workers": 2,
+  "source_bindings": {
+    "fresh_runner": {
+      "path": "cnn_fpga/benchmark/phase9_fresh_twin_qualification.py",
+      "bytes": 83828,
+      "sha256": "8b03c432b93d8e720a273d3d24781db07d4b0b92a6b8defa85c95d603012e116"
+    },
+    "dual_backend_kernel": {
+      "path": "cnn_fpga/benchmark/phase9_dual_backend_qualification.py",
+      "bytes": 43146,
+      "sha256": "468c500d0a4aa7a2655a24d9b02bb71632774a146857703dd3e1e199cc5d3561"
+    },
+    "backend_a": {
+      "path": "physics/phase9_backend_a.py",
+      "bytes": 90371,
+      "sha256": "5dc88f953167d46ab6cd828fd5d87f022a114dbf2324a05f4479af1e53f18558"
+    },
+    "backend_b": {
+      "path": "physics/phase9_backend_b.py",
+      "bytes": 87161,
+      "sha256": "0b7f7e3f2bf9b485bf5eb753602b5d2029e1e4d39d726037309f12abc926c03c"
+    },
+    "cutoff44_adapter": {
+      "path": "physics/phase9_cutoff44_runtime_adapter.py",
+      "bytes": 7539,
+      "sha256": "fa8ecba5270b34b43fc2f2b4d797bbc8eaa7af937d172276b6ad18507a66ab33"
+    },
+    "reset_rao_blackwell": {
+      "path": "physics/phase9_reset_rao_blackwell.py",
+      "bytes": 10459,
+      "sha256": "64889f443d060a2024f0b0689692050fe9c67032ab3a19cf1665592953b9cdca"
+    },
+    "backend_b_bridge": {
+      "path": "physics/phase9_backend_b_logical_bridge.py",
+      "bytes": 13046,
+      "sha256": "104ea5691b4042f046db2d2622a4977b30f689ec9dd387fe1f555ec32e5f5c60"
+    },
+    "iq_reference": {
+      "path": "physics/phase9_iq_likelihood_reference.py",
+      "bytes": 20206,
+      "sha256": "0c7a693bf08a27083ed38eb79f8a2f4f50aff73d8c6905246698d8fb8bd793c4"
+    },
+    "twin_contract": {
+      "path": "physics/phase9_twin_contract.py",
+      "bytes": 97449,
+      "sha256": "05622cb5036ea9593b76b7d27ad161d70e65353e5fa9392becbe116d4591f9c1"
+    }
+  },
+  "artifact_paths": {
+    "run_directory": "runs/t_risk_20260728_03_cutoff36_44_repair_fresh1",
+    "chunk_directory": "runs/t_risk_20260728_03_cutoff36_44_repair_fresh1/chunks",
+    "receipt_directory": "runs/t_risk_20260728_03_cutoff36_44_repair_fresh1/receipts",
+    "heartbeat": "runs/t_risk_20260728_03_cutoff36_44_repair_fresh1/heartbeat.json",
+    "owner_lock": "runs/t_risk_20260728_03_cutoff36_44_repair_fresh1/supervisor.owner.lock",
+    "run_identity": "runs/t_risk_20260728_03_cutoff36_44_repair_fresh1/run_identity.json",
+    "resource_preflight": "runs/t_risk_20260728_03_cutoff36_44_repair_fresh1/resource_preflight.json",
+    "capability_preflight": "runs/t_risk_20260728_03_cutoff36_44_repair_fresh1/capability_preflight.json",
+    "execution_manifest": "docs/t_risk_20260728_03_cutoff36_44_repair_fresh1_manifest.json",
+    "diagnostic_report": "docs/t_risk_20260728_03_cutoff36_44_repair_fresh1_diagnostic.json",
+    "diagnostic_source_data": "docs/t_risk_20260728_03_cutoff36_44_repair_fresh1_source_data.csv",
+    "diagnostic_verification": "docs/t_risk_20260728_03_cutoff36_44_repair_fresh1_verification.json"
+  },
+  "claim_boundary": {
+    "design_repair_only": true,
+    "twin_qualification": null,
+    "ler": null,
+    "lifetime": null,
+    "physical_break_even": null,
+    "official_puviani_exact": null,
+    "puviani_nmf_surpass": null,
+    "external_sota": null,
+    "hardware_measured": null
+  }
+}

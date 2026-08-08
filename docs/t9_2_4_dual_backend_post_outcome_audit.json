@@ -1,0 +1,240 @@
+{
+  "task_id": "T9.2.4",
+  "schema_version": "PHASE9-DUAL-BACKEND-POST-OUTCOME-AUDIT-V1",
+  "verdict": "AUDIT_CONFIRMS_SCIENTIFIC_NO_GO",
+  "formal_report_analysis_sha256": "d3f05e69db9c4799d55ce0813f8bd52cdb22384dbd5cfc68227715c44c53ec49",
+  "evidence": {
+    "report": {
+      "path": "docs/t9_2_4_dual_backend_qualification.json",
+      "bytes": 2995,
+      "sha256": "b81059cb685f76848f5fd978acf0cbdaf52c39a26588f975fa6e7c9b2378c1d1"
+    },
+    "execution_manifest": {
+      "path": "docs/t9_2_4_dual_backend_execution_manifest.json",
+      "bytes": 968,
+      "sha256": "0229a52750b015132e01f45910ec133abfb7885efb34f74e819f60ca13c264bd"
+    },
+    "cell_ledger": {
+      "path": "docs/t9_2_4_dual_backend_cell_ledger.csv",
+      "bytes": 11348795,
+      "sha256": "6c5c80429a2dd14e039af39d20b13285de5c999ff14a4fa0077080eecbcedb94"
+    },
+    "raw_state_archive": {
+      "path": "docs/t9_2_4_dual_backend_state_archive.npz",
+      "bytes": 44011995,
+      "sha256": "b73175b539e63414d771674499fe79269bbaf8e9304361401339a66cad1f057d"
+    },
+    "source_data": {
+      "path": "docs/t9_2_4_dual_backend_qualification_source_data.csv",
+      "bytes": 391488,
+      "sha256": "db39710feafc45ddadaef343bfdf019b6bf47b6849d8dc7187405fb2b390a384"
+    },
+    "release_pin": {
+      "path": "configs/phase9/t9_2_4_release_pin.json",
+      "bytes": 3123,
+      "sha256": "d8e6cf522830447c6922d44ba46b275bf61ab67b7f5884e159eb4863b9fe77d3"
+    }
+  },
+  "summary": {
+    "rows": 16800,
+    "gate_passed": 825,
+    "gate_failed": 217,
+    "failure_counts": {
+      "ensemble_density_trace_distance": 2,
+      "integrated_iq_mean_difference": 66,
+      "iq_two_sample_ks": 66,
+      "leakage_residence_rate_difference": 2,
+      "level_probability_l1": 3,
+      "log_evidence_mean_difference": 66,
+      "logical_survival_difference": 2,
+      "reset_success_rate_difference": 2,
+      "short_trajectory_observable_mean_difference": 8
+    },
+    "worst_gate": "ab|probe|P07_BOUNDARY|XZ|cutoff=8|log_evidence",
+    "worst_point_estimate": 2.156933369985911,
+    "worst_simultaneous_bound": 6.135524026131214,
+    "worst_tolerance": 0.3,
+    "released_tasks": [
+      "T9.2.6"
+    ],
+    "blocked_tasks": [
+      "T9.2.5",
+      "T9.2.7",
+      "T9.3.1",
+      "T9.3.4",
+      "T9.6.2",
+      "T9.6.5"
+    ]
+  },
+  "gates": {
+    "report_self_hash": true,
+    "lineage_exact": true,
+    "execution_row_total": true,
+    "zero_exception_rows": true,
+    "all_conservation_rows": true,
+    "backend_seed_disjoint": true,
+    "archive_schema": true,
+    "archive_terminal_coverage": true,
+    "archive_density_shapes": true,
+    "mapping_backend_alignment": true,
+    "mapping_cutoff_improves_min_capture": true,
+    "source_record_total": true,
+    "gate_count_recomputed": true,
+    "failure_distribution_exact": true,
+    "worst_gate_recomputed": true,
+    "worst_point_from_ledger": true,
+    "simultaneous_bound_arithmetic": true,
+    "worst_gate_fails_frozen_tolerance": true,
+    "bootstrap_scope": true,
+    "no_postselection_contract": true,
+    "scientific_not_infrastructure_failure": true,
+    "failure_propagation": true,
+    "all_claims_typed_null": true,
+    "release_pin_matches_report": true,
+    "release_file_bindings": true
+  },
+  "gate_summary": {
+    "passed": 25,
+    "total": 25,
+    "all_passed": true
+  },
+  "targeted_mutations": [
+    {
+      "mutation_id": "report_hash",
+      "field": "report_self_hash",
+      "detected": true
+    },
+    {
+      "mutation_id": "parent_lineage",
+      "field": "parent_analysis",
+      "detected": true
+    },
+    {
+      "mutation_id": "execution_lineage",
+      "field": "execution_analysis",
+      "detected": true
+    },
+    {
+      "mutation_id": "drop_row",
+      "field": "ledger_count",
+      "detected": true
+    },
+    {
+      "mutation_id": "duplicate_row",
+      "field": "ledger_unique",
+      "detected": true
+    },
+    {
+      "mutation_id": "hide_exception",
+      "field": "ledger_exception_count",
+      "detected": true
+    },
+    {
+      "mutation_id": "hide_conservation_failure",
+      "field": "ledger_conservation_count",
+      "detected": true
+    },
+    {
+      "mutation_id": "overlap_rng",
+      "field": "seed_overlap",
+      "detected": true
+    },
+    {
+      "mutation_id": "drop_archive_density",
+      "field": "archive_ids_count",
+      "detected": true
+    },
+    {
+      "mutation_id": "fake_archive_coverage",
+      "field": "archive_id_coverage",
+      "detected": true
+    },
+    {
+      "mutation_id": "drop_source_gate",
+      "field": "source_gate_count",
+      "detected": true
+    },
+    {
+      "mutation_id": "promote_failed_gate",
+      "field": "source_failed_count",
+      "detected": true
+    },
+    {
+      "mutation_id": "rewrite_failure_family",
+      "field": "failure_counts",
+      "detected": true
+    },
+    {
+      "mutation_id": "replace_worst_gate",
+      "field": "worst_gate",
+      "detected": true
+    },
+    {
+      "mutation_id": "rewrite_point",
+      "field": "worst_source_point",
+      "detected": true
+    },
+    {
+      "mutation_id": "rewrite_bound",
+      "field": "worst_source_bound",
+      "detected": true
+    },
+    {
+      "mutation_id": "reduce_bootstrap",
+      "field": "bootstrap_resamples",
+      "detected": true
+    },
+    {
+      "mutation_id": "permit_postselection",
+      "field": "all_gate_notes_no_postselection",
+      "detected": true
+    },
+    {
+      "mutation_id": "promote_verdict",
+      "field": "report_verdict",
+      "detected": true
+    },
+    {
+      "mutation_id": "release_surrogate",
+      "field": "released_tasks",
+      "detected": true
+    },
+    {
+      "mutation_id": "drop_blocked_task",
+      "field": "blocked_tasks",
+      "detected": true
+    },
+    {
+      "mutation_id": "promote_claim",
+      "field": "report_claim_values",
+      "detected": true
+    },
+    {
+      "mutation_id": "change_release_verdict",
+      "field": "release_verdict",
+      "detected": true
+    },
+    {
+      "mutation_id": "tamper_bound_file",
+      "field": "release_bindings_match",
+      "detected": true
+    }
+  ],
+  "mutation_summary": {
+    "detected": 24,
+    "total": 24,
+    "all_detected": true
+  },
+  "claim_state": {
+    "round_ler": null,
+    "six_state_lifetime": null,
+    "physical_break_even": null,
+    "official_puviani_exact": null,
+    "puviani_nmf_surpass": null,
+    "external_sota": null,
+    "hardware_measured": null,
+    "rank": null
+  },
+  "claim_boundary": "Audit confirms evidence integrity and the frozen scientific NO-GO only; it does not qualify LER, lifetime, physical, hardware, Puviani, external-SOTA, or rank claims.",
+  "analysis_sha256": "b9b0de857f8f345e653600091899f7d87f18d7706fc8909bc1f969d15bb6e6d3"
+}

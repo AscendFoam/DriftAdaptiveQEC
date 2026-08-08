@@ -1,0 +1,610 @@
+{
+  "task_id": "T7.2.1",
+  "schema_version": "t7.2.1-introduction-related-work-contract-v1",
+  "generated_at_utc": "2026-07-20T16:54:47.884759+00:00",
+  "paper_argument": "For repeated approximate-GKP correction, decoder adaptation is an evidence-gated execution contract: MAP owns LER, typed event/fallback logic owns safety, and a versioned six-cycle fast path owns deterministic execution.",
+  "writing_axes": {
+    "paper_type": "algorithmic systems paper",
+    "sections": [
+      "Introduction",
+      "Related Work"
+    ],
+    "language": "English drafted from Chinese evidence ledger",
+    "journal_style": "generic high-impact / Nature-leaning argument discipline",
+    "introduction_variant": "general-to-specific plus open-with-challenge",
+    "related_work_variant": "mechanism-grouped with explicit task signatures"
+  },
+  "comparison_contract": {
+    "literature_lanes": [
+      "single_mode_decoder",
+      "surface_gkp_gate_ci_ml",
+      "multimode_structured_cpd",
+      "direct_nn_rl_nmf_controller",
+      "aqec_physical_protocol",
+      "fpga_implementation"
+    ],
+    "task_signature_required": true,
+    "task_signature_fields": [
+      "code_or_modes",
+      "noise_model",
+      "syndrome_input",
+      "output_action",
+      "observability_or_privilege",
+      "compute_budget",
+      "precision",
+      "timing_boundary",
+      "evidence_grade"
+    ],
+    "global_ranking_allowed": false,
+    "literature_values_as_project_results": false,
+    "same_task_zero_implies_superiority": false
+  },
+  "manuscript": {
+    "note_path": "docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex",
+    "section_order": [
+      "Introduction",
+      "Scope, argument, and evidence cutoff",
+      "Related Work",
+      "Contract-centric dual-loop method",
+      "Results",
+      "Where the current data show an advantage",
+      "Negative results that define the design",
+      "Terminal verdicts and remaining gates",
+      "Discussion",
+      "Reproducibility and evidence availability",
+      "Conclusion",
+      "Evidence-bounded supplementary figure suite",
+      "Mathematical and decision definitions",
+      "Frozen parameters and execution contract",
+      "Complete comparators and statistical protocol",
+      "Ablations, failure modes, and negative selection",
+      "RTL, toolchain, long-sequence, and reproduction procedure",
+      "Phase 6C source locator and non-mixing ledger",
+      "Primary repository evidence map",
+      "Claim wording guardrails"
+    ],
+    "introduction": "The Gottesman--Kitaev--Preskill (GKP) code protects oscillator-encoded quantum\ninformation by converting small phase-space displacements into analog modular\nsyndromes \\cite{gkp2001,grimsmo2021}.  Practical code states have finite energy,\nso peak width, envelope, loss, and the recovery map affect the induced logical\nchannel rather than merely perturbing an ideal lattice decision\n\\cite{hastrup2023,jafarzadeh2025}.  Autonomous stabilization and real-time GKP\nerror correction have further made feedback timing and failure handling physical\nconstraints, not optional implementation details \\cite{lachance2024,sivak2023}.\nThe classical path in a repeated GKP memory must therefore be assessed by what\nit observes, what action it controls, and when that action becomes valid.\n\nNeither analog decoding nor temporal inference is new.  Analog likelihoods have\nimproved concatenated surface--GKP and QLDPC--GKP decoding, maximum-likelihood\n(ML) rules outperform closest-integer (CI) decisions in matched gate models,\nand multi-round Bayesian inference can exploit approximate-GKP syndrome history\n\\cite{fukui2018,noh2020,noh2022,wan2020,berent2024}.  Closest-point decoding\n(CPD) also gives a principled formulation for structured multimode GKP lattices\n\\cite{lin2023}.  These results establish the value of soft, correlated, and\nhistorical information.  They do not, however, make CI, gate-level ML,\nsingle-mode MAP, and multimode CPD interchangeable: their code spaces,\nobservations, actions, and performance denominators differ.\n\nNonstationarity introduces a second problem.  Syndrome statistics have been\nused to estimate time-varying error weights, infer noise parameters, calibrate\nexperimental decoders, reweight decoding graphs, and optimize decoder priors\n\\cite{spitz2018,wagner2021,chen2022,dgr2023,sivak2024}.  Learned decoders and\ncalibration-conditioned models provide complementary ways to absorb complex or\nchanging device statistics \\cite{bausch2024,stein2026}.  In parallel, FPGA QEC\ndecoders have demonstrated low-latency lookup, distributed, clustering, and\nneural implementations, including processor-integrated feedback\n\\cite{lilliput2022,helios2023,collision2025,caune2024,yang2026}.  Yet an\nalgorithmic latency, an FPGA core latency, and a source-to-action closed-loop\nlatency are different observables; a numerical comparison is meaningful only\nafter the task and boundary are matched.\n\nThe source set audited in this work leaves a narrower systems question.  For a\nrepeated single-mode approximate-GKP memory under smooth drift and abrupt fault\nregimes, can observed syndrome and health information update a decoder without\ngiving a slow estimator authority over the cycle-critical action?  Answering\nthis question requires an execution contract as well as an estimator: the\ncontract must define causal observability, expert eligibility, atomic state\npublication, fallback and rollback semantics, latency boundaries, and the\nevidence needed to promote a simulator result to hardware.  It must also retain\nnegative results when adaptation has insufficient causal action-space headroom.\n\nHere we study that question through the \\RouteA{} contract system.  A locked MAP\nexpert owns the logical-error decision; observed-only Window, EWMA, Kalman, or\nregime logic may propose bounded updates; typed event and fallback logic owns\ntail safety; and a versioned A/B bank with last-known-good rollback owns state\npublication.  The six-cycle, initiation-interval-one fast path executes only\nvalidated integer state.  CNN residuals, hidden-state models, and recurrent\nteacher--student modules remain replaceable software extensions rather than\nthe authority or identity of the deployed decoder.\n\nThe present evidence supports a restricted conclusion.  On the frozen smooth\nmatrix, \\RouteA{} improves aggregate paired logical error rate only relative to\nthe locked EWMA baseline, with periodic drift the sole Holm-confirmed family;\nstatic joint MAP has a lower average error rate, and Window MAP remains a\nstronger counterexample.  Abrupt and out-of-distribution tests establish the\nregistered non-inferiority margins rather than broad tail improvement.  A\nplanned posterior-predictive V5 branch was stopped before formal or RTL work\nbecause its causal deployable headroom gates failed.  The retained hardware\nresult is consequently a deterministic pre-board contract and post-route\nestimate, while physical-board latency, jitter, power, and any claim of being\nfaster than prior FPGA decoders remain unmeasured.  The contribution is thus an\nevidence-gated integration and falsification framework: it separates LER,\nsafety, and deterministic execution owners, preserves task-local positive\nresults, and prevents heterogeneous evidence from becoming a global ranking.",
+    "introduction_sha256": "768e1ff5da168e2288a4e12c2323fcf0d4640285d7f1dfc3a6651216f847191a",
+    "introduction_paragraphs": 6,
+    "related_work": "\\subsection{Analog, history-aware, and structured GKP decoding}\n\nHard CI discards distance-to-boundary information that is retained by a wrapped\nlikelihood.  Analog GKP information has consequently been incorporated into\nsurface-code matching and QLDPC message passing, while gate-level ML can use\ncorrelated shift histories that a componentwise CI rule ignores\n\\cite{fukui2018,noh2020,noh2022,raveendran2022,berent2024}.  For an approximate\nsingle-mode GKP memory, a Bayesian memory-assisted decoder instead uses the\nsequence of modular outcomes to infer the current correction \\cite{wan2020}.\nStructured multimode lattices lead to another decision object: CPD identifies a\nlattice point or coset, with complexity determined by lattice structure\n\\cite{lin2023}.  We therefore use separate task-signature lanes for single-mode\nMAP, two-GKP CNOT CI/ML, and multimode CPD.  The project reproduction that CI\nand Euclidean CPD coincide for the isotropic square single-mode case is a\nspecial-case equivalence, not a class-wide decoder ranking.\n\n\\subsection{Calibration and drift-adaptive decoding}\n\nAdaptive QEC includes several distinct operations.  Sliding or weighted\nwindows can update matching weights under time-dependent noise\n\\cite{spitz2018}; syndrome-only estimators can identify stationary noise\nparameters \\cite{wagner2021}; experimental calibration can reconstruct\ncorrelated decoding graphs \\cite{chen2022}; and graph reweighting or direct\nprior optimization can target decoder mismatch rather than physical-parameter\nerror \\cite{dgr2023,sivak2024}.  Calibration-conditioned neural models likewise\nseparate slowly varying device context from the fast syndrome path\n\\cite{stein2026}.  These studies motivate our observed-only update constraint\nand the inclusion of Window, EWMA, Kalman, and change-point baselines.  Our\ndistinctive unit is not a new estimator family, but the contract that limits\nwhen an estimate may alter an action bank and records false update, fallback,\nrecovery, and tail costs separately from average LER.\n\n\\subsection{Learned, non-Markovian, and autonomous feedback}\n\nDirect neural decoding maps a syndrome history to a correction, as demonstrated\nfor surface and bosonic-code settings \\cite{bausch2024,wang2022}.  Model-free\nreinforcement learning instead changes a control policy, whereas the\nnon-Markovian feedback (NMF) method of Puviani \\emph{et al.} uses model-based\nFeedback-GRAPE and a recurrent controller to choose future physical-control\nparameters from the measurement history \\cite{sivak2026,puviani2025}.  An\nautonomous GKP protocol is different again: engineered dissipation and reset\nimplement physical QEC without a per-round classical syndrome decoder\n\\cite{lachance2024}.  We keep these decision objects separate.  The NMF paper\nmotivates a teacher extension, but the available official repository did not\nsupport a paper-exact matched reproduction; existing project checkpoints yield\nzero learned/controller entries eligible for the frozen same-task ranking.\nNeither fact is evidence that the contract system surpasses NMF, RL, direct\nneural decoding, or autonomous QEC.\n\n\\subsection{Deterministic and FPGA QEC decoders}\n\nFPGA QEC work spans compressed lookup tables, distributed union--find,\ncollision/local clustering, belief propagation, and quantized neural inference\n\\cite{lilliput2022,helios2023,collision2025,ziad2024,maurer2025,yang2026}.\nThe literature demonstrates that useful hardware evidence must name the code,\nproblem size, device, precision, throughput or initiation interval, latency\nboundary, and measurement layer.  Processor-integrated experiments further\nseparate decoder-core time from communication and feedback response\n\\cite{caune2024,yang2026}.  Our source normalization found no external FPGA\nimplementation with the same single-mode analog input, MAP/event action,\nprecision, and boundary.  A count of zero same-task comparators prevents a fair\nspeed ranking; it does not imply that the project is faster.  We accordingly\nreport six cycles and initiation interval one as an RTL contract, and frequency\nand resources as three-seed post-route estimates until the named board is\nmeasured.\n\n\\subsection{Position of the present work}\n\nThe component ideas in \\RouteA{}---analog MAP, causal estimation, learned\nextensions, event handling, double-buffered state, and deterministic FPGA\nexecution---all have relevant precedents.  The earlier CNN-centric prototype\nalso established a useful slow-estimator/fast-rule decomposition, but its\nlearned branch did not survive the later unified evidence gate: no matched\nlearned checkpoint was eligible, no family-level learned discovery survived\nthe registered correction, and one calibration transient worsened from 37 to\n55 errors per 512 decisions.  The present paper therefore makes a systems and\nevidence claim.  MAP owns LER; typed events, fallback, and rollback own safety;\nthe fast path owns deterministic execution; and every result remains inside its\ntask signature and evidence grade.  This positioning accommodates the legacy\nCNN and teacher--student evidence as ablations while leaving static-MAP,\nWindow-MAP, V5 early-stop, NMF-reproduction, auxiliary-CPD, and physical-board\nboundaries visible.  It is neither a claim of a first adaptive GKP decoder nor a\nglobal comparison across CI, ML, direct NN, RL, AQEC, CPD, and FPGA systems.",
+    "related_work_sha256": "763235d18083ab0918271e21e8f75605011b5af8fa4d0072240d49000d0dab40",
+    "related_subsections": {
+      "Analog, history-aware, and structured GKP decoding": "Hard CI discards distance-to-boundary information that is retained by a wrapped\nlikelihood.  Analog GKP information has consequently been incorporated into\nsurface-code matching and QLDPC message passing, while gate-level ML can use\ncorrelated shift histories that a componentwise CI rule ignores\n\\cite{fukui2018,noh2020,noh2022,raveendran2022,berent2024}.  For an approximate\nsingle-mode GKP memory, a Bayesian memory-assisted decoder instead uses the\nsequence of modular outcomes to infer the current correction \\cite{wan2020}.\nStructured multimode lattices lead to another decision object: CPD identifies a\nlattice point or coset, with complexity determined by lattice structure\n\\cite{lin2023}.  We therefore use separate task-signature lanes for single-mode\nMAP, two-GKP CNOT CI/ML, and multimode CPD.  The project reproduction that CI\nand Euclidean CPD coincide for the isotropic square single-mode case is a\nspecial-case equivalence, not a class-wide decoder ranking.",
+      "Calibration and drift-adaptive decoding": "Adaptive QEC includes several distinct operations.  Sliding or weighted\nwindows can update matching weights under time-dependent noise\n\\cite{spitz2018}; syndrome-only estimators can identify stationary noise\nparameters \\cite{wagner2021}; experimental calibration can reconstruct\ncorrelated decoding graphs \\cite{chen2022}; and graph reweighting or direct\nprior optimization can target decoder mismatch rather than physical-parameter\nerror \\cite{dgr2023,sivak2024}.  Calibration-conditioned neural models likewise\nseparate slowly varying device context from the fast syndrome path\n\\cite{stein2026}.  These studies motivate our observed-only update constraint\nand the inclusion of Window, EWMA, Kalman, and change-point baselines.  Our\ndistinctive unit is not a new estimator family, but the contract that limits\nwhen an estimate may alter an action bank and records false update, fallback,\nrecovery, and tail costs separately from average LER.",
+      "Learned, non-Markovian, and autonomous feedback": "Direct neural decoding maps a syndrome history to a correction, as demonstrated\nfor surface and bosonic-code settings \\cite{bausch2024,wang2022}.  Model-free\nreinforcement learning instead changes a control policy, whereas the\nnon-Markovian feedback (NMF) method of Puviani \\emph{et al.} uses model-based\nFeedback-GRAPE and a recurrent controller to choose future physical-control\nparameters from the measurement history \\cite{sivak2026,puviani2025}.  An\nautonomous GKP protocol is different again: engineered dissipation and reset\nimplement physical QEC without a per-round classical syndrome decoder\n\\cite{lachance2024}.  We keep these decision objects separate.  The NMF paper\nmotivates a teacher extension, but the available official repository did not\nsupport a paper-exact matched reproduction; existing project checkpoints yield\nzero learned/controller entries eligible for the frozen same-task ranking.\nNeither fact is evidence that the contract system surpasses NMF, RL, direct\nneural decoding, or autonomous QEC.",
+      "Deterministic and FPGA QEC decoders": "FPGA QEC work spans compressed lookup tables, distributed union--find,\ncollision/local clustering, belief propagation, and quantized neural inference\n\\cite{lilliput2022,helios2023,collision2025,ziad2024,maurer2025,yang2026}.\nThe literature demonstrates that useful hardware evidence must name the code,\nproblem size, device, precision, throughput or initiation interval, latency\nboundary, and measurement layer.  Processor-integrated experiments further\nseparate decoder-core time from communication and feedback response\n\\cite{caune2024,yang2026}.  Our source normalization found no external FPGA\nimplementation with the same single-mode analog input, MAP/event action,\nprecision, and boundary.  A count of zero same-task comparators prevents a fair\nspeed ranking; it does not imply that the project is faster.  We accordingly\nreport six cycles and initiation interval one as an RTL contract, and frequency\nand resources as three-seed post-route estimates until the named board is\nmeasured.",
+      "Position of the present work": "The component ideas in \\RouteA{}---analog MAP, causal estimation, learned\nextensions, event handling, double-buffered state, and deterministic FPGA\nexecution---all have relevant precedents.  The earlier CNN-centric prototype\nalso established a useful slow-estimator/fast-rule decomposition, but its\nlearned branch did not survive the later unified evidence gate: no matched\nlearned checkpoint was eligible, no family-level learned discovery survived\nthe registered correction, and one calibration transient worsened from 37 to\n55 errors per 512 decisions.  The present paper therefore makes a systems and\nevidence claim.  MAP owns LER; typed events, fallback, and rollback own safety;\nthe fast path owns deterministic execution; and every result remains inside its\ntask signature and evidence grade.  This positioning accommodates the legacy\nCNN and teacher--student evidence as ablations while leaving static-MAP,\nWindow-MAP, V5 early-stop, NMF-reproduction, auxiliary-CPD, and physical-board\nboundaries visible.  It is neither a claim of a first adaptive GKP decoder nor a\nglobal comparison across CI, ML, direct NN, RL, AQEC, CPD, and FPGA systems."
+    },
+    "related_subsection_citations": {
+      "Analog, history-aware, and structured GKP decoding": [
+        "berent2024",
+        "fukui2018",
+        "lin2023",
+        "noh2020",
+        "noh2022",
+        "raveendran2022",
+        "wan2020"
+      ],
+      "Calibration and drift-adaptive decoding": [
+        "chen2022",
+        "dgr2023",
+        "sivak2024",
+        "spitz2018",
+        "stein2026",
+        "wagner2021"
+      ],
+      "Learned, non-Markovian, and autonomous feedback": [
+        "bausch2024",
+        "lachance2024",
+        "puviani2025",
+        "sivak2026",
+        "wang2022"
+      ],
+      "Deterministic and FPGA QEC decoders": [
+        "caune2024",
+        "collision2025",
+        "helios2023",
+        "lilliput2022",
+        "maurer2025",
+        "yang2026",
+        "ziad2024"
+      ],
+      "Position of the present work": []
+    },
+    "citation_keys": [
+      "bausch2024",
+      "berent2024",
+      "caune2024",
+      "chen2022",
+      "collision2025",
+      "dgr2023",
+      "fukui2018",
+      "gkp2001",
+      "grimsmo2021",
+      "hastrup2023",
+      "helios2023",
+      "jafarzadeh2025",
+      "lachance2024",
+      "lilliput2022",
+      "lin2023",
+      "maurer2025",
+      "noh2020",
+      "noh2022",
+      "puviani2025",
+      "raveendran2022",
+      "sivak2023",
+      "sivak2024",
+      "sivak2026",
+      "spitz2018",
+      "stein2026",
+      "wagner2021",
+      "wan2020",
+      "wang2022",
+      "yang2026",
+      "ziad2024"
+    ],
+    "bibliography_keys": [
+      "bausch2024",
+      "berent2024",
+      "borah2025",
+      "caune2024",
+      "chamberland2026",
+      "chen2022",
+      "collision2025",
+      "dgr2023",
+      "fukui2018",
+      "gkp2001",
+      "grimsmo2021",
+      "hanisch2026",
+      "hastrup2023",
+      "helios2023",
+      "jafarzadeh2025",
+      "lachance2024",
+      "lilliput2022",
+      "lin2023",
+      "maurer2025",
+      "noh2020",
+      "noh2022",
+      "peled2026",
+      "puviani2025",
+      "qldpcfpga2025",
+      "raveendran2022",
+      "roy2025",
+      "sivak2023",
+      "sivak2024",
+      "sivak2026",
+      "spitz2018",
+      "stein2026",
+      "wagner2021",
+      "wan2020",
+      "wang2022",
+      "yang2026",
+      "zheng2024",
+      "ziad2024"
+    ]
+  },
+  "claim_evidence_rows": [
+    {
+      "row_id": "IRW-001",
+      "section": "Introduction",
+      "lane_id": "physical_gkp_context",
+      "claim_anchor": "finite-energy GKP and physical feedback motivate an execution-aware decoder boundary",
+      "citation_keys": [
+        "gkp2001",
+        "grimsmo2021",
+        "hastrup2023",
+        "jafarzadeh2025",
+        "lachance2024",
+        "sivak2023"
+      ],
+      "source_ids": [
+        "literature_matrix:A01,A04,A05,A06,A08"
+      ],
+      "evidence_grade": "LITERATURE_PRIMARY",
+      "boundary": "External theory and experiment motivate the task; they are not project hardware evidence."
+    },
+    {
+      "row_id": "IRW-002",
+      "section": "Introduction",
+      "lane_id": "single_mode_decoder",
+      "claim_anchor": "analog, ML, history-aware, and CPD methods are prior art but have different task signatures",
+      "citation_keys": [
+        "fukui2018",
+        "noh2020",
+        "noh2022",
+        "wan2020",
+        "berent2024",
+        "lin2023"
+      ],
+      "source_ids": [
+        "T6.16.1:method_registry",
+        "T6.16.2:lane_ontology"
+      ],
+      "evidence_grade": "LITERATURE_PRIMARY",
+      "boundary": "No cross-code CI/ML/MAP/CPD leaderboard is permitted."
+    },
+    {
+      "row_id": "IRW-003",
+      "section": "Introduction",
+      "lane_id": "drift_calibration",
+      "claim_anchor": "syndrome-driven calibration and time-dependent decoder adaptation have established precedents",
+      "citation_keys": [
+        "spitz2018",
+        "wagner2021",
+        "chen2022",
+        "dgr2023",
+        "sivak2024",
+        "stein2026"
+      ],
+      "source_ids": [
+        "literature_matrix:C02-C06,C09"
+      ],
+      "evidence_grade": "LITERATURE_PRIMARY",
+      "boundary": "The project does not claim the first adaptive or calibration-aware QEC decoder."
+    },
+    {
+      "row_id": "IRW-004",
+      "section": "Introduction",
+      "lane_id": "contract_system",
+      "claim_anchor": "MAP owns LER, typed event/fallback owns safety, and the fast path owns deterministic execution",
+      "citation_keys": [],
+      "source_ids": [
+        "T7.1.1:CONTRACT_SYSTEM_INTEGRATION",
+        "T6.9.3:V4_FINAL_GATE"
+      ],
+      "evidence_grade": "PROJECT_NATIVE_PREBOARD",
+      "boundary": "Restricted simulator/pre-board integration only; no measured board or global decoder claim."
+    },
+    {
+      "row_id": "IRW-005",
+      "section": "Introduction",
+      "lane_id": "single_mode_decoder",
+      "claim_anchor": "the positive V4 result is restricted to locked EWMA while static and Window remain counterexamples",
+      "citation_keys": [],
+      "source_ids": [
+        "T7.1.1:SMOOTH_LOCKED_EWMA_ADVANTAGE",
+        "T7.1.1:STATIC_GKP_SUPERIORITY"
+      ],
+      "evidence_grade": "PROJECT_NATIVE_MATCHED",
+      "boundary": "No superiority over static or Window MAP and no all-family drift advantage."
+    },
+    {
+      "row_id": "IRW-006",
+      "section": "Introduction",
+      "lane_id": "v5_negative",
+      "claim_anchor": "posterior-predictive V5 stopped before formal/RTL because causal deployable headroom failed",
+      "citation_keys": [],
+      "source_ids": [
+        "T6.10.1:CAUSAL_HEADROOM",
+        "T6.15.5:V5_EARLY_STOP"
+      ],
+      "evidence_grade": "NEGATIVE",
+      "boundary": "V5 has no formal, fixed-point, CXXRTL, P&R, or measured-hardware result."
+    },
+    {
+      "row_id": "IRW-007",
+      "section": "Analog, history-aware, and structured GKP decoding",
+      "lane_id": "surface_gkp_gate_ci_ml",
+      "claim_anchor": "surface-GKP CI/ML and multimode CPD are method-specific lanes",
+      "citation_keys": [
+        "noh2020",
+        "noh2022",
+        "raveendran2022",
+        "berent2024",
+        "lin2023"
+      ],
+      "source_ids": [
+        "T6.17.2:NOH_CNOT_REPRODUCTION",
+        "T6.18.2:OFFICIAL_CPD"
+      ],
+      "evidence_grade": "LITERATURE_PLUS_OFFICIAL_REPRODUCTION",
+      "boundary": "Gate failure, threshold, and multimode LER cannot be subtracted from single-mode Route-A LER."
+    },
+    {
+      "row_id": "IRW-008",
+      "section": "Calibration and drift-adaptive decoding",
+      "lane_id": "drift_calibration",
+      "claim_anchor": "the contract contribution is update authority and cost accounting, not a new estimator class",
+      "citation_keys": [
+        "spitz2018",
+        "wagner2021",
+        "chen2022",
+        "dgr2023",
+        "sivak2024",
+        "stein2026"
+      ],
+      "source_ids": [
+        "T6.5.2:UNIFIED_EXECUTION_CONTRACT"
+      ],
+      "evidence_grade": "SYNTHESIS_INFERENCE",
+      "boundary": "Novelty is joint systems/evidence integration, not absolute algorithmic first use."
+    },
+    {
+      "row_id": "IRW-009",
+      "section": "Learned, non-Markovian, and autonomous feedback",
+      "lane_id": "direct_nn_rl_nmf_controller",
+      "claim_anchor": "Direct NN, model-free RL, model-based NMF, and AQEC have different actions and privileges",
+      "citation_keys": [
+        "bausch2024",
+        "wang2022",
+        "sivak2026",
+        "puviani2025",
+        "lachance2024"
+      ],
+      "source_ids": [
+        "T6.16.1:controller_registry"
+      ],
+      "evidence_grade": "LITERATURE_PRIMARY",
+      "boundary": "Controller gain, decoder LER, and autonomous lifetime are never merged."
+    },
+    {
+      "row_id": "IRW-010",
+      "section": "Learned, non-Markovian, and autonomous feedback",
+      "lane_id": "direct_nn_rl_nmf_controller",
+      "claim_anchor": "NMF exact reproduction is ineligible and learned same-task eligibility is zero",
+      "citation_keys": [
+        "puviani2025"
+      ],
+      "source_ids": [
+        "T6.8.4:GQF_EXACT_NO_GO",
+        "T6.17.3:LEARNED_ELIGIBLE_ZERO",
+        "T7.1.1:P6C-NMF-GQF"
+      ],
+      "evidence_grade": "NEGATIVE",
+      "boundary": "No claim of reproducing or surpassing Puviani NMF is allowed."
+    },
+    {
+      "row_id": "IRW-011",
+      "section": "Deterministic and FPGA QEC decoders",
+      "lane_id": "fpga_implementation",
+      "claim_anchor": "FPGA comparisons require matched code, precision, timing boundary, and evidence grade",
+      "citation_keys": [
+        "lilliput2022",
+        "helios2023",
+        "collision2025",
+        "ziad2024",
+        "maurer2025",
+        "yang2026",
+        "caune2024"
+      ],
+      "source_ids": [
+        "T6.19.2:EXTERNAL_FPGA_NORMALIZATION"
+      ],
+      "evidence_grade": "LITERATURE_PRIMARY",
+      "boundary": "Core, per-round, source-to-action, and closed-loop latency are not interchangeable."
+    },
+    {
+      "row_id": "IRW-012",
+      "section": "Deterministic and FPGA QEC decoders",
+      "lane_id": "fpga_implementation",
+      "claim_anchor": "zero exact same-task FPGA comparators prevents, rather than supports, a speed ranking",
+      "citation_keys": [],
+      "source_ids": [
+        "T6.19.2:SAME_TASK_COMPARATOR_ZERO",
+        "T7.1.1:FPGA_SPEED_ADVANTAGE"
+      ],
+      "evidence_grade": "NEGATIVE",
+      "boundary": "Six cycles/II=1 and post-route values are estimates, not measured board superiority."
+    },
+    {
+      "row_id": "IRW-013",
+      "section": "Position of the present work",
+      "lane_id": "positioning",
+      "claim_anchor": "the innovation unit is the evidence-gated contract rather than a CNN-centric decoder",
+      "citation_keys": [],
+      "source_ids": [
+        "T7.1.1:MANUSCRIPT_DECISION",
+        "T6.19.3:AUX_INTEGRITY"
+      ],
+      "evidence_grade": "PROJECT_SYNTHESIS",
+      "boundary": "Auxiliary positive results remain task-local and cannot rescue V4/V5 promotion."
+    },
+    {
+      "row_id": "IRW-014",
+      "section": "Position of the present work",
+      "lane_id": "positioning",
+      "claim_anchor": "negative evidence and null hardware fields remain visible in the paper narrative",
+      "citation_keys": [],
+      "source_ids": [
+        "T7.1.1:MANDATORY_NEGATIVES",
+        "T7.1.3:MAIN_RESULTS",
+        "T7.1.4:FAILURE_LEDGER"
+      ],
+      "evidence_grade": "PROJECT_SYNTHESIS",
+      "boundary": "The manuscript is restricted pre-board, not a cross-protocol or experimental GKP ranking."
+    }
+  ],
+  "source_bindings": {
+    "claim_matrix": {
+      "path": "docs/t7_1_1_claim_evidence_boundary_matrix.json",
+      "sha256": "d3126d0c7b3a8991a23b1b4281558020e5c76f8b00a071717c30a491d546253c",
+      "bytes": 80985
+    },
+    "method_source_audit": {
+      "path": "docs/t6_16_1_secondary_method_source_audit.json",
+      "sha256": "7fc750c2bb8905f4f6a57ed269df7172fcc0663cd593af8d83ef32385e40c88a",
+      "bytes": 69626
+    },
+    "metric_ontology": {
+      "path": "docs/t6_16_2_comparison_ontology.json",
+      "sha256": "c3d1138466993c6685b1ec4a75feb857c436cc3c15ca9eedd18aab225a81b21c",
+      "bytes": 61056
+    },
+    "literature_matrix": {
+      "path": "docs/literature_matrix.md",
+      "sha256": "34a872e1aac68bac73a32b39b4766585111f162a9eeec8289ac3eba9b8ee24ff",
+      "bytes": 22753
+    },
+    "phase6c_integrity": {
+      "path": "docs/t6_19_3_secondary_evidence_integrity.json",
+      "sha256": "9402e7e33076b314b050788a9a657e7a47a245d55c6da289b2b6227f2d7e1027",
+      "bytes": 384096
+    },
+    "v4_final_gate": {
+      "path": "docs/t6_9_3_route_a_final_evidence_gate.json",
+      "sha256": "382ddf8497a5d50e68b5d88ddbeb3e6bff07946139142e2c81257b59e06f648c",
+      "bytes": 27475
+    },
+    "v5_final_gate": {
+      "path": "docs/t6_15_5_route_a_v5_final_evidence_gate.json",
+      "sha256": "537029824f305e001920e61cf03be457074655ee6112fd2db6ab9f0241607670",
+      "bytes": 6659
+    },
+    "gqf_exact_attempt": {
+      "path": "docs/t6_8_4_gqf_paper_exact_reproduction.json",
+      "sha256": "8677917ad3c8bc6f60f6630dd757546a86c676781594d2c4ecd6f4e41c45ad29",
+      "bytes": 24539
+    },
+    "learned_eligibility": {
+      "path": "docs/t6_17_3_learned_model_eligibility_replay.json",
+      "sha256": "8b2cbaebc40075ef7cd0814699303b99f2f15bfaa362dc34d903279ea8469331",
+      "bytes": 188759
+    },
+    "fpga_normalization": {
+      "path": "docs/t6_19_2_external_fpga_normalization.json",
+      "sha256": "72be049522d2fa531a122ddc8077f655f16a6f39b877716abc0b0fc7c790ec0a",
+      "bytes": 83067
+    },
+    "bibliography": {
+      "path": "docs/paper_notes/CNN_FPGA_GKP_submission_refs.bib",
+      "sha256": "d99de3eb0b41c4c1d0da75242c85d888d3d52bf7dcd49fd519e44082fb4132ad",
+      "bytes": 35726
+    },
+    "implementation": {
+      "path": "cnn_fpga/benchmark/introduction_related_work_contract.py",
+      "sha256": "a874212471c0e7dc1434aab0478c186c96ddead380569bf9ccaa3b3398dda1aa",
+      "bytes": 30937
+    }
+  },
+  "boundary_summary": {
+    "current_manuscript_state": "RESTRICTED_PREBOARD_CONTRACT_PAPER",
+    "v5_state": "NO_GO_V5_EARLY_HEADROOM_STOP",
+    "board_state": "BLOCKED_ALL_MEASURED_FIELDS_NULL",
+    "learned_same_task_eligible": 0,
+    "external_fpga_same_task_comparators": 0,
+    "nmf_exact_reproduction": "INELIGIBLE_SOURCE_INCOMPLETE",
+    "tail_claim": "LOCKED_EWMA_NONINFERIORITY_NOT_BROAD_IMPROVEMENT"
+  },
+  "gates": {
+    "source_bindings_live": true,
+    "section_order": true,
+    "introduction_structure": true,
+    "related_work_structure": true,
+    "citation_keys_resolve": true,
+    "citation_coverage": true,
+    "claim_rows_traceable": true,
+    "literature_lanes_complete": true,
+    "task_signature_contract_explicit": true,
+    "static_window_negative_visible": true,
+    "v5_early_stop_visible": true,
+    "nmf_boundary_visible": true,
+    "learned_eligibility_visible": true,
+    "fpga_boundary_visible": true,
+    "global_ranking_prohibited": true,
+    "role_terminology_consistent": true,
+    "prohibited_assertions_absent": true,
+    "source_data_rows_complete": true
+  },
+  "gate_summary": {
+    "passed": 18,
+    "total": 18
+  },
+  "semantic_mutation_audit": {
+    "count": 18,
+    "detected": 18,
+    "cases": [
+      {
+        "mutation_id": "MUT-01",
+        "target_gate": "source_bindings_live",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-02",
+        "target_gate": "section_order",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-03",
+        "target_gate": "introduction_structure",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-04",
+        "target_gate": "related_work_structure",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-05",
+        "target_gate": "citation_keys_resolve",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-06",
+        "target_gate": "citation_coverage",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-07",
+        "target_gate": "claim_rows_traceable",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-08",
+        "target_gate": "literature_lanes_complete",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-09",
+        "target_gate": "task_signature_contract_explicit",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-10",
+        "target_gate": "static_window_negative_visible",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-11",
+        "target_gate": "v5_early_stop_visible",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-12",
+        "target_gate": "nmf_boundary_visible",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-13",
+        "target_gate": "learned_eligibility_visible",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-14",
+        "target_gate": "fpga_boundary_visible",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-15",
+        "target_gate": "global_ranking_prohibited",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-16",
+        "target_gate": "role_terminology_consistent",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-17",
+        "target_gate": "prohibited_assertions_absent",
+        "rejected": true
+      },
+      {
+        "mutation_id": "MUT-18",
+        "target_gate": "source_data_rows_complete",
+        "rejected": true
+      }
+    ]
+  },
+  "verdict": "PASS_EVIDENCE_BOUNDED_INTRODUCTION_RELATED_WORK",
+  "analysis_sha256": "4fd79ab6dcb66bf925352c17adb6ca6d55d345412365420d823058880c422111"
+}

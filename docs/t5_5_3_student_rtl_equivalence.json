@@ -1,0 +1,56 @@
+{
+  "schema_version": "t5.5.3-student-cxxrtl-equivalence-v1",
+  "task_id": "T5.5.3",
+  "status": "PASS",
+  "sources": [
+    {
+      "path": "cnn_fpga/rtl/low_dimensional_student_kernel.sv",
+      "sha256": "d8f1058b20f584deb30be41fb0eef7318048a60677449b3a47839fd09a52c9ac"
+    },
+    {
+      "path": "cnn_fpga/rtl/student_cxxrtl_driver.cc",
+      "sha256": "f2b2111bfd0ca3af64a5fce0ababc711464cf6058bfadbd24070f931e351414a"
+    },
+    {
+      "path": "cnn_fpga/rtl/generated/t5_5_3_student_memory_manifest.json",
+      "sha256": "6eeae41e4bd1b81269bd360a54e1d47120196c6eaeb5e4224f737b0daa6d83b2"
+    },
+    {
+      "path": "docs/t4_4_3_low_dimensional_student.json",
+      "sha256": "8d3b575c416795b3af522f0322f8c8b0eed937c41616067d163ce47e5fe9bbae"
+    }
+  ],
+  "trace": {
+    "operations": 512,
+    "healthy_updates": 507,
+    "forced_resets": 5,
+    "compared_output_codes": 7680,
+    "mismatch_count": 0,
+    "first_mismatches": [],
+    "maximum_absolute_fixed_minus_float_output": 0.00014603795449283363
+  },
+  "build": {
+    "zero_structural_problems": true,
+    "model_sha256": "5844fa3f2bfa7a6eebbf1f0c81eae5bae49f32956b3347cb1ec26a8e203b209b",
+    "executable_sha256": "d121a2b01effe124c2806c0bb13a95f99ad5fb480a207cf529ca95ceb21c54af",
+    "multiplier_present": true
+  },
+  "gates": {
+    "source_artifact_and_all_memories_are_hash_bound": true,
+    "cxxrtl_structural_check_preserves_multiplier": true,
+    "all_512_operations_match_every_state_and_output_code": true,
+    "healthy_latency_is_exactly_64_cycles": true,
+    "health_failure_resets_state_and_zeroes_outputs": true,
+    "fixed_q3_14_shadow_stays_within_5e_4_of_float": true
+  },
+  "gate_summary": {
+    "passed": 6,
+    "total": 6
+  },
+  "evidence_boundary": {
+    "fixed_student_rtl": true,
+    "cxxrtl_equivalence": true,
+    "integrated_target_synthesis": false,
+    "board_measured": false
+  }
+}

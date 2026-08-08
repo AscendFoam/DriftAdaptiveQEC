@@ -1,0 +1,271 @@
+{
+  "task_id": "T9.2.4",
+  "schema_version": "PHASE9-DUAL-BACKEND-FORMAL-RUNNER-AMENDMENT-V1",
+  "amendment_id": "T9.2.4-A1-PREFORMAL-MAPPING-RUNNER-CUTOFF",
+  "frozen_at": "2026-07-26",
+  "formal_result_accessed_before_amendment": false,
+  "parent_preregistration": {
+    "path": "docs/t9_2_4_twin_qualification_preregistration.json",
+    "analysis_sha256": "98e72c457dab941daab270b3bd63eec939564a6f1fedaad061eab59280988695",
+    "git_commit": "4d9d92bbcec211f3c150b70a98f340d67fb975e3"
+  },
+  "amendment_reason": {
+    "category": "pre-formal numerical-ordering and specification repair",
+    "formal_seed_or_outcome_used": false,
+    "detected_by": "deterministic projector-only mapping pilot permitted by the parent seal",
+    "problem": "released backend B exponentiates displacement and squeezing after finite-Fock truncation; the resulting finite-dimensional unitary is not project-then-truncate and wraps remote comb peaks back into the retained subspace",
+    "resolution": "retain the released backend-B transition, channel, IQ and RNG implementation but replace only the T9.2.4 logical coordinate evaluator by an independent closed-form Hermite-Gaussian projection of the Mehler-damped comb",
+    "threshold_change": false,
+    "formal_seed_change": false,
+    "parent_history_rewritten": false
+  },
+  "logical_bridge": {
+    "implementation": "physics/phase9_backend_b_logical_bridge.py",
+    "bridge_id": "PHASE9-BACKEND-B-ANALYTIC-MEHLER-FOCK-BRIDGE-V1",
+    "projector_delta": 0.34,
+    "tail_tolerance": 1e-12,
+    "support_rule": "symmetric parity-constrained m in [-m_max,m_max], m_max=ceil(sqrt(2*log(1/tail_tolerance)/(pi*tanh(delta^2))))+2",
+    "amplitude_variance": "tanh(projector_delta^2)",
+    "center_contraction": "sech(projector_delta^2)",
+    "envelope": "exp(-0.5*tanh(projector_delta^2)*(m*sqrt(pi))^2)",
+    "coefficient_method": "closed-form physicists-Hermite generating-function recurrence",
+    "orthonormalization": "Lowdin inverse square root of the independently projected raw Gram matrix",
+    "forbidden_runtime_imports": [
+      "physics.phase9_backend_a",
+      "physics.finite_energy_gkp",
+      "physics.fock_density_model",
+      "physics.fock_sbs_cycle"
+    ],
+    "preserved_backend_b_components": [
+      "DENSE_EXPM_STRANG_PLUS_ANALYTIC_CHANNELS",
+      "BLAKE2B_ADDRESS_PYTHON_RANDOM_BOX_MULLER",
+      "INDEPENDENT_PRODUCT_COMPLEX_GAUSSIAN_LOG_LIKELIHOOD"
+    ]
+  },
+  "deterministic_mapping_pilot": {
+    "formal_seed_or_outcome_accessed": false,
+    "cutoffs": [8, 12, 16],
+    "released_native_projector_frobenius": {
+      "8": 0.24211865432785135,
+      "12": 0.41783831923723536,
+      "16": 0.33067769911399547
+    },
+    "analytic_bridge_projector_frobenius": {
+      "8": 6.255335668717663e-16,
+      "12": 1.3073841895904347e-15,
+      "16": 1.0399784575051732e-15
+    },
+    "analytic_bridge_minimum_principal_singular": {
+      "8": 0.9999999999999997,
+      "12": 0.9999999999999997,
+      "16": 0.9999999999999997
+    },
+    "captured_probability": {
+      "8": [0.7041473172406632, 0.870205228404521],
+      "12": [0.9507269770262421, 0.9149500197029818],
+      "16": [0.9692080332347838, 0.9774728006139601]
+    },
+    "disclosure": "A/B same-cutoff mapping agreement does not prove physical cutoff convergence; captured mass and the common cutoff submatrix remain separately gated/reported"
+  },
+  "immutable_parent_tolerances": {
+    "source": "configs/phase9/t9_2_4_twin_qualification.json#prefrozen_tolerances",
+    "change_count": 0,
+    "minimum_code_principal_singular_value": 0.95,
+    "maximum_code_projector_frobenius": 0.30,
+    "maximum_ensemble_density_trace_distance": 0.10,
+    "maximum_mean_photon_difference": 0.08,
+    "maximum_level_probability_l1": 0.10,
+    "maximum_integrated_iq_mean_difference": 0.12,
+    "maximum_integrated_iq_covariance_frobenius": 0.18,
+    "maximum_iq_two_sample_ks": 0.24,
+    "maximum_log_evidence_mean_difference": 0.30,
+    "maximum_posterior_mean_l1": 0.12,
+    "maximum_logical_ptm_entry_difference": 0.12,
+    "maximum_logical_survival_difference": 0.10,
+    "maximum_reset_success_rate_difference": 0.12,
+    "maximum_leakage_residence_rate_difference": 0.10,
+    "maximum_short_trajectory_terminal_trace_distance": 0.15,
+    "maximum_short_trajectory_observable_mean_difference": 0.15,
+    "minimum_conservation_pass_fraction": 1.0,
+    "familywise_alpha": 0.05
+  },
+  "initial_state_definitions": {
+    "vacuum_g": {
+      "oscillator_ket": {"0": 1.0},
+      "ancilla_ket": {"g": 1.0}
+    },
+    "one_g": {
+      "oscillator_ket": {"1": 1.0},
+      "ancilla_ket": {"g": 1.0}
+    },
+    "zero_one_plus_g": {
+      "oscillator_ket": {"0": 0.7071067811865476, "1": 0.7071067811865476},
+      "ancilla_ket": {"g": 1.0}
+    },
+    "vacuum_e": {
+      "oscillator_ket": {"0": 1.0},
+      "ancilla_ket": {"e": 1.0}
+    },
+    "vacuum_f": {
+      "oscillator_ket": {"0": 1.0},
+      "ancilla_ket": {"f": 1.0}
+    },
+    "initial_drift": [0.0, 0.0, 0.0, 0.0, 0.0],
+    "initial_leakage_age": 0,
+    "initial_round_index": 0
+  },
+  "action_and_fault_semantics": {
+    "nominal_action_source": "T9.2.1 CRC-valid terminal recurrence receipt",
+    "one_round_actions": ["IDLE", "X", "Z", "XZ", "RESET", "HOLD", "LKG_HOLD"],
+    "fault_action_sequences": {
+      "step": ["IDLE", "X", "Z", "XZ"],
+      "telegraph": ["X", "Z", "IDLE"],
+      "burst": ["XZ", "IDLE", "HOLD"],
+      "compound": ["X", "Z", "IDLE", "XZ", "RESET", "HOLD"]
+    },
+    "sequence_rule": "repeat the declared sequence cyclically to the frozen horizon",
+    "intervention_rule": "add the scenario drift_delta to the current causal drift immediately before the declared round(s), then propagate normally; actions never observe scenario identity or hidden drift",
+    "step_rule": "apply once at change_round",
+    "telegraph_rule": "alternate +drift_delta and -drift_delta every period rounds, starting with + at round zero",
+    "burst_rule": "apply +drift_delta at start_round and -drift_delta at start_round+duration",
+    "compound_rule": "apply +drift_delta at change_round, an additional +drift_delta at burst_start, and -drift_delta at burst_start+burst_duration"
+  },
+  "seed_expansion": {
+    "source": "configs/phase9/t9_2_4_twin_qualification.json#splits",
+    "backend_a_round_seed_positions": "920000+i for i in [0,63]",
+    "backend_b_round_seed_positions": "930000+i for i in [0,63]",
+    "backend_a_trajectory_seed_positions": "940000+i for i in [0,47]",
+    "backend_b_trajectory_seed_positions": "950000+i for i in [0,47]",
+    "shared_and_logical_cells": "reuse all 64 positional seeds across cells within a backend; each backend expands its own round-addressed RNG",
+    "probe_cells": "reuse the first 16 positional round seeds",
+    "fault_cells": "reuse all 48 positional trajectory seeds",
+    "cutoff_convergence_cells": "reuse the first 16 round-seed positions and first 8 trajectory-seed positions at cutoff 8 and 12",
+    "cluster_receipt": "each ledger row stores backend, absolute seed, seed_position, layer, cell_id, round_index and RNG namespace",
+    "cross_backend_pairing": false,
+    "cross_cutoff_pairing_within_backend": true,
+    "mutable_rng_consumption_forbidden": true
+  },
+  "cutoff_convergence_submatrix": {
+    "cutoffs": [8, 12],
+    "reference_cutoff": 8,
+    "confirmation_cutoff": 12,
+    "shared_states": ["vacuum_g", "one_g", "zero_one_plus_g", "vacuum_e", "vacuum_f"],
+    "logical_states": ["0", "1", "+", "-", "+i", "-i"],
+    "actions": ["IDLE", "XZ", "RESET"],
+    "fault_scenarios": ["step", "telegraph", "burst", "compound"],
+    "samples_per_state_action_backend_cutoff": 16,
+    "trajectories_per_fault_backend_cutoff": 8,
+    "horizon": 12,
+    "cutoff_8_rows_reused_from_parent_matrix": true,
+    "additional_cutoff_12_backend_rounds": 1824,
+    "total_unique_formal_backend_rounds_after_amendment": 16800,
+    "gate_rule": "A/B agreement is gated separately at each cutoff; within-backend cutoff 8-to-12 differences are gated on the same observable tolerances and reported separately from same-cutoff mapping",
+    "logical_capture_rule": "captured probabilities and embedded projector movement are mandatory diagnostics and may not be described as converged merely because A/B agree at a fixed cutoff"
+  },
+  "estimands": {
+    "ensemble_density_trace_distance": "one half of the nuclear norm of the Hermitian difference between unconditional arithmetic-mean joint density matrices for the two backends in the same predeclared cell",
+    "mean_photon_difference": "absolute difference of arithmetic means of Tr[n rho_osc] over the complete cell denominator",
+    "level_probability_l1": "L1 distance between arithmetic-mean post-reset (g,e,f) probability vectors in fixed g,e,f order",
+    "integrated_iq_mean_difference": "Euclidean norm of the difference between arithmetic-mean (integrated_I,integrated_Q) vectors",
+    "integrated_iq_covariance_frobenius": "Frobenius norm of the difference between unbiased 2x2 sample covariance matrices of integrated I/Q",
+    "iq_two_sample_ks": "maximum of the two standard two-sided empirical KS statistics computed separately for integrated I and integrated Q",
+    "log_evidence_mean_difference": "absolute difference of arithmetic means of log_evidence_density",
+    "posterior_mean_l1": "L1 distance between arithmetic-mean posterior vectors in fixed g,e,f order",
+    "logical_trace_decreasing_block": "survival_probability multiplied by the frame-corrected 2x2 logical density; no projection-conditioned renormalization enters a main metric",
+    "logical_ptm": "unconditional 4x4 Pauli transfer matrix reconstructed from ensemble means of the six trace-decreasing +/-X,+/-Y,+/-Z blocks; row/column order I,X,Y,Z",
+    "logical_ptm_entry_difference": "maximum absolute entrywise A/B difference of the unconditional 4x4 logical PTMs",
+    "logical_survival_difference": "absolute difference of arithmetic-mean survival probability for each logical-state/action cell",
+    "reset_success_rate_difference": "absolute difference in hidden reset-success fractions over all and only reset-request rows; the denominator includes reset failures and is never postselected by ACK",
+    "leakage_residence_rate_difference": "absolute difference in fractions of complete rows with post-round leakage_age greater than zero",
+    "short_trajectory_terminal_trace_distance": "one half nuclear norm between unconditional arithmetic-mean terminal joint densities for a fault/cutoff cell",
+    "short_trajectory_observable_mean_difference": "maximum absolute difference across terminal mean photon, g/e/f probabilities, integrated I/Q, log evidence, leakage residence, drift L2 norm and logical survival when available",
+    "conservation_pass_fraction": "fraction of all expected rows whose density is finite, Hermitian Frobenius error <=5e-8, trace error <=5e-8, minimum eigenvalue >=-5e-8, posterior and level laws normalized <=5e-8, and no exception/missing field occurred",
+    "projector_frobenius": "unnormalized Frobenius norm of P_A-P_B at the same cutoff",
+    "principal_singular": "singular values of V_A^dagger V_B at the same cutoff, with V_A/V_B independently orthonormal"
+  },
+  "statistical_procedure": {
+    "confidence": 0.95,
+    "bootstrap_resamples": 2000,
+    "bootstrap_seed": 960000,
+    "resampling_unit": "seed_position cluster within backend and layer/denominator size",
+    "backend_sampling": "resample A and B cluster positions independently with replacement; preserve all rows/cells/rounds attached to a selected position",
+    "cross_cell_dependence": "use the same bootstrap position multiplicities for every cell sharing a layer and denominator size",
+    "cross_cutoff_dependence": "use the same within-backend position multiplicities at cutoff 8 and cutoff 12",
+    "standard_error": "sample standard deviation of the 2000 bootstrap estimand replicates with ddof=1",
+    "standard_error_floor": 1e-12,
+    "max_t_statistic": "for every upper-bounded stochastic gate use abs(theta_star-theta_hat)/max(se,1e-12); take the maximum over all predeclared stochastic cells/metrics per replicate",
+    "critical_value": "empirical 0.95 quantile using numpy method=higher of the 2000 maximum standardized deviations",
+    "upper_bound": "theta_hat + critical_value*max(se,1e-12)",
+    "upper_gate": "pass iff simultaneous upper_bound <= frozen tolerance; equality passes",
+    "mapping_lower_gate": "deterministic pass iff minimum principal singular value >=0.95; equality passes",
+    "mapping_upper_gate": "deterministic pass iff projector Frobenius <=0.30; equality passes",
+    "conservation_gate": "exact pass iff observed/expected rows are equal and conservation pass fraction >=1.0; no bootstrap rescue",
+    "mean_only_rescue": false,
+    "cell_deletion": false
+  },
+  "gate_scope": {
+    "mapping": "both cutoff 8 and cutoff 12 cells",
+    "shared_physical": "every shared-state/action cell at cutoff 8 plus the full declared cutoff-confirmation subset at cutoff 12",
+    "representative_probes": "all 16 T9.2.1 probes at cutoff 8; non-codebook and non-performance",
+    "logical": "every logical-state/action survival cell and every action PTM at cutoff 8 plus the declared cutoff-confirmation subset at cutoff 12",
+    "fault": "every scenario terminal and residence cell at cutoff 8 plus the declared cutoff-confirmation subset at cutoff 12",
+    "cutoff_within_backend": "every predeclared confirmation cell and observable for backend A and backend B separately",
+    "worst_cell_required": true,
+    "aggregate_cannot_rescue_cell": true
+  },
+  "failure_and_release_policy": {
+    "pass_verdict": "PASS_T9_2_4_DUAL_BACKEND_QUALIFIED",
+    "scientific_fail_verdict": "NO_GO_TWIN_QUALIFICATION",
+    "infrastructure_fail_verdict": "INCOMPLETE_FAIL_CLOSED",
+    "scientific_fail_definition": "complete finite formal denominator with at least one frozen main gate outside tolerance",
+    "infrastructure_fail_definition": "any crash, exception, missing/nonfinite/corrupt cell, source-data mismatch, lineage mismatch or incomplete denominator",
+    "complete_artifacts_required_on_scientific_fail": true,
+    "early_exit_on_first_metric_failure": false,
+    "released_after_pass": ["T9.2.5", "T9.2.6"],
+    "released_after_scientific_fail": ["T9.2.6"],
+    "blocked_after_scientific_fail": ["T9.2.5", "T9.2.7", "T9.3.1", "T9.3.4", "T9.6.2", "T9.6.5"],
+    "released_after_infrastructure_fail": [],
+    "no_formal_lifetime_on_fail": true,
+    "no_retuning_after_formal_access": true
+  },
+  "claim_boundary": {
+    "qualified_if_pass": ["dual_backend_agreement_for_prefrozen_synthetic_task"],
+    "forbidden_claim_expansions": [
+      "physical accuracy",
+      "round LER advantage",
+      "logical lifetime advantage",
+      "break-even",
+      "official Puviani reproduction or surpass",
+      "external SOTA",
+      "measured hardware latency or power",
+      "global rank"
+    ],
+    "typed_null": [
+      "round_ler",
+      "six_state_lifetime",
+      "physical_break_even",
+      "official_puviani_exact",
+      "puviani_nmf_surpass",
+      "external_sota",
+      "hardware_measured",
+      "rank"
+    ]
+  },
+  "artifact_paths": {
+    "amendment_seal": "docs/t9_2_4_formal_runner_amendment_seal.json",
+    "amendment_generator": "cnn_fpga/benchmark/phase9_twin_formal_runner_amendment.py",
+    "amendment_tests": "tests/test_phase9_twin_formal_runner_amendment.py",
+    "formal_runner": "cnn_fpga/benchmark/phase9_dual_backend_qualification.py",
+    "independent_verifier": "cnn_fpga/benchmark/phase9_dual_backend_verifier.py",
+    "bridge_tests": "tests/test_phase9_backend_b_logical_bridge.py",
+    "runner_tests": "tests/test_phase9_dual_backend_qualification.py",
+    "verifier_tests": "tests/test_phase9_dual_backend_verifier.py",
+    "execution_manifest": "docs/t9_2_4_dual_backend_execution_manifest.json",
+    "report": "docs/t9_2_4_dual_backend_qualification.json",
+    "cell_ledger": "docs/t9_2_4_dual_backend_cell_ledger.csv",
+    "source_data": "docs/t9_2_4_dual_backend_qualification_source_data.csv",
+    "raw_state_archive": "docs/t9_2_4_dual_backend_state_archive.npz",
+    "markdown": "docs/phase9_dual_backend_qualification.md",
+    "release_pin": "configs/phase9/t9_2_4_release_pin.json"
+  }
+}

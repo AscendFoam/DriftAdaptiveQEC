@@ -1,0 +1,506 @@
+{
+  "task_id": "T7.2.4",
+  "schema_version": "t7.2.4-discussion-conclusion-contract-v1",
+  "generated_at_utc": "2026-07-21T07:25:26.418828+00:00",
+  "manuscript": {
+    "discussion_sha256": "5ac549d94a4ae1292bd0d478c38b84747d4819e9c2a7a18edc31d6c845218111",
+    "conclusion_sha256": "d12fe47e82e23b5e70500cb213c9791464f4ce3ba72dae7c22576a1e0479283e",
+    "discussion_characters": 16570,
+    "conclusion_characters": 1939,
+    "subsections": [
+      "Evidence-supported contribution",
+      "When regime awareness helps",
+      "Safety, performance, and intervention cost",
+      "Computational and hardware cost",
+      "External validity and missing physical evidence",
+      "Relationship to prior decoder classes",
+      "Failure-informed design priorities",
+      "Staged path to real data, board measurement, and physical break-even"
+    ],
+    "transition_stages": [
+      "Real-data intake",
+      "Shadow mode",
+      "Board/HIL",
+      "Guarded QPU",
+      "Physical effectiveness",
+      "Break-even"
+    ],
+    "checks": {
+      "section_order": true,
+      "required_subsections": true,
+      "ordered_subsections": true,
+      "restricted_contribution": true,
+      "regime_interpretation": true,
+      "safety_and_cost": true,
+      "cost_inventory": true,
+      "external_validity": true,
+      "comparison_boundaries": true,
+      "failure_informed_priorities": true,
+      "transition_ladder": true,
+      "explicit_nonclaims": true,
+      "balanced_conclusion": true,
+      "prohibited_assertions_absent": true
+    }
+  },
+  "discussion_rows": [
+    {
+      "row_id": "DC-001",
+      "topic": "restricted_contribution",
+      "discussion_state": "INTERPRETATION_ESTABLISHED",
+      "source_ids": "V4/T7.1.1",
+      "boundary": "Integration and falsification, not a winning decoder"
+    },
+    {
+      "row_id": "DC-002",
+      "topic": "role_separation",
+      "discussion_state": "INTERPRETATION_ESTABLISHED",
+      "source_ids": "T6.5--T7.2.3",
+      "boundary": "MAP, safety FSM, fast path, and learning modules own different claims"
+    },
+    {
+      "row_id": "DC-003",
+      "topic": "locked_ewma_positive",
+      "discussion_state": "INTERPRETATION_ESTABLISHED",
+      "source_ids": "T6.7.1/T6.7.4",
+      "boundary": "Positive only against the preregistered EWMA contrast"
+    },
+    {
+      "row_id": "DC-004",
+      "topic": "static_window_negative",
+      "discussion_state": "LIMITATION_REQUIRED",
+      "source_ids": "T6.7.1/T6.9.3",
+      "boundary": "Static and Window prevent a best-decoder claim"
+    },
+    {
+      "row_id": "DC-005",
+      "topic": "v5_causal_stop",
+      "discussion_state": "LIMITATION_REQUIRED",
+      "source_ids": "T6.10.1/T6.15.5",
+      "boundary": "Observed-only causal/action headroom failed before V5 implementation"
+    },
+    {
+      "row_id": "DC-006",
+      "topic": "tail_noninferiority",
+      "discussion_state": "INTERPRETATION_ESTABLISHED",
+      "source_ids": "T6.7.2/T6.7.4",
+      "boundary": "Safety non-inferiority is not broad tail superiority"
+    },
+    {
+      "row_id": "DC-007",
+      "topic": "intervention_occupancy",
+      "discussion_state": "COST_REQUIRED",
+      "source_ids": "T6.7.2",
+      "boundary": "Fallback and unnecessary fallback can dominate tail intervals"
+    },
+    {
+      "row_id": "DC-008",
+      "topic": "host_update_cost",
+      "discussion_state": "COST_REQUIRED",
+      "source_ids": "T6.5.2/T6.8.3",
+      "boundary": "Slow-loop cadence and compute budget are separate from fast-path cycles"
+    },
+    {
+      "row_id": "DC-009",
+      "topic": "fast_path_cost",
+      "discussion_state": "COST_REQUIRED",
+      "source_ids": "T6.7.3/T6.9.1",
+      "boundary": "Six-cycle II=1 and P&R are pre-board evidence"
+    },
+    {
+      "row_id": "DC-010",
+      "topic": "offline_learning_only",
+      "discussion_state": "LIMITATION_REQUIRED",
+      "source_ids": "T4.4/T5.5",
+      "boundary": "No board-resident or on-board training"
+    },
+    {
+      "row_id": "DC-011",
+      "topic": "board_measurement_null",
+      "discussion_state": "LIMITATION_REQUIRED",
+      "source_ids": "T6.9.2",
+      "boundary": "All 42 physical-board fields remain null"
+    },
+    {
+      "row_id": "DC-012",
+      "topic": "single_mode_model_scope",
+      "discussion_state": "EXTERNAL_VALIDITY_REQUIRED",
+      "source_ids": "T0.1.1/T2.1",
+      "boundary": "Single-mode square-lattice syndrome/effective model"
+    },
+    {
+      "row_id": "DC-013",
+      "topic": "no_calibrated_cavity_transmon",
+      "discussion_state": "EXTERNAL_VALIDITY_REQUIRED",
+      "source_ids": "T0.1.2/T8",
+      "boundary": "No calibrated cavity/transmon pulse-level device model or experiment"
+    },
+    {
+      "row_id": "DC-014",
+      "topic": "synthetic_drift_scope",
+      "discussion_state": "EXTERNAL_VALIDITY_REQUIRED",
+      "source_ids": "T1.3/T6.6",
+      "boundary": "Held-out synthetic generators do not establish real drift prevalence"
+    },
+    {
+      "row_id": "DC-015",
+      "topic": "no_physical_lifetime",
+      "discussion_state": "LIMITATION_REQUIRED",
+      "source_ids": "T5.5.2/T8",
+      "boundary": "Per-round simulated LER is not a physical lifetime"
+    },
+    {
+      "row_id": "DC-016",
+      "topic": "no_outer_threshold",
+      "discussion_state": "LIMITATION_REQUIRED",
+      "source_ids": "T0.1.1",
+      "boundary": "No surface-code or fault-tolerant threshold from single-mode data"
+    },
+    {
+      "row_id": "DC-017",
+      "topic": "task_signature_comparison",
+      "discussion_state": "INTERPRETATION_ESTABLISHED",
+      "source_ids": "T6.16--T6.19",
+      "boundary": "CI/ML/NN/AQEC/CPD/NMF/FPGA lanes have no global leaderboard"
+    },
+    {
+      "row_id": "DC-018",
+      "topic": "phase6c_separation",
+      "discussion_state": "LIMITATION_REQUIRED",
+      "source_ids": "T6.19.3",
+      "boundary": "Secondary CPD/CNOT/AQEC evidence cannot rescue V5"
+    },
+    {
+      "row_id": "DC-019",
+      "topic": "identifiability_first",
+      "discussion_state": "INTERPRETATION_ESTABLISHED",
+      "source_ids": "T6.10.1",
+      "boundary": "Require prospective causal information before estimator expansion"
+    },
+    {
+      "row_id": "DC-020",
+      "topic": "action_value_first",
+      "discussion_state": "INTERPRETATION_ESTABLISHED",
+      "source_ids": "T6.10.1",
+      "boundary": "Require realizable action-value headroom before compiler expansion"
+    },
+    {
+      "row_id": "DC-021",
+      "topic": "real_data_intake",
+      "discussion_state": "FUTURE_GATE_ONLY",
+      "source_ids": "T8.1.1--T8.1.3",
+      "boundary": "Immutable metadata, units, labels, permission, and chronological splits"
+    },
+    {
+      "row_id": "DC-022",
+      "topic": "shadow_mode",
+      "discussion_state": "FUTURE_GATE_ONLY",
+      "source_ids": "T8.2.1",
+      "boundary": "Prospective output logging without actuation"
+    },
+    {
+      "row_id": "DC-023",
+      "topic": "board_hil",
+      "discussion_state": "FUTURE_GATE_ONLY",
+      "source_ids": "T6.9.2",
+      "boundary": "Named-board streaming HIL populates timing, power, and 42 fields"
+    },
+    {
+      "row_id": "DC-024",
+      "topic": "guarded_qpu",
+      "discussion_state": "FUTURE_GATE_ONLY",
+      "source_ids": "T8.2.2--T8.2.3",
+      "boundary": "Frame first; displacement only after separate authorization"
+    },
+    {
+      "row_id": "DC-025",
+      "topic": "physical_effectiveness",
+      "discussion_state": "FUTURE_GATE_ONLY",
+      "source_ids": "T5.5.2/T8",
+      "boundary": "Matched corrected and best-physical channels on the same device"
+    },
+    {
+      "row_id": "DC-026",
+      "topic": "break_even_gate",
+      "discussion_state": "FUTURE_GATE_ONLY",
+      "source_ids": "T5.5.2/T8",
+      "boundary": "Decay-rate ratio with simultaneous lower confidence bound above one"
+    },
+    {
+      "row_id": "DC-027",
+      "topic": "balanced_conclusion",
+      "discussion_state": "CONCLUSION_BOUNDARY",
+      "source_ids": "T7.1.1/T7.2.3",
+      "boundary": "Conclusion retains positives, negatives, nulls, and prohibited upgrades"
+    }
+  ],
+  "parent_state": {
+    "verdicts": {
+      "claim_matrix": "PASS_RESTRICTED_PREBOARD_CLAIM_BOUNDARY_MATRIX",
+      "introduction": "PASS_EVIDENCE_BOUNDED_INTRODUCTION_RELATED_WORK",
+      "methods": "PASS_EVIDENCE_STATE_BOUNDED_METHODS",
+      "results": "PASS_RESULTS_COMPLETE_NEGATIVE_AND_SECONDARY_BOUNDARIES",
+      "v4": "NO_GO_FULL_HIGH_LEVEL_PAPER_RESTRICTED_PREBOARD_DRAFT_ONLY",
+      "board": "BLOCKED_T6_9_2_NO_PHYSICAL_BOARD_EVIDENCE_ALL_MEASURED_FIELDS_NULL",
+      "v5": "NO_GO_V5_EARLY_HEADROOM_STOP",
+      "phase6c": "PASS_AUX_COMPARISON_INTEGRITY"
+    },
+    "previous_contracts_live": {
+      "introduction": true,
+      "methods": true,
+      "results": true
+    },
+    "claim_count": 29,
+    "result_row_count": 27,
+    "result_states": [
+      "DIAGNOSTIC_STOP",
+      "HISTORICAL_EXTENSION",
+      "MANDATORY_NEGATIVE",
+      "NULL_OR_CONTEXTUAL",
+      "PRIMARY_RESTRICTED",
+      "SECONDARY_ELIGIBLE"
+    ],
+    "v5": {
+      "dropped_tasks": 20,
+      "downstream_outputs": 0,
+      "formal_artifacts_exist": false
+    },
+    "board": {
+      "measured_field_count": 42,
+      "nonnull_field_count": 0,
+      "false_external_prerequisites": [
+        "actual_board_inventory",
+        "transport_adapter_qualification",
+        "timestamp_measurement_method",
+        "board_correctness_smoke",
+        "board_hil_qualification",
+        "bitstream_manifest"
+      ],
+      "same_task_speed_claim": "PROHIBITED"
+    },
+    "task_status": {
+      "T7.2.4": "Done",
+      "T8.1.1": "Todo",
+      "T8.2.1": "Todo",
+      "T6.9.2": "Blocked"
+    }
+  },
+  "source_bindings": {
+    "manuscript": {
+      "path": "docs/paper_notes/Contract_Centric_Regime_Aware_GKP_note_draft.tex",
+      "sha256": "12d085b0dc099ac0a9d6b64ee61581868802fc0f29aac976bfcc8741583baf08",
+      "bytes": 134834
+    },
+    "claim_matrix": {
+      "path": "docs/t7_1_1_claim_evidence_boundary_matrix.json",
+      "sha256": "d3126d0c7b3a8991a23b1b4281558020e5c76f8b00a071717c30a491d546253c",
+      "bytes": 80985
+    },
+    "introduction_contract": {
+      "path": "docs/t7_2_1_introduction_related_work_contract.json",
+      "sha256": "3355106bad4cfdf2fbfa9caca0606792aa319a4121fdb6e3f2e9a675e0991c56",
+      "bytes": 35614
+    },
+    "methods_contract": {
+      "path": "docs/t7_2_2_methods_evidence_contract.json",
+      "sha256": "65996736ebac49fdee07b830d0b9c5e3075decc4971dd7f8c6c2906428e0be97",
+      "bytes": 18319
+    },
+    "results_contract": {
+      "path": "docs/t7_2_3_results_evidence_contract.json",
+      "sha256": "d61edaae54591af0abf5b4b7ccb97e2933905277917b4e93b9266e0a28501f5a",
+      "bytes": 34270
+    },
+    "v4_final_gate": {
+      "path": "docs/t6_9_3_route_a_final_evidence_gate.json",
+      "sha256": "382ddf8497a5d50e68b5d88ddbeb3e6bff07946139142e2c81257b59e06f648c",
+      "bytes": 27475
+    },
+    "board_blocker": {
+      "path": "docs/t6_9_2_route_a_board_measurement_blocker.json",
+      "sha256": "3ba6b5fbaf88049b62a6bb8fe32d3a1ccb2c4e234c7b4f96e7401e3f598bf8c8",
+      "bytes": 9311
+    },
+    "v5_final_gate": {
+      "path": "docs/t6_15_5_route_a_v5_final_evidence_gate.json",
+      "sha256": "537029824f305e001920e61cf03be457074655ee6112fd2db6ab9f0241607670",
+      "bytes": 6659
+    },
+    "phase6c_integrity": {
+      "path": "docs/t6_19_3_secondary_evidence_integrity.json",
+      "sha256": "9402e7e33076b314b050788a9a657e7a47a245d55c6da289b2b6227f2d7e1027",
+      "bytes": 384096
+    },
+    "task_board": {
+      "path": "docs/new_task_board.md",
+      "sha256": "c3d6ea95bd01be2ef52c9ed9ea13bea4a469ec74300b1c5cfed7bdd0bf89ecda",
+      "bytes": 279794
+    },
+    "experiment_plan": {
+      "path": "docs/experiment_plan.md",
+      "sha256": "dbc8ff7a5e2dc0277d3ffba136f800292d83b60423c583c039e636bd51545bdc",
+      "bytes": 90517
+    },
+    "scope_freeze": {
+      "path": "docs/tasks/T0.1.1_scope_freeze.md",
+      "sha256": "a1755b05fd170140ca064f5ea778541d75b66cae79e8c6dc391a9539309312cb",
+      "bytes": 9952
+    },
+    "metric_analysis": {
+      "path": "docs/deep_research_reports/GKP解码指标分析.md",
+      "sha256": "28a8c2df2f0e43013ae7888438a3f4a90b24cabbbf2e6218d6adb01e93d1bb26",
+      "bytes": 13969
+    },
+    "implementation": {
+      "path": "cnn_fpga/benchmark/discussion_conclusion_contract.py",
+      "sha256": "3493e3f9f6a2ee21c34f6844efb62f5f0909d70178287a175d3276038653e491",
+      "bytes": 28607
+    }
+  },
+  "source_integrity_declared": true,
+  "gates": {
+    "G01_identity": true,
+    "G02_live_source_bindings": true,
+    "G03_section_order": true,
+    "G04_discussion_subsection_order": true,
+    "G05_restricted_contribution_scope": true,
+    "G06_regime_awareness_interpretation": true,
+    "G07_safety_performance_cost_separation": true,
+    "G08_compute_hardware_cost_inventory": true,
+    "G09_no_onboard_training_claim": true,
+    "G10_external_model_validity": true,
+    "G11_no_physical_apparatus_or_break_even": true,
+    "G12_no_outer_code_threshold_upgrade": true,
+    "G13_task_signature_comparison_boundary": true,
+    "G14_failure_informed_priorities": true,
+    "G15_monotonic_physical_transition": true,
+    "G16_physical_break_even_gate": true,
+    "G17_balanced_conclusion": true,
+    "G18_board_null_and_blocked": true,
+    "G19_v5_stop_and_secondary_nonpromotion": true,
+    "G20_previous_contracts_and_verdicts": true,
+    "G21_discussion_rows_complete": true,
+    "G22_prohibited_assertions_absent": true
+  },
+  "gate_summary": {
+    "passed": 22,
+    "total": 22
+  },
+  "verdict": "PASS_DISCUSSION_LIMITATIONS_COST_AND_PHYSICAL_TRANSITION_BOUNDARIES",
+  "semantic_mutation_audit": {
+    "count": 22,
+    "detected": 22,
+    "cases": [
+      {
+        "mutation_id": "M01",
+        "target_gate": "G01_identity",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M02",
+        "target_gate": "G02_live_source_bindings",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M03",
+        "target_gate": "G03_section_order",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M04",
+        "target_gate": "G04_discussion_subsection_order",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M05",
+        "target_gate": "G05_restricted_contribution_scope",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M06",
+        "target_gate": "G06_regime_awareness_interpretation",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M07",
+        "target_gate": "G07_safety_performance_cost_separation",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M08",
+        "target_gate": "G08_compute_hardware_cost_inventory",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M09",
+        "target_gate": "G09_no_onboard_training_claim",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M10",
+        "target_gate": "G10_external_model_validity",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M11",
+        "target_gate": "G11_no_physical_apparatus_or_break_even",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M12",
+        "target_gate": "G12_no_outer_code_threshold_upgrade",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M13",
+        "target_gate": "G13_task_signature_comparison_boundary",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M14",
+        "target_gate": "G14_failure_informed_priorities",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M15",
+        "target_gate": "G15_monotonic_physical_transition",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M16",
+        "target_gate": "G16_physical_break_even_gate",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M17",
+        "target_gate": "G17_balanced_conclusion",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M18",
+        "target_gate": "G18_board_null_and_blocked",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M19",
+        "target_gate": "G19_v5_stop_and_secondary_nonpromotion",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M20",
+        "target_gate": "G20_previous_contracts_and_verdicts",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M21",
+        "target_gate": "G21_discussion_rows_complete",
+        "rejected": true
+      },
+      {
+        "mutation_id": "M22",
+        "target_gate": "G22_prohibited_assertions_absent",
+        "rejected": true
+      }
+    ]
+  },
+  "analysis_sha256": "6d8812cd80bb30b0b72a24752eaf0fb9f99771cbeabe91f6330b59d679ecadf0"
+}

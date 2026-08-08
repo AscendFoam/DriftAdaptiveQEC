@@ -1,0 +1,126 @@
+{
+  "task_id": "T6.2.1",
+  "status": "PASS",
+  "verdict": "PASS_PRODUCTION_RTL_SHELL_READY_FOR_T6_2_2_LONG_TRACE",
+  "cycle_rows": 1681,
+  "mismatch_count": 0,
+  "first_mismatches": [],
+  "runtime_seconds": 337.61222680000355,
+  "observed_reject_reasons": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "required_reject_reasons": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "gate_summary": {
+    "passed": 8,
+    "total": 8
+  },
+  "gates": {
+    "yosys_elaboration_and_structural_check_zero_problems": true,
+    "independent_reference_matches_every_cycle_and_state_bit": true,
+    "full_514_word_good_and_bad_crc_transactions_executed": true,
+    "all_fail_closed_rejection_classes_observed": true,
+    "safe_boundary_defer_cancel_commit_and_drain_executed": true,
+    "coherent_crc_state_snapshots_complete_in_bounded_18_cycles": true,
+    "all_source_contract_guards_present": true,
+    "all_semantic_output_mutations_are_rejected": true
+  },
+  "source_contract": {
+    "core_rejects_out_of_range_config_address": true,
+    "core_rejects_active_bank_write": true,
+    "core_commit_requires_trust_inactive_bank_and_monotonic_version": true,
+    "production_age_ceiling_is_8192_not_demo_64": true,
+    "production_supports_full_uint16_version_range": true,
+    "strict_514_word_transaction_and_crc32": true,
+    "safe_boundary_commit_cancel_and_drain_guard_present": true,
+    "management_snapshot_crc_is_byte_serial_not_long_combinational_chain": true
+  },
+  "mutation_audit": [
+    {
+      "mutation": "drop_crc_reject",
+      "rejected": true,
+      "mismatch_count": 1
+    },
+    {
+      "mutation": "wrong_crc_reason",
+      "rejected": true,
+      "mismatch_count": 1
+    },
+    {
+      "mutation": "early_commit_complete",
+      "rejected": true,
+      "mismatch_count": 1
+    },
+    {
+      "mutation": "drop_finalize_ack",
+      "rejected": true,
+      "mismatch_count": 1
+    },
+    {
+      "mutation": "active_bank_bit_flip",
+      "rejected": true,
+      "mismatch_count": 1
+    },
+    {
+      "mutation": "management_state_bit_flip",
+      "rejected": true,
+      "mismatch_count": 1
+    },
+    {
+      "mutation": "drop_trace_row",
+      "rejected": true,
+      "mismatch_count": 1
+    }
+  ],
+  "build": {
+    "yosys_version": "Yosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)",
+    "gpp_version": "g++.EXE (Rev5, Built by MSYS2 project) 15.1.0",
+    "yosys_seconds": 1.7693433000240475,
+    "compile_seconds": 24.352716399997007,
+    "model_bytes": 5455599,
+    "model_sha256": "b1308ba886c77cd1506d8f0ccc90d030b0c75e4aee497ff3848517cb6de2fc12",
+    "executable_bytes": 5785186,
+    "executable_sha256": "7257af6efa567aeb17d039beb6c5da5dd392d7dbd995034bcb9affc80ff723b6",
+    "structural_check_zero_problems": true,
+    "memory_count": 8,
+    "memory_bits": 45232,
+    "yosys_log": "build/t6_2_1_production_rtl/yosys_cxxrtl.log",
+    "compile_log": "build/t6_2_1_production_rtl/gpp_compile.log"
+  },
+  "artifacts": {
+    "source_data_csv": "docs/t6_2_1_production_rtl_audit_source_data.csv",
+    "core_rtl": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+    "production_top_rtl": "cnn_fpga/rtl/gkp_fast_path_production_top.sv",
+    "cxxrtl_driver": "cnn_fpga/rtl/production_management_cxxrtl_driver.cc"
+  },
+  "evidence_boundary": {
+    "synthesizable_rtl": true,
+    "cycle_accurate_cxxrtl": true,
+    "board_independent_management_contract": true,
+    "transport_or_cdc_validated": false,
+    "target_place_route": false,
+    "board_measured": false,
+    "crc32_is_integrity_not_authentication": true
+  }
+}

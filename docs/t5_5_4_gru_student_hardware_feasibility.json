@@ -1,0 +1,1339 @@
+{
+  "schema_version": "t5.5.4-gru-student-hardware-feasibility-v1",
+  "task_id": "T5.5.4",
+  "status": "PASS",
+  "verdict": "DISTILLED_STUDENT_ONLY_QUANTIZED_GRU_DROPPED_FULL_GRU_OFFLINE_TEACHER",
+  "target": {
+    "device": "GW2AR-LV18QN88C8/I7",
+    "family": "GW2A-18C",
+    "target_mhz": 27.0,
+    "student_deadline_us": 5.0,
+    "bram_block_bits": 18432,
+    "bram_blocks_available": 46,
+    "mult9_available": 96
+  },
+  "parents": [
+    {
+      "artifact": {
+        "path": "docs/t4_4_1_bounded_residual_rnn_teacher_validation.json",
+        "sha256": "c71094493a63f7a3b1287d28c0a1b71d3ce7a03e16a281a27967a87a65669d53",
+        "bytes": 612076
+      },
+      "task_id": "T4.4.1",
+      "status": "PASS",
+      "gate_summary": {
+        "passed": 21,
+        "total": 21
+      }
+    },
+    {
+      "artifact": {
+        "path": "docs/t4_4_4_teacher_student_gain_retention.json",
+        "sha256": "5cd1478de22ecd998aaf678bc6f14873134e57bc8ae2fc4408df215544b86dfc",
+        "bytes": 502663
+      },
+      "task_id": "T4.4.4",
+      "status": "PASS",
+      "gate_summary": {
+        "passed": 18,
+        "total": 18
+      }
+    },
+    {
+      "artifact": {
+        "path": "docs/t5_5_3_student_rtl_equivalence.json",
+        "sha256": "031a8e92d8e274ba955eac1f16ed15bff7f4367d68e90bf0464e3223e10f9d24",
+        "bytes": 1930
+      },
+      "task_id": "T5.5.3",
+      "status": "PASS",
+      "gate_summary": {
+        "passed": 6,
+        "total": 6
+      }
+    },
+    {
+      "artifact": {
+        "path": "docs/t5_5_3_precision_resource_pareto.json",
+        "sha256": "b390bdaf3b2ad562c9799fae1f29844f10c2f22d9391c3df6482c81b69095ada",
+        "bytes": 126818
+      },
+      "task_id": "T5.5.3",
+      "status": "PASS",
+      "gate_summary": {
+        "passed": 16,
+        "total": 16
+      }
+    }
+  ],
+  "source_bindings": [
+    {
+      "path": "cnn_fpga/benchmark/gru_student_hardware_feasibility.py",
+      "sha256": "4bd8dcd9b4268a2c669f6561d910aa56d403465d00f028221ea94107961cdf8a",
+      "bytes": 46334
+    },
+    {
+      "path": "docs/t4_4_1_bounded_residual_rnn_teacher_checkpoints.pt",
+      "sha256": "7c4e004cfb4e04e2ac4848242fbfe63217ef6b89f8780bbce723422be098711e",
+      "bytes": 1867285
+    },
+    {
+      "path": "cnn_fpga/rtl/generated/t5_5_4_quantized_gru_manifest.json",
+      "sha256": "a833f2da428a867c11260bb055793a79046fc620b0675fdbff619c28b11ba898",
+      "bytes": 4133
+    },
+    {
+      "path": "cnn_fpga/rtl/generated/t5_5_3_student_memory_manifest.json",
+      "sha256": "6eeae41e4bd1b81269bd360a54e1d47120196c6eaeb5e4224f737b0daa6d83b2",
+      "bytes": 1852
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "sha256": "72f84c38bdf064d851ab389c457c9b1fe2115cea65dfca60d60f59efaad9f5af",
+      "bytes": 24895
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_synth_top.sv",
+      "sha256": "c0fb58acc208406aba6fcb98dd6cc1dfaa02040e5e074b05cdfba8f92e545260",
+      "bytes": 5340
+    },
+    {
+      "path": "cnn_fpga/rtl/quantized_gru_workload_kernel.sv",
+      "sha256": "e8eb68efa6adb0c34195d1d87871af7283d8acd853048b30f7c669b810c8fb63",
+      "bytes": 4329
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_gru_workload_synth_top.sv",
+      "sha256": "63c8c118478a5a25e37d53397d94bca9a60731375f596fbef9233fbafeffd1bc",
+      "bytes": 1277
+    },
+    {
+      "path": "cnn_fpga/rtl/quantized_gru_workload_cxxrtl_driver.cc",
+      "sha256": "26c782d162db4815b1d52fe1de48c91eed7da0e19e43c472f99fba2b129193dd",
+      "bytes": 2169
+    },
+    {
+      "path": "cnn_fpga/rtl/tang_nano_20k_27mhz.sdc",
+      "sha256": "75cf6f2866062f7286fa58ccd45d95be42f2d2ebe7b5b3b173ab2c5e85ba62e8",
+      "bytes": 57
+    },
+    {
+      "path": "cnn_fpga/rtl/tang_nano_20k_synth_harness.cst",
+      "sha256": "636f9520efe8c6c0fd3d7391ee80cf99ae36dd67c81768468ad9dbeb28e5a3d0",
+      "bytes": 1581
+    },
+    {
+      "path": "cnn_fpga/rtl/generated/t5_5_4_quantized_gru_weights.mem",
+      "sha256": "108813f658145bea907c0a4e4caa84da2f8628c26e730de1331b435e2eea1a5c",
+      "bytes": 289064
+    },
+    {
+      "path": "cnn_fpga/rtl/generated/t5_5_4_quantized_gru_biases.mem",
+      "sha256": "d412d1f32a3810f9f49d5dccec20de54feef5e82c5a70fe8e437e4864bdfbca5",
+      "bytes": 4109
+    }
+  ],
+  "parameter_accounting": {
+    "architecture": "GRU10-DENSE256-DENSE256-OUT15",
+    "total_parameters": 72853,
+    "weight_macs": 72266,
+    "bias_scalars": 587,
+    "checkpoint_selected_restart_index": 0,
+    "checkpoint_selected_state_sha256": "aee37f0ca66257cda39ae5143305a583504e6068b837b04cdaca8c94a67ea076"
+  },
+  "quantized_functional_shadow": {
+    "model": "functional fake-quantized shadow, not RTL and not physical-gain evidence",
+    "rounding_scope": "per-tensor int8 weights; Q3.14 biases and post-affine/nonlinearity state",
+    "torch_grucell_equation_max_abs_error": 5.551115123125783e-17,
+    "exhaustive_length8_histories_all_prefixes": {
+      "sequence_count": 256,
+      "steps_per_sequence": 8,
+      "action_scalar_comparisons": 30720,
+      "hidden_scalar_comparisons": 20480,
+      "action_rmse": 0.00013213336248081432,
+      "action_maximum_absolute_error": 0.00053793743554581,
+      "action_p99_absolute_error": 0.0003788447315021784,
+      "hidden_rmse": 0.0005162070350050277,
+      "hidden_maximum_absolute_error": 0.0019396895561298866,
+      "all_quantized_values_finite": true,
+      "all_quantized_actions_bounded": true
+    },
+    "long_random_sequences": {
+      "sequence_count": 128,
+      "steps_per_sequence": 256,
+      "action_scalar_comparisons": 491520,
+      "hidden_scalar_comparisons": 327680,
+      "action_rmse": 0.00014222375005332102,
+      "action_maximum_absolute_error": 0.0005519934336795096,
+      "action_p99_absolute_error": 0.00040138332857103665,
+      "hidden_rmse": 0.0005543023721634849,
+      "hidden_maximum_absolute_error": 0.0020456693284190974,
+      "all_quantized_values_finite": true,
+      "all_quantized_actions_bounded": true
+    },
+    "manifest": {
+      "path": "cnn_fpga/rtl/generated/t5_5_4_quantized_gru_manifest.json",
+      "sha256": "a833f2da428a867c11260bb055793a79046fc620b0675fdbff619c28b11ba898",
+      "bytes": 4133
+    },
+    "weight_file": {
+      "path": "cnn_fpga/rtl/generated/t5_5_4_quantized_gru_weights.mem",
+      "sha256": "108813f658145bea907c0a4e4caa84da2f8628c26e730de1331b435e2eea1a5c",
+      "bytes": 289064
+    },
+    "bias_file": {
+      "path": "cnn_fpga/rtl/generated/t5_5_4_quantized_gru_biases.mem",
+      "sha256": "d412d1f32a3810f9f49d5dccec20de54feef5e82c5a70fe8e437e4864bdfbca5",
+      "bytes": 4109
+    },
+    "physical_gain_retention": null,
+    "physical_gain_retention_reason": "T4.4.4 physics benchmark was not rerun with this quantized functional shadow"
+  },
+  "quantized_lower_bound_synthesis": {
+    "artifact": {
+      "path": "docs/t5_5_4_yosys_quantized_gru_lower_bound.log",
+      "sha256": "5e0aed75ff50724287d2b7015f01a265a27dd26ade659e0d07f127b07d6ef227",
+      "bytes": 919195
+    },
+    "primitive_counts_before_abc9": {
+      "SPX9": 33,
+      "SDPX9B": 8,
+      "MULT18X18": 1,
+      "MULT9X9": 3
+    },
+    "complete_parameter_rom_primitives": true,
+    "fast_path_bram_primitives": true,
+    "note": "pre-ABC9 primitive inventory; placed utilization is authoritative"
+  },
+  "quantized_lower_bound_toolchain_provenance": {
+    "schema_version": "t5.5.4-toolchain-execution-v1",
+    "input_bindings": [
+      {
+        "path": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+        "sha256": "72f84c38bdf064d851ab389c457c9b1fe2115cea65dfca60d60f59efaad9f5af",
+        "bytes": 24895
+      },
+      {
+        "path": "cnn_fpga/rtl/gkp_fast_path_synth_top.sv",
+        "sha256": "c0fb58acc208406aba6fcb98dd6cc1dfaa02040e5e074b05cdfba8f92e545260",
+        "bytes": 5340
+      },
+      {
+        "path": "cnn_fpga/rtl/quantized_gru_workload_kernel.sv",
+        "sha256": "e8eb68efa6adb0c34195d1d87871af7283d8acd853048b30f7c669b810c8fb63",
+        "bytes": 4329
+      },
+      {
+        "path": "cnn_fpga/rtl/gkp_fast_path_gru_workload_synth_top.sv",
+        "sha256": "63c8c118478a5a25e37d53397d94bca9a60731375f596fbef9233fbafeffd1bc",
+        "bytes": 1277
+      },
+      {
+        "path": "cnn_fpga/rtl/tang_nano_20k_27mhz.sdc",
+        "sha256": "75cf6f2866062f7286fa58ccd45d95be42f2d2ebe7b5b3b173ab2c5e85ba62e8",
+        "bytes": 57
+      },
+      {
+        "path": "cnn_fpga/rtl/tang_nano_20k_synth_harness.cst",
+        "sha256": "636f9520efe8c6c0fd3d7391ee80cf99ae36dd67c81768468ad9dbeb28e5a3d0",
+        "bytes": 1581
+      },
+      {
+        "path": "cnn_fpga/rtl/generated/t5_5_4_quantized_gru_manifest.json",
+        "sha256": "a833f2da428a867c11260bb055793a79046fc620b0675fdbff619c28b11ba898",
+        "bytes": 4133
+      }
+    ],
+    "synthesis_command": [
+      "C:\\ProgramData\\anaconda3\\envs\\DLEnv\\Scripts\\yowasp-yosys.exe",
+      "-Q",
+      "-p",
+      "read_verilog -sv cnn_fpga/rtl/gkp_fast_path_core.sv cnn_fpga/rtl/gkp_fast_path_synth_top.sv cnn_fpga/rtl/quantized_gru_workload_kernel.sv cnn_fpga/rtl/gkp_fast_path_gru_workload_synth_top.sv; synth_gowin -family gw2a -no-rw-check -top gkp_fast_path_gru_workload_synth_top -json .tmp_t554_build/gkp_gru_workload_gw2a.json; check; stat"
+    ],
+    "route_commands": {
+      "1": [
+        "C:\\ProgramData\\anaconda3\\envs\\DLEnv\\Scripts\\yowasp-nextpnr-himbaechel-gowin.exe",
+        "--device",
+        "GW2AR-LV18QN88C8/I7",
+        "-o",
+        "family=GW2A-18C",
+        "-o",
+        "cst=cnn_fpga/rtl/tang_nano_20k_synth_harness.cst",
+        "--json",
+        ".tmp_t554_build/gkp_gru_workload_gw2a.json",
+        "--top",
+        "gkp_fast_path_gru_workload_synth_top",
+        "--freq",
+        "27",
+        "--sdc",
+        "cnn_fpga/rtl/tang_nano_20k_27mhz.sdc",
+        "--seed",
+        "1",
+        "--report",
+        ".tmp_t554_build/nextpnr_seed01_report.json",
+        "--detailed-timing-report",
+        "--write",
+        ".tmp_t554_build/gkp_gru_workload_routed_seed01.json"
+      ],
+      "7": [
+        "C:\\ProgramData\\anaconda3\\envs\\DLEnv\\Scripts\\yowasp-nextpnr-himbaechel-gowin.exe",
+        "--device",
+        "GW2AR-LV18QN88C8/I7",
+        "-o",
+        "family=GW2A-18C",
+        "-o",
+        "cst=cnn_fpga/rtl/tang_nano_20k_synth_harness.cst",
+        "--json",
+        ".tmp_t554_build/gkp_gru_workload_gw2a.json",
+        "--top",
+        "gkp_fast_path_gru_workload_synth_top",
+        "--freq",
+        "27",
+        "--sdc",
+        "cnn_fpga/rtl/tang_nano_20k_27mhz.sdc",
+        "--seed",
+        "7",
+        "--report",
+        ".tmp_t554_build/nextpnr_seed07_report.json",
+        "--detailed-timing-report",
+        "--write",
+        ".tmp_t554_build/gkp_gru_workload_routed_seed07.json"
+      ],
+      "19": [
+        "C:\\ProgramData\\anaconda3\\envs\\DLEnv\\Scripts\\yowasp-nextpnr-himbaechel-gowin.exe",
+        "--device",
+        "GW2AR-LV18QN88C8/I7",
+        "-o",
+        "family=GW2A-18C",
+        "-o",
+        "cst=cnn_fpga/rtl/tang_nano_20k_synth_harness.cst",
+        "--json",
+        ".tmp_t554_build/gkp_gru_workload_gw2a.json",
+        "--top",
+        "gkp_fast_path_gru_workload_synth_top",
+        "--freq",
+        "27",
+        "--sdc",
+        "cnn_fpga/rtl/tang_nano_20k_27mhz.sdc",
+        "--seed",
+        "19",
+        "--report",
+        ".tmp_t554_build/nextpnr_seed19_report.json",
+        "--detailed-timing-report",
+        "--write",
+        ".tmp_t554_build/gkp_gru_workload_routed_seed19.json"
+      ]
+    },
+    "uncompressed_netlist_sha256": "f2d69097218e08b180f451a42c8319168854aa7cd25ca5ab550fa629c4241adc",
+    "uncompressed_netlist_bytes": 9901300,
+    "compressed_netlist_artifact": {
+      "path": "docs/t5_5_4_quantized_gru_lower_bound_netlist.json.gz",
+      "sha256": "8976421dd77d53391e317e8c3cb68fb5569c0c9cc2da4e2ef205bbcb870699f3",
+      "bytes": 357969
+    },
+    "synthesis_log_artifact": {
+      "path": "docs/t5_5_4_yosys_quantized_gru_lower_bound.log",
+      "sha256": "5e0aed75ff50724287d2b7015f01a265a27dd26ade659e0d07f127b07d6ef227",
+      "bytes": 919195
+    },
+    "route_artifacts": [
+      {
+        "seed": 1,
+        "report": {
+          "path": "docs/t5_5_4_nextpnr_seed01_report.json",
+          "sha256": "aacdc95da9a2e6a37a751c5250f257c7bbf56215d95e5b25139b66ee0d42cf45",
+          "bytes": 250021
+        },
+        "log": {
+          "path": "docs/t5_5_4_nextpnr_seed01_place_route.log",
+          "sha256": "c7c2d0ab02a08744ee1572a0f6fde5cbf2493d65ed6a4c3cf5992a10300ca986",
+          "bytes": 55989
+        }
+      },
+      {
+        "seed": 7,
+        "report": {
+          "path": "docs/t5_5_4_nextpnr_seed07_report.json",
+          "sha256": "c3b84f5ed50abf931949e2bbb80d3965707fac2fc4820406e0e5c88efa1b33d5",
+          "bytes": 239354
+        },
+        "log": {
+          "path": "docs/t5_5_4_nextpnr_seed07_place_route.log",
+          "sha256": "93af2e89ea8b860c84099dcf3cbada4760443e569a37e373fc1c2a8a46434112",
+          "bytes": 50736
+        }
+      },
+      {
+        "seed": 19,
+        "report": {
+          "path": "docs/t5_5_4_nextpnr_seed19_report.json",
+          "sha256": "7a5e61a0a72512a8694b749b7959406e509545316333b28e71a7bdb8dd888e7c",
+          "bytes": 235718
+        },
+        "log": {
+          "path": "docs/t5_5_4_nextpnr_seed19_place_route.log",
+          "sha256": "5bb073d481f1c25d5528e4d33901a295dbf67c24136315caea2bfb36c2639200",
+          "bytes": 48322
+        }
+      }
+    ]
+  },
+  "quantized_lower_bound_cxxrtl": {
+    "cycles_after_start": 72854,
+    "weight_macs_completed": 72266,
+    "biases_consumed": 587,
+    "done": true,
+    "busy": false,
+    "signature": 730990968,
+    "zero_structural_problems": true,
+    "model_sha256": "15e1fbed6da306a5420cfba2ca3262f2ce93ec7cc01d7c039500c98210f1788a",
+    "executable_sha256": "63d4152cd24e602824bdc5318dc3b96508e1c8af0e92cd06ece64a8e9aae8f92",
+    "trace_artifact": {
+      "path": "docs/t5_5_4_quantized_gru_workload_trace.csv",
+      "sha256": "aa690cb501646443e87235c4448d2dae454b19a5823cf8b63303ff83727a4e2f",
+      "bytes": 109
+    },
+    "independent_reference": {
+      "signature": 730990968,
+      "final_accumulator_signed40": -241973801,
+      "final_activation_code18": 261047,
+      "ordered_weight_entries": 72266,
+      "ordered_bias_entries": 587
+    },
+    "signature_matches_independent_reference": true
+  },
+  "quantized_lower_bound_place_route": [
+    {
+      "seed": 1,
+      "clock_name": "core_harness.clk",
+      "target_mhz": 27.0,
+      "achieved_fmax_mhz": 40.26251220703125,
+      "timing_pass": true,
+      "route_status": "PASS",
+      "critical_path": {
+        "period_ns": 24.83700041845441,
+        "segment_count": 85,
+        "clock_to_q_ns": 0.23100000619888306,
+        "logic_ns": 10.98700025677681,
+        "routing_ns": 13.584000155329704,
+        "setup_ns": 0.03500000014901161,
+        "start_cell": "core_harness.core.phase_frame_x_DFFRE_Q",
+        "start_location": [
+          19,
+          25
+        ],
+        "end_cell": "core_harness.fold5_DFFR_Q_6",
+        "end_location": [
+          2,
+          32
+        ],
+        "from_clock": "posedge core_harness.clk",
+        "to_clock": "posedge core_harness.clk"
+      },
+      "utilization": {
+        "ALU": {
+          "used": 518,
+          "available": 15552
+        },
+        "ALU54D": {
+          "used": 0,
+          "available": 24
+        },
+        "BSRAM": {
+          "used": 41,
+          "available": 46
+        },
+        "BUFG": {
+          "used": 1,
+          "available": 24
+        },
+        "CLKDIV": {
+          "used": 0,
+          "available": 8
+        },
+        "CLKDIV2": {
+          "used": 0,
+          "available": 16
+        },
+        "DCS": {
+          "used": 0,
+          "available": 8
+        },
+        "DFF": {
+          "used": 1011,
+          "available": 15552
+        },
+        "DHCEN": {
+          "used": 0,
+          "available": 24
+        },
+        "DQCE": {
+          "used": 0,
+          "available": 24
+        },
+        "DUMMY_CELL": {
+          "used": 7,
+          "available": 0
+        },
+        "GND": {
+          "used": 1,
+          "available": 1
+        },
+        "GSR": {
+          "used": 1,
+          "available": 1
+        },
+        "IOB": {
+          "used": 18,
+          "available": 384
+        },
+        "IOLOGICI": {
+          "used": 0,
+          "available": 384
+        },
+        "IOLOGICO": {
+          "used": 0,
+          "available": 384
+        },
+        "LUT4": {
+          "used": 3895,
+          "available": 20736
+        },
+        "MULT18X18": {
+          "used": 1,
+          "available": 48
+        },
+        "MULT36X36": {
+          "used": 0,
+          "available": 12
+        },
+        "MULT9X9": {
+          "used": 3,
+          "available": 96
+        },
+        "MULTADDALU18X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MULTALU18X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MULTALU36X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MUX2_LUT5": {
+          "used": 1127,
+          "available": 10368
+        },
+        "MUX2_LUT6": {
+          "used": 441,
+          "available": 5184
+        },
+        "MUX2_LUT7": {
+          "used": 178,
+          "available": 2592
+        },
+        "MUX2_LUT8": {
+          "used": 57,
+          "available": 2592
+        },
+        "OSC": {
+          "used": 0,
+          "available": 1
+        },
+        "PADD18": {
+          "used": 0,
+          "available": 48
+        },
+        "PADD9": {
+          "used": 0,
+          "available": 96
+        },
+        "RAM16SDP4": {
+          "used": 0,
+          "available": 648
+        },
+        "VCC": {
+          "used": 1,
+          "available": 1
+        },
+        "rPLL": {
+          "used": 0,
+          "available": 2
+        }
+      },
+      "report_artifact": {
+        "path": "docs/t5_5_4_nextpnr_seed01_report.json",
+        "sha256": "aacdc95da9a2e6a37a751c5250f257c7bbf56215d95e5b25139b66ee0d42cf45",
+        "bytes": 250021
+      },
+      "log_artifact": {
+        "path": "docs/t5_5_4_nextpnr_seed01_place_route.log",
+        "sha256": "c7c2d0ab02a08744ee1572a0f6fde5cbf2493d65ed6a4c3cf5992a10300ca986",
+        "bytes": 55989
+      },
+      "log_contract": {
+        "exact_device_loaded": true,
+        "clock_constrained_to_27mhz": true,
+        "program_finished_normally": true
+      }
+    },
+    {
+      "seed": 7,
+      "clock_name": "core_harness.clk",
+      "target_mhz": 27.0,
+      "achieved_fmax_mhz": 39.152732849121094,
+      "timing_pass": true,
+      "route_status": "PASS",
+      "critical_path": {
+        "period_ns": 25.541000340133905,
+        "segment_count": 79,
+        "clock_to_q_ns": 0.23100000619888306,
+        "logic_ns": 11.548000246286392,
+        "routing_ns": 13.727000087499619,
+        "setup_ns": 0.03500000014901161,
+        "start_cell": "core_harness.core.leakage_clean_run_DFFRE_Q",
+        "start_location": [
+          14,
+          23
+        ],
+        "end_cell": "core_harness.fold5_DFFR_Q_6",
+        "end_location": [
+          6,
+          7
+        ],
+        "from_clock": "posedge core_harness.clk",
+        "to_clock": "posedge core_harness.clk"
+      },
+      "utilization": {
+        "ALU": {
+          "used": 518,
+          "available": 15552
+        },
+        "ALU54D": {
+          "used": 0,
+          "available": 24
+        },
+        "BSRAM": {
+          "used": 41,
+          "available": 46
+        },
+        "BUFG": {
+          "used": 1,
+          "available": 24
+        },
+        "CLKDIV": {
+          "used": 0,
+          "available": 8
+        },
+        "CLKDIV2": {
+          "used": 0,
+          "available": 16
+        },
+        "DCS": {
+          "used": 0,
+          "available": 8
+        },
+        "DFF": {
+          "used": 1011,
+          "available": 15552
+        },
+        "DHCEN": {
+          "used": 0,
+          "available": 24
+        },
+        "DQCE": {
+          "used": 0,
+          "available": 24
+        },
+        "DUMMY_CELL": {
+          "used": 7,
+          "available": 0
+        },
+        "GND": {
+          "used": 1,
+          "available": 1
+        },
+        "GSR": {
+          "used": 1,
+          "available": 1
+        },
+        "IOB": {
+          "used": 18,
+          "available": 384
+        },
+        "IOLOGICI": {
+          "used": 0,
+          "available": 384
+        },
+        "IOLOGICO": {
+          "used": 0,
+          "available": 384
+        },
+        "LUT4": {
+          "used": 3904,
+          "available": 20736
+        },
+        "MULT18X18": {
+          "used": 1,
+          "available": 48
+        },
+        "MULT36X36": {
+          "used": 0,
+          "available": 12
+        },
+        "MULT9X9": {
+          "used": 3,
+          "available": 96
+        },
+        "MULTADDALU18X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MULTALU18X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MULTALU36X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MUX2_LUT5": {
+          "used": 1127,
+          "available": 10368
+        },
+        "MUX2_LUT6": {
+          "used": 441,
+          "available": 5184
+        },
+        "MUX2_LUT7": {
+          "used": 178,
+          "available": 2592
+        },
+        "MUX2_LUT8": {
+          "used": 57,
+          "available": 2592
+        },
+        "OSC": {
+          "used": 0,
+          "available": 1
+        },
+        "PADD18": {
+          "used": 0,
+          "available": 48
+        },
+        "PADD9": {
+          "used": 0,
+          "available": 96
+        },
+        "RAM16SDP4": {
+          "used": 0,
+          "available": 648
+        },
+        "VCC": {
+          "used": 1,
+          "available": 1
+        },
+        "rPLL": {
+          "used": 0,
+          "available": 2
+        }
+      },
+      "report_artifact": {
+        "path": "docs/t5_5_4_nextpnr_seed07_report.json",
+        "sha256": "c3b84f5ed50abf931949e2bbb80d3965707fac2fc4820406e0e5c88efa1b33d5",
+        "bytes": 239354
+      },
+      "log_artifact": {
+        "path": "docs/t5_5_4_nextpnr_seed07_place_route.log",
+        "sha256": "93af2e89ea8b860c84099dcf3cbada4760443e569a37e373fc1c2a8a46434112",
+        "bytes": 50736
+      },
+      "log_contract": {
+        "exact_device_loaded": true,
+        "clock_constrained_to_27mhz": true,
+        "program_finished_normally": true
+      }
+    },
+    {
+      "seed": 19,
+      "clock_name": "core_harness.clk",
+      "target_mhz": 27.0,
+      "achieved_fmax_mhz": 40.6834831237793,
+      "timing_pass": true,
+      "route_status": "PASS",
+      "critical_path": {
+        "period_ns": 24.58000034466386,
+        "segment_count": 77,
+        "clock_to_q_ns": 0.23100000619888306,
+        "logic_ns": 9.219000220298767,
+        "routing_ns": 15.095000118017197,
+        "setup_ns": 0.03500000014901161,
+        "start_cell": "core_harness.core.phase_frame_x_DFFRE_Q",
+        "start_location": [
+          16,
+          21
+        ],
+        "end_cell": "core_harness.fold5_DFFR_Q_6",
+        "end_location": [
+          13,
+          1
+        ],
+        "from_clock": "posedge core_harness.clk",
+        "to_clock": "posedge core_harness.clk"
+      },
+      "utilization": {
+        "ALU": {
+          "used": 518,
+          "available": 15552
+        },
+        "ALU54D": {
+          "used": 0,
+          "available": 24
+        },
+        "BSRAM": {
+          "used": 41,
+          "available": 46
+        },
+        "BUFG": {
+          "used": 1,
+          "available": 24
+        },
+        "CLKDIV": {
+          "used": 0,
+          "available": 8
+        },
+        "CLKDIV2": {
+          "used": 0,
+          "available": 16
+        },
+        "DCS": {
+          "used": 0,
+          "available": 8
+        },
+        "DFF": {
+          "used": 1011,
+          "available": 15552
+        },
+        "DHCEN": {
+          "used": 0,
+          "available": 24
+        },
+        "DQCE": {
+          "used": 0,
+          "available": 24
+        },
+        "DUMMY_CELL": {
+          "used": 7,
+          "available": 0
+        },
+        "GND": {
+          "used": 1,
+          "available": 1
+        },
+        "GSR": {
+          "used": 1,
+          "available": 1
+        },
+        "IOB": {
+          "used": 18,
+          "available": 384
+        },
+        "IOLOGICI": {
+          "used": 0,
+          "available": 384
+        },
+        "IOLOGICO": {
+          "used": 0,
+          "available": 384
+        },
+        "LUT4": {
+          "used": 3899,
+          "available": 20736
+        },
+        "MULT18X18": {
+          "used": 1,
+          "available": 48
+        },
+        "MULT36X36": {
+          "used": 0,
+          "available": 12
+        },
+        "MULT9X9": {
+          "used": 3,
+          "available": 96
+        },
+        "MULTADDALU18X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MULTALU18X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MULTALU36X18": {
+          "used": 0,
+          "available": 24
+        },
+        "MUX2_LUT5": {
+          "used": 1127,
+          "available": 10368
+        },
+        "MUX2_LUT6": {
+          "used": 441,
+          "available": 5184
+        },
+        "MUX2_LUT7": {
+          "used": 178,
+          "available": 2592
+        },
+        "MUX2_LUT8": {
+          "used": 57,
+          "available": 2592
+        },
+        "OSC": {
+          "used": 0,
+          "available": 1
+        },
+        "PADD18": {
+          "used": 0,
+          "available": 48
+        },
+        "PADD9": {
+          "used": 0,
+          "available": 96
+        },
+        "RAM16SDP4": {
+          "used": 0,
+          "available": 648
+        },
+        "VCC": {
+          "used": 1,
+          "available": 1
+        },
+        "rPLL": {
+          "used": 0,
+          "available": 2
+        }
+      },
+      "report_artifact": {
+        "path": "docs/t5_5_4_nextpnr_seed19_report.json",
+        "sha256": "7a5e61a0a72512a8694b749b7959406e509545316333b28e71a7bdb8dd888e7c",
+        "bytes": 235718
+      },
+      "log_artifact": {
+        "path": "docs/t5_5_4_nextpnr_seed19_place_route.log",
+        "sha256": "5bb073d481f1c25d5528e4d33901a295dbf67c24136315caea2bfb36c2639200",
+        "bytes": 48322
+      },
+      "log_contract": {
+        "exact_device_loaded": true,
+        "clock_constrained_to_27mhz": true,
+        "program_finished_normally": true
+      }
+    }
+  ],
+  "quantized_lower_bound_resources": {
+    "LUT4": {
+      "used": 3904,
+      "available": 20736
+    },
+    "DFF": {
+      "used": 1011,
+      "available": 15552
+    },
+    "BSRAM": {
+      "used": 41,
+      "available": 46
+    },
+    "MULT18X18": {
+      "used": 1,
+      "available": 48
+    },
+    "MULT9X9": {
+      "used": 3,
+      "available": 96
+    },
+    "ALU": {
+      "used": 518,
+      "available": 15552
+    },
+    "IOB": {
+      "used": 18,
+      "available": 384
+    }
+  },
+  "quantized_lower_bound_fmax_mhz": {
+    "minimum": 39.152732849121094,
+    "median": 40.26251220703125,
+    "maximum": 40.6834831237793
+  },
+  "candidates": [
+    {
+      "candidate_id": "full_gru_float64",
+      "role": "offline_teacher_only",
+      "functional_model": true,
+      "weight_bits": 64,
+      "bias_bits": 64,
+      "stored_parameters": 72853,
+      "parameter_storage_bits": 4662592,
+      "parameter_bram_blocks_lower_bound": 253,
+      "integrated_bram_blocks_lower_bound": 261,
+      "analytic_weight_macs_per_update": 72266,
+      "optimistic_96_multiplier_cycle_lower_bound": 753,
+      "optimistic_latency_us_at_27mhz_lower_bound": 27.88888888888889,
+      "actual_target_synthesis": false,
+      "synthesis_omission_reason": "parameter storage alone exceeds all target BSRAM before activations, state, and arithmetic",
+      "actual_post_route_resources": null,
+      "actual_fmax_mhz_minimum": null,
+      "worst_case_latency_us": null,
+      "physical_gain_retention": 1.0,
+      "gain_retention_scope": "teacher reference, not a deployed implementation",
+      "deadline_pass": false,
+      "capacity_pass": false,
+      "enhanced_route_eligible": false
+    },
+    {
+      "candidate_id": "full_gru_float32",
+      "role": "offline_teacher_only",
+      "functional_model": true,
+      "weight_bits": 32,
+      "bias_bits": 32,
+      "stored_parameters": 72853,
+      "parameter_storage_bits": 2331296,
+      "parameter_bram_blocks_lower_bound": 127,
+      "integrated_bram_blocks_lower_bound": 135,
+      "analytic_weight_macs_per_update": 72266,
+      "optimistic_96_multiplier_cycle_lower_bound": 753,
+      "optimistic_latency_us_at_27mhz_lower_bound": 27.88888888888889,
+      "actual_target_synthesis": false,
+      "synthesis_omission_reason": "parameter storage alone exceeds all target BSRAM before activations, state, and arithmetic",
+      "actual_post_route_resources": null,
+      "actual_fmax_mhz_minimum": null,
+      "worst_case_latency_us": null,
+      "physical_gain_retention": 1.0,
+      "gain_retention_scope": "teacher reference, not a deployed implementation",
+      "deadline_pass": false,
+      "capacity_pass": false,
+      "enhanced_route_eligible": false
+    },
+    {
+      "candidate_id": "quantized_gru_int8_q14_lower_bound",
+      "role": "dropped_optional_enhanced_route",
+      "functional_model": false,
+      "functional_shadow_available": true,
+      "weight_bits": 8,
+      "bias_bits": 18,
+      "stored_parameters": 72853,
+      "parameter_storage_bits": 588694,
+      "parameter_bram_blocks_analytic": 33,
+      "integrated_bram_blocks_actual": 41,
+      "analytic_weight_macs_per_update": 72266,
+      "cxxrtl_lower_bound_cycles": 72854,
+      "actual_post_route_resources": {
+        "LUT4": 3904,
+        "DFF": 1011,
+        "BSRAM": 41,
+        "MULT18X18": 1,
+        "MULT9X9": 3,
+        "ALU": 518,
+        "IOB": 18
+      },
+      "actual_fmax_mhz_minimum": 39.152732849121094,
+      "latency_us_at_27mhz_lower_bound": 2698.296296296296,
+      "latency_us_at_minimum_fmax_lower_bound": 1860.7641075975475,
+      "worst_case_latency_us": null,
+      "worst_case_latency_reason": "nonfunctional workload omits dependencies, nonlinearities, and activation traffic, so only a lower bound exists",
+      "physical_gain_retention": null,
+      "gain_retention_scope": "not measured; functional action closeness is not physical gain retention",
+      "deadline_pass": false,
+      "capacity_pass": true,
+      "enhanced_route_eligible": false,
+      "disqualification_reasons": [
+        "72,854-cycle optimistic lower bound exceeds 5 us",
+        "synthesized RTL is not a functional GRU",
+        "quantized physical gain retention was not established"
+      ]
+    },
+    {
+      "candidate_id": "distilled_student_q3_14_state4_serial",
+      "role": "selected_default_mainline",
+      "functional_model": true,
+      "weight_bits": 18,
+      "bias_bits": 18,
+      "stored_parameters": 95,
+      "parameter_storage_bits": 1710,
+      "integrated_bram_blocks_actual": 8,
+      "analytic_macs_per_update_parent": 87,
+      "rtl_multiplications_per_update": 64,
+      "cxxrtl_cycles": 64,
+      "actual_post_route_resources": {
+        "LUT4": 3802,
+        "DFF": 1022,
+        "BSRAM": 8,
+        "MULT18X18": 2,
+        "MULT9X9": 1,
+        "ALU": 616,
+        "IOB": 18
+      },
+      "actual_fmax_mhz_minimum": 39.57261657714844,
+      "worst_case_latency_us_at_27mhz": 2.3703703703703702,
+      "physical_gain_retention": {
+        "rows": [
+          {
+            "split": "primary",
+            "metric": "selection_score",
+            "point": 0.9984809901028885,
+            "ci_lower": 0.9907869759758513,
+            "ci_upper": 1.0045467069856677
+          },
+          {
+            "split": "primary",
+            "metric": "fidelity_effective_lifetime_cycles",
+            "point": 0.9973676534513298,
+            "ci_lower": 0.9875105988407641,
+            "ci_upper": 1.0048861977387213
+          },
+          {
+            "split": "primary",
+            "metric": "logical_z_effective_lifetime_cycles",
+            "point": 0.996557189139068,
+            "ci_lower": 0.9824421365114248,
+            "ci_upper": 1.008013606513638
+          },
+          {
+            "split": "confirmation",
+            "metric": "selection_score",
+            "point": 0.9878115850009149,
+            "ci_lower": 0.9670510828847563,
+            "ci_upper": 0.9999013970137284
+          },
+          {
+            "split": "confirmation",
+            "metric": "fidelity_effective_lifetime_cycles",
+            "point": 0.9898064655176845,
+            "ci_lower": 0.9738109021181811,
+            "ci_upper": 0.9991384735875882
+          },
+          {
+            "split": "confirmation",
+            "metric": "logical_z_effective_lifetime_cycles",
+            "point": 0.9814573586937879,
+            "ci_lower": 0.9445014278749587,
+            "ci_upper": 1.0006002171067423
+          }
+        ],
+        "minimum_point": 0.9814573586937879,
+        "minimum_ci_lower": 0.9445014278749587,
+        "threshold": 0.9,
+        "ci_lower_threshold": 0.9,
+        "evidence": "T4.4.4 matched physical benchmark"
+      },
+      "deadline_pass": true,
+      "capacity_pass": true,
+      "enhanced_route_eligible": true
+    }
+  ],
+  "selection": {
+    "candidate_id": "distilled_student_q3_14_state4_serial",
+    "rule": "require functional implementation, target capacity, <=5 us actual/lower-bound deadline, and measured physical gain retention",
+    "full_gru_route": "offline_teacher_only",
+    "quantized_gru_enhanced_route": "dropped",
+    "distilled_student_route": "selected"
+  },
+  "durable_artifacts": [
+    {
+      "path": "docs/t5_5_4_yosys_quantized_gru_lower_bound.log",
+      "sha256": "5e0aed75ff50724287d2b7015f01a265a27dd26ade659e0d07f127b07d6ef227",
+      "bytes": 919195
+    },
+    {
+      "path": "docs/t5_5_4_nextpnr_seed01_report.json",
+      "sha256": "aacdc95da9a2e6a37a751c5250f257c7bbf56215d95e5b25139b66ee0d42cf45",
+      "bytes": 250021
+    },
+    {
+      "path": "docs/t5_5_4_nextpnr_seed01_place_route.log",
+      "sha256": "c7c2d0ab02a08744ee1572a0f6fde5cbf2493d65ed6a4c3cf5992a10300ca986",
+      "bytes": 55989
+    },
+    {
+      "path": "docs/t5_5_4_nextpnr_seed07_report.json",
+      "sha256": "c3b84f5ed50abf931949e2bbb80d3965707fac2fc4820406e0e5c88efa1b33d5",
+      "bytes": 239354
+    },
+    {
+      "path": "docs/t5_5_4_nextpnr_seed07_place_route.log",
+      "sha256": "93af2e89ea8b860c84099dcf3cbada4760443e569a37e373fc1c2a8a46434112",
+      "bytes": 50736
+    },
+    {
+      "path": "docs/t5_5_4_nextpnr_seed19_report.json",
+      "sha256": "7a5e61a0a72512a8694b749b7959406e509545316333b28e71a7bdb8dd888e7c",
+      "bytes": 235718
+    },
+    {
+      "path": "docs/t5_5_4_nextpnr_seed19_place_route.log",
+      "sha256": "5bb073d481f1c25d5528e4d33901a295dbf67c24136315caea2bfb36c2639200",
+      "bytes": 48322
+    },
+    {
+      "path": "docs/t5_5_4_quantized_gru_lower_bound_netlist.json.gz",
+      "sha256": "8976421dd77d53391e317e8c3cb68fb5569c0c9cc2da4e2ef205bbcb870699f3",
+      "bytes": 357969
+    },
+    {
+      "path": "docs/t5_5_4_toolchain_provenance.json",
+      "sha256": "a0fc0b354a19fb6111b05c4f6a9243892904d9db82177927f8fc724e71f5fcdc",
+      "bytes": 5915
+    },
+    {
+      "path": "docs/t5_5_4_quantized_gru_workload_trace.csv",
+      "sha256": "aa690cb501646443e87235c4448d2dae454b19a5823cf8b63303ff83727a4e2f",
+      "bytes": 109
+    },
+    {
+      "path": "docs/t5_5_4_quantized_gru_cxxrtl_yosys.log",
+      "sha256": "c994d98f7bd1add1a5e56202c125a37e92f9b47cb7d3b8560d89036aba771f1d",
+      "bytes": 13630
+    }
+  ],
+  "tool_versions": {
+    "python": "3.12.9",
+    "numpy": "2.2.4",
+    "torch": "2.8.0.dev20250405+cu128",
+    "yowasp_yosys": "0.67.0.0.post1190",
+    "yowasp_nextpnr_himbaechel_gowin": "0.10.0.0.post753"
+  },
+  "evidence_boundary": {
+    "full_gru_parameter_and_mac_accounting": true,
+    "full_gru_target_synthesis": false,
+    "quantized_gru_functional_fake_quantization": true,
+    "quantized_gru_functional_rtl": false,
+    "quantized_gru_lower_bound_target_post_route": true,
+    "quantized_gru_physical_gain_retention": false,
+    "student_cxxrtl_equivalence": true,
+    "student_target_post_route": true,
+    "student_physical_gain_retention": true,
+    "vendor_timing_signoff": false,
+    "bitstream_generated": false,
+    "board_measured": false,
+    "quantum_hardware_measured": false
+  },
+  "gates": {
+    "all_four_parent_artifacts_are_hash_bound_current_passes": true,
+    "all_checkpoint_rtl_memory_driver_and_constraint_sources_are_hash_bound": true,
+    "gru_parameter_bias_and_mac_accounting_is_exact": true,
+    "quantized_functional_shadow_matches_grucell_and_stays_bounded_but_has_no_gain_claim": true,
+    "float32_and_float64_full_gru_fail_target_storage_before_synthesis": true,
+    "quantized_lower_bound_synthesis_preserves_all_33_parameter_and_8_core_brams": true,
+    "cxxrtl_consumes_every_weight_and_bias_in_exactly_72854_cycles": true,
+    "three_quantized_lower_bound_routes_pass_27mhz": true,
+    "quantized_lower_bound_fits_but_uses_41_of_46_bram_blocks": true,
+    "nonfunctional_quantized_lower_bound_is_disqualified_by_deadline_and_missing_gain": true,
+    "functional_student_meets_resource_deadline_and_physical_retention_gates": true,
+    "distilled_student_is_the_unique_eligible_hardware_route": true,
+    "all_durable_tool_and_trace_artifacts_match_hashes": true,
+    "toolchain_execution_binds_current_inputs_netlist_and_route_artifacts": true,
+    "post_route_lower_bound_is_not_mislabeled_as_functional_vendor_or_board_evidence": true,
+    "all_shortcut_mutations_are_rejected": true
+  },
+  "mutation_audit": [
+    {
+      "mutation": "break_parent_hash",
+      "rejected": true,
+      "failed_gates": [
+        "all_four_parent_artifacts_are_hash_bound_current_passes"
+      ]
+    },
+    {
+      "mutation": "hide_full_gru_storage_failure",
+      "rejected": true,
+      "failed_gates": [
+        "float32_and_float64_full_gru_fail_target_storage_before_synthesis"
+      ]
+    },
+    {
+      "mutation": "skip_one_weight",
+      "rejected": true,
+      "failed_gates": [
+        "cxxrtl_consumes_every_weight_and_bias_in_exactly_72854_cycles"
+      ]
+    },
+    {
+      "mutation": "corrupt_parameter_order_signature",
+      "rejected": true,
+      "failed_gates": [
+        "cxxrtl_consumes_every_weight_and_bias_in_exactly_72854_cycles"
+      ]
+    },
+    {
+      "mutation": "shorten_workload_latency",
+      "rejected": true,
+      "failed_gates": [
+        "cxxrtl_consumes_every_weight_and_bias_in_exactly_72854_cycles"
+      ]
+    },
+    {
+      "mutation": "drop_parameter_rom",
+      "rejected": true,
+      "failed_gates": [
+        "quantized_lower_bound_synthesis_preserves_all_33_parameter_and_8_core_brams"
+      ]
+    },
+    {
+      "mutation": "break_toolchain_input_provenance",
+      "rejected": true,
+      "failed_gates": [
+        "toolchain_execution_binds_current_inputs_netlist_and_route_artifacts"
+      ]
+    },
+    {
+      "mutation": "miss_timing",
+      "rejected": true,
+      "failed_gates": [
+        "three_quantized_lower_bound_routes_pass_27mhz"
+      ]
+    },
+    {
+      "mutation": "invent_quantized_gain",
+      "rejected": true,
+      "failed_gates": [
+        "nonfunctional_quantized_lower_bound_is_disqualified_by_deadline_and_missing_gain"
+      ]
+    },
+    {
+      "mutation": "promote_nonfunctional_gru",
+      "rejected": true,
+      "failed_gates": [
+        "nonfunctional_quantized_lower_bound_is_disqualified_by_deadline_and_missing_gain",
+        "distilled_student_is_the_unique_eligible_hardware_route"
+      ]
+    },
+    {
+      "mutation": "break_student_deadline",
+      "rejected": true,
+      "failed_gates": [
+        "functional_student_meets_resource_deadline_and_physical_retention_gates"
+      ]
+    },
+    {
+      "mutation": "claim_board_measurement",
+      "rejected": true,
+      "failed_gates": [
+        "post_route_lower_bound_is_not_mislabeled_as_functional_vendor_or_board_evidence"
+      ]
+    }
+  ],
+  "gate_summary": {
+    "passed": 16,
+    "total": 16
+  },
+  "source_data": {
+    "path": "docs/t5_5_4_gru_student_hardware_feasibility_source_data.csv",
+    "sha256": "3cfa1848f81b67b854ee02f6089e9dbf310c6b199fdd6d91dbd9681e686cf918",
+    "candidate_rows": 4
+  }
+}

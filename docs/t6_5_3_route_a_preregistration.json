@@ -1,0 +1,2434 @@
+{
+  "schema_version": "t6.5.3-route-a-preregistration-v1",
+  "task_id": "T6.5.3",
+  "protocol_id": "ROUTE-A-FORMAL-PREREGISTRATION-V1",
+  "protocol_revision_policy": "immutable; any post-freeze change requires a new protocol_id, new artifact and unchanged archival of this version",
+  "scenario_families": {
+    "smooth": [
+      "mean_drift",
+      "variance_drift",
+      "correlation_drift",
+      "periodic_drift"
+    ],
+    "abrupt_ood": [
+      "step_calibration_shift",
+      "telegraph_drift",
+      "burst_outlier",
+      "readout_reset_fault",
+      "leakage_persistence",
+      "compound_ood"
+    ],
+    "negative_control": [
+      "nominal_static"
+    ]
+  },
+  "splits": [
+    {
+      "split_id": "calibration",
+      "role": "fit static images and non-policy nuisance parameters only",
+      "seeds": [
+        202607176001,
+        202607176002,
+        202607176003,
+        202607176004,
+        202607176005,
+        202607176006,
+        202607176007,
+        202607176008,
+        202607176009,
+        202607176010,
+        202607176011,
+        202607176012
+      ],
+      "transition_rates_per_window": [
+        0.0125,
+        0.025
+      ],
+      "amplitudes": [
+        0.08,
+        0.16
+      ],
+      "durations_windows": [
+        16,
+        32
+      ],
+      "scored_windows_per_cell": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8
+    },
+    {
+      "split_id": "pilot_validation",
+      "role": "select one common baseline, policy threshold tuple and no other formal choices",
+      "seeds": [
+        202607176101,
+        202607176102,
+        202607176103,
+        202607176104,
+        202607176105,
+        202607176106,
+        202607176107,
+        202607176108,
+        202607176109,
+        202607176110,
+        202607176111,
+        202607176112
+      ],
+      "transition_rates_per_window": [
+        0.01875,
+        0.0375
+      ],
+      "amplitudes": [
+        0.1,
+        0.2
+      ],
+      "durations_windows": [
+        24,
+        40
+      ],
+      "scored_windows_per_cell": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8
+    },
+    {
+      "split_id": "formal_evaluation",
+      "role": "locked confirmatory evaluation; never fit, select, tune or replace thresholds",
+      "seeds": [
+        202607176201,
+        202607176202,
+        202607176203,
+        202607176204,
+        202607176205,
+        202607176206,
+        202607176207,
+        202607176208,
+        202607176209,
+        202607176210,
+        202607176211,
+        202607176212,
+        202607176213,
+        202607176214,
+        202607176215,
+        202607176216,
+        202607176217,
+        202607176218,
+        202607176219,
+        202607176220,
+        202607176221,
+        202607176222,
+        202607176223,
+        202607176224
+      ],
+      "transition_rates_per_window": [
+        0.015625,
+        0.03125,
+        0.046875
+      ],
+      "amplitudes": [
+        0.12,
+        0.18,
+        0.24
+      ],
+      "durations_windows": [
+        20,
+        28,
+        48
+      ],
+      "scored_windows_per_cell": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8
+    }
+  ],
+  "scenario_cells": [
+    {
+      "cell_id": "calibration:mean_drift:00",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "mean_drift",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.08,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "peak_abs_mean = amplitude * GKP_lattice"
+    },
+    {
+      "cell_id": "calibration:mean_drift:01",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "mean_drift",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.16,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "peak_abs_mean = amplitude * GKP_lattice"
+    },
+    {
+      "cell_id": "calibration:mean_drift:02",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "mean_drift",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.08,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "peak_abs_mean = amplitude * GKP_lattice"
+    },
+    {
+      "cell_id": "calibration:mean_drift:03",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "mean_drift",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.16,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "peak_abs_mean = amplitude * GKP_lattice"
+    },
+    {
+      "cell_id": "calibration:variance_drift:00",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "variance_drift",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.08,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_sigma_ratio = 1 + 2 * amplitude"
+    },
+    {
+      "cell_id": "calibration:variance_drift:01",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "variance_drift",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.16,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_sigma_ratio = 1 + 2 * amplitude"
+    },
+    {
+      "cell_id": "calibration:variance_drift:02",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "variance_drift",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.08,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_sigma_ratio = 1 + 2 * amplitude"
+    },
+    {
+      "cell_id": "calibration:variance_drift:03",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "variance_drift",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.16,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_sigma_ratio = 1 + 2 * amplitude"
+    },
+    {
+      "cell_id": "calibration:correlation_drift:00",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "correlation_drift",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.08,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_abs_rho = min(0.85, 3 * amplitude)"
+    },
+    {
+      "cell_id": "calibration:correlation_drift:01",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "correlation_drift",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.16,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_abs_rho = min(0.85, 3 * amplitude)"
+    },
+    {
+      "cell_id": "calibration:correlation_drift:02",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "correlation_drift",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.08,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_abs_rho = min(0.85, 3 * amplitude)"
+    },
+    {
+      "cell_id": "calibration:correlation_drift:03",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "correlation_drift",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.16,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_abs_rho = min(0.85, 3 * amplitude)"
+    },
+    {
+      "cell_id": "calibration:periodic_drift:00",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "periodic_drift",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.08,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows"
+    },
+    {
+      "cell_id": "calibration:periodic_drift:01",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "periodic_drift",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.16,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows"
+    },
+    {
+      "cell_id": "calibration:periodic_drift:02",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "periodic_drift",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.08,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows"
+    },
+    {
+      "cell_id": "calibration:periodic_drift:03",
+      "split_id": "calibration",
+      "scenario_group": "smooth",
+      "family": "periodic_drift",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.16,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows"
+    },
+    {
+      "cell_id": "calibration:step_calibration_shift:00",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "step_calibration_shift",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.08,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude"
+    },
+    {
+      "cell_id": "calibration:step_calibration_shift:01",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "step_calibration_shift",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.16,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude"
+    },
+    {
+      "cell_id": "calibration:step_calibration_shift:02",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "step_calibration_shift",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.08,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude"
+    },
+    {
+      "cell_id": "calibration:step_calibration_shift:03",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "step_calibration_shift",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.16,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude"
+    },
+    {
+      "cell_id": "calibration:telegraph_drift:00",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "telegraph_drift",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.08,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "state separation = amplitude * lattice; transition probability is transition_rate_per_window"
+    },
+    {
+      "cell_id": "calibration:telegraph_drift:01",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "telegraph_drift",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.16,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "state separation = amplitude * lattice; transition probability is transition_rate_per_window"
+    },
+    {
+      "cell_id": "calibration:telegraph_drift:02",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "telegraph_drift",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.08,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "state separation = amplitude * lattice; transition probability is transition_rate_per_window"
+    },
+    {
+      "cell_id": "calibration:telegraph_drift:03",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "telegraph_drift",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.16,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "state separation = amplitude * lattice; transition probability is transition_rate_per_window"
+    },
+    {
+      "cell_id": "calibration:burst_outlier:00",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "burst_outlier",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.08,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude"
+    },
+    {
+      "cell_id": "calibration:burst_outlier:01",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "burst_outlier",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.16,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude"
+    },
+    {
+      "cell_id": "calibration:burst_outlier:02",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "burst_outlier",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.08,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude"
+    },
+    {
+      "cell_id": "calibration:burst_outlier:03",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "burst_outlier",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.16,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude"
+    },
+    {
+      "cell_id": "calibration:readout_reset_fault:00",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "readout_reset_fault",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.08,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell"
+    },
+    {
+      "cell_id": "calibration:readout_reset_fault:01",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "readout_reset_fault",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.16,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell"
+    },
+    {
+      "cell_id": "calibration:readout_reset_fault:02",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "readout_reset_fault",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.08,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell"
+    },
+    {
+      "cell_id": "calibration:readout_reset_fault:03",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "readout_reset_fault",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.16,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell"
+    },
+    {
+      "cell_id": "calibration:leakage_persistence:00",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "leakage_persistence",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.08,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "injection probability uses transition rate; persistence severity uses amplitude and duration"
+    },
+    {
+      "cell_id": "calibration:leakage_persistence:01",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "leakage_persistence",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.16,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "injection probability uses transition rate; persistence severity uses amplitude and duration"
+    },
+    {
+      "cell_id": "calibration:leakage_persistence:02",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "leakage_persistence",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.08,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "injection probability uses transition rate; persistence severity uses amplitude and duration"
+    },
+    {
+      "cell_id": "calibration:leakage_persistence:03",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "leakage_persistence",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.16,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "injection probability uses transition rate; persistence severity uses amplitude and duration"
+    },
+    {
+      "cell_id": "calibration:compound_ood:00",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "compound_ood",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.08,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+    },
+    {
+      "cell_id": "calibration:compound_ood:01",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "compound_ood",
+      "transition_rate_per_window": 0.0125,
+      "amplitude": 0.16,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+    },
+    {
+      "cell_id": "calibration:compound_ood:02",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "compound_ood",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.08,
+      "duration_windows": 32,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+    },
+    {
+      "cell_id": "calibration:compound_ood:03",
+      "split_id": "calibration",
+      "scenario_group": "abrupt_ood",
+      "family": "compound_ood",
+      "transition_rate_per_window": 0.025,
+      "amplitude": 0.16,
+      "duration_windows": 16,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+    },
+    {
+      "cell_id": "calibration:nominal_static:00",
+      "split_id": "calibration",
+      "scenario_group": "negative_control",
+      "family": "nominal_static",
+      "transition_rate_per_window": 0.0,
+      "amplitude": 0.0,
+      "duration_windows": 48,
+      "scored_windows": 48,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "stationary in-distribution negative control; dynamic-level disjointness not applicable"
+    },
+    {
+      "cell_id": "pilot_validation:mean_drift:00",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "mean_drift",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.1,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "peak_abs_mean = amplitude * GKP_lattice"
+    },
+    {
+      "cell_id": "pilot_validation:mean_drift:01",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "mean_drift",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.2,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "peak_abs_mean = amplitude * GKP_lattice"
+    },
+    {
+      "cell_id": "pilot_validation:mean_drift:02",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "mean_drift",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.1,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "peak_abs_mean = amplitude * GKP_lattice"
+    },
+    {
+      "cell_id": "pilot_validation:mean_drift:03",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "mean_drift",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.2,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "peak_abs_mean = amplitude * GKP_lattice"
+    },
+    {
+      "cell_id": "pilot_validation:variance_drift:00",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "variance_drift",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.1,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_sigma_ratio = 1 + 2 * amplitude"
+    },
+    {
+      "cell_id": "pilot_validation:variance_drift:01",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "variance_drift",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.2,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_sigma_ratio = 1 + 2 * amplitude"
+    },
+    {
+      "cell_id": "pilot_validation:variance_drift:02",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "variance_drift",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.1,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_sigma_ratio = 1 + 2 * amplitude"
+    },
+    {
+      "cell_id": "pilot_validation:variance_drift:03",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "variance_drift",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.2,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_sigma_ratio = 1 + 2 * amplitude"
+    },
+    {
+      "cell_id": "pilot_validation:correlation_drift:00",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "correlation_drift",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.1,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_abs_rho = min(0.85, 3 * amplitude)"
+    },
+    {
+      "cell_id": "pilot_validation:correlation_drift:01",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "correlation_drift",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.2,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_abs_rho = min(0.85, 3 * amplitude)"
+    },
+    {
+      "cell_id": "pilot_validation:correlation_drift:02",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "correlation_drift",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.1,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_abs_rho = min(0.85, 3 * amplitude)"
+    },
+    {
+      "cell_id": "pilot_validation:correlation_drift:03",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "correlation_drift",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.2,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_abs_rho = min(0.85, 3 * amplitude)"
+    },
+    {
+      "cell_id": "pilot_validation:periodic_drift:00",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "periodic_drift",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.1,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows"
+    },
+    {
+      "cell_id": "pilot_validation:periodic_drift:01",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "periodic_drift",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.2,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows"
+    },
+    {
+      "cell_id": "pilot_validation:periodic_drift:02",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "periodic_drift",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.1,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows"
+    },
+    {
+      "cell_id": "pilot_validation:periodic_drift:03",
+      "split_id": "pilot_validation",
+      "scenario_group": "smooth",
+      "family": "periodic_drift",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.2,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows"
+    },
+    {
+      "cell_id": "pilot_validation:step_calibration_shift:00",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "step_calibration_shift",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.1,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude"
+    },
+    {
+      "cell_id": "pilot_validation:step_calibration_shift:01",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "step_calibration_shift",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.2,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude"
+    },
+    {
+      "cell_id": "pilot_validation:step_calibration_shift:02",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "step_calibration_shift",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.1,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude"
+    },
+    {
+      "cell_id": "pilot_validation:step_calibration_shift:03",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "step_calibration_shift",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.2,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude"
+    },
+    {
+      "cell_id": "pilot_validation:telegraph_drift:00",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "telegraph_drift",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.1,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "state separation = amplitude * lattice; transition probability is transition_rate_per_window"
+    },
+    {
+      "cell_id": "pilot_validation:telegraph_drift:01",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "telegraph_drift",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.2,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "state separation = amplitude * lattice; transition probability is transition_rate_per_window"
+    },
+    {
+      "cell_id": "pilot_validation:telegraph_drift:02",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "telegraph_drift",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.1,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "state separation = amplitude * lattice; transition probability is transition_rate_per_window"
+    },
+    {
+      "cell_id": "pilot_validation:telegraph_drift:03",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "telegraph_drift",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.2,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "state separation = amplitude * lattice; transition probability is transition_rate_per_window"
+    },
+    {
+      "cell_id": "pilot_validation:burst_outlier:00",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "burst_outlier",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.1,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude"
+    },
+    {
+      "cell_id": "pilot_validation:burst_outlier:01",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "burst_outlier",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.2,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude"
+    },
+    {
+      "cell_id": "pilot_validation:burst_outlier:02",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "burst_outlier",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.1,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude"
+    },
+    {
+      "cell_id": "pilot_validation:burst_outlier:03",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "burst_outlier",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.2,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude"
+    },
+    {
+      "cell_id": "pilot_validation:readout_reset_fault:00",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "readout_reset_fault",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.1,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell"
+    },
+    {
+      "cell_id": "pilot_validation:readout_reset_fault:01",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "readout_reset_fault",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.2,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell"
+    },
+    {
+      "cell_id": "pilot_validation:readout_reset_fault:02",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "readout_reset_fault",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.1,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell"
+    },
+    {
+      "cell_id": "pilot_validation:readout_reset_fault:03",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "readout_reset_fault",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.2,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell"
+    },
+    {
+      "cell_id": "pilot_validation:leakage_persistence:00",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "leakage_persistence",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.1,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "injection probability uses transition rate; persistence severity uses amplitude and duration"
+    },
+    {
+      "cell_id": "pilot_validation:leakage_persistence:01",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "leakage_persistence",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.2,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "injection probability uses transition rate; persistence severity uses amplitude and duration"
+    },
+    {
+      "cell_id": "pilot_validation:leakage_persistence:02",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "leakage_persistence",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.1,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "injection probability uses transition rate; persistence severity uses amplitude and duration"
+    },
+    {
+      "cell_id": "pilot_validation:leakage_persistence:03",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "leakage_persistence",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.2,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "injection probability uses transition rate; persistence severity uses amplitude and duration"
+    },
+    {
+      "cell_id": "pilot_validation:compound_ood:00",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "compound_ood",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.1,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+    },
+    {
+      "cell_id": "pilot_validation:compound_ood:01",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "compound_ood",
+      "transition_rate_per_window": 0.01875,
+      "amplitude": 0.2,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+    },
+    {
+      "cell_id": "pilot_validation:compound_ood:02",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "compound_ood",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.1,
+      "duration_windows": 40,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+    },
+    {
+      "cell_id": "pilot_validation:compound_ood:03",
+      "split_id": "pilot_validation",
+      "scenario_group": "abrupt_ood",
+      "family": "compound_ood",
+      "transition_rate_per_window": 0.0375,
+      "amplitude": 0.2,
+      "duration_windows": 24,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+    },
+    {
+      "cell_id": "pilot_validation:nominal_static:00",
+      "split_id": "pilot_validation",
+      "scenario_group": "negative_control",
+      "family": "nominal_static",
+      "transition_rate_per_window": 0.0,
+      "amplitude": 0.0,
+      "duration_windows": 64,
+      "scored_windows": 64,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "stationary in-distribution negative control; dynamic-level disjointness not applicable"
+    },
+    {
+      "cell_id": "formal_evaluation:mean_drift:00",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "mean_drift",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.12,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "peak_abs_mean = amplitude * GKP_lattice"
+    },
+    {
+      "cell_id": "formal_evaluation:mean_drift:01",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "mean_drift",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.18,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "peak_abs_mean = amplitude * GKP_lattice"
+    },
+    {
+      "cell_id": "formal_evaluation:mean_drift:02",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "mean_drift",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.12,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "peak_abs_mean = amplitude * GKP_lattice"
+    },
+    {
+      "cell_id": "formal_evaluation:mean_drift:03",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "mean_drift",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.24,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "peak_abs_mean = amplitude * GKP_lattice"
+    },
+    {
+      "cell_id": "formal_evaluation:mean_drift:04",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "mean_drift",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.18,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "peak_abs_mean = amplitude * GKP_lattice"
+    },
+    {
+      "cell_id": "formal_evaluation:mean_drift:05",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "mean_drift",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.24,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "peak_abs_mean = amplitude * GKP_lattice"
+    },
+    {
+      "cell_id": "formal_evaluation:variance_drift:00",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "variance_drift",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.12,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_sigma_ratio = 1 + 2 * amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:variance_drift:01",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "variance_drift",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.18,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_sigma_ratio = 1 + 2 * amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:variance_drift:02",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "variance_drift",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.12,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_sigma_ratio = 1 + 2 * amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:variance_drift:03",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "variance_drift",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.24,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_sigma_ratio = 1 + 2 * amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:variance_drift:04",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "variance_drift",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.18,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_sigma_ratio = 1 + 2 * amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:variance_drift:05",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "variance_drift",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.24,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_sigma_ratio = 1 + 2 * amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:correlation_drift:00",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "correlation_drift",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.12,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_abs_rho = min(0.85, 3 * amplitude)"
+    },
+    {
+      "cell_id": "formal_evaluation:correlation_drift:01",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "correlation_drift",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.18,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_abs_rho = min(0.85, 3 * amplitude)"
+    },
+    {
+      "cell_id": "formal_evaluation:correlation_drift:02",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "correlation_drift",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.12,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_abs_rho = min(0.85, 3 * amplitude)"
+    },
+    {
+      "cell_id": "formal_evaluation:correlation_drift:03",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "correlation_drift",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.24,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_abs_rho = min(0.85, 3 * amplitude)"
+    },
+    {
+      "cell_id": "formal_evaluation:correlation_drift:04",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "correlation_drift",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.18,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_abs_rho = min(0.85, 3 * amplitude)"
+    },
+    {
+      "cell_id": "formal_evaluation:correlation_drift:05",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "correlation_drift",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.24,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "endpoint_abs_rho = min(0.85, 3 * amplitude)"
+    },
+    {
+      "cell_id": "formal_evaluation:periodic_drift:00",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "periodic_drift",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.12,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows"
+    },
+    {
+      "cell_id": "formal_evaluation:periodic_drift:01",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "periodic_drift",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.18,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows"
+    },
+    {
+      "cell_id": "formal_evaluation:periodic_drift:02",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "periodic_drift",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.12,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows"
+    },
+    {
+      "cell_id": "formal_evaluation:periodic_drift:03",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "periodic_drift",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.24,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows"
+    },
+    {
+      "cell_id": "formal_evaluation:periodic_drift:04",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "periodic_drift",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.18,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows"
+    },
+    {
+      "cell_id": "formal_evaluation:periodic_drift:05",
+      "split_id": "formal_evaluation",
+      "scenario_group": "smooth",
+      "family": "periodic_drift",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.24,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows"
+    },
+    {
+      "cell_id": "formal_evaluation:step_calibration_shift:00",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "step_calibration_shift",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.12,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:step_calibration_shift:01",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "step_calibration_shift",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.18,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:step_calibration_shift:02",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "step_calibration_shift",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.12,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:step_calibration_shift:03",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "step_calibration_shift",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.24,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:step_calibration_shift:04",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "step_calibration_shift",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.18,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:step_calibration_shift:05",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "step_calibration_shift",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.24,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:telegraph_drift:00",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "telegraph_drift",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.12,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "state separation = amplitude * lattice; transition probability is transition_rate_per_window"
+    },
+    {
+      "cell_id": "formal_evaluation:telegraph_drift:01",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "telegraph_drift",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.18,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "state separation = amplitude * lattice; transition probability is transition_rate_per_window"
+    },
+    {
+      "cell_id": "formal_evaluation:telegraph_drift:02",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "telegraph_drift",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.12,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "state separation = amplitude * lattice; transition probability is transition_rate_per_window"
+    },
+    {
+      "cell_id": "formal_evaluation:telegraph_drift:03",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "telegraph_drift",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.24,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "state separation = amplitude * lattice; transition probability is transition_rate_per_window"
+    },
+    {
+      "cell_id": "formal_evaluation:telegraph_drift:04",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "telegraph_drift",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.18,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "state separation = amplitude * lattice; transition probability is transition_rate_per_window"
+    },
+    {
+      "cell_id": "formal_evaluation:telegraph_drift:05",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "telegraph_drift",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.24,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "state separation = amplitude * lattice; transition probability is transition_rate_per_window"
+    },
+    {
+      "cell_id": "formal_evaluation:burst_outlier:00",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "burst_outlier",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.12,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:burst_outlier:01",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "burst_outlier",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.18,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:burst_outlier:02",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "burst_outlier",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.12,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:burst_outlier:03",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "burst_outlier",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.24,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:burst_outlier:04",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "burst_outlier",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.18,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:burst_outlier:05",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "burst_outlier",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.24,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude"
+    },
+    {
+      "cell_id": "formal_evaluation:readout_reset_fault:00",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "readout_reset_fault",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.12,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell"
+    },
+    {
+      "cell_id": "formal_evaluation:readout_reset_fault:01",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "readout_reset_fault",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.18,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell"
+    },
+    {
+      "cell_id": "formal_evaluation:readout_reset_fault:02",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "readout_reset_fault",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.12,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell"
+    },
+    {
+      "cell_id": "formal_evaluation:readout_reset_fault:03",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "readout_reset_fault",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.24,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell"
+    },
+    {
+      "cell_id": "formal_evaluation:readout_reset_fault:04",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "readout_reset_fault",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.18,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell"
+    },
+    {
+      "cell_id": "formal_evaluation:readout_reset_fault:05",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "readout_reset_fault",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.24,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell"
+    },
+    {
+      "cell_id": "formal_evaluation:leakage_persistence:00",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "leakage_persistence",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.12,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "injection probability uses transition rate; persistence severity uses amplitude and duration"
+    },
+    {
+      "cell_id": "formal_evaluation:leakage_persistence:01",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "leakage_persistence",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.18,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "injection probability uses transition rate; persistence severity uses amplitude and duration"
+    },
+    {
+      "cell_id": "formal_evaluation:leakage_persistence:02",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "leakage_persistence",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.12,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "injection probability uses transition rate; persistence severity uses amplitude and duration"
+    },
+    {
+      "cell_id": "formal_evaluation:leakage_persistence:03",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "leakage_persistence",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.24,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "injection probability uses transition rate; persistence severity uses amplitude and duration"
+    },
+    {
+      "cell_id": "formal_evaluation:leakage_persistence:04",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "leakage_persistence",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.18,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "injection probability uses transition rate; persistence severity uses amplitude and duration"
+    },
+    {
+      "cell_id": "formal_evaluation:leakage_persistence:05",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "leakage_persistence",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.24,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "injection probability uses transition rate; persistence severity uses amplitude and duration"
+    },
+    {
+      "cell_id": "formal_evaluation:compound_ood:00",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "compound_ood",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.12,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+    },
+    {
+      "cell_id": "formal_evaluation:compound_ood:01",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "compound_ood",
+      "transition_rate_per_window": 0.015625,
+      "amplitude": 0.18,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+    },
+    {
+      "cell_id": "formal_evaluation:compound_ood:02",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "compound_ood",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.12,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+    },
+    {
+      "cell_id": "formal_evaluation:compound_ood:03",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "compound_ood",
+      "transition_rate_per_window": 0.03125,
+      "amplitude": 0.24,
+      "duration_windows": 20,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+    },
+    {
+      "cell_id": "formal_evaluation:compound_ood:04",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "compound_ood",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.18,
+      "duration_windows": 48,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+    },
+    {
+      "cell_id": "formal_evaluation:compound_ood:05",
+      "split_id": "formal_evaluation",
+      "scenario_group": "abrupt_ood",
+      "family": "compound_ood",
+      "transition_rate_per_window": 0.046875,
+      "amplitude": 0.24,
+      "duration_windows": 28,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+    },
+    {
+      "cell_id": "formal_evaluation:nominal_static:00",
+      "split_id": "formal_evaluation",
+      "scenario_group": "negative_control",
+      "family": "nominal_static",
+      "transition_rate_per_window": 0.0,
+      "amplitude": 0.0,
+      "duration_windows": 96,
+      "scored_windows": 96,
+      "decisions_per_window": 512,
+      "nominal_preamble_windows": 8,
+      "amplitude_semantics": "stationary in-distribution negative control; dynamic-level disjointness not applicable"
+    }
+  ],
+  "trace_schedule": {
+    "shared_across_methods": true,
+    "domain_separated_seed_rule": "uint64_le(SHA256(protocol_id|split_id|family|cell_id|base_seed|stream_name)[0:8])",
+    "streams": [
+      "latent_dynamics",
+      "syndrome_sampling",
+      "readout_reset",
+      "leakage",
+      "transport"
+    ],
+    "nominal_preamble_windows": 8,
+    "smooth_onset": "first scored window after the common preamble",
+    "abrupt_onset": "first scored window + SHA256-derived offset in [0,7]",
+    "telegraph_burst_repetitions": "registered transition rate and duration only; no method-dependent event timing",
+    "trace_reuse": "one immutable trace/action-opportunity sequence is replayed for every comparator"
+  },
+  "formal_workload": {
+    "dynamic_cells": 60,
+    "nominal_cells": 1,
+    "seed_clusters": 24,
+    "trajectories_per_method": 1464,
+    "scored_decisions_per_method": 71958528,
+    "seven_deployable_method_decisions": 503709696,
+    "oracle_decisions_reported_separately": 71958528
+  },
+  "family_amplitude_semantics": {
+    "mean_drift": "peak_abs_mean = amplitude * GKP_lattice",
+    "variance_drift": "endpoint_sigma_ratio = 1 + 2 * amplitude",
+    "correlation_drift": "endpoint_abs_rho = min(0.85, 3 * amplitude)",
+    "periodic_drift": "mean_or_sigma modulation amplitude uses amplitude; duration is period in windows",
+    "step_calibration_shift": "post-step mean shift = amplitude * lattice and sigma ratio = 1 + amplitude",
+    "telegraph_drift": "state separation = amplitude * lattice; transition probability is transition_rate_per_window",
+    "burst_outlier": "burst p_outlier = min(0.25, amplitude); outlier_scale = 1 + 12 * amplitude",
+    "readout_reset_fault": "g/e confusion = min(0.25, amplitude); duration is reset-fault dwell",
+    "leakage_persistence": "injection probability uses transition rate; persistence severity uses amplitude and duration",
+    "compound_ood": "simultaneous mean/variance/correlation/readout/leakage components use the same registered tuple"
+  },
+  "threshold_selection": {
+    "threshold_lock_task": "T6.6.3",
+    "selection_split": "pilot_validation",
+    "formal_evaluation_access_allowed": false,
+    "one_tuple_shared_by_all_scenarios": true,
+    "per_scenario_thresholds_prohibited": true,
+    "candidate_grid": {
+      "regime_posterior_enter_min": [
+        0.6,
+        0.7,
+        0.8,
+        0.9
+      ],
+      "regime_posterior_exit_max": [
+        0.2,
+        0.3,
+        0.4
+      ],
+      "uncertainty_fallback_min": [
+        0.25,
+        0.35,
+        0.45,
+        0.55
+      ],
+      "ood_score_min_code": [
+        128,
+        160,
+        192,
+        224
+      ],
+      "enter_hysteresis_windows": [
+        2,
+        3,
+        4
+      ],
+      "recovery_hysteresis_windows": [
+        4,
+        6,
+        8
+      ]
+    },
+    "fixed_integrity_thresholds": {
+      "max_parameter_age_cycles": 8192,
+      "crc_required": true,
+      "version_rule": "new_version=active_version+1_with_CAS",
+      "commit_ack_required": true
+    },
+    "selection_constraints_in_order": [
+      "zero integrity/undefined/silent-overflow failures",
+      "all pilot abrupt/OOD catastrophic and nominal non-inferiority constraints pass",
+      "maximize minimum per-family safety slack",
+      "maximize aggregate paired LER-improvement 95% lower bound",
+      "minimize unnecessary fallback rate then total fallback rate",
+      "deterministic lexicographic threshold-tuple order"
+    ],
+    "selected_threshold_tuple": null,
+    "selected_strongest_deployable_baseline": null,
+    "lock_sha256": null,
+    "failure_rule": "if no candidate passes all constraints, Route-A formal evaluation is NO_GO until a new protocol version is preregistered"
+  },
+  "metrics": {
+    "logical_outcomes": [
+      "I",
+      "X",
+      "Y",
+      "Z"
+    ],
+    "p_x": "count(X)/all scored decisions",
+    "p_y": "count(Y)/all scored decisions",
+    "p_z": "count(Z)/all scored decisions",
+    "p_l": "p_X+p_Y+p_Z; count(any non-I)/all scored decisions",
+    "average_ler": "all scored decisions, preserving seed/family/cell membership",
+    "window": "nonoverlapping 512 decisions; no rolling overlap and no window-as-independent-seed inference",
+    "p95_window_ler": "empirical quantile with method='higher' over registered 512-decision windows",
+    "seed_worst_window_ler": "maximum 512-decision window LER inside one seed/family across all registered cells",
+    "global_worst_window_ler": "maximum observed registered window, reported with numerator/512 and trace locator",
+    "oracle_gap_closure": "(static_LER-proposed_LER)/(static_LER-oracle_LER), only when paired denominator CI is strictly positive; otherwise NA with flag",
+    "adaptation_lag": "transition onset to first accepted/acknowledged bank version actually used; non-recovery is right-censored",
+    "false_update": "committed parameter update outside normal/smooth truth interval; truth is evaluation-only and never policy input",
+    "unnecessary_fallback": "fallback selected while policy-on and policy-off actions are both correct",
+    "avoided_error": "policy-off wrong and policy-on correct on the identical decision",
+    "induced_error": "policy-off correct and policy-on wrong on the identical decision",
+    "deadline_miss": "logical cycle, host update and future board-measured fields remain separate"
+  },
+  "statistics": {
+    "independent_cluster": "formal seed; all families/cells/windows for that seed are resampled together",
+    "formal_cluster_count": 24,
+    "aggregation_weights": {
+      "within_cell": "all registered decisions equally weighted",
+      "within_family": "cell estimates equally weighted within each seed",
+      "aggregate_smooth": "four smooth family estimates equally weighted within each seed",
+      "aggregate_abrupt_ood": "six abrupt/OOD family estimates equally weighted within each seed",
+      "nominal": "reported separately and never pooled to improve a dynamic aggregate",
+      "forbidden": "raw decision pooling across families/cells or post-result reweighting"
+    },
+    "bootstrap": {
+      "method": "paired nonparametric cluster bootstrap",
+      "replicates": 20000,
+      "seed": 202607176999,
+      "confidence_level": 0.95,
+      "two_sided_bounds": [
+        0.025,
+        0.975
+      ],
+      "zero_difference_ties_preserved": true
+    },
+    "strongest_baseline_selection": {
+      "split": "pilot_validation",
+      "eligible": [
+        "standard_binning",
+        "static_joint_map",
+        "window_map",
+        "ewma_adaptive_map",
+        "kalman_adaptive_map",
+        "legacy_cnn_residual_if_checkpoint_and_budget_pass"
+      ],
+      "oracle_excluded": true,
+      "order": "lowest equal-family pilot aggregate average LER over ten dynamic families, then p95, then worst, then MAC/wall-clock, then canonical id",
+      "formal_reselection_prohibited": true
+    },
+    "hierarchy": [
+      "H1 primary aggregate smooth paired LER improvement: 95% LCB > 0",
+      "H2 calibration-shift strict tail non-inferiority",
+      "H3 all abrupt/OOD catastrophic and nominal margins",
+      "only after H1-H3 pass may family-level superiority be promoted"
+    ],
+    "multiplicity": {
+      "method": "Holm step-down",
+      "familywise_alpha": 0.05,
+      "families": {
+        "smooth_family_superiority": [
+          "mean_drift",
+          "variance_drift",
+          "correlation_drift",
+          "periodic_drift"
+        ],
+        "abrupt_ood_safety": [
+          "step_calibration_shift",
+          "telegraph_drift",
+          "burst_outlier",
+          "readout_reset_fault",
+          "leakage_persistence",
+          "compound_ood",
+          "nominal_static"
+        ]
+      },
+      "p_X_p_Y_p_Z_and_cost_metrics": "secondary descriptive intervals; no claim promotion"
+    }
+  },
+  "acceptance_gates": {
+    "primary_smooth": {
+      "contrast": "strongest_deployable_baseline_LER - proposed_route_a_LER",
+      "aggregate_paired_95_lcb_min_exclusive": 0.0,
+      "all_four_smooth_families_executed": true
+    },
+    "calibration_shift_tail": {
+      "global_worst_error_count_proposed_max_relative_to_baseline": 0,
+      "seed_worst_paired_difference_95_ucb_max": 0.0,
+      "prior_counterexample_target": "new independent formal run must not repeat proposed 55/512 > static 37/512"
+    },
+    "catastrophic_degradation_each_abrupt_ood_family": {
+      "average_ler_proposed_minus_baseline_95_ucb_max": 0.002,
+      "p95_window_ler_proposed_minus_baseline_95_ucb_max": 0.0078125,
+      "seed_worst_window_ler_proposed_minus_baseline_95_ucb_max": 0.015625,
+      "any_single_window_excess_error_count_max": 16,
+      "all_conditions_required": true
+    },
+    "nominal_non_inferiority": {
+      "average_ler_proposed_minus_policy_off_95_ucb_max": 0.0005,
+      "fallback_rate_max": 0.01,
+      "unnecessary_fallback_rate_max": 0.0075,
+      "induced_minus_avoided_rate_95_ucb_max": 0.00025,
+      "all_conditions_required": true
+    },
+    "integrity": {
+      "bit_mismatch_max": 0,
+      "undefined_action_max": 0,
+      "silent_overflow_max": 0,
+      "software_deadline_miss_max": 0,
+      "board_deadline_gate": "deferred_to_T6.9.2_and_must_not_be_imputed_false"
+    },
+    "cnn": "if real checkpoint fails matched budget/performance, retain only as ablation",
+    "failure_branches": {
+      "tail_or_catastrophic_failure": "smooth-only Route-A claim",
+      "primary_average_failure": "static MAP-LUT plus deterministic FPGA claim only",
+      "cnn_failure": "CNN ablation/supplement only",
+      "board_failure_or_absence": "hardware-aware/CXXRTL/P&R estimate only"
+    }
+  },
+  "prior_evidence_disclosure": [
+    {
+      "path": "docs/t5_1_3_oracle_gap_tail_report.json",
+      "disclosed_use": "55/512 proposed calibration-shift worst versus 37/512 static motivated strict new tail gate",
+      "exists": true,
+      "sha256": "d3127e670dfa922917b1981ff13f6540cc7334542bb2678d614904d217092c54"
+    },
+    {
+      "path": "docs/t5_1_4_algorithm_branch_verdict.json",
+      "disclosed_use": "zero Holm discovery and failed learned branch motivated independent clusters and Route-A fallback branch",
+      "exists": true,
+      "sha256": "2c08d760a1a453898a1644ffb319c8d8dccccfaa1c2d9271feebe9bf96ebefc2"
+    },
+    {
+      "path": "docs/t5_4_2_uncertainty_gated_fallback.json",
+      "disclosed_use": "compound and nominal counterexamples motivated catastrophic and nominal non-inferiority margins",
+      "exists": true,
+      "sha256": "c8de321e17d0ae68560ff3814907fc32775a76c71ec8ed89e05064b81ed12ebc"
+    },
+    {
+      "path": "docs/t6_5_2_unified_execution_contract.json",
+      "disclosed_use": "method, privilege, cadence, budget and deadline schemas are frozen parent contracts",
+      "exists": true,
+      "sha256": "ecc431d810790e95b6d03128fdcf63c8a04f2fe94756b8485896fcd14c21e854"
+    }
+  ],
+  "formal_result_access_at_freeze": {
+    "accessed": false,
+    "future_artifact_paths": [
+      "docs/t6_7_1_smooth_formal_matrix.json",
+      "docs/t6_7_2_abrupt_ood_tail_formal_matrix.json",
+      "docs/t6_7_3_integrated_long_sequence.json",
+      "docs/t6_7_4_route_a_decision_gate.json"
+    ],
+    "paths_existing_when_frozen": [],
+    "rule": "absence is recorded historically and is not rechecked after formal execution"
+  },
+  "generated_at_utc": "2026-07-16T23:12:37.466683+00:00",
+  "protocol_sha256": "547e66073cbf478352fc180b57a8fff8677a0858df7f4a9aef47f82d88bddd39",
+  "gates": [
+    {
+      "gate_id": "G01_exact_scenario_coverage",
+      "passed": true
+    },
+    {
+      "gate_id": "G02_seed_splits_pairwise_disjoint",
+      "passed": true
+    },
+    {
+      "gate_id": "G03_rate_amplitude_duration_splits_disjoint",
+      "passed": true
+    },
+    {
+      "gate_id": "G04_unique_registered_cells",
+      "passed": true
+    },
+    {
+      "gate_id": "G05_formal_heldout_design_complete",
+      "passed": true
+    },
+    {
+      "gate_id": "G06_formal_independent_cluster_count_frozen",
+      "passed": true
+    },
+    {
+      "gate_id": "G06b_formal_workload_is_explicit",
+      "passed": true
+    },
+    {
+      "gate_id": "G07_512_decision_tail_window_frozen",
+      "passed": true
+    },
+    {
+      "gate_id": "G07b_shared_trace_schedule_is_method_independent",
+      "passed": true
+    },
+    {
+      "gate_id": "G08_one_common_threshold_tuple_only",
+      "passed": true
+    },
+    {
+      "gate_id": "G09_formal_result_blind_threshold_selection",
+      "passed": true
+    },
+    {
+      "gate_id": "G10_strongest_baseline_pilot_only",
+      "passed": true
+    },
+    {
+      "gate_id": "G11_paired_seed_cluster_bootstrap_frozen",
+      "passed": true
+    },
+    {
+      "gate_id": "G11b_equal_family_aggregation_prevents_reweighting",
+      "passed": true
+    },
+    {
+      "gate_id": "G12_multiplicity_families_frozen",
+      "passed": true
+    },
+    {
+      "gate_id": "G13_primary_smooth_gate_is_strict",
+      "passed": true
+    },
+    {
+      "gate_id": "G14_calibration_shift_counterexample_gate_strict",
+      "passed": true
+    },
+    {
+      "gate_id": "G15_catastrophic_margins_all_required",
+      "passed": true
+    },
+    {
+      "gate_id": "G16_nominal_noninferiority_all_required",
+      "passed": true
+    },
+    {
+      "gate_id": "G17_metrics_include_pauli_tail_lag_and_action_accounting",
+      "passed": true
+    },
+    {
+      "gate_id": "G18_prior_evidence_and_adaptive_origin_disclosed",
+      "passed": true
+    },
+    {
+      "gate_id": "G19_future_formal_results_absent_at_freeze",
+      "passed": true
+    },
+    {
+      "gate_id": "G20_protocol_is_immutable_versioned",
+      "passed": true
+    }
+  ],
+  "semantic_mutations": [
+    {
+      "mutation_id": "overlap_seed",
+      "rejected": true,
+      "reason": "Route-A preregistration failed: ['G02_seed_splits_pairwise_disjoint', 'G06_formal_independent_cluster_count_frozen']"
+    },
+    {
+      "mutation_id": "overlap_rate",
+      "rejected": true,
+      "reason": "Route-A preregistration failed: ['G03_rate_amplitude_duration_splits_disjoint', 'G05_formal_heldout_design_complete']"
+    },
+    {
+      "mutation_id": "per_scenario_threshold",
+      "rejected": true,
+      "reason": "Route-A preregistration failed: ['G08_one_common_threshold_tuple_only']"
+    },
+    {
+      "mutation_id": "preselect_threshold",
+      "rejected": true,
+      "reason": "Route-A preregistration failed: ['G09_formal_result_blind_threshold_selection']"
+    },
+    {
+      "mutation_id": "formal_threshold_access",
+      "rejected": true,
+      "reason": "Route-A preregistration failed: ['G09_formal_result_blind_threshold_selection']"
+    },
+    {
+      "mutation_id": "oracle_baseline",
+      "rejected": true,
+      "reason": "Route-A preregistration failed: ['G10_strongest_baseline_pilot_only']"
+    },
+    {
+      "mutation_id": "window_as_cluster",
+      "rejected": true,
+      "reason": "Route-A preregistration failed: ['G11_paired_seed_cluster_bootstrap_frozen']"
+    },
+    {
+      "mutation_id": "low_bootstrap",
+      "rejected": true,
+      "reason": "Route-A preregistration failed: ['G11_paired_seed_cluster_bootstrap_frozen']"
+    },
+    {
+      "mutation_id": "weak_primary",
+      "rejected": true,
+      "reason": "Route-A preregistration failed: ['G13_primary_smooth_gate_is_strict']"
+    },
+    {
+      "mutation_id": "allow_55_over_37",
+      "rejected": true,
+      "reason": "Route-A preregistration failed: ['G14_calibration_shift_counterexample_gate_strict']"
+    },
+    {
+      "mutation_id": "drop_nominal_all",
+      "rejected": true,
+      "reason": "Route-A preregistration failed: ['G16_nominal_noninferiority_all_required']"
+    },
+    {
+      "mutation_id": "overwrite_protocol",
+      "rejected": true,
+      "reason": "Route-A preregistration failed: ['G20_protocol_is_immutable_versioned']"
+    }
+  ],
+  "status": "PASS",
+  "verdict": "PASS_ROUTE_A_RESULT_BLIND_PREREGISTRATION_FROZEN",
+  "claim_boundary": {
+    "allowed": "result-blind split/scenario/threshold-selection/statistical/decision-gate preregistration for new T6.7 formal evidence",
+    "not_claimed": [
+      "threshold tuple selected",
+      "strongest baseline selected",
+      "formal evaluation executed",
+      "Route-A performance or safety advantage"
+    ]
+  }
+}

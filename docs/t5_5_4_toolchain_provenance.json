@@ -1,0 +1,173 @@
+{
+  "schema_version": "t5.5.4-toolchain-execution-v1",
+  "input_bindings": [
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "sha256": "72f84c38bdf064d851ab389c457c9b1fe2115cea65dfca60d60f59efaad9f5af",
+      "bytes": 24895
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_synth_top.sv",
+      "sha256": "c0fb58acc208406aba6fcb98dd6cc1dfaa02040e5e074b05cdfba8f92e545260",
+      "bytes": 5340
+    },
+    {
+      "path": "cnn_fpga/rtl/quantized_gru_workload_kernel.sv",
+      "sha256": "e8eb68efa6adb0c34195d1d87871af7283d8acd853048b30f7c669b810c8fb63",
+      "bytes": 4329
+    },
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_gru_workload_synth_top.sv",
+      "sha256": "63c8c118478a5a25e37d53397d94bca9a60731375f596fbef9233fbafeffd1bc",
+      "bytes": 1277
+    },
+    {
+      "path": "cnn_fpga/rtl/tang_nano_20k_27mhz.sdc",
+      "sha256": "75cf6f2866062f7286fa58ccd45d95be42f2d2ebe7b5b3b173ab2c5e85ba62e8",
+      "bytes": 57
+    },
+    {
+      "path": "cnn_fpga/rtl/tang_nano_20k_synth_harness.cst",
+      "sha256": "636f9520efe8c6c0fd3d7391ee80cf99ae36dd67c81768468ad9dbeb28e5a3d0",
+      "bytes": 1581
+    },
+    {
+      "path": "cnn_fpga/rtl/generated/t5_5_4_quantized_gru_manifest.json",
+      "sha256": "a833f2da428a867c11260bb055793a79046fc620b0675fdbff619c28b11ba898",
+      "bytes": 4133
+    }
+  ],
+  "synthesis_command": [
+    "C:\\ProgramData\\anaconda3\\envs\\DLEnv\\Scripts\\yowasp-yosys.exe",
+    "-Q",
+    "-p",
+    "read_verilog -sv cnn_fpga/rtl/gkp_fast_path_core.sv cnn_fpga/rtl/gkp_fast_path_synth_top.sv cnn_fpga/rtl/quantized_gru_workload_kernel.sv cnn_fpga/rtl/gkp_fast_path_gru_workload_synth_top.sv; synth_gowin -family gw2a -no-rw-check -top gkp_fast_path_gru_workload_synth_top -json .tmp_t554_build/gkp_gru_workload_gw2a.json; check; stat"
+  ],
+  "route_commands": {
+    "1": [
+      "C:\\ProgramData\\anaconda3\\envs\\DLEnv\\Scripts\\yowasp-nextpnr-himbaechel-gowin.exe",
+      "--device",
+      "GW2AR-LV18QN88C8/I7",
+      "-o",
+      "family=GW2A-18C",
+      "-o",
+      "cst=cnn_fpga/rtl/tang_nano_20k_synth_harness.cst",
+      "--json",
+      ".tmp_t554_build/gkp_gru_workload_gw2a.json",
+      "--top",
+      "gkp_fast_path_gru_workload_synth_top",
+      "--freq",
+      "27",
+      "--sdc",
+      "cnn_fpga/rtl/tang_nano_20k_27mhz.sdc",
+      "--seed",
+      "1",
+      "--report",
+      ".tmp_t554_build/nextpnr_seed01_report.json",
+      "--detailed-timing-report",
+      "--write",
+      ".tmp_t554_build/gkp_gru_workload_routed_seed01.json"
+    ],
+    "7": [
+      "C:\\ProgramData\\anaconda3\\envs\\DLEnv\\Scripts\\yowasp-nextpnr-himbaechel-gowin.exe",
+      "--device",
+      "GW2AR-LV18QN88C8/I7",
+      "-o",
+      "family=GW2A-18C",
+      "-o",
+      "cst=cnn_fpga/rtl/tang_nano_20k_synth_harness.cst",
+      "--json",
+      ".tmp_t554_build/gkp_gru_workload_gw2a.json",
+      "--top",
+      "gkp_fast_path_gru_workload_synth_top",
+      "--freq",
+      "27",
+      "--sdc",
+      "cnn_fpga/rtl/tang_nano_20k_27mhz.sdc",
+      "--seed",
+      "7",
+      "--report",
+      ".tmp_t554_build/nextpnr_seed07_report.json",
+      "--detailed-timing-report",
+      "--write",
+      ".tmp_t554_build/gkp_gru_workload_routed_seed07.json"
+    ],
+    "19": [
+      "C:\\ProgramData\\anaconda3\\envs\\DLEnv\\Scripts\\yowasp-nextpnr-himbaechel-gowin.exe",
+      "--device",
+      "GW2AR-LV18QN88C8/I7",
+      "-o",
+      "family=GW2A-18C",
+      "-o",
+      "cst=cnn_fpga/rtl/tang_nano_20k_synth_harness.cst",
+      "--json",
+      ".tmp_t554_build/gkp_gru_workload_gw2a.json",
+      "--top",
+      "gkp_fast_path_gru_workload_synth_top",
+      "--freq",
+      "27",
+      "--sdc",
+      "cnn_fpga/rtl/tang_nano_20k_27mhz.sdc",
+      "--seed",
+      "19",
+      "--report",
+      ".tmp_t554_build/nextpnr_seed19_report.json",
+      "--detailed-timing-report",
+      "--write",
+      ".tmp_t554_build/gkp_gru_workload_routed_seed19.json"
+    ]
+  },
+  "uncompressed_netlist_sha256": "f2d69097218e08b180f451a42c8319168854aa7cd25ca5ab550fa629c4241adc",
+  "uncompressed_netlist_bytes": 9901300,
+  "compressed_netlist_artifact": {
+    "path": "docs/t5_5_4_quantized_gru_lower_bound_netlist.json.gz",
+    "sha256": "8976421dd77d53391e317e8c3cb68fb5569c0c9cc2da4e2ef205bbcb870699f3",
+    "bytes": 357969
+  },
+  "synthesis_log_artifact": {
+    "path": "docs/t5_5_4_yosys_quantized_gru_lower_bound.log",
+    "sha256": "5e0aed75ff50724287d2b7015f01a265a27dd26ade659e0d07f127b07d6ef227",
+    "bytes": 919195
+  },
+  "route_artifacts": [
+    {
+      "seed": 1,
+      "report": {
+        "path": "docs/t5_5_4_nextpnr_seed01_report.json",
+        "sha256": "aacdc95da9a2e6a37a751c5250f257c7bbf56215d95e5b25139b66ee0d42cf45",
+        "bytes": 250021
+      },
+      "log": {
+        "path": "docs/t5_5_4_nextpnr_seed01_place_route.log",
+        "sha256": "c7c2d0ab02a08744ee1572a0f6fde5cbf2493d65ed6a4c3cf5992a10300ca986",
+        "bytes": 55989
+      }
+    },
+    {
+      "seed": 7,
+      "report": {
+        "path": "docs/t5_5_4_nextpnr_seed07_report.json",
+        "sha256": "c3b84f5ed50abf931949e2bbb80d3965707fac2fc4820406e0e5c88efa1b33d5",
+        "bytes": 239354
+      },
+      "log": {
+        "path": "docs/t5_5_4_nextpnr_seed07_place_route.log",
+        "sha256": "93af2e89ea8b860c84099dcf3cbada4760443e569a37e373fc1c2a8a46434112",
+        "bytes": 50736
+      }
+    },
+    {
+      "seed": 19,
+      "report": {
+        "path": "docs/t5_5_4_nextpnr_seed19_report.json",
+        "sha256": "7a5e61a0a72512a8694b749b7959406e509545316333b28e71a7bdb8dd888e7c",
+        "bytes": 235718
+      },
+      "log": {
+        "path": "docs/t5_5_4_nextpnr_seed19_place_route.log",
+        "sha256": "5bb073d481f1c25d5528e4d33901a295dbf67c24136315caea2bfb36c2639200",
+        "bytes": 48322
+      }
+    }
+  ]
+}

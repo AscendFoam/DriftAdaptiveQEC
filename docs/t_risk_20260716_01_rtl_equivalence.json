@@ -1,0 +1,166 @@
+{
+  "schema_version": "t-risk-20260716-01-rtl-equivalence-v1",
+  "task_id": "T-RISK-20260716-01",
+  "status": "PASS",
+  "verdict": "SYNTHESIZABLE_RTL_EQUIVALENT_FOR_V0_V1_NOT_BOARD_MEASURED",
+  "source_bindings": [
+    {
+      "path": "cnn_fpga/rtl/gkp_fast_path_core.sv",
+      "sha256": "7caad1ad0fd243f5e62c9ce079fd6def9c6d964bb8fe44e870e96b14a6239784"
+    },
+    {
+      "path": "cnn_fpga/rtl/cxxrtl_trace_driver.cc",
+      "sha256": "d1de2c6a0944b81eabb6dbf46b5f87de7d1126386e90311bf339e92211621fd5"
+    },
+    {
+      "path": "cnn_fpga/rtl/generated/t5_5_1_memory_manifest.json",
+      "sha256": "e08bbb9ac41c7b19cda554c62109398329e482c463c023721e3279d88b9c8012"
+    }
+  ],
+  "tools": {
+    "yosys": "C:\\ProgramData\\anaconda3\\envs\\DLEnv\\Scripts\\yowasp-yosys.exe",
+    "gpp": "C:\\ProgramData\\msys2\\mingw64\\bin\\g++.EXE",
+    "include": "C:\\ProgramData\\anaconda3\\envs\\DLEnv\\Lib\\site-packages\\yowasp_yosys\\share\\include\\backends\\cxxrtl\\runtime"
+  },
+  "build": {
+    "yosys_version": "Yosys 0.67 (git sha1 2d1509d1b, Release, Clang /workspace/YoWASP/yosys/wasi-sdk-33.0-x86_64-linux/share/cmake/../..//bin/clang++ 22.1.0)",
+    "gpp_version": "g++.EXE (Rev5, Built by MSYS2 project) 15.1.0",
+    "yosys_seconds": 0.966909399983706,
+    "compile_seconds": 366.20787040001596,
+    "model_bytes": 2317327,
+    "model_sha256": "76413c48a5a1fbbb328373f54a3a20a474367a8555ed482ff5121397e97e0802",
+    "executable_bytes": 610493,
+    "executable_sha256": "7d962dd76bb04bdce1ba1027e188df5f1549a12e4beb55036c64e5fc2006511b",
+    "structural_check_zero_problems": true,
+    "memory_count": 8,
+    "memory_bits": 45232,
+    "multiplier_present": true,
+    "yosys_log": ".tmp_t5_5_2_equivalence/yosys_cxxrtl.log",
+    "compile_log": ".tmp_t5_5_2_equivalence/gpp_compile.log"
+  },
+  "memory_manifest": {
+    "schema_version": "t-risk-20260716-01-frozen-rtl-memory-v1",
+    "source": "T5.5.1 frozen images v0/v1",
+    "word_bits": 22,
+    "encoding": "six lowercase hex digits, two's complement, one word per line",
+    "files": [
+      {
+        "path": "cnn_fpga/rtl/generated/t5_5_1_bank0_x.mem",
+        "entries": 257,
+        "sha256": "26271a951edb70f78156ba9fe2f5e472826bb4fdf6e735b7bb293909d22e1e99",
+        "image_version": 0,
+        "phase": 0
+      },
+      {
+        "path": "cnn_fpga/rtl/generated/t5_5_1_bank0_z.mem",
+        "entries": 257,
+        "sha256": "e92e6418079c2711a07352b7d9c385bebf505437b82e9048453fffb849755584",
+        "image_version": 0,
+        "phase": 1
+      },
+      {
+        "path": "cnn_fpga/rtl/generated/t5_5_1_bank1_x.mem",
+        "entries": 257,
+        "sha256": "125ff558685176188b82aca40fa6ccbfadc7744feb570adf56f42cc8b5a59b68",
+        "image_version": 1,
+        "phase": 0
+      },
+      {
+        "path": "cnn_fpga/rtl/generated/t5_5_1_bank1_z.mem",
+        "entries": 257,
+        "sha256": "2349edcb5ff5125cbe932f3d9a433e61d3f55d48f2cbc734ea27f98a9a5b916e",
+        "image_version": 1,
+        "phase": 1
+      }
+    ]
+  },
+  "scenarios": [
+    {
+      "name": "fault_and_commit",
+      "cycles": 226,
+      "map_valid_rows": 220,
+      "runtime_seconds": 0.9393379999964964,
+      "mismatch_count": 0,
+      "exact": true,
+      "first_mismatches": []
+    },
+    {
+      "name": "exhaustive_v0_v1",
+      "cycles": 4102,
+      "map_valid_rows": 4096,
+      "runtime_seconds": 8.174461099988548,
+      "mismatch_count": 0,
+      "exact": true,
+      "first_mismatches": []
+    }
+  ],
+  "mutation_audit": [
+    {
+      "mutation": "map_llr_plus_one",
+      "rejected": true,
+      "mismatch_count": 1
+    },
+    {
+      "mutation": "map_address_plus_one",
+      "rejected": true,
+      "mismatch_count": 1
+    },
+    {
+      "mutation": "output_word_bit_flip",
+      "rejected": true,
+      "mismatch_count": 1
+    },
+    {
+      "mutation": "state_word_bit_flip",
+      "rejected": true,
+      "mismatch_count": 1
+    },
+    {
+      "mutation": "commit_ack_one_cycle_early",
+      "rejected": true,
+      "mismatch_count": 1
+    },
+    {
+      "mutation": "active_version_one_cycle_early",
+      "rejected": true,
+      "mismatch_count": 1
+    },
+    {
+      "mutation": "drop_map_valid",
+      "rejected": true,
+      "mismatch_count": 1
+    },
+    {
+      "mutation": "drop_trace_row",
+      "rejected": true,
+      "mismatch_count": 126
+    }
+  ],
+  "gates": {
+    "eight_mirrored_1r1w_memories_and_multiplier_survive_elaboration": true,
+    "frozen_v0_v1_memory_files_match_257x22_registry": true,
+    "fault_commit_and_full_words_match_cycle_by_cycle": true,
+    "both_banks_both_phases_all_1024_codes_match": true,
+    "map_and_action_latencies_are_five_and_six_cycles": true,
+    "unsafe_commit_defers_then_safe_commit_is_atomic": true,
+    "all_semantic_mutations_are_rejected": true,
+    "rtl_or_cxxrtl_is_not_mislabeled_as_board_measurement": true
+  },
+  "gate_summary": {
+    "passed": 8,
+    "total": 8
+  },
+  "source_data": {
+    "path": "docs/t_risk_20260716_01_rtl_equivalence_source_data.csv",
+    "rows": 4328
+  },
+  "evidence_boundary": {
+    "synthesizable_rtl": true,
+    "cxxrtl_simulation": true,
+    "target_device_synthesis": false,
+    "target_device_place_route": false,
+    "board_measured": false,
+    "transport_implemented": false,
+    "quantum_hardware_measured": false
+  }
+}

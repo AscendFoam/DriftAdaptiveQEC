@@ -1,0 +1,55 @@
+{
+  "task_id": "T-RISK-20260728-02",
+  "schema_version": "PHASE9-SCALAR-UQ-THREE-SPLIT-INFRASTRUCTURE-FAILURE-V1",
+  "attempt": "v1",
+  "release_commit": "36f82a29fca12ab88676d5c4b721e821bca9cae6",
+  "run_id": "78495c64-3341-4762-a593-fe4e82f13a25",
+  "terminal_state": "FAILED_INFRASTRUCTURE_SEED_COLLISION_BEFORE_SELECTION_SEAL",
+  "exception_type": "RuntimeError",
+  "exception_message": "three-split scalar UQ raw-row seed/index drift",
+  "root_cause": "The v1 address rule base + SHA256(address) mod 1e9 is not injective over 2048 trials per cell and produced a birthday collision in selection_b.",
+  "selection_a": {
+    "published_atomically": true,
+    "cell_count": 192,
+    "trial_count_per_cell": 2048,
+    "raw_trial_count": 393216,
+    "factor_decision_published": false
+  },
+  "selection_b": {
+    "published_atomically": false,
+    "rejected_by_seed_uniqueness_gate": true
+  },
+  "selection_receipt_published": false,
+  "confirmation_outcomes_accessed": false,
+  "final_report_published": false,
+  "v1_outcomes_used_as_v2_selection_or_confirmation_evidence": false,
+  "allowed_v2_repair": "Keep factor grid, statistical gates, trial count, family matrix and split roles unchanged; replace only the colliding address function with a provably injective cell-major address and use entirely new disjoint seed bases.",
+  "bindings": {
+    "selection_a_source_data": {
+      "path": "docs/t_risk_20260728_02_scalar_uq_selection_a_failed_seed_collision_v1.csv",
+      "bytes": 60340294,
+      "sha256": "8b929b30f21e8949e46b4bc61211a17249280254ea23713ea3d967091c1aecc5"
+    },
+    "resource_preflight": {
+      "path": "docs/t_risk_20260728_02_scalar_uq_resource_preflight_failed_seed_collision_v1.json",
+      "bytes": 1202,
+      "sha256": "929a71c108bd296a88d5614f43e6defe0156f641e9936c46264d798dd01b6163"
+    },
+    "run_identity": {
+      "path": "docs/t_risk_20260728_02_scalar_uq_run_identity_failed_seed_collision_v1.json",
+      "bytes": 1856,
+      "sha256": "61721c1e4c81aabc00c9e684aa32af5aea8918d903cf9d17976e90eca61ffadc"
+    }
+  },
+  "claim_state": {
+    "scalar_uq_calibration_only": true,
+    "twin_qualification": null,
+    "ler": null,
+    "lifetime": null,
+    "physical_break_even": null,
+    "official_puviani_exact": null,
+    "puviani_nmf_surpass": null,
+    "external_sota": null,
+    "hardware_measured": null
+  }
+}

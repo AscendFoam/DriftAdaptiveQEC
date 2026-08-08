@@ -1,0 +1,137 @@
+{
+  "task_id": "T-RISK-20260728-01",
+  "schema_version": "PHASE9-CUTOFF32-36-DENSITY-UQ-PREFLIGHT-CONFIG-V1",
+  "purpose": "Outcome-free coverage/power preflight of frozen factor=1.0 and B=199 over dimensions 84/96/108 and 12/384 clusters before any cutoff32/36 scientific run",
+  "parent_artifacts": {
+    "calibration_report": {
+      "path": "docs/t_risk_20260727_01_uq_calibration.json",
+      "bytes": 4691,
+      "sha256": "4546b0605847917eafa98ace26ccfaa466dc619f3a285b535284b77178daf311",
+      "analysis_sha256": "546f808015c82b218664d99c1026cb9fc40af2362b076d479df10e98c7073446"
+    },
+    "calibration_source_data": {
+      "path": "docs/t_risk_20260727_01_uq_calibration_source_data.csv",
+      "bytes": 3683275,
+      "sha256": "d77aa19258f23b07ed54afcbd53484b946197a8c247ecb75e8ff552e1923e88d"
+    },
+    "calibration_config": {
+      "path": "configs/phase9/t_risk_20260727_01_uq_calibration.json",
+      "bytes": 2333,
+      "sha256": "107353f8656353f86d928de80369b3bd29ad7090b124bc908ce6ed883a882268"
+    },
+    "extension_report": {
+      "path": "docs/t_risk_20260727_01_uq_power_extension.json",
+      "bytes": 3330,
+      "sha256": "c5a35bc21504e882a765401625fc69b03905efa66af79a0fdec84bf498755c76",
+      "analysis_sha256": "9f2e2dcf020ba85963f28d75473b150555943c4216845e0005a551e82d8a21e8"
+    },
+    "extension_source_data": {
+      "path": "docs/t_risk_20260727_01_uq_power_extension_source_data.csv",
+      "bytes": 2464717,
+      "sha256": "b8e6bfba4c526fe426efdaca5343cfb87e52896f02fcd8d75616dc6078464692"
+    },
+    "extension_config": {
+      "path": "configs/phase9/t_risk_20260727_01_uq_power_extension.json",
+      "bytes": 1585,
+      "sha256": "e0c3472df2d63b5923e6a578e500577d1039facba3696f142a3e5290a9ea0246"
+    }
+  },
+  "frozen_calibration_factor": 1.0,
+  "frozen_formal_clusters_per_state": 384,
+  "pilot_clusters_per_state": 12,
+  "dimensions": [84, 96, 108],
+  "true_trace_distances": [0.0, 0.05, 0.1, 0.12],
+  "margin": 0.1,
+  "confidence": 0.95,
+  "multiplier_replicates": 199,
+  "families": {
+    "low_energy_balanced": {
+      "spectrum_profile": "low_energy",
+      "left_noise_weight": 0.4,
+      "right_noise_weight": 0.4,
+      "rare_probability": 1.0,
+      "coherent_unitary": false,
+      "power_primary": true
+    },
+    "heavy_tail_rare_coherent": {
+      "spectrum_profile": "heavy_tail",
+      "left_noise_weight": 0.75,
+      "right_noise_weight": 0.75,
+      "rare_probability": 0.12,
+      "coherent_unitary": true,
+      "power_primary": true
+    },
+    "heteroskedastic_coherent": {
+      "spectrum_profile": "low_energy",
+      "left_noise_weight": 0.25,
+      "right_noise_weight": 0.75,
+      "rare_probability": 1.0,
+      "coherent_unitary": true,
+      "power_primary": false
+    }
+  },
+  "power_primary_families": [
+    "heavy_tail_rare_coherent",
+    "low_energy_balanced"
+  ],
+  "confirmation_split": {
+    "trial_seed_base": 1520000,
+    "multiplier_seed_base": 1530000,
+    "trial_count_per_cell": 256,
+    "independent_of_parent_splits": true
+  },
+  "gates": {
+    "minimum_cell_coverage_rate": 0.94,
+    "minimum_cell_coverage_wilson_lcb": 0.9,
+    "null_equivalence_wilson_lcb": 0.8,
+    "local_005_equivalence_wilson_lcb": 0.65,
+    "boundary_equivalence_wilson_ucb": 0.1,
+    "outside_equivalence_wilson_ucb": 0.05
+  },
+  "simultaneous_wilson": {
+    "confidence": 0.95,
+    "global_comparisons": 128,
+    "coverage_cell_comparisons": 128,
+    "power_stratum_comparisons": 128,
+    "method": "single-family Bonferroni-adjusted two-sided Wilson bounds across all 72 coverage and 24 power intervals"
+  },
+  "resource_preflight": {
+    "required": true,
+    "trial_seed_base": 1540000,
+    "multiplier_seed_base": 1550000,
+    "eta_safety_factor": 2.0,
+    "maximum_estimated_wall_seconds": 14400,
+    "maximum_estimated_worker_pool_rss_bytes": 4294967296,
+    "maximum_estimated_total_task_rss_bytes": 5368709120,
+    "rss_scope": "worker_pool and supervisor are gated separately and jointly",
+    "artifact": "runs/t_risk_20260728_01_density_uq_preflight/resource_preflight.json",
+    "disjoint_from_scientific_and_parent_seeds": true
+  },
+  "max_workers": 4,
+  "numeric_execution": {
+    "blas_threads_per_worker": 1,
+    "threading_policy": "one BLAS thread inside each ProcessPool worker; process-level parallelism only",
+    "scientific_design_unchanged": true
+  },
+  "artifact_paths": {
+    "run_directory": "runs/t_risk_20260728_01_density_uq_preflight",
+    "chunk_directory": "runs/t_risk_20260728_01_density_uq_preflight/chunks",
+    "owner_lock": "runs/t_risk_20260728_01_density_uq_preflight/supervisor.owner.lock",
+    "run_identity": "runs/t_risk_20260728_01_density_uq_preflight/run_identity.json",
+    "heartbeat": "runs/t_risk_20260728_01_density_uq_preflight/heartbeat.json",
+    "report": "docs/t_risk_20260728_01_density_uq_preflight.json",
+    "source_data": "docs/t_risk_20260728_01_density_uq_preflight_source_data.csv"
+  },
+  "formal_outcomes_accessed": false,
+  "claim_boundary": {
+    "density_uq_preflight_only": true,
+    "twin_qualification": null,
+    "ler": null,
+    "lifetime": null,
+    "physical_break_even": null,
+    "official_puviani_exact": null,
+    "puviani_nmf_surpass": null,
+    "external_sota": null,
+    "hardware_measured": null
+  }
+}

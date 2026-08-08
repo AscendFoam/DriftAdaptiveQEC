@@ -277,6 +277,37 @@ class BitAccurateFastPath:
         )
         self._history: list[FastPathBitAccurateResult] = []
 
+    def register_image(self, image: ParametricMAPLUTImage) -> None:
+        """Append a newly compiled slow-path image to the trusted fast-path registry."""
+
+        if not isinstance(image, ParametricMAPLUTImage):
+            raise TypeError("image must be ParametricMAPLUTImage")
+        image.verify()
+        next_version = max(self._images) + 1
+        if image.active_bank_version != next_version:
+            raise ValueError("image version must be the next contiguous version")
+        reference = next(iter(self._images.values()))
+        if image.config != reference.config:
+            raise ValueError("registered image must preserve the fixed-point config")
+        self._images[image.active_bank_version] = image
+        self._runtimes[image.active_bank_version] = ParametricMAPLUTRuntime(image)
+        self._controller.register_trusted_image(
+            TrustedParameterImage(
+                image.active_bank_version,
+                image.image_crc32,
+                image.image_sha256,
+            )
+        )
+
+    def unregister_unactivated_image(self, version: int) -> None:
+        if isinstance(version, bool) or not isinstance(version, int):
+            raise TypeError("version must be an integer")
+        if version != max(self._images):
+            raise ValueError("only the newest image can be removed")
+        self._controller.unregister_unactivated_image(version)
+        del self._runtimes[version]
+        del self._images[version]
+
     @property
     def state(self):
         return self._controller.state

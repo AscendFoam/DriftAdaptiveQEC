@@ -117,6 +117,9 @@ class ClosedLoopCycleInput:
     input_crc_ok: bool = True
     deadline_ok: bool = True
     reported_integrity_ok: bool = True
+    allow_lkg_promotion: bool = True
+    reported_active_bank_version: int | None = None
+    reported_parameter_age_cycles: int | None = None
 
     def __post_init__(self) -> None:
         for name in ("epoch", "syndrome_code", "quadrature_phase_bit", "ood_score_code"):
@@ -135,8 +138,13 @@ class ClosedLoopCycleInput:
             "input_crc_ok",
             "deadline_ok",
             "reported_integrity_ok",
+            "allow_lkg_promotion",
         ):
             object.__setattr__(self, name, _boolean(getattr(self, name), name))
+        for name in ("reported_active_bank_version", "reported_parameter_age_cycles"):
+            value = getattr(self, name)
+            if value is not None:
+                object.__setattr__(self, name, _integer(value, name))
 
 
 @dataclass(frozen=True)
@@ -158,6 +166,9 @@ class UpdateAttempt:
 @dataclass(frozen=True)
 class ClosedLoopCycleRecord:
     epoch: int
+    source_cycle: int
+    action_cycle: int
+    source_to_action_cycles: int
     active_bank: str
     active_version: int
     active_semantics_sha256: str
@@ -281,6 +292,44 @@ class ClosedLoopFaultRecoverySupervisor:
     @property
     def last_known_good_semantics_sha256(self) -> str:
         return self._semantics_by_version[self._last_known_good.active_bank_version]
+
+    @property
+    def active_image(self) -> ParametricMAPLUTImage:
+        return self.bank.read_active_image()
+
+    @property
+    def last_known_good_image(self) -> ParametricMAPLUTImage:
+        return self._last_known_good
+
+    def register_image(self, image: ParametricMAPLUTImage) -> None:
+        """Causally append one slow-path image after its source window closes."""
+
+        if not isinstance(image, ParametricMAPLUTImage):
+            raise TypeError("image must be ParametricMAPLUTImage")
+        image.verify()
+        next_version = max(self._images) + 1
+        if image.active_bank_version != next_version:
+            raise ValueError("image version must be the next contiguous version")
+        reference = self._images[0]
+        if image.config != reference.config:
+            raise ValueError("registered image must preserve the fixed-point config")
+        self.fast_path.register_image(image)
+        self._images[image.active_bank_version] = image
+        self._semantics_by_version[image.active_bank_version] = (
+            parameter_image_semantics_sha256(image)
+        )
+
+    def unregister_unactivated_image(self, version: int) -> None:
+        """Forget a finalized-but-rejected newest image after the bank clears it."""
+
+        if isinstance(version, bool) or not isinstance(version, int):
+            raise TypeError("version must be an integer")
+        if version != max(self._images) or version <= self.bank.active_version:
+            raise ValueError("only the newest unactivated image can be removed")
+        self.fast_path.unregister_unactivated_image(version)
+        del self._semantics_by_version[version]
+        del self._images[version]
+        self._purpose_by_version.pop(version, None)
 
     def observe_selection(
         self, *, window_id: int, selection_key: str, eligible: bool
@@ -413,7 +462,18 @@ class ClosedLoopFaultRecoverySupervisor:
         self, cycle: ClosedLoopCycleInput
     ) -> tuple[str, str, str]:
         previous = self.bank.read_active_image()
-        ack = self.bank.commit_if_ready(cycle.epoch, safe_boundary=cycle.safe_boundary)
+        pending_purpose = self._purpose_by_version.get(
+            self.bank.active_version + 1, "candidate"
+        )
+        prior_guard_pending = bool(
+            self._candidate_version == previous.active_bank_version
+            and cycle.epoch <= self._guard_until_epoch
+            and pending_purpose == "candidate"
+        )
+        ack = self.bank.commit_if_ready(
+            cycle.epoch,
+            safe_boundary=cycle.safe_boundary and not prior_guard_pending,
+        )
         commit_status = "none" if ack is None else ack.status
         commit_reason = "none" if ack is None else ack.reason
         readback_status = "none"
@@ -461,6 +521,16 @@ class ClosedLoopFaultRecoverySupervisor:
         commit_status, commit_reason, readback_status = self._process_commit(cycle)
         image = self.bank.read_active_image()
         parameter_age = min(cycle.epoch - self._last_activation_epoch, (1 << 16) - 1)
+        reported_parameter_age = (
+            parameter_age
+            if cycle.reported_parameter_age_cycles is None
+            else cycle.reported_parameter_age_cycles
+        )
+        reported_version = (
+            image.active_bank_version
+            if cycle.reported_active_bank_version is None
+            else cycle.reported_active_bank_version
+        )
         host_age = min(cycle.epoch - self._last_host_heartbeat_epoch, (1 << 16) - 1)
         host_timed_out = host_age > self.config.host_timeout_cycles
         crc = image.image_crc32 if cycle.reported_integrity_ok else "0" * 8
@@ -472,10 +542,10 @@ class ClosedLoopFaultRecoverySupervisor:
                 syndrome_x=cycle.syndrome_x,
                 syndrome_z=cycle.syndrome_z,
                 quadrature_phase_bit=cycle.quadrature_phase_bit,
-                expected_active_bank_version=image.active_bank_version,
+                expected_active_bank_version=reported_version,
                 reported_image_crc32=crc,
                 reported_image_sha256=sha,
-                parameter_age_code=parameter_age,
+                parameter_age_code=reported_parameter_age,
                 ood_score_code=cycle.ood_score_code,
                 reset_ack=cycle.reset_ack,
                 observation_valid=cycle.observation_valid,
@@ -492,11 +562,24 @@ class ClosedLoopFaultRecoverySupervisor:
                 if self._guard_blocking_faults >= self.config.guard_blocking_fault_threshold:
                     self._recovery_requested = True
                     self._recovery_reason = "post_commit_guard_fault"
+            if (
+                cycle.epoch == self._guard_until_epoch
+                and self._candidate_confirmed
+                and self._guard_blocking_faults
+                < self.config.guard_blocking_fault_threshold
+                and cycle.allow_lkg_promotion
+            ):
+                self._last_known_good = image
+                self._candidate_version = None
+                if self._recovery_reason == "host_timeout_or_parameter_stale":
+                    self._recovery_requested = False
+                    self._recovery_reason = "none"
         elif (
             self._candidate_version == image.active_bank_version
             and cycle.epoch > self._guard_until_epoch
             and self._candidate_confirmed
             and self._guard_blocking_faults < self.config.guard_blocking_fault_threshold
+            and cycle.allow_lkg_promotion
         ):
             if not self._recovery_requested or self._recovery_reason == "host_timeout_or_parameter_stale":
                 self._last_known_good = image
@@ -511,6 +594,9 @@ class ClosedLoopFaultRecoverySupervisor:
         awaiting = None if self._awaiting_ack is None else self._awaiting_ack.active_version
         record = ClosedLoopCycleRecord(
             epoch=cycle.epoch,
+            source_cycle=hardware.source_cycle,
+            action_cycle=hardware.action_cycle,
+            source_to_action_cycles=hardware.action_cycle - hardware.source_cycle,
             active_bank=self.bank.active_bank,
             active_version=image.active_bank_version,
             active_semantics_sha256=self._semantics_by_version[image.active_bank_version],

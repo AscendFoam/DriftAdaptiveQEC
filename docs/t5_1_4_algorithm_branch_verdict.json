@@ -1,0 +1,884 @@
+{
+  "schema_version": "t5.1.4-algorithm-success-falsification-v1",
+  "task_id": "T5.1.4",
+  "protocol_id": "FAIL-CLOSED-ALGORITHM-BRANCH-V1",
+  "pass_semantics": "the fail-closed branch decision, counterevidence retention, provenance and claim routing pass; PASS does not mean the strong learned-algorithm branch passed",
+  "active_branch": {
+    "branch_id": "event_aware_adaptive_map_fpga_codesign",
+    "strong_branch_activated": false,
+    "fallback_branch_activated": true,
+    "failed_strong_predicates": [
+      "matched_learned_decoder_candidate_executed",
+      "candidate_compared_on_same_trace_to_static_and_strong_adaptive_baselines",
+      "static_average_p95_and_worst_non_degradation",
+      "positive_seed_cluster_effect_against_strong_deployable_baseline",
+      "holm_adjusted_repeatable_advantage",
+      "no_preregistered_transient_tail_violation",
+      "candidate_is_observed_only_causal_and_deployment_scoped"
+    ]
+  },
+  "strong_branch_predicates": {
+    "all_parent_evidence_is_passed_and_current": true,
+    "matched_learned_decoder_candidate_executed": false,
+    "candidate_compared_on_same_trace_to_static_and_strong_adaptive_baselines": false,
+    "static_average_p95_and_worst_non_degradation": false,
+    "positive_seed_cluster_effect_against_strong_deployable_baseline": false,
+    "holm_adjusted_repeatable_advantage": false,
+    "no_preregistered_transient_tail_violation": false,
+    "candidate_is_observed_only_causal_and_deployment_scoped": false
+  },
+  "evidence_snapshot": {
+    "decoder_lane": {
+      "executed_comparators": [
+        "standard",
+        "static",
+        "window",
+        "ewma",
+        "kalman",
+        "oracle"
+      ],
+      "matched_learned_decoder_candidates": [],
+      "registered_learned_or_neural_rows_outside_decoder_lane": [
+        "bounded_residual_rnn_teacher"
+      ],
+      "same_trace_contract": "all six methods decode identical displacement/residual truth per scenario-seed-window; predictors update only after current-window decoding",
+      "independent_unit": "evaluation_seed",
+      "seed_cluster_count": 36
+    },
+    "multiplicity": {
+      "hypotheses": 24,
+      "adjustment": "Holm-Bonferroni_two_sided_exact_seed_sign_flip",
+      "discoveries": 0,
+      "minimum_raw_p_value": 0.03125,
+      "minimum_adjusted_p_value": 0.75
+    },
+    "classical_diagnostic": {
+      "static_gaussian": {
+        "static_p_l": 0.0017496744791666667,
+        "kalman_p_l": 0.001190185546875,
+        "static_window_ler_p95": 0.00390625,
+        "kalman_window_ler_p95": 0.00390625,
+        "static_observed_worst_window_ler": 0.009765625,
+        "kalman_observed_worst_window_ler": 0.005859375
+      },
+      "calibration_shift": {
+        "static_p_l": 0.021636962890625,
+        "kalman_p_l": 0.005940755208333333,
+        "static_window_ler_p95": 0.0546875,
+        "kalman_window_ler_p95": 0.013671875,
+        "static_observed_worst_window_ler": 0.072265625,
+        "kalman_observed_worst_window_ler": 0.107421875,
+        "transient_tail_violation": true
+      },
+      "interpretation": "classical adaptive MAP motivates the fallback direction only; it is not a learned-candidate result and does not override multiplicity or tail evidence"
+    },
+    "teacher_student_separation": {
+      "artifact_task_id": "T4.4.5",
+      "scope": "read-only hash-bound T4.4.1--T4.4.4 branch freeze; no new evaluation, no universal MF ranking, leakage, OOD, long-horizon, quantized RTL, FPGA, board or device evidence",
+      "active_branch_id": "qualified_student_retention",
+      "controller_matched_model_only": true,
+      "usable_as_t5_1_decoder_evidence": false
+    }
+  },
+  "parent_integrity": {
+    "T5.1.1": {
+      "machine_pass": true,
+      "machine_gate_count": 14,
+      "declared_file_bindings": [
+        {
+          "role": "source_data",
+          "path": "docs\\t5_1_1_comparison_set_registry_source_data.csv",
+          "declared_sha256": "00646a9418b215c79e8d63a7cf719bee71f39d90722a6b906331d467c2af0ff3",
+          "actual_sha256": "00646a9418b215c79e8d63a7cf719bee71f39d90722a6b906331d467c2af0ff3",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:0",
+          "path": "docs/t3_1_1_standard_binning_validation.json",
+          "declared_sha256": "5911b302ec4bcb19264f8ee6e8301078ba5f104470c4f22d2e92be7a109c0bd2",
+          "actual_sha256": "5911b302ec4bcb19264f8ee6e8301078ba5f104470c4f22d2e92be7a109c0bd2",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:1",
+          "path": "docs/t3_1_2_static_map_validation.json",
+          "declared_sha256": "5c5135800d4fbbc36436979b86698e5378dee45d8dcbdc387076ebb164fa8585",
+          "actual_sha256": "5c5135800d4fbbc36436979b86698e5378dee45d8dcbdc387076ebb164fa8585",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:2",
+          "path": "docs/t3_1_3_oracle_validation.json",
+          "declared_sha256": "d539acf3beb2b06e4329a1140b9d80efec630905c7d50d9aa5055deb008324a9",
+          "actual_sha256": "d539acf3beb2b06e4329a1140b9d80efec630905c7d50d9aa5055deb008324a9",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:3",
+          "path": "docs/t3_1_5_topk_map_validation.json",
+          "declared_sha256": "aac5cb70cf63cb238b2abd8f75d52b96dcda72c86a4e0e899cb9e30e05aec2ec",
+          "actual_sha256": "aac5cb70cf63cb238b2abd8f75d52b96dcda72c86a4e0e899cb9e30e05aec2ec",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:4",
+          "path": "docs/t3_2_10_exponential_recurrence_validation.json",
+          "declared_sha256": "120171277b57267cd68f492e5a804b5ce5b5c54aa3ee7bc8517ed2f3a52fb8d7",
+          "actual_sha256": "120171277b57267cd68f492e5a804b5ce5b5c54aa3ee7bc8517ed2f3a52fb8d7",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:5",
+          "path": "docs/t3_2_1_memory_bayesian_validation.json",
+          "declared_sha256": "cd4be868e90210180ad8790432b7da1f6b4463bb3f69f4c2c254c9e0dd8da9c9",
+          "actual_sha256": "cd4be868e90210180ad8790432b7da1f6b4463bb3f69f4c2c254c9e0dd8da9c9",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:6",
+          "path": "docs/t3_2_2_continuous_adaptive_map_validation.json",
+          "declared_sha256": "d5899267c7479d333df6d05b2dd8d69e907d2884023d7900448f1baf626d9e13",
+          "actual_sha256": "d5899267c7479d333df6d05b2dd8d69e907d2884023d7900448f1baf626d9e13",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:7",
+          "path": "docs/t3_2_3_sliding_window_validation.json",
+          "declared_sha256": "04c4f8f304542dca10fb4889c5571b2c9742767a19c6a6f362162cbb2bdd69fb",
+          "actual_sha256": "04c4f8f304542dca10fb4889c5571b2c9742767a19c6a6f362162cbb2bdd69fb",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:8",
+          "path": "docs/t3_2_5_run_length_fsm_validation.json",
+          "declared_sha256": "15112a68970b184788a9a37002b1026a8268250767782b15fc0ee478cfbb8988",
+          "actual_sha256": "15112a68970b184788a9a37002b1026a8268250767782b15fc0ee478cfbb8988",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:9",
+          "path": "docs/t3_2_6_regime_hmm_validation.json",
+          "declared_sha256": "846885105ffdb3ea8499750da30d5966d8ebe31b33127bd120e0fe272e37cf61",
+          "actual_sha256": "846885105ffdb3ea8499750da30d5966d8ebe31b33127bd120e0fe272e37cf61",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:10",
+          "path": "docs/t3_2_7_latest_outcome_markovian_validation.json",
+          "declared_sha256": "3213b988cef743551a229cfeecfb4e588a959f12d32e4a8cf70d2361b152278d",
+          "actual_sha256": "3213b988cef743551a229cfeecfb4e588a959f12d32e4a8cf70d2361b152278d",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:11",
+          "path": "docs/t3_2_8_autonomous_sbs_wallclock_validation.json",
+          "declared_sha256": "0e82244bec0e71b30ccc79a0e1a49e30f89cc7a94c63c0e4beeefbae31da6441",
+          "actual_sha256": "0e82244bec0e71b30ccc79a0e1a49e30f89cc7a94c63c0e4beeefbae31da6441",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:12",
+          "path": "docs/t3_2_9_trajectory_lookup_control_oracle.json",
+          "declared_sha256": "604df4fb818a4ffd4c7c91d913742cee979f1021467f999af6a16c2a60734d7a",
+          "actual_sha256": "604df4fb818a4ffd4c7c91d913742cee979f1021467f999af6a16c2a60734d7a",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:13",
+          "path": "docs/t4_4_1_bounded_residual_rnn_teacher_validation.json",
+          "declared_sha256": "c71094493a63f7a3b1287d28c0a1b71d3ce7a03e16a281a27967a87a65669d53",
+          "actual_sha256": "c71094493a63f7a3b1287d28c0a1b71d3ce7a03e16a281a27967a87a65669d53",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:14",
+          "path": "docs/t4_4_4_teacher_student_gain_retention.json",
+          "declared_sha256": "5cd1478de22ecd998aaf678bc6f14873134e57bc8ae2fc4408df215544b86dfc",
+          "actual_sha256": "5cd1478de22ecd998aaf678bc6f14873134e57bc8ae2fc4408df215544b86dfc",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:15",
+          "path": "docs/t4_4_5_teacher_student_branch_freeze.json",
+          "declared_sha256": "15abd3e94c69e0fa85bc871ca9967eacbf3af8e948741f0b53986cbacd8ad612",
+          "actual_sha256": "15abd3e94c69e0fa85bc871ca9967eacbf3af8e948741f0b53986cbacd8ad612",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:0",
+          "path": "physics/autonomous_sbs.py",
+          "declared_sha256": "1f599cd47bdb15f539664b8bb975a3fa138f8ddbd8ff192299fa34314c813434",
+          "actual_sha256": "1f599cd47bdb15f539664b8bb975a3fa138f8ddbd8ff192299fa34314c813434",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:1",
+          "path": "cnn_fpga/benchmark/standard_binning_baseline.py",
+          "declared_sha256": "c79e52cd319a14f389cdd1e5baced884d786c4ec033b88d3cb5b1f4be2ec51db",
+          "actual_sha256": "c79e52cd319a14f389cdd1e5baced884d786c4ec033b88d3cb5b1f4be2ec51db",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:2",
+          "path": "physics/autonomous_sbs.py",
+          "declared_sha256": "1f599cd47bdb15f539664b8bb975a3fa138f8ddbd8ff192299fa34314c813434",
+          "actual_sha256": "1f599cd47bdb15f539664b8bb975a3fa138f8ddbd8ff192299fa34314c813434",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:3",
+          "path": "physics/autonomous_sbs.py",
+          "declared_sha256": "1f599cd47bdb15f539664b8bb975a3fa138f8ddbd8ff192299fa34314c813434",
+          "actual_sha256": "1f599cd47bdb15f539664b8bb975a3fa138f8ddbd8ff192299fa34314c813434",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:4",
+          "path": "cnn_fpga/benchmark/static_map_baseline.py",
+          "declared_sha256": "6bb4c1705907476adbbe8487111b5f5123e6d984e9c0ec6620609ad335d7d3af",
+          "actual_sha256": "6bb4c1705907476adbbe8487111b5f5123e6d984e9c0ec6620609ad335d7d3af",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:5",
+          "path": "cnn_fpga/benchmark/topk_lattice_coset_map.py",
+          "declared_sha256": "448dc05ad4c86b9b74d2b37a8e077546d09a676f4f4aeca665a8035e4ff17ead",
+          "actual_sha256": "448dc05ad4c86b9b74d2b37a8e077546d09a676f4f4aeca665a8035e4ff17ead",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:6",
+          "path": "cnn_fpga/benchmark/oracle_baseline.py",
+          "declared_sha256": "72f40b4fe9d1cbea6a33ab55c75b24f240e071611e8a98feef0a7058b0ca2f19",
+          "actual_sha256": "72f40b4fe9d1cbea6a33ab55c75b24f240e071611e8a98feef0a7058b0ca2f19",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:7",
+          "path": "physics/finite_energy_trends.py",
+          "declared_sha256": "b3943ba9308cf2a7c329d5191c84c9a8852c6a0116ce60105d24a42c35f350fd",
+          "actual_sha256": "b3943ba9308cf2a7c329d5191c84c9a8852c6a0116ce60105d24a42c35f350fd",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:8",
+          "path": "cnn_fpga/benchmark/memory_assisted_bayesian_decoder.py",
+          "declared_sha256": "3078fb39e219a8e77de12c0e6da49fda30ece2131a33768a63b6d0ca2fa18279",
+          "actual_sha256": "3078fb39e219a8e77de12c0e6da49fda30ece2131a33768a63b6d0ca2fa18279",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:9",
+          "path": "cnn_fpga/benchmark/continuous_adaptive_map.py",
+          "declared_sha256": "979e71606b7928689de5726cbba69535d8d89527582e2883f23b480706f244ef",
+          "actual_sha256": "979e71606b7928689de5726cbba69535d8d89527582e2883f23b480706f244ef",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:10",
+          "path": "cnn_fpga/benchmark/continuous_adaptive_map.py",
+          "declared_sha256": "979e71606b7928689de5726cbba69535d8d89527582e2883f23b480706f244ef",
+          "actual_sha256": "979e71606b7928689de5726cbba69535d8d89527582e2883f23b480706f244ef",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:11",
+          "path": "cnn_fpga/benchmark/sliding_window_syndrome_estimator.py",
+          "declared_sha256": "3a172d3f909b5cd347ba9f17ff89bfb1a16934887cd5e596dbb54e381de436a7",
+          "actual_sha256": "3a172d3f909b5cd347ba9f17ff89bfb1a16934887cd5e596dbb54e381de436a7",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:12",
+          "path": "cnn_fpga/benchmark/run_length_fsm_baseline.py",
+          "declared_sha256": "643b9f70df14ba3ac1132b68a12b068da0f4105fa4594931caec52c277513ba8",
+          "actual_sha256": "643b9f70df14ba3ac1132b68a12b068da0f4105fa4594931caec52c277513ba8",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:13",
+          "path": "cnn_fpga/benchmark/regime_hmm_baseline.py",
+          "declared_sha256": "29702d8e641a46c22a6bccf12f37ac5c1984c1be6eee8ac84cb8d6b3146bbbdc",
+          "actual_sha256": "29702d8e641a46c22a6bccf12f37ac5c1984c1be6eee8ac84cb8d6b3146bbbdc",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:14",
+          "path": "cnn_fpga/benchmark/latest_outcome_markovian_baseline.py",
+          "declared_sha256": "799378876d5d4d35945a682f4bde905455f0fd044a0dee00e68825a513124492",
+          "actual_sha256": "799378876d5d4d35945a682f4bde905455f0fd044a0dee00e68825a513124492",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:15",
+          "path": "cnn_fpga/benchmark/exponential_recurrence_baseline.py",
+          "declared_sha256": "c652145865938b797e00f6847d1e2b544a80f5822d0d753d9e48d5ce207fe8b2",
+          "actual_sha256": "c652145865938b797e00f6847d1e2b544a80f5822d0d753d9e48d5ce207fe8b2",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:16",
+          "path": "cnn_fpga/benchmark/bounded_residual_rnn_teacher.py",
+          "declared_sha256": "948f411bc80148c97db994a1da26a4281b2ec34bc252a3e064647f1c81e27243",
+          "actual_sha256": "948f411bc80148c97db994a1da26a4281b2ec34bc252a3e064647f1c81e27243",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:17",
+          "path": "cnn_fpga/benchmark/low_dimensional_student_distillation.py",
+          "declared_sha256": "6f72ac2b1ec68013e06e6a9960f3a6ccee13c71e584a68362588430f0dde65de",
+          "actual_sha256": "6f72ac2b1ec68013e06e6a9960f3a6ccee13c71e584a68362588430f0dde65de",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:18",
+          "path": "cnn_fpga/benchmark/trajectory_lookup_control_oracle.py",
+          "declared_sha256": "fd6fed6e69bd66d1dc2543ba2fc54cc23208e7b61f63710ac5d7edf6131a8924",
+          "actual_sha256": "fd6fed6e69bd66d1dc2543ba2fc54cc23208e7b61f63710ac5d7edf6131a8924",
+          "passed": true
+        }
+      ],
+      "all_declared_files_current": true,
+      "declared_composite_sha256": null,
+      "current_composite_sha256": null,
+      "composite_current": true,
+      "passed": true
+    },
+    "T5.1.2": {
+      "machine_pass": true,
+      "machine_gate_count": 15,
+      "declared_file_bindings": [
+        {
+          "role": "source_data",
+          "path": "docs\\t5_1_2_mixed_scenario_matrix_source_data.csv",
+          "declared_sha256": "49f0949fcd02ba0f9053abccd28f46d3b5169e60f6360938cdbdd82d061b5e4e",
+          "actual_sha256": "49f0949fcd02ba0f9053abccd28f46d3b5169e60f6360938cdbdd82d061b5e4e",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:0",
+          "path": "docs/t5_1_1_comparison_set_registry.json",
+          "declared_sha256": "915317cdd9818b97f1e21051bb817d9b6cd41b7a8d1ebdabf13403aa466d9257",
+          "actual_sha256": "915317cdd9818b97f1e21051bb817d9b6cd41b7a8d1ebdabf13403aa466d9257",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:1",
+          "path": "docs/t3_2_2_continuous_adaptive_map_validation.json",
+          "declared_sha256": "d5899267c7479d333df6d05b2dd8d69e907d2884023d7900448f1baf626d9e13",
+          "actual_sha256": "d5899267c7479d333df6d05b2dd8d69e907d2884023d7900448f1baf626d9e13",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:2",
+          "path": "docs/t2_3_8_noise_transfer_validation.json",
+          "declared_sha256": "8f674c7876c39d897bc9a8bdafb6b47f5088201182551e65e93bc3739970301f",
+          "actual_sha256": "8f674c7876c39d897bc9a8bdafb6b47f5088201182551e65e93bc3739970301f",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:3",
+          "path": "docs/t2_2_2_protocol_ancilla_validation.json",
+          "declared_sha256": "a70bd1772d46f1c7c7c7f1c7bbc919bedd2a5967812d3b2d09e4f4de584c3b1a",
+          "actual_sha256": "a70bd1772d46f1c7c7c7f1c7bbc919bedd2a5967812d3b2d09e4f4de584c3b1a",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:4",
+          "path": "docs/t2_0_5_displacement_fault_trend.json",
+          "declared_sha256": "14f5fcb38707a15178a71528723dc51f9e86a258d97a4b780062e94a0d99a415",
+          "actual_sha256": "14f5fcb38707a15178a71528723dc51f9e86a258d97a4b780062e94a0d99a415",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:5",
+          "path": "docs/t2_0_6_occupancy_correlation.json",
+          "declared_sha256": "901f4ff4ef8837125597fb79d95fc1d2b15c2649cf8421ed67fa439332681280",
+          "actual_sha256": "901f4ff4ef8837125597fb79d95fc1d2b15c2649cf8421ed67fa439332681280",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:0",
+          "path": "cnn_fpga/benchmark/mixed_scenario_matrix.py",
+          "declared_sha256": "507c19e4ada745224ffc7d43f28aa16cafdf85e128059accfc7198777ab7e023",
+          "actual_sha256": "507c19e4ada745224ffc7d43f28aa16cafdf85e128059accfc7198777ab7e023",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:1",
+          "path": "cnn_fpga/benchmark/continuous_adaptive_map.py",
+          "declared_sha256": "979e71606b7928689de5726cbba69535d8d89527582e2883f23b480706f244ef",
+          "actual_sha256": "979e71606b7928689de5726cbba69535d8d89527582e2883f23b480706f244ef",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:2",
+          "path": "cnn_fpga/decoder/periodic_adaptive_map.py",
+          "declared_sha256": "ccd8b5811e9275114d7de5957d4551a3864f874d9af2ad1582fb88e5b8c43b37",
+          "actual_sha256": "ccd8b5811e9275114d7de5957d4551a3864f874d9af2ad1582fb88e5b8c43b37",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:3",
+          "path": "physics/drift_processes.py",
+          "declared_sha256": "62f78df962fee79d40938d3fee99c243f1615eb81d6c5028f1413a8679db2108",
+          "actual_sha256": "62f78df962fee79d40938d3fee99c243f1615eb81d6c5028f1413a8679db2108",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:4",
+          "path": "physics/noise_transfer_surrogate.py",
+          "declared_sha256": "cd89bdeb981bc2a1b79c021355075e01d4b9b2fb8f4c4cf1060cb9fa2230d801",
+          "actual_sha256": "cd89bdeb981bc2a1b79c021355075e01d4b9b2fb8f4c4cf1060cb9fa2230d801",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:5",
+          "path": "physics/protocol_ancilla_errors.py",
+          "declared_sha256": "2497b9a2a153a37c9c3d19c5c7b52b4424e28e12c623526630ac8c34f355afee",
+          "actual_sha256": "2497b9a2a153a37c9c3d19c5c7b52b4424e28e12c623526630ac8c34f355afee",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:6",
+          "path": "physics/sbs_displacement_fault.py",
+          "declared_sha256": "eb0ec42a55f573cb2f56d54808e8547ae30afbb4249e1f7fbced8cdb7b73cc5f",
+          "actual_sha256": "eb0ec42a55f573cb2f56d54808e8547ae30afbb4249e1f7fbced8cdb7b73cc5f",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:7",
+          "path": "physics/sbs_occupancy_correlation.py",
+          "declared_sha256": "449f942d0f2f15359bf5b3c3477fe0c9041f6c364b5dfe07de480ee0384cd7f4",
+          "actual_sha256": "449f942d0f2f15359bf5b3c3477fe0c9041f6c364b5dfe07de480ee0384cd7f4",
+          "passed": true
+        }
+      ],
+      "all_declared_files_current": true,
+      "declared_composite_sha256": null,
+      "current_composite_sha256": null,
+      "composite_current": true,
+      "passed": true
+    },
+    "T5.1.3": {
+      "machine_pass": true,
+      "machine_gate_count": 15,
+      "declared_file_bindings": [
+        {
+          "role": "source_data",
+          "path": "docs\\t5_1_3_oracle_gap_tail_source_data.csv",
+          "declared_sha256": "29149983fb8bd671da716486a6bd0aa1d59602db31dd6b26daffcab406118fc7",
+          "actual_sha256": "29149983fb8bd671da716486a6bd0aa1d59602db31dd6b26daffcab406118fc7",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:0",
+          "path": "docs/t5_1_2_mixed_scenario_matrix.json",
+          "declared_sha256": "0f0337527d56485100de967ff1ff475993e8472d875d033aff01558f3d35918d",
+          "actual_sha256": "0f0337527d56485100de967ff1ff475993e8472d875d033aff01558f3d35918d",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:1",
+          "path": "docs/t4_4_4_teacher_student_gain_retention.json",
+          "declared_sha256": "5cd1478de22ecd998aaf678bc6f14873134e57bc8ae2fc4408df215544b86dfc",
+          "actual_sha256": "5cd1478de22ecd998aaf678bc6f14873134e57bc8ae2fc4408df215544b86dfc",
+          "passed": true
+        },
+        {
+          "role": "artifact_binding:2",
+          "path": "docs/t3_2_9_trajectory_lookup_control_oracle.json",
+          "declared_sha256": "604df4fb818a4ffd4c7c91d913742cee979f1021467f999af6a16c2a60734d7a",
+          "actual_sha256": "604df4fb818a4ffd4c7c91d913742cee979f1021467f999af6a16c2a60734d7a",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:0",
+          "path": "cnn_fpga/benchmark/oracle_gap_tail_report.py",
+          "declared_sha256": "7789a452797ca0652deee32ccbe63d426621cb1bf29d09d8185b3fb87ab4db93",
+          "actual_sha256": "7789a452797ca0652deee32ccbe63d426621cb1bf29d09d8185b3fb87ab4db93",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:1",
+          "path": "cnn_fpga/benchmark/mixed_scenario_matrix.py",
+          "declared_sha256": "507c19e4ada745224ffc7d43f28aa16cafdf85e128059accfc7198777ab7e023",
+          "actual_sha256": "507c19e4ada745224ffc7d43f28aa16cafdf85e128059accfc7198777ab7e023",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:2",
+          "path": "cnn_fpga/benchmark/continuous_adaptive_map.py",
+          "declared_sha256": "979e71606b7928689de5726cbba69535d8d89527582e2883f23b480706f244ef",
+          "actual_sha256": "979e71606b7928689de5726cbba69535d8d89527582e2883f23b480706f244ef",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:3",
+          "path": "cnn_fpga/decoder/periodic_adaptive_map.py",
+          "declared_sha256": "ccd8b5811e9275114d7de5957d4551a3864f874d9af2ad1582fb88e5b8c43b37",
+          "actual_sha256": "ccd8b5811e9275114d7de5957d4551a3864f874d9af2ad1582fb88e5b8c43b37",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:4",
+          "path": "physics/ideal_gkp_decoder.py",
+          "declared_sha256": "b60d529aaa337c3a3d6104f1790e178e4108de5be2eea12ee7d28ac21b17c53a",
+          "actual_sha256": "b60d529aaa337c3a3d6104f1790e178e4108de5be2eea12ee7d28ac21b17c53a",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:5",
+          "path": "physics/oracle_map.py",
+          "declared_sha256": "344cda91f9c32f73093857ec8b2e2f793f2c154c9aa1e9e377e0adb79950a304",
+          "actual_sha256": "344cda91f9c32f73093857ec8b2e2f793f2c154c9aa1e9e377e0adb79950a304",
+          "passed": true
+        },
+        {
+          "role": "implementation_binding:6",
+          "path": "physics/oracle_gap.py",
+          "declared_sha256": "93eca76a2c70bb7f4e9046dcf321e0a5764939f0590250c747b89048d48c959f",
+          "actual_sha256": "93eca76a2c70bb7f4e9046dcf321e0a5764939f0590250c747b89048d48c959f",
+          "passed": true
+        }
+      ],
+      "all_declared_files_current": true,
+      "declared_composite_sha256": null,
+      "current_composite_sha256": null,
+      "composite_current": true,
+      "passed": true
+    },
+    "T2.4.3": {
+      "machine_pass": true,
+      "machine_gate_count": 11,
+      "declared_file_bindings": [],
+      "all_declared_files_current": true,
+      "declared_composite_sha256": "5cade4f41868da9b2efc3fb1736dda5e5867284912f6b6db308e237e2b18b29c",
+      "current_composite_sha256": "5cade4f41868da9b2efc3fb1736dda5e5867284912f6b6db308e237e2b18b29c",
+      "composite_current": true,
+      "passed": true
+    },
+    "T4.2.1": {
+      "machine_pass": true,
+      "machine_gate_count": 20,
+      "declared_file_bindings": [
+        {
+          "role": "source_data",
+          "path": "docs/t4_2_1_parametric_map_lut_source_data.csv",
+          "declared_sha256": "2accab35a641c8e477c54d892fc5c4fddca7bae76aa5e7b2c93a5c4945831a69",
+          "actual_sha256": "2accab35a641c8e477c54d892fc5c4fddca7bae76aa5e7b2c93a5c4945831a69",
+          "passed": true
+        },
+        {
+          "role": "image_artifact",
+          "path": "docs/t4_2_1_parametric_map_lut_bank_images.json",
+          "declared_sha256": "af68ca112d92b4ae7f86da12fef4eee1f439fa60ced8179a0ffa2219058a9a7b",
+          "actual_sha256": "af68ca112d92b4ae7f86da12fef4eee1f439fa60ced8179a0ffa2219058a9a7b",
+          "passed": true
+        }
+      ],
+      "all_declared_files_current": true,
+      "declared_composite_sha256": "ef06da058c326d7d5264d396cbf65526beef8ebec857898fd89524a8214f549a",
+      "current_composite_sha256": "ef06da058c326d7d5264d396cbf65526beef8ebec857898fd89524a8214f549a",
+      "composite_current": true,
+      "passed": true
+    },
+    "T4.2.3": {
+      "machine_pass": true,
+      "machine_gate_count": 20,
+      "declared_file_bindings": [
+        {
+          "role": "source_data",
+          "path": "docs/t4_2_3_conservative_fallback_source_data.csv",
+          "declared_sha256": "c6cd7455de7d763ad10659b06d07f4b10dd9bb959aa10b462dcfe19a693a9086",
+          "actual_sha256": "c6cd7455de7d763ad10659b06d07f4b10dd9bb959aa10b462dcfe19a693a9086",
+          "passed": true
+        }
+      ],
+      "all_declared_files_current": true,
+      "declared_composite_sha256": "3d1bdf7f07c517a4cadc66b01ca3e27e280af02bf6e54ab894b6803a150b090a",
+      "current_composite_sha256": "3d1bdf7f07c517a4cadc66b01ca3e27e280af02bf6e54ab894b6803a150b090a",
+      "composite_current": true,
+      "passed": true
+    },
+    "T4.3.2": {
+      "machine_pass": true,
+      "machine_gate_count": 17,
+      "declared_file_bindings": [
+        {
+          "role": "source_data",
+          "path": "docs/t4_3_2_atomic_parameter_bank_source_data.csv",
+          "declared_sha256": "9c514fe34def557843312394eaee00cd4acb7af872cf36bab447184b2dc4025a",
+          "actual_sha256": "9c514fe34def557843312394eaee00cd4acb7af872cf36bab447184b2dc4025a",
+          "passed": true
+        }
+      ],
+      "all_declared_files_current": true,
+      "declared_composite_sha256": "d56e6b07871738483d22a0decc559881aad8e8ce3ba702538b0ac905c05b3d7b",
+      "current_composite_sha256": "d56e6b07871738483d22a0decc559881aad8e8ce3ba702538b0ac905c05b3d7b",
+      "composite_current": true,
+      "passed": true
+    },
+    "T4.4.5": {
+      "machine_pass": true,
+      "machine_gate_count": 11,
+      "declared_file_bindings": [
+        {
+          "role": "source_data",
+          "path": "docs/t4_4_5_teacher_student_branch_freeze_source_data.csv",
+          "declared_sha256": "675f05c5d31b73bab6137effb56b40a78354df749ec76b04a4bcb50ba5da70e5",
+          "actual_sha256": "675f05c5d31b73bab6137effb56b40a78354df749ec76b04a4bcb50ba5da70e5",
+          "passed": true
+        },
+        {
+          "role": "parent_provenance:T4.4.1",
+          "path": "docs/t4_4_1_bounded_residual_rnn_teacher_validation.json",
+          "declared_sha256": "c71094493a63f7a3b1287d28c0a1b71d3ce7a03e16a281a27967a87a65669d53",
+          "actual_sha256": "c71094493a63f7a3b1287d28c0a1b71d3ce7a03e16a281a27967a87a65669d53",
+          "passed": true
+        },
+        {
+          "role": "parent_file:T4.4.1:0",
+          "path": "docs/t4_4_1_bounded_residual_rnn_teacher_source_data.csv",
+          "declared_sha256": "b59bc1c963a3e42cab4ca4f41244160ff1c7221be06be1bfdc070009765dbf88",
+          "actual_sha256": "b59bc1c963a3e42cab4ca4f41244160ff1c7221be06be1bfdc070009765dbf88",
+          "passed": true
+        },
+        {
+          "role": "parent_file:T4.4.1:1",
+          "path": "docs/t4_4_1_bounded_residual_rnn_teacher_checkpoints.pt",
+          "declared_sha256": "7c4e004cfb4e04e2ac4848242fbfe63217ef6b89f8780bbce723422be098711e",
+          "actual_sha256": "7c4e004cfb4e04e2ac4848242fbfe63217ef6b89f8780bbce723422be098711e",
+          "passed": true
+        },
+        {
+          "role": "parent_provenance:T4.4.2",
+          "path": "docs/t4_4_2_teacher_hidden_control_analysis.json",
+          "declared_sha256": "9cf3ca1f8245b29a537638bea02edaa961862219aacd64e3f7f714d1a2987e2a",
+          "actual_sha256": "9cf3ca1f8245b29a537638bea02edaa961862219aacd64e3f7f714d1a2987e2a",
+          "passed": true
+        },
+        {
+          "role": "parent_file:T4.4.2:0",
+          "path": "docs/t4_4_2_teacher_hidden_control_source_data.csv",
+          "declared_sha256": "71c141be72560a48e30ddc4650c4059408a2da50999354e9dfce3f135e1a4531",
+          "actual_sha256": "71c141be72560a48e30ddc4650c4059408a2da50999354e9dfce3f135e1a4531",
+          "passed": true
+        },
+        {
+          "role": "parent_provenance:T4.4.3",
+          "path": "docs/t4_4_3_low_dimensional_student_validation.json",
+          "declared_sha256": "1bb56e2d4c8839c4f25e91ece8f404427a1917114bc5e9c69249e92cd7ada26a",
+          "actual_sha256": "1bb56e2d4c8839c4f25e91ece8f404427a1917114bc5e9c69249e92cd7ada26a",
+          "passed": true
+        },
+        {
+          "role": "parent_file:T4.4.3:0",
+          "path": "docs/t4_4_3_low_dimensional_student_source_data.csv",
+          "declared_sha256": "74a7ebfc224b79c0b2b874632783684d55971eff486ed1e5dc22f5554bed73ff",
+          "actual_sha256": "74a7ebfc224b79c0b2b874632783684d55971eff486ed1e5dc22f5554bed73ff",
+          "passed": true
+        },
+        {
+          "role": "parent_file:T4.4.3:1",
+          "path": "docs/t4_4_3_low_dimensional_student_candidates.pt",
+          "declared_sha256": "dd8ab3aa3cfbde8b186214e209c0abd037230e5958eca86ff2c1e2fb2e504a7c",
+          "actual_sha256": "dd8ab3aa3cfbde8b186214e209c0abd037230e5958eca86ff2c1e2fb2e504a7c",
+          "passed": true
+        },
+        {
+          "role": "parent_file:T4.4.3:2",
+          "path": "docs/t4_4_3_low_dimensional_student.json",
+          "declared_sha256": "8d3b575c416795b3af522f0322f8c8b0eed937c41616067d163ce47e5fe9bbae",
+          "actual_sha256": "8d3b575c416795b3af522f0322f8c8b0eed937c41616067d163ce47e5fe9bbae",
+          "passed": true
+        },
+        {
+          "role": "parent_provenance:T4.4.4",
+          "path": "docs/t4_4_4_teacher_student_gain_retention.json",
+          "declared_sha256": "5cd1478de22ecd998aaf678bc6f14873134e57bc8ae2fc4408df215544b86dfc",
+          "actual_sha256": "5cd1478de22ecd998aaf678bc6f14873134e57bc8ae2fc4408df215544b86dfc",
+          "passed": true
+        },
+        {
+          "role": "parent_file:T4.4.4:0",
+          "path": "docs/t4_4_4_teacher_student_gain_retention_source_data.csv",
+          "declared_sha256": "b24501ffaa644e427148f13b5a329d9494ca587c6a276bae94bac23455a834a4",
+          "actual_sha256": "b24501ffaa644e427148f13b5a329d9494ca587c6a276bae94bac23455a834a4",
+          "passed": true
+        }
+      ],
+      "all_declared_files_current": true,
+      "declared_composite_sha256": "05f88e021675f04f8fb9a526bd4d945e01eaf8d3f080d9be8273b33a972ee423",
+      "current_composite_sha256": "05f88e021675f04f8fb9a526bd4d945e01eaf8d3f080d9be8273b33a972ee423",
+      "composite_current": true,
+      "passed": true
+    }
+  },
+  "claim_registry": {
+    "active_allowed": [
+      {
+        "claim_id": "CL-T514-F01",
+        "claim_type": "direction",
+        "statement": "The current paper direction is event/regime-aware, observed-only adaptive periodic MAP with an FPGA-oriented parameter-bank and fail-closed co-design; the registered event components are not yet a unified closed-loop performance result."
+      },
+      {
+        "claim_id": "CL-T514-F02",
+        "claim_type": "counterevidence",
+        "statement": "Classical adaptive MAP effect sizes are diagnostic only: the 24-comparison Holm family has zero discoveries and the calibration-shift Kalman transient worst window is worse than static."
+      },
+      {
+        "claim_id": "CL-T514-F03",
+        "claim_type": "software_contract",
+        "statement": "The fixed-point, parametric MAP-LUT, conservative fallback and atomic-bank evidence is software or hardware-aware validation only, not RTL, synthesis, board, device or measured hardware performance."
+      }
+    ],
+    "prohibited": [
+      "CNN, TCN, GRU or another learned decoder outperforms static MAP or a strong adaptive baseline in the expanded T5.1 matrix",
+      "a learned algorithm is superior under mixed drift or all registered noise classes",
+      "adaptive decoding is universally superior to static MAP",
+      "the four lane-local scenario models form one end-to-end closed-loop robustness experiment",
+      "the qualified T4.4.5 controller teacher/student result is matched decoder evidence",
+      "the historical T24 frozen-set result is expanded-matrix or independent-seed confirmation",
+      "the finite-horizon control reference is a global or ten-cycle control oracle",
+      "software fixed-point or LUT evidence is measured FPGA, board or device performance"
+    ],
+    "historical_quarantine": {
+      "T24_PC01": "historical frozen-set scope only; not expanded T5.1 evidence and not independent confirmation",
+      "T4.4.5": "qualified matched-controller teacher/student evidence only; not a CNN or decoder performance result"
+    }
+  },
+  "fallback_contract": {
+    "branch_id": "event_aware_adaptive_map_fpga_codesign",
+    "activation_rule": "automatic if any strong predicate is false",
+    "paper_direction": "event/regime-aware observed-only adaptive periodic MAP with FPGA-oriented parameter-bank, conservative fallback and atomic update co-design",
+    "current_integration_status": "registered components and lane-local evidence; not yet one finite-energy end-to-end closed-loop performance matrix",
+    "prerequisites": {
+      "observed_only_adaptive_map_rows_are_registered": true,
+      "adaptive_map_methods_were_executed_in_decoder_lane": true,
+      "event_and_regime_components_are_registered_but_component_only": true,
+      "fixed_point_contract_passes": true,
+      "parametric_map_lut_contract_passes": true,
+      "conservative_fallback_contract_passes": true,
+      "atomic_parameter_bank_contract_passes": true
+    },
+    "cnn_or_learned_performance_claim_retained": false,
+    "hardware_measurement_claimed": false
+  },
+  "reopen_contract": {
+    "required_gates": [
+      "new_independent_seed_clusters_preregistered_before_access",
+      "learned_decoder_candidate_runs_same_trace_and_metric_lane",
+      "static_window_ewma_kalman_and_applicable_sliding_baselines_matched",
+      "static_average_p95_and_worst_non_degradation",
+      "drift_or_regime_positive_seed_cluster_ci",
+      "holm_adjusted_familywise_discovery",
+      "no_preregistered_transient_tail_violation",
+      "observed_only_causal_information_set",
+      "deployment_scope_and_costs_reported",
+      "t5_1_3_windows_not_relabelled_as_independent_seeds"
+    ],
+    "new_seed_registration_timing": "before_any_new_evaluation_access",
+    "existing_1152_windows_may_count_as_independent_seeds": false,
+    "reopen_authority": "a future explicit task-board item after preregistration"
+  },
+  "determinism_contract": {
+    "parent_evaluations_rerun": false,
+    "new_random_samples_generated": false,
+    "decision_rule": "logical_conjunction_of_frozen_strong_predicates"
+  },
+  "gates": {
+    "all_parent_evidence_is_passed_and_current": true,
+    "exactly_one_branch_is_active": true,
+    "strong_branch_equals_all_predicates": true,
+    "fallback_automatically_activates_on_failure": true,
+    "matched_learned_candidate_absence_is_retained": true,
+    "zero_holm_discoveries_are_retained": true,
+    "calibration_shift_transient_counterevidence_is_retained": true,
+    "cnn_performance_claim_is_removed_in_fallback": true,
+    "teacher_student_controller_evidence_is_not_decoder_evidence": true,
+    "historical_t24_claim_is_quarantined": true,
+    "fallback_prerequisites_pass": true,
+    "software_evidence_is_not_hardware_measurement": true,
+    "independent_unit_remains_evaluation_seed": true,
+    "reopen_contract_is_complete_and_forbids_window_pseudoreplication": true,
+    "semantic_validator_accepts_only_the_derived_verdict": true,
+    "decision_is_read_only_and_deterministic": true
+  },
+  "gate_summary": {
+    "passed": 16,
+    "total": 16,
+    "failed": []
+  },
+  "status": "PASS",
+  "decision_contract_sha256": "8645b745316a3e9c50893098fe87495a2c3b32bdc1acfec191fd9e2474faaf7e",
+  "generated_at_utc": "2026-07-22T03:22:19.746533+00:00",
+  "implementation_sha256": "08c7940d0b6c2dcfa618f89a30144eff3be90587bbb18dfbef99b2978784b9f2",
+  "artifact_bindings": [
+    {
+      "task_id": "T5.1.1",
+      "path": "docs/t5_1_1_comparison_set_registry.json",
+      "sha256": "915317cdd9818b97f1e21051bb817d9b6cd41b7a8d1ebdabf13403aa466d9257",
+      "machine_and_integrity_pass": true
+    },
+    {
+      "task_id": "T5.1.2",
+      "path": "docs/t5_1_2_mixed_scenario_matrix.json",
+      "sha256": "0f0337527d56485100de967ff1ff475993e8472d875d033aff01558f3d35918d",
+      "machine_and_integrity_pass": true
+    },
+    {
+      "task_id": "T5.1.3",
+      "path": "docs/t5_1_3_oracle_gap_tail_report.json",
+      "sha256": "d3127e670dfa922917b1981ff13f6540cc7334542bb2678d614904d217092c54",
+      "machine_and_integrity_pass": true
+    },
+    {
+      "task_id": "T2.4.3",
+      "path": "docs/t2_4_3_fixed_point_validation.json",
+      "sha256": "1997b0e8d6a0a9233100311677e6da4add76ee0fb1e4d3525fce28812b20a737",
+      "machine_and_integrity_pass": true
+    },
+    {
+      "task_id": "T4.2.1",
+      "path": "docs/t4_2_1_parametric_map_lut_validation.json",
+      "sha256": "2cf8eb0b4aca5703f4a5513e1a8761aa811c973da1e9e47db996fb9529415a43",
+      "machine_and_integrity_pass": true
+    },
+    {
+      "task_id": "T4.2.3",
+      "path": "docs/t4_2_3_conservative_fallback_validation.json",
+      "sha256": "985cef3ee75dc1843c135dd70e00d7d8241a52c0503ad6d21ac78af2a2200f2d",
+      "machine_and_integrity_pass": true
+    },
+    {
+      "task_id": "T4.3.2",
+      "path": "docs/t4_3_2_atomic_parameter_bank_validation.json",
+      "sha256": "7495bb3546522447572f68a7d93054fc8e83f1082278f467840ebfd3858065b3",
+      "machine_and_integrity_pass": true
+    },
+    {
+      "task_id": "T4.4.5",
+      "path": "docs/t4_4_5_teacher_student_branch_freeze.json",
+      "sha256": "15abd3e94c69e0fa85bc871ca9967eacbf3af8e948741f0b53986cbacd8ad612",
+      "machine_and_integrity_pass": true
+    }
+  ],
+  "source_data": {
+    "path": "docs/t5_1_4_algorithm_branch_verdict_source_data.csv",
+    "sha256": "d7f6e7b15064a17018c9793728752f05834414422c11ba7f859bbb0044915a6b",
+    "row_count": 278,
+    "row_types": [
+      "active_claim",
+      "contract_gate",
+      "counterevidence",
+      "fallback_prerequisite",
+      "file_binding",
+      "parent_artifact",
+      "parent_gate",
+      "prohibited_claim",
+      "reopen_gate",
+      "strong_predicate"
+    ]
+  }
+}

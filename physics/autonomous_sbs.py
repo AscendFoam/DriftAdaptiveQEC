@@ -212,6 +212,92 @@ class NonselectiveSBSResult:
         return payload
 
 
+@dataclass(frozen=True)
+class IdleMemoryConfig:
+    """No-correction memory anchor on the same finite-cutoff cavity model.
+
+    One ``full_cycle`` is a reporting interval only.  The channel contains
+    cavity loss during that interval and deliberately contains no sBs gate,
+    measurement, reset, frame update, or outcome-dependent action.
+    """
+
+    full_cycles: int
+    cutoff: int = 12
+    cycle_duration_us: float = 10.0
+    projector_delta: float = 0.34
+    cavity_lifetime_us: float = 245.0
+    ancilla_t1_us: float = 50.0
+    ancilla_t2_us: float = 60.0
+    device: Literal["cpu", "cuda"] = "cpu"
+    real_dtype: Literal["float32", "float64"] = "float64"
+
+    def __post_init__(self) -> None:
+        for name in ("full_cycles", "cutoff"):
+            value = getattr(self, name)
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, (int, np.integer))
+                or int(value) <= 0
+            ):
+                raise ValueError(f"{name} must be a positive integer")
+            object.__setattr__(self, name, int(value))
+        if not 4 <= self.cutoff <= 48:
+            raise ValueError("cutoff must lie in [4, 48]")
+        if self.full_cycles > 10_000:
+            raise ValueError("full_cycles exceeds the explicit long-horizon safety guard")
+        for name in (
+            "cycle_duration_us",
+            "projector_delta",
+            "cavity_lifetime_us",
+            "ancilla_t1_us",
+            "ancilla_t2_us",
+        ):
+            value = float(getattr(self, name))
+            if not isfinite(value) or value <= 0.0:
+                raise ValueError(f"{name} must be finite and positive")
+            object.__setattr__(self, name, value)
+        if self.ancilla_t2_us > 2.0 * self.ancilla_t1_us + 1.0e-12:
+            raise ValueError("ancilla_t2_us must not exceed 2*T1")
+        if self.device not in {"cpu", "cuda"}:
+            raise ValueError("device must be cpu or cuda")
+        if self.real_dtype not in {"float32", "float64"}:
+            raise ValueError("real_dtype must be float32 or float64")
+
+
+@dataclass
+class IdleMemoryResult:
+    config: IdleMemoryConfig
+    time_us: np.ndarray
+    fidelity: np.ndarray
+    code_survival: np.ndarray
+    logical_z_signal: np.ndarray
+    conditional_logical_z: np.ndarray
+    final_cavity_density: Any
+    event_accounting: Mapping[str, float | int]
+    maximum_trace_error: float
+    maximum_hermiticity_error: float
+    minimum_final_eigenvalue: float
+
+    def to_dict(self, *, include_density: bool = False) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "config": asdict(self.config),
+            "time_us": self.time_us.tolist(),
+            "fidelity": self.fidelity.tolist(),
+            "code_survival": self.code_survival.tolist(),
+            "logical_z_signal": self.logical_z_signal.tolist(),
+            "conditional_logical_z": self.conditional_logical_z.tolist(),
+            "event_accounting": dict(self.event_accounting),
+            "maximum_trace_error": self.maximum_trace_error,
+            "maximum_hermiticity_error": self.maximum_hermiticity_error,
+            "minimum_final_eigenvalue": self.minimum_final_eigenvalue,
+        }
+        if include_density:
+            density = self.final_cavity_density.detach().cpu().numpy()
+            payload["final_cavity_density_real"] = density.real.tolist()
+            payload["final_cavity_density_imag"] = density.imag.tolist()
+        return payload
+
+
 class NonselectiveSBSSimulator:
     """Exact expected channel for fixed-control measurement or autonomous sBs."""
 
@@ -332,6 +418,101 @@ class NonselectiveSBSSimulator:
         )
 
 
+class IdleMemorySimulator:
+    """Exact no-correction cavity-memory anchor at a fixed time grid."""
+
+    def __init__(self, config: IdleMemoryConfig) -> None:
+        if not isinstance(config, IdleMemoryConfig):
+            raise TypeError("config must be an IdleMemoryConfig")
+        self.config = config
+        base = DifferentiableSBSConfig(
+            cutoff=config.cutoff,
+            full_cycles=1,
+            batch_size=1,
+            projector_delta=config.projector_delta,
+            cavity_lifetime_us=config.cavity_lifetime_us,
+            ancilla_t1_us=config.ancilla_t1_us,
+            ancilla_t2_us=config.ancilla_t2_us,
+            device=config.device,
+            real_dtype=config.real_dtype,
+        )
+        self.engine = DifferentiableSBSTrajectorySimulator(base)
+        self.cycle_idle_kraus = self.engine._joint_idle_kraus(
+            config.cycle_duration_us
+        )
+
+    def run(self) -> IdleMemoryResult:
+        th = _require_torch()
+        state = self.engine._initial_joint_density()
+        fidelity: list[Any] = []
+        survival: list[Any] = []
+        logical: list[Any] = []
+        conditional: list[Any] = []
+
+        def record() -> None:
+            metrics = self.engine._cavity_evaluation_metrics(
+                self.engine._reduce_cavity(state)
+            )
+            fidelity.append(metrics[0][0])
+            survival.append(metrics[1][0])
+            logical.append(metrics[2][0])
+            conditional.append(metrics[3][0])
+
+        maximum_trace = 0.0
+        maximum_hermiticity = 0.0
+        with th.no_grad():
+            record()
+            for _ in range(self.config.full_cycles):
+                for operators in self.cycle_idle_kraus:
+                    state = self.engine._apply_kraus(state, operators)
+                state = self.engine._stabilize_density(state)
+                trace_error, hermiticity_error, _ = self.engine._diagnostics(state)
+                maximum_trace = max(maximum_trace, trace_error)
+                maximum_hermiticity = max(
+                    maximum_hermiticity, hermiticity_error
+                )
+                record()
+            final_trace, final_hermiticity, minimum_eigenvalue = (
+                self.engine._diagnostics(state)
+            )
+        maximum_trace = max(maximum_trace, final_trace)
+        maximum_hermiticity = max(maximum_hermiticity, final_hermiticity)
+
+        cycles = self.config.full_cycles
+        duration = self.config.cycle_duration_us
+        total_time = cycles * duration
+        accounting: dict[str, float | int] = {
+            "full_cycles": cycles,
+            "total_physical_time_us": total_time,
+            "measurement_events": 0,
+            "reset_events": 0,
+            "active_gate_applications": 0,
+            "frame_updates": 0,
+            "outcome_dependent_parameter_updates": 0,
+            "cycles_per_100us": 100.0 / duration,
+            "measurements_per_100us": 0.0,
+            "resets_per_100us": 0.0,
+            "active_gates_per_100us": 0.0,
+        }
+        return IdleMemoryResult(
+            config=self.config,
+            time_us=np.arange(cycles + 1, dtype=np.float64) * duration,
+            fidelity=th.stack(fidelity).detach().cpu().numpy().astype(np.float64),
+            code_survival=th.stack(survival).detach().cpu().numpy().astype(np.float64),
+            logical_z_signal=th.stack(logical).detach().cpu().numpy().astype(np.float64),
+            conditional_logical_z=th.stack(conditional)
+            .detach()
+            .cpu()
+            .numpy()
+            .astype(np.float64),
+            final_cavity_density=self.engine._reduce_cavity(state)[0],
+            event_accounting=accounting,
+            maximum_trace_error=maximum_trace,
+            maximum_hermiticity_error=maximum_hermiticity,
+            minimum_final_eigenvalue=minimum_eigenvalue,
+        )
+
+
 def finite_horizon_area_lifetime(time_us: np.ndarray, curve: np.ndarray) -> dict[str, float]:
     """Area-equivalent exponential lifetime on an explicit physical-time grid."""
 
@@ -402,6 +583,9 @@ __all__ = [
     "MEASUREMENT_PROFILE_ID",
     "MEASUREMENT_TIMING",
     "MODEL_SCOPE",
+    "IdleMemoryConfig",
+    "IdleMemoryResult",
+    "IdleMemorySimulator",
     "NonselectiveSBSConfig",
     "NonselectiveSBSResult",
     "NonselectiveSBSSimulator",

@@ -1,0 +1,52 @@
+{
+  "schema_version": "t6.18.3-multimode-drift-config-v1",
+  "task_id": "T6.18.3",
+  "experiment_id": "E6183_MULTIMODE_POSTERIOR_WEIGHTED_CPD",
+  "entry_report": "docs/t6_18_2_official_structured_cpd_reproduction.json",
+  "official_repository": "https://github.com/amazon-science/LatticeAlgorithms.jl",
+  "official_commit": "01f9bf1f6970b3e229b43aac9da3325c75518db8",
+  "structured_family": {
+    "name": "rotated_surface_square_gkp",
+    "distance": 3,
+    "modes": 9,
+    "coordinates": 18,
+    "base_sigma": 0.58,
+    "variance_contract": "sigma_i^2=base_sigma^2*exp(sign_i*theta)/cosh(theta); nine positive and nine negative sign coordinates preserve mean variance"
+  },
+  "formal": {
+    "seeds": [61830001, 61830002, 61830003, 61830004, 61830005, 61830006, 61830007, 61830008, 61830009, 61830010, 61830011, 61830012, 61830013, 61830014, 61830015, 61830016, 61830017, 61830018, 61830019, 61830020, 61830021, 61830022, 61830023, 61830024, 61830025, 61830026, 61830027, 61830028, 61830029, 61830030, 61830031, 61830032],
+    "cycles_per_cluster": 100000,
+    "window_cycles": 512,
+    "families": ["smooth", "calibration_shift", "telegraph"],
+    "comparators": ["static_euclidean", "weighted_static", "observed_only_posterior_predictive_weighted", "oracle_metric_upper_bound"]
+  },
+  "drift": {
+    "nominal_theta": 0.4,
+    "smooth": {"center": 0.25, "amplitude": 0.55, "period_cycles": 40000},
+    "calibration_shift": {"before": 0.4, "after": -0.6, "onset_min": 36000, "onset_span": 8001, "onset_seed_multiplier": 257},
+    "telegraph": {"low": -0.65, "high": 0.65, "mean_dwell_cycles": 12000, "minimum_dwell_cycles": 4096, "maximum_dwell_cycles": 20000}
+  },
+  "posterior_filter": {
+    "theta_grid": [-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8],
+    "update_cadence_cycles": 16,
+    "residual_bins": 1024,
+    "periodic_gaussian_terms": 5,
+    "transition_identity_mass": 0.96,
+    "transition_local_mass": 0.035,
+    "transition_uniform_mass": 0.005,
+    "transition_local_sigma": 0.12,
+    "decode_uses": "posterior predictive E[base_sigma^2/sigma_i^2 | observations ending before current 16-cycle block]",
+    "observation": "folded residual only; unwrapped integer, theta, sigma_i and future samples forbidden"
+  },
+  "statistics": {
+    "paired_bootstrap_resamples": 20000,
+    "signflip_resamples": 100000,
+    "holm_family": ["adaptive_vs_static_euclidean", "adaptive_vs_weighted_static", "weighted_static_vs_static_euclidean"],
+    "tail_fraction": 0.05,
+    "lag_midpoint_stable_updates": 3,
+    "aggregate_go_gate": "adaptive p_L improvement 95% LCB > 0 against both deployable static baselines; Holm-adjusted p<0.05 for both; calibration_shift and telegraph worst-window/CVaR95 no worse than strongest static baseline",
+    "oracle_ranking_eligible": false
+  },
+  "runtime_budget": {"wall_clock_seconds": 28800, "memory_gib": 16},
+  "pilot": {"seeds": [61839001], "cycles_per_cluster": 2048, "performance_selection_allowed": false}
+}

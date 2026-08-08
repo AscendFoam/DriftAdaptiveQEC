@@ -1,0 +1,153 @@
+{
+  "schema_version": "t6.25.1-single-mode-rtl-boundary-config-v1",
+  "task_id": "T6.25.1",
+  "evidence_lane": "SINGLE_MODE_DETERMINISTIC_RTL",
+  "required_converged_capabilities": [
+    "single_mode_map_lut",
+    "six_cycle_ii1",
+    "event_action_fail_closed",
+    "complete_image_crc32",
+    "versioned_compare_and_swap",
+    "inactive_bank_write_isolation",
+    "cancel_drain_snapshot",
+    "regime_policy_overlay",
+    "lkg_bank_selection",
+    "no_raw_trust_or_cfg_bypass",
+    "actual_target_synthesis_surface"
+  ],
+  "current_tops": [
+    {
+      "module": "gkp_fast_path_production_top",
+      "path": "cnn_fpga/rtl/gkp_fast_path_production_top.sv",
+      "children": ["gkp_fast_path_core"],
+      "role": "production management plus single-mode core",
+      "capabilities": [
+        "single_mode_map_lut",
+        "six_cycle_ii1",
+        "event_action_fail_closed",
+        "complete_image_crc32",
+        "versioned_compare_and_swap",
+        "inactive_bank_write_isolation",
+        "cancel_drain_snapshot",
+        "no_raw_trust_or_cfg_bypass"
+      ]
+    },
+    {
+      "module": "gkp_fast_path_qualification_top",
+      "path": "cnn_fpga/rtl/gkp_fast_path_qualification_top.sv",
+      "children": ["gkp_fast_path_core"],
+      "role": "long-run raw-pin core qualification wrapper",
+      "capabilities": ["single_mode_map_lut", "six_cycle_ii1", "event_action_fail_closed"]
+    },
+    {
+      "module": "route_a_integrated_qualification_top",
+      "path": "cnn_fpga/rtl/route_a_integrated_qualification_top.sv",
+      "children": ["gkp_fast_path_core", "route_a_policy_overlay"],
+      "role": "single-mode policy plus raw-pin core qualification wrapper",
+      "capabilities": [
+        "single_mode_map_lut",
+        "six_cycle_ii1",
+        "event_action_fail_closed",
+        "regime_policy_overlay",
+        "lkg_bank_selection"
+      ]
+    },
+    {
+      "module": "route_a_hardware_pareto_synth_top",
+      "path": "cnn_fpga/rtl/route_a_hardware_pareto_synth_top.sv",
+      "children": ["route_a_integrated_qualification_top", "low_dimensional_student_kernel"],
+      "role": "small-pin synthesis activity harness, no-student profile is primary",
+      "capabilities": [
+        "single_mode_map_lut",
+        "six_cycle_ii1",
+        "event_action_fail_closed",
+        "regime_policy_overlay",
+        "lkg_bank_selection",
+        "actual_target_synthesis_surface"
+      ]
+    },
+    {
+      "module": "gkp_fast_path_synth_top",
+      "path": "cnn_fpga/rtl/gkp_fast_path_synth_top.sv",
+      "children": ["gkp_fast_path_core"],
+      "role": "static single-mode core synthesis activity harness",
+      "capabilities": [
+        "single_mode_map_lut",
+        "six_cycle_ii1",
+        "event_action_fail_closed",
+        "actual_target_synthesis_surface"
+      ]
+    }
+  ],
+  "required_source_tokens": {
+    "cnn_fpga/rtl/gkp_fast_path_core.sv": [
+      "reg v0, v1, v2, v3, v4;",
+      "bank0_x_y0",
+      "bank1_z_y1",
+      "event_fault_mask",
+      "selected_commit"
+    ],
+    "cnn_fpga/rtl/gkp_fast_path_production_top.sv": [
+      "crc32_word22",
+      "cfg_expected_active_version",
+      "commit_expected_active_version",
+      "RETIRED_BANK_DRAIN_CYCLES",
+      "management_snapshot_crc"
+    ],
+    "cnn_fpga/rtl/route_a_integrated_qualification_top.sv": [
+      "gkp_fast_path_core",
+      "route_a_policy_overlay",
+      "cfg_we",
+      "bank0_trusted",
+      "bank1_trusted"
+    ],
+    "cnn_fpga/rtl/route_a_hardware_pareto_synth_top.sv": [
+      "route_a_integrated_qualification_top",
+      "not a transport implementation or a board measurement"
+    ]
+  },
+  "allowed_contract_bridges": [
+    {
+      "bridge_id": "BRIDGE-CANDIDATE-IMAGE",
+      "payload": "single-mode X/Z MAP image: 514 ordered 22-bit words plus schema/CRC32/version",
+      "deployment_implication": "contract reuse only; a multimode decoder needs a separately proven schema adapter"
+    },
+    {
+      "bridge_id": "BRIDGE-ATOMIC-ACTIVE-VIEW",
+      "payload": "latched active bank and version with old-or-new transaction semantics",
+      "deployment_implication": "single-mode RTL only"
+    },
+    {
+      "bridge_id": "BRIDGE-REGIME-COMMAND",
+      "payload": "quantized four-state regime posterior, event flags, boundary and LKG selector",
+      "deployment_implication": "single-mode policy command; not multimode posterior integration"
+    },
+    {
+      "bridge_id": "BRIDGE-EVENT-ACTION",
+      "payload": "action/reason/version/state words",
+      "deployment_implication": "single-mode event/action contract only"
+    }
+  ],
+  "forbidden_rtl_implementations": [
+    "multimode syndrome graph",
+    "surface-square logical-coset summation",
+    "posterior-predictive integration",
+    "MWPM or K-MWM matching",
+    "multimode learned decoder"
+  ],
+  "parent_reports": {
+    "T6.2.1": "docs/t6_2_1_production_rtl_audit.json",
+    "T6.2.2": "docs/t6_2_2_long_rtl_qualification.json",
+    "T6.7.3": "docs/t6_7_3_route_a_integrated_rtl_qualification.json",
+    "T6.9.1": "docs/t6_9_1_route_a_hardware_pareto.json",
+    "T6.19.1": "docs/t6_19_1_project_preboard_profiles.json",
+    "T6.20.2": "docs/t6_20_2_dual_evidence_lane_contract.json"
+  },
+  "claim_boundary": {
+    "board_measurement": null,
+    "fastest_or_speed_advantage": false,
+    "multimode_decoder_deployed_in_rtl": false,
+    "allowed_now": "audited separation and live legacy evidence only",
+    "required_next": "one converged production top must be qualified by property/cover/mutation, million-cycle CXXRTL and fresh three-seed P&R"
+  }
+}

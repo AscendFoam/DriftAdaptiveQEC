@@ -1,0 +1,1193 @@
+{
+  "schema_version": "t5.5.1-bit-accurate-hardware-reference-validation-v1",
+  "task_id": "T5.5.1",
+  "protocol_id": "PACKED-WORD-TRUE-PIPELINE-ATOMIC-BANK-RTL-GOLDEN-V1",
+  "generated_at_utc": "2026-07-16T11:21:19.566339+00:00",
+  "status": "PASS",
+  "verdict": "BIT_ACCURATE_PYTHON_RTL_GOLDEN_FROZEN_HARDWARE_UNMEASURED",
+  "config": {
+    "input_cycles": 4110,
+    "commit_apply_cycle": 4000
+  },
+  "parent_bindings": [
+    {
+      "task_id": "T4.2.1",
+      "path": "docs/t4_2_1_parametric_map_lut_validation.json",
+      "sha256": "2cf8eb0b4aca5703f4a5513e1a8761aa811c973da1e9e47db996fb9529415a43",
+      "machine_pass": true
+    },
+    {
+      "task_id": "T4.2.2",
+      "path": "docs/t4_2_2_experimental_event_fsm_validation.json",
+      "sha256": "82a1f36aa441024a0aabea98f148629e3507e387d573c1c8fe136fb93bc3ba8c",
+      "machine_pass": true
+    },
+    {
+      "task_id": "T4.2.3",
+      "path": "docs/t4_2_3_conservative_fallback_validation.json",
+      "sha256": "b03e834c4bf39ca56d85382cab65d189a7ab28ee47d51a7e1213dfcbf9cd5162",
+      "machine_pass": true
+    },
+    {
+      "task_id": "T4.2.4",
+      "path": "docs/t4_2_4_fast_path_fixed_point_validation.json",
+      "sha256": "dc775caa9347092b66cfbbbae0f86f107272358dc75055966d206cba6f335609",
+      "machine_pass": true
+    },
+    {
+      "task_id": "T4.3.2",
+      "path": "docs/t4_3_2_atomic_parameter_bank_validation.json",
+      "sha256": "c2c3e6f51115e0cf5556b1b6fed6c094ad886e415affb103bc673bf2dfa7c6e4",
+      "machine_pass": true
+    },
+    {
+      "task_id": "T4.3.3",
+      "path": "docs/t4_3_3_closed_loop_fault_recovery_validation.json",
+      "sha256": "b692bc6599652e97df1cd6aba26e80dc4cf028584735023e0026f2d9fcaa7b77",
+      "machine_pass": true
+    },
+    {
+      "task_id": "T5.4.6",
+      "path": "docs/t5_4_6_randomized_model_mismatch.json",
+      "sha256": "8c77a55d9f73b20efc8ea6e9640f83dc0de4548f10af6aa462d552405aca4429",
+      "machine_pass": true
+    }
+  ],
+  "implementation_bindings": [
+    {
+      "path": "cnn_fpga/runtime/bit_accurate_hardware_reference.py",
+      "sha256": "f7fb4232d495b67f3759596a3b9d235e029df5ec16d3c467c240a6203fc2e801"
+    },
+    {
+      "path": "cnn_fpga/runtime/parametric_map_lut.py",
+      "sha256": "468728aeeedef6b7569163417440bbf309284c21eb6cebdc4fbf604594d7ab8a"
+    },
+    {
+      "path": "cnn_fpga/runtime/experimental_event_fsm.py",
+      "sha256": "af5a0cd49b4924b20b844aa07b5f147d4f27eab0a8d5d08c025d80f19a3fb568"
+    },
+    {
+      "path": "cnn_fpga/runtime/conservative_fallback.py",
+      "sha256": "711c8d85846b81b8052e20486ff7f1f6fd5e827d632cf4ded2344f589f447417"
+    },
+    {
+      "path": "cnn_fpga/runtime/atomic_parameter_bank.py",
+      "sha256": "17f64ae9a6bd102a57fdc0bfeae79072b210ff70ced9629b1cf807c9a9fcd256"
+    },
+    {
+      "path": "cnn_fpga/benchmark/bit_accurate_hardware_reference.py",
+      "sha256": "08b9bf8091677350e99903ee23bb24cb43f5e6f896a18eb47f752c858d73ade0"
+    }
+  ],
+  "contract": {
+    "model_scope": "packed_cycle_accurate_python_rtl_golden_not_rtl_synthesis_or_board",
+    "clock_semantics": "publish prior output; atomically commit A/B image; latch input and image; advance MAP/FSM; register action for next cycle",
+    "map_pipeline_cycles": 5,
+    "event_output_register_cycles": 1,
+    "source_to_output_cycles": 6,
+    "initiation_interval_cycles": 1,
+    "rounding": {
+      "ADC": "upstream unsigned code; float replay is outside online reference",
+      "LUT_interpolation": "signed integer right shift round-to-nearest ties-to-even",
+      "logical_action": "strict llr_code < 0",
+      "counters": "unsigned saturation with no wrap",
+      "Pauli_frame": "GF(2) XOR",
+      "phase_frame": "modulo-256 half-turn addition"
+    },
+    "input_word": {
+      "schema_id": "t5.5.1-fast-input-v1",
+      "bit_order": "little-endian field offsets; field LSB at offset",
+      "byte_order_for_crc": "little-endian payload padded with zero high bits",
+      "crc": "CRC-16/CCITT-FALSE poly=0x1021 init=0xffff xorout=0",
+      "payload_bits": 42,
+      "crc_bits": 16,
+      "word_bits": 58,
+      "fields": [
+        {
+          "name": "syndrome_code",
+          "width": 10,
+          "offset": 0
+        },
+        {
+          "name": "syndrome_x_code",
+          "width": 2,
+          "offset": 10
+        },
+        {
+          "name": "syndrome_z_code",
+          "width": 2,
+          "offset": 12
+        },
+        {
+          "name": "quadrature_phase_bit",
+          "width": 1,
+          "offset": 14
+        },
+        {
+          "name": "ood_score_code",
+          "width": 8,
+          "offset": 15
+        },
+        {
+          "name": "parameter_age_code",
+          "width": 16,
+          "offset": 23
+        },
+        {
+          "name": "reset_ack",
+          "width": 1,
+          "offset": 39
+        },
+        {
+          "name": "observation_valid",
+          "width": 1,
+          "offset": 40
+        },
+        {
+          "name": "deadline_ok",
+          "width": 1,
+          "offset": 41
+        }
+      ]
+    },
+    "output_word": {
+      "schema_id": "t5.5.1-fast-output-v1",
+      "bit_order": "little-endian field offsets; field LSB at offset",
+      "byte_order_for_crc": "little-endian payload padded with zero high bits",
+      "crc": "CRC-16/CCITT-FALSE poly=0x1021 init=0xffff xorout=0",
+      "payload_bits": 102,
+      "crc_bits": 16,
+      "word_bits": 118,
+      "fields": [
+        {
+          "name": "output_valid",
+          "width": 1,
+          "offset": 0
+        },
+        {
+          "name": "mode_code",
+          "width": 3,
+          "offset": 1
+        },
+        {
+          "name": "correction_enable",
+          "width": 1,
+          "offset": 4
+        },
+        {
+          "name": "reset_request",
+          "width": 1,
+          "offset": 5
+        },
+        {
+          "name": "map_action_inhibited",
+          "width": 1,
+          "offset": 6
+        },
+        {
+          "name": "map_action_code",
+          "width": 2,
+          "offset": 7
+        },
+        {
+          "name": "pauli_frame_delta_x",
+          "width": 1,
+          "offset": 9
+        },
+        {
+          "name": "pauli_frame_delta_z",
+          "width": 1,
+          "offset": 10
+        },
+        {
+          "name": "pauli_frame_x",
+          "width": 1,
+          "offset": 11
+        },
+        {
+          "name": "pauli_frame_z",
+          "width": 1,
+          "offset": 12
+        },
+        {
+          "name": "phase_frame_x_code",
+          "width": 8,
+          "offset": 13
+        },
+        {
+          "name": "phase_frame_z_code",
+          "width": 8,
+          "offset": 21
+        },
+        {
+          "name": "x_e_run",
+          "width": 3,
+          "offset": 29
+        },
+        {
+          "name": "z_e_run",
+          "width": 3,
+          "offset": 32
+        },
+        {
+          "name": "leakage_run",
+          "width": 3,
+          "offset": 35
+        },
+        {
+          "name": "leakage_clean_run",
+          "width": 3,
+          "offset": 38
+        },
+        {
+          "name": "health_good_run",
+          "width": 3,
+          "offset": 41
+        },
+        {
+          "name": "reset_wait_run",
+          "width": 3,
+          "offset": 44
+        },
+        {
+          "name": "health_status_code",
+          "width": 3,
+          "offset": 47
+        },
+        {
+          "name": "fault_mask",
+          "width": 14,
+          "offset": 50
+        },
+        {
+          "name": "active_version",
+          "width": 16,
+          "offset": 64
+        },
+        {
+          "name": "map_llr_twos_complement",
+          "width": 22,
+          "offset": 80
+        }
+      ]
+    },
+    "state_word": {
+      "schema_id": "t5.5.1-fast-state-v1",
+      "bit_order": "little-endian field offsets; field LSB at offset",
+      "byte_order_for_crc": "little-endian payload padded with zero high bits",
+      "crc": "CRC-16/CCITT-FALSE poly=0x1021 init=0xffff xorout=0",
+      "payload_bits": 216,
+      "crc_bits": 16,
+      "word_bits": 232,
+      "fields": [
+        {
+          "name": "mode_code",
+          "width": 3,
+          "offset": 0
+        },
+        {
+          "name": "x_e_run",
+          "width": 3,
+          "offset": 3
+        },
+        {
+          "name": "z_e_run",
+          "width": 3,
+          "offset": 6
+        },
+        {
+          "name": "leakage_run",
+          "width": 3,
+          "offset": 9
+        },
+        {
+          "name": "leakage_clean_run",
+          "width": 3,
+          "offset": 12
+        },
+        {
+          "name": "health_good_run",
+          "width": 3,
+          "offset": 15
+        },
+        {
+          "name": "reset_wait_run",
+          "width": 3,
+          "offset": 18
+        },
+        {
+          "name": "pauli_frame_x",
+          "width": 1,
+          "offset": 21
+        },
+        {
+          "name": "pauli_frame_z",
+          "width": 1,
+          "offset": 22
+        },
+        {
+          "name": "phase_frame_x_code",
+          "width": 8,
+          "offset": 23
+        },
+        {
+          "name": "phase_frame_z_code",
+          "width": 8,
+          "offset": 31
+        },
+        {
+          "name": "active_version",
+          "width": 16,
+          "offset": 39
+        },
+        {
+          "name": "health_status_code",
+          "width": 3,
+          "offset": 55
+        },
+        {
+          "name": "fault_run",
+          "width": 8,
+          "offset": 58
+        },
+        {
+          "name": "good_run",
+          "width": 8,
+          "offset": 66
+        },
+        {
+          "name": "fault_cycle_count",
+          "width": 8,
+          "offset": 74
+        },
+        {
+          "name": "leakage_cycle_count",
+          "width": 8,
+          "offset": 82
+        },
+        {
+          "name": "fault_count_00",
+          "width": 8,
+          "offset": 90
+        },
+        {
+          "name": "fault_count_01",
+          "width": 8,
+          "offset": 98
+        },
+        {
+          "name": "fault_count_02",
+          "width": 8,
+          "offset": 106
+        },
+        {
+          "name": "fault_count_03",
+          "width": 8,
+          "offset": 114
+        },
+        {
+          "name": "fault_count_04",
+          "width": 8,
+          "offset": 122
+        },
+        {
+          "name": "fault_count_05",
+          "width": 8,
+          "offset": 130
+        },
+        {
+          "name": "fault_count_06",
+          "width": 8,
+          "offset": 138
+        },
+        {
+          "name": "fault_count_07",
+          "width": 8,
+          "offset": 146
+        },
+        {
+          "name": "fault_count_08",
+          "width": 8,
+          "offset": 154
+        },
+        {
+          "name": "fault_count_09",
+          "width": 8,
+          "offset": 162
+        },
+        {
+          "name": "fault_count_10",
+          "width": 8,
+          "offset": 170
+        },
+        {
+          "name": "fault_count_11",
+          "width": 8,
+          "offset": 178
+        },
+        {
+          "name": "fault_count_12",
+          "width": 8,
+          "offset": 186
+        },
+        {
+          "name": "fault_count_13",
+          "width": 8,
+          "offset": 194
+        },
+        {
+          "name": "last_fault_mask",
+          "width": 14,
+          "offset": 202
+        }
+      ]
+    },
+    "parameter_image": {
+      "schema_version": 1281,
+      "header_bytes": 128,
+      "table_container_bits": 24,
+      "logical_llr_bits": 22,
+      "phase_tables": 2,
+      "entries_per_phase": 257,
+      "trailer": "CRC32 then SHA256 over header+tables",
+      "packed_bytes_per_image": 1706,
+      "binary_runtime_float_operations": 0
+    },
+    "parameter_bank": {
+      "banks": 2,
+      "stage_target": "inactive bank only after complete CRC/SHA/image verification",
+      "commit": "CAS/version/hysteresis/residency/safe-boundary atomic switch",
+      "inflight_rule": "requests latch image/version at S0; commit never changes pending decisions"
+    },
+    "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+    "hardware_fields": {
+      "rtl_generated": false,
+      "synthesized": false,
+      "fmax_mhz": null,
+      "target_lut_count": null,
+      "target_ff_count": null,
+      "target_bram_count": null,
+      "target_dsp_count": null,
+      "board_measured": false
+    }
+  },
+  "binary_parameter_audit": {
+    "image_count": 8,
+    "bytes_per_image": 1706,
+    "all_roundtrip_exact": true,
+    "unique_image_sha256": 8,
+    "proper_prefixes_tested": 1706,
+    "proper_prefixes_rejected": 1706,
+    "single_byte_corruptions_tested": 1706,
+    "single_byte_corruptions_rejected": 1706,
+    "bundle_bytes": 13724,
+    "bundle_roundtrip_exact": true,
+    "bundle_sha256": "320c8703a4af51dfa2f4ef46d48eb0838d7d57b715576cb28cf3d53a6dec3b0a"
+  },
+  "parameter_image_rows": [
+    {
+      "version": 0,
+      "packed_bytes": 1706,
+      "packed_sha256": "17e2e0d4f240fdb500b49eb8669bfcb6c10075ea0cd8ab8e1f630091356a3c70",
+      "image_crc32": "24c4706d",
+      "image_sha256": "83245313ad0f359823ff550ec64c29c96f675fadf10a2ba8d98e9d2d321d963c"
+    },
+    {
+      "version": 1,
+      "packed_bytes": 1706,
+      "packed_sha256": "28f73698aad57fabc9fa603e9613ae7e87d2ecda9403e17a6737a595c2297e51",
+      "image_crc32": "48b5f203",
+      "image_sha256": "68d1f882b41d03f3566e427655b1b1bf19c6db74329b0fa4542df42f9a62385f"
+    },
+    {
+      "version": 2,
+      "packed_bytes": 1706,
+      "packed_sha256": "611123ecd63c0dd84665ac250b15eb9fd00bb7f9f8a5906e47d684df15575f26",
+      "image_crc32": "bb6a29b4",
+      "image_sha256": "0c9b1260caf176079bbc158b6ffdb55aea60cffd0ab329866420f7ae02cf2653"
+    },
+    {
+      "version": 3,
+      "packed_bytes": 1706,
+      "packed_sha256": "617e4812705d74a9bf114771da484888e02bf5973594dcf088f2c2bc5b81a82e",
+      "image_crc32": "a8c1f528",
+      "image_sha256": "0c260799d3e7aab58a59925c7f5f5e1a4e3ad9b702a46110bf065d973204b1d9"
+    },
+    {
+      "version": 4,
+      "packed_bytes": 1706,
+      "packed_sha256": "346d70fef90e24b92b118c36fa3e7752b78bdb5073bc64ae80c39b5915857aa1",
+      "image_crc32": "e7b06f54",
+      "image_sha256": "b8a3b5becebe9b5dfe1697775170b2fea9ca581ababcca2c3f8d0bf91e064be9"
+    },
+    {
+      "version": 5,
+      "packed_bytes": 1706,
+      "packed_sha256": "f12af172859aa5e8572af09d21a882b4e4028ac4e5fce9a4792cd50ae7bd8b28",
+      "image_crc32": "a8899d7f",
+      "image_sha256": "4c4194ea049a9f52c94316ca24c149b9f460c6996910e7efe347f2c98e4f70d3"
+    },
+    {
+      "version": 6,
+      "packed_bytes": 1706,
+      "packed_sha256": "37588c1622bb9633be43a62149eca65c9172390365c14a9973ba1cb5a64e71c4",
+      "image_crc32": "befaa24a",
+      "image_sha256": "72272abbf21969f9b750eddb4dcb0654f3ce32e34cfd5b139b8519dc2b563a6d"
+    },
+    {
+      "version": 7,
+      "packed_bytes": 1706,
+      "packed_sha256": "ad4074245a507537f6dca4af90a54bfd1fea1dd014d7e952fec65cc1b0d3dd1f",
+      "image_crc32": "b66063d5",
+      "image_sha256": "49648d1a8c028a82f3d6b357bf518f97e7897ef1ded678e60a7621f5efaf01b7"
+    }
+  ],
+  "input_crc_audit": {
+    "word_bits": 58,
+    "nominal_crc_ok": true,
+    "single_bit_flips_tested": 58,
+    "single_bit_flips_detected": 58
+  },
+  "exhaustive_map_summary": {
+    "rows": 16384,
+    "llr_code_mismatch_count": 0,
+    "action_mismatch_count": 0,
+    "rows_sha256": "d5c8fb8cc75d533d41dbcf0ac0ed0c4d2f647f6f62b0b9615f38be27fad9e203"
+  },
+  "trace_summary": {
+    "hardware_cycles": 4116,
+    "input_cycles": 4110,
+    "output_valid_cycles": 4110,
+    "warmup_invalid_outputs": 6,
+    "output_source_cycle_min": 0,
+    "output_source_cycle_max": 4109,
+    "output_source_cycles_unique": 4110,
+    "source_to_output_latencies": [
+      6
+    ],
+    "all_output_crc_ok": true,
+    "all_state_crc_ok": true,
+    "bad_input_crc_source_100_detected": true,
+    "bad_input_crc_output_fault_mask": 4,
+    "invalid_observation_output_fault_mask": 1,
+    "deadline_output_fault_mask": 512,
+    "ood_output_fault_mask": 2,
+    "persistent_leakage_reset_request": true,
+    "reset_ack_clears_request": true,
+    "x_e_run_saturates_at_7": true,
+    "commit_rows": [
+      {
+        "cycle": 4000,
+        "status": "deferred",
+        "reason": "unsafe_cycle_boundary",
+        "active_version": 0
+      },
+      {
+        "cycle": 4001,
+        "status": "committed",
+        "reason": "commit_applied",
+        "active_version": 1
+      }
+    ],
+    "deferred_commit_cycle": 4000,
+    "committed_cycle": 4001,
+    "inflight_old_version_at_source_4000": 0,
+    "post_commit_version_at_source_4001": 1,
+    "active_versions_monotonic": true,
+    "final_trace_sha256": "2ef0aede273600351e461459821392f635780452101c39dbfef3f69fd75e68f1"
+  },
+  "trace_samples": [
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 0,
+      "input_valid": true,
+      "input_word_hex": "1bf530000080013",
+      "input_crc_ok": true,
+      "input_latched_version": 0,
+      "map_valid": false,
+      "map_source_cycle": null,
+      "map_valid_cycle": null,
+      "map_active_version": null,
+      "map_address": null,
+      "map_fraction_code": null,
+      "map_llr_code": null,
+      "output_valid": false,
+      "output_source_cycle": null,
+      "output_word_hex": "0a0300000000000000000000000000",
+      "output_crc_ok": true,
+      "state_word_hex": "7853000000000000000000000000000000000000000000000000000000",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "ef52e9ced6187e484ba478226df711a7c5250fa6fc9c991af8ca455e7081019e"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 5,
+      "input_valid": true,
+      "input_word_hex": "19fc70002884180",
+      "input_crc_ok": true,
+      "input_latched_version": 0,
+      "map_valid": true,
+      "map_source_cycle": 0,
+      "map_valid_cycle": 5,
+      "map_active_version": 0,
+      "map_address": 4,
+      "map_fraction_code": 3,
+      "map_llr_code": 3467,
+      "output_valid": false,
+      "output_source_cycle": null,
+      "output_word_hex": "0a0300000000000000000000000000",
+      "output_crc_ok": true,
+      "state_word_hex": "5da5000000000000000000000000000000000000040000000000009000",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "c695351fc80fbdb033308c4eca9fba67d18b9a2843ce83931fb37da4fd29c32d"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 6,
+      "input_valid": true,
+      "input_word_hex": "2f98f00030801c9",
+      "input_crc_ok": true,
+      "input_latched_version": 0,
+      "map_valid": true,
+      "map_source_cycle": 1,
+      "map_valid_cycle": 6,
+      "map_active_version": 0,
+      "map_address": 23,
+      "map_fraction_code": 0,
+      "map_llr_code": 11420,
+      "output_valid": true,
+      "output_source_cycle": 0,
+      "output_word_hex": "0594c00d8b00000000024000000011",
+      "output_crc_ok": true,
+      "state_word_hex": "636d000000000000000000000000000000000000080000000000012000",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "24cfa8a4f80d7083ada70494d77af66f3011476d0714bbc685144d452bce5104"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 100,
+      "input_valid": true,
+      "input_word_hex": "34cd70002080096",
+      "input_crc_ok": false,
+      "input_latched_version": 0,
+      "map_valid": true,
+      "map_source_cycle": 95,
+      "map_valid_cycle": 100,
+      "map_active_version": 0,
+      "map_address": 202,
+      "map_fraction_code": 2,
+      "map_llr_code": 26358,
+      "output_valid": true,
+      "output_source_cycle": 94,
+      "output_word_hex": "3d8880c6f5000000000fc000000011",
+      "output_crc_ok": true,
+      "state_word_hex": "fa6300000000000000000000000000000000000180000000000003f000",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "73ea697ffcda75ec2bc3c5611f5fdf0f432bd289f5f2152509b08234b0079132"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 106,
+      "input_valid": true,
+      "input_word_hex": "0c243000508024d",
+      "input_crc_ok": true,
+      "input_latched_version": 0,
+      "map_valid": true,
+      "map_source_cycle": 101,
+      "map_valid_cycle": 106,
+      "map_active_version": 0,
+      "map_address": 56,
+      "map_fraction_code": 0,
+      "map_llr_code": 27716,
+      "output_valid": true,
+      "output_source_cycle": 100,
+      "output_word_hex": "1fb84068830000001180000000000b",
+      "output_crc_ok": true,
+      "state_word_hex": "25ea000000000000000000000000000400000004040100000000009005",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "12a343b7ab9f2340270750b52d63846c59dcf84813b1331e3b9beda7ff8a8511"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 120,
+      "input_valid": true,
+      "input_word_hex": "0cf06000c08024b",
+      "input_crc_ok": true,
+      "input_latched_version": 0,
+      "map_valid": true,
+      "map_source_cycle": 115,
+      "map_valid_cycle": 120,
+      "map_active_version": 0,
+      "map_address": 55,
+      "map_fraction_code": 2,
+      "map_llr_code": 27469,
+      "output_valid": true,
+      "output_source_cycle": 114,
+      "output_word_hex": "36cec067d2000000000fc000000011",
+      "output_crc_ok": true,
+      "state_word_hex": "1d5f0000000000000000000000000004000000043c000000000003f000",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "73924b56e8a226f39f5c702911e2a2507ea95a95c694601e2cdfe241fefa91ce"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 126,
+      "input_valid": true,
+      "input_word_hex": "34887000f080001",
+      "input_crc_ok": true,
+      "input_latched_version": 0,
+      "map_valid": true,
+      "map_source_cycle": 121,
+      "map_valid_cycle": 126,
+      "map_active_version": 0,
+      "map_address": 165,
+      "map_fraction_code": 0,
+      "map_llr_code": 44876,
+      "output_valid": true,
+      "output_source_cycle": 120,
+      "output_word_hex": "3aa3812f1a0000000580000000000b",
+      "output_crc_ok": true,
+      "state_word_hex": "a4f0000000000000000000000000000400040008040100000000009005",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "4c8761dacd4641597aba857be332faedcdc1461ef60f6fff10b035ccc206509d"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 140,
+      "input_valid": true,
+      "input_word_hex": "24cfd00060803ff",
+      "input_crc_ok": true,
+      "input_latched_version": 0,
+      "map_valid": true,
+      "map_source_cycle": 135,
+      "map_valid_cycle": 140,
+      "map_active_version": 0,
+      "map_address": 164,
+      "map_fraction_code": 2,
+      "map_llr_code": 45123,
+      "output_valid": true,
+      "output_source_cycle": 134,
+      "output_word_hex": "3eabc1307c000000000fc000000011",
+      "output_crc_ok": true,
+      "state_word_hex": "9c450000000000000000000000000004000400083c000000000003f000",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "62b3a86a4957ae92421d046d5b371517f20c01d1e799bbac6cfdaba3391e07c3"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 146,
+      "input_valid": true,
+      "input_word_hex": "0df7700090801b5",
+      "input_crc_ok": true,
+      "input_latched_version": 0,
+      "map_valid": true,
+      "map_source_cycle": 141,
+      "map_valid_cycle": 146,
+      "map_active_version": 0,
+      "map_address": 18,
+      "map_fraction_code": 0,
+      "map_llr_code": 8951,
+      "output_valid": true,
+      "output_source_cycle": 140,
+      "output_word_hex": "19038000590000080180000000000b",
+      "output_crc_ok": true,
+      "state_word_hex": "959100000000000004000000000000040004000c040100000000009005",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "299fbeb48c49eba8641bd4328b96d0ff96363d12fcabed2ade7b2a5a545f0454"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 160,
+      "input_valid": true,
+      "input_word_hex": "09a0300000809b3",
+      "input_crc_ok": true,
+      "input_latched_version": 0,
+      "map_valid": true,
+      "map_source_cycle": 155,
+      "map_valid_cycle": 160,
+      "map_active_version": 0,
+      "map_address": 17,
+      "map_fraction_code": 2,
+      "map_llr_code": 8704,
+      "output_valid": true,
+      "output_source_cycle": 154,
+      "output_word_hex": "3eb74001bc000000000fc000000011",
+      "output_crc_ok": true,
+      "state_word_hex": "ad2400000000000004000000000000040004000c3c000000000003f000",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "74179643efcef75b93ff2b35e650c2c3d190a6a3602ed1125ee9942447adfe63"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 167,
+      "input_valid": true,
+      "input_word_hex": "2c23b00038843b2",
+      "input_crc_ok": true,
+      "input_latched_version": 0,
+      "map_valid": true,
+      "map_source_cycle": 162,
+      "map_valid_cycle": 167,
+      "map_active_version": 0,
+      "map_address": 145,
+      "map_fraction_code": 1,
+      "map_llr_code": 78656,
+      "output_valid": true,
+      "output_source_cycle": 161,
+      "output_word_hex": "2795c0ebb9000080020e1000000029",
+      "output_crc_ok": true,
+      "state_word_hex": "09f700000800000004000000000000040004080c040080000000039003",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "2758d3f4a81389b4a1998505998754db3e86892e708deaeb2fc3720fd92fa88a"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 168,
+      "input_valid": true,
+      "input_word_hex": "36ef300040803fb",
+      "input_crc_ok": true,
+      "input_latched_version": 0,
+      "map_valid": true,
+      "map_source_cycle": 163,
+      "map_valid_cycle": 168,
+      "map_active_version": 0,
+      "map_address": 163,
+      "map_fraction_code": 2,
+      "map_llr_code": 45616,
+      "output_valid": true,
+      "output_source_cycle": 162,
+      "output_word_hex": "20c1c13340000000008e4000000007",
+      "output_crc_ok": true,
+      "state_word_hex": "717e00000800000004000000000000040004080c08000000000003a000",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "7f06a99cded39645d2007997d0d2692225fe81ee967c49e327457fd22ccee379"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 211,
+      "input_valid": true,
+      "input_word_hex": "33d63000988443e",
+      "input_crc_ok": true,
+      "input_latched_version": 0,
+      "map_valid": true,
+      "map_source_cycle": 206,
+      "map_valid_cycle": 211,
+      "map_active_version": 0,
+      "map_address": 180,
+      "map_fraction_code": 1,
+      "map_llr_code": 53777,
+      "output_valid": true,
+      "output_source_cycle": 205,
+      "output_word_hex": "05fc40b515000000000fc0c0000013",
+      "output_crc_ok": true,
+      "state_word_hex": "26b300000800000004000000000000040404081068000000000003f039",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "e08fd152f24a18cc8fdbe9239f92ce857597f7d4fe1b8217485dd5c2f2cdbe3d"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 217,
+      "input_valid": true,
+      "input_word_hex": "0ff37000c8841f4",
+      "input_crc_ok": true,
+      "input_latched_version": 0,
+      "map_valid": true,
+      "map_source_cycle": 212,
+      "map_valid_cycle": 217,
+      "map_active_version": 0,
+      "map_address": 33,
+      "map_fraction_code": 3,
+      "map_llr_code": 24089,
+      "output_valid": true,
+      "output_source_cycle": 211,
+      "output_word_hex": "077b401e24000000000fc0e0000013",
+      "output_crc_ok": true,
+      "state_word_hex": "f11f00000800000004000000000000040404081080000000000003f000",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "7e52f794e38e8ca3ef2e8e47943d411037c5c21f6351a8eaa0d64f5136016c61"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 4000,
+      "input_valid": true,
+      "input_word_hex": "23bf300000800b3",
+      "input_crc_ok": true,
+      "input_latched_version": 0,
+      "map_valid": true,
+      "map_source_cycle": 3995,
+      "map_valid_cycle": 4000,
+      "map_active_version": 0,
+      "map_address": 209,
+      "map_fraction_code": 2,
+      "map_llr_code": 22901,
+      "output_valid": true,
+      "output_source_cycle": 3994,
+      "output_word_hex": "1ac980b383000000000fc000000011",
+      "output_crc_ok": true,
+      "state_word_hex": "b8df000008000000040000000000000404040813fc000000000003f000",
+      "state_crc_ok": true,
+      "active_bank": "A",
+      "active_version": 0,
+      "commit_status": "deferred",
+      "commit_reason": "unsafe_cycle_boundary",
+      "safe_boundary": false,
+      "trace_chain_sha256": "bc08d6329ba16389a4e3714f3e3e4e48cdb1717b9a7be029bea7a7e1bdaef7cc"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 4001,
+      "input_valid": true,
+      "input_word_hex": "3b6ff00008840fc",
+      "input_crc_ok": true,
+      "input_latched_version": 1,
+      "map_valid": true,
+      "map_source_cycle": 3996,
+      "map_valid_cycle": 4001,
+      "map_active_version": 0,
+      "map_address": 227,
+      "map_fraction_code": 3,
+      "map_llr_code": 20000,
+      "output_valid": true,
+      "output_source_cycle": 3995,
+      "output_word_hex": "316b405975000000000fc000000011",
+      "output_crc_ok": true,
+      "state_word_hex": "b8df000008000000040000000000000404040813fc000000000003f000",
+      "state_crc_ok": true,
+      "active_bank": "B",
+      "active_version": 1,
+      "commit_status": "committed",
+      "commit_reason": "commit_applied",
+      "safe_boundary": true,
+      "trace_chain_sha256": "ec66edfd0c7093517d4c4d4f6f7eb92c4c868b399d90103847d17991d6cc130b"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 4006,
+      "input_valid": true,
+      "input_word_hex": "2c6670003080269",
+      "input_crc_ok": true,
+      "input_latched_version": 1,
+      "map_valid": true,
+      "map_source_cycle": 4001,
+      "map_valid_cycle": 4006,
+      "map_active_version": 1,
+      "map_address": 63,
+      "map_fraction_code": 0,
+      "map_llr_code": 52253,
+      "output_valid": true,
+      "output_source_cycle": 4000,
+      "output_word_hex": "0dd2807ca7000000000fc000000011",
+      "output_crc_ok": true,
+      "state_word_hex": "2b4e000008000000040000000000000404040813fc000000800003f000",
+      "state_crc_ok": true,
+      "active_bank": "B",
+      "active_version": 1,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "b8207b9096d216a2bef1a144c6700c6af48ba6d243db614adb1446438c10b73b"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 4007,
+      "input_valid": true,
+      "input_word_hex": "06b7f00038842b2",
+      "input_crc_ok": true,
+      "input_latched_version": 1,
+      "map_valid": true,
+      "map_source_cycle": 4002,
+      "map_valid_cycle": 4007,
+      "map_active_version": 1,
+      "map_address": 81,
+      "map_fraction_code": 1,
+      "map_llr_code": 20262,
+      "output_valid": true,
+      "output_source_cycle": 4001,
+      "output_word_hex": "2e8a00cc1d000100000fc000000011",
+      "output_crc_ok": true,
+      "state_word_hex": "2b4e000008000000040000000000000404040813fc000000800003f000",
+      "state_crc_ok": true,
+      "active_bank": "B",
+      "active_version": 1,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "b617e4632c76d0da9900163f1438bc4c5688b603b612d987694f3c3e39986c72"
+    },
+    {
+      "trace_schema_version": "t5.5.1-bit-accurate-hardware-trace-v1",
+      "hardware_cycle": 4115,
+      "input_valid": false,
+      "input_word_hex": "",
+      "input_crc_ok": null,
+      "input_latched_version": null,
+      "map_valid": false,
+      "map_source_cycle": null,
+      "map_valid_cycle": null,
+      "map_active_version": null,
+      "map_address": null,
+      "map_fraction_code": null,
+      "map_llr_code": null,
+      "output_valid": true,
+      "output_source_cycle": 4109,
+      "output_word_hex": "33c5bfefe0000100000fc000100d11",
+      "output_crc_ok": true,
+      "state_word_hex": "0dab000008000000040000000000000404040813fc000000804023f000",
+      "state_crc_ok": true,
+      "active_bank": "B",
+      "active_version": 1,
+      "commit_status": "none",
+      "commit_reason": "",
+      "safe_boundary": true,
+      "trace_chain_sha256": "2ef0aede273600351e461459821392f635780452101c39dbfef3f69fd75e68f1"
+    }
+  ],
+  "online_ast_audit": {
+    "division_nodes": 0,
+    "forbidden_numeric_calls": [],
+    "online_input_fields": [
+      "syndrome_code",
+      "syndrome_x_code",
+      "syndrome_z_code",
+      "quadrature_phase_bit",
+      "ood_score_code",
+      "parameter_age_code",
+      "reset_ack",
+      "observation_valid",
+      "deadline_ok"
+    ],
+    "truth_tokens_present": false
+  },
+  "repeatability": {
+    "trace_hash_equal": true,
+    "trace_rows_equal": true,
+    "staging_equal": true,
+    "first_trace_sha256": "2ef0aede273600351e461459821392f635780452101c39dbfef3f69fd75e68f1",
+    "repeat_trace_sha256": "2ef0aede273600351e461459821392f635780452101c39dbfef3f69fd75e68f1"
+  },
+  "claim_boundary": {
+    "allowed": "packed-word cycle-accurate deterministic Python RTL golden reference",
+    "forbidden": "RTL generated, synthesized, timing closed, routed, device calibrated, transported, FPGA or board measured",
+    "hardware_fields": {
+      "rtl_generated": false,
+      "synthesized": false,
+      "fmax_mhz": null,
+      "target_lut_count": null,
+      "target_ff_count": null,
+      "target_bram_count": null,
+      "target_dsp_count": null,
+      "board_measured": false
+    }
+  },
+  "golden_trace": {
+    "path": "docs/t5_5_1_bit_accurate_golden_trace.csv",
+    "rows": 4116,
+    "sha256": "9e050aab7ef2c8ba10b1951c6f6d85abf30bd8232e3c37d7080144bb3404634f",
+    "final_chain_sha256": "2ef0aede273600351e461459821392f635780452101c39dbfef3f69fd75e68f1",
+    "chain_valid": true
+  },
+  "parameter_bundle": {
+    "path": "docs/t5_5_1_bit_accurate_parameter_bank.bin",
+    "bytes": 13724,
+    "sha256": "320c8703a4af51dfa2f4ef46d48eb0838d7d57b715576cb28cf3d53a6dec3b0a",
+    "roundtrip_exact": true
+  },
+  "source_data": {
+    "path": "docs/t5_5_1_bit_accurate_hardware_reference_source_data.csv",
+    "rows": 16503,
+    "rows_sha256": "87527989358bdcd78a9e9d0f075e3fb8ec8a29b485187e9dacd615725497cad6",
+    "sha256": "96e627cdf6b0b02a933ae081293ba5b436515a6e3476e37b8a33952a53873683"
+  },
+  "gates": {
+    "all_parent_artifacts_are_live_machine_passes": true,
+    "selected_word_widths_rounding_saturation_and_latency_are_frozen": true,
+    "all_eight_binary_parameter_images_and_bundle_roundtrip_exactly": true,
+    "binary_parameter_image_prefixes_and_byte_corruptions_fail_closed": true,
+    "input_crc_detects_every_single_bit_flip": true,
+    "all_16384_map_codes_match_independent_integer_reconstruction": true,
+    "true_pipeline_has_exact_six_cycle_latency_and_ii_one": true,
+    "output_and_state_words_have_valid_crc_on_every_cycle": true,
+    "atomic_commit_defers_then_switches_at_safe_boundary": true,
+    "inflight_old_image_and_post_commit_new_image_are_both_latched": true,
+    "crc_invalid_deadline_ood_and_leakage_faults_are_not_silent": true,
+    "event_counter_saturates_without_wrap": true,
+    "trace_chain_is_deterministic_under_full_rerun": true,
+    "online_step_is_integer_only_and_truth_free": true,
+    "trace_schema_and_parameter_bank_artifacts_are_byte_bound": true,
+    "rtl_synthesis_timing_resource_and_board_claims_remain_closed": true
+  },
+  "gate_summary": {
+    "passed": 16,
+    "total": 16
+  },
+  "contract_sha256": "bfd5a2ce1d7ec2cc266c22916d8ef3242c2d71a0550e10a1d14d94ab823da7f1"
+}
