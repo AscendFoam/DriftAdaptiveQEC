@@ -9,6 +9,8 @@
 - ``AdaptiveSyndromeMeasurement``：基于噪声水平自适应调整纠错增益。
 """
 
+from __future__ import annotations
+
 import numpy as np
 from typing import Optional, Tuple
 from dataclasses import dataclass

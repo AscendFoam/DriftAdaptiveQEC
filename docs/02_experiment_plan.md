@@ -1,5 +1,7 @@
 # DriftAdaptiveQEC 实验规划与后续开发计划
 
+> **LEGACY（已被取代）：** 下方 `T90` 等“当前任务”表述停留在 2026-06。当前实验计划以 [`experiment_plan.md`](experiment_plan.md) 为准，当前任务与风险以 [`new_task_board.md`](new_task_board.md) 和 [`new_risks.md`](new_risks.md) 为准。
+
 **最后更新：** 2026-06-15
 **当前阶段：** `Phase 2: Controlled Development`  
 **当前决策状态：** `Go`  

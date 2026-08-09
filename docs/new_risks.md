@@ -1,6 +1,6 @@
 # 新任务序列风险登记
 
-**最后更新：** 2026-07-26
+**最后更新：** 2026-08-09
 **适用范围：** `docs/new_task_board.md` 顺序执行计划。  
 **规则：** 风险等级使用 `Low / Medium / High / Critical`，迫切程度使用 `Monitor / Soon / Immediate`。只有风险阻塞当前 task、使当前结论不可信或可能直接产生错误论文 claim，且既有正常 task 无法覆盖时，才插入 `T-RISK-YYYYMMDD-NN`。
 
@@ -206,6 +206,7 @@
 | R-N196 | Mitigated | 固定PRNG seed并不足以保证高维maxT产物逐字节可复现；若配置声明单线程但writer依赖外部BLAS/OMP环境，线程化归约会产生约1e-15末位漂移，使最小后验diff证明失效，亦可能在临界点改变门 | High | Monitor | 首个repair attempt的710项非预期漂移已归档并fail-closed；最终config/runner在Python启动前硬拒绝四项thread env非`\"1\"`，1,204项maxT与V1字符串0差，未采用numeric tolerance whitelist。78 focused tests和完整独立重算通过 | T04及所有未来maxT/trace-norm runner沿用process-entry runtime seal，并把环境纳入immutable receipt；禁止仅在config声明线程数或用浮点近似替代最小diff证明 | T-RISK-20260730-01 / T-RISK-20260728-06 / T-RISK-20260728-04 |
 | R-N197 | Mitigated | 独立verifier若先允许source中的重算物理量存在ULP舍入、随后又把该观测值当作离散生成器的注册design输入，会在验证器内部自相矛盾并把合法证据误报为`density trial design drift` | Critical | Monitor | verifier payload现独立从冻结config重建canonical `spec.effect`，worker只消费该design input；source truth仍按原`1e-15`独立校验。ULP接受、越界/另一effect拒绝、worker independence、config mutation与未注册effect测试齐全；完整重算7,168 trial、max delta=`1.94e-16` | 后续verifier继续分离registered design与observed/recomputed quantity；不得让source summary反向驱动生成器或统计门。该implementation风险已闭合，八类claim仍null | T-RISK-20260730-01 / T-RISK-20260728-06 |
 | R-N198 | Open | T04 resource PASS若只依赖若干小代表chunk、worker自报wall、浅层receipt/NPY hash和不闭合的平均缩放，协调重写可低估正式LPT首批四worker峰值、inventory finalize与mapping-anchor开销，并让错误raw/heartbeat/attempt witness进入preformal seal | Critical | Immediate | V4 `full_v4_20260730_080203`在发现该证据链缺口后受控fail-closed；382点连续采样仅证明旧四worker峰值RSS=`1,128,509,440 B`，0 receipt、69个staging文件只读保留。V5已实现8个full-denominator receipts、227,328行全读、NPY精确shape/dtype/file-size/finite扫描、formal LPT top4、per-cell artifact/transient、deterministic LPT、mapping anchors、外部stage wall/PID双射、owner/heartbeat/attempt/focused-validation live-byte绑定和V2 seal downgrade拒绝 | 必须先以最终源码和全部negative/mutation测试物化唯一V5，再用全新run ID完成resource PASS并由未修改consumer live重放；V4及其staging不得投票。V5未PASS前T04仍In Progress、六个downstream仍Blocked、全部science/performance/physical/hardware/official/Puviani/SOTA/rank字段保持null | T-RISK-20260728-04 |
+| R-N199 | Open | `physics/` v2 已与旧 path/bytes/SHA-256 release pin、checkpoint 和 Source Data 解绑；若仍把历史 PASS 写成对当前实现的资格，会形成 stale-evidence 主张 | High | Immediate | 用户已明确接受 v1 证据降级为历史快照；当前重构通过固定输入/种子的结构与数值等价检查，Phase 9 A/B 仍保持独立科学 kernel，但旧 verifier 的 source hash 失配属预期历史结果 | 当前源码用于任何新论文 claim 前，必须 fresh 重跑相应 qualification，生成多文件 path+SHA manifest，并在 claim-evidence audit 中把 v1 historical 与 current 分栏；严禁回写旧 pin 伪造连续性 | T-MAINT-20260808-01 / T-MAINT-20260809-01 / Phase 9 release pins |
 
 ## 插入任务判断
 
@@ -428,6 +429,9 @@
 | 2026-07-30 | T-RISK-20260730-01 multithread maxT serialization failure | 不继续插入 | 缺口由当前analysis-only repair的runtime reproducibility seal直接造成且在repair report前被最小diff门阻断；raw、count、seed、threshold、gate与科学规则均未改变。单线程环境已逐字符串复现V1，因此无需新科学task或容差救援；在当前task内追加环境硬门、归档失败尝试并重新封印即可。 |
 | 2026-07-30 | T-RISK-20260730-01 / T-RISK-20260728-06终态复核 | 不插入，恢复T-RISK-20260728-04 | 最小repair、三条失败lineage、32 raw chunks、六行白名单、3,043门blueprint与完整独立verifier已闭合；R-N185/R-N192/R-N194--R-N197降为Mitigated。剩余R-N193是T04自身fresh resource/transaction通过门，可在既有T04中直接实现，无需再拆task。T04只获得preregistration，所有science/performance/physical/hardware/official/Puviani/SOTA claim仍null。 |
 | 2026-07-30 | T-RISK-20260728-04 V4 resource受控终止与consumer深审 | 不插入 | 新增R-N198。旧V4在四worker完成前发现正式consumer链、LPT峰值、wall/PID、逐row/NPY、inventory/mapping-anchor与owner/attempt/seal绑定缺口，定向终止并永久保留`START -> FAIL`、382点采样和8.09GB staging；不是OOM、timeout或科学NO-GO。缺口可在当前T04中以V5 immutable contract和fresh run完整修复，另开任务会割裂同一preregistration事务。六个downstream与全部claim继续blocked/null。 |
+
+| 2026-08-08 | T-MAINT-20260808-01 | 不插入 | R-N199 已由精确源码哈希和递归行数守卫缓解；本轮只拆分无字节 pin 的两个模块，并保留 API/CLI/结果。剩余超长源的 v2 迁移应在真正需要改科学实现时另建资格任务，当前不阻塞 `T-RISK-20260728-04`。 |
+| 2026-08-09 | T-MAINT-20260809-01 | 不另插入 | 用户明确选择可维护结构并接受旧证据历史化；本维护任务已直接承接代码迁移。R-N199 升为 Open/Immediate，对当前源码的 fresh qualification 是恢复任何新科学 claim 的硬门；本轮不运行新科学 outcome，因此不旁路插入另一个科学 task，当前推荐指针仍为 `T-RISK-20260728-04`。 |
 
 ## 已关闭风险
 

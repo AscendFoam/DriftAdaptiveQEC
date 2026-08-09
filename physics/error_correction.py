@@ -9,7 +9,8 @@ import numpy as np
 from typing import Tuple, Optional, Dict, Any
 from dataclasses import dataclass, field
 
-from .gkp_state import LATTICE_CONST, ApproximateGKPState
+from .constants import LATTICE_CONST
+from .gkp_state import ApproximateGKPState
 from .syndrome_measurement import RealisticSyndromeMeasurement, MeasurementConfig
 from .noise_channels import CombinedNoiseModel
 

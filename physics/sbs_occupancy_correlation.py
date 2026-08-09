@@ -23,6 +23,7 @@ from typing import Sequence
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
+from ._shared.validation import integer as _integer
 from .sbs_error_space import SBS_PROTOCOL_ID
 from .sbs_observation_reset import (
     HIDDEN_ANCILLA_STATES,
@@ -31,6 +32,7 @@ from .sbs_observation_reset import (
     SBSObservationResetModel,
     make_persistent_leakage_model,
 )
+from ._shared.sampling import categorical_rows as _sample_rows
 
 
 MODEL_SCOPE = "protocol_aligned_occupancy_correlation_effective_model_not_device_calibrated"
@@ -70,15 +72,6 @@ PRIMARY_SOURCE_ANCHORS = (
         "role": "correlation_postselection",
     },
 )
-
-
-def _integer(value: int, name: str, minimum: int) -> int:
-    if isinstance(value, bool) or not isinstance(value, (int, np.integer)):
-        raise TypeError(f"{name} must be an integer")
-    integer = int(value)
-    if integer < minimum:
-        raise ValueError(f"{name} must be at least {minimum}")
-    return integer
 
 
 def _probability(value: float, name: str, *, strict: bool = False) -> float:
@@ -345,22 +338,6 @@ def _make_observation_model(config: OccupancyCorrelationConfig) -> SBSObservatio
             "T2.0.6 external f/higher event process; higher spontaneous decay not controller reset"
         ),
     )
-
-
-def _sample_rows(
-    probabilities: NDArray[np.float64], rng: np.random.Generator
-) -> NDArray[np.int64]:
-    if probabilities.ndim != 2 or probabilities.shape[0] == 0:
-        raise ValueError("probabilities must be a non-empty 2D matrix")
-    if np.any(probabilities < 0.0) or not np.allclose(
-        np.sum(probabilities, axis=1), 1.0, rtol=0.0, atol=1.0e-12
-    ):
-        raise ValueError("probability rows must be non-negative and normalized")
-    cumulative = np.cumsum(probabilities, axis=1)
-    draws = rng.random(probabilities.shape[0])
-    return np.minimum(
-        np.sum(draws[:, None] > cumulative, axis=1), probabilities.shape[1] - 1
-    ).astype(np.int64)
 
 
 def simulate_occupancy_correlation_dataset(

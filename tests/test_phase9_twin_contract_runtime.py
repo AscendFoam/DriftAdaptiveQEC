@@ -6,7 +6,7 @@ import zlib
 
 import pytest
 
-from physics import phase9_twin_contract as subject
+import physics.phase9_twin_contract as subject
 
 
 def _observed() -> dict[str, object]:

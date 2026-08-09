@@ -16,7 +16,8 @@ from typing import Optional, Tuple, Union
 from scipy.ndimage import gaussian_filter
 from dataclasses import dataclass
 
-from .gkp_state import ApproximateGKPState, LATTICE_CONST
+from .constants import LATTICE_CONST
+from .gkp_state import ApproximateGKPState
 
 # 尝试导入 Strawberry Fields（部分精确噪声通道依赖）
 try:

@@ -21,6 +21,7 @@ from typing import Sequence
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
+from ._shared.validation import integer as _integer
 from .sbs_error_space import (
     SBS_OUTCOMES,
     SBS_PROTOCOL_ID,
@@ -35,6 +36,7 @@ from .sbs_observation_reset import (
     ideal_syndrome_from_kraus,
     make_persistent_leakage_model,
 )
+from ._shared.sampling import categorical_rows as _sample_rows
 
 
 MODEL_SCOPE = "protocol_aligned_displacement_fault_trend_not_device_calibrated"
@@ -74,12 +76,7 @@ def _real_probability(value: float, name: str) -> float:
 
 
 def _positive_integer(value: int, name: str, *, minimum: int = 1) -> int:
-    if isinstance(value, bool) or not isinstance(value, (int, np.integer)):
-        raise TypeError(f"{name} must be an integer")
-    integer = int(value)
-    if integer < minimum:
-        raise ValueError(f"{name} must be at least {minimum}")
-    return integer
+    return _integer(value, name, minimum)
 
 
 def distance_to_closest_logical_operation(
@@ -345,22 +342,6 @@ def _make_recovery_instrument(config: DisplacementFaultSweepConfig) -> SBSErrorS
         two_step_probability=0.0,
         ge_fraction=1.0 if config.fault_quadrature == "X" else 0.0,
     )
-
-
-def _sample_rows(
-    probabilities: NDArray[np.float64],
-    rng: np.random.Generator,
-) -> NDArray[np.int64]:
-    if probabilities.ndim != 2 or probabilities.shape[0] == 0:
-        raise ValueError("probabilities must be a non-empty 2D matrix")
-    if np.any(probabilities < 0.0) or not np.allclose(
-        np.sum(probabilities, axis=1), 1.0, rtol=0.0, atol=1.0e-12
-    ):
-        raise ValueError("each probability row must be non-negative and normalized")
-    cumulative = np.cumsum(probabilities, axis=1)
-    draws = rng.random(probabilities.shape[0])
-    choices = np.sum(draws[:, None] > cumulative, axis=1)
-    return np.minimum(choices, probabilities.shape[1] - 1).astype(np.int64)
 
 
 def _max_consecutive_true(values: NDArray[np.bool_]) -> NDArray[np.int64]:

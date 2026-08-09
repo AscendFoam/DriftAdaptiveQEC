@@ -1,5 +1,7 @@
 # Project Snapshot / Raw Idea Record
 
+> **LEGACY（已被取代）：** 本文只保留旧治理链快照。当前任务、风险和实验计划分别以 [`new_task_board.md`](new_task_board.md)、[`new_risks.md`](new_risks.md) 和 [`experiment_plan.md`](experiment_plan.md) 为准。
+
 ## 1. 快照目的
 
 本文件对应 `docs/reference/AI_coding_workflow.md` 中的 `00_raw_idea.md` / 项目快照角色：用最短事实说明项目解决什么问题、为什么值得继续、当前最小可验证实验是什么，以及当前阶段边界。

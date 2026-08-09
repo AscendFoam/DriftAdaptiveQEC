@@ -8,7 +8,6 @@ from math import sqrt
 import numpy as np
 import pytest
 
-import physics
 from physics.cross_fidelity_validation import (
     CROSS_FIDELITY_SCOPE,
     DEFAULT_DB_GRID,
@@ -330,8 +329,3 @@ def test_writer_preserves_checks_and_negative_evidence(production_result, tmp_pa
     assert len(payload["attributions"]) == 4
     assert abs(payload["points"][-1]["fock"]["p_minus_q_ler_gap"]) < 1.0e-5
     assert payload["points"][-1]["fock"]["legacy_p_minus_q_ler_gap"] > 0.4
-
-
-def test_public_lazy_exports_preserve_fail_closed_scope() -> None:
-    assert physics.CrossFidelityConfig is CrossFidelityConfig
-    assert physics.CROSS_FIDELITY_SCOPE == CROSS_FIDELITY_SCOPE

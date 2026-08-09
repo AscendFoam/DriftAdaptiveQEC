@@ -7,9 +7,9 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from physics import phase9_backend_a as backend_a
-from physics import phase9_backend_b as backend_b
-from physics import phase9_high_cutoff_runtime_adapter as adapter
+import physics.phase9_backend_a as backend_a
+import physics.phase9_backend_b as backend_b
+import physics.phase9_high_cutoff_runtime_adapter as adapter
 
 
 ROOT = Path(__file__).resolve().parents[1]

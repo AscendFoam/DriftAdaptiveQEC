@@ -118,7 +118,7 @@ GKP 码运行中会受到噪声漂移影响，固定参数纠错器容易逐渐�
 
 ## 4. 第一幅图：有效保真寿命柱状图
 
-![有效保真寿命柱状图](../figures/ppt_summary_20260716/effective_fidelity_lifetime_cn.png)
+![有效保真寿命柱状图](../figures/ppt_summary_20260716/effective_fidelity_lifetime_cn.svg)
 
 ### 4.1 这幅图的核心结论
 
@@ -232,7 +232,7 @@ MF 可以理解为 Markovian feedback：它可以根据当前输入给出控制�
 
 ## 5. 第二幅图：漂移自适应 GKP 纠错架构
 
-![漂移自适应 GKP 纠错架构](../figures/ppt_summary_20260716/drift_adaptive_architecture_cn.png)
+![漂移自适应 GKP 纠错架构](../figures/ppt_summary_20260716/drift_adaptive_architecture_cn.svg)
 
 ### 5.1 这幅图的核心结论
 
@@ -664,14 +664,13 @@ Pauli 帧可以理解成一份“逻辑上已经发生哪些 X/Z 修正”的数
 
 ## 13. 主要证据来源
 
-- Teacher-Student 物理收益保持：[`../teacher_student_gain_retention.md`](../teacher_student_gain_retention.md)
-- Teacher-Student 允许/禁止主张：[`../teacher_student_branch_freeze.md`](../teacher_student_branch_freeze.md)
-- 4 状态 Student 蒸馏：[`../low_dimensional_student_distillation.md`](../low_dimensional_student_distillation.md)
-- 定点 MAP-LUT：[`../parametric_map_lut.md`](../parametric_map_lut.md)
-- 事件 FSM：[`../experimental_event_fsm.md`](../experimental_event_fsm.md)
-- 端到端定点快路径：[`../fast_path_fixed_point.md`](../fast_path_fixed_point.md)
+- Teacher-Student 物理收益保持：[`../reports/phase4/teacher_student_gain_retention.md`](../reports/phase4/teacher_student_gain_retention.md)
+- Teacher-Student 允许/禁止主张：[`../reports/phase4/teacher_student_branch_freeze.md`](../reports/phase4/teacher_student_branch_freeze.md)
+- 4 状态 Student 蒸馏：[`../reports/phase4/low_dimensional_student_distillation.md`](../reports/phase4/low_dimensional_student_distillation.md)
+- 定点 MAP-LUT：[`../reports/phase4/parametric_map_lut.md`](../reports/phase4/parametric_map_lut.md)
+- 事件 FSM：[`../reports/phase4/experimental_event_fsm.md`](../reports/phase4/experimental_event_fsm.md)
+- 端到端定点快路径：[`../reports/phase4/fast_path_fixed_point.md`](../reports/phase4/fast_path_fixed_point.md)
 - 双缓冲参数库与原子提交：[`../atomic_parameter_bank.md`](../atomic_parameter_bank.md)
-- 三时间尺度与适应延迟：[`../three_timescale_cadence.md`](../three_timescale_cadence.md)
+- 三时间尺度与适应延迟：[`../reports/phase4/three_timescale_cadence.md`](../reports/phase4/three_timescale_cadence.md)
 - 闭环故障恢复：[`../closed_loop_fault_recovery.md`](../closed_loop_fault_recovery.md)
 - 低成本 FPGA 目标与测量边界：[`../low_cost_fpga_boundary.md`](../low_cost_fpga_boundary.md)
-

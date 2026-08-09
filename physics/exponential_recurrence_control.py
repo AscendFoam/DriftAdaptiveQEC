@@ -13,7 +13,6 @@ model.
 
 from __future__ import annotations
 
-import hashlib
 import time
 from dataclasses import asdict, dataclass
 from math import isfinite
@@ -21,6 +20,11 @@ from typing import Any, Literal, Mapping, Sequence
 
 import numpy as np
 
+from ._shared.torch_serialization import (
+    state_dict_cpu as _state_dict_cpu,
+    state_dict_sha256,
+)
+from ._shared.validation import positive_int as _positive_int
 from .differentiable_sbs_trajectory import (
     PARAMETER_NAMES,
     DifferentiableSBSConfig,
@@ -50,15 +54,6 @@ def _require_torch() -> Any:
             "exponential recurrence requires PyTorch; use the local DLEnv interpreter"
         )
     return torch
-
-
-def _positive_int(value: Any, name: str) -> int:
-    if isinstance(value, bool) or not isinstance(value, (int, np.integer)):
-        raise TypeError(f"{name} must be an integer")
-    parsed = int(value)
-    if parsed <= 0:
-        raise ValueError(f"{name} must be positive")
-    return parsed
 
 
 @dataclass(frozen=True)
@@ -406,21 +401,6 @@ def build_policy(
     return ExponentialSaturationControlPolicy(
         config, seed=seed, initialization_std=initialization_std
     )
-
-
-def _state_dict_cpu(policy: Any) -> dict[str, Any]:
-    return {name: value.detach().cpu().clone() for name, value in policy.state_dict().items()}
-
-
-def state_dict_sha256(state: Mapping[str, Any]) -> str:
-    digest = hashlib.sha256()
-    for name in sorted(state):
-        array = state[name].detach().cpu().contiguous().numpy()
-        digest.update(name.encode("utf-8"))
-        digest.update(str(array.dtype).encode("ascii"))
-        digest.update(np.asarray(array.shape, dtype=np.int64).tobytes())
-        digest.update(array.tobytes())
-    return digest.hexdigest()
 
 
 def load_policy_state(

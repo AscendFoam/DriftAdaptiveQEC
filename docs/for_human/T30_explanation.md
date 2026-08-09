@@ -74,7 +74,7 @@ Worker 执行了以下步骤：
 
 ### 2.5 对后续开发的意义
 
-在项目整体路线图（[docs/04_task_board.md](../../04_task_board.md)）中，T30 属于 Milestone 2I: Mechanism Evidence Hardening 的延续。
+在项目整体路线图（[docs/04_task_board.md](../04_task_board.md)）中，T30 属于 Milestone 2I: Mechanism Evidence Hardening 的延续。
 
 **直接意义**：
 1. 后续 statcalib 实现任务有了精确的 API 边界。不需要一边写代码一边临时发明输入输出语义。

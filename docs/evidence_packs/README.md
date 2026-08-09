@@ -1,5 +1,7 @@
 # Evidence Packs
 
+> **状态提示：** 本目录保存证据包，不是当前任务状态源。当前入口见 [`../README.md`](../README.md)。
+
 本目录统一存放已经完成的任务产物、结果包、gate 输出和证据边界说明。它用于减少 `docs/` 根目录堆积，不改变任何实验结论。
 
 ## 子目录
@@ -15,6 +17,6 @@
 ## 使用规则
 
 1. 这里的文档是证据材料或任务产物，不是当前唯一计划入口。
-2. 当前唯一任务仍以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准。
+2. 当前任务与风险分别以 `docs/new_task_board.md` 和 `docs/new_risks.md` 为准。
 3. 论文或计划引用这里的内容时，必须同时保留对应 task、review、run root、artifact 或 helper 边界。
 4. 不要把本目录中的 bounded smoke、mock-backed result、gate/readiness pack 外推成更高证据等级。

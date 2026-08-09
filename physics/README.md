@@ -18,17 +18,37 @@ GKP 码将一个逻辑量子比特编码到谐振子的相空间中。理想 GKP
 状态构造 → 噪声注入 → 综合征测量 → 线性解码 → 残差累积 → 逻辑错误判定
 ```
 
-## 目录结构
+## 阅读地图
 
-| 文件 | 职责 |
-|------|------|
-| [constants.py](constants.py) | 共享物理常量 `LATTICE_CONST = √(2π)` |
-| [gkp_state.py](gkp_state.py) | GKP 态构造与 Wigner 函数近似计算 |
-| [noise_channels.py](noise_channels.py) | 噪声通道建模（光子损失、热噪声、位移噪声、相位噪声） |
-| [syndrome_measurement.py](syndrome_measurement.py) | 综合征测量模型（理想 / 带噪声 / 自适应） |
-| [error_correction.py](error_correction.py) | 线性解码器、单轮纠错、多轮仿真、漂移场景 |
-| [logical_tracking.py](logical_tracking.py) | 逻辑错误追踪、滑窗统计、误差累积仿真入口 |
-| [\_\_init\_\_.py](__init__.py) | 统一导出 API（惰性加载） |
+文件较多是因为不同模块承担不同的物理保真度和证据角色；阅读时按下面五组进入，不要从文件名列表逐个猜测。
+
+| 分组 | 主要模块 | 职责 |
+| --- | --- | --- |
+| 基础与解码 | [`quadrature_conventions.py`](quadrature_conventions.py)、[`constants.py`](constants.py)、[`gkp_state.py`](gkp_state.py)、[`ideal_gkp_decoder.py`](ideal_gkp_decoder.py)、[`drift_processes.py`](drift_processes.py)、`oracle_*` | 坐标约定、基础态、漂移和 reference/oracle decoder |
+| 协议与控制 | [`sbs_error_space.py`](sbs_error_space.py)、[`sbs_observation_reset.py`](sbs_observation_reset.py)、[`sbs_cycle_state_machine.py`](sbs_cycle_state_machine.py)、[`syndrome_stream.py`](syndrome_stream.py)、[`control_memory.py`](control_memory.py) | sBs 事件、观测记忆、状态机和多轮控制 |
+| 多保真模型 | [`finite_energy_gkp.py`](finite_energy_gkp.py)、[`fock_density_model.py`](fock_density_model.py)、[`fock_sbs_cycle.py`](fock_sbs_cycle.py)、[`differentiable_sbs_trajectory.py`](differentiable_sbs_trajectory.py)、`logical_channel*` | analytic、finite-energy、Fock 和 differentiable trajectory；各层不能互相冒充 |
+| 验证与研究 | `fast_monte_carlo.py`、`cross_fidelity_validation.py`、`control_imperfections.py`、`*_ranking.py`、`*_ablation.py`、`*_feasibility.py` | 复现、对照、扫描、消融和证据生成；实现细节收进同名私有目录，不是新的万能物理内核 |
+| Phase 9 | `phase9_twin_contract.py`、`phase9_backend_a.py`、`phase9_backend_b.py`、`phase9_*adapter.py` | 因果 twin 合同和两套故意独立的物理后端；公开模块是稳定入口，实现按职责放在对应私有包 |
+
+[`__init__.py`](__init__.py) 只保留 10 个基础状态/噪声/测量/纠错/跟踪的惰性便捷别名。其他接口从具体模块导入，不再把整个实验库包装成包根 API。
+
+### 整理与复用原则
+
+- 所有 Python 源文件强制不超过 1000 行；科学内核、验证 runner 和 CLI/reporting 只在职责真正不同时分开。
+- 不创建包罗万象的 `utils.py`。只有语义完全一致的数值、校验或序列化逻辑才抽成公共核。
+- `_shared/` 只含按语义命名的 validation、sampling、numerics 和 Torch checkpoint 小核；业务模型、物理判据和 backend 资格门不得放入其中。
+- Phase 9 backend A/B 的传播、RNG、likelihood 和物理性资格必须保持独立，表面重复是防共同失效合同的一部分。
+- 2026-08-09 以前按旧 path/bytes/SHA-256 封存的 release pin、checkpoint 和 Source Data 只是 **v1 历史快照**，不再资格化当前源码。当前实现用于新科学主张前，必须重跑相应资格并生成新的多文件 manifest，不得只替换旧哈希。
+- [`scripts/check_physics_module_size.py`](../scripts/check_physics_module_size.py) 只守护结构性的 1000 行上限，不再把历史源码字节当作当前实现契约。
+
+当前已分层的边界：
+
+- `control_imperfections.py` 保留物理模型和原公开 API，`_control_imperfections/validation.py` 承载验证 runner、writer 和 CLI。
+- `cross_fidelity_validation.py` 保留四 lane 计算与原公开 API，`_cross_fidelity/reporting.py` 承载检查组装、失效归因、JSON writer 和 CLI。
+- `differentiable_sbs_trajectory.py` 保留 Torch trajectory 内核，`_differentiable_sbs/validation.py` 承载确定性验证；`differentiable_sbs_feasibility.py` 编排扫描，`_differentiable_sbs/worker.py` 承载单点训练/基准。
+- `nmf_directional_ranking.py` 保留模型、训练和统计核心，`_nmf_ranking/execution.py` 承载交易写入与 CLI 编排。
+- `phase9_twin_contract.py`、`phase9_backend_a.py`、`phase9_backend_b.py` 是公开入口，实现分别位于 `_phase9_contract/`、`_phase9_backend_a/`、`_phase9_backend_b/`；A/B 不共享科学 kernel。
+- `protocol_ancilla_errors.py` 是协议入口，`_protocol_ancilla/` 分开 sBs fault overlay、sharpen--trim 和 validation。
 
 ### 模块依赖关系
 
@@ -120,16 +140,11 @@ full_qec 模型的一轮闭环流程：
 ### 基本导入
 
 ```python
-from physics import (
-    ApproximateGKPState,
-    GKPStateFactory,
-    PhotonLossChannel,
-    CombinedNoiseModel,
-    RealisticSyndromeMeasurement,
-    LinearDecoder,
-    GKPErrorCorrector,
-    LogicalErrorTracker,
-)
+from physics.gkp_state import ApproximateGKPState, GKPStateFactory
+from physics.noise_channels import CombinedNoiseModel, PhotonLossChannel
+from physics.syndrome_measurement import RealisticSyndromeMeasurement
+from physics.error_correction import GKPErrorCorrector, LinearDecoder
+from physics.logical_tracking import LogicalErrorTracker
 ```
 
 ### 单轮纠错
@@ -146,6 +161,8 @@ result = corrector.run_qec_round(error)
 ### 多轮逻辑错误率仿真
 
 ```python
+from physics.logical_tracking import simulate_error_accumulation
+
 stats = simulate_error_accumulation(
     n_rounds=10000,
     sigma_error=0.3,
@@ -161,7 +178,9 @@ print(f"LER: {stats['total_error_rate']:.4f}")
 ### 漂移场景仿真
 
 ```python
-from physics import QECSimulator
+import numpy as np
+
+from physics.error_correction import QECSimulator
 
 def drift_model(t):
     sigma = 0.3 + 0.001 * t

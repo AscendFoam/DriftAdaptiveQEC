@@ -26,7 +26,7 @@ from cnn_fpga.benchmark import low_dimensional_student_distillation as student_p
 from cnn_fpga.benchmark import offline_teacher_student_distillation as legacy_parent
 from cnn_fpga.benchmark import slow_loop_model_selection as slow_parent
 from cnn_fpga.benchmark import teacher_student_gain_retention as retention_parent
-from physics import nmf_directional_ranking as nmf_parent
+import physics.nmf_directional_ranking as nmf_parent
 
 
 ROOT = Path(__file__).resolve().parents[2]

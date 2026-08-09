@@ -1,5 +1,7 @@
 # Decision Log
 
+> **LEGACY（已被取代）：** 本文保存 2026-06 旧治理链决策。当前决策应从 [`new_task_board.md`](new_task_board.md) 与 [`new_risks.md`](new_risks.md) 读取。
+
 ## D-2026-06-15-02
 
 - 日期：`2026-06-15`

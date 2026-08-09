@@ -15,7 +15,7 @@ from typing import Any
 
 import numpy as np
 
-from physics import phase9_reset_rao_blackwell as _rb
+import physics.phase9_reset_rao_blackwell as _rb
 from physics.phase9_reset_rao_blackwell import (
     ESTIMAND_ID,
     RaoBlackwellResetEvidence,

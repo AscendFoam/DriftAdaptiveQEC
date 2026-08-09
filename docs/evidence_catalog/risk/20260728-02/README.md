@@ -1,0 +1,14 @@
+# 风险任务 20260728-02
+
+本页索引 `8` 个冻结机器证据。文件仍保留原路径，以维持自哈希和 release-pin；优先阅读“人类文档”列。
+
+| Task | 机器证据 | 内容概览 | 人类文档 |
+| --- | --- | --- | --- |
+| `T-RISK-20260728-02` | [t_risk_20260728_02_scalar_uq_calibration.json](../../../t_risk_20260728_02_scalar_uq_calibration.json) · 23.4 KiB | task_id=T-RISK-20260728-02；verdict=PASS_SCALAR_UQ_THREE_SPLIT_CALIBRATION | [T-RISK-20260728-02_scalar_uq_three_split_calibration.md](../../../new_tasks/T-RISK-20260728-02_scalar_uq_three_split_calibration.md) |
+| `T-RISK-20260728-02` | [t_risk_20260728_02_scalar_uq_calibration_verification.json](../../../t_risk_20260728_02_scalar_uq_calibration_verification.json) · 2.2 KiB | task_id=T-RISK-20260728-02；verdict=VERIFIED_PASS_SCALAR_UQ_THREE_SPLIT_CALIBRATION | [T-RISK-20260728-02_scalar_uq_three_split_calibration.md](../../../new_tasks/T-RISK-20260728-02_scalar_uq_three_split_calibration.md) |
+| `T-RISK-20260728-02` | [t_risk_20260728_02_scalar_uq_failed_seed_collision_v1.json](../../../t_risk_20260728_02_scalar_uq_failed_seed_collision_v1.json) · 2.3 KiB | task_id=T-RISK-20260728-02 | [T-RISK-20260728-02_scalar_uq_three_split_calibration.md](../../../new_tasks/T-RISK-20260728-02_scalar_uq_three_split_calibration.md) |
+| `T-RISK-20260728-02` | [t_risk_20260728_02_scalar_uq_resource_preflight.json](../../../t_risk_20260728_02_scalar_uq_resource_preflight.json) · 1.2 KiB | task_id=T-RISK-20260728-02 | [T-RISK-20260728-02_scalar_uq_three_split_calibration.md](../../../new_tasks/T-RISK-20260728-02_scalar_uq_three_split_calibration.md) |
+| `T-RISK-20260728-02` | [t_risk_20260728_02_scalar_uq_resource_preflight_failed_seed_collision_v1.json](../../../t_risk_20260728_02_scalar_uq_resource_preflight_failed_seed_collision_v1.json) · 1.2 KiB | task_id=T-RISK-20260728-02 | [T-RISK-20260728-02_scalar_uq_three_split_calibration.md](../../../new_tasks/T-RISK-20260728-02_scalar_uq_three_split_calibration.md) |
+| `T-RISK-20260728-02` | [t_risk_20260728_02_scalar_uq_run_identity.json](../../../t_risk_20260728_02_scalar_uq_run_identity.json) · 2.1 KiB | task_id=T-RISK-20260728-02 | [T-RISK-20260728-02_scalar_uq_three_split_calibration.md](../../../new_tasks/T-RISK-20260728-02_scalar_uq_three_split_calibration.md) |
+| `T-RISK-20260728-02` | [t_risk_20260728_02_scalar_uq_run_identity_failed_seed_collision_v1.json](../../../t_risk_20260728_02_scalar_uq_run_identity_failed_seed_collision_v1.json) · 1.8 KiB | task_id=T-RISK-20260728-02 | [T-RISK-20260728-02_scalar_uq_three_split_calibration.md](../../../new_tasks/T-RISK-20260728-02_scalar_uq_three_split_calibration.md) |
+| `T-RISK-20260728-02` | [t_risk_20260728_02_scalar_uq_selection_receipt.json](../../../t_risk_20260728_02_scalar_uq_selection_receipt.json) · 17.3 KiB | task_id=T-RISK-20260728-02 | [T-RISK-20260728-02_scalar_uq_three_split_calibration.md](../../../new_tasks/T-RISK-20260728-02_scalar_uq_three_split_calibration.md) |

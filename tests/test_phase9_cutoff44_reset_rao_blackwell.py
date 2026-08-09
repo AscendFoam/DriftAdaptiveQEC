@@ -8,9 +8,9 @@ import numpy as np
 import pytest
 
 from cnn_fpga.benchmark.phase9_dual_backend_qualification import _action_words
-from physics import phase9_backend_a as backend_a
-from physics import phase9_backend_b as backend_b
-from physics import phase9_cutoff44_runtime_adapter as adapter
+import physics.phase9_backend_a as backend_a
+import physics.phase9_backend_b as backend_b
+import physics.phase9_cutoff44_runtime_adapter as adapter
 from physics.phase9_reset_rao_blackwell import (
     ESTIMAND_ID,
     STRESS_ROLE,

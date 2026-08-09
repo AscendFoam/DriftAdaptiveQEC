@@ -22,36 +22,12 @@ import numpy as np
 from .constants import LATTICE_CONST
 from .sbs_error_space import PauliFrame, SBS_PROTOCOL_ID
 from .syndrome_stream import ObservedSyndromeStep
+from ._shared.validation import finite as _finite
+from ._shared.validation import finite_pair as _pair
+from ._shared.validation import integer as _integer
 
 
 MODEL_SCOPE = "observed_only_multiround_control_memory_not_fallback_policy"
-
-
-def _integer(value: int, name: str, minimum: int = 0) -> int:
-    if isinstance(value, bool) or not isinstance(value, (int, np.integer)):
-        raise TypeError(f"{name} must be an integer")
-    result = int(value)
-    if result < minimum:
-        raise ValueError(f"{name} must be at least {minimum}")
-    return result
-
-
-def _finite(value: float, name: str) -> float:
-    if isinstance(value, bool):
-        raise TypeError(f"{name} must be a real number")
-    try:
-        result = float(value)
-    except (TypeError, ValueError) as exc:
-        raise TypeError(f"{name} must be a real number") from exc
-    if not math.isfinite(result):
-        raise ValueError(f"{name} must be finite")
-    return result
-
-
-def _pair(values: Sequence[float], name: str) -> tuple[float, float]:
-    if isinstance(values, (str, bytes)) or len(values) != 2:
-        raise ValueError(f"{name} must contain exactly two values")
-    return _finite(values[0], f"{name}[0]"), _finite(values[1], f"{name}[1]")
 
 
 def _confidence_pair(values: Sequence[float], name: str) -> tuple[float, float]:

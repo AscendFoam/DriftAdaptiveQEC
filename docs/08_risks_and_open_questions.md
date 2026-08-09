@@ -1,5 +1,7 @@
 # Risks And Open Questions
 
+> **LEGACY（已被取代）：** 本文停留在 2026-06 旧风险链。当前风险唯一登记入口是 [`new_risks.md`](new_risks.md)。
+
 ## 2026-06-15 Captain Supersession (T89 closeout)
 
 - The current unique task for all new worker action is `T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`.

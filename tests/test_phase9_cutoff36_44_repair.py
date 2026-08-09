@@ -17,7 +17,7 @@ from cnn_fpga.benchmark import (
     phase9_cutoff36_44_repair_verify as verifier,
 )
 from cnn_fpga.benchmark import phase9_fresh_twin_qualification as fresh
-from physics import phase9_reset_rao_blackwell as rb
+import physics.phase9_reset_rao_blackwell as rb
 
 
 ROOT = Path(__file__).resolve().parents[1]

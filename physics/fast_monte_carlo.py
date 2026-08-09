@@ -21,31 +21,13 @@ import numpy as np
 from .constants import LATTICE_CONST
 from .drift_processes import DriftProcess, DriftState
 from .sbs_error_space import SBS_PROTOCOL_ID
+from ._shared.validation import finite as _finite
+from ._shared.validation import finite_pair as _pair
+from ._shared.validation import integer as _integer
 
 
 MODEL_SCOPE = "vectorized_multitrajectory_syndrome_level_monte_carlo_not_device_calibrated"
 RARE_EVENT_KINDS = ("burst", "leakage", "burst_and_leakage")
-
-
-def _integer(value: int, name: str, minimum: int = 0) -> int:
-    if isinstance(value, bool) or not isinstance(value, (int, np.integer)):
-        raise TypeError(f"{name} must be an integer")
-    result = int(value)
-    if result < minimum:
-        raise ValueError(f"{name} must be at least {minimum}")
-    return result
-
-
-def _finite(value: float, name: str) -> float:
-    if isinstance(value, bool):
-        raise TypeError(f"{name} must be a real number")
-    try:
-        result = float(value)
-    except (TypeError, ValueError) as exc:
-        raise TypeError(f"{name} must be a real number") from exc
-    if not math.isfinite(result):
-        raise ValueError(f"{name} must be finite")
-    return result
 
 
 def _probability(value: float, name: str, *, strict: bool = False) -> float:
@@ -55,12 +37,6 @@ def _probability(value: float, name: str, *, strict: bool = False) -> float:
         interval = "(0, 1)" if strict else "[0, 1]"
         raise ValueError(f"{name} must lie in {interval}")
     return result
-
-
-def _pair(values: Sequence[float], name: str) -> tuple[float, float]:
-    if isinstance(values, (str, bytes)) or len(values) != 2:
-        raise ValueError(f"{name} must contain exactly two values")
-    return _finite(values[0], f"{name}[0]"), _finite(values[1], f"{name}[1]")
 
 
 @dataclass(frozen=True)

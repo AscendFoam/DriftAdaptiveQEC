@@ -12,7 +12,7 @@ None.
 
 ### N1: Worker Output miscounts figure entries
 
-The Worker Output section in the task package states "6 figure entries" but the ledger ([docs/paper_materials/paper_ablation_result_pack.md](docs/paper_materials/paper_ablation_result_pack.md) §2.1) actually contains **11 figure entries** (F1, F2, F3, FR1, FR4, FR6, FR7, FR8, FR10, FR11, FR12). Table count of 5 is correct (T1–T5).
+The Worker Output section in the task package states "6 figure entries" but the ledger ([docs/paper_materials/paper_ablation_result_pack.md](../paper_materials/paper_ablation_result_pack.md) §2.1) actually contains **11 figure entries** (F1, F2, F3, FR1, FR4, FR6, FR7, FR8, FR10, FR11, FR12). Table count of 5 is correct (T1–T5).
 
 **Impact:** The ledger content itself is correct and complete; only the summary count in the Worker Output block is wrong. Does not affect any downstream workflow. **Accepted** — cosmetic.
 

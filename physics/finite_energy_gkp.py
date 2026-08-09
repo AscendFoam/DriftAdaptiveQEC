@@ -27,6 +27,7 @@ from numpy.typing import ArrayLike, NDArray
 
 from .constants import LATTICE_CONST
 from .quadrature_conventions import CANONICAL_LOGICAL_CELL_SPACING
+from ._shared.validation import finite_positive as _finite_positive
 
 
 LogicalState = Literal["0", "1", "+", "-"]
@@ -74,13 +75,6 @@ class WignerLikeGrid:
     captured_probability: float
     total_mass: float
     negative_volume: float
-
-
-def _finite_positive(value: float, name: str) -> float:
-    result = float(value)
-    if not isfinite(result) or result <= 0.0:
-        raise ValueError(f"{name} must be finite and positive")
-    return result
 
 
 def _validate_lattice(lattice: float) -> float:

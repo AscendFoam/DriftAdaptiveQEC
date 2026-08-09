@@ -1,5 +1,7 @@
 # Evaluation Protocol And Repo Noise Governance
 
+> **LEGACY / REFERENCE：** 本文保留旧执行协议与 repo-noise 规则，仅作参考；当前任务流程以根 [`AGENTS.md`](../AGENTS.md) 和 [`new_task_board.md`](new_task_board.md) 为准。
+
 本文件对应 `docs/reference/AI_coding_workflow.md` 中 `06_eval_protocol.md` 的当前项目版本，同时保留恢复期形成的 repo noise governance。Phase 2 的所有 Worker 应先按本文件确定“什么算验证通过”，再记录或引用新结果。
 
 ## 1. 目的

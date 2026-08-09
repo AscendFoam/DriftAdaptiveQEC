@@ -31,6 +31,7 @@ from .differentiable_sbs_trajectory import (
     DifferentiableSBSTrajectorySimulator,
 )
 from .sbs_error_space import SBS_PROTOCOL_ID
+from ._shared.validation import positive_int as _positive_int
 
 try:
     import torch
@@ -55,15 +56,6 @@ def _require_torch() -> Any:
     if torch is None:
         raise RuntimeError("T2.3.5 requires PyTorch; use the local DLEnv/QuantumEnv")
     return torch
-
-
-def _positive_int(value: int, name: str) -> int:
-    if isinstance(value, bool) or not isinstance(value, (int, np.integer)):
-        raise TypeError(f"{name} must be an integer")
-    result = int(value)
-    if result <= 0:
-        raise ValueError(f"{name} must be positive")
-    return result
 
 
 @dataclass(frozen=True)

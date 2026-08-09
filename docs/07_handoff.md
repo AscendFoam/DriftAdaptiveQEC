@@ -1,3 +1,5 @@
+> **LEGACY（已被取代）：** 本文记录 2026-06 的 T89/T90 handoff，不是当前接力入口。当前任务以 [`new_task_board.md`](new_task_board.md) 为准。
+
 ## 2026-06-15 Captain Final Supersession (T89 closeout)
 
 - Current unique task: `T90: 训练链 clean-CPU 同机 repeated-run 一致性证据包`

@@ -29,25 +29,14 @@ import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
 from physics.fock_density_model import FiniteCutoffFockModel
+from ._shared.validation import finite_positive as _finite_positive, integer as _integer
 
 
 ComplexMatrix = NDArray[np.complex128]
 
 
 def _positive_integer(value: int, name: str, *, minimum: int = 1) -> int:
-    if isinstance(value, bool) or not isinstance(value, (int, np.integer)):
-        raise TypeError(f"{name} must be an integer")
-    result = int(value)
-    if result < minimum:
-        raise ValueError(f"{name} must be >= {minimum}")
-    return result
-
-
-def _finite_positive(value: float, name: str) -> float:
-    result = float(value)
-    if not isfinite(result) or result <= 0.0:
-        raise ValueError(f"{name} must be finite and positive")
-    return result
+    return _integer(value, name, minimum)
 
 
 def _matrix(value: ArrayLike, name: str) -> ComplexMatrix:

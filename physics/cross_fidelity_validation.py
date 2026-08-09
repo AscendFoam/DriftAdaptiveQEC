@@ -9,9 +9,7 @@ silently equated with a Gaussian central-cell probability.
 
 from __future__ import annotations
 
-import argparse
-import json
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from math import ceil, isfinite, pi, sqrt
 from pathlib import Path
 from typing import Literal
@@ -21,6 +19,13 @@ from numpy.typing import NDArray
 from scipy.ndimage import gaussian_filter1d
 
 from .constants import LATTICE_CONST
+from ._shared.numerics import hermite_functions as _hermite_functions
+from ._shared.validation import finite_positive as _positive
+from ._cross_fidelity.reporting import (
+    _error_attributions,
+    _validation_checks,
+    _write_cross_fidelity_validation,
+)
 from .finite_energy_gkp import damped_projector_state
 from .finite_squeezing_noise import (
     FiniteSqueezingNoiseConfig,
@@ -63,13 +68,6 @@ CROSS_FIDELITY_SCOPE = (
     "failure attribution"
 )
 DEFAULT_DB_GRID = (3.0, 5.0, 8.0, 10.0, 12.0)
-
-
-def _positive(value: float, name: str) -> float:
-    result = float(value)
-    if not isfinite(result) or result <= 0.0:
-        raise ValueError(f"{name} must be finite and positive")
-    return result
 
 
 @dataclass(frozen=True)
@@ -203,19 +201,6 @@ class FockFoldedResponse:
     displacement_sigma_input: float
     displacement_sigma_canonical: float
     coordinate_contract: FockCoordinateContract
-
-
-def _hermite_functions(coordinate: RealMatrix, cutoff: int) -> RealMatrix:
-    functions = np.empty((cutoff, coordinate.size), dtype=np.float64)
-    previous = np.zeros_like(coordinate)
-    current = pi ** (-0.25) * np.exp(-0.5 * coordinate * coordinate)
-    for n in range(cutoff):
-        functions[n] = current
-        following = sqrt(2.0 / (n + 1.0)) * coordinate * current
-        if n > 0:
-            following -= sqrt(n / (n + 1.0)) * previous
-        previous, current = current, following
-    return functions
 
 
 def fock_folded_map_response(
@@ -796,14 +781,28 @@ def evaluate_cross_fidelity_point(
     )
 
 
-def run_cross_fidelity_validation(
-    config: CrossFidelityConfig | None = None,
-) -> CrossFidelityValidationResult:
-    actual = CrossFidelityConfig() if config is None else config
-    if not isinstance(actual, CrossFidelityConfig):
-        raise TypeError("config must be a CrossFidelityConfig or None")
-    points = [evaluate_cross_fidelity_point(db, actual) for db in actual.squeezing_db]
-    cutoff_sweep = _twelve_db_cutoff_sweep(actual)
+@dataclass(frozen=True)
+class _ComparisonGaps:
+    high: list[CrossFidelityPoint]
+    low: CrossFidelityPoint
+    fock_syndrome: float
+    noise_syndrome: float
+    effective_noise_z: float
+    low_noise_syndrome: float
+
+
+@dataclass(frozen=True)
+class _DirectionalTrends:
+    common_lanes_consistent: bool
+    protocol_survival: list[float]
+    protocol_weighted: list[float]
+    effective_occupancy: list[float]
+    noise_occupancy: list[float]
+    cutoff_ler: list[float]
+    cutoff_capture: list[float]
+
+
+def _comparison_gaps(points: list[CrossFidelityPoint]) -> _ComparisonGaps:
     high = [item for item in points if item.region == "high_squeezing"]
     fock_syndrome_gap = max(
         abs(
@@ -838,6 +837,20 @@ def run_cross_fidelity_validation(
         low.noise_transfer.pauli.q_axis_ler
         - low.syndrome.square_symmetry_projection.q_axis_ler
     )
+    return _ComparisonGaps(
+        high=high,
+        low=low,
+        fock_syndrome=fock_syndrome_gap,
+        noise_syndrome=noise_syndrome_gap,
+        effective_noise_z=max_z,
+        low_noise_syndrome=low_gap,
+    )
+
+
+def _directional_trends(
+    points: list[CrossFidelityPoint],
+    cutoff_sweep: tuple[FockCutoffPoint, ...],
+) -> _DirectionalTrends:
     common_lanes = {
         "fock_canonical_two_axis": [
             item.fock.two_axis_pauli_metrics for item in points
@@ -864,107 +877,59 @@ def run_cross_fidelity_validation(
     noise_occupancy = [item.noise_transfer.central_domain_occupancy for item in points]
     cutoff_ler = [item.q_axis_ler for item in cutoff_sweep]
     cutoff_capture = [item.minimum_captured_probability for item in cutoff_sweep]
-    canonical_qp_gap = max(
-        abs(item.fock.p_minus_q_ler_gap) for item in high
+    return _DirectionalTrends(
+        common_lanes_consistent=directional,
+        protocol_survival=protocol_survival,
+        protocol_weighted=protocol_weighted,
+        effective_occupancy=effective_occupancy,
+        noise_occupancy=noise_occupancy,
+        cutoff_ler=cutoff_ler,
+        cutoff_capture=cutoff_capture,
     )
+
+
+def _axis_comparison_gaps(
+    high: list[CrossFidelityPoint],
+) -> tuple[float, float]:
+    canonical_qp_gap = max(abs(item.fock.p_minus_q_ler_gap) for item in high)
     legacy_p_audit_gap = min(
         item.fock.legacy_p_minus_q_ler_gap for item in high
     )
-    attributions = (
-        ErrorAttribution(
-            attribution_id="XA-LOW-CLIPPING",
-            region="3 dB",
-            observation=(
-                f"noise-transfer versus direct-syndrome q-LER gap is {low_gap:.6f}; "
-                f"clipping ratio is {low.noise_transfer.minimum_clipping_ratio:.6f}"
-            ),
-            primary_cause="localized Gaussian peak assumption loses state/envelope structure under clipping",
-            reporting_consequence="3/5 dB remain falsification cases, never calibration points for the surrogate",
-        ),
-        ErrorAttribution(
-            attribution_id="XA-HIGH-CUTOFF",
-            region="12 dB",
-            observation=(
-                f"cutoff-24 to cutoff-48 q-LER changes from {cutoff_ler[0]:.6g} "
-                f"to {cutoff_ler[-1]:.6g} while minimum capture rises from "
-                f"{cutoff_capture[0]:.6f} to {cutoff_capture[-1]:.6f}"
-            ),
-            primary_cause="narrow high-squeezing peaks require larger photon-number cutoff for tail-sensitive alias rates",
-            reporting_consequence="12 dB Fock agreement uses an absolute gate and retains the full cutoff sweep",
-        ),
-        ErrorAttribution(
-            attribution_id="XA-P-COORDINATE",
-            region="all, strongest at 10/12 dB",
-            observation=(
-                f"maximum high-squeezing canonical |p-q| LER gap is {canonical_qp_gap:.6g}; "
-                f"the frozen legacy ambiguous audit still has minimum p-q gap "
-                f"{legacy_p_audit_gap:.6f}"
-            ),
-            primary_cause=(
-                "the former audit identified decoder logical-cell spacing sqrt(2*pi) with a "
-                "canonical Fock domain and omitted the width/envelope/Jacobian dilation"
-            ),
-            reporting_consequence=(
-                "axis-resolved canonical q/p responses are allowed; the independent-axis Pauli "
-                "projection is not promoted to a coherent joint-axis correlation claim"
-            ),
-        ),
-        ErrorAttribution(
-            attribution_id="XA-OCCUPANCY-SEMANTICS",
-            region="all",
-            observation="Fock code survival, Gaussian central-domain mass and Pauli correct-coset occupancy have different denominators",
-            primary_cause="protocol leakage, alias-domain localization and logical-coset correctness are distinct events",
-            reporting_consequence="only directional native-occupancy trends are compared; absolute occupancy values are never ranked",
-        ),
+    return canonical_qp_gap, legacy_p_audit_gap
+
+
+def run_cross_fidelity_validation(
+    config: CrossFidelityConfig | None = None,
+) -> CrossFidelityValidationResult:
+    actual = CrossFidelityConfig() if config is None else config
+    if not isinstance(actual, CrossFidelityConfig):
+        raise TypeError("config must be a CrossFidelityConfig or None")
+    points = [evaluate_cross_fidelity_point(db, actual) for db in actual.squeezing_db]
+    cutoff_sweep = _twelve_db_cutoff_sweep(actual)
+    comparison = _comparison_gaps(points)
+    trends = _directional_trends(points, cutoff_sweep)
+    canonical_qp_gap, legacy_p_audit_gap = _axis_comparison_gaps(comparison.high)
+    attributions = _error_attributions(
+        comparison, trends, canonical_qp_gap, legacy_p_audit_gap
     )
-    checks = {
-        "all_common_lanes_have_consistent_LER_occupancy_Favg_directions": directional,
-        "fock_protocol_survival_improves_with_squeezing": _strictly_increasing(
-            protocol_survival
-        ),
-        "fock_protocol_code_weighted_fidelity_improves_with_squeezing": _strictly_increasing(
-            protocol_weighted
-        ),
-        "effective_central_domain_occupancy_improves": _strictly_increasing(
-            effective_occupancy
-        ),
-        "noise_transfer_central_domain_occupancy_improves": _strictly_increasing(
-            noise_occupancy
-        ),
-        "high_squeezing_fock_q_matches_direct_syndrome_absolutely": fock_syndrome_gap
-        < 5.0e-4,
-        "high_squeezing_noise_transfer_matches_direct_syndrome": noise_syndrome_gap
-        < 1.0e-4,
-        "high_squeezing_effective_MC_matches_noise_transfer": max_z < 5.0,
-        "low_squeezing_clipping_mismatch_is_exposed": low_gap > 1.0e-2
-        and low.noise_transfer.validity == "clipping_dominated",
-        "high_squeezing_noise_transfer_is_localized": all(
-            item.noise_transfer.validity == "localized" for item in high
-        ),
-        "twelve_db_fock_q_alias_converges_with_cutoff": _strictly_decreasing(
-            cutoff_ler
-        )
-        and _strictly_increasing(cutoff_capture),
-        "fock_reconstructed_probability_mass_is_complete": max(
-            item.fock.maximum_reconstructed_mass_error for item in points
-        )
-        < 1.0e-10,
-        "canonical_fock_qp_fourier_alignment_is_restored": canonical_qp_gap
-        < 1.0e-5,
-        "legacy_ambiguous_fourier_mismatch_is_retained_as_negative_provenance": legacy_p_audit_gap
-        > 0.1,
-        "error_attribution_table_is_complete": len(attributions) >= 4,
-    }
+    checks = _validation_checks(
+        points,
+        comparison,
+        trends,
+        canonical_qp_gap,
+        legacy_p_audit_gap,
+        attributions,
+    )
     return CrossFidelityValidationResult(
         config=actual,
         points=tuple(points),
         twelve_db_fock_cutoff_sweep=cutoff_sweep,
-        maximum_high_squeezing_fock_syndrome_q_ler_gap=fock_syndrome_gap,
-        maximum_high_squeezing_noise_syndrome_q_ler_gap=noise_syndrome_gap,
-        maximum_high_squeezing_effective_noise_z_score=max_z,
+        maximum_high_squeezing_fock_syndrome_q_ler_gap=comparison.fock_syndrome,
+        maximum_high_squeezing_noise_syndrome_q_ler_gap=comparison.noise_syndrome,
+        maximum_high_squeezing_effective_noise_z_score=comparison.effective_noise_z,
         maximum_high_squeezing_canonical_fock_qp_ler_gap=canonical_qp_gap,
         minimum_high_squeezing_legacy_p_minus_q_ler_gap=legacy_p_audit_gap,
-        low_squeezing_noise_syndrome_q_ler_gap=low_gap,
+        low_squeezing_noise_syndrome_q_ler_gap=comparison.low_noise_syndrome,
         attributions=attributions,
         checks=checks,
     )
@@ -974,37 +939,13 @@ def write_cross_fidelity_validation(
     result: CrossFidelityValidationResult,
     output: str | Path,
 ) -> Path:
-    if not isinstance(result, CrossFidelityValidationResult):
-        raise TypeError("result must be a CrossFidelityValidationResult")
-    path = Path(output)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    payload = asdict(result)
-    payload["passed"] = result.passed
-    path.write_text(
-        json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-    )
-    return path
-
-
-def _main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--effective-samples", type=int, default=200_000)
-    parser.add_argument("--seed", type=int, default=2026071433)
-    arguments = parser.parse_args()
-    result = run_cross_fidelity_validation(
-        CrossFidelityConfig(
-            effective_samples=arguments.effective_samples,
-            seed=arguments.seed,
-        )
-    )
-    write_cross_fidelity_validation(result, arguments.output)
-    print(json.dumps({"passed": result.passed, "checks": result.checks}, sort_keys=True))
-    return 0 if result.passed else 1
+    return _write_cross_fidelity_validation(result, output)
 
 
 if __name__ == "__main__":
-    raise SystemExit(_main())
+    from ._cross_fidelity.reporting import main
+
+    raise SystemExit(main())
 
 
 __all__ = [

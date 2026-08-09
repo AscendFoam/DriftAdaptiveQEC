@@ -192,7 +192,7 @@ def test_action_layout_is_contiguous_80_bits_and_residual_zero() -> None:
 
 def test_action_word_roundtrip_and_crc_tamper_rejection() -> None:
     _implementation()
-    from physics import phase9_twin_contract as runtime
+    import physics.phase9_twin_contract as runtime
 
     result = runtime.total_recurrence(
         runtime.CompositeKey(
@@ -217,7 +217,7 @@ def test_nonzero_residual_is_structurally_rejected(
     field: str, value: int
 ) -> None:
     _implementation()
-    from physics import phase9_twin_contract as runtime
+    import physics.phase9_twin_contract as runtime
 
     kwargs = {
         "action_code": 0,
@@ -242,7 +242,7 @@ def test_nonzero_residual_is_structurally_rejected(
 
 def test_deployable_validator_recursively_rejects_truth() -> None:
     _implementation()
-    from physics import phase9_twin_contract as runtime
+    import physics.phase9_twin_contract as runtime
 
     observed = runtime._minimal_observed()
     memory = runtime._minimal_memory()
@@ -322,7 +322,7 @@ def test_fault_priority_is_unique_complete_and_safe() -> None:
         and row["undefined_action"] is False
         for row in fault["priority"]
     )
-    from physics import phase9_twin_contract as runtime
+    import physics.phase9_twin_contract as runtime
 
     assert [row["fault_id"] for row in fault["priority"]] == list(
         runtime.FAULT_PRIORITY
@@ -347,7 +347,7 @@ def test_exactly_sixteen_probes_are_nonpromotional() -> None:
         and row["ranking_evidence"] is False
         for row in probes
     )
-    from physics import phase9_twin_contract as runtime
+    import physics.phase9_twin_contract as runtime
 
     runtime_probes = runtime.representative_action_probes()
     for probe in runtime_probes:

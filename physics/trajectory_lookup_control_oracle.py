@@ -23,6 +23,7 @@ from typing import Any, Literal, Mapping, Sequence
 
 import numpy as np
 
+from ._shared.validation import positive_int as _positive_int
 from .differentiable_sbs_trajectory import (
     DIFFERENTIABLE_SBS_SCOPE,
     PARAMETER_NAMES,
@@ -57,15 +58,6 @@ def _require_torch() -> Any:
             "C:/ProgramData/anaconda3/envs/DLEnv/python.exe"
         )
     return torch
-
-
-def _positive_int(value: Any, name: str) -> int:
-    if isinstance(value, bool) or not isinstance(value, (int, np.integer)):
-        raise TypeError(f"{name} must be an integer")
-    result = int(value)
-    if result <= 0:
-        raise ValueError(f"{name} must be positive")
-    return result
 
 
 def history_node_count(half_cycles: int) -> int:

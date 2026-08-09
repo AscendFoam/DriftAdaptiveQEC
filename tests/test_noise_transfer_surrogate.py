@@ -14,7 +14,6 @@ import numpy as np
 import pytest
 from scipy.integrate import quad
 
-import physics
 from physics.constants import LATTICE_CONST
 from physics.noise_transfer_surrogate import (
     NOISE_TRANSFER_SCOPE,
@@ -374,8 +373,3 @@ def test_production_validation_and_writer(tmp_path) -> None:
 def test_validation_rejects_demo_sized_monte_carlo() -> None:
     with pytest.raises(ValueError, match="50000"):
         run_noise_transfer_validation(monte_carlo_samples=49_999)
-
-
-def test_public_lazy_exports_preserve_scope() -> None:
-    assert physics.GKPNoiseTransferSurrogate is GKPNoiseTransferSurrogate
-    assert physics.NOISE_TRANSFER_SCOPE == NOISE_TRANSFER_SCOPE

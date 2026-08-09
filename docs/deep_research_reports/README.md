@@ -1,13 +1,15 @@
 # Deep Research Reports
 
+> **状态提示：** 本索引冻结于 2026-06-11，下面的“T72/当前唯一任务”等表述只描述当时状态。当前任务与风险请从 [`../README.md`](../README.md) 进入。
+
 本目录保存深度研究、查重和论文定位材料。原报告保留为历史研究输入；本 README 只作为截至 2026-06-11 的状态索引，用来标记哪些建议已经被后续任务覆盖，哪些内容已经过时、需要降级解读或重新任务化。
 
-当前项目事实仍以 `docs/04_task_board.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md` 和对应 task/review 文档为准。本目录中的报告不能单独作为“当前已完成”或“硬件已验证”的证据。
+本目录中的报告不能单独作为“当前已完成”或“硬件已验证”的证据；当前项目事实入口见 `docs/README.md`。
 
 ## 当前权威边界
 
 - 当前阶段是 `Phase 2: Controlled Development`，决策状态为 `Go`。
-- 当前唯一任务是 `T72: Real-board transfer-pack provenance hardening`；它是迁移包溯源与回归加固任务，不是 benchmark、`.tflite`、真板联调或论文结论任务。
+- 截至本索引冻结时，唯一任务是 `T72: Real-board transfer-pack provenance hardening`；它是历史状态，不代表当前任务指针。
 - `T24` 已形成冻结集 formal software revalidation，但边界是 mock-backed software-HIL；不能写成 `.tflite`、真板或 paper-grade expanded benchmark。
 - `T45` 已对深度研究提出的 broader benchmark 进行协议分类和锁定；未被采纳的扩展项仍需单独任务化。
 - `T48` 已确认 preserved `static_theta_v2` 路径的 isolated current-host true `.tflite` runtime，但不等于默认环境、跨主机部署或 HIL/真板闭环恢复。

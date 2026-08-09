@@ -22,7 +22,7 @@ from cnn_fpga.decoder.regime_hmm import (
 # protocol constants before importing torch, matching the rest of the physics
 # stack's safe import order and avoiding a later process abort during pytest
 # collection.
-from physics import sbs_error_space as _sbs_error_space  # noqa: F401
+import physics.sbs_error_space as _sbs_error_space  # noqa: F401
 
 try:  # Keep non-neural artifact inspection usable in the base environment.
     import torch

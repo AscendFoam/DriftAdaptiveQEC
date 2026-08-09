@@ -1,5 +1,7 @@
 # Task Board
 
+> **LEGACY（已被取代）：** 本板仅作旧任务链兼容记录，不再是当前任务主状态。当前唯一状态源是 [`new_task_board.md`](new_task_board.md)。
+
 本文件是当前仓库的任务主状态。后续 Worker 只能领取 `Current Unique Task` 指向的单个任务包；Captain 完成整合前，不自动领取下一项。
 
 全局建议：运行代码可以使用conda的DLEnv环境(重环境)，也可以直接使用conda的默认python环境(轻环境)。

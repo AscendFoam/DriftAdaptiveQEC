@@ -1,5 +1,7 @@
 # Feasibility And Legacy Audit
 
+> **LEGACY（已被取代）：** 本文只保留旧治理审计。当前状态入口见 [`README.md`](README.md)，不得用下方旧入口覆盖 `new_*` 状态源。
+
 **维护状态**：legacy 真实性审计底稿
 **最后维护说明更新**：2026-06-15
 **当前事实入口**：`docs/02_experiment_plan.md`、`docs/04_task_board.md`、`docs/07_handoff.md`、`docs/08_risks_and_open_questions.md`

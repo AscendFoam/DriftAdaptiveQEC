@@ -44,7 +44,7 @@ Worker 按照任务包的要求，执行了以下只读步骤：
 3. **列出先决条件**：6 条 prerequisite checklist 确保后续实现任务不会跳过必要步骤。
 4. **约束未来任务包**：gate 文档要求任何后续实现任务必须包含 Allowed files / Forbidden scope / Verification / Docs to update 四个字段。
 
-在项目整体路线图（[docs/04_task_board.md](../../04_task_board.md)）中，T26 属于 Milestone 2I: Mechanism Evidence Hardening。它的前置任务是 T27-T29（修复 teacher diagnostics 和报告格式），后续可能是 T30（paper-inspired statcalib 实现）或其他 statcalib 实现任务。T36（seed 失败机理诊断）是并行的独立优先级。
+在项目整体路线图（[docs/04_task_board.md](../04_task_board.md)）中，T26 属于 Milestone 2I: Mechanism Evidence Hardening。它的前置任务是 T27-T29（修复 teacher diagnostics 和报告格式），后续可能是 T30（paper-inspired statcalib 实现）或其他 statcalib 实现任务。T36（seed 失败机理诊断）是并行的独立优先级。
 
 ## 3. 为什么给出 PASS 的 Review 结果
 

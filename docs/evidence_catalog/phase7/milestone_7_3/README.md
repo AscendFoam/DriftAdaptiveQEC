@@ -1,0 +1,16 @@
+# Phase 7 · Milestone 7.3
+
+本页索引 `10` 个冻结机器证据。文件仍保留原路径，以维持自哈希和 release-pin；优先阅读“人类文档”列。
+
+| Task | 机器证据 | 内容概览 | 人类文档 |
+| --- | --- | --- | --- |
+| `T7.3.1` | [t7_3_1_exact_oracle_map_reviewer_contract.json](../../../t7_3_1_exact_oracle_map_reviewer_contract.json) · 16.4 KiB | task_id=T7.3.1；verdict=FAIL_EXACT_ORACLE_MAP_REVIEWER_CONTRACT | [exact_oracle_map_reviewer_response.md](../../../exact_oracle_map_reviewer_response.md) |
+| `T7.3.1` | [t7_3_1_exact_oracle_map_reviewer_source_data.csv](../../../t7_3_1_exact_oracle_map_reviewer_source_data.csv) · 2.8 KiB | 20 rows；5 columns（row_id, topic, response_state, source_ids, …） | [exact_oracle_map_reviewer_response.md](../../../exact_oracle_map_reviewer_response.md) |
+| `T7.3.2` | [t7_3_2_cnn_centric_reviewer_contract.json](../../../t7_3_2_cnn_centric_reviewer_contract.json) · 38.3 KiB | task_id=T7.3.2；verdict=PASS_CNN_NONCENTRIC_REPLACEABLE_LEARNING_REVIEWER_RESPONSE | [T7.3.2_cnn_centric_reviewer_response.md](../../../new_tasks/T7.3.2_cnn_centric_reviewer_response.md) |
+| `T7.3.2` | [t7_3_2_cnn_centric_reviewer_source_data.csv](../../../t7_3_2_cnn_centric_reviewer_source_data.csv) · 7.4 KiB | 24 rows；7 columns（row_id, response_state, topic, claim, …） | [T7.3.2_cnn_centric_reviewer_response.md](../../../new_tasks/T7.3.2_cnn_centric_reviewer_response.md) |
+| `T7.3.3` | [t7_3_3_experiment_relevance_reviewer_contract.json](../../../t7_3_3_experiment_relevance_reviewer_contract.json) · 32.4 KiB | task_id=T7.3.3；verdict=PASS_EXPERIMENT_RELEVANCE_WITHOUT_HARDWARE_OVERCLAIM | [T7.3.3_experiment_relevance_reviewer_response.md](../../../new_tasks/T7.3.3_experiment_relevance_reviewer_response.md) |
+| `T7.3.3` | [t7_3_3_experiment_relevance_reviewer_source_data.csv](../../../t7_3_3_experiment_relevance_reviewer_source_data.csv) · 7.5 KiB | 24 rows；7 columns（row_id, response_state, topic, claim, …） | [T7.3.3_experiment_relevance_reviewer_response.md](../../../new_tasks/T7.3.3_experiment_relevance_reviewer_response.md) |
+| `T7.3.4` | [t7_3_4_postselection_breakeven_reviewer_contract.json](../../../t7_3_4_postselection_breakeven_reviewer_contract.json) · 30.7 KiB | task_id=T7.3.4；verdict=PASS_POSTSELECTION_DIAGNOSTIC_AND_BREAKEVEN_NOT_ESTABLISHED | [T7.3.4_postselection_breakeven_reviewer_response.md](../../../new_tasks/T7.3.4_postselection_breakeven_reviewer_response.md) |
+| `T7.3.4` | [t7_3_4_postselection_breakeven_reviewer_source_data.csv](../../../t7_3_4_postselection_breakeven_reviewer_source_data.csv) · 7.0 KiB | 24 rows；7 columns（row_id, response_state, topic, claim, …） | [T7.3.4_postselection_breakeven_reviewer_response.md](../../../new_tasks/T7.3.4_postselection_breakeven_reviewer_response.md) |
+| `T7.3.5` | [t7_3_5_puviani_novelty_reviewer_contract.json](../../../t7_3_5_puviani_novelty_reviewer_contract.json) · 49.4 KiB | task_id=T7.3.5；verdict=PASS_PUVIANI_RELATIONSHIP_SEPARATED_WITH_SURPASS_PROHIBITED | [T7.3.5_puviani_novelty_reviewer_response.md](../../../new_tasks/T7.3.5_puviani_novelty_reviewer_response.md) |
+| `T7.3.5` | [t7_3_5_puviani_novelty_reviewer_source_data.csv](../../../t7_3_5_puviani_novelty_reviewer_source_data.csv) · 8.2 KiB | 24 rows；7 columns（row_id, response_state, topic, claim, …） | [T7.3.5_puviani_novelty_reviewer_response.md](../../../new_tasks/T7.3.5_puviani_novelty_reviewer_response.md) |

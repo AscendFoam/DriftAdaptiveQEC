@@ -24,6 +24,7 @@ import numpy as np
 from numpy.typing import ArrayLike, NDArray
 from scipy.special import ndtr, ndtri
 
+from ._shared.numerics import hermite_functions as _hermite_functions
 from .constants import LATTICE_CONST
 from .finite_energy_gkp import damped_projector_state
 from .fock_density_model import FiniteCutoffFockModel
@@ -33,6 +34,7 @@ from .quadrature_conventions import (
     QuadratureChartName,
     chart,
 )
+from ._shared.validation import finite_positive as _finite_positive
 
 
 RealMatrix = NDArray[np.float64]
@@ -44,13 +46,6 @@ NOISE_TRANSFER_SCOPE = (
     "surrogate; not an SBS Kraus recovery, pulse/transmon model, device calibration, "
     "or replacement for Fock cross-validation"
 )
-
-
-def _finite_positive(value: float, name: str) -> float:
-    result = float(value)
-    if not isfinite(result) or result <= 0.0:
-        raise ValueError(f"{name} must be finite and positive")
-    return result
 
 
 def _unit_interval(value: float, name: str, *, strictly_positive: bool = False) -> float:
@@ -513,19 +508,6 @@ def _domain_conditioned_variance_from_density(
         second = float(np.trapz(local_x * local_x * local_p, local_x))
         variance += second - first * first / local_mass
     return max(float(variance), 0.0)
-
-
-def _hermite_functions(coordinate: NDArray[np.float64], cutoff: int) -> RealMatrix:
-    functions = np.empty((cutoff, coordinate.size), dtype=np.float64)
-    previous = np.zeros_like(coordinate)
-    current = pi ** (-0.25) * np.exp(-0.5 * coordinate * coordinate)
-    for n in range(cutoff):
-        functions[n] = current
-        following = sqrt(2.0 / (n + 1.0)) * coordinate * current
-        if n > 0:
-            following -= sqrt(n / (n + 1.0)) * previous
-        previous, current = current, following
-    return functions
 
 
 @dataclass(frozen=True)

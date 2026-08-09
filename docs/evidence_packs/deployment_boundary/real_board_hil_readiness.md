@@ -163,7 +163,7 @@
 3. 不跳过设备/权限/日志证据。
 4. 不在无最小 smoke 证据时更新阶段结论。
 
-`T22` 已补出 [docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md](docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md) 作为计划层输出。
+`T22` 已补出 [docs/evidence_packs/deployment_boundary/real_board_smoke_execution_plan.md](real_board_smoke_execution_plan.md) 作为计划层输出。
 
 后续任何真板执行任务在运行命令前，必须先在以下宿主模型中选定一种并写入任务包：
 

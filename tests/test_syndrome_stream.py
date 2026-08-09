@@ -366,11 +366,3 @@ def test_different_stream_seed_changes_stochastic_trajectory_not_drift_truth() -
     assert [step.truth.channel_displacement for step in first.steps] != [
         step.truth.channel_displacement for step in second.steps
     ]
-
-
-def test_public_physics_exports_resolve_without_eager_import_contract_breakage() -> None:
-    from physics import SyndromeStreamConfig as PublicConfig
-    from physics import generate_syndrome_stream as public_generate
-
-    assert PublicConfig is SyndromeStreamConfig
-    assert public_generate is generate_syndrome_stream

@@ -1,12 +1,14 @@
 # Reality Recovery Retired
 
+> **状态提示：** 本目录已经退役；下面的 T72 和旧治理链只描述 2026-06-11 附近状态。当前入口见 [`../README.md`](../README.md)。
+
 本目录原用于 `T44: Research Reality Recovery Mode` 附近的真实性冻结与证据复核。随着后续主线已经继续完成 `T45`、`T48`、`T49`、`T57`、`T58`、`T64`-`T70`、`T71` 并切换到 `T72`，原始 reality-recovery 文件中的许多状态已经过时。
 
 因此，本目录自 2026-06-11 起退役，不再作为当前项目事实来源。
 
 ## 当前权威入口
 
-当前项目状态请优先阅读：
+以下是本目录退役时使用的历史治理入口：
 
 - `docs/00_project_snapshot.md`
 - `docs/01_legacy_audit.md`
@@ -18,7 +20,7 @@
 
 特别注意：
 
-- 当前唯一任务以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准。
+- 当时的唯一任务以 `docs/04_task_board.md` 和 `docs/07_handoff.md` 为准；当前任务改从 `docs/new_task_board.md` 读取。
 - `T48` 已改变旧文件中关于 true `.tflite` runtime 的 current-host 状态，但不等于默认环境或部署闭环完成。
 - `T49/T71/T72` 已改变旧文件中关于 real-board gate 的状态，但 current-host verdict 仍是 `NO_GO_REAL_BOARD_HOST_OR_DEVICE_PATH_UNAVAILABLE`，不是真板验证完成。
 - `T64`-`T70` 已改变旧文件中关于 `statcalib` 的状态，但 `statcalib` 仍是 mock-backed software-HIL extension lane，不是成熟主线 comparator。

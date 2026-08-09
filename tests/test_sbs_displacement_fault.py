@@ -7,7 +7,6 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-import physics
 import physics.sbs_displacement_fault as displacement_module
 from physics.sbs_displacement_fault import (
     MODEL_SCOPE,
@@ -293,9 +292,3 @@ def test_protocol_registry_promotes_only_the_verified_fault_trend_layer() -> Non
     assert all((ROOT / path).is_file() for path in update["artifacts"])
     forbidden = " ".join(main["forbidden_transfers"])
     assert "not claim the qualitative displacement trend is a digitized Fig. 4(c)" in forbidden
-
-
-def test_public_lazy_exports_include_displacement_fault_contract() -> None:
-    assert physics.DisplacementFaultSweepConfig is DisplacementFaultSweepConfig
-    assert physics.run_displacement_fault_sweep is run_displacement_fault_sweep
-    assert physics.distance_to_closest_logical_operation is distance_to_closest_logical_operation

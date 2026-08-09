@@ -8,7 +8,6 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-import physics
 import physics.sbs_occupancy_correlation as occupancy_module
 from physics.sbs_occupancy_correlation import (
     MODEL_SCOPE,
@@ -340,9 +339,3 @@ def test_protocol_registry_promotes_only_verified_occupancy_correlation_scope() 
     assert all((ROOT / path).is_file() for path in update["artifacts"])
     forbidden = " ".join(main["forbidden_transfers"])
     assert "reproduces experimental raw data" in forbidden
-
-
-def test_public_lazy_exports_include_occupancy_correlation_contract() -> None:
-    assert physics.OccupancyCorrelationConfig is OccupancyCorrelationConfig
-    assert physics.estimate_occupancy_from_syndrome is estimate_occupancy_from_syndrome
-    assert physics.run_occupancy_correlation_validation is run_occupancy_correlation_validation

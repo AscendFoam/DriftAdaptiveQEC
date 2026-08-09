@@ -350,11 +350,3 @@ def test_report_writer_round_trips_machine_artifact() -> None:
         assert payload["scope_limits"][2] == "not device calibrated or target-board timed"
         with pytest.raises(TypeError, match="result"):
             write_fast_monte_carlo_report(object(), path)  # type: ignore[arg-type]
-
-
-def test_public_physics_exports_resolve() -> None:
-    from physics import FastMonteCarloConfig as PublicConfig
-    from physics import run_fast_monte_carlo as public_run
-
-    assert PublicConfig is FastMonteCarloConfig
-    assert public_run is run_fast_monte_carlo

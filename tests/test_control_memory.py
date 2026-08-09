@@ -428,11 +428,3 @@ def test_state_phase_boundary_is_canonicalized_to_half_open_interval() -> None:
     state = ControlMemoryState(phase_frame_rad=(math.pi, -math.pi))
     assert state.phase_frame_rad == (-math.pi, -math.pi)
     assert all(-math.pi <= value < math.pi for value in state.phase_frame_rad)
-
-
-def test_public_physics_exports_resolve() -> None:
-    from physics import ControlDecision as PublicDecision
-    from physics import MultiRoundControlMemory as PublicMemory
-
-    assert PublicDecision is ControlDecision
-    assert PublicMemory is MultiRoundControlMemory

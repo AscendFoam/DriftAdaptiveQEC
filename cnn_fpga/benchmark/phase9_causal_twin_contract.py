@@ -22,7 +22,7 @@ from typing import Any, Callable, Iterable, Mapping, Sequence
 
 from cnn_fpga.benchmark import phase9_scoped_claim_amendment
 from cnn_fpga.benchmark import phase9_three_lane_protocol
-from physics import phase9_twin_contract
+import physics.phase9_twin_contract as phase9_twin_contract
 
 
 ROOT = Path(__file__).resolve().parents[2]
