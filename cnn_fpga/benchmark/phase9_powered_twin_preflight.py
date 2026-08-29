@@ -2889,6 +2889,24 @@ class ResourcePreflightSupervisor:
         sampler_started = False
         heartbeat_started = False
         terminal_recorded = False
+        # Keep a stable, fail-closed snapshot of every stage that may have
+        # completed before a later resource gate rejects the run.  These
+        # values are deliberately initialized before the guarded execution so
+        # early failures remain explicit instead of being mistaken for absent
+        # reporting, while late failures preserve the already-computed
+        # projection and gate decision for independent diagnosis.
+        lineage: dict[str, Any] | None = None
+        seed_firewall: dict[str, Any] | None = None
+        measurements: list[dict[str, Any]] = []
+        stats: dict[str, Any] | None = None
+        raw_seed_audit: dict[str, Any] | None = None
+        inventory: dict[str, Any] | None = None
+        inventory_evidence: dict[str, Any] | None = None
+        inventory_binding: dict[str, Any] | None = None
+        projection: dict[str, Any] | None = None
+        decision: dict[str, Any] | None = None
+        maximum_inflight_temp_bytes: int | None = None
+        analysis_scratch_bytes: int | None = None
         try:
             lineage = self.lineage_validator(
                 root,
@@ -3218,6 +3236,26 @@ class ResourcePreflightSupervisor:
                 "formal_artifact_namespace_accessed": False,
                 "artifact_namespace": artifact_paths,
                 "sampling": sampling,
+                "completed_stage_evidence": {
+                    "lineage_validation": lineage,
+                    "seed_firewall": seed_firewall,
+                    # Preserve the already-returned process-group order.  Do
+                    # not perform additional validation while serializing an
+                    # exception: a malformed partial measurement must not
+                    # mask the original fail-closed cause.
+                    "profile_measurements": list(measurements),
+                    "streaming_statistics_dry_run": stats,
+                    "raw_seed_audit": raw_seed_audit,
+                    "inventory": inventory,
+                    "inventory_binding": inventory_binding,
+                    "inventory_no_copy_evidence": inventory_evidence,
+                    "projection": projection,
+                    "resource_gate_decision": decision,
+                    "maximum_inflight_temp_bytes": (
+                        maximum_inflight_temp_bytes
+                    ),
+                    "analysis_scratch_bytes": analysis_scratch_bytes,
+                },
                 "scientific_verdict": None,
                 "qualified_claim": None,
                 "claim_boundary": _claims_null(),

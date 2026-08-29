@@ -3,7 +3,7 @@
 - Task ID：`T-RISK-20260728-04`
 - 标题：fresh powered dual-backend qualification
 - 日期：2026-07-30
-- 状态：`In Progress — V5 preregistration/materialization PASS; fresh resource run pending`
+- 状态：`Blocked — V5c verified resource wall NO-GO; feasibility repair required`
 
 ## 输入材料
 
@@ -206,3 +206,30 @@ twin、LER、lifetime、break-even、hardware measured 或外部排名证据。
 - `README.md`：增加 T04 V4 失败证据与 V5 resource/preformal 入口；
 - 下一步：先提交并推送 V5 preregistration，再以全新 run ID 启动唯一
   full-resource preflight；PASS 后才允许创建 V2 preformal seal 和正式执行。
+
+## 2026-08-30 V5c 终态补记
+
+V5c `full_v5c_20260827_220849` 首次完成全部 8 个 resource profiles：
+
+- 8/8 receipts、227,328 observed/expected rows、15,360 RESET/sidecar；
+- 78 个唯一对象、10,860,153,597 B；staging 为空；
+- 37,920 点连续采样、最大 4 children、peak RSS 5,386,903,552 B；
+- no-copy inventory、逐row/NPY、seed firewall 与 claim-null 均保持；
+- attempt ledger 终态为
+  `START_RESOURCE_PREFLIGHT -> FAIL_RESOURCE_PREFLIGHT`，失败门仅为 `wall`。
+
+独立使用冻结 plan、8 个 receipt commit、stage 采样和未修改
+`stratified_projection` 重建的正式总 wall 约为 `4,293,112.1 s`，超过
+`1,209,600 s` 上限约 `3.549x`。因此本 task 改为
+`Blocked (resource wall)`；同合同换 run ID 重跑会确定性再失败，不得启动。
+
+旧 failure report 没有持久化 gate 前已经计算的 projection/decision。本轮只为
+未来失败新增 `completed_stage_evidence`，early-worker/late-wall 聚焦回归
+`25/25` 通过；没有回写 V5c 或改变科学/资源合同。按 R-N199 插入
+`T-RISK-20260830-01`，只允许不缩分母、不改 seed/estimand/margin、
+不放宽 14-day 门的 exact-output 可行性修复。详见：
+
+`docs/new_tasks/T-RISK-20260728-04_resource_preflight_wall_fail_full_v5c_20260827_220849.md`。
+
+全部 official/Puviani/SOTA、LER、lifetime、physical、hardware、rank 与 twin
+qualification 字段仍为 `null`。

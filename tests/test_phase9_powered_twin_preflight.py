@@ -450,6 +450,12 @@ def test_mock_worker_failure_records_attempt_and_cannot_pollute_formal(
     assert report["formal_seed_addresses_accessed"] is False
     assert report["formal_artifact_namespace_accessed"] is False
     assert all(value is None for value in report["claim_boundary"].values())
+    completed = report["completed_stage_evidence"]
+    assert completed["lineage_validation"] == {"passed": True}
+    assert completed["seed_firewall"] is not None
+    assert completed["profile_measurements"] == []
+    assert completed["projection"] is None
+    assert completed["resource_gate_decision"] is None
     assert len(calls) == 1
 
     preflight = tmp_path / "runs" / "t04_resource_preflight_worker_failure"
@@ -472,6 +478,147 @@ def test_mock_worker_failure_records_attempt_and_cannot_pollute_formal(
         assert not (tmp_path / config["artifact_paths"][key]).exists()
     with pytest.raises(RuntimeError, match="fresh run_id"):
         supervisor.run()
+
+
+def test_late_wall_gate_failure_preserves_completed_stage_evidence(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from cnn_fpga.benchmark import phase9_powered_twin_preflight as preflight
+
+    config = _config()
+    group_calls = 0
+
+    def complete_group(worker_kwargs, **kwargs):
+        nonlocal group_calls
+        group_calls += 1
+        assert kwargs["sample_callback"] is not None
+        return [
+            {
+                "plan_index": int(item["cell"].plan_index),
+                "profile_wall_seconds": 1.0,
+            }
+            for item in worker_kwargs
+        ]
+
+    stats = {
+        "wall_seconds": 2.0,
+        "peak_analysis_scratch_bytes": 17,
+        "retained_density_physicality_profile": {
+            "projected_full_serial_wall_seconds": 3.0,
+        },
+    }
+    raw_seed_audit = {
+        "formal_seed_addresses_accessed": False,
+        "receipt_count": 8,
+    }
+    inventory = {
+        "raw_status": "RAW_EVIDENCE_COMPLETE_NO_SCIENTIFIC_VERDICT",
+        "receipt_count": 8,
+        "totals": {
+            "object_bytes_unique": 123,
+            "expected_rows": 227_328,
+            "observed_rows": 227_328,
+            "exception_rows": 0,
+            "missing_rows": 0,
+            "conservation_failures": 0,
+        },
+        "monolithic_archive": None,
+        "merged_full_csv": None,
+    }
+    inventory_evidence = {"finalize_wall_seconds": 4.0}
+    projection = {
+        "cell_projections": [
+            {"projected_transient_bytes": value}
+            for value in (11, 7, 5, 3)
+        ],
+        "projected_formal_artifact_bytes": 456,
+        "projected_formal_wall_seconds_at_frozen_concurrency": (
+            float(config["resource_contract"]["maximum_wall_seconds"]) + 1.0
+        ),
+    }
+    decision = {
+        "checks": {
+            "rss": True,
+            "artifact": True,
+            "disk": True,
+            "wall": False,
+            "inventory": True,
+        },
+        "passed": False,
+        "decision_sha256": "d" * 64,
+    }
+
+    monkeypatch.setattr(
+        preflight,
+        "audit_resource_profile_receipts",
+        lambda *args, **kwargs: raw_seed_audit,
+    )
+    monkeypatch.setattr(
+        preflight,
+        "no_copy_inventory",
+        lambda *args, **kwargs: (inventory, inventory_evidence),
+    )
+    monkeypatch.setattr(
+        preflight,
+        "validate_statistics_profile",
+        lambda *args, **kwargs: None,
+    )
+    monkeypatch.setattr(
+        preflight,
+        "validate_continuous_sampling",
+        lambda *args, **kwargs: None,
+    )
+    monkeypatch.setattr(
+        preflight,
+        "stratified_projection",
+        lambda *args, **kwargs: projection,
+    )
+    monkeypatch.setattr(
+        preflight,
+        "resource_gate_decision",
+        lambda *args, **kwargs: decision,
+    )
+
+    supervisor = ResourcePreflightSupervisor(
+        root=tmp_path,
+        config=config,
+        config_sha256="1" * 64,
+        plan_sha256=config["plan_contract"]["canonical_plan_sha256"],
+        run_id="late_wall_failure",
+        source_snapshot_sha256="3" * 64,
+        sample_interval_seconds=5.0,
+        heartbeat_period_seconds=0.01,
+        process_group_runner=complete_group,
+        stats_runner=lambda *args, **kwargs: dict(stats),
+        lineage_validator=lambda *args: {"passed": True},
+    )
+    with pytest.raises(ResourcePreflightFailure) as raised:
+        supervisor.run()
+
+    assert group_calls == 2
+    report = raised.value.report
+    assert report["error"] == "resource gates failed: wall"
+    completed = report["completed_stage_evidence"]
+    assert len(completed["profile_measurements"]) == 8
+    assert completed["streaming_statistics_dry_run"]["wall_seconds"] == 2.0
+    assert completed["raw_seed_audit"] == raw_seed_audit
+    assert completed["inventory"] == inventory
+    assert completed["inventory_no_copy_evidence"] == inventory_evidence
+    assert completed["projection"] == projection
+    assert completed["resource_gate_decision"] == decision
+    assert completed["maximum_inflight_temp_bytes"] == 26
+    assert completed["analysis_scratch_bytes"] == 17
+    assert all(value is None for value in report["claim_boundary"].values())
+    persisted = json.loads(
+        (
+            tmp_path
+            / "runs"
+            / "t04_resource_preflight_late_wall_failure"
+            / "resource_preflight_failed.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert persisted["completed_stage_evidence"] == completed
 
 
 def _tiny_cells() -> list[T04CellSpec]:

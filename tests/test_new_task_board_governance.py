@@ -531,15 +531,16 @@ def test_phase9_performance_first_single_mode_reboot_is_nonblocking_and_fail_clo
         }
     )
     assert statuses["T7.3.5"] == "Done"
-    assert "当前推荐任务：`T-RISK-20260728-04`" in board
+    assert "当前推荐任务：`T-RISK-20260830-01`" in board
     assert statuses["T-RISK-20260726-01"] == "Done (NO-GO)"
     assert statuses["T-RISK-20260727-01"] == "Done (Risk Signal)"
     assert statuses["T-RISK-20260728-01"] == "Blocked (Scientific NO-GO)"
     assert statuses["T-RISK-20260728-03"] == "Done (Design Repair PASS)"
-    assert statuses["T-RISK-20260728-04"] == "In Progress"
+    assert statuses["T-RISK-20260728-04"] == "Blocked (resource wall)"
     assert statuses["T-RISK-20260728-05"] == "Done (Verified Statistical NO-GO)"
     assert statuses["T-RISK-20260728-06"] == "Done (Independent PASS)"
     assert statuses["T-RISK-20260730-01"] == "Done"
+    assert statuses["T-RISK-20260830-01"] == "In Progress"
     count_verification = json.loads(
         (
             ROOT
