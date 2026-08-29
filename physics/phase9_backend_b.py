@@ -19,6 +19,7 @@ kernel, likelihood function, logical projector, RNG stream, or truth cache.
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+from functools import lru_cache
 from hashlib import blake2b, sha256
 import json
 from math import comb, cos, exp, isfinite, log, pi, sin, sqrt
@@ -166,17 +167,18 @@ def _density(
         raise ValueError(f"{name} has wrong shape")
     if not np.all(np.isfinite(matrix)):
         raise ValueError(f"{name} must be finite")
-    data = _diagnostics(matrix)
-    if data["hermiticity_frobenius"] > tolerance:
+    hermitian = 0.5 * (matrix + matrix.conj().T)
+    trace = complex(np.trace(matrix))
+    if np.linalg.norm(matrix - matrix.conj().T, ord="fro") > tolerance:
         raise ValueError(f"{name} must be Hermitian")
     if (
-        abs(data["trace_real"] - 1.0) > tolerance
-        or abs(data["trace_imag"]) > tolerance
+        abs(trace.real - 1.0) > tolerance
+        or abs(trace.imag) > tolerance
     ):
         raise ValueError(f"{name} must have unit trace")
-    if data["minimum_eigenvalue"] < -tolerance:
+    if float(np.min(np.linalg.eigvalsh(hermitian))) < -tolerance:
         raise ValueError(f"{name} must be positive semidefinite")
-    return _readonly(0.5 * (matrix + matrix.conj().T))
+    return _readonly(hermitian)
 
 
 def _trace_distance(left: ComplexMatrix, right: ComplexMatrix) -> float:
@@ -1050,6 +1052,7 @@ class Phase9BackendBSimulator:
         self.y_ge = -1.0j * self.ge_lower + 1.0j * self.ge_raise
         self.x_ef = self.ef_lower + self.ef_raise
         self.joint_a = np.kron(self.a, self.i_a)
+        self.joint_adag = np.kron(self.adag, self.i_a)
         self.joint_number = np.kron(self.number, self.i_a)
         self.joint_q = np.kron(self.q, self.i_a)
         self.joint_p = np.kron(self.p, self.i_a)
@@ -1058,6 +1061,13 @@ class Phase9BackendBSimulator:
         self.joint_projectors = tuple(
             np.kron(self.i_o, projector)
             for projector in self.level_projectors
+        )
+        dispersion = self.level_projectors[1] + 2.0 * self.level_projectors[2]
+        kerr = self.number @ (self.number - self.i_o)
+        self._base_kerr_term = self.config.self_kerr * np.kron(kerr, self.i_a)
+        self._base_dispersive_term = self.config.dispersive_chi * np.kron(
+            self.number,
+            dispersion,
         )
         self._logical_isometry: ComplexMatrix | None = None
 
@@ -1071,24 +1081,57 @@ class Phase9BackendBSimulator:
             result += operator @ matrix @ operator.conj().T
         return result
 
-    def _pure_loss_operators(self, duration: float) -> tuple[ComplexMatrix, ...]:
+    @lru_cache(maxsize=8)
+    def _pure_loss_coefficients(self, duration: float) -> tuple[RealVector, ...]:
         transmissivity = exp(-self.config.oscillator_loss_rate * duration)
-        rows: list[ComplexMatrix] = []
+        rows: list[RealVector] = []
         for lost in range(self.cutoff):
+            coefficients = np.array(
+                [
+                    sqrt(comb(initial, lost))
+                    * (1.0 - transmissivity) ** (0.5 * lost)
+                    * transmissivity ** (0.5 * (initial - lost))
+                    for initial in range(lost, self.cutoff)
+                ],
+                dtype=np.float64,
+            )
+            rows.append(_readonly(coefficients))
+        return tuple(rows)
+
+    @lru_cache(maxsize=8)
+    def _pure_loss_operators(self, duration: float) -> tuple[ComplexMatrix, ...]:
+        rows: list[ComplexMatrix] = []
+        for lost, coefficients in enumerate(
+            self._pure_loss_coefficients(duration)
+        ):
             operator = np.zeros(
                 (self.cutoff, self.cutoff),
                 dtype=np.complex128,
             )
-            for initial in range(lost, self.cutoff):
-                remaining = initial - lost
-                operator[remaining, initial] = (
-                    sqrt(comb(initial, lost))
-                    * (1.0 - transmissivity) ** (0.5 * lost)
-                    * transmissivity ** (0.5 * remaining)
-                )
-            rows.append(np.kron(operator, self.i_a))
+            initial = np.arange(lost, self.cutoff)
+            operator[initial - lost, initial] = coefficients
+            rows.append(_readonly(np.kron(operator, self.i_a)))
         return tuple(rows)
 
+    def _apply_pure_loss(
+        self,
+        matrix: ComplexMatrix,
+        duration: float,
+    ) -> ComplexMatrix:
+        tensor = matrix.reshape(self.cutoff, 3, self.cutoff, 3)
+        result = np.zeros_like(tensor)
+        for lost, coefficients in enumerate(
+            self._pure_loss_coefficients(duration)
+        ):
+            remaining = self.cutoff - lost
+            result[:remaining, :, :remaining, :] += (
+                coefficients[:, None, None, None]
+                * tensor[lost:, :, lost:, :]
+                * coefficients[None, None, :, None]
+            )
+        return result.reshape(self.dimension, self.dimension)
+
+    @lru_cache(maxsize=32)
     def _local_amplitude_operators(
         self,
         source: int,
@@ -1099,7 +1142,42 @@ class Phase9BackendBSimulator:
         no_jump[source, source] = sqrt(1.0 - probability)
         jump = np.zeros((3, 3), dtype=np.complex128)
         jump[target, source] = sqrt(probability)
-        return np.kron(self.i_o, no_jump), np.kron(self.i_o, jump)
+        return (
+            _readonly(np.kron(self.i_o, no_jump)),
+            _readonly(np.kron(self.i_o, jump)),
+        )
+
+    def _apply_local_amplitude(
+        self,
+        matrix: ComplexMatrix,
+        source: int,
+        target: int,
+        probability: float,
+    ) -> ComplexMatrix:
+        tensor = matrix.reshape(self.cutoff, 3, self.cutoff, 3)
+        diagonal = np.ones(3, dtype=np.float64)
+        diagonal[source] = sqrt(1.0 - probability)
+        result = (
+            tensor
+            * diagonal[None, :, None, None]
+            * diagonal[None, None, None, :]
+        )
+        result[:, target, :, target] += (
+            probability * tensor[:, source, :, source]
+        )
+        return result.reshape(self.dimension, self.dimension)
+
+    @lru_cache(maxsize=8)
+    def _oscillator_dephasing_factor(self, duration: float) -> ComplexMatrix:
+        indices = np.arange(self.cutoff, dtype=np.float64)
+        return _readonly(
+            np.exp(
+                -0.5
+                * self.config.oscillator_dephasing_rate
+                * duration
+                * (indices[:, None] - indices[None, :]) ** 2
+            )
+        )
 
     def _dephase_oscillator(
         self,
@@ -1109,15 +1187,21 @@ class Phase9BackendBSimulator:
         if self.config.oscillator_dephasing_rate == 0.0:
             return matrix
         tensor = matrix.reshape(self.cutoff, 3, self.cutoff, 3)
-        indices = np.arange(self.cutoff, dtype=np.float64)
-        factor = np.exp(
-            -0.5
-            * self.config.oscillator_dephasing_rate
-            * duration
-            * (indices[:, None] - indices[None, :]) ** 2
-        )
+        factor = self._oscillator_dephasing_factor(duration)
         tensor = tensor * factor[:, None, :, None]
         return tensor.reshape(self.dimension, self.dimension)
+
+    @lru_cache(maxsize=8)
+    def _ancilla_dephasing_factor(self, duration: float) -> ComplexMatrix:
+        weights = np.array([-1.0, 1.0, 2.0], dtype=np.float64)
+        return _readonly(
+            np.exp(
+                -0.5
+                * self.config.ancilla_dephasing_rate
+                * duration
+                * (weights[:, None] - weights[None, :]) ** 2
+            )
+        )
 
     def _dephase_ancilla(
         self,
@@ -1126,13 +1210,7 @@ class Phase9BackendBSimulator:
     ) -> ComplexMatrix:
         if self.config.ancilla_dephasing_rate == 0.0:
             return matrix
-        weights = np.array([-1.0, 1.0, 2.0], dtype=np.float64)
-        factor = np.exp(
-            -0.5
-            * self.config.ancilla_dephasing_rate
-            * duration
-            * (weights[:, None] - weights[None, :]) ** 2
-        )
+        factor = self._ancilla_dephasing_factor(duration)
         tensor = matrix.reshape(self.cutoff, 3, self.cutoff, 3)
         tensor = tensor * factor[None, :, None, :]
         return tensor.reshape(self.dimension, self.dimension)
@@ -1144,10 +1222,7 @@ class Phase9BackendBSimulator:
     ) -> ComplexMatrix:
         result = matrix
         if self.config.oscillator_loss_rate > 0.0:
-            result = self._apply_kraus(
-                result,
-                self._pure_loss_operators(duration),
-            )
+            result = self._apply_pure_loss(result, duration)
         result = self._dephase_oscillator(result, duration)
         local_channels = (
             (1, 0, self.config.ancilla_ge_relax_rate),
@@ -1157,13 +1232,11 @@ class Phase9BackendBSimulator:
         for source, target, rate in local_channels:
             if rate > 0.0:
                 probability = 1.0 - exp(-rate * duration)
-                result = self._apply_kraus(
+                result = self._apply_local_amplitude(
                     result,
-                    self._local_amplitude_operators(
-                        source,
-                        target,
-                        probability,
-                    ),
+                    source,
+                    target,
+                    probability,
                 )
         result = self._dephase_ancilla(result, duration)
         return result
@@ -1196,11 +1269,9 @@ class Phase9BackendBSimulator:
         return errors
 
     def _base_hamiltonian(self, drift: BackendBDrift) -> ComplexMatrix:
-        dispersion = self.level_projectors[1] + 2.0 * self.level_projectors[2]
-        kerr = self.number @ (self.number - self.i_o)
         return (
-            self.config.self_kerr * np.kron(kerr, self.i_a)
-            + self.config.dispersive_chi * np.kron(self.number, dispersion)
+            self._base_kerr_term
+            + self._base_dispersive_term
             + drift.drive_q * self.joint_q
             + drift.drive_p * self.joint_p
             + drift.leakage_detuning * self.joint_projectors[2]
@@ -1221,6 +1292,7 @@ class Phase9BackendBSimulator:
         steps = self.config.split_steps_per_segment
         dt = duration / steps
         result = np.asarray(density, dtype=np.complex128)
+        half_cache: dict[bytes, ComplexMatrix] = {}
         for index in range(steps):
             midpoint = (index + 0.5) / steps
             hamiltonian = np.asarray(
@@ -1232,7 +1304,11 @@ class Phase9BackendBSimulator:
                 ord="fro",
             ) > 1.0e-10:
                 raise ValueError("Hamiltonian must be Hermitian")
-            half = expm(-0.5j * dt * hamiltonian)
+            cache_key = hamiltonian.tobytes(order="C")
+            half = half_cache.get(cache_key)
+            if half is None:
+                half = _readonly(expm(-0.5j * dt * hamiltonian))
+                half_cache[cache_key] = half
             result = half @ result @ half.conj().T
             result = self._noise_channels(result, dt)
             result = half @ result @ half.conj().T
@@ -1281,8 +1357,8 @@ class Phase9BackendBSimulator:
         leakage = np.zeros_like(base)
         if duration > 0.0:
             drive = 1.0j * (
-                alpha * np.kron(self.adag, self.i_a)
-                - alpha.conjugate() * np.kron(self.a, self.i_a)
+                alpha * self.joint_adag
+                - alpha.conjugate() * self.joint_a
             ) / duration
             leakage = (
                 self.config.action_leakage_coupling
@@ -1442,7 +1518,8 @@ class Phase9BackendBSimulator:
             )
         )
 
-    def _reset_operators(self) -> dict[str, tuple[ComplexMatrix, ...]]:
+    @lru_cache(maxsize=1)
+    def _reset_operators(self) -> Mapping[str, tuple[ComplexMatrix, ...]]:
         g, e, f = self.level_kets
         success = (
             np.kron(self.i_o, np.outer(g, g.conj())),
@@ -1457,10 +1534,12 @@ class Phase9BackendBSimulator:
             + sqrt(1.0 - self.config.reset_success_f)
             * np.outer(f, f.conj())
         )
-        return {
-            "success": success,
-            "failure": (np.kron(self.i_o, failed_local),),
-        }
+        return MappingProxyType(
+            {
+                "success": tuple(_readonly(item) for item in success),
+                "failure": (_readonly(np.kron(self.i_o, failed_local)),),
+            }
+        )
 
     def reset_completeness_error(self) -> float:
         gram = np.zeros_like(self.i_joint)

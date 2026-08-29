@@ -73,7 +73,23 @@ PASS。
   naive 并发尚无 RSS/CPU 证据；
 - 新增 6 个 forensic/LPT 单元测试，和原 25 个 preflight 测试合计
   `31/31` 通过；
-- 尚未修改 scientific kernel 或启动新 full run。
+- 已完成第一轮 backend-B exact-semantics 热点修复：pure-loss Kraus 利用解析
+  superdiagonal 结构在 `(Fock, ancilla, Fock, ancilla)` tensor 上执行，qutrit
+  amplitude channel 使用等价 diagonal/jump block；固定 duration 的 loss/dephasing/
+  reset operator、constant Hamiltonian half-step、base Hamiltonian 与 joint ladder 只构造
+  一次。没有删 split step、Kraus branch、noise channel、cutoff、density PSD 检查或
+  formal row；
+- 新增 `tests/test_phase9_backend_b_exact_output_optimization.py`：constant-H split
+  对旧循环 byte-identical 且 `expm` 从8次降到1次，varying-H 仍逐 midpoint 执行；
+  structured pure-loss/qutrit channel 对 dense Kraus reference 的 max-abs 差不超过
+  `2e-16`，异常分支、只读缓存、Hamiltonian/reset 闭合均覆盖。cutoff44、8-step
+  sense 同进程3次盲测中，旧dense median=`0.279241 s`、新structured
+  median=`0.031850 s`，speedup=`8.767x`，该样本 output 的 max-abs 与 trace
+  distance 都为0；这是 component microbenchmark，不外推为正式518-cell wall PASS；
+- backend-B hash-bound qualification 已原子重建，analysis SHA-256 更新为
+  `a302196cb98fad93d3d73c8abcbe3ac95430b79dfda87dbfb8293a1ac082c5aa`，
+  13/13 live artifact checks 和 `205/205` focused tests通过；数值门、mutation、
+  claim-null边界保持通过。旧V5c仍永久只读，尚未启动新 full run。
 
 ## 当前判断与下一步
 
@@ -81,10 +97,10 @@ PASS。
 - 仅加并发无法作为合规修复：15-worker 理想下界虽过 wall，但当前 RSS 与
   CPU contention 未证明，且改变 `max_workers=4` 必须另立 outcome-blind
   preregistered child contract。
-- 下一步优先审计 backend B 的 exact-output 热点：constant-Hamiltonian split
-  内重复 `expm`、固定 duration 的 Kraus/dephasing operator 重建，以及 validator
-  中不参与门判定的 purity matrix multiply；任何缓存/移除都必须以同一输入的
-  row/NPY byte equality、异常路径等价和 full projection speedup 证明后才可释放。
+- 下一步使用全新、outcome-blind 的 focused resource projection 对完整8类 profile
+  重测该实现；只有 deterministic 518-cell LPT、RSS、artifact/disk、joint-maxT、
+  physicality 和 inventory 全部门同时 PASS，才允许另一个全新 run ID。当前
+  `8.767x` 只是 backend-B sense microbenchmark，不能替代完整投影或释放T04。
 
 ## claim 边界
 

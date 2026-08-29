@@ -198,6 +198,10 @@ def _source_bindings(root: Path) -> dict[str, dict[str, object]]:
             root,
             "tests/test_phase9_backend_b.py",
         ),
+        "exact_output_optimization_tests": _binding(
+            root,
+            "tests/test_phase9_backend_b_exact_output_optimization.py",
+        ),
         "artifact_tests": _binding(
             root,
             "tests/test_phase9_backend_b_qualification.py",
