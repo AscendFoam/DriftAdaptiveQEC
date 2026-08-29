@@ -90,6 +90,10 @@ PASS。
   `a302196cb98fad93d3d73c8abcbe3ac95430b79dfda87dbfb8293a1ac082c5aa`，
   13/13 live artifact checks 和 `205/205` focused tests通过；数值门、mutation、
   claim-null边界保持通过。旧V5c仍永久只读，尚未启动新 full run。
+- fresh V6 `full_v6_20260830_043859` 在任何scientific row前 fail-closed：T03
+  frozen loader 正确拒绝 optimized backend-B 与旧 binding `0b7f7e3f...` 不一致；
+  0 receipt/staging/object、formal seed/outcome未访问、claim全null。直接默认替换
+  旧 binding 的方案被安全审查拒绝且已完全撤回；V6永久只读，详见对应终态记录。
 
 ## 当前判断与下一步
 
@@ -101,6 +105,9 @@ PASS。
   重测该实现；只有 deterministic 518-cell LPT、RSS、artifact/disk、joint-maxT、
   physicality 和 inventory 全部门同时 PASS，才允许另一个全新 run ID。当前
   `8.767x` 只是 backend-B sense microbenchmark，不能替代完整投影或释放T04。
+- 在此之前需要用户明确授权建立新的显式 byte-bound exact-equivalence child
+  contract；旧T03 config/manifest/raw保持不变。未获授权不得默认注入replacement、
+  放宽loader或启动V7。
 
 ## claim 边界
 
