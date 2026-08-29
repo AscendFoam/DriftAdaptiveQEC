@@ -71,7 +71,10 @@
   `4,293,112.1 s`；
 - frozen maximum wall：`1,209,600 s`（14 days）；
 - ratio：约 `3.549x`，即约 49.7 days / 14 days；
-- projected artifact：约 `135,082,918,009 B`，未触发
+- projected artifact：经 `phase9_powered_twin_resource_forensics.py` 从 8 个
+  immutable receipts 逐 role 重放为 `129,165,799,929 B`，未触发 artifact 门；
+  旧手工汇总的 `135,082,918,009 B` 未扣除 shared/probe primary 与
+  `rb_expected_density_npy` 的同对象显式 alias，现予纠正
   `171,798,691,840 B` artifact gate。
 
 因此 wall 失败不是边界舍入、OOM、GPU 故障、receipt 缺失或外部重启。对同一
